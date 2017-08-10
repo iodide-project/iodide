@@ -36,7 +36,12 @@ let actions = {
 			type: 'ADD_CELL',
 			cellType: cellType
 		}
-
+	},
+	selectCell: function(cellID) {
+		return {
+			type: 'SELECT_CELL',
+			id: cellID
+		}
 	},
 	deleteCell: function(cellID) {
 		return {

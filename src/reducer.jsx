@@ -1,5 +1,6 @@
 
 import Interpreter from 'js-interpreter'
+import marked from 'marked'
 
 var INTERPRETER = new Interpreter('')
 INTERPRETER.defaultProperties = Object.keys(INTERPRETER.global.properties)
@@ -30,6 +31,15 @@ let reducer = function (state, action) {
 					rendered: false
 				}]
 			});
+
+		case 'SELECT_CELL':
+			var cells = state.cells.slice()
+			var index = cells.findIndex(c=>c.id===action.id)
+			var thisCell = cells[index]
+			cells.forEach((c)=>c.selected=false)
+			thisCell.selected = true
+			cells[index] = thisCell
+			return Object.assign({}, state, {cells})
 
 		case 'CELL_UP':
 			var cells = state.cells.slice();
@@ -66,6 +76,7 @@ let reducer = function (state, action) {
 			var index = cells.findIndex(c=>c.id===action.id);
 			var thisCell = cells[index];
 			thisCell.cellType = action.cellType;
+			thisCell.value = undefined;
 			cells[index] = thisCell;
 			return Object.assign({}, state, {cells});
 
@@ -95,6 +106,9 @@ let reducer = function (state, action) {
 					lastValue = thisCell.value;
 				}
 				declaredProperties = INTERPRETER.declaredProperties();
+			} else if (thisCell.cellType === 'markdown') {
+				// one line, huh.
+				thisCell.value = marked(thisCell.content);
 			}
 			
 			cells[index] = thisCell;

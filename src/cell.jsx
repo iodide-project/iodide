@@ -41,44 +41,22 @@ class JSCell extends React.Component {
 		this.props.actions.changeCellType(this.props.cell.id, cellType)
 	}
 
+	selectCell(){
+		this.props.actions.selectCell(this.props.cell.id)
+	}
+
 	render() {
 		var options = {
 			lineNumbers: true,
 			mode: this.props.cell.cellType,
 			theme: 'eclipse'
 		}
-	
 		var resultElem;
-		var returnedSomething;
-		if (this.props.cell.value == undefined) returnedSomething = false;
-		if (typeof this.props.cell.value == 'object' && this.props.cell.value.hasOwnProperty('type') && this.props.cell.value.type !='undefined') returnedSomething = true;
-		if (returnedSomething) {
-			resultElem = <JSONTree data={this.props.cell.value} hideRoot={true} theme={{
-				  scheme: 'bright',
-				  author: 'chris kempson (http://chriskempson.com)',
-				  base00: '#000000',
-				  base01: '#303030',
-				  base02: '#505050',
-				  base03: '#b0b0b0',
-				  base04: '#d0d0d0',
-				  base05: '#e0e0e0',
-				  base06: '#f5f5f5',
-				  base07: '#ffffff',
-				  base08: '#fb0120',
-				  base09: '#fc6d24',
-				  base0A: '#fda331',
-				  base0B: '#a1c659',
-				  base0C: '#76c7b7',
-				  base0D: '#6fb3d2',
-				  base0E: '#d381c3',
-				  base0F: '#be643c'
-				}} />
-		} else {
-			resultElem = <div className='empty-resultset'></div>;
-		}
+		if (this.props.cell.cellType === 'javascript') resultElem = jsReturnValue(this.props.cell);
+		else if (this.props.cell.cellType === 'markdown') resultElem = this.props.cell.value;
 
-		return (<div className='js-cell' >
-			<CodeMirror ref="editor" value={this.props.cell.content} onChange={this.updateCell.bind(this)} options={options} autoFocus={true} />
+		return (<div className={'js-cell ' + (this.props.cell.selected ? 'selected-cell' : '')} onClick={this.selectCell.bind(this)}>
+			<CodeMirror ref="editor" value={this.props.cell.content} onChange={this.updateCell.bind(this)} onFocus={this.selectCell.bind(this)} options={options} autoFocus={true} />
 
 			<ButtonToolbar >
 				<Button bsSize='xsmall' onClick={this.runCell.bind(this)}>run</Button>
@@ -99,6 +77,39 @@ class JSCell extends React.Component {
 		</div>)
 
 	}
+}
+
+function jsReturnValue(cell) {
+	var resultElem;
+	var returnedSomething;
+	if (cell.value == undefined) returnedSomething = false;
+	if (typeof cell.value == 'object' && cell.value.hasOwnProperty('type') && cell.value.type !='undefined') returnedSomething = true;
+
+	if (returnedSomething) {
+		resultElem = <JSONTree data={cell.value} hideRoot={true} theme={{
+			  scheme: 'bright',
+			  author: 'chris kempson (http://chriskempson.com)',
+			  base00: '#000000',
+			  base01: '#303030',
+			  base02: '#505050',
+			  base03: '#b0b0b0',
+			  base04: '#d0d0d0',
+			  base05: '#e0e0e0',
+			  base06: '#f5f5f5',
+			  base07: '#ffffff',
+			  base08: '#fb0120',
+			  base09: '#fc6d24',
+			  base0A: '#fda331',
+			  base0B: '#a1c659',
+			  base0C: '#76c7b7',
+			  base0D: '#6fb3d2',
+			  base0E: '#d381c3',
+			  base0F: '#be643c'
+			}} />
+	} else {
+		resultElem = <div className='empty-resultset'></div>;
+	}
+	return resultElem;
 }
 
 export default JSCell;

@@ -28,14 +28,16 @@ div.declared-variables {
 	padding-left:10px;
 }
 
-div.js-cell .selected-cell {
-	outline: 4px solid lightgray;
-}
+
 div.js-cell {
 	margin-top:20px;
 	margin-bottom:20px;
 	width:700px;
 		outline:1px solid lightgray;
 
+}
+
+div.selected-cell {
+	outline: 4px solid lightgray;
 }
 
