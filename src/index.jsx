@@ -6,7 +6,8 @@ import Page from './page.jsx'
 
 var initialState = {
 	cells: [],
-	declaredProperties:{}
+	declaredProperties:{},
+	lastValue: undefined
 }
 
 var store = configureStore(initialState)

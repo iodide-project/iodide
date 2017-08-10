@@ -10,9 +10,7 @@ let finalCreateStore = compose(
 
  function configureStore(
 		initialState = {
-			cells: []
 		}) {
-  console.log('WTF is happening??')
   return finalCreateStore(reducer, initialState)
 }
 

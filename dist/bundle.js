@@ -23245,7 +23245,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 var initialState = {
 	cells: [],
-	declaredProperties: {}
+	declaredProperties: {},
+	lastValue: undefined
 };
 
 var store = Object(__WEBPACK_IMPORTED_MODULE_2__store_jsx__["a" /* default */])(initialState);
@@ -25669,10 +25670,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 
 let finalCreateStore = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_2_redux_logger___default.a))(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */]);
 
-function configureStore(initialState = {
-  cells: []
-}) {
-  console.log('WTF is happening??');
+function configureStore(initialState = {}) {
   return finalCreateStore(__WEBPACK_IMPORTED_MODULE_1__reducer_jsx__["a" /* default */], initialState);
 }
 
@@ -25757,16 +25755,27 @@ let reducer = function (state, action) {
 			var cells = state.cells.slice();
 			var index = cells.findIndex(c => c.id === action.id);
 			var thisCell = cells[index];
+
 			if (thisCell.cellType === 'javascript') {
+				thisCell.value = undefined;
 				INTERPRETER.appendCode(thisCell.content);
 				INTERPRETER.run();
 				thisCell.rendered = true;
 				thisCell.value = INTERPRETER.value;
+				var lastValue;
+				// Check to see if the returned value has actually updated.
+				// if it hasn't, then nothing was returned from this cell.
+				if (thisCell.value == state.lastValue) {
+					thisCell.value = undefined;
+					lastValue = state.lastValue;
+				} else {
+					lastValue = thisCell.value;
+				}
 				declaredProperties = INTERPRETER.declaredProperties();
 			}
 
 			cells[index] = thisCell;
-			return Object.assign({}, state, { cells }, { declaredProperties });
+			return Object.assign({}, state, { cells }, { declaredProperties }, { lastValue });
 
 		case 'DELETE_CELL':
 			return Object.assign({}, state, {

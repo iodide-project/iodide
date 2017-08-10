@@ -71,16 +71,29 @@ let reducer = function (state, action) {
 			var cells = state.cells.slice();
 			var index = cells.findIndex(c=>c.id===action.id);
 			var thisCell = cells[index];
+
+			
 			if (thisCell.cellType === 'javascript') {
+				thisCell.value = undefined;
 				INTERPRETER.appendCode(thisCell.content);
 				INTERPRETER.run();
 				thisCell.rendered = true;
 				thisCell.value = INTERPRETER.value;
+				var lastValue;
+				// Check to see if the returned value has actually updated.
+				// if it hasn't, then nothing was returned from this cell.
+				if (thisCell.value == state.lastValue) {
+					thisCell.value = undefined;
+					lastValue = state.lastValue;
+				}
+				else {
+					lastValue = thisCell.value;
+				}
 				declaredProperties = INTERPRETER.declaredProperties();
 			}
 			
 			cells[index] = thisCell;
-			return Object.assign({}, state, {cells}, {declaredProperties});
+			return Object.assign({}, state, {cells}, {declaredProperties}, {lastValue});
 
 		case 'DELETE_CELL':
 			return Object.assign({}, state, {
