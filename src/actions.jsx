@@ -6,6 +6,13 @@ let actions = {
 			content: text
 		}
 	},
+	changeCellType: function(cellID, cellType) {
+		return {
+			type: 'CHANGE_CELL_TYPE',
+			id: cellID,
+			cellType: cellType
+		}
+	},
 	renderCell: function(cellID) {
 		return {
 			type: 'RENDER_CELL',

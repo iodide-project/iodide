@@ -12,6 +12,7 @@
     "babel-preset-react": "^6.24.1",
     "js-interpreter": "^1.4.6",
     "react": "^15.6.1",
+    "react-bootstrap": "^0.31.2",
     "react-codemirror": "^1.0.0",
     "react-dom": "^15.6.1",
     "react-json-tree": "^0.10.9",

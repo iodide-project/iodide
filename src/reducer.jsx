@@ -54,15 +54,20 @@ let reducer = function (state, action) {
 		  	} else return state;
 
 		case 'UPDATE_CELL':
-
 			var cells = state.cells.slice();
-
 			var index = cells.findIndex(c=>c.id===action.id);
 			var thisCell = cells[index];
-			
 			thisCell.content = action.content;
 			cells[index] = thisCell;
 			return Object.assign({}, state, {cells})
+
+		case 'CHANGE_CELL_TYPE':
+			var cells = state.cells.slice();
+			var index = cells.findIndex(c=>c.id===action.id);
+			var thisCell = cells[index];
+			thisCell.cellType = action.cellType;
+			cells[index] = thisCell;
+			return Object.assign({}, state, {cells});
 
 		case 'RENDER_CELL':
 

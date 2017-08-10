@@ -2,41 +2,25 @@
 // the same interpreter.
 
 
-import React from 'react';
-import JSONTree from 'react-json-tree';
-import CodeMirror from 'react-codemirror';
-
+import React from 'react'
+import JSONTree from 'react-json-tree'
+import CodeMirror from 'react-codemirror'
+import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'react-bootstrap';
 
 class JSCell extends React.Component {
 	constructor(props) {
 		super(props);
-		//this.state = {code: '', value: undefined, selected: false};
-
-		//this.updateCode = this.updateCode.bind(this);
-		// this.runCell = this.runCell.bind(this);
-		// this.selected = this.selected.bind(this);
-
-		// this.cellUp = this.cellUp.bind(this);
-		// this.cellDown = this.cellDown.bind(this);
-		// this.deleteCell = this.deleteCell.bind(this);
 	}
 
 	updateCell(content) {
 		this.props.actions.updateCell(this.props.cell.id, content);
-		//this.props.actions.update
-		//this.setState({code: code})
 	}
 
 	runCell() {
 		this.props.actions.renderCell(this.props.cell.id);
-		// this.props.interpreter.appendCode(this.state.code);
-		// this.props.interpreter.run();
-		// this.setState({value: this.props.interpreter.value});
-		// this.props.onCellRun(this.props.index);
 	}
 
 	selected() {
-		this.setState({selected: true});
 	}
 
 	cellUp(){
@@ -48,14 +32,17 @@ class JSCell extends React.Component {
 	}
 
 	deleteCell(){
-		//this.props.onDeleteCell(this.props.index);
 		this.props.actions.deleteCell(this.props.cell.id);
+	}
+
+	changeCellType(cellType){
+		this.props.actions.changeCellType(this.props.cell.id, cellType)
 	}
 
 	render() {
 		var options = {
 			lineNumbers: true,
-			mode: 'javascript',
+			mode: this.props.cell.cellType,
 			theme: 'eclipse'
 		}
 	
@@ -90,10 +77,20 @@ class JSCell extends React.Component {
 
 		return (<div className='js-cell' >
 			<CodeMirror ref="editor" value={this.props.cell.content} onChange={this.updateCell.bind(this)} options={options} autoFocus={true} />
-			<button onClick={this.runCell.bind(this)}>run</button><button >type</button>
-			<button onClick={this.cellDown.bind(this)} >down</button>
-			<button onClick={this.cellUp.bind(this)}>up</button>
-			<button onClick={this.deleteCell.bind(this)}>delete</button>
+
+			<ButtonToolbar >
+				<Button bsSize='xsmall' onClick={this.runCell.bind(this)}>run</Button>
+				<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}>down</Button>
+				<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}>up</Button>
+				<Button bsSize='xsmall' onClick={this.deleteCell.bind(this)}>delete</Button>
+      			<ToggleButtonGroup type="radio" name="options"  onChange={this.changeCellType.bind(this)} defaultValue={this.props.cell.cellType}>
+					<ToggleButton bsSize='xsmall'  value={"javascript"} >JS</ToggleButton>
+					<ToggleButton bsSize='xsmall'  value={'markdown'} >MD</ToggleButton>
+					<ToggleButton bsSize='xsmall'  value={'raw'} >Raw</ToggleButton>
+				</ ToggleButtonGroup>
+				<Label>{this.props.cell.cellType}</Label>
+			</ ButtonToolbar>
+
 			<div className='result'>				
 					{resultElem}
 			</div>
