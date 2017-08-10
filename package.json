@@ -11,6 +11,7 @@
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "js-interpreter": "^1.4.6",
+    "marked": "^0.3.6",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",
     "react-codemirror": "^1.0.0",

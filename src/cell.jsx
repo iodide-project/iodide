@@ -4,8 +4,10 @@
 
 import React from 'react'
 import JSONTree from 'react-json-tree'
+import js from 'codemirror/mode/javascript/javascript'
+import markdown from 'codemirror/mode/markdown/markdown'
 import CodeMirror from 'react-codemirror'
-import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'react-bootstrap';
+import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'react-bootstrap'
 
 class JSCell extends React.Component {
 	constructor(props) {
