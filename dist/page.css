@@ -1,0 +1,41 @@
+
+html,body { min-height:100%; margin:0; padding:0; }
+
+.CodeMirror {
+	height: auto;
+}
+
+h1.page-title {
+	font-family: 'Open Sans';
+	font-weight:900;
+	text-transform:uppercase;
+}
+
+div#page {
+	width:1000px;
+	margin:auto;
+
+}
+
+div.cells {
+	float:left;
+	width: 700px;
+}
+
+div.declared-variables {
+	float:left;
+	width:290px;
+	padding-left:10px;
+}
+
+div.js-cell .selected-cell {
+	outline: 4px solid lightgray;
+}
+div.js-cell {
+	margin-top:20px;
+	margin-bottom:20px;
+	width:700px;
+		outline:1px solid lightgray;
+
+}
+

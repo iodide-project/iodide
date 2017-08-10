@@ -1,0 +1,23 @@
+{
+  "name": "js-notebook",
+  "version": "0.1a",
+  "description": "A notebook-style interface for literate programming in javascript.",
+  "main": "index.js",
+  "author": "Hamilton Ulmer",
+  "license": "Mozilla Public License 2.0",
+  "dependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2016": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "js-interpreter": "^1.4.6",
+    "react": "^15.6.1",
+    "react-codemirror": "^1.0.0",
+    "react-dom": "^15.6.1",
+    "react-json-tree": "^0.10.9",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-logger": "^3.0.6",
+    "webpack": "^3.5.2"
+  }
+}
