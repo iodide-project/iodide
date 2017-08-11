@@ -2,39 +2,46 @@
 // the same interpreter.
 
 
-import React from 'react'
+import React, {createElement} from 'react'
 import JSONTree from 'react-json-tree'
 import js from 'codemirror/mode/javascript/javascript'
 import markdown from 'codemirror/mode/markdown/markdown'
 import CodeMirror from 'react-codemirror'
+import marksy from 'marksy'
+const MD_COMPILER = marksy({createElement})
+
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'react-bootstrap'
 
 class JSCell extends React.Component {
 	constructor(props) {
-		super(props);
+		super(props)
 	}
 
 	updateCell(content) {
-		this.props.actions.updateCell(this.props.cell.id, content);
+		this.props.actions.updateCell(this.props.cell.id, content)
 	}
 
-	runCell() {
-		this.props.actions.renderCell(this.props.cell.id);
+	renderCell(render) {
+		this.props.actions.renderCell(this.props.cell.id)
+	}
+
+	unrender() {
+		this.props.actions.renderCell(this.props.cell.id, false)
 	}
 
 	selected() {
 	}
 
 	cellUp(){
-		this.props.actions.cellUp(this.props.cell.id);
+		this.props.actions.cellUp(this.props.cell.id)
 	}
 
 	cellDown(){
-		this.props.actions.cellDown(this.props.cell.id);
+		this.props.actions.cellDown(this.props.cell.id)
 	}
 
 	deleteCell(){
-		this.props.actions.deleteCell(this.props.cell.id);
+		this.props.actions.deleteCell(this.props.cell.id)
 	}
 
 	changeCellType(cellType){
@@ -51,15 +58,26 @@ class JSCell extends React.Component {
 			mode: this.props.cell.cellType,
 			theme: 'eclipse'
 		}
-		var resultElem;
+		var resultElem, mainElem
 		if (this.props.cell.cellType === 'javascript') resultElem = jsReturnValue(this.props.cell);
-		else if (this.props.cell.cellType === 'markdown') resultElem = this.props.cell.value;
+		else if (this.props.cell.cellType === 'markdown') resultElem = <div></div>//<div dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
 
+		if (this.props.cell.cellType === 'javascript' || this.props.cell.cellType === 'raw' || (this.props.cell.cellType === 'markdown' && !this.props.cell.rendered)) {
+			mainElem = <CodeMirror ref="editor" 
+						   value={this.props.cell.content} 
+						   onChange={this.updateCell.bind(this)} 
+						   onFocus={this.selectCell.bind(this)} 
+						   options={options} autoFocus={true} />
+
+		} else if (this.props.cell.cellType === 'markdown' && this.props.cell.rendered) {
+			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)} dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
+		} 
 		return (<div className={'js-cell ' + (this.props.cell.selected ? 'selected-cell' : '')} onClick={this.selectCell.bind(this)}>
-			<CodeMirror ref="editor" value={this.props.cell.content} onChange={this.updateCell.bind(this)} onFocus={this.selectCell.bind(this)} options={options} autoFocus={true} />
+			
+			{mainElem}
 
 			<ButtonToolbar >
-				<Button bsSize='xsmall' onClick={this.runCell.bind(this)}>run</Button>
+				<Button bsSize='xsmall' onClick={this.renderCell.bind(this)}>run</Button>
 				<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}>down</Button>
 				<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}>up</Button>
 				<Button bsSize='xsmall' onClick={this.deleteCell.bind(this)}>delete</Button>

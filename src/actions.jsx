@@ -13,10 +13,11 @@ let actions = {
 			cellType: cellType
 		}
 	},
-	renderCell: function(cellID) {
+	renderCell: function(cellID, renderMode=true) {
 		return {
 			type: 'RENDER_CELL',
-			id: cellID
+			id: cellID,
+			render: renderMode
 		}
 	},
 	cellUp: function(cellID) {

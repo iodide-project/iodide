@@ -77,39 +77,49 @@ let reducer = function (state, action) {
 			var thisCell = cells[index];
 			thisCell.cellType = action.cellType;
 			thisCell.value = undefined;
+			thisCell.rendered = false;
 			cells[index] = thisCell;
 			return Object.assign({}, state, {cells});
 
-		case 'RENDER_CELL':
-
-			var declaredProperties = state.declaredProperties;
-
+		case 'UNRENDER_CELL':
 			var cells = state.cells.slice();
 			var index = cells.findIndex(c=>c.id===action.id);
 			var thisCell = cells[index];
 
-			
-			if (thisCell.cellType === 'javascript') {
-				thisCell.value = undefined;
-				INTERPRETER.appendCode(thisCell.content);
-				INTERPRETER.run();
-				thisCell.rendered = true;
-				thisCell.value = INTERPRETER.value;
-				var lastValue;
-				// Check to see if the returned value has actually updated.
-				// if it hasn't, then nothing was returned from this cell.
-				if (thisCell.value == state.lastValue) {
+		case 'RENDER_CELL':
+			var declaredProperties = state.declaredProperties
+
+			var cells = state.cells.slice()
+			var index = cells.findIndex(c=>c.id===action.id)
+			var thisCell = cells[index]
+
+			if (action.render) {
+				if (thisCell.cellType === 'javascript') {
 					thisCell.value = undefined;
-					lastValue = state.lastValue;
+					INTERPRETER.appendCode(thisCell.content);
+					INTERPRETER.run();
+					thisCell.rendered = true;
+					thisCell.value = INTERPRETER.value;
+					var lastValue;
+					// Check to see if the returned value has actually updated.
+					// if it hasn't, then nothing was returned from this cell.
+					if (thisCell.value == state.lastValue) {
+						thisCell.value = undefined;
+						lastValue = state.lastValue;
+					}
+					else {
+						lastValue = thisCell.value;
+					}
+					declaredProperties = INTERPRETER.declaredProperties();
+				} else if (thisCell.cellType === 'markdown') {
+					// one line, huh.
+					thisCell.value = marked(thisCell.content);
+					thisCell.rendered = true;
 				}
-				else {
-					lastValue = thisCell.value;
-				}
-				declaredProperties = INTERPRETER.declaredProperties();
-			} else if (thisCell.cellType === 'markdown') {
-				// one line, huh.
-				thisCell.value = marked(thisCell.content);
+			} else {
+				thisCell.rendered = false;
 			}
+			
 			
 			cells[index] = thisCell;
 			return Object.assign({}, state, {cells}, {declaredProperties}, {lastValue});
