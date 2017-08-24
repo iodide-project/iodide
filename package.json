@@ -1,6 +1,6 @@
 {
   "name": "js-notebook",
-  "version": "0.1a",
+  "version": "0.0.1",
   "description": "A notebook-style interface for literate programming in javascript.",
   "main": "index.js",
   "author": "Hamilton Ulmer",
@@ -13,6 +13,7 @@
     "js-interpreter": "^1.4.6",
     "marked": "^0.3.6",
     "marksy": "^5.0.0",
+    "mousetrap": "^1.6.1",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",
     "react-codemirror": "^1.0.0",
@@ -21,6 +22,10 @@
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
+    "redux-persist": "^4.8.3",
     "webpack": "^3.5.2"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^2.7.1"
   }
 }

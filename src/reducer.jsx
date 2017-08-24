@@ -18,11 +18,18 @@ function getId(state) {
   }, -1) + 1
 }
 
+
+
+
 let reducer = function (state, action) {
 	switch (action.type) {
 
+		case 'CHANGE_MODE':
+			var mode = action.mode
+			return Object.assign({}, state, {mode});
+
 		case 'ADD_CELL':
-			return Object.assign({}, state, {
+			var nextState = Object.assign({}, state, {
 				cells: [...state.cells, {
 					content: '',
 					id: getId(state),
@@ -30,7 +37,8 @@ let reducer = function (state, action) {
 					value: undefined,
 					rendered: false
 				}]
-			});
+			})
+			return nextState
 
 		case 'SELECT_CELL':
 			var cells = state.cells.slice()
@@ -39,29 +47,34 @@ let reducer = function (state, action) {
 			cells.forEach((c)=>c.selected=false)
 			thisCell.selected = true
 			cells[index] = thisCell
-			return Object.assign({}, state, {cells})
+			var currentlySelected = thisCell;
+			var nextState = Object.assign({}, state, {cells}, {currentlySelected})
+			return nextState
 
 		case 'CELL_UP':
 			var cells = state.cells.slice();
 		  	var index = cells.findIndex(c=>c.id===action.id);
+		  	var nextState = state;
 		  	if (index > 0) {
 		  		var elem = cells[index-1];
 		  		cells[index-1] = cells[index];
 		  		cells[index] = elem;
-		  		var nextState = Object.assign({}, state, {cells});
-		  		return nextState;
-		  	} else return state;
+		  		nextState = Object.assign({}, state, {cells});
+		  	} 
+		  	return nextState
 
 		case 'CELL_DOWN':
 			var cells = state.cells.slice();
 		  	var index = cells.findIndex(c=>c.id===action.id);
+		  	var nextState = state;
 		  	if (index < cells.length-1) {
 		  		var elem = cells[index+1];
 		  		cells[index+1] = cells[index];
 		  		cells[index] = elem;
-		  		var nextState = Object.assign({}, state, {cells});
-		  		return nextState;
-		  	} else return state;
+		  		 nextState = Object.assign({}, state, {cells});
+		  		
+		  	} 
+		  	return nextState
 
 		case 'UPDATE_CELL':
 			var cells = state.cells.slice();
@@ -69,7 +82,8 @@ let reducer = function (state, action) {
 			var thisCell = cells[index];
 			thisCell.content = action.content;
 			cells[index] = thisCell;
-			return Object.assign({}, state, {cells})
+			var nextState = Object.assign({}, state, {cells})
+			return nextState
 
 		case 'CHANGE_CELL_TYPE':
 			var cells = state.cells.slice();
@@ -79,12 +93,8 @@ let reducer = function (state, action) {
 			thisCell.value = undefined;
 			thisCell.rendered = false;
 			cells[index] = thisCell;
-			return Object.assign({}, state, {cells});
-
-		case 'UNRENDER_CELL':
-			var cells = state.cells.slice();
-			var index = cells.findIndex(c=>c.id===action.id);
-			var thisCell = cells[index];
+			var nextState = Object.assign({}, state, {cells})
+			return nextState
 
 		case 'RENDER_CELL':
 			var declaredProperties = state.declaredProperties
@@ -122,12 +132,14 @@ let reducer = function (state, action) {
 			
 			
 			cells[index] = thisCell;
-			return Object.assign({}, state, {cells}, {declaredProperties}, {lastValue});
+			var nextState = Object.assign({}, state, {cells}, {declaredProperties}, {lastValue});
+			return nextState
 
 		case 'DELETE_CELL':
-			return Object.assign({}, state, {
+			var nextState =Object.assign({}, state, {
 				cells: state.cells.filter((cell)=> {return cell.id !== action.id})
 			})
+			return nextState
 
 		default:
 			return state;

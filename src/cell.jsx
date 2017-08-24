@@ -12,7 +12,7 @@ const MD_COMPILER = marksy({createElement})
 
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'react-bootstrap'
 
-class JSCell extends React.Component {
+class Cell extends React.Component {
 	constructor(props) {
 		super(props)
 	}
@@ -64,10 +64,11 @@ class JSCell extends React.Component {
 
 		if (this.props.cell.cellType === 'javascript' || this.props.cell.cellType === 'raw' || (this.props.cell.cellType === 'markdown' && !this.props.cell.rendered)) {
 			mainElem = <CodeMirror ref="editor" 
-						   value={this.props.cell.content} 
+						   value={this.props.cell.content}
+						   autoFocus={this.props.cell.selected && this.props.appState == 'edit'}
 						   onChange={this.updateCell.bind(this)} 
 						   onFocus={this.selectCell.bind(this)} 
-						   options={options} autoFocus={true} />
+						   options={options} />
 
 		} else if (this.props.cell.cellType === 'markdown' && this.props.cell.rendered) {
 			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)} dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
@@ -130,4 +131,4 @@ function jsReturnValue(cell) {
 	return resultElem;
 }
 
-export default JSCell;
+export default Cell;

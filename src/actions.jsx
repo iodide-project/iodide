@@ -1,4 +1,12 @@
 let actions = {
+
+	changeMode: function(mode) {
+		return {
+			type: 'CHANGE_MODE',
+			mode
+		}
+	},
+
 	updateCell: function(cellID, text) {
 		return {
 			type: 'UPDATE_CELL',
