@@ -15,11 +15,75 @@ class Page extends React.Component {
   constructor(props) {
     super(props)
 
+    Mousetrap.bind(['up'], ()=>{
+      if (this.props.mode === 'command') {
+        if (this.props.currentlySelected != undefined) {
+          var selectedID = this.props.currentlySelected.id
+          
+          var order = this.props.cells
+            .map((d,i)=>{return [i,d]})
+            .filter((di)=>di[1].id == selectedID)[0][0]
+
+          if (order > 0) {
+            var nextID = this.props.cells[order-1].id
+            this.props.actions.selectCell(nextID)
+          }
+
+        } else {
+          if (this.props.cells.length) {
+            this.props.actions.selectCell(0)
+          }
+        }
+      }
+    })
+
+    Mousetrap.bind(['down'], ()=>{
+      if (this.props.mode === 'command') {
+        if (this.props.currentlySelected != undefined) {
+
+          var selectedID = this.props.currentlySelected.id
+
+          var order = this.props.cells
+              .map((d,i)=>{return [i,d]})
+              .filter((di)=>di[1].id == selectedID)[0][0]
+
+          if (order < this.props.cells.length-1) {
+            var nextID = this.props.cells[order+1].id
+            this.props.actions.selectCell(nextID)
+          }
+
+        } else {
+          if (this.props.cells.length) {
+            this.props.actions.selectCell(0)
+          }
+        }
+      }
+    })
+
+    Mousetrap.bind(['escape', 'esc'], (e)=>{
+      if (this.props.mode !== 'command') this.props.actions.changeMode('command')  
+    })
+
+    Mousetrap.bind(['enter', 'return'], (e)=>{
+      if (this.props.mode !== 'edit') this.props.actions.changeMode('edit')
+    });
 
 
     Mousetrap.bind(['shift+del', 'shift+backspace'], ()=>{
-      if (this.props.currentlySelected != undefined) this.props.actions.deleteCell(this.props.currentlySelected.id)
+      if (this.props.currentlySelected != undefined) {
+        var selectedID = this.props.currentlySelected.id
+        // if selectedID >
+        var nextID;
+        if (selectedID === this.props.cells.length-1) nextID = this.props.cells.length-2
+        else nextID = selectedID+1
+
+        this.props.actions.deleteCell(selectedID)
+        this.props.actions.selectCell(nextID)
+        // pick next item, if 
+      }
     });
+
+
 
 
   }
@@ -44,7 +108,7 @@ class Page extends React.Component {
     return (
         <div>
 
-          <h1 className='page-title'>Javascript Notebook</h1>
+          <h1 className='page-title'>Javascript Notebook <span>{this.props.mode}</span></h1>
           <div className='controls'>
           	<button onClick={this.addCell.bind(this)}> + </button>
           </div>

@@ -74,7 +74,7 @@ class Cell extends React.Component {
 			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)} dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
 		} 
 		return (<div className={'js-cell ' + (this.props.cell.selected ? 'selected-cell' : '')} onClick={this.selectCell.bind(this)}>
-			
+			{this.props.cell.id}
 			{mainElem}
 
 			<ButtonToolbar >
