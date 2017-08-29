@@ -15,6 +15,7 @@ import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'r
 class Cell extends React.Component {
 	constructor(props) {
 		super(props)
+		this.selectCell = this.selectCell.bind(this)
 	}
 
 	updateCell(content) {
@@ -50,6 +51,8 @@ class Cell extends React.Component {
 
 	selectCell(){
 		this.props.actions.selectCell(this.props.cell.id)
+		this.props.actions.changeMode('edit')
+		this.refs.editor.focus()
 	}
 
 	render() {
@@ -63,18 +66,17 @@ class Cell extends React.Component {
 		else if (this.props.cell.cellType === 'markdown') resultElem = <div></div>//<div dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
 
 		if (this.props.cell.cellType === 'javascript' || this.props.cell.cellType === 'raw' || (this.props.cell.cellType === 'markdown' && !this.props.cell.rendered)) {
-			mainElem = <CodeMirror ref="editor" 
+			mainElem = <CodeMirror ref='editor'
 						   value={this.props.cell.content}
-						   autoFocus={this.props.cell.selected && this.props.appState == 'edit'}
 						   onChange={this.updateCell.bind(this)} 
-						   onFocus={this.selectCell.bind(this)} 
+						   onFocus={this.selectCell}
 						   options={options} />
 
 		} else if (this.props.cell.cellType === 'markdown' && this.props.cell.rendered) {
 			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)} dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
 		} 
-		return (<div className={'js-cell ' + (this.props.cell.selected ? 'selected-cell' : '')} onClick={this.selectCell.bind(this)}>
-			{this.props.cell.id}
+		return (<div className={'js-cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode' : 'command-mode')} onClick={this.selectCell.bind(this)}>
+			
 			{mainElem}
 
 			<ButtonToolbar >

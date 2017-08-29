@@ -34063,7 +34063,8 @@ let reducer = function (state, action) {
 					id: getId(state),
 					cellType: action.cellType,
 					value: undefined,
-					rendered: false
+					rendered: false,
+					selected: false
 				}]
 			});
 			return nextState;
@@ -53590,10 +53591,16 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 
     __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['escape', 'esc'], e => {
       if (this.props.mode !== 'command') this.props.actions.changeMode('command');
+      // 
+      this.refs.deselector.focus();
     });
 
     __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['enter', 'return'], e => {
       if (this.props.mode !== 'edit') this.props.actions.changeMode('edit');
+      if (this.props.currentlySelected != undefined) {
+        var selectedID = this.props.currentlySelected.id;
+        this.refs['cell' + selectedID].selectCell();
+      }
     });
 
     __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['shift+del', 'shift+backspace'], () => {
@@ -53615,8 +53622,8 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   }
 
   render() {
-    var cells = this.props.cells.map(cell => {
-      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* default */], { cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+    var cells = this.props.cells.map((cell, i) => {
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* default */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
     });
     var declaredPropertiesPane;
     if (Object.keys(this.props.declaredProperties).length) {
@@ -53629,8 +53636,13 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       'div',
       null,
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'div',
+        { id: 'deselector' },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { ref: 'deselector' })
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'h1',
-        { className: 'page-title' },
+        { ref: 'pageTitle', className: 'page-title' },
         'Javascript Notebook ',
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'span',
@@ -53643,7 +53655,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
         { className: 'controls' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'button',
-          { onClick: this.addCell.bind(this) },
+          { ref: 'addCellButton', onClick: this.addCell.bind(this) },
           ' + '
         )
       ),
@@ -54822,6 +54834,7 @@ const MD_COMPILER = __WEBPACK_IMPORTED_MODULE_5_marksy___default()({ createEleme
 class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 	constructor(props) {
 		super(props);
+		this.selectCell = this.selectCell.bind(this);
 	}
 
 	updateCell(content) {
@@ -54856,6 +54869,8 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 
 	selectCell() {
 		this.props.actions.selectCell(this.props.cell.id);
+		this.props.actions.changeMode('edit');
+		this.refs.editor.focus();
 	}
 
 	render() {
@@ -54870,17 +54885,15 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 		if (this.props.cell.cellType === 'javascript' || this.props.cell.cellType === 'raw' || this.props.cell.cellType === 'markdown' && !this.props.cell.rendered) {
 			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
 				value: this.props.cell.content,
-				autoFocus: this.props.cell.selected && this.props.appState == 'edit',
 				onChange: this.updateCell.bind(this),
-				onFocus: this.selectCell.bind(this),
+				onFocus: this.selectCell,
 				options: options });
 		} else if (this.props.cell.cellType === 'markdown' && this.props.cell.rendered) {
 			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { onDoubleClick: () => this.unrender.bind(this)(false), dangerouslySetInnerHTML: { __html: this.props.cell.value } });
 		}
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
-			{ className: 'js-cell ' + (this.props.cell.selected ? 'selected-cell' : ''), onClick: this.selectCell.bind(this) },
-			this.props.cell.id,
+			{ className: 'js-cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode' : 'command-mode'), onClick: this.selectCell.bind(this) },
 			mainElem,
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["b" /* ButtonToolbar */],

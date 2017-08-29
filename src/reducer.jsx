@@ -35,7 +35,8 @@ let reducer = function (state, action) {
 					id: getId(state),
 					cellType: action.cellType,
 					value: undefined,
-					rendered: false
+					rendered: false,
+					selected: false
 				}]
 			})
 			return nextState
@@ -53,7 +54,7 @@ let reducer = function (state, action) {
 
 		// case 'SELECT_UP':
 		// 	var cells = state.cells.slice()
-			
+
 		// 	var index = cells.findIndex(c=>c.id===action.id)
 		// 	var thisCell = cells[index]
 		// 	cells.forEach((c)=>c.selected=false)

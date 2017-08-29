@@ -61,11 +61,17 @@ class Page extends React.Component {
     })
 
     Mousetrap.bind(['escape', 'esc'], (e)=>{
-      if (this.props.mode !== 'command') this.props.actions.changeMode('command')  
+      if (this.props.mode !== 'command') this.props.actions.changeMode('command')
+      // 
+      this.refs.deselector.focus()
     })
 
     Mousetrap.bind(['enter', 'return'], (e)=>{
       if (this.props.mode !== 'edit') this.props.actions.changeMode('edit')
+        if (this.props.currentlySelected != undefined) {
+          var selectedID = this.props.currentlySelected.id
+          this.refs['cell'+selectedID].selectCell()
+        }
     });
 
 
@@ -83,20 +89,15 @@ class Page extends React.Component {
       }
     });
 
-
-
-
   }
 
   addCell() {
     this.props.actions.addCell('javascript');
   }
 
-
-
   render () {
-    var cells = this.props.cells.map((cell)=> {
-      return <Cell cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+    var cells = this.props.cells.map((cell,i)=> {
+      return <Cell ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
     });
     var declaredPropertiesPane;
     if (Object.keys(this.props.declaredProperties).length) {
@@ -107,10 +108,12 @@ class Page extends React.Component {
 
     return (
         <div>
-
-          <h1 className='page-title'>Javascript Notebook <span>{this.props.mode}</span></h1>
+        <div id='deselector'>
+          <input ref='deselector' />
+        </div>
+          <h1 ref='pageTitle' className='page-title'>Javascript Notebook <span>{this.props.mode}</span></h1>
           <div className='controls'>
-          	<button onClick={this.addCell.bind(this)}> + </button>
+          	<button ref='addCellButton' onClick={this.addCell.bind(this)}> + </button>
           </div>
 
           <div className='cells'>

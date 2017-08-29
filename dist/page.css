@@ -3,6 +3,13 @@ html,body {
 	min-height:100%; margin:0; padding:0; 
 }
 
+
+
+div#deselector {
+	width:0;
+	overflow:hidden;
+}
+
 .CodeMirror {
 	height: auto;
 }
@@ -44,7 +51,11 @@ div.js-cell {
 
 }
 
-div.selected-cell {
+div.selected-cell.command-mode {
 	outline: 4px solid lightgray;
+}
+
+div.selected-cell.edit-mode {
+	outline:4px solid gray;
 }
 
