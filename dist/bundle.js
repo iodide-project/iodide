@@ -53530,6 +53530,7 @@ module.exports = ReactDOMInvalidARIAHook;
 __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.prototype.stopCallback = function () {
   return false;
 };
+
 class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   constructor(props) {
     super(props);
@@ -53596,9 +53597,14 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       }
     });
 
+    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['mod+enter', 'mod+return'], () => {
+      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
+        this.props.actions.renderCell(this.props.currentlySelected.id);
+      }
+    });
+
     __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['escape', 'esc'], e => {
       if (this.props.mode !== 'command') this.props.actions.changeMode('command');
-      // 
       this.refs.deselector.focus();
     });
 
@@ -53610,12 +53616,13 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       }
     });
 
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['shift+del', 'shift+backspace'], () => {
+    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['shift+del', 'd d'], () => {
       if (this.props.currentlySelected != undefined) {
         var selectedID = this.props.currentlySelected.id;
         var nextID;
-        if (selectedID === this.props.cells.length - 1) nextID = this.props.cells.length - 2;else nextID = selectedID + 1;
         this.props.actions.deleteCell(selectedID);
+        if (!this.props.cells.length) return;
+        if (selectedID === this.props.cells.length - 1) nextID = this.props.cells.length - 2;else nextID = this.props.cells[this.props.cells.findIndex(c => c.id === selectedID) + 1].id;
         this.props.actions.selectCell(nextID);
       }
     });

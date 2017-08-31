@@ -11,6 +11,7 @@ import DeclaredProperties from './declared-properties.jsx'
 Mousetrap.prototype.stopCallback  = function () {
      return false;
 }
+
 class Page extends React.Component {
   constructor(props) {
     super(props)
@@ -32,7 +33,7 @@ class Page extends React.Component {
       if (this.props.mode === 'command' && this.props.currentlySelected!= undefined) {
         this.props.actions.changeCellType(this.props.currentlySelected.id, 'raw')
       }
-    })    
+    })
 
     Mousetrap.bind(['up'], ()=>{
       if (this.props.mode === 'command') {
@@ -79,28 +80,33 @@ class Page extends React.Component {
       }
     })
 
+    Mousetrap.bind(['mod+enter', 'mod+return'], ()=>{
+      if (this.props.mode === 'command' && this.props.currentlySelected!=undefined) {
+        this.props.actions.renderCell(this.props.currentlySelected.id)
+      } 
+    })
+
     Mousetrap.bind(['escape', 'esc'], (e)=>{
       if (this.props.mode !== 'command') this.props.actions.changeMode('command')
-      // 
       this.refs.deselector.focus()
     })
 
     Mousetrap.bind(['enter', 'return'], (e)=>{
       if (this.props.mode !== 'edit') this.props.actions.changeMode('edit')
-        if (this.props.currentlySelected != undefined) {
-          var selectedID = this.props.currentlySelected.id
-          this.refs['cell'+selectedID].selectCell()
-        }
-    });
+      if (this.props.currentlySelected != undefined) {
+        var selectedID = this.props.currentlySelected.id
+        this.refs['cell'+selectedID].selectCell()
+      }
+    })
 
-
-    Mousetrap.bind(['shift+del', 'shift+backspace'], ()=>{
+    Mousetrap.bind(['shift+del', 'd d'], ()=>{
       if (this.props.currentlySelected != undefined) {
         var selectedID = this.props.currentlySelected.id
         var nextID;
-        if (selectedID === this.props.cells.length-1) nextID = this.props.cells.length-2
-        else nextID = selectedID+1
         this.props.actions.deleteCell(selectedID)
+        if (!this.props.cells.length) return
+        if (selectedID === this.props.cells.length-1) nextID = this.props.cells.length-2
+        else nextID = this.props.cells[this.props.cells.findIndex(c=>c.id===selectedID)+1].id
         this.props.actions.selectCell(nextID)
       }
     });
