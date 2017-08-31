@@ -84,7 +84,7 @@ class Cell extends React.Component {
 				<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}>down</Button>
 				<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}>up</Button>
 				<Button bsSize='xsmall' onClick={this.deleteCell.bind(this)}>delete</Button>
-      			<ToggleButtonGroup type="radio" name="options"  onChange={this.changeCellType.bind(this)} defaultValue={this.props.cell.cellType}>
+      			<ToggleButtonGroup type="radio" name="options" value={this.props.cell.cellType} onChange={this.changeCellType.bind(this)} defaultValue={this.props.cell.cellType}>
 					<ToggleButton bsSize='xsmall'  value={"javascript"} >JS</ToggleButton>
 					<ToggleButton bsSize='xsmall'  value={'markdown'} >MD</ToggleButton>
 					<ToggleButton bsSize='xsmall'  value={'raw'} >Raw</ToggleButton>

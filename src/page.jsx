@@ -15,6 +15,25 @@ class Page extends React.Component {
   constructor(props) {
     super(props)
 
+    Mousetrap.bind(['j'], ()=>{
+      // to code
+      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
+        this.props.actions.changeCellType(this.props.currentlySelected.id, 'javascript')
+      }
+    })
+
+    Mousetrap.bind(['m'], ()=>{
+      if (this.props.mode === 'command' && this.props.currentlySelected!= undefined) {
+        this.props.actions.changeCellType(this.props.currentlySelected.id, 'markdown')
+      }
+    })
+
+    Mousetrap.bind(['r'], ()=>{
+      if (this.props.mode === 'command' && this.props.currentlySelected!= undefined) {
+        this.props.actions.changeCellType(this.props.currentlySelected.id, 'raw')
+      }
+    })    
+
     Mousetrap.bind(['up'], ()=>{
       if (this.props.mode === 'command') {
         if (this.props.currentlySelected != undefined) {
@@ -78,14 +97,11 @@ class Page extends React.Component {
     Mousetrap.bind(['shift+del', 'shift+backspace'], ()=>{
       if (this.props.currentlySelected != undefined) {
         var selectedID = this.props.currentlySelected.id
-        // if selectedID >
         var nextID;
         if (selectedID === this.props.cells.length-1) nextID = this.props.cells.length-2
         else nextID = selectedID+1
-
         this.props.actions.deleteCell(selectedID)
         this.props.actions.selectCell(nextID)
-        // pick next item, if 
       }
     });
 

@@ -52,18 +52,6 @@ let reducer = function (state, action) {
 			var nextState = Object.assign({}, state, {cells}, {currentlySelected})
 			return nextState
 
-		// case 'SELECT_UP':
-		// 	var cells = state.cells.slice()
-
-		// 	var index = cells.findIndex(c=>c.id===action.id)
-		// 	var thisCell = cells[index]
-		// 	cells.forEach((c)=>c.selected=false)
-		// 	thisCell.selected = true
-		// 	cells[index] = thisCell
-		// 	var currentlySelected = thisCell;
-		// 	var nextState = Object.assign({}, state, {cells}, {currentlySelected})
-		// 	return nextState
-
 		case 'CELL_UP':
 			var cells = state.cells.slice();
 		  	var index = cells.findIndex(c=>c.id===action.id);

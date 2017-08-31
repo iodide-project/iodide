@@ -34080,18 +34080,6 @@ let reducer = function (state, action) {
 			var nextState = Object.assign({}, state, { cells }, { currentlySelected });
 			return nextState;
 
-		// case 'SELECT_UP':
-		// 	var cells = state.cells.slice()
-
-		// 	var index = cells.findIndex(c=>c.id===action.id)
-		// 	var thisCell = cells[index]
-		// 	cells.forEach((c)=>c.selected=false)
-		// 	thisCell.selected = true
-		// 	cells[index] = thisCell
-		// 	var currentlySelected = thisCell;
-		// 	var nextState = Object.assign({}, state, {cells}, {currentlySelected})
-		// 	return nextState
-
 		case 'CELL_UP':
 			var cells = state.cells.slice();
 			var index = cells.findIndex(c => c.id === action.id);
@@ -53546,6 +53534,25 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   constructor(props) {
     super(props);
 
+    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['j'], () => {
+      // to code
+      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
+        this.props.actions.changeCellType(this.props.currentlySelected.id, 'javascript');
+      }
+    });
+
+    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['m'], () => {
+      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
+        this.props.actions.changeCellType(this.props.currentlySelected.id, 'markdown');
+      }
+    });
+
+    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['r'], () => {
+      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
+        this.props.actions.changeCellType(this.props.currentlySelected.id, 'raw');
+      }
+    });
+
     __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['up'], () => {
       if (this.props.mode === 'command') {
         if (this.props.currentlySelected != undefined) {
@@ -53606,13 +53613,10 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['shift+del', 'shift+backspace'], () => {
       if (this.props.currentlySelected != undefined) {
         var selectedID = this.props.currentlySelected.id;
-        // if selectedID >
         var nextID;
         if (selectedID === this.props.cells.length - 1) nextID = this.props.cells.length - 2;else nextID = selectedID + 1;
-
         this.props.actions.deleteCell(selectedID);
         this.props.actions.selectCell(nextID);
-        // pick next item, if 
       }
     });
   }
@@ -54920,7 +54924,7 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 				),
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["e" /* ToggleButtonGroup */],
-					{ type: 'radio', name: 'options', onChange: this.changeCellType.bind(this), defaultValue: this.props.cell.cellType },
+					{ type: 'radio', name: 'options', value: this.props.cell.cellType, onChange: this.changeCellType.bind(this), defaultValue: this.props.cell.cellType },
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
 						{ bsSize: 'xsmall', value: "javascript" },
