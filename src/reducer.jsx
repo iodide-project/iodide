@@ -148,13 +148,31 @@ let reducer = function (state, action) {
 			return nextState
 
 		case 'DELETE_CELL':
-			var nextState =Object.assign({}, state, {
+			var cells = state.cells.slice()
+			if (!cells.length) return state
+			var index = cells.findIndex(c=>c.id===action.id)
+			var thisCell = state.cells[index]
+			var currentlySelected
+			if (thisCell.selected) {
+				var nextIndex=0;
+				if (cells.length>1) {
+					if (index == cells.length-1) nextIndex = cells.length-2
+					else nextIndex=index+1
+					cells[nextIndex].selected=true
+				}
+				// add the currentlySelected cell to the new spot.
+				currentlySelected = cells[nextIndex]
+			} else {
+				currentlySelected = state.currentlySelected
+			}
+
+			var nextState = Object.assign({}, state, {
 				cells: state.cells.filter((cell)=> {return cell.id !== action.id})
-			})
+			}, {currentlySelected})
 			return nextState
 
 		default:
-			return state;
+			return state
 	}
 }
 

@@ -34,6 +34,7 @@ div#page {
 div.cells {
 	float:left;
 	width: 700px;
+
 }
 
 div.declared-variables {
@@ -42,13 +43,37 @@ div.declared-variables {
 	padding-left:10px;
 }
 
-
-div.js-cell {
+div.cell-container {
+	min-height:50px;
 	margin-top:20px;
 	margin-bottom:20px;
-	width:700px;
-		outline:1px solid lightgray;
+	width:900px;
+	display:flex;
+	 justify-content: space-around;
+}
 
+div.left-of-cell {
+	width:50px;
+}
+
+div.cell {
+	width:650px;
+}
+
+div.cell.unrendered {
+	outline:1px solid gray;
+}
+
+div.cell-controls {
+	width:200px;
+}
+
+div.cell-controls.controls-visible {
+	opacity:1;
+}
+
+div.cell-controls.controls-invisible {
+	opacity:0;
 }
 
 div.selected-cell.command-mode {

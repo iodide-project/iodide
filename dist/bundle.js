@@ -34175,11 +34175,28 @@ let reducer = function (state, action) {
 			return nextState;
 
 		case 'DELETE_CELL':
+			var cells = state.cells.slice();
+			if (!cells.length) return state;
+			var index = cells.findIndex(c => c.id === action.id);
+			var thisCell = state.cells[index];
+			var currentlySelected;
+			if (thisCell.selected) {
+				var nextIndex = 0;
+				if (cells.length > 1) {
+					if (index == cells.length - 1) nextIndex = cells.length - 2;else nextIndex = index + 1;
+					cells[nextIndex].selected = true;
+				}
+				// add the currentlySelected cell to the new spot.
+				currentlySelected = cells[nextIndex];
+			} else {
+				currentlySelected = state.currentlySelected;
+			}
+
 			var nextState = Object.assign({}, state, {
 				cells: state.cells.filter(cell => {
 					return cell.id !== action.id;
 				})
-			});
+			}, { currentlySelected });
 			return nextState;
 
 		default:
@@ -53531,6 +53548,7 @@ module.exports = ReactDOMInvalidARIAHook;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_jsx__ = __webpack_require__(368);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__cell_jsx__ = __webpack_require__(369);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__declared_properties_jsx__ = __webpack_require__(584);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__keybindings_jsx__ = __webpack_require__(586);
 
 
 
@@ -53540,134 +53558,12 @@ module.exports = ReactDOMInvalidARIAHook;
 
 
 
-__WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.prototype.stopCallback = function () {
-  return false;
-};
 
 class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   constructor(props) {
     super(props);
-
+    Object(__WEBPACK_IMPORTED_MODULE_7__keybindings_jsx__["a" /* default */])('jupyter', this);
     // TODO: this is messy and could use refactoring.
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['shift+up'], () => {
-      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) this.props.actions.cellUp(this.props.currentlySelected.id);
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['shift+down'], () => {
-      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) this.props.actions.cellDown(this.props.currentlySelected.id);
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['a'], () => {
-      if (this.props.mode === 'command') {
-        if (this.props.currentlySelected != undefined) {
-          this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'above');
-        } else {
-          this.props.actions.addCell('javascript');
-        }
-      }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['b'], () => {
-      if (this.props.mode === 'command') {
-        if (this.props.currentlySelected != undefined) {
-          this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'below');
-        } else {
-          this.props.actions.addCell('javascript');
-        }
-      }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['j'], () => {
-      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
-        this.props.actions.changeCellType(this.props.currentlySelected.id, 'javascript');
-      }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['m'], () => {
-      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
-        this.props.actions.changeCellType(this.props.currentlySelected.id, 'markdown');
-      }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['r'], () => {
-      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
-        this.props.actions.changeCellType(this.props.currentlySelected.id, 'raw');
-      }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['up'], () => {
-      if (this.props.mode === 'command') {
-        if (this.props.currentlySelected != undefined) {
-          var selectedID = this.props.currentlySelected.id;
-
-          var order = this.props.cells.map((d, i) => {
-            return [i, d];
-          }).filter(di => di[1].id == selectedID)[0][0];
-
-          if (order > 0) {
-            var nextID = this.props.cells[order - 1].id;
-            this.props.actions.selectCell(nextID);
-          }
-        } else {
-          if (this.props.cells.length) {
-            this.props.actions.selectCell(0);
-          }
-        }
-      }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['down'], () => {
-      if (this.props.mode === 'command') {
-        if (this.props.currentlySelected != undefined) {
-
-          var selectedID = this.props.currentlySelected.id;
-
-          var order = this.props.cells.map((d, i) => {
-            return [i, d];
-          }).filter(di => di[1].id == selectedID)[0][0];
-
-          if (order < this.props.cells.length - 1) {
-            var nextID = this.props.cells[order + 1].id;
-            this.props.actions.selectCell(nextID);
-          }
-        } else {
-          if (this.props.cells.length) {
-            this.props.actions.selectCell(0);
-          }
-        }
-      }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['mod+enter', 'mod+return'], () => {
-      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
-        this.props.actions.renderCell(this.props.currentlySelected.id);
-      }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['escape', 'esc'], e => {
-      if (this.props.mode !== 'command') this.props.actions.changeMode('command');
-      this.refs.deselector.focus();
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['enter', 'return'], e => {
-      if (this.props.mode !== 'edit') this.props.actions.changeMode('edit');
-      if (this.props.currentlySelected != undefined) {
-        var selectedID = this.props.currentlySelected.id;
-        this.refs['cell' + selectedID].selectCell();
-      }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['shift+del', 'd d'], () => {
-      if (this.props.currentlySelected != undefined) {
-        var selectedID = this.props.currentlySelected.id;
-        var nextID;
-        this.props.actions.deleteCell(selectedID);
-        if (!this.props.cells.length) return;
-        if (selectedID === this.props.cells.length - 1) nextID = this.props.cells.length - 2;else nextID = this.props.cells[this.props.cells.findIndex(c => c.id === selectedID) + 1].id;
-        this.props.actions.selectCell(nextID);
-      }
-    });
   }
 
   addCell() {
@@ -54895,6 +54791,7 @@ const MD_COMPILER = __WEBPACK_IMPORTED_MODULE_5_marksy___default()({ createEleme
 class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 	constructor(props) {
 		super(props);
+		this.state = { showControls: false };
 		this.selectCell = this.selectCell.bind(this);
 	}
 
@@ -54929,14 +54826,23 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 	}
 
 	selectCell() {
+		this.props.actions.renderCell(this.props.cell.id, false);
 		this.props.actions.selectCell(this.props.cell.id);
 		this.props.actions.changeMode('edit');
 		this.refs.editor.focus();
 	}
 
+	showControls() {
+		this.setState({ showControls: true });
+	}
+	hideControls() {
+		this.setState({ showControls: false });
+	}
+
 	render() {
 		var options = {
-			lineNumbers: true,
+			lineNumbers: !this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
 			theme: 'eclipse'
 		};
@@ -54954,60 +54860,69 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 		}
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
-			{ className: 'js-cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode' : 'command-mode'), onClick: this.selectCell.bind(this) },
-			mainElem,
+			{ className: 'cell-container', onMouseEnter: this.showControls.bind(this), onMouseLeave: this.hideControls.bind(this) },
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null),
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["b" /* ButtonToolbar */],
-				null,
+				'div',
+				{ className: 'cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ') + (this.props.cell.rendered ? 'rendered ' : 'unrendered '), onClick: this.selectCell },
+				mainElem,
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-					{ bsSize: 'xsmall', onClick: this.renderCell.bind(this) },
-					'run'
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-					{ bsSize: 'xsmall', onClick: this.cellDown.bind(this) },
-					'down'
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-					{ bsSize: 'xsmall', onClick: this.cellUp.bind(this) },
-					'up'
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-					{ bsSize: 'xsmall', onClick: this.deleteCell.bind(this) },
-					'delete'
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["e" /* ToggleButtonGroup */],
-					{ type: 'radio', name: 'options', value: this.props.cell.cellType, onChange: this.changeCellType.bind(this), defaultValue: this.props.cell.cellType },
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
-						{ bsSize: 'xsmall', value: "javascript" },
-						'JS'
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
-						{ bsSize: 'xsmall', value: 'markdown' },
-						'MD'
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
-						{ bsSize: 'xsmall', value: 'raw' },
-						'Raw'
-					)
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* Label */],
-					null,
-					this.props.cell.cellType
+					'div',
+					{ className: 'result' },
+					resultElem
 				)
 			),
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
-				{ className: 'result' },
-				resultElem
+				{ className: 'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible') },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["b" /* ButtonToolbar */],
+					null,
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+						{ bsSize: 'xsmall', onClick: this.renderCell.bind(this) },
+						'run'
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+						{ bsSize: 'xsmall', onClick: this.cellDown.bind(this) },
+						'down'
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+						{ bsSize: 'xsmall', onClick: this.cellUp.bind(this) },
+						'up'
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+						{ bsSize: 'xsmall', onClick: this.deleteCell.bind(this) },
+						'delete'
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["e" /* ToggleButtonGroup */],
+						{ type: 'radio', name: 'options', value: this.props.cell.cellType, onChange: this.changeCellType.bind(this), defaultValue: this.props.cell.cellType },
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
+							{ bsSize: 'xsmall', value: "javascript" },
+							'JS'
+						),
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
+							{ bsSize: 'xsmall', value: 'markdown' },
+							'MD'
+						),
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
+							{ bsSize: 'xsmall', value: 'raw' },
+							'Raw'
+						)
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* Label */],
+						null,
+						this.props.cell.cellType
+					)
+				)
 			)
 		);
 	}
@@ -75821,6 +75736,169 @@ const saveState = state => {
 };
 /* unused harmony export saveState */
 
+
+/***/ }),
+/* 586 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mousetrap__ = __webpack_require__(367);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mousetrap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_mousetrap__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keybindings_jupyter_jsx__ = __webpack_require__(587);
+
+
+// for now, let's just keep the keybindings here.
+
+__WEBPACK_IMPORTED_MODULE_0_mousetrap___default.a.prototype.stopCallback = function () {
+	return false;
+};
+
+function keyBinding(style, elem) {
+	var binding;
+	if (style === 'jupyter') {
+		binding = __WEBPACK_IMPORTED_MODULE_1__keybindings_jupyter_jsx__["a" /* default */];
+	}
+	binding.forEach(binding => {
+		__WEBPACK_IMPORTED_MODULE_0_mousetrap___default.a.bind(binding[0], binding[1].bind(elem));
+	});
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (keyBinding);
+
+/***/ }),
+/* 587 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var jupyterKeybindings = [];
+
+// SELECT: above, below.
+
+var moveCell = (elem, dirFcn) => {
+  if (elem.props.mode === 'command' && elem.props.currentlySelected != undefined) elem.props.actions[dirFcn](elem.props.currentlySelected.id);
+};
+
+var MOVE_UP = [['shift+up'], function () {
+  moveCell(this, 'cellUp');
+}];
+
+var MOVE_DOWN = [['shift+down'], function () {
+  moveCell(this, 'cellDown');
+}];
+
+var ADD_CELL_ABOVE = [['a'], function () {
+  if (this.props.mode === 'command') {
+    if (this.props.currentlySelected != undefined) {
+      this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'above');
+    } else {
+      this.props.actions.addCell('javascript');
+    }
+  }
+}];
+
+var ADD_CELL_BELOW = [['b'], function () {
+  if (this.props.mode === 'command') {
+    if (this.props.currentlySelected != undefined) {
+      this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'below');
+    } else {
+      this.props.actions.addCell('javascript');
+    }
+  }
+}];
+
+function changeCellMode(elem, cellMode) {
+  if (elem.props.mode === 'command' && elem.props.currentlySelected != undefined) {
+    elem.props.actions.changeCellType(elem.props.currentlySelected.id, cellMode);
+  }
+}
+
+var JAVASCRIPT_MODE = [['j'], function () {
+  changeCellMode(this, 'javascript');
+}];
+
+var MARKDOWN_MODE = [['m'], function () {
+  changeCellMode(this, 'markdown');
+}];
+
+var RAW_MODE = [['r'], function () {
+  changeCellMode(this, 'raw');
+}];
+
+function changeSelection(elem, dir) {
+  if (elem.props.mode === 'command' && elem.props.cells.length) {
+    if (elem.props.currentlySelected != undefined) {
+
+      var selectedID = elem.props.currentlySelected.id;
+
+      var order = elem.props.cells.findIndex(c => c.id == selectedID);
+
+      var orderConditional = dir > 0 ? order < elem.props.cells.length - 1 : order > 0;
+      if (orderConditional) {
+        var nextID = elem.props.cells[order + dir].id;
+        elem.props.actions.selectCell(nextID);
+      }
+    } else {
+      if (elem.props.cells.length) {
+        elem.props.actions.selectCell(elem.props.cells[0].id);
+      }
+    }
+  }
+}
+
+var SELECT_UP = [['up'], function () {
+  changeSelection(this, -1);
+}];
+
+var SELECT_DOWN = [['down'], function () {
+  changeSelection(this, 1);
+}];
+
+var RENDER_CELL = [['mod+enter', 'mod+return'], function () {
+  if (this.props.currentlySelected != undefined) {
+    this.props.actions.renderCell(this.props.currentlySelected.id);
+    this.props.actions.changeMode('command');
+  }
+}];
+
+var COMMAND_MODE = [['escape', 'esc'], function (e) {
+  if (this.props.mode !== 'command') this.props.actions.changeMode('command');
+  this.refs.deselector.focus();
+}];
+var EDIT_MODE = [['enter', 'return'], function (e) {
+  if (this.props.mode !== 'edit') this.props.actions.changeMode('edit');
+  if (this.props.currentlySelected != undefined) {
+    var selectedID = this.props.currentlySelected.id;
+    this.refs['cell' + selectedID].selectCell();
+  }
+}];
+
+var DELETE_CELL = [['shift+del', 'shift+backspace'], function () {
+  if (this.props.currentlySelected != undefined) {
+    var selectedID = this.props.currentlySelected.id;
+    // var nextID;
+    this.props.actions.deleteCell(selectedID);
+    // if (!this.props.cells.length) return
+    // if (selectedID === this.props.cells.length-1) nextID = this.props.cells.length-2
+    // else nextID = this.props.cells[this.props.cells.findIndex(c=>c.id===selectedID)+1].id
+    // this.props.actions.selectCell(nextID)
+  }
+}];
+
+jupyterKeybindings.push(JAVASCRIPT_MODE);
+jupyterKeybindings.push(MARKDOWN_MODE);
+jupyterKeybindings.push(RAW_MODE);
+jupyterKeybindings.push(SELECT_UP);
+jupyterKeybindings.push(SELECT_DOWN);
+jupyterKeybindings.push(ADD_CELL_ABOVE);
+jupyterKeybindings.push(ADD_CELL_BELOW);
+jupyterKeybindings.push(MOVE_UP);
+jupyterKeybindings.push(MOVE_DOWN);
+jupyterKeybindings.push(EDIT_MODE);
+jupyterKeybindings.push(COMMAND_MODE);
+jupyterKeybindings.push(RENDER_CELL);
+jupyterKeybindings.push(DELETE_CELL);
+
+/* harmony default export */ __webpack_exports__["a"] = (jupyterKeybindings);
 
 /***/ })
 /******/ ]);

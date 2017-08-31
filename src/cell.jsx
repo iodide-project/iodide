@@ -15,6 +15,7 @@ import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'r
 class Cell extends React.Component {
 	constructor(props) {
 		super(props)
+		this.state = {showControls:false}
 		this.selectCell = this.selectCell.bind(this)
 	}
 
@@ -50,14 +51,19 @@ class Cell extends React.Component {
 	}
 
 	selectCell(){
+		this.props.actions.renderCell(this.props.cell.id, false)
 		this.props.actions.selectCell(this.props.cell.id)
 		this.props.actions.changeMode('edit')
 		this.refs.editor.focus()
 	}
 
+	showControls(){this.setState({showControls:true})}
+	hideControls(){this.setState({showControls:false})}
+
 	render() {
 		var options = {
-			lineNumbers: true,
+			lineNumbers: !this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
 			theme: 'eclipse'
 		}
@@ -75,27 +81,41 @@ class Cell extends React.Component {
 		} else if (this.props.cell.cellType === 'markdown' && this.props.cell.rendered) {
 			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)} dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
 		} 
-		return (<div className={'js-cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode' : 'command-mode')} onClick={this.selectCell.bind(this)}>
+		return (
+			<div className='cell-container' onMouseEnter={this.showControls.bind(this)} onMouseLeave={this.hideControls.bind(this)} >
+				<div></div>
+				<div className={'cell ' + 
+					(this.props.cell.selected ? 'selected-cell ' : ' ') + 
+					(this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ') +
+					(this.props.cell.rendered ? 'rendered ' : 'unrendered ')
+				} onClick={this.selectCell}>
 			
-			{mainElem}
+					{mainElem}
 
-			<ButtonToolbar >
-				<Button bsSize='xsmall' onClick={this.renderCell.bind(this)}>run</Button>
-				<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}>down</Button>
-				<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}>up</Button>
-				<Button bsSize='xsmall' onClick={this.deleteCell.bind(this)}>delete</Button>
-      			<ToggleButtonGroup type="radio" name="options" value={this.props.cell.cellType} onChange={this.changeCellType.bind(this)} defaultValue={this.props.cell.cellType}>
-					<ToggleButton bsSize='xsmall'  value={"javascript"} >JS</ToggleButton>
-					<ToggleButton bsSize='xsmall'  value={'markdown'} >MD</ToggleButton>
-					<ToggleButton bsSize='xsmall'  value={'raw'} >Raw</ToggleButton>
-				</ ToggleButtonGroup>
-				<Label>{this.props.cell.cellType}</Label>
-			</ ButtonToolbar>
 
-			<div className='result'>				
-					{resultElem}
+
+					<div className='result'>				
+							{resultElem}
+					</div>
+				</div>
+
+
+				<div className={'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible')}>
+					<ButtonToolbar >
+						<Button bsSize='xsmall' onClick={this.renderCell.bind(this)}>run</Button>
+						<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}>down</Button>
+						<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}>up</Button>
+						<Button bsSize='xsmall' onClick={this.deleteCell.bind(this)}>delete</Button>
+		      			<ToggleButtonGroup type="radio" name="options" value={this.props.cell.cellType} onChange={this.changeCellType.bind(this)} defaultValue={this.props.cell.cellType}>
+							<ToggleButton bsSize='xsmall'  value={"javascript"} >JS</ToggleButton>
+							<ToggleButton bsSize='xsmall'  value={'markdown'} >MD</ToggleButton>
+							<ToggleButton bsSize='xsmall'  value={'raw'} >Raw</ToggleButton>
+						</ ToggleButtonGroup>
+						<Label>{this.props.cell.cellType}</Label>
+					</ ButtonToolbar>
+				</div>
 			</div>
-		</div>)
+		)
 
 	}
 }
