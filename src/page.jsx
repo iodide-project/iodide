@@ -16,8 +16,37 @@ class Page extends React.Component {
   constructor(props) {
     super(props)
 
+    // TODO: this is messy and could use refactoring.
+
+    Mousetrap.bind(['shift+up'], ()=>{
+      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) this.props.actions.cellUp(this.props.currentlySelected.id)
+    })
+
+    Mousetrap.bind(['shift+down'], ()=>{
+      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) this.props.actions.cellDown(this.props.currentlySelected.id)
+    })
+
+    Mousetrap.bind(['a'], ()=>{
+      if (this.props.mode === 'command') {
+        if (this.props.currentlySelected != undefined) {
+          this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'above')
+        } else {
+          this.props.actions.addCell('javascript')
+        }
+      }
+    })
+
+    Mousetrap.bind(['b'], ()=>{
+      if (this.props.mode === 'command') {
+        if (this.props.currentlySelected != undefined) {
+          this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'below')
+        } else {
+          this.props.actions.addCell('javascript')
+        }
+      }
+    })
+
     Mousetrap.bind(['j'], ()=>{
-      // to code
       if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
         this.props.actions.changeCellType(this.props.currentlySelected.id, 'javascript')
       }
@@ -109,7 +138,7 @@ class Page extends React.Component {
         else nextID = this.props.cells[this.props.cells.findIndex(c=>c.id===selectedID)+1].id
         this.props.actions.selectCell(nextID)
       }
-    });
+    })
 
   }
 

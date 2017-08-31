@@ -18,7 +18,16 @@ function getId(state) {
   }, -1) + 1
 }
 
-
+function newCell(state, cellType){
+	return {
+		content:'',
+		id: getId(state),
+		cellType: cellType,
+		value: undefined,
+		rendered: false,
+		selected: false
+	}
+}
 
 
 let reducer = function (state, action) {
@@ -28,16 +37,18 @@ let reducer = function (state, action) {
 			var mode = action.mode
 			return Object.assign({}, state, {mode});
 
+		case 'INSERT_CELL':
+			var cells = state.cells.slice()
+			var index = cells.findIndex(c=>c.id===action.id)
+			var direction = 0
+			if (action.direction == 'above') direction=1
+			cells.splice(index+direction, 0, newCell(state, 'javascript'))
+			var nextState = Object.assign({}, state, {cells})
+			return nextState
+
 		case 'ADD_CELL':
 			var nextState = Object.assign({}, state, {
-				cells: [...state.cells, {
-					content: '',
-					id: getId(state),
-					cellType: action.cellType,
-					value: undefined,
-					rendered: false,
-					selected: false
-				}]
+				cells: [...state.cells, newCell(state, action.cellType)]
 			})
 			return nextState
 

@@ -34049,6 +34049,17 @@ function getId(state) {
 	}, -1) + 1;
 }
 
+function newCell(state, cellType) {
+	return {
+		content: '',
+		id: getId(state),
+		cellType: cellType,
+		value: undefined,
+		rendered: false,
+		selected: false
+	};
+}
+
 let reducer = function (state, action) {
 	switch (action.type) {
 
@@ -34056,16 +34067,18 @@ let reducer = function (state, action) {
 			var mode = action.mode;
 			return Object.assign({}, state, { mode });
 
+		case 'INSERT_CELL':
+			var cells = state.cells.slice();
+			var index = cells.findIndex(c => c.id === action.id);
+			var direction = 0;
+			if (action.direction == 'above') direction = 1;
+			cells.splice(index + direction, 0, newCell(state, 'javascript'));
+			var nextState = Object.assign({}, state, { cells });
+			return nextState;
+
 		case 'ADD_CELL':
 			var nextState = Object.assign({}, state, {
-				cells: [...state.cells, {
-					content: '',
-					id: getId(state),
-					cellType: action.cellType,
-					value: undefined,
-					rendered: false,
-					selected: false
-				}]
+				cells: [...state.cells, newCell(state, action.cellType)]
 			});
 			return nextState;
 
@@ -53535,8 +53548,37 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   constructor(props) {
     super(props);
 
+    // TODO: this is messy and could use refactoring.
+
+    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['shift+up'], () => {
+      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) this.props.actions.cellUp(this.props.currentlySelected.id);
+    });
+
+    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['shift+down'], () => {
+      if (this.props.mode === 'command' && this.props.currentlySelected != undefined) this.props.actions.cellDown(this.props.currentlySelected.id);
+    });
+
+    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['a'], () => {
+      if (this.props.mode === 'command') {
+        if (this.props.currentlySelected != undefined) {
+          this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'above');
+        } else {
+          this.props.actions.addCell('javascript');
+        }
+      }
+    });
+
+    __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['b'], () => {
+      if (this.props.mode === 'command') {
+        if (this.props.currentlySelected != undefined) {
+          this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'below');
+        } else {
+          this.props.actions.addCell('javascript');
+        }
+      }
+    });
+
     __WEBPACK_IMPORTED_MODULE_3_mousetrap___default.a.bind(['j'], () => {
-      // to code
       if (this.props.mode === 'command' && this.props.currentlySelected != undefined) {
         this.props.actions.changeCellType(this.props.currentlySelected.id, 'javascript');
       }
@@ -54786,6 +54828,14 @@ let actions = {
 		return {
 			type: 'CELL_DOWN',
 			id: cellID
+		};
+	},
+	insertCell: function (cellType, cellID, direction) {
+		return {
+			type: 'INSERT_CELL',
+			id: cellID,
+			cellType: cellType,
+			direction: direction
 		};
 	},
 	addCell: function (cellType) {

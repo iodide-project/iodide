@@ -38,6 +38,14 @@ let actions = {
 			id: cellID
 		}
 	},
+	insertCell: function(cellType, cellID, direction) {
+		return {
+			type: 'INSERT_CELL',
+			id: cellID,
+			cellType: cellType,
+			direction: direction
+		}
+	},
 	addCell: function(cellType) {
 		return {
 			type: 'ADD_CELL',
