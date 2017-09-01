@@ -1,7 +1,5 @@
 var jupyterKeybindings = [];
 
-// SELECT: above, below.
-
 var moveCell = (elem, dirFcn) => {
   if (elem.props.mode === 'command' && elem.props.currentlySelected != undefined) elem.props.actions[dirFcn](elem.props.currentlySelected.id)
 }
@@ -124,13 +122,7 @@ var EDIT_MODE = [['enter', 'return'], function(e){
 
 var DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
     if (this.props.currentlySelected != undefined) {
-      var selectedID = this.props.currentlySelected.id
-      // var nextID;
-      this.props.actions.deleteCell(selectedID)
-      // if (!this.props.cells.length) return
-      // if (selectedID === this.props.cells.length-1) nextID = this.props.cells.length-2
-      // else nextID = this.props.cells[this.props.cells.findIndex(c=>c.id===selectedID)+1].id
-      // this.props.actions.selectCell(nextID)
+      this.props.actions.deleteCell(this.props.currentlySelected.id)
     }
   }
 ]

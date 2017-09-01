@@ -65,6 +65,7 @@ class Cell extends React.Component {
 			lineNumbers: !this.props.cell.rendered,
 			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
+			lineWrapping: this.props.cell.cellType == 'markdown',
 			theme: 'eclipse'
 		}
 		var resultElem, mainElem
