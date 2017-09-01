@@ -52,6 +52,11 @@ let reducer = function (state, action) {
 			})
 			return nextState
 
+		case 'DESELECT_ALL':
+			var cells = state.cells.slice()
+			cells.forEach((c)=>{c.selected=false; return c})
+			return Object.assign({}, state, {cells}, {currentlySelected: undefined})
+
 		case 'SELECT_CELL':
 			var cells = state.cells.slice()
 			var index = cells.findIndex(c=>c.id===action.id)

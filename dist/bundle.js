@@ -34082,6 +34082,13 @@ let reducer = function (state, action) {
 			});
 			return nextState;
 
+		case 'DESELECT_ALL':
+			var cells = state.cells.slice();
+			cells.forEach(c => {
+				c.selected = false;return c;
+			});
+			return Object.assign({}, state, { cells }, { currentlySelected: undefined });
+
 		case 'SELECT_CELL':
 			var cells = state.cells.slice();
 			var index = cells.findIndex(c => c.id === action.id);
@@ -54744,6 +54751,11 @@ let actions = {
 		return {
 			type: 'SELECT_CELL',
 			id: cellID
+		};
+	},
+	deselectAll: function () {
+		return {
+			type: 'DESELECT_ALL'
 		};
 	},
 	deleteCell: function (cellID) {
@@ -75824,6 +75836,10 @@ var RAW_MODE = [['r'], function () {
   changeCellMode(this, 'raw');
 }];
 
+var DESELECT = [['shift+esc', 'shift+escape'], function () {
+  this.props.actions.deselectAll();
+}];
+
 function changeSelection(elem, dir) {
   if (elem.props.mode === 'command' && elem.props.cells.length) {
     if (elem.props.currentlySelected != undefined) {
@@ -75884,6 +75900,7 @@ var DELETE_CELL = [['shift+del', 'shift+backspace'], function () {
   }
 }];
 
+jupyterKeybindings.push(DESELECT);
 jupyterKeybindings.push(JAVASCRIPT_MODE);
 jupyterKeybindings.push(MARKDOWN_MODE);
 jupyterKeybindings.push(RAW_MODE);

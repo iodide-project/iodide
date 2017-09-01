@@ -62,6 +62,10 @@ var RAW_MODE = [['r'], function(){
     changeCellMode(this, 'raw')
     }
 ]
+ 
+var DESELECT = [['shift+esc', 'shift+escape'], function(){
+  this.props.actions.deselectAll()
+}]
 
 function changeSelection(elem, dir) {
   if (elem.props.mode === 'command' && elem.props.cells.length) {
@@ -131,6 +135,7 @@ var DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
   }
 ]
 
+jupyterKeybindings.push(DESELECT)
 jupyterKeybindings.push(JAVASCRIPT_MODE)
 jupyterKeybindings.push(MARKDOWN_MODE)
 jupyterKeybindings.push(RAW_MODE)
