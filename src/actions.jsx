@@ -1,8 +1,8 @@
 let actions = {
-	changePageTitle: function(mode) {
+	changePageTitle: function(title) {
 		return {
 			type: 'CHANGE_PAGE_TITLE',
-			title: mode.title
+			title: title
 		}
 	},
 	changeMode: function(mode) {

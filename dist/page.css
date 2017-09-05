@@ -11,10 +11,15 @@ div#deselector {
 	height: auto;
 }
 
-h1.page-title {
+input.page-title {
 	font-family: 'Open Sans';
 	font-weight:900;
 	text-transform:uppercase;
+	font-size:35px;
+	border:none;
+	outline:none;
+	width:100%;
+	margin-left:25px;
 }
 
 h1.page-title span {

@@ -30,7 +30,7 @@ class Page extends React.Component {
     } else {
       declaredPropertiesPane = <div></div>
     }
-
+    //{declaredPropertiesPane} // put this in after everything else
     return (
         <div>
         <div id='deselector'>
@@ -45,7 +45,7 @@ class Page extends React.Component {
           	{cells}
           </div>
             
-          {declaredPropertiesPane}
+          
 
         </div>
     );

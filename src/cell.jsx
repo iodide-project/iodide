@@ -124,8 +124,8 @@ function jsReturnValue(cell) {
 	var resultElem;
 	var returnedSomething;
 	if (cell.value == undefined) returnedSomething = false;
-	if (typeof cell.value == 'object' && cell.value.hasOwnProperty('type') && cell.value.type !='undefined') returnedSomething = true;
-
+	//if (typeof cell.value == 'object' && cell.value.hasOwnProperty('type') && cell.value.type !='undefined') returnedSomething = true;
+	if (cell.value !== undefined) returnedSomething = true
 	if (returnedSomething) {
 		resultElem = <JSONTree data={cell.value} hideRoot={true} theme={{
 			  scheme: 'bright',

@@ -12,6 +12,9 @@ INTERPRETER.declaredProperties = ()=>{
 	return out;
 };
 
+
+
+
 function getId(state) {
   return state.cells.reduce((maxId, cell) => {
     return Math.max(cell.id, maxId)
@@ -34,7 +37,7 @@ let reducer = function (state, action) {
 	switch (action.type) {
 
 		case 'CHANGE_PAGE_TITLE':
-			
+			return Object.assign({}, state, {title: action.title})
 
 		case 'CHANGE_MODE':
 			var mode = action.mode
@@ -126,21 +129,31 @@ let reducer = function (state, action) {
 			if (action.render) {
 				if (thisCell.cellType === 'javascript') {
 					thisCell.value = undefined;
-					INTERPRETER.appendCode(thisCell.content);
-					INTERPRETER.run();
+
+					// JS-interpreter --- CODE RUN
+					//INTERPRETER.appendCode(thisCell.content);
+					//INTERPRETER.run();
+					var output = new Function(thisCell.content)()
+
 					thisCell.rendered = true;
-					thisCell.value = INTERPRETER.value;
+
+					// JS-interpreter --- RETURN VALUE
+					//thisCell.value = INTERPRETER.value;
+					if (output !== undefined) {
+						thisCell.value = output
+					}
+
 					var lastValue;
 					// Check to see if the returned value has actually updated.
 					// if it hasn't, then nothing was returned from this cell.
-					if (thisCell.value == state.lastValue) {
-						thisCell.value = undefined;
-						lastValue = state.lastValue;
-					}
-					else {
-						lastValue = thisCell.value;
-					}
-					declaredProperties = INTERPRETER.declaredProperties();
+					// if (thisCell.value == state.lastValue) {
+					// 	thisCell.value = undefined;
+					// 	lastValue = state.lastValue;
+					// }
+					// else {
+					// 	lastValue = thisCell.value;
+					// }
+					//declaredProperties = INTERPRETER.declaredProperties();
 				} else if (thisCell.cellType === 'markdown') {
 					// one line, huh.
 					thisCell.value = marked(thisCell.content);
@@ -152,7 +165,7 @@ let reducer = function (state, action) {
 			
 			
 			cells[index] = thisCell;
-			var nextState = Object.assign({}, state, {cells}, {declaredProperties}, {lastValue});
+			var nextState = Object.assign({}, state, {cells}, {lastValue});
 			return nextState
 
 		case 'DELETE_CELL':

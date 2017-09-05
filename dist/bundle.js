@@ -32681,6 +32681,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+function runFunction(code) {
+	return new Function(code);
+}
+
 var initialState = {
 	title: undefined,
 	cells: [],
@@ -35112,6 +35116,7 @@ let reducer = function (state, action) {
 	switch (action.type) {
 
 		case 'CHANGE_PAGE_TITLE':
+			return Object.assign({}, state, { title: action.title });
 
 		case 'CHANGE_MODE':
 			var mode = action.mode;
@@ -35204,20 +35209,31 @@ let reducer = function (state, action) {
 			if (action.render) {
 				if (thisCell.cellType === 'javascript') {
 					thisCell.value = undefined;
-					INTERPRETER.appendCode(thisCell.content);
-					INTERPRETER.run();
+
+					// JS-interpreter --- CODE RUN
+					//INTERPRETER.appendCode(thisCell.content);
+					//INTERPRETER.run();
+					var output = new Function(thisCell.content)();
+
 					thisCell.rendered = true;
-					thisCell.value = INTERPRETER.value;
+
+					// JS-interpreter --- RETURN VALUE
+					//thisCell.value = INTERPRETER.value;
+					if (output !== undefined) {
+						thisCell.value = output;
+					}
+
 					var lastValue;
 					// Check to see if the returned value has actually updated.
 					// if it hasn't, then nothing was returned from this cell.
-					if (thisCell.value == state.lastValue) {
-						thisCell.value = undefined;
-						lastValue = state.lastValue;
-					} else {
-						lastValue = thisCell.value;
-					}
-					declaredProperties = INTERPRETER.declaredProperties();
+					// if (thisCell.value == state.lastValue) {
+					// 	thisCell.value = undefined;
+					// 	lastValue = state.lastValue;
+					// }
+					// else {
+					// 	lastValue = thisCell.value;
+					// }
+					//declaredProperties = INTERPRETER.declaredProperties();
 				} else if (thisCell.cellType === 'markdown') {
 					// one line, huh.
 					thisCell.value = __WEBPACK_IMPORTED_MODULE_1_marked___default()(thisCell.content);
@@ -35228,7 +35244,7 @@ let reducer = function (state, action) {
 			}
 
 			cells[index] = thisCell;
-			var nextState = Object.assign({}, state, { cells }, { declaredProperties }, { lastValue });
+			var nextState = Object.assign({}, state, { cells }, { lastValue });
 			return nextState;
 
 		case 'DELETE_CELL':
@@ -54638,7 +54654,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     } else {
       declaredPropertiesPane = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
     }
-
+    //{declaredPropertiesPane} // put this in after everything else
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
       null,
@@ -54661,8 +54677,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
         'div',
         { className: 'cells' },
         cells
-      ),
-      declaredPropertiesPane
+      )
     );
   }
 }
@@ -54685,10 +54700,10 @@ function mapDispatchToProps(dispatch) {
 
 "use strict";
 let actions = {
-	changePageTitle: function (mode) {
+	changePageTitle: function (title) {
 		return {
 			type: 'CHANGE_PAGE_TITLE',
-			title: mode.title
+			title: title
 		};
 	},
 	changeMode: function (mode) {
@@ -54941,8 +54956,8 @@ function jsReturnValue(cell) {
 	var resultElem;
 	var returnedSomething;
 	if (cell.value == undefined) returnedSomething = false;
-	if (typeof cell.value == 'object' && cell.value.hasOwnProperty('type') && cell.value.type != 'undefined') returnedSomething = true;
-
+	//if (typeof cell.value == 'object' && cell.value.hasOwnProperty('type') && cell.value.type !='undefined') returnedSomething = true;
+	if (cell.value !== undefined) returnedSomething = true;
 	if (returnedSomething) {
 		resultElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_json_tree___default.a, { data: cell.value, hideRoot: true, theme: {
 				scheme: 'bright',
@@ -75914,11 +75929,9 @@ const saveState = state => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_bootstrap__ = __webpack_require__(483);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_contenteditable__ = __webpack_require__(590);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_contenteditable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react_contenteditable__);
 
 
-
+// import ContentEditable from "react-contenteditable"
 
 function formattedTitle(title) {
 	return title !== undefined || title == '' ? title : 'new notebook';
@@ -75930,11 +75943,11 @@ class Title extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 		this.state = { title: formattedTitle(props.title), previousMode: props.pageMode };
 	}
 
-	changeTitle(title, evt) {
+	changeTitle(evt) {
 		// need 
-		this.props.actions.changePageTitle(title);
 		this.props.actions.changeMode('title-edit');
-		this.setState({ formattedTitle });
+		this.props.actions.changePageTitle(evt.target.value);
+		this.setState({ title: formattedTitle(evt.target.value) });
 	}
 
 	onBlur() {
@@ -75942,118 +75955,13 @@ class Title extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 	}
 
 	render() {
-		var elem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_contenteditable___default.a, { tagName: 'h1', className: 'page-title', onBlur: this.onBlur.bind(this), onChange: this.changeTitle.bind(this), html: this.state.title });
+		//var elem = <ContentEditable tagName={'h1'} className={'page-title'} onBlur={this.onBlur.bind(this)} onChange={this.changeTitle.bind(this)} html={this.state.title} />
+		var elem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { className: 'page-title', value: this.state.title, onChange: this.changeTitle.bind(this) });
 		return elem;
 	}
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (Title);
-
-/***/ }),
-/* 589 */,
-/* 590 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ContentEditable = function (_React$Component) {
-  _inherits(ContentEditable, _React$Component);
-
-  function ContentEditable() {
-    _classCallCheck(this, ContentEditable);
-
-    var _this = _possibleConstructorReturn(this, (ContentEditable.__proto__ || Object.getPrototypeOf(ContentEditable)).call(this));
-
-    _this.emitChange = _this.emitChange.bind(_this);
-    return _this;
-  }
-
-  _createClass(ContentEditable, [{
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var _props = this.props,
-          tagName = _props.tagName,
-          html = _props.html,
-          props = _objectWithoutProperties(_props, ['tagName', 'html']);
-
-      return _react2.default.createElement(tagName || 'div', _extends({}, props, {
-        ref: function ref(e) {
-          return _this2.htmlEl = e;
-        },
-        onInput: this.emitChange,
-        onBlur: this.props.onBlur || this.emitChange,
-        contentEditable: !this.props.disabled,
-        dangerouslySetInnerHTML: { __html: html }
-      }), this.props.children);
-    }
-  }, {
-    key: 'shouldComponentUpdate',
-    value: function shouldComponentUpdate(nextProps) {
-      // We need not rerender if the change of props simply reflects the user's
-      // edits. Rerendering in this case would make the cursor/caret jump.
-      return (
-        // Rerender if there is no element yet... (somehow?)
-        !this.htmlEl
-        // ...or if html really changed... (programmatically, not by user edit)
-        || nextProps.html !== this.htmlEl.innerHTML && nextProps.html !== this.props.html
-        // ...or if editing is enabled or disabled.
-        || this.props.disabled !== nextProps.disabled
-        // ...or if className changed
-        || this.props.className !== nextProps.className
-      );
-    }
-  }, {
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate() {
-      if (this.htmlEl && this.props.html !== this.htmlEl.innerHTML) {
-        // Perhaps React (whose VDOM gets outdated because we often prevent
-        // rerendering) did not update the DOM. So we update it manually now.
-        this.htmlEl.innerHTML = this.props.html;
-      }
-    }
-  }, {
-    key: 'emitChange',
-    value: function emitChange(evt) {
-      if (!this.htmlEl) return;
-      var html = this.htmlEl.innerHTML;
-      if (this.props.onChange && html !== this.lastHtml) {
-        evt.target = { value: html };
-        this.props.onChange(evt);
-      }
-      this.lastHtml = html;
-    }
-  }]);
-
-  return ContentEditable;
-}(_react2.default.Component);
-
-exports.default = ContentEditable;
-module.exports = exports['default'];
 
 /***/ })
 /******/ ]);

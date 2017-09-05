@@ -1,6 +1,6 @@
 import React, {createElement} from 'react'
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'react-bootstrap'
-import ContentEditable from "react-contenteditable"
+// import ContentEditable from "react-contenteditable"
 
 function formattedTitle(title) {
 	return title !== undefined || title == '' ? title : 'new notebook'
@@ -12,11 +12,12 @@ class Title extends React.Component {
 		this.state = {title: formattedTitle(props.title), previousMode: props.pageMode}
 	}
 
-	changeTitle(title, evt) {
+	changeTitle(evt) {
 		// need 
-		this.props.actions.changePageTitle(title)
 		this.props.actions.changeMode('title-edit')
-		this.setState({formattedTitle})
+		this.props.actions.changePageTitle(evt.target.value)
+		this.setState({title: formattedTitle(evt.target.value)})
+
 
 	}
 
@@ -25,7 +26,8 @@ class Title extends React.Component {
 	}
 
 	render() {
-		var elem = <ContentEditable tagName={'h1'} className={'page-title'} onBlur={this.onBlur.bind(this)} onChange={this.changeTitle.bind(this)} html={this.state.title} />
+		//var elem = <ContentEditable tagName={'h1'} className={'page-title'} onBlur={this.onBlur.bind(this)} onChange={this.changeTitle.bind(this)} html={this.state.title} />
+		var elem = <input className='page-title' value={this.state.title} onChange={this.changeTitle.bind(this)} />
 		return elem
 	}
 }

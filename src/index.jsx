@@ -6,6 +6,12 @@ import {render} from 'react-dom'
 import Page from './page.jsx'
 import { loadState, saveState } from './persistent-state.jsx'
 
+
+function runFunction(code) {
+	return new Function(code)
+}
+
+
 var initialState = {
 	title: undefined,
 	cells: [],
