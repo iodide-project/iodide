@@ -1,18 +1,17 @@
 
-import Interpreter from 'js-interpreter'
+//import Interpreter from 'js-interpreter'
+
 import marked from 'marked'
 
-var INTERPRETER = new Interpreter('')
-INTERPRETER.defaultProperties = Object.keys(INTERPRETER.global.properties)
-INTERPRETER.declaredProperties = ()=>{ 
-	var out = {};
-	var declaredProps = Object.keys(INTERPRETER.global.properties)
-					.filter(x=> !new Set(INTERPRETER.defaultProperties).has(x))
-	declaredProps.forEach((p)=>out[p]=INTERPRETER.global.properties[p])
-	return out;
-};
-
-
+// var INTERPRETER = new Interpreter('')
+// INTERPRETER.defaultProperties = Object.keys(INTERPRETER.global.properties)
+// INTERPRETER.declaredProperties = ()=>{ 
+// 	var out = {};
+// 	var declaredProps = Object.keys(INTERPRETER.global.properties)
+// 					.filter(x=> !new Set(INTERPRETER.defaultProperties).has(x))
+// 	declaredProps.forEach((p)=>out[p]=INTERPRETER.global.properties[p])
+// 	return out;
+// };
 
 
 function getId(state) {
@@ -133,8 +132,8 @@ let reducer = function (state, action) {
 					// JS-interpreter --- CODE RUN
 					//INTERPRETER.appendCode(thisCell.content);
 					//INTERPRETER.run();
+					
 					var output = new Function(thisCell.content)()
-
 					thisCell.rendered = true;
 
 					// JS-interpreter --- RETURN VALUE

@@ -13,13 +13,23 @@ div#deselector {
 
 input.page-title {
 	font-family: 'Open Sans';
-	font-weight:900;
-	text-transform:uppercase;
 	font-size:35px;
 	border:none;
 	outline:none;
 	width:100%;
 	margin-left:25px;
+}
+
+i.add-cell {
+	padding:5px;
+}
+
+i.add-cell:hover {
+	outline:1px solid lightgray;
+}
+
+input.page-title.unrendered-title {
+	color:gray;
 }
 
 h1.page-title span {

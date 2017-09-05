@@ -38,7 +38,7 @@ class Page extends React.Component {
         </div>
           <Title actions={this.props.actions} title={this.props.title} pageMode={this.props.mode} />
           <div className='controls'>
-          	<button ref='addCellButton' onClick={this.addCell.bind(this)}> + </button>
+          	<i className='fa fa-plus add-cell' onClick={this.addCell.bind(this)}></i>
           </div>
 
           <div className='cells'>

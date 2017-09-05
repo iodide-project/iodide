@@ -3,7 +3,7 @@ import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'r
 // import ContentEditable from "react-contenteditable"
 
 function formattedTitle(title) {
-	return title !== undefined || title == '' ? title : 'new notebook'
+	return (title !== undefined) ? title : 'new notebook'
 }
 
 class Title extends React.Component {
@@ -26,8 +26,7 @@ class Title extends React.Component {
 	}
 
 	render() {
-		//var elem = <ContentEditable tagName={'h1'} className={'page-title'} onBlur={this.onBlur.bind(this)} onChange={this.changeTitle.bind(this)} html={this.state.title} />
-		var elem = <input className='page-title' value={this.state.title} onChange={this.changeTitle.bind(this)} />
+		var elem = <input className={'page-title ' + (this.props.title === undefined ? 'unrendered-title' : '')} value={this.state.title} onChange={this.changeTitle.bind(this)} />
 		return elem
 	}
 }
