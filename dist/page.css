@@ -77,6 +77,7 @@ div.cell.unrendered {
 
 div.cell-controls {
 	width:200px;
+	padding-top:2px;
 }
 
 .controls-visible {

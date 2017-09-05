@@ -45674,7 +45674,7 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 		this.props.actions.deleteCell(this.props.cell.id);
 	}
 
-	changeCellType(cellType) {
+	changeCellType(cellType, evt) {
 		this.props.actions.changeCellType(this.props.cell.id, cellType);
 	}
 
@@ -45739,41 +45739,36 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
 						{ bsSize: 'xsmall', onClick: this.renderCell.bind(this) },
-						'run'
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' })
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
 						{ bsSize: 'xsmall', onClick: this.cellDown.bind(this) },
-						'down'
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-down', 'aria-hidden': 'true' })
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
 						{ bsSize: 'xsmall', onClick: this.cellUp.bind(this) },
-						'up'
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-up', 'aria-hidden': 'true' })
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["e" /* ToggleButtonGroup */],
-						{ type: 'radio', name: 'options', value: this.props.cell.cellType, onChange: this.changeCellType.bind(this), defaultValue: this.props.cell.cellType },
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* DropdownButton */],
+						{ bsSize: 'xsmall', id: 'cell-choice-' + this.props.id, bsStyle: 'default', title: this.props.cell.cellType, onSelect: this.changeCellType.bind(this) },
 						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
-							{ bsSize: 'xsmall', value: "javascript" },
+							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+							{ eventKey: "javascript" },
 							'JS'
 						),
 						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
-							{ bsSize: 'xsmall', value: 'markdown' },
+							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+							{ eventKey: 'markdown' },
 							'MD'
 						),
 						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* ToggleButton */],
-							{ bsSize: 'xsmall', value: 'raw' },
+							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+							{ eventKey: 'raw' },
 							'Raw'
 						)
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* Label */],
-						null,
-						this.props.cell.cellType
 					)
 				)
 			)
@@ -56088,7 +56083,7 @@ function createRenderer(tracker, options) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__Dropdown__ = __webpack_require__(82);
 /* unused harmony reexport Dropdown */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__DropdownButton__ = __webpack_require__(517);
-/* unused harmony reexport DropdownButton */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_17__DropdownButton__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__Fade__ = __webpack_require__(85);
 /* unused harmony reexport Fade */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__Form__ = __webpack_require__(518);
@@ -56110,7 +56105,7 @@ function createRenderer(tracker, options) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__Jumbotron__ = __webpack_require__(528);
 /* unused harmony reexport Jumbotron */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__Label__ = __webpack_require__(529);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_28__Label__["a"]; });
+/* unused harmony reexport Label */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ListGroup__ = __webpack_require__(530);
 /* unused harmony reexport ListGroup */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__ListGroupItem__ = __webpack_require__(218);
@@ -56118,7 +56113,7 @@ function createRenderer(tracker, options) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__Media__ = __webpack_require__(135);
 /* unused harmony reexport Media */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__MenuItem__ = __webpack_require__(537);
-/* unused harmony reexport MenuItem */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_32__MenuItem__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__Modal__ = __webpack_require__(538);
 /* unused harmony reexport Modal */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__ModalBody__ = __webpack_require__(225);
@@ -56186,9 +56181,9 @@ function createRenderer(tracker, options) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_65__Thumbnail__ = __webpack_require__(579);
 /* unused harmony reexport Thumbnail */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_66__ToggleButton__ = __webpack_require__(238);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_66__ToggleButton__["a"]; });
+/* unused harmony reexport ToggleButton */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_67__ToggleButtonGroup__ = __webpack_require__(580);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_67__ToggleButtonGroup__["a"]; });
+/* unused harmony reexport ToggleButtonGroup */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_68__Tooltip__ = __webpack_require__(581);
 /* unused harmony reexport Tooltip */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_69__Well__ = __webpack_require__(582);
@@ -58993,7 +58988,7 @@ var DropdownButton = function (_React$Component) {
 
 DropdownButton.propTypes = propTypes;
 
-/* unused harmony default export */ var _unused_webpack_default_export = (DropdownButton);
+/* harmony default export */ __webpack_exports__["a"] = (DropdownButton);
 
 /***/ }),
 /* 518 */
@@ -60032,7 +60027,7 @@ var Label = function (_React$Component) {
   return Label;
 }(__WEBPACK_IMPORTED_MODULE_7_react___default.a.Component);
 
-/* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_8__utils_bootstrapUtils__["a" /* bsClass */])('label', Object(__WEBPACK_IMPORTED_MODULE_8__utils_bootstrapUtils__["c" /* bsStyles */])([].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_values___default()(__WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["d" /* State */]), [__WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].DEFAULT, __WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].PRIMARY]), __WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].DEFAULT, Label)));
+/* unused harmony default export */ var _unused_webpack_default_export = (Object(__WEBPACK_IMPORTED_MODULE_8__utils_bootstrapUtils__["a" /* bsClass */])('label', Object(__WEBPACK_IMPORTED_MODULE_8__utils_bootstrapUtils__["c" /* bsStyles */])([].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_values___default()(__WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["d" /* State */]), [__WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].DEFAULT, __WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].PRIMARY]), __WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].DEFAULT, Label)));
 
 /***/ }),
 /* 530 */
@@ -60756,7 +60751,7 @@ var MenuItem = function (_React$Component) {
 MenuItem.propTypes = propTypes;
 MenuItem.defaultProps = defaultProps;
 
-/* unused harmony default export */ var _unused_webpack_default_export = (Object(__WEBPACK_IMPORTED_MODULE_10__utils_bootstrapUtils__["a" /* bsClass */])('dropdown', MenuItem));
+/* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_10__utils_bootstrapUtils__["a" /* bsClass */])('dropdown', MenuItem));
 
 /***/ }),
 /* 538 */
@@ -66296,7 +66291,7 @@ var UncontrolledToggleButtonGroup = __WEBPACK_IMPORTED_MODULE_8_uncontrollable__
 
 UncontrolledToggleButtonGroup.Button = __WEBPACK_IMPORTED_MODULE_12__ToggleButton__["a" /* default */];
 
-/* harmony default export */ __webpack_exports__["a"] = (UncontrolledToggleButtonGroup);
+/* unused harmony default export */ var _unused_webpack_default_export = (UncontrolledToggleButtonGroup);
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),

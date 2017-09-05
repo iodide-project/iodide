@@ -10,7 +10,7 @@ import CodeMirror from 'react-codemirror'
 import marksy from 'marksy'
 const MD_COMPILER = marksy({createElement})
 
-import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'react-bootstrap'
+import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem } from 'react-bootstrap'
 
 class Cell extends React.Component {
 	constructor(props) {
@@ -46,7 +46,7 @@ class Cell extends React.Component {
 		this.props.actions.deleteCell(this.props.cell.id)
 	}
 
-	changeCellType(cellType){
+	changeCellType(cellType, evt){
 		this.props.actions.changeCellType(this.props.cell.id, cellType)
 	}
 
@@ -103,15 +103,15 @@ class Cell extends React.Component {
 
 				<div className={'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible')}>
 					<ButtonToolbar >
-						<Button bsSize='xsmall' onClick={this.renderCell.bind(this)}>run</Button>
-						<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}>down</Button>
-						<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}>up</Button>
-		      			<ToggleButtonGroup type="radio" name="options" value={this.props.cell.cellType} onChange={this.changeCellType.bind(this)} defaultValue={this.props.cell.cellType}>
-							<ToggleButton bsSize='xsmall'  value={"javascript"} >JS</ToggleButton>
-							<ToggleButton bsSize='xsmall'  value={'markdown'} >MD</ToggleButton>
-							<ToggleButton bsSize='xsmall'  value={'raw'} >Raw</ToggleButton>
-						</ ToggleButtonGroup>
-						<Label>{this.props.cell.cellType}</Label>
+
+						<Button bsSize='xsmall' onClick={this.renderCell.bind(this)}><i className="fa fa-play" aria-hidden="true"></i></Button>
+						<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
+						<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
+		      			<DropdownButton bsSize="xsmall" id={'cell-choice-' + this.props.id} bsStyle='default' title={this.props.cell.cellType} onSelect={this.changeCellType.bind(this)} >
+							<MenuItem   eventKey={"javascript"} >JS</MenuItem>
+							<MenuItem   eventKey={'markdown'} >MD</MenuItem>
+							<MenuItem   eventKey={'raw'} >Raw</MenuItem>
+						</ DropdownButton>
 					</ ButtonToolbar>
 				</div>
 			</div>
