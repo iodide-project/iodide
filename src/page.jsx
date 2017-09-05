@@ -7,19 +7,17 @@ import actions from './actions.jsx'
 import Cell from './cell.jsx'
 import DeclaredProperties from './declared-properties.jsx'
 import keyBinding from './keybindings.jsx' 
-
+import Title from './title.jsx'
 
 
 class Page extends React.Component {
   constructor(props) {
     super(props)
     keyBinding('jupyter', this)
-    // TODO: this is messy and could use refactoring.
-
   }
 
   addCell() {
-    this.props.actions.addCell('javascript');
+    this.props.actions.addCell('javascript')
   }
 
   render () {
@@ -38,7 +36,7 @@ class Page extends React.Component {
         <div id='deselector'>
           <input ref='deselector' />
         </div>
-          <h1 ref='pageTitle' className='page-title'>Javascript Notebook <span>{this.props.mode}</span></h1>
+          <Title actions={this.props.actions} title={this.props.title} pageMode={this.props.mode} />
           <div className='controls'>
           	<button ref='addCellButton' onClick={this.addCell.bind(this)}> + </button>
           </div>

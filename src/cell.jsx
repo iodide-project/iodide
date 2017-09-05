@@ -84,7 +84,7 @@ class Cell extends React.Component {
 		} 
 		return (
 			<div className='cell-container' onMouseEnter={this.showControls.bind(this)} onMouseLeave={this.hideControls.bind(this)} >
-				<div></div>
+				<div><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
 				<div className={'cell ' + 
 					(this.props.cell.selected ? 'selected-cell ' : ' ') + 
 					(this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ') +
@@ -106,7 +106,6 @@ class Cell extends React.Component {
 						<Button bsSize='xsmall' onClick={this.renderCell.bind(this)}>run</Button>
 						<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}>down</Button>
 						<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}>up</Button>
-						<Button bsSize='xsmall' onClick={this.deleteCell.bind(this)}>delete</Button>
 		      			<ToggleButtonGroup type="radio" name="options" value={this.props.cell.cellType} onChange={this.changeCellType.bind(this)} defaultValue={this.props.cell.cellType}>
 							<ToggleButton bsSize='xsmall'  value={"javascript"} >JS</ToggleButton>
 							<ToggleButton bsSize='xsmall'  value={'markdown'} >MD</ToggleButton>

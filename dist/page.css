@@ -1,9 +1,6 @@
-
 html,body { 
 	min-height:100%; margin:0; padding:0; 
 }
-
-
 
 div#deselector {
 	width:0;
@@ -44,12 +41,11 @@ div.declared-variables {
 }
 
 div.cell-container {
-	min-height:50px;
 	margin-top:20px;
 	margin-bottom:20px;
 	width:900px;
 	display:flex;
-	 justify-content: space-around;
+	justify-content:space-around;
 }
 
 div.left-of-cell {
@@ -61,19 +57,21 @@ div.cell {
 }
 
 div.cell.unrendered {
-	outline:1px solid gray;
+	outline: 1px solid #ddd
 }
 
 div.cell-controls {
 	width:200px;
 }
 
-div.cell-controls.controls-visible {
+.controls-visible {
 	opacity:1;
+	transition: 50ms;
 }
 
-div.cell-controls.controls-invisible {
+.controls-invisible {
 	opacity:0;
+	transition: 50ms;
 }
 
 div.selected-cell.command-mode {

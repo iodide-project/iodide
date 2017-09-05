@@ -10,6 +10,7 @@
     "babel-loader": "^7.1.1",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "codemirror-no-newlines": "^1.0.2",
     "js-interpreter": "^1.4.6",
     "marked": "^0.3.6",
     "marksy": "^5.0.0",

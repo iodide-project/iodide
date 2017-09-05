@@ -7,6 +7,7 @@ import Page from './page.jsx'
 import { loadState, saveState } from './persistent-state.jsx'
 
 var initialState = {
+	title: undefined,
 	cells: [],
 	currentlySelected: undefined,
 	declaredProperties:{},
@@ -16,10 +17,6 @@ var initialState = {
 
 var store = configureStore(initialState)
 
-// store.subscribe(()=>{
-// 	console.log('did this work')
-// 	saveState(store.getState())
-// })
 render(
 	<Provider store={store}>
 		<Page />

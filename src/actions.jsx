@@ -1,4 +1,10 @@
 let actions = {
+	changePageTitle: function(mode) {
+		return {
+			type: 'CHANGE_PAGE_TITLE',
+			title: mode.title
+		}
+	},
 	changeMode: function(mode) {
 		return {
 			type: 'CHANGE_MODE',

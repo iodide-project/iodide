@@ -33,6 +33,9 @@ function newCell(state, cellType){
 let reducer = function (state, action) {
 	switch (action.type) {
 
+		case 'CHANGE_PAGE_TITLE':
+			
+
 		case 'CHANGE_MODE':
 			var mode = action.mode
 			return Object.assign({}, state, {mode});
