@@ -81,7 +81,9 @@ class Cell extends React.Component {
 
 		} else if (this.props.cell.cellType === 'markdown' && this.props.cell.rendered) {
 			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)} dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
-		} 
+		}  else if (this.props.cell.cellType === 'svg') {
+			mainElem = SVGCell('svg-'+this.props.id)
+		}
 		return (
 			<div className='cell-container' onMouseEnter={this.showControls.bind(this)} onMouseLeave={this.hideControls.bind(this)} >
 				<div><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
@@ -111,6 +113,8 @@ class Cell extends React.Component {
 							<MenuItem   eventKey={"javascript"} >JS</MenuItem>
 							<MenuItem   eventKey={'markdown'} >MD</MenuItem>
 							<MenuItem   eventKey={'raw'} >Raw</MenuItem>
+							<MenuItem   eventKey={'svg'} >SVG</MenuItem>
+
 						</ DropdownButton>
 					</ ButtonToolbar>
 				</div>
@@ -118,6 +122,17 @@ class Cell extends React.Component {
 		)
 
 	}
+}
+
+function SVGCell(name){
+	// represents a dom element
+	return (
+		<div>
+			<div>{name}</div>
+			<svg id={name} width='100%' height='400'>
+			</svg>
+		</div>
+	)
 }
 
 function jsReturnValue(cell) {

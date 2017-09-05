@@ -58,7 +58,7 @@ div.declared-variables {
 div.cell-container {
 	margin-top:20px;
 	margin-bottom:20px;
-	width:900px;
+	width:1100px;
 	display:flex;
 	justify-content:space-around;
 }
@@ -68,7 +68,7 @@ div.left-of-cell {
 }
 
 div.cell {
-	width:650px;
+	width:850px;
 }
 
 div.cell.unrendered {

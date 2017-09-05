@@ -45711,6 +45711,8 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 				options: options });
 		} else if (this.props.cell.cellType === 'markdown' && this.props.cell.rendered) {
 			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { onDoubleClick: () => this.unrender.bind(this)(false), dangerouslySetInnerHTML: { __html: this.props.cell.value } });
+		} else if (this.props.cell.cellType === 'svg') {
+			mainElem = SVGCell('svg-' + this.props.id);
 		}
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
@@ -45768,12 +45770,31 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
 							{ eventKey: 'raw' },
 							'Raw'
+						),
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+							{ eventKey: 'svg' },
+							'SVG'
 						)
 					)
 				)
 			)
 		);
 	}
+}
+
+function SVGCell(name) {
+	// represents a dom element
+	return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+		'div',
+		null,
+		__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+			'div',
+			null,
+			name
+		),
+		__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('svg', { id: name, width: '100%', height: '400' })
+	);
 }
 
 function jsReturnValue(cell) {
