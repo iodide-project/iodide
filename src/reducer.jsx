@@ -75,8 +75,7 @@ let reducer = function (state, action) {
 		case 'INSERT_CELL':
 			var cells = state.cells.slice()
 			var index = cells.findIndex(c=>c.id===action.id)
-			var direction = 0
-			if (action.direction == 'above') direction=1
+			var direction = (action.direction == 'above') ? 0:1
 			cells.splice(index+direction, 0, newCell(state, 'javascript'))
 			var nextState = Object.assign({}, state, {cells})
 			return nextState
