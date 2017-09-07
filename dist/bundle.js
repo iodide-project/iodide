@@ -35386,6 +35386,9 @@ var initialState = {
 	mode: 'command'
 };
 
+initialState.cells.push(newCell(initialState, 'javascript'));
+initialState.currentlySelected = initialState.cells[0];
+
 function getId(state) {
 	return state.cells.reduce((maxId, cell) => {
 		return Math.max(cell.id, maxId);
