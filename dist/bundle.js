@@ -35437,14 +35437,13 @@ let reducer = function (state, action) {
 		case 'INSERT_CELL':
 			var cells = state.cells.slice();
 			var index = cells.findIndex(c => c.id === action.id);
-			var direction = 0;
+			var direction = action.direction == 'above' ? 0 : 1;
 
 			cells.forEach(cell => {
 				cell.selected = false;return cell;
 			});
 			var nextCell = newCell(state, 'javascript');
 			nextCell.selected = true;
-			if (action.direction == 'above') direction = 1;
 			cells.splice(index + direction, 0, nextCell);
 			var nextState = Object.assign({}, state, { cells, currentlySelected: nextCell });
 			return nextState;
