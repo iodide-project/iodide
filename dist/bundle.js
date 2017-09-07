@@ -66736,7 +66736,7 @@ var RENDER_CELL = [['mod+enter', 'mod+return'], function () {
 }];
 
 var COMMAND_MODE = [['escape', 'esc'], function (e) {
-  if (this.props.mode !== 'command') this.props.actions.changeMode('command');
+  if (this.props.mode !== 'command') this.props.actions.changeMode('command');else if (this.props.mode == 'command') this.props.actions.deselectAll();
   this.refs.deselector.focus();
 }];
 var EDIT_MODE = [['enter', 'return'], function (e) {
