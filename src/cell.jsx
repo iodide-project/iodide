@@ -124,11 +124,11 @@ class Cell extends React.Component {
 	}
 }
 
-function SVGCell(name){
-	// represents a dom element
+function DisplayCell(name, displayType){
+	var displayElem = createElement(displayType, {id: name})
 	return (
 		<div>
-			<div>{name}</div>
+			<span className='display-cell-title'>{name}</span>
 			<svg id={name} width='100%' height='400'>
 			</svg>
 		</div>
@@ -139,7 +139,6 @@ function jsReturnValue(cell) {
 	var resultElem;
 	var returnedSomething;
 	if (cell.value == undefined) returnedSomething = false;
-	//if (typeof cell.value == 'object' && cell.value.hasOwnProperty('type') && cell.value.type !='undefined') returnedSomething = true;
 	if (cell.value !== undefined) returnedSomething = true
 	if (returnedSomething) {
 		resultElem = <JSONTree data={cell.value} hideRoot={true} theme={{

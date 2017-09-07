@@ -1,4 +1,15 @@
 let actions = {
+	saveNotebook: function() {
+		return {
+			type: 'SAVE_NOTEBOOK'
+		}
+	},
+	loadNotebook: function(title) {
+		return {
+			type: 'LOAD_NOTEBOOK',
+			title: title
+		}
+	},
 	changePageTitle: function(title) {
 		return {
 			type: 'CHANGE_PAGE_TITLE',

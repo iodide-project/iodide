@@ -31,9 +31,18 @@ function newCell(state, cellType){
 	}
 }
 
-
 let reducer = function (state, action) {
 	switch (action.type) {
+
+		case 'SAVE_NOTEBOOK':
+			// make sure your title is valid before saving!
+			localStorage.setItem(state.title, JSON.stringify(state))
+			//state.lastSaved = new Date()
+			return Object.assign({}, state, {lastSaved: new Date()})
+
+		case 'LOAD_NOTEBOOK':
+			var state = JSON.parse(localStorage.getItem(action.title))
+			return state
 
 		case 'CHANGE_PAGE_TITLE':
 			return Object.assign({}, state, {title: action.title})

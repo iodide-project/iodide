@@ -9,16 +9,12 @@ function formattedTitle(title) {
 class Title extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {title: formattedTitle(props.title), previousMode: props.pageMode}
+		this.state = {previousMode: props.pageMode}
 	}
 
 	changeTitle(evt) {
-		// need 
 		this.props.actions.changeMode('title-edit')
 		this.props.actions.changePageTitle(evt.target.value)
-		this.setState({title: formattedTitle(evt.target.value)})
-
-
 	}
 
 	onBlur() {
@@ -26,7 +22,7 @@ class Title extends React.Component {
 	}
 
 	render() {
-		var elem = <input className={'page-title ' + (this.props.title === undefined ? 'unrendered-title' : '')} value={this.state.title} onChange={this.changeTitle.bind(this)} />
+		var elem = <input className={'page-title ' + (this.props.title === undefined ? 'unrendered-title' : '')} value={formattedTitle(this.props.title)} onChange={this.changeTitle.bind(this)} />
 		return elem
 	}
 }

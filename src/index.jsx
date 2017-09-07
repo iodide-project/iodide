@@ -18,6 +18,7 @@ var initialState = {
 	currentlySelected: undefined,
 	declaredProperties:{},
 	lastValue: undefined,
+	lastSaved: undefined,
 	mode: 'command'
 }
 

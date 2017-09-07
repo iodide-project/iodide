@@ -8,7 +8,7 @@ import Cell from './cell.jsx'
 import DeclaredProperties from './declared-properties.jsx'
 import keyBinding from './keybindings.jsx' 
 import Title from './title.jsx'
-
+import NotebookActions from './notebook-actions.jsx'
 
 class Page extends React.Component {
   constructor(props) {
@@ -33,6 +33,7 @@ class Page extends React.Component {
     //{declaredPropertiesPane} // put this in after everything else
     return (
         <div>
+        <NotebookActions actions={this.props.actions} lastSaved={this.props.lastSaved} />
         <div id='deselector'>
           <input ref='deselector' />
         </div>

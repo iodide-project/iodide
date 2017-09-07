@@ -98,3 +98,19 @@ div.selected-cell.edit-mode {
 	outline:4px solid gray;
 }
 
+span.display-cell-title {
+	display:inline-block;
+	padding:5px;
+	margin:3px;
+	background:aliceblue;
+	max-width:200px;
+	color:gray;
+	border:1px solid lightgray;
+	border-radius:3px;
+}
+
+.notebook-actions {
+	position:fixed;
+	left:10px;
+	top:10px;
+}
