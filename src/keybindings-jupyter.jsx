@@ -107,11 +107,16 @@ var RENDER_CELL = [['mod+enter', 'mod+return'], function(){
 ]
 
 var COMMAND_MODE = [['escape', 'esc'], function(e){
-      if (this.props.mode !== 'command') this.props.actions.changeMode('command')
-      else if (this.props.mode == 'command') this.props.actions.deselectAll()
-      this.refs.deselector.focus()
+      if (this.props.mode == 'edit') {
+        this.props.actions.changeMode('command')
+        this.refs.deselector.focus()
+      }
+      else if (this.props.mode == 'command' && this.props.currentlySelected !== undefined) {
+        this.props.actions.deselectAll()
+      }
     }
 ]
+
 var EDIT_MODE = [['enter', 'return'], function(e){
       if (this.props.mode !== 'edit') this.props.actions.changeMode('edit')
       if (this.props.currentlySelected != undefined) {

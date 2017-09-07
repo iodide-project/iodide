@@ -113,7 +113,7 @@ class Cell extends React.Component {
 							<MenuItem   eventKey={"javascript"} >JS</MenuItem>
 							<MenuItem   eventKey={'markdown'} >MD</MenuItem>
 							<MenuItem   eventKey={'raw'} >Raw</MenuItem>
-							<MenuItem   eventKey={'svg'} >SVG</MenuItem>
+							<MenuItem   eventKey={'dom'} >DOM</MenuItem>
 
 						</ DropdownButton>
 					</ ButtonToolbar>
@@ -124,13 +124,13 @@ class Cell extends React.Component {
 	}
 }
 
-function DisplayCell(name, displayType){
-	var displayElem = createElement(displayType, {id: name})
+function DisplayCell(name, displayType, props){
+	var displayElem = createElement(displayType, Object.assign({}, props, {id: name}))
 	return (
 		<div>
 			<span className='display-cell-title'>{name}</span>
-			<svg id={name} width='100%' height='400'>
-			</svg>
+			<span className='display-cell-type'>{displayType}</span>
+			{displayElem}
 		</div>
 	)
 }

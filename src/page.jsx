@@ -34,6 +34,7 @@ class Page extends React.Component {
     return (
         <div>
         <NotebookActions actions={this.props.actions} lastSaved={this.props.lastSaved} currentTitle={this.props.title} />
+        <div className='page-mode'>{this.props.mode}</div>
         <div id='deselector'>
           <input ref='deselector' />
         </div>

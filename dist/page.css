@@ -114,3 +114,9 @@ span.display-cell-title {
 	left:10px;
 	top:10px;
 }
+
+.page-mode {
+	position:fixed;
+	left:10px;
+	bottom:10px;
+}
