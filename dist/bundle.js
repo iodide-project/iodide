@@ -35438,14 +35438,28 @@ let reducer = function (state, action) {
 			var cells = state.cells.slice();
 			var index = cells.findIndex(c => c.id === action.id);
 			var direction = 0;
+
+			cells.forEach(cell => {
+				cell.selected = false;return cell;
+			});
+			var nextCell = newCell(state, 'javascript');
+			nextCell.selected = true;
 			if (action.direction == 'above') direction = 1;
-			cells.splice(index + direction, 0, newCell(state, 'javascript'));
-			var nextState = Object.assign({}, state, { cells });
+			cells.splice(index + direction, 0, nextCell);
+			var nextState = Object.assign({}, state, { cells, currentlySelected: nextCell });
 			return nextState;
 
 		case 'ADD_CELL':
+			var cells = state.cells.slice();
+			cells.forEach(cell => {
+				cell.selected = false;return cell;
+			});
+
+			var nextCell = newCell(state, action.cellType);
+			nextCell.selected = true;
 			var nextState = Object.assign({}, state, {
-				cells: [...state.cells, newCell(state, action.cellType)]
+				cells: [...cells, nextCell],
+				currentlySelected: nextCell
 			});
 			return nextState;
 
