@@ -46140,8 +46140,9 @@ function DisplayCell(name, displayType, props) {
 function jsReturnValue(cell) {
 	var resultElem;
 	var returnedSomething;
-	if (cell.value == undefined) returnedSomething = false;
+	if (cell.value == undefined && !cell.rendered) returnedSomething = false;
 	if (cell.value !== undefined) returnedSomething = true;
+	if (cell.value == undefined && cell.rendered) returnedSomething = true;
 	if (returnedSomething) {
 		resultElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_json_tree___default.a, { data: cell.value, hideRoot: true, theme: {
 				scheme: 'bright',
