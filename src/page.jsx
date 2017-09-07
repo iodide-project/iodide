@@ -33,7 +33,7 @@ class Page extends React.Component {
     //{declaredPropertiesPane} // put this in after everything else
     return (
         <div>
-        <NotebookActions actions={this.props.actions} lastSaved={this.props.lastSaved} />
+        <NotebookActions actions={this.props.actions} lastSaved={this.props.lastSaved} currentTitle={this.props.title} />
         <div id='deselector'>
           <input ref='deselector' />
         </div>

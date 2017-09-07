@@ -14,6 +14,16 @@ import marked from 'marked'
 // };
 
 
+var initialState = {
+	title: undefined,
+	cells: [],
+	currentlySelected: undefined,
+	declaredProperties:{},
+	lastValue: undefined,
+	lastSaved: undefined,
+	mode: 'command'
+}
+
 function getId(state) {
   return state.cells.reduce((maxId, cell) => {
     return Math.max(cell.id, maxId)
@@ -35,14 +45,22 @@ let reducer = function (state, action) {
 	switch (action.type) {
 
 		case 'SAVE_NOTEBOOK':
-			// make sure your title is valid before saving!
 			localStorage.setItem(state.title, JSON.stringify(state))
-			//state.lastSaved = new Date()
 			return Object.assign({}, state, {lastSaved: new Date()})
 
 		case 'LOAD_NOTEBOOK':
-			var state = JSON.parse(localStorage.getItem(action.title))
-			return state
+			var newState = JSON.parse(localStorage.getItem(action.title))
+			return newState
+
+		case 'DELETE_NOTEBOOK':
+			var title = action.title
+			if (title === state.title) {
+				if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title)
+				var newState = Object.assign({}, initialState)
+			} else {
+				var newState = Object.assign({}, state)
+			}
+			return newState
 
 		case 'CHANGE_PAGE_TITLE':
 			return Object.assign({}, state, {title: action.title})
@@ -205,4 +223,4 @@ let reducer = function (state, action) {
 	}
 }
 
-export default reducer
+export {reducer, initialState}

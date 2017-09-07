@@ -32962,8 +32962,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_dom__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_react_dom__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__page_jsx__ = __webpack_require__(367);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__persistent_state_jsx__ = __webpack_require__(587);
-
 
 
 
@@ -32975,17 +32973,7 @@ function runFunction(code) {
 	return new Function(code);
 }
 
-var initialState = {
-	title: undefined,
-	cells: [],
-	currentlySelected: undefined,
-	declaredProperties: {},
-	lastValue: undefined,
-	lastSaved: undefined,
-	mode: 'command'
-};
-
-var store = Object(__WEBPACK_IMPORTED_MODULE_2__store_jsx__["a" /* default */])(initialState);
+var store = Object(__WEBPACK_IMPORTED_MODULE_2__store_jsx__["a" /* default */])();
 
 Object(__WEBPACK_IMPORTED_MODULE_3_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 	__WEBPACK_IMPORTED_MODULE_1_react_redux__["a" /* Provider */],
@@ -35346,7 +35334,6 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 //   applyMiddleware(logger)
 // )(createStore)
 
-
 //  function configureStore(
 // 		initialState = {
 // 			cells: [],
@@ -35356,8 +35343,8 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 //   return finalCreateStore(reducer, initialState)
 // }
 
-function configureStore(initialState = {}) {
-	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducer_jsx__["a" /* default */], initialState, Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_2_redux_logger___default.a)));
+function configureStore() {
+	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducer_jsx__["b" /* reducer */], __WEBPACK_IMPORTED_MODULE_1__reducer_jsx__["a" /* initialState */], Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_2_redux_logger___default.a)));
 	//persistStore(store)
 	return store;
 }
@@ -35369,6 +35356,8 @@ function configureStore(initialState = {}) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return reducer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return initialState; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_marked__ = __webpack_require__(93);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_marked___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_marked__);
 
@@ -35386,6 +35375,16 @@ function configureStore(initialState = {}) {
 // 	return out;
 // };
 
+
+var initialState = {
+	title: undefined,
+	cells: [],
+	currentlySelected: undefined,
+	declaredProperties: {},
+	lastValue: undefined,
+	lastSaved: undefined,
+	mode: 'command'
+};
 
 function getId(state) {
 	return state.cells.reduce((maxId, cell) => {
@@ -35408,14 +35407,22 @@ let reducer = function (state, action) {
 	switch (action.type) {
 
 		case 'SAVE_NOTEBOOK':
-			// make sure your title is valid before saving!
 			localStorage.setItem(state.title, JSON.stringify(state));
-			//state.lastSaved = new Date()
 			return Object.assign({}, state, { lastSaved: new Date() });
 
 		case 'LOAD_NOTEBOOK':
-			var state = JSON.parse(localStorage.getItem(action.title));
-			return state;
+			var newState = JSON.parse(localStorage.getItem(action.title));
+			return newState;
+
+		case 'DELETE_NOTEBOOK':
+			var title = action.title;
+			if (title === state.title) {
+				if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title);
+				var newState = Object.assign({}, initialState);
+			} else {
+				var newState = Object.assign({}, state);
+			}
+			return newState;
 
 		case 'CHANGE_PAGE_TITLE':
 			return Object.assign({}, state, { title: action.title });
@@ -35579,7 +35586,7 @@ let reducer = function (state, action) {
 	}
 };
 
-/* harmony default export */ __webpack_exports__["a"] = (reducer);
+
 
 /***/ }),
 /* 281 */
@@ -45793,7 +45800,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
       null,
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_9__notebook_actions_jsx__["a" /* default */], { actions: this.props.actions, lastSaved: this.props.lastSaved }),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_9__notebook_actions_jsx__["a" /* default */], { actions: this.props.actions, lastSaved: this.props.lastSaved, currentTitle: this.props.title }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { id: 'deselector' },
@@ -45840,6 +45847,12 @@ let actions = {
 	loadNotebook: function (title) {
 		return {
 			type: 'LOAD_NOTEBOOK',
+			title: title
+		};
+	},
+	deleteNotebook: function (title) {
+		return {
+			type: 'DELETE_NOTEBOOK',
 			title: title
 		};
 	},
@@ -66797,38 +66810,7 @@ class Title extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 /* harmony default export */ __webpack_exports__["a"] = (Title);
 
 /***/ }),
-/* 587 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-const loadState = () => {
-	try {
-		const serializedState = localStorage.getItem('state');
-		if (serializedState === null) {
-			return undefined;
-		}
-		return JSON.parse(serializedState);
-	} catch (err) {
-		console.log('this failed', err);
-		return undefined;
-	}
-};
-/* unused harmony export loadState */
-
-
-const saveState = state => {
-	try {
-		const serializedState = JSON.stringify(state);
-		localStorage.setItem('state', serializedState);
-	} catch (err) {
-		console.log(err);
-	}
-};
-/* unused harmony export saveState */
-
-
-/***/ }),
+/* 587 */,
 /* 588 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -66853,8 +66835,9 @@ class NotebookActions extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Comp
 		super(props);
 	}
 
-	selectMenuItem(menuItem) {
-		this.props.actions[menuItem]();
+	selectMenuItem(menuItem, evt) {
+		if (menuItem == 'saveNotebook') this.props.actions.saveNotebook();
+		if (menuItem == 'deleteNotebook') this.props.actions.deleteNotebook(this.props.currentTitle);
 	}
 
 	loadNotebook(notebookName) {

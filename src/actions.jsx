@@ -10,6 +10,12 @@ let actions = {
 			title: title
 		}
 	},
+	deleteNotebook: function(title) {
+		return {
+			type: 'DELETE_NOTEBOOK',
+			title: title
+		}
+	},
 	changePageTitle: function(title) {
 		return {
 			type: 'CHANGE_PAGE_TITLE',

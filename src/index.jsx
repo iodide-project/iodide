@@ -4,25 +4,12 @@ import { Provider } from 'react-redux'
 import configureStore from './store.jsx'
 import {render} from 'react-dom'
 import Page from './page.jsx'
-import { loadState, saveState } from './persistent-state.jsx'
-
 
 function runFunction(code) {
 	return new Function(code)
 }
 
-
-var initialState = {
-	title: undefined,
-	cells: [],
-	currentlySelected: undefined,
-	declaredProperties:{},
-	lastValue: undefined,
-	lastSaved: undefined,
-	mode: 'command'
-}
-
-var store = configureStore(initialState)
+var store = configureStore()
 
 render(
 	<Provider store={store}>

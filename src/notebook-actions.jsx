@@ -15,8 +15,9 @@ class NotebookActions extends React.Component {
 		super(props)
 	}
 
-	selectMenuItem(menuItem) {
-		this.props.actions[menuItem]()
+	selectMenuItem(menuItem, evt) {
+		if (menuItem=='saveNotebook') this.props.actions.saveNotebook()
+		if (menuItem=='deleteNotebook') this.props.actions.deleteNotebook(this.props.currentTitle)
 	}
 
 	loadNotebook(notebookName) {
