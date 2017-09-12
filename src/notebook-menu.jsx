@@ -10,7 +10,7 @@ new notebook
 
 */
 
-class NotebookActions extends React.Component {
+class NotebookMenu extends React.Component {
 	constructor(props) {
 		super(props)
 	}
@@ -46,4 +46,4 @@ class NotebookActions extends React.Component {
 	}
 }
 
-export default NotebookActions
+export default NotebookMenu
