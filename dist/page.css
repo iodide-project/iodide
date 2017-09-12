@@ -120,3 +120,10 @@ span.display-cell-title {
 	left:10px;
 	bottom:10px;
 }
+
+span.menu-item-title {
+	font-style:italic;
+	color:gray;
+	font-weight:300;
+	padding-left:8px;
+}

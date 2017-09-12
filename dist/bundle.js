@@ -66958,6 +66958,7 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 				' '
 			);
 		}
+		var currentTitle = this.props.currentTitle !== undefined ? this.props.currentTitle : 'new notebook';
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
 			{ className: 'notebook-actions' },
@@ -66975,12 +66976,22 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* MenuItem */],
 						{ eventKey: "saveNotebook" },
-						'Save Notebook'
+						'Save ',
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							'span',
+							{ className: 'menu-item-title' },
+							currentTitle
+						)
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* MenuItem */],
 						{ eventKey: "deleteNotebook" },
-						'Delete Notebook'
+						'Delete ',
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							'span',
+							{ className: 'menu-item-title' },
+							currentTitle
+						)
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* MenuItem */],

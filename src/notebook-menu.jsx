@@ -57,6 +57,7 @@ class NotebookMenu extends React.Component {
 		if (notebookNames.length) {
 			notebookNames = <DropdownButton onSelect={this.loadNotebook.bind(this)} bsSize="xsmall" title='Notebooks' id='load-notebook'> {notebookNames} </DropdownButton>
 		}
+		var currentTitle = this.props.currentTitle !== undefined ? this.props.currentTitle : 'new notebook'
 		return (
 			<div className='notebook-actions'>
 			    <input id='import-notebook' 
@@ -66,8 +67,8 @@ class NotebookMenu extends React.Component {
           		<a id='export-anchor' style={{display:'none'}} ></a>
 				<ButtonToolbar>
 					<DropdownButton bsSize="xsmall" id='main-menu' bsStyle='default' title="Menu" onSelect={this.selectMenuItem.bind(this)} >
-						<MenuItem   eventKey={"saveNotebook"} >Save Notebook</MenuItem>
-						<MenuItem   eventKey={"deleteNotebook"} >Delete Notebook</MenuItem>
+						<MenuItem   eventKey={"saveNotebook"} >Save <span className='menu-item-title'>{currentTitle}</span></MenuItem>
+						<MenuItem   eventKey={"deleteNotebook"} >Delete <span className='menu-item-title'>{currentTitle}</span></MenuItem>
 						<MenuItem   eventKey={"importNotebook"} >Import Notebook</MenuItem>
 						<MenuItem   eventKey={"exportNotebook"} >Export Notebook</MenuItem>
 						<MenuItem   eventKey={'new'} >New Notebook</MenuItem>
