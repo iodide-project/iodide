@@ -1,4 +1,15 @@
 let actions = {
+	importNotebook: function(newState) {
+		return {
+			type: 'IMPORT_NOTEBOOK',
+			newState: newState
+		}
+	},
+	exportNotebook: function() {
+		return {
+			type: 'EXPORT_NOTEBOOK'
+		}
+	},
 	saveNotebook: function() {
 		return {
 			type: 'SAVE_NOTEBOOK'

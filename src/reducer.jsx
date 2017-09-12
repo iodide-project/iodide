@@ -47,6 +47,21 @@ function newCell(state, cellType){
 let reducer = function (state, action) {
   switch (action.type) {
 
+    case 'EXPORT_NOTEBOOK':
+      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state))
+      var dlAnchorElem = document.getElementById('export-anchor')
+      dlAnchorElem.setAttribute("href", dataStr)
+      var title = state.title
+      var filename = state.title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json'
+      dlAnchorElem.setAttribute("download", filename)
+      dlAnchorElem.click()
+      return state
+
+    case 'IMPORT_NOTEBOOK':
+      // this may need to be refactored
+      var newState = action.newState
+      return newState
+
     case 'SAVE_NOTEBOOK':
       localStorage.setItem(state.title, JSON.stringify(state))
       return Object.assign({}, state, {lastSaved: new Date()})

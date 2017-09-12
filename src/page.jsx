@@ -33,21 +33,21 @@ class Page extends React.Component {
     //{declaredPropertiesPane} // put this in after everything else
     return (
         <div>
-        <NotebookMenu actions={this.props.actions} lastSaved={this.props.lastSaved} currentTitle={this.props.title} />
-        <div className='page-mode'>{this.props.mode}</div>
-        <div id='deselector'>
-          <input ref='deselector' />
-        </div>
-          <Title actions={this.props.actions} title={this.props.title} pageMode={this.props.mode} />
-          <div className='controls'>
-          	<i className='fa fa-plus add-cell' onClick={this.addCell.bind(this)}></i>
+          <NotebookMenu actions={this.props.actions} lastSaved={this.props.lastSaved} currentTitle={this.props.title} />
+          <div className='page-mode'>{this.props.mode}</div>
+          <div id='deselector'>
+            <input ref='deselector' />
           </div>
+            <Title actions={this.props.actions} title={this.props.title} pageMode={this.props.mode} />
+            <div className='controls'>
+            	<i className='fa fa-plus add-cell' onClick={this.addCell.bind(this)}></i>
+            </div>
 
-          <div className='cells'>
-          	{cells}
-          </div>
+            <div className='cells'>
+            	{cells}
+            </div>
+              
             
-          
 
         </div>
     );
