@@ -66801,6 +66801,14 @@ var RENDER_CELL = [['mod+enter'], function () {
   }
 }];
 
+var RENDER_AND_SELECT_BELOW = [['shift+enter'], function () {
+  if (this.props.currentlySelected != undefined) {
+    this.props.actions.renderCell(this.props.currentlySelected.id);
+    this.props.actions.changeMode('command');
+    changeSelection(this, 1);
+  }
+}];
+
 var COMMAND_MODE = [['esc'], function (e) {
   if (this.props.mode == 'edit') {
     this.props.actions.changeMode('command');
@@ -66837,6 +66845,7 @@ jupyterKeybindings.push(MOVE_DOWN);
 jupyterKeybindings.push(EDIT_MODE);
 jupyterKeybindings.push(COMMAND_MODE);
 jupyterKeybindings.push(RENDER_CELL);
+jupyterKeybindings.push(RENDER_AND_SELECT_BELOW);
 jupyterKeybindings.push(DELETE_CELL);
 
 /* harmony default export */ __webpack_exports__["a"] = (jupyterKeybindings);
