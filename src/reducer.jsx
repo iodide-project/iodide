@@ -6,22 +6,22 @@ import marked from 'marked'
 // var INTERPRETER = new Interpreter('')
 // INTERPRETER.defaultProperties = Object.keys(INTERPRETER.global.properties)
 // INTERPRETER.declaredProperties = ()=>{ 
-// 	var out = {};
-// 	var declaredProps = Object.keys(INTERPRETER.global.properties)
-// 					.filter(x=> !new Set(INTERPRETER.defaultProperties).has(x))
-// 	declaredProps.forEach((p)=>out[p]=INTERPRETER.global.properties[p])
-// 	return out;
+//   var out = {};
+//   var declaredProps = Object.keys(INTERPRETER.global.properties)
+//           .filter(x=> !new Set(INTERPRETER.defaultProperties).has(x))
+//   declaredProps.forEach((p)=>out[p]=INTERPRETER.global.properties[p])
+//   return out;
 // };
 
 
 var initialState = {
-	title: undefined,
-	cells: [],
-	currentlySelected: undefined,
-	declaredProperties:{},
-	lastValue: undefined,
-	lastSaved: undefined,
-	mode: 'command'
+  title: undefined,
+  cells: [],
+  currentlySelected: undefined,
+  declaredProperties:{},
+  lastValue: undefined,
+  lastSaved: undefined,
+  mode: 'command'
 }
 
 initialState.cells.push(newCell(initialState, 'javascript'))
@@ -34,205 +34,218 @@ function getId(state) {
 }
 
 function newCell(state, cellType){
-	return {
-		content:'',
-		id: getId(state),
-		cellType: cellType,
-		value: undefined,
-		rendered: false,
-		selected: false
-	}
+  return {
+    content:'',
+    id: getId(state),
+    cellType: cellType,
+    value: undefined,
+    rendered: false,
+    selected: false
+  }
 }
 
 let reducer = function (state, action) {
-	switch (action.type) {
+  switch (action.type) {
 
-		case 'SAVE_NOTEBOOK':
-			localStorage.setItem(state.title, JSON.stringify(state))
-			return Object.assign({}, state, {lastSaved: new Date()})
+    case 'SAVE_NOTEBOOK':
+      localStorage.setItem(state.title, JSON.stringify(state))
+      return Object.assign({}, state, {lastSaved: new Date()})
 
-		case 'LOAD_NOTEBOOK':
-			var newState = JSON.parse(localStorage.getItem(action.title))
-			return newState
+    case 'LOAD_NOTEBOOK':
+      var newState = JSON.parse(localStorage.getItem(action.title))
+      return newState
 
-		case 'DELETE_NOTEBOOK':
-			var title = action.title
-			if (title === state.title) {
-				if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title)
-				var newState = Object.assign({}, initialState)
-			} else {
-				var newState = Object.assign({}, state)
-			}
-			return newState
+    case 'DELETE_NOTEBOOK':
+      var title = action.title
+      if (title === state.title) {
+        if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title)
+        var newState = Object.assign({}, initialState)
+      } else {
+        var newState = Object.assign({}, state)
+      }
+      return newState
 
-		case 'CHANGE_PAGE_TITLE':
-			return Object.assign({}, state, {title: action.title})
+    case 'CHANGE_PAGE_TITLE':
+      return Object.assign({}, state, {title: action.title})
 
-		case 'CHANGE_MODE':
-			var mode = action.mode
-			return Object.assign({}, state, {mode});
+    case 'CHANGE_MODE':
+      var mode = action.mode
+      return Object.assign({}, state, {mode});
 
-		case 'INSERT_CELL':
-			var cells = state.cells.slice()
-			var index = cells.findIndex(c=>c.id===action.id)
-			var direction = (action.direction == 'above') ? 0:1
+    case 'INSERT_CELL':
+      var cells = state.cells.slice()
+      var index = cells.findIndex(c=>c.id===action.id)
+      var direction = (action.direction == 'above') ? 0:1
 
-			cells.forEach((cell)=>{cell.selected=false; return cell})
-			var nextCell = newCell(state, 'javascript')
-			nextCell.selected = true
-			cells.splice(index+direction, 0, nextCell)
-			var nextState = Object.assign({}, state, {cells, currentlySelected: nextCell})
-			return nextState
+      cells.forEach((cell)=>{cell.selected=false; return cell})
+      var nextCell = newCell(state, 'javascript')
+      nextCell.selected = true
+      cells.splice(index+direction, 0, nextCell)
+      var nextState = Object.assign({}, state, {cells, currentlySelected: nextCell})
+      return nextState
 
-		case 'ADD_CELL':
-			var cells = state.cells.slice()
-			cells.forEach((cell)=>{cell.selected = false; return cell})
+    case 'ADD_CELL':
+      var cells = state.cells.slice()
+      cells.forEach((cell)=>{cell.selected = false; return cell})
 
-			var nextCell = newCell(state, action.cellType)
-			nextCell.selected = true
-			var nextState = Object.assign({}, state, {
-				cells: [...cells, nextCell],
-				currentlySelected: nextCell
-			})
-			return nextState
+      var nextCell = newCell(state, action.cellType)
+      nextCell.selected = true
+      var nextState = Object.assign({}, state, {
+        cells: [...cells, nextCell],
+        currentlySelected: nextCell
+      })
+      return nextState
 
-		case 'DESELECT_ALL':
-			var cells = state.cells.slice()
-			cells.forEach((c)=>{c.selected=false; return c})
-			return Object.assign({}, state, {cells}, {currentlySelected: undefined})
+    case 'DESELECT_ALL':
+      var cells = state.cells.slice()
+      cells.forEach((c)=>{c.selected=false; return c})
+      return Object.assign({}, state, {cells}, {currentlySelected: undefined})
 
-		case 'SELECT_CELL':
-			var cells = state.cells.slice()
-			var index = cells.findIndex(c=>c.id===action.id)
-			var thisCell = cells[index]
-			cells.forEach((c)=>c.selected=false)
-			thisCell.selected = true
-			cells[index] = thisCell
-			var currentlySelected = thisCell;
-			var nextState = Object.assign({}, state, {cells}, {currentlySelected})
-			return nextState
+    case 'SELECT_CELL':
+      var cells = state.cells.slice()
+      var index = cells.findIndex(c=>c.id===action.id)
+      var thisCell = cells[index]
+      cells.forEach((c)=>c.selected=false)
+      thisCell.selected = true
+      cells[index] = thisCell
+      var currentlySelected = thisCell;
+      var nextState = Object.assign({}, state, {cells}, {currentlySelected})
+      return nextState
 
-		case 'CELL_UP':
-			var cells = state.cells.slice();
-		  	var index = cells.findIndex(c=>c.id===action.id);
-		  	var nextState = state;
-		  	if (index > 0) {
-		  		var elem = cells[index-1];
-		  		cells[index-1] = cells[index];
-		  		cells[index] = elem;
-		  		nextState = Object.assign({}, state, {cells});
-		  	} 
-		  	return nextState
+    case 'CELL_UP':
+      var cells = state.cells.slice();
+        var index = cells.findIndex(c=>c.id===action.id);
+        var nextState = state;
+        if (index > 0) {
+          var elem = cells[index-1];
+          cells[index-1] = cells[index];
+          cells[index] = elem;
+          nextState = Object.assign({}, state, {cells});
+        } 
+        return nextState
 
-		case 'CELL_DOWN':
-			var cells = state.cells.slice();
-		  	var index = cells.findIndex(c=>c.id===action.id);
-		  	var nextState = state;
-		  	if (index < cells.length-1) {
-		  		var elem = cells[index+1];
-		  		cells[index+1] = cells[index];
-		  		cells[index] = elem;
-		  		 nextState = Object.assign({}, state, {cells});
-		  		
-		  	} 
-		  	return nextState
+    case 'CELL_DOWN':
+      var cells = state.cells.slice();
+        var index = cells.findIndex(c=>c.id===action.id);
+        var nextState = state;
+        if (index < cells.length-1) {
+          var elem = cells[index+1];
+          cells[index+1] = cells[index];
+          cells[index] = elem;
+           nextState = Object.assign({}, state, {cells});
+          
+        } 
+        return nextState
 
-		case 'UPDATE_CELL':
-			var cells = state.cells.slice();
-			var index = cells.findIndex(c=>c.id===action.id);
-			var thisCell = cells[index];
-			thisCell.content = action.content;
-			cells[index] = thisCell;
-			var nextState = Object.assign({}, state, {cells})
-			return nextState
+    case 'UPDATE_CELL':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c=>c.id===action.id);
+      var thisCell = cells[index];
+      thisCell.content = action.content;
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, state, {cells})
+      return nextState
 
-		case 'CHANGE_CELL_TYPE':
-			var cells = state.cells.slice();
-			var index = cells.findIndex(c=>c.id===action.id);
-			var thisCell = cells[index];
-			thisCell.cellType = action.cellType;
-			thisCell.value = undefined;
-			thisCell.rendered = false;
-			cells[index] = thisCell;
-			var nextState = Object.assign({}, state, {cells})
-			return nextState
+    case 'CHANGE_CELL_TYPE':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c=>c.id===action.id);
+      var thisCell = cells[index];
+      thisCell.cellType = action.cellType;
+      thisCell.value = undefined;
+      thisCell.rendered = false;
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, state, {cells})
+      return nextState
 
-		case 'RENDER_CELL':
-			var declaredProperties = state.declaredProperties
+    case 'RENDER_CELL':
+      var declaredProperties = state.declaredProperties
 
-			var cells = state.cells.slice()
-			var index = cells.findIndex(c=>c.id===action.id)
-			var thisCell = cells[index]
+      var cells = state.cells.slice()
+      var index = cells.findIndex(c=>c.id===action.id)
+      var thisCell = cells[index]
 
-			if (action.render) {
-				if (thisCell.cellType === 'javascript') {
-					thisCell.value = undefined;
+      if (action.render) {
+        if (thisCell.cellType === 'javascript') {
+          thisCell.value = undefined;
 
-					// JS-interpreter --- CODE RUN
-					//INTERPRETER.appendCode(thisCell.content);
-					//INTERPRETER.run();
-					
-					var output = new Function(thisCell.content)()
-					thisCell.rendered = true;
+          // JS-interpreter --- CODE RUN
+          //INTERPRETER.appendCode(thisCell.content);
+          //INTERPRETER.run();
+          
+          // var output = window.eval(thisCell.content)
+          console.log("evaled:" + thisCell.content)
+          
+          var output;
+          try {
+    	      output = window.eval(thisCell.content);
+	      } catch(e) {
+	        var err = e.constructor('Error in Evaled Script: ' + e.message);
+	        // +3 because `err` has the line number of the `eval` line plus two.
+	        err.lineNumber = e.lineNumber - err.lineNumber + 3;
+	        output = `${e.name}: ${e.message}  
+(line ${e.lineNumber} column ${e.columnNumber})`
+	        // throw err;
+	      }
+	      thisCell.rendered = true;
 
-					// JS-interpreter --- RETURN VALUE
-					//thisCell.value = INTERPRETER.value;
-					if (output !== undefined) {
-						thisCell.value = output
-					}
+          // JS-interpreter --- RETURN VALUE
+          //thisCell.value = INTERPRETER.value;
+          if (output !== undefined) {
+            thisCell.value = output
+          }
 
-					var lastValue;
-					// Check to see if the returned value has actually updated.
-					// if it hasn't, then nothing was returned from this cell.
-					// if (thisCell.value == state.lastValue) {
-					// 	thisCell.value = undefined;
-					// 	lastValue = state.lastValue;
-					// }
-					// else {
-					// 	lastValue = thisCell.value;
-					// }
-					//declaredProperties = INTERPRETER.declaredProperties();
-				} else if (thisCell.cellType === 'markdown') {
-					// one line, huh.
-					thisCell.value = marked(thisCell.content);
-					thisCell.rendered = true;
-				}
-			} else {
-				thisCell.rendered = false;
-			}
-			
-			
-			cells[index] = thisCell;
-			var nextState = Object.assign({}, state, {cells}, {lastValue});
-			return nextState
+          var lastValue;
+          // Check to see if the returned value has actually updated.
+          // if it hasn't, then nothing was returned from this cell.
+          // if (thisCell.value == state.lastValue) {
+          //   thisCell.value = undefined;
+          //   lastValue = state.lastValue;
+          // }
+          // else {
+          //   lastValue = thisCell.value;
+          // }
+          //declaredProperties = INTERPRETER.declaredProperties();
+        } else if (thisCell.cellType === 'markdown') {
+          // one line, huh.
+          thisCell.value = marked(thisCell.content);
+          thisCell.rendered = true;
+        }
+      } else {
+        thisCell.rendered = false;
+      }
+      
+      
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, state, {cells}, {lastValue});
+      return nextState
 
-		case 'DELETE_CELL':
-			var cells = state.cells.slice()
-			if (!cells.length) return state
-			var index = cells.findIndex(c=>c.id===action.id)
-			var thisCell = state.cells[index]
-			var currentlySelected
-			if (thisCell.selected) {
-				var nextIndex=0;
-				if (cells.length>1) {
-					if (index == cells.length-1) nextIndex = cells.length-2
-					else nextIndex=index+1
-					cells[nextIndex].selected=true
-				}
-				// add the currentlySelected cell to the new spot.
-				currentlySelected = cells[nextIndex]
-			} else {
-				currentlySelected = state.currentlySelected
-			}
+    case 'DELETE_CELL':
+      var cells = state.cells.slice()
+      if (!cells.length) return state
+      var index = cells.findIndex(c=>c.id===action.id)
+      var thisCell = state.cells[index]
+      var currentlySelected
+      if (thisCell.selected) {
+        var nextIndex=0;
+        if (cells.length>1) {
+          if (index == cells.length-1) nextIndex = cells.length-2
+          else nextIndex=index+1
+          cells[nextIndex].selected=true
+        }
+        // add the currentlySelected cell to the new spot.
+        currentlySelected = cells[nextIndex]
+      } else {
+        currentlySelected = state.currentlySelected
+      }
 
-			var nextState = Object.assign({}, state, {
-				cells: state.cells.filter((cell)=> {return cell.id !== action.id})
-			}, {currentlySelected})
-			return nextState
+      var nextState = Object.assign({}, state, {
+        cells: state.cells.filter((cell)=> {return cell.id !== action.id})
+      }, {currentlySelected})
+      return nextState
 
-		default:
-			return state
-	}
+    default:
+      return state
+  }
 }
 
 export {reducer, initialState}
