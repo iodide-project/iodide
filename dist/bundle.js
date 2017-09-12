@@ -45832,7 +45832,12 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 
   render() {
     var cells = this.props.cells.map((cell, i) => {
-      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* default */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+      var cellComponent;
+      if (cell.cellType === 'javascript') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* JavascriptCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+      if (cell.cellType === 'markdown') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["b" /* MarkdownCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+      if (cell.cellType === 'raw') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["c" /* RawCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+      return cellComponent;
+      //return <Cell ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
     });
     var declaredPropertiesPane;
     if (Object.keys(this.props.declaredProperties).length) {
@@ -46001,6 +46006,9 @@ let actions = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return JavascriptCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return MarkdownCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return RawCell; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_json_tree__ = __webpack_require__(184);
@@ -46028,26 +46036,17 @@ const MD_COMPILER = __WEBPACK_IMPORTED_MODULE_5_marksy___default()({ createEleme
 
 
 
-class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 	constructor(props) {
 		super(props);
 		this.state = { showControls: false };
 		this.selectCell = this.selectCell.bind(this);
-	}
-
-	updateCell(content) {
-		this.props.actions.updateCell(this.props.cell.id, content);
+		this.makeButtons = this.makeButtons.bind(this);
 	}
 
 	renderCell(render) {
 		this.props.actions.renderCell(this.props.cell.id);
 	}
-
-	unrender() {
-		this.props.actions.renderCell(this.props.cell.id, false);
-	}
-
-	selected() {}
 
 	cellUp() {
 		this.props.actions.cellUp(this.props.cell.id);
@@ -46079,28 +46078,79 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 		this.setState({ showControls: false });
 	}
 
-	render() {
-		var options = {
-			lineNumbers: !this.props.cell.rendered,
-			readOnly: this.props.cell.rendered,
-			mode: this.props.cell.cellType,
-			lineWrapping: this.props.cell.cellType == 'markdown',
-			theme: 'eclipse'
-		};
-		var resultElem, mainElem;
-		if (this.props.cell.cellType === 'javascript') resultElem = jsReturnValue(this.props.cell);else if (this.props.cell.cellType === 'markdown') resultElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null); //<div dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
+	makeButtons() {
+		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+			'div',
+			{ className: 'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible') },
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["b" /* ButtonToolbar */],
+				null,
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+					{ bsSize: 'xsmall', onClick: this.renderCell.bind(this) },
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' })
+				),
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+					{ bsSize: 'xsmall', onClick: this.cellDown.bind(this) },
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-down', 'aria-hidden': 'true' })
+				),
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+					{ bsSize: 'xsmall', onClick: this.cellUp.bind(this) },
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-up', 'aria-hidden': 'true' })
+				),
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* DropdownButton */],
+					{ bsSize: 'xsmall', id: 'cell-choice-' + this.props.id, bsStyle: 'default', title: this.props.cell.cellType, onSelect: this.changeCellType.bind(this) },
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+						{ eventKey: "javascript" },
+						'JS'
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+						{ eventKey: 'markdown' },
+						'MD'
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+						{ eventKey: 'raw' },
+						'Raw'
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+						{ eventKey: 'dom' },
+						'DOM'
+					)
+				)
+			)
+		);
+	}
 
-		if (this.props.cell.cellType === 'javascript' || this.props.cell.cellType === 'raw' || this.props.cell.cellType === 'markdown' && !this.props.cell.rendered) {
-			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
-				value: this.props.cell.content,
-				onChange: this.updateCell.bind(this),
-				onFocus: this.selectCell,
-				options: options });
-		} else if (this.props.cell.cellType === 'markdown' && this.props.cell.rendered) {
-			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { onDoubleClick: () => this.unrender.bind(this)(false), dangerouslySetInnerHTML: { __html: this.props.cell.value } });
-		} else if (this.props.cell.cellType === 'svg') {
-			mainElem = SVGCell('svg-' + this.props.id);
-		}
+	render() {}
+
+}
+
+class RunnableCell extends GenericCell {
+	constructor(props) {
+		super(props);
+	}
+
+	updateCell(content) {
+		this.props.actions.updateCell(this.props.cell.id, content);
+	}
+
+	mainComponent() {
+		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
+	}
+
+	resultComponent() {
+		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
+	}
+
+	render() {
+
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
 			{ className: 'cell-container', onMouseEnter: this.showControls.bind(this), onMouseLeave: this.hideControls.bind(this) },
@@ -46112,61 +46162,97 @@ class Cell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
 				{ className: 'cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ') + (this.props.cell.rendered ? 'rendered ' : 'unrendered '), onClick: this.selectCell },
-				mainElem,
+				this.mainComponent.bind(this)(),
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 					'div',
 					{ className: 'result' },
-					resultElem
+					this.resultComponent.bind(this)()
 				)
 			),
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'div',
-				{ className: 'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible') },
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["b" /* ButtonToolbar */],
-					null,
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-						{ bsSize: 'xsmall', onClick: this.renderCell.bind(this) },
-						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' })
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-						{ bsSize: 'xsmall', onClick: this.cellDown.bind(this) },
-						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-down', 'aria-hidden': 'true' })
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-						{ bsSize: 'xsmall', onClick: this.cellUp.bind(this) },
-						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-up', 'aria-hidden': 'true' })
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* DropdownButton */],
-						{ bsSize: 'xsmall', id: 'cell-choice-' + this.props.id, bsStyle: 'default', title: this.props.cell.cellType, onSelect: this.changeCellType.bind(this) },
-						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
-							{ eventKey: "javascript" },
-							'JS'
-						),
-						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
-							{ eventKey: 'markdown' },
-							'MD'
-						),
-						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
-							{ eventKey: 'raw' },
-							'Raw'
-						),
-						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
-							{ eventKey: 'dom' },
-							'DOM'
-						)
-					)
-				)
-			)
+			this.makeButtons()
 		);
+	}
+}
+
+class JavascriptCell extends RunnableCell {
+	constructor(props) {
+		super(props);
+	}
+
+	mainComponent() {
+		var options = {
+			lineNumbers: !this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
+			mode: this.props.cell.cellType,
+			lineWrapping: this.props.cell.cellType == 'markdown',
+			theme: 'eclipse'
+		};
+		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
+			value: this.props.cell.content,
+			onChange: this.updateCell.bind(this),
+			onFocus: this.selectCell,
+			options: options });
+	}
+
+	resultComponent() {
+		return jsReturnValue(this.props.cell);
+	}
+}
+
+class RawCell extends RunnableCell {
+	constructor(props) {
+		super(props);
+	}
+
+	mainComponent() {
+		var options = {
+			lineNumbers: !this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
+			mode: this.props.cell.cellType,
+			lineWrapping: this.props.cell.cellType == 'markdown',
+			theme: 'eclipse'
+		};
+		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
+			value: this.props.cell.content,
+			onChange: this.updateCell.bind(this),
+			onFocus: this.selectCell,
+			options: options });
+		return mainElem;
+	}
+
+	resultComponent() {
+		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
+	}
+}
+
+class MarkdownCell extends RunnableCell {
+	constructor(props) {
+		super(props);
+	}
+
+	mainComponent() {
+		var options = {
+			lineNumbers: !this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
+			mode: this.props.cell.cellType,
+			lineWrapping: this.props.cell.cellType == 'markdown',
+			theme: 'eclipse'
+		};
+		var mainElem;
+		if (!this.props.cell.rendered) {
+			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
+				value: this.props.cell.content,
+				onChange: this.updateCell.bind(this),
+				onFocus: this.selectCell,
+				options: options });
+		} else {
+			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { onDoubleClick: () => this.unrender.bind(this)(false), dangerouslySetInnerHTML: { __html: this.props.cell.value } });
+		}
+		return mainElem;
+	}
+
+	resultComponent() {
+		// there is none.
 	}
 }
 
@@ -46222,7 +46308,7 @@ function jsReturnValue(cell) {
 	return resultElem;
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (Cell);
+
 
 /***/ }),
 /* 370 */

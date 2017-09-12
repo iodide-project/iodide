@@ -12,26 +12,16 @@ const MD_COMPILER = marksy({createElement})
 
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem } from 'react-bootstrap'
 
-class Cell extends React.Component {
+class GenericCell extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {showControls:false}
 		this.selectCell = this.selectCell.bind(this)
-	}
-
-	updateCell(content) {
-		this.props.actions.updateCell(this.props.cell.id, content)
+		this.makeButtons = this.makeButtons.bind(this)
 	}
 
 	renderCell(render) {
 		this.props.actions.renderCell(this.props.cell.id)
-	}
-
-	unrender() {
-		this.props.actions.renderCell(this.props.cell.id, false)
-	}
-
-	selected() {
 	}
 
 	cellUp(){
@@ -60,30 +50,52 @@ class Cell extends React.Component {
 	showControls(){this.setState({showControls:true})}
 	hideControls(){this.setState({showControls:false})}
 
+	makeButtons(){
+		return (
+			<div className={'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible')}>
+				<ButtonToolbar >
+
+					<Button bsSize='xsmall' onClick={this.renderCell.bind(this)}><i className="fa fa-play" aria-hidden="true"></i></Button>
+					<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
+					<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
+	      			<DropdownButton bsSize="xsmall" id={'cell-choice-' + this.props.id} bsStyle='default' title={this.props.cell.cellType} onSelect={this.changeCellType.bind(this)} >
+						<MenuItem   eventKey={"javascript"} >JS</MenuItem>
+						<MenuItem   eventKey={'markdown'} >MD</MenuItem>
+						<MenuItem   eventKey={'raw'} >Raw</MenuItem>
+						<MenuItem   eventKey={'dom'} >DOM</MenuItem>
+
+					</ DropdownButton>
+				</ ButtonToolbar>
+			</div>
+		)
+	}
+
+
 	render() {
-		var options = {
-			lineNumbers: !this.props.cell.rendered,
-			readOnly: this.props.cell.rendered,
-			mode: this.props.cell.cellType,
-			lineWrapping: this.props.cell.cellType == 'markdown',
-			theme: 'eclipse'
-		}
-		var resultElem, mainElem
-		if (this.props.cell.cellType === 'javascript') resultElem = jsReturnValue(this.props.cell);
-		else if (this.props.cell.cellType === 'markdown') resultElem = <div></div>//<div dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
 
-		if (this.props.cell.cellType === 'javascript' || this.props.cell.cellType === 'raw' || (this.props.cell.cellType === 'markdown' && !this.props.cell.rendered)) {
-			mainElem = <CodeMirror ref='editor'
-						   value={this.props.cell.content}
-						   onChange={this.updateCell.bind(this)} 
-						   onFocus={this.selectCell}
-						   options={options} />
+	}
 
-		} else if (this.props.cell.cellType === 'markdown' && this.props.cell.rendered) {
-			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)} dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
-		}  else if (this.props.cell.cellType === 'svg') {
-			mainElem = SVGCell('svg-'+this.props.id)
-		}
+}
+
+class RunnableCell extends GenericCell {
+	constructor(props){
+		super(props)
+	}
+
+	updateCell(content) {
+		this.props.actions.updateCell(this.props.cell.id, content)
+	}
+
+	mainComponent(){
+		return <div></div>
+	}
+
+	resultComponent(){
+		return <div></div>
+	}
+
+	render() {
+
 		return (
 			<div className='cell-container' onMouseEnter={this.showControls.bind(this)} onMouseLeave={this.hideControls.bind(this)} >
 				<div><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
@@ -93,36 +105,105 @@ class Cell extends React.Component {
 					(this.props.cell.rendered ? 'rendered ' : 'unrendered ')
 				} onClick={this.selectCell}>
 			
-					{mainElem}
-
-
+					{this.mainComponent.bind(this)()}
 
 					<div className='result'>				
-							{resultElem}
+							{this.resultComponent.bind(this)()}
 					</div>
 				</div>
 
+				{this.makeButtons()}
 
-				<div className={'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible')}>
-					<ButtonToolbar >
-
-						<Button bsSize='xsmall' onClick={this.renderCell.bind(this)}><i className="fa fa-play" aria-hidden="true"></i></Button>
-						<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
-						<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
-		      			<DropdownButton bsSize="xsmall" id={'cell-choice-' + this.props.id} bsStyle='default' title={this.props.cell.cellType} onSelect={this.changeCellType.bind(this)} >
-							<MenuItem   eventKey={"javascript"} >JS</MenuItem>
-							<MenuItem   eventKey={'markdown'} >MD</MenuItem>
-							<MenuItem   eventKey={'raw'} >Raw</MenuItem>
-							<MenuItem   eventKey={'dom'} >DOM</MenuItem>
-
-						</ DropdownButton>
-					</ ButtonToolbar>
-				</div>
 			</div>
 		)
-
 	}
 }
+
+class JavascriptCell extends RunnableCell {
+	constructor(props){
+		super(props)
+	}
+
+	mainComponent(){
+		var options = {
+			lineNumbers: !this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
+			mode: this.props.cell.cellType,
+			lineWrapping: this.props.cell.cellType == 'markdown',
+			theme: 'eclipse'
+		}
+		return ( <CodeMirror ref='editor'
+						   value={this.props.cell.content}
+						   onChange={this.updateCell.bind(this)} 
+						   onFocus={this.selectCell}
+						   options={options} />
+		)
+	}
+
+	resultComponent(){
+		return jsReturnValue(this.props.cell)
+	}
+}
+
+class RawCell extends RunnableCell {
+	constructor(props) {
+		super(props)
+	}
+
+	mainComponent(){
+		var options = {
+			lineNumbers: !this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
+			mode: this.props.cell.cellType,
+			lineWrapping: this.props.cell.cellType == 'markdown',
+			theme: 'eclipse'
+		}
+		var mainElem = <CodeMirror ref='editor'
+						   value={this.props.cell.content}
+						   onChange={this.updateCell.bind(this)} 
+						   onFocus={this.selectCell}
+						   options={options} />
+		return mainElem
+	}
+
+	resultComponent(){
+		return <div></div>
+	}
+}
+
+
+
+class MarkdownCell extends RunnableCell {
+	constructor(props){
+		super(props)
+	}
+
+	mainComponent(){
+		var options = {
+			lineNumbers: !this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
+			mode: this.props.cell.cellType,
+			lineWrapping: this.props.cell.cellType == 'markdown',
+			theme: 'eclipse'
+		}
+		var mainElem
+		if (!this.props.cell.rendered) {
+			mainElem = <CodeMirror ref='editor'
+			   value={this.props.cell.content}
+			   onChange={this.updateCell.bind(this)} 
+			   onFocus={this.selectCell}
+			   options={options} />
+		} else {
+			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)} dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
+		}
+		return mainElem
+	}
+
+	resultComponent() {
+		// there is none.
+	}
+}
+
 
 function DisplayCell(name, displayType, props){
 	var displayElem = createElement(displayType, Object.assign({}, props, {id: name}))
@@ -168,4 +249,4 @@ function jsReturnValue(cell) {
 	return resultElem;
 }
 
-export default Cell;
+export {JavascriptCell, MarkdownCell, RawCell};
