@@ -66841,14 +66841,14 @@ var SELECT_DOWN = [['down'], function () {
   changeSelection(this, 1);
 }];
 
-var RENDER_CELL = [['mod+enter', 'mod+return'], function () {
+var RENDER_CELL = [['mod+enter'], function () {
   if (this.props.currentlySelected != undefined) {
     this.props.actions.renderCell(this.props.currentlySelected.id);
     this.props.actions.changeMode('command');
   }
 }];
 
-var COMMAND_MODE = [['escape', 'esc'], function (e) {
+var COMMAND_MODE = [['esc'], function (e) {
   if (this.props.mode == 'edit') {
     this.props.actions.changeMode('command');
     this.refs.deselector.focus();
