@@ -18,6 +18,8 @@ function stateIsValid(state) {
 class NotebookMenu extends React.Component {
 	constructor(props) {
 		super(props)
+		this.changeMode = this.changeMode.bind(this)
+		this.state = {previousMode: props.mode}
 	}
 
 	selectMenuItem(menuItem, evt) {
@@ -29,6 +31,16 @@ class NotebookMenu extends React.Component {
 
 	loadNotebook(notebookName) {
 		this.props.actions.loadNotebook(notebookName)
+	}
+
+	changeMode(mode) {
+		if (mode == 'editor-modes') {
+			this.props.actions.changeMode(this.state.previousMode)
+		}
+		else {
+			this.setState({previousMode: this.props.mode})
+			this.props.actions.changeMode(mode)
+		}
 	}
 
 	notebookFileImport(evt) {
@@ -74,6 +86,10 @@ class NotebookMenu extends React.Component {
 						<MenuItem   eventKey={'new'} >New Notebook</MenuItem>
 					</ DropdownButton>
 						{notebookNames}
+				</ButtonToolbar>
+				<ButtonToolbar className='mode'>
+					<Button bsSize='xsmall' onClick={()=>{this.changeMode('editor-modes')}}>Editor</Button>
+					<Button bsSize='xsmall'onClick={()=>{this.changeMode('history')}}>History</Button>
 				</ButtonToolbar>
 			</div>
 		)

@@ -45852,14 +45852,32 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   }
 
   render() {
-    var cells = this.props.cells.map((cell, i) => {
-      var cellComponent;
-      if (cell.cellType === 'javascript') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* JavascriptCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-      if (cell.cellType === 'markdown') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["b" /* MarkdownCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-      if (cell.cellType === 'raw') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["c" /* RawCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-      return cellComponent;
-      //return <Cell ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-    });
+
+    var bodyContent;
+
+    if (this.props.mode === 'history') {
+      if (this.props.history.length) {
+        var bodyContent = this.props.history.map((cell, i) => {
+          var cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* HistoryCell */], { ref: 'cell' + cell.id, actions: this.props.actions, cell: cell, id: cell.id, key: i });
+          return cellComponent;
+        });
+      } else {
+        bodyContent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          { className: 'no-history' },
+          'No History'
+        );
+      }
+    } else {
+      var bodyContent = this.props.cells.map((cell, i) => {
+        var cellComponent;
+        if (cell.cellType === 'javascript') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["b" /* JavascriptCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+        if (cell.cellType === 'markdown') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["c" /* MarkdownCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+        if (cell.cellType === 'raw') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["d" /* RawCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+        return cellComponent;
+      });
+    }
+
     var declaredPropertiesPane;
     if (Object.keys(this.props.declaredProperties).length) {
       declaredPropertiesPane = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__declared_properties_jsx__["a" /* default */], { state: this.props.declaredProperties });
@@ -45867,10 +45885,20 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       declaredPropertiesPane = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
     }
     //{declaredPropertiesPane} // put this in after everything else
+    var pageControls;
+    if (this.props.mode == 'history') {
+      pageControls = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'controls' });
+    } else {
+      pageControls = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'div',
+        { className: 'controls' },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-plus add-cell', onClick: this.addCell.bind(this) })
+      );
+    }
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
       null,
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_9__notebook_menu_jsx__["a" /* default */], { actions: this.props.actions, lastSaved: this.props.lastSaved, currentTitle: this.props.title }),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_9__notebook_menu_jsx__["a" /* default */], { actions: this.props.actions, mode: this.props.mode, lastSaved: this.props.lastSaved, currentTitle: this.props.title }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { className: 'page-mode' },
@@ -45882,15 +45910,11 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { ref: 'deselector' })
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_8__title_jsx__["a" /* default */], { actions: this.props.actions, title: this.props.title, pageMode: this.props.mode }),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'div',
-        { className: 'controls' },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-plus add-cell', onClick: this.addCell.bind(this) })
-      ),
+      pageControls,
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { className: 'cells' },
-        cells
+        bodyContent
       )
     );
   }
@@ -46027,9 +46051,10 @@ let actions = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return JavascriptCell; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return MarkdownCell; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return RawCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return JavascriptCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return MarkdownCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return RawCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HistoryCell; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_json_tree__ = __webpack_require__(184);
@@ -46151,6 +46176,45 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 
 	render() {}
 
+}
+
+class HistoryCell extends GenericCell {
+	constructor(props) {
+		super(props);
+		this.state = { showControls: false };
+	}
+
+	render() {
+		var options = {
+			lineNumbers: true,
+			readOnly: true,
+			mode: this.props.cell.cellType,
+			theme: 'eclipse'
+		};
+		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
+			value: this.props.cell.content,
+			options: options });
+
+		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+			'div',
+			{ className: 'cell-container' },
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				'div',
+				{ className: 'cell history-cell' },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'div',
+					{ className: 'history-content' },
+					mainElem
+				),
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'div',
+					{ className: 'history-date' },
+					this.props.cell.lastRan.toUTCString()
+				)
+			),
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'cell-controls' })
+		);
+	}
 }
 
 class RunnableCell extends GenericCell {
@@ -67025,6 +67089,8 @@ function stateIsValid(state) {
 class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 	constructor(props) {
 		super(props);
+		this.changeMode = this.changeMode.bind(this);
+		this.state = { previousMode: props.mode };
 	}
 
 	selectMenuItem(menuItem, evt) {
@@ -67036,6 +67102,15 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 
 	loadNotebook(notebookName) {
 		this.props.actions.loadNotebook(notebookName);
+	}
+
+	changeMode(mode) {
+		if (mode == 'editor-modes') {
+			this.props.actions.changeMode(this.state.previousMode);
+		} else {
+			this.setState({ previousMode: this.props.mode });
+			this.props.actions.changeMode(mode);
+		}
 	}
 
 	notebookFileImport(evt) {
@@ -67127,6 +67202,24 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 					)
 				),
 				notebookNames
+			),
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["b" /* ButtonToolbar */],
+				{ className: 'mode' },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["a" /* Button */],
+					{ bsSize: 'xsmall', onClick: () => {
+							this.changeMode('editor-modes');
+						} },
+					'Editor'
+				),
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["a" /* Button */],
+					{ bsSize: 'xsmall', onClick: () => {
+							this.changeMode('history');
+						} },
+					'History'
+				)
 			)
 		);
 	}

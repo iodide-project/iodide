@@ -77,6 +77,41 @@ class GenericCell extends React.Component {
 
 }
 
+class HistoryCell extends GenericCell {
+	constructor(props) {
+		super(props)
+		this.state = {showControls:false}
+	}
+
+	render() {
+		var options = {
+			lineNumbers: true,
+			readOnly: true,
+			mode: this.props.cell.cellType,
+			theme: 'eclipse'
+		}
+		var mainElem = <CodeMirror ref='editor'
+						   value={this.props.cell.content}
+						   options={options} />
+		
+		
+
+		return (
+			<div className='cell-container'>
+				<div className='cell history-cell'>
+					<div className='history-content'>
+						{mainElem}
+					</div>
+						<div className='history-date'>{this.props.cell.lastRan.toUTCString()}</div>
+				</div>
+				
+
+					<div className={'cell-controls'}>
+					</div>
+				</div>)
+	}
+}
+
 class RunnableCell extends GenericCell {
 	constructor(props){
 		super(props)
@@ -249,4 +284,4 @@ function jsReturnValue(cell) {
 	return resultElem;
 }
 
-export {JavascriptCell, MarkdownCell, RawCell};
+export {JavascriptCell, MarkdownCell, RawCell, HistoryCell};

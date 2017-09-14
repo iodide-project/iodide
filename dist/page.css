@@ -127,3 +127,27 @@ span.menu-item-title {
 	font-weight:300;
 	padding-left:8px;
 }
+
+div.history-cell {
+}
+
+div.history-content {
+		outline:1px solid lightgray;
+
+}
+
+div.history-date {
+	padding-left:33px;
+	margin-top:8px;
+	margin-bottom:8px;
+	font-size:12px;
+	color:gray;
+}
+
+div.no-history {
+	font-size:20px;
+	font-weight:bold;
+	color:lightgray;
+	margin-top:60px;
+	margin-left:30px;
+}
