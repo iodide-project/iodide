@@ -20426,9 +20426,9 @@ module.exports = clamp;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__Collapse__ = __webpack_require__(133);
 /* unused harmony reexport Collapse */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__Dropdown__ = __webpack_require__(82);
-/* unused harmony reexport Dropdown */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_16__Dropdown__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__DropdownButton__ = __webpack_require__(516);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_17__DropdownButton__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_17__DropdownButton__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__Fade__ = __webpack_require__(85);
 /* unused harmony reexport Fade */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__Form__ = __webpack_require__(517);
@@ -20450,7 +20450,7 @@ module.exports = clamp;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__Jumbotron__ = __webpack_require__(527);
 /* unused harmony reexport Jumbotron */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__Label__ = __webpack_require__(528);
-/* unused harmony reexport Label */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_28__Label__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__ListGroup__ = __webpack_require__(529);
 /* unused harmony reexport ListGroup */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__ListGroupItem__ = __webpack_require__(219);
@@ -20458,7 +20458,7 @@ module.exports = clamp;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__Media__ = __webpack_require__(136);
 /* unused harmony reexport Media */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__MenuItem__ = __webpack_require__(536);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_32__MenuItem__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_32__MenuItem__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__Modal__ = __webpack_require__(537);
 /* unused harmony reexport Modal */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__ModalBody__ = __webpack_require__(226);
@@ -35444,7 +35444,9 @@ let reducer = function (state, action) {
       var lastSaved = new Date();
       var outputState = Object.assign({}, state, { lastSaved });
       clearHistory(outputState);
-      localStorage.setItem(state.title, JSON.stringify(outputState));
+      var title;
+      if (action.title !== undefined) title = action.title;else title = state.title;
+      localStorage.setItem(title, JSON.stringify(outputState));
       return Object.assign({}, state, { lastSaved });
 
     case 'LOAD_NOTEBOOK':
@@ -35454,8 +35456,8 @@ let reducer = function (state, action) {
 
     case 'DELETE_NOTEBOOK':
       var title = action.title;
+      if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title);
       if (title === state.title) {
-        if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title);
         var newState = Object.assign({}, initialState);
       } else {
         var newState = Object.assign({}, state);
@@ -45850,10 +45852,25 @@ module.exports = ReactDOMInvalidARIAHook;
 
 
 
+const AUTOSAVE = 'AUTOSAVE: ';
+
 class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   constructor(props) {
     super(props);
     Object(__WEBPACK_IMPORTED_MODULE_7__keybindings_jsx__["a" /* default */])('jupyter', this);
+    setInterval(() => {
+      // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
+      var notebooks = Object.keys(localStorage);
+      var autos = notebooks.filter(n => n.includes(AUTOSAVE));
+
+      if (autos.length) {
+
+        autos.forEach(n => {
+          this.props.actions.deleteNotebook(n);
+        });
+      }
+      this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title));
+    }, 1000 * 60);
   }
 
   addCell() {
@@ -45958,9 +45975,10 @@ let actions = {
 			type: 'EXPORT_NOTEBOOK'
 		};
 	},
-	saveNotebook: function () {
+	saveNotebook: function (title = undefined) {
 		return {
-			type: 'SAVE_NOTEBOOK'
+			type: 'SAVE_NOTEBOOK',
+			title: title
 		};
 	},
 	loadNotebook: function (title) {
@@ -46156,25 +46174,25 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-up', 'aria-hidden': 'true' })
 				),
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* DropdownButton */],
+					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* DropdownButton */],
 					{ bsSize: 'xsmall', id: 'cell-choice-' + this.props.id, bsStyle: 'default', title: this.props.cell.cellType, onSelect: this.changeCellType.bind(this) },
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: "javascript" },
 						'JS'
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: 'markdown' },
 						'MD'
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: 'raw' },
 						'Raw'
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["d" /* MenuItem */],
+						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: 'dom' },
 						'DOM'
 					)
@@ -46205,27 +46223,23 @@ class HistoryCell extends GenericCell {
 			options: options });
 
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-			'a',
-			{ href: '#' },
+			'div',
+			{ className: 'cell-container' },
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
-				{ className: 'cell-container' },
+				{ className: 'cell history-cell' },
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 					'div',
-					{ className: 'cell history-cell' },
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						'div',
-						{ className: 'history-content' },
-						mainElem
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						'div',
-						{ className: 'history-date' },
-						this.props.cell.lastRan.toUTCString()
-					)
+					{ className: 'history-content' },
+					mainElem
 				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'cell-controls' })
-			)
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'div',
+					{ className: 'history-date' },
+					this.props.cell.lastRan.toUTCString()
+				)
+			),
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'cell-controls' })
 		);
 	}
 }
@@ -60333,7 +60347,7 @@ var Label = function (_React$Component) {
   return Label;
 }(__WEBPACK_IMPORTED_MODULE_7_react___default.a.Component);
 
-/* unused harmony default export */ var _unused_webpack_default_export = (Object(__WEBPACK_IMPORTED_MODULE_8__utils_bootstrapUtils__["a" /* bsClass */])('label', Object(__WEBPACK_IMPORTED_MODULE_8__utils_bootstrapUtils__["c" /* bsStyles */])([].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_values___default()(__WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["d" /* State */]), [__WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].DEFAULT, __WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].PRIMARY]), __WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].DEFAULT, Label)));
+/* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_8__utils_bootstrapUtils__["a" /* bsClass */])('label', Object(__WEBPACK_IMPORTED_MODULE_8__utils_bootstrapUtils__["c" /* bsStyles */])([].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_values___default()(__WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["d" /* State */]), [__WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].DEFAULT, __WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].PRIMARY]), __WEBPACK_IMPORTED_MODULE_9__utils_StyleConfig__["e" /* Style */].DEFAULT, Label)));
 
 /***/ }),
 /* 529 */
@@ -67086,14 +67100,15 @@ class Title extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 
 
 
-/*
+// TODO: replace settings w/ a settings file that we can share everywhere.
 
-save
-save as
-load
-new notebook
+var settings = {};
+settings.AUTOSAVE = 'AUTOSAVE: ';
 
-*/
+function formatDateString(d) {
+	var d = new Date(d);
+	return d.toUTCString();
+}
 
 function stateIsValid(state) {
 	// TODO - fill this out and figure out if everything is in order.
@@ -67146,24 +67161,82 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 	}
 
 	render() {
-		var notebookNames = Object.keys(localStorage).map(n => {
+
+		var notebookMenuItems = Object.keys(localStorage).filter(n => !n.includes(settings.AUTOSAVE)).map(n => {
+			var lastSaved = JSON.parse(localStorage[n]).lastSaved;
 			return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* MenuItem */],
+				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */],
 				{ eventKey: n, key: n, id: n },
 				' ',
-				n,
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'span',
+					{ className: 'menu-notebook-name' },
+					n
+				),
+				' ',
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'span',
+					{ className: 'menu-last-saved' },
+					formatDateString(lastSaved)
+				),
 				' '
 			);
 		});
-		if (notebookNames.length) {
-			notebookNames = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["c" /* DropdownButton */],
-				{ onSelect: this.loadNotebook.bind(this), bsSize: 'xsmall', title: 'Notebooks', id: 'load-notebook' },
-				' ',
-				notebookNames,
-				' '
+
+		var autosave = Object.keys(localStorage).filter(n => n.includes(settings.AUTOSAVE));
+		if (autosave.length) {
+			console.log(autosave);
+
+			autosave = autosave[0];
+			var lastSaved = JSON.parse(localStorage[autosave]).lastSaved;
+			var displayTitle = autosave.replace(settings.AUTOSAVE, '');
+			notebookMenuItems = [...[__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */],
+				{ eventKey: autosave,
+					key: autosave,
+					id: autosave },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'span',
+					{ className: 'menu-notebook-name' },
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["e" /* Label */],
+						null,
+						'auto'
+					),
+					' ',
+					displayTitle
+				),
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'span',
+					{ className: 'menu-last-saved' },
+					lastSaved
+				)
+			), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */], { divider: true }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */],
+				{ header: true },
+				'Saved Notebooks'
+			)],, ...notebookMenuItems];
+		}
+
+		if (notebookMenuItems.length) {
+			notebookMenuItems = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["c" /* Dropdown */],
+				{ onSelect: this.loadNotebook.bind(this) },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["c" /* Dropdown */].Toggle,
+					{ bsSize: 'xsmall' },
+					'Notebooks'
+				),
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["c" /* Dropdown */].Menu,
+					{ className: 'load-notebook-menu' },
+					' ',
+					notebookMenuItems,
+					' '
+				)
 			);
 		}
+
 		var currentTitle = this.props.currentTitle !== undefined ? this.props.currentTitle : 'new notebook';
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
@@ -67177,10 +67250,10 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["b" /* ButtonToolbar */],
 				null,
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["c" /* DropdownButton */],
+					__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* DropdownButton */],
 					{ bsSize: 'xsmall', id: 'main-menu', bsStyle: 'default', title: 'Menu', onSelect: this.selectMenuItem.bind(this) },
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* MenuItem */],
+						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: "saveNotebook" },
 						'Save ',
 						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -67190,7 +67263,7 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 						)
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* MenuItem */],
+						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: "deleteNotebook" },
 						'Delete ',
 						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -67200,22 +67273,22 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 						)
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* MenuItem */],
+						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: "importNotebook" },
 						'Import Notebook'
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* MenuItem */],
+						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: "exportNotebook" },
 						'Export Notebook'
 					),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["d" /* MenuItem */],
+						__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: 'new' },
 						'New Notebook'
 					)
 				),
-				notebookNames
+				notebookMenuItems
 			),
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["b" /* ButtonToolbar */],

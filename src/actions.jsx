@@ -10,9 +10,10 @@ let actions = {
 			type: 'EXPORT_NOTEBOOK'
 		}
 	},
-	saveNotebook: function() {
+	saveNotebook: function(title=undefined) {
 		return {
-			type: 'SAVE_NOTEBOOK'
+			type: 'SAVE_NOTEBOOK',
+			title: title
 		}
 	},
 	loadNotebook: function(title) {

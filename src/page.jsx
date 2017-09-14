@@ -10,10 +10,26 @@ import keyBinding from './keybindings.jsx'
 import Title from './title.jsx'
 import NotebookMenu from './notebook-menu.jsx'
 
+const AUTOSAVE = 'AUTOSAVE: '
+
+
 class Page extends React.Component {
   constructor(props) {
     super(props)
     keyBinding('jupyter', this)
+    setInterval(()=>{
+      // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
+      var notebooks = Object.keys(localStorage)
+      var autos = notebooks.filter((n)=>n.includes(AUTOSAVE))
+
+      if (autos.length) {
+
+        autos.forEach((n)=>{
+          this.props.actions.deleteNotebook(n)
+        })
+      }
+      this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title))
+    },1000*60)
   }
 
   addCell() {
@@ -64,6 +80,7 @@ class Page extends React.Component {
     return (
         <div>
           <NotebookMenu actions={this.props.actions} mode={this.props.mode} lastSaved={this.props.lastSaved} currentTitle={this.props.title} />
+
           <div className='page-mode'>{this.props.mode}</div>
           <div id='deselector'>
             <input ref='deselector' />

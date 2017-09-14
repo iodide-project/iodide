@@ -82,7 +82,10 @@ let reducer = function (state, action) {
       var lastSaved = new Date()
       var outputState = Object.assign({}, state, {lastSaved})
       clearHistory(outputState)
-      localStorage.setItem(state.title, JSON.stringify(outputState))
+      var title
+      if (action.title!==undefined) title = action.title
+      else title = state.title
+      localStorage.setItem(title, JSON.stringify(outputState))
       return Object.assign({}, state, {lastSaved})
 
     case 'LOAD_NOTEBOOK':
@@ -92,8 +95,8 @@ let reducer = function (state, action) {
 
     case 'DELETE_NOTEBOOK':
       var title = action.title
+      if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title)
       if (title === state.title) {
-        if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title)
         var newState = Object.assign({}, initialState)
       } else {
         var newState = Object.assign({}, state)

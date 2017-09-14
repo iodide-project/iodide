@@ -111,7 +111,7 @@ span.display-cell-title {
 }
 
 .notebook-actions {
-	position:fixed;
+	position:absolute;
 	left:10px;
 	top:10px;
 }
@@ -157,4 +157,26 @@ div.no-history {
 	position:fixed;
 	right: 10px;
 	top:10px;
+}
+
+ul.load-notebook-menu {
+	min-width:525px;
+	background-color:white;
+}
+
+
+.load-notebook-menu span.menu-notebook-name {
+	display:inline-block;
+	min-width: 300px;
+	text-overflow:ellipsis;
+	padding-right:15px;
+	max-height:30px;
+}
+
+.load-notebook-menu span.menu-last-saved {
+	display:inline-block;
+	width:200px;
+	font-size:12px;
+	color:gray;
+	font-weight:300;
 }

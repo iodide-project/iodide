@@ -1,14 +1,15 @@
 import React from 'react'
-import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem } from 'react-bootstrap'
+import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, Dropdown } from 'react-bootstrap'
 
-/*
+// TODO: replace settings w/ a settings file that we can share everywhere.
 
-save
-save as
-load
-new notebook
+var settings = {}
+settings.AUTOSAVE = 'AUTOSAVE: '
 
-*/
+function formatDateString(d) {
+  var d = new Date(d)
+  return d.toUTCString()
+}
 
 function stateIsValid(state) {
 	// TODO - fill this out and figure out if everything is in order.
@@ -63,12 +64,43 @@ class NotebookMenu extends React.Component {
 	}
 
 	render() {
-		var notebookNames = Object.keys(localStorage).map((n)=> {
-			return <MenuItem eventKey={n} key={n} id={n}> {n} </MenuItem>
+		
+		
+		var notebookMenuItems = Object.keys(localStorage).filter((n)=>!n.includes(settings.AUTOSAVE)).map((n)=> {
+			var lastSaved = JSON.parse(localStorage[n]).lastSaved
+			return <MenuItem eventKey={n} key={n} id={n}> <span className="menu-notebook-name">{n}</span> <span className="menu-last-saved">{formatDateString(lastSaved)}</span> </MenuItem>
 		})
-		if (notebookNames.length) {
-			notebookNames = <DropdownButton onSelect={this.loadNotebook.bind(this)} bsSize="xsmall" title='Notebooks' id='load-notebook'> {notebookNames} </DropdownButton>
+
+		var autosave = Object.keys(localStorage).filter((n)=>n.includes(settings.AUTOSAVE))
+		if (autosave.length) {
+					console.log(autosave)
+
+			autosave = autosave[0]
+			var lastSaved = JSON.parse(localStorage[autosave]).lastSaved
+			var displayTitle = autosave.replace(settings.AUTOSAVE, '')
+			notebookMenuItems = [...[
+				<MenuItem eventKey={autosave} 
+					key={autosave} 
+					id={autosave}> 
+						<span className="menu-notebook-name"><Label>auto</Label> {displayTitle}</span> 
+						<span className="menu-last-saved">{lastSaved}</span> 
+				</MenuItem>,
+				<MenuItem divider />,
+				<MenuItem header>Saved Notebooks</ MenuItem>
+				],
+				, ...notebookMenuItems
+			]
 		}
+
+		if (notebookMenuItems.length) {
+			notebookMenuItems = <Dropdown onSelect={this.loadNotebook.bind(this)} > 
+				<Dropdown.Toggle bsSize="xsmall">Notebooks</Dropdown.Toggle>
+				<Dropdown.Menu className='load-notebook-menu'> {notebookMenuItems} </Dropdown.Menu>
+			</Dropdown>
+		}
+
+
+
 		var currentTitle = this.props.currentTitle !== undefined ? this.props.currentTitle : 'new notebook'
 		return (
 			<div className='notebook-actions'>
@@ -85,7 +117,7 @@ class NotebookMenu extends React.Component {
 						<MenuItem   eventKey={"exportNotebook"} >Export Notebook</MenuItem>
 						<MenuItem   eventKey={'new'} >New Notebook</MenuItem>
 					</ DropdownButton>
-						{notebookNames}
+						{notebookMenuItems}
 				</ButtonToolbar>
 				<ButtonToolbar className='mode-buttons'>
 					<Button bsSize='xsmall' onClick={()=>{this.changeMode('editor-modes')}}>Editor</Button>

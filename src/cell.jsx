@@ -97,7 +97,6 @@ class HistoryCell extends GenericCell {
 		
 
 		return (
-		<a href='#'>
 			<div className='cell-container'>
 				<div className='cell history-cell'>
 					<div className='history-content'>
@@ -110,7 +109,7 @@ class HistoryCell extends GenericCell {
 					<div className={'cell-controls'}>
 					</div>
 				</div>
-		</a>)
+			)
 	}
 }
 
