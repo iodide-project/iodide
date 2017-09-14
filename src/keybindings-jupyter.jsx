@@ -110,7 +110,9 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
   if (this.props.currentlySelected!=undefined) {
     this.props.actions.renderCell(this.props.currentlySelected.id)
     this.props.actions.changeMode('command')
-    // if the newly rendered cell is at the end of the list, select the next.
+    var cells = this.props.cells.slice()
+    var index = cells.findIndex(c=>c.id===this.props.currentlySelected.id)
+    if (index == cells.length-1) this.props.actions.addCell('javascript')
     changeSelection(this, 1)
   }
 }]
