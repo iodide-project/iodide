@@ -110,6 +110,7 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
   if (this.props.currentlySelected!=undefined) {
     this.props.actions.renderCell(this.props.currentlySelected.id)
     this.props.actions.changeMode('command')
+    // if the newly rendered cell is at the end of the list, select the next.
     changeSelection(this, 1)
   }
 }]
