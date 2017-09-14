@@ -35412,6 +35412,11 @@ function clearHistory(state) {
   state.history = [];
 }
 
+function scrollToCell(cellID) {
+  var elem = document.getElementById('cell-' + cellID);
+  elem.scrollIntoView();
+}
+
 let reducer = function (state, action) {
   switch (action.type) {
 
@@ -35505,6 +35510,7 @@ let reducer = function (state, action) {
       cells[index] = thisCell;
       var currentlySelected = thisCell;
       var nextState = Object.assign({}, state, { cells }, { currentlySelected });
+      scrollToCell(thisCell.id);
       return nextState;
 
     case 'CELL_UP':
@@ -46196,23 +46202,27 @@ class HistoryCell extends GenericCell {
 			options: options });
 
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-			'div',
-			{ className: 'cell-container' },
+			'a',
+			{ href: '#' },
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
-				{ className: 'cell history-cell' },
+				{ className: 'cell-container' },
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 					'div',
-					{ className: 'history-content' },
-					mainElem
+					{ className: 'cell history-cell' },
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						'div',
+						{ className: 'history-content' },
+						mainElem
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						'div',
+						{ className: 'history-date' },
+						this.props.cell.lastRan.toUTCString()
+					)
 				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					'div',
-					{ className: 'history-date' },
-					this.props.cell.lastRan.toUTCString()
-				)
-			),
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'cell-controls' })
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'cell-controls' })
+			)
 		);
 	}
 }
@@ -46235,10 +46245,9 @@ class RunnableCell extends GenericCell {
 	}
 
 	render() {
-
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
-			{ className: 'cell-container', onMouseEnter: this.showControls.bind(this), onMouseLeave: this.hideControls.bind(this) },
+			{ id: 'cell-' + this.props.cell.id, className: 'cell-container', onMouseEnter: this.showControls.bind(this), onMouseLeave: this.hideControls.bind(this) },
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
 				{ style: { display: "none" } },

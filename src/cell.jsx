@@ -97,6 +97,7 @@ class HistoryCell extends GenericCell {
 		
 
 		return (
+		<a href='#'>
 			<div className='cell-container'>
 				<div className='cell history-cell'>
 					<div className='history-content'>
@@ -108,7 +109,8 @@ class HistoryCell extends GenericCell {
 
 					<div className={'cell-controls'}>
 					</div>
-				</div>)
+				</div>
+		</a>)
 	}
 }
 
@@ -130,9 +132,8 @@ class RunnableCell extends GenericCell {
 	}
 
 	render() {
-
 		return (
-			<div className='cell-container' onMouseEnter={this.showControls.bind(this)} onMouseLeave={this.hideControls.bind(this)} >
+			<div id={'cell-'+ this.props.cell.id} className='cell-container' onMouseEnter={this.showControls.bind(this)} onMouseLeave={this.hideControls.bind(this)} >
 				<div style={{display:"none"}}><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
 				<div className={'cell ' + 
 					(this.props.cell.selected ? 'selected-cell ' : ' ') + 

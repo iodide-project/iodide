@@ -50,6 +50,11 @@ function clearHistory(state) {
   state.history = []
 }
 
+function scrollToCell(cellID) {
+  var elem = document.getElementById('cell-'+cellID)
+  elem.scrollIntoView()
+}
+
 let reducer = function (state, action) {
   switch (action.type) {
 
@@ -137,6 +142,7 @@ let reducer = function (state, action) {
       cells[index] = thisCell
       var currentlySelected = thisCell;
       var nextState = Object.assign({}, state, {cells}, {currentlySelected})
+      scrollToCell(thisCell.id)
       return nextState
 
     case 'CELL_UP':
