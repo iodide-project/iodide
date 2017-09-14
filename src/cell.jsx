@@ -98,7 +98,7 @@ class RunnableCell extends GenericCell {
 
 		return (
 			<div className='cell-container' onMouseEnter={this.showControls.bind(this)} onMouseLeave={this.hideControls.bind(this)} >
-				<div><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
+				<div style={{display:"none"}}><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
 				<div className={'cell ' + 
 					(this.props.cell.selected ? 'selected-cell ' : ' ') + 
 					(this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ') +

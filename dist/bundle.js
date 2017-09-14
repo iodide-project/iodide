@@ -46156,7 +46156,7 @@ class RunnableCell extends GenericCell {
 			{ className: 'cell-container', onMouseEnter: this.showControls.bind(this), onMouseLeave: this.hideControls.bind(this) },
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
-				null,
+				{ style: { display: "none" } },
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { onClick: this.deleteCell.bind(this), className: "fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible'), 'aria-hidden': 'true' })
 			),
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
