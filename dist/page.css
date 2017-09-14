@@ -151,3 +151,9 @@ div.no-history {
 	margin-top:60px;
 	margin-left:30px;
 }
+
+.mode-buttons {
+	position:fixed;
+	right: 10px;
+	top:10px;
+}

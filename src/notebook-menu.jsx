@@ -87,7 +87,7 @@ class NotebookMenu extends React.Component {
 					</ DropdownButton>
 						{notebookNames}
 				</ButtonToolbar>
-				<ButtonToolbar className='mode'>
+				<ButtonToolbar className='mode-buttons'>
 					<Button bsSize='xsmall' onClick={()=>{this.changeMode('editor-modes')}}>Editor</Button>
 					<Button bsSize='xsmall'onClick={()=>{this.changeMode('history')}}>History</Button>
 				</ButtonToolbar>
