@@ -56,7 +56,8 @@ div.declared-variables {
 }
 
 div.cell-container {
-	margin-top:20px;
+	padding-top:10px;
+	margin-top:15px;
 	margin-bottom:20px;
 	width:1100px;
 	display:flex;

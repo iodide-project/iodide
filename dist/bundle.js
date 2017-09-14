@@ -35414,7 +35414,10 @@ function clearHistory(state) {
 
 function scrollToCell(cellID) {
   var elem = document.getElementById('cell-' + cellID);
-  elem.scrollIntoView();
+  elem.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
 }
 
 let reducer = function (state, action) {
