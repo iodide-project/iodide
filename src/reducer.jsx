@@ -13,7 +13,6 @@ import marked from 'marked'
 //   return out;
 // };
 
-
 var initialState = {
   title: undefined,
   cells: [],
@@ -21,7 +20,8 @@ var initialState = {
   declaredProperties:{},
   lastValue: undefined,
   lastSaved: undefined,
-  mode: 'command'
+  mode: 'command',
+  history:[]
 }
 
 initialState.cells.push(newCell(initialState, 'javascript'))
@@ -44,11 +44,19 @@ function newCell(state, cellType){
   }
 }
 
+function clearHistory(state) {
+  // remove history and declared properties before exporting the state.
+  state.declaredProperties = {}
+  state.history = []
+}
+
 let reducer = function (state, action) {
   switch (action.type) {
 
     case 'EXPORT_NOTEBOOK':
-      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state))
+      var outputState = Object.assign({}, state)
+      clearHistory(outputState)
+      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(outputState))
       var dlAnchorElem = document.getElementById('export-anchor')
       dlAnchorElem.setAttribute("href", dataStr)
       var title = state.title
@@ -63,11 +71,15 @@ let reducer = function (state, action) {
       return newState
 
     case 'SAVE_NOTEBOOK':
-      localStorage.setItem(state.title, JSON.stringify(state))
-      return Object.assign({}, state, {lastSaved: new Date()})
+      var lastSaved = new Date()
+      var outputState = Object.assign({}, state, {lastSaved})
+      clearHistory(outputState)
+      localStorage.setItem(state.title, JSON.stringify(outputState))
+      return Object.assign({}, state, {lastSaved})
 
     case 'LOAD_NOTEBOOK':
       var newState = JSON.parse(localStorage.getItem(action.title))
+      clearHistory(newState)
       return newState
 
     case 'DELETE_NOTEBOOK':
@@ -173,22 +185,32 @@ let reducer = function (state, action) {
       return nextState
 
     case 'RENDER_CELL':
-      var declaredProperties = state.declaredProperties
 
-      var cells = state.cells.slice()
+      var newState = Object.assign({}, state)
+      var declaredProperties = newState.declaredProperties
+      var cells = newState.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = cells[index]
 
       if (action.render) {
+        
         if (thisCell.cellType === 'javascript') {
+
+          // add to newState.history
+          newState.history.push({
+            cellID: thisCell.id,
+            lastRan: new Date(),
+            content: thisCell.content
+          }) 
+
+
           thisCell.value = undefined;
 
           // JS-interpreter --- CODE RUN
           //INTERPRETER.appendCode(thisCell.content);
           //INTERPRETER.run();
           
-          // var output = window.eval(thisCell.content)
-          console.log("evaled:" + thisCell.content)
+          console.log("evaled: " + thisCell.content)
           
           var output;
           try {
@@ -231,7 +253,7 @@ let reducer = function (state, action) {
       
       
       cells[index] = thisCell;
-      var nextState = Object.assign({}, state, {cells}, {lastValue});
+      var nextState = Object.assign({}, newState, {cells}, {lastValue});
       return nextState
 
     case 'DELETE_CELL':
