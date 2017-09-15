@@ -63,7 +63,7 @@ class GenericCell extends React.Component {
 						<MenuItem   eventKey={'markdown'} >MD</MenuItem>
 						<MenuItem   eventKey={'raw'} >Raw</MenuItem>
 						<MenuItem   eventKey={'dom'} >DOM</MenuItem>
-
+						<MenuItem   eventKey={'external scripts'} >external scripts</MenuItem>
 					</ DropdownButton>
 				</ ButtonToolbar>
 			</div>
@@ -180,6 +180,32 @@ class JavascriptCell extends RunnableCell {
 	}
 }
 
+class ExternalScriptCell extends RunnableCell {
+	constructor(props) {
+		super(props)
+	}
+
+	mainComponent(){
+		var options = {
+			lineNumbers: !this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
+			mode: this.props.cell.cellType,
+			lineWrapping: this.props.cell.cellType == 'markdown',
+			theme: 'eclipse'
+		}
+		var mainElem = <CodeMirror ref='editor'
+						   value={this.props.cell.content}
+						   onChange={this.updateCell.bind(this)} 
+						   onFocus={this.selectCell}
+						   options={options} />
+		return mainElem
+	}
+
+	resultComponent(){
+		return <div></div>
+	}
+}
+
 class RawCell extends RunnableCell {
 	constructor(props) {
 		super(props)
@@ -284,4 +310,4 @@ function jsReturnValue(cell) {
 	return resultElem;
 }
 
-export {JavascriptCell, MarkdownCell, RawCell, HistoryCell};
+export {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell};
