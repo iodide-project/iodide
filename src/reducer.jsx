@@ -66,6 +66,16 @@ function scrollToCell(cellID) {
 }
 
 
+function addExternalScript(scriptUrl){
+  // FIXME there must be a better way to do this with promises etc...
+  var head = document.getElementsByTagName('head')[0];
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = scriptUrl;
+  head.appendChild(script);
+}
+
+
 let reducer = function (state, action) {
   switch (action.type) {
 
@@ -206,7 +216,6 @@ let reducer = function (state, action) {
       return nextState
 
     case 'RENDER_CELL':
-
       var newState = Object.assign({}, state)
       var declaredProperties = newState.declaredProperties
       var cells = newState.cells.slice()
@@ -244,7 +253,9 @@ let reducer = function (state, action) {
           thisCell.rendered = true;
         } else if (thisCell.cellType === 'external scripts') {
           var scriptUrls = thisCell.content.split("\n").filter(s => s!="");
-          console.log(scriptUrls);
+          var newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script));
+          newScripts.forEach(addExternalScript)
+          newState.externalScripts.push(...newScripts)
           thisCell.value = "loaded scripts";
           thisCell.rendered = true;
         }
