@@ -13,19 +13,22 @@ import marked from 'marked'
 //   return out;
 // };
 
-var initialState = {
-  title: undefined,
-  cells: [],
-  currentlySelected: undefined,
-  declaredProperties:{},
-  lastValue: undefined,
-  lastSaved: undefined,
-  mode: 'command',
-  history:[],
-  externalScripts:[]
+
+function newBlankState(){
+  return  {
+    title: undefined,
+    cells: [],
+    currentlySelected: undefined,
+    declaredProperties:{},
+    lastValue: undefined,
+    lastSaved: undefined,
+    mode: 'command',
+    history:[],
+    externalScripts:[]
+  }
 }
 
-
+var initialState = newBlankState()
 
 initialState.cells.push(newCell(initialState, 'javascript'))
 initialState.currentlySelected = initialState.cells[0]
@@ -51,6 +54,7 @@ function clearHistory(state) {
   // remove history and declared properties before exporting the state.
   state.declaredProperties = {}
   state.history = []
+  state.externalScripts = []
 }
 
 function scrollToCell(cellID) {
@@ -93,9 +97,10 @@ let reducer = function (state, action) {
       return Object.assign({}, state, {lastSaved})
 
     case 'LOAD_NOTEBOOK':
-      var newState = JSON.parse(localStorage.getItem(action.title))
-      clearHistory(newState)
-      return newState
+      var newState = newBlankState();
+      var loadedState = JSON.parse(localStorage.getItem(action.title))
+      clearHistory(loadedState)
+      return Object.assign(newState,loadedState)
 
     case 'DELETE_NOTEBOOK':
       var title = action.title
@@ -221,13 +226,13 @@ let reducer = function (state, action) {
 
           var output;
           try {
-    	      output = window.eval(thisCell.content);
-	      } catch(e) {
-	        var err = e.constructor('Error in Evaled Script: ' + e.message);
-	        err.lineNumber = e.lineNumber - err.lineNumber + 3;
-	        output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
-	      }
-	      thisCell.rendered = true;
+            output = window.eval(thisCell.content);
+          } catch(e) {
+            var err = e.constructor('Error in Evaled Script: ' + e.message);
+            err.lineNumber = e.lineNumber - err.lineNumber + 3;
+            output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+          }
+          thisCell.rendered = true;
 
           if (output !== undefined) {
             thisCell.value = output
@@ -236,6 +241,11 @@ let reducer = function (state, action) {
         } else if (thisCell.cellType === 'markdown') {
           // one line, huh.
           thisCell.value = marked(thisCell.content);
+          thisCell.rendered = true;
+        } else if (thisCell.cellType === 'external scripts') {
+          var scriptUrls = thisCell.content.split("\n").filter(s => s!="");
+          console.log(scriptUrls);
+          thisCell.value = "loaded scripts";
           thisCell.rendered = true;
         }
       } else {
