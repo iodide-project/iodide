@@ -21,8 +21,11 @@ var initialState = {
   lastValue: undefined,
   lastSaved: undefined,
   mode: 'command',
-  history:[]
+  history:[],
+  externalScripts:[]
 }
+
+
 
 initialState.cells.push(newCell(initialState, 'javascript'))
 initialState.currentlySelected = initialState.cells[0]
@@ -57,6 +60,7 @@ function scrollToCell(cellID) {
     block: 'start'
   })
 }
+
 
 let reducer = function (state, action) {
   switch (action.type) {
@@ -205,55 +209,30 @@ let reducer = function (state, action) {
       var thisCell = cells[index]
 
       if (action.render) {
-        
         if (thisCell.cellType === 'javascript') {
-
           // add to newState.history
           newState.history.push({
             cellID: thisCell.id,
             lastRan: new Date(),
             content: thisCell.content
-          }) 
-
+          })
 
           thisCell.value = undefined;
 
-          // JS-interpreter --- CODE RUN
-          //INTERPRETER.appendCode(thisCell.content);
-          //INTERPRETER.run();
-          
-          console.log("evaled: " + thisCell.content)
-          
           var output;
           try {
     	      output = window.eval(thisCell.content);
 	      } catch(e) {
 	        var err = e.constructor('Error in Evaled Script: ' + e.message);
-	        // +3 because `err` has the line number of the `eval` line plus two.
 	        err.lineNumber = e.lineNumber - err.lineNumber + 3;
-	        output = `${e.name}: ${e.message}  
-(line ${e.lineNumber} column ${e.columnNumber})`
-	        // throw err;
+	        output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
 	      }
 	      thisCell.rendered = true;
 
-          // JS-interpreter --- RETURN VALUE
-          //thisCell.value = INTERPRETER.value;
           if (output !== undefined) {
             thisCell.value = output
           }
-
           var lastValue;
-          // Check to see if the returned value has actually updated.
-          // if it hasn't, then nothing was returned from this cell.
-          // if (thisCell.value == state.lastValue) {
-          //   thisCell.value = undefined;
-          //   lastValue = state.lastValue;
-          // }
-          // else {
-          //   lastValue = thisCell.value;
-          // }
-          //declaredProperties = INTERPRETER.declaredProperties();
         } else if (thisCell.cellType === 'markdown') {
           // one line, huh.
           thisCell.value = marked(thisCell.content);
@@ -262,7 +241,6 @@ let reducer = function (state, action) {
       } else {
         thisCell.rendered = false;
       }
-      
       
       cells[index] = thisCell;
       var nextState = Object.assign({}, newState, {cells}, {lastValue});
