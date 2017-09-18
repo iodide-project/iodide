@@ -258,6 +258,13 @@ let reducer = function (state, action) {
           newState.externalScripts.push(...newScripts)
           thisCell.value = "loaded scripts";
           thisCell.rendered = true;
+          // add to newState.history
+          newState.history.push({
+            cellID: thisCell.id,
+            lastRan: new Date(),
+            content: "added external scripts:\n" + ( newScripts.join("\n") )
+          })
+
         }
       } else {
         thisCell.rendered = false;
