@@ -262,7 +262,7 @@ let reducer = function (state, action) {
           newState.history.push({
             cellID: thisCell.id,
             lastRan: new Date(),
-            content: "added external scripts:\n" + ( newScripts.join("\n") )
+            content: "// added external scripts:\n" + ( newScripts.map(s => "// "+s).join("\n") )
           })
 
         }
