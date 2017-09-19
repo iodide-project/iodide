@@ -1,18 +1,4 @@
-
-//import Interpreter from 'js-interpreter'
-
 import marked from 'marked'
-
-// var INTERPRETER = new Interpreter('')
-// INTERPRETER.defaultProperties = Object.keys(INTERPRETER.global.properties)
-// INTERPRETER.declaredProperties = ()=>{ 
-//   var out = {};
-//   var declaredProps = Object.keys(INTERPRETER.global.properties)
-//           .filter(x=> !new Set(INTERPRETER.defaultProperties).has(x))
-//   declaredProps.forEach((p)=>out[p]=INTERPRETER.global.properties[p])
-//   return out;
-// };
-
 
 function newBlankState(){
   return  {
@@ -57,56 +43,82 @@ function clearHistory(state) {
   state.externalScripts = []
 }
 
-function scrollToCellIfNeeded(cellID) {
-  var elem = document.getElementById('cell-'+cellID);
-  var cellOutside = isCellOutsideViewport(elem);
-  console.log("cell outside viewport?", cellOutside);
-  if(cellOutside){
-    elem.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    })
-  }
-}
+// function scrollToCellIfNeeded(cellID) {
+//   var elem = document.getElementById('cell-'+cellID);
+//   var cellOutside = isCellOutsideViewport(elem);
+//   console.log("cell outside viewport?", cellOutside);
+//   if ((cellOutside=="ABOVE_VIEWPORT")
+//     ||(cellOutside=="BOTTOM_IN_VIEWPORT")){
+//     console.log("attempted scroll")
+//     elem.scrollIntoView({
+//       behavior: 'smooth',
+//       block: 'start'
+//     })
+//   } else if ((cellOutside=="TOP_IN_VIEWPORT")
+//     ||(cellOutside=="BELOW_VIEWPORT")){
+//     console.log("attempted scroll")
+//     elem.scrollIntoView({
+//       behavior: 'smooth',
+//       block: 'start'
+//     })
+//   }
+// }
 
 // function isCellOutsideViewport(el) {
 //     var rect = el.getBoundingClientRect();
-//     // true if either: the bottom of the rect is above the top of the viewport,
-//     // or the top of the rect is below the bottom of the viewport,
-//     console.log(
-//       "bottom", rect.bottom, "<0     ",
-//       "windowHeight:",(window.innerHeight || document.documentElement.clientHeight),
-//       "<top",rect.top
-//     )
-//     return (
-//       (rect.bottom <= 0) ||
-//       ((window.innerHeight || document.documentElement.clientHeight) <= rect.top)
-//     );
+//     var windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+//     var tallerThanWindow = (rect.bottom-rect.top)>windowHeight
+//     if (rect.bottom <= 0){
+//       return "ABOVE_VIEWPORT"
+//     } else if (rect.top>=windowHeight){
+//       return "BELOW_VIEWPORT"
+//     } else if ((rect.top<=0)&&(0<=rect.bottom)){
+//       return "BOTTOM_IN_VIEWPORT"
+//     } else if ((rect.top<=windowHeight)&&(windowHeight<=rect.bottom)){
+//       return "TOP_IN_VIEWPORT"
+//     } else {
+//       return false
+//     };
 // }
 
-function isCellOutsideViewport(el) {
-    var rect = el.getBoundingClientRect();
-    // true if either: the bottom of the rect is above the top of the viewport,
-    // or the top of the rect is below the bottom of the viewport,
-    // console.log(
-    //   "bottom", rect.bottom, "<0     ",
-    //   "windowHeight:",(window.innerHeight || document.documentElement.clientHeight),
-    //   "<top",rect.top
-    // );
-
-    var windowBottom = (window.innerHeight || document.documentElement.clientHeight);
-    if (rect.bottom <= 0){
-      return "ABOVE_VIEWPORT"
-    } else if (rect.top>=windowBottom){
-      return "BELOW_VIEWPORT"
+function scrollToCellIfNeeded(cellID) {
+  var elem = document.getElementById('cell-'+cellID);
+  var rect = elem.getBoundingClientRect();
+  var windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+  var tallerThanWindow = (rect.bottom-rect.top)>windowHeight
+  var cellPosition
+  // verbose but readable
+  if (rect.bottom <= 0){
+      cellPosition = "ABOVE_VIEWPORT"
+    } else if (rect.top>=windowHeight){
+      cellPosition = "BELOW_VIEWPORT"
     } else if ((rect.top<=0)&&(0<=rect.bottom)){
-      return "BOTTOM_IN_VIEWPORT"
-    } else if ((rect.top<=windowBottom)&&(windowBottom<=rect.bottom)){
-      return "TOP_IN_VIEWPORT"
+      cellPosition = "BOTTOM_IN_VIEWPORT"
+    } else if ((rect.top<=windowHeight)&&(windowHeight<=rect.bottom)){
+      cellPosition = "TOP_IN_VIEWPORT"
     } else {
-      return false
+      cellPosition = "IN_VIEWPORT"
     };
+
+  if ((cellPosition == "ABOVE_VIEWPORT")
+    || (cellPosition == "BOTTOM_IN_VIEWPORT")
+    || ((cellPosition == "BELOW_VIEWPORT") && (tallerThanWindow))
+    || ((cellPosition == "TOP_IN_VIEWPORT") && (tallerThanWindow))
+    ){ // in these cases, scroll the window such that the cell top is at the window top
+    elem.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  } else if ( ((cellPosition == "BELOW_VIEWPORT") && !(tallerThanWindow))
+    || ((cellPosition == "TOP_IN_VIEWPORT") && !(tallerThanWindow))
+    ){ //in these cases, scroll the window such that the cell bottom is at the window bottom
+    elem.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end'
+    });
+  }
 }
+
 
 
 

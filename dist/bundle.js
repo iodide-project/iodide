@@ -35381,31 +35381,22 @@ function configureStore() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_marked__ = __webpack_require__(93);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_marked___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_marked__);
 
-//import Interpreter from 'js-interpreter'
 
+function newBlankState() {
+  return {
+    title: undefined,
+    cells: [],
+    currentlySelected: undefined,
+    declaredProperties: {},
+    lastValue: undefined,
+    lastSaved: undefined,
+    mode: 'command',
+    history: [],
+    externalScripts: []
+  };
+}
 
-
-// var INTERPRETER = new Interpreter('')
-// INTERPRETER.defaultProperties = Object.keys(INTERPRETER.global.properties)
-// INTERPRETER.declaredProperties = ()=>{ 
-//   var out = {};
-//   var declaredProps = Object.keys(INTERPRETER.global.properties)
-//           .filter(x=> !new Set(INTERPRETER.defaultProperties).has(x))
-//   declaredProps.forEach((p)=>out[p]=INTERPRETER.global.properties[p])
-//   return out;
-// };
-
-var initialState = {
-  title: undefined,
-  cells: [],
-  currentlySelected: undefined,
-  declaredProperties: {},
-  lastValue: undefined,
-  lastSaved: undefined,
-  mode: 'command',
-  history: [],
-  externalScripts: []
-};
+var initialState = newBlankState();
 
 initialState.cells.push(newCell(initialState, 'javascript'));
 initialState.currentlySelected = initialState.cells[0];
@@ -35431,14 +35422,88 @@ function clearHistory(state) {
   // remove history and declared properties before exporting the state.
   state.declaredProperties = {};
   state.history = [];
+  state.externalScripts = [];
 }
 
-function scrollToCell(cellID) {
+// function scrollToCellIfNeeded(cellID) {
+//   var elem = document.getElementById('cell-'+cellID);
+//   var cellOutside = isCellOutsideViewport(elem);
+//   console.log("cell outside viewport?", cellOutside);
+//   if ((cellOutside=="ABOVE_VIEWPORT")
+//     ||(cellOutside=="BOTTOM_IN_VIEWPORT")){
+//     console.log("attempted scroll")
+//     elem.scrollIntoView({
+//       behavior: 'smooth',
+//       block: 'start'
+//     })
+//   } else if ((cellOutside=="TOP_IN_VIEWPORT")
+//     ||(cellOutside=="BELOW_VIEWPORT")){
+//     console.log("attempted scroll")
+//     elem.scrollIntoView({
+//       behavior: 'smooth',
+//       block: 'start'
+//     })
+//   }
+// }
+
+// function isCellOutsideViewport(el) {
+//     var rect = el.getBoundingClientRect();
+//     var windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+//     var tallerThanWindow = (rect.bottom-rect.top)>windowHeight
+//     if (rect.bottom <= 0){
+//       return "ABOVE_VIEWPORT"
+//     } else if (rect.top>=windowHeight){
+//       return "BELOW_VIEWPORT"
+//     } else if ((rect.top<=0)&&(0<=rect.bottom)){
+//       return "BOTTOM_IN_VIEWPORT"
+//     } else if ((rect.top<=windowHeight)&&(windowHeight<=rect.bottom)){
+//       return "TOP_IN_VIEWPORT"
+//     } else {
+//       return false
+//     };
+// }
+
+function scrollToCellIfNeeded(cellID) {
   var elem = document.getElementById('cell-' + cellID);
-  elem.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-  });
+  var rect = elem.getBoundingClientRect();
+  var windowHeight = window.innerHeight || document.documentElement.clientHeight;
+  var tallerThanWindow = rect.bottom - rect.top > windowHeight;
+  var cellPosition;
+  // verbose but readable
+  if (rect.bottom <= 0) {
+    cellPosition = "ABOVE_VIEWPORT";
+  } else if (rect.top >= windowHeight) {
+    cellPosition = "BELOW_VIEWPORT";
+  } else if (rect.top <= 0 && 0 <= rect.bottom) {
+    cellPosition = "BOTTOM_IN_VIEWPORT";
+  } else if (rect.top <= windowHeight && windowHeight <= rect.bottom) {
+    cellPosition = "TOP_IN_VIEWPORT";
+  } else {
+    cellPosition = "IN_VIEWPORT";
+  };
+
+  if (cellPosition == "ABOVE_VIEWPORT" || cellPosition == "BOTTOM_IN_VIEWPORT" || cellPosition == "BELOW_VIEWPORT" && tallerThanWindow || cellPosition == "TOP_IN_VIEWPORT" && tallerThanWindow) {
+    // in these cases, scroll the window such that the cell top is at the window top
+    elem.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  } else if (cellPosition == "BELOW_VIEWPORT" && !tallerThanWindow || cellPosition == "TOP_IN_VIEWPORT" && !tallerThanWindow) {
+    //in these cases, scroll the window such that the cell bottom is at the window bottom
+    elem.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end'
+    });
+  }
+}
+
+function addExternalScript(scriptUrl) {
+  // FIXME there must be a better way to do this with promises etc...
+  var head = document.getElementsByTagName('head')[0];
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = scriptUrl;
+  head.appendChild(script);
 }
 
 let reducer = function (state, action) {
@@ -35471,9 +35536,10 @@ let reducer = function (state, action) {
       return Object.assign({}, state, { lastSaved });
 
     case 'LOAD_NOTEBOOK':
-      var newState = JSON.parse(localStorage.getItem(action.title));
-      clearHistory(newState);
-      return newState;
+      var newState = newBlankState();
+      var loadedState = JSON.parse(localStorage.getItem(action.title));
+      clearHistory(loadedState);
+      return Object.assign(newState, loadedState);
 
     case 'DELETE_NOTEBOOK':
       var title = action.title;
@@ -35536,7 +35602,7 @@ let reducer = function (state, action) {
       cells[index] = thisCell;
       var currentlySelected = thisCell;
       var nextState = Object.assign({}, state, { cells }, { currentlySelected });
-      scrollToCell(thisCell.id);
+      scrollToCellIfNeeded(thisCell.id);
       return nextState;
 
     case 'CELL_UP':
@@ -35584,7 +35650,6 @@ let reducer = function (state, action) {
       return nextState;
 
     case 'RENDER_CELL':
-
       var newState = Object.assign({}, state);
       var declaredProperties = newState.declaredProperties;
       var cells = newState.cells.slice();
@@ -35620,6 +35685,19 @@ let reducer = function (state, action) {
           // one line, huh.
           thisCell.value = __WEBPACK_IMPORTED_MODULE_0_marked___default()(thisCell.content);
           thisCell.rendered = true;
+        } else if (thisCell.cellType === 'external scripts') {
+          var scriptUrls = thisCell.content.split("\n").filter(s => s != "");
+          var newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script));
+          newScripts.forEach(addExternalScript);
+          newState.externalScripts.push(...newScripts);
+          thisCell.value = "loaded scripts";
+          thisCell.rendered = true;
+          // add to newState.history
+          newState.history.push({
+            cellID: thisCell.id,
+            lastRan: new Date(),
+            content: "// added external scripts:\n" + newScripts.map(s => "// " + s).join("\n")
+          });
         }
       } else {
         thisCell.rendered = false;
@@ -46268,7 +46346,11 @@ class RunnableCell extends GenericCell {
 	render() {
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
-			{ id: 'cell-' + this.props.cell.id, className: 'cell-container', onMouseEnter: this.showControls.bind(this), onMouseLeave: this.hideControls.bind(this) },
+			{ id: 'cell-' + this.props.cell.id,
+				className: 'cell-container',
+				onMouseEnter: this.showControls.bind(this),
+				onMouseLeave: this.hideControls.bind(this),
+				onMouseDown: this.selectCell },
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
 				{ style: { display: "none" } },
@@ -46276,7 +46358,7 @@ class RunnableCell extends GenericCell {
 			),
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
-				{ className: 'cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ') + (this.props.cell.rendered ? 'rendered ' : 'unrendered '), onClick: this.selectCell },
+				{ className: 'cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ') + (this.props.cell.rendered ? 'rendered ' : 'unrendered ') },
 				this.mainComponent.bind(this)(),
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 					'div',
@@ -46296,7 +46378,7 @@ class JavascriptCell extends RunnableCell {
 
 	mainComponent() {
 		var options = {
-			lineNumbers: !this.props.cell.rendered,
+			lineNumbers: true, //!this.props.cell.rendered,
 			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
 			lineWrapping: this.props.cell.cellType == 'markdown',
@@ -46321,7 +46403,7 @@ class ExternalScriptCell extends RunnableCell {
 
 	mainComponent() {
 		var options = {
-			lineNumbers: !this.props.cell.rendered,
+			lineNumbers: false, //!this.props.cell.rendered,
 			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
 			lineWrapping: this.props.cell.cellType == 'markdown',
@@ -46347,7 +46429,7 @@ class RawCell extends RunnableCell {
 
 	mainComponent() {
 		var options = {
-			lineNumbers: !this.props.cell.rendered,
+			lineNumbers: false, //!this.props.cell.rendered,
 			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
 			lineWrapping: this.props.cell.cellType == 'markdown',
@@ -46373,7 +46455,7 @@ class MarkdownCell extends RunnableCell {
 
 	mainComponent() {
 		var options = {
-			lineNumbers: !this.props.cell.rendered,
+			lineNumbers: false, //!this.props.cell.rendered,
 			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
 			lineWrapping: this.props.cell.cellType == 'markdown',
@@ -67066,16 +67148,31 @@ function changeSelection(elem, dir) {
   }
 }
 
-var SELECT_UP = [['up'], function () {
+var SELECT_UP = [['up'], function (e) {
+  // e.preventDefault blocks kbd scrolling of entire window
+  if (e.preventDefault) {
+    e.preventDefault();
+  } else {
+    // internet explorer
+    e.returnValue = false;
+  }
   changeSelection(this, -1);
 }];
 
-var SELECT_DOWN = [['down'], function () {
+var SELECT_DOWN = [['down'], function (e) {
+  // e.preventDefault blocks kbd scrolling of entire window
+  if (e.preventDefault) {
+    e.preventDefault();
+  } else {
+    // internet explorer
+    e.returnValue = false;
+  }
   changeSelection(this, 1);
 }];
 
 var RENDER_CELL = [['mod+enter'], function () {
   if (this.props.currentlySelected != undefined) {
+    document.activeElement.blur();
     this.props.actions.renderCell(this.props.currentlySelected.id);
     this.props.actions.changeMode('command');
   }
@@ -67083,6 +67180,7 @@ var RENDER_CELL = [['mod+enter'], function () {
 
 var RENDER_AND_SELECT_BELOW = [['shift+enter'], function () {
   if (this.props.currentlySelected != undefined) {
+    document.activeElement.blur();
     this.props.actions.renderCell(this.props.currentlySelected.id);
     this.props.actions.changeMode('command');
     var cells = this.props.cells.slice();
@@ -67094,11 +67192,14 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function () {
 
 var COMMAND_MODE = [['esc'], function (e) {
   if (this.props.mode == 'edit') {
+    document.activeElement.blur();
     this.props.actions.changeMode('command');
-    this.refs.deselector.focus();
-  } else if (this.props.mode == 'command' && this.props.currentlySelected !== undefined) {
-    this.props.actions.deselectAll();
+    // this.refs.deselector.focus()
   }
+  // see issue #50
+  // else if (this.props.mode == 'command' && this.props.currentlySelected !== undefined) {
+  //   this.props.actions.deselectAll()
+  // }
 }];
 
 var EDIT_MODE = [['enter', 'return'], function (e) {
