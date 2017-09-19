@@ -38,30 +38,27 @@ class Page extends React.Component {
 
   render () {
     
-    var bodyContent
+    var bodyContent = []
+
+    var bodyContent = this.props.cells.map((cell,i)=> {
+      var cellComponent
+      if (cell.cellType === 'javascript') cellComponent = <JavascriptCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      if (cell.cellType === 'markdown') cellComponent = <MarkdownCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      if (cell.cellType === 'raw') cellComponent = <RawCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      if (cell.cellType === 'external scripts') cellComponent = <ExternalScriptCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      return cellComponent
+    }); 
 
     if (this.props.mode === 'history') {
       if (this.props.history.length) {
-        var bodyContent = this.props.history.map((cell,i)=> {
-          var cellComponent = <HistoryCell ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={cell.id} key={i} />
+        bodyContent = bodyContent.concat(this.props.history.map((cell,i)=> {
+          var cellComponent = <HistoryCell display={true} ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
           return cellComponent
-        })
+        }))
       } else {
-        bodyContent = <div className='no-history'>No History</div>
+        bodyContent.push(<div className='no-history'>No History</div>)
       }
-
-    } else {
-      var bodyContent = this.props.cells.map((cell,i)=> {
-        var cellComponent
-        if (cell.cellType === 'javascript') cellComponent = <JavascriptCell ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-        if (cell.cellType === 'markdown') cellComponent = <MarkdownCell ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-        if (cell.cellType === 'raw') cellComponent = <RawCell ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-        if (cell.cellType === 'external scripts') cellComponent = <ExternalScriptCell ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-        return cellComponent
-      });  
     }
-    
-
 
     var declaredPropertiesPane;
     if (Object.keys(this.props.declaredProperties).length) {

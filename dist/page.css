@@ -180,3 +180,7 @@ ul.load-notebook-menu {
 	color:gray;
 	font-weight:300;
 }
+
+div.hidden-cell {
+	display:none;
+}

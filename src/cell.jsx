@@ -103,7 +103,7 @@ class DependencyCell extends GenericCell {
 
 	render() {
 		return (
-			<div className='cell-container'>
+			<div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
 				<div className='cell dependency-cell'>
 					 <input value='dependency' />
 				</div>
@@ -136,7 +136,7 @@ class HistoryCell extends GenericCell {
 		
 
 		return (
-			<div className='cell-container'>
+			<div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
 				<div className='cell history-cell'>
 					<div className='history-content'>
 						{mainElem}
@@ -172,7 +172,7 @@ class RunnableCell extends GenericCell {
 	render() {
 		return (
 			<div id={'cell-'+ this.props.cell.id}
-			className='cell-container'
+			className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}
 			onMouseEnter={this.showControls.bind(this)}
 			onMouseLeave={this.hideControls.bind(this)}
 			onMouseDown={this.selectCell} >

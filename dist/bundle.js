@@ -45955,30 +45955,30 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 
   render() {
 
-    var bodyContent;
+    var bodyContent = [];
+
+    var bodyContent = this.props.cells.map((cell, i) => {
+      var cellComponent;
+      if (cell.cellType === 'javascript') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["c" /* JavascriptCell */], { display: this.props.mode !== 'history', ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+      if (cell.cellType === 'markdown') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["d" /* MarkdownCell */], { display: this.props.mode !== 'history', ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+      if (cell.cellType === 'raw') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["e" /* RawCell */], { display: this.props.mode !== 'history', ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+      if (cell.cellType === 'external scripts') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* ExternalScriptCell */], { display: this.props.mode !== 'history', ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+      return cellComponent;
+    });
 
     if (this.props.mode === 'history') {
       if (this.props.history.length) {
-        var bodyContent = this.props.history.map((cell, i) => {
-          var cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["b" /* HistoryCell */], { ref: 'cell' + cell.id, actions: this.props.actions, cell: cell, id: cell.id, key: i });
+        bodyContent = bodyContent.concat(this.props.history.map((cell, i) => {
+          var cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["b" /* HistoryCell */], { display: true, ref: 'cell' + cell.id, actions: this.props.actions, cell: cell, id: i + '-' + cell.id, key: 'history' + i });
           return cellComponent;
-        });
+        }));
       } else {
-        bodyContent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        bodyContent.push(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'no-history' },
           'No History'
-        );
+        ));
       }
-    } else {
-      var bodyContent = this.props.cells.map((cell, i) => {
-        var cellComponent;
-        if (cell.cellType === 'javascript') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["c" /* JavascriptCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-        if (cell.cellType === 'markdown') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["d" /* MarkdownCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-        if (cell.cellType === 'raw') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["e" /* RawCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-        if (cell.cellType === 'external scripts') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* ExternalScriptCell */], { ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-        return cellComponent;
-      });
     }
 
     var declaredPropertiesPane;
@@ -46312,7 +46312,7 @@ class DependencyCell extends GenericCell {
 	render() {
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
-			{ className: 'cell-container' },
+			{ className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') },
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
 				{ className: 'cell dependency-cell' },
@@ -46346,7 +46346,7 @@ class HistoryCell extends GenericCell {
 
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
-			{ className: 'cell-container' },
+			{ className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') },
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
 				{ className: 'cell history-cell' },
@@ -46387,7 +46387,7 @@ class RunnableCell extends GenericCell {
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
 			{ id: 'cell-' + this.props.cell.id,
-				className: 'cell-container',
+				className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell'),
 				onMouseEnter: this.showControls.bind(this),
 				onMouseLeave: this.hideControls.bind(this),
 				onMouseDown: this.selectCell },
