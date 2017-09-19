@@ -75,7 +75,7 @@ class NotebookMenu extends React.Component {
 		if (autosave.length) {
 
 			autosave = autosave[0]
-			var lastSaved = JSON.parse(localStorage[autosave]).lastSaved
+			var lastSaved = formatDateString(JSON.parse(localStorage[autosave]).lastSaved)
 			var displayTitle = autosave.replace(settings.AUTOSAVE, '')
 			notebookMenuItems = [...[
 				<MenuItem eventKey={autosave} 

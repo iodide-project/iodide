@@ -46277,7 +46277,7 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["f" /* MenuItem */],
 						{ eventKey: 'external scripts' },
-						'external scripts'
+						'External Script'
 					)
 				)
 			)
@@ -46296,17 +46296,16 @@ class DependencyCell extends GenericCell {
 
 		// resourcetype can be js or css.
 
-
 		var head = document.getElementsByTagName('head')[0];
 		var loader;
 		if (resourceType === 'javascript') {
 			loader = document.createElement('script');
+			loader.type = resourceType; //'text/javascript';
+			loader.src = src; //"http://threejs.org/build/three.min.js";
+		} else if (resourceType === 'css') {
+			loader = document.createElement('link');
 		}
 
-		if (resourceType === 'css') loader = document.createElement('link');
-
-		loader.type = resourceType; //'text/javascript';
-		loader.src = src; //"http://threejs.org/build/three.min.js";
 		head.appendChild(loader);
 	}
 
@@ -67345,7 +67344,7 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 		if (autosave.length) {
 
 			autosave = autosave[0];
-			var lastSaved = JSON.parse(localStorage[autosave]).lastSaved;
+			var lastSaved = formatDateString(JSON.parse(localStorage[autosave]).lastSaved);
 			var displayTitle = autosave.replace(settings.AUTOSAVE, '');
 			notebookMenuItems = [...[__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["f" /* MenuItem */],

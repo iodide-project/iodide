@@ -63,7 +63,7 @@ class GenericCell extends React.Component {
 						<MenuItem   eventKey={'markdown'} >MD</MenuItem>
 						<MenuItem   eventKey={'raw'} >Raw</MenuItem>
 						<MenuItem   eventKey={'dom'} >DOM</MenuItem>
-						<MenuItem   eventKey={'external scripts'} >external scripts</MenuItem>
+						<MenuItem   eventKey={'external scripts'} >External Script</MenuItem>
 					</ DropdownButton>
 				</ ButtonToolbar>
 			</div>
@@ -86,18 +86,18 @@ class DependencyCell extends GenericCell {
 
 		// resourcetype can be js or css.
 
-
-
 		var head = document.getElementsByTagName('head')[0]
 		var loader
 		if (resourceType === 'javascript') {
 			loader = document.createElement('script')
+			loader.type = resourceType//'text/javascript';
+			loader.src = src//"http://threejs.org/build/three.min.js";
+		}
+		else if (resourceType === 'css') {
+			loader = document.createElement('link')
 		}
 
-		if (resourceType === 'css') loader = document.createElement('link')
 
-		loader.type = resourceType//'text/javascript';
-		loader.src = src//"http://threejs.org/build/three.min.js";
 		head.appendChild(loader);
 	}
 
@@ -114,6 +114,7 @@ class DependencyCell extends GenericCell {
 		)
 	}
 }
+
 
 class HistoryCell extends GenericCell {
 	constructor(props) {
