@@ -57,12 +57,24 @@ function clearHistory(state) {
   state.externalScripts = []
 }
 
-function scrollToCell(cellID) {
+function scrollToCellIfNeeded(cellID) {
   var elem = document.getElementById('cell-'+cellID)
-  elem.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-  })
+  if(isCellOutsideViewport(elem)){
+    elem.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
+}
+
+function isCellOutsideViewport(el) {
+    var rect = el.getBoundingClientRect();
+    // true if either: the bottom of the rect is above the top of the viewport,
+    // or the top of the rect is below the bottom of the viewport,
+    return (
+      (rect.bottom <= 0) ||
+      ((window.innerHeight || document.documentElement.clientHeight) <= rect.top)
+    );
 }
 
 
@@ -167,7 +179,7 @@ let reducer = function (state, action) {
       cells[index] = thisCell
       var currentlySelected = thisCell;
       var nextState = Object.assign({}, state, {cells}, {currentlySelected})
-      scrollToCell(thisCell.id)
+      scrollToCellIfNeeded(thisCell.id)
       return nextState
 
     case 'CELL_UP':
