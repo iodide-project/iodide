@@ -81,7 +81,7 @@ class NotebookMenu extends React.Component {
 				<MenuItem eventKey={autosave} 
 					key={autosave} 
 					id={autosave}> 
-						<span className="menu-notebook-name"><Label>auto</Label> {displayTitle}</span> 
+						<span className="menu-notebook-name"><span className='notebook-label'>auto</span> {displayTitle}</span> 
 						<span className="menu-last-saved">{lastSaved}</span> 
 				</MenuItem>,
 				<MenuItem divider />,
