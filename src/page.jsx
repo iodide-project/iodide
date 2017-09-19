@@ -9,8 +9,9 @@ import DeclaredProperties from './declared-properties.jsx'
 import keyBinding from './keybindings.jsx' 
 import Title from './title.jsx'
 import NotebookMenu from './notebook-menu.jsx'
+import settings from './settings.jsx'
 
-const AUTOSAVE = 'AUTOSAVE: '
+const AUTOSAVE = settings.labels.AUTOSAVE
 
 
 class Page extends React.Component {

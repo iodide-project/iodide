@@ -45916,6 +45916,7 @@ module.exports = ReactDOMInvalidARIAHook;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__keybindings_jsx__ = __webpack_require__(584);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__title_jsx__ = __webpack_require__(586);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__notebook_menu_jsx__ = __webpack_require__(587);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__settings_jsx__ = __webpack_require__(588);
 
 
 
@@ -45928,7 +45929,8 @@ module.exports = ReactDOMInvalidARIAHook;
 
 
 
-const AUTOSAVE = 'AUTOSAVE: ';
+
+const AUTOSAVE = __WEBPACK_IMPORTED_MODULE_10__settings_jsx__["a" /* default */].labels.AUTOSAVE;
 
 class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   constructor(props) {
@@ -67254,13 +67256,14 @@ class Title extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_bootstrap__ = __webpack_require__(128);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__settings_jsx__ = __webpack_require__(588);
 
 
 
 // TODO: replace settings w/ a settings file that we can share everywhere.
 
-var settings = {};
-settings.AUTOSAVE = 'AUTOSAVE: ';
+
+const AUTOSAVE = __WEBPACK_IMPORTED_MODULE_2__settings_jsx__["a" /* default */].labels.AUTOSAVE;
 
 function formatDateString(d) {
 	var d = new Date(d);
@@ -67319,7 +67322,7 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 
 	render() {
 
-		var notebookMenuItems = Object.keys(localStorage).filter(n => !n.includes(settings.AUTOSAVE)).map(n => {
+		var notebookMenuItems = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE)).map(n => {
 			var lastSaved = JSON.parse(localStorage[n]).lastSaved;
 			return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["e" /* MenuItem */],
@@ -67340,12 +67343,12 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 			);
 		});
 
-		var autosave = Object.keys(localStorage).filter(n => n.includes(settings.AUTOSAVE));
+		var autosave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE));
 		if (autosave.length) {
 
 			autosave = autosave[0];
 			var lastSaved = formatDateString(JSON.parse(localStorage[autosave]).lastSaved);
-			var displayTitle = autosave.replace(settings.AUTOSAVE, '');
+			var displayTitle = autosave.replace(AUTOSAVE, '');
 			notebookMenuItems = [...[__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["e" /* MenuItem */],
 				{ eventKey: autosave,
@@ -67469,6 +67472,18 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (NotebookMenu);
+
+/***/ }),
+/* 588 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var settings = {};
+
+settings.labels = {};
+settings.labels.AUTOSAVE = 'AUTOSAVE: ';
+
+/* harmony default export */ __webpack_exports__["a"] = (settings);
 
 /***/ })
 /******/ ]);
