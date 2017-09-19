@@ -1,32 +1,3 @@
-
-if (!Element.prototype.scrollIntoViewIfNeeded) {
-  Element.prototype.scrollIntoViewIfNeeded = function (centerIfNeeded) {
-    centerIfNeeded = arguments.length === 0 ? true : !!centerIfNeeded;
-
-    var parent = this.parentNode,
-        parentComputedStyle = window.getComputedStyle(parent, null),
-        parentBorderTopWidth = parseInt(parentComputedStyle.getPropertyValue('border-top-width')),
-        parentBorderLeftWidth = parseInt(parentComputedStyle.getPropertyValue('border-left-width')),
-        overTop = this.offsetTop - parent.offsetTop < parent.scrollTop,
-        overBottom = (this.offsetTop - parent.offsetTop + this.clientHeight - parentBorderTopWidth) > (parent.scrollTop + parent.clientHeight),
-        overLeft = this.offsetLeft - parent.offsetLeft < parent.scrollLeft,
-        overRight = (this.offsetLeft - parent.offsetLeft + this.clientWidth - parentBorderLeftWidth) > (parent.scrollLeft + parent.clientWidth),
-        alignWithTop = overTop && !overBottom;
-
-    if ((overTop || overBottom) && centerIfNeeded) {
-      parent.scrollTop = this.offsetTop - parent.offsetTop - parent.clientHeight / 2 - parentBorderTopWidth + this.clientHeight / 2;
-    }
-
-    if ((overLeft || overRight) && centerIfNeeded) {
-      parent.scrollLeft = this.offsetLeft - parent.offsetLeft - parent.clientWidth / 2 - parentBorderLeftWidth + this.clientWidth / 2;
-    }
-
-    if ((overTop || overBottom || overLeft || overRight) && !centerIfNeeded) {
-      this.scrollIntoView(alignWithTop);
-    }
-  };
-}
-
 //import Interpreter from 'js-interpreter'
 
 import marked from 'marked'
@@ -97,30 +68,8 @@ function scrollToCellIfNeeded(cellID) {
   }
 }
 
-// function isCellOutsideViewport(el) {
-//     var rect = el.getBoundingClientRect();
-//     // true if either: the bottom of the rect is above the top of the viewport,
-//     // or the top of the rect is below the bottom of the viewport,
-//     console.log(
-//       "bottom", rect.bottom, "<0     ",
-//       "windowHeight:",(window.innerHeight || document.documentElement.clientHeight),
-//       "<top",rect.top
-//     )
-//     return (
-//       (rect.bottom <= 0) ||
-//       ((window.innerHeight || document.documentElement.clientHeight) <= rect.top)
-//     );
-// }
-
 function isCellOutsideViewport(el) {
     var rect = el.getBoundingClientRect();
-    // true if either: the bottom of the rect is above the top of the viewport,
-    // or the top of the rect is below the bottom of the viewport,
-    // console.log(
-    //   "bottom", rect.bottom, "<0     ",
-    //   "windowHeight:",(window.innerHeight || document.documentElement.clientHeight),
-    //   "<top",rect.top
-    // );
 
     var windowBottom = (window.innerHeight || document.documentElement.clientHeight);
     if (rect.bottom <= 0){
