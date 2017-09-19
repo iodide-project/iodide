@@ -13,7 +13,6 @@ import settings from './settings.jsx'
 
 const AUTOSAVE = settings.labels.AUTOSAVE
 
-
 class Page extends React.Component {
   constructor(props) {
     super(props)

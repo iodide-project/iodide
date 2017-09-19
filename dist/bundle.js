@@ -46289,46 +46289,6 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 	render() {}
 }
 
-class DependencyCell extends GenericCell {
-	constructor(props) {
-		super(props);
-	}
-
-	loadResource(resourceName, resourceType, src) {
-
-		// resourcetype can be js or css.
-
-		var head = document.getElementsByTagName('head')[0];
-		var loader;
-		if (resourceType === 'javascript') {
-			loader = document.createElement('script');
-			loader.type = resourceType; //'text/javascript';
-			loader.src = src; //"http://threejs.org/build/three.min.js";
-		} else if (resourceType === 'css') {
-			loader = document.createElement('link');
-		}
-
-		head.appendChild(loader);
-	}
-
-	render() {
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-			'div',
-			{ className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') },
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'div',
-				{ className: 'cell dependency-cell' },
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { value: 'dependency' })
-			),
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'div',
-				{ className: 'cell-controls' },
-				this.makeButtons()
-			)
-		);
-	}
-}
-
 class HistoryCell extends GenericCell {
 	constructor(props) {
 		super(props);

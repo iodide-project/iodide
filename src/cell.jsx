@@ -10,7 +10,7 @@ import CodeMirror from 'react-codemirror'
 import marksy from 'marksy'
 const MD_COMPILER = marksy({createElement})
 
-import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem } from 'react-bootstrap'
+import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, SplitButton } from 'react-bootstrap'
 
 class GenericCell extends React.Component {
 	constructor(props) {
@@ -75,46 +75,6 @@ class GenericCell extends React.Component {
 
 	}
 }
-
-class DependencyCell extends GenericCell {
-	constructor(props) {
-		super(props)
-
-	}
-
-	loadResource(resourceName, resourceType, src) {
-
-		// resourcetype can be js or css.
-
-		var head = document.getElementsByTagName('head')[0]
-		var loader
-		if (resourceType === 'javascript') {
-			loader = document.createElement('script')
-			loader.type = resourceType//'text/javascript';
-			loader.src = src//"http://threejs.org/build/three.min.js";
-		}
-		else if (resourceType === 'css') {
-			loader = document.createElement('link')
-		}
-
-
-		head.appendChild(loader);
-	}
-
-	render() {
-		return (
-			<div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
-				<div className='cell dependency-cell'>
-					 <input value='dependency' />
-				</div>
-				<div className='cell-controls'>
-					{this.makeButtons()}
-				</div>
-			</div>
-		)
-	}
-}
-
 
 class HistoryCell extends GenericCell {
 	constructor(props) {
