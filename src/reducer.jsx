@@ -43,43 +43,6 @@ function clearHistory(state) {
   state.externalScripts = []
 }
 
-// function scrollToCellIfNeeded(cellID) {
-//   var elem = document.getElementById('cell-'+cellID);
-//   var cellOutside = isCellOutsideViewport(elem);
-//   console.log("cell outside viewport?", cellOutside);
-//   if ((cellOutside=="ABOVE_VIEWPORT")
-//     ||(cellOutside=="BOTTOM_IN_VIEWPORT")){
-//     console.log("attempted scroll")
-//     elem.scrollIntoView({
-//       behavior: 'smooth',
-//       block: 'start'
-//     })
-//   } else if ((cellOutside=="TOP_IN_VIEWPORT")
-//     ||(cellOutside=="BELOW_VIEWPORT")){
-//     console.log("attempted scroll")
-//     elem.scrollIntoView({
-//       behavior: 'smooth',
-//       block: 'start'
-//     })
-//   }
-// }
-
-// function isCellOutsideViewport(el) {
-//     var rect = el.getBoundingClientRect();
-//     var windowHeight = (window.innerHeight || document.documentElement.clientHeight);
-//     var tallerThanWindow = (rect.bottom-rect.top)>windowHeight
-//     if (rect.bottom <= 0){
-//       return "ABOVE_VIEWPORT"
-//     } else if (rect.top>=windowHeight){
-//       return "BELOW_VIEWPORT"
-//     } else if ((rect.top<=0)&&(0<=rect.bottom)){
-//       return "BOTTOM_IN_VIEWPORT"
-//     } else if ((rect.top<=windowHeight)&&(windowHeight<=rect.bottom)){
-//       return "TOP_IN_VIEWPORT"
-//     } else {
-//       return false
-//     };
-// }
 
 function scrollToCellIfNeeded(cellID) {
   var elem = document.getElementById('cell-'+cellID);

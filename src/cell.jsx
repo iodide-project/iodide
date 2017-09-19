@@ -10,7 +10,7 @@ import CodeMirror from 'react-codemirror'
 import marksy from 'marksy'
 const MD_COMPILER = marksy({createElement})
 
-import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem } from 'react-bootstrap'
+import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, SplitButton } from 'react-bootstrap'
 
 class GenericCell extends React.Component {
 	constructor(props) {
@@ -63,7 +63,7 @@ class GenericCell extends React.Component {
 						<MenuItem   eventKey={'markdown'} >MD</MenuItem>
 						<MenuItem   eventKey={'raw'} >Raw</MenuItem>
 						<MenuItem   eventKey={'dom'} >DOM</MenuItem>
-						<MenuItem   eventKey={'external scripts'} >external scripts</MenuItem>
+						<MenuItem   eventKey={'external scripts'} >External Script</MenuItem>
 					</ DropdownButton>
 				</ ButtonToolbar>
 			</div>
@@ -74,7 +74,6 @@ class GenericCell extends React.Component {
 	render() {
 
 	}
-
 }
 
 class HistoryCell extends GenericCell {
@@ -97,7 +96,7 @@ class HistoryCell extends GenericCell {
 		
 
 		return (
-			<div className='cell-container'>
+			<div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
 				<div className='cell history-cell'>
 					<div className='history-content'>
 						{mainElem}
@@ -133,7 +132,7 @@ class RunnableCell extends GenericCell {
 	render() {
 		return (
 			<div id={'cell-'+ this.props.cell.id}
-			className='cell-container'
+			className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}
 			onMouseEnter={this.showControls.bind(this)}
 			onMouseLeave={this.hideControls.bind(this)}
 			onMouseDown={this.selectCell} >

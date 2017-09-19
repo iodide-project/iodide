@@ -1,10 +1,10 @@
 import React from 'react'
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, Dropdown } from 'react-bootstrap'
-
+import settings from './settings.jsx'
 // TODO: replace settings w/ a settings file that we can share everywhere.
 
-var settings = {}
-settings.AUTOSAVE = 'AUTOSAVE: '
+
+const AUTOSAVE = settings.labels.AUTOSAVE
 
 function formatDateString(d) {
   var d = new Date(d)
@@ -66,23 +66,22 @@ class NotebookMenu extends React.Component {
 	render() {
 		
 		
-		var notebookMenuItems = Object.keys(localStorage).filter((n)=>!n.includes(settings.AUTOSAVE)).map((n)=> {
+		var notebookMenuItems = Object.keys(localStorage).filter((n)=>!n.includes(AUTOSAVE)).map((n)=> {
 			var lastSaved = JSON.parse(localStorage[n]).lastSaved
 			return <MenuItem eventKey={n} key={n} id={n}> <span className="menu-notebook-name">{n}</span> <span className="menu-last-saved">{formatDateString(lastSaved)}</span> </MenuItem>
 		})
 
-		var autosave = Object.keys(localStorage).filter((n)=>n.includes(settings.AUTOSAVE))
+		var autosave = Object.keys(localStorage).filter((n)=>n.includes(AUTOSAVE))
 		if (autosave.length) {
-					console.log(autosave)
 
 			autosave = autosave[0]
-			var lastSaved = JSON.parse(localStorage[autosave]).lastSaved
-			var displayTitle = autosave.replace(settings.AUTOSAVE, '')
+			var lastSaved = formatDateString(JSON.parse(localStorage[autosave]).lastSaved)
+			var displayTitle = autosave.replace(AUTOSAVE, '')
 			notebookMenuItems = [...[
 				<MenuItem eventKey={autosave} 
 					key={autosave} 
 					id={autosave}> 
-						<span className="menu-notebook-name"><Label>auto</Label> {displayTitle}</span> 
+						<span className="menu-notebook-name"><span className='notebook-label'>auto</span> {displayTitle}</span> 
 						<span className="menu-last-saved">{lastSaved}</span> 
 				</MenuItem>,
 				<MenuItem divider />,
