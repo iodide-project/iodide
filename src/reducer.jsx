@@ -58,8 +58,10 @@ function clearHistory(state) {
 }
 
 function scrollToCellIfNeeded(cellID) {
-  var elem = document.getElementById('cell-'+cellID)
-  if(isCellOutsideViewport(elem)){
+  var elem = document.getElementById('cell-'+cellID);
+  var cellOutside = isCellOutsideViewport(elem);
+  console.log("cell outside viewport?", cellOutside);
+  if(cellOutside){
     elem.scrollIntoView({
       behavior: 'smooth',
       block: 'start'
@@ -67,15 +69,22 @@ function scrollToCellIfNeeded(cellID) {
   }
 }
 
+
 function isCellOutsideViewport(el) {
     var rect = el.getBoundingClientRect();
-    // true if either: the bottom of the rect is above the top of the viewport,
-    // or the top of the rect is below the bottom of the viewport,
-    return (
-      (rect.bottom <= 0) ||
-      ((window.innerHeight || document.documentElement.clientHeight) <= rect.top)
-    );
+    if (rect.bottom <= 0){
+      return "ABOVE_VIEWPORT"
+    } else if (rect.top>=windowBottom){
+      return "BELOW_VIEWPORT"
+    } else if ((rect.top<=0)&&(0<=rect.bottom)){
+      return "BOTTOM_IN_VIEWPORT"
+    } else if ((rect.top<=windowBottom)&&(windowBottom<=rect.bottom)){
+      return "TOP_IN_VIEWPORT"
+    } else {
+      return false
+    };
 }
+
 
 
 function addExternalScript(scriptUrl){
