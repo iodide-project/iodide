@@ -122,9 +122,10 @@ var COMMAND_MODE = [['esc'], function(e){
         this.props.actions.changeMode('command')
         this.refs.deselector.focus()
       }
-      else if (this.props.mode == 'command' && this.props.currentlySelected !== undefined) {
-        this.props.actions.deselectAll()
-      }
+      // see issue #50
+      // else if (this.props.mode == 'command' && this.props.currentlySelected !== undefined) {
+      //   this.props.actions.deselectAll()
+      // }
     }
 ]
 
