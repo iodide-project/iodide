@@ -120,7 +120,7 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
 var COMMAND_MODE = [['esc'], function(e){
       if (this.props.mode == 'edit') {
         this.props.actions.changeMode('command')
-        this.refs.deselector.focus()
+        // this.refs.deselector.focus()
       }
       // see issue #50
       // else if (this.props.mode == 'command' && this.props.currentlySelected !== undefined) {
