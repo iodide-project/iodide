@@ -74,7 +74,45 @@ class GenericCell extends React.Component {
 	render() {
 
 	}
+}
 
+class DependencyCell extends GenericCell {
+	constructor(props) {
+		super(props)
+
+	}
+
+	loadResource(resourceName, resourceType, src) {
+
+		// resourcetype can be js or css.
+
+
+
+		var head = document.getElementsByTagName('head')[0]
+		var loader
+		if (resourceType === 'javascript') {
+			loader = document.createElement('script')
+		}
+
+		if (resourceType === 'css') loader = document.createElement('link')
+
+		loader.type = resourceType//'text/javascript';
+		loader.src = src//"http://threejs.org/build/three.min.js";
+		head.appendChild(loader);
+	}
+
+	render() {
+		return (
+			<div className='cell-container'>
+				<div className='cell dependency-cell'>
+					 <input value='dependency' />
+				</div>
+				<div className='cell-controls'>
+					{this.makeButtons()}
+				</div>
+			</div>
+		)
+	}
 }
 
 class HistoryCell extends GenericCell {

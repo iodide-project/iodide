@@ -73,7 +73,6 @@ class NotebookMenu extends React.Component {
 
 		var autosave = Object.keys(localStorage).filter((n)=>n.includes(settings.AUTOSAVE))
 		if (autosave.length) {
-					console.log(autosave)
 
 			autosave = autosave[0]
 			var lastSaved = JSON.parse(localStorage[autosave]).lastSaved

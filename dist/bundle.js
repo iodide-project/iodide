@@ -35361,6 +35361,34 @@ function configureStore() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_marked__ = __webpack_require__(93);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_marked___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_marked__);
 
+if (!Element.prototype.scrollIntoViewIfNeeded) {
+  Element.prototype.scrollIntoViewIfNeeded = function (centerIfNeeded) {
+    centerIfNeeded = arguments.length === 0 ? true : !!centerIfNeeded;
+
+    var parent = this.parentNode,
+        parentComputedStyle = window.getComputedStyle(parent, null),
+        parentBorderTopWidth = parseInt(parentComputedStyle.getPropertyValue('border-top-width')),
+        parentBorderLeftWidth = parseInt(parentComputedStyle.getPropertyValue('border-left-width')),
+        overTop = this.offsetTop - parent.offsetTop < parent.scrollTop,
+        overBottom = this.offsetTop - parent.offsetTop + this.clientHeight - parentBorderTopWidth > parent.scrollTop + parent.clientHeight,
+        overLeft = this.offsetLeft - parent.offsetLeft < parent.scrollLeft,
+        overRight = this.offsetLeft - parent.offsetLeft + this.clientWidth - parentBorderLeftWidth > parent.scrollLeft + parent.clientWidth,
+        alignWithTop = overTop && !overBottom;
+
+    if ((overTop || overBottom) && centerIfNeeded) {
+      parent.scrollTop = this.offsetTop - parent.offsetTop - parent.clientHeight / 2 - parentBorderTopWidth + this.clientHeight / 2;
+    }
+
+    if ((overLeft || overRight) && centerIfNeeded) {
+      parent.scrollLeft = this.offsetLeft - parent.offsetLeft - parent.clientWidth / 2 - parentBorderLeftWidth + this.clientWidth / 2;
+    }
+
+    if ((overTop || overBottom || overLeft || overRight) && !centerIfNeeded) {
+      this.scrollIntoView(alignWithTop);
+    }
+  };
+}
+
 //import Interpreter from 'js-interpreter'
 
 
@@ -46202,7 +46230,47 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 	}
 
 	render() {}
+}
 
+class DependencyCell extends GenericCell {
+	constructor(props) {
+		super(props);
+	}
+
+	loadResource(resourceName, resourceType, src) {
+
+		// resourcetype can be js or css.
+
+
+		var head = document.getElementsByTagName('head')[0];
+		var loader;
+		if (resourceType === 'javascript') {
+			loader = document.createElement('script');
+		}
+
+		if (resourceType === 'css') loader = document.createElement('link');
+
+		loader.type = resourceType; //'text/javascript';
+		loader.src = src; //"http://threejs.org/build/three.min.js";
+		head.appendChild(loader);
+	}
+
+	render() {
+		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+			'div',
+			{ className: 'cell-container' },
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				'div',
+				{ className: 'cell dependency-cell' },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { value: 'dependency' })
+			),
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				'div',
+				{ className: 'cell-controls' },
+				this.makeButtons()
+			)
+		);
+	}
 }
 
 class HistoryCell extends GenericCell {
@@ -67185,7 +67253,6 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 
 		var autosave = Object.keys(localStorage).filter(n => n.includes(settings.AUTOSAVE));
 		if (autosave.length) {
-			console.log(autosave);
 
 			autosave = autosave[0];
 			var lastSaved = JSON.parse(localStorage[autosave]).lastSaved;
