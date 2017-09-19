@@ -41,16 +41,22 @@ import marked from 'marked'
 //   return out;
 // };
 
-var initialState = {
-  title: undefined,
-  cells: [],
-  currentlySelected: undefined,
-  declaredProperties:{},
-  lastValue: undefined,
-  lastSaved: undefined,
-  mode: 'command',
-  history:[]
+
+function newBlankState(){
+  return  {
+    title: undefined,
+    cells: [],
+    currentlySelected: undefined,
+    declaredProperties:{},
+    lastValue: undefined,
+    lastSaved: undefined,
+    mode: 'command',
+    history:[],
+    externalScripts:[]
+  }
 }
+
+var initialState = newBlankState()
 
 initialState.cells.push(newCell(initialState, 'javascript'))
 initialState.currentlySelected = initialState.cells[0]
@@ -76,15 +82,71 @@ function clearHistory(state) {
   // remove history and declared properties before exporting the state.
   state.declaredProperties = {}
   state.history = []
+  state.externalScripts = []
 }
 
-function scrollToCell(cellID) {
-  var elem = document.getElementById('cell-'+cellID)
-  elem.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-  })
+function scrollToCellIfNeeded(cellID) {
+  var elem = document.getElementById('cell-'+cellID);
+  var cellOutside = isCellOutsideViewport(elem);
+  console.log("cell outside viewport?", cellOutside);
+  if(cellOutside){
+    elem.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
 }
+
+// function isCellOutsideViewport(el) {
+//     var rect = el.getBoundingClientRect();
+//     // true if either: the bottom of the rect is above the top of the viewport,
+//     // or the top of the rect is below the bottom of the viewport,
+//     console.log(
+//       "bottom", rect.bottom, "<0     ",
+//       "windowHeight:",(window.innerHeight || document.documentElement.clientHeight),
+//       "<top",rect.top
+//     )
+//     return (
+//       (rect.bottom <= 0) ||
+//       ((window.innerHeight || document.documentElement.clientHeight) <= rect.top)
+//     );
+// }
+
+function isCellOutsideViewport(el) {
+    var rect = el.getBoundingClientRect();
+    // true if either: the bottom of the rect is above the top of the viewport,
+    // or the top of the rect is below the bottom of the viewport,
+    // console.log(
+    //   "bottom", rect.bottom, "<0     ",
+    //   "windowHeight:",(window.innerHeight || document.documentElement.clientHeight),
+    //   "<top",rect.top
+    // );
+
+    var windowBottom = (window.innerHeight || document.documentElement.clientHeight);
+    if (rect.bottom <= 0){
+      return "ABOVE_VIEWPORT"
+    } else if (rect.top>=windowBottom){
+      return "BELOW_VIEWPORT"
+    } else if ((rect.top<=0)&&(0<=rect.bottom)){
+      return "BOTTOM_IN_VIEWPORT"
+    } else if ((rect.top<=windowBottom)&&(windowBottom<=rect.bottom)){
+      return "TOP_IN_VIEWPORT"
+    } else {
+      return false
+    };
+}
+
+
+
+function addExternalScript(scriptUrl){
+  // FIXME there must be a better way to do this with promises etc...
+  var head = document.getElementsByTagName('head')[0];
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = scriptUrl;
+  head.appendChild(script);
+}
+
 
 let reducer = function (state, action) {
   switch (action.type) {
@@ -117,9 +179,10 @@ let reducer = function (state, action) {
       return Object.assign({}, state, {lastSaved})
 
     case 'LOAD_NOTEBOOK':
-      var newState = JSON.parse(localStorage.getItem(action.title))
-      clearHistory(newState)
-      return newState
+      var newState = newBlankState();
+      var loadedState = JSON.parse(localStorage.getItem(action.title))
+      clearHistory(loadedState)
+      return Object.assign(newState,loadedState)
 
     case 'DELETE_NOTEBOOK':
       var title = action.title
@@ -176,7 +239,7 @@ let reducer = function (state, action) {
       cells[index] = thisCell
       var currentlySelected = thisCell;
       var nextState = Object.assign({}, state, {cells}, {currentlySelected})
-      scrollToCell(thisCell.id)
+      scrollToCellIfNeeded(thisCell.id)
       return nextState
 
     case 'CELL_UP':
@@ -225,7 +288,6 @@ let reducer = function (state, action) {
       return nextState
 
     case 'RENDER_CELL':
-
       var newState = Object.assign({}, state)
       var declaredProperties = newState.declaredProperties
       var cells = newState.cells.slice()
@@ -233,64 +295,52 @@ let reducer = function (state, action) {
       var thisCell = cells[index]
 
       if (action.render) {
-        
         if (thisCell.cellType === 'javascript') {
-
           // add to newState.history
           newState.history.push({
             cellID: thisCell.id,
             lastRan: new Date(),
             content: thisCell.content
-          }) 
-
+          })
 
           thisCell.value = undefined;
 
-          // JS-interpreter --- CODE RUN
-          //INTERPRETER.appendCode(thisCell.content);
-          //INTERPRETER.run();
-          
-          console.log("evaled: " + thisCell.content)
-          
           var output;
           try {
-    	      output = window.eval(thisCell.content);
-	      } catch(e) {
-	        var err = e.constructor('Error in Evaled Script: ' + e.message);
-	        // +3 because `err` has the line number of the `eval` line plus two.
-	        err.lineNumber = e.lineNumber - err.lineNumber + 3;
-	        output = `${e.name}: ${e.message}  
-(line ${e.lineNumber} column ${e.columnNumber})`
-	        // throw err;
-	      }
-	      thisCell.rendered = true;
+            output = window.eval(thisCell.content);
+          } catch(e) {
+            var err = e.constructor('Error in Evaled Script: ' + e.message);
+            err.lineNumber = e.lineNumber - err.lineNumber + 3;
+            output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+          }
+          thisCell.rendered = true;
 
-          // JS-interpreter --- RETURN VALUE
-          //thisCell.value = INTERPRETER.value;
           if (output !== undefined) {
             thisCell.value = output
           }
-
           var lastValue;
-          // Check to see if the returned value has actually updated.
-          // if it hasn't, then nothing was returned from this cell.
-          // if (thisCell.value == state.lastValue) {
-          //   thisCell.value = undefined;
-          //   lastValue = state.lastValue;
-          // }
-          // else {
-          //   lastValue = thisCell.value;
-          // }
-          //declaredProperties = INTERPRETER.declaredProperties();
         } else if (thisCell.cellType === 'markdown') {
           // one line, huh.
           thisCell.value = marked(thisCell.content);
           thisCell.rendered = true;
+        } else if (thisCell.cellType === 'external scripts') {
+          var scriptUrls = thisCell.content.split("\n").filter(s => s!="");
+          var newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script));
+          newScripts.forEach(addExternalScript)
+          newState.externalScripts.push(...newScripts)
+          thisCell.value = "loaded scripts";
+          thisCell.rendered = true;
+          // add to newState.history
+          newState.history.push({
+            cellID: thisCell.id,
+            lastRan: new Date(),
+            content: "// added external scripts:\n" + ( newScripts.map(s => "// "+s).join("\n") )
+          })
+
         }
       } else {
         thisCell.rendered = false;
       }
-      
       
       cells[index] = thisCell;
       var nextState = Object.assign({}, newState, {cells}, {lastValue});

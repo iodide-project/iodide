@@ -63,7 +63,7 @@ class GenericCell extends React.Component {
 						<MenuItem   eventKey={'markdown'} >MD</MenuItem>
 						<MenuItem   eventKey={'raw'} >Raw</MenuItem>
 						<MenuItem   eventKey={'dom'} >DOM</MenuItem>
-
+						<MenuItem   eventKey={'external scripts'} >external scripts</MenuItem>
 					</ DropdownButton>
 				</ ButtonToolbar>
 			</div>
@@ -170,13 +170,17 @@ class RunnableCell extends GenericCell {
 
 	render() {
 		return (
-			<div id={'cell-'+ this.props.cell.id} className='cell-container' onMouseEnter={this.showControls.bind(this)} onMouseLeave={this.hideControls.bind(this)} >
+			<div id={'cell-'+ this.props.cell.id}
+			className='cell-container'
+			onMouseEnter={this.showControls.bind(this)}
+			onMouseLeave={this.hideControls.bind(this)}
+			onMouseDown={this.selectCell} >
 				<div style={{display:"none"}}><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
 				<div className={'cell ' + 
 					(this.props.cell.selected ? 'selected-cell ' : ' ') + 
 					(this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ') +
 					(this.props.cell.rendered ? 'rendered ' : 'unrendered ')
-				} onClick={this.selectCell}>
+				}>
 			
 					{this.mainComponent.bind(this)()}
 
@@ -199,7 +203,7 @@ class JavascriptCell extends RunnableCell {
 
 	mainComponent(){
 		var options = {
-			lineNumbers: !this.props.cell.rendered,
+			lineNumbers: true,//!this.props.cell.rendered,
 			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
 			lineWrapping: this.props.cell.cellType == 'markdown',
@@ -218,6 +222,32 @@ class JavascriptCell extends RunnableCell {
 	}
 }
 
+class ExternalScriptCell extends RunnableCell {
+	constructor(props) {
+		super(props)
+	}
+
+	mainComponent(){
+		var options = {
+			lineNumbers: false,//!this.props.cell.rendered,
+			readOnly: this.props.cell.rendered,
+			mode: this.props.cell.cellType,
+			lineWrapping: this.props.cell.cellType == 'markdown',
+			theme: 'eclipse'
+		}
+		var mainElem = <CodeMirror ref='editor'
+						   value={this.props.cell.content}
+						   onChange={this.updateCell.bind(this)} 
+						   onFocus={this.selectCell}
+						   options={options} />
+		return mainElem
+	}
+
+	resultComponent(){
+		return <div></div>
+	}
+}
+
 class RawCell extends RunnableCell {
 	constructor(props) {
 		super(props)
@@ -225,7 +255,7 @@ class RawCell extends RunnableCell {
 
 	mainComponent(){
 		var options = {
-			lineNumbers: !this.props.cell.rendered,
+			lineNumbers: false,//!this.props.cell.rendered,
 			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
 			lineWrapping: this.props.cell.cellType == 'markdown',
@@ -253,7 +283,7 @@ class MarkdownCell extends RunnableCell {
 
 	mainComponent(){
 		var options = {
-			lineNumbers: !this.props.cell.rendered,
+			lineNumbers: false,//!this.props.cell.rendered,
 			readOnly: this.props.cell.rendered,
 			mode: this.props.cell.cellType,
 			lineWrapping: this.props.cell.cellType == 'markdown',
@@ -322,4 +352,4 @@ function jsReturnValue(cell) {
 	return resultElem;
 }
 
-export {JavascriptCell, MarkdownCell, RawCell, HistoryCell};
+export {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell};
