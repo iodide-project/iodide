@@ -100,6 +100,7 @@ var SELECT_DOWN = [['down'], function(){
 
 var RENDER_CELL = [['mod+enter'], function(){
       if (this.props.currentlySelected!=undefined) {
+        document.activeElement.blur()
         this.props.actions.renderCell(this.props.currentlySelected.id)
         this.props.actions.changeMode('command')
       } 
@@ -108,6 +109,7 @@ var RENDER_CELL = [['mod+enter'], function(){
 
 var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
   if (this.props.currentlySelected!=undefined) {
+    document.activeElement.blur()
     this.props.actions.renderCell(this.props.currentlySelected.id)
     this.props.actions.changeMode('command')
     var cells = this.props.cells.slice()
@@ -119,6 +121,7 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
 
 var COMMAND_MODE = [['esc'], function(e){
       if (this.props.mode == 'edit') {
+        document.activeElement.blur()
         this.props.actions.changeMode('command')
         // this.refs.deselector.focus()
       }

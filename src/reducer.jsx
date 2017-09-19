@@ -69,9 +69,32 @@ function scrollToCellIfNeeded(cellID) {
   }
 }
 
+// function isCellOutsideViewport(el) {
+//     var rect = el.getBoundingClientRect();
+//     // true if either: the bottom of the rect is above the top of the viewport,
+//     // or the top of the rect is below the bottom of the viewport,
+//     console.log(
+//       "bottom", rect.bottom, "<0     ",
+//       "windowHeight:",(window.innerHeight || document.documentElement.clientHeight),
+//       "<top",rect.top
+//     )
+//     return (
+//       (rect.bottom <= 0) ||
+//       ((window.innerHeight || document.documentElement.clientHeight) <= rect.top)
+//     );
+// }
 
 function isCellOutsideViewport(el) {
     var rect = el.getBoundingClientRect();
+    // true if either: the bottom of the rect is above the top of the viewport,
+    // or the top of the rect is below the bottom of the viewport,
+    // console.log(
+    //   "bottom", rect.bottom, "<0     ",
+    //   "windowHeight:",(window.innerHeight || document.documentElement.clientHeight),
+    //   "<top",rect.top
+    // );
+
+    var windowBottom = (window.innerHeight || document.documentElement.clientHeight);
     if (rect.bottom <= 0){
       return "ABOVE_VIEWPORT"
     } else if (rect.top>=windowBottom){
