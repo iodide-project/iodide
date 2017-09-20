@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import Mousetrap from 'mousetrap'
 
 import actions from './actions.jsx'
-import {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell} from './cell.jsx'
+import {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, DOMCell} from './cell.jsx'
 import DeclaredProperties from './declared-properties.jsx'
 import keyBinding from './keybindings.jsx' 
 import Title from './title.jsx'
@@ -46,6 +46,7 @@ class Page extends React.Component {
       if (cell.cellType === 'markdown') cellComponent = <MarkdownCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
       if (cell.cellType === 'raw') cellComponent = <RawCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
       if (cell.cellType === 'external scripts') cellComponent = <ExternalScriptCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      if  (cell.cellType === 'dom') cellComponent = <DOMCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
       return cellComponent
     }); 
 

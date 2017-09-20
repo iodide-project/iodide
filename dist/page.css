@@ -208,3 +208,21 @@ span.notebook-label {
 	padding-bottom:2px;
 	text-align:center;
 }
+
+div.dom-cell {
+	border-top:1px solid lightgray;
+	border-bottom:1px solid lightgray;
+}
+
+div.dom-cell-error {
+	color:gray;
+	margin-top:5px;
+}
+
+.right-spacer {
+	margin-right:10px;
+}
+
+.dom-inputs {
+	padding:3px;
+}

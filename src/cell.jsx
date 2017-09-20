@@ -10,7 +10,8 @@ import CodeMirror from 'react-codemirror'
 import marksy from 'marksy'
 const MD_COMPILER = marksy({createElement})
 
-import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, SplitButton } from 'react-bootstrap'
+import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
+		SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
 
 class GenericCell extends React.Component {
 	constructor(props) {
@@ -18,6 +19,7 @@ class GenericCell extends React.Component {
 		this.state = {showControls:false}
 		this.selectCell = this.selectCell.bind(this)
 		this.makeButtons = this.makeButtons.bind(this)
+		this.hasEditor = false
 	}
 
 	renderCell(render) {
@@ -44,7 +46,7 @@ class GenericCell extends React.Component {
 		this.props.actions.renderCell(this.props.cell.id, false)
 		this.props.actions.selectCell(this.props.cell.id)
 		this.props.actions.changeMode('edit')
-		this.refs.editor.focus()
+		if (this.hasEditor) this.refs.editor.focus()
 	}
 
 	showControls(){this.setState({showControls:true})}
@@ -76,7 +78,18 @@ class GenericCell extends React.Component {
 	}
 }
 
+// function validateElementType(t){
+// 	var s = new Set(['div', 'svg', 'canvas', 'span'])
+// 	return 
+// }
+
 class DOMCell extends GenericCell {
+
+	constructor(props) {
+		super(props)
+		props.actions.changeElementType(props.cell.id, 'div')
+		props.actions.changeDOMElementID(props.cell.id, 'dom-cell-'+props.cell.id)
+	}
 
 	changeID(event){
 		var ID = event.target.value.trim()
@@ -85,23 +98,46 @@ class DOMCell extends GenericCell {
 
 	changeElementType(event) {
 		var elementType = event.target.value.trim()
+		this.props.actions.changeElementType(this.props.cell.id, elementType)
+	}
+
+	changeElementID(event) {
+		var elementID = event.target.value.trim()
+		this.props.actions.changeDOMElementID(this.props.cell.id, elementID)
 	}
 
 	render() {
-		// createElement
-		var elem = createElement(this.props.elementType)
+		var elem
+		if (this.props.cell.elementType.length) elem = createElement(this.props.cell.elementType, {id: this.props.cell.domElementID})
+		else {
+			elem = <div className='dom-cell-error'>please add an elem type</div>
+		}
 		return (
-			<div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
-				<div className='cell dom-cell'>
-					<div className='cell dom-cell-elementType'>
-						<input onChange={this.changeElementType.bind(this)} />
-					</div>
-					<div className='cell dom-cell-id'>
-						<input onChange={this.changeID.bind(this)} />
+			<div id={'cell-'+ this.props.cell.id} 
+				onMouseOver={this.showControls.bind(this)} 
+				onMouseOut={this.hideControls.bind(this)} 
+				className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
+
+				<div 
+					className={'cell dom-cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + 
+						(this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
+					onClick={this.selectCell.bind(this)}>
+
+					<div className='dom-cell-elementType' 
+						style={{display: this.props.cell.selected ? 'inherit' : 'none'}}>
+						
+						<Form className='dom-inputs' inline>
+							<FormGroup bsSize='xsmall' controlId={'dom-'+this.props.cell.id}>
+							    <ControlLabel className='right-spacer'>tag</ControlLabel>
+	      						<FormControl className='right-spacer' type="text" onChange={this.changeElementType.bind(this)} value={this.props.cell.elementType} placeholder="div, svg, etc." />
+	      						<ControlLabel className='right-spacer'>css ID</ControlLabel>
+	      						<FormControl type="text" onChange={this.changeElementID.bind(this)} value={this.props.cell.domElementID} placeholder="id"  />
+	    					</FormGroup>
+	    				</Form>
 					</div>
 					{elem}
 				</div>
-				<div className='cell-controls'></div>
+				{this.makeButtons()}
 			</div>
 		)
 	}
@@ -146,6 +182,7 @@ class HistoryCell extends GenericCell {
 class RunnableCell extends GenericCell {
 	constructor(props){
 		super(props)
+		this.hasEditor = true
 	}
 
 	updateCell(content) {
@@ -300,17 +337,6 @@ class MarkdownCell extends RunnableCell {
 }
 
 
-function DisplayCell(name, displayType, props){
-	var displayElem = createElement(displayType, Object.assign({}, props, {id: name}))
-	return (
-		<div>
-			<span className='display-cell-title'>{name}</span>
-			<span className='display-cell-type'>{displayType}</span>
-			{displayElem}
-		</div>
-	)
-}
-
 function jsReturnValue(cell) {
 	var resultElem;
 	var returnedSomething
@@ -344,4 +370,4 @@ function jsReturnValue(cell) {
 	return resultElem;
 }
 
-export {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell};
+export {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, DOMCell};

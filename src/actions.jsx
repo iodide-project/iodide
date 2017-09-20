@@ -103,6 +103,20 @@ let actions = {
 			type: 'DELETE_CELL',
 			id: cellID
 		}
+	},
+	changeElementType: function(cellID, elementType) {
+		return {
+			type: 'CHANGE_ELEMENT_TYPE',
+			id: cellID,
+			elementType: elementType
+		}
+	},
+	changeDOMElementID: function(cellID, elemID) {
+		return {
+			type: 'CHANGE_DOM_ELEMENT_ID',
+			id: cellID,
+			elemID: elemID
+		}
 	}
 }
 

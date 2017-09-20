@@ -317,6 +317,22 @@ let reducer = function (state, action) {
       }, {currentlySelected})
       return nextState
 
+    case 'CHANGE_ELEMENT_TYPE':
+       var cells = state.cells.slice()
+      var index = cells.findIndex(c=>c.id===action.id)
+      var thisCell = cells[index]
+      thisCell.elementType = action.elementType
+      cells[index] = thisCell
+      return Object.assign({}, state, {cells})
+
+    case 'CHANGE_DOM_ELEMENT_ID':
+      var cells = state.cells.slice()
+      var index = cells.findIndex(c=>c.id===action.id)
+      var thisCell = cells[index]
+      thisCell.domElementID = action.elemID
+      cells[index] = thisCell
+      return Object.assign({}, state, {cells})
+
     default:
       return state
   }
