@@ -46238,6 +46238,43 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 	render() {}
 }
 
+class DOMCell extends GenericCell {
+
+	changeID(event) {
+		var ID = event.target.value.trim();
+		// this.props.actions.updateOptions({cssID: ID})
+	}
+
+	changeElementType(event) {
+		var elementType = event.target.value.trim();
+	}
+
+	render() {
+		// createElement
+		var elem = Object(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])(this.props.elementType);
+		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+			'div',
+			{ className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') },
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				'div',
+				{ className: 'cell dom-cell' },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'div',
+					{ className: 'cell dom-cell-elementType' },
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.changeElementType.bind(this) })
+				),
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'div',
+					{ className: 'cell dom-cell-id' },
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { onChange: this.changeID.bind(this) })
+				),
+				elem
+			),
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'cell-controls' })
+		);
+	}
+}
+
 class HistoryCell extends GenericCell {
 	constructor(props) {
 		super(props);

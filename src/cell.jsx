@@ -76,6 +76,37 @@ class GenericCell extends React.Component {
 	}
 }
 
+class DOMCell extends GenericCell {
+
+	changeID(event){
+		var ID = event.target.value.trim()
+		// this.props.actions.updateOptions({cssID: ID})
+	}
+
+	changeElementType(event) {
+		var elementType = event.target.value.trim()
+	}
+
+	render() {
+		// createElement
+		var elem = createElement(this.props.elementType)
+		return (
+			<div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
+				<div className='cell dom-cell'>
+					<div className='cell dom-cell-elementType'>
+						<input onChange={this.changeElementType.bind(this)} />
+					</div>
+					<div className='cell dom-cell-id'>
+						<input onChange={this.changeID.bind(this)} />
+					</div>
+					{elem}
+				</div>
+				<div className='cell-controls'></div>
+			</div>
+		)
+	}
+}
+
 class HistoryCell extends GenericCell {
 	constructor(props) {
 		super(props)
