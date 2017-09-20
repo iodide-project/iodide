@@ -87,8 +87,8 @@ class DOMCell extends GenericCell {
 
 	constructor(props) {
 		super(props)
-		props.actions.changeElementType(props.cell.id, 'div')
-		props.actions.changeDOMElementID(props.cell.id, 'dom-cell-'+props.cell.id)
+		if (!props.cell.hasOwnProperty('elementType')) props.actions.changeElementType(props.cell.id, 'div')
+		if (!props.cell.hasOwnProperty('domElementID')) props.actions.changeDOMElementID(props.cell.id, 'dom-cell-'+props.cell.id)
 	}
 
 	changeID(event){
