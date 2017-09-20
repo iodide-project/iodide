@@ -35544,7 +35544,7 @@ let reducer = function (state, action) {
       cells[index] = thisCell;
       var currentlySelected = thisCell;
 
-      if (state.mode === 'command') scrollToCellIfNeeded(thisCell.id);
+      if (state.mode === 'command' || state.currentlySelected !== undefined && thisCell.id !== state.currentlySelected.id) scrollToCellIfNeeded(thisCell.id);
 
       var nextState = Object.assign({}, state, { cells }, { currentlySelected });
       return nextState;
