@@ -88,12 +88,24 @@ function changeSelection(elem, dir) {
 }
 
 
-var SELECT_UP = [['up'], function(){
+var SELECT_UP = [['up'], function(e){
+    // e.preventDefault blocks kbd scrolling of entire window
+    if (e.preventDefault) {
+        e.preventDefault();
+    } else { // internet explorer
+        e.returnValue = false;
+    }
     changeSelection(this, -1)
   }
 ]
 
-var SELECT_DOWN = [['down'], function(){
+var SELECT_DOWN = [['down'], function(e){
+    // e.preventDefault blocks kbd scrolling of entire window
+    if (e.preventDefault) {
+        e.preventDefault();
+    } else { // internet explorer
+        e.returnValue = false;
+    }
   changeSelection(this, 1)
   }
 ]
