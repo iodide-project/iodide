@@ -35543,8 +35543,10 @@ let reducer = function (state, action) {
       thisCell.selected = true;
       cells[index] = thisCell;
       var currentlySelected = thisCell;
+
+      if (state.mode === 'command') scrollToCellIfNeeded(thisCell.id);
+
       var nextState = Object.assign({}, state, { cells }, { currentlySelected });
-      scrollToCellIfNeeded(thisCell.id);
       return nextState;
 
     case 'CELL_UP':
