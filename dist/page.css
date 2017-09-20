@@ -210,8 +210,6 @@ span.notebook-label {
 }
 
 div.dom-cell {
-	border-top:1px solid lightgray;
-	border-bottom:1px solid lightgray;
 }
 
 div.dom-cell-error {
