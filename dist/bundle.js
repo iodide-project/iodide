@@ -67291,7 +67291,7 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 	constructor(props) {
 		super(props);
 		this.changeMode = this.changeMode.bind(this);
-		this.state = { previousMode: props.mode };
+		this.state = { previousMode: props.mode, exampleBooks: [] };
 	}
 
 	selectMenuItem(menuItem, evt) {

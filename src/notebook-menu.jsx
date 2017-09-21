@@ -20,7 +20,7 @@ class NotebookMenu extends React.Component {
 	constructor(props) {
 		super(props)
 		this.changeMode = this.changeMode.bind(this)
-		this.state = {previousMode: props.mode}
+		this.state = {previousMode: props.mode, exampleBooks:[]}
 	}
 
 	selectMenuItem(menuItem, evt) {
