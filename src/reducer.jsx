@@ -108,7 +108,7 @@ let reducer = function (state, action) {
       var filename = state.title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json'
       dlAnchorElem.setAttribute("download", filename)
       dlAnchorElem.click()
-      return state
+      return Object.assign({}, state)
 
     case 'IMPORT_NOTEBOOK':
       // this may need to be refactored
@@ -129,7 +129,7 @@ let reducer = function (state, action) {
       var newState = newBlankState();
       var loadedState = JSON.parse(localStorage.getItem(action.title))
       clearHistory(loadedState)
-      return Object.assign(newState,loadedState)
+      return Object.assign(newState, loadedState)
 
     case 'DELETE_NOTEBOOK':
       var title = action.title
@@ -308,14 +308,13 @@ let reducer = function (state, action) {
           else nextIndex=index+1
           cells[nextIndex].selected=true
         }
-        // add the currentlySelected cell to the new spot.
         currentlySelected = cells[nextIndex]
       } else {
-        currentlySelected = state.currentlySelected
+        currentlySelected = Object.assign({}, state.currentlySelected)
       }
 
       var nextState = Object.assign({}, state, {
-        cells: state.cells.filter((cell)=> {return cell.id !== action.id})
+        cells: cells.filter((cell)=> {return cell.id !== action.id})
       }, {currentlySelected})
       return nextState
 

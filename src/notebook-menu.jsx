@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, Dropdown } from 'react-bootstrap'
 import settings from './settings.jsx'
+import exampleNotebooks from './example-notebooks.jsx'
+
 // TODO: replace settings w/ a settings file that we can share everywhere.
 
 
@@ -20,7 +22,7 @@ class NotebookMenu extends React.Component {
 	constructor(props) {
 		super(props)
 		this.changeMode = this.changeMode.bind(this)
-		this.state = {previousMode: props.mode, exampleBooks:[]}
+		this.state = {previousMode: props.mode, exampleNotebooks}
 	}
 
 	selectMenuItem(menuItem, evt) {
@@ -30,8 +32,17 @@ class NotebookMenu extends React.Component {
 		if (menuItem=='importNotebook') document.getElementById('import-notebook').click()//triggers notebookFileImport
 	}
 
-	loadNotebook(notebookName) {
-		this.props.actions.loadNotebook(notebookName)
+	handleNotebookSelection(notebook, evt) {
+		if (notebook.notebookType === 'saved' || notebook.notebookType === 'autosave') this.props.actions.loadNotebook(notebook.title)
+
+		if (notebook.notebookType === 'example') {
+
+			var notebook = exampleNotebooks.filter((nb)=>{return nb.title === notebook.title})[0]
+
+
+			this.props.actions.importNotebook(notebook)
+
+		}
 	}
 
 	changeMode(mode) {
@@ -65,42 +76,76 @@ class NotebookMenu extends React.Component {
 
 	render() {
 		
-		
-		var notebookMenuItems = Object.keys(localStorage).filter((n)=>!n.includes(AUTOSAVE)).map((n)=> {
-			var lastSaved = JSON.parse(localStorage[n]).lastSaved
-			return <MenuItem eventKey={n} key={n} id={n}> <span className="menu-notebook-name">{n}</span> <span className="menu-last-saved">{formatDateString(lastSaved)}</span> </MenuItem>
-		})
+		var notebookMenuItems = []
+		var autosaveNBs=[], savedNBs=[], exampleNBs=[]
 
 		var autosave = Object.keys(localStorage).filter((n)=>n.includes(AUTOSAVE))
-		if (autosave.length) {
 
+		if (autosave.length) {
 			autosave = autosave[0]
 			var lastSaved = formatDateString(JSON.parse(localStorage[autosave]).lastSaved)
 			var displayTitle = autosave.replace(AUTOSAVE, '')
-			notebookMenuItems = [...[
-				<MenuItem eventKey={autosave} 
+			autosaveNBs = [
+				<MenuItem eventKey={{notebookType:'autosave', title: autosave}} 
 					key={autosave} 
 					id={autosave}> 
 						<span className="menu-notebook-name"><span className='notebook-label'>auto</span> {displayTitle}</span> 
 						<span className="menu-last-saved">{lastSaved}</span> 
-				</MenuItem>,
-				<MenuItem divider />,
-				<MenuItem header>Saved Notebooks</ MenuItem>
-				],
-				, ...notebookMenuItems
+				</MenuItem>
 			]
+		} 
+		var saves = Object.keys(localStorage)
+		if (saves.length) {
+			savedNBs = saves.filter((n)=>!n.includes(AUTOSAVE)).map((n)=> {
+				var lastSaved = JSON.parse(localStorage[n]).lastSaved
+				return <MenuItem 
+					eventKey={{notebookType:'saved', title:n}} 
+					key={n} 
+					id={n}> 
+						<span className="menu-notebook-name">{n}</span> 
+						<span className="menu-last-saved">{formatDateString(lastSaved)}</span> 
+					</MenuItem>
+			})	
+			savedNBs.unshift(<MenuItem header>Saved Notebooks </MenuItem>)	
+		}
+		exampleNBs = exampleNotebooks.map((nb)=>{
+			var lastSaved = nb.lastSaved
+			return <MenuItem 
+				eventKey={{notebookType: 'example', title:nb.title}} 
+				key={settings.labels.EXAMPLE+nb.title} 
+				id={nb.title}
+			>
+						<span className="menu-notebook-name">{nb.title}</span> 
+						<span className="menu-last-saved">{formatDateString(lastSaved)}</span> 
+			</MenuItem>
+		})
+
+		exampleNBs.unshift(<MenuItem header>Example Notebooks </MenuItem>)
+		
+
+		// let's handle label logic, etc.
+
+		if (exampleNBs.length && (autosaveNBs.length || savedNBs.length)) {
+			// add a double line
+			exampleNBs.unshift(<MenuItem divider />)
 		}
 
+		if (savedNBs.length && autosaveNBs.length) {
+			savedNBs.unshift(<MenuItem divider />)
+		}
+
+		notebookMenuItems = notebookMenuItems.concat(autosaveNBs).concat(savedNBs).concat(exampleNBs)
+
 		if (notebookMenuItems.length) {
-			notebookMenuItems = <Dropdown onSelect={this.loadNotebook.bind(this)} > 
+			notebookMenuItems = <Dropdown onSelect={this.handleNotebookSelection.bind(this)} > 
 				<Dropdown.Toggle bsSize="xsmall">Notebooks</Dropdown.Toggle>
 				<Dropdown.Menu className='load-notebook-menu'> {notebookMenuItems} </Dropdown.Menu>
 			</Dropdown>
 		}
 
 
-
 		var currentTitle = this.props.currentTitle !== undefined ? this.props.currentTitle : 'new notebook'
+
 		return (
 			<div className='notebook-actions'>
 			    <input id='import-notebook' 
