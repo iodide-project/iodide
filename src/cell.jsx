@@ -346,7 +346,6 @@ function jsReturnValue(cell) {
 	if (cell.value !== undefined) returnedSomething = true
 	if (cell.value == undefined && cell.rendered) returnedSomething = true
 	if (returnedSomething) {
-		console.log(cell.id, cell.rendered)
 		resultElem = <JSONTree data={cell.value} hideRoot={false} theme={{
 			  scheme: 'bright',
 			  author: 'chris kempson (http://chriskempson.com)',
