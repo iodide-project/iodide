@@ -117,7 +117,6 @@ class DOMCell extends GenericCell {
 				onMouseOut={this.hideControls.bind(this)} 
 				className={'cell-container ' + (this.props.display ? '' : 'hidden-cell') +
                 (this.props.cell.selected ? 'selected-cell ' : ' ')}>
-
 				<div 
 					className={'cell dom-cell '  + 
 						(this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
@@ -208,7 +207,9 @@ class RunnableCell extends GenericCell {
 			onMouseLeave={this.hideControls.bind(this)}
 			onMouseDown={this.selectCell} >
                 <div id = {"cell-execution-status-"+ this.props.cell.id}
-                className ={"cell-execution-status"}>[ ]</div>
+                className ={"cell-execution-status " + this.props.cell.cellType}>
+                    [{this.props.cell.executionStatus}]
+                </div>
 				<div style={{display:"none"}}><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
 				<div className={'cell '  +
 					(this.props.cell.rendered ? 'rendered ' : 'unrendered ')

@@ -35404,7 +35404,8 @@ function newBlankState() {
     lastSaved: undefined,
     mode: 'command',
     history: [],
-    externalScripts: []
+    externalScripts: [],
+    executionNumber: 1
   };
 }
 
@@ -35426,7 +35427,9 @@ function newCell(state, cellType) {
     cellType: cellType,
     value: undefined,
     rendered: false,
-    selected: false
+    selected: false,
+    isExecuting: false,
+    executionStatus: " "
   };
 }
 
@@ -35435,6 +35438,7 @@ function clearHistory(state) {
   state.declaredProperties = {};
   state.history = [];
   state.externalScripts = [];
+  state.executionNumber = 0;
 }
 
 function scrollToCellIfNeeded(cellID) {
@@ -35625,14 +35629,30 @@ let reducer = function (state, action) {
       var nextState = Object.assign({}, state, { cells });
       return nextState;
 
+    case 'CLEAR_CELL_BEFORE_EVALUATION':
+      var newState = Object.assign({}, state);
+      var cells = newState.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      thisCell.executionStatus = "*";
+      thisCell.value = undefined;
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, newState, { cells });
+      console.log(cells);
+      console.log(thisCell);
+      console.log(thisCell.executionStatus);
+      console.log(nextState);
+      return nextState;
+
     case 'RENDER_CELL':
       var newState = Object.assign({}, state);
       var declaredProperties = newState.declaredProperties;
       var cells = newState.cells.slice();
       var index = cells.findIndex(c => c.id === action.id);
       var thisCell = cells[index];
+      var executionNumber = newState.executionNumber;
 
-      if (action.render) {
+      if (action.evaluateCell) {
         if (thisCell.cellType === 'javascript') {
           // add to newState.history
           newState.history.push({
@@ -35657,6 +35677,8 @@ let reducer = function (state, action) {
             thisCell.value = output;
           }
           var lastValue;
+          newState.executionNumber++;
+          thisCell.executionStatus = "" + newState.executionNumber;
         } else if (thisCell.cellType === 'markdown') {
           // one line, huh.
           thisCell.value = __WEBPACK_IMPORTED_MODULE_0_marked___default()(thisCell.content);
@@ -35674,6 +35696,9 @@ let reducer = function (state, action) {
             lastRan: new Date(),
             content: "// added external scripts:\n" + newScripts.map(s => "// " + s).join("\n")
           });
+
+          newState.executionNumber++;
+          thisCell.executionStatus = "" + newState.executionNumber;
         }
       } else {
         thisCell.rendered = false;
@@ -46089,11 +46114,18 @@ let actions = {
 			cellType: cellType
 		};
 	},
-	renderCell: function (cellID, renderMode = true) {
+	clearCellBeforeEvaluation: function (cellID) {
+		return {
+			type: 'CLEAR_CELL_BEFORE_EVALUATION',
+			id: cellID
+			// render: renderMode
+		};
+	},
+	renderCell: function (cellID, evaluateCell = true) {
 		return {
 			type: 'RENDER_CELL',
 			id: cellID,
-			render: renderMode
+			evaluateCell: evaluateCell
 		};
 	},
 	cellUp: function (cellID) {
@@ -46443,8 +46475,10 @@ class RunnableCell extends GenericCell {
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
 				{ id: "cell-execution-status-" + this.props.cell.id,
-					className: "cell-execution-status" },
-				'[ ]'
+					className: "cell-execution-status " + this.props.cell.cellType },
+				'[',
+				this.props.cell.executionStatus,
+				']'
 			),
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
@@ -67248,7 +67282,11 @@ var SELECT_DOWN = [['down'], function (e) {
 var RENDER_CELL = [['mod+enter'], function () {
   if (this.props.currentlySelected != undefined) {
     document.activeElement.blur();
+    // this.props.actions.clearCellBeforeEvaluation(this.props.currentlySelected.id)
     this.props.actions.renderCell(this.props.currentlySelected.id);
+    // setTimeout(()=>{
+    // this.props.actions.renderCell(this.props.currentlySelected.id)
+    // } ,100)
     this.props.actions.changeMode('command');
   }
 }];

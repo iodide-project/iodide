@@ -72,6 +72,12 @@ div.cell-execution-status{
 	padding-right:8px;
 	width: 80px;
 	text-align: right;
+	color: #aaa
+}
+
+div.cell-execution-status.markdown,
+div.cell-execution-status.raw {
+	visibility: hidden 
 }
 
 div.left-of-cell {
@@ -117,10 +123,13 @@ div.ReactCodeMirror--focused {
     outline: 1px solid #bbb;
 }
 
-
 div.selected-cell.command-mode {
 	outline: 2px solid #ccc;
 }
+
+
+
+
 
 span.display-cell-title {
 	display:inline-block;

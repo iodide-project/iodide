@@ -54,11 +54,18 @@ let actions = {
 			cellType: cellType
 		}
 	},
-	renderCell: function(cellID, renderMode=true) {
+    clearCellBeforeEvaluation: function(cellID) {
+        return {
+            type: 'CLEAR_CELL_BEFORE_EVALUATION',
+            id: cellID,
+            // render: renderMode
+        }
+    },
+	renderCell: function(cellID, evaluateCell=true) {
 		return {
 			type: 'RENDER_CELL',
 			id: cellID,
-			render: renderMode
+			evaluateCell: evaluateCell
 		}
 	},
 	cellUp: function(cellID) {
