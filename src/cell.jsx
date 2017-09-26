@@ -6,7 +6,7 @@ import React, {createElement} from 'react'
 import JSONTree from 'react-json-tree'
 import js from 'codemirror/mode/javascript/javascript'
 import markdown from 'codemirror/mode/markdown/markdown'
-import CodeMirror from 'react-codemirror'
+import CodeMirror from '@skidding/react-codemirror'
 import marksy from 'marksy'
 const MD_COMPILER = marksy({createElement})
 

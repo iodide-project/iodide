@@ -35398,9 +35398,10 @@ initialVariables.add('__core-js_shared__');
 initialVariables.add('Mousetrap');
 
 function getId(loadedState) {
-  return loadedState.cells.reduce((maxId, cell) => {
+  var newID = loadedState.cells.reduce((maxId, cell) => {
     return Math.max(cell.id, maxId);
   }, -1) + 1;
+  return newID;
 }
 
 function newCell(loadedState, cellType) {
@@ -46224,8 +46225,8 @@ let actions = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_codemirror_mode_javascript_javascript___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_codemirror_mode_javascript_javascript__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_codemirror_mode_markdown_markdown__ = __webpack_require__(474);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_codemirror_mode_markdown_markdown___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_codemirror_mode_markdown_markdown__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react_codemirror__ = __webpack_require__(477);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react_codemirror___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_react_codemirror__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror__ = __webpack_require__(592);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_marksy__ = __webpack_require__(481);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_marksy___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_marksy__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__ = __webpack_require__(128);
@@ -46437,7 +46438,7 @@ class HistoryCell extends GenericCell {
 			mode: this.props.cell.cellType,
 			theme: 'eclipse'
 		};
-		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
+		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
 			value: this.props.cell.content,
 			options: options });
 
@@ -46522,7 +46523,7 @@ class JavascriptCell extends RunnableCell {
 			lineWrapping: this.props.cell.cellType == 'markdown',
 			theme: 'eclipse'
 		};
-		var comp = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor', key: 'cell-' + this.props.cell.id,
+		var comp = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor', key: 'cell-' + this.props.cell.id,
 			value: this.props.cell.content,
 			onChange: this.updateCell.bind(this),
 			onFocus: this.selectCell,
@@ -46549,7 +46550,7 @@ class ExternalScriptCell extends RunnableCell {
 			lineWrapping: this.props.cell.cellType == 'markdown',
 			theme: 'eclipse'
 		};
-		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
+		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
 			value: this.props.cell.content,
 			onChange: this.updateCell.bind(this),
 			onFocus: this.selectCell,
@@ -46576,7 +46577,7 @@ class RawCell extends RunnableCell {
 			theme: 'eclipse'
 		};
 
-		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
+		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
 			value: this.props.cell.content,
 			onChange: this.updateCell.bind(this),
 			onFocus: this.selectCell,
@@ -46604,7 +46605,7 @@ class MarkdownCell extends RunnableCell {
 		};
 		var mainElem;
 		if (!this.props.cell.rendered) {
-			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_codemirror___default.a, { ref: 'editor',
+			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
 				value: this.props.cell.content,
 				onChange: this.updateCell.bind(this),
 				onFocus: this.selectCell,
@@ -53857,532 +53858,8 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
 
 /***/ }),
-/* 477 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var React = __webpack_require__(0);
-var ReactDOM = __webpack_require__(20);
-var PropTypes = __webpack_require__(7);
-var className = __webpack_require__(8);
-var debounce = __webpack_require__(478);
-var isEqual = __webpack_require__(479);
-var createReactClass = __webpack_require__(480);
-
-function normalizeLineEndings(str) {
-	if (!str) return str;
-	return str.replace(/\r\n|\r/g, '\n');
-}
-
-var CodeMirror = createReactClass({
-	propTypes: {
-		autoFocus: PropTypes.bool,
-		className: PropTypes.any,
-		codeMirrorInstance: PropTypes.func,
-		defaultValue: PropTypes.string,
-		name: PropTypes.string,
-		onChange: PropTypes.func,
-		onCursorActivity: PropTypes.func,
-		onFocusChange: PropTypes.func,
-		onScroll: PropTypes.func,
-		options: PropTypes.object,
-		path: PropTypes.string,
-		value: PropTypes.string,
-		preserveScrollPosition: PropTypes.bool
-	},
-	getDefaultProps: function getDefaultProps() {
-		return {
-			preserveScrollPosition: false
-		};
-	},
-	getCodeMirrorInstance: function getCodeMirrorInstance() {
-		return this.props.codeMirrorInstance || __webpack_require__(62);
-	},
-	getInitialState: function getInitialState() {
-		return {
-			isFocused: false
-		};
-	},
-	componentWillMount: function componentWillMount() {
-		this.componentWillReceiveProps = debounce(this.componentWillReceiveProps, 0);
-		if (this.props.path) {
-			console.error('Warning: react-codemirror: the `path` prop has been changed to `name`');
-		}
-	},
-	componentDidMount: function componentDidMount() {
-		var codeMirrorInstance = this.getCodeMirrorInstance();
-		this.codeMirror = codeMirrorInstance.fromTextArea(this.textareaNode, this.props.options);
-		this.codeMirror.on('change', this.codemirrorValueChanged);
-		this.codeMirror.on('cursorActivity', this.cursorActivity);
-		this.codeMirror.on('focus', this.focusChanged.bind(this, true));
-		this.codeMirror.on('blur', this.focusChanged.bind(this, false));
-		this.codeMirror.on('scroll', this.scrollChanged);
-		this.codeMirror.setValue(this.props.defaultValue || this.props.value || '');
-	},
-	componentWillUnmount: function componentWillUnmount() {
-		// is there a lighter-weight way to remove the cm instance?
-		if (this.codeMirror) {
-			this.codeMirror.toTextArea();
-		}
-	},
-	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-		if (this.codeMirror && nextProps.value !== undefined && nextProps.value !== this.props.value && normalizeLineEndings(this.codeMirror.getValue()) !== normalizeLineEndings(nextProps.value)) {
-			if (this.props.preserveScrollPosition) {
-				var prevScrollPosition = this.codeMirror.getScrollInfo();
-				this.codeMirror.setValue(nextProps.value);
-				this.codeMirror.scrollTo(prevScrollPosition.left, prevScrollPosition.top);
-			} else {
-				this.codeMirror.setValue(nextProps.value);
-			}
-		}
-		if (typeof nextProps.options === 'object') {
-			for (var optionName in nextProps.options) {
-				if (nextProps.options.hasOwnProperty(optionName)) {
-					this.setOptionIfChanged(optionName, nextProps.options[optionName]);
-				}
-			}
-		}
-	},
-	setOptionIfChanged: function setOptionIfChanged(optionName, newValue) {
-		var oldValue = this.codeMirror.getOption(optionName);
-		if (!isEqual(oldValue, newValue)) {
-			this.codeMirror.setOption(optionName, newValue);
-		}
-	},
-	getCodeMirror: function getCodeMirror() {
-		return this.codeMirror;
-	},
-	focus: function focus() {
-		if (this.codeMirror) {
-			this.codeMirror.focus();
-		}
-	},
-	focusChanged: function focusChanged(focused) {
-		this.setState({
-			isFocused: focused
-		});
-		this.props.onFocusChange && this.props.onFocusChange(focused);
-	},
-	cursorActivity: function cursorActivity(cm) {
-		this.props.onCursorActivity && this.props.onCursorActivity(cm);
-	},
-	scrollChanged: function scrollChanged(cm) {
-		this.props.onScroll && this.props.onScroll(cm.getScrollInfo());
-	},
-	codemirrorValueChanged: function codemirrorValueChanged(doc, change) {
-		if (this.props.onChange && change.origin !== 'setValue') {
-			this.props.onChange(doc.getValue(), change);
-		}
-	},
-	render: function render() {
-		var _this = this;
-
-		var editorClassName = className('ReactCodeMirror', this.state.isFocused ? 'ReactCodeMirror--focused' : null, this.props.className);
-		return React.createElement(
-			'div',
-			{ className: editorClassName },
-			React.createElement('textarea', {
-				ref: function (ref) {
-					return _this.textareaNode = ref;
-				},
-				name: this.props.name || this.props.path,
-				defaultValue: this.props.value,
-				autoComplete: 'off',
-				autoFocus: this.props.autoFocus
-			})
-		);
-	}
-});
-
-module.exports = CodeMirror;
-
-/***/ }),
-/* 478 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global) {/**
- * lodash (Custom Build) <https://lodash.com/>
- * Build: `lodash modularize exports="npm" -o ./`
- * Copyright jQuery Foundation and other contributors <https://jquery.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-/** Used as the `TypeError` message for "Functions" methods. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/** Used as references for various `Number` constants. */
-var NAN = 0 / 0;
-
-/** `Object#toString` result references. */
-var symbolTag = '[object Symbol]';
-
-/** Used to match leading and trailing whitespace. */
-var reTrim = /^\s+|\s+$/g;
-
-/** Used to detect bad signed hexadecimal string values. */
-var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-/** Used to detect binary string values. */
-var reIsBinary = /^0b[01]+$/i;
-
-/** Used to detect octal string values. */
-var reIsOctal = /^0o[0-7]+$/i;
-
-/** Built-in method references without a dependency on `root`. */
-var freeParseInt = parseInt;
-
-/** Detect free variable `global` from Node.js. */
-var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
-
-/** Detect free variable `self`. */
-var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
-
-/** Used as a reference to the global object. */
-var root = freeGlobal || freeSelf || Function('return this')();
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
-
-/* Built-in method references for those with the same name as other `lodash` methods. */
-var nativeMax = Math.max,
-    nativeMin = Math.min;
-
-/**
- * Gets the timestamp of the number of milliseconds that have elapsed since
- * the Unix epoch (1 January 1970 00:00:00 UTC).
- *
- * @static
- * @memberOf _
- * @since 2.4.0
- * @category Date
- * @returns {number} Returns the timestamp.
- * @example
- *
- * _.defer(function(stamp) {
- *   console.log(_.now() - stamp);
- * }, _.now());
- * // => Logs the number of milliseconds it took for the deferred invocation.
- */
-var now = function() {
-  return root.Date.now();
-};
-
-/**
- * Creates a debounced function that delays invoking `func` until after `wait`
- * milliseconds have elapsed since the last time the debounced function was
- * invoked. The debounced function comes with a `cancel` method to cancel
- * delayed `func` invocations and a `flush` method to immediately invoke them.
- * Provide `options` to indicate whether `func` should be invoked on the
- * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
- * with the last arguments provided to the debounced function. Subsequent
- * calls to the debounced function return the result of the last `func`
- * invocation.
- *
- * **Note:** If `leading` and `trailing` options are `true`, `func` is
- * invoked on the trailing edge of the timeout only if the debounced function
- * is invoked more than once during the `wait` timeout.
- *
- * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
- * until to the next tick, similar to `setTimeout` with a timeout of `0`.
- *
- * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
- * for details over the differences between `_.debounce` and `_.throttle`.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Function
- * @param {Function} func The function to debounce.
- * @param {number} [wait=0] The number of milliseconds to delay.
- * @param {Object} [options={}] The options object.
- * @param {boolean} [options.leading=false]
- *  Specify invoking on the leading edge of the timeout.
- * @param {number} [options.maxWait]
- *  The maximum time `func` is allowed to be delayed before it's invoked.
- * @param {boolean} [options.trailing=true]
- *  Specify invoking on the trailing edge of the timeout.
- * @returns {Function} Returns the new debounced function.
- * @example
- *
- * // Avoid costly calculations while the window size is in flux.
- * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
- *
- * // Invoke `sendMail` when clicked, debouncing subsequent calls.
- * jQuery(element).on('click', _.debounce(sendMail, 300, {
- *   'leading': true,
- *   'trailing': false
- * }));
- *
- * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
- * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
- * var source = new EventSource('/stream');
- * jQuery(source).on('message', debounced);
- *
- * // Cancel the trailing debounced invocation.
- * jQuery(window).on('popstate', debounced.cancel);
- */
-function debounce(func, wait, options) {
-  var lastArgs,
-      lastThis,
-      maxWait,
-      result,
-      timerId,
-      lastCallTime,
-      lastInvokeTime = 0,
-      leading = false,
-      maxing = false,
-      trailing = true;
-
-  if (typeof func != 'function') {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  wait = toNumber(wait) || 0;
-  if (isObject(options)) {
-    leading = !!options.leading;
-    maxing = 'maxWait' in options;
-    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
-    trailing = 'trailing' in options ? !!options.trailing : trailing;
-  }
-
-  function invokeFunc(time) {
-    var args = lastArgs,
-        thisArg = lastThis;
-
-    lastArgs = lastThis = undefined;
-    lastInvokeTime = time;
-    result = func.apply(thisArg, args);
-    return result;
-  }
-
-  function leadingEdge(time) {
-    // Reset any `maxWait` timer.
-    lastInvokeTime = time;
-    // Start the timer for the trailing edge.
-    timerId = setTimeout(timerExpired, wait);
-    // Invoke the leading edge.
-    return leading ? invokeFunc(time) : result;
-  }
-
-  function remainingWait(time) {
-    var timeSinceLastCall = time - lastCallTime,
-        timeSinceLastInvoke = time - lastInvokeTime,
-        result = wait - timeSinceLastCall;
-
-    return maxing ? nativeMin(result, maxWait - timeSinceLastInvoke) : result;
-  }
-
-  function shouldInvoke(time) {
-    var timeSinceLastCall = time - lastCallTime,
-        timeSinceLastInvoke = time - lastInvokeTime;
-
-    // Either this is the first call, activity has stopped and we're at the
-    // trailing edge, the system time has gone backwards and we're treating
-    // it as the trailing edge, or we've hit the `maxWait` limit.
-    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
-      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
-  }
-
-  function timerExpired() {
-    var time = now();
-    if (shouldInvoke(time)) {
-      return trailingEdge(time);
-    }
-    // Restart the timer.
-    timerId = setTimeout(timerExpired, remainingWait(time));
-  }
-
-  function trailingEdge(time) {
-    timerId = undefined;
-
-    // Only invoke if we have `lastArgs` which means `func` has been
-    // debounced at least once.
-    if (trailing && lastArgs) {
-      return invokeFunc(time);
-    }
-    lastArgs = lastThis = undefined;
-    return result;
-  }
-
-  function cancel() {
-    if (timerId !== undefined) {
-      clearTimeout(timerId);
-    }
-    lastInvokeTime = 0;
-    lastArgs = lastCallTime = lastThis = timerId = undefined;
-  }
-
-  function flush() {
-    return timerId === undefined ? result : trailingEdge(now());
-  }
-
-  function debounced() {
-    var time = now(),
-        isInvoking = shouldInvoke(time);
-
-    lastArgs = arguments;
-    lastThis = this;
-    lastCallTime = time;
-
-    if (isInvoking) {
-      if (timerId === undefined) {
-        return leadingEdge(lastCallTime);
-      }
-      if (maxing) {
-        // Handle invocations in a tight loop.
-        timerId = setTimeout(timerExpired, wait);
-        return invokeFunc(lastCallTime);
-      }
-    }
-    if (timerId === undefined) {
-      timerId = setTimeout(timerExpired, wait);
-    }
-    return result;
-  }
-  debounced.cancel = cancel;
-  debounced.flush = flush;
-  return debounced;
-}
-
-/**
- * Checks if `value` is the
- * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
- * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(_.noop);
- * // => true
- *
- * _.isObject(null);
- * // => false
- */
-function isObject(value) {
-  var type = typeof value;
-  return !!value && (type == 'object' || type == 'function');
-}
-
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-function isObjectLike(value) {
-  return !!value && typeof value == 'object';
-}
-
-/**
- * Checks if `value` is classified as a `Symbol` primitive or object.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
- * @example
- *
- * _.isSymbol(Symbol.iterator);
- * // => true
- *
- * _.isSymbol('abc');
- * // => false
- */
-function isSymbol(value) {
-  return typeof value == 'symbol' ||
-    (isObjectLike(value) && objectToString.call(value) == symbolTag);
-}
-
-/**
- * Converts `value` to a number.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to process.
- * @returns {number} Returns the number.
- * @example
- *
- * _.toNumber(3.2);
- * // => 3.2
- *
- * _.toNumber(Number.MIN_VALUE);
- * // => 5e-324
- *
- * _.toNumber(Infinity);
- * // => Infinity
- *
- * _.toNumber('3.2');
- * // => 3.2
- */
-function toNumber(value) {
-  if (typeof value == 'number') {
-    return value;
-  }
-  if (isSymbol(value)) {
-    return NAN;
-  }
-  if (isObject(value)) {
-    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-    value = isObject(other) ? (other + '') : other;
-  }
-  if (typeof value != 'string') {
-    return value === 0 ? value : +value;
-  }
-  value = value.replace(reTrim, '');
-  var isBinary = reIsBinary.test(value);
-  return (isBinary || reIsOctal.test(value))
-    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-    : (reIsBadHex.test(value) ? NAN : +value);
-}
-
-module.exports = debounce;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
-
-/***/ }),
+/* 477 */,
+/* 478 */,
 /* 479 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -67679,6 +67156,146 @@ module.exports = {"title":"Evictions by San Francisco Neighborhood, 1999-2015","
 /***/ (function(module, exports) {
 
 module.exports = {"title":"What does a Javascript Notebook Look Like?","cells":[{"content":"# Cell types\n\n## Markdown cell\n\nThis  is a markdown cell, just as you would see in Jupyter or R-markdown. It supports all the normal markdown things you'd expect including inline\n\n### Demo of targeting elements within a markdown cell\nBelow this paragraph is a div with id=\"targetDiv\":\n<div id=\"targetDiv\"></div>\nWe'll target that div with a small THREE.js example, which we'll run in cells below.\n\n## JS cell\nThe following cell is a Javascript cell","id":1,"cellType":"markdown","value":"<h1 id=\"cell-types\">Cell types</h1>\n<h2 id=\"markdown-cell\">Markdown cell</h2>\n<p>This  is a markdown cell, just as you would see in Jupyter or R-markdown. It supports all the normal markdown things you&#39;d expect including inline</p>\n<h3 id=\"demo-of-targeting-elements-within-a-markdown-cell\">Demo of targeting elements within a markdown cell</h3>\n<p>Below this paragraph is a div with id=&quot;targetDiv&quot;:</p>\n<p><div id=\"targetDiv\"></div>\nWe&#39;ll target that div with a small THREE.js example, which we&#39;ll run in cells below.</p>\n<h2 id=\"js-cell\">JS cell</h2>\n<p>The following cell is a Javascript cell</p>\n","rendered":true,"selected":false},{"content":"// this is a JS code cell. We can use normal JS and browser APIs\n// to select the div defined in the MD cell above\ntargetDiv = document.body\n  .querySelector(\"#targetDiv\")\n","id":14,"cellType":"javascript","rendered":true,"selected":false,"value":{}},{"content":"### External script cells\nthe cell below is an \"external script cell\". It loads external JS from URLs.","id":22,"cellType":"markdown","rendered":true,"selected":false,"value":"<h3 id=\"external-script-cells\">External script cells</h3>\n<p>the cell below is an &quot;external script cell&quot;. It loads external JS from URLs.</p>\n"},{"content":"http://threejs.org/build/three.min.js\nhttps://code.jquery.com/jquery-3.2.1.slim.js\nhttps://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js","id":20,"cellType":"external scripts","rendered":true,"selected":false,"value":"loaded scripts"},{"content":"(function() {\n    //'use strict';\n  \tvar width = 400, height = 300\n\n    var scene = new THREE.Scene();\n    var camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100);\n\n    var renderer = new THREE.WebGLRenderer();\n    renderer.setSize(width, height);\n    targetDiv.appendChild(renderer.domElement);\n\n    var geometry = new THREE.CubeGeometry(5, 5, 5);\n    var material = new THREE.MeshLambertMaterial({\n        color: 0x00fff0\n\n    });\n    var cube = new THREE.Mesh(geometry, material);\n    scene.add(cube);\n\n    camera.position.z = 12;\n    \n    var pointLight = new THREE.PointLight(0xFFFFFF);\n\n    pointLight.position.x = 10;\n    pointLight.position.y = 50;\n    pointLight.position.z = 130;\n\n    scene.add(pointLight);\n\n    var reqAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;\n\n    var render = function() {\n        reqAnimFrame(render);\n        \n        var delta = Math.random() * (0.06 - 0.02) + 0.03\n\n;\n\n        cube.rotation.x += delta;\n        cube.rotation.y += delta;\n        cube.rotation.z -= delta;\n\n        renderer.render(scene, camera);\n    };\n\n    render();\n}());","id":2,"cellType":"javascript","rendered":true,"selected":false},{"content":"canvas target div with id=\"targetDiv2\" right below:\n<div id=\"targetDiv2\"></div>","id":15,"cellType":"markdown","value":"<p>canvas target div with id=&quot;targetDiv2&quot; right below:</p>\n<div id=\"targetDiv2\"></div>","rendered":true,"selected":false},{"content":"targetDiv2 = document.body.querySelector(\"#targetDiv2\")\n\n","id":17,"cellType":"javascript","value":{},"rendered":true,"selected":false},{"content":"var width = 400, height = 300\n\nvar scene = new THREE.Scene();\nvar camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100);\n\nvar renderer = new THREE.WebGLRenderer();\nrenderer.setSize(width, height);\ntargetDiv2.appendChild(renderer.domElement);\n\nvar geometry = new THREE.CubeGeometry(5, 5, 5);\nvar material = new THREE.MeshLambertMaterial({\n  color: 0x00fff0\n});\nvar cube = new THREE.Mesh(geometry, material);\nscene.add(cube);\n\ncamera.position.z = 12;\n\nvar pointLight = new THREE.PointLight(0xFFFFFF);\n\npointLight.position.x = 10;\npointLight.position.y = 50;\npointLight.position.z = 130;\n\nscene.add(pointLight);\nvar reqAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;\n\nvar render = function() {\n  reqAnimFrame(render);\n\n  var delta = Math.random() * (0.06 - 0.02) + 0.02;\n\n  cube.rotation.x += delta;\n  cube.rotation.y += delta;\n  cube.rotation.z -= delta;\n\n  renderer.render(scene, camera);\n};\n\nrender();\n","id":16,"cellType":"javascript","rendered":true,"selected":false},{"content":"\np = document.createElement(\"p\");\np.innerHTML = \"a paragraph\";\n\ntargetDiv2.appendChild(p)\n","id":19,"cellType":"javascript","rendered":true,"selected":false,"value":{}},{"content":"\ni=0\nwhile (i<1000000){i+=1}\ni\n","id":18,"cellType":"javascript","rendered":true,"selected":true,"value":1000000}],"currentlySelected":{"content":"\ni=0\nwhile (i<1000000){i+=1}\ni\n","id":18,"cellType":"javascript","rendered":true,"selected":true,"value":1000000},"declaredProperties":{},"lastSaved":"2017-09-21T18:10:47.505Z","mode":"edit","history":[],"externalScripts":[]}
+
+/***/ }),
+/* 592 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var React = __webpack_require__(0);
+var ReactDOM = __webpack_require__(20);
+var PropTypes = __webpack_require__(7);
+var className = __webpack_require__(8);
+var isEqual = __webpack_require__(479);
+var createReactClass = __webpack_require__(480);
+
+function normalizeLineEndings(str) {
+	if (!str) return str;
+	return str.replace(/\r\n|\r/g, '\n');
+}
+
+var CodeMirror = createReactClass({
+	propTypes: {
+		autoFocus: PropTypes.bool,
+		className: PropTypes.any,
+		codeMirrorInstance: PropTypes.func,
+		defaultValue: PropTypes.string,
+		name: PropTypes.string,
+		onChange: PropTypes.func,
+		onCursorActivity: PropTypes.func,
+		onFocusChange: PropTypes.func,
+		onScroll: PropTypes.func,
+		options: PropTypes.object,
+		path: PropTypes.string,
+		value: PropTypes.string,
+		preserveScrollPosition: PropTypes.bool
+	},
+	getDefaultProps: function getDefaultProps() {
+		return {
+			preserveScrollPosition: false
+		};
+	},
+	getCodeMirrorInstance: function getCodeMirrorInstance() {
+		return this.props.codeMirrorInstance || __webpack_require__(62);
+	},
+	getInitialState: function getInitialState() {
+		return {
+			isFocused: false
+		};
+	},
+	componentWillMount: function componentWillMount() {
+		if (this.props.path) {
+			console.error('Warning: react-codemirror: the `path` prop has been changed to `name`');
+		}
+	},
+	componentDidMount: function componentDidMount() {
+		var codeMirrorInstance = this.getCodeMirrorInstance();
+		this.codeMirror = codeMirrorInstance.fromTextArea(this.textareaNode, this.props.options);
+		this.codeMirror.on('change', this.codemirrorValueChanged);
+		this.codeMirror.on('cursorActivity', this.cursorActivity);
+		this.codeMirror.on('focus', this.focusChanged.bind(this, true));
+		this.codeMirror.on('blur', this.focusChanged.bind(this, false));
+		this.codeMirror.on('scroll', this.scrollChanged);
+		this.codeMirror.setValue(this.props.defaultValue || this.props.value || '');
+	},
+	componentWillUnmount: function componentWillUnmount() {
+		// is there a lighter-weight way to remove the cm instance?
+		if (this.codeMirror) {
+			this.codeMirror.toTextArea();
+		}
+	},
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		if (this.codeMirror && nextProps.value !== undefined && nextProps.value !== this.props.value && normalizeLineEndings(this.codeMirror.getValue()) !== normalizeLineEndings(nextProps.value)) {
+			if (this.props.preserveScrollPosition) {
+				var prevScrollPosition = this.codeMirror.getScrollInfo();
+				this.codeMirror.setValue(nextProps.value);
+				this.codeMirror.scrollTo(prevScrollPosition.left, prevScrollPosition.top);
+			} else {
+				this.codeMirror.setValue(nextProps.value);
+			}
+		}
+		if (typeof nextProps.options === 'object') {
+			for (var optionName in nextProps.options) {
+				if (nextProps.options.hasOwnProperty(optionName)) {
+					this.setOptionIfChanged(optionName, nextProps.options[optionName]);
+				}
+			}
+		}
+	},
+	setOptionIfChanged: function setOptionIfChanged(optionName, newValue) {
+		var oldValue = this.codeMirror.getOption(optionName);
+		if (!isEqual(oldValue, newValue)) {
+			this.codeMirror.setOption(optionName, newValue);
+		}
+	},
+	getCodeMirror: function getCodeMirror() {
+		return this.codeMirror;
+	},
+	focus: function focus() {
+		if (this.codeMirror) {
+			this.codeMirror.focus();
+		}
+	},
+	focusChanged: function focusChanged(focused) {
+		this.setState({
+			isFocused: focused
+		});
+		this.props.onFocusChange && this.props.onFocusChange(focused);
+	},
+	cursorActivity: function cursorActivity(cm) {
+		this.props.onCursorActivity && this.props.onCursorActivity(cm);
+	},
+	scrollChanged: function scrollChanged(cm) {
+		this.props.onScroll && this.props.onScroll(cm.getScrollInfo());
+	},
+	codemirrorValueChanged: function codemirrorValueChanged(doc, change) {
+		if (this.props.onChange && change.origin !== 'setValue') {
+			this.props.onChange(doc.getValue(), change);
+		}
+	},
+	render: function render() {
+		var _this = this;
+
+		var editorClassName = className('ReactCodeMirror', this.state.isFocused ? 'ReactCodeMirror--focused' : null, this.props.className);
+		return React.createElement(
+			'div',
+			{ className: editorClassName },
+			React.createElement('textarea', {
+				ref: function (ref) {
+					return _this.textareaNode = ref;
+				},
+				name: this.props.name || this.props.path,
+				defaultValue: this.props.value,
+				autoComplete: 'off',
+				autoFocus: this.props.autoFocus
+			})
+		);
+	}
+});
+
+module.exports = CodeMirror;
 
 /***/ })
 /******/ ]);

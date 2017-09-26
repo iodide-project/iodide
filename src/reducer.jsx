@@ -24,9 +24,10 @@ initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 
 function getId(loadedState) {
-  return loadedState.cells.reduce((maxId, cell) => {
+  var newID = loadedState.cells.reduce((maxId, cell) => {
     return Math.max(cell.id, maxId)
   }, -1) + 1
+  return newID
 }
 
 function newCell(loadedState, cellType){
