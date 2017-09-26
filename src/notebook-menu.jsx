@@ -22,7 +22,7 @@ class NotebookMenu extends React.Component {
 	constructor(props) {
 		super(props)
 		this.changeMode = this.changeMode.bind(this)
-		this.state = {previousMode: props.mode, exampleNotebooks}
+		this.state = {previousMode: props.mode}
 	}
 
 	selectMenuItem(menuItem, evt) {
@@ -30,10 +30,17 @@ class NotebookMenu extends React.Component {
 		if (menuItem=='deleteNotebook') this.props.actions.deleteNotebook(this.props.currentTitle)
 		if (menuItem=='exportNotebook') this.props.actions.exportNotebook()
 		if (menuItem=='importNotebook') document.getElementById('import-notebook').click()//triggers notebookFileImport
+		if (menuItem=='newNotebook') {
+			this.props.actions.newNotebook()
+			//this.props.actions.addCell('javascript')
+		}
 	}
 
 	handleNotebookSelection(notebook, evt) {
-		if (notebook.notebookType === 'saved' || notebook.notebookType === 'autosave') this.props.actions.loadNotebook(notebook.title)
+		if (notebook.notebookType === 'saved' || notebook.notebookType === 'autosave') {
+			//this.props.actions.newNotebook()
+			this.props.actions.loadNotebook(notebook.title)
+		}
 
 		if (notebook.notebookType === 'example') {
 
@@ -53,6 +60,11 @@ class NotebookMenu extends React.Component {
 			this.setState({previousMode: this.props.mode})
 			this.props.actions.changeMode(mode)
 		}
+	}
+
+	changeSidePaneMode(sidePaneMode) {
+		if (this.props.sidePaneMode === sidePaneMode) this.props.actions.changeSidePaneMode(undefined)
+		else this.props.actions.changeSidePaneMode(sidePaneMode)
 	}
 
 	notebookFileImport(evt) {
@@ -100,44 +112,40 @@ class NotebookMenu extends React.Component {
 				var lastSaved = JSON.parse(localStorage[n]).lastSaved
 				return <MenuItem 
 					eventKey={{notebookType:'saved', title:n}} 
-					key={n} 
-					id={n}> 
+					key={'SAVED: '+n} 
+					id={'SAVED: '+ n}> 
 						<span className="menu-notebook-name">{n}</span> 
 						<span className="menu-last-saved">{formatDateString(lastSaved)}</span> 
 					</MenuItem>
 			})	
-			savedNBs.unshift(<MenuItem header>Saved Notebooks </MenuItem>)	
+			savedNBs.unshift(<MenuItem key='saved-notebooks-header' header>Saved Notebooks </MenuItem>)	
 		}
 		exampleNBs = exampleNotebooks.map((nb)=>{
 			var lastSaved = nb.lastSaved
 			return <MenuItem 
 				eventKey={{notebookType: 'example', title:nb.title}} 
 				key={settings.labels.EXAMPLE+nb.title} 
-				id={nb.title}
+				id={settings.labels.EXAMPLE+nb.title}
 			>
 						<span className="menu-notebook-name">{nb.title}</span> 
 						<span className="menu-last-saved">{formatDateString(lastSaved)}</span> 
 			</MenuItem>
 		})
 
-		exampleNBs.unshift(<MenuItem header>Example Notebooks </MenuItem>)
+		exampleNBs.unshift(<MenuItem key='example-notebooks-header' header>Example Notebooks </MenuItem>)
 		
-
-		// let's handle label logic, etc.
-
 		if (exampleNBs.length && (autosaveNBs.length || savedNBs.length)) {
-			// add a double line
-			exampleNBs.unshift(<MenuItem divider />)
+			exampleNBs.unshift(<MenuItem key='example-notebook-divider' divider />)
 		}
 
 		if (savedNBs.length && autosaveNBs.length) {
-			savedNBs.unshift(<MenuItem divider />)
+			savedNBs.unshift(<MenuItem key='saved-notebook-divider' divider />)
 		}
 
 		notebookMenuItems = notebookMenuItems.concat(autosaveNBs).concat(savedNBs).concat(exampleNBs)
 
 		if (notebookMenuItems.length) {
-			notebookMenuItems = <Dropdown onSelect={this.handleNotebookSelection.bind(this)} > 
+			notebookMenuItems = <Dropdown id='notebook-menu-items' onSelect={this.handleNotebookSelection.bind(this)} > 
 				<Dropdown.Toggle bsSize="xsmall">Notebooks</Dropdown.Toggle>
 				<Dropdown.Menu className='load-notebook-menu'> {notebookMenuItems} </Dropdown.Menu>
 			</Dropdown>
@@ -153,19 +161,22 @@ class NotebookMenu extends React.Component {
 			    	type='file' style={{display:'none'}} onChange={this.notebookFileImport.bind(this)} 
 			    />
           		<a id='export-anchor' style={{display:'none'}} ></a>
-				<ButtonToolbar>
-					<DropdownButton bsSize="xsmall" id='main-menu' bsStyle='default' title="Menu" onSelect={this.selectMenuItem.bind(this)} >
-						<MenuItem   eventKey={"saveNotebook"} >Save <span className='menu-item-title'>{currentTitle}</span></MenuItem>
-						<MenuItem   eventKey={"deleteNotebook"} >Delete <span className='menu-item-title'>{currentTitle}</span></MenuItem>
-						<MenuItem   eventKey={"importNotebook"} >Import Notebook</MenuItem>
-						<MenuItem   eventKey={"exportNotebook"} >Export Notebook</MenuItem>
-						<MenuItem   eventKey={'new'} >New Notebook</MenuItem>
+				<ButtonToolbar id='notebook-actions'>
+					<DropdownButton id='notebook-action-dropdown' bsSize="xsmall" id='main-menu' bsStyle='default' title="Menu" onSelect={this.selectMenuItem.bind(this)} >
+						<MenuItem id='save-notebook-item'  eventKey={"saveNotebook"} >Save <span className='menu-item-title'>{currentTitle}</span></MenuItem>
+						<MenuItem id='delete-notebook-item'  eventKey={"deleteNotebook"} >Delete <span className='menu-item-title'>{currentTitle}</span></MenuItem>
+						<MenuItem id='import-notebook-item'  eventKey={"importNotebook"} >Import Notebook</MenuItem>
+						<MenuItem id='export-notebook-item'  eventKey={"exportNotebook"} >Export Notebook</MenuItem>
+						<MenuItem id='new-notebook-item'  eventKey={'newNotebook'} >New Notebook</MenuItem>
 					</ DropdownButton>
 						{notebookMenuItems}
 				</ButtonToolbar>
-				<ButtonToolbar className='mode-buttons'>
-					<Button bsSize='xsmall' onClick={()=>{this.changeMode('editor-modes')}}>Editor</Button>
-					<Button bsSize='xsmall'onClick={()=>{this.changeMode('history')}}>History</Button>
+				<ButtonToolbar id='notebook-controls' className='mode-buttons'>
+					<Button bsSize='xsmall' onClick={ ()=>{this.changeMode('editor-modes')} }>Editor</Button>
+					<Button bsSize='xsmall'>Presentation</Button>
+
+					<Button bsSize='xsmall'onClick={ ()=>{this.changeSidePaneMode('history')} }>History</Button>
+					<Button bsSize='xsmall'onClick={()=>{this.changeSidePaneMode('declared variables')} }>Declared Variables</Button>
 				</ButtonToolbar>
 			</div>
 		)

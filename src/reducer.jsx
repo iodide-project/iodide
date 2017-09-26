@@ -1,7 +1,7 @@
 import marked from 'marked'
 
 function newBlankState(){
-  return  {
+  var initialState =  {
     title: undefined,
     cells: [],
     currentlySelected: undefined,
@@ -9,26 +9,30 @@ function newBlankState(){
     lastValue: undefined,
     lastSaved: undefined,
     mode: 'command',
+    sidePaneMode: undefined,
     history:[],
     externalScripts:[]
   }
+  initialState.cells.push(newCell(initialState, 'javascript'))
+  initialState.cells[0].selected = true
+  initialState.currentlySelected = Object.assign({}, initialState.cells[0])
+  return initialState
 }
 
-var initialState = newBlankState()
+var initialVariables = new Set(Object.keys(window)) // gives all global variables
+initialVariables.add('__core-js_shared__')
+initialVariables.add('Mousetrap')
 
-initialState.cells.push(newCell(initialState, 'javascript'))
-initialState.currentlySelected = initialState.cells[0]
-
-function getId(state) {
-  return state.cells.reduce((maxId, cell) => {
+function getId(loadedState) {
+  return loadedState.cells.reduce((maxId, cell) => {
     return Math.max(cell.id, maxId)
   }, -1) + 1
 }
 
-function newCell(state, cellType){
+function newCell(loadedState, cellType){
   return {
     content:'',
-    id: getId(state),
+    id: getId(loadedState),
     cellType: cellType,
     value: undefined,
     rendered: false,
@@ -36,13 +40,17 @@ function newCell(state, cellType){
   }
 }
 
-function clearHistory(state) {
+function clearHistory(loadedState) {
   // remove history and declared properties before exporting the state.
-  state.declaredProperties = {}
-  state.history = []
-  state.externalScripts = []
+  loadedState.declaredProperties = {}
+  loadedState.history = []
+  loadedState.externalScripts = []
 }
 
+function validateState(state) {
+  // check for cells
+  // check
+}
 
 function scrollToCellIfNeeded(cellID) {
   var elem = document.getElementById('cell-'+cellID);
@@ -98,6 +106,11 @@ function addExternalScript(scriptUrl){
 let reducer = function (state, action) {
   switch (action.type) {
 
+    case 'NEW_NOTEBOOK':
+      var newState = newBlankState()
+      //newState.cells.push(newCell(newState, 'javascript'))
+      return newState
+
     case 'EXPORT_NOTEBOOK':
       var outputState = Object.assign({}, state)
       clearHistory(outputState)
@@ -126,16 +139,16 @@ let reducer = function (state, action) {
       return Object.assign({}, state, {lastSaved})
 
     case 'LOAD_NOTEBOOK':
-      var newState = newBlankState();
+      //var newState = newBlankState();
       var loadedState = JSON.parse(localStorage.getItem(action.title))
-      clearHistory(loadedState)
-      return Object.assign(newState, loadedState)
+      //clearHistory(loadedState)
+      return Object.assign({}, loadedState)
 
     case 'DELETE_NOTEBOOK':
       var title = action.title
       if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title)
       if (title === state.title) {
-        var newState = Object.assign({}, initialState)
+        var newState = Object.assign({}, newBlankState())
       } else {
         var newState = Object.assign({}, state)
       }
@@ -161,14 +174,16 @@ let reducer = function (state, action) {
       return nextState
 
     case 'ADD_CELL':
-      var cells = state.cells.slice()
+      var newState = Object.assign({}, state)
+
+      var cells = newState.cells.slice()
       cells.forEach((cell)=>{cell.selected = false; return cell})
 
-      var nextCell = newCell(state, action.cellType)
+      var nextCell = newCell(newState, action.cellType)
       nextCell.selected = true
       var nextState = Object.assign({}, state, {
         cells: [...cells, nextCell],
-        currentlySelected: nextCell
+        currentlySelected: Object.assign({}, nextCell)
       })
       return nextState
 
@@ -246,6 +261,7 @@ let reducer = function (state, action) {
       if (action.render) {
         if (thisCell.cellType === 'javascript') {
           // add to newState.history
+
           newState.history.push({
             cellID: thisCell.id,
             lastRan: new Date(),
@@ -267,7 +283,16 @@ let reducer = function (state, action) {
           if (output !== undefined) {
             thisCell.value = output
           }
-          var lastValue;
+
+          // ok. Now let's see if there are any new declared variables.
+          declaredProperties = {} //
+          var currentGlobal = Object.keys(window)
+          currentGlobal.forEach((g)=>{
+            if (!initialVariables.has(g)) {
+              declaredProperties[g] = window[g]
+            }
+          })
+
         } else if (thisCell.cellType === 'markdown') {
           // one line, huh.
           thisCell.value = marked(thisCell.content);
@@ -292,7 +317,7 @@ let reducer = function (state, action) {
       }
       
       cells[index] = thisCell;
-      var nextState = Object.assign({}, newState, {cells}, {lastValue});
+      var nextState = Object.assign({}, newState, {cells}, {declaredProperties});
       return nextState
 
     case 'DELETE_CELL':
@@ -308,7 +333,7 @@ let reducer = function (state, action) {
           else nextIndex=index+1
           cells[nextIndex].selected=true
         }
-        currentlySelected = cells[nextIndex]
+        currentlySelected = Object.assign({}, cells[nextIndex])
       } else {
         currentlySelected = Object.assign({}, state.currentlySelected)
       }
@@ -334,9 +359,12 @@ let reducer = function (state, action) {
       cells[index] = thisCell
       return Object.assign({}, state, {cells})
 
+    case 'CHANGE_SIDE_PANE_MODE':
+      return Object.assign({}, state, {sidePaneMode: action.mode})
+
     default:
       return state
   }
 }
 
-export {reducer, initialState}
+export {reducer, newBlankState}

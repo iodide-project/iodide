@@ -1,5 +1,5 @@
 import { applyMiddleware, compose, createStore } from 'redux'
-import { reducer, initialState } from './reducer.jsx'
+import { reducer, newBlankState } from './reducer.jsx'
 import  logger from 'redux-logger'
 
 // let finalCreateStore = compose(
@@ -17,7 +17,7 @@ import  logger from 'redux-logger'
 
 function configureStore() {
 	var store = createStore(
-		reducer, initialState,
+		reducer, newBlankState(),
 		compose(applyMiddleware(logger)))
 	//persistStore(store)
 	return store

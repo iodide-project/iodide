@@ -5,7 +5,7 @@ import Mousetrap from 'mousetrap'
 
 import actions from './actions.jsx'
 import {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, DOMCell} from './cell.jsx'
-import DeclaredProperties from './declared-properties.jsx'
+import DeclaredVariables from './declared-variables.jsx'
 import keyBinding from './keybindings.jsx' 
 import Title from './title.jsx'
 import NotebookMenu from './notebook-menu.jsx'
@@ -13,9 +13,47 @@ import settings from './settings.jsx'
 
 const AUTOSAVE = settings.labels.AUTOSAVE
 
+class SidePane extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
+  exitSidePane() {
+
+    this.props.actions.changeSidePaneMode(undefined)
+  }
+
+  render() {
+
+    //
+    var contents=[];
+    if (this.props.sidePaneMode === 'history') {
+      if (this.props.history.length) {
+        contents = this.props.history.map((cell,i)=> {
+          var cellComponent = <HistoryCell display={true} ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
+          return cellComponent
+        })
+      } else {
+        contents.push(<div className='no-history'>No History</div>)
+      }
+    } else if (this.props.sidePaneMode == 'declared variables') {
+      contents = <DeclaredVariables variables={this.props.declaredProperties}  />
+    }
+
+    return (
+      <div className='side-pane'>
+        <div><i onClick={this.exitSidePane.bind(this)} className="fa fa-times close-side-pane" aria-hidden="true"></i></div>
+        {contents}
+      </div>
+    )
+  }
+}
+
 class Page extends React.Component {
   constructor(props) {
     super(props)
+    this.props.actions.newNotebook()
+    // this.props.actions.addCell('javascript')
     keyBinding('jupyter', this)
     setInterval(()=>{
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
@@ -42,43 +80,29 @@ class Page extends React.Component {
 
     var bodyContent = this.props.cells.map((cell,i)=> {
       var cellComponent
-      if (cell.cellType === 'javascript') cellComponent = <JavascriptCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'markdown') cellComponent = <MarkdownCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'raw') cellComponent = <RawCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'external scripts') cellComponent = <ExternalScriptCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if  (cell.cellType === 'dom') cellComponent = <DOMCell display={this.props.mode!=='history'} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      if (cell.cellType === 'javascript') cellComponent = <JavascriptCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      if (cell.cellType === 'markdown') cellComponent = <MarkdownCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      if (cell.cellType === 'raw') cellComponent = <RawCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      if (cell.cellType === 'external scripts') cellComponent = <ExternalScriptCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+      if  (cell.cellType === 'dom') cellComponent = <DOMCell  display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
       return cellComponent
-    }); 
+    });
 
-    if (this.props.mode === 'history') {
-      if (this.props.history.length) {
-        bodyContent = bodyContent.concat(this.props.history.map((cell,i)=> {
-          var cellComponent = <HistoryCell display={true} ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
-          return cellComponent
-        }))
-      } else {
-        bodyContent.push(<div className='no-history'>No History</div>)
-      }
-    }
-
-    var declaredPropertiesPane;
-    if (Object.keys(this.props.declaredProperties).length) {
-      declaredPropertiesPane = <DeclaredProperties state={this.props.declaredProperties} />
-    } else {
-      declaredPropertiesPane = <div></div>
-    }
-    //{declaredPropertiesPane} // put this in after everything else
-    var pageControls
-    if (this.props.mode == 'history') {
-      pageControls = <div className='controls'></div>
-    } else {
-        pageControls = <div className='controls'>
-              <i className='fa fa-plus add-cell' onClick={this.addCell.bind(this)}></i>
-            </div>
-    }
+    var sp = <span></span>
+    if (this.props.sidePaneMode !== undefined) sp = <SidePane 
+        sidePaneMode={this.props.sidePaneMode} 
+        pageMode={this.props.pageMode}
+        cells={this.props.cells}
+        history={this.props.history}
+        declaredProperties={this.props.declaredProperties}
+        actions={this.props.actions} />
+    
+    var pageControls = <div className='controls'>
+      <i className='fa fa-plus add-cell' onClick={this.addCell.bind(this)}></i>
+    </div>
     return (
         <div>
-          <NotebookMenu actions={this.props.actions} mode={this.props.mode} lastSaved={this.props.lastSaved} currentTitle={this.props.title} />
+          <NotebookMenu actions={this.props.actions} mode={this.props.mode} sidePaneMode={this.props.sidePaneMode} lastSaved={this.props.lastSaved} currentTitle={this.props.title} />
 
           <div className='page-mode'>{this.props.mode}</div>
           <div id='deselector'>
@@ -91,8 +115,8 @@ class Page extends React.Component {
             <div className='cells'>
             	{bodyContent}
             </div>
-              
             
+            {sp}
 
         </div>
     );

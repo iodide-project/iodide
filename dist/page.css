@@ -50,9 +50,9 @@ div.cells {
 }
 
 div.declared-variables {
-	float:left;
-	width:290px;
+	width:270px;
 	padding-left:10px;
+	padding-bottom:10px;
 }
 
 div.cell-container {
@@ -223,4 +223,24 @@ div.dom-cell-error {
 
 .dom-inputs {
 	padding:3px;
+}
+
+div.side-pane {
+	position: fixed;
+	right:0;
+	top:40px;
+	border:2px solid gray;
+	border-right:none;
+	width:350px;
+	overflow: scroll;
+	height:100%;
+	background-color:rgba(255,255,255,.9);
+}
+
+i.close-side-pane {
+	padding:5px;
+}
+
+i.close-side-pane:hover {
+	outline:1px solid lightgray;
 }

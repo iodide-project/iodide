@@ -1,13 +1,13 @@
 import React from 'react';
 import JSONTree from 'react-json-tree';
 
-class DeclaredProperties extends React.Component {
+class DeclaredVariables extends React.Component {
 
 
 	render() {
 		return (
 			<div className='declared-variables'>
-				<JSONTree data={this.props.state} hideRoot={true} theme={{
+				<JSONTree data={this.props.variables} hideRoot={false} theme={{
 				  scheme: 'bright',
 				  author: 'chris kempson (http://chriskempson.com)',
 				  base00: '#000000',
@@ -31,4 +31,4 @@ class DeclaredProperties extends React.Component {
 	}
 }
 
-export default DeclaredProperties;
+export default DeclaredVariables;

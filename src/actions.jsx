@@ -28,6 +28,11 @@ let actions = {
 			title: title
 		}
 	},
+	newNotebook: function() {
+		return {
+			type: 'NEW_NOTEBOOK'
+		}
+	},
 	changePageTitle: function(title) {
 		return {
 			type: 'CHANGE_PAGE_TITLE',
@@ -116,6 +121,12 @@ let actions = {
 			type: 'CHANGE_DOM_ELEMENT_ID',
 			id: cellID,
 			elemID: elemID
+		}
+	},
+	changeSidePaneMode: function(mode) {
+		return {
+			type: 'CHANGE_SIDE_PANE_MODE',
+			mode
 		}
 	}
 }
