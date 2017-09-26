@@ -11,7 +11,8 @@ function newBlankState(){
     mode: 'command',
     sidePaneMode: undefined,
     history:[],
-    externalScripts:[]
+    externalScripts:[],
+    executionNumber: 1
   }
   initialState.cells.push(newCell(initialState, 'javascript'))
   initialState.cells[0].selected = true
@@ -37,7 +38,9 @@ function newCell(loadedState, cellType){
     cellType: cellType,
     value: undefined,
     rendered: false,
-    selected: false
+    selected: false,
+    isExecuting: false,
+    executionStatus: " "
   }
 }
 
@@ -46,6 +49,7 @@ function clearHistory(loadedState) {
   loadedState.declaredProperties = {}
   loadedState.history = []
   loadedState.externalScripts = []
+  loadedState.executionNumber = 0
 }
 
 function validateState(state) {
@@ -252,14 +256,31 @@ let reducer = function (state, action) {
       var nextState = Object.assign({}, state, {cells})
       return nextState
 
+    case 'CLEAR_CELL_BEFORE_EVALUATION':
+      var newState = Object.assign({}, state)
+      var cells = newState.cells.slice()
+      var index = cells.findIndex(c=>c.id===action.id)
+      var thisCell = cells[index]
+      thisCell.executionStatus = "*"
+      thisCell.value = undefined
+      cells[index] = thisCell
+      var nextState = Object.assign({}, newState, {cells});
+      console.log(cells)
+      console.log(thisCell)
+      console.log(thisCell.executionStatus)
+      console.log(nextState)
+      return nextState
+
     case 'RENDER_CELL':
       var newState = Object.assign({}, state)
       var declaredProperties = newState.declaredProperties
       var cells = newState.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = cells[index]
+      var executionNumber = newState.executionNumber
 
-      if (action.render) {
+
+      if (action.evaluateCell) {
         if (thisCell.cellType === 'javascript') {
           // add to newState.history
 
@@ -294,6 +315,9 @@ let reducer = function (state, action) {
             }
           })
 
+          var lastValue;
+          newState.executionNumber++
+          thisCell.executionStatus = ""+newState.executionNumber
         } else if (thisCell.cellType === 'markdown') {
           // one line, huh.
           thisCell.value = marked(thisCell.content);
@@ -311,6 +335,9 @@ let reducer = function (state, action) {
             lastRan: new Date(),
             content: "// added external scripts:\n" + ( newScripts.map(s => "// "+s).join("\n") )
           })
+
+          newState.executionNumber++
+          thisCell.executionStatus = ""+newState.executionNumber
 
         }
       } else {

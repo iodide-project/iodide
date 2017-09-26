@@ -1,7 +1,6 @@
 // a Page is a collection of cells. They are displayed in order. All javascript cells share
 // the same interpreter.
 
-
 import React, {createElement} from 'react'
 import JSONTree from 'react-json-tree'
 import js from 'codemirror/mode/javascript/javascript'
@@ -113,13 +112,13 @@ class DOMCell extends GenericCell {
 			elem = <div className='dom-cell-error'>please add an elem type</div>
 		}
 		return (
-			<div id={'cell-'+ this.props.cell.id} 
+			<div id={'cell-'+ this.props.cell.id}
 				onMouseOver={this.showControls.bind(this)} 
 				onMouseOut={this.hideControls.bind(this)} 
-				className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
-
+				className={'cell-container ' + (this.props.display ? '' : 'hidden-cell') +
+                (this.props.cell.selected ? 'selected-cell ' : ' ')}>
 				<div 
-					className={'cell dom-cell ' + (this.props.cell.selected ? 'selected-cell ' : ' ') + 
+					className={'cell dom-cell '  + 
 						(this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
 					onClick={this.selectCell.bind(this)}>
 
@@ -143,6 +142,7 @@ class DOMCell extends GenericCell {
 	}
 }
 
+
 class HistoryCell extends GenericCell {
 	constructor(props) {
 		super(props)
@@ -159,8 +159,6 @@ class HistoryCell extends GenericCell {
 		var mainElem = <CodeMirror ref='editor'
 						   value={this.props.cell.content}
 						   options={options} />
-		
-		
 
 		return (
 			<div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
@@ -178,6 +176,7 @@ class HistoryCell extends GenericCell {
 			)
 	}
 }
+
 
 class RunnableCell extends GenericCell {
 	constructor(props){
@@ -200,20 +199,23 @@ class RunnableCell extends GenericCell {
 	render() {
 		return (
 			<div id={'cell-'+ this.props.cell.id}
-			className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}
+			className={'cell-container ' + 
+                (this.props.display ? '' : 'hidden-cell') +
+                (this.props.cell.selected ? 'selected-cell ' : ' ') + 
+                (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
 			onMouseEnter={this.showControls.bind(this)}
 			onMouseLeave={this.hideControls.bind(this)}
 			onMouseDown={this.selectCell} >
+                <div id = {"cell-execution-status-"+ this.props.cell.id}
+                className ={"cell-execution-status " + this.props.cell.cellType}>
+                    [{this.props.cell.executionStatus}]
+                </div>
 				<div style={{display:"none"}}><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
-				<div className={'cell ' + 
-					(this.props.cell.selected ? 'selected-cell ' : ' ') + 
-					(this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ') +
+				<div className={'cell '  +
 					(this.props.cell.rendered ? 'rendered ' : 'unrendered ')
 				}>
-			
 					{this.mainComponent.bind(this)()}
-
-					<div className='result'>				
+					<div className='result'>
 							{this.resultComponent.bind(this)()}
 					</div>
 				</div>
@@ -265,12 +267,12 @@ class ExternalScriptCell extends RunnableCell {
 			lineWrapping: this.props.cell.cellType == 'markdown',
 			theme: 'eclipse'
 		}
-		var mainElem = <CodeMirror ref='editor'
-						   value={this.props.cell.content}
-						   onChange={this.updateCell.bind(this)} 
-						   onFocus={this.selectCell}
-						   options={options} />
-		return mainElem
+        return (<CodeMirror ref='editor'
+                           value={this.props.cell.content}
+                           onChange={this.updateCell.bind(this)} 
+                           onFocus={this.selectCell}
+                           options={options} />
+        )
 	}
 
 	resultComponent(){

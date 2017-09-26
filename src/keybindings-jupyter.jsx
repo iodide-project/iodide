@@ -113,7 +113,11 @@ var SELECT_DOWN = [['down'], function(e){
 var RENDER_CELL = [['mod+enter'], function(){
       if (this.props.currentlySelected!=undefined) {
         document.activeElement.blur()
+        // this.props.actions.clearCellBeforeEvaluation(this.props.currentlySelected.id)
         this.props.actions.renderCell(this.props.currentlySelected.id)
+        // setTimeout(()=>{
+        // this.props.actions.renderCell(this.props.currentlySelected.id)
+        // } ,100)
         this.props.actions.changeMode('command')
       } 
     }
