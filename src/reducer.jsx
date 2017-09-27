@@ -1,5 +1,8 @@
-import marked from 'marked'
-
+//import marked from 'marked'
+import MarkdownIt from 'markdown-it'
+import MarkdownItKatex from 'markdown-it-katex'
+var MD = MarkdownIt()
+MD.use(MarkdownItKatex)
 function newBlankState(){
   var initialState =  {
     title: undefined,
@@ -247,7 +250,7 @@ let reducer = function (state, action) {
 
     case 'CHANGE_CELL_TYPE':
       var cells = state.cells.slice();
-      var index = cells.findIndex(c=>c.id===action.id);
+      var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = cells[index];
       thisCell.cellType = action.cellType;
       thisCell.value = undefined;
@@ -264,11 +267,7 @@ let reducer = function (state, action) {
       thisCell.executionStatus = "*"
       thisCell.value = undefined
       cells[index] = thisCell
-      var nextState = Object.assign({}, newState, {cells});
-      console.log(cells)
-      console.log(thisCell)
-      console.log(thisCell.executionStatus)
-      console.log(nextState)
+      var nextState = Object.assign({}, newState, {cells})
       return nextState
 
     case 'RENDER_CELL':
@@ -320,7 +319,7 @@ let reducer = function (state, action) {
           thisCell.executionStatus = ""+newState.executionNumber
         } else if (thisCell.cellType === 'markdown') {
           // one line, huh.
-          thisCell.value = marked(thisCell.content);
+          thisCell.value = MD.render(thisCell.content);
           thisCell.rendered = true;
         } else if (thisCell.cellType === 'external scripts') {
           var scriptUrls = thisCell.content.split("\n").filter(s => s!="");

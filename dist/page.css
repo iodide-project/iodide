@@ -276,3 +276,7 @@ i.close-side-pane {
 i.close-side-pane:hover {
 	outline:1px solid lightgray;
 }
+
+.katex-html {
+	display:none;
+}
