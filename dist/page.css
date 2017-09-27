@@ -2,6 +2,24 @@ html,body {
 	min-height:100%; margin:0; padding:0; 
 }
 
+/* for Github-flavored Markdown */
+
+table {
+    display: block;
+    overflow: auto;
+    width: 100%;
+}
+
+    table th, table td {
+        padding: 6px 13px;
+        border: 1px solid #ddd;
+    }
+
+    table tr:nth-child(2n) {
+        background-color: #f8f8f8;
+}
+
+
 div#deselector {
 	width:0;
 	overflow:hidden;
