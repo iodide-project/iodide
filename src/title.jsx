@@ -10,6 +10,7 @@ class Title extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {previousMode: props.pageMode}
+		this.changeTitle = this.changeTitle.bind(this)
 	}
 
 	changeTitle(evt) {
@@ -22,7 +23,7 @@ class Title extends React.Component {
 	}
 
 	render() {
-		var elem = <input className={'page-title ' + (this.props.title === undefined ? 'unrendered-title' : '')} value={formattedTitle(this.props.title)} onChange={this.changeTitle.bind(this)} />
+		var elem = <input className={'page-title ' + (this.props.title === undefined ? 'unrendered-title' : '')} value={formattedTitle(this.props.title)} onChange={this.changeTitle} />
 		return elem
 	}
 }

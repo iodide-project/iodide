@@ -22,6 +22,9 @@ class NotebookMenu extends React.Component {
 	constructor(props) {
 		super(props)
 		this.changeMode = this.changeMode.bind(this)
+		this.handleNotebookSelection = this.handleNotebookSelection.bind(this)
+		this.notebookFileImport = this.notebookFileImport.bind(this)
+		this.selectMenuItem = this.selectMenuItem.bind(this)
 		this.state = {previousMode: props.mode}
 	}
 
@@ -145,7 +148,7 @@ class NotebookMenu extends React.Component {
 		notebookMenuItems = notebookMenuItems.concat(autosaveNBs).concat(savedNBs).concat(exampleNBs)
 
 		if (notebookMenuItems.length) {
-			notebookMenuItems = <Dropdown id='notebook-menu-items' onSelect={this.handleNotebookSelection.bind(this)} > 
+			notebookMenuItems = <Dropdown id='notebook-menu-items' onSelect={this.handleNotebookSelection} > 
 				<Dropdown.Toggle bsSize="xsmall">Notebooks</Dropdown.Toggle>
 				<Dropdown.Menu className='load-notebook-menu'> {notebookMenuItems} </Dropdown.Menu>
 			</Dropdown>
@@ -158,11 +161,11 @@ class NotebookMenu extends React.Component {
 			<div className='notebook-actions'>
 			    <input id='import-notebook' 
 			    	name='file'
-			    	type='file' style={{display:'none'}} onChange={this.notebookFileImport.bind(this)} 
+			    	type='file' style={{display:'none'}} onChange={this.notebookFileImport} 
 			    />
           		<a id='export-anchor' style={{display:'none'}} ></a>
 				<ButtonToolbar id='notebook-actions'>
-					<DropdownButton id='notebook-action-dropdown' bsSize="xsmall" id='main-menu' bsStyle='default' title="Menu" onSelect={this.selectMenuItem.bind(this)} >
+					<DropdownButton id='notebook-action-dropdown' bsSize="xsmall" id='main-menu' bsStyle='default' title="Menu" onSelect={this.selectMenuItem} >
 						<MenuItem id='save-notebook-item'  eventKey={"saveNotebook"} >Save <span className='menu-item-title'>{currentTitle}</span></MenuItem>
 						<MenuItem id='delete-notebook-item'  eventKey={"deleteNotebook"} >Delete <span className='menu-item-title'>{currentTitle}</span></MenuItem>
 						<MenuItem id='import-notebook-item'  eventKey={"importNotebook"} >Import Notebook</MenuItem>

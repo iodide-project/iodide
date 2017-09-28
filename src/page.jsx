@@ -16,6 +16,7 @@ const AUTOSAVE = settings.labels.AUTOSAVE
 class SidePane extends React.Component {
   constructor(props) {
     super(props)
+    this.exitSidePane = this.exitSidePane.bind(this)
   }
 
   exitSidePane() {
@@ -42,7 +43,7 @@ class SidePane extends React.Component {
 
     return (
       <div className='side-pane'>
-        <div><i onClick={this.exitSidePane.bind(this)} className="fa fa-times close-side-pane" aria-hidden="true"></i></div>
+        <div><i onClick={this.exitSidePane} className="fa fa-times close-side-pane" aria-hidden="true"></i></div>
         {contents}
       </div>
     )
@@ -53,7 +54,7 @@ class Page extends React.Component {
   constructor(props) {
     super(props)
     this.props.actions.newNotebook()
-    // this.props.actions.addCell('javascript')
+    this.addCell = this.addCell.bind(this)
     keyBinding('jupyter', this)
     setInterval(()=>{
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
@@ -98,7 +99,7 @@ class Page extends React.Component {
         actions={this.props.actions} />
     
     var pageControls = <div className='controls'>
-      <i className='fa fa-plus add-cell' onClick={this.addCell.bind(this)}></i>
+      <i className='fa fa-plus add-cell' onClick={this.addCell}></i>
     </div>
     return (
         <div>
