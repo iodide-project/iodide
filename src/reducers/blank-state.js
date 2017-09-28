@@ -13,8 +13,10 @@ function newCell(loadedState, cellType){
     value: undefined,
     rendered: false,
     selected: false,
-    isExecuting: false,
-    executionStatus: " "
+    executionStatus: " ",
+    // evaluationOld set to true if the content of the editor changes from whatever
+    // produced the most recent output value
+    evaluationOld: true
   }
 }
 

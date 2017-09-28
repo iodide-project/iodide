@@ -62596,6 +62596,12 @@ let actions = {
 			evaluateCell: evaluateCell
 		};
 	},
+	markCellNotRendered: function (cellID, evaluateCell = true) {
+		return {
+			type: 'MARK_CELL_NOT_RENDERED',
+			id: cellID
+		};
+	},
 	cellUp: function (cellID) {
 		return {
 			type: 'CELL_UP',
@@ -62711,7 +62717,8 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
         this.cellDown = this.cellDown.bind(this);
         this.deleteCell = this.deleteCell.bind(this);
         this.changeCellType = this.changeCellType.bind(this);
-        this.selectCell = this.selectCell.bind(this);
+        this.handleCellClick = this.handleCellClick.bind(this);
+        this.editCell = this.editCell.bind(this);
         this.showControls = this.showControls.bind(this);
         this.hideControls = this.hideControls.bind(this);
         this.makeButtons = this.makeButtons.bind(this);
@@ -62737,8 +62744,15 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
         this.props.actions.changeCellType(this.props.cell.id, cellType);
     }
 
-    selectCell() {
-        this.props.actions.renderCell(this.props.cell.id, false);
+    handleCellClick() {
+        this.props.actions.selectCell(this.props.cell.id);
+        if (this.props.pageMode == 'edit') {
+            this.props.actions.changeMode('command');
+        }
+    }
+
+    editCell() {
+        // this.props.actions.renderCell(this.props.cell.id, false)
         this.props.actions.selectCell(this.props.cell.id);
         this.props.actions.changeMode('edit');
         if (this.hasEditor) this.refs.editor.focus();
@@ -62851,7 +62865,7 @@ class DOMCell extends GenericCell {
                 'div',
                 {
                     className: 'cell dom-cell ' + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode '),
-                    onClick: this.selectCell },
+                    onClick: this.handleCellClick },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
                     { className: 'dom-cell-elementType',
@@ -62957,7 +62971,7 @@ class RunnableCell extends GenericCell {
                 className: cellContainerStyle,
                 onMouseEnter: this.showControls,
                 onMouseLeave: this.hideControls,
-                onMouseDown: this.selectCell },
+                onMouseDown: this.handleCellClick },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { id: "cell-execution-status-" + this.props.cell.id,
@@ -62997,17 +63011,20 @@ class JavascriptCell extends RunnableCell {
 
     mainComponent() {
         var options = {
-            lineNumbers: true, //!this.props.cell.rendered,
-            readOnly: this.props.cell.rendered,
+            lineNumbers: true,
             mode: this.props.cell.cellType,
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
         };
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor', key: 'cell-' + this.props.cell.id,
-            value: this.props.cell.content,
-            onChange: this.updateCell,
-            onFocus: this.selectCell,
-            options: options });
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'editor', onClick: this.editCell },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor', key: 'cell-' + this.props.cell.id,
+                value: this.props.cell.content,
+                onChange: this.updateCell,
+                onFocus: this.editCell,
+                options: options })
+        );
     }
 
     resultComponent() {
@@ -63022,17 +63039,20 @@ class ExternalScriptCell extends RunnableCell {
 
     mainComponent() {
         var options = {
-            lineNumbers: false, //!this.props.cell.rendered,
-            readOnly: this.props.cell.rendered,
+            lineNumbers: false,
             mode: this.props.cell.cellType,
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
         };
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
-            value: this.props.cell.content,
-            onChange: this.updateCell,
-            onFocus: this.selectCell,
-            options: options });
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'editor', onClick: this.editCell },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
+                value: this.props.cell.content,
+                onChange: this.updateCell,
+                onFocus: this.editCell,
+                options: options })
+        );
     }
 
     resultComponent() {
@@ -63047,52 +63067,112 @@ class RawCell extends RunnableCell {
 
     mainComponent() {
         var options = {
-            lineNumbers: false, //!this.props.cell.rendered,
-            readOnly: this.props.cell.rendered,
+            lineNumbers: false,
             mode: this.props.cell.cellType,
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
         };
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
-            value: this.props.cell.content,
-            onChange: this.updateCell,
-            onFocus: this.selectCell,
-            options: options });
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'editor', onClick: this.editCell },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
+                value: this.props.cell.content,
+                onChange: this.updateCell,
+                onFocus: this.editCell,
+                options: options })
+        );
     }
     resultComponent() {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
     }
 }
 
+// class MarkdownCell extends RunnableCell {
+//     constructor(props){
+//         super(props)
+//     }
+
+//     mainComponent(){
+//         var options = {
+//             lineNumbers: false,
+//             mode: this.props.cell.cellType,
+//             lineWrapping: this.props.cell.cellType == 'markdown',
+//             theme: 'eclipse'
+//         }
+//         var mainElem
+//         if (!this.props.cell.rendered) {
+//             mainElem = 
+//             <div className="editor" onClick={this.editCell}>
+//                 <CodeMirror ref='editor'
+//                     value={this.props.cell.content}
+//                     onChange={this.updateCell} 
+//                     onFocus={this.editCell}
+//                     options={options} />
+//             </div>
+//         } else {
+//             mainElem = <div onDoubleClick={this.editCell}
+//                 dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
+//         }
+//         return mainElem
+//     }
+
+//     resultComponent() {
+//         // there is none.
+//         return <div></div>
+//     }
+// }
+
 class MarkdownCell extends RunnableCell {
     constructor(props) {
         super(props);
+        this.editCell = this.editCell.bind(this);
+    }
+
+    editCell() {
+        this.props.actions.markCellNotRendered(this.props.cell.id);
+        super.editCell();
+        // this.props.actions.selectCell(this.props.cell.id)
+        // this.props.actions.changeMode('edit')
+        // if (this.hasEditor) this.refs.editor.focus()
     }
 
     mainComponent() {
+        // the editor is shown if this cell is being edited
+        // or if !this.props.cell.rendered
+        var editorDisplayStyle = !this.props.cell.rendered || this.props.cell.selected && this.props.pageMode == 'edit' ? "block" : "none";
+
         var options = {
-            lineNumbers: false, //!this.props.cell.rendered,
-            readOnly: this.props.cell.rendered,
+            lineNumbers: false,
             mode: this.props.cell.cellType,
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
         };
         var mainElem;
-        if (!this.props.cell.rendered) {
-            mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
+        // if (!this.props.cell.rendered) {
+        mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'editor',
+                style: { display: editorDisplayStyle },
+                onClick: this.editCell },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
                 value: this.props.cell.content,
                 onChange: this.updateCell,
-                onFocus: this.selectCell,
-                options: options });
-        } else {
-            mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { onDoubleClick: () => this.unrender.bind(this)(false),
-                dangerouslySetInnerHTML: { __html: this.props.cell.value } });
-        }
+                onFocus: this.editCell,
+                options: options })
+        );
         return mainElem;
     }
 
     resultComponent() {
+        // the rendered MD is shown if this cell is NOT being edited
+        // and if this.props.cell.rendered
+        var resultDisplayStyle = this.props.cell.rendered && !(this.props.cell.selected && this.props.pageMode == 'edit') ? "block" : "none";
+        // (this.state.showStore ? 'block' : 'none')
         // there is none.
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { onDoubleClick: this.editCell,
+            style: { display: resultDisplayStyle },
+            dangerouslySetInnerHTML: { __html: this.props.cell.value } });
+        // <div></div>
     }
 }
 
@@ -83431,7 +83511,7 @@ var EDIT_MODE = [['enter', 'return'], function (e) {
   }
   if (this.props.currentlySelected != undefined) {
     var selectedID = this.props.currentlySelected.id;
-    this.refs['cell' + selectedID].selectCell();
+    this.refs['cell' + selectedID].editCell();
   }
 }];
 
@@ -83857,8 +83937,10 @@ function newCell(loadedState, cellType) {
     value: undefined,
     rendered: false,
     selected: false,
-    isExecuting: false,
-    executionStatus: " "
+    executionStatus: " ",
+    // evaluationOld set to true if the content of the editor changes from whatever
+    // produced the most recent output value
+    evaluationOld: true
   };
 }
 
@@ -84162,6 +84244,15 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       thisCell.value = undefined;
       cells[index] = thisCell;
       var nextState = Object.assign({}, newState, { cells });
+      return nextState;
+
+    case 'MARK_CELL_NOT_RENDERED':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      thisCell.rendered = false;
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, state, { cells });
       return nextState;
 
     case 'RENDER_CELL':

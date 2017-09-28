@@ -234,7 +234,7 @@ class RunnableCell extends GenericCell {
                         aria-hidden="true">
                     </i>
                 </div>
-                <div className={'cell '  +
+                <div className={'cell ' +
                     (this.props.cell.rendered ? 'rendered ' : 'unrendered ')}>
                     {this.mainComponent()}
                     <div className='result'> {this.resultComponent()} </div>
@@ -257,12 +257,15 @@ class JavascriptCell extends RunnableCell {
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
         }
-        return <CodeMirror ref='editor' key={'cell-'+this.props.cell.id}
+        return (
+            <div className="editor" onClick={this.editCell}>
+                <CodeMirror ref='editor' key={'cell-'+this.props.cell.id}
                     value={this.props.cell.content}
                     onChange={this.updateCell} 
                     onFocus={this.editCell}
-                    onMouseDown={this.editCell}
                     options={options} />
+            </div>
+        )
     }
 
     resultComponent(){
@@ -282,12 +285,15 @@ class ExternalScriptCell extends RunnableCell {
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
         }
-        return <CodeMirror ref='editor'
+        return (
+            <div className="editor" onClick={this.editCell}>
+                <CodeMirror ref='editor'
                     value={this.props.cell.content}
                     onChange={this.updateCell} 
                     onFocus={this.editCell}
-                    onMouseDown={this.editCell}
                     options={options} />
+            </div>
+        )
     }
 
     resultComponent(){
@@ -307,25 +313,79 @@ class RawCell extends RunnableCell {
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
         }
-        return <CodeMirror ref='editor'
+        return (
+            <div className="editor" onClick={this.editCell}>
+                <CodeMirror ref='editor'
                     value={this.props.cell.content}
                     onChange={this.updateCell} 
                     onFocus={this.editCell}
-                    onMouseDown={this.editCell}
                     options={options} />
+            </div>
+        )
     }
     resultComponent(){
         return <div></div>
     }
 }
 
+// class MarkdownCell extends RunnableCell {
+//     constructor(props){
+//         super(props)
+//     }
+
+//     mainComponent(){
+//         var options = {
+//             lineNumbers: false,
+//             mode: this.props.cell.cellType,
+//             lineWrapping: this.props.cell.cellType == 'markdown',
+//             theme: 'eclipse'
+//         }
+//         var mainElem
+//         if (!this.props.cell.rendered) {
+//             mainElem = 
+//             <div className="editor" onClick={this.editCell}>
+//                 <CodeMirror ref='editor'
+//                     value={this.props.cell.content}
+//                     onChange={this.updateCell} 
+//                     onFocus={this.editCell}
+//                     options={options} />
+//             </div>
+//         } else {
+//             mainElem = <div onDoubleClick={this.editCell}
+//                 dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
+//         }
+//         return mainElem
+//     }
+
+//     resultComponent() {
+//         // there is none.
+//         return <div></div>
+//     }
+// }
 
 class MarkdownCell extends RunnableCell {
     constructor(props){
         super(props)
+        this.editCell = this.editCell.bind(this)
+    }
+
+    editCell(){
+        this.props.actions.markCellNotRendered(this.props.cell.id)
+        super.editCell()
+        // this.props.actions.selectCell(this.props.cell.id)
+        // this.props.actions.changeMode('edit')
+        // if (this.hasEditor) this.refs.editor.focus()
     }
 
     mainComponent(){
+        // the editor is shown if this cell is being edited
+        // or if !this.props.cell.rendered
+        var editorDisplayStyle = (
+            !this.props.cell.rendered ||
+            (this.props.cell.selected
+                && this.props.pageMode == 'edit')
+        ) ? "block" : "none"
+
         var options = {
             lineNumbers: false,
             mode: this.props.cell.cellType,
@@ -334,22 +394,32 @@ class MarkdownCell extends RunnableCell {
         }
         var mainElem
         // if (!this.props.cell.rendered) {
-            mainElem = <CodeMirror ref='editor'
-                value={this.props.cell.content}
-                onChange={this.updateCell} 
-                onFocus={this.editCell}
-                onMouseDown={this.editCell}
-                options={options} />
-        // } else {
-        //     mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)}
-        //         dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
-        // }
+            mainElem = (
+                <div className="editor"
+                    style = {{display: editorDisplayStyle}}
+                    onClick={this.editCell}>
+                    <CodeMirror ref='editor'
+                        value={this.props.cell.content}
+                        onChange={this.updateCell} 
+                        onFocus={this.editCell}
+                        options={options} />
+                </div>
+            )
         return mainElem
     }
 
     resultComponent() {
+        // the rendered MD is shown if this cell is NOT being edited
+        // and if this.props.cell.rendered
+        var resultDisplayStyle = ((
+            this.props.cell.rendered &&
+            !(this.props.cell.selected
+                && this.props.pageMode == 'edit')
+        ) ? "block" : "none")
+        // (this.state.showStore ? 'block' : 'none')
         // there is none.
-        return <div onDoubleClick={()=>this.unrender.bind(this)(false)}
+        return <div onDoubleClick={this.editCell}
+            style = {{display: resultDisplayStyle}}
             dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
         // <div></div>
     }

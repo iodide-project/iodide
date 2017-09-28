@@ -164,6 +164,15 @@ let cell = function (state = newBlankState(), action) {
       var nextState = Object.assign({}, newState, {cells})
       return nextState
 
+    case 'MARK_CELL_NOT_RENDERED':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c=>c.id===action.id)
+      var thisCell = cells[index];
+      thisCell.rendered = false;
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, state, {cells})
+      return nextState
+
     case 'RENDER_CELL':
       var newState = Object.assign({}, state)
       var declaredProperties = newState.declaredProperties
