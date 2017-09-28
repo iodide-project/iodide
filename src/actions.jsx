@@ -73,6 +73,12 @@ let actions = {
 			evaluateCell: evaluateCell
 		}
 	},
+    markCellNotRendered: function(cellID, evaluateCell=true) {
+        return {
+            type: 'MARK_CELL_NOT_RENDERED',
+            id: cellID
+        }
+    },
 	cellUp: function(cellID) {
 		return {
 			type: 'CELL_UP',
