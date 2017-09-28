@@ -65,9 +65,8 @@ let cell = function (state = newBlankState(), action) {
 
       cells.forEach((cell)=>{cell.selected=false; return cell})
       var nextCell = newCell(state, 'javascript')
-      nextCell.selected = true
       cells.splice(index+direction, 0, nextCell)
-      var nextState = Object.assign({}, state, {cells, currentlySelected: nextCell})
+      var nextState = Object.assign({}, state, {cells})
       return nextState
 
     case 'ADD_CELL':
@@ -75,11 +74,7 @@ let cell = function (state = newBlankState(), action) {
       var cells = newState.cells.slice()
       cells.forEach((cell)=>{cell.selected = false; return cell})
       var nextCell = newCell(newState, action.cellType)
-      nextCell.selected = true
-      var nextState = Object.assign({}, state, {
-        cells: [...cells, nextCell],
-        currentlySelected: Object.assign({}, nextCell)
-      })
+      var nextState = Object.assign({}, state, {cells: [...cells, nextCell]})
       return nextState
 
     case 'DESELECT_ALL':

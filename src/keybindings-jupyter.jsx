@@ -22,6 +22,7 @@ var ADD_CELL_ABOVE = [['a'], function(){
     if (this.props.mode === 'command') {
       if (this.props.currentlySelected != undefined) {
         this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'above')
+        changeSelection(this, -1)
       } else {
         this.props.actions.addCell('javascript')
       }
@@ -33,6 +34,7 @@ var ADD_CELL_BELOW = [['b'], function(){
     if (this.props.mode === 'command') {
       if (this.props.currentlySelected != undefined) {
         this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'below')
+        changeSelection(this, 1)
       } else {
         this.props.actions.addCell('javascript')
       }
