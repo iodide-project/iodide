@@ -62628,10 +62628,11 @@ let actions = {
 			cellType: cellType
 		};
 	},
-	selectCell: function (cellID) {
+	selectCell: function (cellID, scrollToCell = false) {
 		return {
 			type: 'SELECT_CELL',
-			id: cellID
+			id: cellID,
+			scrollToCell: scrollToCell
 		};
 	},
 	deselectAll: function () {
@@ -62745,7 +62746,8 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
     }
 
     handleCellClick() {
-        this.props.actions.selectCell(this.props.cell.id);
+        var scrollToCell = false;
+        this.props.actions.selectCell(this.props.cell.id, scrollToCell);
         if (this.props.pageMode == 'edit') {
             this.props.actions.changeMode('command');
         }
@@ -63087,41 +63089,6 @@ class RawCell extends RunnableCell {
     }
 }
 
-// class MarkdownCell extends RunnableCell {
-//     constructor(props){
-//         super(props)
-//     }
-
-//     mainComponent(){
-//         var options = {
-//             lineNumbers: false,
-//             mode: this.props.cell.cellType,
-//             lineWrapping: this.props.cell.cellType == 'markdown',
-//             theme: 'eclipse'
-//         }
-//         var mainElem
-//         if (!this.props.cell.rendered) {
-//             mainElem = 
-//             <div className="editor" onClick={this.editCell}>
-//                 <CodeMirror ref='editor'
-//                     value={this.props.cell.content}
-//                     onChange={this.updateCell} 
-//                     onFocus={this.editCell}
-//                     options={options} />
-//             </div>
-//         } else {
-//             mainElem = <div onDoubleClick={this.editCell}
-//                 dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
-//         }
-//         return mainElem
-//     }
-
-//     resultComponent() {
-//         // there is none.
-//         return <div></div>
-//     }
-// }
-
 class MarkdownCell extends RunnableCell {
     constructor(props) {
         super(props);
@@ -63129,11 +63096,8 @@ class MarkdownCell extends RunnableCell {
     }
 
     editCell() {
-        this.props.actions.markCellNotRendered(this.props.cell.id);
         super.editCell();
-        // this.props.actions.selectCell(this.props.cell.id)
-        // this.props.actions.changeMode('edit')
-        // if (this.hasEditor) this.refs.editor.focus()
+        this.props.actions.markCellNotRendered(this.props.cell.id);
     }
 
     mainComponent() {
@@ -63148,7 +63112,6 @@ class MarkdownCell extends RunnableCell {
             theme: 'eclipse'
         };
         var mainElem;
-        // if (!this.props.cell.rendered) {
         mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'editor',
@@ -63167,12 +63130,9 @@ class MarkdownCell extends RunnableCell {
         // the rendered MD is shown if this cell is NOT being edited
         // and if this.props.cell.rendered
         var resultDisplayStyle = this.props.cell.rendered && !(this.props.cell.selected && this.props.pageMode == 'edit') ? "block" : "none";
-        // (this.state.showStore ? 'block' : 'none')
-        // there is none.
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { onDoubleClick: this.editCell,
             style: { display: resultDisplayStyle },
             dangerouslySetInnerHTML: { __html: this.props.cell.value } });
-        // <div></div>
     }
 }
 
@@ -83381,6 +83341,7 @@ var ADD_CELL_ABOVE = [['a'], function () {
   if (this.props.mode === 'command') {
     if (this.props.currentlySelected != undefined) {
       this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'above');
+      changeSelection(this, -1);
     } else {
       this.props.actions.addCell('javascript');
     }
@@ -83391,6 +83352,7 @@ var ADD_CELL_BELOW = [['b'], function () {
   if (this.props.mode === 'command') {
     if (this.props.currentlySelected != undefined) {
       this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'below');
+      changeSelection(this, 1);
     } else {
       this.props.actions.addCell('javascript');
     }
@@ -83420,6 +83382,8 @@ var DESELECT = [['shift+esc', 'shift+escape'], function () {
 }];
 
 function changeSelection(elem, dir) {
+  // always scroll to cell with kbd actions
+  var scrollToCell = true;
   if (elem.props.mode === 'command' && elem.props.cells.length) {
     if (elem.props.currentlySelected != undefined) {
 
@@ -83430,11 +83394,11 @@ function changeSelection(elem, dir) {
       var orderConditional = dir > 0 ? order < elem.props.cells.length - 1 : order > 0;
       if (orderConditional) {
         var nextID = elem.props.cells[order + dir].id;
-        elem.props.actions.selectCell(nextID);
+        elem.props.actions.selectCell(nextID, scrollToCell);
       }
     } else {
       if (elem.props.cells.length) {
-        elem.props.actions.selectCell(elem.props.cells[0].id);
+        elem.props.actions.selectCell(elem.props.cells[0].id, scrollToCell);
       }
     }
   }
@@ -84145,9 +84109,8 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
         cell.selected = false;return cell;
       });
       var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newCell */])(state, 'javascript');
-      nextCell.selected = true;
       cells.splice(index + direction, 0, nextCell);
-      var nextState = Object.assign({}, state, { cells, currentlySelected: nextCell });
+      var nextState = Object.assign({}, state, { cells });
       return nextState;
 
     case 'ADD_CELL':
@@ -84157,11 +84120,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
         cell.selected = false;return cell;
       });
       var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newCell */])(newState, action.cellType);
-      nextCell.selected = true;
-      var nextState = Object.assign({}, state, {
-        cells: [...cells, nextCell],
-        currentlySelected: Object.assign({}, nextCell)
-      });
+      var nextState = Object.assign({}, state, { cells: [...cells, nextCell] });
       return nextState;
 
     case 'DESELECT_ALL':
@@ -84184,7 +84143,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       cells[index] = thisCell;
       var currentlySelected = thisCell;
 
-      if (state.mode === 'command' || state.currentlySelected !== undefined && thisCell.id !== state.currentlySelected.id) {
+      if (action.scrollToCell) {
         scrollToCellIfNeeded(thisCell.id);
       }
 
