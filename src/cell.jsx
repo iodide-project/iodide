@@ -89,9 +89,7 @@ class GenericCell extends React.Component {
         )
     }
 
-
     render() {
-
     }
 }
 
@@ -328,40 +326,6 @@ class RawCell extends RunnableCell {
     }
 }
 
-// class MarkdownCell extends RunnableCell {
-//     constructor(props){
-//         super(props)
-//     }
-
-//     mainComponent(){
-//         var options = {
-//             lineNumbers: false,
-//             mode: this.props.cell.cellType,
-//             lineWrapping: this.props.cell.cellType == 'markdown',
-//             theme: 'eclipse'
-//         }
-//         var mainElem
-//         if (!this.props.cell.rendered) {
-//             mainElem = 
-//             <div className="editor" onClick={this.editCell}>
-//                 <CodeMirror ref='editor'
-//                     value={this.props.cell.content}
-//                     onChange={this.updateCell} 
-//                     onFocus={this.editCell}
-//                     options={options} />
-//             </div>
-//         } else {
-//             mainElem = <div onDoubleClick={this.editCell}
-//                 dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
-//         }
-//         return mainElem
-//     }
-
-//     resultComponent() {
-//         // there is none.
-//         return <div></div>
-//     }
-// }
 
 class MarkdownCell extends RunnableCell {
     constructor(props){
@@ -370,11 +334,8 @@ class MarkdownCell extends RunnableCell {
     }
 
     editCell(){
-        this.props.actions.markCellNotRendered(this.props.cell.id)
         super.editCell()
-        // this.props.actions.selectCell(this.props.cell.id)
-        // this.props.actions.changeMode('edit')
-        // if (this.hasEditor) this.refs.editor.focus()
+        this.props.actions.markCellNotRendered(this.props.cell.id)
     }
 
     mainComponent(){
@@ -393,7 +354,6 @@ class MarkdownCell extends RunnableCell {
             theme: 'eclipse'
         }
         var mainElem
-        // if (!this.props.cell.rendered) {
             mainElem = (
                 <div className="editor"
                     style = {{display: editorDisplayStyle}}
@@ -416,12 +376,9 @@ class MarkdownCell extends RunnableCell {
             !(this.props.cell.selected
                 && this.props.pageMode == 'edit')
         ) ? "block" : "none")
-        // (this.state.showStore ? 'block' : 'none')
-        // there is none.
         return <div onDoubleClick={this.editCell}
             style = {{display: resultDisplayStyle}}
             dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
-        // <div></div>
     }
 }
 
