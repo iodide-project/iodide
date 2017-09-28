@@ -160,7 +160,7 @@ var EDIT_MODE = [['enter', 'return'], function(e){
     }
     if (this.props.currentlySelected != undefined) {
         var selectedID = this.props.currentlySelected.id
-        this.refs['cell'+selectedID].selectCell()
+        this.refs['cell'+selectedID].editCell()
       }
     }
 ]
