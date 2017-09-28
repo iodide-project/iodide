@@ -38377,28 +38377,17 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(98);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__reducer_jsx__ = __webpack_require__(302);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_logger__ = __webpack_require__(373);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_redux_logger__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__ = __webpack_require__(682);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reducers_blank_state_js__ = __webpack_require__(683);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_redux_logger__ = __webpack_require__(373);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_redux_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_redux_logger__);
 
 
 
 
-// let finalCreateStore = compose(
-//   applyMiddleware(logger)
-// )(createStore)
-
-//  function configureStore(
-// 		initialState = {
-// 			cells: [],
-// 			declaredProperties:{},
-// 			lastValue: undefined
-// 		}) {
-//   return finalCreateStore(reducer, initialState)
-// }
 
 function configureStore() {
-	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducer_jsx__["b" /* reducer */], Object(__WEBPACK_IMPORTED_MODULE_1__reducer_jsx__["a" /* newBlankState */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_2_redux_logger___default.a)));
+	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__["a" /* default */], Object(__WEBPACK_IMPORTED_MODULE_2__reducers_blank_state_js__["a" /* newBlankState */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_3_redux_logger___default.a)));
 	//persistStore(store)
 	return store;
 }
@@ -38406,410 +38395,7 @@ function configureStore() {
 /* harmony default export */ __webpack_exports__["a"] = (configureStore);
 
 /***/ }),
-/* 302 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return reducer; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return newBlankState; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_markdown_it__ = __webpack_require__(303);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_markdown_it___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_markdown_it__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_markdown_it_katex__ = __webpack_require__(358);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_markdown_it_katex___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_markdown_it_katex__);
-//import marked from 'marked'
-
-
-var MD = __WEBPACK_IMPORTED_MODULE_0_markdown_it___default()({ html: true });
-MD.use(__WEBPACK_IMPORTED_MODULE_1_markdown_it_katex___default.a);
-function newBlankState() {
-  var initialState = {
-    title: undefined,
-    cells: [],
-    currentlySelected: undefined,
-    declaredProperties: {},
-    lastValue: undefined,
-    lastSaved: undefined,
-    mode: 'command',
-    sidePaneMode: undefined,
-    history: [],
-    externalScripts: [],
-    executionNumber: 1
-  };
-  initialState.cells.push(newCell(initialState, 'javascript'));
-  initialState.cells[0].selected = true;
-  initialState.currentlySelected = Object.assign({}, initialState.cells[0]);
-  return initialState;
-}
-
-var initialVariables = new Set(Object.keys(window)); // gives all global variables
-initialVariables.add('__core-js_shared__');
-initialVariables.add('Mousetrap');
-
-function getId(loadedState) {
-  var newID = loadedState.cells.reduce((maxId, cell) => {
-    return Math.max(cell.id, maxId);
-  }, -1) + 1;
-  return newID;
-}
-
-function newCell(loadedState, cellType) {
-  return {
-    content: '',
-    id: getId(loadedState),
-    cellType: cellType,
-    value: undefined,
-    rendered: false,
-    selected: false,
-    isExecuting: false,
-    executionStatus: " "
-  };
-}
-
-function clearHistory(loadedState) {
-  // remove history and declared properties before exporting the state.
-  loadedState.declaredProperties = {};
-  loadedState.history = [];
-  loadedState.externalScripts = [];
-  loadedState.executionNumber = 0;
-}
-
-function validateState(state) {
-  // check for cells
-  // check
-}
-
-function scrollToCellIfNeeded(cellID) {
-  var elem = document.getElementById('cell-' + cellID);
-  var rect = elem.getBoundingClientRect();
-  var windowHeight = window.innerHeight || document.documentElement.clientHeight;
-  var tallerThanWindow = rect.bottom - rect.top > windowHeight;
-  var cellPosition;
-  // verbose but readable
-  if (rect.bottom <= 0) {
-    cellPosition = "ABOVE_VIEWPORT";
-  } else if (rect.top >= windowHeight) {
-    cellPosition = "BELOW_VIEWPORT";
-  } else if (rect.top <= 0 && 0 <= rect.bottom) {
-    cellPosition = "BOTTOM_IN_VIEWPORT";
-  } else if (rect.top <= windowHeight && windowHeight <= rect.bottom) {
-    cellPosition = "TOP_IN_VIEWPORT";
-  } else {
-    cellPosition = "IN_VIEWPORT";
-  };
-
-  if (cellPosition == "ABOVE_VIEWPORT" || cellPosition == "BOTTOM_IN_VIEWPORT" || cellPosition == "BELOW_VIEWPORT" && tallerThanWindow || cellPosition == "TOP_IN_VIEWPORT" && tallerThanWindow) {
-    // in these cases, scroll the window such that the cell top is at the window top
-    elem.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
-  } else if (cellPosition == "BELOW_VIEWPORT" && !tallerThanWindow || cellPosition == "TOP_IN_VIEWPORT" && !tallerThanWindow) {
-    //in these cases, scroll the window such that the cell bottom is at the window bottom
-    elem.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end'
-    });
-  }
-}
-
-function addExternalScript(scriptUrl) {
-  // FIXME there must be a better way to do this with promises etc...
-  var head = document.getElementsByTagName('head')[0];
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = scriptUrl;
-  head.appendChild(script);
-}
-
-let reducer = function (state, action) {
-  switch (action.type) {
-
-    case 'NEW_NOTEBOOK':
-      var newState = newBlankState();
-      //newState.cells.push(newCell(newState, 'javascript'))
-      return newState;
-
-    case 'EXPORT_NOTEBOOK':
-      var outputState = Object.assign({}, state);
-      clearHistory(outputState);
-      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(outputState));
-      var dlAnchorElem = document.getElementById('export-anchor');
-      dlAnchorElem.setAttribute("href", dataStr);
-      var title = state.title;
-      var filename = state.title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
-      dlAnchorElem.setAttribute("download", filename);
-      dlAnchorElem.click();
-      return Object.assign({}, state);
-
-    case 'IMPORT_NOTEBOOK':
-      // this may need to be refactored
-      var newState = action.newState;
-      return newState;
-
-    case 'SAVE_NOTEBOOK':
-      var lastSaved = new Date();
-      var outputState = Object.assign({}, state, { lastSaved });
-      clearHistory(outputState);
-      var title;
-      if (action.title !== undefined) title = action.title;else title = state.title;
-      localStorage.setItem(title, JSON.stringify(outputState));
-      return Object.assign({}, state, { lastSaved });
-
-    case 'LOAD_NOTEBOOK':
-      //var newState = newBlankState();
-      var loadedState = JSON.parse(localStorage.getItem(action.title));
-      //clearHistory(loadedState)
-      return Object.assign({}, loadedState);
-
-    case 'DELETE_NOTEBOOK':
-      var title = action.title;
-      if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title);
-      if (title === state.title) {
-        var newState = Object.assign({}, newBlankState());
-      } else {
-        var newState = Object.assign({}, state);
-      }
-      return newState;
-
-    case 'CHANGE_PAGE_TITLE':
-      return Object.assign({}, state, { title: action.title });
-
-    case 'CHANGE_MODE':
-      var mode = action.mode;
-      return Object.assign({}, state, { mode });
-
-    case 'INSERT_CELL':
-      var cells = state.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var direction = action.direction == 'above' ? 0 : 1;
-
-      cells.forEach(cell => {
-        cell.selected = false;return cell;
-      });
-      var nextCell = newCell(state, 'javascript');
-      nextCell.selected = true;
-      cells.splice(index + direction, 0, nextCell);
-      var nextState = Object.assign({}, state, { cells, currentlySelected: nextCell });
-      return nextState;
-
-    case 'ADD_CELL':
-      var newState = Object.assign({}, state);
-
-      var cells = newState.cells.slice();
-      cells.forEach(cell => {
-        cell.selected = false;return cell;
-      });
-
-      var nextCell = newCell(newState, action.cellType);
-      nextCell.selected = true;
-      var nextState = Object.assign({}, state, {
-        cells: [...cells, nextCell],
-        currentlySelected: Object.assign({}, nextCell)
-      });
-      return nextState;
-
-    case 'DESELECT_ALL':
-      var cells = state.cells.slice();
-      cells.forEach(c => {
-        c.selected = false;return c;
-      });
-      return Object.assign({}, state, { cells }, { currentlySelected: undefined });
-
-    case 'SELECT_CELL':
-      var cells = state.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var thisCell = cells[index];
-      cells.forEach(c => c.selected = false);
-      thisCell.selected = true;
-      cells[index] = thisCell;
-      var currentlySelected = thisCell;
-
-      if (state.mode === 'command' || state.currentlySelected !== undefined && thisCell.id !== state.currentlySelected.id) scrollToCellIfNeeded(thisCell.id);
-
-      var nextState = Object.assign({}, state, { cells }, { currentlySelected });
-      return nextState;
-
-    case 'CELL_UP':
-      var cells = state.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var nextState = state;
-      if (index > 0) {
-        var elem = cells[index - 1];
-        cells[index - 1] = cells[index];
-        cells[index] = elem;
-        nextState = Object.assign({}, state, { cells });
-      }
-      return nextState;
-
-    case 'CELL_DOWN':
-      var cells = state.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var nextState = state;
-      if (index < cells.length - 1) {
-        var elem = cells[index + 1];
-        cells[index + 1] = cells[index];
-        cells[index] = elem;
-        nextState = Object.assign({}, state, { cells });
-      }
-      return nextState;
-
-    case 'UPDATE_CELL':
-      var cells = state.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var thisCell = cells[index];
-      thisCell.content = action.content;
-      cells[index] = thisCell;
-      var nextState = Object.assign({}, state, { cells });
-      return nextState;
-
-    case 'CHANGE_CELL_TYPE':
-      var cells = state.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var thisCell = cells[index];
-      thisCell.cellType = action.cellType;
-      thisCell.value = undefined;
-      thisCell.rendered = false;
-      cells[index] = thisCell;
-      var nextState = Object.assign({}, state, { cells });
-      return nextState;
-
-    case 'CLEAR_CELL_BEFORE_EVALUATION':
-      var newState = Object.assign({}, state);
-      var cells = newState.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var thisCell = cells[index];
-      thisCell.executionStatus = "*";
-      thisCell.value = undefined;
-      cells[index] = thisCell;
-      var nextState = Object.assign({}, newState, { cells });
-      return nextState;
-
-    case 'RENDER_CELL':
-      var newState = Object.assign({}, state);
-      var declaredProperties = newState.declaredProperties;
-      var cells = newState.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var thisCell = cells[index];
-      var executionNumber = newState.executionNumber;
-
-      if (action.evaluateCell) {
-        if (thisCell.cellType === 'javascript') {
-          // add to newState.history
-
-          newState.history.push({
-            cellID: thisCell.id,
-            lastRan: new Date(),
-            content: thisCell.content
-          });
-
-          thisCell.value = undefined;
-
-          var output;
-          try {
-            output = window.eval(thisCell.content);
-          } catch (e) {
-            var err = e.constructor('Error in Evaled Script: ' + e.message);
-            err.lineNumber = e.lineNumber - err.lineNumber + 3;
-            output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`;
-          }
-          thisCell.rendered = true;
-
-          if (output !== undefined) {
-            thisCell.value = output;
-          }
-
-          // ok. Now let's see if there are any new declared variables.
-          declaredProperties = {}; //
-          var currentGlobal = Object.keys(window);
-          currentGlobal.forEach(g => {
-            if (!initialVariables.has(g)) {
-              declaredProperties[g] = window[g];
-            }
-          });
-
-          var lastValue;
-          newState.executionNumber++;
-          thisCell.executionStatus = "" + newState.executionNumber;
-        } else if (thisCell.cellType === 'markdown') {
-          // one line, huh.
-          thisCell.value = MD.render(thisCell.content);
-          thisCell.rendered = true;
-        } else if (thisCell.cellType === 'external scripts') {
-          var scriptUrls = thisCell.content.split("\n").filter(s => s != "");
-          var newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script));
-          newScripts.forEach(addExternalScript);
-          newState.externalScripts.push(...newScripts);
-          thisCell.value = "loaded scripts";
-          thisCell.rendered = true;
-          // add to newState.history
-          newState.history.push({
-            cellID: thisCell.id,
-            lastRan: new Date(),
-            content: "// added external scripts:\n" + newScripts.map(s => "// " + s).join("\n")
-          });
-
-          newState.executionNumber++;
-          thisCell.executionStatus = "" + newState.executionNumber;
-        }
-      } else {
-        thisCell.rendered = false;
-      }
-
-      cells[index] = thisCell;
-      var nextState = Object.assign({}, newState, { cells }, { declaredProperties });
-      return nextState;
-
-    case 'DELETE_CELL':
-      var cells = state.cells.slice();
-      if (!cells.length) return state;
-      var index = cells.findIndex(c => c.id === action.id);
-      var thisCell = state.cells[index];
-      var currentlySelected;
-      if (thisCell.selected) {
-        var nextIndex = 0;
-        if (cells.length > 1) {
-          if (index == cells.length - 1) nextIndex = cells.length - 2;else nextIndex = index + 1;
-          cells[nextIndex].selected = true;
-        }
-        currentlySelected = Object.assign({}, cells[nextIndex]);
-      } else {
-        currentlySelected = Object.assign({}, state.currentlySelected);
-      }
-
-      var nextState = Object.assign({}, state, {
-        cells: cells.filter(cell => {
-          return cell.id !== action.id;
-        })
-      }, { currentlySelected });
-      return nextState;
-
-    case 'CHANGE_ELEMENT_TYPE':
-      var cells = state.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var thisCell = cells[index];
-      thisCell.elementType = action.elementType;
-      cells[index] = thisCell;
-      return Object.assign({}, state, { cells });
-
-    case 'CHANGE_DOM_ELEMENT_ID':
-      var cells = state.cells.slice();
-      var index = cells.findIndex(c => c.id === action.id);
-      var thisCell = cells[index];
-      thisCell.domElementID = action.elemID;
-      cells[index] = thisCell;
-      return Object.assign({}, state, { cells });
-
-    case 'CHANGE_SIDE_PANE_MODE':
-      return Object.assign({}, state, { sidePaneMode: action.mode });
-
-    default:
-      return state;
-  }
-};
-
-
-
-/***/ }),
+/* 302 */,
 /* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -63095,420 +62681,432 @@ const MD_COMPILER = __WEBPACK_IMPORTED_MODULE_5_marksy___default()({ createEleme
 
 
 class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
-	constructor(props) {
-		super(props);
-		this.state = { showControls: false };
-		this.selectCell = this.selectCell.bind(this);
-		this.makeButtons = this.makeButtons.bind(this);
-		this.hasEditor = false;
-	}
+    constructor(props) {
+        super(props);
+        this.state = { showControls: false };
+        this.hasEditor = false;
+        // explicitly bind "this" for all methods in constructors
+        this.renderCell = this.renderCell.bind(this);
+        this.cellUp = this.cellUp.bind(this);
+        this.cellDown = this.cellDown.bind(this);
+        this.deleteCell = this.deleteCell.bind(this);
+        this.changeCellType = this.changeCellType.bind(this);
+        this.selectCell = this.selectCell.bind(this);
+        this.showControls = this.showControls.bind(this);
+        this.hideControls = this.hideControls.bind(this);
+        this.makeButtons = this.makeButtons.bind(this);
+    }
 
-	renderCell(render) {
-		this.props.actions.renderCell(this.props.cell.id);
-	}
+    renderCell(render) {
+        this.props.actions.renderCell(this.props.cell.id);
+    }
 
-	cellUp() {
-		this.props.actions.cellUp(this.props.cell.id);
-	}
+    cellUp() {
+        this.props.actions.cellUp(this.props.cell.id);
+    }
 
-	cellDown() {
-		this.props.actions.cellDown(this.props.cell.id);
-	}
+    cellDown() {
+        this.props.actions.cellDown(this.props.cell.id);
+    }
 
-	deleteCell() {
-		this.props.actions.deleteCell(this.props.cell.id);
-	}
+    deleteCell() {
+        this.props.actions.deleteCell(this.props.cell.id);
+    }
 
-	changeCellType(cellType, evt) {
-		this.props.actions.changeCellType(this.props.cell.id, cellType);
-	}
+    changeCellType(cellType, evt) {
+        this.props.actions.changeCellType(this.props.cell.id, cellType);
+    }
 
-	selectCell() {
-		this.props.actions.renderCell(this.props.cell.id, false);
-		this.props.actions.selectCell(this.props.cell.id);
-		this.props.actions.changeMode('edit');
-		if (this.hasEditor) this.refs.editor.focus();
-	}
+    selectCell() {
+        this.props.actions.renderCell(this.props.cell.id, false);
+        this.props.actions.selectCell(this.props.cell.id);
+        this.props.actions.changeMode('edit');
+        if (this.hasEditor) this.refs.editor.focus();
+    }
 
-	showControls() {
-		this.setState({ showControls: true });
-	}
-	hideControls() {
-		this.setState({ showControls: false });
-	}
+    showControls() {
+        this.setState({ showControls: true });
+    }
+    hideControls() {
+        this.setState({ showControls: false });
+    }
 
-	makeButtons() {
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-			'div',
-			{ className: 'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible') },
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["b" /* ButtonToolbar */],
-				null,
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-					{ bsSize: 'xsmall', onClick: this.renderCell.bind(this) },
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' })
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-					{ bsSize: 'xsmall', onClick: this.cellDown.bind(this) },
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-down', 'aria-hidden': 'true' })
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
-					{ bsSize: 'xsmall', onClick: this.cellUp.bind(this) },
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-up', 'aria-hidden': 'true' })
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["e" /* DropdownButton */],
-					{ bsSize: 'xsmall', id: 'cell-choice-' + this.props.id, bsStyle: 'default', title: this.props.cell.cellType, onSelect: this.changeCellType.bind(this) },
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
-						{ eventKey: "javascript" },
-						'JS'
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
-						{ eventKey: 'markdown' },
-						'MD'
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
-						{ eventKey: 'raw' },
-						'Raw'
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
-						{ eventKey: 'dom' },
-						'DOM'
-					),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
-						{ eventKey: 'external scripts' },
-						'External Script'
-					)
-				)
-			)
-		);
-	}
+    makeButtons() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible') },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["b" /* ButtonToolbar */],
+                null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+                    { bsSize: 'xsmall', onClick: this.renderCell },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' })
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+                    { bsSize: 'xsmall', onClick: this.cellDown },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-down', 'aria-hidden': 'true' })
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["a" /* Button */],
+                    { bsSize: 'xsmall', onClick: this.cellUp },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-up', 'aria-hidden': 'true' })
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["e" /* DropdownButton */],
+                    { bsSize: 'xsmall', id: 'cell-choice-' + this.props.id,
+                        bsStyle: 'default', title: this.props.cell.cellType,
+                        onSelect: this.changeCellType },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
+                        { eventKey: "javascript" },
+                        'JS'
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
+                        { eventKey: 'markdown' },
+                        'MD'
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
+                        { eventKey: 'raw' },
+                        'Raw'
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
+                        { eventKey: 'dom' },
+                        'DOM'
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["i" /* MenuItem */],
+                        { eventKey: 'external scripts' },
+                        'External Script'
+                    )
+                )
+            )
+        );
+    }
 
-	render() {}
+    render() {}
 }
-
-// function validateElementType(t){
-// 	var s = new Set(['div', 'svg', 'canvas', 'span'])
-// 	return 
-// }
 
 class DOMCell extends GenericCell {
 
-	constructor(props) {
-		super(props);
-		if (!props.cell.hasOwnProperty('elementType')) props.actions.changeElementType(props.cell.id, 'div');
-		if (!props.cell.hasOwnProperty('domElementID')) props.actions.changeDOMElementID(props.cell.id, 'dom-cell-' + props.cell.id);
-	}
+    constructor(props) {
+        super(props);
+        if (!props.cell.hasOwnProperty('elementType')) props.actions.changeElementType(props.cell.id, 'div');
+        if (!props.cell.hasOwnProperty('domElementID')) props.actions.changeDOMElementID(props.cell.id, 'dom-cell-' + props.cell.id);
+        // explicitly bind "this" for all methods in constructors
+        this.changeElementType = this.changeElementType.bind(this);
+        this.changeElementID = this.changeElementID.bind(this);
+    }
 
-	changeID(event) {
-		var ID = event.target.value.trim();
-		// this.props.actions.updateOptions({cssID: ID})
-	}
+    changeElementType(event) {
+        var elementType = event.target.value.trim();
+        this.props.actions.changeElementType(this.props.cell.id, elementType);
+    }
 
-	changeElementType(event) {
-		var elementType = event.target.value.trim();
-		this.props.actions.changeElementType(this.props.cell.id, elementType);
-	}
+    changeElementID(event) {
+        var elementID = event.target.value.trim();
+        this.props.actions.changeDOMElementID(this.props.cell.id, elementID);
+    }
 
-	changeElementID(event) {
-		var elementID = event.target.value.trim();
-		this.props.actions.changeDOMElementID(this.props.cell.id, elementID);
-	}
-
-	render() {
-		var elem;
-		if (this.props.cell.elementType.length) elem = Object(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])(this.props.cell.elementType, { id: this.props.cell.domElementID });else {
-			elem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'div',
-				{ className: 'dom-cell-error' },
-				'please add an elem type'
-			);
-		}
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-			'div',
-			{ id: 'cell-' + this.props.cell.id,
-				onMouseOver: this.showControls.bind(this),
-				onMouseOut: this.hideControls.bind(this),
-				className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') + (this.props.cell.selected ? 'selected-cell ' : ' ') },
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'div',
-				{
-					className: 'cell dom-cell ' + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode '),
-					onClick: this.selectCell.bind(this) },
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					'div',
-					{ className: 'dom-cell-elementType',
-						style: { display: this.props.cell.selected ? 'inherit' : 'none' } },
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-						__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["f" /* Form */],
-						{ className: 'dom-inputs', inline: true },
-						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-							__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["h" /* FormGroup */],
-							{ bsSize: 'xsmall', controlId: 'dom-' + this.props.cell.id },
-							__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-								__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* ControlLabel */],
-								{ className: 'right-spacer' },
-								'tag'
-							),
-							__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["g" /* FormControl */], { className: 'right-spacer', type: 'text', onChange: this.changeElementType.bind(this), value: this.props.cell.elementType, placeholder: 'div, svg, etc.' }),
-							__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-								__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* ControlLabel */],
-								{ className: 'right-spacer' },
-								'css ID'
-							),
-							__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["g" /* FormControl */], { type: 'text', onChange: this.changeElementID.bind(this), value: this.props.cell.domElementID, placeholder: 'id' })
-						)
-					)
-				),
-				elem
-			),
-			this.makeButtons()
-		);
-	}
+    render() {
+        var elem;
+        if (this.props.cell.elementType.length) elem = Object(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])(this.props.cell.elementType, { id: this.props.cell.domElementID });else {
+            elem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'dom-cell-error' },
+                'please add an elem type'
+            );
+        }
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { id: 'cell-' + this.props.cell.id,
+                onMouseOver: this.showControls,
+                onMouseOut: this.hideControls,
+                className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') + (this.props.cell.selected ? 'selected-cell ' : ' ') },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                {
+                    className: 'cell dom-cell ' + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode '),
+                    onClick: this.selectCell },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'dom-cell-elementType',
+                        style: { display: this.props.cell.selected ? 'inherit' : 'none' } },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["f" /* Form */],
+                        { className: 'dom-inputs', inline: true },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["h" /* FormGroup */],
+                            { bsSize: 'xsmall', controlId: 'dom-' + this.props.cell.id },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* ControlLabel */],
+                                { className: 'right-spacer' },
+                                'tag'
+                            ),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["g" /* FormControl */], { className: 'right-spacer', type: 'text',
+                                onChange: this.changeElementType,
+                                value: this.props.cell.elementType,
+                                placeholder: 'div, svg, etc.' }),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                __WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["c" /* ControlLabel */],
+                                { className: 'right-spacer' },
+                                'css ID'
+                            ),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6_react_bootstrap__["g" /* FormControl */], { type: 'text', onChange: this.changeElementID,
+                                value: this.props.cell.domElementID, placeholder: 'id' })
+                        )
+                    )
+                ),
+                elem
+            ),
+            this.makeButtons()
+        );
+    }
 }
 
 class HistoryCell extends GenericCell {
-	constructor(props) {
-		super(props);
-		this.state = { showControls: false };
-	}
+    constructor(props) {
+        super(props);
+        this.state = { showControls: false };
+    }
 
-	render() {
-		var options = {
-			lineNumbers: true,
-			readOnly: true,
-			mode: this.props.cell.cellType,
-			theme: 'eclipse'
-		};
-		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
-			value: this.props.cell.content,
-			options: options });
+    render() {
+        var options = {
+            lineNumbers: true,
+            readOnly: true,
+            mode: this.props.cell.cellType,
+            theme: 'eclipse'
+        };
+        var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
+            value: this.props.cell.content,
+            options: options });
 
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-			'div',
-			{ className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') },
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'div',
-				{ className: 'cell history-cell' },
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					'div',
-					{ className: 'history-content' },
-					mainElem
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					'div',
-					{ className: 'history-date' },
-					this.props.cell.lastRan.toUTCString()
-				)
-			),
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'cell-controls' })
-		);
-	}
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'cell history-cell' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'history-content' },
+                    mainElem
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'history-date' },
+                    this.props.cell.lastRan.toUTCString()
+                )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'cell-controls' })
+        );
+    }
 }
 
 class RunnableCell extends GenericCell {
-	constructor(props) {
-		super(props);
-		this.hasEditor = true;
-	}
+    constructor(props) {
+        super(props);
+        this.hasEditor = true;
+        // explicitly bind "this" for all methods in constructors
+        this.updateCell = this.updateCell.bind(this);
+        this.mainComponent = this.mainComponent.bind(this);
+        this.resultComponent = this.resultComponent.bind(this);
+    }
 
-	updateCell(content) {
-		this.props.actions.updateCell(this.props.cell.id, content);
-	}
+    updateCell(content) {
+        this.props.actions.updateCell(this.props.cell.id, content);
+    }
 
-	mainComponent() {
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
-	}
+    mainComponent() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
+    }
 
-	resultComponent() {
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
-	}
+    resultComponent() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
+    }
 
-	render() {
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-			'div',
-			{ id: 'cell-' + this.props.cell.id,
-				className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode '),
-				onMouseEnter: this.showControls.bind(this),
-				onMouseLeave: this.hideControls.bind(this),
-				onMouseDown: this.selectCell },
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'div',
-				{ id: "cell-execution-status-" + this.props.cell.id,
-					className: "cell-execution-status " + this.props.cell.cellType },
-				'[',
-				this.props.cell.executionStatus,
-				']'
-			),
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'div',
-				{ style: { display: "none" } },
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { onClick: this.deleteCell.bind(this), className: "fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible'), 'aria-hidden': 'true' })
-			),
-			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				'div',
-				{ className: 'cell ' + (this.props.cell.rendered ? 'rendered ' : 'unrendered ') },
-				this.mainComponent.bind(this)(),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					'div',
-					{ className: 'result' },
-					this.resultComponent.bind(this)()
-				)
-			),
-			this.makeButtons()
-		);
-	}
+    render() {
+        var cellContainerStyle = 'cell-container ' + (this.props.display ? '' : 'hidden-cell ') + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ');
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { id: 'cell-' + this.props.cell.id,
+                className: cellContainerStyle,
+                onMouseEnter: this.showControls,
+                onMouseLeave: this.hideControls,
+                onMouseDown: this.selectCell },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { id: "cell-execution-status-" + this.props.cell.id,
+                    className: "cell-execution-status " + this.props.cell.cellType },
+                '[',
+                this.props.cell.executionStatus,
+                ']'
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { style: { display: "none" } },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { onClick: this.deleteCell,
+                    className: "fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible'),
+                    'aria-hidden': 'true' })
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'cell ' + (this.props.cell.rendered ? 'rendered ' : 'unrendered ') },
+                this.mainComponent(),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'result' },
+                    ' ',
+                    this.resultComponent(),
+                    ' '
+                )
+            ),
+            this.makeButtons()
+        );
+    }
 }
 
 class JavascriptCell extends RunnableCell {
-	constructor(props) {
-		super(props);
-	}
+    constructor(props) {
+        super(props);
+    }
 
-	mainComponent() {
-		var options = {
-			lineNumbers: true, //!this.props.cell.rendered,
-			readOnly: this.props.cell.rendered,
-			mode: this.props.cell.cellType,
-			lineWrapping: this.props.cell.cellType == 'markdown',
-			theme: 'eclipse'
-		};
-		var comp = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor', key: 'cell-' + this.props.cell.id,
-			value: this.props.cell.content,
-			onChange: this.updateCell.bind(this),
-			onFocus: this.selectCell,
-			options: options });
+    mainComponent() {
+        var options = {
+            lineNumbers: true, //!this.props.cell.rendered,
+            readOnly: this.props.cell.rendered,
+            mode: this.props.cell.cellType,
+            lineWrapping: this.props.cell.cellType == 'markdown',
+            theme: 'eclipse'
+        };
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor', key: 'cell-' + this.props.cell.id,
+            value: this.props.cell.content,
+            onChange: this.updateCell,
+            onFocus: this.selectCell,
+            options: options });
+    }
 
-		return comp;
-	}
-
-	resultComponent() {
-		return jsReturnValue(this.props.cell);
-	}
+    resultComponent() {
+        return jsReturnValue(this.props.cell);
+    }
 }
 
 class ExternalScriptCell extends RunnableCell {
-	constructor(props) {
-		super(props);
-	}
+    constructor(props) {
+        super(props);
+    }
 
-	mainComponent() {
-		var options = {
-			lineNumbers: false, //!this.props.cell.rendered,
-			readOnly: this.props.cell.rendered,
-			mode: this.props.cell.cellType,
-			lineWrapping: this.props.cell.cellType == 'markdown',
-			theme: 'eclipse'
-		};
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
-			value: this.props.cell.content,
-			onChange: this.updateCell.bind(this),
-			onFocus: this.selectCell,
-			options: options });
-	}
+    mainComponent() {
+        var options = {
+            lineNumbers: false, //!this.props.cell.rendered,
+            readOnly: this.props.cell.rendered,
+            mode: this.props.cell.cellType,
+            lineWrapping: this.props.cell.cellType == 'markdown',
+            theme: 'eclipse'
+        };
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
+            value: this.props.cell.content,
+            onChange: this.updateCell,
+            onFocus: this.selectCell,
+            options: options });
+    }
 
-	resultComponent() {
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
-	}
+    resultComponent() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
+    }
 }
 
 class RawCell extends RunnableCell {
-	constructor(props) {
-		super(props);
-	}
+    constructor(props) {
+        super(props);
+    }
 
-	mainComponent() {
-		var options = {
-			lineNumbers: false, //!this.props.cell.rendered,
-			readOnly: this.props.cell.rendered,
-			mode: this.props.cell.cellType,
-			lineWrapping: this.props.cell.cellType == 'markdown',
-			theme: 'eclipse'
-		};
-
-		var mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
-			value: this.props.cell.content,
-			onChange: this.updateCell.bind(this),
-			onFocus: this.selectCell,
-			options: options });
-		return mainElem;
-	}
-
-	resultComponent() {
-		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
-	}
+    mainComponent() {
+        var options = {
+            lineNumbers: false, //!this.props.cell.rendered,
+            readOnly: this.props.cell.rendered,
+            mode: this.props.cell.cellType,
+            lineWrapping: this.props.cell.cellType == 'markdown',
+            theme: 'eclipse'
+        };
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
+            value: this.props.cell.content,
+            onChange: this.updateCell,
+            onFocus: this.selectCell,
+            options: options });
+    }
+    resultComponent() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
+    }
 }
 
 class MarkdownCell extends RunnableCell {
-	constructor(props) {
-		super(props);
-	}
+    constructor(props) {
+        super(props);
+    }
 
-	mainComponent() {
-		var options = {
-			lineNumbers: false, //!this.props.cell.rendered,
-			readOnly: this.props.cell.rendered,
-			mode: this.props.cell.cellType,
-			lineWrapping: this.props.cell.cellType == 'markdown',
-			theme: 'eclipse'
-		};
-		var mainElem;
-		if (!this.props.cell.rendered) {
-			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
-				value: this.props.cell.content,
-				onChange: this.updateCell.bind(this),
-				onFocus: this.selectCell,
-				options: options });
-		} else {
-			mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { onDoubleClick: () => this.unrender.bind(this)(false), dangerouslySetInnerHTML: { __html: this.props.cell.value } });
-		}
-		return mainElem;
-	}
+    mainComponent() {
+        var options = {
+            lineNumbers: false, //!this.props.cell.rendered,
+            readOnly: this.props.cell.rendered,
+            mode: this.props.cell.cellType,
+            lineWrapping: this.props.cell.cellType == 'markdown',
+            theme: 'eclipse'
+        };
+        var mainElem;
+        if (!this.props.cell.rendered) {
+            mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
+                value: this.props.cell.content,
+                onChange: this.updateCell,
+                onFocus: this.selectCell,
+                options: options });
+        } else {
+            mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { onDoubleClick: () => this.unrender.bind(this)(false),
+                dangerouslySetInnerHTML: { __html: this.props.cell.value } });
+        }
+        return mainElem;
+    }
 
-	resultComponent() {
-		// there is none.
-	}
+    resultComponent() {
+        // there is none.
+    }
 }
 
 function jsReturnValue(cell) {
-	var resultElem;
-	var returnedSomething;
-	if (cell.value == undefined && !cell.rendered) returnedSomething = false;
-	if (cell.value !== undefined) returnedSomething = true;
-	if (cell.value == undefined && cell.rendered) returnedSomething = true;
-	if (returnedSomething) {
-		resultElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_json_tree___default.a, { data: cell.value, hideRoot: false, theme: {
-				scheme: 'bright',
-				author: 'chris kempson (http://chriskempson.com)',
-				base00: '#000000',
-				base01: '#303030',
-				base02: '#505050',
-				base03: '#b0b0b0',
-				base04: '#d0d0d0',
-				base05: '#e0e0e0',
-				base06: '#f5f5f5',
-				base07: '#ffffff',
-				base08: '#fb0120',
-				base09: '#fc6d24',
-				base0A: '#fda331',
-				base0B: '#a1c659',
-				base0C: '#76c7b7',
-				base0D: '#6fb3d2',
-				base0E: '#d381c3',
-				base0F: '#be643c'
-			} });
-	} else {
-		resultElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'empty-resultset' });
-	}
-	return resultElem;
+    var resultElem;
+    var returnedSomething;
+    if (cell.value == undefined && !cell.rendered) returnedSomething = false;
+    if (cell.value !== undefined) returnedSomething = true;
+    if (cell.value == undefined && cell.rendered) returnedSomething = true;
+    if (returnedSomething) {
+        resultElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_json_tree___default.a, { data: cell.value, hideRoot: false, theme: {
+                scheme: 'bright',
+                author: 'chris kempson (http://chriskempson.com)',
+                base00: '#000000',
+                base01: '#303030',
+                base02: '#505050',
+                base03: '#b0b0b0',
+                base04: '#d0d0d0',
+                base05: '#e0e0e0',
+                base06: '#f5f5f5',
+                base07: '#ffffff',
+                base08: '#fb0120',
+                base09: '#fc6d24',
+                base0A: '#fda331',
+                base0B: '#a1c659',
+                base0C: '#76c7b7',
+                base0D: '#6fb3d2',
+                base0E: '#d381c3',
+                base0F: '#be643c'
+            } });
+    } else {
+        resultElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'empty-resultset' });
+    }
+    return resultElem;
 }
 
 
@@ -84154,6 +83752,451 @@ module.exports = {"title":"Evictions by San Francisco Neighborhood, 1999-2015","
 /***/ (function(module, exports) {
 
 module.exports = {"title":"What does a Javascript Notebook Look Like?","cells":[{"content":"# Cell types\n\n## Markdown cell\n\nThis  is a markdown cell, just as you would see in Jupyter or R-markdown. It supports all the normal markdown things you'd expect including inline\n\n### Demo of targeting elements within a markdown cell\nBelow this paragraph is a div with id=\"targetDiv\":\n<div id=\"targetDiv\"></div>\nWe'll target that div with a small THREE.js example, which we'll run in cells below.\n\n## JS cell\nThe following cell is a Javascript cell","id":1,"cellType":"markdown","value":"<h1 id=\"cell-types\">Cell types</h1>\n<h2 id=\"markdown-cell\">Markdown cell</h2>\n<p>This  is a markdown cell, just as you would see in Jupyter or R-markdown. It supports all the normal markdown things you&#39;d expect including inline</p>\n<h3 id=\"demo-of-targeting-elements-within-a-markdown-cell\">Demo of targeting elements within a markdown cell</h3>\n<p>Below this paragraph is a div with id=&quot;targetDiv&quot;:</p>\n<p><div id=\"targetDiv\"></div>\nWe&#39;ll target that div with a small THREE.js example, which we&#39;ll run in cells below.</p>\n<h2 id=\"js-cell\">JS cell</h2>\n<p>The following cell is a Javascript cell</p>\n","rendered":true,"selected":false},{"content":"// this is a JS code cell. We can use normal JS and browser APIs\n// to select the div defined in the MD cell above\ntargetDiv = document.body\n  .querySelector(\"#targetDiv\")\n","id":14,"cellType":"javascript","rendered":true,"selected":false,"value":{}},{"content":"### External script cells\nthe cell below is an \"external script cell\". It loads external JS from URLs.","id":22,"cellType":"markdown","rendered":true,"selected":false,"value":"<h3 id=\"external-script-cells\">External script cells</h3>\n<p>the cell below is an &quot;external script cell&quot;. It loads external JS from URLs.</p>\n"},{"content":"http://threejs.org/build/three.min.js\nhttps://code.jquery.com/jquery-3.2.1.slim.js\nhttps://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js","id":20,"cellType":"external scripts","rendered":true,"selected":false,"value":"loaded scripts"},{"content":"(function() {\n    //'use strict';\n  \tvar width = 400, height = 300\n\n    var scene = new THREE.Scene();\n    var camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100);\n\n    var renderer = new THREE.WebGLRenderer();\n    renderer.setSize(width, height);\n    targetDiv.appendChild(renderer.domElement);\n\n    var geometry = new THREE.CubeGeometry(5, 5, 5);\n    var material = new THREE.MeshLambertMaterial({\n        color: 0x00fff0\n\n    });\n    var cube = new THREE.Mesh(geometry, material);\n    scene.add(cube);\n\n    camera.position.z = 12;\n    \n    var pointLight = new THREE.PointLight(0xFFFFFF);\n\n    pointLight.position.x = 10;\n    pointLight.position.y = 50;\n    pointLight.position.z = 130;\n\n    scene.add(pointLight);\n\n    var reqAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;\n\n    var render = function() {\n        reqAnimFrame(render);\n        \n        var delta = Math.random() * (0.06 - 0.02) + 0.03\n\n;\n\n        cube.rotation.x += delta;\n        cube.rotation.y += delta;\n        cube.rotation.z -= delta;\n\n        renderer.render(scene, camera);\n    };\n\n    render();\n}());","id":2,"cellType":"javascript","rendered":true,"selected":false},{"content":"canvas target div with id=\"targetDiv2\" right below:\n<div id=\"targetDiv2\"></div>","id":15,"cellType":"markdown","value":"<p>canvas target div with id=&quot;targetDiv2&quot; right below:</p>\n<div id=\"targetDiv2\"></div>","rendered":true,"selected":false},{"content":"targetDiv2 = document.body.querySelector(\"#targetDiv2\")\n\n","id":17,"cellType":"javascript","value":{},"rendered":true,"selected":false},{"content":"var width = 400, height = 300\n\nvar scene = new THREE.Scene();\nvar camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100);\n\nvar renderer = new THREE.WebGLRenderer();\nrenderer.setSize(width, height);\ntargetDiv2.appendChild(renderer.domElement);\n\nvar geometry = new THREE.CubeGeometry(5, 5, 5);\nvar material = new THREE.MeshLambertMaterial({\n  color: 0x00fff0\n});\nvar cube = new THREE.Mesh(geometry, material);\nscene.add(cube);\n\ncamera.position.z = 12;\n\nvar pointLight = new THREE.PointLight(0xFFFFFF);\n\npointLight.position.x = 10;\npointLight.position.y = 50;\npointLight.position.z = 130;\n\nscene.add(pointLight);\nvar reqAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;\n\nvar render = function() {\n  reqAnimFrame(render);\n\n  var delta = Math.random() * (0.06 - 0.02) + 0.02;\n\n  cube.rotation.x += delta;\n  cube.rotation.y += delta;\n  cube.rotation.z -= delta;\n\n  renderer.render(scene, camera);\n};\n\nrender();\n","id":16,"cellType":"javascript","rendered":true,"selected":false},{"content":"\np = document.createElement(\"p\");\np.innerHTML = \"a paragraph\";\n\ntargetDiv2.appendChild(p)\n","id":19,"cellType":"javascript","rendered":true,"selected":false,"value":{}},{"content":"\ni=0\nwhile (i<1000000){i+=1}\ni\n","id":18,"cellType":"javascript","rendered":true,"selected":true,"value":1000000}],"currentlySelected":{"content":"\ni=0\nwhile (i<1000000){i+=1}\ni\n","id":18,"cellType":"javascript","rendered":true,"selected":true,"value":1000000},"declaredProperties":{},"lastSaved":"2017-09-21T18:10:47.505Z","mode":"edit","history":[],"externalScripts":[]}
+
+/***/ }),
+/* 682 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__notebook_reducer_js__ = __webpack_require__(684);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cell_reducer_js__ = __webpack_require__(685);
+// import { combineReducers } from 'redux'
+
+
+
+/*
+It is suggested that using combineReducers, and following the standard
+of having each reducer only function on a section of the state container,
+might be a better approach. Redux makes it easy to refactor,
+but we're not there quite yet. I'd rather simply decompose our reducers
+so we can more manageably test them.
+*/
+
+function reduceReducers(...reducers) {
+  return (previous, current) => reducers.reduce((p, r) => r(p, current), previous);
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (reduceReducers(__WEBPACK_IMPORTED_MODULE_0__notebook_reducer_js__["a" /* default */], __WEBPACK_IMPORTED_MODULE_1__cell_reducer_js__["a" /* default */]));
+
+/***/ }),
+/* 683 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return newBlankState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return newCell; });
+function getId(loadedState) {
+  var newID = loadedState.cells.reduce((maxId, cell) => {
+    return Math.max(cell.id, maxId);
+  }, -1) + 1;
+  return newID;
+}
+
+function newCell(loadedState, cellType) {
+  return {
+    content: '',
+    id: getId(loadedState),
+    cellType: cellType,
+    value: undefined,
+    rendered: false,
+    selected: false,
+    isExecuting: false,
+    executionStatus: " "
+  };
+}
+
+function newBlankState() {
+  var initialState = {
+    title: undefined,
+    cells: [],
+    currentlySelected: undefined,
+    declaredProperties: {},
+    lastValue: undefined,
+    lastSaved: undefined,
+    mode: 'command',
+    sidePaneMode: undefined,
+    history: [],
+    externalScripts: [],
+    executionNumber: 1
+  };
+  initialState.cells.push(newCell(initialState, 'javascript'));
+  initialState.cells[0].selected = true;
+  initialState.currentlySelected = Object.assign({}, initialState.cells[0]);
+  return initialState;
+}
+
+
+
+/***/ }),
+/* 684 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__blank_state_js__ = __webpack_require__(683);
+
+
+function clearHistory(loadedState) {
+  // remove history and declared properties before exporting the state.
+  loadedState.declaredProperties = {};
+  loadedState.history = [];
+  loadedState.externalScripts = [];
+  loadedState.executionNumber = 0;
+}
+
+let notebook = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newBlankState */])(), action) {
+  switch (action.type) {
+    case 'NEW_NOTEBOOK':
+      var newState = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newBlankState */])();
+      return newState;
+
+    case 'EXPORT_NOTEBOOK':
+      var outputState = Object.assign({}, state);
+      clearHistory(outputState);
+      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(outputState));
+      var dlAnchorElem = document.getElementById('export-anchor');
+      dlAnchorElem.setAttribute("href", dataStr);
+      var title = state.title;
+      var filename = state.title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
+      dlAnchorElem.setAttribute("download", filename);
+      dlAnchorElem.click();
+      return Object.assign({}, state);
+
+    case 'IMPORT_NOTEBOOK':
+      // this may need to be refactored
+      var newState = action.newState;
+      return newState;
+
+    case 'SAVE_NOTEBOOK':
+      var lastSaved = new Date();
+      var outputState = Object.assign({}, state, { lastSaved });
+      clearHistory(outputState);
+      var title;
+      if (action.title !== undefined) title = action.title;else title = state.title;
+      localStorage.setItem(title, JSON.stringify(outputState));
+      return Object.assign({}, state, { lastSaved });
+
+    case 'LOAD_NOTEBOOK':
+      var loadedState = JSON.parse(localStorage.getItem(action.title));
+      return Object.assign({}, loadedState);
+
+    case 'DELETE_NOTEBOOK':
+      var title = action.title;
+      if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title);
+      if (title === state.title) {
+        var newState = Object.assign({}, Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newBlankState */])());
+      } else {
+        var newState = Object.assign({}, state);
+      }
+      return newState;
+
+    case 'CHANGE_PAGE_TITLE':
+      return Object.assign({}, state, { title: action.title });
+
+    case 'CHANGE_MODE':
+      var mode = action.mode;
+      return Object.assign({}, state, { mode });
+
+    default:
+      return state;
+  }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (notebook);
+
+/***/ }),
+/* 685 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__blank_state_js__ = __webpack_require__(683);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_markdown_it__ = __webpack_require__(303);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_markdown_it___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_markdown_it__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_markdown_it_katex__ = __webpack_require__(358);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_markdown_it_katex___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_markdown_it_katex__);
+
+
+
+
+var MD = __WEBPACK_IMPORTED_MODULE_1_markdown_it___default()({ html: true });
+MD.use(__WEBPACK_IMPORTED_MODULE_2_markdown_it_katex___default.a);
+
+var initialVariables = new Set(Object.keys(window)); // gives all global variables
+initialVariables.add('__core-js_shared__');
+initialVariables.add('Mousetrap');
+
+function scrollToCellIfNeeded(cellID) {
+  var elem = document.getElementById('cell-' + cellID);
+  var rect = elem.getBoundingClientRect();
+  var windowHeight = window.innerHeight || document.documentElement.clientHeight;
+  var tallerThanWindow = rect.bottom - rect.top > windowHeight;
+  var cellPosition;
+  // verbose but readable
+  if (rect.bottom <= 0) {
+    cellPosition = "ABOVE_VIEWPORT";
+  } else if (rect.top >= windowHeight) {
+    cellPosition = "BELOW_VIEWPORT";
+  } else if (rect.top <= 0 && 0 <= rect.bottom) {
+    cellPosition = "BOTTOM_IN_VIEWPORT";
+  } else if (rect.top <= windowHeight && windowHeight <= rect.bottom) {
+    cellPosition = "TOP_IN_VIEWPORT";
+  } else {
+    cellPosition = "IN_VIEWPORT";
+  };
+
+  if (cellPosition == "ABOVE_VIEWPORT" || cellPosition == "BOTTOM_IN_VIEWPORT" || cellPosition == "BELOW_VIEWPORT" && tallerThanWindow || cellPosition == "TOP_IN_VIEWPORT" && tallerThanWindow) {
+    // in these cases, scroll the window such that the cell top is at the window top
+    elem.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  } else if (cellPosition == "BELOW_VIEWPORT" && !tallerThanWindow || cellPosition == "TOP_IN_VIEWPORT" && !tallerThanWindow) {
+    //in these cases, scroll the window such that the cell bottom is at the window bottom
+    elem.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end'
+    });
+  }
+}
+
+function addExternalScript(scriptUrl) {
+  // FIXME there must be a better way to do this with promises etc...
+  var head = document.getElementsByTagName('head')[0];
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = scriptUrl;
+  head.appendChild(script);
+}
+
+let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newBlankState */])(), action) {
+  switch (action.type) {
+
+    case 'INSERT_CELL':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var direction = action.direction == 'above' ? 0 : 1;
+
+      cells.forEach(cell => {
+        cell.selected = false;return cell;
+      });
+      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newCell */])(state, 'javascript');
+      nextCell.selected = true;
+      cells.splice(index + direction, 0, nextCell);
+      var nextState = Object.assign({}, state, { cells, currentlySelected: nextCell });
+      return nextState;
+
+    case 'ADD_CELL':
+      var newState = Object.assign({}, state);
+
+      var cells = newState.cells.slice();
+      cells.forEach(cell => {
+        cell.selected = false;return cell;
+      });
+
+      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newCell */])(newState, action.cellType);
+      nextCell.selected = true;
+      var nextState = Object.assign({}, state, {
+        cells: [...cells, nextCell],
+        currentlySelected: Object.assign({}, nextCell)
+      });
+      return nextState;
+
+    case 'DESELECT_ALL':
+      var cells = state.cells.slice();
+      cells.forEach(c => {
+        c.selected = false;return c;
+      });
+      return Object.assign({}, state, { cells }, { currentlySelected: undefined });
+
+    case 'SELECT_CELL':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      cells.forEach(c => c.selected = false);
+      thisCell.selected = true;
+      cells[index] = thisCell;
+      var currentlySelected = thisCell;
+
+      if (state.mode === 'command' || state.currentlySelected !== undefined && thisCell.id !== state.currentlySelected.id) scrollToCellIfNeeded(thisCell.id);
+
+      var nextState = Object.assign({}, state, { cells }, { currentlySelected });
+      return nextState;
+
+    case 'CELL_UP':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var nextState = state;
+      if (index > 0) {
+        var elem = cells[index - 1];
+        cells[index - 1] = cells[index];
+        cells[index] = elem;
+        nextState = Object.assign({}, state, { cells });
+      }
+      return nextState;
+
+    case 'CELL_DOWN':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var nextState = state;
+      if (index < cells.length - 1) {
+        var elem = cells[index + 1];
+        cells[index + 1] = cells[index];
+        cells[index] = elem;
+        nextState = Object.assign({}, state, { cells });
+      }
+      return nextState;
+
+    case 'UPDATE_CELL':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      thisCell.content = action.content;
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, state, { cells });
+      return nextState;
+
+    case 'CHANGE_CELL_TYPE':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      thisCell.cellType = action.cellType;
+      thisCell.value = undefined;
+      thisCell.rendered = false;
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, state, { cells });
+      return nextState;
+
+    case 'CLEAR_CELL_BEFORE_EVALUATION':
+      var newState = Object.assign({}, state);
+      var cells = newState.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      thisCell.executionStatus = "*";
+      thisCell.value = undefined;
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, newState, { cells });
+      return nextState;
+
+    case 'RENDER_CELL':
+      var newState = Object.assign({}, state);
+      var declaredProperties = newState.declaredProperties;
+      var cells = newState.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      var executionNumber = newState.executionNumber;
+
+      if (action.evaluateCell) {
+        if (thisCell.cellType === 'javascript') {
+          // add to newState.history
+
+          newState.history.push({
+            cellID: thisCell.id,
+            lastRan: new Date(),
+            content: thisCell.content
+          });
+
+          thisCell.value = undefined;
+
+          var output;
+          try {
+            output = window.eval(thisCell.content);
+          } catch (e) {
+            var err = e.constructor('Error in Evaled Script: ' + e.message);
+            err.lineNumber = e.lineNumber - err.lineNumber + 3;
+            output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`;
+          }
+          thisCell.rendered = true;
+
+          if (output !== undefined) {
+            thisCell.value = output;
+          }
+
+          // ok. Now let's see if there are any new declared variables.
+          declaredProperties = {}; //
+          var currentGlobal = Object.keys(window);
+          currentGlobal.forEach(g => {
+            if (!initialVariables.has(g)) {
+              declaredProperties[g] = window[g];
+            }
+          });
+
+          var lastValue;
+          newState.executionNumber++;
+          thisCell.executionStatus = "" + newState.executionNumber;
+        } else if (thisCell.cellType === 'markdown') {
+          // one line, huh.
+          thisCell.value = MD.render(thisCell.content);
+          thisCell.rendered = true;
+        } else if (thisCell.cellType === 'external scripts') {
+          var scriptUrls = thisCell.content.split("\n").filter(s => s != "");
+          var newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script));
+          newScripts.forEach(addExternalScript);
+          newState.externalScripts.push(...newScripts);
+          thisCell.value = "loaded scripts";
+          thisCell.rendered = true;
+          // add to newState.history
+          newState.history.push({
+            cellID: thisCell.id,
+            lastRan: new Date(),
+            content: "// added external scripts:\n" + newScripts.map(s => "// " + s).join("\n")
+          });
+
+          newState.executionNumber++;
+          thisCell.executionStatus = "" + newState.executionNumber;
+        }
+      } else {
+        thisCell.rendered = false;
+      }
+
+      cells[index] = thisCell;
+      var nextState = Object.assign({}, newState, { cells }, { declaredProperties });
+      return nextState;
+
+    case 'DELETE_CELL':
+      var cells = state.cells.slice();
+      if (!cells.length) return state;
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = state.cells[index];
+      var currentlySelected;
+      if (thisCell.selected) {
+        var nextIndex = 0;
+        if (cells.length > 1) {
+          if (index == cells.length - 1) nextIndex = cells.length - 2;else nextIndex = index + 1;
+          cells[nextIndex].selected = true;
+        }
+        currentlySelected = Object.assign({}, cells[nextIndex]);
+      } else {
+        currentlySelected = Object.assign({}, state.currentlySelected);
+      }
+
+      var nextState = Object.assign({}, state, {
+        cells: cells.filter(cell => {
+          return cell.id !== action.id;
+        })
+      }, { currentlySelected });
+      return nextState;
+
+    case 'CHANGE_ELEMENT_TYPE':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      thisCell.elementType = action.elementType;
+      cells[index] = thisCell;
+      return Object.assign({}, state, { cells });
+
+    case 'CHANGE_DOM_ELEMENT_ID':
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      thisCell.domElementID = action.elemID;
+      cells[index] = thisCell;
+      return Object.assign({}, state, { cells });
+
+    default:
+      return state;
+  }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (cell);
 
 /***/ })
 /******/ ]);

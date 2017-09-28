@@ -1,19 +1,7 @@
 import { applyMiddleware, compose, createStore } from 'redux'
-import { reducer, newBlankState } from './reducer.jsx'
+import reducer from './reducers/reducer.js'
+import { newBlankState } from './reducers/blank-state.js'
 import  logger from 'redux-logger'
-
-// let finalCreateStore = compose(
-//   applyMiddleware(logger)
-// )(createStore)
-
-//  function configureStore(
-// 		initialState = {
-// 			cells: [],
-// 			declaredProperties:{},
-// 			lastValue: undefined
-// 		}) {
-//   return finalCreateStore(reducer, initialState)
-// }
 
 function configureStore() {
 	var store = createStore(
