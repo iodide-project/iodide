@@ -105,10 +105,11 @@ let actions = {
 			cellType: cellType
 		}
 	},
-	selectCell: function(cellID) {
+	selectCell: function(cellID, scrollToCell=false) {
 		return {
 			type: 'SELECT_CELL',
-			id: cellID
+			id: cellID,
+            scrollToCell: scrollToCell
 		}
 	},
 	deselectAll: function() {

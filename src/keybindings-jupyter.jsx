@@ -66,6 +66,8 @@ var DESELECT = [['shift+esc', 'shift+escape'], function(){
 }]
 
 function changeSelection(elem, dir) {
+    // always scroll to cell with kbd actions
+    var scrollToCell = true
   if (elem.props.mode === 'command' && elem.props.cells.length) {
     if (elem.props.currentlySelected != undefined) {
 
@@ -76,12 +78,12 @@ function changeSelection(elem, dir) {
       var orderConditional = dir > 0 ? order < elem.props.cells.length-1 : order > 0
       if (orderConditional) {
         var nextID = elem.props.cells[order+dir].id
-        elem.props.actions.selectCell(nextID)
+        elem.props.actions.selectCell(nextID,scrollToCell)
       }
 
     } else {
       if (elem.props.cells.length) {
-        elem.props.actions.selectCell(elem.props.cells[0].id)
+        elem.props.actions.selectCell(elem.props.cells[0].id,scrollToCell)
       }
     }
   }  

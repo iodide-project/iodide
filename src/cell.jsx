@@ -51,7 +51,8 @@ class GenericCell extends React.Component {
     }
 
     handleCellClick(){
-        this.props.actions.selectCell(this.props.cell.id)
+        var scrollToCell = false
+        this.props.actions.selectCell(this.props.cell.id,scrollToCell)
         if (this.props.pageMode=='edit'){
             this.props.actions.changeMode('command')
         }
