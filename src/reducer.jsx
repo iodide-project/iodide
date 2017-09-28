@@ -1,7 +1,7 @@
 //import marked from 'marked'
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
-var MD = MarkdownIt()
+var MD = MarkdownIt({html:true})
 MD.use(MarkdownItKatex)
 function newBlankState(){
   var initialState =  {
