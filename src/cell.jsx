@@ -252,8 +252,7 @@ class JavascriptCell extends RunnableCell {
 
     mainComponent(){
         var options = {
-            lineNumbers: true,//!this.props.cell.rendered,
-            // readOnly: this.props.cell.rendered,
+            lineNumbers: true,
             mode: this.props.cell.cellType,
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
@@ -278,8 +277,7 @@ class ExternalScriptCell extends RunnableCell {
 
     mainComponent(){
         var options = {
-            lineNumbers: false,//!this.props.cell.rendered,
-            // readOnly: this.props.cell.rendered,
+            lineNumbers: false,
             mode: this.props.cell.cellType,
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
@@ -304,8 +302,7 @@ class RawCell extends RunnableCell {
 
     mainComponent(){
         var options = {
-            lineNumbers: false,//!this.props.cell.rendered,
-            // readOnly: this.props.cell.rendered,
+            lineNumbers: false,
             mode: this.props.cell.cellType,
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
@@ -330,8 +327,7 @@ class MarkdownCell extends RunnableCell {
 
     mainComponent(){
         var options = {
-            lineNumbers: false,//!this.props.cell.rendered,
-            // readOnly: this.props.cell.rendered,
+            lineNumbers: false,
             mode: this.props.cell.cellType,
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
