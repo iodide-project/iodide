@@ -149,8 +149,16 @@ var COMMAND_MODE = [['esc'], function(e){
 ]
 
 var EDIT_MODE = [['enter', 'return'], function(e){
-      if (this.props.mode !== 'edit') this.props.actions.changeMode('edit')
-      if (this.props.currentlySelected != undefined) {
+    if (this.props.mode == 'command'){
+        // e.preventDefault blocks inserting a newline when you transition to edit mode
+        if (e.preventDefault) {
+            e.preventDefault();
+        } else { // internet explorer
+            e.returnValue = false;
+        }
+        this.props.actions.changeMode('edit')
+    }
+    if (this.props.currentlySelected != undefined) {
         var selectedID = this.props.currentlySelected.id
         this.refs['cell'+selectedID].selectCell()
       }

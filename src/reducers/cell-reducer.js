@@ -58,7 +58,6 @@ function addExternalScript(scriptUrl){
 
 let cell = function (state = newBlankState(), action) {
   switch (action.type) {
-
     case 'INSERT_CELL':
       var cells = state.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)
@@ -73,10 +72,8 @@ let cell = function (state = newBlankState(), action) {
 
     case 'ADD_CELL':
       var newState = Object.assign({}, state)
-
       var cells = newState.cells.slice()
       cells.forEach((cell)=>{cell.selected = false; return cell})
-
       var nextCell = newCell(newState, action.cellType)
       nextCell.selected = true
       var nextState = Object.assign({}, state, {
@@ -90,6 +87,10 @@ let cell = function (state = newBlankState(), action) {
       cells.forEach((c)=>{c.selected=false; return c})
       return Object.assign({}, state, {cells}, {currentlySelected: undefined})
 
+    case 'CHANGE_MODE':
+      var mode = action.mode
+      return Object.assign({}, state, {mode});
+
     case 'SELECT_CELL':
       var cells = state.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)
@@ -99,7 +100,11 @@ let cell = function (state = newBlankState(), action) {
       cells[index] = thisCell
       var currentlySelected = thisCell;
 
-      if (state.mode === 'command' || (state.currentlySelected !== undefined && thisCell.id !== state.currentlySelected.id)) scrollToCellIfNeeded(thisCell.id)
+      if (state.mode === 'command'
+        || (state.currentlySelected !== undefined
+          && thisCell.id !== state.currentlySelected.id)) {
+        scrollToCellIfNeeded(thisCell.id)
+      }
 
       var nextState = Object.assign({}, state, {cells}, {currentlySelected})
       return nextState
@@ -125,7 +130,6 @@ let cell = function (state = newBlankState(), action) {
           cells[index+1] = cells[index];
           cells[index] = elem;
            nextState = Object.assign({}, state, {cells});
-          
         } 
         return nextState
 
