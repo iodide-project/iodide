@@ -354,16 +354,23 @@ class MarkdownCell extends RunnableCell {
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
         }
+
+        var cmInstance = <CodeMirror ref='editor'
+        value={this.props.cell.content}
+        onChange={this.updateCell} 
+        onFocus={this.editCell}
+        options={options} />
+
+        if (this.props.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode == 'edit') {
+            this.refs.editor.getCodeMirror().refresh()
+            this.refs.editor.focus()
+        }
         var mainElem
             mainElem = (
                 <div className="editor"
                     style = {{display: editorDisplayStyle}}
                     onClick={this.editCell}>
-                    <CodeMirror ref='editor'
-                        value={this.props.cell.content}
-                        onChange={this.updateCell} 
-                        onFocus={this.editCell}
-                        options={options} />
+                    {cmInstance}
                 </div>
             )
         return mainElem

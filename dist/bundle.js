@@ -63548,17 +63548,24 @@ class MarkdownCell extends RunnableCell {
             lineWrapping: this.props.cell.cellType == 'markdown',
             theme: 'eclipse'
         };
+
+        var cmInstance = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
+            value: this.props.cell.content,
+            onChange: this.updateCell,
+            onFocus: this.editCell,
+            options: options });
+
+        if (this.props.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode == 'edit') {
+            this.refs.editor.getCodeMirror().refresh();
+            this.refs.editor.focus();
+        }
         var mainElem;
         mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'editor',
                 style: { display: editorDisplayStyle },
                 onClick: this.editCell },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
-                value: this.props.cell.content,
-                onChange: this.updateCell,
-                onFocus: this.editCell,
-                options: options })
+            cmInstance
         );
         return mainElem;
     }
