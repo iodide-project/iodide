@@ -83896,6 +83896,9 @@ let notebook = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state
       var mode = action.mode;
       return Object.assign({}, state, { mode });
 
+    case 'CHANGE_SIDE_PANE_MODE':
+      return Object.assign({}, state, { sidePaneMode: action.mode });
+
     default:
       return state;
   }

@@ -9,9 +9,6 @@ var initialVariables = new Set(Object.keys(window)) // gives all global variable
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 
-
-
-
 function scrollToCellIfNeeded(cellID) {
   var elem = document.getElementById('cell-'+cellID);
   var rect = elem.getBoundingClientRect();

@@ -61,7 +61,10 @@ let notebook = function (state=newBlankState(), action) {
     case 'CHANGE_MODE':
       var mode = action.mode
       return Object.assign({}, state, {mode});
-
+    
+    case 'CHANGE_SIDE_PANE_MODE':
+      return Object.assign({}, state, {sidePaneMode: action.mode})
+    
     default:
         return state
   }
