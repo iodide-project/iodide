@@ -16,9 +16,17 @@ class GenericCell extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {showControls:false}
-		this.selectCell = this.selectCell.bind(this)
-		this.makeButtons = this.makeButtons.bind(this)
-		this.hasEditor = false
+        this.hasEditor = false
+        // explicitly bind "this" for all methods in constructors
+        this.renderCell = this.renderCell.bind(this)
+        this.cellUp = this.cellUp.bind(this)
+        this.cellDown = this.cellDown.bind(this)
+        this.deleteCell = this.deleteCell.bind(this)
+        this.changeCellType = this.changeCellType.bind(this)
+        this.selectCell = this.selectCell.bind(this)
+        this.showControls = this.showControls.bind(this)
+        this.hideControls = this.hideControls.bind(this)
+        this.makeButtons = this.makeButtons.bind(this)
 	}
 
 	renderCell(render) {
@@ -56,10 +64,12 @@ class GenericCell extends React.Component {
 			<div className={'cell-controls ' + (this.state.showControls ? 'controls-visible' : 'controls-invisible')}>
 				<ButtonToolbar >
 
-					<Button bsSize='xsmall' onClick={this.renderCell.bind(this)}><i className="fa fa-play" aria-hidden="true"></i></Button>
-					<Button bsSize='xsmall' onClick={this.cellDown.bind(this)}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
-					<Button bsSize='xsmall' onClick={this.cellUp.bind(this)}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
-	      			<DropdownButton bsSize="xsmall" id={'cell-choice-' + this.props.id} bsStyle='default' title={this.props.cell.cellType} onSelect={this.changeCellType.bind(this)} >
+					<Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
+					<Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
+					<Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
+	      			<DropdownButton bsSize="xsmall" id={'cell-choice-' + this.props.id}
+                        bsStyle='default' title={this.props.cell.cellType}
+                        onSelect={this.changeCellType} >
 						<MenuItem   eventKey={"javascript"} >JS</MenuItem>
 						<MenuItem   eventKey={'markdown'} >MD</MenuItem>
 						<MenuItem   eventKey={'raw'} >Raw</MenuItem>
@@ -77,10 +87,6 @@ class GenericCell extends React.Component {
 	}
 }
 
-// function validateElementType(t){
-// 	var s = new Set(['div', 'svg', 'canvas', 'span'])
-// 	return 
-// }
 
 class DOMCell extends GenericCell {
 
@@ -88,11 +94,9 @@ class DOMCell extends GenericCell {
 		super(props)
 		if (!props.cell.hasOwnProperty('elementType')) props.actions.changeElementType(props.cell.id, 'div')
 		if (!props.cell.hasOwnProperty('domElementID')) props.actions.changeDOMElementID(props.cell.id, 'dom-cell-'+props.cell.id)
-	}
-
-	changeID(event){
-		var ID = event.target.value.trim()
-		// this.props.actions.updateOptions({cssID: ID})
+        // explicitly bind "this" for all methods in constructors
+        this.changeElementType = this.changeElementType.bind(this)
+        this.changeElementID = this.changeElementID.bind(this)
 	}
 
 	changeElementType(event) {
@@ -113,14 +117,15 @@ class DOMCell extends GenericCell {
 		}
 		return (
 			<div id={'cell-'+ this.props.cell.id}
-				onMouseOver={this.showControls.bind(this)} 
-				onMouseOut={this.hideControls.bind(this)} 
+				onMouseOver={this.showControls} 
+				onMouseOut={this.hideControls} 
 				className={'cell-container ' + (this.props.display ? '' : 'hidden-cell') +
-                (this.props.cell.selected ? 'selected-cell ' : ' ')}>
+                    (this.props.cell.selected ? 'selected-cell ' : ' ')}>
 				<div 
 					className={'cell dom-cell '  + 
-						(this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
-					onClick={this.selectCell.bind(this)}>
+						(this.props.cell.selected &&
+                            this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
+					onClick={this.selectCell}>
 
 					<div className='dom-cell-elementType' 
 						style={{display: this.props.cell.selected ? 'inherit' : 'none'}}>
@@ -128,9 +133,13 @@ class DOMCell extends GenericCell {
 						<Form className='dom-inputs' inline>
 							<FormGroup bsSize='xsmall' controlId={'dom-'+this.props.cell.id}>
 							    <ControlLabel className='right-spacer'>tag</ControlLabel>
-	      						<FormControl className='right-spacer' type="text" onChange={this.changeElementType.bind(this)} value={this.props.cell.elementType} placeholder="div, svg, etc." />
+	      						<FormControl className='right-spacer' type="text"
+                                    onChange={this.changeElementType}
+                                    value={this.props.cell.elementType}
+                                    placeholder="div, svg, etc." />
 	      						<ControlLabel className='right-spacer'>css ID</ControlLabel>
-	      						<FormControl type="text" onChange={this.changeElementID.bind(this)} value={this.props.cell.domElementID} placeholder="id"  />
+	      						<FormControl type="text" onChange={this.changeElementID}
+                                    value={this.props.cell.domElementID} placeholder="id"  />
 	    					</FormGroup>
 	    				</Form>
 					</div>
@@ -163,16 +172,11 @@ class HistoryCell extends GenericCell {
 		return (
 			<div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
 				<div className='cell history-cell'>
-					<div className='history-content'>
-						{mainElem}
-					</div>
-						<div className='history-date'>{this.props.cell.lastRan.toUTCString()}</div>
+					<div className='history-content'>{mainElem}</div>
+					<div className='history-date'>{this.props.cell.lastRan.toUTCString()}</div>
 				</div>
-				
-
-					<div className={'cell-controls'}>
-					</div>
-				</div>
+				<div className={'cell-controls'}></div>
+			</div>
 			)
 	}
 }
@@ -182,6 +186,10 @@ class RunnableCell extends GenericCell {
 	constructor(props){
 		super(props)
 		this.hasEditor = true
+        // explicitly bind "this" for all methods in constructors
+        this.updateCell = this.updateCell.bind(this)
+        this.mainComponent = this.mainComponent.bind(this)
+        this.resultComponent = this.resultComponent.bind(this)
 	}
 
 	updateCell(content) {
@@ -203,20 +211,22 @@ class RunnableCell extends GenericCell {
                 (this.props.display ? '' : 'hidden-cell') +
                 (this.props.cell.selected ? 'selected-cell ' : ' ') + 
                 (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
-			onMouseEnter={this.showControls.bind(this)}
-			onMouseLeave={this.hideControls.bind(this)}
+			onMouseEnter={this.showControls}
+			onMouseLeave={this.hideControls}
 			onMouseDown={this.selectCell} >
                 <div id = {"cell-execution-status-"+ this.props.cell.id}
                 className ={"cell-execution-status " + this.props.cell.cellType}>
                     [{this.props.cell.executionStatus}]
                 </div>
-				<div style={{display:"none"}}><i onClick={this.deleteCell.bind(this)} className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')} aria-hidden="true"></i></div>
+				<div style={{display:"none"}}><i onClick={this.deleteCell}
+                    className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')}
+                    aria-hidden="true"></i></div>
 				<div className={'cell '  +
 					(this.props.cell.rendered ? 'rendered ' : 'unrendered ')
 				}>
-					{this.mainComponent.bind(this)()}
+					{this.mainComponent()}
 					<div className='result'>
-							{this.resultComponent.bind(this)()}
+							{this.resultComponent()}
 					</div>
 				</div>
 
@@ -242,7 +252,7 @@ class JavascriptCell extends RunnableCell {
 		}
 		var comp = <CodeMirror ref='editor' key={'cell-'+this.props.cell.id}
 						   value={this.props.cell.content}
-						   onChange={this.updateCell.bind(this)} 
+						   onChange={this.updateCell} 
 						   onFocus={this.selectCell}
 						   options={options} />
 		
@@ -268,10 +278,10 @@ class ExternalScriptCell extends RunnableCell {
 			theme: 'eclipse'
 		}
         return (<CodeMirror ref='editor'
-                           value={this.props.cell.content}
-                           onChange={this.updateCell.bind(this)} 
-                           onFocus={this.selectCell}
-                           options={options} />
+                    value={this.props.cell.content}
+                    onChange={this.updateCell} 
+                    onFocus={this.selectCell}
+                    options={options} />
         )
 	}
 
@@ -293,15 +303,13 @@ class RawCell extends RunnableCell {
 			lineWrapping: this.props.cell.cellType == 'markdown',
 			theme: 'eclipse'
 		}
-
 		var mainElem = <CodeMirror ref='editor'
 						   value={this.props.cell.content}
-						   onChange={this.updateCell.bind(this)} 
+						   onChange={this.updateCell} 
 						   onFocus={this.selectCell}
 						   options={options} />
 		return mainElem
 	}
-
 	resultComponent(){
 		return <div></div>
 	}
@@ -326,11 +334,12 @@ class MarkdownCell extends RunnableCell {
 		if (!this.props.cell.rendered) {
 			mainElem = <CodeMirror ref='editor'
 			   value={this.props.cell.content}
-			   onChange={this.updateCell.bind(this)} 
+			   onChange={this.updateCell} 
 			   onFocus={this.selectCell}
 			   options={options} />
 		} else {
-			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)} dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
+			mainElem = <div onDoubleClick={()=>this.unrender.bind(this)(false)}
+                dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
 		}
 		return mainElem
 	}
