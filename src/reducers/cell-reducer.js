@@ -80,7 +80,7 @@ let cell = function (state = newBlankState(), action) {
     case 'DESELECT_ALL':
       var cells = state.cells.slice()
       cells.forEach((c)=>{c.selected=false; return c})
-      return Object.assign({}, state, {cells}, {currentlySelected: undefined})
+      return Object.assign({}, state, {cells})
 
     case 'CHANGE_MODE':
       var mode = action.mode
@@ -93,11 +93,10 @@ let cell = function (state = newBlankState(), action) {
       cells.forEach((c)=>c.selected=false)
       thisCell.selected = true
       cells[index] = thisCell
-      var currentlySelected = thisCell;
 
       if (action.scrollToCell) { scrollToCellIfNeeded(thisCell.id) }
 
-      var nextState = Object.assign({}, state, {cells}, {currentlySelected})
+      var nextState = Object.assign({}, state, {cells})
       return nextState
 
     case 'CELL_UP':
@@ -246,7 +245,6 @@ let cell = function (state = newBlankState(), action) {
       if (!cells.length) return state
       var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = state.cells[index]
-      var currentlySelected
       if (thisCell.selected) {
         var nextIndex=0;
         if (cells.length>1) {
@@ -254,14 +252,11 @@ let cell = function (state = newBlankState(), action) {
           else nextIndex=index+1
           cells[nextIndex].selected=true
         }
-        currentlySelected = Object.assign({}, cells[nextIndex])
-      } else {
-        currentlySelected = Object.assign({}, state.currentlySelected)
       }
 
       var nextState = Object.assign({}, state, {
         cells: cells.filter((cell)=> {return cell.id !== action.id})
-      }, {currentlySelected})
+      })
       return nextState
 
     case 'CHANGE_ELEMENT_TYPE':

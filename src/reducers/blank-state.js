@@ -24,7 +24,6 @@ function newBlankState(){
   var initialState =  {
     title: undefined,
     cells: [],
-    currentlySelected: undefined,
     declaredProperties:{},
     lastValue: undefined,
     lastSaved: undefined,
@@ -36,7 +35,6 @@ function newBlankState(){
   }
   initialState.cells.push(newCell(initialState, 'javascript'))
   initialState.cells[0].selected = true
-  initialState.currentlySelected = Object.assign({}, initialState.cells[0])
   return initialState
 }
 

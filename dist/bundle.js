@@ -18643,7 +18643,6 @@ function newBlankState() {
   var initialState = {
     title: undefined,
     cells: [],
-    currentlySelected: undefined,
     declaredProperties: {},
     lastValue: undefined,
     lastSaved: undefined,
@@ -18655,7 +18654,6 @@ function newBlankState() {
   };
   initialState.cells.push(newCell(initialState, 'javascript'));
   initialState.cells[0].selected = true;
-  initialState.currentlySelected = Object.assign({}, initialState.cells[0]);
   return initialState;
 }
 
@@ -38643,7 +38641,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       cells.forEach(c => {
         c.selected = false;return c;
       });
-      return Object.assign({}, state, { cells }, { currentlySelected: undefined });
+      return Object.assign({}, state, { cells });
 
     case 'CHANGE_MODE':
       var mode = action.mode;
@@ -38656,13 +38654,12 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       cells.forEach(c => c.selected = false);
       thisCell.selected = true;
       cells[index] = thisCell;
-      var currentlySelected = thisCell;
 
       if (action.scrollToCell) {
         scrollToCellIfNeeded(thisCell.id);
       }
 
-      var nextState = Object.assign({}, state, { cells }, { currentlySelected });
+      var nextState = Object.assign({}, state, { cells });
       return nextState;
 
     case 'CELL_UP':
@@ -38809,23 +38806,19 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       if (!cells.length) return state;
       var index = cells.findIndex(c => c.id === action.id);
       var thisCell = state.cells[index];
-      var currentlySelected;
       if (thisCell.selected) {
         var nextIndex = 0;
         if (cells.length > 1) {
           if (index == cells.length - 1) nextIndex = cells.length - 2;else nextIndex = index + 1;
           cells[nextIndex].selected = true;
         }
-        currentlySelected = Object.assign({}, cells[nextIndex]);
-      } else {
-        currentlySelected = Object.assign({}, state.currentlySelected);
       }
 
       var nextState = Object.assign({}, state, {
         cells: cells.filter(cell => {
           return cell.id !== action.id;
         })
-      }, { currentlySelected });
+      });
       return nextState;
 
     case 'CHANGE_ELEMENT_TYPE':
@@ -62799,8 +62792,8 @@ module.exports = ReactDOMInvalidARIAHook;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__cell_jsx__ = __webpack_require__(464);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__declared_variables_jsx__ = __webpack_require__(677);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__keybindings_jsx__ = __webpack_require__(678);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__title_jsx__ = __webpack_require__(680);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__notebook_menu_jsx__ = __webpack_require__(681);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__title_jsx__ = __webpack_require__(681);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__notebook_menu_jsx__ = __webpack_require__(682);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__settings_jsx__ = __webpack_require__(262);
 
 
@@ -83714,10 +83707,14 @@ function keyBinding(style, elem) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__notebook_utils__ = __webpack_require__(680);
+
+
 var jupyterKeybindings = [];
 
 var moveCell = (elem, dirFcn) => {
-  if (elem.props.mode === 'command' && elem.props.currentlySelected != undefined) elem.props.actions[dirFcn](elem.props.currentlySelected.id);
+  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(elem.props.cells);
+  if (elem.props.mode === 'command' && currentlySelected != undefined) elem.props.actions[dirFcn](currentlySelected.id);
 };
 
 var MOVE_UP = [['shift+up'], function () {
@@ -83729,9 +83726,10 @@ var MOVE_DOWN = [['shift+down'], function () {
 }];
 
 var ADD_CELL_ABOVE = [['a'], function () {
+  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
   if (this.props.mode === 'command') {
-    if (this.props.currentlySelected != undefined) {
-      this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'above');
+    if (currentlySelected != undefined) {
+      this.props.actions.insertCell('javascript', currentlySelected.id, 'above');
       changeSelection(this, -1);
     } else {
       this.props.actions.addCell('javascript');
@@ -83740,9 +83738,10 @@ var ADD_CELL_ABOVE = [['a'], function () {
 }];
 
 var ADD_CELL_BELOW = [['b'], function () {
+  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
   if (this.props.mode === 'command') {
-    if (this.props.currentlySelected != undefined) {
-      this.props.actions.insertCell('javascript', this.props.currentlySelected.id, 'below');
+    if (currentlySelected != undefined) {
+      this.props.actions.insertCell('javascript', currentlySelected.id, 'below');
       changeSelection(this, 1);
     } else {
       this.props.actions.addCell('javascript');
@@ -83751,8 +83750,9 @@ var ADD_CELL_BELOW = [['b'], function () {
 }];
 
 function changeCellMode(elem, cellMode) {
-  if (elem.props.mode === 'command' && elem.props.currentlySelected != undefined) {
-    elem.props.actions.changeCellType(elem.props.currentlySelected.id, cellMode);
+  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(elem.props.cells);
+  if (elem.props.mode === 'command' && currentlySelected != undefined) {
+    elem.props.actions.changeCellType(currentlySelected.id, cellMode);
   }
 }
 
@@ -83772,17 +83772,19 @@ var DESELECT = [['shift+esc', 'shift+escape'], function () {
   this.props.actions.deselectAll();
 }];
 
-function changeSelection(elem, dir) {
+function changeSelection(elem, dir, scrollToCell = true) {
   // always scroll to cell with kbd actions
-  var scrollToCell = true;
   if (elem.props.mode === 'command' && elem.props.cells.length) {
-    if (elem.props.currentlySelected != undefined) {
+    var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(elem.props.cells);
 
-      var selectedID = elem.props.currentlySelected.id;
+    if (currentlySelected != undefined) {
+
+      var selectedID = currentlySelected.id;
 
       var order = elem.props.cells.findIndex(c => c.id == selectedID);
 
       var orderConditional = dir > 0 ? order < elem.props.cells.length - 1 : order > 0;
+
       if (orderConditional) {
         var nextID = elem.props.cells[order + dir].id;
         elem.props.actions.selectCell(nextID, scrollToCell);
@@ -83818,24 +83820,26 @@ var SELECT_DOWN = [['down'], function (e) {
 }];
 
 var RENDER_CELL = [['mod+enter'], function () {
-  if (this.props.currentlySelected != undefined) {
+  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  if (currentlySelected != undefined) {
     document.activeElement.blur();
-    // this.props.actions.clearCellBeforeEvaluation(this.props.currentlySelected.id)
-    this.props.actions.renderCell(this.props.currentlySelected.id);
-    // setTimeout(()=>{
-    // this.props.actions.renderCell(this.props.currentlySelected.id)
-    // } ,100)
+    this.props.actions.renderCell(currentlySelected.id);
     this.props.actions.changeMode('command');
   }
 }];
 
 var RENDER_AND_SELECT_BELOW = [['shift+enter'], function () {
-  if (this.props.currentlySelected != undefined) {
+  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  if (currentlySelected != undefined) {
+    // currentlySelected does in theory change after each of these actions, 
+    // so we need to keep pulling if we need them.
     document.activeElement.blur();
-    this.props.actions.renderCell(this.props.currentlySelected.id);
+    this.props.actions.renderCell(currentlySelected.id);
     this.props.actions.changeMode('command');
+
+    var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
     var cells = this.props.cells.slice();
-    var index = cells.findIndex(c => c.id === this.props.currentlySelected.id);
+    var index = cells.findIndex(c => c.id === currentlySelected.id);
     if (index == cells.length - 1) this.props.actions.addCell('javascript');
     changeSelection(this, 1);
   }
@@ -83845,12 +83849,7 @@ var COMMAND_MODE = [['esc'], function (e) {
   if (this.props.mode == 'edit') {
     document.activeElement.blur();
     this.props.actions.changeMode('command');
-    // this.refs.deselector.focus()
   }
-  // see issue #50
-  // else if (this.props.mode == 'command' && this.props.currentlySelected !== undefined) {
-  //   this.props.actions.deselectAll()
-  // }
 }];
 
 var EDIT_MODE = [['enter', 'return'], function (e) {
@@ -83864,15 +83863,17 @@ var EDIT_MODE = [['enter', 'return'], function (e) {
     }
     this.props.actions.changeMode('edit');
   }
-  if (this.props.currentlySelected != undefined) {
-    var selectedID = this.props.currentlySelected.id;
+  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  if (currentlySelected != undefined) {
+    var selectedID = currentlySelected.id;
     this.refs['cell' + selectedID].editCell();
   }
 }];
 
 var DELETE_CELL = [['shift+del', 'shift+backspace'], function () {
-  if (this.props.currentlySelected != undefined) {
-    this.props.actions.deleteCell(this.props.currentlySelected.id);
+  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  if (currentlySelected != undefined) {
+    this.props.actions.deleteCell(currentlySelected.id);
   }
 }];
 
@@ -83896,6 +83897,27 @@ jupyterKeybindings.push(DELETE_CELL);
 
 /***/ }),
 /* 680 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var utils = {};
+
+function getSelectedCell(cells) {
+  let index = cells.slice().findIndex(c => {
+    return c.selected;
+  });
+  if (index > -1) {
+    return cells[index];
+  } else {
+    return undefined; // for now
+  }
+}
+
+utils.getSelectedCell = getSelectedCell;
+/* harmony default export */ __webpack_exports__["a"] = (utils);
+
+/***/ }),
+/* 681 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -83935,7 +83957,7 @@ class Title extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 /* harmony default export */ __webpack_exports__["a"] = (Title);
 
 /***/ }),
-/* 681 */
+/* 682 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -83943,7 +83965,7 @@ class Title extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_bootstrap__ = __webpack_require__(138);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__settings_jsx__ = __webpack_require__(262);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__example_notebooks_jsx__ = __webpack_require__(682);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__example_notebooks_jsx__ = __webpack_require__(683);
 
 
 
@@ -84244,13 +84266,13 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 /* harmony default export */ __webpack_exports__["a"] = (NotebookMenu);
 
 /***/ }),
-/* 682 */
+/* 683 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__examples_evictions_by_san_francisco_neighborhood_1999_2015_json__ = __webpack_require__(683);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__examples_evictions_by_san_francisco_neighborhood_1999_2015_json__ = __webpack_require__(684);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__examples_evictions_by_san_francisco_neighborhood_1999_2015_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__examples_evictions_by_san_francisco_neighborhood_1999_2015_json__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__examples_what_does_a_javascript_notebook_look_like_json__ = __webpack_require__(684);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__examples_what_does_a_javascript_notebook_look_like_json__ = __webpack_require__(685);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__examples_what_does_a_javascript_notebook_look_like_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__examples_what_does_a_javascript_notebook_look_like_json__);
 var exampleNotebooks = [];
 
@@ -84263,13 +84285,13 @@ exampleNotebooks.push(__WEBPACK_IMPORTED_MODULE_1__examples_what_does_a_javascri
 /* harmony default export */ __webpack_exports__["a"] = (exampleNotebooks);
 
 /***/ }),
-/* 683 */
+/* 684 */
 /***/ (function(module, exports) {
 
 module.exports = {"title":"Evictions by San Francisco Neighborhood, 1999-2015","cells":[{"content":"","id":2,"cellType":"dom","rendered":false,"selected":false,"elementType":"div","domElementID":"by-neighborhood"},{"content":"## Code","id":8,"cellType":"markdown","rendered":true,"selected":true,"value":"<h2 id=\"code\">Code</h2>\n"},{"content":"https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js","id":4,"cellType":"external scripts","value":"loaded scripts","rendered":true,"selected":false},{"content":"https://cdn.rawgit.com/hamilton/67d7904af5cd696ec2b12450b69bd657/raw/fd768a81ffb431fc7c843055f4cd1ee07af5ff50/metricsgraphics.min.js","id":7,"cellType":"external scripts","value":"loaded scripts","rendered":true,"selected":false},{"content":"__TODO__: (external css - need to roll this into 'external scripts')\n<link href='https://cdn.rawgit.com/hamilton/67d7904af5cd696ec2b12450b69bd657/raw/fd768a81ffb431fc7c843055f4cd1ee07af5ff50/metricsgraphics.css' rel='stylesheet' type='text/css'>\n","id":6,"cellType":"markdown","rendered":true,"selected":false,"value":"<p><strong>TODO</strong>: (external css - need to roll this into &#39;external scripts&#39;)</p>\n<link href='https://cdn.rawgit.com/hamilton/67d7904af5cd696ec2b12450b69bd657/raw/fd768a81ffb431fc7c843055f4cd1ee07af5ff50/metricsgraphics.css' rel='stylesheet' type='text/css'>\n","elementType":"div","domElementID":"dom-cell-6"},{"content":"\nvar strip_punctuation = function(s) {\n    var punctuationless = s.replace(/[^a-zA-Z0-9 _]+/g, '');\n    var finalString = punctuationless.replace(/ +?/g, '');\n    return finalString;\n}\n//\n//'by-neighborhood.csv'\nd3.csv('https://gist.githubusercontent.com/hamilton/67d7904af5cd696ec2b12450b69bd657/raw/15d83f7f281c3e5de2ca3359529ef041b47fcbf6/css', function(data) {\n    data = MG.convert.date(data, 'date');\n    data = MG.convert.number(data, 'count');\n    var each_neighborhood = {};\n    var which_neighborhoods = {};\n    data.forEach(function(d){\n        var n=d.nbrhd;\n        if (!each_neighborhood.hasOwnProperty(n)) each_neighborhood[n]=[];\n        each_neighborhood[n].push(MG.clone(d));\n        if (!which_neighborhoods.hasOwnProperty(n)) which_neighborhoods[n]=0;\n        which_neighborhoods[n]+= d.count;\n    })\n    // sort by most interesting neighborhoods\n    var nord=[];\n    Object.keys(which_neighborhoods).forEach(function(d){\n        nord.push([which_neighborhoods[d], d]);\n    })\n    nord.sort(function(a,b){return b[0]-a[0]});\n    nord = nord.map(function(d){return d[1]});\n    var c = 0;\n    var neigh = d3.select('div#by-neighborhood').append('div');\n    var row = neigh.append('div').classed('row', true);\n\n\n\n    var test = nord.slice(1,4).map(function(n){\n        return each_neighborhood[n];\n    });\n  \n    nord.forEach(function(neighborhood,i){\n        if (c < 24){\n            var n = strip_punctuation(neighborhood)\n            var all = row.append('div').classed(n, true).classed('neighborhood', true).classed('col-md-2', true);\n\n            MG.data_graphic({\n                title: neighborhood,\n                data: each_neighborhood[neighborhood],\n                width: 150,\n                height:145,\n                max_y:350,\n                mouseover_align:'center',\n                left: i===0 ? 30 : 15,\n                right:i===0 ? 15 : 15,\n                top:45,\n                xax_count:3,\n                y_axis: i == 0 ? true : false,\n                min_x: new Date('1996-12-31'),\n                show_secondary_x_label: false,\n                area:false,\n                linked:true,\n                color:'black',\n                xax_format: function(d){return d3.timeFormat('%Y')(d)},\n                x_rollover_format: '%Y  ',\n                y_rollover_format: function(d) { return d.count + ' evictions'},\n                target: 'div.'+n,\n                x_accessor: 'date',\n                y_accessor: 'count',\n                small_text: false,\n            });\n            if (c+1 % 6 === 0) row = neigh.append('div').classed('row', true);\n\n        }\n        c +=1;\n\n    })\n});\nnull","id":3,"cellType":"javascript","rendered":true,"selected":false,"value":null},{"content":"","id":9,"cellType":"javascript","rendered":false,"selected":false}],"currentlySelected":{"content":"## Code","id":8,"cellType":"markdown","rendered":true,"selected":true,"value":"<h2 id=\"code\">Code</h2>\n"},"declaredProperties":{},"lastSaved":"2017-09-21T04:43:08.538Z","mode":"command","history":[],"externalScripts":[]}
 
 /***/ }),
-/* 684 */
+/* 685 */
 /***/ (function(module, exports) {
 
 module.exports = {"title":"What does a Javascript Notebook Look Like?","cells":[{"content":"# Cell types\n\n## Markdown cell\n\nThis  is a markdown cell, just as you would see in Jupyter or R-markdown. It supports all the normal markdown things you'd expect including inline\n\n### Demo of targeting elements within a markdown cell\nBelow this paragraph is a div with id=\"targetDiv\":\n<div id=\"targetDiv\"></div>\nWe'll target that div with a small THREE.js example, which we'll run in cells below.\n\n## JS cell\nThe following cell is a Javascript cell","id":1,"cellType":"markdown","value":"<h1 id=\"cell-types\">Cell types</h1>\n<h2 id=\"markdown-cell\">Markdown cell</h2>\n<p>This  is a markdown cell, just as you would see in Jupyter or R-markdown. It supports all the normal markdown things you&#39;d expect including inline</p>\n<h3 id=\"demo-of-targeting-elements-within-a-markdown-cell\">Demo of targeting elements within a markdown cell</h3>\n<p>Below this paragraph is a div with id=&quot;targetDiv&quot;:</p>\n<p><div id=\"targetDiv\"></div>\nWe&#39;ll target that div with a small THREE.js example, which we&#39;ll run in cells below.</p>\n<h2 id=\"js-cell\">JS cell</h2>\n<p>The following cell is a Javascript cell</p>\n","rendered":true,"selected":false},{"content":"// this is a JS code cell. We can use normal JS and browser APIs\n// to select the div defined in the MD cell above\ntargetDiv = document.body\n  .querySelector(\"#targetDiv\")\n","id":14,"cellType":"javascript","rendered":true,"selected":false,"value":{}},{"content":"### External script cells\nthe cell below is an \"external script cell\". It loads external JS from URLs.","id":22,"cellType":"markdown","rendered":true,"selected":false,"value":"<h3 id=\"external-script-cells\">External script cells</h3>\n<p>the cell below is an &quot;external script cell&quot;. It loads external JS from URLs.</p>\n"},{"content":"http://threejs.org/build/three.min.js\nhttps://code.jquery.com/jquery-3.2.1.slim.js\nhttps://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js","id":20,"cellType":"external scripts","rendered":true,"selected":false,"value":"loaded scripts"},{"content":"(function() {\n    //'use strict';\n  \tvar width = 400, height = 300\n\n    var scene = new THREE.Scene();\n    var camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100);\n\n    var renderer = new THREE.WebGLRenderer();\n    renderer.setSize(width, height);\n    targetDiv.appendChild(renderer.domElement);\n\n    var geometry = new THREE.CubeGeometry(5, 5, 5);\n    var material = new THREE.MeshLambertMaterial({\n        color: 0x00fff0\n\n    });\n    var cube = new THREE.Mesh(geometry, material);\n    scene.add(cube);\n\n    camera.position.z = 12;\n    \n    var pointLight = new THREE.PointLight(0xFFFFFF);\n\n    pointLight.position.x = 10;\n    pointLight.position.y = 50;\n    pointLight.position.z = 130;\n\n    scene.add(pointLight);\n\n    var reqAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;\n\n    var render = function() {\n        reqAnimFrame(render);\n        \n        var delta = Math.random() * (0.06 - 0.02) + 0.03\n\n;\n\n        cube.rotation.x += delta;\n        cube.rotation.y += delta;\n        cube.rotation.z -= delta;\n\n        renderer.render(scene, camera);\n    };\n\n    render();\n}());","id":2,"cellType":"javascript","rendered":true,"selected":false},{"content":"canvas target div with id=\"targetDiv2\" right below:\n<div id=\"targetDiv2\"></div>","id":15,"cellType":"markdown","value":"<p>canvas target div with id=&quot;targetDiv2&quot; right below:</p>\n<div id=\"targetDiv2\"></div>","rendered":true,"selected":false},{"content":"targetDiv2 = document.body.querySelector(\"#targetDiv2\")\n\n","id":17,"cellType":"javascript","value":{},"rendered":true,"selected":false},{"content":"var width = 400, height = 300\n\nvar scene = new THREE.Scene();\nvar camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100);\n\nvar renderer = new THREE.WebGLRenderer();\nrenderer.setSize(width, height);\ntargetDiv2.appendChild(renderer.domElement);\n\nvar geometry = new THREE.CubeGeometry(5, 5, 5);\nvar material = new THREE.MeshLambertMaterial({\n  color: 0x00fff0\n});\nvar cube = new THREE.Mesh(geometry, material);\nscene.add(cube);\n\ncamera.position.z = 12;\n\nvar pointLight = new THREE.PointLight(0xFFFFFF);\n\npointLight.position.x = 10;\npointLight.position.y = 50;\npointLight.position.z = 130;\n\nscene.add(pointLight);\nvar reqAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;\n\nvar render = function() {\n  reqAnimFrame(render);\n\n  var delta = Math.random() * (0.06 - 0.02) + 0.02;\n\n  cube.rotation.x += delta;\n  cube.rotation.y += delta;\n  cube.rotation.z -= delta;\n\n  renderer.render(scene, camera);\n};\n\nrender();\n","id":16,"cellType":"javascript","rendered":true,"selected":false},{"content":"\np = document.createElement(\"p\");\np.innerHTML = \"a paragraph\";\n\ntargetDiv2.appendChild(p)\n","id":19,"cellType":"javascript","rendered":true,"selected":false,"value":{}},{"content":"\ni=0\nwhile (i<1000000){i+=1}\ni\n","id":18,"cellType":"javascript","rendered":true,"selected":true,"value":1000000}],"currentlySelected":{"content":"\ni=0\nwhile (i<1000000){i+=1}\ni\n","id":18,"cellType":"javascript","rendered":true,"selected":true,"value":1000000},"declaredProperties":{},"lastSaved":"2017-09-21T18:10:47.505Z","mode":"edit","history":[],"externalScripts":[]}
