@@ -11,7 +11,10 @@
   "jest": {
     "transformIgnorePatterns": [
       "/node_modules/(?!test-component).+\\.js$"
-    ]
+    ],
+    "globals": {
+      "window": true
+    }
   },
   "dependencies": {
     "@skidding/react-codemirror": "^1.0.0",

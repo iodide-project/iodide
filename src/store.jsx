@@ -1,6 +1,6 @@
 import { applyMiddleware, compose, createStore } from 'redux'
 import reducer from './reducers/reducer.js'
-import { newNotebook } from './reducers/blank-state.js'
+import { newNotebook } from './notebook-utils.js'
 import  logger from 'redux-logger'
 
 function configureStore() {

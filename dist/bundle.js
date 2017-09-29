@@ -18611,61 +18611,7 @@ function isPlainObject(value) {
 
 
 /***/ }),
-/* 100 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export blankState */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return newNotebook; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return newCell; });
-function getId(loadedState) {
-  var newID = loadedState.cells.reduce((maxId, cell) => {
-    return Math.max(cell.id, maxId);
-  }, -1) + 1;
-  return newID;
-}
-
-function newCell(loadedState, cellType) {
-  return {
-    content: '',
-    id: getId(loadedState),
-    cellType: cellType,
-    value: undefined,
-    rendered: false,
-    selected: false,
-    executionStatus: " ",
-    // evaluationOld set to true if the content of the editor changes from whatever
-    // produced the most recent output value
-    evaluationOld: true
-  };
-}
-
-function blankState() {
-  var initialState = {
-    title: undefined,
-    cells: [],
-    declaredProperties: {},
-    lastValue: undefined,
-    lastSaved: undefined,
-    mode: 'command',
-    sidePaneMode: undefined,
-    history: [],
-    externalScripts: [],
-    executionNumber: 1
-  };
-  return initialState;
-}
-
-function newNotebook() {
-  var initialState = blankState();
-  initialState.cells.push(newCell(initialState, 'javascript'));
-  initialState.cells[0].selected = true;
-  return initialState;
-}
-
-
-
-/***/ }),
+/* 100 */,
 /* 101 */
 /***/ (function(module, exports) {
 
@@ -38433,7 +38379,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(98);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__ = __webpack_require__(303);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reducers_blank_state_js__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__notebook_utils_js__ = __webpack_require__(680);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_redux_logger__ = __webpack_require__(376);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_redux_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_redux_logger__);
 
@@ -38442,7 +38388,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 
 
 function configureStore() {
-	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__["a" /* default */], Object(__WEBPACK_IMPORTED_MODULE_2__reducers_blank_state_js__["b" /* newNotebook */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_3_redux_logger___default.a)));
+	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__["a" /* default */], Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils_js__["c" /* newNotebook */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_3_redux_logger___default.a)));
 	//persistStore(store)
 	return store;
 }
@@ -38479,7 +38425,7 @@ function reduceReducers(...reducers) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__blank_state_js__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__ = __webpack_require__(680);
 
 
 function clearHistory(loadedState) {
@@ -38490,10 +38436,10 @@ function clearHistory(loadedState) {
   loadedState.executionNumber = 0;
 }
 
-let notebook = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newNotebook */])(), action) {
+let notebook = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["c" /* newNotebook */])(), action) {
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      var newState = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newNotebook */])();
+      var newState = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["c" /* newNotebook */])();
       return newState;
 
     case 'EXPORT_NOTEBOOK':
@@ -38530,7 +38476,7 @@ let notebook = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state
       var title = action.title;
       if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title);
       if (title === state.title) {
-        var newState = Object.assign({}, Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newNotebook */])());
+        var newState = Object.assign({}, Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["c" /* newNotebook */])());
       } else {
         var newState = Object.assign({}, state);
       }
@@ -38558,7 +38504,7 @@ let notebook = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__blank_state_js__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__ = __webpack_require__(680);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_markdown_it__ = __webpack_require__(306);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_markdown_it___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_markdown_it__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_markdown_it_katex__ = __webpack_require__(361);
@@ -38617,7 +38563,7 @@ function addExternalScript(scriptUrl) {
   head.appendChild(script);
 }
 
-let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newNotebook */])(), action) {
+let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["c" /* newNotebook */])(), action) {
   switch (action.type) {
     case 'INSERT_CELL':
       var cells = state.cells.slice();
@@ -38625,7 +38571,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       var direction = action.direction == 'above' ? 0 : 1;
 
       //cells.forEach((cell)=>{cell.selected=false; return cell})
-      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newCell */])(state, 'javascript');
+      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["b" /* newCell */])(state, 'javascript');
       cells.splice(index + direction, 0, nextCell);
       var nextState = Object.assign({}, state, { cells });
       return nextState;
@@ -38634,7 +38580,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       var newState = Object.assign({}, state);
       var cells = newState.cells.slice();
       //cells.forEach((cell)=>{cell.selected = false; return cell})
-      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newCell */])(newState, action.cellType);
+      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["b" /* newCell */])(newState, action.cellType);
       var nextState = Object.assign({}, newState, { cells: [...cells, nextCell] });
       return nextState;
 
@@ -83721,7 +83667,7 @@ function keyBinding(style, elem) {
 var jupyterKeybindings = [];
 
 var moveCell = (elem, dirFcn) => {
-  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(elem.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(elem.props.cells);
   if (elem.props.mode === 'command' && currentlySelected != undefined) elem.props.actions[dirFcn](currentlySelected.id);
 };
 
@@ -83734,7 +83680,7 @@ var MOVE_DOWN = [['shift+down'], function () {
 }];
 
 var ADD_CELL_ABOVE = [['a'], function () {
-  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
   if (this.props.mode === 'command') {
     if (currentlySelected != undefined) {
       this.props.actions.insertCell('javascript', currentlySelected.id, 'above');
@@ -83746,7 +83692,7 @@ var ADD_CELL_ABOVE = [['a'], function () {
 }];
 
 var ADD_CELL_BELOW = [['b'], function () {
-  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
   if (this.props.mode === 'command') {
     if (currentlySelected != undefined) {
       this.props.actions.insertCell('javascript', currentlySelected.id, 'below');
@@ -83758,7 +83704,7 @@ var ADD_CELL_BELOW = [['b'], function () {
 }];
 
 function changeCellMode(elem, cellMode) {
-  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(elem.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(elem.props.cells);
   if (elem.props.mode === 'command' && currentlySelected != undefined) {
     elem.props.actions.changeCellType(currentlySelected.id, cellMode);
   }
@@ -83783,7 +83729,7 @@ var DESELECT = [['shift+esc', 'shift+escape'], function () {
 function changeSelection(elem, dir, scrollToCell = true) {
   // always scroll to cell with kbd actions
   if (elem.props.mode === 'command' && elem.props.cells.length) {
-    var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(elem.props.cells);
+    var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(elem.props.cells);
     if (currentlySelected !== undefined) {
 
       var selectedID = currentlySelected.id;
@@ -83829,7 +83775,7 @@ var SELECT_DOWN = [['down'], function (e) {
 }];
 
 var RENDER_CELL = [['mod+enter'], function () {
-  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
   if (currentlySelected != undefined) {
     document.activeElement.blur();
     this.props.actions.renderCell(currentlySelected.id);
@@ -83838,7 +83784,7 @@ var RENDER_CELL = [['mod+enter'], function () {
 }];
 
 var RENDER_AND_SELECT_BELOW = [['shift+enter'], function () {
-  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
   if (currentlySelected != undefined) {
     // currentlySelected does in theory change after each of these actions, 
     // so we need to keep pulling if we need them.
@@ -83846,7 +83792,7 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function () {
     this.props.actions.renderCell(currentlySelected.id);
     this.props.actions.changeMode('command');
 
-    var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+    var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
     var cells = this.props.cells.slice();
     var index = cells.findIndex(c => c.id === currentlySelected.id);
     if (index == cells.length - 1) this.props.actions.addCell('javascript');
@@ -83872,7 +83818,7 @@ var EDIT_MODE = [['enter', 'return'], function (e) {
     }
     this.props.actions.changeMode('edit');
   }
-  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
   if (currentlySelected != undefined) {
     var selectedID = currentlySelected.id;
     this.refs['cell' + selectedID].editCell();
@@ -83880,7 +83826,7 @@ var EDIT_MODE = [['enter', 'return'], function (e) {
 }];
 
 var DELETE_CELL = [['shift+del', 'shift+backspace'], function () {
-  var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
   if (currentlySelected != undefined) {
     this.props.actions.deleteCell(currentlySelected.id);
   }
@@ -83909,7 +83855,58 @@ jupyterKeybindings.push(DELETE_CELL);
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var utils = {};
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return getSelectedCell; });
+/* unused harmony export blankState */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return newNotebook; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return newCell; });
+function newCellID(loadedState) {
+  var newID = loadedState.cells.reduce((maxId, cell) => {
+    return Math.max(cell.id, maxId);
+  }, -1) + 1;
+  return newID;
+}
+
+function cloneState(state) {
+  return Object.assign({}, state);
+}
+
+function newCell(loadedState, cellType) {
+  return {
+    content: '',
+    id: newCellID(loadedState),
+    cellType: cellType,
+    value: undefined,
+    rendered: false,
+    selected: false,
+    executionStatus: " ",
+    // evaluationOld set to true if the content of the editor changes from whatever
+    // produced the most recent output value
+    evaluationOld: true
+  };
+}
+
+function blankState() {
+  var initialState = {
+    title: undefined,
+    cells: [],
+    declaredProperties: {},
+    lastValue: undefined,
+    lastSaved: undefined,
+    mode: 'command',
+    sidePaneMode: undefined,
+    history: [],
+    externalScripts: [],
+    executionNumber: 1
+  };
+  return initialState;
+}
+
+function newNotebook() {
+  var initialState = blankState();
+  initialState.cells.push(newCell(initialState, 'javascript'));
+  initialState.cells[0].selected = true;
+  return initialState;
+}
 
 function getSelectedCell(cells) {
   let index = cells.slice().findIndex(c => {
@@ -83922,8 +83919,7 @@ function getSelectedCell(cells) {
   }
 }
 
-utils.getSelectedCell = getSelectedCell;
-/* harmony default export */ __webpack_exports__["a"] = (utils);
+
 
 /***/ }),
 /* 681 */

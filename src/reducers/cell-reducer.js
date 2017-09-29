@@ -1,4 +1,4 @@
-import { blankState, newNotebook, newCell } from './blank-state.js'
+import { blankState, newNotebook, newCell } from '../notebook-utils.js'
 
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'

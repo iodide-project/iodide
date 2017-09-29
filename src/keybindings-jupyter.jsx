@@ -1,9 +1,9 @@
-import utils from './notebook-utils'
+import {getSelectedCell} from './notebook-utils'
 
 var jupyterKeybindings = [];
 
 var moveCell = (elem, dirFcn) => {
-  var currentlySelected = utils.getSelectedCell(elem.props.cells)
+  var currentlySelected = getSelectedCell(elem.props.cells)
   if (elem.props.mode === 'command' && currentlySelected != undefined) elem.props.actions[dirFcn](currentlySelected.id)
 }
 
@@ -22,7 +22,7 @@ var MOVE_DOWN = [
 ]
 
 var ADD_CELL_ABOVE = [['a'], function(){
-  var currentlySelected = utils.getSelectedCell(this.props.cells)
+  var currentlySelected = getSelectedCell(this.props.cells)
     if (this.props.mode === 'command') {
       if (currentlySelected != undefined) {
         this.props.actions.insertCell('javascript', currentlySelected.id, 'above')
@@ -35,7 +35,7 @@ var ADD_CELL_ABOVE = [['a'], function(){
 ]
 
 var ADD_CELL_BELOW = [['b'], function(){
-  var currentlySelected = utils.getSelectedCell(this.props.cells)
+  var currentlySelected = getSelectedCell(this.props.cells)
     if (this.props.mode === 'command') {
       if (currentlySelected != undefined) {
         this.props.actions.insertCell('javascript', currentlySelected.id, 'below')
@@ -48,7 +48,7 @@ var ADD_CELL_BELOW = [['b'], function(){
 ]
 
 function changeCellMode(elem, cellMode) {
-  var currentlySelected = utils.getSelectedCell(elem.props.cells)
+  var currentlySelected = getSelectedCell(elem.props.cells)
   if (elem.props.mode === 'command' && currentlySelected != undefined) {
     elem.props.actions.changeCellType(currentlySelected.id, cellMode)
   }  
@@ -76,7 +76,7 @@ var DESELECT = [['shift+esc', 'shift+escape'], function(){
 function changeSelection(elem, dir, scrollToCell = true) {
   // always scroll to cell with kbd actions
   if (elem.props.mode === 'command' && elem.props.cells.length) {
-    var currentlySelected = utils.getSelectedCell(elem.props.cells)
+    var currentlySelected = getSelectedCell(elem.props.cells)
     if (currentlySelected !== undefined) {
 
       var selectedID = currentlySelected.id
@@ -122,7 +122,7 @@ var SELECT_DOWN = [['down'], function(e){
 ]
 
 var RENDER_CELL = [['mod+enter'], function(){
-      var currentlySelected = utils.getSelectedCell(this.props.cells)
+      var currentlySelected = getSelectedCell(this.props.cells)
       if (currentlySelected != undefined) {
         document.activeElement.blur()
         this.props.actions.renderCell(currentlySelected.id)
@@ -132,7 +132,7 @@ var RENDER_CELL = [['mod+enter'], function(){
 ]
 
 var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
-  var currentlySelected = utils.getSelectedCell(this.props.cells)
+  var currentlySelected = getSelectedCell(this.props.cells)
   if (currentlySelected!=undefined) {
     // currentlySelected does in theory change after each of these actions, 
     // so we need to keep pulling if we need them.
@@ -140,7 +140,7 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
     this.props.actions.renderCell(currentlySelected.id)
     this.props.actions.changeMode('command')
     
-    var currentlySelected = utils.getSelectedCell(this.props.cells)
+    var currentlySelected = getSelectedCell(this.props.cells)
     var cells = this.props.cells.slice()
     var index = cells.findIndex(c=>c.id===currentlySelected.id)
     if (index == cells.length-1) this.props.actions.addCell('javascript')
@@ -166,7 +166,7 @@ var EDIT_MODE = [['enter', 'return'], function(e){
         }
         this.props.actions.changeMode('edit')
     }
-    var currentlySelected = utils.getSelectedCell(this.props.cells)
+    var currentlySelected = getSelectedCell(this.props.cells)
     if (currentlySelected != undefined) {
         var selectedID = currentlySelected.id
         this.refs['cell'+selectedID].editCell()
@@ -175,7 +175,7 @@ var EDIT_MODE = [['enter', 'return'], function(e){
 ]
 
 var DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
-  var currentlySelected = utils.getSelectedCell(this.props.cells)
+  var currentlySelected = getSelectedCell(this.props.cells)
     if (currentlySelected != undefined) {
       this.props.actions.deleteCell(currentlySelected.id)
     }

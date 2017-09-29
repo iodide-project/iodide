@@ -1,4 +1,4 @@
-import { blankState, newNotebook } from './blank-state.js'
+import { blankState, newNotebook } from '../notebook-utils.js'
 
 function clearHistory(loadedState) {
   // remove history and declared properties before exporting the state.
