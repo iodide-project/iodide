@@ -1,4 +1,4 @@
-import { newBlankState, newCell } from './blank-state.js'
+import { blankState, newNotebook, newCell } from './blank-state.js'
 
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
@@ -56,7 +56,7 @@ function addExternalScript(scriptUrl){
   head.appendChild(script)
 }
 
-let cell = function (state = newBlankState(), action) {
+let cell = function (state = newNotebook(), action) {
   switch (action.type) {
     case 'INSERT_CELL':
       var cells = state.cells.slice()

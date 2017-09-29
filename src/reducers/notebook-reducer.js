@@ -1,4 +1,4 @@
-import { newBlankState } from './blank-state.js'
+import { blankState, newNotebook } from './blank-state.js'
 
 function clearHistory(loadedState) {
   // remove history and declared properties before exporting the state.
@@ -8,10 +8,10 @@ function clearHistory(loadedState) {
   loadedState.executionNumber = 0
 }
 
-let notebook = function (state=newBlankState(), action) {
+let notebook = function (state=newNotebook(), action) {
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      var newState = newBlankState()
+      var newState = newNotebook()
       return newState
 
     case 'EXPORT_NOTEBOOK':
@@ -49,7 +49,7 @@ let notebook = function (state=newBlankState(), action) {
       var title = action.title
       if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title)
       if (title === state.title) {
-        var newState = Object.assign({}, newBlankState())
+        var newState = Object.assign({}, newNotebook())
       } else {
         var newState = Object.assign({}, state)
       }

@@ -20,7 +20,7 @@ function newCell(loadedState, cellType){
   }
 }
 
-function newBlankState(){
+function blankState(){
   var initialState =  {
     title: undefined,
     cells: [],
@@ -33,9 +33,14 @@ function newBlankState(){
     externalScripts:[],
     executionNumber: 1
   }
+  return initialState
+}
+
+function newNotebook(){
+  var initialState = blankState()
   initialState.cells.push(newCell(initialState, 'javascript'))
   initialState.cells[0].selected = true
   return initialState
 }
 
-export {newBlankState, newCell}
+export {blankState, newNotebook, newCell}

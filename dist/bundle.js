@@ -18615,8 +18615,9 @@ function isPlainObject(value) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return newBlankState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return newCell; });
+/* unused harmony export blankState */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return newNotebook; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return newCell; });
 function getId(loadedState) {
   var newID = loadedState.cells.reduce((maxId, cell) => {
     return Math.max(cell.id, maxId);
@@ -18639,7 +18640,7 @@ function newCell(loadedState, cellType) {
   };
 }
 
-function newBlankState() {
+function blankState() {
   var initialState = {
     title: undefined,
     cells: [],
@@ -18652,6 +18653,11 @@ function newBlankState() {
     externalScripts: [],
     executionNumber: 1
   };
+  return initialState;
+}
+
+function newNotebook() {
+  var initialState = blankState();
   initialState.cells.push(newCell(initialState, 'javascript'));
   initialState.cells[0].selected = true;
   return initialState;
@@ -38436,7 +38442,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 
 
 function configureStore() {
-	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__["a" /* default */], Object(__WEBPACK_IMPORTED_MODULE_2__reducers_blank_state_js__["a" /* newBlankState */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_3_redux_logger___default.a)));
+	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__["a" /* default */], Object(__WEBPACK_IMPORTED_MODULE_2__reducers_blank_state_js__["b" /* newNotebook */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_3_redux_logger___default.a)));
 	//persistStore(store)
 	return store;
 }
@@ -38484,10 +38490,10 @@ function clearHistory(loadedState) {
   loadedState.executionNumber = 0;
 }
 
-let notebook = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newBlankState */])(), action) {
+let notebook = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newNotebook */])(), action) {
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      var newState = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newBlankState */])();
+      var newState = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newNotebook */])();
       return newState;
 
     case 'EXPORT_NOTEBOOK':
@@ -38524,7 +38530,7 @@ let notebook = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state
       var title = action.title;
       if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title);
       if (title === state.title) {
-        var newState = Object.assign({}, Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newBlankState */])());
+        var newState = Object.assign({}, Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newNotebook */])());
       } else {
         var newState = Object.assign({}, state);
       }
@@ -38611,7 +38617,7 @@ function addExternalScript(scriptUrl) {
   head.appendChild(script);
 }
 
-let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newBlankState */])(), action) {
+let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newNotebook */])(), action) {
   switch (action.type) {
     case 'INSERT_CELL':
       var cells = state.cells.slice();
@@ -38619,7 +38625,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       var direction = action.direction == 'above' ? 0 : 1;
 
       //cells.forEach((cell)=>{cell.selected=false; return cell})
-      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newCell */])(state, 'javascript');
+      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newCell */])(state, 'javascript');
       cells.splice(index + direction, 0, nextCell);
       var nextState = Object.assign({}, state, { cells });
       return nextState;
@@ -38628,7 +38634,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       var newState = Object.assign({}, state);
       var cells = newState.cells.slice();
       //cells.forEach((cell)=>{cell.selected = false; return cell})
-      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newCell */])(newState, action.cellType);
+      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["a" /* newCell */])(newState, action.cellType);
       var nextState = Object.assign({}, newState, { cells: [...cells, nextCell] });
       return nextState;
 
