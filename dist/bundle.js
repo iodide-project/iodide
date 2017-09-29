@@ -63576,7 +63576,13 @@ function jsReturnValue(cell) {
     if (cell.value !== undefined) returnedSomething = true;
     if (cell.value == undefined && cell.rendered) returnedSomething = true;
     if (returnedSomething) {
-        resultElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_json_tree___default.a, { data: cell.value, hideRoot: false, theme: {
+        resultElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_json_tree___default.a, {
+            data: cell.value,
+            shouldExpandNode: (keyName, data, level) => {
+                return false;
+            },
+            hideRoot: false,
+            theme: {
                 scheme: 'bright',
                 author: 'chris kempson (http://chriskempson.com)',
                 base00: '#000000',
