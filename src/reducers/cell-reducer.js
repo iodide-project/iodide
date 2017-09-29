@@ -49,11 +49,11 @@ function scrollToCellIfNeeded(cellID) {
 
 function addExternalScript(scriptUrl){
   // FIXME there must be a better way to do this with promises etc...
-  var head = document.getElementsByTagName('head')[0];
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = scriptUrl;
-  head.appendChild(script);
+  var head = document.getElementsByTagName('head')[0]
+  var script = document.createElement('script')
+  script.type = 'text/javascript'
+  script.src = scriptUrl
+  head.appendChild(script)
 }
 
 let cell = function (state = newBlankState(), action) {
@@ -63,7 +63,7 @@ let cell = function (state = newBlankState(), action) {
       var index = cells.findIndex(c=>c.id===action.id)
       var direction = (action.direction == 'above') ? 0:1
 
-      cells.forEach((cell)=>{cell.selected=false; return cell})
+      //cells.forEach((cell)=>{cell.selected=false; return cell})
       var nextCell = newCell(state, 'javascript')
       cells.splice(index+direction, 0, nextCell)
       var nextState = Object.assign({}, state, {cells})
@@ -72,9 +72,9 @@ let cell = function (state = newBlankState(), action) {
     case 'ADD_CELL':
       var newState = Object.assign({}, state)
       var cells = newState.cells.slice()
-      cells.forEach((cell)=>{cell.selected = false; return cell})
+      //cells.forEach((cell)=>{cell.selected = false; return cell})
       var nextCell = newCell(newState, action.cellType)
-      var nextState = Object.assign({}, state, {cells: [...cells, nextCell]})
+      var nextState = Object.assign({}, newState, {cells: [...cells, nextCell]})
       return nextState
 
     case 'DESELECT_ALL':

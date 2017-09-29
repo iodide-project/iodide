@@ -38618,9 +38618,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
       var index = cells.findIndex(c => c.id === action.id);
       var direction = action.direction == 'above' ? 0 : 1;
 
-      cells.forEach(cell => {
-        cell.selected = false;return cell;
-      });
+      //cells.forEach((cell)=>{cell.selected=false; return cell})
       var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newCell */])(state, 'javascript');
       cells.splice(index + direction, 0, nextCell);
       var nextState = Object.assign({}, state, { cells });
@@ -38629,11 +38627,9 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js_
     case 'ADD_CELL':
       var newState = Object.assign({}, state);
       var cells = newState.cells.slice();
-      cells.forEach(cell => {
-        cell.selected = false;return cell;
-      });
+      //cells.forEach((cell)=>{cell.selected = false; return cell})
       var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__blank_state_js__["b" /* newCell */])(newState, action.cellType);
-      var nextState = Object.assign({}, state, { cells: [...cells, nextCell] });
+      var nextState = Object.assign({}, newState, { cells: [...cells, nextCell] });
       return nextState;
 
     case 'DESELECT_ALL':
@@ -83776,21 +83772,22 @@ function changeSelection(elem, dir, scrollToCell = true) {
   // always scroll to cell with kbd actions
   if (elem.props.mode === 'command' && elem.props.cells.length) {
     var currentlySelected = __WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* default */].getSelectedCell(elem.props.cells);
-
-    if (currentlySelected != undefined) {
+    if (currentlySelected !== undefined) {
 
       var selectedID = currentlySelected.id;
 
       var order = elem.props.cells.findIndex(c => c.id == selectedID);
 
       var orderConditional = dir > 0 ? order < elem.props.cells.length - 1 : order > 0;
-
       if (orderConditional) {
         var nextID = elem.props.cells[order + dir].id;
         elem.props.actions.selectCell(nextID, scrollToCell);
       }
     } else {
       if (elem.props.cells.length) {
+        console.log(elem.props.cells.map(c => {
+          return c.selected;
+        }));
         elem.props.actions.selectCell(elem.props.cells[0].id, scrollToCell);
       }
     }

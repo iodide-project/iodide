@@ -77,15 +77,13 @@ function changeSelection(elem, dir, scrollToCell = true) {
   // always scroll to cell with kbd actions
   if (elem.props.mode === 'command' && elem.props.cells.length) {
     var currentlySelected = utils.getSelectedCell(elem.props.cells)
-
-    if (currentlySelected != undefined) {
+    if (currentlySelected !== undefined) {
 
       var selectedID = currentlySelected.id
       
       var order = elem.props.cells.findIndex((c)=> c.id == selectedID)
 
       var orderConditional = dir > 0 ? order < elem.props.cells.length-1 : order > 0
-
       if (orderConditional) {
         var nextID = elem.props.cells[order+dir].id
         elem.props.actions.selectCell(nextID, scrollToCell)
@@ -93,6 +91,7 @@ function changeSelection(elem, dir, scrollToCell = true) {
 
     } else {
       if (elem.props.cells.length) {
+        console.log(elem.props.cells.map((c)=>{return c.selected}))
         elem.props.actions.selectCell(elem.props.cells[0].id, scrollToCell)
       }
     }
