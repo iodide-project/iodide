@@ -22,6 +22,7 @@ class GenericCell extends React.Component {
         this.changeCellType = this.changeCellType.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
         this.enterEditMode = this.enterEditMode.bind(this)
+        this.updateInputContent = this.updateInputContent.bind(this)
         this.inputComponent = this.inputComponent.bind(this)
         this.outputComponent = this.outputComponent.bind(this)
         this.makeButtons = this.makeButtons.bind(this)
@@ -60,6 +61,11 @@ class GenericCell extends React.Component {
         this.props.actions.changeMode('edit')
         if (this.hasEditor) this.refs.editor.focus()
     }
+
+    updateInputContent(content) {
+        this.props.actions.updateInputContent(this.props.cell.id, content)
+    }
+
 
     inputComponent(){
         return <div></div>
@@ -220,13 +226,9 @@ class RunnableCell extends GenericCell {
         super(props)
         this.hasEditor = true
         // explicitly bind "this" for all methods in constructors
-        this.updateCell = this.updateCell.bind(this)
+        this.updateInputContent = this.updateInputContent.bind(this)
         this.inputComponent = this.inputComponent.bind(this)
         this.outputComponent = this.outputComponent.bind(this)
-    }
-
-    updateCell(content) {
-        this.props.actions.updateCell(this.props.cell.id, content)
     }
 
     inputComponent(){
@@ -289,7 +291,7 @@ class JavascriptCell extends RunnableCell {
             <div className="editor" onClick={this.enterEditMode}>
                 <CodeMirror ref='editor' key={'cell-'+this.props.cell.id}
                     value={this.props.cell.content}
-                    onChange={this.updateCell} 
+                    onChange={this.updateInputContent} 
                     onFocus={this.enterEditMode}
                     options={options} />
             </div>
@@ -317,7 +319,7 @@ class ExternalScriptCell extends RunnableCell {
             <div className="editor" onClick={this.enterEditMode}>
                 <CodeMirror ref='editor'
                     value={this.props.cell.content}
-                    onChange={this.updateCell} 
+                    onChange={this.updateInputContent} 
                     onFocus={this.enterEditMode}
                     options={options} />
             </div>
@@ -345,7 +347,7 @@ class RawCell extends RunnableCell {
             <div className="editor" onClick={this.enterEditMode}>
                 <CodeMirror ref='editor'
                     value={this.props.cell.content}
-                    onChange={this.updateCell} 
+                    onChange={this.updateInputContent} 
                     onFocus={this.enterEditMode}
                     options={options} />
             </div>
@@ -386,7 +388,7 @@ class MarkdownCell extends RunnableCell {
 
         var cmInstance = <CodeMirror ref='editor'
             value={this.props.cell.content}
-            onChange={this.updateCell} 
+            onChange={this.updateInputContent} 
             onFocus={this.enterEditMode}
             options={options} />
 

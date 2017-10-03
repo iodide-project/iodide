@@ -1,3 +1,4 @@
+
 let actions = {
 	importNotebook: function(newState) {
 		return {
@@ -45,7 +46,7 @@ let actions = {
 			mode: mode
 		}
 	},
-	updateCell: function(cellID, text) {
+	updateInputContent: function(cellID, text) {
 		return {
 			type: 'UPDATE_CELL',
 			id: cellID,
