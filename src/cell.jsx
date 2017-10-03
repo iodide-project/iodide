@@ -10,6 +10,10 @@ import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, Dropdown
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
 
 class GenericCell extends React.Component {
+    /* Generic cell implements a basic cell with a code mirror editor
+    in text-wrap mode (like MD or Raw), and with empty output component
+    Override input/output components for different behavior
+    */
     constructor(props) {
         super(props)
         this.state = {showControls:false}
@@ -127,6 +131,36 @@ class GenericCell extends React.Component {
         )
     }
 }
+
+
+class RawCell extends RunnableCell {
+    constructor(props) {
+        super(props)
+    }
+
+    inputComponent(){
+        var options = {
+            lineNumbers: false,
+            mode: this.props.cell.cellType,
+            lineWrapping: this.props.cell.cellType == 'markdown',
+            theme: 'eclipse'
+        }
+        return (
+            <div className="editor" onClick={this.enterEditMode}>
+                <CodeMirror ref='editor'
+                    value={this.props.cell.content}
+                    onChange={this.updateInputContent} 
+                    onFocus={this.enterEditMode}
+                    options={options} />
+            </div>
+        )
+    }
+    outputComponent(){
+        return <div></div>
+    }
+}
+
+
 
 
 class DOMCell extends GenericCell {
@@ -331,32 +365,6 @@ class ExternalScriptCell extends RunnableCell {
     }
 }
 
-class RawCell extends RunnableCell {
-    constructor(props) {
-        super(props)
-    }
-
-    inputComponent(){
-        var options = {
-            lineNumbers: false,
-            mode: this.props.cell.cellType,
-            lineWrapping: this.props.cell.cellType == 'markdown',
-            theme: 'eclipse'
-        }
-        return (
-            <div className="editor" onClick={this.enterEditMode}>
-                <CodeMirror ref='editor'
-                    value={this.props.cell.content}
-                    onChange={this.updateInputContent} 
-                    onFocus={this.enterEditMode}
-                    options={options} />
-            </div>
-        )
-    }
-    outputComponent(){
-        return <div></div>
-    }
-}
 
 
 class MarkdownCell extends RunnableCell {
