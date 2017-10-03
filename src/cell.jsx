@@ -17,7 +17,13 @@ class GenericCell extends React.Component {
     constructor(props) {
         super(props)
         this.state = {showControls:false}
-        this.hasEditor = false
+        this.hasEditor = true
+        this.editorOptions = {
+            lineNumbers: false,
+            mode: this.props.cell.cellType,
+            lineWrapping: this.props.cell.cellType == 'markdown',
+            theme: 'eclipse'
+        }
         // explicitly bind "this" for all methods in constructors
         this.renderCell = this.renderCell.bind(this)
         this.cellUp = this.cellUp.bind(this)
@@ -30,6 +36,8 @@ class GenericCell extends React.Component {
         this.inputComponent = this.inputComponent.bind(this)
         this.outputComponent = this.outputComponent.bind(this)
         this.makeButtons = this.makeButtons.bind(this)
+
+
     }
 
     renderCell(render) {
@@ -72,7 +80,15 @@ class GenericCell extends React.Component {
 
 
     inputComponent(){
-        return <div></div>
+        return (
+            <div className="editor" onClick={this.enterEditMode}>
+                <CodeMirror ref='editor'
+                    value={this.props.cell.content}
+                    onChange={this.updateInputContent} 
+                    onFocus={this.enterEditMode}
+                    options={this.editorOptions} />
+            </div>
+        )
     }
 
     outputComponent(){
@@ -133,31 +149,17 @@ class GenericCell extends React.Component {
 }
 
 
-class RawCell extends RunnableCell {
+class RawCell extends GenericCell {
     constructor(props) {
         super(props)
+        
     }
 
-    inputComponent(){
-        var options = {
-            lineNumbers: false,
-            mode: this.props.cell.cellType,
-            lineWrapping: this.props.cell.cellType == 'markdown',
-            theme: 'eclipse'
-        }
-        return (
-            <div className="editor" onClick={this.enterEditMode}>
-                <CodeMirror ref='editor'
-                    value={this.props.cell.content}
-                    onChange={this.updateInputContent} 
-                    onFocus={this.enterEditMode}
-                    options={options} />
-            </div>
-        )
-    }
-    outputComponent(){
-        return <div></div>
-    }
+    // inputComponent(){
+    // }
+    // outputComponent(){
+    //     return <div></div>
+    // }
 }
 
 
@@ -172,6 +174,7 @@ class DOMCell extends GenericCell {
         // explicitly bind "this" for all methods in constructors
         this.changeElementType = this.changeElementType.bind(this)
         this.changeElementID = this.changeElementID.bind(this)
+        this.hasEditor = false
     }
 
     changeElementType(event) {
@@ -183,6 +186,13 @@ class DOMCell extends GenericCell {
         var elementID = event.target.value.trim()
         this.props.actions.changeDOMElementID(this.props.cell.id, elementID)
     }
+
+// need to Override enterEditMode for DOMCell
+//     enterEditMode(){
+//         this.props.actions.selectCell(this.props.cell.id)
+//         this.props.actions.changeMode('edit')
+//         if (this.hasEditor) this.refs.editor.focus()
+//     }
 
     render() {
         var elem
