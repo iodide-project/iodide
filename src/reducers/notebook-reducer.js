@@ -38,16 +38,16 @@ let notebook = function (state=newNotebook(), action) {
       var title
       if (action.title!==undefined) title = action.title
       else title = state.title
-      localStorage.setItem(title, JSON.stringify(outputState))
+      window.localStorage.setItem(title, JSON.stringify(outputState))
       return Object.assign({}, state, {lastSaved})
 
     case 'LOAD_NOTEBOOK':
-      var loadedState = JSON.parse(localStorage.getItem(action.title))
+      var loadedState = JSON.parse(window.localStorage.getItem(action.title))
       return Object.assign({}, loadedState)
 
     case 'DELETE_NOTEBOOK':
       var title = action.title
-      if (localStorage.hasOwnProperty(title)) localStorage.removeItem(title)
+      if (window.localStorage.hasOwnProperty(title)) window.localStorage.removeItem(title)
       if (title === state.title) {
         var newState = Object.assign({}, newNotebook())
       } else {
