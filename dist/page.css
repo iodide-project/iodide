@@ -10,13 +10,13 @@ table {
     width: 100%;
 }
 
-    table th, table td {
-        padding: 6px 13px;
-        border: 1px solid #ddd;
-    }
+table th, table td {
+	padding: 6px 13px;
+	border: 1px solid #ddd;
+}
 
-    table tr:nth-child(2n) {
-        background-color: #f8f8f8;
+table tr:nth-child(2n) {
+	background-color: #f8f8f8;
 }
 
 
@@ -56,15 +56,14 @@ h1.page-title span {
 }
 
 div#page {
-	width:1000px;
-	margin:auto;
+	/*! width:1000px; */
+	/*! margin:auto; */
 
 }
 
 div.cells {
 	float:left;
-	width: 700px;
-
+  width: 100%;
 }
 
 div.declared-variables {
@@ -76,26 +75,44 @@ div.declared-variables {
 div.cell-container {
     padding-top: 5px;
     padding-bottom: 5px;
+	padding-right: 5px;
     margin-top: 15px;
     margin-bottom: 20px;
-    width: 1100px;
+	  margin-left: 40px;
+	  margin-right: 40px;
+/* 	  max-width: 90%; */
     display: flex;
-    justify-content: space-around;
+	  flex-direction: column;
     outline: #f4f4f4 1px solid;
 }
 
-div.cell-execution-status{	
+div.cell-row{
+	display: flex;
+}
+
+div.editor {
+	flex-grow: 1;
+/* 	flex-basis:  fill-available; */
+/* 	max-width: fill-available; */
+	max-width: 90%;
+/* 	overflow: scroll; */
+}
+
+div.cell-status{	
 	font-family: monospace;
 	white-space: pre;
 	padding-right:8px;
-	width: 80px;
+	flex-basis: 70px;
+	flex-shrink: 0;
+	flex-grow: 0;
 	text-align: right;
 	color: #aaa
 }
 
-div.cell-execution-status.markdown,
-div.cell-execution-status.raw {
-	visibility: hidden 
+div.cell-status.markdown,
+div.cell-status.raw {
+	visibility: hidden;
+	height: 0px
 }
 
 div.left-of-cell {
@@ -103,11 +120,7 @@ div.left-of-cell {
 }
 
 div.cell {
-	width:850px;
-}
-
-div.cell.unrendered {
-/* 	outline: 1px solid #ddd */
+/* 	width:850px; */
 }
 
 div.cell-controls {
@@ -144,10 +157,6 @@ div.ReactCodeMirror--focused {
 div.selected-cell.command-mode {
 	outline: 2px solid #ccc;
 }
-
-
-
-
 
 span.display-cell-title {
 	display:inline-block;
