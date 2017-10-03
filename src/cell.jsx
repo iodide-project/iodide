@@ -21,7 +21,9 @@ class GenericCell extends React.Component {
         this.deleteCell = this.deleteCell.bind(this)
         this.changeCellType = this.changeCellType.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
-        this.editCell = this.editCell.bind(this)
+        this.enterEditMode = this.enterEditMode.bind(this)
+        this.inputComponent = this.inputComponent.bind(this)
+        this.outputComponent = this.outputComponent.bind(this)
         this.makeButtons = this.makeButtons.bind(this)
     }
 
@@ -53,10 +55,18 @@ class GenericCell extends React.Component {
         }
     }
 
-    editCell(){
+    enterEditMode(){
         this.props.actions.selectCell(this.props.cell.id)
         this.props.actions.changeMode('edit')
         if (this.hasEditor) this.refs.editor.focus()
+    }
+
+    inputComponent(){
+        return <div></div>
+    }
+
+    outputComponent(){
+        return <div></div>
     }
 
     makeButtons(){
@@ -84,6 +94,32 @@ class GenericCell extends React.Component {
     }
 
     render() {
+        var cellContainerStyle = ((this.props.display ? '' : 'hidden-cell ') +
+            (this.props.cell.selected ? 'selected-cell ' : ' ') + 
+            (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')
+            )
+        return (
+            <div id={'cell-'+ this.props.cell.id}
+                className={'cell-container '+ cellContainerStyle}
+                onMouseDown={this.handleCellClick} >
+                <div className="cell-row">
+                    <div id = {"cell-input-status-"+ this.props.cell.id}
+                        className ={"cell-status cell-input " + this.props.cell.cellType}>
+                        [{this.props.cell.executionStatus}]
+                    </div>
+                    {this.inputComponent()}
+                    
+                </div>
+                <div className='cell-row'>
+                    <div id = {"cell-output-status-"+ this.props.cell.id}
+                        className ={"cell-status cell-output " + this.props.cell.cellType}>
+                        {/* eventually we may wish to add ouptut status here, a la jupyter */}
+                    </div>
+                    {this.outputComponent()}
+                </div>
+                {this.makeButtons()}
+            </div>
+        )
     }
 }
 
@@ -251,11 +287,11 @@ class JavascriptCell extends RunnableCell {
             theme: 'eclipse'
         }
         return (
-            <div className="editor" onClick={this.editCell}>
+            <div className="editor" onClick={this.enterEditMode}>
                 <CodeMirror ref='editor' key={'cell-'+this.props.cell.id}
                     value={this.props.cell.content}
                     onChange={this.updateCell} 
-                    onFocus={this.editCell}
+                    onFocus={this.enterEditMode}
                     options={options} />
             </div>
         )
@@ -279,11 +315,11 @@ class ExternalScriptCell extends RunnableCell {
             theme: 'eclipse'
         }
         return (
-            <div className="editor" onClick={this.editCell}>
+            <div className="editor" onClick={this.enterEditMode}>
                 <CodeMirror ref='editor'
                     value={this.props.cell.content}
                     onChange={this.updateCell} 
-                    onFocus={this.editCell}
+                    onFocus={this.enterEditMode}
                     options={options} />
             </div>
         )
@@ -307,11 +343,11 @@ class RawCell extends RunnableCell {
             theme: 'eclipse'
         }
         return (
-            <div className="editor" onClick={this.editCell}>
+            <div className="editor" onClick={this.enterEditMode}>
                 <CodeMirror ref='editor'
                     value={this.props.cell.content}
                     onChange={this.updateCell} 
-                    onFocus={this.editCell}
+                    onFocus={this.enterEditMode}
                     options={options} />
             </div>
         )
@@ -325,11 +361,11 @@ class RawCell extends RunnableCell {
 class MarkdownCell extends RunnableCell {
     constructor(props){
         super(props)
-        this.editCell = this.editCell.bind(this)
+        this.enterEditMode = this.enterEditMode.bind(this)
     }
 
     editCell(){
-        super.editCell()
+        super.enterEditMode()
         this.props.actions.markCellNotRendered(this.props.cell.id)
     }
 
@@ -352,7 +388,7 @@ class MarkdownCell extends RunnableCell {
         var cmInstance = <CodeMirror ref='editor'
             value={this.props.cell.content}
             onChange={this.updateCell} 
-            onFocus={this.editCell}
+            onFocus={this.enterEditMode}
             options={options} />
 
         if (this.props.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode == 'edit') {
@@ -363,7 +399,7 @@ class MarkdownCell extends RunnableCell {
             mainElem = (
                 <div className="editor"
                     style = {{display: editorDisplayStyle}}
-                    onClick={this.editCell}>
+                    onClick={this.enterEditMode}>
                     {cmInstance}
                 </div>
             )
@@ -378,7 +414,7 @@ class MarkdownCell extends RunnableCell {
             !(this.props.cell.selected
                 && this.props.pageMode == 'edit')
         ) ? "block" : "none")
-        return <div onDoubleClick={this.editCell}
+        return <div onDoubleClick={this.enterEditMode}
             style = {{display: resultDisplayStyle}}
             dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
     }
