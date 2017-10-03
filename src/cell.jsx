@@ -22,8 +22,6 @@ class GenericCell extends React.Component {
         this.changeCellType = this.changeCellType.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
         this.editCell = this.editCell.bind(this)
-        // this.showControls = this.showControls.bind(this)
-        // this.hideControls = this.hideControls.bind(this)
         this.makeButtons = this.makeButtons.bind(this)
     }
 
@@ -56,14 +54,10 @@ class GenericCell extends React.Component {
     }
 
     editCell(){
-        // this.props.actions.renderCell(this.props.cell.id, false)
         this.props.actions.selectCell(this.props.cell.id)
         this.props.actions.changeMode('edit')
         if (this.hasEditor) this.refs.editor.focus()
     }
-
-    // showControls(){this.setState({showControls:true})}
-    // hideControls(){this.setState({showControls:false})}
 
     makeButtons(){
         return (
