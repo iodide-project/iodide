@@ -288,18 +288,19 @@ div.dom-cell-error {
 }
 
 div.side-pane {
+	z-index: 200;
 	position: fixed;
 	right:0;
 	top:40px;
 	border:2px solid gray;
 	border-right:none;
-	width:350px;
+	width:75%;
 	overflow: scroll;
 	height:100%;
-	background-color:rgba(255,255,255,.9);
+	background-color:rgba(255,255,255);
 }
 
-i.close-side-pane {
+
 	padding:5px;
 }
 
