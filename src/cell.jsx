@@ -148,7 +148,6 @@ class GenericCell extends React.Component {
     }
 }
 
-
 class RawCell extends GenericCell {
     constructor(props) {
         super(props)
@@ -156,62 +155,11 @@ class RawCell extends GenericCell {
     }
 }
 
-
-
-
-
 class RunnableCell extends GenericCell {
     constructor(props){
         super(props)
-        this.hasEditor = true
-        // explicitly bind "this" for all methods in constructors
-        this.updateInputContent = this.updateInputContent.bind(this)
-        this.inputComponent = this.inputComponent.bind(this)
-        this.outputComponent = this.outputComponent.bind(this)
     }
 
-    inputComponent(){
-        return <div></div>
-    }
-
-    outputComponent(){
-        return <div></div>
-    }
-
-    render() {
-        var cellContainerStyle = ((this.props.display ? '' : 'hidden-cell ') +
-            (this.props.cell.selected ? 'selected-cell ' : ' ') + 
-            (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')
-            )
-        return (
-            <div id={'cell-'+ this.props.cell.id}
-                className={'cell-container '+ cellContainerStyle}
-                onMouseDown={this.handleCellClick} >
-                <div style={{display:"none"}}>
-                    <i onClick={this.deleteCell}
-                        className={"fa fa-times " + (this.state.showControls ? 'controls-visible' : 'controls-invisible')}
-                        aria-hidden="true">
-                    </i>
-                </div>
-                <div className="cell-row">
-                    <div id = {"cell-input-status-"+ this.props.cell.id}
-                        className ={"cell-status cell-input " + this.props.cell.cellType}>
-                        [{this.props.cell.executionStatus}]
-                    </div>
-                    {this.inputComponent()}
-                    
-                </div>
-                <div className='cell-row'>
-                    <div id = {"cell-output-status-"+ this.props.cell.id}
-                        className ={"cell-status cell-output " + this.props.cell.cellType}>
-                        {/* eventually we may wish to add ouptut status here, a la jupyter */}
-                    </div>
-                    {this.outputComponent()}
-                </div>
-                {this.makeButtons()}
-            </div>
-        )
-    }
 }
 
 class JavascriptCell extends RunnableCell {
