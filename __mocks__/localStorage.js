@@ -8,7 +8,6 @@ export default {
         return localStorage[key];
     },
     removeItem(key) {
-        console.log(localStorage)
         delete localStorage[key]
         return localStorage
     },
