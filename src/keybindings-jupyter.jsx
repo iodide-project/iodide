@@ -169,7 +169,7 @@ var EDIT_MODE = [['enter', 'return'], function(e){
     var currentlySelected = getSelectedCell(this.props.cells)
     if (currentlySelected != undefined) {
         var selectedID = currentlySelected.id
-        this.refs['cell'+selectedID].editCell()
+        this.refs['cell'+selectedID].enterEditMode()
       }
     }
 ]
