@@ -108,7 +108,6 @@ class GenericCell extends React.Component {
                         [{this.props.cell.executionStatus}]
                     </div>
                     {this.inputComponent()}
-                    
                 </div>
                 <div className='cell-row'>
                     <div id = {"cell-output-status-"+ this.props.cell.id}
@@ -364,7 +363,7 @@ class MarkdownCell extends RunnableCell {
         this.enterEditMode = this.enterEditMode.bind(this)
     }
 
-    editCell(){
+    enterEditMode(){
         super.enterEditMode()
         this.props.actions.markCellNotRendered(this.props.cell.id)
     }
