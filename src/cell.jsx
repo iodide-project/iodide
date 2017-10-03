@@ -154,115 +154,10 @@ class RawCell extends GenericCell {
         super(props)
         
     }
-
-    // inputComponent(){
-    // }
-    // outputComponent(){
-    //     return <div></div>
-    // }
 }
 
 
 
-
-class DOMCell extends GenericCell {
-
-    constructor(props) {
-        super(props)
-        if (!props.cell.hasOwnProperty('elementType')) props.actions.changeElementType(props.cell.id, 'div')
-        if (!props.cell.hasOwnProperty('domElementID')) props.actions.changeDOMElementID(props.cell.id, 'dom-cell-'+props.cell.id)
-        // explicitly bind "this" for all methods in constructors
-        this.changeElementType = this.changeElementType.bind(this)
-        this.changeElementID = this.changeElementID.bind(this)
-        this.hasEditor = false
-    }
-
-    changeElementType(event) {
-        var elementType = event.target.value.trim()
-        this.props.actions.changeElementType(this.props.cell.id, elementType)
-    }
-
-    changeElementID(event) {
-        var elementID = event.target.value.trim()
-        this.props.actions.changeDOMElementID(this.props.cell.id, elementID)
-    }
-
-// need to Override enterEditMode for DOMCell
-//     enterEditMode(){
-//         this.props.actions.selectCell(this.props.cell.id)
-//         this.props.actions.changeMode('edit')
-//         if (this.hasEditor) this.refs.editor.focus()
-//     }
-
-    render() {
-        var elem
-        if (this.props.cell.elementType.length) elem = createElement(this.props.cell.elementType, {id: this.props.cell.domElementID})
-        else {
-            elem = <div className='dom-cell-error'>please add an elem type</div>
-        }
-        return (
-            <div id={'cell-'+ this.props.cell.id}
-                className={'cell-container ' + (this.props.display ? '' : 'hidden-cell') +
-                    (this.props.cell.selected ? 'selected-cell ' : ' ')}>
-                <div 
-                    className={'cell dom-cell '  + 
-                        (this.props.cell.selected &&
-                            this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
-                    onClick={this.handleCellClick}>
-
-                    <div className='dom-cell-elementType' 
-                        style={{display: this.props.cell.selected ? 'inherit' : 'none'}}>
-                        
-                        <Form className='dom-inputs' inline>
-                            <FormGroup bsSize='xsmall' controlId={'dom-'+this.props.cell.id}>
-                                <ControlLabel className='right-spacer'>tag</ControlLabel>
-                                  <FormControl className='right-spacer' type="text"
-                                    onChange={this.changeElementType}
-                                    value={this.props.cell.elementType}
-                                    placeholder="div, svg, etc." />
-                                  <ControlLabel className='right-spacer'>css ID</ControlLabel>
-                                  <FormControl type="text" onChange={this.changeElementID}
-                                    value={this.props.cell.domElementID} placeholder="id"  />
-                            </FormGroup>
-                        </Form>
-                    </div>
-                    {elem}
-                </div>
-                {this.makeButtons()}
-            </div>
-        )
-    }
-}
-
-
-class HistoryCell extends GenericCell {
-    constructor(props) {
-        super(props)
-        this.state = {showControls:false}
-    }
-
-    render() {
-        var options = {
-            lineNumbers: true,
-            readOnly: true,
-            mode: this.props.cell.cellType,
-            theme: 'eclipse'
-        }
-        var mainElem = <CodeMirror ref='editor'
-                           value={this.props.cell.content}
-                           options={options} />
-
-        return (
-            <div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
-                <div className='cell history-cell'>
-                    <div className='history-content'>{mainElem}</div>
-                    <div className='history-date'>{this.props.cell.lastRan.toUTCString()}</div>
-                </div>
-                <div className={'cell-controls'}></div>
-            </div>
-            )
-    }
-}
 
 
 class RunnableCell extends GenericCell {
@@ -438,6 +333,108 @@ class MarkdownCell extends RunnableCell {
             dangerouslySetInnerHTML={{__html: this.props.cell.value}}></div>
     }
 }
+
+
+
+class DOMCell extends GenericCell {
+
+    constructor(props) {
+        super(props)
+        if (!props.cell.hasOwnProperty('elementType')) props.actions.changeElementType(props.cell.id, 'div')
+        if (!props.cell.hasOwnProperty('domElementID')) props.actions.changeDOMElementID(props.cell.id, 'dom-cell-'+props.cell.id)
+        // explicitly bind "this" for all methods in constructors
+        this.changeElementType = this.changeElementType.bind(this)
+        this.changeElementID = this.changeElementID.bind(this)
+        this.hasEditor = false
+    }
+
+    changeElementType(event) {
+        var elementType = event.target.value.trim()
+        this.props.actions.changeElementType(this.props.cell.id, elementType)
+    }
+
+    changeElementID(event) {
+        var elementID = event.target.value.trim()
+        this.props.actions.changeDOMElementID(this.props.cell.id, elementID)
+    }
+
+// need to Override enterEditMode for DOMCell
+//     enterEditMode(){
+//         this.props.actions.selectCell(this.props.cell.id)
+//         this.props.actions.changeMode('edit')
+//         if (this.hasEditor) this.refs.editor.focus()
+//     }
+
+    render() {
+        var elem
+        if (this.props.cell.elementType.length) elem = createElement(this.props.cell.elementType, {id: this.props.cell.domElementID})
+        else {
+            elem = <div className='dom-cell-error'>please add an elem type</div>
+        }
+        return (
+            <div id={'cell-'+ this.props.cell.id}
+                className={'cell-container ' + (this.props.display ? '' : 'hidden-cell') +
+                    (this.props.cell.selected ? 'selected-cell ' : ' ')}>
+                <div 
+                    className={'cell dom-cell '  + 
+                        (this.props.cell.selected &&
+                            this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
+                    onClick={this.handleCellClick}>
+
+                    <div className='dom-cell-elementType' 
+                        style={{display: this.props.cell.selected ? 'inherit' : 'none'}}>
+                        
+                        <Form className='dom-inputs' inline>
+                            <FormGroup bsSize='xsmall' controlId={'dom-'+this.props.cell.id}>
+                                <ControlLabel className='right-spacer'>tag</ControlLabel>
+                                  <FormControl className='right-spacer' type="text"
+                                    onChange={this.changeElementType}
+                                    value={this.props.cell.elementType}
+                                    placeholder="div, svg, etc." />
+                                  <ControlLabel className='right-spacer'>css ID</ControlLabel>
+                                  <FormControl type="text" onChange={this.changeElementID}
+                                    value={this.props.cell.domElementID} placeholder="id"  />
+                            </FormGroup>
+                        </Form>
+                    </div>
+                    {elem}
+                </div>
+                {this.makeButtons()}
+            </div>
+        )
+    }
+}
+
+
+class HistoryCell extends GenericCell {
+    constructor(props) {
+        super(props)
+        this.state = {showControls:false}
+    }
+
+    render() {
+        var options = {
+            lineNumbers: true,
+            readOnly: true,
+            mode: this.props.cell.cellType,
+            theme: 'eclipse'
+        }
+        var mainElem = <CodeMirror ref='editor'
+                           value={this.props.cell.content}
+                           options={options} />
+
+        return (
+            <div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
+                <div className='cell history-cell'>
+                    <div className='history-content'>{mainElem}</div>
+                    <div className='history-date'>{this.props.cell.lastRan.toUTCString()}</div>
+                </div>
+                <div className={'cell-controls'}></div>
+            </div>
+            )
+    }
+}
+
 
 
 function jsReturnValue(cell) {
