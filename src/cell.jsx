@@ -21,7 +21,7 @@ class GenericCell extends React.Component {
         this.editorOptions = {
             lineNumbers: false,
             mode: this.props.cell.cellType,
-            lineWrapping: this.props.cell.cellType == 'markdown',
+            lineWrapping: false,
             theme: 'eclipse'
         }
         // explicitly bind "this" for all methods in constructors
@@ -155,34 +155,11 @@ class RawCell extends GenericCell {
     }
 }
 
-class RunnableCell extends GenericCell {
+
+class JavascriptCell extends GenericCell {
     constructor(props){
         super(props)
-    }
-
-}
-
-class JavascriptCell extends RunnableCell {
-    constructor(props){
-        super(props)
-    }
-
-    inputComponent(){
-        var options = {
-            lineNumbers: true,
-            mode: this.props.cell.cellType,
-            lineWrapping: this.props.cell.cellType == 'markdown',
-            theme: 'eclipse'
-        }
-        return (
-            <div className="editor" onClick={this.enterEditMode}>
-                <CodeMirror ref='editor' key={'cell-'+this.props.cell.id}
-                    value={this.props.cell.content}
-                    onChange={this.updateInputContent} 
-                    onFocus={this.enterEditMode}
-                    options={options} />
-            </div>
-        )
+        this.editorOptions.lineNumbers = true
     }
 
     outputComponent(){
@@ -190,7 +167,7 @@ class JavascriptCell extends RunnableCell {
     }
 }
 
-class ExternalScriptCell extends RunnableCell {
+class ExternalScriptCell extends GenericCell {
     constructor(props) {
         super(props)
     }
@@ -220,7 +197,7 @@ class ExternalScriptCell extends RunnableCell {
 
 
 
-class MarkdownCell extends RunnableCell {
+class MarkdownCell extends GenericCell {
     constructor(props){
         super(props)
         this.enterEditMode = this.enterEditMode.bind(this)
