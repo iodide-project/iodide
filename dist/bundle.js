@@ -38683,7 +38683,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_
       var direction = action.direction == 'above' ? 0 : 1;
 
       //cells.forEach((cell)=>{cell.selected=false; return cell})
-      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["b" /* newCell */])(state, 'javascript');
+      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["b" /* newCell */])(state.cells, 'javascript');
       cells.splice(index + direction, 0, nextCell);
       var nextState = Object.assign({}, state, { cells });
       return nextState;
@@ -38692,7 +38692,7 @@ let cell = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_
       var newState = Object.assign({}, state);
       var cells = newState.cells.slice();
       //cells.forEach((cell)=>{cell.selected = false; return cell})
-      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["b" /* newCell */])(newState, action.cellType);
+      var nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["b" /* newCell */])(newState.cells, action.cellType);
       var nextState = Object.assign({}, newState, { cells: [...cells, nextCell] });
       return nextState;
 
