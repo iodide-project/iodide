@@ -106,7 +106,8 @@ div.cell-status{
 }
 
 div.cell-status.markdown,
-div.cell-status.raw {
+div.cell-status.raw,
+div.cell-status.dom {
 	visibility: hidden;
 	height: 0px
 }

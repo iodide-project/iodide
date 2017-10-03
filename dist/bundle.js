@@ -61593,8 +61593,8 @@ class JavascriptCell extends GenericCell {
     constructor(props) {
         super(props);
         this.editorOptions.lineNumbers = true;
+        this.outputComponent = this.outputComponent.bind(this);
     }
-
     outputComponent() {
         return jsReturnValue(this.props.cell);
     }
@@ -61604,34 +61604,15 @@ class ExternalScriptCell extends GenericCell {
     constructor(props) {
         super(props);
     }
-
-    inputComponent() {
-        var options = {
-            lineNumbers: false,
-            mode: this.props.cell.cellType,
-            lineWrapping: this.props.cell.cellType == 'markdown',
-            theme: 'eclipse'
-        };
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'div',
-            { className: 'editor', onClick: this.enterEditMode },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
-                value: this.props.cell.content,
-                onChange: this.updateInputContent,
-                onFocus: this.enterEditMode,
-                options: options })
-        );
-    }
-
-    outputComponent() {
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
-    }
 }
 
 class MarkdownCell extends GenericCell {
     constructor(props) {
         super(props);
+        this.editorOptions.lineWrapping = true;
         this.enterEditMode = this.enterEditMode.bind(this);
+        this.inputComponent = this.inputComponent.bind(this);
+        this.outputComponent = this.outputComponent.bind(this);
     }
 
     enterEditMode() {
@@ -61644,32 +61625,24 @@ class MarkdownCell extends GenericCell {
         // or if !this.props.cell.rendered
         var editorDisplayStyle = !this.props.cell.rendered || this.props.cell.selected && this.props.pageMode == 'edit' ? "block" : "none";
 
-        var options = {
-            lineNumbers: false,
-            mode: this.props.cell.cellType,
-            lineWrapping: this.props.cell.cellType == 'markdown',
-            theme: 'eclipse'
-        };
-
         var cmInstance = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
             value: this.props.cell.content,
             onChange: this.updateInputContent,
             onFocus: this.enterEditMode,
-            options: options });
+            options: this.editorOptions });
 
-        if (this.props.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode == 'edit') {
+        if (this.props.cell.selected && this.refs.hasOwnProperty('editor') // FIXME-- is this needed?
+        && this.props.pageMode == 'edit') {
             this.refs.editor.getCodeMirror().refresh();
             this.refs.editor.focus();
         }
-        var mainElem;
-        mainElem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'editor',
                 style: { display: editorDisplayStyle },
                 onClick: this.enterEditMode },
             cmInstance
         );
-        return mainElem;
     }
 
     outputComponent() {
@@ -61704,64 +61677,57 @@ class DOMCell extends GenericCell {
         this.props.actions.changeDOMElementID(this.props.cell.id, elementID);
     }
 
-    // need to Override enterEditMode for DOMCell
+    // FIXME!! need to Override enterEditMode for DOMCell
     //     enterEditMode(){
     //         this.props.actions.selectCell(this.props.cell.id)
     //         this.props.actions.changeMode('edit')
     //         if (this.hasEditor) this.refs.editor.focus()
     //     }
 
-    render() {
+    inputComponent() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'dom-cell-elementType',
+                style: { display: this.props.cell.selected ? 'inherit' : 'none' } },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                __WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["f" /* Form */],
+                { className: 'dom-inputs', inline: true },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["h" /* FormGroup */],
+                    { bsSize: 'xsmall', controlId: 'dom-' + this.props.cell.id },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        __WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["c" /* ControlLabel */],
+                        { className: 'right-spacer' },
+                        'tag'
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["g" /* FormControl */], { className: 'right-spacer', type: 'text',
+                        onChange: this.changeElementType,
+                        value: this.props.cell.elementType,
+                        placeholder: 'div, svg, etc.' }),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        __WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["c" /* ControlLabel */],
+                        { className: 'right-spacer' },
+                        'css ID'
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["g" /* FormControl */], { type: 'text', onChange: this.changeElementID,
+                        value: this.props.cell.domElementID, placeholder: 'id' })
+                )
+            )
+        );
+    }
+
+    outputComponent() {
         var elem;
-        if (this.props.cell.elementType.length) elem = Object(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])(this.props.cell.elementType, { id: this.props.cell.domElementID });else {
+        if (this.props.cell.elementType.length) {
+            elem = Object(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])(this.props.cell.elementType, { id: this.props.cell.domElementID });
+        } else {
             elem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: 'dom-cell-error' },
                 'please add an elem type'
             );
         }
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'div',
-            { id: 'cell-' + this.props.cell.id,
-                className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') + (this.props.cell.selected ? 'selected-cell ' : ' ') },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                {
-                    className: 'cell dom-cell ' + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode '),
-                    onClick: this.handleCellClick },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { className: 'dom-cell-elementType',
-                        style: { display: this.props.cell.selected ? 'inherit' : 'none' } },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        __WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["f" /* Form */],
-                        { className: 'dom-inputs', inline: true },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            __WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["h" /* FormGroup */],
-                            { bsSize: 'xsmall', controlId: 'dom-' + this.props.cell.id },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                __WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["c" /* ControlLabel */],
-                                { className: 'right-spacer' },
-                                'tag'
-                            ),
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["g" /* FormControl */], { className: 'right-spacer', type: 'text',
-                                onChange: this.changeElementType,
-                                value: this.props.cell.elementType,
-                                placeholder: 'div, svg, etc.' }),
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                __WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["c" /* ControlLabel */],
-                                { className: 'right-spacer' },
-                                'css ID'
-                            ),
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_react_bootstrap__["g" /* FormControl */], { type: 'text', onChange: this.changeElementID,
-                                value: this.props.cell.domElementID, placeholder: 'id' })
-                        )
-                    )
-                ),
-                elem
-            ),
-            this.makeButtons()
-        );
+        return elem;
     }
 }
 

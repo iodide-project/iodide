@@ -101,18 +101,17 @@ class GenericCell extends React.Component {
                 (this.props.cell.selected &&
                             this.props.pageMode == 'command') ? 'controls-visible' : 'controls-invisible')}>
                 <ButtonToolbar >
-
                     <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
                     <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
                     <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
                       <DropdownButton bsSize="xsmall" id={'cell-choice-' + this.props.id}
                         bsStyle='default' title={this.props.cell.cellType}
                         onSelect={this.changeCellType} >
-                        <MenuItem   eventKey={"javascript"} >JS</MenuItem>
-                        <MenuItem   eventKey={'markdown'} >MD</MenuItem>
-                        <MenuItem   eventKey={'raw'} >Raw</MenuItem>
-                        <MenuItem   eventKey={'dom'} >DOM</MenuItem>
-                        <MenuItem   eventKey={'external scripts'} >External Script</MenuItem>
+                        <MenuItem eventKey={"javascript"} >JS</MenuItem>
+                        <MenuItem eventKey={'markdown'} >MD</MenuItem>
+                        <MenuItem eventKey={'raw'} >Raw</MenuItem>
+                        <MenuItem eventKey={'dom'} >DOM</MenuItem>
+                        <MenuItem eventKey={'external scripts'} >External Script</MenuItem>
                     </ DropdownButton>
                 </ ButtonToolbar>
             </div>
@@ -148,10 +147,10 @@ class GenericCell extends React.Component {
     }
 }
 
+
 class RawCell extends GenericCell {
     constructor(props) {
         super(props)
-        
     }
 }
 
@@ -160,47 +159,28 @@ class JavascriptCell extends GenericCell {
     constructor(props){
         super(props)
         this.editorOptions.lineNumbers = true
+        this.outputComponent = this.outputComponent.bind(this)
     }
-
     outputComponent(){
         return jsReturnValue(this.props.cell)
     }
 }
 
+
 class ExternalScriptCell extends GenericCell {
     constructor(props) {
         super(props)
     }
-
-    inputComponent(){
-        var options = {
-            lineNumbers: false,
-            mode: this.props.cell.cellType,
-            lineWrapping: this.props.cell.cellType == 'markdown',
-            theme: 'eclipse'
-        }
-        return (
-            <div className="editor" onClick={this.enterEditMode}>
-                <CodeMirror ref='editor'
-                    value={this.props.cell.content}
-                    onChange={this.updateInputContent} 
-                    onFocus={this.enterEditMode}
-                    options={options} />
-            </div>
-        )
-    }
-
-    outputComponent(){
-        return <div></div>
-    }
 }
-
 
 
 class MarkdownCell extends GenericCell {
     constructor(props){
         super(props)
+        this.editorOptions.lineWrapping = true
         this.enterEditMode = this.enterEditMode.bind(this)
+        this.inputComponent = this.inputComponent.bind(this)
+        this.outputComponent = this.outputComponent.bind(this)
     }
 
     enterEditMode(){
@@ -217,32 +197,25 @@ class MarkdownCell extends GenericCell {
                 && this.props.pageMode == 'edit')
         ) ? "block" : "none"
 
-        var options = {
-            lineNumbers: false,
-            mode: this.props.cell.cellType,
-            lineWrapping: this.props.cell.cellType == 'markdown',
-            theme: 'eclipse'
-        }
-
         var cmInstance = <CodeMirror ref='editor'
             value={this.props.cell.content}
             onChange={this.updateInputContent} 
             onFocus={this.enterEditMode}
-            options={options} />
+            options={this.editorOptions} />
 
-        if (this.props.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode == 'edit') {
+        if (this.props.cell.selected
+            && this.refs.hasOwnProperty('editor') // FIXME-- is this needed?
+            && this.props.pageMode == 'edit') {
             this.refs.editor.getCodeMirror().refresh()
             this.refs.editor.focus()
         }
-        var mainElem
-            mainElem = (
-                <div className="editor"
-                    style = {{display: editorDisplayStyle}}
-                    onClick={this.enterEditMode}>
-                    {cmInstance}
-                </div>
-            )
-        return mainElem
+        return (
+            <div className="editor"
+                style = {{display: editorDisplayStyle}}
+                onClick={this.enterEditMode}>
+                {cmInstance}
+            </div>
+        )
     }
 
     outputComponent() {
@@ -283,50 +256,41 @@ class DOMCell extends GenericCell {
         this.props.actions.changeDOMElementID(this.props.cell.id, elementID)
     }
 
-// need to Override enterEditMode for DOMCell
+// FIXME!! need to Override enterEditMode for DOMCell
 //     enterEditMode(){
 //         this.props.actions.selectCell(this.props.cell.id)
 //         this.props.actions.changeMode('edit')
 //         if (this.hasEditor) this.refs.editor.focus()
 //     }
 
-    render() {
-        var elem
-        if (this.props.cell.elementType.length) elem = createElement(this.props.cell.elementType, {id: this.props.cell.domElementID})
-        else {
-            elem = <div className='dom-cell-error'>please add an elem type</div>
-        }
+    inputComponent(){
         return (
-            <div id={'cell-'+ this.props.cell.id}
-                className={'cell-container ' + (this.props.display ? '' : 'hidden-cell') +
-                    (this.props.cell.selected ? 'selected-cell ' : ' ')}>
-                <div 
-                    className={'cell dom-cell '  + 
-                        (this.props.cell.selected &&
-                            this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')}
-                    onClick={this.handleCellClick}>
-
-                    <div className='dom-cell-elementType' 
-                        style={{display: this.props.cell.selected ? 'inherit' : 'none'}}>
-                        
-                        <Form className='dom-inputs' inline>
-                            <FormGroup bsSize='xsmall' controlId={'dom-'+this.props.cell.id}>
-                                <ControlLabel className='right-spacer'>tag</ControlLabel>
-                                  <FormControl className='right-spacer' type="text"
-                                    onChange={this.changeElementType}
-                                    value={this.props.cell.elementType}
-                                    placeholder="div, svg, etc." />
-                                  <ControlLabel className='right-spacer'>css ID</ControlLabel>
-                                  <FormControl type="text" onChange={this.changeElementID}
-                                    value={this.props.cell.domElementID} placeholder="id"  />
-                            </FormGroup>
-                        </Form>
-                    </div>
-                    {elem}
-                </div>
-                {this.makeButtons()}
+            <div className='dom-cell-elementType' 
+                style={{display: this.props.cell.selected ? 'inherit' : 'none'}}>
+                <Form className='dom-inputs' inline>
+                    <FormGroup bsSize='xsmall' controlId={'dom-'+this.props.cell.id}>
+                        <ControlLabel className='right-spacer'>tag</ControlLabel>
+                          <FormControl className='right-spacer' type="text"
+                            onChange={this.changeElementType}
+                            value={this.props.cell.elementType}
+                            placeholder="div, svg, etc." />
+                          <ControlLabel className='right-spacer'>css ID</ControlLabel>
+                          <FormControl type="text" onChange={this.changeElementID}
+                            value={this.props.cell.domElementID} placeholder="id"  />
+                    </FormGroup>
+                </Form>
             </div>
         )
+    }
+
+    outputComponent(){
+        var elem
+        if (this.props.cell.elementType.length) {
+            elem = createElement(this.props.cell.elementType, {id: this.props.cell.domElementID})
+        } else {
+            elem = <div className='dom-cell-error'>please add an elem type</div>
+        }
+        return elem
     }
 }
 
