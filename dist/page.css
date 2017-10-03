@@ -73,17 +73,16 @@ div.declared-variables {
 }
 
 div.cell-container {
-    padding-top: 5px;
-    padding-bottom: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	padding-right: 5px;
-    margin-top: 15px;
-    margin-bottom: 20px;
-	  margin-left: 40px;
-	  margin-right: 40px;
-/* 	  max-width: 90%; */
-    display: flex;
-	  flex-direction: column;
-    outline: #f4f4f4 1px solid;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	margin-left: 40px;
+	margin-right: 40px;
+	display: flex;
+	flex-direction: column;
+	outline: #f4f4f4 1px solid;
 }
 
 div.cell-row{
@@ -92,10 +91,7 @@ div.cell-row{
 
 div.editor {
 	flex-grow: 1;
-/* 	flex-basis:  fill-available; */
-/* 	max-width: fill-available; */
 	max-width: 90%;
-/* 	overflow: scroll; */
 }
 
 div.cell-status{	
@@ -124,8 +120,14 @@ div.cell {
 }
 
 div.cell-controls {
-	width:200px;
-	padding-top:2px;
+/* 	width:200px; */
+	z-index: 100;
+	padding:2px;
+	background-color: #fff;
+	border:1px solid lightgray;
+	border-radius:3px;
+	position:  absolute;
+	right: 45px; /*margin-right from div.cell-container, +5px to bring it in from the edge*/
 }
 
 .controls-visible {

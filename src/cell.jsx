@@ -25,8 +25,8 @@ class GenericCell extends React.Component {
         this.changeCellType = this.changeCellType.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
         this.editCell = this.editCell.bind(this)
-        this.showControls = this.showControls.bind(this)
-        this.hideControls = this.hideControls.bind(this)
+        // this.showControls = this.showControls.bind(this)
+        // this.hideControls = this.hideControls.bind(this)
         this.makeButtons = this.makeButtons.bind(this)
     }
 
@@ -65,8 +65,8 @@ class GenericCell extends React.Component {
         if (this.hasEditor) this.refs.editor.focus()
     }
 
-    showControls(){this.setState({showControls:true})}
-    hideControls(){this.setState({showControls:false})}
+    // showControls(){this.setState({showControls:true})}
+    // hideControls(){this.setState({showControls:false})}
 
     makeButtons(){
         return (
@@ -232,7 +232,7 @@ class RunnableCell extends GenericCell {
                         [{this.props.cell.executionStatus}]
                     </div>
                     {this.inputComponent()}
-                    {this.makeButtons()}
+                    
                 </div>
                 <div className='cell-row'>
                     <div id = {"cell-output-status-"+ this.props.cell.id}
@@ -241,7 +241,7 @@ class RunnableCell extends GenericCell {
                     </div>
                     {this.outputComponent()}
                 </div>
-                
+                {this.makeButtons()}
             </div>
         )
     }
