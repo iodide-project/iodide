@@ -37291,7 +37291,7 @@ let notebook = function (state = newNotebook(), action) {
       var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(outputState));
       var dlAnchorElem = document.getElementById('export-anchor');
       dlAnchorElem.setAttribute("href", dataStr);
-      var title = state.title === undefined ? 'new-notebook' : state.title;
+      var title = outputState.title === undefined ? 'new-notebook' : outputState.title;
       var filename = title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
       dlAnchorElem.setAttribute("download", filename);
       dlAnchorElem.click();

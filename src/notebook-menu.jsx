@@ -163,7 +163,7 @@ class NotebookMenu extends React.Component {
 			    	name='file'
 			    	type='file' style={{display:'none'}} onChange={this.notebookFileImport} 
 			    />
-          		<a id='export-anchor' style={{display:'none'}} ></a>
+          		<a id='export-anchor' style={{display: 'none'}} ></a>
 				<ButtonToolbar id='notebook-actions'>
 					<DropdownButton id='notebook-action-dropdown' bsSize="xsmall" id='main-menu' bsStyle='default' title="Menu" onSelect={this.selectMenuItem} >
 						<MenuItem id='save-notebook-item'  eventKey={"saveNotebook"} >Save <span className='menu-item-title'>{currentTitle}</span></MenuItem>
