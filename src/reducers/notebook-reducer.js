@@ -1,4 +1,4 @@
-import { blankState, newNotebook } from '../notebook-utils.js'
+import * as NB from '../notebook-utils.js'
 
 function clearHistory(loadedState) {
   // remove history and declared properties before exporting the state.
@@ -11,7 +11,7 @@ function clearHistory(loadedState) {
 let notebook = function (state=newNotebook(), action) {
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      var newState = newNotebook()
+      var newState = NB.newNotebook()
       return newState
 
     case 'EXPORT_NOTEBOOK':
@@ -28,8 +28,7 @@ let notebook = function (state=newNotebook(), action) {
 
     case 'IMPORT_NOTEBOOK':
       // this may need to be refactored
-      var newState = action.newState
-      return newState
+      return action.newState
 
     case 'SAVE_NOTEBOOK':
       var lastSaved = new Date()
@@ -48,11 +47,7 @@ let notebook = function (state=newNotebook(), action) {
     case 'DELETE_NOTEBOOK':
       var title = action.title
       if (window.localStorage.hasOwnProperty(title)) window.localStorage.removeItem(title)
-      if (title === state.title) {
-        var newState = Object.assign({}, newNotebook())
-      } else {
-        var newState = Object.assign({}, state)
-      }
+      var newState = (title === state.title) ? Object.assign({}, NB.newNotebook()) : Object.assign({}, state)
       return newState
 
     case 'CHANGE_PAGE_TITLE':

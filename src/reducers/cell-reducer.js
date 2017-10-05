@@ -1,4 +1,4 @@
-import { blankState, newNotebook, newCell } from '../notebook-utils.js'
+import * as NB from '../notebook-utils.js'
 
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
@@ -8,6 +8,12 @@ MD.use(MarkdownItKatex)
 var initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
+
+function addCell(cells, cellType) {}
+
+
+
+
 
 function scrollToCellIfNeeded(cellID) {
   var elem = document.getElementById('cell-'+cellID);
@@ -62,9 +68,7 @@ let cell = function (state = newNotebook(), action) {
       var cells = state.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)
       var direction = (action.direction == 'above') ? 0:1
-
-      //cells.forEach((cell)=>{cell.selected=false; return cell})
-      var nextCell = newCell(state.cells, 'javascript')
+      var nextCell = NB.newCell(state.cells, 'javascript')
       cells.splice(index+direction, 0, nextCell)
       var nextState = Object.assign({}, state, {cells})
       return nextState
@@ -72,8 +76,7 @@ let cell = function (state = newNotebook(), action) {
     case 'ADD_CELL':
       var newState = Object.assign({}, state)
       var cells = newState.cells.slice()
-      //cells.forEach((cell)=>{cell.selected = false; return cell})
-      var nextCell = newCell(newState.cells, action.cellType)
+      var nextCell = NB.newCell(newState.cells, action.cellType)
       var nextState = Object.assign({}, newState, {cells: [...cells, nextCell]})
       return nextState
 
@@ -100,27 +103,11 @@ let cell = function (state = newNotebook(), action) {
       return nextState
 
     case 'CELL_UP':
-      var cells = state.cells.slice();
-        var index = cells.findIndex(c=>c.id===action.id);
-        var nextState = state;
-        if (index > 0) {
-          var elem = cells[index-1];
-          cells[index-1] = cells[index];
-          cells[index] = elem;
-          nextState = Object.assign({}, state, {cells});
-        } 
+        var nextState = Object.assign({}, state, {cells: NB.moveCell(state.cells, action.id, 'up')})
         return nextState
 
     case 'CELL_DOWN':
-      var cells = state.cells.slice();
-        var index = cells.findIndex(c=>c.id===action.id);
-        var nextState = state;
-        if (index < cells.length-1) {
-          var elem = cells[index+1];
-          cells[index+1] = cells[index];
-          cells[index] = elem;
-           nextState = Object.assign({}, state, {cells});
-        } 
+        var nextState = Object.assign({}, state, {cells: NB.moveCell(state.cells, action.id, 'down')})
         return nextState
 
     case 'UPDATE_CELL':

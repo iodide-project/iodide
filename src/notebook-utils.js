@@ -1,3 +1,6 @@
+const compose = (...functions) => data =>
+functions.reduceRight((value, func) => func(value), data)
+
 function newCellID(cells) {
   var newID = cells.reduce( (maxId, cell) => {
     return Math.max(cell.id, maxId)
@@ -94,6 +97,28 @@ function getSelectedCell(cells) {
   }
 }
 
+
+function moveCell(cells, cellID, dir) {
+  
+    var _cells = cells.slice()
+    var index = _cells.findIndex(c=>c.id===cellID);
+  
+    var moveIndex, moveCondition
+    if (dir==='up') {
+      moveIndex = -1
+      moveCondition = index > 0
+    } else {
+      moveIndex = 1
+      moveCondition = index < cells.length-1
+    }
+    if (moveCondition) {
+      var elem = _cells[index+moveIndex];
+      _cells[index+moveIndex] = _cells[index]
+      _cells[index] = elem
+    } 
+    return _cells
+  }
+
 export {
   getSelectedCell, 
   blankState, 
@@ -102,5 +127,6 @@ export {
   newNotebook, 
   newCell,
   addCell,
-  selectCell
+  selectCell,
+  moveCell
 }
