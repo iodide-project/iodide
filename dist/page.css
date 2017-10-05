@@ -34,8 +34,13 @@ input.page-title {
 	font-size:35px;
 	border:none;
 	outline:none;
-	width:100%;
+	width:calc(100% - 50px);
 	margin-left:25px;
+	padding-left:175px
+}
+
+div.controls {
+	padding-left:175px
 }
 
 i.add-cell {
