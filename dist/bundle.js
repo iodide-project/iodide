@@ -81983,8 +81983,8 @@ jupyterKeybindings.push(COMMAND_MODE);
 jupyterKeybindings.push(RENDER_CELL);
 jupyterKeybindings.push(RENDER_AND_SELECT_BELOW);
 jupyterKeybindings.push(DELETE_CELL);
-// jupyterKeybindings.push(SAVE_NOTEBOOK)
-// jupyterKeybindings.push(EXPORT_NOTEBOOK)
+jupyterKeybindings.push(SAVE_NOTEBOOK);
+jupyterKeybindings.push(EXPORT_NOTEBOOK);
 
 /* harmony default export */ __webpack_exports__["a"] = (jupyterKeybindings);
 
