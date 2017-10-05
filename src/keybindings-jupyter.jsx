@@ -7,17 +7,13 @@ var moveCell = (elem, dirFcn) => {
   if (elem.props.mode === 'command' && currentlySelected != undefined) elem.props.actions[dirFcn](currentlySelected.id)
 }
 
-var MOVE_UP = [
-    ['shift+up'], 
-    function(){
-      moveCell(this, 'cellUp')
+var MOVE_UP = [['shift+up'], function(){
+      if (this.props.mode == 'command') moveCell(this, 'cellUp')
     }
 ]
 
-var MOVE_DOWN = [
-    ['shift+down'], 
-    function(){
-      moveCell(this, 'cellDown')
+var MOVE_DOWN = [['shift+down'], function(){
+      if (this.props.mode == 'command') moveCell(this, 'cellDown')
     }
 ]
 
@@ -55,17 +51,17 @@ function changeCellMode(elem, cellMode) {
 }
 
 var JAVASCRIPT_MODE = [['j'], function(){
-    changeCellMode(this, 'javascript')
+    if (this.props.mode == 'command') changeCellMode(this, 'javascript')
     }
 ]
 
 var MARKDOWN_MODE = [['m'], function(){
-    changeCellMode(this, 'markdown')
+    if (this.props.mode == 'command') changeCellMode(this, 'markdown')
     }
 ]
 
 var RAW_MODE = [['r'], function(){
-    changeCellMode(this, 'raw')
+    if (this.props.mode == 'command') changeCellMode(this, 'raw')
     }
 ]
  
@@ -176,7 +172,8 @@ var EDIT_MODE = [['enter', 'return'], function(e){
 
 var DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
   var currentlySelected = getSelectedCell(this.props.cells)
-    if (currentlySelected != undefined) {
+    if (currentlySelected != undefined
+        && this.props.mode == 'command') {
       this.props.actions.deleteCell(currentlySelected.id)
     }
   }
