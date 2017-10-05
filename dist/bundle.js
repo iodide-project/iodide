@@ -37291,8 +37291,8 @@ let notebook = function (state = newNotebook(), action) {
       var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(outputState));
       var dlAnchorElem = document.getElementById('export-anchor');
       dlAnchorElem.setAttribute("href", dataStr);
-      var title = state.title;
-      var filename = state.title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
+      var title = state.title === undefined ? 'new-notebook' : state.title;
+      var filename = title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
       dlAnchorElem.setAttribute("download", filename);
       dlAnchorElem.click();
       return Object.assign({}, state);
@@ -81847,6 +81847,17 @@ var RAW_MODE = [['r'], function () {
   changeCellMode(this, 'raw');
 }];
 
+var SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function (e) {
+  if (e.preventDfault) e.preventDefault();else e.returnValue = false;
+  this.props.actions.saveNotebook(this.props.title);
+}];
+
+var EXPORT_NOTEBOOK = [['ctrl+e', 'meta+e'], function (e) {
+  // if (e.preventDfault) e.preventDefault()
+  // else e.returnValue = false
+  this.props.actions.exportNotebook();
+}];
+
 var DESELECT = [['shift+esc', 'shift+escape'], function () {
   this.props.actions.deselectAll();
 }];
@@ -81972,6 +81983,8 @@ jupyterKeybindings.push(COMMAND_MODE);
 jupyterKeybindings.push(RENDER_CELL);
 jupyterKeybindings.push(RENDER_AND_SELECT_BELOW);
 jupyterKeybindings.push(DELETE_CELL);
+// jupyterKeybindings.push(SAVE_NOTEBOOK)
+// jupyterKeybindings.push(EXPORT_NOTEBOOK)
 
 /* harmony default export */ __webpack_exports__["a"] = (jupyterKeybindings);
 

@@ -68,7 +68,20 @@ var RAW_MODE = [['r'], function(){
     changeCellMode(this, 'raw')
     }
 ]
- 
+
+var SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function(e){
+  if (e.preventDfault) e.preventDefault()
+  else e.returnValue = false
+  this.props.actions.saveNotebook(this.props.title)
+}]
+
+var EXPORT_NOTEBOOK = [['ctrl+e', 'meta+e'], function(e){
+  // if (e.preventDfault) e.preventDefault()
+  // else e.returnValue = false
+  this.props.actions.exportNotebook()
+}]
+
+
 var DESELECT = [['shift+esc', 'shift+escape'], function(){
   this.props.actions.deselectAll()
 }]
@@ -197,5 +210,7 @@ jupyterKeybindings.push(COMMAND_MODE)
 jupyterKeybindings.push(RENDER_CELL)
 jupyterKeybindings.push(RENDER_AND_SELECT_BELOW)
 jupyterKeybindings.push(DELETE_CELL)
+// jupyterKeybindings.push(SAVE_NOTEBOOK)
+// jupyterKeybindings.push(EXPORT_NOTEBOOK)
 
 export default jupyterKeybindings
