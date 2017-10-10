@@ -11,24 +11,21 @@ initialVariables.add('Mousetrap')
 
 function addCell(cells, cellType) {}
 
-
-
-
-
 function scrollToCellIfNeeded(cellID) {
   var elem = document.getElementById('cell-'+cellID);
   var rect = elem.getBoundingClientRect();
+  var viewportRect = document.getElementById('cells').getBoundingClientRect();
   var windowHeight = (window.innerHeight || document.documentElement.clientHeight);
   var tallerThanWindow = (rect.bottom-rect.top)>windowHeight
   var cellPosition
   // verbose but readable
-  if (rect.bottom <= 0){
+  if (rect.bottom <= viewportRect.top){
       cellPosition = "ABOVE_VIEWPORT"
-    } else if (rect.top>=windowHeight){
+    } else if (rect.top>=viewportRect.bottom){
       cellPosition = "BELOW_VIEWPORT"
-    } else if ((rect.top<=0)&&(0<=rect.bottom)){
+    } else if ((rect.top<=viewportRect.top) && (viewportRect.top<=rect.bottom)){
       cellPosition = "BOTTOM_IN_VIEWPORT"
-    } else if ((rect.top<=windowHeight)&&(windowHeight<=rect.bottom)){
+    } else if ((rect.top<=viewportRect.bottom) && (viewportRect.bottom<=rect.bottom)){
       cellPosition = "TOP_IN_VIEWPORT"
     } else {
       cellPosition = "IN_VIEWPORT"
