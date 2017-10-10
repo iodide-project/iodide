@@ -131,30 +131,27 @@ class Page extends React.Component {
     var bodyContent = []
 
     var bodyContent = this.props.cells.map((cell,i)=> {
-
-      switch (cell.cellType){
-        case 'javascript':
-            return <JavascriptCell display={true} ref={'cell'+cell.id}
-                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
-                key={cell.id} id={cell.id} />
-        case 'markdown':
-            return <MarkdownCell display={true} ref={'cell'+cell.id}
-                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
-                key={cell.id} id={cell.id} />
-        case 'raw':
-            return <RawCell display={true} ref={'cell'+cell.id}
-                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
-                key={cell.id} id={cell.id} />
-        case 'external scripts':
-            return <ExternalScriptCell display={true} ref={'cell'+cell.id}
-                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
-                key={cell.id} id={cell.id} />
-        case 'dom':
-            return <DOMCell display={true} ref={'cell'+cell.id}
-                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
-                key={cell.id} id={cell.id} />
-      }
-      return cellComponent
+        var cellParams = {display:true,
+            ref: 'cell'+cell.id,
+            cell: cell,
+            pageMode: this.props.mode,
+            actions: this.props.actions,
+            key: cell.id,
+            id: cell.id
+        }
+        switch (cell.cellType){
+            case 'javascript':
+                return <JavascriptCell {...cellParams}/>
+            case 'markdown':
+                return <MarkdownCell {...cellParams}/>
+            case 'raw':
+                return <RawCell {...cellParams}/>
+            case 'external scripts':
+                return <ExternalScriptCell {...cellParams}/>
+            case 'dom':
+                return <DOMCell {...cellParams}/>
+        }
+        return cellComponent
     });
 
     var sp = <span></span>
