@@ -30,13 +30,6 @@ div#cells {
 }
 
 
-div#deselector {
-	width:0;
-	overflow:hidden;
-}
-
-
-
 /************************************************/
 /* header bar styles */
 
@@ -46,16 +39,7 @@ input.page-title {
 	border:none;
 	outline:none;
 	width:calc(100% - 50px);
-/* 	margin-left:25px; */
 	padding-left:3px;
-}
-
-i.add-cell {
-	padding:5px;
-}
-
-i.add-cell:hover {
-	outline:1px solid lightgray;
 }
 
 input.page-title.unrendered-title {
@@ -65,12 +49,6 @@ input.page-title.unrendered-title {
 h1.page-title span {
 	font-weight:300;
 	font-size:16px;
-}
-
-.mode-buttons {
-/* 	position:fixed; */
-	right: 10px;
-	top:10px;
 }
 
 ul.load-notebook-menu {
@@ -83,19 +61,16 @@ ul.load-notebook-menu li {
 }
 
 .load-notebook-menu span.menu-notebook-name {
-/* 	display:inline-block; */
 	width: 300px;
 	text-overflow:ellipsis;
 	overflow-x: hidden;
 	vertical-align:top;
 	padding-right:15px;
 	max-height:30px;
-		font-size:14px;
-
+	font-size:14px;
 }
 
 .load-notebook-menu span.menu-last-saved {
-/* 	display:inline-block; */
 	width:200px;
 	font-size:14px;
 	color:gray;
@@ -216,8 +191,6 @@ span.display-cell-title {
 	border-radius:3px;
 }
 
-
-
 span.menu-item-title {
 	font-style:italic;
 	color:gray;
@@ -230,7 +203,6 @@ div.hidden-cell {
 }
 
 span.notebook-label {
-/* 	display: inline-block; */
 	background-color:gray;
 	color:white;
 	padding-left:5px;
