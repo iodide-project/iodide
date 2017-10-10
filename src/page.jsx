@@ -165,7 +165,6 @@ class Page extends React.Component {
                         lastSaved={this.props.lastSaved}
                         currentTitle={this.props.title} />
                     <div className='page-mode'>{this.props.mode}</div>
-                    <div id='deselector'><input ref='deselector' /></div>
                     {this.makeButtons()}
                 </div>
                 
