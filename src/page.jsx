@@ -164,14 +164,31 @@ class Page extends React.Component {
                         sidePaneMode={this.props.sidePaneMode}
                         lastSaved={this.props.lastSaved}
                         currentTitle={this.props.title} />
-                    <div className='page-mode'>{this.props.mode}</div>
-                    {this.makeButtons()}
+                    <div id="cell-menu" className={'cell-controls controls-visible'}>
+                        <ButtonToolbar >
+                            <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
+                            <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
+                            <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
+                            <Button bsSize='xsmall' onClick={this.addCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>
+                              <DropdownButton bsSize="xsmall"
+                                bsStyle='default' title={this.getSelectedCell().cellType}
+                                onSelect={this.changeCellType} >
+                                <MenuItem eventKey={"javascript"} >JS</MenuItem>
+                                <MenuItem eventKey={'markdown'} >MD</MenuItem>
+                                <MenuItem eventKey={'raw'} >Raw</MenuItem>
+                                <MenuItem eventKey={'dom'} >DOM</MenuItem>
+                                <MenuItem eventKey={'external scripts'} >External Script</MenuItem>
+                            </DropdownButton>
+                        </ButtonToolbar>
+                        <div className='page-mode'>{this.props.mode}</div>
+                    </div>
                 </div>
                 
             </div>
             <div id='cells'>
             	{bodyContent}
             </div>
+            {sp}
         </div>
     );
   }
