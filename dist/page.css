@@ -110,6 +110,7 @@ div.cell-container {
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-right: 5px;
+	padding-left: 5px;
 	margin-top: 15px;
 	margin-bottom: 15px;
 	margin-left: 40px;
@@ -121,6 +122,7 @@ div.cell-container {
 
 div.cell-row{
 	display: flex;
+	padding: 1px;
 }
 
 div.editor {
@@ -131,12 +133,24 @@ div.editor {
 div.cell-status{	
 	font-family: monospace;
 	white-space: pre;
-	padding-right:8px;
-	flex-basis: 70px;
+	flex-basis: 50px;
 	flex-shrink: 0;
 	flex-grow: 0;
 	text-align: right;
 	color: #aaa
+}
+
+div.cell-collapse-button{    
+    margin-right: 3px;
+    margin-left: 3px;
+    flex-basis: 15px;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+div.cell-collapse-button:hover{
+	background: #fbfbfb;
+	outline: 1px solid #ddd;
 }
 
 div.cell-status.markdown,
