@@ -6,6 +6,9 @@ function clearHistory(loadedState) {
   loadedState.history = []
   loadedState.externalScripts = []
   loadedState.executionNumber = 0
+  loadedState.cells.forEach(cell=>{
+    if (cell.cellType==='javascript') cell.value = undefined
+  })
 }
 
 let notebook = function (state=newNotebook(), action) {
@@ -42,6 +45,7 @@ let notebook = function (state=newNotebook(), action) {
 
     case 'LOAD_NOTEBOOK':
       var loadedState = JSON.parse(window.localStorage.getItem(action.title))
+      clearHistory(loadedState)
       return Object.assign({}, loadedState)
 
     case 'DELETE_NOTEBOOK':
