@@ -123,22 +123,26 @@ class GenericCell extends React.Component {
             (this.props.cell.selected ? 'selected-cell ' : ' ') + 
             (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')
             )
+        var cellId = this.props.cell.id
+        var cellType = this.props.cell.cellType
+        var collapsedStatus;
+        
         return (
-            <div id={'cell-'+ this.props.cell.id}
+            <div id={'cell-'+ cellId}
                 className={'cell-container '+ cellContainerStyle}
                 onMouseDown={this.handleCellClick} >
                 <div className="cell-row">
-                    <div id = {"cell-input-status-"+ this.props.cell.id}
-                        className ={"cell-status cell-input " + this.props.cell.cellType}>
+                    <div className ={"cell-status cell-input " + cellType}>
                         [{this.props.cell.executionStatus}]
                     </div>
+                    <div className ={"cell-collapse-button cell-input " + cellType}></div>
                     {this.inputComponent()}
                 </div>
                 <div className='cell-row'>
-                    <div id = {"cell-output-status-"+ this.props.cell.id}
-                        className ={"cell-status cell-output " + this.props.cell.cellType}>
+                    <div className ={"cell-status cell-output " + cellType}>
                         {/* eventually we may wish to add ouptut status here, a la jupyter */}
                     </div>
+                    <div className ={"cell-collapse-button cell-input " + cellType}></div>
                     {this.outputComponent()}
                 </div>
             </div>
