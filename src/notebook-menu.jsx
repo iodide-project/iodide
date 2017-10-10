@@ -172,14 +172,13 @@ class NotebookMenu extends React.Component {
 						<MenuItem id='export-notebook-item'  eventKey={"exportNotebook"} >Export Notebook</MenuItem>
 						<MenuItem id='new-notebook-item'  eventKey={'newNotebook'} >New Notebook</MenuItem>
 					</ DropdownButton>
-						{notebookMenuItems}
+					{notebookMenuItems}
+                    <Button bsSize='xsmall'onClick={ ()=>{this.changeSidePaneMode('history')} }>History</Button>
+                    <Button bsSize='xsmall'onClick={()=>{this.changeSidePaneMode('declared variables')} }>Declared Variables</Button>
 				</ButtonToolbar>
-				<ButtonToolbar id='notebook-controls' className='mode-buttons'>
+				<ButtonToolbar id='notebook-view-mode-controls' className='mode-buttons'>
 					<Button bsSize='xsmall' onClick={ ()=>{this.changeMode('editor-modes')} }>Editor</Button>
 					<Button bsSize='xsmall'>Presentation</Button>
-
-					<Button bsSize='xsmall'onClick={ ()=>{this.changeSidePaneMode('history')} }>History</Button>
-					<Button bsSize='xsmall'onClick={()=>{this.changeSidePaneMode('declared variables')} }>Declared Variables</Button>
 				</ButtonToolbar>
 			</div>
 		)
