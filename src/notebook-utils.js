@@ -30,10 +30,10 @@ function newCell(cells, cellType){
     evaluationOld: true,
     // these track the collapsed state of input and outputs
     // must be one of "COLLAPSED" "SCROLLABLE" "EXPANDED"
-    editViewInputCollapsed: "EXPANDED",
-    editViewOutputCollapsed: "EXPANDED",
-    presentationViewInputCollapsed: "COLLAPSED",
-    presentationViewOutputCollapsed: "EXPANDED",
+    collapseEditViewInput: "EXPANDED",
+    collapseEditViewOutput: "EXPANDED",
+    collapsePresentationViewInput: "COLLAPSED",
+    collapsePresentationViewOutput: "EXPANDED",
   }
 }
 
