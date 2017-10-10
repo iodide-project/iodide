@@ -131,12 +131,29 @@ class Page extends React.Component {
     var bodyContent = []
 
     var bodyContent = this.props.cells.map((cell,i)=> {
-      var cellComponent
-      if (cell.cellType === 'javascript') cellComponent = <JavascriptCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'markdown') cellComponent = <MarkdownCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'raw') cellComponent = <RawCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'external scripts') cellComponent = <ExternalScriptCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'dom') cellComponent = <DOMCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
+
+      switch (cell.cellType){
+        case 'javascript':
+            return <JavascriptCell display={true} ref={'cell'+cell.id}
+                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
+                key={cell.id} id={cell.id} />
+        case 'markdown':
+            return <MarkdownCell display={true} ref={'cell'+cell.id}
+                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
+                key={cell.id} id={cell.id} />
+        case 'raw':
+            return <RawCell display={true} ref={'cell'+cell.id}
+                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
+                key={cell.id} id={cell.id} />
+        case 'external scripts':
+            return <ExternalScriptCell display={true} ref={'cell'+cell.id}
+                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
+                key={cell.id} id={cell.id} />
+        case 'dom':
+            return <DOMCell display={true} ref={'cell'+cell.id}
+                cell={cell} pageMode={this.props.mode} actions={this.props.actions}
+                key={cell.id} id={cell.id} />
+      }
       return cellComponent
     });
 
