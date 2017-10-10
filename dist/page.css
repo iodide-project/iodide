@@ -1,22 +1,30 @@
+/* top-level styles */
+
 html,body { 
-	min-height:100%; margin:0; padding:0; 
+	height:100%;
+	margin:0;
+	padding:0; 
 }
 
-/* for Github-flavored Markdown */
-
-table {
-    display: block;
-    overflow: auto;
-    width: 100%;
+div#page {
+  height: 100%;
 }
 
-table th, table td {
-	padding: 6px 13px;
-	border: 1px solid #ddd;
+div#notebook-container {
+  height: 100%;
+  width:100%;
+  display: flex;
+  flex-direction: column;
 }
 
-table tr:nth-child(2n) {
-	background-color: #f8f8f8;
+div#headerbar {
+	flex: 0 0 150px;
+	outline: 1px #aaa solid;
+}
+
+div#cells {
+	flex-grow: 1;
+	overflow: auto;
 }
 
 
@@ -25,9 +33,10 @@ div#deselector {
 	overflow:hidden;
 }
 
-.CodeMirror {
-	height: auto;
-}
+
+
+/************************************************/
+/* header bar styles */
 
 input.page-title {
 	font-family: 'Open Sans';
@@ -36,11 +45,11 @@ input.page-title {
 	outline:none;
 	width:calc(100% - 50px);
 	margin-left:25px;
-	padding-left:175px
+	padding-left:175px;
 }
 
 div.controls {
-	padding-left:175px
+/* 	padding-left:175px */
 }
 
 i.add-cell {
@@ -60,22 +69,60 @@ h1.page-title span {
 	font-size:16px;
 }
 
-div#page {
-	/*! width:1000px; */
-	/*! margin:auto; */
+.mode-buttons {
+/* 	position:fixed; */
+	right: 10px;
+	top:10px;
+}
+
+ul.load-notebook-menu {
+	min-width:525px;
+	background-color:white;
+}
+
+ul.load-notebook-menu li {
+	height:30px;
+}
+
+.load-notebook-menu span.menu-notebook-name {
+/* 	display:inline-block; */
+	width: 300px;
+	text-overflow:ellipsis;
+	overflow-x: hidden;
+	vertical-align:top;
+	padding-right:15px;
+	max-height:30px;
+		font-size:14px;
 
 }
 
-div.cells {
-	float:left;
-  width: 100%;
+.load-notebook-menu span.menu-last-saved {
+/* 	display:inline-block; */
+	width:200px;
+	font-size:14px;
+	color:gray;
+	font-weight:300;
+	overflow-x: hidden;
+	vertical-align:top;
 }
 
-div.declared-variables {
-	width:270px;
-	padding-left:10px;
-	padding-bottom:10px;
+.notebook-actions {
+/* 	position:absolute; */
+	left:10px;
+	top:10px;
 }
+
+.page-mode {
+/* 	position:fixed; */
+	left:10px;
+	bottom:10px;
+}
+
+
+
+
+/************************************************/
+/*  cell and cell container styles*/
 
 div.cell-container {
 	padding-top: 5px;
@@ -132,7 +179,7 @@ div.cell-controls {
 	background-color: #fff;
 	border:1px solid lightgray;
 	border-radius:3px;
-	position:  absolute;
+/* 	position:  absolute; */
 	right: 45px; /*margin-right from div.cell-container, +5px to bring it in from the edge*/
 }
 
@@ -152,6 +199,10 @@ div.selected-cell {
 
 div.CodeMirror{
   background: #f9f9f9;
+}
+
+.CodeMirror {
+	height: auto;
 }
 
 div.ReactCodeMirror {
@@ -177,17 +228,7 @@ span.display-cell-title {
 	border-radius:3px;
 }
 
-.notebook-actions {
-	position:absolute;
-	left:10px;
-	top:10px;
-}
 
-.page-mode {
-	position:fixed;
-	left:10px;
-	bottom:10px;
-}
 
 span.menu-item-title {
 	font-style:italic;
@@ -196,74 +237,12 @@ span.menu-item-title {
 	padding-left:8px;
 }
 
-div.history-cell {
-}
-
-div.history-content {
-		outline:1px solid lightgray;
-
-}
-
-div.history-date {
-	padding-left:33px;
-	margin-top:8px;
-	margin-bottom:8px;
-	font-size:12px;
-	color:gray;
-}
-
-div.no-history {
-	font-size:20px;
-	font-weight:bold;
-	color:lightgray;
-	margin-top:60px;
-	margin-left:30px;
-}
-
-.mode-buttons {
-	position:fixed;
-	right: 10px;
-	top:10px;
-}
-
-ul.load-notebook-menu {
-	min-width:525px;
-	background-color:white;
-}
-
-ul.load-notebook-menu li {
-	height:30px;
-}
-
-
-.load-notebook-menu span.menu-notebook-name {
-	display:inline-block;
-	width: 300px;
-	text-overflow:ellipsis;
-	overflow-x: hidden;
-	vertical-align:top;
-	padding-right:15px;
-	max-height:30px;
-		font-size:14px;
-
-}
-
-.load-notebook-menu span.menu-last-saved {
-	display:inline-block;
-	width:200px;
-	font-size:14px;
-	color:gray;
-	font-weight:300;
-	overflow-x: hidden;
-	vertical-align:top;
-}
-
 div.hidden-cell {
 	display:none;
 }
 
 span.notebook-label {
-	display: inline-block;
+/* 	display: inline-block; */
 	background-color:gray;
 	color:white;
 	padding-left:5px;
@@ -292,6 +271,34 @@ div.dom-cell-error {
 	padding:3px;
 }
 
+
+/************************************************/
+/* side pane styles */
+
+div.history-cell {
+}
+
+div.history-content {
+		outline:1px solid lightgray;
+
+}
+
+div.history-date {
+	padding-left:33px;
+	margin-top:8px;
+	margin-bottom:8px;
+	font-size:12px;
+	color:gray;
+}
+
+div.no-history {
+	font-size:20px;
+	font-weight:bold;
+	color:lightgray;
+	margin-top:60px;
+	margin-left:30px;
+}
+
 div.side-pane {
 	z-index: 200;
 	position: fixed;
@@ -306,13 +313,35 @@ div.side-pane {
 }
 
 
-	padding:5px;
-}
-
 i.close-side-pane:hover {
 	outline:1px solid lightgray;
 }
 
+div.declared-variables {
+	width:270px;
+	padding-left:10px;
+	padding-bottom:10px;
+}
+
+/************************************************/
+/* et cetera styles */
 .katex-html {
 	display:none;
+}
+
+/************************************************/
+/* for Github-flavored Markdown */
+table {
+    display: block;
+    overflow: auto;
+    width: 100%;
+}
+
+table th, table td {
+	padding: 6px 13px;
+	border: 1px solid #ddd;
+}
+
+table tr:nth-child(2n) {
+	background-color: #f8f8f8;
 }
