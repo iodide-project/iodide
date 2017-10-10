@@ -141,7 +141,6 @@ class GenericCell extends React.Component {
                     </div>
                     {this.outputComponent()}
                 </div>
-                {this.makeButtons()}
             </div>
         )
     }
