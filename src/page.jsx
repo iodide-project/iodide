@@ -62,6 +62,7 @@ class Page extends React.Component {
     this.renderCell = this.renderCell.bind(this)
     this.cellUp = this.cellUp.bind(this)
     this.cellDown = this.cellDown.bind(this)
+    this.changeCellType = this.changeCellType.bind(this)
     this.getSelectedCell = this.getSelectedCell.bind(this)
 
     keyBinding('jupyter', this)
@@ -97,7 +98,7 @@ class Page extends React.Component {
     }
 
     changeCellType(cellType, evt){
-        this.props.actions.changeCellType(this.props.cell.id, cellType)
+        this.props.actions.changeCellType(this.getSelectedCell().id, cellType)
     }
 
     getSelectedCell(){
