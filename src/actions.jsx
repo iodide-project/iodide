@@ -46,6 +46,12 @@ let actions = {
 			mode: mode
 		}
 	},
+    setViewMode: function(viewMode) {
+        return {
+            type: 'SET_VIEW_MODE',
+            viewMode: viewMode,
+        }
+    },
 	updateInputContent: function(cellID, text) {
 		return {
 			type: 'UPDATE_CELL',
@@ -64,7 +70,6 @@ let actions = {
         return {
             type: 'CLEAR_CELL_BEFORE_EVALUATION',
             id: cellID,
-            // render: renderMode
         }
     },
 	renderCell: function(cellID, evaluateCell=true) {
@@ -76,7 +81,7 @@ let actions = {
 	},
     setCellCollapsedState: function(cellID, viewMode, collapsedState) {
         return {
-            type: 'RENDER_CELL',
+            type: 'SET_CELL_COLLAPSED_STATE',
             id: cellID,
             viewMode: viewMode,
             collapsedState: collapsedState
