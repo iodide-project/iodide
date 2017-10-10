@@ -37277,6 +37277,7 @@ function clearHistory(loadedState) {
   loadedState.history = [];
   loadedState.externalScripts = [];
   loadedState.executionNumber = 0;
+  loadedState.cells = loadedState.cells.slice();
   loadedState.cells.forEach(cell => {
     if (cell.cellType === 'javascript') cell.value = undefined;
   });
@@ -37308,7 +37309,12 @@ let notebook = function (state = newNotebook(), action) {
 
     case 'SAVE_NOTEBOOK':
       var lastSaved = new Date();
-      var outputState = Object.assign({}, state, { lastSaved });
+      var outputState = Object.assign({}, state, { lastSaved }, { cells: state.cells.slice().map(c => {
+          var newC = Object.assign({}, c);
+          newC.value = undefined;
+          return newC;
+        }) });
+      clearHistory(outputState);
       var title;
       if (action.title !== undefined) title = action.title;else title = state.title;
       window.localStorage.setItem(title, JSON.stringify(outputState));
