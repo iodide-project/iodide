@@ -58,10 +58,11 @@ class Page extends React.Component {
   constructor(props) {
     super(props)
     this.props.actions.newNotebook()
-    this.addCell = this.addCell.bind(this)
+    this.addCell = this.insertCell.bind(this)
     this.renderCell = this.renderCell.bind(this)
     this.cellUp = this.cellUp.bind(this)
     this.cellDown = this.cellDown.bind(this)
+    this.changeCellType = this.changeCellType.bind(this)
     this.getSelectedCell = this.getSelectedCell.bind(this)
 
     keyBinding('jupyter', this)
@@ -80,8 +81,8 @@ class Page extends React.Component {
     },1000*60)
   }
 
-  addCell() {
-    this.props.actions.addCell('javascript')
+  insertCell() {
+    this.props.actions.insertCell('javascript', this.getSelectedCell().id, 1)
   }
 
   renderCell(render) {
@@ -97,7 +98,7 @@ class Page extends React.Component {
     }
 
     changeCellType(cellType, evt){
-        this.props.actions.changeCellType(this.props.cell.id, cellType)
+        this.props.actions.changeCellType(this.getSelectedCell().id, cellType)
     }
 
     getSelectedCell(){
@@ -111,7 +112,7 @@ class Page extends React.Component {
                     <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
                     <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
                     <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
-                    <Button bsSize='xsmall' onClick={this.addCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>
+                    <Button bsSize='xsmall' onClick={this.insertCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>
                       <DropdownButton bsSize="xsmall"
                         bsStyle='default' title={this.getSelectedCell().cellType}
                         onSelect={this.changeCellType} >

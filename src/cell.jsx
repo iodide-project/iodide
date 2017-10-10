@@ -6,6 +6,9 @@ import JSONTree from 'react-json-tree'
 import js from 'codemirror/mode/javascript/javascript'
 import markdown from 'codemirror/mode/markdown/markdown'
 import CodeMirror from '@skidding/react-codemirror'
+import matchbrackets from 'codemirror/addon/edit/matchbrackets'
+import closebrackets from 'codemirror/addon/edit/closebrackets'
+
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
 
@@ -157,6 +160,8 @@ class JavascriptCell extends GenericCell {
     constructor(props){
         super(props)
         this.editorOptions.lineNumbers = true
+        this.editorOptions.matchBrackets = true
+        this.editorOptions.autoCloseBrackets = true
         this.outputComponent = this.outputComponent.bind(this)
     }
     outputComponent(){

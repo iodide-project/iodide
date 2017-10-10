@@ -66,8 +66,9 @@ var RAW_MODE = [['r'], function(){
 ]
 
 var SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function(e){
-  if (e.preventDfault) e.preventDefault()
-  else e.returnValue = false
+  if (e.preventDefault) {
+    e.preventDefault()
+  } else {e.returnValue = false }
   this.props.actions.saveNotebook(this.props.title)
 }]
 
