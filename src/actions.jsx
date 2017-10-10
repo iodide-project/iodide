@@ -74,6 +74,14 @@ let actions = {
 			evaluateCell: evaluateCell
 		}
 	},
+    setCellCollapsedState: function(cellID, viewMode, collapsedState) {
+        return {
+            type: 'RENDER_CELL',
+            id: cellID,
+            viewMode: viewMode,
+            collapsedState: collapsedState
+        }
+    },
     markCellNotRendered: function(cellID, evaluateCell=true) {
         return {
             type: 'MARK_CELL_NOT_RENDERED',
