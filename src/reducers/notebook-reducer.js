@@ -31,12 +31,13 @@ let notebook = function (state=newNotebook(), action) {
 
     case 'IMPORT_NOTEBOOK':
       // this may need to be refactored
-      return action.newState
+      var newState = action.newState
+      clearHistory(newState)
+      return newState
 
     case 'SAVE_NOTEBOOK':
       var lastSaved = new Date()
       var outputState = Object.assign({}, state, {lastSaved})
-      clearHistory(outputState)
       var title
       if (action.title!==undefined) title = action.title
       else title = state.title
