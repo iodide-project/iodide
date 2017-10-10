@@ -64,6 +64,10 @@ let notebook = function (state=newNotebook(), action) {
     case 'CHANGE_MODE':
       var mode = action.mode
       return Object.assign({}, state, {mode});
+
+    case 'SET_VIEW_MODE':
+      var viewMode = action.viewMode
+      return Object.assign({}, state, {viewMode});
     
     case 'CHANGE_SIDE_PANE_MODE':
       return Object.assign({}, state, {sidePaneMode: action.mode})
