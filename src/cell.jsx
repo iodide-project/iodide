@@ -16,7 +16,6 @@ class GenericCell extends React.Component {
     */
     constructor(props) {
         super(props)
-        this.state = {showControls:false}
         this.hasEditor = true
         this.editorOptions = {
             lineNumbers: false,
@@ -32,12 +31,12 @@ class GenericCell extends React.Component {
         this.changeCellType = this.changeCellType.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
         this.enterEditMode = this.enterEditMode.bind(this)
+        this.handleCollapseButtonClick = this.handleCollapseButtonClick.bind(this)
+        this.handleCollapseInputClick = this.handleCollapseInputClick.bind(this)
+        this.handleCollapseOutputClick = this.handleCollapseOutputClick.bind(this)
         this.updateInputContent = this.updateInputContent.bind(this)
         this.inputComponent = this.inputComponent.bind(this)
         this.outputComponent = this.outputComponent.bind(this)
-        this.makeButtons = this.makeButtons.bind(this)
-
-
     }
 
     renderCell(render) {
@@ -74,10 +73,27 @@ class GenericCell extends React.Component {
         if (this.hasEditor) this.refs.editor.focus()
     }
 
+    handleCollapseButtonClick(rowType){
+        console.log(rowType,
+            this.props.cell.collapseEditViewInput,
+            this.props.cell.collapseEditViewOutput,
+            this.props.cell.collapsePresentationViewInput,
+            this.props.cell.collapsePresentationViewOutput
+        )
+        this.props.actions.setCellCollapsedState(this.props.cell.id, "edit", "COLLAPSED")
+    }
+
+    handleCollapseInputClick(){
+        this.handleCollapseButtonClick("input")
+    }
+
+    handleCollapseOutputClick(){
+        this.handleCollapseButtonClick("output")
+    }
+
     updateInputContent(content) {
         this.props.actions.updateInputContent(this.props.cell.id, content)
     }
-
 
     inputComponent(){
         return (
@@ -95,29 +111,6 @@ class GenericCell extends React.Component {
         return <div></div>
     }
 
-    makeButtons(){
-        return (
-            <div className={'cell-controls ' + (
-                (this.props.cell.selected &&
-                            this.props.pageMode == 'command') ? 'controls-visible' : 'controls-invisible')}>
-                <ButtonToolbar >
-                    <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
-                    <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
-                    <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
-                      <DropdownButton bsSize="xsmall" id={'cell-choice-' + this.props.id}
-                        bsStyle='default' title={this.props.cell.cellType}
-                        onSelect={this.changeCellType} >
-                        <MenuItem eventKey={"javascript"} >JS</MenuItem>
-                        <MenuItem eventKey={'markdown'} >MD</MenuItem>
-                        <MenuItem eventKey={'raw'} >Raw</MenuItem>
-                        <MenuItem eventKey={'dom'} >DOM</MenuItem>
-                        <MenuItem eventKey={'external scripts'} >External Script</MenuItem>
-                    </ DropdownButton>
-                </ ButtonToolbar>
-            </div>
-        )
-    }
-
     render() {
         var cellContainerStyle = ((this.props.display ? '' : 'hidden-cell ') +
             (this.props.cell.selected ? 'selected-cell ' : ' ') + 
@@ -126,7 +119,7 @@ class GenericCell extends React.Component {
         var cellId = this.props.cell.id
         var cellType = this.props.cell.cellType
         var collapsedStatus;
-        
+
         return (
             <div id={'cell-'+ cellId}
                 className={'cell-container '+ cellContainerStyle}
@@ -135,14 +128,16 @@ class GenericCell extends React.Component {
                     <div className ={"cell-status cell-input " + cellType}>
                         [{this.props.cell.executionStatus}]
                     </div>
-                    <div className ={"cell-collapse-button cell-input " + cellType}></div>
+                    <div className ={"cell-collapse-button cell-input " + cellType}
+                        onDoubleClick={this.handleCollapseInputClick}></div>
                     {this.inputComponent()}
                 </div>
                 <div className='cell-row'>
                     <div className ={"cell-status cell-output " + cellType}>
                         {/* eventually we may wish to add ouptut status here, a la jupyter */}
                     </div>
-                    <div className ={"cell-collapse-button cell-input " + cellType}></div>
+                    <div className ={"cell-collapse-button cell-output " + cellType}
+                        onDoubleClick={this.handleCollapseOutputClick}></div>
                     {this.outputComponent()}
                 </div>
             </div>
@@ -301,7 +296,6 @@ class DOMCell extends GenericCell {
 class HistoryCell extends GenericCell {
     constructor(props) {
         super(props)
-        this.state = {showControls:false}
     }
 
     render() {
