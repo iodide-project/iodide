@@ -18,8 +18,10 @@ div#notebook-container {
 }
 
 div#headerbar {
-	flex: 0 0 150px;
-	outline: 1px #aaa solid;
+/* 	flex: 0 0 150px; */
+	border-bottom: 1px #aaa solid;
+	padding-left:10px;
+	padding-right:10px;
 }
 
 div#cells {
@@ -40,16 +42,12 @@ div#deselector {
 
 input.page-title {
 	font-family: 'Open Sans';
-	font-size:35px;
+	font-size:25px;
 	border:none;
 	outline:none;
 	width:calc(100% - 50px);
-	margin-left:25px;
-	padding-left:175px;
-}
-
-div.controls {
-/* 	padding-left:175px */
+/* 	margin-left:25px; */
+	padding-left:3px;
 }
 
 i.add-cell {
@@ -106,17 +104,26 @@ ul.load-notebook-menu li {
 	vertical-align:top;
 }
 
-.notebook-actions {
-/* 	position:absolute; */
-	left:10px;
-	top:10px;
+div.notebook-actions {
+	display: flex;
+	justify-content: space-between;
+	padding: 3px
 }
 
-.page-mode {
-/* 	position:fixed; */
-	left:10px;
-	bottom:10px;
+
+div.cell-controls {
+	display: flex;
+	padding:3px;
+	background-color: #fff;
 }
+
+div.page-mode {
+	margin-left: 10px;
+	color: #999;
+	font-size:12px;
+	padding: 2px
+}
+
 
 
 
@@ -172,26 +179,7 @@ div.cell {
 /* 	width:850px; */
 }
 
-div.cell-controls {
-/* 	width:200px; */
-	z-index: 100;
-	padding:2px;
-	background-color: #fff;
-	border:1px solid lightgray;
-	border-radius:3px;
-/* 	position:  absolute; */
-	right: 45px; /*margin-right from div.cell-container, +5px to bring it in from the edge*/
-}
 
-.controls-visible {
-	opacity:1;
-	transition: 50ms;
-}
-
-.controls-invisible {
-	opacity:0;
-	transition: 50ms;
-}
 
 div.selected-cell {
     outline: 1px solid #bbb;
