@@ -79,11 +79,12 @@ let actions = {
 			evaluateCell: evaluateCell
 		}
 	},
-    setCellCollapsedState: function(cellID, viewMode, collapsedState) {
+    setCellCollapsedState: function(cellID, viewMode, rowType, collapsedState) {
         return {
             type: 'SET_CELL_COLLAPSED_STATE',
             id: cellID,
             viewMode: viewMode,
+            rowType: rowType,
             collapsedState: collapsedState
         }
     },
