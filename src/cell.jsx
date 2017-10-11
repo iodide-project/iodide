@@ -81,9 +81,42 @@ class GenericCell extends React.Component {
             this.props.cell.collapseEditViewInput,
             this.props.cell.collapseEditViewOutput,
             this.props.cell.collapsePresentationViewInput,
-            this.props.cell.collapsePresentationViewOutput
+            this.props.cell.collapsePresentationViewOutput,
+            this.props.viewMode
         )
-        this.props.actions.setCellCollapsedState(this.props.cell.id, "edit", "COLLAPSED")
+        var currentCollapsedState,nextCollapsedState;
+        console.log(this.props.viewMode + "," + rowType)
+        switch (this.props.viewMode + "," + rowType){
+            case "presentation,input":
+              currentCollapsedState = this.props.cell.collapsePresentationViewInput
+              break
+            case "presentation,output":
+              currentCollapsedState = this.props.cell.collapsePresentationViewOutput
+              break
+            case "editor,input":
+              currentCollapsedState = this.props.cell.collapseEditViewInput
+              break
+            case "editor,output":
+              currentCollapsedState = this.props.cell.collapseEditViewOutput
+              break
+        }
+        switch (currentCollapsedState){
+            case "COLLAPSED":
+              nextCollapsedState = "EXPANDED"
+              break
+            case "EXPANDED":
+              nextCollapsedState = "SCROLLABLE"
+              break
+            case "SCROLLABLE":
+              nextCollapsedState = "COLLAPSED"
+              break
+        }
+        console.log(currentCollapsedState,nextCollapsedState)
+        this.props.actions.setCellCollapsedState(
+            this.props.cell.id,
+            this.props.viewMode,
+            rowType,
+            nextCollapsedState)
     }
 
     handleCollapseInputClick(){
@@ -121,13 +154,20 @@ class GenericCell extends React.Component {
             )
         var cellId = this.props.cell.id
         var cellType = this.props.cell.cellType
-        var collapsedStatus;
+        var collapseInput, collapseOutput;
+        if (this.props.viewMode=="presentation"){
+            collapseInput = this.props.cell.collapsePresentationViewInput
+            collapseOutput = this.props.cell.collapsePresentationViewOutput
+        } else if (this.props.viewMode=="editor"){
+            collapseInput = this.props.cell.collapseEditViewInput
+            collapseOutput = this.props.cell.collapseEditViewOutput
+        }
 
         return (
             <div id={'cell-'+ cellId}
                 className={'cell-container '+ cellContainerStyle}
                 onMouseDown={this.handleCellClick} >
-                <div className="cell-row">
+                <div className={"cell-row "+collapseInput}>
                     <div className ={"cell-status cell-input " + cellType}>
                         [{this.props.cell.executionStatus}]
                     </div>
@@ -135,7 +175,7 @@ class GenericCell extends React.Component {
                         onDoubleClick={this.handleCollapseInputClick}></div>
                     {this.inputComponent()}
                 </div>
-                <div className='cell-row'>
+                <div className={"cell-row "+collapseOutput}>
                     <div className ={"cell-status cell-output " + cellType}>
                         {/* eventually we may wish to add ouptut status here, a la jupyter */}
                     </div>
