@@ -139,6 +139,28 @@ let cell = function (state = newNotebook(), action) {
       var nextState = Object.assign({}, state, {cells})
       return nextState
 
+    case "SET_CELL_COLLAPSED_STATE":
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c=>c.id===action.id)
+      var thisCell = cells[index];
+      switch (action.viewMode + "," + action.rowType){
+        case "presentation,input":
+          thisCell.collapsePresentationViewInput = action.collapsedState
+          break
+        case "presentation,output":
+          thisCell.collapsePresentationViewOutput = action.collapsedState
+          break
+        case "editor,input":
+          thisCell.collapseEditViewInput = action.collapsedState
+          break
+        case "editor,output":
+          thisCell.collapseEditViewOutput = action.collapsedState
+          break
+      }
+      cells[index] = thisCell;
+      return Object.assign({}, state, {cells})
+
+
     case 'CLEAR_CELL_BEFORE_EVALUATION':
       var newState = Object.assign({}, state)
       var cells = newState.cells.slice()

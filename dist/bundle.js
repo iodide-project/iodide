@@ -14241,15 +14241,15 @@ module.exports = invariant;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return getSelectedCell; });
-/* unused harmony export blankState */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return getSelectedCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return blankState; });
 /* unused harmony export createNextState */
 /* unused harmony export changeTitle */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return newNotebook; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return newCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return newNotebook; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return newCell; });
 /* unused harmony export addCell */
 /* unused harmony export selectCell */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return moveCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return moveCell; });
 const compose = (...functions) => data => functions.reduceRight((value, func) => func(value), data);
 
 function newCellID(cells) {
@@ -14278,7 +14278,13 @@ function newCell(cells, cellType) {
     executionStatus: " ",
     // evaluationOld set to true if the content of the editor changes from whatever
     // produced the most recent output value
-    evaluationOld: true
+    evaluationOld: true,
+    // these track the collapsed state of input and outputs
+    // must be one of "COLLAPSED" "SCROLLABLE" "EXPANDED"
+    collapseEditViewInput: "EXPANDED",
+    collapseEditViewOutput: "EXPANDED",
+    collapsePresentationViewInput: "COLLAPSED",
+    collapsePresentationViewOutput: "EXPANDED"
   };
 }
 
@@ -14306,7 +14312,8 @@ function blankState() {
     declaredProperties: {},
     lastValue: undefined,
     lastSaved: undefined,
-    mode: 'command',
+    mode: 'command', // command, edit
+    viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
     history: [],
     externalScripts: [],
@@ -37231,7 +37238,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 
 
 function configureStore() {
-	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__["a" /* default */], Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils_js__["d" /* newNotebook */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_3_redux_logger___default.a)));
+	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__["a" /* default */], Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils_js__["e" /* newNotebook */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_3_redux_logger___default.a)));
 	//persistStore(store)
 	return store;
 }
@@ -37286,7 +37293,7 @@ function clearHistory(loadedState) {
 let notebook = function (state = newNotebook(), action) {
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      var newState = __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["d" /* newNotebook */]();
+      var newState = __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["e" /* newNotebook */]();
       return newState;
 
     case 'EXPORT_NOTEBOOK':
@@ -37302,10 +37309,12 @@ let notebook = function (state = newNotebook(), action) {
       return Object.assign({}, state);
 
     case 'IMPORT_NOTEBOOK':
-      // this may need to be refactored
-      var newState = action.newState;
+      // note: loading a NB should always assign to a copy of the latest global
+      // and per-cell state for backwards compatibility
+      var loadedState = action.newState;
       clearHistory(newState);
-      return newState;
+      var cells = loadedState.cells.map(cell => Object.assign(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["d" /* newCell */](loadedState.cells, cell.cellType), cell));
+      return Object.assign(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["a" /* blankState */](), loadedState, { cells });
 
     case 'SAVE_NOTEBOOK':
       if (!action.autosave) var lastSaved = new Date();else lastSaved = state.lastSaved;
@@ -37321,14 +37330,17 @@ let notebook = function (state = newNotebook(), action) {
       return Object.assign({}, state, { lastSaved });
 
     case 'LOAD_NOTEBOOK':
+      // note: loading a NB should always assign to a copy of the latest global
+      // and per-cell state for backwards compatibility
       var loadedState = JSON.parse(window.localStorage.getItem(action.title));
       clearHistory(loadedState);
-      return Object.assign({}, loadedState);
+      var cells = loadedState.cells.map(cell => Object.assign(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["d" /* newCell */](loadedState.cells, cell.cellType), cell));
+      return Object.assign(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["a" /* blankState */](), loadedState, { cells });
 
     case 'DELETE_NOTEBOOK':
       var title = action.title;
       if (window.localStorage.hasOwnProperty(title)) window.localStorage.removeItem(title);
-      var newState = title === state.title ? Object.assign({}, __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["d" /* newNotebook */]()) : Object.assign({}, state);
+      var newState = title === state.title ? Object.assign({}, __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["e" /* newNotebook */]()) : Object.assign({}, state);
       return newState;
 
     case 'CHANGE_PAGE_TITLE':
@@ -37337,6 +37349,10 @@ let notebook = function (state = newNotebook(), action) {
     case 'CHANGE_MODE':
       var mode = action.mode;
       return Object.assign({}, state, { mode });
+
+    case 'SET_VIEW_MODE':
+      var viewMode = action.viewMode;
+      return Object.assign({}, state, { viewMode });
 
     case 'CHANGE_SIDE_PANE_MODE':
       return Object.assign({}, state, { sidePaneMode: action.mode });
@@ -37433,7 +37449,7 @@ let cell = function (state = newNotebook(), action) {
       var cells = state.cells.slice();
       var index = cells.findIndex(c => c.id === action.id);
       var direction = action.direction == 'above' ? 0 : 1;
-      var nextCell = __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["c" /* newCell */](state.cells, 'javascript');
+      var nextCell = __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["d" /* newCell */](state.cells, 'javascript');
       cells.splice(index + direction, 0, nextCell);
       var nextState = Object.assign({}, state, { cells });
       return nextState;
@@ -37441,7 +37457,7 @@ let cell = function (state = newNotebook(), action) {
     case 'ADD_CELL':
       var newState = Object.assign({}, state);
       var cells = newState.cells.slice();
-      var nextCell = __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["c" /* newCell */](newState.cells, action.cellType);
+      var nextCell = __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["d" /* newCell */](newState.cells, action.cellType);
       var nextState = Object.assign({}, newState, { cells: [...cells, nextCell] });
       return nextState;
 
@@ -37472,11 +37488,11 @@ let cell = function (state = newNotebook(), action) {
       return nextState;
 
     case 'CELL_UP':
-      var nextState = Object.assign({}, state, { cells: __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["b" /* moveCell */](state.cells, action.id, 'up') });
+      var nextState = Object.assign({}, state, { cells: __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["c" /* moveCell */](state.cells, action.id, 'up') });
       return nextState;
 
     case 'CELL_DOWN':
-      var nextState = Object.assign({}, state, { cells: __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["b" /* moveCell */](state.cells, action.id, 'down') });
+      var nextState = Object.assign({}, state, { cells: __WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["c" /* moveCell */](state.cells, action.id, 'down') });
       return nextState;
 
     case 'UPDATE_CELL':
@@ -37498,6 +37514,27 @@ let cell = function (state = newNotebook(), action) {
       cells[index] = thisCell;
       var nextState = Object.assign({}, state, { cells });
       return nextState;
+
+    case "SET_CELL_COLLAPSED_STATE":
+      var cells = state.cells.slice();
+      var index = cells.findIndex(c => c.id === action.id);
+      var thisCell = cells[index];
+      switch (action.viewMode + "," + action.rowType) {
+        case "presentation,input":
+          thisCell.collapsePresentationViewInput = action.collapsedState;
+          break;
+        case "presentation,output":
+          thisCell.collapsePresentationViewOutput = action.collapsedState;
+          break;
+        case "editor,input":
+          thisCell.collapseEditViewInput = action.collapsedState;
+          break;
+        case "editor,output":
+          thisCell.collapseEditViewOutput = action.collapsedState;
+          break;
+      }
+      cells[index] = thisCell;
+      return Object.assign({}, state, { cells });
 
     case 'CLEAR_CELL_BEFORE_EVALUATION':
       var newState = Object.assign({}, state);
@@ -61718,7 +61755,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   }
 
   getSelectedCell() {
-    return Object(__WEBPACK_IMPORTED_MODULE_11__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
+    return Object(__WEBPACK_IMPORTED_MODULE_11__notebook_utils__["b" /* getSelectedCell */])(this.props.cells);
   }
 
   makeButtons() {
@@ -61787,12 +61824,27 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     var bodyContent = [];
 
     var bodyContent = this.props.cells.map((cell, i) => {
-      var cellComponent;
-      if (cell.cellType === 'javascript') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["d" /* JavascriptCell */], { display: true, ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-      if (cell.cellType === 'markdown') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["e" /* MarkdownCell */], { display: true, ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-      if (cell.cellType === 'raw') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["f" /* RawCell */], { display: true, ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-      if (cell.cellType === 'external scripts') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["b" /* ExternalScriptCell */], { display: true, ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
-      if (cell.cellType === 'dom') cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* DOMCell */], { display: true, ref: 'cell' + cell.id, cell: cell, pageMode: this.props.mode, actions: this.props.actions, key: cell.id, id: cell.id });
+      var cellParams = { display: true,
+        ref: 'cell' + cell.id,
+        cell: cell,
+        pageMode: this.props.mode,
+        viewMode: this.props.viewMode,
+        actions: this.props.actions,
+        key: cell.id,
+        id: cell.id
+      };
+      switch (cell.cellType) {
+        case 'javascript':
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["d" /* JavascriptCell */], cellParams);
+        case 'markdown':
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["e" /* MarkdownCell */], cellParams);
+        case 'raw':
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["f" /* RawCell */], cellParams);
+        case 'external scripts':
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["b" /* ExternalScriptCell */], cellParams);
+        case 'dom':
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__cell_jsx__["a" /* DOMCell */], cellParams);
+      }
       return cellComponent;
     });
 
@@ -61824,6 +61876,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
           { id: 'menu-containter' },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_9__notebook_menu_jsx__["a" /* default */], { actions: this.props.actions,
             mode: this.props.mode,
+            viewMode: this.props.viewMode,
             sidePaneMode: this.props.sidePaneMode,
             lastSaved: this.props.lastSaved,
             currentTitle: this.props.title }),
@@ -61985,6 +62038,12 @@ let actions = {
 			mode: mode
 		};
 	},
+	setViewMode: function (viewMode) {
+		return {
+			type: 'SET_VIEW_MODE',
+			viewMode: viewMode
+		};
+	},
 	updateInputContent: function (cellID, text) {
 		return {
 			type: 'UPDATE_CELL',
@@ -62003,7 +62062,6 @@ let actions = {
 		return {
 			type: 'CLEAR_CELL_BEFORE_EVALUATION',
 			id: cellID
-			// render: renderMode
 		};
 	},
 	renderCell: function (cellID, evaluateCell = true) {
@@ -62016,6 +62074,15 @@ let actions = {
 	runAllCells: function () {
 		return {
 			type: 'RUN_ALL_CELLS'
+		};
+	},
+	setCellCollapsedState: function (cellID, viewMode, rowType, collapsedState) {
+		return {
+			type: 'SET_CELL_COLLAPSED_STATE',
+			id: cellID,
+			viewMode: viewMode,
+			rowType: rowType,
+			collapsedState: collapsedState
 		};
 	},
 	markCellNotRendered: function (cellID, evaluateCell = true) {
@@ -62138,7 +62205,6 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
     */
     constructor(props) {
         super(props);
-        this.state = { showControls: false };
         this.hasEditor = true;
         this.editorOptions = {
             lineNumbers: false,
@@ -62153,10 +62219,12 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
         this.changeCellType = this.changeCellType.bind(this);
         this.handleCellClick = this.handleCellClick.bind(this);
         this.enterEditMode = this.enterEditMode.bind(this);
+        this.handleCollapseButtonClick = this.handleCollapseButtonClick.bind(this);
+        this.handleCollapseInputClick = this.handleCollapseInputClick.bind(this);
+        this.handleCollapseOutputClick = this.handleCollapseOutputClick.bind(this);
         this.updateInputContent = this.updateInputContent.bind(this);
         this.inputComponent = this.inputComponent.bind(this);
         this.outputComponent = this.outputComponent.bind(this);
-        this.makeButtons = this.makeButtons.bind(this);
     }
 
     renderCell(render) {
@@ -62193,6 +62261,44 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
         if (this.hasEditor) this.refs.editor.focus();
     }
 
+    handleCollapseButtonClick(rowType) {
+        var currentCollapsedState, nextCollapsedState;
+        switch (this.props.viewMode + "," + rowType) {
+            case "presentation,input":
+                currentCollapsedState = this.props.cell.collapsePresentationViewInput;
+                break;
+            case "presentation,output":
+                currentCollapsedState = this.props.cell.collapsePresentationViewOutput;
+                break;
+            case "editor,input":
+                currentCollapsedState = this.props.cell.collapseEditViewInput;
+                break;
+            case "editor,output":
+                currentCollapsedState = this.props.cell.collapseEditViewOutput;
+                break;
+        }
+        switch (currentCollapsedState) {
+            case "COLLAPSED":
+                nextCollapsedState = "EXPANDED";
+                break;
+            case "EXPANDED":
+                nextCollapsedState = "SCROLLABLE";
+                break;
+            case "SCROLLABLE":
+                nextCollapsedState = "COLLAPSED";
+                break;
+        }
+        this.props.actions.setCellCollapsedState(this.props.cell.id, this.props.viewMode, rowType, nextCollapsedState);
+    }
+
+    handleCollapseInputClick() {
+        this.handleCollapseButtonClick("input");
+    }
+
+    handleCollapseOutputClick() {
+        this.handleCollapseButtonClick("output");
+    }
+
     updateInputContent(content) {
         this.props.actions.updateInputContent(this.props.cell.id, content);
     }
@@ -62213,90 +62319,46 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', null);
     }
 
-    makeButtons() {
+    makeCellRow(rowType, collapse, collapseButtonHandler, executionStatus, mainComponent) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { className: 'cell-controls ' + (this.props.cell.selected && this.props.pageMode == 'command' ? 'controls-visible' : 'controls-invisible') },
+            { className: `cell-row ${rowType} ${collapse}` },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["b" /* ButtonToolbar */],
-                null,
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["a" /* Button */],
-                    { bsSize: 'xsmall', onClick: this.renderCell },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' })
-                ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["a" /* Button */],
-                    { bsSize: 'xsmall', onClick: this.cellDown },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-down', 'aria-hidden': 'true' })
-                ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["a" /* Button */],
-                    { bsSize: 'xsmall', onClick: this.cellUp },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-up', 'aria-hidden': 'true' })
-                ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["e" /* DropdownButton */],
-                    { bsSize: 'xsmall', id: 'cell-choice-' + this.props.id,
-                        bsStyle: 'default', title: this.props.cell.cellType,
-                        onSelect: this.changeCellType },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["i" /* MenuItem */],
-                        { eventKey: "javascript" },
-                        'JS'
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["i" /* MenuItem */],
-                        { eventKey: 'markdown' },
-                        'MD'
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["i" /* MenuItem */],
-                        { eventKey: 'raw' },
-                        'Raw'
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["i" /* MenuItem */],
-                        { eventKey: 'dom' },
-                        'DOM'
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        __WEBPACK_IMPORTED_MODULE_7_react_bootstrap__["i" /* MenuItem */],
-                        { eventKey: 'external scripts' },
-                        'External Script'
-                    )
-                )
+                'div',
+                { className: "status" },
+                executionStatus
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: "collapse-button",
+                onClick: collapseButtonHandler }),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: "main-component" },
+                mainComponent
             )
         );
     }
 
     render() {
-        var cellContainerStyle = (this.props.display ? '' : 'hidden-cell ') + (this.props.cell.selected ? 'selected-cell ' : ' ') + (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ');
+        var cellSelected = this.props.cell.selected ? 'selected-cell ' : '';
+        var editorMode = this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ';
+        var cellId = this.props.cell.id;
+        var cellType = this.props.cell.cellType;
+        var collapseInput, collapseOutput;
+        if (this.props.viewMode == "presentation") {
+            collapseInput = this.props.cell.collapsePresentationViewInput;
+            collapseOutput = this.props.cell.collapsePresentationViewOutput;
+        } else if (this.props.viewMode == "editor") {
+            collapseInput = this.props.cell.collapseEditViewInput;
+            collapseOutput = this.props.cell.collapseEditViewOutput;
+        }
+
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { id: 'cell-' + this.props.cell.id,
-                className: 'cell-container ' + cellContainerStyle,
+            { id: 'cell-' + cellId,
+                className: `cell-container ${cellSelected} ${editorMode} ${cellType}`,
                 onMouseDown: this.handleCellClick },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'cell-row' },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { id: "cell-input-status-" + this.props.cell.id,
-                        className: "cell-status cell-input " + this.props.cell.cellType },
-                    '[',
-                    this.props.cell.executionStatus,
-                    ']'
-                ),
-                this.inputComponent()
-            ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'cell-row' },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { id: "cell-output-status-" + this.props.cell.id,
-                    className: "cell-status cell-output " + this.props.cell.cellType }),
-                this.outputComponent()
-            )
+            this.makeCellRow("input", collapseInput, this.handleCollapseInputClick, `[${this.props.cell.executionStatus}]`, this.inputComponent()),
+            this.makeCellRow("output", collapseOutput, this.handleCollapseOutputClick, "", this.outputComponent())
         );
     }
 }
@@ -62459,7 +62521,6 @@ class DOMCell extends GenericCell {
 class HistoryCell extends GenericCell {
     constructor(props) {
         super(props);
-        this.state = { showControls: false };
     }
 
     render() {
@@ -82381,7 +82442,7 @@ function keyBinding(style, elem) {
 var jupyterKeybindings = [];
 
 var moveCell = (elem, dirFcn) => {
-  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(elem.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(elem.props.cells);
   if (elem.props.mode === 'command' && currentlySelected != undefined) elem.props.actions[dirFcn](currentlySelected.id);
 };
 
@@ -82394,7 +82455,7 @@ var MOVE_DOWN = [['shift+down'], function () {
 }];
 
 var ADD_CELL_ABOVE = [['a'], function () {
-  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(this.props.cells);
   if (this.props.mode === 'command') {
     if (currentlySelected != undefined) {
       this.props.actions.insertCell('javascript', currentlySelected.id, 'above');
@@ -82406,7 +82467,7 @@ var ADD_CELL_ABOVE = [['a'], function () {
 }];
 
 var ADD_CELL_BELOW = [['b'], function () {
-  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(this.props.cells);
   if (this.props.mode === 'command') {
     if (currentlySelected != undefined) {
       this.props.actions.insertCell('javascript', currentlySelected.id, 'below');
@@ -82418,7 +82479,7 @@ var ADD_CELL_BELOW = [['b'], function () {
 }];
 
 function changeCellMode(elem, cellMode) {
-  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(elem.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(elem.props.cells);
   if (elem.props.mode === 'command' && currentlySelected != undefined) {
     elem.props.actions.changeCellType(currentlySelected.id, cellMode);
   }
@@ -82437,7 +82498,11 @@ var RAW_MODE = [['r'], function () {
 }];
 
 var SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function (e) {
-  if (e.preventDfault) e.preventDefault();else e.returnValue = false;
+  if (e.preventDefault) {
+    e.preventDefault();
+  } else {
+    e.returnValue = false;
+  }
   this.props.actions.saveNotebook(this.props.title);
 }];
 
@@ -82454,7 +82519,7 @@ var DESELECT = [['shift+esc', 'shift+escape'], function () {
 function changeSelection(elem, dir, scrollToCell = true) {
   // always scroll to cell with kbd actions
   if (elem.props.mode === 'command' && elem.props.cells.length) {
-    var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(elem.props.cells);
+    var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(elem.props.cells);
     if (currentlySelected !== undefined) {
 
       var selectedID = currentlySelected.id;
@@ -82500,7 +82565,7 @@ var SELECT_DOWN = [['down'], function (e) {
 }];
 
 var RENDER_CELL = [['mod+enter'], function () {
-  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(this.props.cells);
   if (currentlySelected != undefined) {
     document.activeElement.blur();
     this.props.actions.renderCell(currentlySelected.id);
@@ -82509,7 +82574,7 @@ var RENDER_CELL = [['mod+enter'], function () {
 }];
 
 var RENDER_AND_SELECT_BELOW = [['shift+enter'], function () {
-  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(this.props.cells);
   if (currentlySelected != undefined) {
     // currentlySelected does in theory change after each of these actions, 
     // so we need to keep pulling if we need them.
@@ -82517,7 +82582,7 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function () {
     this.props.actions.renderCell(currentlySelected.id);
     this.props.actions.changeMode('command');
 
-    var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
+    var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(this.props.cells);
     var cells = this.props.cells.slice();
     var index = cells.findIndex(c => c.id === currentlySelected.id);
     if (index == cells.length - 1) this.props.actions.addCell('javascript');
@@ -82543,7 +82608,7 @@ var EDIT_MODE = [['enter', 'return'], function (e) {
     }
     this.props.actions.changeMode('edit');
   }
-  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(this.props.cells);
   if (currentlySelected != undefined) {
     var selectedID = currentlySelected.id;
     this.refs['cell' + selectedID].enterEditMode();
@@ -82551,7 +82616,7 @@ var EDIT_MODE = [['enter', 'return'], function (e) {
 }];
 
 var DELETE_CELL = [['shift+del', 'shift+backspace'], function () {
-  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["a" /* getSelectedCell */])(this.props.cells);
+  var currentlySelected = Object(__WEBPACK_IMPORTED_MODULE_0__notebook_utils__["b" /* getSelectedCell */])(this.props.cells);
   if (currentlySelected != undefined && this.props.mode == 'command') {
     this.props.actions.deleteCell(currentlySelected.id);
   }
@@ -82904,21 +82969,39 @@ class NotebookMenu extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 					'Declared Variables'
 				)
 			),
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(ViewModeToggleButton, { actions: this.props.actions, viewMode: this.props.viewMode })
+		);
+	}
+}
+
+class ViewModeToggleButton extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+	constructor(props) {
+		super(props);
+		this.toggleViewMode = this.toggleViewMode.bind(this);
+	}
+
+	toggleViewMode() {
+		if (this.props.viewMode == "presentation") {
+			this.props.actions.setViewMode("editor");
+		} else if (this.props.viewMode == "editor") {
+			this.props.actions.setViewMode("presentation");
+		}
+	}
+
+	render() {
+		var buttonString;
+		if (this.props.viewMode == "presentation") {
+			buttonString = "Presentation";
+		} else if (this.props.viewMode == "editor") {
+			buttonString = "Editor";
+		}
+		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+			__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["b" /* ButtonToolbar */],
+			{ id: 'notebook-view-mode-controls', className: 'mode-buttons' },
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["b" /* ButtonToolbar */],
-				{ id: 'notebook-view-mode-controls', className: 'mode-buttons' },
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["a" /* Button */],
-					{ bsSize: 'xsmall', onClick: () => {
-							this.changeMode('editor-modes');
-						} },
-					'Editor'
-				),
-				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["a" /* Button */],
-					{ bsSize: 'xsmall' },
-					'Presentation'
-				)
+				__WEBPACK_IMPORTED_MODULE_1_react_bootstrap__["a" /* Button */],
+				{ bsSize: 'xsmall', onClick: this.toggleViewMode },
+				buttonString
 			)
 		);
 	}

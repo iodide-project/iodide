@@ -47,6 +47,12 @@ let actions = {
 			mode: mode
 		}
 	},
+    setViewMode: function(viewMode) {
+        return {
+            type: 'SET_VIEW_MODE',
+            viewMode: viewMode,
+        }
+    },
 	updateInputContent: function(cellID, text) {
 		return {
 			type: 'UPDATE_CELL',
@@ -65,7 +71,6 @@ let actions = {
         return {
             type: 'CLEAR_CELL_BEFORE_EVALUATION',
             id: cellID,
-            // render: renderMode
         }
     },
 	renderCell: function(cellID, evaluateCell=true) {
@@ -80,6 +85,15 @@ let actions = {
 			type: 'RUN_ALL_CELLS'
 		}
 	},
+    setCellCollapsedState: function(cellID, viewMode, rowType, collapsedState) {
+        return {
+            type: 'SET_CELL_COLLAPSED_STATE',
+            id: cellID,
+            viewMode: viewMode,
+            rowType: rowType,
+            collapsedState: collapsedState
+        }
+    },
     markCellNotRendered: function(cellID, evaluateCell=true) {
         return {
             type: 'MARK_CELL_NOT_RENDERED',

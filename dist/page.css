@@ -26,7 +26,8 @@ div#headerbar {
 
 div#cells {
 	flex-grow: 1;
-	overflow: auto;
+	overflow-y: auto;
+	width: 100%
 }
 
 
@@ -122,10 +123,11 @@ div.last-saved {
 /************************************************/
 /*  cell and cell container styles*/
 
-div.cell-container {
+div.cell-container{
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-right: 5px;
+	padding-left: 5px;
 	margin-top: 15px;
 	margin-bottom: 15px;
 	margin-left: 40px;
@@ -133,33 +135,76 @@ div.cell-container {
 	display: flex;
 	flex-direction: column;
 	outline: #f4f4f4 1px solid;
+	width: calc(100% - 80px);
 }
 
 div.cell-row{
 	display: flex;
+	padding: 1px;
 }
+
 
 div.editor {
-	flex-grow: 1;
-	max-width: 90%;
 }
 
-div.cell-status{	
+div.status{
 	font-family: monospace;
 	white-space: pre;
-	padding-right:8px;
-	flex-basis: 70px;
+	flex-basis: 50px;
 	flex-shrink: 0;
 	flex-grow: 0;
 	text-align: right;
 	color: #aaa
 }
 
-div.cell-status.markdown,
-div.cell-status.raw,
-div.cell-status.dom {
-	visibility: hidden;
-	height: 0px
+div.collapse-button{
+    margin-right: 3px;
+    margin-left: 3px;
+    flex-basis: 15px;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+div.javascript div.collapse-button:hover{
+	background: #fbfbfb;
+	outline: 1px solid #ddd;
+}
+
+div.main-component{
+	flex-grow: 1;
+	width: calc(100% - 80px);
+}
+
+
+div.javascript div.COLLAPSED div.status{
+	height: 20px;
+	flex-basis: 0px;
+}
+div.javascript div.COLLAPSED div.collapse-button{
+	height: 20px;
+	flex-grow: 1;
+	outline: #ddd 1px solid;
+}
+div.javascript div.COLLAPSED div.main-component{
+	height: 20px;
+	flex-shrink: 1;
+	flex-basis: 0px;
+	flex-grow: 0;
+	overflow:  hidden;
+/* 	outline: #ddd 1px solid; */
+}
+
+div.javascript div.SCROLLABLE div.main-component{
+	max-height: 300px;
+	overflow:  auto;
+	outline: #ddd 1px solid;
+} 
+
+div.cell-container.markdown div.status,
+div.cell-container.raw div.status,
+div.cell-container.dom div.status {
+    visibility: hidden;
+    height: 0px
 }
 
 div.left-of-cell {

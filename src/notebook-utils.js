@@ -27,7 +27,13 @@ function newCell(cells, cellType){
     executionStatus: " ",
     // evaluationOld set to true if the content of the editor changes from whatever
     // produced the most recent output value
-    evaluationOld: true
+    evaluationOld: true,
+    // these track the collapsed state of input and outputs
+    // must be one of "COLLAPSED" "SCROLLABLE" "EXPANDED"
+    collapseEditViewInput: "EXPANDED",
+    collapseEditViewOutput: "EXPANDED",
+    collapsePresentationViewInput: "COLLAPSED",
+    collapsePresentationViewOutput: "EXPANDED",
   }
 }
 
@@ -55,7 +61,8 @@ function blankState(){
     declaredProperties:{},
     lastValue: undefined,
     lastSaved: undefined,
-    mode: 'command',
+    mode: 'command', // command, edit
+    viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
     history:[],
     externalScripts:[],

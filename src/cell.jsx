@@ -19,7 +19,6 @@ class GenericCell extends React.Component {
     */
     constructor(props) {
         super(props)
-        this.state = {showControls:false}
         this.hasEditor = true
         this.editorOptions = {
             lineNumbers: false,
@@ -35,12 +34,12 @@ class GenericCell extends React.Component {
         this.changeCellType = this.changeCellType.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
         this.enterEditMode = this.enterEditMode.bind(this)
+        this.handleCollapseButtonClick = this.handleCollapseButtonClick.bind(this)
+        this.handleCollapseInputClick = this.handleCollapseInputClick.bind(this)
+        this.handleCollapseOutputClick = this.handleCollapseOutputClick.bind(this)
         this.updateInputContent = this.updateInputContent.bind(this)
         this.inputComponent = this.inputComponent.bind(this)
         this.outputComponent = this.outputComponent.bind(this)
-        this.makeButtons = this.makeButtons.bind(this)
-
-
     }
 
     renderCell(render) {
@@ -77,10 +76,51 @@ class GenericCell extends React.Component {
         if (this.hasEditor) this.refs.editor.focus()
     }
 
+    handleCollapseButtonClick(rowType){
+        var currentCollapsedState,nextCollapsedState;
+        switch (this.props.viewMode + "," + rowType){
+            case "presentation,input":
+              currentCollapsedState = this.props.cell.collapsePresentationViewInput
+              break
+            case "presentation,output":
+              currentCollapsedState = this.props.cell.collapsePresentationViewOutput
+              break
+            case "editor,input":
+              currentCollapsedState = this.props.cell.collapseEditViewInput
+              break
+            case "editor,output":
+              currentCollapsedState = this.props.cell.collapseEditViewOutput
+              break
+        }
+        switch (currentCollapsedState){
+            case "COLLAPSED":
+              nextCollapsedState = "EXPANDED"
+              break
+            case "EXPANDED":
+              nextCollapsedState = "SCROLLABLE"
+              break
+            case "SCROLLABLE":
+              nextCollapsedState = "COLLAPSED"
+              break
+        }
+        this.props.actions.setCellCollapsedState(
+            this.props.cell.id,
+            this.props.viewMode,
+            rowType,
+            nextCollapsedState)
+    }
+
+    handleCollapseInputClick(){
+        this.handleCollapseButtonClick("input")
+    }
+
+    handleCollapseOutputClick(){
+        this.handleCollapseButtonClick("output")
+    }
+
     updateInputContent(content) {
         this.props.actions.updateInputContent(this.props.cell.id, content)
     }
-
 
     inputComponent(){
         return (
@@ -95,55 +135,58 @@ class GenericCell extends React.Component {
     }
 
     outputComponent(){
-        return <div></div>
+        return <div ></div>
     }
 
-    makeButtons(){
+    makeCellRow(rowType,collapse,collapseButtonHandler,
+        executionStatus,mainComponent) {
         return (
-            <div className={'cell-controls ' + (
-                (this.props.cell.selected &&
-                            this.props.pageMode == 'command') ? 'controls-visible' : 'controls-invisible')}>
-                <ButtonToolbar >
-                    <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
-                    <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
-                    <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
-                      <DropdownButton bsSize="xsmall" id={'cell-choice-' + this.props.id}
-                        bsStyle='default' title={this.props.cell.cellType}
-                        onSelect={this.changeCellType} >
-                        <MenuItem eventKey={"javascript"} >JS</MenuItem>
-                        <MenuItem eventKey={'markdown'} >MD</MenuItem>
-                        <MenuItem eventKey={'raw'} >Raw</MenuItem>
-                        <MenuItem eventKey={'dom'} >DOM</MenuItem>
-                        <MenuItem eventKey={'external scripts'} >External Script</MenuItem>
-                    </ DropdownButton>
-                </ ButtonToolbar>
+            <div className={`cell-row ${rowType} ${collapse}`}>
+                <div className ={"status"}>
+                    {executionStatus}
+                </div>
+                <div className ={"collapse-button"}
+                    onClick={collapseButtonHandler}>
+                </div>
+                <div className ={"main-component"}>
+                    {mainComponent}
+                </div>
             </div>
         )
     }
 
     render() {
-        var cellContainerStyle = ((this.props.display ? '' : 'hidden-cell ') +
-            (this.props.cell.selected ? 'selected-cell ' : ' ') + 
-            (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')
-            )
+        var cellSelected = this.props.cell.selected ? 'selected-cell ' : ''
+        var editorMode = (
+            (this.props.cell.selected && this.props.pageMode == 'edit') ?
+            'edit-mode ' : 'command-mode '
+        )
+        var cellId = this.props.cell.id
+        var cellType = this.props.cell.cellType
+        var collapseInput, collapseOutput;
+        if (this.props.viewMode=="presentation"){
+            collapseInput = this.props.cell.collapsePresentationViewInput
+            collapseOutput = this.props.cell.collapsePresentationViewOutput
+        } else if (this.props.viewMode=="editor"){
+            collapseInput = this.props.cell.collapseEditViewInput
+            collapseOutput = this.props.cell.collapseEditViewOutput
+        }
+
         return (
-            <div id={'cell-'+ this.props.cell.id}
-                className={'cell-container '+ cellContainerStyle}
+            <div id={'cell-'+ cellId}
+                className={`cell-container ${cellSelected} ${editorMode} ${cellType}`}
                 onMouseDown={this.handleCellClick} >
-                <div className="cell-row">
-                    <div id = {"cell-input-status-"+ this.props.cell.id}
-                        className ={"cell-status cell-input " + this.props.cell.cellType}>
-                        [{this.props.cell.executionStatus}]
-                    </div>
-                    {this.inputComponent()}
-                </div>
-                <div className='cell-row'>
-                    <div id = {"cell-output-status-"+ this.props.cell.id}
-                        className ={"cell-status cell-output " + this.props.cell.cellType}>
-                        {/* eventually we may wish to add ouptut status here, a la jupyter */}
-                    </div>
-                    {this.outputComponent()}
-                </div>
+                {this.makeCellRow(
+                    "input",
+                    collapseInput,
+                    this.handleCollapseInputClick,
+                    `[${this.props.cell.executionStatus}]`,
+                    this.inputComponent())}
+                {this.makeCellRow("output",
+                    collapseOutput,
+                    this.handleCollapseOutputClick,
+                    "",
+                    this.outputComponent())}
             </div>
         )
     }
@@ -310,7 +353,6 @@ class DOMCell extends GenericCell {
 class HistoryCell extends GenericCell {
     constructor(props) {
         super(props)
-        this.state = {showControls:false}
     }
 
     render() {

@@ -31,10 +31,14 @@ let notebook = function (state=newNotebook(), action) {
       return Object.assign({}, state)
 
     case 'IMPORT_NOTEBOOK':
-      // this may need to be refactored
-      var newState = action.newState
+      // note: loading a NB should always assign to a copy of the latest global
+      // and per-cell state for backwards compatibility
+      var loadedState = action.newState
       clearHistory(newState)
-      return newState
+      var cells = loadedState.cells.map(
+        cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
+      return Object.assign(NB.blankState(), loadedState, {cells})
+
 
     case 'SAVE_NOTEBOOK':
       if (!action.autosave) var lastSaved = new Date()
@@ -53,9 +57,14 @@ let notebook = function (state=newNotebook(), action) {
       return Object.assign({}, state, {lastSaved})
 
     case 'LOAD_NOTEBOOK':
+      // note: loading a NB should always assign to a copy of the latest global
+      // and per-cell state for backwards compatibility
       var loadedState = JSON.parse(window.localStorage.getItem(action.title))
       clearHistory(loadedState)
-      return Object.assign({}, loadedState)
+      var cells = loadedState.cells.map(
+        cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
+      return Object.assign(NB.blankState(), loadedState, {cells})
+
 
     case 'DELETE_NOTEBOOK':
       var title = action.title
@@ -69,6 +78,10 @@ let notebook = function (state=newNotebook(), action) {
     case 'CHANGE_MODE':
       var mode = action.mode
       return Object.assign({}, state, {mode});
+
+    case 'SET_VIEW_MODE':
+      var viewMode = action.viewMode
+      return Object.assign({}, state, {viewMode});
     
     case 'CHANGE_SIDE_PANE_MODE':
       return Object.assign({}, state, {sidePaneMode: action.mode})

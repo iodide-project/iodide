@@ -176,13 +176,37 @@ class NotebookMenu extends React.Component {
                     <Button bsSize='xsmall'onClick={ ()=>{this.changeSidePaneMode('history')} }>History</Button>
                     <Button bsSize='xsmall'onClick={()=>{this.changeSidePaneMode('declared variables')} }>Declared Variables</Button>
 				</ButtonToolbar>
-				<ButtonToolbar id='notebook-view-mode-controls' className='mode-buttons'>
-					<Button bsSize='xsmall' onClick={ ()=>{this.changeMode('editor-modes')} }>Editor</Button>
-					<Button bsSize='xsmall'>Presentation</Button>
-				</ButtonToolbar>
+                <ViewModeToggleButton actions={this.props.actions} viewMode={this.props.viewMode} />
 			</div>
 		)
 	}
+}
+
+
+class ViewModeToggleButton extends React.Component {
+    constructor(props) {
+        super(props)
+        this.toggleViewMode = this.toggleViewMode.bind(this)
+    }
+
+    toggleViewMode(){
+        if (this.props.viewMode=="presentation") {
+            this.props.actions.setViewMode("editor")
+        } else if (this.props.viewMode=="editor"){
+            this.props.actions.setViewMode("presentation")
+        }
+    }
+
+    render() {
+        var buttonString;
+        if (this.props.viewMode=="presentation"){buttonString="Presentation"}
+        else if (this.props.viewMode=="editor"){buttonString="Editor"}
+        return (
+            <ButtonToolbar id='notebook-view-mode-controls' className='mode-buttons'>
+                <Button bsSize='xsmall' onClick={this.toggleViewMode}>{buttonString}</Button>
+            </ButtonToolbar>
+        )
+    }
 }
 
 export default NotebookMenu

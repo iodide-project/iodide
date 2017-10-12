@@ -62,7 +62,7 @@ class SidePane extends React.Component {
         contents.push(<div className='no-history'>No History</div>)
       }
     } else if (this.props.sidePaneMode == 'declared variables') {
-      contents = <DeclaredVariables variables={this.props.declaredProperties}  />
+      contents = <DeclaredVariables variables={this.props.declaredProperties} />
     }
 
     return (
@@ -156,13 +156,28 @@ class Page extends React.Component {
     var bodyContent = []
 
     var bodyContent = this.props.cells.map((cell,i)=> {
-      var cellComponent
-      if (cell.cellType === 'javascript') cellComponent = <JavascriptCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'markdown') cellComponent = <MarkdownCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'raw') cellComponent = <RawCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'external scripts') cellComponent = <ExternalScriptCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      if (cell.cellType === 'dom') cellComponent = <DOMCell display={true} ref={'cell'+cell.id} cell={cell} pageMode={this.props.mode} actions={this.props.actions} key={cell.id} id={cell.id} />
-      return cellComponent
+        var cellParams = {display:true,
+            ref: 'cell'+cell.id,
+            cell: cell,
+            pageMode: this.props.mode,
+            viewMode: this.props.viewMode,
+            actions: this.props.actions,
+            key: cell.id,
+            id: cell.id
+        }
+        switch (cell.cellType){
+            case 'javascript':
+                return <JavascriptCell {...cellParams}/>
+            case 'markdown':
+                return <MarkdownCell {...cellParams}/>
+            case 'raw':
+                return <RawCell {...cellParams}/>
+            case 'external scripts':
+                return <ExternalScriptCell {...cellParams}/>
+            case 'dom':
+                return <DOMCell {...cellParams}/>
+        }
+        return cellComponent
     });
 
     var sp = <span></span>
@@ -186,6 +201,7 @@ class Page extends React.Component {
                 <div id="menu-containter">
                     <NotebookMenu actions={this.props.actions}
                         mode={this.props.mode}
+                        viewMode={this.props.viewMode}
                         sidePaneMode={this.props.sidePaneMode}
                         lastSaved={this.props.lastSaved}
                         currentTitle={this.props.title} />
