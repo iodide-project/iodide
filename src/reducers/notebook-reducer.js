@@ -6,7 +6,7 @@ function clearHistory(loadedState) {
   loadedState.history = []
   loadedState.externalScripts = []
   loadedState.executionNumber = 0
-  loadedState.cells = loadedState.cells.slice()
+  loadedState.cells = [...loadedState.cells.slice()]
   loadedState.cells.forEach(cell=>{
     if (cell.cellType==='javascript') cell.value = undefined
   })
@@ -40,7 +40,7 @@ let notebook = function (state=newNotebook(), action) {
       var lastSaved = new Date()
       var outputState = Object.assign({}, state, {lastSaved}, {cells: state.cells.slice().map(c=>{
           var newC = Object.assign({},c)
-          newC.value = undefined
+          if (newC.cellType === 'javascript') newC.value = undefined
           return newC
         }
       )})
