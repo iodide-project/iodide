@@ -1,5 +1,5 @@
-// a Page is a collection of cells. They are displayed in order. All javascript cells share
-// the same interpreter.
+// a Page is a collection of cells. They are displayed in order.
+// All javascript cells share the same interpreter.
 
 import React, {createElement} from 'react'
 import JSONTree from 'react-json-tree'
@@ -8,6 +8,7 @@ import markdown from 'codemirror/mode/markdown/markdown'
 import CodeMirror from '@skidding/react-codemirror'
 import matchbrackets from 'codemirror/addon/edit/matchbrackets'
 import closebrackets from 'codemirror/addon/edit/closebrackets'
+import autorefresh from 'codemirror/addon/display/autorefresh'
 
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
@@ -24,7 +25,8 @@ class GenericCell extends React.Component {
             lineNumbers: false,
             mode: this.props.cell.cellType,
             lineWrapping: false,
-            theme: 'eclipse'
+            theme: 'eclipse',
+            autoRefresh: true
         }
         // explicitly bind "this" for all methods in constructors
         this.renderCell = this.renderCell.bind(this)
@@ -129,7 +131,7 @@ class GenericCell extends React.Component {
                     value={this.props.cell.content}
                     onChange={this.updateInputContent} 
                     onFocus={this.enterEditMode}
-                    options={this.editorOptions} />
+                    options={this.editorOptions}/>
             </div>
         )
     }
