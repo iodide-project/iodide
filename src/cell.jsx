@@ -144,14 +144,32 @@ class GenericCell extends React.Component {
     }
 
     outputComponent(){
-        return <div></div>
+        return <div ></div>
+    }
+
+    makeCellRow(rowType,collapse,collapseButtonHandler,
+        executionStatus,mainComponent) {
+        return (
+            <div className={`cell-row ${rowType} ${collapse}`}>
+                <div className ={"status"}>
+                    {executionStatus}
+                </div>
+                <div className ={"collapse-button"}
+                    onDoubleClick={collapseButtonHandler}>
+                </div>
+                <div className ={"main-component"}>
+                    {mainComponent}
+                </div>
+            </div>
+        )
     }
 
     render() {
-        var cellContainerStyle = ((this.props.display ? '' : 'hidden-cell ') +
-            (this.props.cell.selected ? 'selected-cell ' : ' ') + 
-            (this.props.cell.selected && this.props.pageMode == 'edit' ? 'edit-mode ' : 'command-mode ')
-            )
+        var cellSelected = this.props.cell.selected ? 'selected-cell ' : ''
+        var editorMode = (
+            (this.props.cell.selected && this.props.pageMode == 'edit') ?
+            'edit-mode ' : 'command-mode '
+        )
         var cellId = this.props.cell.id
         var cellType = this.props.cell.cellType
         var collapseInput, collapseOutput;
@@ -165,28 +183,42 @@ class GenericCell extends React.Component {
 
         return (
             <div id={'cell-'+ cellId}
-                className={'cell-container '+ cellContainerStyle}
+                className={`cell-container ${cellSelected} ${editorMode} ${cellType}`}
                 onMouseDown={this.handleCellClick} >
-                <div className={"cell-row "+collapseInput}>
-                    <div className ={"cell-status cell-input " + cellType}>
-                        [{this.props.cell.executionStatus}]
-                    </div>
-                    <div className ={"cell-collapse-button cell-input " + cellType}
-                        onDoubleClick={this.handleCollapseInputClick}></div>
-                    {this.inputComponent()}
-                </div>
-                <div className={"cell-row "+collapseOutput}>
-                    <div className ={"cell-status cell-output " + cellType}>
-                        {/* eventually we may wish to add ouptut status here, a la jupyter */}
-                    </div>
-                    <div className ={"cell-collapse-button cell-output " + cellType}
-                        onDoubleClick={this.handleCollapseOutputClick}></div>
-                    {this.outputComponent()}
-                </div>
+                {this.makeCellRow(
+                    "input",
+                    collapseInput,
+                    this.handleCollapseInputClick,
+                    `[${this.props.cell.executionStatus}]`,
+                    this.inputComponent())}
+                {this.makeCellRow("output",
+                    collapseOutput,
+                    this.handleCollapseOutputClick,
+                    "",
+                    this.outputComponent())}
             </div>
         )
     }
 }
+
+                // <div className={`cell-row cell-input ${collapseInput}`}>
+                //     <div className ={"cell-status"}>
+                //         [{this.props.cell.executionStatus}]
+                //     </div>
+                //     <div className ={"cell-collapse-button "}
+                //         onDoubleClick={this.handleCollapseInputClick}></div>
+                //     <div className ={"cell-main-component"}>
+                //         {this.inputComponent()}
+                //     <div>
+                // </div>
+                // <div className={`cell-row cell-output ${collapseOutput}`}>
+                //     <div className ={"cell-status"}>
+                //         {/* eventually we may wish to add ouptut status here, a la jupyter */}
+                //     </div>
+                //     <div className ={"cell-collapse-button"}
+                //         onDoubleClick={this.handleCollapseOutputClick}></div>
+                //     {this.outputComponent()}
+                // </div>
 
 
 class RawCell extends GenericCell {
