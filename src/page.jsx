@@ -233,7 +233,7 @@ class Page extends React.Component {
                 </div>
                 
             </div>
-            <div id='cells'>
+            <div id='cells' className={this.props.viewMode}>
             	{bodyContent}
             </div>
             {sp}
