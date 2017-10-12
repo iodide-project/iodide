@@ -77,15 +77,7 @@ class GenericCell extends React.Component {
     }
 
     handleCollapseButtonClick(rowType){
-        console.log(rowType,
-            this.props.cell.collapseEditViewInput,
-            this.props.cell.collapseEditViewOutput,
-            this.props.cell.collapsePresentationViewInput,
-            this.props.cell.collapsePresentationViewOutput,
-            this.props.viewMode
-        )
         var currentCollapsedState,nextCollapsedState;
-        console.log(this.props.viewMode + "," + rowType)
         switch (this.props.viewMode + "," + rowType){
             case "presentation,input":
               currentCollapsedState = this.props.cell.collapsePresentationViewInput
@@ -111,7 +103,6 @@ class GenericCell extends React.Component {
               nextCollapsedState = "COLLAPSED"
               break
         }
-        console.log(currentCollapsedState,nextCollapsedState)
         this.props.actions.setCellCollapsedState(
             this.props.cell.id,
             this.props.viewMode,
@@ -119,11 +110,13 @@ class GenericCell extends React.Component {
             nextCollapsedState)
     }
 
-    handleCollapseInputClick(){
+    handleCollapseInputClick(evt){
+        console.log(evt)
         this.handleCollapseButtonClick("input")
     }
 
     handleCollapseOutputClick(){
+        console.log(evt)
         this.handleCollapseButtonClick("output")
     }
 
@@ -200,25 +193,6 @@ class GenericCell extends React.Component {
         )
     }
 }
-
-                // <div className={`cell-row cell-input ${collapseInput}`}>
-                //     <div className ={"cell-status"}>
-                //         [{this.props.cell.executionStatus}]
-                //     </div>
-                //     <div className ={"cell-collapse-button "}
-                //         onDoubleClick={this.handleCollapseInputClick}></div>
-                //     <div className ={"cell-main-component"}>
-                //         {this.inputComponent()}
-                //     <div>
-                // </div>
-                // <div className={`cell-row cell-output ${collapseOutput}`}>
-                //     <div className ={"cell-status"}>
-                //         {/* eventually we may wish to add ouptut status here, a la jupyter */}
-                //     </div>
-                //     <div className ={"cell-collapse-button"}
-                //         onDoubleClick={this.handleCollapseOutputClick}></div>
-                //     {this.outputComponent()}
-                // </div>
 
 
 class RawCell extends GenericCell {
