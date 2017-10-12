@@ -235,9 +235,15 @@ class MarkdownCell extends GenericCell {
         this.props.actions.markCellNotRendered(this.props.cell.id)
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.cell.selected
+            && this.refs.hasOwnProperty('editor')
+            && this.props.pageMode == 'edit') {
+            this.refs.editor.getCodeMirror().refresh()
+        } 
+    }
+
     inputComponent(){
-        // the editor is shown if this cell is being edited
-        // or if !this.props.cell.rendered
         var editorDisplayStyle = (
             !this.props.cell.rendered ||
             (this.props.cell.selected
@@ -251,9 +257,8 @@ class MarkdownCell extends GenericCell {
             options={this.editorOptions} />
 
         if (this.props.cell.selected
-            && this.refs.hasOwnProperty('editor') // FIXME-- is this needed?
+            && this.refs.hasOwnProperty('editor')
             && this.props.pageMode == 'edit') {
-            this.refs.editor.getCodeMirror().refresh()
             this.refs.editor.focus()
         }
         return (
@@ -285,12 +290,15 @@ class DOMCell extends GenericCell {
 
     constructor(props) {
         super(props)
-        if (!props.cell.hasOwnProperty('elementType')) props.actions.changeElementType(props.cell.id, 'div')
-        if (!props.cell.hasOwnProperty('domElementID')) props.actions.changeDOMElementID(props.cell.id, 'dom-cell-'+props.cell.id)
         // explicitly bind "this" for all methods in constructors
         this.changeElementType = this.changeElementType.bind(this)
         this.changeElementID = this.changeElementID.bind(this)
         this.hasEditor = false
+    }
+
+    componentWillMount() {
+        if (!this.props.cell.hasOwnProperty('elementType')) this.props.actions.changeElementType(this.props.cell.id, 'div')
+        if (!this.props.cell.hasOwnProperty('domElementID')) this.props.actions.changeDOMElementID(this.props.cell.id, 'dom-cell-'+this.props.cell.id)
     }
 
     changeElementType(event) {

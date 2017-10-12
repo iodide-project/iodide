@@ -37304,6 +37304,10 @@ function clearHistory(loadedState) {
   loadedState.history = [];
   loadedState.externalScripts = [];
   loadedState.executionNumber = 0;
+  loadedState.cells = [...loadedState.cells.slice()];
+  loadedState.cells.forEach(cell => {
+    if (cell.cellType === 'javascript') cell.value = undefined;
+  });
 }
 
 let notebook = function (state = newNotebook(), action) {
@@ -37328,12 +37332,17 @@ let notebook = function (state = newNotebook(), action) {
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
       var loadedState = action.newState;
+      clearHistory(newState);
       var cells = loadedState.cells.map(cell => Object.assign(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["d" /* newCell */](loadedState.cells, cell.cellType), cell));
       return Object.assign(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["a" /* blankState */](), loadedState, { cells });
 
     case 'SAVE_NOTEBOOK':
-      var lastSaved = new Date();
-      var outputState = Object.assign({}, state, { lastSaved });
+      if (!action.autosave) var lastSaved = new Date();else lastSaved = state.lastSaved;
+      var outputState = Object.assign({}, state, { lastSaved }, { cells: state.cells.slice().map(c => {
+          var newC = Object.assign({}, c);
+          if (newC.cellType === 'javascript') newC.value = undefined;
+          return newC;
+        }) });
       clearHistory(outputState);
       var title;
       if (action.title !== undefined) title = action.title;else title = state.title;
@@ -37344,6 +37353,7 @@ let notebook = function (state = newNotebook(), action) {
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
       var loadedState = JSON.parse(window.localStorage.getItem(action.title));
+      clearHistory(loadedState);
       var cells = loadedState.cells.map(cell => Object.assign(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["d" /* newCell */](loadedState.cells, cell.cellType), cell));
       return Object.assign(__WEBPACK_IMPORTED_MODULE_0__notebook_utils_js__["a" /* blankState */](), loadedState, { cells });
 
@@ -61643,6 +61653,18 @@ module.exports = ReactDOMInvalidARIAHook;
 
 const AUTOSAVE = __WEBPACK_IMPORTED_MODULE_10__settings_jsx__["a" /* default */].labels.AUTOSAVE;
 
+function prettyDate(time) {
+  var date = new Date(time),
+      diff = (new Date().getTime() - date.getTime()) / 1000,
+      day_diff = Math.floor(diff / 86400);
+  // return date for anything greater than a day
+  if (isNaN(day_diff) || day_diff < 0 || day_diff > 0) {
+    return date.getDate() + " " + date.toDateString().split(" ")[1];
+  }
+
+  return day_diff == 0 && (diff < 60 && "just now" || diff < 120 && "1 minute ago" || diff < 3600 && Math.floor(diff / 60) + " minutes ago" || diff < 7200 && "1 hour ago" || diff < 86400 && Math.floor(diff / 3600) + " hours ago") || day_diff == 1 && "Yesterday" || day_diff < 7 && day_diff + " days ago" || day_diff < 31 && Math.ceil(day_diff / 7) + " weeks ago";
+}
+
 class SidePane extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   constructor(props) {
     super(props);
@@ -61711,7 +61733,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
           this.props.actions.deleteNotebook(n);
         });
       }
-      this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title));
+      this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title), true);
     }, 1000 * 60);
   }
 
@@ -61843,7 +61865,6 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       { className: 'controls' },
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-plus add-cell', onClick: this.addCell })
     );
-
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
       { id: 'notebook-container' },
@@ -61866,64 +61887,73 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
             'div',
             { id: 'cell-menu', className: 'cell-controls controls-visible' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["b" /* ButtonToolbar */],
-              null,
+              'div',
+              { className: 'left-cell-menu' },
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
-                { bsSize: 'xsmall', onClick: this.renderCell },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' })
-              ),
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
-                { bsSize: 'xsmall', onClick: this.cellDown },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-down', 'aria-hidden': 'true' })
-              ),
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
-                { bsSize: 'xsmall', onClick: this.cellUp },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-up', 'aria-hidden': 'true' })
-              ),
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
-                { bsSize: 'xsmall', onClick: this.addCell },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
-              ),
-              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["e" /* DropdownButton */],
-                { bsSize: 'xsmall',
-                  bsStyle: 'default', title: this.getSelectedCell().cellType,
-                  onSelect: this.changeCellType },
+                __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["b" /* ButtonToolbar */],
+                null,
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
-                  { eventKey: "javascript" },
-                  'JS'
+                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
+                  { bsSize: 'xsmall', onClick: this.renderCell },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' })
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
-                  { eventKey: 'markdown' },
-                  'MD'
+                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
+                  { bsSize: 'xsmall', onClick: this.cellDown },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-down', 'aria-hidden': 'true' })
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
-                  { eventKey: 'raw' },
-                  'Raw'
+                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
+                  { bsSize: 'xsmall', onClick: this.cellUp },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-level-up', 'aria-hidden': 'true' })
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
-                  { eventKey: 'dom' },
-                  'DOM'
+                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
+                  { bsSize: 'xsmall', onClick: this.addCell },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
-                  { eventKey: 'external scripts' },
-                  'External Script'
+                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["e" /* DropdownButton */],
+                  { bsSize: 'xsmall',
+                    bsStyle: 'default', title: this.getSelectedCell().cellType,
+                    onSelect: this.changeCellType },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
+                    { eventKey: "javascript" },
+                    'JS'
+                  ),
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
+                    { eventKey: 'markdown' },
+                    'MD'
+                  ),
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
+                    { eventKey: 'raw' },
+                    'Raw'
+                  ),
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
+                    { eventKey: 'dom' },
+                    'DOM'
+                  ),
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["i" /* MenuItem */],
+                    { eventKey: 'external scripts' },
+                    'External Script'
+                  )
                 )
+              ),
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'page-mode' },
+                this.props.mode
               )
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               'div',
-              { className: 'page-mode' },
-              this.props.mode
+              { className: 'last-saved' },
+              this.props.lastSaved !== undefined ? 'last saved: ' + prettyDate(this.props.lastSaved) : ''
             )
           )
         )
@@ -61968,10 +61998,11 @@ let actions = {
 			type: 'EXPORT_NOTEBOOK'
 		};
 	},
-	saveNotebook: function (title = undefined) {
+	saveNotebook: function (title = undefined, autosave = false) {
 		return {
 			type: 'SAVE_NOTEBOOK',
-			title: title
+			title: title,
+			autosave
 		};
 	},
 	loadNotebook: function (title) {
@@ -62222,9 +62253,7 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
     }
 
     handleCollapseButtonClick(rowType) {
-        console.log(rowType, this.props.cell.collapseEditViewInput, this.props.cell.collapseEditViewOutput, this.props.cell.collapsePresentationViewInput, this.props.cell.collapsePresentationViewOutput, this.props.viewMode);
         var currentCollapsedState, nextCollapsedState;
-        console.log(this.props.viewMode + "," + rowType);
         switch (this.props.viewMode + "," + rowType) {
             case "presentation,input":
                 currentCollapsedState = this.props.cell.collapsePresentationViewInput;
@@ -62250,7 +62279,6 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                 nextCollapsedState = "COLLAPSED";
                 break;
         }
-        console.log(currentCollapsedState, nextCollapsedState);
         this.props.actions.setCellCollapsedState(this.props.cell.id, this.props.viewMode, rowType, nextCollapsedState);
     }
 
@@ -62292,7 +62320,7 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                 executionStatus
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: "collapse-button",
-                onDoubleClick: collapseButtonHandler }),
+                onClick: collapseButtonHandler }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: "main-component" },
@@ -62325,26 +62353,6 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
         );
     }
 }
-
-// <div className={`cell-row cell-input ${collapseInput}`}>
-//     <div className ={"cell-status"}>
-//         [{this.props.cell.executionStatus}]
-//     </div>
-//     <div className ={"cell-collapse-button "}
-//         onDoubleClick={this.handleCollapseInputClick}></div>
-//     <div className ={"cell-main-component"}>
-//         {this.inputComponent()}
-//     <div>
-// </div>
-// <div className={`cell-row cell-output ${collapseOutput}`}>
-//     <div className ={"cell-status"}>
-//         {/* eventually we may wish to add ouptut status here, a la jupyter */}
-//     </div>
-//     <div className ={"cell-collapse-button"}
-//         onDoubleClick={this.handleCollapseOutputClick}></div>
-//     {this.outputComponent()}
-// </div>
-
 
 class RawCell extends GenericCell {
     constructor(props) {
@@ -62385,9 +62393,13 @@ class MarkdownCell extends GenericCell {
         this.props.actions.markCellNotRendered(this.props.cell.id);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode == 'edit') {
+            this.refs.editor.getCodeMirror().refresh();
+        }
+    }
+
     inputComponent() {
-        // the editor is shown if this cell is being edited
-        // or if !this.props.cell.rendered
         var editorDisplayStyle = !this.props.cell.rendered || this.props.cell.selected && this.props.pageMode == 'edit' ? "block" : "none";
 
         var cmInstance = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
@@ -62396,9 +62408,7 @@ class MarkdownCell extends GenericCell {
             onFocus: this.enterEditMode,
             options: this.editorOptions });
 
-        if (this.props.cell.selected && this.refs.hasOwnProperty('editor') // FIXME-- is this needed?
-        && this.props.pageMode == 'edit') {
-            this.refs.editor.getCodeMirror().refresh();
+        if (this.props.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode == 'edit') {
             this.refs.editor.focus();
         }
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -62424,12 +62434,15 @@ class DOMCell extends GenericCell {
 
     constructor(props) {
         super(props);
-        if (!props.cell.hasOwnProperty('elementType')) props.actions.changeElementType(props.cell.id, 'div');
-        if (!props.cell.hasOwnProperty('domElementID')) props.actions.changeDOMElementID(props.cell.id, 'dom-cell-' + props.cell.id);
         // explicitly bind "this" for all methods in constructors
         this.changeElementType = this.changeElementType.bind(this);
         this.changeElementID = this.changeElementID.bind(this);
         this.hasEditor = false;
+    }
+
+    componentWillMount() {
+        if (!this.props.cell.hasOwnProperty('elementType')) this.props.actions.changeElementType(this.props.cell.id, 'div');
+        if (!this.props.cell.hasOwnProperty('domElementID')) this.props.actions.changeDOMElementID(this.props.cell.id, 'dom-cell-' + this.props.cell.id);
     }
 
     changeElementType(event) {

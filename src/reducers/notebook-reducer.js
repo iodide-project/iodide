@@ -6,6 +6,10 @@ function clearHistory(loadedState) {
   loadedState.history = []
   loadedState.externalScripts = []
   loadedState.executionNumber = 0
+  loadedState.cells = [...loadedState.cells.slice()]
+  loadedState.cells.forEach(cell=>{
+    if (cell.cellType==='javascript') cell.value = undefined
+  })
 }
 
 let notebook = function (state=newNotebook(), action) {
@@ -30,13 +34,21 @@ let notebook = function (state=newNotebook(), action) {
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
       var loadedState = action.newState
+      clearHistory(newState)
       var cells = loadedState.cells.map(
         cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
       return Object.assign(NB.blankState(), loadedState, {cells})
 
+
     case 'SAVE_NOTEBOOK':
-      var lastSaved = new Date()
-      var outputState = Object.assign({}, state, {lastSaved})
+      if (!action.autosave) var lastSaved = new Date()
+      else lastSaved = state.lastSaved
+      var outputState = Object.assign({}, state, {lastSaved}, {cells: state.cells.slice().map(c=>{
+          var newC = Object.assign({},c)
+          if (newC.cellType === 'javascript') newC.value = undefined
+          return newC
+        }
+      )})
       clearHistory(outputState)
       var title
       if (action.title!==undefined) title = action.title
@@ -48,9 +60,11 @@ let notebook = function (state=newNotebook(), action) {
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
       var loadedState = JSON.parse(window.localStorage.getItem(action.title))
+      clearHistory(loadedState)
       var cells = loadedState.cells.map(
         cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
       return Object.assign(NB.blankState(), loadedState, {cells})
+
 
     case 'DELETE_NOTEBOOK':
       var title = action.title

@@ -91,13 +91,29 @@ div.cell-controls {
 	display: flex;
 	padding:3px;
 	background-color: #fff;
+	justify-content: space-between
 }
+
+div.left-cell-menu {
+	display:flex
+}
+
 
 div.page-mode {
 	margin-left: 10px;
 	color: #999;
 	font-size:12px;
-	padding: 2px
+	padding: 2px;
+	width: 150px;
+	display:flex
+}
+
+div.last-saved {
+	padding:2px;
+	display: flex;
+	color: #999;
+	font-style:italic;
+	font-size:12px
 }
 
 
