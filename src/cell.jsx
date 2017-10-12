@@ -110,13 +110,11 @@ class GenericCell extends React.Component {
             nextCollapsedState)
     }
 
-    handleCollapseInputClick(evt){
-        console.log(evt)
+    handleCollapseInputClick(){
         this.handleCollapseButtonClick("input")
     }
 
     handleCollapseOutputClick(){
-        console.log(evt)
         this.handleCollapseButtonClick("output")
     }
 
@@ -148,7 +146,7 @@ class GenericCell extends React.Component {
                     {executionStatus}
                 </div>
                 <div className ={"collapse-button"}
-                    onDoubleClick={collapseButtonHandler}>
+                    onClick={collapseButtonHandler}>
                 </div>
                 <div className ={"main-component"}>
                     {mainComponent}
