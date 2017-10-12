@@ -11,10 +11,11 @@ let actions = {
 			type: 'EXPORT_NOTEBOOK'
 		}
 	},
-	saveNotebook: function(title=undefined) {
+	saveNotebook: function(title=undefined, autosave=false) {
 		return {
 			type: 'SAVE_NOTEBOOK',
-			title: title
+			title: title,
+			autosave
 		}
 	},
 	loadNotebook: function(title) {

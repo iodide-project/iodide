@@ -37,7 +37,8 @@ let notebook = function (state=newNotebook(), action) {
       return newState
 
     case 'SAVE_NOTEBOOK':
-      var lastSaved = new Date()
+      if (!action.autosave) var lastSaved = new Date()
+      else lastSaved = state.lastSaved
       var outputState = Object.assign({}, state, {lastSaved}, {cells: state.cells.slice().map(c=>{
           var newC = Object.assign({},c)
           if (newC.cellType === 'javascript') newC.value = undefined

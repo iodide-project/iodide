@@ -37308,7 +37308,7 @@ let notebook = function (state = newNotebook(), action) {
       return newState;
 
     case 'SAVE_NOTEBOOK':
-      var lastSaved = new Date();
+      if (!action.autosave) var lastSaved = new Date();else lastSaved = state.lastSaved;
       var outputState = Object.assign({}, state, { lastSaved }, { cells: state.cells.slice().map(c => {
           var newC = Object.assign({}, c);
           if (newC.cellType === 'javascript') newC.value = undefined;
@@ -61676,7 +61676,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
           this.props.actions.deleteNotebook(n);
         });
       }
-      this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title));
+      this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title), true);
     }, 1000 * 60);
   }
 
@@ -61925,10 +61925,11 @@ let actions = {
 			type: 'EXPORT_NOTEBOOK'
 		};
 	},
-	saveNotebook: function (title = undefined) {
+	saveNotebook: function (title = undefined, autosave = false) {
 		return {
 			type: 'SAVE_NOTEBOOK',
-			title: title
+			title: title,
+			autosave
 		};
 	},
 	loadNotebook: function (title) {
