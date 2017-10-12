@@ -37411,12 +37411,24 @@ function addExternalScript(scriptUrl) {
   var head = document.getElementsByTagName('head')[0];
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src = scriptUrl;
+  //script.src = scriptUrl  
+  var xhrObj = new XMLHttpRequest();
+  xhrObj.open('GET', scriptUrl, false);
+  xhrObj.send('');
+  script.text = xhrObj.responseText;
   head.appendChild(script);
 }
 
 let cell = function (state = newNotebook(), action) {
   switch (action.type) {
+    case 'RUN_ALL_CELLS':
+      var nextState = Object.assign({}, state, { cells: [...state.cells] });
+      state.cells.forEach(c => {
+        nextState = cell(nextState, { type: 'SELECT_CELL', id: c.id });
+        nextState = Object.assign({}, cell(nextState, { type: 'RENDER_CELL', id: c.id, evaluateCell: true }));
+      });
+      return nextState;
+
     case 'INSERT_CELL':
       var cells = state.cells.slice();
       var index = cells.findIndex(c => c.id === action.id);
@@ -61663,6 +61675,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     this.cellDown = this.cellDown.bind(this);
     this.changeCellType = this.changeCellType.bind(this);
     this.getSelectedCell = this.getSelectedCell.bind(this);
+    this.runAllCells = this.runAllCells.bind(this);
 
     Object(__WEBPACK_IMPORTED_MODULE_7__keybindings_jsx__["a" /* default */])('jupyter', this);
     setInterval(() => {
@@ -61678,6 +61691,10 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       }
       this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title), true);
     }, 1000 * 60);
+  }
+
+  runAllCells() {
+    this.props.actions.runAllCells();
   }
 
   insertCell() {
@@ -61822,7 +61839,14 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
                   { bsSize: 'xsmall', onClick: this.renderCell },
-                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' })
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' }),
+                  ' run cell'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
+                  { bsSize: 'xsmall', onClick: this.runAllCells },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' }),
+                  ' run all'
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   __WEBPACK_IMPORTED_MODULE_12_react_bootstrap__["a" /* Button */],
@@ -61987,6 +62011,11 @@ let actions = {
 			type: 'RENDER_CELL',
 			id: cellID,
 			evaluateCell: evaluateCell
+		};
+	},
+	runAllCells: function () {
+		return {
+			type: 'RUN_ALL_CELLS'
 		};
 	},
 	markCellNotRendered: function (cellID, evaluateCell = true) {

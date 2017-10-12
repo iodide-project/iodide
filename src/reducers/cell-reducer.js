@@ -55,12 +55,24 @@ function addExternalScript(scriptUrl){
   var head = document.getElementsByTagName('head')[0]
   var script = document.createElement('script')
   script.type = 'text/javascript'
-  script.src = scriptUrl
+  //script.src = scriptUrl  
+  var xhrObj = new XMLHttpRequest()
+  xhrObj.open('GET', scriptUrl, false)
+  xhrObj.send('')
+  script.text = xhrObj.responseText;
   head.appendChild(script)
 }
 
 let cell = function (state = newNotebook(), action) {
   switch (action.type) {
+    case 'RUN_ALL_CELLS':
+      var nextState = Object.assign({}, state, {cells: [...state.cells]})
+      state.cells.forEach(c=>{
+        nextState = cell(nextState, {type: 'SELECT_CELL', id: c.id})
+        nextState = Object.assign({}, cell(nextState, {type:'RENDER_CELL', id: c.id, evaluateCell: true}))
+      })
+      return nextState
+
     case 'INSERT_CELL':
       var cells = state.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)

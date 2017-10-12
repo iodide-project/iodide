@@ -84,6 +84,7 @@ class Page extends React.Component {
     this.cellDown = this.cellDown.bind(this)
     this.changeCellType = this.changeCellType.bind(this)
     this.getSelectedCell = this.getSelectedCell.bind(this)
+    this.runAllCells = this.runAllCells.bind(this)
 
     keyBinding('jupyter', this)
     setInterval(()=>{
@@ -99,6 +100,10 @@ class Page extends React.Component {
       }
       this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title), true)
     },1000*60)
+  }
+
+  runAllCells() {
+    this.props.actions.runAllCells()
   }
 
   insertCell() {
@@ -187,7 +192,9 @@ class Page extends React.Component {
                     <div id="cell-menu" className={'cell-controls controls-visible'}>
                         <div className='left-cell-menu'>
                           <ButtonToolbar >
-                              <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
+                              <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i> run cell</Button>
+                              <Button bsSize='xsmall' onClick={this.runAllCells}><i className="fa fa-play" aria-hidden="true"></i> run all</Button>
+
                               <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
                               <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
                               <Button bsSize='xsmall' onClick={this.addCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>

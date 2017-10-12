@@ -75,6 +75,11 @@ let actions = {
 			evaluateCell: evaluateCell
 		}
 	},
+	runAllCells: function() {
+		return {
+			type: 'RUN_ALL_CELLS'
+		}
+	},
     markCellNotRendered: function(cellID, evaluateCell=true) {
         return {
             type: 'MARK_CELL_NOT_RENDERED',
