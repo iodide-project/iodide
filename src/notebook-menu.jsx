@@ -48,8 +48,7 @@ class NotebookMenu extends React.Component {
 		if (notebook.notebookType === 'example') {
 
 			var notebook = exampleNotebooks.filter((nb)=>{return nb.title === notebook.title})[0]
-
-
+			console.log(notebook)
 			this.props.actions.importNotebook(notebook)
 
 		}

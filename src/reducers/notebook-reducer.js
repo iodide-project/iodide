@@ -34,7 +34,7 @@ let notebook = function (state=newNotebook(), action) {
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
       var loadedState = action.newState
-      clearHistory(newState)
+      clearHistory(loadedState)
       var cells = loadedState.cells.map(
         cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
       return Object.assign(NB.blankState(), loadedState, {cells})
