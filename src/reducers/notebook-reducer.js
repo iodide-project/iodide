@@ -6,6 +6,10 @@ function clearHistory(loadedState) {
   loadedState.history = []
   loadedState.externalScripts = []
   loadedState.executionNumber = 0
+  loadedState.cells = [...loadedState.cells.slice()]
+  loadedState.cells.forEach(cell=>{
+    if (cell.cellType==='javascript') cell.value = undefined
+  })
 }
 
 let notebook = function (state=newNotebook(), action) {
@@ -28,11 +32,19 @@ let notebook = function (state=newNotebook(), action) {
 
     case 'IMPORT_NOTEBOOK':
       // this may need to be refactored
-      return action.newState
+      var newState = action.newState
+      clearHistory(newState)
+      return newState
 
     case 'SAVE_NOTEBOOK':
-      var lastSaved = new Date()
-      var outputState = Object.assign({}, state, {lastSaved})
+      if (!action.autosave) var lastSaved = new Date()
+      else lastSaved = state.lastSaved
+      var outputState = Object.assign({}, state, {lastSaved}, {cells: state.cells.slice().map(c=>{
+          var newC = Object.assign({},c)
+          if (newC.cellType === 'javascript') newC.value = undefined
+          return newC
+        }
+      )})
       clearHistory(outputState)
       var title
       if (action.title!==undefined) title = action.title
@@ -42,6 +54,7 @@ let notebook = function (state=newNotebook(), action) {
 
     case 'LOAD_NOTEBOOK':
       var loadedState = JSON.parse(window.localStorage.getItem(action.title))
+      clearHistory(loadedState)
       return Object.assign({}, loadedState)
 
     case 'DELETE_NOTEBOOK':
