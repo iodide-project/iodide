@@ -60,6 +60,11 @@ var MARKDOWN_MODE = [['m'], function(){
     }
 ]
 
+var EXTERNAL_SCRIPTS_MODE = [['e'], function(){
+  if (this.props.mode == 'command') changeCellMode(this, 'external scripts')
+  }
+]
+
 var RAW_MODE = [['r'], function(){
     if (this.props.mode == 'command') changeCellMode(this, 'raw')
     }
@@ -196,6 +201,7 @@ var DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
 jupyterKeybindings.push(DESELECT)
 jupyterKeybindings.push(JAVASCRIPT_MODE)
 jupyterKeybindings.push(MARKDOWN_MODE)
+jupyterKeybindings.push(EXTERNAL_SCRIPTS_MODE)
 jupyterKeybindings.push(RAW_MODE)
 jupyterKeybindings.push(SELECT_UP)
 jupyterKeybindings.push(SELECT_DOWN)
