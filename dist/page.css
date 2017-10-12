@@ -107,7 +107,7 @@ div.page-mode {
 /************************************************/
 /*  cell and cell container styles*/
 
-div.cell-container {
+div.cell-container{
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-right: 5px;
@@ -131,7 +131,7 @@ div.cell-row{
 div.editor {
 }
 
-div.status{	
+div.status{
 	font-family: monospace;
 	white-space: pre;
 	flex-basis: 50px;
@@ -141,7 +141,7 @@ div.status{
 	color: #aaa
 }
 
-div.collapse-button{    
+div.collapse-button{
     margin-right: 3px;
     margin-left: 3px;
     flex-basis: 15px;
