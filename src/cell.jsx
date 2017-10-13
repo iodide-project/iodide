@@ -173,10 +173,14 @@ class GenericCell extends React.Component {
             collapseInput = this.props.cell.collapseEditViewInput
             collapseOutput = this.props.cell.collapseEditViewOutput
         }
+        var collapseBoth = (collapseInput == "COLLAPSED"
+            && collapseOutput == "COLLAPSED") ? "collapse-both" : ""
+        var cellClass = ["cell-container",cellSelected,
+            editorMode,cellType,collapseBoth].join(" ")
 
         return (
             <div id={'cell-'+ cellId}
-                className={`cell-container ${cellSelected} ${editorMode} ${cellType}`}
+                className={cellClass}
                 onMouseDown={this.handleCellClick} >
                 {this.makeCellRow(
                     "input",
