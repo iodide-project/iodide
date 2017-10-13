@@ -27,95 +27,13 @@ div#headerbar {
 div#cells {
 	flex-grow: 1;
 	overflow-y: auto;
-	width: 100%
-}
-
-
-/************************************************/
-/* header bar styles */
-
-input.page-title {
-	font-family: 'Open Sans';
-	font-size:25px;
-	border:none;
-	outline:none;
-	width:calc(100% - 50px);
-	padding-left:3px;
-}
-
-input.page-title.unrendered-title {
-	color:gray;
-}
-
-h1.page-title span {
-	font-weight:300;
-	font-size:16px;
-}
-
-ul.load-notebook-menu {
-	min-width:525px;
-	background-color:white;
-}
-
-ul.load-notebook-menu li {
-	height:30px;
-}
-
-.load-notebook-menu span.menu-notebook-name {
-	width: 300px;
-	text-overflow:ellipsis;
-	overflow-x: hidden;
-	vertical-align:top;
-	padding-right:15px;
-	max-height:30px;
-	font-size:14px;
-}
-
-.load-notebook-menu span.menu-last-saved {
-	width:200px;
-	font-size:14px;
-	color:gray;
-	font-weight:300;
-	overflow-x: hidden;
-	vertical-align:top;
-}
-
-div.notebook-actions {
+	width: 100%;
 	display: flex;
-	justify-content: space-between;
-	padding: 3px
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	padding-left: 40px;
+	padding-right: 40px;
 }
-
-
-div.cell-controls {
-	display: flex;
-	padding:3px;
-	background-color: #fff;
-	justify-content: space-between
-}
-
-div.left-cell-menu {
-	display:flex
-}
-
-
-div.page-mode {
-	margin-left: 10px;
-	color: #999;
-	font-size:12px;
-	padding: 2px;
-	width: 150px;
-	display:flex
-}
-
-div.last-saved {
-	padding:2px;
-	display: flex;
-	color: #999;
-	font-style:italic;
-	font-size:12px
-}
-
 
 
 
@@ -130,19 +48,60 @@ div.cell-container{
 	padding-left: 5px;
 	margin-top: 15px;
 	margin-bottom: 15px;
-	margin-left: 40px;
-	margin-right: 40px;
+/* 	margin-left: 40px; */
+/* 	margin-right: 40px; */
+		justify-content:  center;
 	display: flex;
 	flex-direction: column;
 	outline: #f4f4f4 1px solid;
-	width: calc(100% - 80px);
+/* 	width: calc(100% - 80px); */
+	width: calc(100%);
 }
+
+div#cells.presentation {
+	display: flex;
+	flex-direction: row;
+	flex-wrap:  wrap;
+	align-content:   start;
+	justify-content:   flex-end;
+/* 	align-items: flex-end; */
+/* 	flex-flow: column wrap; */
+}
+
+div#cells.presentation div.cell-container{
+	outline: none;
+	margin-top: 1px;
+	margin-bottom: 0px;
+}
+
+div#cells.presentation .collapse-both.cell-container{
+	flex-basis: 120px;
+	flex-direction: row;
+}
+
+div#cells.presentation .collapse-both .status{
+	display: none;
+}
+
+div#cells.presentation .collapse-both div.collapse-button{
+    flex-basis: 50px;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+div#cells.presentation .collapse-both .main-component{
+  display:  none;
+}
+
+div#cells.presentation .collapse-both .cell-row{
+	flex-basis: 51px
+}
+
 
 div.cell-row{
 	display: flex;
 	padding: 1px;
 }
-
 
 div.editor {
 }
@@ -157,10 +116,15 @@ div.status{
 	color: #aaa
 }
 
+div#cells.presentation div.status{
+		visibility: hidden;
+    height: 0px
+}
+
 div.collapse-button{
     margin-right: 3px;
     margin-left: 3px;
-    flex-basis: 15px;
+    flex-basis: 18px;
     flex-shrink: 0;
     flex-grow: 0;
 }
@@ -175,30 +139,35 @@ div.main-component{
 	width: calc(100% - 80px);
 }
 
-
-div.javascript div.COLLAPSED div.status{
+/* div.javascript div.COLLAPSED div.status{
 	height: 20px;
 	flex-basis: 0px;
-}
+} */
 div.javascript div.COLLAPSED div.collapse-button{
-	height: 20px;
+	height: 18px;
 	flex-grow: 1;
 	outline: #ddd 1px solid;
+	margin-right: 0px;
 }
 div.javascript div.COLLAPSED div.main-component{
-	height: 20px;
+	height: 18px;
 	flex-shrink: 1;
 	flex-basis: 0px;
 	flex-grow: 0;
 	overflow:  hidden;
-/* 	outline: #ddd 1px solid; */
 }
-
 div.javascript div.SCROLLABLE div.main-component{
 	max-height: 300px;
 	overflow:  auto;
 	outline: #ddd 1px solid;
 } 
+
+div.javascript div.COLLAPSED div.collapse-button{
+	height: 18px;
+	flex-grow: 1;
+	outline: #ddd 1px solid;
+	margin-right: 0px;
+}
 
 div.cell-container.markdown div.status,
 div.cell-container.raw div.status,
@@ -290,6 +259,91 @@ div.dom-cell-error {
 
 .dom-inputs {
 	padding:3px;
+}
+
+/************************************************/
+/* header bar styles */
+
+input.page-title {
+	font-family: 'Open Sans';
+	font-size:25px;
+	border:none;
+	outline:none;
+	width:calc(100% - 50px);
+	padding-left:3px;
+}
+
+input.page-title.unrendered-title {
+	color:gray;
+}
+
+h1.page-title span {
+	font-weight:300;
+	font-size:16px;
+}
+
+ul.load-notebook-menu {
+	min-width:525px;
+	background-color:white;
+}
+
+ul.load-notebook-menu li {
+	height:30px;
+}
+
+.load-notebook-menu span.menu-notebook-name {
+	width: 300px;
+	text-overflow:ellipsis;
+	overflow-x: hidden;
+	vertical-align:top;
+	padding-right:15px;
+	max-height:30px;
+	font-size:14px;
+}
+
+.load-notebook-menu span.menu-last-saved {
+	width:200px;
+	font-size:14px;
+	color:gray;
+	font-weight:300;
+	overflow-x: hidden;
+	vertical-align:top;
+}
+
+div.notebook-actions {
+	display: flex;
+	justify-content: space-between;
+	padding: 3px
+}
+
+
+div.cell-controls {
+	display: flex;
+	padding:3px;
+	background-color: #fff;
+	justify-content: space-between
+}
+
+div.left-cell-menu {
+	display:flex
+}
+
+
+div.page-mode {
+	margin-left: 10px;
+	color: #999;
+	font-size:12px;
+	padding: 2px;
+	width: 150px;
+	display:flex
+}
+
+div.last-saved {
+	padding:2px;
+	display: flex;
+	color: #999;
+	font-style:italic;
+	font-size:12px
 }
 
 
