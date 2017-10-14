@@ -28,11 +28,12 @@ div#cells {
 	flex-grow: 1;
 	overflow-y: auto;
 	width: 100%;
+	padding-left: 40px;
+	padding-right: 40px;
+	
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: flex-end;
-	padding-left: 40px;
-	padding-right: 40px;
 }
 
 
@@ -48,24 +49,14 @@ div.cell-container{
 	padding-left: 5px;
 	margin-top: 15px;
 	margin-bottom: 15px;
-/* 	margin-left: 40px; */
-/* 	margin-right: 40px; */
-		justify-content:  center;
+	justify-content:  center;
 	display: flex;
 	flex-direction: column;
 	outline: #f4f4f4 1px solid;
-/* 	width: calc(100% - 80px); */
 	width: calc(100%);
 }
 
 div#cells.presentation {
-	display: flex;
-	flex-direction: row;
-	flex-wrap:  wrap;
-	align-content:   start;
-	justify-content:   flex-end;
-/* 	align-items: flex-end; */
-/* 	flex-flow: column wrap; */
 }
 
 div#cells.presentation div.cell-container{
