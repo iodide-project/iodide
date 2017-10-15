@@ -103,9 +103,6 @@ div.cell-row{
 	padding: 1px;
 }
 
-div.editor {
-}
-
 div.status{
 	font-family: monospace;
 	white-space: pre;
@@ -139,7 +136,9 @@ div.main-component{
 	width: calc(100% - 80px);
 }
 
-div.javascript div.COLLAPSED div.collapse-button{
+div.javascript div.COLLAPSED div.collapse-button,
+div.external div.COLLAPSED div.collapse-button,
+div.dom div.COLLAPSED div.collapse-button{
 /* 	height: 18px; */
 	flex-grow: 1;
 	outline: #ddd 1px solid;
@@ -153,7 +152,7 @@ div.javascript div.COLLAPSED div.main-component{
 	overflow:  hidden;
 }
 div.javascript div.SCROLLABLE div.main-component{
-	max-height: 300px;
+	max-height: 320px;
 	overflow:  auto;
 	outline: #ddd 1px solid;
 } 
@@ -173,19 +172,22 @@ div.cell {
 /* 	width:850px; */
 }
 
-
-
 div.selected-cell {
     outline: 1px solid #bbb;
 }
 
 div.CodeMirror{
+/* 	height: auto; */
   background: #f9f9f9;
 }
-
-.CodeMirror {
-	height: auto;
+div.EXPANDED div.main-component div.CodeMirror{
+	  height: auto
 }
+
+div.SCROLLABLE div.main-component div.CodeMirror{
+/* 	  height:  inherit */
+}
+
 
 div.ReactCodeMirror {
     outline: 1px solid #eee;
