@@ -25,7 +25,6 @@ div#headerbar {
 }
 
 div#cells {
-	flex-grow: 1;
 	overflow-y: auto;
 	width: 100%;
 	padding-left: 40px;
