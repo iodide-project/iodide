@@ -74,9 +74,20 @@ div#cells.presentation .collapse-both .status{
 }
 
 div#cells.presentation .collapse-both div.collapse-button{
-    flex-basis: 50px;
-    flex-shrink: 0;
-    flex-grow: 0;
+	padding:4px;
+/* FIXME this negative margin is a sucky hack, but i don't know
+	where the three pixel gap between the collapse buttons was coming from*/
+	margin: -1.5px; 
+	outline: none;
+	border: 1px solid #ddd;
+}
+
+div#cells.presentation .collapse-both .input div.collapse-button{
+  border-radius: 4px 0px 0px 4px;
+}
+
+div#cells.presentation .collapse-both .output div.collapse-button{
+  border-radius: 0px 4px 4px 0px;
 }
 
 div#cells.presentation .collapse-both .main-component{
@@ -86,7 +97,6 @@ div#cells.presentation .collapse-both .main-component{
 div#cells.presentation .collapse-both .cell-row{
 	flex-basis: 51px
 }
-
 
 div.cell-row{
 	display: flex;
@@ -129,12 +139,8 @@ div.main-component{
 	width: calc(100% - 80px);
 }
 
-/* div.javascript div.COLLAPSED div.status{
-	height: 20px;
-	flex-basis: 0px;
-} */
 div.javascript div.COLLAPSED div.collapse-button{
-	height: 18px;
+/* 	height: 18px; */
 	flex-grow: 1;
 	outline: #ddd 1px solid;
 	margin-right: 0px;
@@ -151,13 +157,6 @@ div.javascript div.SCROLLABLE div.main-component{
 	overflow:  auto;
 	outline: #ddd 1px solid;
 } 
-
-div.javascript div.COLLAPSED div.collapse-button{
-	height: 18px;
-	flex-grow: 1;
-	outline: #ddd 1px solid;
-	margin-right: 0px;
-}
 
 div.cell-container.markdown div.status,
 div.cell-container.raw div.status,

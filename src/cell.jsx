@@ -140,8 +140,12 @@ class GenericCell extends React.Component {
         return <div ></div>
     }
 
-    makeCellRow(rowType,collapse,collapseButtonHandler,
+    makeCellRow(rowType,cellType,collapse,collapseButtonHandler,
         executionStatus,mainComponent) {
+        var collapseButtonLabel;
+        if (collapse=="COLLAPSED"){
+            collapseButtonLabel = rowType=="input" ? cellType : "output"
+        } else {collapseButtonLabel=""}
         return (
             <div className={`cell-row ${rowType} ${collapse}`}>
                 <div className ={"status"}>
@@ -149,6 +153,7 @@ class GenericCell extends React.Component {
                 </div>
                 <div className ={"collapse-button"}
                     onClick={collapseButtonHandler}>
+                    {collapseButtonLabel}
                 </div>
                 <div className ={"main-component"}>
                     {mainComponent}
@@ -183,12 +188,13 @@ class GenericCell extends React.Component {
                 className={cellClass}
                 onMouseDown={this.handleCellClick} >
                 {this.makeCellRow(
-                    "input",
+                    "input", cellType,
                     collapseInput,
                     this.handleCollapseInputClick,
                     `[${this.props.cell.executionStatus}]`,
                     this.inputComponent())}
-                {this.makeCellRow("output",
+                {this.makeCellRow(
+                    "output", cellType,
                     collapseOutput,
                     this.handleCollapseOutputClick,
                     "",
