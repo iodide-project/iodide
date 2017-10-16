@@ -74,12 +74,18 @@ div#cells.presentation .collapse-both .status{
 }
 
 div#cells.presentation .collapse-both div.collapse-button{
-	padding:4px;
+	padding:3px;
 /* FIXME this negative margin is a sucky hack, but i don't know
 	where the three pixel gap between the collapse buttons was coming from*/
 	margin: -1.5px; 
 	outline: none;
 	border: 1px solid #ddd;
+}
+
+div#cells.presentation .markdown .collapse-button,
+div#cells.presentation .dom .collapse-button {
+		visibility: hidden;
+    height: 0px
 }
 
 div#cells.presentation .collapse-both .input div.collapse-button{
@@ -114,16 +120,21 @@ div.status{
 }
 
 div#cells.presentation div.status{
-		visibility: hidden;
+    visibility: hidden;
     height: 0px
 }
 
 div.collapse-button{
-    margin-right: 3px;
-    margin-left: 3px;
-    flex-basis: 18px;
-    flex-shrink: 0;
-    flex-grow: 0;
+	margin-right: 3px;
+	margin-left: 3px;
+	flex-basis: 18px;
+	flex-shrink: 0;
+	flex-grow: 0;
+	vertical-align: middle;
+	padding: 1px 5px;
+	font-size: 12px;
+	line-height: 1.5;
+	cursor: pointer;
 }
 
 div.javascript div.collapse-button:hover{
@@ -136,25 +147,35 @@ div.main-component{
 	width: calc(100% - 80px);
 }
 
-div.javascript div.COLLAPSED div.collapse-button,
-div.external div.COLLAPSED div.collapse-button,
-div.dom div.COLLAPSED div.collapse-button{
-/* 	height: 18px; */
+div.input div.main-component {
+	outline: 1px solid #f1f1f1;
+}
+
+div.markdown div.input div.main-component {
+	outline: none;
+}
+
+div.COLLAPSED div.collapse-button{
+	padding:3px;
 	flex-grow: 1;
 	outline: #ddd 1px solid;
 	margin-right: 0px;
 }
-div.javascript div.COLLAPSED div.main-component{
+
+div.COLLAPSED div.main-component{
 	height: 18px;
 	flex-shrink: 1;
 	flex-basis: 0px;
 	flex-grow: 0;
-	overflow:  hidden;
+	overflow: hidden;
+	outline: none;
 }
+div.COLLAPSED div.input div.main-component {
+	outline: 1px solid #f1f1f1;
+}
+
 div.javascript div.SCROLLABLE div.main-component{
-	max-height: 320px;
-	overflow:  auto;
-	outline: #ddd 1px solid;
+	overflow: auto;
 } 
 
 div.cell-container.markdown div.status,
@@ -173,11 +194,14 @@ div.cell {
 }
 
 div.selected-cell {
-    outline: 1px solid #bbb;
+  outline: 1px solid #bbb;
+}
+
+div.selected-cell.edit-mode div.input div.main-component {
+	outline: 1px solid #bbb;
 }
 
 div.CodeMirror{
-/* 	height: auto; */
   background: #f9f9f9;
 }
 div.EXPANDED div.main-component div.CodeMirror{
@@ -185,16 +209,11 @@ div.EXPANDED div.main-component div.CodeMirror{
 }
 
 div.SCROLLABLE div.main-component div.CodeMirror{
-/* 	  height:  inherit */
+height: auto;
 }
 
-
-div.ReactCodeMirror {
-    outline: 1px solid #eee;
-}
-
-div.ReactCodeMirror--focused {
-    outline: 1px solid #bbb;
+div.SCROLLABLE div.main-component div.CodeMirror div.CodeMirror-scroll{
+	max-height: 350px;
 }
 
 div.selected-cell.command-mode {
