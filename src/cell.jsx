@@ -73,6 +73,16 @@ class GenericCell extends React.Component {
     }
 
     enterEditMode(){
+        // uncollapse the editor upon entering edit mode.
+        // note: entering editMode is only allowed from editorView
+        // thus, we only need to check the editorView collapsed state
+        if(this.props.cell.collapseEditViewInput=="COLLAPSED"){
+            this.props.actions.setCellCollapsedState(
+                this.props.cell.id,
+                this.props.viewMode,
+                "input",
+                "SCROLLABLE")
+        }
         this.props.actions.selectCell(this.props.cell.id)
         this.props.actions.changeMode('edit')
         if (this.hasEditor) this.refs.editor.focus()
@@ -137,7 +147,7 @@ class GenericCell extends React.Component {
     }
 
     outputComponent(){
-        return <div ></div>
+        return <div></div>
     }
 
     makeCellRow(rowType,cellType,collapse,collapseButtonHandler,
@@ -323,7 +333,7 @@ class DOMCell extends GenericCell {
         this.props.actions.changeDOMElementID(this.props.cell.id, elementID)
     }
 
-// FIXME!! need to Override enterEditMode for DOMCell
+// FIXME!! need to Override enterEditMode for DOMCell to focus the inputs
 //     enterEditMode(){
 //         this.props.actions.selectCell(this.props.cell.id)
 //         this.props.actions.changeMode('edit')
