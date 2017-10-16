@@ -272,6 +272,10 @@ span.notebook-label {
 div.dom-cell {
 }
 
+.cm-s-eclipse .CodeMirror-matchingbracket{
+	outline:1px dotted #000;
+}
+
 div.dom-cell-error {
 	color:gray;
 	margin-top:5px;
