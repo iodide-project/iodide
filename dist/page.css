@@ -65,7 +65,7 @@ div#cells.presentation div.cell-container{
 }
 
 div#cells.presentation .collapse-both.cell-container{
-	flex-basis: 120px;
+	width: auto;
 	flex-direction: row;
 }
 
@@ -74,7 +74,6 @@ div#cells.presentation .collapse-both .status{
 }
 
 div#cells.presentation .collapse-both div.collapse-button{
-	padding:3px;
 /* FIXME this negative margin is a sucky hack, but i don't know
 	where the three pixel gap between the collapse buttons was coming from*/
 	margin: -1.5px; 
@@ -100,8 +99,13 @@ div#cells.presentation .collapse-both .main-component{
   display:  none;
 }
 
-div#cells.presentation .collapse-both .cell-row{
-	flex-basis: 51px
+div#cells.presentation div.external div.COLLAPSED.output .collapse-button,
+div#cells.presentation div.raw div.COLLAPSED.output .collapse-button{
+  display: none; 
+}
+div#cells.presentation div.external div.COLLAPSED.input .collapse-button,
+div#cells.presentation div.raw div.COLLAPSED.input .collapse-button{
+  border-radius: 4px;
 }
 
 div.cell-row{
@@ -120,7 +124,7 @@ div.status{
 }
 
 div#cells.presentation div.status{
-    visibility: hidden;
+		visibility: hidden;
     height: 0px
 }
 
@@ -131,12 +135,13 @@ div.collapse-button{
 	flex-shrink: 0;
 	flex-grow: 0;
 	vertical-align: middle;
-	padding: 1px 5px;
 	font-size: 12px;
-	line-height: 1.5;
+	line-height: 1.6;
 	cursor: pointer;
 }
 
+div.raw div.collapse-button:hover,
+div.external div.collapse-button:hover,
 div.javascript div.collapse-button:hover{
 	background: #fbfbfb;
 	outline: 1px solid #ddd;
@@ -156,10 +161,14 @@ div.markdown div.input div.main-component {
 }
 
 div.COLLAPSED div.collapse-button{
-	padding:3px;
+	padding-top: 1px;
+	padding-bottom: 2px;
+	padding-left: 6px;
+	padding-right: 6px;
 	flex-grow: 1;
 	outline: #ddd 1px solid;
 	margin-right: 0px;
+	margin-left: 24px;
 }
 
 div.COLLAPSED div.main-component{
@@ -213,7 +222,12 @@ height: auto;
 }
 
 div.SCROLLABLE div.main-component div.CodeMirror div.CodeMirror-scroll{
-	max-height: 350px;
+	max-height: 300px;
+}
+
+div.SCROLLABLE.output .main-component{
+	max-height: 300px;
+	outline: 1px solid #ddd;
 }
 
 div.selected-cell.command-mode {

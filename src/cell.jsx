@@ -218,6 +218,13 @@ class GenericCell extends React.Component {
 class RawCell extends GenericCell {
     constructor(props) {
         super(props)
+        // FIXME: this is of a hack to make sure that the output for raw cells
+        // is set to COLLAPSED in presentation View
+        this.props.actions.setCellCollapsedState(
+            this.props.cell.id,
+            "presentation",
+            "output",
+            "COLLAPSED")
     }
 }
 
@@ -239,6 +246,14 @@ class JavascriptCell extends GenericCell {
 class ExternalScriptCell extends GenericCell {
     constructor(props) {
         super(props)
+        // FIXME: this is of a hack to make sure that the output for raw cells
+        // is set to COLLAPSED in presentation View
+        // THIS SHOULD BE REMOVED ONCE EXTERNAL SCRIPT CELLS RETURN A TRUE OUTPUT
+        this.props.actions.setCellCollapsedState(
+            this.props.cell.id,
+            "presentation",
+            "output",
+            "COLLAPSED")
     }
 }
 
