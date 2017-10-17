@@ -85,7 +85,23 @@ class GenericCell extends React.Component {
         }
         this.props.actions.selectCell(this.props.cell.id)
         this.props.actions.changeMode('edit')
-        if (this.hasEditor) this.refs.editor.focus()
+        // if (this.hasEditor) this.refs.editor.focus()
+    }
+
+    componentDidMount(){
+        if (this.props.cell.selected
+            && this.refs.hasOwnProperty('editor')
+            && this.props.pageMode == 'edit') {
+            this.refs.editor.focus()
+        }
+    }
+
+    componentDidUpdate(prevProps,prevState){
+        if (this.props.cell.selected
+            && this.refs.hasOwnProperty('editor')
+            && this.props.pageMode == 'edit') {
+            this.refs.editor.focus()
+        }
     }
 
     handleCollapseButtonClick(rowType){
@@ -370,7 +386,7 @@ class DOMCell extends GenericCell {
             <div className='dom-cell-elementType' 
                 style={{display: this.props.cell.selected ? 'inherit' : 'none'}}>
                 <Form className='dom-inputs' inline>
-                    <FormGroup bsSize='xsmall' controlId={'dom-'+this.props.cell.id}>
+                    <FormGroup bsSize='small' controlId={'dom-'+this.props.cell.id}>
                         <ControlLabel className='right-spacer'>tag</ControlLabel>
                           <FormControl className='right-spacer' type="text"
                             onChange={this.changeElementType}
