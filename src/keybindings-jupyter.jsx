@@ -164,10 +164,8 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
 }]
 
 var COMMAND_MODE = [['esc'], function(e){
-      if (this.props.mode == 'edit') {
-        document.activeElement.blur()
-        this.props.actions.changeMode('command')
-      }
+    document.activeElement.blur()
+    this.props.actions.changeMode('command')
     }
 ]
 
