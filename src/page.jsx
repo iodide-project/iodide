@@ -85,6 +85,7 @@ class Page extends React.Component {
     this.changeCellType = this.changeCellType.bind(this)
     this.getSelectedCell = this.getSelectedCell.bind(this)
     this.runAllCells = this.runAllCells.bind(this)
+    this.handlePageClick = this.handlePageClick.bind(this)
 
     keyBinding('jupyter', this)
     setInterval(()=>{
@@ -100,6 +101,14 @@ class Page extends React.Component {
       }
       this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title), true)
     },1000*60)
+  }
+
+  handlePageClick(e) {
+    if (e.target.className.includes('notebook-actions') || 
+        e.target.id.includes('cells') ||
+        e.target.id.includes('notebook-container')) {
+          if (this.props.mode != 'command') this.props.actions.changeMode('command')
+    }
   }
 
   runAllCells() {
@@ -193,7 +202,7 @@ class Page extends React.Component {
         <i className='fa fa-plus add-cell' onClick={this.addCell}></i>
     </div>
     return (
-        <div id="notebook-container">
+        <div id="notebook-container" onMouseDown={this.handlePageClick}>
             <div id="headerbar">
                 <Title actions={this.props.actions}
                     title={this.props.title}

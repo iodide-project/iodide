@@ -61721,6 +61721,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     this.changeCellType = this.changeCellType.bind(this);
     this.getSelectedCell = this.getSelectedCell.bind(this);
     this.runAllCells = this.runAllCells.bind(this);
+    this.handlePageClick = this.handlePageClick.bind(this);
 
     Object(__WEBPACK_IMPORTED_MODULE_7__keybindings_jsx__["a" /* default */])('jupyter', this);
     setInterval(() => {
@@ -61736,6 +61737,12 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       }
       this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title), true);
     }, 1000 * 60);
+  }
+
+  handlePageClick(e) {
+    if (e.target.className.includes('notebook-actions') || e.target.id.includes('cells') || e.target.id.includes('notebook-container')) {
+      if (this.props.mode != 'command') this.props.actions.changeMode('command');
+    }
   }
 
   runAllCells() {
@@ -61832,7 +61839,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     );
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
-      { id: 'notebook-container' },
+      { id: 'notebook-container', onMouseDown: this.handlePageClick },
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { id: 'headerbar' },
