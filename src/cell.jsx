@@ -64,10 +64,11 @@ class GenericCell extends React.Component {
         this.props.actions.changeCellType(this.props.cell.id, cellType)
     }
 
-    handleCellClick(){
+    handleCellClick(e){
         var scrollToCell = false
-        this.props.actions.selectCell(this.props.cell.id,scrollToCell)
-        if (this.props.pageMode=='edit'){
+        if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id, scrollToCell)
+        if (this.props.pageMode=='edit' && 
+            (this.hasEditor && !this.refs.editor.getCodeMirror().display.wrapper.contains(e.target))){
             this.props.actions.changeMode('command')
         }
     }
@@ -83,8 +84,8 @@ class GenericCell extends React.Component {
                 "input",
                 "SCROLLABLE")
         }
-        this.props.actions.selectCell(this.props.cell.id)
-        this.props.actions.changeMode('edit')
+        if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id)
+        if (!this.props.pageMode != 'edit') this.props.actions.changeMode('edit')
         // if (this.hasEditor) this.refs.editor.focus()
     }
 
@@ -152,12 +153,11 @@ class GenericCell extends React.Component {
 
     inputComponent(){
         return (
-            <div className="editor" onClick={this.enterEditMode}>
+            <div className="editor" >
                 <CodeMirror ref='editor'
                     value={this.props.cell.content}
                     onChange={this.updateInputContent} 
-                    // onFocus={this.enterEditMode}
-                    onFocusChange={(focus)=>{ if(focus) this.enterEditMode()}}
+                    onFocusChange={(focus)=>{if(focus && this.props.pageMode !== 'edit') this.enterEditMode()}}
                     options={this.editorOptions}/>
             </div>
         )

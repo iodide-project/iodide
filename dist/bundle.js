@@ -62217,10 +62217,10 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
         this.props.actions.changeCellType(this.props.cell.id, cellType);
     }
 
-    handleCellClick() {
+    handleCellClick(e) {
         var scrollToCell = false;
-        this.props.actions.selectCell(this.props.cell.id, scrollToCell);
-        if (this.props.pageMode == 'edit') {
+        if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id, scrollToCell);
+        if (this.props.pageMode == 'edit' && this.hasEditor && !this.refs.editor.getCodeMirror().display.wrapper.contains(e.target)) {
             this.props.actions.changeMode('command');
         }
     }
@@ -62232,9 +62232,21 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
         if (this.props.cell.collapseEditViewInput == "COLLAPSED") {
             this.props.actions.setCellCollapsedState(this.props.cell.id, this.props.viewMode, "input", "SCROLLABLE");
         }
-        this.props.actions.selectCell(this.props.cell.id);
-        this.props.actions.changeMode('edit');
-        if (this.hasEditor) this.refs.editor.focus();
+        if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id);
+        if (!this.props.pageMode != 'edit') this.props.actions.changeMode('edit');
+        // if (this.hasEditor) this.refs.editor.focus()
+    }
+
+    componentDidMount() {
+        if (this.props.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode == 'edit') {
+            this.refs.editor.focus();
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode == 'edit') {
+            this.refs.editor.focus();
+        }
     }
 
     handleCollapseButtonClick(rowType) {
@@ -62282,13 +62294,12 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
     inputComponent() {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { className: 'editor', onClick: this.enterEditMode },
+            { className: 'editor' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__skidding_react_codemirror___default.a, { ref: 'editor',
                 value: this.props.cell.content,
-                onChange: this.updateInputContent
-                // onFocus={this.enterEditMode}
-                , onFocusChange: focus => {
-                    if (focus) this.enterEditMode();
+                onChange: this.updateInputContent,
+                onFocusChange: focus => {
+                    if (focus && this.props.pageMode !== 'edit') this.enterEditMode();
                 },
                 options: this.editorOptions })
         );
@@ -62487,7 +62498,7 @@ class DOMCell extends GenericCell {
                 { className: 'dom-inputs', inline: true },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     __WEBPACK_IMPORTED_MODULE_8_react_bootstrap__["h" /* FormGroup */],
-                    { bsSize: 'xsmall', controlId: 'dom-' + this.props.cell.id },
+                    { bsSize: 'small', controlId: 'dom-' + this.props.cell.id },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         __WEBPACK_IMPORTED_MODULE_8_react_bootstrap__["c" /* ControlLabel */],
                         { className: 'right-spacer' },
