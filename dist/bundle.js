@@ -37244,7 +37244,9 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 
 
 function configureStore() {
-	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__["a" /* default */], Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils_js__["e" /* newNotebook */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(__WEBPACK_IMPORTED_MODULE_3_redux_logger___default.a)));
+	var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* createStore */])(__WEBPACK_IMPORTED_MODULE_1__reducers_reducer_js__["a" /* default */], Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils_js__["e" /* newNotebook */])(), Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* compose */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */])(Object(__WEBPACK_IMPORTED_MODULE_3_redux_logger__["createLogger"])({
+		predicate: (getState, action) => action.type !== 'UPDATE_CELL'
+	}))));
 	//persistStore(store)
 	return store;
 }
