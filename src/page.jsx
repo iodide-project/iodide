@@ -130,27 +130,27 @@ class Page extends React.Component {
         return getSelectedCell(this.props.cells)
     }
 
-  makeButtons(){
-        return (
-            <div className={'cell-controls controls-visible'}>
-                <ButtonToolbar >
-                    <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
-                    <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
-                    <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
-                    <Button bsSize='xsmall' onClick={this.insertCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>
-                      <DropdownButton bsSize="xsmall"
-                        bsStyle='default' title={this.getSelectedCell().cellType}
-                        onSelect={this.changeCellType} >
-                        <MenuItem eventKey={"javascript"} >JS</MenuItem>
-                        <MenuItem eventKey={'markdown'} >MD</MenuItem>
-                        <MenuItem eventKey={'raw'} >Raw</MenuItem>
-                        <MenuItem eventKey={'dom'} >DOM</MenuItem>
-                        <MenuItem eventKey={'external scripts'} >External Script</MenuItem>
-                    </DropdownButton>
-                </ButtonToolbar>
-            </div>
-        )
-    }
+  // makeButtons(){
+  //       return (
+  //           <div className={'cell-controls controls-visible'}>
+  //               <ButtonToolbar >
+  //                   <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
+  //                   <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
+  //                   <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
+  //                   <Button bsSize='xsmall' onClick={this.insertCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>
+  //                     <DropdownButton id="changeCellType" bsSize="xsmall"
+  //                       bsStyle='default' title={this.getSelectedCell().cellType}
+  //                       onSelect={this.changeCellType} >
+  //                       <MenuItem eventKey={"javascript"} >JS</MenuItem>
+  //                       <MenuItem eventKey={'markdown'} >MD</MenuItem>
+  //                       <MenuItem eventKey={'raw'} >Raw</MenuItem>
+  //                       <MenuItem eventKey={'dom'} >DOM</MenuItem>
+  //                       <MenuItem eventKey={'external scripts'} >External Script</MenuItem>
+  //                   </DropdownButton>
+  //               </ButtonToolbar>
+  //           </div>
+  //       )
+  //   }
 
   render () {
     var bodyContent = []
@@ -214,7 +214,7 @@ class Page extends React.Component {
                               <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
                               <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
                               <Button bsSize='xsmall' onClick={this.addCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>
-                                <DropdownButton bsSize="xsmall"
+                                <DropdownButton id="changeCellType" bsSize="xsmall"
                                   bsStyle='default' title={this.getSelectedCell().cellType}
                                   onSelect={this.changeCellType} >
                                   <MenuItem eventKey={"javascript"} >JS</MenuItem>
