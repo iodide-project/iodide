@@ -62161,9 +62161,15 @@ let actions = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_codemirror_addon_edit_closebrackets___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_codemirror_addon_edit_closebrackets__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_codemirror_addon_display_autorefresh__ = __webpack_require__(575);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_codemirror_addon_display_autorefresh___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_codemirror_addon_display_autorefresh__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_react_bootstrap__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_codemirror_addon_comment_comment__ = __webpack_require__(687);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_codemirror_addon_comment_comment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_codemirror_addon_comment_comment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_codemirror_keymap_sublime__ = __webpack_require__(684);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_codemirror_keymap_sublime___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_codemirror_keymap_sublime__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_react_bootstrap__ = __webpack_require__(87);
 // a Page is a collection of cells. They are displayed in order.
 // All javascript cells share the same interpreter.
+
+
 
 
 
@@ -62392,6 +62398,7 @@ class JavascriptCell extends GenericCell {
         this.editorOptions.lineNumbers = true;
         this.editorOptions.matchBrackets = true;
         this.editorOptions.autoCloseBrackets = true;
+        this.editorOptions.keyMap = 'sublime';
         this.outputComponent = this.outputComponent.bind(this);
     }
     outputComponent() {
@@ -62503,26 +62510,26 @@ class DOMCell extends GenericCell {
             { className: 'dom-cell-elementType',
                 style: { display: this.props.cell.selected ? 'inherit' : 'none' } },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_8_react_bootstrap__["f" /* Form */],
+                __WEBPACK_IMPORTED_MODULE_10_react_bootstrap__["f" /* Form */],
                 { className: 'dom-inputs', inline: true },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    __WEBPACK_IMPORTED_MODULE_8_react_bootstrap__["h" /* FormGroup */],
+                    __WEBPACK_IMPORTED_MODULE_10_react_bootstrap__["h" /* FormGroup */],
                     { bsSize: 'small', controlId: 'dom-' + this.props.cell.id },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        __WEBPACK_IMPORTED_MODULE_8_react_bootstrap__["c" /* ControlLabel */],
+                        __WEBPACK_IMPORTED_MODULE_10_react_bootstrap__["c" /* ControlLabel */],
                         { className: 'right-spacer' },
                         'tag'
                     ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_8_react_bootstrap__["g" /* FormControl */], { className: 'right-spacer', type: 'text',
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_10_react_bootstrap__["g" /* FormControl */], { className: 'right-spacer', type: 'text',
                         onChange: this.changeElementType,
                         value: this.props.cell.elementType,
                         placeholder: 'div, svg, etc.' }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        __WEBPACK_IMPORTED_MODULE_8_react_bootstrap__["c" /* ControlLabel */],
+                        __WEBPACK_IMPORTED_MODULE_10_react_bootstrap__["c" /* ControlLabel */],
                         { className: 'right-spacer' },
                         'css ID'
                     ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_8_react_bootstrap__["g" /* FormControl */], { type: 'text', onChange: this.changeElementID,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_10_react_bootstrap__["g" /* FormControl */], { type: 'text', onChange: this.changeElementID,
                         value: this.props.cell.domElementID, placeholder: 'id' })
                 )
             )
@@ -83121,6 +83128,1140 @@ module.exports = {"title":"Evictions by San Francisco Neighborhood, 1999-2015","
 /***/ (function(module, exports) {
 
 module.exports = {"title":"What does a Javascript Notebook Look Like?","cells":[{"content":"# Cell types\n\n## Markdown cell\n\nThis  is a markdown cell, just as you would see in Jupyter or R-markdown. It supports all the normal markdown things you'd expect including inline\n\n### Demo of targeting elements within a markdown cell\nBelow this paragraph is a div with id=\"targetDiv\":\n<div id=\"targetDiv\"></div>\nWe'll target that div with a small THREE.js example, which we'll run in cells below.\n\n## JS cell\nThe following cell is a Javascript cell","id":1,"cellType":"markdown","value":"<h1 id=\"cell-types\">Cell types</h1>\n<h2 id=\"markdown-cell\">Markdown cell</h2>\n<p>This  is a markdown cell, just as you would see in Jupyter or R-markdown. It supports all the normal markdown things you&#39;d expect including inline</p>\n<h3 id=\"demo-of-targeting-elements-within-a-markdown-cell\">Demo of targeting elements within a markdown cell</h3>\n<p>Below this paragraph is a div with id=&quot;targetDiv&quot;:</p>\n<p><div id=\"targetDiv\"></div>\nWe&#39;ll target that div with a small THREE.js example, which we&#39;ll run in cells below.</p>\n<h2 id=\"js-cell\">JS cell</h2>\n<p>The following cell is a Javascript cell</p>\n","rendered":true,"selected":false},{"content":"// this is a JS code cell. We can use normal JS and browser APIs\n// to select the div defined in the MD cell above\ntargetDiv = document.body\n  .querySelector(\"#targetDiv\")\n","id":14,"cellType":"javascript","rendered":true,"selected":false,"value":{}},{"content":"### External script cells\nthe cell below is an \"external script cell\". It loads external JS from URLs.","id":22,"cellType":"markdown","rendered":true,"selected":false,"value":"<h3 id=\"external-script-cells\">External script cells</h3>\n<p>the cell below is an &quot;external script cell&quot;. It loads external JS from URLs.</p>\n"},{"content":"http://threejs.org/build/three.min.js\nhttps://code.jquery.com/jquery-3.2.1.slim.js\nhttps://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js","id":20,"cellType":"external scripts","rendered":true,"selected":false,"value":"loaded scripts"},{"content":"(function() {\n    //'use strict';\n  \tvar width = 400, height = 300\n\n    var scene = new THREE.Scene();\n    var camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100);\n\n    var renderer = new THREE.WebGLRenderer();\n    renderer.setSize(width, height);\n    targetDiv.appendChild(renderer.domElement);\n\n    var geometry = new THREE.CubeGeometry(5, 5, 5);\n    var material = new THREE.MeshLambertMaterial({\n        color: 0x00fff0\n\n    });\n    var cube = new THREE.Mesh(geometry, material);\n    scene.add(cube);\n\n    camera.position.z = 12;\n    \n    var pointLight = new THREE.PointLight(0xFFFFFF);\n\n    pointLight.position.x = 10;\n    pointLight.position.y = 50;\n    pointLight.position.z = 130;\n\n    scene.add(pointLight);\n\n    var reqAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;\n\n    var render = function() {\n        reqAnimFrame(render);\n        \n        var delta = Math.random() * (0.06 - 0.02) + 0.03\n\n;\n\n        cube.rotation.x += delta;\n        cube.rotation.y += delta;\n        cube.rotation.z -= delta;\n\n        renderer.render(scene, camera);\n    };\n\n    render();\n}());","id":2,"cellType":"javascript","rendered":true,"selected":false},{"content":"canvas target div with id=\"targetDiv2\" right below:\n<div id=\"targetDiv2\"></div>","id":15,"cellType":"markdown","value":"<p>canvas target div with id=&quot;targetDiv2&quot; right below:</p>\n<div id=\"targetDiv2\"></div>","rendered":true,"selected":false},{"content":"targetDiv2 = document.body.querySelector(\"#targetDiv2\")\n\n","id":17,"cellType":"javascript","value":{},"rendered":true,"selected":false},{"content":"var width = 400, height = 300\n\nvar scene = new THREE.Scene();\nvar camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100);\n\nvar renderer = new THREE.WebGLRenderer();\nrenderer.setSize(width, height);\ntargetDiv2.appendChild(renderer.domElement);\n\nvar geometry = new THREE.CubeGeometry(5, 5, 5);\nvar material = new THREE.MeshLambertMaterial({\n  color: 0x00fff0\n});\nvar cube = new THREE.Mesh(geometry, material);\nscene.add(cube);\n\ncamera.position.z = 12;\n\nvar pointLight = new THREE.PointLight(0xFFFFFF);\n\npointLight.position.x = 10;\npointLight.position.y = 50;\npointLight.position.z = 130;\n\nscene.add(pointLight);\nvar reqAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;\n\nvar render = function() {\n  reqAnimFrame(render);\n\n  var delta = Math.random() * (0.06 - 0.02) + 0.02;\n\n  cube.rotation.x += delta;\n  cube.rotation.y += delta;\n  cube.rotation.z -= delta;\n\n  renderer.render(scene, camera);\n};\n\nrender();\n","id":16,"cellType":"javascript","rendered":true,"selected":false},{"content":"\np = document.createElement(\"p\");\np.innerHTML = \"a paragraph\";\n\ntargetDiv2.appendChild(p)\n","id":19,"cellType":"javascript","rendered":true,"selected":false,"value":{}},{"content":"\ni=0\nwhile (i<1000000){i+=1}\ni\n","id":18,"cellType":"javascript","rendered":true,"selected":true,"value":1000000}],"currentlySelected":{"content":"\ni=0\nwhile (i<1000000){i+=1}\ni\n","id":18,"cellType":"javascript","rendered":true,"selected":true,"value":1000000},"declaredProperties":{},"lastSaved":"2017-09-21T18:10:47.505Z","mode":"edit","history":[],"externalScripts":[]}
+
+/***/ }),
+/* 684 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
+// A rough approximation of Sublime Text's keybindings
+// Depends on addon/search/searchcursor.js and optionally addon/dialog/dialogs.js
+
+(function(mod) {
+  if (true) // CommonJS
+    mod(__webpack_require__(38), __webpack_require__(685), __webpack_require__(573));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../lib/codemirror", "../addon/search/searchcursor", "../addon/edit/matchbrackets"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+  "use strict";
+
+  var map = CodeMirror.keyMap.sublime = {fallthrough: "default"};
+  var cmds = CodeMirror.commands;
+  var Pos = CodeMirror.Pos;
+  var mac = CodeMirror.keyMap["default"] == CodeMirror.keyMap.macDefault;
+  var ctrl = mac ? "Cmd-" : "Ctrl-";
+
+  // This is not exactly Sublime's algorithm. I couldn't make heads or tails of that.
+  function findPosSubword(doc, start, dir) {
+    if (dir < 0 && start.ch == 0) return doc.clipPos(Pos(start.line - 1));
+    var line = doc.getLine(start.line);
+    if (dir > 0 && start.ch >= line.length) return doc.clipPos(Pos(start.line + 1, 0));
+    var state = "start", type;
+    for (var pos = start.ch, e = dir < 0 ? 0 : line.length, i = 0; pos != e; pos += dir, i++) {
+      var next = line.charAt(dir < 0 ? pos - 1 : pos);
+      var cat = next != "_" && CodeMirror.isWordChar(next) ? "w" : "o";
+      if (cat == "w" && next.toUpperCase() == next) cat = "W";
+      if (state == "start") {
+        if (cat != "o") { state = "in"; type = cat; }
+      } else if (state == "in") {
+        if (type != cat) {
+          if (type == "w" && cat == "W" && dir < 0) pos--;
+          if (type == "W" && cat == "w" && dir > 0) { type = "w"; continue; }
+          break;
+        }
+      }
+    }
+    return Pos(start.line, pos);
+  }
+
+  function moveSubword(cm, dir) {
+    cm.extendSelectionsBy(function(range) {
+      if (cm.display.shift || cm.doc.extend || range.empty())
+        return findPosSubword(cm.doc, range.head, dir);
+      else
+        return dir < 0 ? range.from() : range.to();
+    });
+  }
+
+  var goSubwordCombo = mac ? "Ctrl-" : "Alt-";
+
+  cmds[map[goSubwordCombo + "Left"] = "goSubwordLeft"] = function(cm) { moveSubword(cm, -1); };
+  cmds[map[goSubwordCombo + "Right"] = "goSubwordRight"] = function(cm) { moveSubword(cm, 1); };
+
+  if (mac) map["Cmd-Left"] = "goLineStartSmart";
+
+  var scrollLineCombo = mac ? "Ctrl-Alt-" : "Ctrl-";
+
+  cmds[map[scrollLineCombo + "Up"] = "scrollLineUp"] = function(cm) {
+    var info = cm.getScrollInfo();
+    if (!cm.somethingSelected()) {
+      var visibleBottomLine = cm.lineAtHeight(info.top + info.clientHeight, "local");
+      if (cm.getCursor().line >= visibleBottomLine)
+        cm.execCommand("goLineUp");
+    }
+    cm.scrollTo(null, info.top - cm.defaultTextHeight());
+  };
+  cmds[map[scrollLineCombo + "Down"] = "scrollLineDown"] = function(cm) {
+    var info = cm.getScrollInfo();
+    if (!cm.somethingSelected()) {
+      var visibleTopLine = cm.lineAtHeight(info.top, "local")+1;
+      if (cm.getCursor().line <= visibleTopLine)
+        cm.execCommand("goLineDown");
+    }
+    cm.scrollTo(null, info.top + cm.defaultTextHeight());
+  };
+
+  cmds[map["Shift-" + ctrl + "L"] = "splitSelectionByLine"] = function(cm) {
+    var ranges = cm.listSelections(), lineRanges = [];
+    for (var i = 0; i < ranges.length; i++) {
+      var from = ranges[i].from(), to = ranges[i].to();
+      for (var line = from.line; line <= to.line; ++line)
+        if (!(to.line > from.line && line == to.line && to.ch == 0))
+          lineRanges.push({anchor: line == from.line ? from : Pos(line, 0),
+                           head: line == to.line ? to : Pos(line)});
+    }
+    cm.setSelections(lineRanges, 0);
+  };
+
+  map["Shift-Tab"] = "indentLess";
+
+  cmds[map["Esc"] = "singleSelectionTop"] = function(cm) {
+    var range = cm.listSelections()[0];
+    cm.setSelection(range.anchor, range.head, {scroll: false});
+  };
+
+  cmds[map[ctrl + "L"] = "selectLine"] = function(cm) {
+    var ranges = cm.listSelections(), extended = [];
+    for (var i = 0; i < ranges.length; i++) {
+      var range = ranges[i];
+      extended.push({anchor: Pos(range.from().line, 0),
+                     head: Pos(range.to().line + 1, 0)});
+    }
+    cm.setSelections(extended);
+  };
+
+  map["Shift-Ctrl-K"] = "deleteLine";
+
+  function insertLine(cm, above) {
+    if (cm.isReadOnly()) return CodeMirror.Pass
+    cm.operation(function() {
+      var len = cm.listSelections().length, newSelection = [], last = -1;
+      for (var i = 0; i < len; i++) {
+        var head = cm.listSelections()[i].head;
+        if (head.line <= last) continue;
+        var at = Pos(head.line + (above ? 0 : 1), 0);
+        cm.replaceRange("\n", at, null, "+insertLine");
+        cm.indentLine(at.line, null, true);
+        newSelection.push({head: at, anchor: at});
+        last = head.line + 1;
+      }
+      cm.setSelections(newSelection);
+    });
+    cm.execCommand("indentAuto");
+  }
+
+  cmds[map[ctrl + "Enter"] = "insertLineAfter"] = function(cm) { return insertLine(cm, false); };
+
+  cmds[map["Shift-" + ctrl + "Enter"] = "insertLineBefore"] = function(cm) { return insertLine(cm, true); };
+
+  function wordAt(cm, pos) {
+    var start = pos.ch, end = start, line = cm.getLine(pos.line);
+    while (start && CodeMirror.isWordChar(line.charAt(start - 1))) --start;
+    while (end < line.length && CodeMirror.isWordChar(line.charAt(end))) ++end;
+    return {from: Pos(pos.line, start), to: Pos(pos.line, end), word: line.slice(start, end)};
+  }
+
+  cmds[map[ctrl + "D"] = "selectNextOccurrence"] = function(cm) {
+    var from = cm.getCursor("from"), to = cm.getCursor("to");
+    var fullWord = cm.state.sublimeFindFullWord == cm.doc.sel;
+    if (CodeMirror.cmpPos(from, to) == 0) {
+      var word = wordAt(cm, from);
+      if (!word.word) return;
+      cm.setSelection(word.from, word.to);
+      fullWord = true;
+    } else {
+      var text = cm.getRange(from, to);
+      var query = fullWord ? new RegExp("\\b" + text + "\\b") : text;
+      var cur = cm.getSearchCursor(query, to);
+      var found = cur.findNext();
+      if (!found) {
+        cur = cm.getSearchCursor(query, Pos(cm.firstLine(), 0));
+        found = cur.findNext();
+      }
+      if (!found || isSelectedRange(cm.listSelections(), cur.from(), cur.to()))
+        return CodeMirror.Pass
+      cm.addSelection(cur.from(), cur.to());
+    }
+    if (fullWord)
+      cm.state.sublimeFindFullWord = cm.doc.sel;
+  };
+
+  function addCursorToSelection(cm, dir) {
+    var ranges = cm.listSelections(), newRanges = [];
+    for (var i = 0; i < ranges.length; i++) {
+      var range = ranges[i];
+      var newAnchor = cm.findPosV(range.anchor, dir, "line");
+      var newHead = cm.findPosV(range.head, dir, "line");
+      var newRange = {anchor: newAnchor, head: newHead};
+      newRanges.push(range);
+      newRanges.push(newRange);
+    }
+    cm.setSelections(newRanges);
+  }
+
+  var addCursorToLineCombo = mac ? "Shift-Cmd" : 'Alt-Ctrl';
+  cmds[map[addCursorToLineCombo + "Up"] = "addCursorToPrevLine"] = function(cm) { addCursorToSelection(cm, -1); };
+  cmds[map[addCursorToLineCombo + "Down"] = "addCursorToNextLine"] = function(cm) { addCursorToSelection(cm, 1); };
+
+  function isSelectedRange(ranges, from, to) {
+    for (var i = 0; i < ranges.length; i++)
+      if (ranges[i].from() == from && ranges[i].to() == to) return true
+    return false
+  }
+
+  var mirror = "(){}[]";
+  function selectBetweenBrackets(cm) {
+    var ranges = cm.listSelections(), newRanges = []
+    for (var i = 0; i < ranges.length; i++) {
+      var range = ranges[i], pos = range.head, opening = cm.scanForBracket(pos, -1);
+      if (!opening) return false;
+      for (;;) {
+        var closing = cm.scanForBracket(pos, 1);
+        if (!closing) return false;
+        if (closing.ch == mirror.charAt(mirror.indexOf(opening.ch) + 1)) {
+          newRanges.push({anchor: Pos(opening.pos.line, opening.pos.ch + 1),
+                          head: closing.pos});
+          break;
+        }
+        pos = Pos(closing.pos.line, closing.pos.ch + 1);
+      }
+    }
+    cm.setSelections(newRanges);
+    return true;
+  }
+
+  cmds[map["Shift-" + ctrl + "Space"] = "selectScope"] = function(cm) {
+    selectBetweenBrackets(cm) || cm.execCommand("selectAll");
+  };
+  cmds[map["Shift-" + ctrl + "M"] = "selectBetweenBrackets"] = function(cm) {
+    if (!selectBetweenBrackets(cm)) return CodeMirror.Pass;
+  };
+
+  cmds[map[ctrl + "M"] = "goToBracket"] = function(cm) {
+    cm.extendSelectionsBy(function(range) {
+      var next = cm.scanForBracket(range.head, 1);
+      if (next && CodeMirror.cmpPos(next.pos, range.head) != 0) return next.pos;
+      var prev = cm.scanForBracket(range.head, -1);
+      return prev && Pos(prev.pos.line, prev.pos.ch + 1) || range.head;
+    });
+  };
+
+  var swapLineCombo = mac ? "Cmd-Ctrl-" : "Shift-Ctrl-";
+
+  cmds[map[swapLineCombo + "Up"] = "swapLineUp"] = function(cm) {
+    if (cm.isReadOnly()) return CodeMirror.Pass
+    var ranges = cm.listSelections(), linesToMove = [], at = cm.firstLine() - 1, newSels = [];
+    for (var i = 0; i < ranges.length; i++) {
+      var range = ranges[i], from = range.from().line - 1, to = range.to().line;
+      newSels.push({anchor: Pos(range.anchor.line - 1, range.anchor.ch),
+                    head: Pos(range.head.line - 1, range.head.ch)});
+      if (range.to().ch == 0 && !range.empty()) --to;
+      if (from > at) linesToMove.push(from, to);
+      else if (linesToMove.length) linesToMove[linesToMove.length - 1] = to;
+      at = to;
+    }
+    cm.operation(function() {
+      for (var i = 0; i < linesToMove.length; i += 2) {
+        var from = linesToMove[i], to = linesToMove[i + 1];
+        var line = cm.getLine(from);
+        cm.replaceRange("", Pos(from, 0), Pos(from + 1, 0), "+swapLine");
+        if (to > cm.lastLine())
+          cm.replaceRange("\n" + line, Pos(cm.lastLine()), null, "+swapLine");
+        else
+          cm.replaceRange(line + "\n", Pos(to, 0), null, "+swapLine");
+      }
+      cm.setSelections(newSels);
+      cm.scrollIntoView();
+    });
+  };
+
+  cmds[map[swapLineCombo + "Down"] = "swapLineDown"] = function(cm) {
+    if (cm.isReadOnly()) return CodeMirror.Pass
+    var ranges = cm.listSelections(), linesToMove = [], at = cm.lastLine() + 1;
+    for (var i = ranges.length - 1; i >= 0; i--) {
+      var range = ranges[i], from = range.to().line + 1, to = range.from().line;
+      if (range.to().ch == 0 && !range.empty()) from--;
+      if (from < at) linesToMove.push(from, to);
+      else if (linesToMove.length) linesToMove[linesToMove.length - 1] = to;
+      at = to;
+    }
+    cm.operation(function() {
+      for (var i = linesToMove.length - 2; i >= 0; i -= 2) {
+        var from = linesToMove[i], to = linesToMove[i + 1];
+        var line = cm.getLine(from);
+        if (from == cm.lastLine())
+          cm.replaceRange("", Pos(from - 1), Pos(from), "+swapLine");
+        else
+          cm.replaceRange("", Pos(from, 0), Pos(from + 1, 0), "+swapLine");
+        cm.replaceRange(line + "\n", Pos(to, 0), null, "+swapLine");
+      }
+      cm.scrollIntoView();
+    });
+  };
+
+  cmds[map[ctrl + "/"] = "toggleCommentIndented"] = function(cm) {
+    cm.toggleComment({ indent: true });
+  }
+
+  cmds[map[ctrl + "J"] = "joinLines"] = function(cm) {
+    var ranges = cm.listSelections(), joined = [];
+    for (var i = 0; i < ranges.length; i++) {
+      var range = ranges[i], from = range.from();
+      var start = from.line, end = range.to().line;
+      while (i < ranges.length - 1 && ranges[i + 1].from().line == end)
+        end = ranges[++i].to().line;
+      joined.push({start: start, end: end, anchor: !range.empty() && from});
+    }
+    cm.operation(function() {
+      var offset = 0, ranges = [];
+      for (var i = 0; i < joined.length; i++) {
+        var obj = joined[i];
+        var anchor = obj.anchor && Pos(obj.anchor.line - offset, obj.anchor.ch), head;
+        for (var line = obj.start; line <= obj.end; line++) {
+          var actual = line - offset;
+          if (line == obj.end) head = Pos(actual, cm.getLine(actual).length + 1);
+          if (actual < cm.lastLine()) {
+            cm.replaceRange(" ", Pos(actual), Pos(actual + 1, /^\s*/.exec(cm.getLine(actual + 1))[0].length));
+            ++offset;
+          }
+        }
+        ranges.push({anchor: anchor || head, head: head});
+      }
+      cm.setSelections(ranges, 0);
+    });
+  };
+
+  cmds[map["Shift-" + ctrl + "D"] = "duplicateLine"] = function(cm) {
+    cm.operation(function() {
+      var rangeCount = cm.listSelections().length;
+      for (var i = 0; i < rangeCount; i++) {
+        var range = cm.listSelections()[i];
+        if (range.empty())
+          cm.replaceRange(cm.getLine(range.head.line) + "\n", Pos(range.head.line, 0));
+        else
+          cm.replaceRange(cm.getRange(range.from(), range.to()), range.from());
+      }
+      cm.scrollIntoView();
+    });
+  };
+
+  if (!mac) map[ctrl + "T"] = "transposeChars";
+
+  function sortLines(cm, caseSensitive) {
+    if (cm.isReadOnly()) return CodeMirror.Pass
+    var ranges = cm.listSelections(), toSort = [], selected;
+    for (var i = 0; i < ranges.length; i++) {
+      var range = ranges[i];
+      if (range.empty()) continue;
+      var from = range.from().line, to = range.to().line;
+      while (i < ranges.length - 1 && ranges[i + 1].from().line == to)
+        to = ranges[++i].to().line;
+      if (!ranges[i].to().ch) to--;
+      toSort.push(from, to);
+    }
+    if (toSort.length) selected = true;
+    else toSort.push(cm.firstLine(), cm.lastLine());
+
+    cm.operation(function() {
+      var ranges = [];
+      for (var i = 0; i < toSort.length; i += 2) {
+        var from = toSort[i], to = toSort[i + 1];
+        var start = Pos(from, 0), end = Pos(to);
+        var lines = cm.getRange(start, end, false);
+        if (caseSensitive)
+          lines.sort();
+        else
+          lines.sort(function(a, b) {
+            var au = a.toUpperCase(), bu = b.toUpperCase();
+            if (au != bu) { a = au; b = bu; }
+            return a < b ? -1 : a == b ? 0 : 1;
+          });
+        cm.replaceRange(lines, start, end);
+        if (selected) ranges.push({anchor: start, head: Pos(to + 1, 0)});
+      }
+      if (selected) cm.setSelections(ranges, 0);
+    });
+  }
+
+  cmds[map["F9"] = "sortLines"] = function(cm) { sortLines(cm, true); };
+  cmds[map[ctrl + "F9"] = "sortLinesInsensitive"] = function(cm) { sortLines(cm, false); };
+
+  cmds[map["F2"] = "nextBookmark"] = function(cm) {
+    var marks = cm.state.sublimeBookmarks;
+    if (marks) while (marks.length) {
+      var current = marks.shift();
+      var found = current.find();
+      if (found) {
+        marks.push(current);
+        return cm.setSelection(found.from, found.to);
+      }
+    }
+  };
+
+  cmds[map["Shift-F2"] = "prevBookmark"] = function(cm) {
+    var marks = cm.state.sublimeBookmarks;
+    if (marks) while (marks.length) {
+      marks.unshift(marks.pop());
+      var found = marks[marks.length - 1].find();
+      if (!found)
+        marks.pop();
+      else
+        return cm.setSelection(found.from, found.to);
+    }
+  };
+
+  cmds[map[ctrl + "F2"] = "toggleBookmark"] = function(cm) {
+    var ranges = cm.listSelections();
+    var marks = cm.state.sublimeBookmarks || (cm.state.sublimeBookmarks = []);
+    for (var i = 0; i < ranges.length; i++) {
+      var from = ranges[i].from(), to = ranges[i].to();
+      var found = cm.findMarks(from, to);
+      for (var j = 0; j < found.length; j++) {
+        if (found[j].sublimeBookmark) {
+          found[j].clear();
+          for (var k = 0; k < marks.length; k++)
+            if (marks[k] == found[j])
+              marks.splice(k--, 1);
+          break;
+        }
+      }
+      if (j == found.length)
+        marks.push(cm.markText(from, to, {sublimeBookmark: true, clearWhenEmpty: false}));
+    }
+  };
+
+  cmds[map["Shift-" + ctrl + "F2"] = "clearBookmarks"] = function(cm) {
+    var marks = cm.state.sublimeBookmarks;
+    if (marks) for (var i = 0; i < marks.length; i++) marks[i].clear();
+    marks.length = 0;
+  };
+
+  cmds[map["Alt-F2"] = "selectBookmarks"] = function(cm) {
+    var marks = cm.state.sublimeBookmarks, ranges = [];
+    if (marks) for (var i = 0; i < marks.length; i++) {
+      var found = marks[i].find();
+      if (!found)
+        marks.splice(i--, 0);
+      else
+        ranges.push({anchor: found.from, head: found.to});
+    }
+    if (ranges.length)
+      cm.setSelections(ranges, 0);
+  };
+
+  map["Alt-Q"] = "wrapLines";
+
+  var cK = ctrl + "K ";
+
+  function modifyWordOrSelection(cm, mod) {
+    cm.operation(function() {
+      var ranges = cm.listSelections(), indices = [], replacements = [];
+      for (var i = 0; i < ranges.length; i++) {
+        var range = ranges[i];
+        if (range.empty()) { indices.push(i); replacements.push(""); }
+        else replacements.push(mod(cm.getRange(range.from(), range.to())));
+      }
+      cm.replaceSelections(replacements, "around", "case");
+      for (var i = indices.length - 1, at; i >= 0; i--) {
+        var range = ranges[indices[i]];
+        if (at && CodeMirror.cmpPos(range.head, at) > 0) continue;
+        var word = wordAt(cm, range.head);
+        at = word.from;
+        cm.replaceRange(mod(word.word), word.from, word.to);
+      }
+    });
+  }
+
+  map[cK + ctrl + "Backspace"] = "delLineLeft";
+
+  cmds[map["Backspace"] = "smartBackspace"] = function(cm) {
+    if (cm.somethingSelected()) return CodeMirror.Pass;
+
+    cm.operation(function() {
+      var cursors = cm.listSelections();
+      var indentUnit = cm.getOption("indentUnit");
+
+      for (var i = cursors.length - 1; i >= 0; i--) {
+        var cursor = cursors[i].head;
+        var toStartOfLine = cm.getRange({line: cursor.line, ch: 0}, cursor);
+        var column = CodeMirror.countColumn(toStartOfLine, null, cm.getOption("tabSize"));
+
+        // Delete by one character by default
+        var deletePos = cm.findPosH(cursor, -1, "char", false);
+
+        if (toStartOfLine && !/\S/.test(toStartOfLine) && column % indentUnit == 0) {
+          var prevIndent = new Pos(cursor.line,
+            CodeMirror.findColumn(toStartOfLine, column - indentUnit, indentUnit));
+
+          // Smart delete only if we found a valid prevIndent location
+          if (prevIndent.ch != cursor.ch) deletePos = prevIndent;
+        }
+
+        cm.replaceRange("", deletePos, cursor, "+delete");
+      }
+    });
+  };
+
+  cmds[map[cK + ctrl + "K"] = "delLineRight"] = function(cm) {
+    cm.operation(function() {
+      var ranges = cm.listSelections();
+      for (var i = ranges.length - 1; i >= 0; i--)
+        cm.replaceRange("", ranges[i].anchor, Pos(ranges[i].to().line), "+delete");
+      cm.scrollIntoView();
+    });
+  };
+
+  cmds[map[cK + ctrl + "U"] = "upcaseAtCursor"] = function(cm) {
+    modifyWordOrSelection(cm, function(str) { return str.toUpperCase(); });
+  };
+  cmds[map[cK + ctrl + "L"] = "downcaseAtCursor"] = function(cm) {
+    modifyWordOrSelection(cm, function(str) { return str.toLowerCase(); });
+  };
+
+  cmds[map[cK + ctrl + "Space"] = "setSublimeMark"] = function(cm) {
+    if (cm.state.sublimeMark) cm.state.sublimeMark.clear();
+    cm.state.sublimeMark = cm.setBookmark(cm.getCursor());
+  };
+  cmds[map[cK + ctrl + "A"] = "selectToSublimeMark"] = function(cm) {
+    var found = cm.state.sublimeMark && cm.state.sublimeMark.find();
+    if (found) cm.setSelection(cm.getCursor(), found);
+  };
+  cmds[map[cK + ctrl + "W"] = "deleteToSublimeMark"] = function(cm) {
+    var found = cm.state.sublimeMark && cm.state.sublimeMark.find();
+    if (found) {
+      var from = cm.getCursor(), to = found;
+      if (CodeMirror.cmpPos(from, to) > 0) { var tmp = to; to = from; from = tmp; }
+      cm.state.sublimeKilled = cm.getRange(from, to);
+      cm.replaceRange("", from, to);
+    }
+  };
+  cmds[map[cK + ctrl + "X"] = "swapWithSublimeMark"] = function(cm) {
+    var found = cm.state.sublimeMark && cm.state.sublimeMark.find();
+    if (found) {
+      cm.state.sublimeMark.clear();
+      cm.state.sublimeMark = cm.setBookmark(cm.getCursor());
+      cm.setCursor(found);
+    }
+  };
+  cmds[map[cK + ctrl + "Y"] = "sublimeYank"] = function(cm) {
+    if (cm.state.sublimeKilled != null)
+      cm.replaceSelection(cm.state.sublimeKilled, null, "paste");
+  };
+
+  map[cK + ctrl + "G"] = "clearBookmarks";
+  cmds[map[cK + ctrl + "C"] = "showInCenter"] = function(cm) {
+    var pos = cm.cursorCoords(null, "local");
+    cm.scrollTo(null, (pos.top + pos.bottom) / 2 - cm.getScrollInfo().clientHeight / 2);
+  };
+
+  var selectLinesCombo = mac ? "Ctrl-Shift-" : "Ctrl-Alt-";
+  cmds[map[selectLinesCombo + "Up"] = "selectLinesUpward"] = function(cm) {
+    cm.operation(function() {
+      var ranges = cm.listSelections();
+      for (var i = 0; i < ranges.length; i++) {
+        var range = ranges[i];
+        if (range.head.line > cm.firstLine())
+          cm.addSelection(Pos(range.head.line - 1, range.head.ch));
+      }
+    });
+  };
+  cmds[map[selectLinesCombo + "Down"] = "selectLinesDownward"] = function(cm) {
+    cm.operation(function() {
+      var ranges = cm.listSelections();
+      for (var i = 0; i < ranges.length; i++) {
+        var range = ranges[i];
+        if (range.head.line < cm.lastLine())
+          cm.addSelection(Pos(range.head.line + 1, range.head.ch));
+      }
+    });
+  };
+
+  function getTarget(cm) {
+    var from = cm.getCursor("from"), to = cm.getCursor("to");
+    if (CodeMirror.cmpPos(from, to) == 0) {
+      var word = wordAt(cm, from);
+      if (!word.word) return;
+      from = word.from;
+      to = word.to;
+    }
+    return {from: from, to: to, query: cm.getRange(from, to), word: word};
+  }
+
+  function findAndGoTo(cm, forward) {
+    var target = getTarget(cm);
+    if (!target) return;
+    var query = target.query;
+    var cur = cm.getSearchCursor(query, forward ? target.to : target.from);
+
+    if (forward ? cur.findNext() : cur.findPrevious()) {
+      cm.setSelection(cur.from(), cur.to());
+    } else {
+      cur = cm.getSearchCursor(query, forward ? Pos(cm.firstLine(), 0)
+                                              : cm.clipPos(Pos(cm.lastLine())));
+      if (forward ? cur.findNext() : cur.findPrevious())
+        cm.setSelection(cur.from(), cur.to());
+      else if (target.word)
+        cm.setSelection(target.from, target.to);
+    }
+  };
+  cmds[map[ctrl + "F3"] = "findUnder"] = function(cm) { findAndGoTo(cm, true); };
+  cmds[map["Shift-" + ctrl + "F3"] = "findUnderPrevious"] = function(cm) { findAndGoTo(cm,false); };
+  cmds[map["Alt-F3"] = "findAllUnder"] = function(cm) {
+    var target = getTarget(cm);
+    if (!target) return;
+    var cur = cm.getSearchCursor(target.query);
+    var matches = [];
+    var primaryIndex = -1;
+    while (cur.findNext()) {
+      matches.push({anchor: cur.from(), head: cur.to()});
+      if (cur.from().line <= target.from.line && cur.from().ch <= target.from.ch)
+        primaryIndex++;
+    }
+    cm.setSelections(matches, primaryIndex);
+  };
+
+  map["Shift-" + ctrl + "["] = "fold";
+  map["Shift-" + ctrl + "]"] = "unfold";
+  map[cK + ctrl + "0"] = map[cK + ctrl + "J"] = "unfoldAll";
+
+  map[ctrl + "I"] = "findIncremental";
+  map["Shift-" + ctrl + "I"] = "findIncrementalReverse";
+  map[ctrl + "H"] = "replace";
+  map["F3"] = "findNext";
+  map["Shift-F3"] = "findPrev";
+
+  CodeMirror.normalizeKeyMap(map);
+});
+
+
+/***/ }),
+/* 685 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
+(function(mod) {
+  if (true) // CommonJS
+    mod(__webpack_require__(38))
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod)
+  else // Plain browser env
+    mod(CodeMirror)
+})(function(CodeMirror) {
+  "use strict"
+  var Pos = CodeMirror.Pos
+
+  function regexpFlags(regexp) {
+    var flags = regexp.flags
+    return flags != null ? flags : (regexp.ignoreCase ? "i" : "")
+      + (regexp.global ? "g" : "")
+      + (regexp.multiline ? "m" : "")
+  }
+
+  function ensureGlobal(regexp) {
+    return regexp.global ? regexp : new RegExp(regexp.source, regexpFlags(regexp) + "g")
+  }
+
+  function maybeMultiline(regexp) {
+    return /\\s|\\n|\n|\\W|\\D|\[\^/.test(regexp.source)
+  }
+
+  function searchRegexpForward(doc, regexp, start) {
+    regexp = ensureGlobal(regexp)
+    for (var line = start.line, ch = start.ch, last = doc.lastLine(); line <= last; line++, ch = 0) {
+      regexp.lastIndex = ch
+      var string = doc.getLine(line), match = regexp.exec(string)
+      if (match)
+        return {from: Pos(line, match.index),
+                to: Pos(line, match.index + match[0].length),
+                match: match}
+    }
+  }
+
+  function searchRegexpForwardMultiline(doc, regexp, start) {
+    if (!maybeMultiline(regexp)) return searchRegexpForward(doc, regexp, start)
+
+    regexp = ensureGlobal(regexp)
+    var string, chunk = 1
+    for (var line = start.line, last = doc.lastLine(); line <= last;) {
+      // This grows the search buffer in exponentially-sized chunks
+      // between matches, so that nearby matches are fast and don't
+      // require concatenating the whole document (in case we're
+      // searching for something that has tons of matches), but at the
+      // same time, the amount of retries is limited.
+      for (var i = 0; i < chunk; i++) {
+        var curLine = doc.getLine(line++)
+        string = string == null ? curLine : string + "\n" + curLine
+      }
+      chunk = chunk * 2
+      regexp.lastIndex = start.ch
+      var match = regexp.exec(string)
+      if (match) {
+        var before = string.slice(0, match.index).split("\n"), inside = match[0].split("\n")
+        var startLine = start.line + before.length - 1, startCh = before[before.length - 1].length
+        return {from: Pos(startLine, startCh),
+                to: Pos(startLine + inside.length - 1,
+                        inside.length == 1 ? startCh + inside[0].length : inside[inside.length - 1].length),
+                match: match}
+      }
+    }
+  }
+
+  function lastMatchIn(string, regexp) {
+    var cutOff = 0, match
+    for (;;) {
+      regexp.lastIndex = cutOff
+      var newMatch = regexp.exec(string)
+      if (!newMatch) return match
+      match = newMatch
+      cutOff = match.index + (match[0].length || 1)
+      if (cutOff == string.length) return match
+    }
+  }
+
+  function searchRegexpBackward(doc, regexp, start) {
+    regexp = ensureGlobal(regexp)
+    for (var line = start.line, ch = start.ch, first = doc.firstLine(); line >= first; line--, ch = -1) {
+      var string = doc.getLine(line)
+      if (ch > -1) string = string.slice(0, ch)
+      var match = lastMatchIn(string, regexp)
+      if (match)
+        return {from: Pos(line, match.index),
+                to: Pos(line, match.index + match[0].length),
+                match: match}
+    }
+  }
+
+  function searchRegexpBackwardMultiline(doc, regexp, start) {
+    regexp = ensureGlobal(regexp)
+    var string, chunk = 1
+    for (var line = start.line, first = doc.firstLine(); line >= first;) {
+      for (var i = 0; i < chunk; i++) {
+        var curLine = doc.getLine(line--)
+        string = string == null ? curLine.slice(0, start.ch) : curLine + "\n" + string
+      }
+      chunk *= 2
+
+      var match = lastMatchIn(string, regexp)
+      if (match) {
+        var before = string.slice(0, match.index).split("\n"), inside = match[0].split("\n")
+        var startLine = line + before.length, startCh = before[before.length - 1].length
+        return {from: Pos(startLine, startCh),
+                to: Pos(startLine + inside.length - 1,
+                        inside.length == 1 ? startCh + inside[0].length : inside[inside.length - 1].length),
+                match: match}
+      }
+    }
+  }
+
+  var doFold, noFold
+  if (String.prototype.normalize) {
+    doFold = function(str) { return str.normalize("NFD").toLowerCase() }
+    noFold = function(str) { return str.normalize("NFD") }
+  } else {
+    doFold = function(str) { return str.toLowerCase() }
+    noFold = function(str) { return str }
+  }
+
+  // Maps a position in a case-folded line back to a position in the original line
+  // (compensating for codepoints increasing in number during folding)
+  function adjustPos(orig, folded, pos, foldFunc) {
+    if (orig.length == folded.length) return pos
+    for (var min = 0, max = pos + Math.max(0, orig.length - folded.length);;) {
+      if (min == max) return min
+      var mid = (min + max) >> 1
+      var len = foldFunc(orig.slice(0, mid)).length
+      if (len == pos) return mid
+      else if (len > pos) max = mid
+      else min = mid + 1
+    }
+  }
+
+  function searchStringForward(doc, query, start, caseFold) {
+    // Empty string would match anything and never progress, so we
+    // define it to match nothing instead.
+    if (!query.length) return null
+    var fold = caseFold ? doFold : noFold
+    var lines = fold(query).split(/\r|\n\r?/)
+
+    search: for (var line = start.line, ch = start.ch, last = doc.lastLine() + 1 - lines.length; line <= last; line++, ch = 0) {
+      var orig = doc.getLine(line).slice(ch), string = fold(orig)
+      if (lines.length == 1) {
+        var found = string.indexOf(lines[0])
+        if (found == -1) continue search
+        var start = adjustPos(orig, string, found, fold) + ch
+        return {from: Pos(line, adjustPos(orig, string, found, fold) + ch),
+                to: Pos(line, adjustPos(orig, string, found + lines[0].length, fold) + ch)}
+      } else {
+        var cutFrom = string.length - lines[0].length
+        if (string.slice(cutFrom) != lines[0]) continue search
+        for (var i = 1; i < lines.length - 1; i++)
+          if (fold(doc.getLine(line + i)) != lines[i]) continue search
+        var end = doc.getLine(line + lines.length - 1), endString = fold(end), lastLine = lines[lines.length - 1]
+        if (end.slice(0, lastLine.length) != lastLine) continue search
+        return {from: Pos(line, adjustPos(orig, string, cutFrom, fold) + ch),
+                to: Pos(line + lines.length - 1, adjustPos(end, endString, lastLine.length, fold))}
+      }
+    }
+  }
+
+  function searchStringBackward(doc, query, start, caseFold) {
+    if (!query.length) return null
+    var fold = caseFold ? doFold : noFold
+    var lines = fold(query).split(/\r|\n\r?/)
+
+    search: for (var line = start.line, ch = start.ch, first = doc.firstLine() - 1 + lines.length; line >= first; line--, ch = -1) {
+      var orig = doc.getLine(line)
+      if (ch > -1) orig = orig.slice(0, ch)
+      var string = fold(orig)
+      if (lines.length == 1) {
+        var found = string.lastIndexOf(lines[0])
+        if (found == -1) continue search
+        return {from: Pos(line, adjustPos(orig, string, found, fold)),
+                to: Pos(line, adjustPos(orig, string, found + lines[0].length, fold))}
+      } else {
+        var lastLine = lines[lines.length - 1]
+        if (string.slice(0, lastLine.length) != lastLine) continue search
+        for (var i = 1, start = line - lines.length + 1; i < lines.length - 1; i++)
+          if (fold(doc.getLine(start + i)) != lines[i]) continue search
+        var top = doc.getLine(line + 1 - lines.length), topString = fold(top)
+        if (topString.slice(topString.length - lines[0].length) != lines[0]) continue search
+        return {from: Pos(line + 1 - lines.length, adjustPos(top, topString, top.length - lines[0].length, fold)),
+                to: Pos(line, adjustPos(orig, string, lastLine.length, fold))}
+      }
+    }
+  }
+
+  function SearchCursor(doc, query, pos, options) {
+    this.atOccurrence = false
+    this.doc = doc
+    pos = pos ? doc.clipPos(pos) : Pos(0, 0)
+    this.pos = {from: pos, to: pos}
+
+    var caseFold
+    if (typeof options == "object") {
+      caseFold = options.caseFold
+    } else { // Backwards compat for when caseFold was the 4th argument
+      caseFold = options
+      options = null
+    }
+
+    if (typeof query == "string") {
+      if (caseFold == null) caseFold = false
+      this.matches = function(reverse, pos) {
+        return (reverse ? searchStringBackward : searchStringForward)(doc, query, pos, caseFold)
+      }
+    } else {
+      query = ensureGlobal(query)
+      if (!options || options.multiline !== false)
+        this.matches = function(reverse, pos) {
+          return (reverse ? searchRegexpBackwardMultiline : searchRegexpForwardMultiline)(doc, query, pos)
+        }
+      else
+        this.matches = function(reverse, pos) {
+          return (reverse ? searchRegexpBackward : searchRegexpForward)(doc, query, pos)
+        }
+    }
+  }
+
+  SearchCursor.prototype = {
+    findNext: function() {return this.find(false)},
+    findPrevious: function() {return this.find(true)},
+
+    find: function(reverse) {
+      var result = this.matches(reverse, this.doc.clipPos(reverse ? this.pos.from : this.pos.to))
+
+      // Implements weird auto-growing behavior on null-matches for
+      // backwards-compatiblity with the vim code (unfortunately)
+      while (result && CodeMirror.cmpPos(result.from, result.to) == 0) {
+        if (reverse) {
+          if (result.from.ch) result.from = Pos(result.from.line, result.from.ch - 1)
+          else if (result.from.line == this.doc.firstLine()) result = null
+          else result = this.matches(reverse, this.doc.clipPos(Pos(result.from.line - 1)))
+        } else {
+          if (result.to.ch < this.doc.getLine(result.to.line).length) result.to = Pos(result.to.line, result.to.ch + 1)
+          else if (result.to.line == this.doc.lastLine()) result = null
+          else result = this.matches(reverse, Pos(result.to.line + 1, 0))
+        }
+      }
+
+      if (result) {
+        this.pos = result
+        this.atOccurrence = true
+        return this.pos.match || true
+      } else {
+        var end = Pos(reverse ? this.doc.firstLine() : this.doc.lastLine() + 1, 0)
+        this.pos = {from: end, to: end}
+        return this.atOccurrence = false
+      }
+    },
+
+    from: function() {if (this.atOccurrence) return this.pos.from},
+    to: function() {if (this.atOccurrence) return this.pos.to},
+
+    replace: function(newText, origin) {
+      if (!this.atOccurrence) return
+      var lines = CodeMirror.splitLines(newText)
+      this.doc.replaceRange(lines, this.pos.from, this.pos.to, origin)
+      this.pos.to = Pos(this.pos.from.line + lines.length - 1,
+                        lines[lines.length - 1].length + (lines.length == 1 ? this.pos.from.ch : 0))
+    }
+  }
+
+  CodeMirror.defineExtension("getSearchCursor", function(query, pos, caseFold) {
+    return new SearchCursor(this.doc, query, pos, caseFold)
+  })
+  CodeMirror.defineDocExtension("getSearchCursor", function(query, pos, caseFold) {
+    return new SearchCursor(this, query, pos, caseFold)
+  })
+
+  CodeMirror.defineExtension("selectMatches", function(query, caseFold) {
+    var ranges = []
+    var cur = this.getSearchCursor(query, this.getCursor("from"), caseFold)
+    while (cur.findNext()) {
+      if (CodeMirror.cmpPos(cur.to(), this.getCursor("to")) > 0) break
+      ranges.push({anchor: cur.from(), head: cur.to()})
+    }
+    if (ranges.length)
+      this.setSelections(ranges, 0)
+  })
+});
+
+
+/***/ }),
+/* 686 */,
+/* 687 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
+(function(mod) {
+  if (true) // CommonJS
+    mod(__webpack_require__(38));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+  "use strict";
+
+  var noOptions = {};
+  var nonWS = /[^\s\u00a0]/;
+  var Pos = CodeMirror.Pos;
+
+  function firstNonWS(str) {
+    var found = str.search(nonWS);
+    return found == -1 ? 0 : found;
+  }
+
+  CodeMirror.commands.toggleComment = function(cm) {
+    cm.toggleComment();
+  };
+
+  CodeMirror.defineExtension("toggleComment", function(options) {
+    if (!options) options = noOptions;
+    var cm = this;
+    var minLine = Infinity, ranges = this.listSelections(), mode = null;
+    for (var i = ranges.length - 1; i >= 0; i--) {
+      var from = ranges[i].from(), to = ranges[i].to();
+      if (from.line >= minLine) continue;
+      if (to.line >= minLine) to = Pos(minLine, 0);
+      minLine = from.line;
+      if (mode == null) {
+        if (cm.uncomment(from, to, options)) mode = "un";
+        else { cm.lineComment(from, to, options); mode = "line"; }
+      } else if (mode == "un") {
+        cm.uncomment(from, to, options);
+      } else {
+        cm.lineComment(from, to, options);
+      }
+    }
+  });
+
+  // Rough heuristic to try and detect lines that are part of multi-line string
+  function probablyInsideString(cm, pos, line) {
+    return /\bstring\b/.test(cm.getTokenTypeAt(Pos(pos.line, 0))) && !/^[\'\"\`]/.test(line)
+  }
+
+  function getMode(cm, pos) {
+    var mode = cm.getMode()
+    return mode.useInnerComments === false || !mode.innerMode ? mode : cm.getModeAt(pos)
+  }
+
+  CodeMirror.defineExtension("lineComment", function(from, to, options) {
+    if (!options) options = noOptions;
+    var self = this, mode = getMode(self, from);
+    var firstLine = self.getLine(from.line);
+    if (firstLine == null || probablyInsideString(self, from, firstLine)) return;
+
+    var commentString = options.lineComment || mode.lineComment;
+    if (!commentString) {
+      if (options.blockCommentStart || mode.blockCommentStart) {
+        options.fullLines = true;
+        self.blockComment(from, to, options);
+      }
+      return;
+    }
+
+    var end = Math.min(to.ch != 0 || to.line == from.line ? to.line + 1 : to.line, self.lastLine() + 1);
+    var pad = options.padding == null ? " " : options.padding;
+    var blankLines = options.commentBlankLines || from.line == to.line;
+
+    self.operation(function() {
+      if (options.indent) {
+        var baseString = null;
+        for (var i = from.line; i < end; ++i) {
+          var line = self.getLine(i);
+          var whitespace = line.slice(0, firstNonWS(line));
+          if (baseString == null || baseString.length > whitespace.length) {
+            baseString = whitespace;
+          }
+        }
+        for (var i = from.line; i < end; ++i) {
+          var line = self.getLine(i), cut = baseString.length;
+          if (!blankLines && !nonWS.test(line)) continue;
+          if (line.slice(0, cut) != baseString) cut = firstNonWS(line);
+          self.replaceRange(baseString + commentString + pad, Pos(i, 0), Pos(i, cut));
+        }
+      } else {
+        for (var i = from.line; i < end; ++i) {
+          if (blankLines || nonWS.test(self.getLine(i)))
+            self.replaceRange(commentString + pad, Pos(i, 0));
+        }
+      }
+    });
+  });
+
+  CodeMirror.defineExtension("blockComment", function(from, to, options) {
+    if (!options) options = noOptions;
+    var self = this, mode = getMode(self, from);
+    var startString = options.blockCommentStart || mode.blockCommentStart;
+    var endString = options.blockCommentEnd || mode.blockCommentEnd;
+    if (!startString || !endString) {
+      if ((options.lineComment || mode.lineComment) && options.fullLines != false)
+        self.lineComment(from, to, options);
+      return;
+    }
+    if (/\bcomment\b/.test(self.getTokenTypeAt(Pos(from.line, 0)))) return
+
+    var end = Math.min(to.line, self.lastLine());
+    if (end != from.line && to.ch == 0 && nonWS.test(self.getLine(end))) --end;
+
+    var pad = options.padding == null ? " " : options.padding;
+    if (from.line > end) return;
+
+    self.operation(function() {
+      if (options.fullLines != false) {
+        var lastLineHasText = nonWS.test(self.getLine(end));
+        self.replaceRange(pad + endString, Pos(end));
+        self.replaceRange(startString + pad, Pos(from.line, 0));
+        var lead = options.blockCommentLead || mode.blockCommentLead;
+        if (lead != null) for (var i = from.line + 1; i <= end; ++i)
+          if (i != end || lastLineHasText)
+            self.replaceRange(lead + pad, Pos(i, 0));
+      } else {
+        self.replaceRange(endString, to);
+        self.replaceRange(startString, from);
+      }
+    });
+  });
+
+  CodeMirror.defineExtension("uncomment", function(from, to, options) {
+    if (!options) options = noOptions;
+    var self = this, mode = getMode(self, from);
+    var end = Math.min(to.ch != 0 || to.line == from.line ? to.line : to.line - 1, self.lastLine()), start = Math.min(from.line, end);
+
+    // Try finding line comments
+    var lineString = options.lineComment || mode.lineComment, lines = [];
+    var pad = options.padding == null ? " " : options.padding, didSomething;
+    lineComment: {
+      if (!lineString) break lineComment;
+      for (var i = start; i <= end; ++i) {
+        var line = self.getLine(i);
+        var found = line.indexOf(lineString);
+        if (found > -1 && !/comment/.test(self.getTokenTypeAt(Pos(i, found + 1)))) found = -1;
+        if (found == -1 && nonWS.test(line)) break lineComment;
+        if (found > -1 && nonWS.test(line.slice(0, found))) break lineComment;
+        lines.push(line);
+      }
+      self.operation(function() {
+        for (var i = start; i <= end; ++i) {
+          var line = lines[i - start];
+          var pos = line.indexOf(lineString), endPos = pos + lineString.length;
+          if (pos < 0) continue;
+          if (line.slice(endPos, endPos + pad.length) == pad) endPos += pad.length;
+          didSomething = true;
+          self.replaceRange("", Pos(i, pos), Pos(i, endPos));
+        }
+      });
+      if (didSomething) return true;
+    }
+
+    // Try block comments
+    var startString = options.blockCommentStart || mode.blockCommentStart;
+    var endString = options.blockCommentEnd || mode.blockCommentEnd;
+    if (!startString || !endString) return false;
+    var lead = options.blockCommentLead || mode.blockCommentLead;
+    var startLine = self.getLine(start), open = startLine.indexOf(startString)
+    if (open == -1) return false
+    var endLine = end == start ? startLine : self.getLine(end)
+    var close = endLine.indexOf(endString, end == start ? open + startString.length : 0);
+    if (close == -1 && start != end) {
+      endLine = self.getLine(--end);
+      close = endLine.indexOf(endString);
+    }
+    var insideStart = Pos(start, open + 1), insideEnd = Pos(end, close + 1)
+    if (close == -1 ||
+        !/comment/.test(self.getTokenTypeAt(insideStart)) ||
+        !/comment/.test(self.getTokenTypeAt(insideEnd)) ||
+        self.getRange(insideStart, insideEnd, "\n").indexOf(endString) > -1)
+      return false;
+
+    // Avoid killing block comments completely outside the selection.
+    // Positions of the last startString before the start of the selection, and the first endString after it.
+    var lastStart = startLine.lastIndexOf(startString, from.ch);
+    var firstEnd = lastStart == -1 ? -1 : startLine.slice(0, from.ch).indexOf(endString, lastStart + startString.length);
+    if (lastStart != -1 && firstEnd != -1 && firstEnd + endString.length != from.ch) return false;
+    // Positions of the first endString after the end of the selection, and the last startString before it.
+    firstEnd = endLine.indexOf(endString, to.ch);
+    var almostLastStart = endLine.slice(to.ch).lastIndexOf(startString, firstEnd - to.ch);
+    lastStart = (firstEnd == -1 || almostLastStart == -1) ? -1 : to.ch + almostLastStart;
+    if (firstEnd != -1 && lastStart != -1 && lastStart != to.ch) return false;
+
+    self.operation(function() {
+      self.replaceRange("", Pos(end, close - (pad && endLine.slice(close - pad.length, close) == pad ? pad.length : 0)),
+                        Pos(end, close + endString.length));
+      var openEnd = open + startString.length;
+      if (pad && startLine.slice(openEnd, openEnd + pad.length) == pad) openEnd += pad.length;
+      self.replaceRange("", Pos(start, open), Pos(start, openEnd));
+      if (lead) for (var i = start + 1; i <= end; ++i) {
+        var line = self.getLine(i), found = line.indexOf(lead);
+        if (found == -1 || nonWS.test(line.slice(0, found))) continue;
+        var foundEnd = found + lead.length;
+        if (pad && line.slice(foundEnd, foundEnd + pad.length) == pad) foundEnd += pad.length;
+        self.replaceRange("", Pos(i, found), Pos(i, foundEnd));
+      }
+    });
+    return true;
+  });
+});
+
 
 /***/ })
 /******/ ]);
