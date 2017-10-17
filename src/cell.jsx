@@ -157,6 +157,7 @@ class GenericCell extends React.Component {
                     value={this.props.cell.content}
                     onChange={this.updateInputContent} 
                     // onFocus={this.enterEditMode}
+                    onFocusChange={(focus)=>{ if(focus) this.enterEditMode()}}
                     options={this.editorOptions}/>
             </div>
         )
