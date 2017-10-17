@@ -140,7 +140,7 @@ class GenericCell extends React.Component {
                 <CodeMirror ref='editor'
                     value={this.props.cell.content}
                     onChange={this.updateInputContent} 
-                    onFocus={this.enterEditMode}
+                    // onFocus={this.enterEditMode}
                     options={this.editorOptions}/>
             </div>
         )
@@ -277,13 +277,23 @@ class MarkdownCell extends GenericCell {
         this.props.actions.markCellNotRendered(this.props.cell.id)
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.cell.selected
+
+    componentDidMount(){
+        if (this.props.cell.selected
             && this.refs.hasOwnProperty('editor')
             && this.props.pageMode == 'edit') {
-            this.refs.editor.getCodeMirror().refresh()
-        } 
+            this.refs.editor.focus()
+        }
     }
+
+    componentDidUpdate(prevProps,prevState){
+        if (this.props.cell.selected
+            && this.refs.hasOwnProperty('editor')
+            && this.props.pageMode == 'edit') {
+            this.refs.editor.focus()
+        }
+    }
+
 
     inputComponent(){
         var editorDisplayStyle = (
@@ -298,11 +308,6 @@ class MarkdownCell extends GenericCell {
             onFocus={this.enterEditMode}
             options={this.editorOptions} />
 
-        if (this.props.cell.selected
-            && this.refs.hasOwnProperty('editor')
-            && this.props.pageMode == 'edit') {
-            this.refs.editor.focus()
-        }
         return (
             <div className="editor"
                 style = {{display: editorDisplayStyle}}
