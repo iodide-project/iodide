@@ -139,19 +139,17 @@ var SELECT_DOWN = [['down'], function(e){
 var RENDER_CELL = [['mod+enter'], function(){
       var currentlySelected = getSelectedCell(this.props.cells)
       if (currentlySelected != undefined) {
-        document.activeElement.blur()
         this.props.actions.renderCell(currentlySelected.id)
         this.props.actions.changeMode('command')
       } 
     }
 ]
 
-var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
+var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
   var currentlySelected = getSelectedCell(this.props.cells)
   if (currentlySelected!=undefined) {
     // currentlySelected does in theory change after each of these actions, 
     // so we need to keep pulling if we need them.
-    document.activeElement.blur()
     this.props.actions.renderCell(currentlySelected.id)
     this.props.actions.changeMode('command')
     
@@ -159,7 +157,7 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(){
     var cells = this.props.cells.slice()
     var index = cells.findIndex(c=>c.id===currentlySelected.id)
     if (index == cells.length-1) this.props.actions.addCell('javascript')
-    changeSelection(this, 1)
+    changeSelection(this, 1)    
   }
 }]
 

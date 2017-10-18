@@ -105,6 +105,9 @@ class GenericCell extends React.Component {
             && this.props.pageMode == 'edit') {
             this.refs.editor.focus()
         }
+        if (this.hasEditor && this.props.pageMode != 'edit') {
+            this.refs.editor.getCodeMirror().display.input.textarea.blur()
+        }
     }
 
     handleCollapseButtonClick(rowType){
