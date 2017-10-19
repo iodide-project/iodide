@@ -504,7 +504,7 @@ function jsReturnValue(cell) {
             // console.log(columns)
             var dataSetInfo = `array of objects: ${cell.value.length} rows, ${columns.length} columns`
             resultElem = (<div>
-                <span className="data-set-info">{dataSetInfo}</span>
+                <div className="data-set-info">{dataSetInfo}</div>
                 <ReactTable
                     data={cell.value}
                     columns={columns}

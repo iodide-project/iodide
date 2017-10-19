@@ -290,6 +290,18 @@ div.dom-cell-error {
 }
 
 /************************************************/
+/* cell output styles */
+
+.data-set-info{
+	color: #888;
+	font-style:  italic;
+	font-size: 12px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+
+/************************************************/
 /* header bar styles */
 
 input.page-title {
