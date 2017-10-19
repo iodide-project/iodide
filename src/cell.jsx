@@ -12,6 +12,8 @@ import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
 import sublime from 'codemirror/keymap/sublime'
 
+import ReactTable from 'react-table'
+
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
 
@@ -450,6 +452,45 @@ class HistoryCell extends GenericCell {
 
 
 
+var nb = {}
+
+nb.all = function(arr){
+  for (var i=0; i<arr.length; i++) {
+    if (!arr[i]){return false};
+  }
+  return true
+}
+nb.any = function(arr){
+  for (var i=0; i<arr.length; i++) {
+    if (arr[i]){return true};
+  }
+  return false
+}
+
+nb.isArray = (obj => Array.isArray(obj))
+
+nb.isMatrixLike = function(obj){
+  if (nb.isArray(obj)){
+    return nb.all(obj.map(nb.isArray))
+  } else {return false}
+}
+
+nb.arrayEqual = function(a1,a2){
+  if (a1.length != a2.length){return false}
+  for (let i=0, l=a1.length; i<l; i++){
+    if (a1[i]!=a2[i]){return false}
+  }
+  return true;
+}
+
+nb.isRowDataSet = function(obj,rowsChecked = 100){
+  if (nb.isArray(obj)){
+    var keys = Object.keys(obj[0]).sort()
+    return nb.all(obj.slice(0,rowsChecked).map(r => nb.arrayEqual(keys, Object.keys(r).sort())))
+  } else {return false}
+}
+
+
 function jsReturnValue(cell) {
     var resultElem;
     var returnedSomething
@@ -457,32 +498,48 @@ function jsReturnValue(cell) {
     if (cell.value !== undefined) returnedSomething = true
     if (cell.value == undefined && cell.rendered) returnedSomething = true
     if (returnedSomething) {
-        resultElem = <JSONTree 
-            data={cell.value} 
-            shouldExpandNode={(keyName, data, level)=>{
-                return false
-            }}
-            hideRoot={false} 
-            theme={{
-              scheme: 'bright',
-              author: 'chris kempson (http://chriskempson.com)',
-              base00: '#000000',
-              base01: '#303030',
-              base02: '#505050',
-              base03: '#b0b0b0',
-              base04: '#d0d0d0',
-              base05: '#e0e0e0',
-              base06: '#f5f5f5',
-              base07: '#ffffff',
-              base08: '#fb0120',
-              base09: '#fc6d24',
-              base0A: '#fda331',
-              base0B: '#a1c659',
-              base0C: '#76c7b7',
-              base0D: '#6fb3d2',
-              base0E: '#d381c3',
-              base0F: '#be643c'
-            }} />
+        if (nb.isRowDataSet(cell.value)){
+            var columns = Object.keys(cell.value[0]).map(k=>({Header:k,accessor:k}))
+            // console.log(Object.keys(cell.value))
+            // console.log(columns)
+            var dataSetInfo = `array of objects: ${cell.value.length} rows, ${columns.length} columns`
+            resultElem = (<div>
+                <span className="data-set-info">{dataSetInfo}</span>
+                <ReactTable
+                    data={cell.value}
+                    columns={columns}
+                    showPaginationTop={true}
+                    showPaginationBottom={false}
+                    pageSizeOptions = {[5, 10, 25, 50, 100]}
+                    defaultPageSize = {25}
+                    />
+                </div>)
+        } else {
+            resultElem = <JSONTree 
+                data={cell.value} 
+                shouldExpandNode={(keyName, data, level)=>{return false}}
+                hideRoot={false} 
+                theme={{
+                  scheme: 'bright',
+                  author: 'chris kempson (http://chriskempson.com)',
+                  base00: '#000000',
+                  base01: '#303030',
+                  base02: '#505050',
+                  base03: '#b0b0b0',
+                  base04: '#d0d0d0',
+                  base05: '#e0e0e0',
+                  base06: '#f5f5f5',
+                  base07: '#ffffff',
+                  base08: '#fb0120',
+                  base09: '#fc6d24',
+                  base0A: '#fda331',
+                  base0B: '#a1c659',
+                  base0C: '#76c7b7',
+                  base0D: '#6fb3d2',
+                  base0E: '#d381c3',
+                  base0F: '#be643c'
+                }} />
+        }
     } else {
         resultElem = <div className='empty-resultset'></div>;
     }
