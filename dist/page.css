@@ -19,7 +19,6 @@ div#notebook-container {
 
 div#headerbar {
 /* 	flex: 0 0 150px; */
-	border-bottom: 1px #aaa solid;
 	padding-left:10px;
 	padding-right:10px;
 }
@@ -447,4 +446,51 @@ table th, table td {
 
 table tr:nth-child(2n) {
 	background-color: #f8f8f8;
+}
+
+/* span.cell-menu {
+	width:292px !important
+} */
+
+
+.medium-menu {
+	display: flex !important;
+	justify-content: space-between;
+	flex-flow: row wrap;
+	
+}
+
+.medium-menu div div {
+	display:flex !important;
+	float:none !important;
+	justify-content: space-between;
+	flex-flow: row wrap;
+}
+
+.medium-menu div div div:first-child {
+	order:1;
+	width:60px;
+	justify-content: flex-end;
+	font-size:12px;
+	
+	display:block;
+}
+
+.medium-menu div div div:nth-child(2) {
+	float:initial !important;
+	width:145px;
+	overflow:hidden;
+	order:0;
+} 
+
+.main-bar {
+	background-color:black
+}
+
+.menu-button {
+	color: #fafafa
+}
+
+.menu-button:hover {
+	outline:1px solid #fafafa
 }

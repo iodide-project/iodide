@@ -43,6 +43,7 @@
     "babel-preset-react": "^6.24.1",
     "enzyme": "^3.0.0",
     "jest": "^21.2.1",
+    "material-ui": "^0.19.4",
     "regenerator-runtime": "^0.11.0",
     "webpack-dev-server": "^2.7.1"
   }
