@@ -31,7 +31,7 @@ div#headerbar {
 div#cells {
 	overflow-y: auto;
 	width: 100%;
-	margin-top:20px;
+	padding-top:20px;
 	padding-left: 40px;
 	padding-right: 40px;
 	
@@ -556,7 +556,7 @@ table tr:nth-child(2n) {
 }
 
 .view-mode-toggle-from-presentation {
-	position: absolute;
+	position: fixed;
 	right:20px;
 	top:10px;
 }

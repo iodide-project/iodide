@@ -151,6 +151,7 @@ class EditorMenu extends React.Component {
 									pageMode={this.props.mode} />
 							</ToolbarGroup>
 							<ToolbarGroup id='notebook-view-mode-controls' className='mode-buttons'>
+								<ToolbarTitle style={{fontSize:'13px', color:'lightgray', fontStyle: 'italic'}} text={this.props.lastSaved === undefined ? ' ' : 'last saved: ' + prettyDate(this.props.lastSaved)} />
 								<ViewModeToggleButton actions={this.props.actions} viewMode={this.props.viewMode} />
 							</ToolbarGroup>
 							
