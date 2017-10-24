@@ -139,7 +139,7 @@ class NotebookHeader extends React.Component {
 						openSecondary={true}
 						overlayStyle={{backgroundColor: 'none'}}
 						onRequestChange={(open, request) => {this.props.actions.changeSidePaneMode(undefined)}}>
-						<h1 className='overlay-title'>History</h1>
+						<h1 className='overlay-title'>Execution History</h1>
 						<div className='history-cells'>
 							{histContents}
 						</div>
