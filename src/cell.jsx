@@ -17,6 +17,9 @@ import ReactTable from 'react-table'
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
 
+import _ from "lodash"
+import nb from "../tools/nb.js"
+
 class GenericCell extends React.Component {
     /* Generic cell implements a basic cell with a code mirror editor
     in text-wrap mode (like MD or Raw), and with empty output component
@@ -94,6 +97,7 @@ class GenericCell extends React.Component {
     }
 
     componentDidMount(){
+        // console.log("mounted",this.props.cell.id)
         if (this.props.cell.selected
             && this.refs.hasOwnProperty('editor')
             && this.props.pageMode == 'edit') {
@@ -102,6 +106,11 @@ class GenericCell extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
+        // console.log("updated",this.props.cell.id)
+        // console.log(prevProps)
+        // console.log(this.props)
+        // console.log(prevState)
+        // console.log(this.state)
         if (this.props.cell.selected
             && this.refs.hasOwnProperty('editor')
             && this.props.pageMode == 'edit') {
@@ -451,44 +460,58 @@ class HistoryCell extends GenericCell {
 }
 
 
+class PrettyMatrix extends React.Component {
+    constructor(props) {
+        super(props);
+        this.matrix = this.props.matrix;
+        this.maxDims = this.props.maxDims==undefined ? [10,10] : this.props.maxDims;
+        [this.numRows, this.numCols] =  nb.shape(this.matrix);
+    }
 
-var nb = {}
+    cellText(i,j){
+        var text =""
+        if (_.isNumber(i) && _.isNumber(j)) {
+            text = nb.prettyFormatNumber(this.matrix[i][j],6)
+        }
+        else if ( _.isString(i) && _.isString(j)) {text = "⋱"}
+        else if ( _.isString(i) && (j==0 || j==this.numCols-1) ) {text = i}
+        else if ( _.isString(j) && (i==0 || i==this.numRows-1) ) {text = j}
+        return text
+    }
 
-nb.all = function(arr){
-  for (var i=0; i<arr.length; i++) {
-    if (!arr[i]){return false};
-  }
-  return true
+    render() {
+        var [matrix, maxDims, numRows, numCols] = [
+            this.matrix, this.maxDims, this.numRows, this.numCols]
+
+        if (numRows>maxDims[0]){
+            var halfDim = Math.round(maxDims[0]/2)
+            var rowInds = _.range(0,halfDim).concat("⋮", _.range(numRows-halfDim,numRows))
+        } else {
+            var rowInds = _.range(numRows)
+        }
+        if (numCols>maxDims[1]){
+            var halfDim = Math.round(maxDims[1]/2)
+            var colInds = _.range(0,halfDim).concat("⋯", _.range(numCols-halfDim,numCols))
+        } else {
+            var colInds = _.range(numCols)
+        }
+
+      return (
+        <table className="matrixTable">
+          <tbody>
+            {rowInds.map((i, i_tr) =>
+              <tr key={i_tr}>
+                {colInds.map((j, j_td) =>
+                  <td key={j_td}>{this.cellText(i,j)}</td>
+                )}
+              </tr>
+            )}
+          </tbody>
+        </table>
+      );
+    }
 }
-nb.any = function(arr){
-  for (var i=0; i<arr.length; i++) {
-    if (arr[i]){return true};
-  }
-  return false
-}
 
-nb.isArray = (obj => Array.isArray(obj))
-
-nb.isMatrixLike = function(obj){
-  if (nb.isArray(obj)){
-    return nb.all(obj.map(nb.isArray))
-  } else {return false}
-}
-
-nb.arrayEqual = function(a1,a2){
-  if (a1.length != a2.length){return false}
-  for (let i=0, l=a1.length; i<l; i++){
-    if (a1[i]!=a2[i]){return false}
-  }
-  return true;
-}
-
-nb.isRowDataSet = function(obj,rowsChecked = 100){
-  if (nb.isArray(obj)){
-    var keys = Object.keys(obj[0]).sort()
-    return nb.all(obj.slice(0,rowsChecked).map(r => nb.arrayEqual(keys, Object.keys(r).sort())))
-  } else {return false}
-}
 
 
 function jsReturnValue(cell) {
@@ -498,7 +521,9 @@ function jsReturnValue(cell) {
     if (cell.value !== undefined) returnedSomething = true
     if (cell.value == undefined && cell.rendered) returnedSomething = true
     if (returnedSomething) {
-        if (nb.isRowDataSet(cell.value)){
+        if (cell.value == undefined){
+            resultElem = <div className="data-set-info">undefined</div>
+        } else if (nb.isRowDf(cell.value)){
             var columns = Object.keys(cell.value[0]).map(k=>({Header:k,accessor:k}))
             // console.log(Object.keys(cell.value))
             // console.log(columns)
@@ -513,6 +538,25 @@ function jsReturnValue(cell) {
                     pageSizeOptions = {[5, 10, 25, 50, 100]}
                     defaultPageSize = {25}
                     />
+                </div>)
+        } else if (nb.isMatrix(cell.value)){
+            var shape = nb.shape(cell.value)
+            var dataSetInfo = `${shape[0]} × ${shape[1]} matrix (array of arrays)`
+            resultElem = (<div>
+                <div className="data-set-info">{dataSetInfo}</div>
+                <PrettyMatrix matrix={cell.value} maxDims={[10,10]} />
+                </div>)
+        } else if (_.isArray(cell.value)){
+            var dataSetInfo = `${cell.value.length} element array`
+            let len = cell.value.length
+            if (len < 500){
+                var arrayOutput = `[${cell.value.join(", ")}]`
+            } else {
+                var arrayOutput = `[${cell.value.slice(0,100).join(", ")}, ... , ${cell.value.slice(len-100,len).join(", ")}]`
+            }
+            resultElem = (<div>
+                <div className="data-set-info">{dataSetInfo}</div>
+                <div className="array-output">{arrayOutput}</div>
                 </div>)
         } else {
             resultElem = <JSONTree 
