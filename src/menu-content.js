@@ -232,6 +232,8 @@ menuItems.view = {
     menuItems: [menuItems.viewDeclaredVariables, menuItems.viewHistory]
 }
 
-menuItems.fileAnIssue = {primaryText: 'File An Issue'}
+menuItems.fileAnIssue = {primaryText: 'File An Issue ... ', callback: function(){
+    window.open('https://github.com/mozilla/javascript-notebook/issues/new')
+}}
 
 export {menuItems, getSavedNotebooks}
