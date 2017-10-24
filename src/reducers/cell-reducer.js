@@ -96,6 +96,7 @@ let cell = function (state = newNotebook(), action) {
 
     case 'CHANGE_MODE':
       var mode = action.mode
+      if (mode == "command") document.activeElement.blur()
       return Object.assign({}, state, {mode});
 
     case 'SELECT_CELL':

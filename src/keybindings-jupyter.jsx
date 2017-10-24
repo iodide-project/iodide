@@ -137,22 +137,20 @@ var SELECT_DOWN = [['down'], function(e){
 ]
 
 var RENDER_CELL = [['mod+enter'], function(){
-      var currentlySelected = getSelectedCell(this.props.cells)
-      if (currentlySelected != undefined) {
-        this.props.actions.renderCell(currentlySelected.id)
+    var currentlySelected = getSelectedCell(this.props.cells)
+    if (currentlySelected != undefined) {
         this.props.actions.changeMode('command')
-      } 
+        this.props.actions.renderCell(currentlySelected.id)
     }
-]
+}]
 
 var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
   var currentlySelected = getSelectedCell(this.props.cells)
   if (currentlySelected!=undefined) {
+    this.props.actions.changeMode('command')
+    this.props.actions.renderCell(currentlySelected.id)
     // currentlySelected does in theory change after each of these actions, 
     // so we need to keep pulling if we need them.
-    this.props.actions.renderCell(currentlySelected.id)
-    this.props.actions.changeMode('command')
-    
     var currentlySelected = getSelectedCell(this.props.cells)
     var cells = this.props.cells.slice()
     var index = cells.findIndex(c=>c.id===currentlySelected.id)
@@ -162,10 +160,8 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
 }]
 
 var COMMAND_MODE = [['esc'], function(e){
-    document.activeElement.blur()
     this.props.actions.changeMode('command')
-    }
-]
+}]
 
 var EDIT_MODE = [['enter', 'return'], function(e){
     if (this.props.mode == 'command'){
