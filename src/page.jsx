@@ -8,7 +8,7 @@ import {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, 
 import DeclaredVariables from './declared-variables.jsx'
 import keyBinding from './keybindings.jsx' 
 import Title from './title.jsx'
-import NotebookMenu from './notebook-menu.jsx'
+import { NotebookHeader } from './notebook-header.jsx'
 import settings from './settings.jsx'
 import {getSelectedCell, prettyDate} from './notebook-utils'
 
@@ -16,8 +16,6 @@ import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, Dropdown
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
 
 const AUTOSAVE = settings.labels.AUTOSAVE
-
-
 
 
 class SidePane extends React.Component {
@@ -97,14 +95,14 @@ class Page extends React.Component {
   runAllCells() {
     this.props.actions.runAllCells()
   }
-
+  renderCell(render) {
+    this.props.actions.renderCell(this.getSelectedCell().id)
+    }
   insertCell() {
     this.props.actions.insertCell('javascript', this.getSelectedCell().id, 1)
   }
 
-  renderCell(render) {
-    this.props.actions.renderCell(this.getSelectedCell().id)
-    }
+
 
     cellUp(){
     this.props.actions.cellUp(this.getSelectedCell().id)
@@ -121,28 +119,6 @@ class Page extends React.Component {
     getSelectedCell(){
         return getSelectedCell(this.props.cells)
     }
-
-  // makeButtons(){
-  //       return (
-  //           <div className={'cell-controls controls-visible'}>
-  //               <ButtonToolbar >
-  //                   <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
-  //                   <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
-  //                   <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
-  //                   <Button bsSize='xsmall' onClick={this.insertCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>
-  //                     <DropdownButton id="changeCellType" bsSize="xsmall"
-  //                       bsStyle='default' title={this.getSelectedCell().cellType}
-  //                       onSelect={this.changeCellType} >
-  //                       <MenuItem eventKey={"javascript"} >JS</MenuItem>
-  //                       <MenuItem eventKey={'markdown'} >MD</MenuItem>
-  //                       <MenuItem eventKey={'raw'} >Raw</MenuItem>
-  //                       <MenuItem eventKey={'dom'} >DOM</MenuItem>
-  //                       <MenuItem eventKey={'external scripts'} >External Script</MenuItem>
-  //                   </DropdownButton>
-  //               </ButtonToolbar>
-  //           </div>
-  //       )
-  //   }
 
   render () {
     var bodyContent = []
@@ -184,23 +160,17 @@ class Page extends React.Component {
     var pageControls = <div className='controls'>
         <i className='fa fa-plus add-cell' onClick={this.addCell}></i>
     </div>
-     //               <Title actions={this.props.actions}
-     //               title={this.props.title}
-    //                pageMode={this.props.mode} />
+
     return (
-        <div id="notebook-container" onMouseDown={this.handlePageClick}>
-            <div id="headerbar">
-                <div id="menu-container">
-                    <NotebookMenu actions={this.props.actions}
-                        mode={this.props.mode}
-                        cells={this.props.cells}
-                        viewMode={this.props.viewMode}
-                        sidePaneMode={this.props.sidePaneMode}
-                        lastSaved={this.props.lastSaved}
-                        currentTitle={this.props.title} />
-                </div>
-                
-            </div>
+        <div id="notebook-container" className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''} onMouseDown={this.handlePageClick}>
+            <NotebookHeader actions={this.props.actions}
+                mode={this.props.mode}
+                cells={this.props.cells}
+                viewMode={this.props.viewMode}
+                title={this.props.title}
+                sidePaneMode={this.props.sidePaneMode}
+                lastSaved={this.props.lastSaved}
+                currentTitle={this.props.title} />
             <div id='cells' className={this.props.viewMode}>
             	{bodyContent}
             </div>

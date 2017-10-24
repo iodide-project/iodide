@@ -17,6 +17,11 @@ div#notebook-container {
   flex-direction: column;
 }
 
+div#notebook-container.presentation-mode {
+	display:block;
+}
+
+
 div#headerbar {
 /* 	flex: 0 0 150px; */
 	padding-left:10px;
@@ -26,6 +31,7 @@ div#headerbar {
 div#cells {
 	overflow-y: auto;
 	width: 100%;
+	margin-top:20px;
 	padding-left: 40px;
 	padding-right: 40px;
 	
@@ -291,17 +297,59 @@ div.dom-cell-error {
 /************************************************/
 /* header bar styles */
 
-input.page-title {
-	font-family: 'Open Sans';
-	font-size:25px;
-	border:none;
-	outline:none;
-	width:calc(100% - 50px);
-	padding-left:3px;
+div.title-field {
+	width:100%;
 }
 
+div.title-field-contents {
+	display: flex;
+	width:100%
+}
+
+div.display-title {
+	color:white;
+	width:100%;
+	text-align:center;
+}
+
+div.display-title span {
+	padding-left:15px;
+	padding-right:15px;
+}
+
+div.display-title span:after {
+	content: '▼';
+	color:red;
+	padding-left:5px
+}
+
+input.page-title {
+	font-family: 'Open Sans';
+	font-size:14px;
+	border:none;
+	outline:none;
+	width: calc(100% - 20px);
+	margin:auto;
+	text-align:center;
+	color:white;
+	background-color:black
+}
+
+input.page-title:focus {
+	font-size:25px
+}
+/* div.unselected-title-field:before {
+	content: 'Title: ';
+	font-weight:900;
+	color:red !important;
+	display: relative;
+	margin-left:40px;
+	color:white;
+	transition: 100ms;
+} */
+
 input.page-title.unrendered-title {
-	color:gray;
+	color:lightgray;
 }
 
 h1.page-title span {
@@ -493,4 +541,19 @@ table tr:nth-child(2n) {
 
 .menu-button:hover {
 	outline:1px solid #fafafa
+}
+
+.view-mode-toggle-from-presentation {
+	position: absolute;
+	right:20px;
+	top:10px;
+}
+
+.presentation-header {
+	margin-bottom:20px;
+	margin-top:40px
+}
+
+.presentation-title {
+	text-align:center
 }
