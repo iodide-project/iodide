@@ -10,7 +10,7 @@ if (navigator.oscpu.indexOf("X11")!=-1) OSName="UNIX"
 if (navigator.oscpu.indexOf("Linux")!=-1) OSName="Linux"
 
 function commandKey(key) {
-    let ctr = 'Ctrl-'
+    let ctr = 'Ctrl '
     if (OSName === 'MacOS') {
         ctr= '⌘ '
     }
@@ -113,6 +113,7 @@ menuItems.deleteNotebook = {
 
 menuItems.exportNotebookAsJSON = {
     primaryText: 'Export as JSON',
+    secondaryText: commandKey("E"),
     callback: function(){this.props.actions.exportNotebook()}
 }
 menuItems.importNotebookFromJSON = {
@@ -211,6 +212,7 @@ menuItems.cell = {
 
 menuItems.viewDeclaredVariables = {
     primaryText: 'Declared Variables',
+    secondaryText: 'Ctrl D',
     callback: function() {
         this.props.actions.changeSidePaneMode('declared variables')
     }
@@ -218,6 +220,7 @@ menuItems.viewDeclaredVariables = {
 
 menuItems.viewHistory = {
     primaryText: 'Execution History',
+    secondaryText: 'Ctrl H',
     callback: function() {
         this.props.actions.changeSidePaneMode('history')
     }
