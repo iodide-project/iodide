@@ -49,8 +49,6 @@ class SidePane extends React.Component {
   }
 
   render() {
-
-    //
     var contents=[];
     if (this.props.sidePaneMode === 'history') {
       if (this.props.history.length) {
@@ -73,6 +71,8 @@ class SidePane extends React.Component {
     )
   }
 }
+
+
 
 class Page extends React.Component {
   constructor(props) {
@@ -139,41 +139,19 @@ class Page extends React.Component {
         return getSelectedCell(this.props.cells)
     }
 
-  // makeButtons(){
-  //       return (
-  //           <div className={'cell-controls controls-visible'}>
-  //               <ButtonToolbar >
-  //                   <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i></Button>
-  //                   <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
-  //                   <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
-  //                   <Button bsSize='xsmall' onClick={this.insertCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>
-  //                     <DropdownButton id="changeCellType" bsSize="xsmall"
-  //                       bsStyle='default' title={this.getSelectedCell().cellType}
-  //                       onSelect={this.changeCellType} >
-  //                       <MenuItem eventKey={"javascript"} >JS</MenuItem>
-  //                       <MenuItem eventKey={'markdown'} >MD</MenuItem>
-  //                       <MenuItem eventKey={'raw'} >Raw</MenuItem>
-  //                       <MenuItem eventKey={'dom'} >DOM</MenuItem>
-  //                       <MenuItem eventKey={'external scripts'} >External Script</MenuItem>
-  //                   </DropdownButton>
-  //               </ButtonToolbar>
-  //           </div>
-  //       )
-  //   }
-
   render () {
-    var bodyContent = []
-
-    var bodyContent = this.props.cells.map((cell,i)=> {
-        var cellParams = {display:true,
-            ref: 'cell'+cell.id,
-            cell: cell,
+    var globalProps = {display:true,
             pageMode: this.props.mode,
             viewMode: this.props.viewMode,
-            actions: this.props.actions,
-            key: cell.id,
-            id: cell.id
-        }
+            actions: this.props.actions}
+    var bodyContent = this.props.cells.map((cell,i)=> {
+        var cellParams = Object.assign({},
+            globalProps,
+            {ref: 'cell'+cell.id,
+                cell: cell,
+                key: cell.id,
+                id: cell.id
+            })
         switch (cell.cellType){
             case 'javascript':
                 return <JavascriptCell {...cellParams}/>
