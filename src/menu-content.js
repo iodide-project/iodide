@@ -209,6 +209,26 @@ menuItems.cell = {
     ]
 } 
 
+menuItems.viewDeclaredVariables = {
+    primaryText: 'Declared Variables',
+    callback: function() {
+        this.props.actions.changeSidePaneMode('declared variables')
+    }
+}
+
+menuItems.viewHistory = {
+    primaryText: 'Execution History',
+    callback: function() {
+        this.props.actions.changeSidePaneMode('history')
+    }
+}
+
+menuItems.view = {
+    primaryText: 'View',
+    childrenClass:'medium-menu',
+    menuItems: [menuItems.viewDeclaredVariables, menuItems.viewHistory]
+}
+
 menuItems.fileAnIssue = {primaryText: 'File An Issue'}
 
 export {menuItems, getSavedNotebooks}

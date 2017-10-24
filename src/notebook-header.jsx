@@ -4,19 +4,23 @@ import React from 'react'
 // 	Navbar, Nav, NavItem, Glyphicon } from 'react-bootstrap'
 import settings from './settings.jsx'
 
-
+import {HistoryCell} from './cell.jsx'
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
 import {red500, yellow500, blue500, grey900,grey50} from 'material-ui/styles/colors'
 
 
 import FlatButton from 'material-ui/FlatButton'
+import IconButton from 'material-ui/IconButton'
+import HistoryIcon from 'material-ui/svg-icons/action/history'
+import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down'
 
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
-import DropDownMenu from 'material-ui/DropDownMenu'
-import Subheader from 'material-ui/Subheader'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+
+import DropDownMenu from 'material-ui/DropDownMenu'
+import Subheader from 'material-ui/Subheader'
 import AppBar from 'material-ui/AppBar'
 import Paper from 'material-ui/Paper'
 import Menu from 'material-ui/Menu'
@@ -25,8 +29,10 @@ import Divider from 'material-ui/Divider'
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
 import FontIcon from 'material-ui/FontIcon'
 
-import MainMenu from './menu-component.jsx'
+import Drawer from 'material-ui/Drawer'
 
+import MainMenu from './menu-component.jsx'
+import DeclaredVariables from './declared-variables.jsx'
 import {prettyDate, formatDateString} from './notebook-utils'
 
 import Title from './title.jsx'
@@ -70,6 +76,16 @@ class NotebookHeader extends React.Component {
 	}
 
 	render() {
+		var histContents = []
+		if (this.props.history.length) {
+		histContents = this.props.history.map((cell,i)=> {
+			var cellComponent = <HistoryCell display={true} ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
+			return cellComponent
+		})
+		} else {
+			histContents.push(<div className='no-history'>No History</div>)
+		}
+
 		return (
 			<div className='notebook-header'>
 				<input id='import-notebook' 
@@ -96,10 +112,51 @@ class NotebookHeader extends React.Component {
 						sidePaneMode={this.props.sidePaneMode}
 						lastSaved={this.props.lastSaved} />
 				</div>
+
+				<MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+
+					<Drawer 
+						width={600} 
+						docked={false}
+						open={this.props.sidePaneMode==='declared variables'} 
+						openSecondary={true}
+						overlayStyle={{backgroundColor: 'none'}}
+						onRequestChange={(open, request) => {this.props.actions.changeSidePaneMode(undefined)} }
+						>
+						<h1 className='overlay-title'>Declared Variables</h1>
+						<DeclaredVariables variables={this.props.declaredVariables} />
+					</Drawer>
+				</ MuiThemeProvider>
+
+
+
+				<MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+
+					<Drawer 
+						width={600} 
+						docked={false}
+						open={this.props.sidePaneMode==='history'} 
+						openSecondary={true}
+						overlayStyle={{backgroundColor: 'none'}}
+						onRequestChange={(open, request) => {this.props.actions.changeSidePaneMode(undefined)}}>
+						<h1 className='overlay-title'>History</h1>
+						<div className='history-cells'>
+							{histContents}
+						</div>
+					</Drawer>
+				</ MuiThemeProvider>
 			</div>
 		)
 	}
 }
+
+{/* <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+
+					<Drawer width={600} open={this.props.sidePaneMode==='history'} >
+						Hello!!!
+					</Drawer>
+
+				</ MuiThemeProvider> */}
 
 class PresentationMenu extends React.Component {
 	constructor(props) {
@@ -152,6 +209,18 @@ class EditorMenu extends React.Component {
 							</ToolbarGroup>
 							<ToolbarGroup id='notebook-view-mode-controls' className='mode-buttons'>
 								<ToolbarTitle style={{fontSize:'13px', color:'lightgray', fontStyle: 'italic'}} text={this.props.lastSaved === undefined ? ' ' : 'last saved: ' + prettyDate(this.props.lastSaved)} />
+								<IconButton 
+									tooltip='Declared Variables'
+									style={{color: '#fafafa'}} 
+									onClick={()=>{this.props.actions.changeSidePaneMode('declared variables')}} >
+								<ArrowDropDown />
+								</IconButton>
+								<IconButton 
+									tooltip='History'
+									style={{color: '#fafafa'}} 
+									onClick={()=>{this.props.actions.changeSidePaneMode('history') }} >
+								<HistoryIcon />
+								</IconButton>
 								<ViewModeToggleButton actions={this.props.actions} viewMode={this.props.viewMode} />
 							</ToolbarGroup>
 							

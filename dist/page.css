@@ -40,6 +40,10 @@ div#cells {
 	justify-content: flex-end;
 }
 
+h1.overlay-title {
+	padding-left:20px;
+	font-size:20px
+}
 
 
 
@@ -440,6 +444,11 @@ div.last-saved {
 div.history-cell {
 }
 
+div.history-cells {
+	padding-left:20px;
+	padding-right:20px
+}
+
 div.history-content {
 		outline:1px solid lightgray;
 
@@ -480,8 +489,9 @@ i.close-side-pane:hover {
 }
 
 div.declared-variables {
-	width:270px;
+	width:100%;
 	padding-left:10px;
+	padding-right:10px;
 	padding-bottom:10px;
 }
 

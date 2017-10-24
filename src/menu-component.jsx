@@ -130,6 +130,8 @@ class MainMenu extends React.Component {
                     <Divider />
                     {mc.cell}
                     <Divider />
+                    {mc.view}
+                    <Divider />
                     {mc.fileAnIssue}
             </IconMenu>
 
