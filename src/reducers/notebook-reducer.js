@@ -48,7 +48,7 @@ let notebook = function (state=newNotebook(), action) {
           if (newC.cellType === 'javascript') newC.value = undefined
           return newC
         }
-      )})
+      ), }, {title: state.title === undefined ? 'new notebook' : state.title})
       clearHistory(outputState)
       var title
       if (action.title!==undefined) title = action.title

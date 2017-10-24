@@ -8,33 +8,14 @@ import {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, 
 import DeclaredVariables from './declared-variables.jsx'
 import keyBinding from './keybindings.jsx' 
 import Title from './title.jsx'
-import NotebookMenu from './notebook-menu.jsx'
+import { NotebookHeader } from './notebook-header.jsx'
 import settings from './settings.jsx'
-import {getSelectedCell} from './notebook-utils'
+import {getSelectedCell, prettyDate} from './notebook-utils'
 
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
 
 const AUTOSAVE = settings.labels.AUTOSAVE
-
-function prettyDate(time) {
-  var date = new Date(time),
-    diff = (((new Date()).getTime() - date.getTime()) / 1000),
-    day_diff = Math.floor(diff / 86400);
-  // return date for anything greater than a day
-  if ( isNaN(day_diff) || day_diff < 0 || day_diff > 0 )
-    { return date.getDate() + " " + date.toDateString().split(" ")[1]; }
-  
-  return day_diff == 0 && (
-      diff < 60 && "just now" ||
-      diff < 120 && "1 minute ago" ||
-      diff < 3600 && Math.floor( diff / 60 ) + " minutes ago" ||
-      diff < 7200 && "1 hour ago" ||
-      diff < 86400 && Math.floor( diff / 3600 ) + " hours ago") ||
-    day_diff == 1 && "Yesterday" ||
-    day_diff < 7 && day_diff + " days ago" ||
-    day_diff < 31 && Math.ceil( day_diff / 7 ) + " weeks ago"
-  }
 
 
 class SidePane extends React.Component {
@@ -114,14 +95,14 @@ class Page extends React.Component {
   runAllCells() {
     this.props.actions.runAllCells()
   }
-
+  renderCell(render) {
+    this.props.actions.renderCell(this.getSelectedCell().id)
+    }
   insertCell() {
     this.props.actions.insertCell('javascript', this.getSelectedCell().id, 1)
   }
 
-  renderCell(render) {
-    this.props.actions.renderCell(this.getSelectedCell().id)
-    }
+
 
     cellUp(){
     this.props.actions.cellUp(this.getSelectedCell().id)
@@ -179,47 +160,17 @@ class Page extends React.Component {
     var pageControls = <div className='controls'>
         <i className='fa fa-plus add-cell' onClick={this.addCell}></i>
     </div>
-    return (
-        <div id="notebook-container" onMouseDown={this.handlePageClick}>
-            <div id="headerbar">
-                <Title actions={this.props.actions}
-                    title={this.props.title}
-                    pageMode={this.props.mode} />
-                <div id="menu-containter">
-                    <NotebookMenu actions={this.props.actions}
-                        mode={this.props.mode}
-                        viewMode={this.props.viewMode}
-                        sidePaneMode={this.props.sidePaneMode}
-                        lastSaved={this.props.lastSaved}
-                        currentTitle={this.props.title} />
-                    <div id="cell-menu" className={'cell-controls controls-visible'}>
-                        <div className='left-cell-menu'>
-                          <ButtonToolbar >
-                              <Button bsSize='xsmall' onClick={this.renderCell}><i className="fa fa-play" aria-hidden="true"></i> run cell</Button>
-                              <Button bsSize='xsmall' onClick={this.runAllCells}><i className="fa fa-play" aria-hidden="true"></i> run all</Button>
 
-                              <Button bsSize='xsmall' onClick={this.cellDown}><i className="fa fa-level-down" aria-hidden="true"></i></Button>
-                              <Button bsSize='xsmall' onClick={this.cellUp}><i className="fa fa-level-up" aria-hidden="true"></i></Button>
-                              <Button bsSize='xsmall' onClick={this.addCell}><i className="fa fa-plus" aria-hidden="true"></i></Button>
-                                <DropdownButton id="changeCellType" bsSize="xsmall"
-                                  bsStyle='default' title={this.getSelectedCell().cellType}
-                                  onSelect={this.changeCellType} >
-                                  <MenuItem eventKey={"javascript"} >JS</MenuItem>
-                                  <MenuItem eventKey={'markdown'} >MD</MenuItem>
-                                  <MenuItem eventKey={'raw'} >Raw</MenuItem>
-                                  <MenuItem eventKey={'dom'} >DOM</MenuItem>
-                                  <MenuItem eventKey={'external scripts'} >External Script</MenuItem>
-                              </DropdownButton>
-                          </ButtonToolbar>
-                          <div className='page-mode'>{this.props.mode}</div>
-                        </div>
-                        <div className='last-saved'>
-                            {this.props.lastSaved !== undefined ? 'last saved: ' + prettyDate(this.props.lastSaved) : ''}
-                          </div>
-                    </div>
-                </div>
-                
-            </div>
+    return (
+        <div id="notebook-container" className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''} onMouseDown={this.handlePageClick}>
+            <NotebookHeader actions={this.props.actions}
+                mode={this.props.mode}
+                cells={this.props.cells}
+                viewMode={this.props.viewMode}
+                title={this.props.title}
+                sidePaneMode={this.props.sidePaneMode}
+                lastSaved={this.props.lastSaved}
+                currentTitle={this.props.title} />
             <div id='cells' className={this.props.viewMode}>
             	{bodyContent}
             </div>
