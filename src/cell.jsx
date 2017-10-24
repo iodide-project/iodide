@@ -10,7 +10,7 @@ import matchbrackets from 'codemirror/addon/edit/matchbrackets'
 import closebrackets from 'codemirror/addon/edit/closebrackets'
 import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
-import sublime from 'codemirror/keymap/sublime'
+import sublime from './codemirror-keymap-sublime.js'
 
 import ReactTable from 'react-table'
 
