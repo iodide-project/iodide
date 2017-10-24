@@ -123,7 +123,8 @@ menuItems.importNotebookFromJSON = {
 
 menuItems.savedNotebooks = {
     primaryText: 'Saved Notebooks',
-    menuItems: getSavedNotebooks
+    menuItems: getSavedNotebooks,
+    childrenClass: 'large-menu'
 }
 
 

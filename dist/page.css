@@ -553,6 +553,43 @@ table tr:nth-child(2n) {
 	order:0;
 } 
 
+
+
+
+.large-menu {
+	display: flex !important;
+	justify-content: space-between;
+	flex-flow: row wrap;
+	
+}
+
+.large-menu div div {
+	display:flex !important;
+	float:none !important;
+	justify-content: space-between;
+	flex-flow: row wrap;
+}
+
+.large-menu div div div:first-child {
+	order:1;
+	width:120px;
+	justify-content: flex-end;
+	font-size:12px;
+	display:block;
+}
+
+.large-menu div div div:nth-child(2) {
+	float:initial !important;
+	width:280px;
+	text-overflow: ellipsis;
+	order:0;
+} 
+
+
+
+
+
+
 .main-bar {
 	background-color:black
 }
