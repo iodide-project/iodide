@@ -556,7 +556,7 @@ table tr:nth-child(2n) {
 }
 
 .view-mode-toggle-from-presentation {
-	position: absolute;
+	position: fixed;
 	right:20px;
 	top:10px;
 }
