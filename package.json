@@ -21,6 +21,7 @@
     "codemirror-no-newlines": "^1.0.2",
     "d3": "^4.10.2",
     "js-interpreter": "^1.4.6",
+    "lodash": "^4.17.4",
     "markdown-it": "^8.4.0",
     "markdown-it-katex": "^2.0.3",
     "mousetrap": "^1.6.1",
