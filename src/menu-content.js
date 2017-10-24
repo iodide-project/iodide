@@ -212,7 +212,7 @@ menuItems.cell = {
 
 menuItems.viewDeclaredVariables = {
     primaryText: 'Declared Variables',
-    secondaryText: 'Ctrl D',
+    secondaryText: commandKey('D'),
     callback: function() {
         this.props.actions.changeSidePaneMode('declared variables')
     }
@@ -220,7 +220,7 @@ menuItems.viewDeclaredVariables = {
 
 menuItems.viewHistory = {
     primaryText: 'Execution History',
-    secondaryText: 'Ctrl H',
+    secondaryText: commandKey('H'),
     callback: function() {
         this.props.actions.changeSidePaneMode('history')
     }
