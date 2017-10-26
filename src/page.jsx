@@ -66,7 +66,7 @@ class Page extends React.Component {
     this.changeCellType = this.changeCellType.bind(this)
     this.getSelectedCell = this.getSelectedCell.bind(this)
     this.runAllCells = this.runAllCells.bind(this)
-    this.handlePageClick = this.handlePageClick.bind(this)
+    this.enterCommandModeOnClickOutOfCell = this.enterCommandModeOnClickOutOfCell.bind(this)
 
     keyBinding('jupyter', this)
     setInterval(()=>{
@@ -84,10 +84,10 @@ class Page extends React.Component {
     },1000*60)
   }
 
-  handlePageClick(e) {
-    if (e.target.className.includes('notebook-actions') || 
-        e.target.id.includes('cells') ||
-        e.target.id.includes('notebook-container')) {
+  enterCommandModeOnClickOutOfCell(e) {
+    //check whther the click is (1) directly in div#cells (2) in any element contained in the notebook header
+    if (e.target.id.includes('cells') ||
+        document.querySelector(".notebook-header").contains(e.target)) {
           if (this.props.mode != 'command') this.props.actions.changeMode('command')
     }
   }
@@ -162,7 +162,9 @@ class Page extends React.Component {
     </div>
 
     return (
-        <div id="notebook-container" className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''} onMouseDown={this.handlePageClick}>
+        <div id="notebook-container"
+            className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''}
+            onMouseDown={this.enterCommandModeOnClickOutOfCell}>
             <NotebookHeader actions={this.props.actions}
                 mode={this.props.mode}
                 cells={this.props.cells}
