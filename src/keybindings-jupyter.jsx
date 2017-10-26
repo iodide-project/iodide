@@ -83,6 +83,21 @@ var EXPORT_NOTEBOOK = [['ctrl+e', 'meta+e'], function(e){
   this.props.actions.exportNotebook()
 }]
 
+var SHOW_DECLARED_VARIABLES = [['ctrl+d', 'meta+d'], function(e){
+  if (e.preventDefault) {
+    e.preventDefault()
+  } else {e.returnValue = false }
+  if (this.props.changeSidePaneMode !=='declared variables') this.props.actions.changeSidePaneMode('declared variables')
+  else this.props.actions.changeSidePaneMode()
+}]
+
+var SHOW_HISTORY = [['ctrl+h', 'meta+h'], function(e){
+  if (e.preventDefault) {
+    e.preventDefault()
+  } else {e.returnValue = false }
+  if (this.props.changeSidePaneMode !=='history') this.props.actions.changeSidePaneMode('history')
+  else this.props.actions.changeSidePaneMode()
+}]
 
 var DESELECT = [['shift+esc', 'shift+escape'], function(){
   this.props.actions.deselectAll()
@@ -208,5 +223,7 @@ jupyterKeybindings.push(RENDER_AND_SELECT_BELOW)
 jupyterKeybindings.push(DELETE_CELL)
 jupyterKeybindings.push(SAVE_NOTEBOOK)
 jupyterKeybindings.push(EXPORT_NOTEBOOK)
+jupyterKeybindings.push(SHOW_DECLARED_VARIABLES)
+jupyterKeybindings.push(SHOW_HISTORY)
 
 export default jupyterKeybindings

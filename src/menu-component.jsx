@@ -13,7 +13,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import FontIcon from 'material-ui/FontIcon'
-
+import TextField from 'material-ui/TextField'
 import {getSelectedCell} from './notebook-utils'
 
 import {ToolbarGroup, ToolbarSeparator} from 'material-ui/Toolbar';
@@ -70,7 +70,7 @@ class MainMenu extends React.Component {
         this.runCell = this.runCell.bind(this)
         this.deleteNotebook = this.deleteNotebook.bind(this)
         this.runAllCells = this.runAllCells.bind(this)
-        this.state={localStorage:Object.keys(localStorage)}
+        this.state={localStorage:Object.keys(localStorage), previousMode: undefined}
     }
 
     deleteNotebook(notebook){
@@ -120,6 +120,7 @@ class MainMenu extends React.Component {
                 desktop={true}
                 className='menu-button'
             >
+
                     {mc.newNotebook}
                     {mc.saveNotebook}
                     {mc.deleteNotebook}
@@ -129,6 +130,8 @@ class MainMenu extends React.Component {
                     {mc.savedNotebooks}
                     <Divider />
                     {mc.cell}
+                    <Divider />
+                    {mc.view}
                     <Divider />
                     {mc.fileAnIssue}
             </IconMenu>

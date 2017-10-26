@@ -10,7 +10,7 @@ if (navigator.oscpu.indexOf("X11")!=-1) OSName="UNIX"
 if (navigator.oscpu.indexOf("Linux")!=-1) OSName="Linux"
 
 function commandKey(key) {
-    let ctr = 'Ctrl-'
+    let ctr = 'Ctrl '
     if (OSName === 'MacOS') {
         ctr= '⌘ '
     }
@@ -113,6 +113,7 @@ menuItems.deleteNotebook = {
 
 menuItems.exportNotebookAsJSON = {
     primaryText: 'Export as JSON',
+    secondaryText: commandKey("E"),
     callback: function(){this.props.actions.exportNotebook()}
 }
 menuItems.importNotebookFromJSON = {
@@ -122,7 +123,8 @@ menuItems.importNotebookFromJSON = {
 
 menuItems.savedNotebooks = {
     primaryText: 'Saved Notebooks',
-    menuItems: getSavedNotebooks
+    menuItems: getSavedNotebooks,
+    childrenClass: 'large-menu'
 }
 
 
@@ -209,6 +211,30 @@ menuItems.cell = {
     ]
 } 
 
-menuItems.fileAnIssue = {primaryText: 'File An Issue'}
+menuItems.viewDeclaredVariables = {
+    primaryText: 'Declared Variables',
+    secondaryText: commandKey('D'),
+    callback: function() {
+        this.props.actions.changeSidePaneMode('declared variables')
+    }
+}
+
+menuItems.viewHistory = {
+    primaryText: 'Execution History',
+    secondaryText: commandKey('H'),
+    callback: function() {
+        this.props.actions.changeSidePaneMode('history')
+    }
+}
+
+menuItems.view = {
+    primaryText: 'View',
+    childrenClass:'medium-menu',
+    menuItems: [menuItems.viewDeclaredVariables, menuItems.viewHistory]
+}
+
+menuItems.fileAnIssue = {primaryText: 'File An Issue ... ', callback: function(){
+    window.open('https://github.com/mozilla/javascript-notebook/issues/new')
+}}
 
 export {menuItems, getSavedNotebooks}

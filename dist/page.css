@@ -40,6 +40,10 @@ div#cells {
 	justify-content: flex-end;
 }
 
+h1.overlay-title {
+	padding-left:20px;
+	font-size:20px
+}
 
 
 
@@ -440,6 +444,11 @@ div.last-saved {
 div.history-cell {
 }
 
+div.history-cells {
+	padding-left:20px;
+	padding-right:20px
+}
+
 div.history-content {
 		outline:1px solid lightgray;
 
@@ -480,8 +489,9 @@ i.close-side-pane:hover {
 }
 
 div.declared-variables {
-	width:270px;
+	width:100%;
 	padding-left:10px;
+	padding-right:10px;
 	padding-bottom:10px;
 }
 
@@ -542,6 +552,43 @@ table tr:nth-child(2n) {
 	overflow:hidden;
 	order:0;
 } 
+
+
+
+
+.large-menu {
+	display: flex !important;
+	justify-content: space-between;
+	flex-flow: row wrap;
+	
+}
+
+.large-menu div div {
+	display:flex !important;
+	float:none !important;
+	justify-content: space-between;
+	flex-flow: row wrap;
+}
+
+.large-menu div div div:first-child {
+	order:1;
+	width:120px;
+	justify-content: flex-end;
+	font-size:12px;
+	display:block;
+}
+
+.large-menu div div div:nth-child(2) {
+	float:initial !important;
+	width:280px;
+	text-overflow: ellipsis;
+	order:0;
+} 
+
+
+
+
+
 
 .main-bar {
 	background-color:black

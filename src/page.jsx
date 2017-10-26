@@ -18,40 +18,40 @@ import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, Dropdown
 const AUTOSAVE = settings.labels.AUTOSAVE
 
 
-class SidePane extends React.Component {
-  constructor(props) {
-    super(props)
-    this.exitSidePane = this.exitSidePane.bind(this)
-  }
+// class SidePane extends React.Component {
+//   constructor(props) {
+//     super(props)
+//     this.exitSidePane = this.exitSidePane.bind(this)
+//   }
 
-  exitSidePane() {
+//   exitSidePane() {
 
-    this.props.actions.changeSidePaneMode(undefined)
-  }
+//     this.props.actions.changeSidePaneMode(undefined)
+//   }
 
-  render() {
-    var contents=[];
-    if (this.props.sidePaneMode === 'history') {
-      if (this.props.history.length) {
-        contents = this.props.history.map((cell,i)=> {
-          var cellComponent = <HistoryCell display={true} ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
-          return cellComponent
-        })
-      } else {
-        contents.push(<div className='no-history'>No History</div>)
-      }
-    } else if (this.props.sidePaneMode == 'declared variables') {
-      contents = <DeclaredVariables variables={this.props.declaredProperties} />
-    }
+//   render() {
+//     var contents=[];
+//     if (this.props.sidePaneMode === 'history') {
+//       if (this.props.history.length) {
+//         contents = this.props.history.map((cell,i)=> {
+//           var cellComponent = <HistoryCell display={true} ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
+//           return cellComponent
+//         })
+//       } else {
+//         contents.push(<div className='no-history'>No History</div>)
+//       }
+//     } else if (this.props.sidePaneMode == 'declared variables') {
+//       contents = <DeclaredVariables variables={this.props.declaredProperties} />
+//     }
 
-    return (
-      <div className='side-pane'>
-        <div><i onClick={this.exitSidePane} className="fa fa-times close-side-pane" aria-hidden="true"></i></div>
-        {contents}
-      </div>
-    )
-  }
-}
+//     return (
+//       <div className='side-pane'>
+//         <div><i onClick={this.exitSidePane} className="fa fa-times close-side-pane" aria-hidden="true"></i></div>
+//         {contents}
+//       </div>
+//     )
+//   }
+// }
 
 
 
@@ -149,17 +149,17 @@ class Page extends React.Component {
     });
 
     var sp = <span></span>
-    if (this.props.sidePaneMode !== undefined) sp = <SidePane 
-        sidePaneMode={this.props.sidePaneMode} 
-        pageMode={this.props.pageMode}
-        cells={this.props.cells}
-        history={this.props.history}
-        declaredProperties={this.props.declaredProperties}
-        actions={this.props.actions} />
+    // if (this.props.sidePaneMode !== undefined) sp = <SidePane 
+    //     sidePaneMode={this.props.sidePaneMode} 
+    //     pageMode={this.props.pageMode}
+    //     cells={this.props.cells}
+    //     history={this.props.history}
+    //     declaredProperties={this.props.declaredProperties}
+    //     actions={this.props.actions} />
     
-    var pageControls = <div className='controls'>
-        <i className='fa fa-plus add-cell' onClick={this.addCell}></i>
-    </div>
+    // var pageControls = <div className='controls'>
+    //     <i className='fa fa-plus add-cell' onClick={this.addCell}></i>
+    // </div>
 
     return (
         <div id="notebook-container"
@@ -170,13 +170,14 @@ class Page extends React.Component {
                 cells={this.props.cells}
                 viewMode={this.props.viewMode}
                 title={this.props.title}
+                declaredVariables={this.props.declaredProperties}
                 sidePaneMode={this.props.sidePaneMode}
                 lastSaved={this.props.lastSaved}
+                history={this.props.history}
                 currentTitle={this.props.title} />
             <div id='cells' className={this.props.viewMode}>
             	{bodyContent}
             </div>
-            {sp}
         </div>
     );
   }

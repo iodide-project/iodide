@@ -20,6 +20,7 @@
     "@skidding/react-codemirror": "^1.0.0",
     "codemirror-no-newlines": "^1.0.2",
     "d3": "^4.10.2",
+    "fuse.js": "^3.2.0",
     "js-interpreter": "^1.4.6",
     "lodash": "^4.17.4",
     "markdown-it": "^8.4.0",
