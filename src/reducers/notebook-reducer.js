@@ -39,7 +39,6 @@ let notebook = function (state=newNotebook(), action) {
         cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
       return Object.assign(NB.blankState(), loadedState, {cells})
 
-
     case 'SAVE_NOTEBOOK':
       if (!action.autosave) var lastSaved = new Date()
       else lastSaved = state.lastSaved
@@ -65,7 +64,6 @@ let notebook = function (state=newNotebook(), action) {
         cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
       return Object.assign(NB.blankState(), loadedState, {cells})
 
-
     case 'DELETE_NOTEBOOK':
       var title = action.title
       if (window.localStorage.hasOwnProperty(title)) window.localStorage.removeItem(title)
@@ -74,10 +72,6 @@ let notebook = function (state=newNotebook(), action) {
 
     case 'CHANGE_PAGE_TITLE':
       return Object.assign({}, state, {title: action.title})
-
-    case 'CHANGE_MODE':
-      var mode = action.mode
-      return Object.assign({}, state, {mode});
 
     case 'SET_VIEW_MODE':
       var viewMode = action.viewMode
