@@ -1,6 +1,5 @@
 // a Page is a collection of cells. They are displayed in order.
 // All javascript cells share the same interpreter.
-
 import React, {createElement} from 'react'
 import JSONTree from 'react-json-tree'
 import js from 'codemirror/mode/javascript/javascript'
@@ -11,14 +10,13 @@ import closebrackets from 'codemirror/addon/edit/closebrackets'
 import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
 import sublime from './codemirror-keymap-sublime.js'
-
 import ReactTable from 'react-table'
-
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
-
 import _ from "lodash"
 import nb from "../tools/nb.js"
+import PrettyMatrix from "./pretty-matrix.jsx"
+
 
 class GenericCell extends React.Component {
     /* Generic cell implements a basic cell with a code mirror editor
@@ -33,7 +31,7 @@ class GenericCell extends React.Component {
             mode: this.props.cell.cellType,
             lineWrapping: false,
             theme: 'eclipse',
-            autoRefresh: true
+            autoRefresh: true,
         }
         // explicitly bind "this" for all methods in constructors
         this.renderCell = this.renderCell.bind(this)
@@ -72,32 +70,39 @@ class GenericCell extends React.Component {
     }
 
     handleCellClick(e){
-        var scrollToCell = false
-        if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id, scrollToCell)
-        if (this.props.pageMode=='edit' && 
-            (this.hasEditor && !this.refs.editor.getCodeMirror().display.wrapper.contains(e.target))){
-            this.props.actions.changeMode('command')
+        console.log(this.props.pageMode, this.props.viewMode)
+        if (this.props.viewMode=="editor"){
+            var scrollToCell = false
+            if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id, scrollToCell)
+            if (this.props.pageMode=='edit' && 
+                (this.hasEditor && !this.refs.editor.getCodeMirror().display.wrapper.contains(e.target))){
+                this.props.actions.changeMode('command')
+            }
         }
     }
 
     enterEditMode(){
-        // uncollapse the editor upon entering edit mode.
-        // note: entering editMode is only allowed from editorView
-        // thus, we only need to check the editorView collapsed state
-        if(this.props.cell.collapseEditViewInput=="COLLAPSED"){
-            this.props.actions.setCellCollapsedState(
-                this.props.cell.id,
-                this.props.viewMode,
-                "input",
-                "SCROLLABLE")
+        console.log(this.props.pageMode, this.props.viewMode)
+        if (this.props.viewMode=="editor"){
+                // uncollapse the editor upon entering edit mode.
+                // note: entering editMode is only allowed from editorView
+                // thus, we only need to check the editorView collapsed state
+            if(this.props.cell.collapseEditViewInput=="COLLAPSED"){
+                this.props.actions.setCellCollapsedState(
+                    this.props.cell.id,
+                    this.props.viewMode,
+                    "input",
+                    "SCROLLABLE")
+            }
+            if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id)
+            if (!this.props.pageMode != 'edit' && this.props.viewMode=="editor"){
+                this.props.actions.changeMode('edit')
+            }
         }
-        if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id)
-        if (!this.props.pageMode != 'edit') this.props.actions.changeMode('edit')
         // if (this.hasEditor) this.refs.editor.focus()
     }
 
     componentDidMount(){
-        // console.log("mounted",this.props.cell.id)
         if (this.props.cell.selected
             && this.refs.hasOwnProperty('editor')
             && this.props.pageMode == 'edit') {
@@ -106,11 +111,6 @@ class GenericCell extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        // console.log("updated",this.props.cell.id)
-        // console.log(prevProps)
-        // console.log(this.props)
-        // console.log(prevState)
-        // console.log(this.state)
         if (this.props.cell.selected
             && this.refs.hasOwnProperty('editor')
             && this.props.pageMode == 'edit') {
@@ -168,13 +168,18 @@ class GenericCell extends React.Component {
     }
 
     inputComponent(){
+        var editorOptions = Object.assign({},
+            this.editorOptions,
+            {readOnly: (this.props.viewMode=="presentation")},
+        )
+
         return (
             <div className="editor" >
                 <CodeMirror ref='editor'
                     value={this.props.cell.content}
                     onChange={this.updateInputContent} 
                     onFocusChange={(focus)=>{if(focus && this.props.pageMode !== 'edit') this.enterEditMode()}}
-                    options={this.editorOptions}/>
+                    options={editorOptions}/>
             </div>
         )
     }
@@ -307,8 +312,10 @@ class MarkdownCell extends GenericCell {
     }
 
     enterEditMode(){
-        super.enterEditMode()
-        this.props.actions.markCellNotRendered(this.props.cell.id)
+        if (this.props.viewMode == 'editor'){
+            super.enterEditMode()
+            this.props.actions.markCellNotRendered(this.props.cell.id)
+        }
     }
 
 
@@ -394,8 +401,7 @@ class DOMCell extends GenericCell {
 
 // FIXME!! need to Override enterEditMode for DOMCell to focus the inputs
 //     enterEditMode(){
-//         this.props.actions.selectCell(this.props.cell.id)
-//         this.props.actions.changeMode('edit')
+//         super.enterEditMode()
 //         if (this.hasEditor) this.refs.editor.focus()
 //     }
 
@@ -459,58 +465,6 @@ class HistoryCell extends GenericCell {
     }
 }
 
-
-class PrettyMatrix extends React.Component {
-    constructor(props) {
-        super(props);
-        this.matrix = this.props.matrix;
-        this.maxDims = this.props.maxDims==undefined ? [10,10] : this.props.maxDims;
-        [this.numRows, this.numCols] =  nb.shape(this.matrix);
-    }
-
-    cellText(i,j){
-        var text =""
-        if (_.isNumber(i) && _.isNumber(j)) {
-            text = nb.prettyFormatNumber(this.matrix[i][j],6)
-        }
-        else if ( _.isString(i) && _.isString(j)) {text = "⋱"}
-        else if ( _.isString(i) && (j==0 || j==this.numCols-1) ) {text = i}
-        else if ( _.isString(j) && (i==0 || i==this.numRows-1) ) {text = j}
-        return text
-    }
-
-    render() {
-        var [matrix, maxDims, numRows, numCols] = [
-            this.matrix, this.maxDims, this.numRows, this.numCols]
-
-        if (numRows>maxDims[0]){
-            var halfDim = Math.round(maxDims[0]/2)
-            var rowInds = _.range(0,halfDim).concat("⋮", _.range(numRows-halfDim,numRows))
-        } else {
-            var rowInds = _.range(numRows)
-        }
-        if (numCols>maxDims[1]){
-            var halfDim = Math.round(maxDims[1]/2)
-            var colInds = _.range(0,halfDim).concat("⋯", _.range(numCols-halfDim,numCols))
-        } else {
-            var colInds = _.range(numCols)
-        }
-
-      return (
-        <table className="matrixTable">
-          <tbody>
-            {rowInds.map((i, i_tr) =>
-              <tr key={i_tr}>
-                {colInds.map((j, j_td) =>
-                  <td key={j_td}>{this.cellText(i,j)}</td>
-                )}
-              </tr>
-            )}
-          </tbody>
-        </table>
-      );
-    }
-}
 
 
 
