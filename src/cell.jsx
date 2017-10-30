@@ -16,6 +16,10 @@ import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, Dropdown
 import _ from "lodash"
 import nb from "../tools/nb.js"
 import PrettyMatrix from "./pretty-matrix.jsx"
+import {getCellById} from "./notebook-utils.js"
+import actions from './actions.jsx'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 
 class GenericCell extends React.Component {
@@ -316,24 +320,6 @@ class MarkdownCell extends GenericCell {
         }
     }
 
-
-    componentDidMount(){
-        if (this.props.cell.selected
-            && this.refs.hasOwnProperty('editor')
-            && this.props.pageMode == 'edit') {
-            this.refs.editor.focus()
-        }
-    }
-
-    componentDidUpdate(prevProps,prevState){
-        if (this.props.cell.selected
-            && this.refs.hasOwnProperty('editor')
-            && this.props.pageMode == 'edit') {
-            this.refs.editor.focus()
-        }
-    }
-
-
     inputComponent(){
         var editorDisplayStyle = (
             !this.props.cell.rendered ||
@@ -540,4 +526,48 @@ function jsReturnValue(cell) {
     return resultElem;
 }
 
-export {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, DOMCell};
+// globalProps = {display:true,
+//             pageMode: this.props.mode,
+//             viewMode: this.props.viewMode,
+//             actions: this.props.actions}
+//     var bodyContent = this.props.cells.map((cell,i)=> {
+//         var cellParams = Object.assign({},
+//             globalProps,
+//             {ref: 'cell'+cell.id,
+//                 cell: cell,
+//                 key: cell.id,
+//                 id: cell.id
+//             })
+
+function mapStateToPropsForCells(state,ownProps) {
+    // cellId
+    console.log(state)
+    console.log(ownProps)
+    let cell = getCellById(state.cells, ownProps.cellId) 
+    return {
+        display:true,
+        pageMode: state.mode,
+        viewMode: state.viewMode,
+        ref: 'cell'+cell.id,
+        cell: cell,
+        key: cell.id,
+        id: cell.id
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  }
+}
+
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Page)
+var JavascriptCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(JavascriptCell)
+// export JavascriptCell_connected as JavascriptCell
+export {JavascriptCell_connected as JavascriptCell,
+    MarkdownCell,
+    RawCell,
+    HistoryCell,
+    ExternalScriptCell,
+    DOMCell}

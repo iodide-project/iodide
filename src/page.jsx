@@ -57,6 +57,7 @@ const AUTOSAVE = settings.labels.AUTOSAVE
 
 class Page extends React.Component {
   constructor(props) {
+    console.log(props)
     super(props)
     this.props.actions.newNotebook()
     this.addCell = this.insertCell.bind(this)
@@ -135,7 +136,7 @@ class Page extends React.Component {
             })
         switch (cell.cellType){
             case 'javascript':
-                return <JavascriptCell {...cellParams}/>
+                return <JavascriptCell cellId={cellParams.id}/> 
             case 'markdown':
                 return <MarkdownCell {...cellParams}/>
             case 'raw':
