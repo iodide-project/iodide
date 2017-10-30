@@ -166,5 +166,6 @@ export {
   selectCell,
   moveCell,
   prettyDate,
-  formatDateString
+  formatDateString,
+  getCellById
 }
