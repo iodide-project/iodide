@@ -70,7 +70,6 @@ class GenericCell extends React.Component {
     }
 
     handleCellClick(e){
-        console.log(this.props.pageMode, this.props.viewMode)
         if (this.props.viewMode=="editor"){
             var scrollToCell = false
             if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id, scrollToCell)
@@ -82,7 +81,6 @@ class GenericCell extends React.Component {
     }
 
     enterEditMode(){
-        console.log(this.props.pageMode, this.props.viewMode)
         if (this.props.viewMode=="editor"){
                 // uncollapse the editor upon entering edit mode.
                 // note: entering editMode is only allowed from editorView
@@ -479,8 +477,6 @@ function jsReturnValue(cell) {
             resultElem = <div className="data-set-info">undefined</div>
         } else if (nb.isRowDf(cell.value)){
             var columns = Object.keys(cell.value[0]).map(k=>({Header:k,accessor:k}))
-            // console.log(Object.keys(cell.value))
-            // console.log(columns)
             var dataSetInfo = `array of objects: ${cell.value.length} rows, ${columns.length} columns`
             resultElem = (<div>
                 <div className="data-set-info">{dataSetInfo}</div>
