@@ -100,6 +100,8 @@ let cell = function (state = newNotebook(), action) {
       return Object.assign({}, state, {mode});
 
     case 'SELECT_CELL':
+      if (typeof action.id === "undefined") return state
+
       var cells = state.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = cells[index]
@@ -130,6 +132,8 @@ let cell = function (state = newNotebook(), action) {
       return nextState
 
     case 'CHANGE_CELL_TYPE':
+      if (typeof action.id === "undefined") return state
+
       var cells = state.cells.slice();
       var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = cells[index];
@@ -141,6 +145,8 @@ let cell = function (state = newNotebook(), action) {
       return nextState
 
     case "SET_CELL_COLLAPSED_STATE":
+      if (typeof action.id === "undefined") return state
+      
       var cells = state.cells.slice();
       var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = cells[index];
@@ -163,6 +169,8 @@ let cell = function (state = newNotebook(), action) {
 
 
     case 'CLEAR_CELL_BEFORE_EVALUATION':
+      if (typeof action.id === "undefined") return state
+      
       var newState = Object.assign({}, state)
       var cells = newState.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)
@@ -174,6 +182,8 @@ let cell = function (state = newNotebook(), action) {
       return nextState
 
     case 'MARK_CELL_NOT_RENDERED':
+      if (typeof action.id === "undefined") return state
+      
       var cells = state.cells.slice();
       var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = cells[index];
@@ -183,6 +193,8 @@ let cell = function (state = newNotebook(), action) {
       return nextState
 
     case 'RENDER_CELL':
+      if (typeof action.id === "undefined") return state
+      
       var newState = Object.assign({}, state)
       var declaredProperties = newState.declaredProperties
       var cells = newState.cells.slice()
@@ -260,6 +272,9 @@ let cell = function (state = newNotebook(), action) {
       return nextState
 
     case 'DELETE_CELL':
+      if (typeof action.id === "undefined"){
+        return state
+      }
       var cells = state.cells.slice()
       if (!cells.length) return state
       var index = cells.findIndex(c=>c.id===action.id)
@@ -279,6 +294,8 @@ let cell = function (state = newNotebook(), action) {
       return nextState
 
     case 'CHANGE_ELEMENT_TYPE':
+      if (typeof action.id === "undefined") return state
+      
        var cells = state.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = cells[index]
@@ -287,6 +304,8 @@ let cell = function (state = newNotebook(), action) {
       return Object.assign({}, state, {cells})
 
     case 'CHANGE_DOM_ELEMENT_ID':
+      if (typeof action.id === "undefined") return state
+      
       var cells = state.cells.slice()
       var index = cells.findIndex(c=>c.id===action.id)
       var thisCell = cells[index]
