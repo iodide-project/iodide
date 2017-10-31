@@ -2,6 +2,7 @@ import React from 'react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import actions from './actions.jsx'
 
 import settings from './settings.jsx'
 
@@ -247,9 +248,17 @@ class ViewModeToggleButton extends React.Component {
 //                 currentTitle={this.props.title} 
 
 function mapStateToProps(state) {
-    // FIXME: don't pass full state
-    // re cells: only pass list of cell ids
-  return state
+    return {
+        mode: state.mode,
+        cells: state.cells.slice(),
+        viewMode: state.viewMode,
+        title: state.title,
+        declaredVariables: state.declaredProperties,
+        sidePaneMode: state.sidePaneMode,
+        lastSaved: state.lastSaved,
+        history: state.history,
+        currentTitle: state.title
+    }
 }
 
 function mapDispatchToProps(dispatch) {
@@ -257,6 +266,6 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(actions, dispatch)
   }
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(NotebookHeader)
+var NotebookHeader_connected = connect(mapStateToProps, mapDispatchToProps)(NotebookHeader)
+export {NotebookHeader_connected as NotebookHeader}
 // export {NotebookHeader}

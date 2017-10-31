@@ -39,7 +39,6 @@ class Page extends React.Component {
     }
   }
 
-
   render () {
     var bodyContent = this.props.cells.map((cell,i)=> {
         let id = cell.id
@@ -63,16 +62,7 @@ class Page extends React.Component {
         <div id="notebook-container"
             className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''}
             onMouseDown={this.enterCommandModeOnClickOutOfCell}>
-            <NotebookHeader actions={this.props.actions}
-                mode={this.props.mode}
-                cells={this.props.cells}
-                viewMode={this.props.viewMode}
-                title={this.props.title}
-                declaredVariables={this.props.declaredProperties}
-                sidePaneMode={this.props.sidePaneMode}
-                lastSaved={this.props.lastSaved}
-                history={this.props.history}
-                currentTitle={this.props.title} />
+            <NotebookHeader />
             <div id='cells' className={this.props.viewMode}>
             	{bodyContent}
             </div>
