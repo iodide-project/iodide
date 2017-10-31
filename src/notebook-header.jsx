@@ -236,17 +236,6 @@ class ViewModeToggleButton extends React.Component {
     }
 }
 
-// actions={this.props.actions}
-//                 mode={this.props.mode}
-//                 cells={this.props.cells}
-//                 viewMode={this.props.viewMode}
-//                 title={this.props.title}
-//                 declaredVariables={this.props.declaredProperties}
-//                 sidePaneMode={this.props.sidePaneMode}
-//                 lastSaved={this.props.lastSaved}
-//                 history={this.props.history}
-//                 currentTitle={this.props.title} 
-
 function mapStateToProps(state) {
     return {
         mode: state.mode,
