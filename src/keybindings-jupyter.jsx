@@ -134,24 +134,28 @@ var SHOW_HISTORY = [['ctrl+h', 'meta+h'], function(e){
 }]
 
 var SELECT_UP = [['up'], function(e){
-    // e.preventDefault blocks kbd scrolling of entire window
-    if (e.preventDefault) {
-        e.preventDefault();
-    } else { // internet explorer
-        e.returnValue = false;
+    if (isCommandMode()){
+        // e.preventDefault blocks kbd scrolling of entire window
+        if (e.preventDefault) {
+            e.preventDefault();
+        } else { // internet explorer
+            e.returnValue = false;
+        }
+        dispatcher.selectCell(getCellAboveSelectedId(), true)
     }
-    dispatcher.selectCell(getCellAboveSelectedId(), true)
   }
 ]
 
 var SELECT_DOWN = [['down'], function(e){
-    // e.preventDefault blocks kbd scrolling of entire window
-    if (e.preventDefault) {
-        e.preventDefault();
-    } else { // internet explorer
-        e.returnValue = false;
+    if (isCommandMode()){
+            // e.preventDefault blocks kbd scrolling of entire window
+        if (e.preventDefault) {
+            e.preventDefault();
+        } else { // internet explorer
+            e.returnValue = false;
+        }
+      dispatcher.selectCell(getCellBelowSelectedId(), true)
     }
-  dispatcher.selectCell(getCellBelowSelectedId(), true)
   }
 ]
 
