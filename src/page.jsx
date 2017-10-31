@@ -1,29 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Mousetrap from 'mousetrap'
-
 import actions from './actions.jsx'
 import {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, DOMCell} from './cell.jsx'
-import DeclaredVariables from './declared-variables.jsx'
 import keyBinding from './keybindings.jsx' 
-import Title from './title.jsx'
 import { NotebookHeader } from './notebook-header.jsx'
 import settings from './settings.jsx'
-import {getSelectedCell, prettyDate} from './notebook-utils'
-
-import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
-        SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
+import { prettyDate} from './notebook-utils'
 
 const AUTOSAVE = settings.labels.AUTOSAVE
-
 
 class Page extends React.Component {
   constructor(props) {
     console.log(props)
     super(props)
     this.props.actions.newNotebook()
-    this.getSelectedCell = this.getSelectedCell.bind(this)
     this.enterCommandModeOnClickOutOfCell = this.enterCommandModeOnClickOutOfCell.bind(this)
 
     keyBinding('jupyter', this)
@@ -48,9 +39,6 @@ class Page extends React.Component {
     }
   }
 
-    getSelectedCell(){
-        return getSelectedCell(this.props.cells)
-    }
 
   render () {
     var bodyContent = this.props.cells.map((cell,i)=> {
