@@ -281,6 +281,28 @@ class JavascriptCell extends GenericCell {
         this.editorOptions.keyMap = 'sublime'
         this.outputComponent = this.outputComponent.bind(this)
     }
+
+    // componentWillReceiveProps(nextProps){
+    //     console.log(nextProps)
+    //     console.log(this.props)
+    //     // console.log(this.props.cell)
+    // }
+
+    // // FIXME: TESTING ONLY, REMOVE
+    // componentDidUpdate(prevProps,prevState){
+    //     // console.log(prevProps)
+    //     // console.log(this.props)
+    //     // console.log(this.props.cell)
+    //     if (this.props.cell.selected
+    //         && this.refs.hasOwnProperty('editor')
+    //         && this.props.pageMode == 'edit') {
+    //         this.refs.editor.focus()
+    //     }
+    //     if (this.hasEditor && this.props.pageMode != 'edit') {
+    //         this.refs.editor.getCodeMirror().display.input.textarea.blur()
+    //     }
+    // }
+
     outputComponent(){
         return jsReturnValue(this.props.cell)
     }
@@ -526,31 +548,14 @@ function jsReturnValue(cell) {
     return resultElem;
 }
 
-// globalProps = {display:true,
-//             pageMode: this.props.mode,
-//             viewMode: this.props.viewMode,
-//             actions: this.props.actions}
-//     var bodyContent = this.props.cells.map((cell,i)=> {
-//         var cellParams = Object.assign({},
-//             globalProps,
-//             {ref: 'cell'+cell.id,
-//                 cell: cell,
-//                 key: cell.id,
-//                 id: cell.id
-//             })
-
 function mapStateToPropsForCells(state,ownProps) {
-    // cellId
-    console.log(state)
-    console.log(ownProps)
     let cell = getCellById(state.cells, ownProps.cellId) 
     return {
         display:true,
         pageMode: state.mode,
         viewMode: state.viewMode,
         ref: 'cell'+cell.id,
-        cell: cell,
-        key: cell.id,
+        cell: Object.assign({},cell),
         id: cell.id
     }
 }
@@ -561,13 +566,17 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-
 // export default connect(mapStateToProps, mapDispatchToProps)(Page)
 var JavascriptCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(JavascriptCell)
+var MarkdownCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(MarkdownCell)
+var RawCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(RawCell)
+var ExternalScriptCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(ExternalScriptCell)
+var DOMCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(DOMCell)
 // export JavascriptCell_connected as JavascriptCell
 export {JavascriptCell_connected as JavascriptCell,
-    MarkdownCell,
-    RawCell,
+    MarkdownCell_connected as MarkdownCell,
+    RawCell_connected as RawCell,
+    ExternalScriptCell_connected as ExternalScriptCell,
+    DOMCell_connected as DOMCell,
     HistoryCell,
-    ExternalScriptCell,
-    DOMCell}
+    }

@@ -85,29 +85,30 @@ class Page extends React.Component {
     }
 
   render () {
-    var globalProps = {display:true,
-            pageMode: this.props.mode,
-            viewMode: this.props.viewMode,
-            actions: this.props.actions}
+    // var globalProps = {display:true,
+    //         pageMode: this.props.mode,
+    //         viewMode: this.props.viewMode,
+    //         actions: this.props.actions}
     var bodyContent = this.props.cells.map((cell,i)=> {
-        var cellParams = Object.assign({},
-            globalProps,
-            {ref: 'cell'+cell.id,
-                cell: cell,
-                key: cell.id,
-                id: cell.id
-            })
+        // var cellParams = Object.assign({},
+        //     globalProps,
+        //     {ref: 'cell'+cell.id,
+        //         cell: cell,
+        //         key: cell.id,
+        //         id: cell.id
+        //     })
+        let id = cell.id
         switch (cell.cellType){
             case 'javascript':
-                return <JavascriptCell cellId={cellParams.id}/> 
+                return <JavascriptCell cellId={id} key={id}/> 
             case 'markdown':
-                return <MarkdownCell {...cellParams}/>
+                return <MarkdownCell cellId={id} key={cell.id}/>
             case 'raw':
-                return <RawCell {...cellParams}/>
+                return <RawCell cellId={id} key={id}/>
             case 'external scripts':
-                return <ExternalScriptCell {...cellParams}/>
+                return <ExternalScriptCell cellId={id} key={id}/>
             case 'dom':
-                return <DOMCell {...cellParams}/>
+                return <DOMCell cellId={id} key={id}/>
         }
         return cellComponent
     });
