@@ -14,4 +14,6 @@ var store = configureStore()
 render(
 	<Provider store={store}>
 		<Page />
-	</ Provider>, document.getElementById('page'))
+	</Provider>, document.getElementById('page'))
+
+export {store}
