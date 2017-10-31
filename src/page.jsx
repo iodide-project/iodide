@@ -12,7 +12,6 @@ const AUTOSAVE = settings.labels.AUTOSAVE
 
 class Page extends React.Component {
   constructor(props) {
-    console.log(props)
     super(props)
     this.props.actions.newNotebook()
     this.enterCommandModeOnClickOutOfCell = this.enterCommandModeOnClickOutOfCell.bind(this)
@@ -40,13 +39,13 @@ class Page extends React.Component {
   }
 
   render () {
-    var bodyContent = this.props.cells.map((cell,i)=> {
-        let id = cell.id
-        switch (cell.cellType){
+    var bodyContent = this.props.cellIds.map( (id,i) => {
+        // let id = cell.id
+        switch (this.props.cellTypes[i]){
             case 'javascript':
                 return <JavascriptCell cellId={id} key={id}/> 
             case 'markdown':
-                return <MarkdownCell cellId={id} key={cell.id}/>
+                return <MarkdownCell cellId={id} key={id}/>
             case 'raw':
                 return <RawCell cellId={id} key={id}/>
             case 'external scripts':
@@ -54,7 +53,6 @@ class Page extends React.Component {
             case 'dom':
                 return <DOMCell cellId={id} key={id}/>
         }
-        return cellComponent
     });
 
     var sp = <span></span>
@@ -74,7 +72,14 @@ class Page extends React.Component {
 function mapStateToProps(state) {
     // FIXME: don't pass full state
     // re cells: only pass list of cell ids
-  return state
+  // return state
+    return {
+        mode: state.mode,
+        cellIds: state.cells.map(c => c.id),
+        cellTypes: state.cells.map(c => c.cellType),
+        viewMode: state.viewMode,
+        title: state.title
+    }
 }
 
 function mapDispatchToProps(dispatch) {
