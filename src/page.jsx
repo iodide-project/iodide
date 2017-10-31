@@ -23,13 +23,7 @@ class Page extends React.Component {
     console.log(props)
     super(props)
     this.props.actions.newNotebook()
-    this.addCell = this.insertCell.bind(this)
-    this.renderCell = this.renderCell.bind(this)
-    this.cellUp = this.cellUp.bind(this)
-    this.cellDown = this.cellDown.bind(this)
-    this.changeCellType = this.changeCellType.bind(this)
     this.getSelectedCell = this.getSelectedCell.bind(this)
-    this.runAllCells = this.runAllCells.bind(this)
     this.enterCommandModeOnClickOutOfCell = this.enterCommandModeOnClickOutOfCell.bind(this)
 
     keyBinding('jupyter', this)
@@ -37,9 +31,7 @@ class Page extends React.Component {
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
       var notebooks = Object.keys(localStorage)
       var autos = notebooks.filter((n)=>n.includes(AUTOSAVE))
-
       if (autos.length) {
-
         autos.forEach((n)=>{
           this.props.actions.deleteNotebook(n)
         })
@@ -56,47 +48,12 @@ class Page extends React.Component {
     }
   }
 
-  runAllCells() {
-    this.props.actions.runAllCells()
-  }
-  renderCell(render) {
-    this.props.actions.renderCell(this.getSelectedCell().id)
-    }
-  insertCell() {
-    this.props.actions.insertCell('javascript', this.getSelectedCell().id, 1)
-  }
-
-
-
-    cellUp(){
-    this.props.actions.cellUp(this.getSelectedCell().id)
-    }
-
-    cellDown(){
-    this.props.actions.cellDown(this.getSelectedCell().id)
-    }
-
-    changeCellType(cellType, evt){
-        this.props.actions.changeCellType(this.getSelectedCell().id, cellType)
-    }
-
     getSelectedCell(){
         return getSelectedCell(this.props.cells)
     }
 
   render () {
-    // var globalProps = {display:true,
-    //         pageMode: this.props.mode,
-    //         viewMode: this.props.viewMode,
-    //         actions: this.props.actions}
     var bodyContent = this.props.cells.map((cell,i)=> {
-        // var cellParams = Object.assign({},
-        //     globalProps,
-        //     {ref: 'cell'+cell.id,
-        //         cell: cell,
-        //         key: cell.id,
-        //         id: cell.id
-        //     })
         let id = cell.id
         switch (cell.cellType){
             case 'javascript':
@@ -137,6 +94,8 @@ class Page extends React.Component {
 }
 
 function mapStateToProps(state) {
+    // FIXME: don't pass full state
+    // re cells: only pass list of cell ids
   return state
 }
 
