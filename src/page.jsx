@@ -7,6 +7,7 @@ import keyBinding from './keybindings.jsx'
 import { NotebookHeader } from './notebook-header.jsx'
 import settings from './settings.jsx'
 import { prettyDate} from './notebook-utils'
+import deepEqual from 'deep-equal'
 
 const AUTOSAVE = settings.labels.AUTOSAVE
 
@@ -36,6 +37,24 @@ class Page extends React.Component {
         document.querySelector(".notebook-header").contains(e.target)) {
           if (this.props.mode != 'command') this.props.actions.changeMode('command')
     }
+  }
+
+  componentWillReceiveProps(nextProps){
+    // console.log(this.props)
+    // console.log(nextProps)
+    // console.log(this.props==nextProps)
+    // console.log(this.props===nextProps)
+    // console.log(deepEqual(this.props,nextProps))
+    // return deepEqual(this.props,nextProps)
+  }
+
+    componentDidUpdate(prevProps,prevState){
+        console.log("page update")
+    }
+
+  shouldComponentUpdate(nextProps, nextState){
+    console.log("page deepequal", deepEqual(this.props,nextProps))
+    return !deepEqual(this.props,nextProps)
   }
 
   render () {
@@ -87,5 +106,6 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(actions, dispatch)
   }
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(Page)
