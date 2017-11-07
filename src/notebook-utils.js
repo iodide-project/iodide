@@ -33,14 +33,6 @@ function newCellID(cells) {
   return newID
 }
 
-function cloneState(state){
-  return Object.assign({}, state)
-}
-
-function createNextState(state) {
-  return cloneState(state)
-}
-
 function newCell(cells, cellType){
     var outputCollapseDefault;
   if (cellType=="dom" || cellType=="external scripts" || cellType=="dom"){
@@ -158,7 +150,6 @@ function moveCell(cells, cellID, dir) {
 export {
   getSelectedCell, 
   blankState, 
-  createNextState,
   changeTitle,
   newNotebook, 
   newCell,
