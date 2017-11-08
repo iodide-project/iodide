@@ -25,11 +25,19 @@ function getSelectedCellId(){
 }
 
 function isCommandMode(){
-    return store.getState().mode=='command'
+    return store.getState().mode=='command' && viewModeIsEditor()
 }
 
 function isEditMode(){
     return store.getState().mode=='command'
+}
+
+function viewModeIsEditor(){
+  return store.getState().viewMode ==='editor'
+}
+
+function viewModeIsPresentation(){
+  return store.getState().viewMode === 'presentation'
 }
 
 function getCellBelowSelectedId(){
@@ -165,6 +173,7 @@ var RENDER_CELL = [['mod+enter'], function(){
 }]
 
 var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
+  if (viewModeIsEditor()) {
     dispatcher.changeMode('command')
     dispatcher.renderCell(getSelectedCellId())
     var cellBelowId = getCellBelowSelectedId()
@@ -174,6 +183,8 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
         dispatcher.addCell('javascript')
         dispatcher.selectCell(getCellBelowSelectedId(), true)
     }
+  }
+    
 }]
 
 var COMMAND_MODE = [['esc'], function(e){

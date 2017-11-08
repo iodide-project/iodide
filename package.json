@@ -6,7 +6,8 @@
   "author": "Hamilton Ulmer",
   "license": "Mozilla Public License 2.0",
   "scripts": {
-    "test": "jest --no-cache"
+    "test": "jest --no-cache",
+    "build": "./node_modules/.bin/webpack --watch"
   },
   "jest": {
     "transformIgnorePatterns": [
