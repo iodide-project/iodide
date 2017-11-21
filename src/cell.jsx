@@ -172,7 +172,7 @@ class GenericCell extends React.Component {
     inputComponent(){
         var editorOptions = Object.assign({},
             this.editorOptions,
-            {readOnly: (this.props.viewMode=="presentation")},
+            {readOnly: (this.props.viewMode=="presentation" ? 'nocursor' : false)},
         )
 
         return (
