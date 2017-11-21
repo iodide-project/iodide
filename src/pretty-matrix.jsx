@@ -2,6 +2,41 @@ import React from 'react'
 import _ from "lodash"
 import nb from "../tools/nb.js"
 
+function cellText(matrixLike,i,j){
+    let [numRows, numCols] = nb.shape(matrixLike);
+    var text =""
+    if (_.isNumber(i) && _.isNumber(j)) {
+        text = nb.prettyFormatNumber(matrixLike[i][j],6)
+    }
+    else if ( _.isString(i) && _.isString(j)) {text = "⋱"}
+    else if ( _.isString(i) && (j==0 || j==numCols-1) ) {text = i}
+    else if ( _.isString(j) && (i==0 || i==numRows-1) ) {text = j}
+    return text
+}
+
+function makeMatrixText(matrixLike,maxDims){
+    let [numRows, numCols] = nb.shape(matrixLike);
+
+    if (numRows>maxDims[0]){
+        var halfDim = Math.round(maxDims[0]/2)
+        var rowInds = _.range(0,halfDim).concat("⋮", _.range(numRows-halfDim,numRows))
+    } else {
+        var rowInds = _.range(numRows)
+    }
+    if (numCols>maxDims[1]){
+        var halfDim = Math.round(maxDims[1]/2)
+        var colInds = _.range(0,halfDim).concat("⋯", _.range(numCols-halfDim,numCols))
+    } else {
+        var colInds = _.range(numCols)
+    }
+
+    return rowInds.map(
+        i => colInds.map(
+            j => cellText(matrixLike, i, j)
+        )
+    )
+}
+
 class PrettyMatrix extends React.Component {
     constructor(props) {
         super(props);
@@ -55,4 +90,27 @@ class PrettyMatrix extends React.Component {
 }
 
 
-export default PrettyMatrix
+class SimpleTable extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+      return (
+        <table className="matrixTable">
+          <tbody>
+            {this.props.tabledata.map((row, i_tr) =>
+              <tr key={i_tr}>
+                {row.map((colText, j_td) =>
+                  <td key={j_td}>{colText}</td>
+                )}
+              </tr>
+            )}
+          </tbody>
+        </table>
+      );
+    }
+}
+
+
+export {PrettyMatrix, SimpleTable, makeMatrixText}
