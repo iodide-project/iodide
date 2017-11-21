@@ -20,7 +20,10 @@ var config = {
         loader : 'babel-loader'
       }
     ]
-  }
+  },
+  watchOptions: {
+    poll: true
+  },
 };
 
 module.exports = config;
