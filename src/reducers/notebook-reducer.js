@@ -44,7 +44,7 @@ let notebook = function (state=newNotebook(), action) {
       else lastSaved = state.lastSaved
       var outputState = Object.assign({}, state, {lastSaved}, {cells: state.cells.slice().map(c=>{
           var newC = Object.assign({},c)
-          if (newC.cellType === 'javascript') newC.value = undefined
+          if (newC.cellType === 'javascript' || newC.cellType === 'external dependencies') newC.value = undefined
           return newC
         }
       ), }, {title: state.title === undefined ? 'new notebook' : state.title})

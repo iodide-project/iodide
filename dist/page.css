@@ -585,11 +585,6 @@ table tr:nth-child(2n) {
 	order:0;
 } 
 
-
-
-
-
-
 .main-bar {
 	background-color:black
 }
@@ -610,9 +605,42 @@ table tr:nth-child(2n) {
 
 .presentation-header {
 	margin-bottom:20px;
-	margin-top:40px
+	margin-top:40px;
 }
 
 .presentation-title {
 	text-align:center
+}
+
+.dependency-output {
+	padding-top:10px;
+}
+
+.dependency-container {
+	margin-bottom:6px;
+}
+
+.dependency-row {
+	display:flex;
+	align-items:center;
+}
+
+.dependency-row div {
+}
+
+.dependency-src {
+	margin-left:10px;
+	font-size:12px;
+	font-style: italic;
+
+}
+
+.dependency-status-explanation {
+	margin-left:35px;
+	font-size:11px;
+	color: red;
+	margin-top:-5px;
+}
+
+.dependency-status-explanation:before {
 }
