@@ -1,4 +1,5 @@
 import * as NB from '../notebook-utils.js'
+import tjsm from '../transpile-jsm.js'
 
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
@@ -216,13 +217,33 @@ let cell = function (state = newNotebook(), action) {
           thisCell.value = undefined;
 
           var output;
+          let code = thisCell.content
+          // console.log(code.slice(0,12))
+          // console.log(code.slice(0,12)=="use matrix")
+          // console.log(code.slice(0,12)=='use matrix')
+          if (code.slice(0,12)=="'use matrix'" || code.slice(0,12)=='"use matrix"'){
+            console.log("---transpiling code---")
+              try {
+                code = tjsm.transpile(thisCell.content)
+                console.log("---transpiled code---")
+                console.log(code)
+              } catch(e) {
+                console.log("---transpilation failed---")
+                var err = e.constructor('transpilation failed: ' + e.message);
+                // err.lineNumber = e.lineNumber - err.lineNumber + 3;
+                // output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+              }
+          }
+
           try {
-            output = window.eval(thisCell.content);
+            output = window.eval(code);
           } catch(e) {
             var err = e.constructor('Error in Evaled Script: ' + e.message);
             err.lineNumber = e.lineNumber - err.lineNumber + 3;
             output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
           }
+
+
           thisCell.rendered = true;
 
           if (output !== undefined) {
