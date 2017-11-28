@@ -15,7 +15,7 @@ import { Button, Label, DropdownButton,
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
 import _ from "lodash"
 import nb from "../tools/nb.js"
-import PrettyMatrix from "./pretty-matrix.jsx"
+import {PrettyMatrix, SimpleTable, makeMatrixText} from "./pretty-matrix.jsx"
 import {getCellById} from "./notebook-utils.js"
 import actions from './actions.jsx'
 import { connect } from 'react-redux'
@@ -24,6 +24,11 @@ import { bindActionCreators } from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
+
+import CheckCircle from 'material-ui/svg-icons/action/check-circle'
+import ErrorCircle from 'material-ui/svg-icons/alert/error'
+import UnloadedCircle from 'material-ui/svg-icons/content/remove'
+
 
 class GenericCell extends React.Component {
     /* Generic cell implements a basic cell with a code mirror editor
@@ -256,11 +261,6 @@ class GenericCell extends React.Component {
         )
     }
 }
-
-
-import CheckCircle from 'material-ui/svg-icons/action/check-circle'
-import ErrorCircle from 'material-ui/svg-icons/alert/error'
-import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 
 class ExternalDependencyCell extends GenericCell {
     constructor(props) {
@@ -547,9 +547,10 @@ function jsReturnValue(cell) {
         } else if (nb.isMatrix(cell.value)){
             var shape = nb.shape(cell.value)
             var dataSetInfo = `${shape[0]} × ${shape[1]} matrix (array of arrays)`
+            let tabledata = makeMatrixText(cell.value,[10,10])
             resultElem = (<div>
                 <div className="data-set-info">{dataSetInfo}</div>
-                <PrettyMatrix matrix={cell.value} maxDims={[10,10]} />
+                <SimpleTable tabledata={tabledata} />
                 </div>)
         } else if (_.isArray(cell.value)){
             var dataSetInfo = `${cell.value.length} element array`
