@@ -108,21 +108,25 @@ function addExternalDependency(dep){
       outElem.status = 'error'
       outElem.statusExplanation = err.message
     }
-  } else {
+  } else if (depType ==='css') {
     //<link rel="stylesheet" type="text/css" href="mystyles.css" media="screen" />
     elem = document.createElement('link')
     elem.rel = 'stylesheet'
     elem.type = 'text/css'
     elem.href = src
     outElem.status = 'loaded'
+  } else {
+    outElem.status = 'error'
+    outElem.statusExplanation = 'unknown dependency type.'
+    outElem.src = src
+    outElem.dependencyType = depType
+    return outElem
   }
-  
   //script.src = scriptUrl  
   
   head.appendChild(elem)
   outElem.src = src
   outElem.dependencyType = depType
-
   return outElem
 }
 
