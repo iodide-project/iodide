@@ -136,6 +136,7 @@ let cell = function (state = newNotebook(), action) {
       var nextState = Object.assign({}, state, {cells: [...state.cells]})
       state.cells.forEach(c=>{
         nextState = cell(nextState, {type: 'SELECT_CELL', id: c.id})
+        // check here for error.
         nextState = Object.assign({}, cell(nextState, {type:'RENDER_CELL', id: c.id, evaluateCell: true}))
       })
       return nextState

@@ -47,7 +47,6 @@ class Title extends React.Component {
 	render() {
 		var elem = <div className={'title-field-contents ' + (this.props.pageMode !='title-edit' ? 'unselected-title-field' : '')}>
 				<input 
-					ref='titleEditor'
 					onBlur={this.onBlur}
 					onClick={this.onFocus}
 					className={'page-title ' + (this.props.title === undefined ? 'unrendered-title' : '')} 
