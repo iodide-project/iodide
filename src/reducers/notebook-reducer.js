@@ -58,7 +58,14 @@ let notebook = function (state=newNotebook(), action) {
     case 'LOAD_NOTEBOOK':
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
-      var loadedState = JSON.parse(window.localStorage.getItem(action.title))
+      var loadedState
+      try {
+        var loadedState = JSON.parse(window.localStorage.getItem(action.title))
+      } catch(err) {
+        console.log(err.message)
+        return Object.assign({}, state)
+      }
+      
       clearHistory(loadedState)
       var cells = loadedState.cells.map(
         cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
