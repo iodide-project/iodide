@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@skidding/react-codemirror": "^1.0.0",
+    "astring": "^1.2.0",
     "codemirror-no-newlines": "^1.0.2",
     "d3": "^4.10.2",
     "fuse.js": "^3.2.0",
@@ -27,6 +28,7 @@
     "markdown-it": "^8.4.0",
     "markdown-it-katex": "^2.0.3",
     "mousetrap": "^1.6.1",
+    "ndarray": "^1.0.18",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",
     "react-dom": "^15.6.1",
