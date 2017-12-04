@@ -3,11 +3,12 @@ import exampleNotebooks from './example-notebooks.jsx'
 import settings from './settings.jsx'
 const AUTOSAVE = settings.labels.AUTOSAVE
 
+let oscpu = window.navigator.oscpu || window.navigator.platform;
 var OSName="Unknown OS";
-if (navigator.oscpu.indexOf("Win")!=-1) OSName="Windows"
-if (navigator.oscpu.indexOf("Mac")!=-1) OSName="MacOS"
-if (navigator.oscpu.indexOf("X11")!=-1) OSName="UNIX"
-if (navigator.oscpu.indexOf("Linux")!=-1) OSName="Linux"
+if (oscpu.indexOf("Win")!=-1) OSName="Windows"
+if (oscpu.indexOf("Mac")!=-1) OSName="MacOS"
+if (oscpu.indexOf("X11")!=-1) OSName="UNIX"
+if (oscpu.indexOf("Linux")!=-1) OSName="Linux"
 
 function commandKey(key) {
     let ctr = 'Ctrl '
