@@ -108,25 +108,21 @@ function addExternalDependency(dep){
       outElem.status = 'error'
       outElem.statusExplanation = err.message
     }
-  } else if (depType ==='css') {
+  } else {
     //<link rel="stylesheet" type="text/css" href="mystyles.css" media="screen" />
     elem = document.createElement('link')
     elem.rel = 'stylesheet'
     elem.type = 'text/css'
     elem.href = src
     outElem.status = 'loaded'
-  } else {
-    outElem.status = 'error'
-    outElem.statusExplanation = 'unknown dependency type.'
-    outElem.src = src
-    outElem.dependencyType = depType
-    return outElem
   }
+  
   //script.src = scriptUrl  
   
   head.appendChild(elem)
   outElem.src = src
   outElem.dependencyType = depType
+
   return outElem
 }
 
@@ -136,7 +132,6 @@ let cell = function (state = newNotebook(), action) {
       var nextState = Object.assign({}, state, {cells: [...state.cells]})
       state.cells.forEach(c=>{
         nextState = cell(nextState, {type: 'SELECT_CELL', id: c.id})
-        // check here for error.
         nextState = Object.assign({}, cell(nextState, {type:'RENDER_CELL', id: c.id, evaluateCell: true}))
       })
       return nextState

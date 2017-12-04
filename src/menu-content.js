@@ -56,19 +56,7 @@ function getSavedNotebooks (elem) {
 		} 
 		var saves = Object.keys(localStorage)
 		if (saves.length) {
-            savedNBs = saves.filter((n)=>!n.includes(AUTOSAVE))
-                .filter(n=>{
-                    // test to see if this localStorage entry parses correctly and is indeed a notebook.
-                    try {
-                        JSON.parse(localStorage[n]).lastSaved
-                        return true
-                    } catch(err) {
-                        console.warn(`localStorage error for '${n}' --- `, err.message)
-                        console.warn('we use localStorage to save the underlying notebook state. Use of localStorage for general work at this time is discouraged.')
-                        return false
-                    }
-                })
-                .map((n)=> {
+			savedNBs = saves.filter((n)=>!n.includes(AUTOSAVE)).map((n)=> {
                 var lastSaved = JSON.parse(localStorage[n]).lastSaved
                 return {primaryText:n, secondaryText: prettyDate(formatDateString(lastSaved)), callback: openLocalStorageNotebook(n)}
 				// return <MenuItem
