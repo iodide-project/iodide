@@ -1,25 +1,33 @@
 // a Page is a collection of cells. They are displayed in order.
 // All javascript cells share the same interpreter.
 import React, {createElement} from 'react'
-import JSONTree from 'react-json-tree'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import deepEqual from 'deep-equal'
+
+import CodeMirror from '@skidding/react-codemirror'
 import js from 'codemirror/mode/javascript/javascript'
 import markdown from 'codemirror/mode/markdown/markdown'
-import CodeMirror from '@skidding/react-codemirror'
 import matchbrackets from 'codemirror/addon/edit/matchbrackets'
 import closebrackets from 'codemirror/addon/edit/closebrackets'
 import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
 import sublime from './codemirror-keymap-sublime.js'
-import ReactTable from 'react-table'
+
 import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
+
 import _ from "lodash"
 import nb from "../tools/nb.js"
-import PrettyMatrix from "./pretty-matrix.jsx"
 import {getCellById} from "./notebook-utils.js"
+
+import ReactTable from 'react-table'
+import JSONTree from 'react-json-tree'
+
+import PrettyMatrix from "./pretty-matrix.jsx"
+import CellRow from "./cell-row.jsx"
+
 import actions from './actions.jsx'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
 
 class GenericCell extends React.Component {
@@ -45,9 +53,9 @@ class GenericCell extends React.Component {
         this.changeCellType = this.changeCellType.bind(this)
         this.handleCellClick = this.handleCellClick.bind(this)
         this.enterEditMode = this.enterEditMode.bind(this)
-        this.handleCollapseButtonClick = this.handleCollapseButtonClick.bind(this)
-        this.handleCollapseInputClick = this.handleCollapseInputClick.bind(this)
-        this.handleCollapseOutputClick = this.handleCollapseOutputClick.bind(this)
+        // this.handleCollapseButtonClick = this.handleCollapseButtonClick.bind(this)
+        // this.handleCollapseInputClick = this.handleCollapseInputClick.bind(this)
+        // this.handleCollapseOutputClick = this.handleCollapseOutputClick.bind(this)
         this.updateInputContent = this.updateInputContent.bind(this)
         this.inputComponent = this.inputComponent.bind(this)
         this.outputComponent = this.outputComponent.bind(this)
@@ -86,16 +94,6 @@ class GenericCell extends React.Component {
 
     enterEditMode(){
         if (this.props.viewMode=="editor"){
-                // uncollapse the editor upon entering edit mode.
-                // note: entering editMode is only allowed from editorView
-                // thus, we only need to check the editorView collapsed state
-            if(this.props.cell.collapseEditViewInput=="COLLAPSED"){
-                this.props.actions.setCellCollapsedState(
-                    this.props.cell.id,
-                    this.props.viewMode,
-                    "input",
-                    "SCROLLABLE")
-            }
             if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id)
             if (!this.props.pageMode != 'edit' && this.props.viewMode=="editor"){
                 this.props.actions.changeMode('edit')
@@ -103,6 +101,12 @@ class GenericCell extends React.Component {
         }
         // if (this.hasEditor) this.refs.editor.focus()
     }
+
+
+      shouldComponentUpdate(nextProps, nextState){
+        console.log("cell deepequal", this.props.id, deepEqual(this.props,nextProps))
+        return !deepEqual(this.props,nextProps)
+      }
 
     componentDidMount(){
         if (this.props.cell.selected
@@ -113,6 +117,7 @@ class GenericCell extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
+        console.log(this.props.cell.id)
         if (this.props.cell.selected
             && this.refs.hasOwnProperty('editor')
             && this.props.pageMode == 'edit') {
@@ -121,48 +126,6 @@ class GenericCell extends React.Component {
         if (this.hasEditor && this.props.pageMode != 'edit') {
             this.refs.editor.getCodeMirror().display.input.textarea.blur()
         }
-    }
-
-    handleCollapseButtonClick(rowType){
-        var currentCollapsedState,nextCollapsedState;
-        switch (this.props.viewMode + "," + rowType){
-            case "presentation,input":
-              currentCollapsedState = this.props.cell.collapsePresentationViewInput
-              break
-            case "presentation,output":
-              currentCollapsedState = this.props.cell.collapsePresentationViewOutput
-              break
-            case "editor,input":
-              currentCollapsedState = this.props.cell.collapseEditViewInput
-              break
-            case "editor,output":
-              currentCollapsedState = this.props.cell.collapseEditViewOutput
-              break
-        }
-        switch (currentCollapsedState){
-            case "COLLAPSED":
-              nextCollapsedState = "EXPANDED"
-              break
-            case "EXPANDED":
-              nextCollapsedState = "SCROLLABLE"
-              break
-            case "SCROLLABLE":
-              nextCollapsedState = "COLLAPSED"
-              break
-        }
-        this.props.actions.setCellCollapsedState(
-            this.props.cell.id,
-            this.props.viewMode,
-            rowType,
-            nextCollapsedState)
-    }
-
-    handleCollapseInputClick(){
-        this.handleCollapseButtonClick("input")
-    }
-
-    handleCollapseOutputClick(){
-        this.handleCollapseButtonClick("output")
     }
 
     updateInputContent(content) {
@@ -190,28 +153,6 @@ class GenericCell extends React.Component {
         return <div></div>
     }
 
-    makeCellRow(rowType,cellType,collapse,collapseButtonHandler,
-        executionStatus,mainComponent) {
-        var collapseButtonLabel;
-        if (collapse=="COLLAPSED"){
-            collapseButtonLabel = rowType=="input" ? cellType : "output"
-        } else {collapseButtonLabel=""}
-        return (
-            <div className={`cell-row ${rowType} ${collapse}`}>
-                <div className ={"status"}>
-                    {executionStatus}
-                </div>
-                <div className ={"collapse-button"}
-                    onClick={collapseButtonHandler}>
-                    {collapseButtonLabel}
-                </div>
-                <div className ={"main-component"}>
-                    {mainComponent}
-                </div>
-            </div>
-        )
-    }
-
     render() {
         var cellSelected = this.props.cell.selected ? 'selected-cell ' : ''
         var editorMode = (
@@ -235,24 +176,22 @@ class GenericCell extends React.Component {
 
         return (
             <div id={'cell-'+ cellId}
-                className={cellClass}
-                onMouseDown={this.handleCellClick} >
-                {this.makeCellRow(
-                    "input", cellType,
-                    collapseInput,
-                    this.handleCollapseInputClick,
-                    `[${this.props.cell.executionStatus}]`,
-                    this.inputComponent())}
-                {this.makeCellRow(
-                    "output", cellType,
-                    collapseOutput,
-                    this.handleCollapseOutputClick,
-                    "",
-                    this.outputComponent())}
+                    className={cellClass}
+                    onMouseDown={this.handleCellClick} >
+                <CellRow cellId={cellId}
+                    rowType={"input"}
+                    mainComponent={this.inputComponent()}/>
+                <CellRow cellId={cellId}
+                    rowType={"output"}
+                    mainComponent={this.outputComponent()}/>
             </div>
         )
     }
 }
+
+
+
+
 
 
 class RawCell extends GenericCell {
@@ -281,27 +220,6 @@ class JavascriptCell extends GenericCell {
         this.editorOptions.keyMap = 'sublime'
         this.outputComponent = this.outputComponent.bind(this)
     }
-
-    // componentWillReceiveProps(nextProps){
-    //     console.log(nextProps)
-    //     console.log(this.props)
-    //     // console.log(this.props.cell)
-    // }
-
-    // // FIXME: TESTING ONLY, REMOVE
-    // componentDidUpdate(prevProps,prevState){
-    //     // console.log(prevProps)
-    //     // console.log(this.props)
-    //     // console.log(this.props.cell)
-    //     if (this.props.cell.selected
-    //         && this.refs.hasOwnProperty('editor')
-    //         && this.props.pageMode == 'edit') {
-    //         this.refs.editor.focus()
-    //     }
-    //     if (this.hasEditor && this.props.pageMode != 'edit') {
-    //         this.refs.editor.getCodeMirror().display.input.textarea.blur()
-    //     }
-    // }
 
     outputComponent(){
         return jsReturnValue(this.props.cell)
@@ -549,6 +467,7 @@ function jsReturnValue(cell) {
 }
 
 function mapStateToPropsForCells(state,ownProps) {
+    console.log("mapStateToPropsForCells")
     let cell = getCellById(state.cells, ownProps.cellId) 
     return {
         display:true,
