@@ -14,23 +14,18 @@ import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
 import sublime from './codemirror-keymap-sublime.js'
 
-// <<<<<<< HEAD
-
-// import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
-// =======
-import { Button, Label, DropdownButton, 
-// >>>>>>> master
-        SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
+import { Label, FormGroup, FormControl, ControlLabel, Form } from 'react-bootstrap'
 
 import _ from "lodash"
 import nb from "../tools/nb.js"
 
 import {getCellById} from "./notebook-utils.js"
 
+import {PrettyMatrix, SimpleTable, makeMatrixText} from "./pretty-matrix.jsx"
 import ReactTable from 'react-table'
 import JSONTree from 'react-json-tree'
 
-import {PrettyMatrix, SimpleTable, makeMatrixText} from "./pretty-matrix.jsx"
+
 import CellRow from "./cell-row.jsx"
 
 import actions from './actions.jsx'
@@ -38,7 +33,6 @@ import actions from './actions.jsx'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
 import ErrorCircle from 'material-ui/svg-icons/alert/error'
 import UnloadedCircle from 'material-ui/svg-icons/content/remove'
@@ -118,8 +112,9 @@ class GenericCell extends React.Component {
 
 
       shouldComponentUpdate(nextProps, nextState){
-        console.log("cell deepequal", this.props.id, deepEqual(this.props,nextProps))
-        return !deepEqual(this.props,nextProps)
+        let propsEqual = deepEqual(this.props,nextProps)
+     // console.log("cell deepequal", this.props.id, propsEqual)
+        return !propsEqual
       }
 
     componentDidMount(){
@@ -131,7 +126,7 @@ class GenericCell extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        console.log(this.props.cell.id)
+     // console.log("componentDidUpdate",this.props.cell.id)
         if (this.props.cell.selected
             && this.refs.hasOwnProperty('editor')
             && this.props.pageMode == 'edit') {
@@ -147,6 +142,7 @@ class GenericCell extends React.Component {
     }
 
     inputComponent(){
+     // console.log("inputComponent",this.props.cell.id)
         var editorOptions = Object.assign({},
             this.editorOptions,
             {readOnly: (this.props.viewMode=="presentation" ? 'nocursor' : false)},
@@ -168,6 +164,7 @@ class GenericCell extends React.Component {
     }
 
     render() {
+     // console.log("cell render",this.props.cell.id)
         var cellSelected = this.props.cell.selected ? 'selected-cell ' : ''
         var editorMode = (
             (this.props.cell.selected && this.props.pageMode == 'edit') ?
@@ -202,6 +199,9 @@ class GenericCell extends React.Component {
         )
     }
 }
+
+
+
 
 class ExternalDependencyCell extends GenericCell {
     constructor(props) {
@@ -521,7 +521,7 @@ function jsReturnValue(cell) {
 }
 
 function mapStateToPropsForCells(state,ownProps) {
-    console.log("mapStateToPropsForCells")
+ // console.log("mapStateToPropsForCells")
     let cell = getCellById(state.cells, ownProps.cellId) 
     return {
         display:true,
