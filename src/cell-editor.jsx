@@ -1,5 +1,3 @@
-// a Page is a collection of cells. They are displayed in order.
-// All javascript cells share the same interpreter.
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
