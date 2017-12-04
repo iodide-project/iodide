@@ -1,4 +1,5 @@
 import * as NB from '../notebook-utils.js'
+import tjsm from '../transpile-jsm.js'
 
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
@@ -61,6 +62,69 @@ function addExternalScript(scriptUrl){
   xhrObj.send('')
   script.text = xhrObj.responseText;
   head.appendChild(script)
+}
+
+function addExternalDependency(dep){
+  // FIXME there must be a better way to do this with promises etc...
+  var head = document.getElementsByTagName('head')[0]
+  var elem
+  var outElem = {}
+  // check for js: or css:
+  var src
+  var depType
+  
+  if (dep.trim().slice(0,2) === '//') {
+    return
+  }
+
+  if (dep.slice(0,4) === 'css:') {
+    depType = 'css'
+    src = dep.slice(4)
+  } else if (dep.slice(0,3) === 'js:') {
+    depType = 'js'
+    src = dep.slice(3)
+  } else if (dep.slice(dep.length-2) === 'js') {
+    depType = 'js'
+    src = dep
+  } else if (dep.slice(dep.length-3) === 'css') {
+    depType = 'css'
+    src = dep
+  } else {
+    src = dep
+  }
+
+  src = src.trim()
+
+  if (depType === 'js') {
+    elem = document.createElement('script')
+    elem.type = 'text/javascript'
+    var xhrObj = new XMLHttpRequest()
+    xhrObj.open('GET', src, false)
+    try {
+      xhrObj.send('')
+      elem.text = xhrObj.responseText
+      outElem.status = 'loaded'
+    } catch(err) {
+      console.log(err)
+      outElem.status = 'error'
+      outElem.statusExplanation = err.message
+    }
+  } else {
+    //<link rel="stylesheet" type="text/css" href="mystyles.css" media="screen" />
+    elem = document.createElement('link')
+    elem.rel = 'stylesheet'
+    elem.type = 'text/css'
+    elem.href = src
+    outElem.status = 'loaded'
+  }
+  
+  //script.src = scriptUrl  
+  
+  head.appendChild(elem)
+  outElem.src = src
+  outElem.dependencyType = depType
+
+  return outElem
 }
 
 let cell = function (state = newNotebook(), action) {
@@ -140,6 +204,9 @@ let cell = function (state = newNotebook(), action) {
       thisCell.cellType = action.cellType;
       thisCell.value = undefined;
       thisCell.rendered = false;
+      if (action.cellType ==='external-dependency' && !thisCell.dependencies.length) {
+        thisCell.dependencies.push(newDependency(thisCell.dependencies, 'js'))
+      }
       cells[index] = thisCell;
       var nextState = Object.assign({}, state, {cells})
       return nextState
@@ -216,13 +283,33 @@ let cell = function (state = newNotebook(), action) {
           thisCell.value = undefined;
 
           var output;
+          let code = thisCell.content
+          // console.log(code.slice(0,12))
+          // console.log(code.slice(0,12)=="use matrix")
+          // console.log(code.slice(0,12)=='use matrix')
+          if (code.slice(0,12)=="'use matrix'" || code.slice(0,12)=='"use matrix"'){
+            console.log("---transpiling code---")
+              try {
+                code = tjsm.transpile(thisCell.content)
+                console.log("---transpiled code---")
+                console.log(code)
+              } catch(e) {
+                console.log("---transpilation failed---")
+                var err = e.constructor('transpilation failed: ' + e.message);
+                // err.lineNumber = e.lineNumber - err.lineNumber + 3;
+                // output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+              }
+          }
+
           try {
-            output = window.eval(thisCell.content);
+            output = window.eval(code);
           } catch(e) {
             var err = e.constructor('Error in Evaled Script: ' + e.message);
             err.lineNumber = e.lineNumber - err.lineNumber + 3;
             output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
           }
+
+
           thisCell.rendered = true;
 
           if (output !== undefined) {
@@ -258,15 +345,42 @@ let cell = function (state = newNotebook(), action) {
             lastRan: new Date(),
             content: "// added external scripts:\n" + ( newScripts.map(s => "// "+s).join("\n") )
           })
-
+          
           newState.executionNumber++
           thisCell.executionStatus = ""+newState.executionNumber
 
-        }
+        
+      } else if (thisCell.cellType === 'external dependencies') {
+          //var dependencies = thisCell.dependencies.filter(s => s.src!==undefined);
+
+
+          //var dependencies = dependencies.filter(script => !newState.externalScripts.includes(script.src));
+          var dependencies = thisCell.content.split('\n').filter(d=>d.trim().slice(0,2) !=='//')
+          var outValue = dependencies.map(addExternalDependency)
+
+          outValue.forEach(d=>{
+            if (!newState.externalScripts.includes(d.src)) {
+              newState.externalScripts.push(d.src)
+            }
+          })
+          thisCell.value = outValue;
+          thisCell.rendered = true;
+          // add to newState.history
+          if (outValue.length) {
+            newState.history.push({
+              cellID: thisCell.id,
+              lastRan: new Date(),
+              content: "// added external scripts:\n" + ( outValue.map(s => "// "+s.src).join("\n") )
+            })  
+          }
+          
+
+          newState.executionNumber++
+          thisCell.executionStatus = ""+newState.executionNumber
       } else {
         thisCell.rendered = false;
-      }
-      
+       }
+    }
       cells[index] = thisCell;
       var nextState = Object.assign({}, newState, {cells}, {declaredProperties});
       return nextState

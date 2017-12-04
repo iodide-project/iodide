@@ -17,7 +17,6 @@ function prettyDate(time) {
     day_diff < 31 && Math.ceil( day_diff / 7 ) + " weeks ago"
   }
 
-
   function formatDateString(d) {
   var d = new Date(d)
   return d.toUTCString()
@@ -46,6 +45,7 @@ function newCell(cells, cellType){
     rendered: false,
     selected: false,
     executionStatus: " ",
+    // dependencies: [newDependency([], 'js')],
     // evaluationOld set to true if the content of the editor changes from whatever
     // produced the most recent output value
     evaluationOld: true,
@@ -57,6 +57,16 @@ function newCell(cells, cellType){
     collapsePresentationViewOutput: outputCollapseDefault,
   }
 }
+
+// function newDependency(dependencies, dependencyType) {
+//   return {
+//     status: undefined, // unloaded.
+//     statusExplanation: undefined,
+//     dependencyType: 'js',
+//     src: undefined,
+//     id: newCellID(dependencies)
+//   }
+// }
 
 function addCell(cells, cellType='javascript') {
   // mutates state.cells.
@@ -158,5 +168,6 @@ export {
   moveCell,
   prettyDate,
   formatDateString,
-  getCellById
+  getCellById,
+  newDependency
 }

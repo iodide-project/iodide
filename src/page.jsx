@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import actions from './actions.jsx'
-import {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, DOMCell} from './cell.jsx'
+import {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, DOMCell, ExternalDependencyCell} from './cell.jsx'
 import keyBinding from './keybindings.jsx' 
 import { NotebookHeader } from './notebook-header.jsx'
 import settings from './settings.jsx'
@@ -69,6 +69,8 @@ class Page extends React.Component {
                 return <RawCell cellId={id} key={id}/>
             case 'external scripts':
                 return <ExternalScriptCell cellId={id} key={id}/>
+            case 'external dependencies':
+                return <ExternalDependencyCell cellId={id} key={id} />
             case 'dom':
                 return <DOMCell cellId={id} key={id}/>
         }

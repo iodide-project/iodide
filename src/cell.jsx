@@ -14,20 +14,34 @@ import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
 import sublime from './codemirror-keymap-sublime.js'
 
-import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
+// <<<<<<< HEAD
+
+// import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label, DropdownButton, MenuItem, 
+// =======
+import { Button, Label, DropdownButton, 
+// >>>>>>> master
         SplitButton, FormGroup, FormControl, ControlLabel, Form, Col } from 'react-bootstrap'
 
 import _ from "lodash"
 import nb from "../tools/nb.js"
+
 import {getCellById} from "./notebook-utils.js"
 
 import ReactTable from 'react-table'
 import JSONTree from 'react-json-tree'
 
-import PrettyMatrix from "./pretty-matrix.jsx"
+import {PrettyMatrix, SimpleTable, makeMatrixText} from "./pretty-matrix.jsx"
 import CellRow from "./cell-row.jsx"
 
 import actions from './actions.jsx'
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+
+import CheckCircle from 'material-ui/svg-icons/action/check-circle'
+import ErrorCircle from 'material-ui/svg-icons/alert/error'
+import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 
 
 class GenericCell extends React.Component {
@@ -184,6 +198,45 @@ class GenericCell extends React.Component {
                 <CellRow cellId={cellId}
                     rowType={"output"}
                     mainComponent={this.outputComponent()}/>
+            </div>
+        )
+    }
+}
+
+class ExternalDependencyCell extends GenericCell {
+    constructor(props) {
+        super(props)
+    }
+
+    outputComponent() {
+        if (this.props.cell.value == undefined) return undefined 
+        var outs = this.props.cell.value.map(d=>{
+            var statusExplanation
+            var statusIcon = d.status === undefined ?
+                        <UnloadedCircle /> :
+                (d.status === 'loaded' ?
+                        <CheckCircle color='lightblue' />:
+                        <ErrorCircle color='firebrick' />
+
+                )
+            if (d.hasOwnProperty('statusExplanation')) {
+                statusExplanation=<div className='dependency-status-explanation'>{d.statusExplanation}</div>
+            }
+            return (
+            <div className='dependency-container'>
+                <div className='dependency-row'>
+                        <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+                                {statusIcon}
+                        </MuiThemeProvider>
+                    <div className='dependency-src'>{d.src}</div>
+                </div>
+                {statusExplanation}
+            </div>
+            )
+        })
+        return (
+            <div className='dependency-output'>
+                {outs}
             </div>
         )
     }
@@ -418,9 +471,10 @@ function jsReturnValue(cell) {
         } else if (nb.isMatrix(cell.value)){
             var shape = nb.shape(cell.value)
             var dataSetInfo = `${shape[0]} × ${shape[1]} matrix (array of arrays)`
+            let tabledata = makeMatrixText(cell.value,[10,10])
             resultElem = (<div>
                 <div className="data-set-info">{dataSetInfo}</div>
-                <PrettyMatrix matrix={cell.value} maxDims={[10,10]} />
+                <SimpleTable tabledata={tabledata} />
                 </div>)
         } else if (_.isArray(cell.value)){
             var dataSetInfo = `${cell.value.length} element array`
@@ -479,6 +533,21 @@ function mapStateToPropsForCells(state,ownProps) {
     }
 }
 
+
+function mapStateToPropsForExternalDependency(state,ownProps) {
+    let cell = getCellById(state.cells, ownProps.cellId) 
+    return {
+        display:true,
+        pageMode: state.mode,
+        viewMode: state.viewMode,
+        ref: 'cell'+cell.id,
+        cell: Object.assign({},cell),
+        id: cell.id,
+        dependencies: cell.dependencies //Object.assign({}, cell.dependencies || [])
+    }
+}
+
+
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(actions, dispatch)
@@ -491,11 +560,15 @@ var MarkdownCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps
 var RawCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(RawCell)
 var ExternalScriptCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(ExternalScriptCell)
 var DOMCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(DOMCell)
+var ExternalDependencyCell_connected = connect(mapStateToPropsForExternalDependency, mapDispatchToProps)(ExternalDependencyCell)
+
+
 // export JavascriptCell_connected as JavascriptCell
 export {JavascriptCell_connected as JavascriptCell,
     MarkdownCell_connected as MarkdownCell,
     RawCell_connected as RawCell,
     ExternalScriptCell_connected as ExternalScriptCell,
     DOMCell_connected as DOMCell,
+    ExternalDependencyCell_connected as ExternalDependencyCell,
     HistoryCell,
     }

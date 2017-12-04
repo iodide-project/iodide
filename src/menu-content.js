@@ -185,6 +185,13 @@ menuItems.changeCellTypeToExternal = {
         this.props.actions.changeCellType(getSelectedCell(this.props.cells).id, 'external scripts')
     }
 }
+menuItems.changeCellTypeToExternal = {
+    primaryText: 'External Dependencies', 
+    secondaryText:'E',
+    callback: function() {
+        this.props.actions.changeCellType(getSelectedCell(this.props.cells).id, 'external dependencies')
+    }
+}
 menuItems.changeCellTypeToDOM= {
     primaryText: 'DOM', 
     secondaryText: ' ',
