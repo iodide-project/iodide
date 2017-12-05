@@ -19,6 +19,7 @@ module.exports = {
             "error",
             2
         ],
+        "no-var": ["error"],
         "linebreak-style": [
             "error",
             "unix"
