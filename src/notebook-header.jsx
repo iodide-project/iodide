@@ -72,6 +72,7 @@ class NotebookHeader extends React.Component {
   }
 
   render() {
+    console.log("NotebookHeader render")
     var histContents = []
     if (this.props.history.length) {
     histContents = this.props.history.filter(cell=>cell.content.length).map((cell,i)=> {
@@ -92,7 +93,6 @@ class NotebookHeader extends React.Component {
         <div className='notebook-menu' style={{display: this.props.viewMode === 'editor' ? 'block' : 'none'}}>
             <EditorMenu actions={this.props.actions}
               mode={this.props.mode}
-              cells={this.props.cells}
               viewMode={this.props.viewMode}
               title={this.props.title}
               sidePaneMode={this.props.sidePaneMode}
@@ -101,7 +101,6 @@ class NotebookHeader extends React.Component {
         <div className='presentation-menu' style={{display: (this.props.viewMode === 'presentation' ? 'block' : 'none')}} >
           <PresentationMenu
             mode={this.props.mode}
-            cells={this.props.cells}
             viewMode={this.props.viewMode}
             title={this.props.title}
             actions={this.props.actions}
@@ -140,6 +139,11 @@ class NotebookHeader extends React.Component {
 }
 
 
+
+
+
+
+
 class PresentationMenu extends React.Component {
   constructor(props) {
     super(props)
@@ -159,6 +163,14 @@ class PresentationMenu extends React.Component {
   }
 }
 
+
+
+
+
+
+
+
+
 class EditorMenu extends React.Component {
   constructor(props) {
     super(props)
@@ -177,7 +189,6 @@ class EditorMenu extends React.Component {
               <MainMenu 
                   isFirstChild={true}
                   actions={this.props.actions} 
-                  cells={this.props.cells}
                   mode={this.props.mode}
                   title={this.props.title}
                   viewMode={this.props.viewMode}
@@ -212,6 +223,11 @@ class EditorMenu extends React.Component {
 }
 
 
+
+
+
+
+
 class ViewModeToggleButton extends React.Component {
     constructor(props) {
         super(props)
@@ -236,10 +252,13 @@ class ViewModeToggleButton extends React.Component {
     }
 }
 
+
+
+
+
 function mapStateToProps(state) {
     return {
         mode: state.mode,
-        cells: state.cells.slice(),
         viewMode: state.viewMode,
         title: state.title,
         declaredVariables: state.declaredProperties,

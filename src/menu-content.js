@@ -1,4 +1,4 @@
-import {prettyDate, formatDateString, getSelectedCell} from './notebook-utils'
+import {prettyDate, formatDateString, getSelectedCellId} from './notebook-utils'
 import exampleNotebooks from './example-notebooks.jsx'
 import settings from './settings.jsx'
 const AUTOSAVE = settings.labels.AUTOSAVE
@@ -135,10 +135,10 @@ menuItems.deleteCell = {
     primaryText: 'Delete Cell', 
     secondaryText: '\u21E7 \u232b', 
     callback: function(){
-        var currentlySelected = getSelectedCell(this.props.cells)
-        if (currentlySelected != undefined
+        var currentlySelectedId = getSelectedCellId()
+        if (currentlySelectedId != undefined
             && this.props.mode == 'command') {
-            this.props.actions.deleteCell(currentlySelected.id)
+            this.props.actions.deleteCell(currentlySelectedId)
         }
     }
 }
@@ -148,56 +148,56 @@ menuItems.moveCellUp = {
     primaryText: 'Move Cell Up', 
     secondaryText: '\u21E7 \u2191',
     callback: function(){
-       this.props.actions.cellUp(getSelectedCell(this.props.cells).id)
+       this.props.actions.cellUp(getSelectedCellId())
     }
 }
 menuItems.moveCellDown = {
     primaryText: 'Move Cell Down',
     secondaryText: '\u21E7 \u2193',
     callback: function(){
-        this.props.actions.cellDown(getSelectedCell(this.props.cells).id)
+        this.props.actions.cellDown(getSelectedCellId())
     }
 }
 menuItems.changeCellTypeToJavascript = {
     primaryText: 'Javascript', 
     secondaryText:'J', 
     callback: function(){
-        this.props.actions.changeCellType(getSelectedCell(this.props.cells).id, 'javascript')
+        this.props.actions.changeCellType(getSelectedCellId(), 'javascript')
     }
 }
 menuItems.changeCellTypeToMarkdown = {
     primaryText: 'Markdown', 
     secondaryText:'M',
     callback: function() {
-        this.props.actions.changeCellType(getSelectedCell(this.props.cells).id, 'markdown')
+        this.props.actions.changeCellType(getSelectedCellId(), 'markdown')
     }
 }
 menuItems.changeCellTypeToRaw = {
     primaryText: 'Raw', 
     secondaryText:'R',
     callback: function() {
-        this.props.actions.changeCellType(getSelectedCell(this.props.cells).id, 'raw')
+        this.props.actions.changeCellType(getSelectedCellId(), 'raw')
     }
 }
 menuItems.changeCellTypeToExternal = {
     primaryText: 'External Scripts', 
     secondaryText:'E',
     callback: function() {
-        this.props.actions.changeCellType(getSelectedCell(this.props.cells).id, 'external scripts')
+        this.props.actions.changeCellType(getSelectedCellId(), 'external scripts')
     }
 }
 menuItems.changeCellTypeToExternal = {
     primaryText: 'External Dependencies', 
     secondaryText:'E',
     callback: function() {
-        this.props.actions.changeCellType(getSelectedCell(this.props.cells).id, 'external dependencies')
+        this.props.actions.changeCellType(getSelectedCellId(), 'external dependencies')
     }
 }
 menuItems.changeCellTypeToDOM= {
     primaryText: 'DOM', 
     secondaryText: ' ',
     callback: function() {
-        this.props.actions.changeCellType(getSelectedCell(this.props.cells).id, 'dom')
+        this.props.actions.changeCellType(getSelectedCellId(), 'dom')
     }}
 
 menuItems.cell = {

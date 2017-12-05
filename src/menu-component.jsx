@@ -1,6 +1,5 @@
 import React from 'react'
-import settings from './settings.jsx'
-const AUTOSAVE = settings.labels.AUTOSAVE
+
 import {List, ListItem} from 'material-ui/List';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
@@ -14,15 +13,18 @@ import Divider from 'material-ui/Divider';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import FontIcon from 'material-ui/FontIcon'
 import TextField from 'material-ui/TextField'
-import {getSelectedCell} from './notebook-utils'
-
 import {ToolbarGroup, ToolbarSeparator} from 'material-ui/Toolbar';
 import AddButton from 'material-ui/svg-icons/content/add';
 import UpArrow from 'material-ui/svg-icons/navigation/arrow-upward';
 import DownArrow from 'material-ui/svg-icons/navigation/arrow-downward';
 import PlayButton from 'material-ui/svg-icons/av/play-arrow'
 import FastForward from 'material-ui/svg-icons/av/fast-forward'
+
+import settings from './settings.jsx'
 import {menuItems, getSavedNotebooks} from './menu-content'
+import {getSelectedCellId} from './notebook-utils'
+
+const AUTOSAVE = settings.labels.AUTOSAVE
 
 function transformToMaterialUIComponent(item, parentComponent, childrenClass=false) {
     if (item.hasOwnProperty('itemType')) {
@@ -64,7 +66,6 @@ class MainMenu extends React.Component {
     constructor(props){
         super(props)
         this.insertCell = this.insertCell.bind(this)
-        this.getSelectedCell = this.getSelectedCell.bind(this)
         this.cellUp = this.cellUp.bind(this)
         this.cellDown = this.cellDown.bind(this)
         this.runCell = this.runCell.bind(this)
@@ -77,30 +78,26 @@ class MainMenu extends React.Component {
         this.props.actions.deleteNotebook(notebook)
     }
 
-	getSelectedCell(){
-        return getSelectedCell(this.props.cells)
-    }
-
     runAllCells() {
         this.props.actions.runAllCells()
         if (this.props.pageMode !== 'command') this.props.actions.changeMode('command')
 	}
 	
 	runCell(render) {
-        this.props.actions.renderCell(this.getSelectedCell().id)
+        this.props.actions.renderCell(getSelectedCellId())
         if (this.props.pageMode !== 'command') this.props.actions.changeMode('command')
 	}
 
 	insertCell() {
-		this.props.actions.insertCell('javascript', this.getSelectedCell().id, 1)		
+		this.props.actions.insertCell('javascript', getSelectedCellId(), 1)
 	}
 	
     cellUp(){
-        this.props.actions.cellUp(this.getSelectedCell().id)
+        this.props.actions.cellUp(getSelectedCellId())
     }
 
     cellDown(){
-        this.props.actions.cellDown(this.getSelectedCell().id)
+        this.props.actions.cellDown(getSelectedCellId())
     }
 
 

@@ -113,7 +113,7 @@ class GenericCell extends React.Component {
 
       shouldComponentUpdate(nextProps, nextState){
         let propsEqual = deepEqual(this.props,nextProps)
-     // console.log("cell deepequal", this.props.id, propsEqual)
+        console.log("cell deepequal", this.props.id, propsEqual)
         return !propsEqual
       }
 
@@ -126,7 +126,7 @@ class GenericCell extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-     // console.log("componentDidUpdate",this.props.cell.id)
+        console.log("componentDidUpdate",this.props.cell.id)
         if (this.props.cell.selected
             && this.refs.hasOwnProperty('editor')
             && this.props.pageMode == 'edit') {
@@ -142,7 +142,7 @@ class GenericCell extends React.Component {
     }
 
     inputComponent(){
-     // console.log("inputComponent",this.props.cell.id)
+        console.log("inputComponent",this.props.cell.id)
         var editorOptions = Object.assign({},
             this.editorOptions,
             {readOnly: (this.props.viewMode=="presentation" ? 'nocursor' : false)},
@@ -164,7 +164,7 @@ class GenericCell extends React.Component {
     }
 
     render() {
-     // console.log("cell render",this.props.cell.id)
+        console.log("cell render",this.props.cell.id)
         var cellSelected = this.props.cell.selected ? 'selected-cell ' : ''
         var editorMode = (
             (this.props.cell.selected && this.props.pageMode == 'edit') ?
@@ -521,7 +521,7 @@ function jsReturnValue(cell) {
 }
 
 function mapStateToPropsForCells(state,ownProps) {
- // console.log("mapStateToPropsForCells")
+    console.log("mapStateToPropsForCells")
     let cell = getCellById(state.cells, ownProps.cellId) 
     return {
         display:true,
