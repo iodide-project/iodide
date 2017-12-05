@@ -1,3 +1,54 @@
+import {store} from './index.jsx'
+
+function isCommandMode(){
+    return store.getState().mode=='command' && viewModeIsEditor()
+}
+
+function isEditMode(){
+    return store.getState().mode=='command'
+}
+
+function viewModeIsEditor(){
+  return store.getState().viewMode ==='editor'
+}
+
+function viewModeIsPresentation(){
+  return store.getState().viewMode === 'presentation'
+}
+
+function getSelectedCellId(){
+  let cells = store.getState().cells
+  let index = cells.findIndex((c)=>{return c.selected})
+  if (index > -1) {
+    return cells[index].id
+  } else {
+    return undefined // for now
+  }
+}
+
+function getCellBelowSelectedId(){
+  let cells = store.getState().cells
+  let index = cells.findIndex((c)=>{return c.selected})
+  if (0<=index && index<(cells.length-1)) {
+    return cells[index+1].id
+  } else {
+    return undefined // for now
+  }
+}
+
+function getCellAboveSelectedId(){
+  let cells = store.getState().cells
+  let index = cells.findIndex((c)=>{return c.selected})
+  if (0<index && index<=(cells.length-1)) {
+    return cells[index-1].id
+  } else {
+    return undefined // for now
+  }
+}
+
+
+
+
 function prettyDate(time) {
   var date = new Date(time),
     diff = (((new Date()).getTime() - date.getTime()) / 1000),
@@ -126,15 +177,6 @@ function selectCell(cells, cellID){
   updateCell(cells, cellID, {selected: true})
 }
 
-function getSelectedCell(cells) {
-  let index = cells.findIndex((c)=>{return c.selected})
-  if (index > -1) {
-    return cells[index]
-  } else {
-    return undefined // for now
-  }
-}
-
 
 function moveCell(cells, cellID, dir) {
   
@@ -158,7 +200,6 @@ function moveCell(cells, cellID, dir) {
   }
 
 export {
-  getSelectedCell, 
   blankState, 
   changeTitle,
   newNotebook, 
@@ -169,5 +210,10 @@ export {
   prettyDate,
   formatDateString,
   getCellById,
-  newDependency
+  newDependency,
+  getSelectedCellId,
+  getCellBelowSelectedId, getCellAboveSelectedId,
+  isCommandMode,
+  isEditMode,
+  viewModeIsEditor, viewModeIsPresentation,
 }

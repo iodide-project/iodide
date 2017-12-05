@@ -1,6 +1,8 @@
-// import {getSelectedCell} from './notebook-utils'
 import {store} from './index.jsx'
 import actions from './actions.jsx'
+import {getSelectedCellId, isCommandMode, isEditMode,
+    viewModeIsEditor, viewModeIsPresentation,
+    getCellBelowSelectedId, getCellAboveSelectedId} from './notebook-utils'
 
 var jupyterKeybindings = [];
 
@@ -13,52 +15,6 @@ for (let action in actions){
     dispatcher[action] = (...params) => (store.dispatch(actions[action](...params)))
 }
 
-
-function getSelectedCellId(){
-  let cells = store.getState().cells
-  let index = cells.findIndex((c)=>{return c.selected})
-  if (index > -1) {
-    return cells[index].id
-  } else {
-    return undefined // for now
-  }
-}
-
-function isCommandMode(){
-    return store.getState().mode=='command' && viewModeIsEditor()
-}
-
-function isEditMode(){
-    return store.getState().mode=='command'
-}
-
-function viewModeIsEditor(){
-  return store.getState().viewMode ==='editor'
-}
-
-function viewModeIsPresentation(){
-  return store.getState().viewMode === 'presentation'
-}
-
-function getCellBelowSelectedId(){
-  let cells = store.getState().cells
-  let index = cells.findIndex((c)=>{return c.selected})
-  if (0<=index && index<(cells.length-1)) {
-    return cells[index+1].id
-  } else {
-    return undefined // for now
-  }
-}
-
-function getCellAboveSelectedId(){
-  let cells = store.getState().cells
-  let index = cells.findIndex((c)=>{return c.selected})
-  if (0<index && index<=(cells.length-1)) {
-    return cells[index-1].id
-  } else {
-    return undefined // for now
-  }
-}
 
 var MOVE_UP = [['shift+up'], function(){
     if (isCommandMode()) dispatcher.cellUp(getSelectedCellId())
