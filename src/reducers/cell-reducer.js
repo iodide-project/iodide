@@ -141,9 +141,16 @@ let cell = function (state = newNotebook(), action) {
   switch (action.type) {
     case 'RUN_ALL_CELLS':
       var nextState = Object.assign({}, state, {cells: [...state.cells]})
+      var breakThis = false
       state.cells.forEach(c=>{
-        nextState = cell(nextState, {type: 'SELECT_CELL', id: c.id})
-        nextState = Object.assign({}, cell(nextState, {type:'RENDER_CELL', id: c.id, evaluateCell: true}))
+        if (!breakThis) {
+          nextState = cell(nextState, {type: 'SELECT_CELL', id: c.id})
+          nextState = Object.assign({}, cell(nextState, {type:'RENDER_CELL', id: c.id, evaluateCell: true}))
+          var ind = nextState.cells.findIndex(ci=>ci.id === c.id)
+          if (nextState.cells[ind].evalStatus === evalStatuses.ERROR) {
+            breakThis = true
+          }
+        }
       })
       return nextState
 
@@ -376,7 +383,7 @@ let cell = function (state = newNotebook(), action) {
               newState.externalScripts.push(d.src)
             }
           })
-          
+          thisCell.evalStatus = outValue.map(d=>d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
           thisCell.value = outValue;
           thisCell.rendered = true;
           // add to newState.history
