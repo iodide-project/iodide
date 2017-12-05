@@ -57,7 +57,17 @@ function getSavedNotebooks (elem) {
 		} 
 		var saves = Object.keys(localStorage)
 		if (saves.length) {
-			savedNBs = saves.filter((n)=>!n.includes(AUTOSAVE)).map((n)=> {
+            savedNBs = saves
+                .filter((n)=>!n.includes(AUTOSAVE))
+                .filter((n)=> {
+                    try {
+                        JSON.parse(localStorage[n]).lastSaved
+                        return true
+                    } catch(err) {
+                        return false
+                    }
+                })
+                .map((n)=> {
                 var lastSaved = JSON.parse(localStorage[n]).lastSaved
                 return {primaryText:n, secondaryText: prettyDate(formatDateString(lastSaved)), callback: openLocalStorageNotebook(n)}
 				// return <MenuItem
