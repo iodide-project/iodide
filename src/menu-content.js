@@ -139,8 +139,28 @@ menuItems.savedNotebooks = {
 }
 
 
-menuItems.addCellBelow = {primaryText: 'Add Cell Below', secondaryText:'B'}
-menuItems.addCellAbove = {primaryText: 'Add Cell Above', secondaryText:'A'}
+menuItems.addCellBelow = {
+    primaryText: 'Add Cell Below', 
+    secondaryText:'B',
+    callback: function(){
+        var currentlySelectedId = getSelectedCellId()
+        if (currentlySelectedId != undefined) {
+            this.props.actions.insertCell(currentlySelectedId, 'below')
+        }
+    }
+}
+
+menuItems.addCellAbove = {
+    primaryText: 'Add Cell Above', 
+    secondaryText:'A',
+    callback: function(){
+        var currentlySelectedId = getSelectedCellId()
+        if (currentlySelectedId != undefined) {
+            this.props.actions.insertCell(currentlySelectedId, 'above')
+        }
+    }
+}
+
 menuItems.deleteCell = {
     primaryText: 'Delete Cell', 
     secondaryText: '\u21E7 \u232b', 
