@@ -13,7 +13,16 @@ var config = {
   devtool: 'source-map',
 
   module : {
-    loaders : [
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: "eslint-loader",
+        options: {
+          // eslint options (if necessary)
+          emitWarning: true
+        }
+      },
       {
         test : /\.jsx?/,
         include : APP_DIR,
