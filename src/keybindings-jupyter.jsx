@@ -1,10 +1,10 @@
 import {store} from './index.jsx'
 import actions from './actions.jsx'
 import {getSelectedCellId, isCommandMode, isEditMode,
-    viewModeIsEditor, viewModeIsPresentation,
-    getCellBelowSelectedId, getCellAboveSelectedId} from './notebook-utils'
+  viewModeIsEditor, viewModeIsPresentation,
+  getCellBelowSelectedId, getCellAboveSelectedId} from './notebook-utils'
 
-var jupyterKeybindings = [];
+var jupyterKeybindings = []
 
 // this just allows calling:
 // dispatcher.action(params)
@@ -12,54 +12,54 @@ var jupyterKeybindings = [];
 // store.dispatch(actions.action(...params)
 let dispatcher = {}
 for (let action in actions){
-    dispatcher[action] = (...params) => (store.dispatch(actions[action](...params)))
+  dispatcher[action] = (...params) => (store.dispatch(actions[action](...params)))
 }
 
 
 var MOVE_UP = [['shift+up'], function(){
-    if (isCommandMode()) dispatcher.cellUp(getSelectedCellId())
-  }
+  if (isCommandMode()) dispatcher.cellUp(getSelectedCellId())
+}
 ]
 
 var MOVE_DOWN = [['shift+down'], function(){
-    if (isCommandMode()) dispatcher.cellDown(getSelectedCellId())
-  }
+  if (isCommandMode()) dispatcher.cellDown(getSelectedCellId())
+}
 ]
 
 var ADD_CELL_ABOVE = [['a'], function(){
-    if (isCommandMode()) {
-        dispatcher.insertCell('javascript', getSelectedCellId(), 'above')
-        dispatcher.selectCell(getCellAboveSelectedId(), true)
-    }
+  if (isCommandMode()) {
+    dispatcher.insertCell('javascript', getSelectedCellId(), 'above')
+    dispatcher.selectCell(getCellAboveSelectedId(), true)
   }
+}
 ]
 
 var ADD_CELL_BELOW = [['b'], function(){
   if (isCommandMode()) {
-        dispatcher.insertCell('javascript', getSelectedCellId(), 'below')
-        dispatcher.selectCell(getCellBelowSelectedId(), true)
-    }
+    dispatcher.insertCell('javascript', getSelectedCellId(), 'below')
+    dispatcher.selectCell(getCellBelowSelectedId(), true)
   }
+}
 ]
 
 var JAVASCRIPT_MODE = [['j'], function(){
-    if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'javascript')
-    }
+  if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'javascript')
+}
 ]
 
 var MARKDOWN_MODE = [['m'], function(){
-    if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'markdown')
-    }
+  if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'markdown')
+}
 ]
 
 var EXTERNAL_SCRIPTS_MODE = [['e'], function(){
   if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'external scripts')
-  }
+}
 ]
 
 var RAW_MODE = [['r'], function(){
-    if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'raw')
-    }
+  if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'raw')
+}
 ]
 
 var SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function(e){
@@ -98,34 +98,34 @@ var SHOW_HISTORY = [['ctrl+h', 'meta+h'], function(e){
 }]
 
 var SELECT_UP = [['up'], function(e){
-    if (isCommandMode()){
-        // e.preventDefault blocks kbd scrolling of entire window
-        if (e.preventDefault) {
-            e.preventDefault();
+  if (isCommandMode()){
+    // e.preventDefault blocks kbd scrolling of entire window
+    if (e.preventDefault) {
+      e.preventDefault()
         } else { // internet explorer
-            e.returnValue = false;
+      e.returnValue = false
         }
-        dispatcher.selectCell(getCellAboveSelectedId(), true)
-    }
+    dispatcher.selectCell(getCellAboveSelectedId(), true)
   }
+}
 ]
 
 var SELECT_DOWN = [['down'], function(e){
-    if (isCommandMode()){
-            // e.preventDefault blocks kbd scrolling of entire window
-        if (e.preventDefault) {
-            e.preventDefault();
+  if (isCommandMode()){
+    // e.preventDefault blocks kbd scrolling of entire window
+    if (e.preventDefault) {
+      e.preventDefault()
         } else { // internet explorer
-            e.returnValue = false;
+      e.returnValue = false
         }
-      dispatcher.selectCell(getCellBelowSelectedId(), true)
-    }
+    dispatcher.selectCell(getCellBelowSelectedId(), true)
   }
+}
 ]
 
 var RENDER_CELL = [['mod+enter'], function(){
-        dispatcher.changeMode('command')
-        dispatcher.renderCell(getSelectedCellId())
+  dispatcher.changeMode('command')
+  dispatcher.renderCell(getSelectedCellId())
 }]
 
 var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
@@ -134,34 +134,34 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
     dispatcher.renderCell(getSelectedCellId())
     var cellBelowId = getCellBelowSelectedId()
     if (cellBelowId){
-        dispatcher.selectCell(cellBelowId, true)
+      dispatcher.selectCell(cellBelowId, true)
     } else {
-        dispatcher.addCell('javascript')
-        dispatcher.selectCell(getCellBelowSelectedId(), true)
+      dispatcher.addCell('javascript')
+      dispatcher.selectCell(getCellBelowSelectedId(), true)
     }
   }
     
 }]
 
 var COMMAND_MODE = [['esc'], function(e){
-    dispatcher.changeMode('command')
+  dispatcher.changeMode('command')
 }]
 
 var EDIT_MODE = [['enter', 'return'], function(e){
-    if (isCommandMode()){
-        // e.preventDefault blocks inserting a newline when you transition to edit mode
-        if (e.preventDefault) {
-            e.preventDefault();
+  if (isCommandMode()){
+    // e.preventDefault blocks inserting a newline when you transition to edit mode
+    if (e.preventDefault) {
+      e.preventDefault()
         } else { // internet explorer
-            e.returnValue = false;
+      e.returnValue = false
         }
-        dispatcher.changeMode('edit')
-    }
+    dispatcher.changeMode('edit')
+  }
 }]
 
 var DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
-    if (isCommandMode()) dispatcher.deleteCell(getSelectedCellId())
-  }
+  if (isCommandMode()) dispatcher.deleteCell(getSelectedCellId())
+}
 ]
 
 jupyterKeybindings.push(JAVASCRIPT_MODE)

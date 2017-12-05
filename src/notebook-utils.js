@@ -1,11 +1,11 @@
 import {store} from './index.jsx'
 
 function isCommandMode(){
-    return store.getState().mode=='command' && viewModeIsEditor()
+  return store.getState().mode=='command' && viewModeIsEditor()
 }
 
 function isEditMode(){
-    return store.getState().mode=='command'
+  return store.getState().mode=='command'
 }
 
 function viewModeIsEditor(){
@@ -52,29 +52,29 @@ function getCellAboveSelectedId(){
 function prettyDate(time) {
   var date = new Date(time),
     diff = (((new Date()).getTime() - date.getTime()) / 1000),
-    day_diff = Math.floor(diff / 86400);
+    day_diff = Math.floor(diff / 86400)
   // return date for anything greater than a day
   if ( isNaN(day_diff) || day_diff < 0 || day_diff > 0 )
-    { return date.getDate() + " " + date.toDateString().split(" ")[1]; }
+  { return date.getDate() + ' ' + date.toDateString().split(' ')[1] }
   
   return day_diff == 0 && (
-      diff < 60 && "just now" ||
-      diff < 120 && "1 minute ago" ||
-      diff < 3600 && Math.floor( diff / 60 ) + " minutes ago" ||
-      diff < 7200 && "1 hour ago" ||
-      diff < 86400 && Math.floor( diff / 3600 ) + " hours ago") ||
-    day_diff == 1 && "Yesterday" ||
-    day_diff < 7 && day_diff + " days ago" ||
-    day_diff < 31 && Math.ceil( day_diff / 7 ) + " weeks ago"
-  }
+    diff < 60 && 'just now' ||
+      diff < 120 && '1 minute ago' ||
+      diff < 3600 && Math.floor( diff / 60 ) + ' minutes ago' ||
+      diff < 7200 && '1 hour ago' ||
+      diff < 86400 && Math.floor( diff / 3600 ) + ' hours ago') ||
+    day_diff == 1 && 'Yesterday' ||
+    day_diff < 7 && day_diff + ' days ago' ||
+    day_diff < 31 && Math.ceil( day_diff / 7 ) + ' weeks ago'
+}
 
-  function formatDateString(d) {
+function formatDateString(d) {
   var d = new Date(d)
   return d.toUTCString()
 }
 
 const compose = (...functions) => data =>
-functions.reduceRight((value, func) => func(value), data)
+  functions.reduceRight((value, func) => func(value), data)
 
 function newCellID(cells) {
   var newID = cells.reduce( (maxId, cell) => {
@@ -84,10 +84,10 @@ function newCellID(cells) {
 }
 
 function newCell(cells, cellType){
-    var outputCollapseDefault;
-  if (cellType=="dom" || cellType=="external scripts" || cellType=="dom"){
-    outputCollapseDefault = "COLLAPSED"
-    } else {outputCollapseDefault = "EXPANDED"}
+  var outputCollapseDefault
+  if (cellType=='dom' || cellType=='external scripts' || cellType=='dom'){
+    outputCollapseDefault = 'COLLAPSED'
+  } else {outputCollapseDefault = 'EXPANDED'}
   return {
     content:'',
     id: newCellID(cells),
@@ -95,7 +95,7 @@ function newCell(cells, cellType){
     value: undefined,
     rendered: false,
     selected: false,
-    executionStatus: " ",
+    executionStatus: ' ',
     evalStatus: undefined,
     // dependencies: [newDependency([], 'js')],
     // evaluationOld set to true if the content of the editor changes from whatever
@@ -103,9 +103,9 @@ function newCell(cells, cellType){
     evaluationOld: true,
     // these track the collapsed state of input and outputs
     // must be one of "COLLAPSED" "SCROLLABLE" "EXPANDED"
-    collapseEditViewInput: "EXPANDED",
+    collapseEditViewInput: 'EXPANDED',
     collapseEditViewOutput: outputCollapseDefault,
-    collapsePresentationViewInput: "COLLAPSED",
+    collapsePresentationViewInput: 'COLLAPSED',
     collapsePresentationViewOutput: outputCollapseDefault,
   }
 }
@@ -181,24 +181,24 @@ function selectCell(cells, cellID){
 
 function moveCell(cells, cellID, dir) {
   
-    var _cells = cells.slice()
-    var index = _cells.findIndex(c=>c.id===cellID);
+  var _cells = cells.slice()
+  var index = _cells.findIndex(c=>c.id===cellID)
   
     var moveIndex, moveCondition
-    if (dir==='up') {
-      moveIndex = -1
-      moveCondition = index > 0
-    } else {
-      moveIndex = 1
-      moveCondition = index < cells.length-1
-    }
-    if (moveCondition) {
-      var elem = _cells[index+moveIndex];
-      _cells[index+moveIndex] = _cells[index]
-      _cells[index] = elem
-    } 
-    return _cells
+  if (dir==='up') {
+    moveIndex = -1
+    moveCondition = index > 0
+  } else {
+    moveIndex = 1
+    moveCondition = index < cells.length-1
   }
+  if (moveCondition) {
+    var elem = _cells[index+moveIndex]
+      _cells[index+moveIndex] = _cells[index]
+    _cells[index] = elem
+  } 
+  return _cells
+}
 
 export {
   blankState, 

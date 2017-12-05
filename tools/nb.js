@@ -2,13 +2,13 @@ let nb = {}
 
 nb.all = function(arr){
   for (var i=0; i<arr.length; i++) {
-    if (!arr[i]){return false};
+    if (!arr[i]){return false}
   }
   return true
 }
 nb.any = function(arr){
   for (var i=0; i<arr.length; i++) {
-    if (arr[i]){return true};
+    if (arr[i]){return true}
   }
   return false
 }
@@ -30,7 +30,7 @@ nb.arrayEqual = function(a1,a2){
   for (let i=0, l=a1.length; i<l; i++){
     if (a1[i]!=a2[i]){return false}
   }
-  return true;
+  return true
 }
 
 nb.sameKeys = function(x,y){
@@ -65,7 +65,7 @@ nb.isColumnDf = function(obj,colsToCheck = 100){
   var numRows = obj[cols[0]].length
   for (let i=1; i<colsToCheck; i++){
     if (obj[cols[i]].length != numRows)
-    return false
+      return false
   }
   return true
 }
@@ -82,12 +82,12 @@ nb.rank = function(arr) {
   arr.slice()
     .sort(nb.nanComparison) // sort arr pairs (pushing NaNs to end)
     .forEach( (x,i) => { //build up the rankMapping
-    if (i===0){ rankMapping[x]=rank }
-    if (i>0){
-      if (x>arr[i-1]){rank++}
-      rankMapping[x]=rank
-    }  
-  })
+      if (i===0){ rankMapping[x]=rank }
+      if (i>0){
+        if (x>arr[i-1]){rank++}
+        rankMapping[x]=rank
+      }  
+    })
   return arr.map(item => isNaN(item) ? NaN : rankMapping[item] )
 }
 
@@ -130,12 +130,12 @@ nb.prettyFormatNumber = function(x,numChars=8){
   if(!_.isNumber(x)){return x}
   var str = x.toString()
   if (str.length<=numChars) {return str}
-  var [intStr,decStr] = str.split(".")
+  var [intStr,decStr] = str.split('.')
   if (intStr.length >= numChars){
     return x.toExponential(numChars-4)
-  } else if (intStr=="0" && decStr.length >= numChars-2){
+  } else if (intStr=='0' && decStr.length >= numChars-2){
     return x.toFixed(numChars-2)
-  } else if (intStr=="-0" && decStr.length >= numChars-3){
+  } else if (intStr=='-0' && decStr.length >= numChars-3){
     return x.toFixed(numChars-2)
     
   } else {

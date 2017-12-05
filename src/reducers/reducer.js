@@ -15,7 +15,7 @@ function reduceReducers(...reducers) {
     reducers.reduce(
       (p, r) => r(p, current),
       previous
-    );
+    )
 }
 
 export default reduceReducers(notebook, cell)

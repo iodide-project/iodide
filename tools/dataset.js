@@ -27,58 +27,58 @@ arrange: sorts by all the keys you pass it, or w/ functions of the keys.
 var DS = {}
 
 class DataSet {
-	constructor(data) {
+  constructor(data) {
     	this.data = data
-        this.operations = []
-    }
+    this.operations = []
+  }
   
   	arrange() {
-      this.operations.push([_arrange, ...arguments])
-      return this
-    }
+    this.operations.push([_arrange, ...arguments])
+    return this
+  }
   
   	mutate() {
-      this.operations.push([_mutate, ...arguments])
-      return this
-    }
+    this.operations.push([_mutate, ...arguments])
+    return this
+  }
     
   	select() {
-      this.operations.push([_select, ...arguments])
-      return this
-    }
+    this.operations.push([_select, ...arguments])
+    return this
+  }
   
   	groupBy() {
-      this.operations.push([_groupBy, ...arguments])
-      return this
-    }
+    this.operations.push([_groupBy, ...arguments])
+    return this
+  }
   
   	standardize() {
-      this.operations.push([_standardize, ...arguments])
-      return this
-    }
+    this.operations.push([_standardize, ...arguments])
+    return this
+  }
   	
   	summarize() {
-      this.operations.push([_summarize, ...arguments])
-      return this
-    }
+    this.operations.push([_summarize, ...arguments])
+    return this
+  }
   
   	filter() {
-      this.operations.push([_filter, ...arguments])
-      return this
-    }
+    this.operations.push([_filter, ...arguments])
+    return this
+  }
 
-    transform() {
-        this.operations.push([_transform, ...arguments])
-        return this
-    }
+  transform() {
+    this.operations.push([_transform, ...arguments])
+    return this
+  }
   
-    get() {
-      var out = this.data.slice()
-      this.operations.forEach(op=>{
-        out = op[0](out, ...op.slice(1))
-      })
-      return out
-    }
+  get() {
+    var out = this.data.slice()
+    this.operations.forEach(op=>{
+      out = op[0](out, ...op.slice(1))
+    })
+    return out
+  }
 }
 
 function twoSimpleObjects(k) {
@@ -93,13 +93,13 @@ function twoSimpleObjects(k) {
 function _filter(dataset, ...filters) {
   return dataset.filter(d=>{
     return filters.every(f=>{
-		return f(d)
+      return f(d)
     })
   })
 }
 
 function _transform(dataset, fcn) {
-    return fcn(dataset)
+  return fcn(dataset)
 }
 
 function _mutate(dataset, how){
@@ -120,7 +120,7 @@ function _select(dataset, ...selections) {
   }))
   
   var out = dataset.map(d=>{
-	var _d = {}
+    var _d = {}
     keys.forEach(c=>{
       _d[c] = (d.hasOwnProperty(c)) ? d[c] : null
     })
@@ -131,14 +131,14 @@ function _select(dataset, ...selections) {
 
 function colMap(arr, cols) {
   return cols.map(c=>{
-      if (typeof c === 'string') return arr[c]
-      if (typeof c === 'function') return c(arr)
-    })
+    if (typeof c === 'string') return arr[c]
+    if (typeof c === 'function') return c(arr)
+  })
 }
 
 function arrangeComp(cols) {
   return function(a,b) {
-	var acols = colMap(a, cols)
+    var acols = colMap(a, cols)
     var bcols = colMap(b, cols)
     var outval = 0
     acols.every((ai,i)=> {
@@ -187,14 +187,14 @@ function _groupBy(dataset, ...groups){
       var kout = {}
       if (typeof gr === 'string') {kout[gr] = d[gr]}
 	  if (typeof gr === 'object') {
-		Object.keys(gr).forEach(grk=>{
+        Object.keys(gr).forEach(grk=>{
           kout[grk] = gr[grk](d)
         })
       }
       return kout
     })
-	out.translation[keyString] = key
-	if (!out.map.hasOwnProperty(keyString)) out.map[keyString] = []
+    out.translation[keyString] = key
+    if (!out.map.hasOwnProperty(keyString)) out.map[keyString] = []
     out.map[keyString].push(Object.assign({}, d))
   })
   return out
@@ -206,7 +206,7 @@ function _summarize(dataObj, ...summaries){
   var outSet = []
   Object.keys(dataset).forEach(k=>{
     var keys = [...trans[k]]
-	var ds = dataset[k] // array or objs here
+    var ds = dataset[k] // array or objs here
     var outD = {}
     keys.forEach(ks=>{
       var k = Object.keys(ks)[0]
@@ -214,11 +214,11 @@ function _summarize(dataObj, ...summaries){
       outD[k] = v
     })
     summaries.forEach(summarySet=>{
-		Object.keys(summarySet).forEach(s=>{
+      Object.keys(summarySet).forEach(s=>{
     	  outD[s] = summarySet[s](ds)
 	    })
     })
-	outSet.push(outD)
+    outSet.push(outD)
   })
   return outSet
 }
@@ -228,22 +228,22 @@ function sequence() {
   return function (result) {
     fns.forEach((fn,i)=> {result = fn.call(this, result)})
     return result
-  };
-};
+  }
+}
 
 DS.pluck=function(arrayOfObjects, ...keys) {
-    return arrayOfObjects.map(d=> keys.map(k=>d[k]))
+  return arrayOfObjects.map(d=> keys.map(k=>d[k]))
 }
 
 DS.frequency=function(arrayOfScalars) {
-    return arrayOfScalars.reduce((out, v)=>{out[v] = (out[v] || 0) + 1}, {})
+  return arrayOfScalars.reduce((out, v)=>{out[v] = (out[v] || 0) + 1}, {})
 }
 
 DS.proportion=function(arrayOfScalars) {
-    var freqs = DS.frequency(arrayOfScalars)
-    var total = Objects.keys(freqs).reduce((out,a) => out+total[a], 0)
-    Object.keys(freqs).forEach((d) => freqs[d] = freqs[d] / total)
-    return freqs
+  var freqs = DS.frequency(arrayOfScalars)
+  var total = Objects.keys(freqs).reduce((out,a) => out+total[a], 0)
+  Object.keys(freqs).forEach((d) => freqs[d] = freqs[d] / total)
+  return freqs
 }
 
 DS.data = (data, options)=>new DataSet(data)

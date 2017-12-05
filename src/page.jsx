@@ -34,8 +34,8 @@ class Page extends React.Component {
   enterCommandModeOnClickOutOfCell(e) {
     //check whther the click is (1) directly in div#cells (2) in any element contained in the notebook header
     if (e.target.id.includes('cells') ||
-        document.querySelector(".notebook-header").contains(e.target)) {
-          if (this.props.mode != 'command') this.props.actions.changeMode('command')
+        document.querySelector('.notebook-header').contains(e.target)) {
+      if (this.props.mode != 'command') this.props.actions.changeMode('command')
     }
   }
 
@@ -48,59 +48,59 @@ class Page extends React.Component {
     // return deepEqual(this.props,nextProps)
   }
 
-    componentDidUpdate(prevProps,prevState){
-        console.log("page update")
-    }
+  componentDidUpdate(prevProps,prevState){
+    console.log('page update')
+  }
 
   shouldComponentUpdate(nextProps, nextState){
-    console.log("page deepequal", deepEqual(this.props,nextProps))
+    console.log('page deepequal', deepEqual(this.props,nextProps))
     return !deepEqual(this.props,nextProps)
   }
 
   render () {
     var bodyContent = this.props.cellIds.map( (id,i) => {
-        // let id = cell.id
-        switch (this.props.cellTypes[i]){
-            case 'javascript':
-                return <JavascriptCell cellId={id} key={id}/> 
-            case 'markdown':
-                return <MarkdownCell cellId={id} key={id}/>
-            case 'raw':
-                return <RawCell cellId={id} key={id}/>
-            case 'external scripts':
-                return <ExternalScriptCell cellId={id} key={id}/>
-            case 'external dependencies':
-                return <ExternalDependencyCell cellId={id} key={id} />
-            case 'dom':
-                return <DOMCell cellId={id} key={id}/>
-        }
-    });
+      // let id = cell.id
+      switch (this.props.cellTypes[i]){
+      case 'javascript':
+        return <JavascriptCell cellId={id} key={id}/> 
+      case 'markdown':
+        return <MarkdownCell cellId={id} key={id}/>
+      case 'raw':
+        return <RawCell cellId={id} key={id}/>
+      case 'external scripts':
+        return <ExternalScriptCell cellId={id} key={id}/>
+      case 'external dependencies':
+        return <ExternalDependencyCell cellId={id} key={id} />
+      case 'dom':
+        return <DOMCell cellId={id} key={id}/>
+      }
+    })
 
     var sp = <span></span>
     return (
-        <div id="notebook-container"
-            className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''}
-            onMouseDown={this.enterCommandModeOnClickOutOfCell}>
-            <NotebookHeader />
-            <div id='cells' className={this.props.viewMode}>
+      <div id="notebook-container"
+        className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''}
+        onMouseDown={this.enterCommandModeOnClickOutOfCell}>
+        <NotebookHeader />
+        <div id='cells' className={this.props.viewMode}>
             	{bodyContent}
-            </div>
         </div>
-    );
+      </div>
+    )
   }
 }
 
 function mapStateToProps(state) {
-    // FIXME: don't pass full state
-    // re cells: only pass list of cell ids
+  // FIXME: don't pass full state
+  // re cells: only pass list of cell ids
   // return state
-    return {
-        mode: state.mode,
-        cellIds: state.cells.map(c => c.id),
-        cellTypes: state.cells.map(c => c.cellType),
-        viewMode: state.viewMode,
-        title: state.title
-    }
+  return {
+    mode: state.mode,
+    cellIds: state.cells.map(c => c.id),
+    cellTypes: state.cells.map(c => c.cellType),
+    viewMode: state.viewMode,
+    title: state.title
+  }
 }
 
 function mapDispatchToProps(dispatch) {
