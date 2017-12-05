@@ -10,6 +10,10 @@ var initialVariables = new Set(Object.keys(window)) // gives all global variable
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 
+var evalStatuses = {}
+evalStatuses.SUCCESS = 'success'
+evalStatuses.ERROR = 'error'
+
 function addCell(cells, cellType) {}
 
 function scrollToCellIfNeeded(cellID) {
@@ -109,13 +113,19 @@ function addExternalDependency(dep){
       outElem.status = 'error'
       outElem.statusExplanation = err.message
     }
-  } else {
+  } else if (depType === 'css') {
     //<link rel="stylesheet" type="text/css" href="mystyles.css" media="screen" />
     elem = document.createElement('link')
     elem.rel = 'stylesheet'
     elem.type = 'text/css'
     elem.href = src
     outElem.status = 'loaded'
+  } else {
+    outElem.status = 'error';
+    outElem.statusExplanation = 'unknown dependency type.';
+    outElem.src = src;
+    outElem.dependencyType = depType;
+    return outElem;
   }
   
   //script.src = scriptUrl  
@@ -303,10 +313,12 @@ let cell = function (state = newNotebook(), action) {
 
           try {
             output = window.eval(code);
+            thisCell.evalStatus = evalStatuses.SUCCESS
           } catch(e) {
             var err = e.constructor('Error in Evaled Script: ' + e.message);
             err.lineNumber = e.lineNumber - err.lineNumber + 3;
             output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+            thisCell.evalStatus = evalStatuses.ERROR
           }
 
 
@@ -332,6 +344,7 @@ let cell = function (state = newNotebook(), action) {
           // one line, huh.
           thisCell.value = MD.render(thisCell.content);
           thisCell.rendered = true;
+          thisCell.evalStatus = evalStatuses.SUCCESS
         } else if (thisCell.cellType === 'external scripts') {
           var scriptUrls = thisCell.content.split("\n").filter(s => s!="");
           var newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script));
@@ -348,7 +361,7 @@ let cell = function (state = newNotebook(), action) {
           
           newState.executionNumber++
           thisCell.executionStatus = ""+newState.executionNumber
-
+          thisCell.evalStatus = evalStatuses.SUCCESS
         
       } else if (thisCell.cellType === 'external dependencies') {
           //var dependencies = thisCell.dependencies.filter(s => s.src!==undefined);
@@ -363,6 +376,7 @@ let cell = function (state = newNotebook(), action) {
               newState.externalScripts.push(d.src)
             }
           })
+          
           thisCell.value = outValue;
           thisCell.rendered = true;
           // add to newState.history
@@ -373,7 +387,7 @@ let cell = function (state = newNotebook(), action) {
               content: "// added external scripts:\n" + ( outValue.map(s => "// "+s.src).join("\n") )
             })  
           }
-          
+          //
 
           newState.executionNumber++
           thisCell.executionStatus = ""+newState.executionNumber

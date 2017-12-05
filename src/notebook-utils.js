@@ -96,6 +96,7 @@ function newCell(cells, cellType){
     rendered: false,
     selected: false,
     executionStatus: " ",
+    evalStatus: undefined,
     // dependencies: [newDependency([], 'js')],
     // evaluationOld set to true if the content of the editor changes from whatever
     // produced the most recent output value
