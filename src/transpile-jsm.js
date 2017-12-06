@@ -144,8 +144,8 @@ function extendAcorn(acorn) {
     return loose ? p.tok.type : p.type
   }
     
-  var extendsAcorn = function (pp) {
-    var loose = pp == (acorn.LooseParser && acorn.LooseParser.prototype)
+  let extendsAcorn = function (pp) {
+    let loose = pp == (acorn.LooseParser && acorn.LooseParser.prototype)
       
     pp.readToken_dot = function() {
       let next = this.input.charCodeAt(this.pos + 1)
@@ -233,7 +233,7 @@ function extendAcorn(acorn) {
     return function(instance) {
       instance.extend('getTokenFromCode', function(inner) {
         return function(code) {
-          console.log('code', code, String.fromCharCode(code))
+          // console.log('code', code, String.fromCharCode(code))
           let next = this.input.charCodeAt(this.pos + 1)
           if (code == 64 && next==42) { //'@' && '*'
             return this.finishOp(tt.matrixMult,2)
@@ -245,7 +245,7 @@ function extendAcorn(acorn) {
     }
   }
     
-  var tt = acorn.tokTypes
+  let tt = acorn.tokTypes
   function binop(name, prec) {
     return new acorn.TokenType(name, {beforeExpr: true, binop: prec})
   }
@@ -284,19 +284,19 @@ const blacklistedKeys = [
 ]
 
 function walk(node, visitor) {
-  var all = typeof visitor === 'function'
-  var walking = true
+  let all = typeof visitor === 'function'
+  let walking = true
 
   function stop () {
     walking = false
   }
 
-  for (var queue = [node]; queue.length && walking;) {
+  for (let queue = [node]; queue.length && walking;) {
     node = queue.shift()
     // Skip a missing node
     if (!node) continue
     // Execute visitor
-    var handle = all ? visitor : visitor[node.type]
+    let handle = all ? visitor : visitor[node.type]
     if (handle) handle(node, stop)
     // Continue walking
     if (walking) step(node, queue)
@@ -304,21 +304,21 @@ function walk(node, visitor) {
 }
 
 function step(node, queue) {
-  var before = queue.length
+  let before = queue.length
 
   // Enumerate keys for possible children
-  for (var key in node) {
+  for (let key in node) {
     if (blacklistedKeys.indexOf(key) >= 0) continue
 
-    var child = node[key]
+    let child = node[key]
 
     if (child && child.type) {
       queue.push(child)
     }
 
     if (Array.isArray(child)) {
-      for (var i = 0; i < child.length; i++) {
-        var item = child[i]
+      for (let i = 0; i < child.length; i++) {
+        let item = child[i]
         if (item && item.type) {
           queue.push(item)
         }
@@ -329,7 +329,7 @@ function step(node, queue) {
   return queue.length !== before
 }
 
-var opToFuncMap = {
+const opToFuncMap = {
   '.+': 'broadcastPlus',
   '.-': 'broadcastMinus',
   '.*': 'broadcastMult',
@@ -346,11 +346,11 @@ var opToFuncMap = {
   '@*': 'matrixMult',
 }
 
-var arrayLib = 'nd'
+const arrayLib = 'nd'
 
 
 function replaceOpsWithCalls(node){
-  console.log('node',node.type)
+  // console.log('node',node.type)
   if (Object.keys(opToFuncMap).includes(node.operator)){
     node.type = 'CallExpression'
     node.callee = {
@@ -363,17 +363,17 @@ function replaceOpsWithCalls(node){
     delete node.left
     delete node.right
     delete node.operator
-    console.log('node modified',node.type)
+    // console.log('node modified',node.type)
   }
 }
 
-var visitor = {BinaryExpression: replaceOpsWithCalls,
+const visitor = {BinaryExpression: replaceOpsWithCalls,
   AssignmentExpression: replaceOpsWithCalls}
 
-var tjsm = {}
+const tjsm = {}
 
 tjsm.transpile = function(code){
-  console.log('code in :',code)
+  // console.log('code in :',code)
   let ast = acorn.parse(code,{
     // Specify use of the plugin
     plugins:{es7:true},
