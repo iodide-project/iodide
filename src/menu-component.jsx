@@ -31,7 +31,7 @@ function transformToMaterialUIComponent(item, parentComponent, childrenClass=fal
     if (item.itemType === 'Divider') return <Divider />
     if (item.itemType === 'Subheader') return <Subheader> {item.name} </Subheader>
   } else {
-    var out = {}
+    let out = {}
     out.primaryText = item.primaryText
     out.secondaryText = item.secondaryText || ' '
     if (item.hasOwnProperty('menuItems')) {
@@ -53,7 +53,7 @@ function transformToMaterialUIComponent(item, parentComponent, childrenClass=fal
 }
 
 function menuComponents(items, parentComponent) {
-  var out = {}
+  let out = {}
   Object.keys(items).forEach((k)=>{
     out[k] = transformToMaterialUIComponent(items[k], parentComponent)
   })
@@ -102,7 +102,7 @@ class MainMenu extends React.Component {
 
 
   render() {
-    var mc = menuComponents(menuItems, this)
+    let mc = menuComponents(menuItems, this)
         
     return (
       <ToolbarGroup firstChild={this.props.firstChild}>

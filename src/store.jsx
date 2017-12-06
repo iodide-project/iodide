@@ -1,10 +1,10 @@
 import { applyMiddleware, compose, createStore } from 'redux'
 import reducer from './reducers/reducer.js'
-import { newNotebook } from './notebook-utils.js'
 import  { createLogger } from 'redux-logger'
+import { newNotebook } from './notebook-utils.js'
 
 function configureStore() {
-  var store = createStore(
+  let store = createStore(
     reducer, newNotebook(),
     compose(applyMiddleware(createLogger({
       predicate: (getState, action) => action.type !== 'UPDATE_CELL'

@@ -55,10 +55,10 @@ class NotebookHeader extends React.Component {
   }
 
   notebookFileImport(evt) {
-    var fn = evt.target.files[0]
-    var reader = new FileReader()
+    let fn = evt.target.files[0]
+    let reader = new FileReader()
     reader.onload = (result) => {
-      var newState
+      let newState
       try {
         newState = JSON.parse(result.target.result)  
       } catch(e) {
@@ -73,10 +73,10 @@ class NotebookHeader extends React.Component {
 
   render() {
     console.log('NotebookHeader render')
-    var histContents = []
+    let histContents = []
     if (this.props.history.length) {
       histContents = this.props.history.filter(cell=>cell.content.length).map((cell,i)=> {
-        var cellComponent = <HistoryCell display={true} ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
+        let cellComponent = <HistoryCell display={true} ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
         return cellComponent
       })
     } else {
@@ -243,7 +243,7 @@ class ViewModeToggleButton extends React.Component {
   }
 
   render() {
-    var buttonString
+    let buttonString
     if (this.props.viewMode=='presentation'){buttonString='Presentation'}
     else if (this.props.viewMode=='editor'){buttonString='Editor'}
     return (
@@ -274,6 +274,6 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(actions, dispatch)
   }
 }
-var NotebookHeader_connected = connect(mapStateToProps, mapDispatchToProps)(NotebookHeader)
+let NotebookHeader_connected = connect(mapStateToProps, mapDispatchToProps)(NotebookHeader)
 export {NotebookHeader_connected as NotebookHeader}
 // export {NotebookHeader}

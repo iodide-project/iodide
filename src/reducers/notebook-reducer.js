@@ -1,4 +1,5 @@
 import * as NB from '../notebook-utils.js'
+import { newNotebook, newCell, blankState } from '../state-prototypes.js'
 
 function clearHistory(loadedState) {
   // remove history and declared properties before exporting the state.
@@ -16,7 +17,7 @@ function clearHistory(loadedState) {
 let notebook = function (state = newNotebook(), action) {
   switch (action.type) {
   case 'NEW_NOTEBOOK':
-    var newState = NB.newNotebook()
+    var newState = newNotebook()
     return newState
 
   case 'EXPORT_NOTEBOOK':
@@ -37,14 +38,14 @@ let notebook = function (state = newNotebook(), action) {
     var loadedState = action.newState
     clearHistory(loadedState)
     var cells = loadedState.cells.map(
-      cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
-    return Object.assign(NB.blankState(), loadedState, {cells})
+      cell => Object.assign(newCell(loadedState.cells, cell.cellType), cell) )
+    return Object.assign(blankState(), loadedState, {cells})
 
   case 'SAVE_NOTEBOOK':
     if (!action.autosave) var lastSaved = new Date()
     else lastSaved = state.lastSaved
     var outputState = Object.assign({}, state, {lastSaved}, {cells: state.cells.slice().map(c=>{
-      var newC = Object.assign({},c)
+      let newC = Object.assign({},c)
       newC.evalStatus = undefined
       if (newC.cellType === 'javascript' || newC.cellType === 'external dependencies') {
         newC.value = undefined
@@ -65,14 +66,14 @@ let notebook = function (state = newNotebook(), action) {
     var loadedState = JSON.parse(window.localStorage.getItem(action.title))
     clearHistory(loadedState)
     var cells = loadedState.cells.map(
-      cell => Object.assign(NB.newCell(loadedState.cells, cell.cellType), cell) )
-    var nextState = Object.assign(NB.blankState(), loadedState, {cells})
+      cell => Object.assign(newCell(loadedState.cells, cell.cellType), cell) )
+    var nextState = Object.assign(blankState(), loadedState, {cells})
     return nextState
 
   case 'DELETE_NOTEBOOK':
     var title = action.title
     if (window.localStorage.hasOwnProperty(title)) window.localStorage.removeItem(title)
-    var newState = (title === state.title) ? Object.assign({}, NB.newNotebook()) : Object.assign({}, state)
+    var newState = (title === state.title) ? Object.assign({}, newNotebook()) : Object.assign({}, state)
     return newState
 
   case 'CHANGE_PAGE_TITLE':
