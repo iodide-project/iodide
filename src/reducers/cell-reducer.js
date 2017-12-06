@@ -159,8 +159,7 @@ function addExternalDependency(dep){
 }
 
 let cell = function (state = newNotebook(), action) {
-  let nextState
-  let cells
+  var nextState
   switch (action.type) {
   case 'RUN_ALL_CELLS':
     nextState = Object.assign({}, state, {cells: [...state.cells]})
@@ -178,18 +177,18 @@ let cell = function (state = newNotebook(), action) {
     return nextState
 
   case 'INSERT_CELL':
-    cells = state.cells.slice()
-    let index = cells.findIndex(c=>c.id===action.id)
+    var cells = state.cells.slice()
+    var index = cells.findIndex(c=>c.id===action.id)
     let direction = (action.direction == 'above') ? 0:1
-    let nextCell = newCell(state.cells, 'javascript')
+    var nextCell = newCell(state.cells, 'javascript')
     cells.splice(index+direction, 0, nextCell)
     nextState = Object.assign({}, state, {cells})
     return nextState
 
   case 'ADD_CELL':
     nextState = Object.assign({}, state)
-    cells = newState.cells.slice()
-    let nextCell = newCell(nextState.cells, action.cellType)
+    var cells = newState.cells.slice()
+    var nextCell = newCell(nextState.cells, action.cellType)
     nextState = Object.assign({}, nextState, {cells: [...cells, nextCell]})
     return nextState
 
@@ -207,7 +206,7 @@ let cell = function (state = newNotebook(), action) {
     if (typeof action.id === 'undefined') return state
 
     cells = state.cells.slice()
-    let index = cells.findIndex(c=>c.id===action.id)
+    var index = cells.findIndex(c=>c.id===action.id)
     var thisCell = cells[index]
     cells.forEach((c)=>c.selected=false)
     thisCell.selected = true

@@ -14,7 +14,7 @@ let actions = {
     return {
       type: 'SAVE_NOTEBOOK',
       title: title,
-    autosave}
+      autosave}
   },
   loadNotebook: function (title) {
     return {
@@ -159,7 +159,7 @@ let actions = {
   changeSidePaneMode: function (mode) {
     return {
       type: 'CHANGE_SIDE_PANE_MODE',
-    mode}
+      mode}
   }
 }
 
