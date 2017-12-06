@@ -80,7 +80,7 @@ let cellReducer = function (state = newNotebook(), action) {
   }
   case 'CELL_DOWN':{
     return Object.assign({}, state,
-      {cells: moveCell(state.cells, getSelectedCellId(state), 'doen')}
+      {cells: moveCell(state.cells, getSelectedCellId(state), 'down')}
     )
   }
   case 'UPDATE_CELL':
