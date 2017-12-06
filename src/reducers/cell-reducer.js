@@ -1,5 +1,3 @@
-import * as NB from '../notebook-utils.js'
-
 import { newCell, newNotebook } from '../state-prototypes.js'
 
 import tjsm from '../transpile-jsm.js'
