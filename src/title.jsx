@@ -1,10 +1,4 @@
-import React, {createElement} from 'react'
-import { Button, ButtonToolbar, ToggleButtonGroup, ToggleButton, Label } from 'react-bootstrap'
-// import ContentEditable from "react-contenteditable"
-
-function formattedTitle(title) {
-  return (title !== undefined) ? title : 'new notebook'
-}
+import React from 'react'
 
 class Title extends React.Component {
   constructor(props) {
@@ -34,8 +28,6 @@ class Title extends React.Component {
   onFocus() {
     this.setState({isFocused: true})
     if (!this.props.pageMode != 'title-edit') {
-      console.log('onFocus')
-			
       //this.props.actions.changeMode(this.state.previousMode)
       this.setState({previousMode: this.props.pageMode})
       this.props.actions.changeMode('title-edit')
