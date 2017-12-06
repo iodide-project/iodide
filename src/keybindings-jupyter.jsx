@@ -4,7 +4,7 @@ import {getSelectedCellId, isCommandMode, isEditMode,
   viewModeIsEditor, viewModeIsPresentation,
   getCellBelowSelectedId, getCellAboveSelectedId} from './notebook-utils'
 
-var jupyterKeybindings = []
+let jupyterKeybindings = []
 
 // this just allows calling:
 // dispatcher.action(params)
@@ -16,17 +16,17 @@ for (let action in actions){
 }
 
 
-var MOVE_UP = [['shift+up'], function(){
+let MOVE_UP = [['shift+up'], function(){
   if (isCommandMode()) dispatcher.cellUp(getSelectedCellId())
 }
 ]
 
-var MOVE_DOWN = [['shift+down'], function(){
+let MOVE_DOWN = [['shift+down'], function(){
   if (isCommandMode()) dispatcher.cellDown(getSelectedCellId())
 }
 ]
 
-var ADD_CELL_ABOVE = [['a'], function(){
+let ADD_CELL_ABOVE = [['a'], function(){
   if (isCommandMode()) {
     dispatcher.insertCell('javascript', getSelectedCellId(), 'above')
     dispatcher.selectCell(getCellAboveSelectedId(), true)
@@ -34,7 +34,7 @@ var ADD_CELL_ABOVE = [['a'], function(){
 }
 ]
 
-var ADD_CELL_BELOW = [['b'], function(){
+let ADD_CELL_BELOW = [['b'], function(){
   if (isCommandMode()) {
     dispatcher.insertCell('javascript', getSelectedCellId(), 'below')
     dispatcher.selectCell(getCellBelowSelectedId(), true)
@@ -42,40 +42,40 @@ var ADD_CELL_BELOW = [['b'], function(){
 }
 ]
 
-var JAVASCRIPT_MODE = [['j'], function(){
+let JAVASCRIPT_MODE = [['j'], function(){
   if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'javascript')
 }
 ]
 
-var MARKDOWN_MODE = [['m'], function(){
+let MARKDOWN_MODE = [['m'], function(){
   if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'markdown')
 }
 ]
 
-var EXTERNAL_SCRIPTS_MODE = [['e'], function(){
+let EXTERNAL_SCRIPTS_MODE = [['e'], function(){
   if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'external scripts')
 }
 ]
 
-var RAW_MODE = [['r'], function(){
+let RAW_MODE = [['r'], function(){
   if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'raw')
 }
 ]
 
-var SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function(e){
+let SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function(e){
   if (e.preventDefault) {
     e.preventDefault()
   } else {e.returnValue = false }
   dispatcher.saveNotebook(store.getState().title)
 }]
 
-var EXPORT_NOTEBOOK = [['ctrl+e', 'meta+e'], function(e){
+let EXPORT_NOTEBOOK = [['ctrl+e', 'meta+e'], function(e){
   // if (e.preventDfault) e.preventDefault()
   // else e.returnValue = false
   dispatcher.exportNotebook()
 }]
 
-var SHOW_DECLARED_VARIABLES = [['ctrl+d', 'meta+d'], function(e){
+let SHOW_DECLARED_VARIABLES = [['ctrl+d', 'meta+d'], function(e){
   if (e.preventDefault) {
     e.preventDefault()
   } else {e.returnValue = false }
@@ -86,7 +86,7 @@ var SHOW_DECLARED_VARIABLES = [['ctrl+d', 'meta+d'], function(e){
   }
 }]
 
-var SHOW_HISTORY = [['ctrl+h', 'meta+h'], function(e){
+let SHOW_HISTORY = [['ctrl+h', 'meta+h'], function(e){
   if (e.preventDefault) {
     e.preventDefault()
   } else {e.returnValue = false }
@@ -97,42 +97,42 @@ var SHOW_HISTORY = [['ctrl+h', 'meta+h'], function(e){
   }
 }]
 
-var SELECT_UP = [['up'], function(e){
+let SELECT_UP = [['up'], function(e){
   if (isCommandMode()){
     // e.preventDefault blocks kbd scrolling of entire window
     if (e.preventDefault) {
       e.preventDefault()
-        } else { // internet explorer
+    } else { // internet explorer
       e.returnValue = false
-        }
+    }
     dispatcher.selectCell(getCellAboveSelectedId(), true)
   }
 }
 ]
 
-var SELECT_DOWN = [['down'], function(e){
+let SELECT_DOWN = [['down'], function(e){
   if (isCommandMode()){
     // e.preventDefault blocks kbd scrolling of entire window
     if (e.preventDefault) {
       e.preventDefault()
-        } else { // internet explorer
+    } else { // internet explorer
       e.returnValue = false
-        }
+    }
     dispatcher.selectCell(getCellBelowSelectedId(), true)
   }
 }
 ]
 
-var RENDER_CELL = [['mod+enter'], function(){
+let RENDER_CELL = [['mod+enter'], function(){
   dispatcher.changeMode('command')
   dispatcher.renderCell(getSelectedCellId())
 }]
 
-var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
+let RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
   if (viewModeIsEditor()) {
     dispatcher.changeMode('command')
     dispatcher.renderCell(getSelectedCellId())
-    var cellBelowId = getCellBelowSelectedId()
+    let cellBelowId = getCellBelowSelectedId()
     if (cellBelowId){
       dispatcher.selectCell(cellBelowId, true)
     } else {
@@ -143,23 +143,23 @@ var RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
     
 }]
 
-var COMMAND_MODE = [['esc'], function(e){
+let COMMAND_MODE = [['esc'], function(e){
   dispatcher.changeMode('command')
 }]
 
-var EDIT_MODE = [['enter', 'return'], function(e){
+let EDIT_MODE = [['enter', 'return'], function(e){
   if (isCommandMode()){
     // e.preventDefault blocks inserting a newline when you transition to edit mode
     if (e.preventDefault) {
       e.preventDefault()
-        } else { // internet explorer
+    } else { // internet explorer
       e.returnValue = false
-        }
+    }
     dispatcher.changeMode('edit')
   }
 }]
 
-var DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
+let DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
   if (isCommandMode()) dispatcher.deleteCell(getSelectedCellId())
 }
 ]

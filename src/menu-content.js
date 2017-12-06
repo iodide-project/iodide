@@ -4,7 +4,7 @@ import settings from './settings.jsx'
 const AUTOSAVE = settings.labels.AUTOSAVE
 
 let oscpu = window.navigator.oscpu || window.navigator.platform
-var OSName='Unknown OS';
+let OSName='Unknown OS'
 if (oscpu.indexOf('Win')!=-1) OSName='Windows'
 if (oscpu.indexOf('Mac')!=-1) OSName='MacOS'
 if (oscpu.indexOf('X11')!=-1) OSName='UNIX'
@@ -22,38 +22,38 @@ function commandKey(key) {
 
 function getSavedNotebooks (elem) {
 
-  var openLocalStorageNotebook = name => {
+  let openLocalStorageNotebook = name => {
     return ()=>{
       elem.props.actions.loadNotebook(name)
     }   
   }
 
-  var openExampleNotebook = notebook => {
-    var nbs = exampleNotebooks
-    var thisNotebook = notebook
+  let openExampleNotebook = notebook => {
+    let nbs = exampleNotebooks
+    let thisNotebook = notebook
     return () => {
-      var notebook = nbs.filter((nb)=>{return nb.title === thisNotebook.title})[0]
+      let notebook = nbs.filter((nb)=>{return nb.title === thisNotebook.title})[0]
       elem.props.actions.importNotebook(notebook)
     }
   }
 
-  var currentNotebooks = []
-  var autosaveNBs=[], savedNBs=[], exampleNBs=[]
+  let currentNotebooks = []
+  let autosaveNBs=[], savedNBs=[], exampleNBs=[]
 
-  var autosave = Object.keys(localStorage).filter((n)=>n.includes(AUTOSAVE))
+  let autosave = Object.keys(localStorage).filter((n)=>n.includes(AUTOSAVE))
 
   if (autosave.length) {
     autosave = autosave[0]
-    var lastSaved = JSON.parse(localStorage[autosave]).lastSaved
+    let lastSaved = JSON.parse(localStorage[autosave]).lastSaved
     if (lastSaved!== undefined) lastSaved = prettyDate(formatDateString(lastSaved))
     lastSaved = (lastSaved!== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
-    var displayTitle = autosave.replace(AUTOSAVE, '')
+    let displayTitle = autosave.replace(AUTOSAVE, '')
     autosaveNBs = [
       {name: 'Auto-Saved', itemType: 'Subheader'},
       {primaryText: displayTitle, secondaryText: lastSaved, callback: openLocalStorageNotebook(autosave)}
     ]
   } 
-  var saves = Object.keys(localStorage)
+  let saves = Object.keys(localStorage)
   if (saves.length) {
     savedNBs = saves
       .filter((n)=>!n.includes(AUTOSAVE))
@@ -66,7 +66,7 @@ function getSavedNotebooks (elem) {
         }
       })
       .map((n)=> {
-        var lastSaved = JSON.parse(localStorage[n]).lastSaved
+        let lastSaved = JSON.parse(localStorage[n]).lastSaved
         return {primaryText:n, secondaryText: prettyDate(formatDateString(lastSaved)), callback: openLocalStorageNotebook(n)}
         // return <MenuItem
         // 	primaryText={n}
@@ -76,7 +76,7 @@ function getSavedNotebooks (elem) {
     savedNBs.unshift({name: 'Saved Notebooks', itemType: 'Subheader'})	
   }
   exampleNBs = exampleNotebooks.map((nb)=>{
-    var lastSaved = nb.lastSaved
+    let lastSaved = nb.lastSaved
     return {primaryText: nb.title, secondaryText: prettyDate(formatDateString(lastSaved)), callback: openExampleNotebook(nb)}
     // return <MenuItem
     // 	primaryText={nb.title}
@@ -98,7 +98,7 @@ function getSavedNotebooks (elem) {
   return currentNotebooks
 }
 
-var menuItems = {}
+let menuItems = {}
 
 
 
@@ -141,7 +141,7 @@ menuItems.addCellBelow = {
   primaryText: 'Add Cell Below', 
   secondaryText:'B',
   callback: function(){
-    var currentlySelectedId = getSelectedCellId()
+    let currentlySelectedId = getSelectedCellId()
     if (currentlySelectedId != undefined) {
       this.props.actions.insertCell(currentlySelectedId, 'below')
     }
@@ -152,7 +152,7 @@ menuItems.addCellAbove = {
   primaryText: 'Add Cell Above', 
   secondaryText:'A',
   callback: function(){
-    var currentlySelectedId = getSelectedCellId()
+    let currentlySelectedId = getSelectedCellId()
     if (currentlySelectedId != undefined) {
       this.props.actions.insertCell(currentlySelectedId, 'above')
     }
@@ -163,7 +163,7 @@ menuItems.deleteCell = {
   primaryText: 'Delete Cell', 
   secondaryText: '\u21E7 \u232b', 
   callback: function(){
-    var currentlySelectedId = getSelectedCellId()
+    let currentlySelectedId = getSelectedCellId()
     if (currentlySelectedId != undefined
             && this.props.mode == 'command') {
       this.props.actions.deleteCell(currentlySelectedId)

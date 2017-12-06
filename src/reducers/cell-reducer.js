@@ -1,28 +1,51 @@
 import * as NB from '../notebook-utils.js'
+
+import { newCell, newNotebook } from '../state-prototypes.js'
+
 import tjsm from '../transpile-jsm.js'
 
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
-var MD = MarkdownIt({html:true})
+let MD = MarkdownIt({html:true})
 MD.use(MarkdownItKatex)
 
-var initialVariables = new Set(Object.keys(window)) // gives all global variables
+let initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 
-var evalStatuses = {}
+let evalStatuses = {}
 evalStatuses.SUCCESS = 'success'
 evalStatuses.ERROR = 'error'
 
-function addCell(cells, cellType) {}
+
+function moveCell(cells, cellID, dir) {
+  
+  let _cells = cells.slice()
+  let index = _cells.findIndex(c=>c.id===cellID)
+  
+  let moveIndex, moveCondition
+  if (dir==='up') {
+    moveIndex = -1
+    moveCondition = index > 0
+  } else {
+    moveIndex = 1
+    moveCondition = index < cells.length-1
+  }
+  if (moveCondition) {
+    let elem = _cells[index+moveIndex]
+    _cells[index+moveIndex] = _cells[index]
+    _cells[index] = elem
+  } 
+  return _cells
+}
 
 function scrollToCellIfNeeded(cellID) {
-  var elem = document.getElementById('cell-'+cellID)
-  var rect = elem.getBoundingClientRect()
-  var viewportRect = document.getElementById('cells').getBoundingClientRect()
-  var windowHeight = (window.innerHeight || document.documentElement.clientHeight)
-  var tallerThanWindow = (rect.bottom-rect.top)>windowHeight
-  var cellPosition
+  let elem = document.getElementById('cell-'+cellID)
+  let rect = elem.getBoundingClientRect()
+  let viewportRect = document.getElementById('cells').getBoundingClientRect()
+  let windowHeight = (window.innerHeight || document.documentElement.clientHeight)
+  let tallerThanWindow = (rect.bottom-rect.top)>windowHeight
+  let cellPosition
   // verbose but readable
   if (rect.bottom <= viewportRect.top){
     cellPosition = 'ABOVE_VIEWPORT'
@@ -57,11 +80,11 @@ function scrollToCellIfNeeded(cellID) {
 
 function addExternalScript(scriptUrl){
   // FIXME there must be a better way to do this with promises etc...
-  var head = document.getElementsByTagName('head')[0]
-  var script = document.createElement('script')
+  let head = document.getElementsByTagName('head')[0]
+  let script = document.createElement('script')
   script.type = 'text/javascript'
   //script.src = scriptUrl  
-  var xhrObj = new XMLHttpRequest()
+  let xhrObj = new XMLHttpRequest()
   xhrObj.open('GET', scriptUrl, false)
   xhrObj.send('')
   script.text = xhrObj.responseText
@@ -70,12 +93,12 @@ function addExternalScript(scriptUrl){
 
 function addExternalDependency(dep){
   // FIXME there must be a better way to do this with promises etc...
-  var head = document.getElementsByTagName('head')[0]
-  var elem
-  var outElem = {}
+  let head = document.getElementsByTagName('head')[0]
+  let elem
+  let outElem = {}
   // check for js: or css:
-  var src
-  var depType
+  let src
+  let depType
   
   if (dep.trim().slice(0,2) === '//') {
     return
@@ -102,7 +125,7 @@ function addExternalDependency(dep){
   if (depType === 'js') {
     elem = document.createElement('script')
     elem.type = 'text/javascript'
-    var xhrObj = new XMLHttpRequest()
+    let xhrObj = new XMLHttpRequest()
     xhrObj.open('GET', src, false)
     try {
       xhrObj.send('')
@@ -146,7 +169,7 @@ let cell = function (state = newNotebook(), action) {
       if (!breakThis) {
         nextState = cell(nextState, {type: 'SELECT_CELL', id: c.id})
         nextState = Object.assign({}, cell(nextState, {type:'RENDER_CELL', id: c.id, evaluateCell: true}))
-        var ind = nextState.cells.findIndex(ci=>ci.id === c.id)
+        let ind = nextState.cells.findIndex(ci=>ci.id === c.id)
         if (nextState.cells[ind].evalStatus === evalStatuses.ERROR) {
           breakThis = true
         }
@@ -158,7 +181,7 @@ let cell = function (state = newNotebook(), action) {
     var cells = state.cells.slice()
     var index = cells.findIndex(c=>c.id===action.id)
     var direction = (action.direction == 'above') ? 0:1
-    var nextCell = NB.newCell(state.cells, 'javascript')
+    var nextCell = newCell(state.cells, 'javascript')
     cells.splice(index+direction, 0, nextCell)
     var nextState = Object.assign({}, state, {cells})
     return nextState
@@ -166,7 +189,7 @@ let cell = function (state = newNotebook(), action) {
   case 'ADD_CELL':
     var newState = Object.assign({}, state)
     var cells = newState.cells.slice()
-    var nextCell = NB.newCell(newState.cells, action.cellType)
+    var nextCell = newCell(newState.cells, action.cellType)
     var nextState = Object.assign({}, newState, {cells: [...cells, nextCell]})
     return nextState
 
@@ -196,11 +219,11 @@ let cell = function (state = newNotebook(), action) {
     return nextState
 
   case 'CELL_UP':
-    var nextState = Object.assign({}, state, {cells: NB.moveCell(state.cells, action.id, 'up')})
+    var nextState = Object.assign({}, state, {cells: moveCell(state.cells, action.id, 'up')})
     return nextState
 
   case 'CELL_DOWN':
-    var nextState = Object.assign({}, state, {cells: NB.moveCell(state.cells, action.id, 'down')})
+    var nextState = Object.assign({}, state, {cells: moveCell(state.cells, action.id, 'down')})
     return nextState
 
   case 'UPDATE_CELL':
@@ -299,7 +322,7 @@ let cell = function (state = newNotebook(), action) {
 
         thisCell.value = undefined
 
-        var output
+        let output
         let code = thisCell.content
         // console.log(code.slice(0,12))
         // console.log(code.slice(0,12)=="use matrix")
@@ -337,14 +360,14 @@ let cell = function (state = newNotebook(), action) {
 
         // ok. Now let's see if there are any new declared variables.
         declaredProperties = {} //
-        var currentGlobal = Object.keys(window)
+        let currentGlobal = Object.keys(window)
         currentGlobal.forEach((g)=>{
           if (!initialVariables.has(g)) {
             declaredProperties[g] = window[g]
           }
         })
 
-        var lastValue
+        let lastValue
         newState.executionNumber++
         thisCell.executionStatus = ''+newState.executionNumber
       } else if (thisCell.cellType === 'markdown') {
@@ -353,8 +376,8 @@ let cell = function (state = newNotebook(), action) {
         thisCell.rendered = true
         thisCell.evalStatus = evalStatuses.SUCCESS
       } else if (thisCell.cellType === 'external scripts') {
-        var scriptUrls = thisCell.content.split('\n').filter(s => s!='')
-        var newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script))
+        let scriptUrls = thisCell.content.split('\n').filter(s => s!='')
+        let newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script))
         newScripts.forEach(addExternalScript)
         newState.externalScripts.push(...newScripts)
         thisCell.value = 'loaded scripts'
@@ -375,8 +398,8 @@ let cell = function (state = newNotebook(), action) {
 
 
         //var dependencies = dependencies.filter(script => !newState.externalScripts.includes(script.src));
-        var dependencies = thisCell.content.split('\n').filter(d=>d.trim().slice(0,2) !=='//')
-        var outValue = dependencies.map(addExternalDependency)
+        let dependencies = thisCell.content.split('\n').filter(d=>d.trim().slice(0,2) !=='//')
+        let outValue = dependencies.map(addExternalDependency)
 
         outValue.forEach(d=>{
           if (!newState.externalScripts.includes(d.src)) {
@@ -415,7 +438,7 @@ let cell = function (state = newNotebook(), action) {
     var index = cells.findIndex(c=>c.id===action.id)
     var thisCell = state.cells[index]
     if (thisCell.selected) {
-      var nextIndex=0
+      let nextIndex=0
       if (cells.length>1) {
         if (index == cells.length-1) nextIndex = cells.length-2
         else nextIndex=index+1

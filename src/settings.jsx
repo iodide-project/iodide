@@ -1,4 +1,4 @@
-var settings = {}
+let settings = {}
 
 settings.labels = {}
 settings.labels.AUTOSAVE = 'AUTOSAVE: '
