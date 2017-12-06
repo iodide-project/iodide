@@ -67,16 +67,16 @@ class GenericCell extends React.Component {
     this.outputComponent = this.outputComponent.bind(this)
   }
 
-  renderCell(render) {
+  renderCell() {
     this.props.actions.renderCell(this.props.cell.id)
   }
 
   cellUp() {
-    this.props.actions.cellUp(this.props.cell.id)
+    this.props.actions.cellUp()
   }
 
   cellDown() {
-    this.props.actions.cellDown(this.props.cell.id)
+    this.props.actions.cellDown()
   }
 
   deleteCell() {

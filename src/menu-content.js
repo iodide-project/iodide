@@ -176,14 +176,14 @@ menuItems.moveCellUp = {
   primaryText: 'Move Cell Up', 
   secondaryText: '\u21E7 \u2191',
   callback: function(){
-    this.props.actions.cellUp(getSelectedCellId())
+    this.props.actions.cellUp()
   }
 }
 menuItems.moveCellDown = {
   primaryText: 'Move Cell Down',
   secondaryText: '\u21E7 \u2193',
   callback: function(){
-    this.props.actions.cellDown(getSelectedCellId())
+    this.props.actions.cellDown()
   }
 }
 menuItems.changeCellTypeToJavascript = {

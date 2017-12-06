@@ -136,4 +136,19 @@ function addExternalDependency(dep){
   return outElem
 }
 
-export {moveCell,scrollToCellIfNeeded,addExternalDependency,addExternalScript}
+function getSelectedCellId(state){
+  let cells = state.cells
+  let index = cells.findIndex((c)=>{return c.selected})
+  if (index > -1) {
+    return cells[index].id
+  } else {
+    return undefined // for now
+  }
+}
+
+export {
+  moveCell,
+  scrollToCellIfNeeded,
+  addExternalDependency,
+  addExternalScript,
+  getSelectedCellId}

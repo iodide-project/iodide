@@ -1,6 +1,8 @@
 import { newCell, newNotebook } from '../state-prototypes.js'
 
-import {moveCell,scrollToCellIfNeeded,addExternalDependency,addExternalScript} from './cell-reducer-utils.js'
+import {moveCell,scrollToCellIfNeeded,
+  addExternalDependency,addExternalScript,
+  getSelectedCellId} from './cell-reducer-utils.js'
 
 import tjsm from '../transpile-jsm.js'
 
@@ -71,14 +73,16 @@ let cellReducer = function (state = newNotebook(), action) {
     var nextState = Object.assign({}, state, {cells})
     return nextState
 
-  case 'CELL_UP':
-    var nextState = Object.assign({}, state, {cells: moveCell(state.cells, action.id, 'up')})
-    return nextState
-
-  case 'CELL_DOWN':
-    var nextState = Object.assign({}, state, {cells: moveCell(state.cells, action.id, 'down')})
-    return nextState
-
+  case 'CELL_UP':{
+    return Object.assign({}, state,
+      {cells: moveCell(state.cells, getSelectedCellId(state), 'up')}
+    )
+  }
+  case 'CELL_DOWN':{
+    return Object.assign({}, state,
+      {cells: moveCell(state.cells, getSelectedCellId(state), 'doen')}
+    )
+  }
   case 'UPDATE_CELL':
     var cells = state.cells.slice()
     var index = cells.findIndex(c=>c.id===action.id)

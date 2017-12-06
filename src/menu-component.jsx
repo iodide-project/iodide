@@ -93,11 +93,11 @@ class MainMenu extends React.Component {
   }
 	
   cellUp(){
-    this.props.actions.cellUp(getSelectedCellId())
+    this.props.actions.cellUp()
   }
 
   cellDown(){
-    this.props.actions.cellDown(getSelectedCellId())
+    this.props.actions.cellDown()
   }
 
 

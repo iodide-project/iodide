@@ -17,12 +17,12 @@ for (let action in actions){
 
 
 let MOVE_UP = [['shift+up'], function(){
-  if (isCommandMode()) dispatcher.cellUp(getSelectedCellId())
+  if (isCommandMode()) dispatcher.cellUp()
 }
 ]
 
 let MOVE_DOWN = [['shift+down'], function(){
-  if (isCommandMode()) dispatcher.cellDown(getSelectedCellId())
+  if (isCommandMode()) dispatcher.cellDown()
 }
 ]
 

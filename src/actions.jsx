@@ -92,22 +92,20 @@ let actions = {
       collapsedState: collapsedState
     }
   },
-  markCellNotRendered: function (cellID, evaluateCell = true) {
+  markCellNotRendered: function (cellID) {
     return {
       type: 'MARK_CELL_NOT_RENDERED',
       id: cellID
     }
   },
-  cellUp: function (cellID) {
+  cellUp: function () {
     return {
-      type: 'CELL_UP',
-      id: cellID
+      type: 'CELL_UP'
     }
   },
-  cellDown: function (cellID) {
+  cellDown: function () {
     return {
-      type: 'CELL_DOWN',
-      id: cellID
+      type: 'CELL_DOWN'
     }
   },
   insertCell: function (cellType, cellID, direction) {
