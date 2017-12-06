@@ -131,11 +131,6 @@ let actions = {
       scrollToCell: scrollToCell
     }
   },
-  deselectAll: function () {
-    return {
-      type: 'DESELECT_ALL'
-    }
-  },
   deleteCell: function (cellID) {
     return {
       type: 'DELETE_CELL',
