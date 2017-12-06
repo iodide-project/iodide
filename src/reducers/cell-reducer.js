@@ -55,10 +55,6 @@ let cellReducer = function (state = newNotebook(), action) {
     nextState = Object.assign({}, nextState, {cells: [...cells, nextCell]})
     return nextState
   }
-  case 'CHANGE_MODE':
-    let mode = action.mode
-    if (mode == 'command') document.activeElement.blur()
-    return Object.assign({}, state, {mode})
 
   case 'SELECT_CELL':
     if (typeof action.id === 'undefined') return state

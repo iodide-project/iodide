@@ -90,6 +90,12 @@ let notebookReducer = function (state = newNotebook(), action) {
     let viewMode = action.viewMode
     return Object.assign({}, state, {viewMode})
   }
+
+  case 'CHANGE_MODE':{
+    let mode = action.mode
+    if (mode == 'command') document.activeElement.blur()
+    return Object.assign({}, state, {mode})
+  }
       
   case 'CHANGE_SIDE_PANE_MODE': {
     return Object.assign({}, state, {sidePaneMode: action.mode})
