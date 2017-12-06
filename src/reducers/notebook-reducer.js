@@ -13,7 +13,7 @@ function clearHistory(loadedState) {
   })
 }
 
-let notebook = function (state = newNotebook(), action) {
+let notebookReducer = function (state = newNotebook(), action) {
   
   let nextState
   let title
@@ -101,4 +101,4 @@ let notebook = function (state = newNotebook(), action) {
   }
 }
 
-export default notebook
+export default notebookReducer

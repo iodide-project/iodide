@@ -1,6 +1,6 @@
 // import { combineReducers } from 'redux'
-import notebook from './notebook-reducer.js'
-import cell from './cell-reducer.js'
+import notebookReducer from './notebook-reducer.js'
+import cellReducer from './cell-reducer.js'
 
 /*
 It is suggested that using combineReducers, and following the standard
@@ -18,4 +18,4 @@ function reduceReducers(...reducers) {
     )
 }
 
-export default reduceReducers(notebook, cell)
+export default reduceReducers(notebookReducer, cellReducer)

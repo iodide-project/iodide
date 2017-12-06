@@ -1,9 +1,8 @@
-import notebook from '../src/reducers/notebook-reducer'
+import notebookReducer from '../src/reducers/notebook-reducer'
 import localStorageMock from '../__mocks__/localStorage'
-
 import { newNotebook, blankState, newCell } from '../src/state-prototypes.js'
-
 import * as utils from '../src/state-prototypes'
+
 
 window.localStorage = localStorageMock
 
@@ -25,7 +24,7 @@ function exampleNotebookWithContent(title=EXAMPLE_NOTEBOOK_1) {
 
 describe('blank-state-reducer', ()=>{
   it('should return the initial state', ()=>{
-    expect(notebook(blankState(), {})).toEqual(blankState())
+    expect(notebookReducer(blankState(), {})).toEqual(blankState())
   })
 })
 
@@ -33,7 +32,7 @@ describe('new notebooks', ()=>{
   let nextState = utils.newNotebook()
 
   it('should create newNotebook() on NEW_NOTEBOOK', ()=>{
-    expect(notebook(nextState, {type:'NEW_NOTEBOOK'})).toEqual(newNotebook())
+    expect(notebookReducer(nextState, {type:'NEW_NOTEBOOK'})).toEqual(newNotebook())
   })
 
 })
@@ -42,7 +41,7 @@ describe('misc. notebook operations that don\'t belong elsewhere', ()=> {
   let state = exampleNotebookWithContent()
   let NEW_NAME = 'changed notebook name'
   it('should change title', ()=>{
-    expect(notebook(state, {type:'CHANGE_PAGE_TITLE', title: NEW_NAME}).title).toEqual(NEW_NAME)
+    expect(notebookReducer(state, {type:'CHANGE_PAGE_TITLE', title: NEW_NAME}).title).toEqual(NEW_NAME)
   })
 })
 
@@ -51,7 +50,7 @@ describe('importing a notebook via state', ()=> {
   let nextState = exampleNotebookWithContent()
 
   it('should import a notebook correctly on IMPORT_NOTEBOOK', ()=>{
-    expect(notebook(state, {type: 'IMPORT_NOTEBOOK', newState: nextState})).toEqual(nextState)
+    expect(notebookReducer(state, {type: 'IMPORT_NOTEBOOK', newState: nextState})).toEqual(nextState)
   })
 })
 
@@ -62,7 +61,7 @@ describe('saving / deleting localStorage-saved notebooks', ()=>{
   let state = exampleNotebookWithContent(SAVE_DELETE_NOTEBOOK_NAME)
     
   it('should save via SAVE_NOTEBOOK',()=>{
-    notebook(state, {type: 'SAVE_NOTEBOOK'})
+    notebookReducer(state, {type: 'SAVE_NOTEBOOK'})
 
     let savedNotebook = JSON.parse(window.localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME))
     expect(savedNotebook.title).toEqual(state.title)
@@ -71,7 +70,7 @@ describe('saving / deleting localStorage-saved notebooks', ()=>{
   })
 
   it('should delete via DELETE_NOTEBOOK', ()=> {
-    notebook(state, {type: 'DELETE_NOTEBOOK', title: SAVE_DELETE_NOTEBOOK_NAME})        
+    notebookReducer(state, {type: 'DELETE_NOTEBOOK', title: SAVE_DELETE_NOTEBOOK_NAME})        
     expect(window.localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME)).toEqual(undefined)
   })
 })

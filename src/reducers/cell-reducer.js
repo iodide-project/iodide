@@ -159,7 +159,7 @@ function addExternalDependency(dep){
   return outElem
 }
 
-let cell = function (state = newNotebook(), action) {
+let cellReducer = function (state = newNotebook(), action) {
   var nextState
   switch (action.type) {
   case 'RUN_ALL_CELLS':{
@@ -476,4 +476,4 @@ let cell = function (state = newNotebook(), action) {
   }
 }
 
-export default cell
+export default cellReducer
