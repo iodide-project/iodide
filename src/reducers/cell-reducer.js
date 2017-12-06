@@ -159,10 +159,12 @@ function addExternalDependency(dep){
 }
 
 let cell = function (state = newNotebook(), action) {
+  let nextState
+  let cells
   switch (action.type) {
   case 'RUN_ALL_CELLS':
-    var nextState = Object.assign({}, state, {cells: [...state.cells]})
-    var breakThis = false
+    nextState = Object.assign({}, state, {cells: [...state.cells]})
+    let breakThis = false
     state.cells.forEach(c=>{
       if (!breakThis) {
         nextState = cell(nextState, {type: 'SELECT_CELL', id: c.id})
@@ -176,36 +178,36 @@ let cell = function (state = newNotebook(), action) {
     return nextState
 
   case 'INSERT_CELL':
-    var cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var direction = (action.direction == 'above') ? 0:1
-    var nextCell = newCell(state.cells, 'javascript')
+    cells = state.cells.slice()
+    let index = cells.findIndex(c=>c.id===action.id)
+    let direction = (action.direction == 'above') ? 0:1
+    let nextCell = newCell(state.cells, 'javascript')
     cells.splice(index+direction, 0, nextCell)
-    var nextState = Object.assign({}, state, {cells})
+    nextState = Object.assign({}, state, {cells})
     return nextState
 
   case 'ADD_CELL':
-    var newState = Object.assign({}, state)
-    var cells = newState.cells.slice()
-    var nextCell = newCell(newState.cells, action.cellType)
-    var nextState = Object.assign({}, newState, {cells: [...cells, nextCell]})
+    nextState = Object.assign({}, state)
+    cells = newState.cells.slice()
+    let nextCell = newCell(nextState.cells, action.cellType)
+    nextState = Object.assign({}, nextState, {cells: [...cells, nextCell]})
     return nextState
 
   case 'DESELECT_ALL':
-    var cells = state.cells.slice()
+    cells = state.cells.slice()
     cells.forEach((c)=>{c.selected=false; return c})
     return Object.assign({}, state, {cells})
 
   case 'CHANGE_MODE':
-    var mode = action.mode
+    let mode = action.mode
     if (mode == 'command') document.activeElement.blur()
     return Object.assign({}, state, {mode})
 
   case 'SELECT_CELL':
     if (typeof action.id === 'undefined') return state
 
-    var cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
+    cells = state.cells.slice()
+    let index = cells.findIndex(c=>c.id===action.id)
     var thisCell = cells[index]
     cells.forEach((c)=>c.selected=false)
     thisCell.selected = true

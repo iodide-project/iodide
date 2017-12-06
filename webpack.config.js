@@ -1,10 +1,10 @@
-var webpack = require('webpack');
-var path = require('path');
+let webpack = require('webpack')
+let path = require('path')
 
-var BUILD_DIR = path.resolve(__dirname, 'dist/');
-var APP_DIR = path.resolve(__dirname, 'src/');
+let BUILD_DIR = path.resolve(__dirname, 'dist/')
+let APP_DIR = path.resolve(__dirname, 'src/')
 
-var config = {
+let config = {
   entry: APP_DIR + '/index.jsx',
   output: {
     path: BUILD_DIR,
@@ -15,10 +15,10 @@ var config = {
   module : {
     rules: [
       {
-        enforce: "pre",
+        enforce: 'pre',
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "eslint-loader",
+        loader: 'eslint-loader',
         options: {
           // eslint options (if necessary)
           emitWarning: true
@@ -34,6 +34,6 @@ var config = {
   watchOptions: {
     poll: true
   },
-};
+}
 
-module.exports = config;
+module.exports = config
