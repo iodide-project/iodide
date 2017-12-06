@@ -1,8 +1,5 @@
 function newCellID(cells) {
-  let newID = cells.reduce( (maxId, cell) => {
-    return Math.max(cell.id, maxId)
-  }, -1) + 1
-  return newID
+  return Math.max(-1,...cells.map(c=>c.id))+1
 }
 
 function newCell(cells, cellType){
@@ -19,7 +16,6 @@ function newCell(cells, cellType){
     selected: false,
     executionStatus: ' ',
     evalStatus: undefined,
-    // dependencies: [newDependency([], 'js')],
     // evaluationOld set to true if the content of the editor changes from whatever
     // produced the most recent output value
     evaluationOld: true,
@@ -32,28 +28,6 @@ function newCell(cells, cellType){
   }
 }
 
-function addCell(cells, cellType='javascript') {
-  // mutates state.cells.
-  cells.push(newCell(cells, cellType))
-}
-
-function selectCell(cells, cellID){
-  cells.forEach((c)=>c.selected=false) // unselect all cells first.
-  updateCell(cells, cellID, {selected: true})
-}
-
-function updateCell(cells, cellID, options) {
-  // mutates state.cells.
-  if (cellID === undefined || options === undefined) {
-    throw 'updateCell requires a cellID and options. You provided id:' + cellID +' and options:' + options
-  } else {
-    let thisCellIndex = cells.findIndex((c)=> c.id == cellID)
-    let cell = cells[thisCellIndex]
-    Object.keys(options).forEach((k)=>{
-      cell[k] = options[k]
-    })
-  }
-}
 
 function blankState(){
   let initialState =  {
@@ -73,10 +47,13 @@ function blankState(){
 }
 
 function newNotebook(){
+  // initialize a blank notebook
   let initialState = blankState()
-  //initialState.cells.push(newCell(initialState.cells, 'javascript'))
-  addCell(initialState.cells, 'javascript')
-  selectCell(initialState.cells, initialState.cells[0].id)
+  // push a blank new cell into  into cells
+  initialState.cells.push(newCell(initialState.cells, 'javascript'))
+  // set the cell that was just pushed to be the selected cell
+  initialState.cells[0].selected = true
+  // selectCell(initialState.cells, initialState.cells[0].id)
   return initialState
 }
 
@@ -84,8 +61,5 @@ function newNotebook(){
 export {
   newNotebook,
   blankState,
-  updateCell,
-  addCell,
   newCell,
-  newCellID
 }
