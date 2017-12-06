@@ -45,7 +45,7 @@ function selectCell(cells, cellID){
 function updateCell(cells, cellID, options) {
   // mutates state.cells.
   if (cellID === undefined || options === undefined) {
-    throw new ValueError('updateCell requires a cellID and options. You provided id:' + cellID +' and options:' + options)
+    throw 'updateCell requires a cellID and options. You provided id:' + cellID +' and options:' + options
   } else {
     let thisCellIndex = cells.findIndex((c)=> c.id == cellID)
     let cell = cells[thisCellIndex]

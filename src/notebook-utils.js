@@ -53,7 +53,6 @@ function getCellById(cells, cellID) {
   return thisCell
 }
 
-
 function prettyDate(time) {
   let date = new Date(time),
     diff = (((new Date()).getTime() - date.getTime()) / 1000),
@@ -74,7 +73,7 @@ function prettyDate(time) {
 }
 
 function formatDateString(d) {
-  var d = new Date(d)
+  d = new Date(d)
   return d.toUTCString()
 }
 

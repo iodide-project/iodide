@@ -1,13 +1,15 @@
+import _ from 'lodash'
+
 let nb = {}
 
 nb.all = function(arr){
-  for (var i=0; i<arr.length; i++) {
+  for (let i=0; i<arr.length; i++) {
     if (!arr[i]){return false}
   }
   return true
 }
 nb.any = function(arr){
-  for (var i=0; i<arr.length; i++) {
+  for (let i=0; i<arr.length; i++) {
     if (arr[i]){return true}
   }
   return false
@@ -39,7 +41,7 @@ nb.sameKeys = function(x,y){
 
 nb.isRowDf = function(obj,rowsToCheck = 100){
   if (!_.isArray(obj) || obj.length==0) {return false}
-  var rowsToCheck = Math.min(rowsToCheck,_.size(obj))
+  rowsToCheck = Math.min(rowsToCheck,_.size(obj))
   for (let i=1; i<rowsToCheck; i++){
     if (! _.isPlainObject(obj[i])) {return false}
     if (!nb.sameKeys(obj[0],obj[i])) {return false}
@@ -49,7 +51,7 @@ nb.isRowDf = function(obj,rowsToCheck = 100){
 
 nb.isMatrix = function(obj,rowsToCheck = 100){
   if (!_.isArray(obj) || obj.length==0) {return false}
-  var rowsToCheck = Math.min(rowsToCheck,_.size(obj))
+  rowsToCheck = Math.min(rowsToCheck,_.size(obj))
   for (let i=0; i<rowsToCheck; i++){
     if (! _.isArray(obj[i]) || obj.length==0) {return false}
     if (! obj[0].length===obj[i].length) {return false}
@@ -60,9 +62,9 @@ nb.isMatrix = function(obj,rowsToCheck = 100){
 
 nb.isColumnDf = function(obj,colsToCheck = 100){
   if (!_.isPlainObject(obj)) {return false}
-  var colsToCheck = Math.min(colsToCheck,_.size(obj))
-  var cols = Object.keys(obj)
-  var numRows = obj[cols[0]].length
+  colsToCheck = Math.min(colsToCheck,_.size(obj))
+  let cols = Object.keys(obj)
+  let numRows = obj[cols[0]].length
   for (let i=1; i<colsToCheck; i++){
     if (obj[cols[i]].length != numRows)
       return false
@@ -92,9 +94,9 @@ nb.rank = function(arr) {
 }
 
 nb.toColumns = function(rowDF){
-  cols = _.keys(rowDF[0])
-  columnar = {}
-  for (col of cols){
+  let cols = _.keys(rowDF[0])
+  let columnar = {}
+  for (let col of cols){
     let colData = rowDF.map(row => row[col])
     columnar[col] = colData
   }
@@ -102,14 +104,13 @@ nb.toColumns = function(rowDF){
 }
 
 nb.toRows = function(colDf){
-  cols = Object.keys(colDf)
-  return colDf[col[0]].map
+  let cols = Object.keys(colDf)
+  return colDf[cols[0]].map
 }
 
 nb.shape = function(obj){
   // rows by cols
   if (nb.isColumnDf(obj)){
-    console.log
     let cols = _.keys(obj)
     return [obj[cols[0]].length, cols.length]
   } else if (nb.isRowDf(obj)){
@@ -128,9 +129,9 @@ nb.dropRowsWithNaN = function(col1,col2){
 nb.prettyFormatNumber = function(x,numChars=8){
   numChars = numChars<=4 ? 4 : numChars
   if(!_.isNumber(x)){return x}
-  var str = x.toString()
+  let str = x.toString()
   if (str.length<=numChars) {return str}
-  var [intStr,decStr] = str.split('.')
+  let [intStr,decStr] = str.split('.')
   if (intStr.length >= numChars){
     return x.toExponential(numChars-4)
   } else if (intStr=='0' && decStr.length >= numChars-2){
@@ -144,9 +145,9 @@ nb.prettyFormatNumber = function(x,numChars=8){
 }
 
 nb.cartesianProduct = function(a1,a2){
-  var out = []
-  for (x of a1){
-    for (y of a2){
+  let out = []
+  for (let x of a1){
+    for (let y of a2){
       out.push([x,y])
     }
   }
