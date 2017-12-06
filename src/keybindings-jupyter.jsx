@@ -1,4 +1,4 @@
-import {store} from './index.jsx'
+import {store} from './store.jsx'
 import actions from './actions.jsx'
 import {getSelectedCellId, isCommandMode, isEditMode,
   viewModeIsEditor, viewModeIsPresentation,

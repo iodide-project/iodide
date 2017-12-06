@@ -4,6 +4,8 @@ import tjsm from '../transpile-jsm.js'
 
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
+
+
 let MD = MarkdownIt({html:true})
 MD.use(MarkdownItKatex)
 
@@ -17,7 +19,6 @@ evalStatuses.ERROR = 'error'
 
 
 function moveCell(cells, cellID, dir) {
-  
   let _cells = cells.slice()
   let index = _cells.findIndex(c=>c.id===cellID)
   
@@ -161,7 +162,7 @@ function addExternalDependency(dep){
 let cell = function (state = newNotebook(), action) {
   var nextState
   switch (action.type) {
-  case 'RUN_ALL_CELLS':
+  case 'RUN_ALL_CELLS':{
     nextState = Object.assign({}, state, {cells: [...state.cells]})
     let breakThis = false
     state.cells.forEach(c=>{
@@ -175,23 +176,23 @@ let cell = function (state = newNotebook(), action) {
       }
     })
     return nextState
-
-  case 'INSERT_CELL':
-    var cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
+  }
+  case 'INSERT_CELL':{
+    let cells = state.cells.slice()
+    let index = cells.findIndex(c=>c.id===action.id)
     let direction = (action.direction == 'above') ? 0:1
-    var nextCell = newCell(state.cells, 'javascript')
+    let nextCell = newCell(state.cells, 'javascript')
     cells.splice(index+direction, 0, nextCell)
     nextState = Object.assign({}, state, {cells})
     return nextState
-
-  case 'ADD_CELL':
+  }
+  case 'ADD_CELL':{
     nextState = Object.assign({}, state)
-    var cells = newState.cells.slice()
-    var nextCell = newCell(nextState.cells, action.cellType)
+    let cells = nextState.cells.slice()
+    let nextCell = newCell(nextState.cells, action.cellType)
     nextState = Object.assign({}, nextState, {cells: [...cells, nextCell]})
     return nextState
-
+  }
   case 'DESELECT_ALL':
     cells = state.cells.slice()
     cells.forEach((c)=>{c.selected=false; return c})
