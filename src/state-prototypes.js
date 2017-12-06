@@ -53,7 +53,6 @@ function newNotebook(){
   initialState.cells.push(newCell(initialState.cells, 'javascript'))
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
-  // selectCell(initialState.cells, initialState.cells[0].id)
   return initialState
 }
 
