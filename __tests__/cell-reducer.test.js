@@ -1,5 +1,5 @@
-import cell from './../src/reducers/cell-reducer'
-import * as NB from './../src/notebook-utils'
+import cell from '../src/reducers/cell-reducer'
+import * as NB from '../src/notebook-utils'
 import { newNotebook } from './../src/state-prototypes'
 
 describe('add cells', ()=>{

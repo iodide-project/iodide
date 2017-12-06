@@ -1,9 +1,9 @@
-import notebook                from './../src/reducers/notebook-reducer'
-import localStorageMock from './../__mocks__/localStorage'
+import notebook from '../src/reducers/notebook-reducer'
+import localStorageMock from '../__mocks__/localStorage'
 
-import { newNotebook, blankState, newCell } from './../src/state-prototypes.js'
+import { newNotebook, blankState, newCell } from '../src/state-prototypes.js'
 
-import * as utils from './../src/state-prototypes'
+import * as utils from '../src/state-prototypes'
 
 window.localStorage = localStorageMock
 
