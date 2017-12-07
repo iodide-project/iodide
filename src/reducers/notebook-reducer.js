@@ -48,8 +48,6 @@ let notebookReducer = function (state = newNotebook(), action) {
   }
 
   case 'SAVE_NOTEBOOK': {
-    // is this a test
-    // I don't understand
     let lastSaved
     if (!action.autosave) lastSaved = new Date()
     else lastSaved = state.lastSaved
