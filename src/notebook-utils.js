@@ -4,10 +4,6 @@ function isCommandMode(){
   return store.getState().mode=='command' && viewModeIsEditor()
 }
 
-function isEditMode(){
-  return store.getState().mode=='command'
-}
-
 function viewModeIsEditor(){
   return store.getState().viewMode ==='editor'
 }
@@ -73,6 +69,5 @@ export {
   getCellById,
   getCellBelowSelectedId, getCellAboveSelectedId,
   isCommandMode,
-  isEditMode,
   viewModeIsEditor, viewModeIsPresentation,
 }

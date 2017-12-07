@@ -127,7 +127,7 @@ let EVALUATE_CELL = [['mod+enter'], function(){
   dispatcher.evaluateCell()
 }]
 
-let EVAL_AND_SELECT_BELOW = [['shift+enter'], function(e){
+let EVAL_AND_SELECT_BELOW = [['shift+enter'], function(){
   if (viewModeIsEditor()) {
     dispatcher.changeMode('command')
     dispatcher.evaluateCell()
@@ -142,7 +142,7 @@ let EVAL_AND_SELECT_BELOW = [['shift+enter'], function(e){
     
 }]
 
-let COMMAND_MODE = [['esc'], function(e){
+let COMMAND_MODE = [['esc'], function(){
   dispatcher.changeMode('command')
 }]
 
