@@ -2,7 +2,9 @@ import { newCell, newNotebook } from '../state-prototypes.js'
 
 import {moveCell,scrollToCellIfNeeded,
   addExternalDependency,addExternalScript,
-  getSelectedCellId} from './cell-reducer-utils.js'
+  getSelectedCellId,
+  newStateWithSelectedCellPropertySet,
+  newStateWithSelectedCellPropertiesSet} from './cell-reducer-utils.js'
 
 import tjsm from '../transpile-jsm.js'
 
@@ -84,77 +86,44 @@ let cellReducer = function (state = newNotebook(), action) {
     )
   }
   case 'UPDATE_CELL':
-    var cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = cells[index]
-    thisCell.content = action.content
-    cells[index] = thisCell
-    var nextState = Object.assign({}, state, {cells})
-    return nextState
+    return newStateWithSelectedCellPropertySet(state,'content',action.content)
+
+  case 'CHANGE_ELEMENT_TYPE':
+    return newStateWithSelectedCellPropertySet(state,'elementType',action.elementType)
+
+  case 'CHANGE_DOM_ELEMENT_ID':
+    return newStateWithSelectedCellPropertySet(state,'domElementID',action.elemID)
 
   case 'CHANGE_CELL_TYPE':
-    if (typeof action.id === 'undefined') return state
-
-    var cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = cells[index]
-    thisCell.cellType = action.cellType
-    thisCell.value = undefined
-    thisCell.rendered = false
-    if (action.cellType ==='external-dependency' && !thisCell.dependencies.length) {
-      thisCell.dependencies.push(newDependency(thisCell.dependencies, 'js'))
-    }
-    cells[index] = thisCell
-    var nextState = Object.assign({}, state, {cells})
-    return nextState
+    return newStateWithSelectedCellPropertiesSet(state,
+      ['cellType','value','rendered'],
+      [action.cellType,undefined,false])
 
   case 'SET_CELL_COLLAPSED_STATE':
     if (typeof action.id === 'undefined') return state
-      
-    var cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = cells[index]
     switch (action.viewMode + ',' + action.rowType){
     case 'presentation,input':
-      thisCell.collapsePresentationViewInput = action.collapsedState
-      break
+      return newStateWithSelectedCellPropertySet(state,
+        'collapsePresentationViewInput',action.collapsedState)
     case 'presentation,output':
-      thisCell.collapsePresentationViewOutput = action.collapsedState
-      break
+      return newStateWithSelectedCellPropertySet(state,
+        'collapsePresentationViewOutput',action.collapsedState)
     case 'editor,input':
-      thisCell.collapseEditViewInput = action.collapsedState
-      break
+      return newStateWithSelectedCellPropertySet(state,
+        'collapseEditViewInput',action.collapsedState)
     case 'editor,output':
-      thisCell.collapseEditViewOutput = action.collapsedState
-      break
+      return newStateWithSelectedCellPropertySet(state,
+        'collapseEditViewOutput',action.collapsedState)
     }
-    cells[index] = thisCell
-    return Object.assign({}, state, {cells})
-
 
   case 'CLEAR_CELL_BEFORE_EVALUATION':
-    if (typeof action.id === 'undefined') return state
-      
-    var newState = Object.assign({}, state)
-    var cells = newState.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = cells[index]
-    thisCell.executionStatus = '*'
-    thisCell.value = undefined
-    cells[index] = thisCell
-    var nextState = Object.assign({}, newState, {cells})
-    return nextState
+    return newStateWithSelectedCellPropertiesSet(state,
+      ['executionStatus','value'],
+      ['*',undefined])
 
   case 'MARK_CELL_NOT_RENDERED':
-    if (typeof action.id === 'undefined') return state
-      
-    var cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = cells[index]
-    thisCell.rendered = false
-    cells[index] = thisCell
-    var nextState = Object.assign({}, state, {cells})
-    return nextState
+    return newStateWithSelectedCellPropertySet(state,
+      'rendered',false)
 
   case 'RENDER_CELL':
     if (typeof action.id === 'undefined') return state
@@ -308,25 +277,6 @@ let cellReducer = function (state = newNotebook(), action) {
     })
     return nextState
 
-  case 'CHANGE_ELEMENT_TYPE':
-    if (typeof action.id === 'undefined') return state
-      
-    var cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = cells[index]
-    thisCell.elementType = action.elementType
-    cells[index] = thisCell
-    return Object.assign({}, state, {cells})
-
-  case 'CHANGE_DOM_ELEMENT_ID':
-    if (typeof action.id === 'undefined') return state
-      
-    var cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = cells[index]
-    thisCell.domElementID = action.elemID
-    cells[index] = thisCell
-    return Object.assign({}, state, {cells})
 
   default:
     return state

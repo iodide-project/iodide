@@ -146,9 +146,34 @@ function getSelectedCellId(state){
   }
 }
 
+function getSelectedCell(state){
+  let cells = state.cells
+  let index = cells.findIndex((c)=>{return c.selected})
+  if (index > -1) {
+    return cells[index]
+  } else {
+    return undefined // for now
+  }
+}
+
+function newStateWithSelectedCellPropertySet(state,cellPropToSet,newValue){
+  var cells = state.cells.slice()
+  let thisCell = getSelectedCell(state)
+  thisCell[cellPropToSet] = newValue
+  return Object.assign({}, state, {cells})
+}
+function newStateWithSelectedCellPropertiesSet(state,cellPropsToSet,newValues){
+  var cells = state.cells.slice()
+  let thisCell = getSelectedCell(state)
+  cellPropsToSet.forEach( (p,i) => {thisCell[p] = newValues[i]})
+  return Object.assign({}, state, {cells})
+}
+
 export {
   moveCell,
   scrollToCellIfNeeded,
   addExternalDependency,
   addExternalScript,
-  getSelectedCellId}
+  getSelectedCellId,
+  newStateWithSelectedCellPropertySet,
+newStateWithSelectedCellPropertiesSet}
