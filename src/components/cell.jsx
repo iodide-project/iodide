@@ -262,20 +262,7 @@ class JavascriptCell extends GenericCell {
   }
 }
 
-class ExternalScriptCell extends GenericCell {
-  constructor(props) {
-    super(props)
-  }
-  componentWillMount() {
-    // FIXME: this is of a hack to make sure that the output for raw cells
-    // is set to COLLAPSED in presentation View
-    // THIS SHOULD BE REMOVED ONCE EXTERNAL SCRIPT CELLS RETURN A TRUE OUTPUT
-    this.props.actions.setCellCollapsedState(
-      'presentation',
-      'output',
-      'COLLAPSED')
-  }
-}
+
 
 class MarkdownCell extends GenericCell {
   constructor(props) {
@@ -507,7 +494,6 @@ function mapDispatchToProps(dispatch) {
 let JavascriptCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(JavascriptCell)
 let MarkdownCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(MarkdownCell)
 let RawCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(RawCell)
-let ExternalScriptCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(ExternalScriptCell)
 let DOMCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(DOMCell)
 let ExternalDependencyCell_connected = connect(mapStateToPropsForExternalDependency, mapDispatchToProps)(ExternalDependencyCell)
 
@@ -515,7 +501,6 @@ let ExternalDependencyCell_connected = connect(mapStateToPropsForExternalDepende
 export {JavascriptCell_connected as JavascriptCell,
   MarkdownCell_connected as MarkdownCell,
   RawCell_connected as RawCell,
-  ExternalScriptCell_connected as ExternalScriptCell,
   DOMCell_connected as DOMCell,
   ExternalDependencyCell_connected as ExternalDependencyCell,
   HistoryCell,

@@ -47007,7 +47007,6 @@ function objEquiv(a, b, opts) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return JavascriptCell_connected; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return MarkdownCell_connected; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return RawCell_connected; });
-/* unused harmony export ExternalScriptCell */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DOMCell_connected; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ExternalDependencyCell_connected; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return HistoryCell; });
@@ -47308,18 +47307,6 @@ class JavascriptCell extends GenericCell {
   }
 }
 
-class ExternalScriptCell extends GenericCell {
-  constructor(props) {
-    super(props);
-  }
-  componentWillMount() {
-    // FIXME: this is of a hack to make sure that the output for raw cells
-    // is set to COLLAPSED in presentation View
-    // THIS SHOULD BE REMOVED ONCE EXTERNAL SCRIPT CELLS RETURN A TRUE OUTPUT
-    this.props.actions.setCellCollapsedState('presentation', 'output', 'COLLAPSED');
-  }
-}
-
 class MarkdownCell extends GenericCell {
   constructor(props) {
     super(props);
@@ -47585,7 +47572,6 @@ function mapDispatchToProps(dispatch) {
 let JavascriptCell_connected = Object(__WEBPACK_IMPORTED_MODULE_1_react_redux__["b" /* connect */])(mapStateToPropsForCells, mapDispatchToProps)(JavascriptCell);
 let MarkdownCell_connected = Object(__WEBPACK_IMPORTED_MODULE_1_react_redux__["b" /* connect */])(mapStateToPropsForCells, mapDispatchToProps)(MarkdownCell);
 let RawCell_connected = Object(__WEBPACK_IMPORTED_MODULE_1_react_redux__["b" /* connect */])(mapStateToPropsForCells, mapDispatchToProps)(RawCell);
-let ExternalScriptCell_connected = Object(__WEBPACK_IMPORTED_MODULE_1_react_redux__["b" /* connect */])(mapStateToPropsForCells, mapDispatchToProps)(ExternalScriptCell);
 let DOMCell_connected = Object(__WEBPACK_IMPORTED_MODULE_1_react_redux__["b" /* connect */])(mapStateToPropsForCells, mapDispatchToProps)(DOMCell);
 let ExternalDependencyCell_connected = Object(__WEBPACK_IMPORTED_MODULE_1_react_redux__["b" /* connect */])(mapStateToPropsForExternalDependency, mapDispatchToProps)(ExternalDependencyCell);
 

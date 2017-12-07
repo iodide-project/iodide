@@ -5,8 +5,7 @@ import deepEqual from 'deep-equal'
 
 
 import {JavascriptCell, MarkdownCell,
-  RawCell, HistoryCell,
-  ExternalScriptCell, DOMCell,
+  RawCell, HistoryCell, DOMCell,
   ExternalDependencyCell} from './cell.jsx'
 import { NotebookHeader } from './notebook-header.jsx'
 
