@@ -28,7 +28,7 @@ let MOVE_DOWN = [['shift+down'], function(){
 
 let ADD_CELL_ABOVE = [['a'], function(){
   if (isCommandMode()) {
-    dispatcher.insertCell('javascript', getSelectedCellId(), 'above')
+    dispatcher.insertCell('javascript', 'above')
     dispatcher.selectCell(getCellAboveSelectedId(), true)
   }
 }
@@ -36,7 +36,7 @@ let ADD_CELL_ABOVE = [['a'], function(){
 
 let ADD_CELL_BELOW = [['b'], function(){
   if (isCommandMode()) {
-    dispatcher.insertCell('javascript', getSelectedCellId(), 'below')
+    dispatcher.insertCell('javascript', 'below')
     dispatcher.selectCell(getCellBelowSelectedId(), true)
   }
 }

@@ -143,7 +143,7 @@ menuItems.addCellBelow = {
   callback: function(){
     let currentlySelectedId = getSelectedCellId()
     if (currentlySelectedId != undefined) {
-      this.props.actions.insertCell(currentlySelectedId, 'below')
+      this.props.actions.insertCell('javascript','below')
     }
   }
 }
@@ -154,7 +154,7 @@ menuItems.addCellAbove = {
   callback: function(){
     let currentlySelectedId = getSelectedCellId()
     if (currentlySelectedId != undefined) {
-      this.props.actions.insertCell(currentlySelectedId, 'above')
+      this.props.actions.insertCell('javascript','above')
     }
   }
 }

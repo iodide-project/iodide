@@ -44,7 +44,7 @@ class CellEditor extends React.Component {
     }
 
     updateInputContent(content) {
-        this.props.actions.updateInputContent(this.props.cellId, content)
+        this.props.actions.updateInputContent(content)
     }
 
     render(){

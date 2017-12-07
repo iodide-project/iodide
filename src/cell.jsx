@@ -135,7 +135,7 @@ class GenericCell extends React.Component {
   }
 
   updateInputContent(content) {
-    this.props.actions.updateInputContent(this.props.cell.id, content)
+    this.props.actions.updateInputContent(content)
   }
 
   inputComponent() {

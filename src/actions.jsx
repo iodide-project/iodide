@@ -51,10 +51,9 @@ let actions = {
       viewMode: viewMode
     }
   },
-  updateInputContent: function (cellID, text) {
+  updateInputContent: function (text) {
     return {
       type: 'UPDATE_INPUT_CONTENT',
-      id: cellID,
       content: text
     }
   },
@@ -97,10 +96,9 @@ let actions = {
       type: 'CELL_DOWN'
     }
   },
-  insertCell: function (cellType, cellID, direction) {
+  insertCell: function (cellType, direction) {
     return {
       type: 'INSERT_CELL',
-      id: cellID,
       cellType: cellType,
       direction: direction
     }

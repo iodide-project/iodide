@@ -45,7 +45,7 @@ let cellReducer = function (state = newNotebook(), action) {
   }
   case 'INSERT_CELL':{
     let cells = state.cells.slice()
-    let index = cells.findIndex(c=>c.id===action.id)
+    let index = cells.findIndex(c=>c.id===getSelectedCellId(state))
     let direction = (action.direction == 'above') ? 0:1
     let nextCell = newCell(state.cells, 'javascript')
     cells.splice(index+direction, 0, nextCell)
