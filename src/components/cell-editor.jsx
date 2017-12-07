@@ -10,9 +10,9 @@ import matchbrackets from 'codemirror/addon/edit/matchbrackets'
 import closebrackets from 'codemirror/addon/edit/closebrackets'
 import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
-import sublime from '../codemirror-keymap-sublime.js'
+import sublime from '../codemirror-keymap-sublime'
 
-import actions from '../actions.jsx'
+import actions from '../actions'
 
 class CellEditor extends React.Component {
     constructor(props) {

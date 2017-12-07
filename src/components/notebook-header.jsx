@@ -35,9 +35,9 @@ import DeclaredVariables from './declared-variables.jsx'
 
 import Title from './title.jsx'
 
-import {prettyDate, formatDateString} from '../notebook-utils'
-import actions from '../actions.jsx'
-import settings from '../settings.jsx'
+import {prettyDate, formatDateString} from '../notebook-utils.js'
+import actions from '../actions.js'
+import settings from '../settings.js'
 
 // TODO: replace settings w/ a settings file that we can share everywhere.
 

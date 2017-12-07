@@ -1,14 +1,14 @@
 import Mousetrap from 'mousetrap'
-import jupyterKeybindings from './keybindings-jupyter.jsx'
+import jupyterKeybindings from './keybindings-jupyter'
 // for now, let's just keep the keybindings here.
 
-Mousetrap.prototype.stopCallback  = function () {
+Mousetrap.prototype.stopCallback  = function (){
   return false
 }
 
 
 function keyBinding(style, elem) {
-  var binding
+  let binding
   if (style === 'jupyter') {
     binding = jupyterKeybindings
   }

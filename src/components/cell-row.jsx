@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import {getCellById} from '../notebook-utils.js'
-import actions from '../actions.jsx'
+import actions from '../actions.js'
 
 class CellRow extends React.Component {
   constructor (props) {
