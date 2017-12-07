@@ -1,4 +1,4 @@
-import {store} from './store.jsx'
+import {store} from './store.js'
 
 function isCommandMode(){
   return store.getState().mode=='command' && viewModeIsEditor()

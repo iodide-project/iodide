@@ -1,7 +1,9 @@
-import {store} from './store.jsx'
-import actions from './actions.jsx'
-import {isCommandMode,  viewModeIsEditor,
-  getCellBelowSelectedId, getCellAboveSelectedId} from './notebook-utils'
+import {store} from './store'
+import actions from './actions'
+import {isCommandMode,
+  viewModeIsEditor,
+  getCellBelowSelectedId,
+  getCellAboveSelectedId} from './notebook-utils'
 
 let jupyterKeybindings = []
 
@@ -68,7 +70,7 @@ let SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function(e){
   dispatcher.saveNotebook(store.getState().title)
 }]
 
-let EXPORT_NOTEBOOK = [['ctrl+e', 'meta+e'], function(e){
+let EXPORT_NOTEBOOK = [['ctrl+e', 'meta+e'], function(){
   // if (e.preventDfault) e.preventDefault()
   // else e.returnValue = false
   dispatcher.exportNotebook()

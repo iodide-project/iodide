@@ -26,7 +26,7 @@ import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 import CellRow from './cell-row.jsx'
 import {PrettyMatrix, SimpleTable, makeMatrixText} from './pretty-matrix.jsx'
 
-import actions from '../actions.jsx'
+import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
 import nb from '../../tools/nb.js'
 import sublime from '../codemirror-keymap-sublime.js'

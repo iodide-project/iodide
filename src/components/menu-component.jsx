@@ -22,7 +22,7 @@ import FastForward from 'material-ui/svg-icons/av/fast-forward'
 
 import {menuItems, getSavedNotebooks} from './menu-content'
 
-import settings from '../settings.jsx'
+import settings from '../settings.js'
 
 const AUTOSAVE = settings.labels.AUTOSAVE
 
