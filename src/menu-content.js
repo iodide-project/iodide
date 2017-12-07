@@ -190,42 +190,42 @@ menuItems.changeCellTypeToJavascript = {
   primaryText: 'Javascript', 
   secondaryText:'J', 
   callback: function(){
-    this.props.actions.changeCellType(getSelectedCellId(), 'javascript')
+    this.props.actions.changeCellType('javascript')
   }
 }
 menuItems.changeCellTypeToMarkdown = {
   primaryText: 'Markdown', 
   secondaryText:'M',
   callback: function() {
-    this.props.actions.changeCellType(getSelectedCellId(), 'markdown')
+    this.props.actions.changeCellType('markdown')
   }
 }
 menuItems.changeCellTypeToRaw = {
   primaryText: 'Raw', 
   secondaryText:'R',
   callback: function() {
-    this.props.actions.changeCellType(getSelectedCellId(), 'raw')
+    this.props.actions.changeCellType('raw')
   }
 }
 menuItems.changeCellTypeToExternal = {
   primaryText: 'External Scripts', 
   secondaryText:'E',
   callback: function() {
-    this.props.actions.changeCellType(getSelectedCellId(), 'external scripts')
+    this.props.actions.changeCellType('external scripts')
   }
 }
 menuItems.changeCellTypeToExternal = {
   primaryText: 'External Dependencies', 
   secondaryText:'E',
   callback: function() {
-    this.props.actions.changeCellType(getSelectedCellId(), 'external dependencies')
+    this.props.actions.changeCellType('external dependencies')
   }
 }
 menuItems.changeCellTypeToDOM= {
   primaryText: 'DOM', 
   secondaryText: ' ',
   callback: function() {
-    this.props.actions.changeCellType(getSelectedCellId(), 'dom')
+    this.props.actions.changeCellType('dom')
   }}
 
 menuItems.cell = {

@@ -43,22 +43,22 @@ let ADD_CELL_BELOW = [['b'], function(){
 ]
 
 let JAVASCRIPT_MODE = [['j'], function(){
-  if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'javascript')
+  if (isCommandMode()) dispatcher.changeCellType('javascript')
 }
 ]
 
 let MARKDOWN_MODE = [['m'], function(){
-  if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'markdown')
+  if (isCommandMode()) dispatcher.changeCellType('markdown')
 }
 ]
 
 let EXTERNAL_SCRIPTS_MODE = [['e'], function(){
-  if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'external scripts')
+  if (isCommandMode()) dispatcher.changeCellType('external scripts')
 }
 ]
 
 let RAW_MODE = [['r'], function(){
-  if (isCommandMode()) dispatcher.changeCellType(getSelectedCellId(), 'raw')
+  if (isCommandMode()) dispatcher.changeCellType('raw')
 }
 ]
 

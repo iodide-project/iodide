@@ -84,7 +84,7 @@ class GenericCell extends React.Component {
   }
 
   changeCellType(cellType, evt) {
-    this.props.actions.changeCellType(this.props.cell.id, cellType)
+    this.props.actions.changeCellType(cellType)
   }
 
   handleCellClick(e) {
@@ -247,7 +247,6 @@ class RawCell extends GenericCell {
     // FIXME: this is of a hack to make sure that the output for raw cells
     // is set to COLLAPSED in presentation View
     this.props.actions.setCellCollapsedState(
-      this.props.cell.id,
       'presentation',
       'output',
       'COLLAPSED')
@@ -278,7 +277,6 @@ class ExternalScriptCell extends GenericCell {
     // is set to COLLAPSED in presentation View
     // THIS SHOULD BE REMOVED ONCE EXTERNAL SCRIPT CELLS RETURN A TRUE OUTPUT
     this.props.actions.setCellCollapsedState(
-      this.props.cell.id,
       'presentation',
       'output',
       'COLLAPSED')

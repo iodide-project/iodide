@@ -58,10 +58,9 @@ let actions = {
       content: text
     }
   },
-  changeCellType: function (cellID, cellType) {
+  changeCellType: function (cellType) {
     return {
       type: 'CHANGE_CELL_TYPE',
-      id: cellID,
       cellType: cellType
     }
   },
@@ -81,10 +80,9 @@ let actions = {
       type: 'RUN_ALL_CELLS'
     }
   },
-  setCellCollapsedState: function (cellID, viewMode, rowType, collapsedState) {
+  setCellCollapsedState: function (viewMode, rowType, collapsedState) {
     return {
       type: 'SET_CELL_COLLAPSED_STATE',
-      id: cellID,
       viewMode: viewMode,
       rowType: rowType,
       collapsedState: collapsedState

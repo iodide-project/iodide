@@ -27,7 +27,6 @@ class CellRow extends React.Component {
         break
     }
     this.props.actions.setCellCollapsedState(
-            this.props.cellId,
             this.props.viewMode,
             this.props.rowType,
             nextCollapsedState)
@@ -42,7 +41,6 @@ class CellRow extends React.Component {
                 this.props.rowType === 'input' &&
                 this.props.collapsedState === 'COLLAPSED') {
       this.props.actions.setCellCollapsedState(
-                this.props.cellId,
                 this.props.viewMode,
                 'input',
                 'SCROLLABLE')
