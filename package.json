@@ -34,7 +34,6 @@
     "react-table": "^6.6.0",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-persist": "^4.8.3",
     "webpack": "^3.5.2"
   },
   "devDependencies": {
@@ -45,14 +44,12 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "enzyme": "^3.0.0",
     "eslint": "^4.12.1",
     "eslint-config-google": "^0.9.1",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-react": "^7.5.1",
     "jest": "^21.2.1",
     "material-ui": "^0.19.4",
-    "regenerator-runtime": "^0.11.0",
     "webpack-dev-server": "^2.7.1"
   }
 }
