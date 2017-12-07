@@ -1,7 +1,7 @@
 import { newCell, newNotebook } from '../state-prototypes.js'
 
 import {moveCell,scrollToCellIfNeeded,
-  addExternalDependency,addExternalScript,
+  addExternalDependency,
   getSelectedCellId,
   newStateWithSelectedCellPropertySet,
   // newStateWithSelectedCellPropertiesSet,

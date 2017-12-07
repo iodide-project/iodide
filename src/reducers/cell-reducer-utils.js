@@ -57,19 +57,6 @@ function scrollToCellIfNeeded(cellID) {
   }
 }
 
-function addExternalScript(scriptUrl){
-  // FIXME there must be a better way to do this with promises etc...
-  let head = document.getElementsByTagName('head')[0]
-  let script = document.createElement('script')
-  script.type = 'text/javascript'
-  //script.src = scriptUrl  
-  let xhrObj = new XMLHttpRequest()
-  xhrObj.open('GET', scriptUrl, false)
-  xhrObj.send('')
-  script.text = xhrObj.responseText
-  head.appendChild(script)
-}
-
 function addExternalDependency(dep){
   // FIXME there must be a better way to do this with promises etc...
   let head = document.getElementsByTagName('head')[0]
@@ -174,7 +161,6 @@ export {
   moveCell,
   scrollToCellIfNeeded,
   addExternalDependency,
-  addExternalScript,
   getSelectedCellId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned}
