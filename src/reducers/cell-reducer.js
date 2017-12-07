@@ -26,7 +26,7 @@ evalStatuses.ERROR = 'error'
 
 
 let cellReducer = function (state = newNotebook(), action) {
-  var nextState
+  let nextState
   switch (action.type) {
   case 'RUN_ALL_CELLS':{
     nextState = Object.assign({}, state, {cells: [...state.cells]})
@@ -60,31 +60,30 @@ let cellReducer = function (state = newNotebook(), action) {
     return nextState
   }
 
-  case 'SELECT_CELL':
+  case 'SELECT_CELL':{
     if (typeof action.id === 'undefined') return state
 
-    cells = state.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = cells[index]
+    let cells = state.cells.slice()
+    let index = cells.findIndex(c=>c.id===action.id)
+    let thisCell = cells[index]
     cells.forEach((c)=>c.selected=false)
     thisCell.selected = true
     cells[index] = thisCell
 
     if (action.scrollToCell) { scrollToCellIfNeeded(thisCell.id) }
 
-    var nextState = Object.assign({}, state, {cells})
+    let nextState = Object.assign({}, state, {cells})
     return nextState
+  }
 
-  case 'CELL_UP':{
+  case 'CELL_UP':
     return Object.assign({}, state,
-      {cells: moveCell(state.cells, getSelectedCellId(state), 'up')}
-    )
-  }
-  case 'CELL_DOWN':{
+      {cells: moveCell(state.cells, getSelectedCellId(state), 'up')})
+
+  case 'CELL_DOWN':
     return Object.assign({}, state,
-      {cells: moveCell(state.cells, getSelectedCellId(state), 'down')}
-    )
-  }
+      {cells: moveCell(state.cells, getSelectedCellId(state), 'down')})
+  
   case 'UPDATE_INPUT_CONTENT':
     return newStateWithSelectedCellPropertySet(state,'content',action.content)
 
@@ -99,8 +98,7 @@ let cellReducer = function (state = newNotebook(), action) {
       ['cellType','value','rendered'],
       [action.cellType,undefined,false])
 
-  case 'SET_CELL_COLLAPSED_STATE':
-    if (typeof action.id === 'undefined') return state
+  case 'SET_CELL_COLLAPSED_STATE':{
     switch (action.viewMode + ',' + action.rowType){
     case 'presentation,input':
       return newStateWithSelectedCellPropertySet(state,
@@ -115,6 +113,8 @@ let cellReducer = function (state = newNotebook(), action) {
       return newStateWithSelectedCellPropertySet(state,
         'collapseEditViewOutput',action.collapsedState)
     }
+    break
+  }
 
   case 'CLEAR_CELL_BEFORE_EVALUATION':
     return newStateWithSelectedCellPropertiesSet(state,
@@ -125,16 +125,14 @@ let cellReducer = function (state = newNotebook(), action) {
     return newStateWithSelectedCellPropertySet(state,
       'rendered',false)
 
-  case 'EVALUATE_CELL':
+  case 'EVALUATE_CELL':{
     if (typeof action.id === 'undefined') return state
       
-    var newState = Object.assign({}, state)
-    var declaredProperties = newState.declaredProperties
-    var cells = newState.cells.slice()
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = cells[index]
-    var executionNumber = newState.executionNumber
-
+    let newState = Object.assign({}, state)
+    let declaredProperties = newState.declaredProperties
+    let cells = newState.cells.slice()
+    let index = cells.findIndex(c=>c.id===action.id)
+    let thisCell = cells[index]
 
     if (action.evaluateCell) {
       if (thisCell.cellType === 'javascript') {
@@ -150,20 +148,15 @@ let cellReducer = function (state = newNotebook(), action) {
 
         let output
         let code = thisCell.content
-        // console.log(code.slice(0,12))
-        // console.log(code.slice(0,12)=="use matrix")
-        // console.log(code.slice(0,12)=='use matrix')
         if (code.slice(0,12)=='\'use matrix\'' || code.slice(0,12)=='"use matrix"'){
-          console.log('---transpiling code---')
+          // console.log('---transpiling code---')
           try {
             code = tjsm.transpile(thisCell.content)
-            console.log('---transpiled code---')
-            console.log(code)
+            // console.log('---transpiled code---')
+            // console.log(code)
           } catch(e) {
-            console.log('---transpilation failed---')
-            var err = e.constructor('transpilation failed: ' + e.message)
-            // err.lineNumber = e.lineNumber - err.lineNumber + 3;
-            // output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+            // console.log('---transpilation failed---')
+            e.constructor('transpilation failed: ' + e.message)
           }
         }
 
@@ -171,12 +164,11 @@ let cellReducer = function (state = newNotebook(), action) {
           output = window.eval(code)
           thisCell.evalStatus = evalStatuses.SUCCESS
         } catch(e) {
-          var err = e.constructor('Error in Evaled Script: ' + e.message)
+          let err = e.constructor('Error in Evaled Script: ' + e.message)
           err.lineNumber = e.lineNumber - err.lineNumber + 3
           output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
           thisCell.evalStatus = evalStatuses.ERROR
         }
-
 
         thisCell.rendered = true
 
@@ -193,7 +185,6 @@ let cellReducer = function (state = newNotebook(), action) {
           }
         })
 
-        let lastValue
         newState.executionNumber++
         thisCell.executionStatus = ''+newState.executionNumber
       } else if (thisCell.cellType === 'markdown') {
@@ -252,17 +243,17 @@ let cellReducer = function (state = newNotebook(), action) {
       }
     }
     cells[index] = thisCell
-    var nextState = Object.assign({}, newState, {cells}, {declaredProperties})
+    nextState = Object.assign({}, newState, {cells}, {declaredProperties})
     return nextState
-
-  case 'DELETE_CELL':
+  }
+  case 'DELETE_CELL':{
     if (typeof action.id === 'undefined'){
       return state
     }
-    var cells = state.cells.slice()
+    let cells = state.cells.slice()
     if (!cells.length) return state
-    var index = cells.findIndex(c=>c.id===action.id)
-    var thisCell = state.cells[index]
+    let index = cells.findIndex(c=>c.id===action.id)
+    let thisCell = state.cells[index]
     if (thisCell.selected) {
       let nextIndex=0
       if (cells.length>1) {
@@ -272,10 +263,11 @@ let cellReducer = function (state = newNotebook(), action) {
       }
     }
 
-    var nextState = Object.assign({}, state, {
+    nextState = Object.assign({}, state, {
       cells: cells.filter((cell)=> {return cell.id !== action.id})
     })
     return nextState
+  }
 
 
   default:

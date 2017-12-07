@@ -111,7 +111,7 @@ function addExternalDependency(dep){
       elem.text = xhrObj.responseText
       outElem.status = 'loaded'
     } catch(err) {
-      console.log(err)
+      // console.log(err)
       outElem.status = 'error'
       outElem.statusExplanation = err.message
     }
@@ -157,13 +157,13 @@ function getSelectedCell(state){
 }
 
 function newStateWithSelectedCellPropertySet(state,cellPropToSet,newValue){
-  var cells = state.cells.slice()
+  let cells = state.cells.slice()
   let thisCell = getSelectedCell(state)
   thisCell[cellPropToSet] = newValue
   return Object.assign({}, state, {cells})
 }
 function newStateWithSelectedCellPropertiesSet(state,cellPropsToSet,newValues){
-  var cells = state.cells.slice()
+  let cells = state.cells.slice()
   let thisCell = getSelectedCell(state)
   cellPropsToSet.forEach( (p,i) => {thisCell[p] = newValues[i]})
   return Object.assign({}, state, {cells})
@@ -176,4 +176,4 @@ export {
   addExternalScript,
   getSelectedCellId,
   newStateWithSelectedCellPropertySet,
-newStateWithSelectedCellPropertiesSet}
+  newStateWithSelectedCellPropertiesSet}
