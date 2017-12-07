@@ -9,7 +9,7 @@ function clearHistory(loadedState) {
   loadedState.cells = [...loadedState.cells.slice()]
   loadedState.cells.forEach(cell=>{
     cell.evalStatus = undefined
-    if (cell.cellType==='javascript') cell.value = undefined
+    if (cell.cellType==='javascript' || cell.cellType ==='external dependencies') cell.value = undefined
   })
 }
 
