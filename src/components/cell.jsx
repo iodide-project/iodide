@@ -349,10 +349,6 @@ class DOMCell extends GenericCell {
     super(props)
   }
 
-  componentWillMount() {
-  
-  }
-
   outputComponent() {
     let elem
     // {domtype}#{elementID}
