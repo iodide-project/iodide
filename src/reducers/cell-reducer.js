@@ -4,7 +4,8 @@ import {moveCell,scrollToCellIfNeeded,
   addExternalDependency,addExternalScript,
   getSelectedCellId,
   newStateWithSelectedCellPropertySet,
-  newStateWithSelectedCellPropertiesSet} from './cell-reducer-utils.js'
+  // newStateWithSelectedCellPropertiesSet,
+  newStateWithSelectedCellPropsAssigned} from './cell-reducer-utils.js'
 
 import tjsm from '../transpile-jsm.js'
 
@@ -89,9 +90,11 @@ let cellReducer = function (state = newNotebook(), action) {
     return newStateWithSelectedCellPropertySet(state,'domElementID',action.elemID)
 
   case 'CHANGE_CELL_TYPE':
-    return newStateWithSelectedCellPropertiesSet(state,
-      ['cellType','value','rendered'],
-      [action.cellType,undefined,false])
+    return newStateWithSelectedCellPropsAssigned(state,
+      {cellType:action.cellType, value:undefined, rendered:false})
+    // return newStateWithSelectedCellPropertiesSet(state,
+    //   ['cellType','value','rendered'],
+    //   [action.cellType,undefined,false])
 
   case 'SET_CELL_COLLAPSED_STATE':{
     switch (action.viewMode + ',' + action.rowType){

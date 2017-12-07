@@ -162,10 +162,11 @@ function newStateWithSelectedCellPropertySet(state,cellPropToSet,newValue){
   thisCell[cellPropToSet] = newValue
   return Object.assign({}, state, {cells})
 }
-function newStateWithSelectedCellPropertiesSet(state,cellPropsToSet,newValues){
+
+function newStateWithSelectedCellPropsAssigned(state,cellPropsToSet){
   let cells = state.cells.slice()
-  let thisCell = getSelectedCell(state)
-  cellPropsToSet.forEach( (p,i) => {thisCell[p] = newValues[i]})
+  let index = cells.findIndex((c)=>{return c.selected})
+  cells[index] = Object.assign(cells[index], cellPropsToSet)
   return Object.assign({}, state, {cells})
 }
 
@@ -176,4 +177,4 @@ export {
   addExternalScript,
   getSelectedCellId,
   newStateWithSelectedCellPropertySet,
-  newStateWithSelectedCellPropertiesSet}
+  newStateWithSelectedCellPropsAssigned}
