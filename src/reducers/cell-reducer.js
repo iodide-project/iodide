@@ -169,21 +169,8 @@ let cellReducer = function (state = newNotebook(), action) {
           output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
           thisCell.evalStatus = evalStatuses.ERROR
         }
-
         thisCell.rendered = true
-
-        if (output !== undefined) {
-          thisCell.value = output
-        }
-
-        // ok. Now let's see if there are any new declared variables.
-        declaredProperties = {} //
-        let currentGlobal = Object.keys(window)
-        currentGlobal.forEach((g)=>{
-          if (!initialVariables.has(g)) {
-            declaredProperties[g] = window[g]
-          }
-        })
+        if (output !== undefined) {thisCell.value = output}
 
         newState.executionNumber++
         thisCell.executionStatus = ''+newState.executionNumber
@@ -211,10 +198,6 @@ let cellReducer = function (state = newNotebook(), action) {
         thisCell.evalStatus = evalStatuses.SUCCESS
         
       } else if (thisCell.cellType === 'external dependencies') {
-        //var dependencies = thisCell.dependencies.filter(s => s.src!==undefined);
-
-
-        //var dependencies = dependencies.filter(script => !newState.externalScripts.includes(script.src));
         let dependencies = thisCell.content.split('\n').filter(d=>d.trim().slice(0,2) !=='//')
         let outValue = dependencies.map(addExternalDependency)
 
@@ -234,14 +217,17 @@ let cellReducer = function (state = newNotebook(), action) {
             content: '// added external scripts:\n' + ( outValue.map(s => '// '+s.src).join('\n') )
           })  
         }
-        //
-
         newState.executionNumber++
         thisCell.executionStatus = ''+newState.executionNumber
       } else {
         thisCell.rendered = false
       }
     }
+    // ok. Now let's see if there are any new declared variables or libs
+    declaredProperties = {}
+    Object.keys(window)
+      .filter(g => !initialVariables.has(g))
+      .forEach(g => {declaredProperties[g] = window[g]})
     cells[index] = thisCell
     nextState = Object.assign({}, newState, {cells}, {declaredProperties})
     return nextState
