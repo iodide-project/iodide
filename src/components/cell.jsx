@@ -4,7 +4,6 @@ import React, {createElement} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import deepEqual from 'deep-equal'
-
 import CodeMirror from '@skidding/react-codemirror'
 import js from 'codemirror/mode/javascript/javascript'
 import markdown from 'codemirror/mode/markdown/markdown'
@@ -12,29 +11,26 @@ import matchbrackets from 'codemirror/addon/edit/matchbrackets'
 import closebrackets from 'codemirror/addon/edit/closebrackets'
 import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
-import sublime from './codemirror-keymap-sublime.js'
-
-import {FormGroup, FormControl, ControlLabel, Form} from 'react-bootstrap'
-
+import {FormGroup, FormControl,
+  ControlLabel, Form} from 'react-bootstrap'
 import _ from 'lodash'
-import nb from '../tools/nb.js'
-
-import {getCellById} from './notebook-utils.js'
-
-import {PrettyMatrix, SimpleTable, makeMatrixText} from './pretty-matrix.jsx'
 import ReactTable from 'react-table'
 import JSONTree from 'react-json-tree'
-
-import CellRow from './cell-row.jsx'
-
-import actions from './actions.jsx'
-
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
 import ErrorCircle from 'material-ui/svg-icons/alert/error'
 import UnloadedCircle from 'material-ui/svg-icons/content/remove'
+
+import CellRow from './cell-row.jsx'
+import {PrettyMatrix, SimpleTable, makeMatrixText} from './pretty-matrix.jsx'
+
+import actions from '../actions.jsx'
+import {getCellById} from '../notebook-utils.js'
+import nb from '../../tools/nb.js'
+import sublime from '../codemirror-keymap-sublime.js'
+
 
 class GenericCell extends React.Component {
   /* Generic cell implements a basic cell with a code mirror editor

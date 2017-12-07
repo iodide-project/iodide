@@ -1,6 +1,6 @@
-import {prettyDate, formatDateString} from './notebook-utils'
-import exampleNotebooks from './example-notebooks.jsx'
-import settings from './settings.jsx'
+import {prettyDate, formatDateString} from '../notebook-utils'
+import exampleNotebooks from '../example-notebooks.jsx'
+import settings from '../settings.jsx'
 const AUTOSAVE = settings.labels.AUTOSAVE
 
 let oscpu = window.navigator.oscpu || window.navigator.platform

@@ -2,12 +2,10 @@ import React from 'react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import actions from './actions.jsx'
-
-import settings from './settings.jsx'
 
 import {HistoryCell} from './cell.jsx'
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
+import {Toolbar, ToolbarGroup,
+  ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
 import {red500, yellow500, blue500, grey900,grey50} from 'material-ui/styles/colors'
 
 import FlatButton from 'material-ui/FlatButton'
@@ -34,9 +32,12 @@ import Drawer from 'material-ui/Drawer'
 
 import MainMenu from './menu-component.jsx'
 import DeclaredVariables from './declared-variables.jsx'
-import {prettyDate, formatDateString} from './notebook-utils'
 
 import Title from './title.jsx'
+
+import {prettyDate, formatDateString} from '../notebook-utils'
+import actions from '../actions.jsx'
+import settings from '../settings.jsx'
 
 // TODO: replace settings w/ a settings file that we can share everywhere.
 

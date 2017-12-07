@@ -1,13 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import actions from './actions.jsx'
-import {JavascriptCell, MarkdownCell, RawCell, HistoryCell, ExternalScriptCell, DOMCell, ExternalDependencyCell} from './cell.jsx'
-import keyBinding from './keybindings.jsx' 
-import { NotebookHeader } from './notebook-header.jsx'
-import settings from './settings.jsx'
-import { prettyDate} from './notebook-utils'
 import deepEqual from 'deep-equal'
+
+
+import {JavascriptCell, MarkdownCell,
+    RawCell, HistoryCell,
+    ExternalScriptCell, DOMCell,
+    ExternalDependencyCell} from './cell.jsx'
+import { NotebookHeader } from './notebook-header.jsx'
+
+import settings from '../settings.jsx'
+import { prettyDate} from '../notebook-utils'
+import keyBinding from '../keybindings.jsx'
+import actions from '../actions.jsx'
+
 
 const AUTOSAVE = settings.labels.AUTOSAVE
 

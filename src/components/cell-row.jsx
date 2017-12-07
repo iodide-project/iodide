@@ -2,9 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import {getCellById} from './notebook-utils.js'
-
-import actions from './actions.jsx'
+import {getCellById} from '../notebook-utils.js'
+import actions from '../actions.jsx'
 
 class CellRow extends React.Component {
   constructor (props) {
