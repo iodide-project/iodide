@@ -4,7 +4,7 @@ function newCellID(cells) {
 
 function newCell(cells, cellType){
   let outputCollapseDefault
-  if (cellType=='dom' || cellType=='external scripts' || cellType=='dom'){
+  if (cellType=='dom' || cellType=='dom'){
     outputCollapseDefault = 'COLLAPSED'
   } else {outputCollapseDefault = 'EXPANDED'}
   return {
@@ -40,7 +40,7 @@ function blankState(){
     viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
     history:[],
-    externalScripts:[],
+    externalDependencies:[],
     executionNumber: 1
   }
   return initialState

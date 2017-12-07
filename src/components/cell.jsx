@@ -352,7 +352,13 @@ class DOMCell extends GenericCell {
     // {domtype}#{elementID}
     let content = parseDOMCellContent(this.props.cell.content)
     if (content.elem !== '' && content.elem !== undefined) {
-      elem = createElement(content.elem, {id: content.elemID})
+      try {
+        elem = createElement(content.elem, {id: content.elemID})
+      } catch (err) {
+        console.error(`elem ${content.elem} is not valid`)
+        elem = <div className='dom-cell-error'>{content.elem} is not valid</div>
+      }
+      
     } else {
       elem = <div className='dom-cell-error'>please add an elem type</div>
     }

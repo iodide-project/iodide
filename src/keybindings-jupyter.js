@@ -53,8 +53,8 @@ let MARKDOWN_MODE = [['m'], function(){
 }
 ]
 
-let EXTERNAL_SCRIPTS_MODE = [['e'], function(){
-  if (isCommandMode()) dispatcher.changeCellType('external scripts')
+let EXTERNAL_DEPENDENCIES_MODE = [['e'], function(){
+  if (isCommandMode()) dispatcher.changeCellType('external dependencies')
 }
 ]
 
@@ -167,7 +167,7 @@ let DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
 
 jupyterKeybindings.push(JAVASCRIPT_MODE)
 jupyterKeybindings.push(MARKDOWN_MODE)
-jupyterKeybindings.push(EXTERNAL_SCRIPTS_MODE)
+jupyterKeybindings.push(EXTERNAL_DEPENDENCIES_MODE)
 jupyterKeybindings.push(RAW_MODE)
 jupyterKeybindings.push(SELECT_UP)
 jupyterKeybindings.push(SELECT_DOWN)

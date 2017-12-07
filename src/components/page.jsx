@@ -27,8 +27,8 @@ class Page extends React.Component {
     keyBinding('jupyter', this)
     setInterval(()=>{
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
-      var notebooks = Object.keys(localStorage)
-      var autos = notebooks.filter((n)=>n.includes(AUTOSAVE))
+      let notebooks = Object.keys(localStorage)
+      let autos = notebooks.filter((n)=>n.includes(AUTOSAVE))
       if (autos.length) {
         autos.forEach((n)=>{
           this.props.actions.deleteNotebook(n)
@@ -65,7 +65,7 @@ class Page extends React.Component {
   }
 
   render () {
-    var bodyContent = this.props.cellIds.map( (id,i) => {
+    let bodyContent = this.props.cellIds.map( (id,i) => {
       // let id = cell.id
       switch (this.props.cellTypes[i]){
       case 'javascript':
@@ -74,8 +74,6 @@ class Page extends React.Component {
         return <MarkdownCell cellId={id} key={id}/>
       case 'raw':
         return <RawCell cellId={id} key={id}/>
-      case 'external scripts':
-        return <ExternalScriptCell cellId={id} key={id}/>
       case 'external dependencies':
         return <ExternalDependencyCell cellId={id} key={id} />
       case 'dom':
@@ -83,7 +81,7 @@ class Page extends React.Component {
       }
     })
 
-    var sp = <span></span>
+    let sp = <span></span>
     return (
       <div id="notebook-container"
         className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''}

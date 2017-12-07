@@ -4,7 +4,7 @@ function clearHistory(loadedState) {
   // remove history and declared properties before exporting the state.
   loadedState.declaredProperties = {}
   loadedState.history = []
-  loadedState.externalScripts = []
+  loadedState.externalDependencies = []
   loadedState.executionNumber = 0
   loadedState.cells = [...loadedState.cells.slice()]
   loadedState.cells.forEach(cell=>{

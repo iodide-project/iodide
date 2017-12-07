@@ -168,31 +168,13 @@ let cellReducer = function (state = newNotebook(), action) {
       thisCell.value = MD.render(thisCell.content)
       thisCell.rendered = true
       thisCell.evalStatus = evalStatuses.SUCCESS
-    } else if (thisCell.cellType === 'external scripts') {
-      let scriptUrls = thisCell.content.split('\n').filter(s => s!='')
-      let newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script))
-      newScripts.forEach(addExternalScript)
-      newState.externalScripts.push(...newScripts)
-      thisCell.value = 'loaded scripts'
-      thisCell.rendered = true
-      // add to newState.history
-      newState.history.push({
-        cellID: thisCell.id,
-        lastRan: new Date(),
-        content: '// added external scripts:\n' + ( newScripts.map(s => '// '+s).join('\n') )
-      })
-        
-      newState.executionNumber++
-      thisCell.executionStatus = ''+newState.executionNumber
-      thisCell.evalStatus = evalStatuses.SUCCESS
-      
-    } else if (thisCell.cellType === 'external dependencies') {
+    }  else if (thisCell.cellType === 'external dependencies') {
       let dependencies = thisCell.content.split('\n').filter(d=>d.trim().slice(0,2) !=='//')
       let outValue = dependencies.map(addExternalDependency)
 
       outValue.forEach(d=>{
-        if (!newState.externalScripts.includes(d.src)) {
-          newState.externalScripts.push(d.src)
+        if (!newState.externalDependencies.includes(d.src)) {
+          newState.externalDependencies.push(d.src)
         }
       })
       thisCell.evalStatus = outValue.map(d=>d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
@@ -203,7 +185,7 @@ let cellReducer = function (state = newNotebook(), action) {
         newState.history.push({
           cellID: thisCell.id,
           lastRan: new Date(),
-          content: '// added external scripts:\n' + ( outValue.map(s => '// '+s.src).join('\n') )
+          content: '// added external dependencies:\n' + ( outValue.map(s => '// '+s.src).join('\n') )
         })  
       }
       newState.executionNumber++

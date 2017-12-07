@@ -196,13 +196,6 @@ menuItems.changeCellTypeToRaw = {
   }
 }
 menuItems.changeCellTypeToExternal = {
-  primaryText: 'External Scripts', 
-  secondaryText:'E',
-  callback: function() {
-    this.props.actions.changeCellType('external scripts')
-  }
-}
-menuItems.changeCellTypeToExternal = {
   primaryText: 'External Dependencies', 
   secondaryText:'E',
   callback: function() {

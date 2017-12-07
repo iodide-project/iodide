@@ -39147,7 +39147,7 @@ function newCellID(cells) {
 
 function newCell(cells, cellType) {
   let outputCollapseDefault;
-  if (cellType == 'dom' || cellType == 'external scripts' || cellType == 'dom') {
+  if (cellType == 'dom' || cellType == 'dom') {
     outputCollapseDefault = 'COLLAPSED';
   } else {
     outputCollapseDefault = 'EXPANDED';
@@ -39184,7 +39184,7 @@ function blankState() {
     viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
     history: [],
-    externalScripts: [],
+    externalDependencies: [],
     executionNumber: 1
   };
   return initialState;
@@ -47101,13 +47101,13 @@ function objEquiv(a, b, opts) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return JavascriptCell_connected; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return MarkdownCell_connected; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return RawCell_connected; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return ExternalScriptCell_connected; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return JavascriptCell_connected; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return MarkdownCell_connected; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return RawCell_connected; });
+/* unused harmony export ExternalScriptCell */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DOMCell_connected; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ExternalDependencyCell_connected; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return HistoryCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return HistoryCell; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_redux__ = __webpack_require__(75);
@@ -47483,7 +47483,17 @@ class DOMCell extends GenericCell {
     // {domtype}#{elementID}
     let content = parseDOMCellContent(this.props.cell.content);
     if (content.elem !== '' && content.elem !== undefined) {
-      elem = Object(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])(content.elem, { id: content.elemID });
+      try {
+        elem = Object(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])(content.elem, { id: content.elemID });
+      } catch (err) {
+        console.error(`elem ${content.elem} is not valid`);
+        elem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          { className: 'dom-cell-error' },
+          content.elem,
+          ' is not valid'
+        );
+      }
     } else {
       elem = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
@@ -63935,8 +63945,8 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     Object(__WEBPACK_IMPORTED_MODULE_8__keybindings_js__["a" /* default */])('jupyter', this);
     setInterval(() => {
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
-      var notebooks = Object.keys(localStorage);
-      var autos = notebooks.filter(n => n.includes(AUTOSAVE));
+      let notebooks = Object.keys(localStorage);
+      let autos = notebooks.filter(n => n.includes(AUTOSAVE));
       if (autos.length) {
         autos.forEach(n => {
           this.props.actions.deleteNotebook(n);
@@ -63972,17 +63982,15 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   }
 
   render() {
-    var bodyContent = this.props.cellIds.map((id, i) => {
+    let bodyContent = this.props.cellIds.map((id, i) => {
       // let id = cell.id
       switch (this.props.cellTypes[i]) {
         case 'javascript':
-          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__cell_jsx__["e" /* JavascriptCell */], { cellId: id, key: id });
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__cell_jsx__["d" /* JavascriptCell */], { cellId: id, key: id });
         case 'markdown':
-          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__cell_jsx__["f" /* MarkdownCell */], { cellId: id, key: id });
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__cell_jsx__["e" /* MarkdownCell */], { cellId: id, key: id });
         case 'raw':
-          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__cell_jsx__["g" /* RawCell */], { cellId: id, key: id });
-        case 'external scripts':
-          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__cell_jsx__["c" /* ExternalScriptCell */], { cellId: id, key: id });
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__cell_jsx__["f" /* RawCell */], { cellId: id, key: id });
         case 'external dependencies':
           return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__cell_jsx__["b" /* ExternalDependencyCell */], { cellId: id, key: id });
         case 'dom':
@@ -63990,7 +63998,7 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       }
     });
 
-    var sp = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', null);
+    let sp = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', null);
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
       { id: 'notebook-container',
@@ -81127,7 +81135,7 @@ function clearHistory(loadedState) {
   // remove history and declared properties before exporting the state.
   loadedState.declaredProperties = {};
   loadedState.history = [];
-  loadedState.externalScripts = [];
+  loadedState.externalDependencies = [];
   loadedState.executionNumber = 0;
   loadedState.cells = [...loadedState.cells.slice()];
   loadedState.cells.forEach(cell => {
@@ -81291,7 +81299,7 @@ let cellReducer = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__state_pr
     case 'INSERT_CELL':
       {
         let cells = state.cells.slice();
-        let index = cells.findIndex(c => c.id === Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["c" /* getSelectedCellId */])(state));
+        let index = cells.findIndex(c => c.id === Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["b" /* getSelectedCellId */])(state));
         let direction = action.direction == 'above' ? 0 : 1;
         let nextCell = Object(__WEBPACK_IMPORTED_MODULE_0__state_prototypes_js__["b" /* newCell */])(state.cells, 'javascript');
         cells.splice(index + direction, 0, nextCell);
@@ -81315,29 +81323,29 @@ let cellReducer = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__state_pr
         let thisCell = cells[index];
         thisCell.selected = true;
         if (action.scrollToCell) {
-          Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["g" /* scrollToCellIfNeeded */])(thisCell.id);
+          Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["f" /* scrollToCellIfNeeded */])(thisCell.id);
         }
         let nextState = Object.assign({}, state, { cells });
         return nextState;
       }
 
     case 'CELL_UP':
-      return Object.assign({}, state, { cells: Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* moveCell */])(state.cells, Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["c" /* getSelectedCellId */])(state), 'up') });
+      return Object.assign({}, state, { cells: Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["c" /* moveCell */])(state.cells, Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["b" /* getSelectedCellId */])(state), 'up') });
 
     case 'CELL_DOWN':
-      return Object.assign({}, state, { cells: Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* moveCell */])(state.cells, Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["c" /* getSelectedCellId */])(state), 'down') });
+      return Object.assign({}, state, { cells: Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["c" /* moveCell */])(state.cells, Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["b" /* getSelectedCellId */])(state), 'down') });
 
     case 'UPDATE_INPUT_CONTENT':
-      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["e" /* newStateWithSelectedCellPropertySet */])(state, 'content', action.content);
+      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* newStateWithSelectedCellPropertySet */])(state, 'content', action.content);
 
     case 'CHANGE_ELEMENT_TYPE':
-      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["e" /* newStateWithSelectedCellPropertySet */])(state, 'elementType', action.elementType);
+      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* newStateWithSelectedCellPropertySet */])(state, 'elementType', action.elementType);
 
     case 'CHANGE_DOM_ELEMENT_ID':
-      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["e" /* newStateWithSelectedCellPropertySet */])(state, 'domElementID', action.elemID);
+      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* newStateWithSelectedCellPropertySet */])(state, 'domElementID', action.elemID);
 
     case 'CHANGE_CELL_TYPE':
-      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["f" /* newStateWithSelectedCellPropsAssigned */])(state, { cellType: action.cellType, value: undefined, rendered: false });
+      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["e" /* newStateWithSelectedCellPropsAssigned */])(state, { cellType: action.cellType, value: undefined, rendered: false });
     // return newStateWithSelectedCellPropertiesSet(state,
     //   ['cellType','value','rendered'],
     //   [action.cellType,undefined,false])
@@ -81346,26 +81354,26 @@ let cellReducer = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__state_pr
       {
         switch (action.viewMode + ',' + action.rowType) {
           case 'presentation,input':
-            return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["e" /* newStateWithSelectedCellPropertySet */])(state, 'collapsePresentationViewInput', action.collapsedState);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* newStateWithSelectedCellPropertySet */])(state, 'collapsePresentationViewInput', action.collapsedState);
           case 'presentation,output':
-            return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["e" /* newStateWithSelectedCellPropertySet */])(state, 'collapsePresentationViewOutput', action.collapsedState);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* newStateWithSelectedCellPropertySet */])(state, 'collapsePresentationViewOutput', action.collapsedState);
           case 'editor,input':
-            return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["e" /* newStateWithSelectedCellPropertySet */])(state, 'collapseEditViewInput', action.collapsedState);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* newStateWithSelectedCellPropertySet */])(state, 'collapseEditViewInput', action.collapsedState);
           case 'editor,output':
-            return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["e" /* newStateWithSelectedCellPropertySet */])(state, 'collapseEditViewOutput', action.collapsedState);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* newStateWithSelectedCellPropertySet */])(state, 'collapseEditViewOutput', action.collapsedState);
         }
         break;
       }
 
     case 'MARK_CELL_NOT_RENDERED':
-      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["e" /* newStateWithSelectedCellPropertySet */])(state, 'rendered', false);
+      return Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["d" /* newStateWithSelectedCellPropertySet */])(state, 'rendered', false);
 
     case 'EVALUATE_CELL':
       {
         let newState = Object.assign({}, state);
         let declaredProperties = newState.declaredProperties;
         let cells = newState.cells.slice();
-        let index = cells.findIndex(c => c.id === Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["c" /* getSelectedCellId */])(state));
+        let index = cells.findIndex(c => c.id === Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["b" /* getSelectedCellId */])(state));
         let thisCell = cells[index];
 
         if (thisCell.cellType === 'javascript') {
@@ -81413,30 +81421,13 @@ let cellReducer = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__state_pr
           thisCell.value = MD.render(thisCell.content);
           thisCell.rendered = true;
           thisCell.evalStatus = evalStatuses.SUCCESS;
-        } else if (thisCell.cellType === 'external scripts') {
-          let scriptUrls = thisCell.content.split('\n').filter(s => s != '');
-          let newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script));
-          newScripts.forEach(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["b" /* addExternalScript */]);
-          newState.externalScripts.push(...newScripts);
-          thisCell.value = 'loaded scripts';
-          thisCell.rendered = true;
-          // add to newState.history
-          newState.history.push({
-            cellID: thisCell.id,
-            lastRan: new Date(),
-            content: '// added external scripts:\n' + newScripts.map(s => '// ' + s).join('\n')
-          });
-
-          newState.executionNumber++;
-          thisCell.executionStatus = '' + newState.executionNumber;
-          thisCell.evalStatus = evalStatuses.SUCCESS;
         } else if (thisCell.cellType === 'external dependencies') {
           let dependencies = thisCell.content.split('\n').filter(d => d.trim().slice(0, 2) !== '//');
           let outValue = dependencies.map(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["a" /* addExternalDependency */]);
 
           outValue.forEach(d => {
-            if (!newState.externalScripts.includes(d.src)) {
-              newState.externalScripts.push(d.src);
+            if (!newState.externalDependencies.includes(d.src)) {
+              newState.externalDependencies.push(d.src);
             }
           });
           thisCell.evalStatus = outValue.map(d => d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS;
@@ -81447,7 +81438,7 @@ let cellReducer = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__state_pr
             newState.history.push({
               cellID: thisCell.id,
               lastRan: new Date(),
-              content: '// added external scripts:\n' + outValue.map(s => '// ' + s.src).join('\n')
+              content: '// added external dependencies:\n' + outValue.map(s => '// ' + s.src).join('\n')
             });
           }
           newState.executionNumber++;
@@ -81466,7 +81457,7 @@ let cellReducer = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__state_pr
       }
     case 'DELETE_CELL':
       {
-        let selectedId = Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["c" /* getSelectedCellId */])(state);
+        let selectedId = Object(__WEBPACK_IMPORTED_MODULE_1__cell_reducer_utils_js__["b" /* getSelectedCellId */])(state);
         let cells = state.cells.slice();
         if (!cells.length) return state;
         let index = cells.findIndex(c => c.id === selectedId);
@@ -81498,13 +81489,13 @@ let cellReducer = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__state_pr
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return moveCell; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return scrollToCellIfNeeded; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return moveCell; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return scrollToCellIfNeeded; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addExternalDependency; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return addExternalScript; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return getSelectedCellId; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return newStateWithSelectedCellPropertySet; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return newStateWithSelectedCellPropsAssigned; });
+/* unused harmony export addExternalScript */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return getSelectedCellId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return newStateWithSelectedCellPropertySet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return newStateWithSelectedCellPropsAssigned; });
 function moveCell(cells, cellID, dir) {
   let _cells = cells.slice();
   let index = _cells.findIndex(c => c.id === cellID);
@@ -101737,7 +101728,7 @@ class NotebookHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compo
     let histContents = [];
     if (this.props.history.length) {
       histContents = this.props.history.filter(cell => cell.content.length).map((cell, i) => {
-        let cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__cell_jsx__["d" /* HistoryCell */], { display: true, ref: 'cell' + cell.id, actions: this.props.actions, cell: cell, id: i + '-' + cell.id, key: 'history' + i });
+        let cellComponent = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__cell_jsx__["c" /* HistoryCell */], { display: true, ref: 'cell' + cell.id, actions: this.props.actions, cell: cell, id: i + '-' + cell.id, key: 'history' + i });
         return cellComponent;
       });
     } else {
@@ -113421,8 +113412,8 @@ let MARKDOWN_MODE = [['m'], function () {
   if (Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils__["e" /* isCommandMode */])()) dispatcher.changeCellType('markdown');
 }];
 
-let EXTERNAL_SCRIPTS_MODE = [['e'], function () {
-  if (Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils__["e" /* isCommandMode */])()) dispatcher.changeCellType('external scripts');
+let EXTERNAL_DEPENDENCIES_MODE = [['e'], function () {
+  if (Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils__["e" /* isCommandMode */])()) dispatcher.changeCellType('external dependencies');
 }];
 
 let RAW_MODE = [['r'], function () {
@@ -113538,7 +113529,7 @@ let DELETE_CELL = [['shift+del', 'shift+backspace'], function () {
 
 jupyterKeybindings.push(JAVASCRIPT_MODE);
 jupyterKeybindings.push(MARKDOWN_MODE);
-jupyterKeybindings.push(EXTERNAL_SCRIPTS_MODE);
+jupyterKeybindings.push(EXTERNAL_DEPENDENCIES_MODE);
 jupyterKeybindings.push(RAW_MODE);
 jupyterKeybindings.push(SELECT_UP);
 jupyterKeybindings.push(SELECT_DOWN);
@@ -113779,13 +113770,6 @@ menuItems.changeCellTypeToRaw = {
   secondaryText: 'R',
   callback: function () {
     this.props.actions.changeCellType('raw');
-  }
-};
-menuItems.changeCellTypeToExternal = {
-  primaryText: 'External Scripts',
-  secondaryText: 'E',
-  callback: function () {
-    this.props.actions.changeCellType('external scripts');
   }
 };
 menuItems.changeCellTypeToExternal = {
