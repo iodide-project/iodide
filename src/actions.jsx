@@ -71,11 +71,9 @@ let actions = {
       id: cellID
     }
   },
-  renderCell: function (cellID, evaluateCell = true) {
+  renderCell: function () {
     return {
-      type: 'EVALUATE_CELL',
-      id: cellID,
-      evaluateCell: evaluateCell
+      type: 'EVALUATE_CELL'
     }
   },
   runAllCells: function () {

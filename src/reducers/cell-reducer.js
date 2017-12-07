@@ -126,109 +126,105 @@ let cellReducer = function (state = newNotebook(), action) {
       'rendered',false)
 
   case 'EVALUATE_CELL':{
-    if (typeof action.id === 'undefined') return state
-      
     let newState = Object.assign({}, state)
     let declaredProperties = newState.declaredProperties
     let cells = newState.cells.slice()
-    let index = cells.findIndex(c=>c.id===action.id)
+    let index = cells.findIndex(c=>c.id===getSelectedCellId(state))
     let thisCell = cells[index]
+    
+    if (thisCell.cellType === 'javascript') {
+      // add to newState.history
+      newState.history.push({
+        cellID: thisCell.id,
+        lastRan: new Date(),
+        content: thisCell.content
+      })
 
-    if (action.evaluateCell) {
-      if (thisCell.cellType === 'javascript') {
-        // add to newState.history
+      thisCell.value = undefined
 
-        newState.history.push({
-          cellID: thisCell.id,
-          lastRan: new Date(),
-          content: thisCell.content
-        })
-
-        thisCell.value = undefined
-
-        let output
-        let code = thisCell.content
-        if (code.slice(0,12)=='\'use matrix\'' || code.slice(0,12)=='"use matrix"'){
-          // console.log('---transpiling code---')
-          try {
-            code = tjsm.transpile(thisCell.content)
-            // console.log('---transpiled code---')
-            // console.log(code)
-          } catch(e) {
-            // console.log('---transpilation failed---')
-            e.constructor('transpilation failed: ' + e.message)
-          }
-        }
-
+      let output
+      let code = thisCell.content
+      if (code.slice(0,12)=='\'use matrix\'' || code.slice(0,12)=='"use matrix"'){
+        // console.log('---transpiling code---')
         try {
-          output = window.eval(code)
-          thisCell.evalStatus = evalStatuses.SUCCESS
+          code = tjsm.transpile(thisCell.content)
+          // console.log('---transpiled code---')
+          // console.log(code)
         } catch(e) {
-          let err = e.constructor('Error in Evaled Script: ' + e.message)
-          err.lineNumber = e.lineNumber - err.lineNumber + 3
-          output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
-          thisCell.evalStatus = evalStatuses.ERROR
+          // console.log('---transpilation failed---')
+          e.constructor('transpilation failed: ' + e.message)
         }
-        thisCell.rendered = true
-        if (output !== undefined) {thisCell.value = output}
+      }
 
-        newState.executionNumber++
-        thisCell.executionStatus = ''+newState.executionNumber
-      } else if (thisCell.cellType === 'markdown') {
-        // one line, huh.
-        thisCell.value = MD.render(thisCell.content)
-        thisCell.rendered = true
+      try {
+        output = window.eval(code)
         thisCell.evalStatus = evalStatuses.SUCCESS
-      } else if (thisCell.cellType === 'external scripts') {
-        let scriptUrls = thisCell.content.split('\n').filter(s => s!='')
-        let newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script))
-        newScripts.forEach(addExternalScript)
-        newState.externalScripts.push(...newScripts)
-        thisCell.value = 'loaded scripts'
-        thisCell.rendered = true
-        // add to newState.history
+      } catch(e) {
+        let err = e.constructor('Error in Evaled Script: ' + e.message)
+        err.lineNumber = e.lineNumber - err.lineNumber + 3
+        output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+        thisCell.evalStatus = evalStatuses.ERROR
+      }
+      thisCell.rendered = true
+      if (output !== undefined) {thisCell.value = output}
+
+      newState.executionNumber++
+      thisCell.executionStatus = ''+newState.executionNumber
+    } else if (thisCell.cellType === 'markdown') {
+      // one line, huh.
+      thisCell.value = MD.render(thisCell.content)
+      thisCell.rendered = true
+      thisCell.evalStatus = evalStatuses.SUCCESS
+    } else if (thisCell.cellType === 'external scripts') {
+      let scriptUrls = thisCell.content.split('\n').filter(s => s!='')
+      let newScripts = scriptUrls.filter(script => !newState.externalScripts.includes(script))
+      newScripts.forEach(addExternalScript)
+      newState.externalScripts.push(...newScripts)
+      thisCell.value = 'loaded scripts'
+      thisCell.rendered = true
+      // add to newState.history
+      newState.history.push({
+        cellID: thisCell.id,
+        lastRan: new Date(),
+        content: '// added external scripts:\n' + ( newScripts.map(s => '// '+s).join('\n') )
+      })
+        
+      newState.executionNumber++
+      thisCell.executionStatus = ''+newState.executionNumber
+      thisCell.evalStatus = evalStatuses.SUCCESS
+      
+    } else if (thisCell.cellType === 'external dependencies') {
+      let dependencies = thisCell.content.split('\n').filter(d=>d.trim().slice(0,2) !=='//')
+      let outValue = dependencies.map(addExternalDependency)
+
+      outValue.forEach(d=>{
+        if (!newState.externalScripts.includes(d.src)) {
+          newState.externalScripts.push(d.src)
+        }
+      })
+      thisCell.evalStatus = outValue.map(d=>d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
+      thisCell.value = outValue
+      thisCell.rendered = true
+      // add to newState.history
+      if (outValue.length) {
         newState.history.push({
           cellID: thisCell.id,
           lastRan: new Date(),
-          content: '// added external scripts:\n' + ( newScripts.map(s => '// '+s).join('\n') )
-        })
-          
-        newState.executionNumber++
-        thisCell.executionStatus = ''+newState.executionNumber
-        thisCell.evalStatus = evalStatuses.SUCCESS
-        
-      } else if (thisCell.cellType === 'external dependencies') {
-        let dependencies = thisCell.content.split('\n').filter(d=>d.trim().slice(0,2) !=='//')
-        let outValue = dependencies.map(addExternalDependency)
-
-        outValue.forEach(d=>{
-          if (!newState.externalScripts.includes(d.src)) {
-            newState.externalScripts.push(d.src)
-          }
-        })
-        thisCell.evalStatus = outValue.map(d=>d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
-        thisCell.value = outValue
-        thisCell.rendered = true
-        // add to newState.history
-        if (outValue.length) {
-          newState.history.push({
-            cellID: thisCell.id,
-            lastRan: new Date(),
-            content: '// added external scripts:\n' + ( outValue.map(s => '// '+s.src).join('\n') )
-          })  
-        }
-        newState.executionNumber++
-        thisCell.executionStatus = ''+newState.executionNumber
-      } else {
-        thisCell.rendered = false
+          content: '// added external scripts:\n' + ( outValue.map(s => '// '+s.src).join('\n') )
+        })  
       }
+      newState.executionNumber++
+      thisCell.executionStatus = ''+newState.executionNumber
+    } else {
+      thisCell.rendered = false
     }
+    
     // ok. Now let's see if there are any new declared variables or libs
     declaredProperties = {}
     Object.keys(window)
       .filter(g => !initialVariables.has(g))
       .forEach(g => {declaredProperties[g] = window[g]})
-    cells[index] = thisCell
+    // cells[index] = thisCell
     nextState = Object.assign({}, newState, {cells}, {declaredProperties})
     return nextState
   }
