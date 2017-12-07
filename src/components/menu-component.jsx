@@ -20,7 +20,7 @@ import DownArrow from 'material-ui/svg-icons/navigation/arrow-downward'
 import PlayButton from 'material-ui/svg-icons/av/play-arrow'
 import FastForward from 'material-ui/svg-icons/av/fast-forward'
 
-import {menuItems, getSavedNotebooks} from './menu-content'
+import {menuItems, getSavedNotebooks} from '../menu-content'
 
 import settings from '../settings.js'
 
