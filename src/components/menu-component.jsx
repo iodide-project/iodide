@@ -20,8 +20,9 @@ import DownArrow from 'material-ui/svg-icons/navigation/arrow-downward'
 import PlayButton from 'material-ui/svg-icons/av/play-arrow'
 import FastForward from 'material-ui/svg-icons/av/fast-forward'
 
-import settings from './settings.jsx'
 import {menuItems, getSavedNotebooks} from './menu-content'
+
+import settings from '../settings.jsx'
 
 const AUTOSAVE = settings.labels.AUTOSAVE
 
