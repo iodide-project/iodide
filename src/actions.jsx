@@ -126,23 +126,20 @@ let actions = {
       scrollToCell: scrollToCell
     }
   },
-  deleteCell: function (cellID) {
+  deleteCell: function () {
     return {
       type: 'DELETE_CELL',
-      id: cellID
     }
   },
-  changeElementType: function (cellID, elementType) {
+  changeElementType: function (elementType) {
     return {
       type: 'CHANGE_ELEMENT_TYPE',
-      id: cellID,
       elementType: elementType
     }
   },
-  changeDOMElementID: function (cellID, elemID) {
+  changeDOMElementID: function (elemID) {
     return {
       type: 'CHANGE_DOM_ELEMENT_ID',
-      id: cellID,
       elemID: elemID
     }
   },

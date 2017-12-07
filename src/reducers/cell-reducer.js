@@ -228,12 +228,10 @@ let cellReducer = function (state = newNotebook(), action) {
     return nextState
   }
   case 'DELETE_CELL':{
-    if (typeof action.id === 'undefined'){
-      return state
-    }
+    let selectedId = getSelectedCellId(state)
     let cells = state.cells.slice()
     if (!cells.length) return state
-    let index = cells.findIndex(c=>c.id===action.id)
+    let index = cells.findIndex(c=>c.id===selectedId)
     let thisCell = state.cells[index]
     if (thisCell.selected) {
       let nextIndex=0
@@ -243,9 +241,8 @@ let cellReducer = function (state = newNotebook(), action) {
         cells[nextIndex].selected=true
       }
     }
-
     nextState = Object.assign({}, state, {
-      cells: cells.filter((cell)=> {return cell.id !== action.id})
+      cells: cells.filter((cell)=> {return cell.id !== selectedId})
     })
     return nextState
   }

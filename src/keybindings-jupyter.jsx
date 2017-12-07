@@ -160,7 +160,7 @@ let EDIT_MODE = [['enter', 'return'], function(e){
 }]
 
 let DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
-  if (isCommandMode()) dispatcher.deleteCell(getSelectedCellId())
+  if (isCommandMode()) dispatcher.deleteCell()
 }
 ]
 

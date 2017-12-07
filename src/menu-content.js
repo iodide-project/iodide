@@ -166,7 +166,7 @@ menuItems.deleteCell = {
     let currentlySelectedId = getSelectedCellId()
     if (currentlySelectedId != undefined
             && this.props.mode == 'command') {
-      this.props.actions.deleteCell(currentlySelectedId)
+      this.props.actions.deleteCell()
     }
   }
 }

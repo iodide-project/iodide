@@ -80,7 +80,7 @@ class GenericCell extends React.Component {
   }
 
   deleteCell() {
-    this.props.actions.deleteCell(this.props.cell.id)
+    this.props.actions.deleteCell()
   }
 
   changeCellType(cellType, evt) {
@@ -347,18 +347,18 @@ class DOMCell extends GenericCell {
   }
 
   componentWillMount() {
-    if (!this.props.cell.hasOwnProperty('elementType')) this.props.actions.changeElementType(this.props.cell.id, 'div')
-    if (!this.props.cell.hasOwnProperty('domElementID')) this.props.actions.changeDOMElementID(this.props.cell.id, 'dom-cell-' + this.props.cell.id)
+    if (!this.props.cell.hasOwnProperty('elementType')) this.props.actions.changeElementType('div')
+    if (!this.props.cell.hasOwnProperty('domElementID')) this.props.actions.changeDOMElementID('dom-cell-' + this.props.cell.id)
   }
 
   changeElementType(event) {
     let elementType = event.target.value.trim()
-    this.props.actions.changeElementType(this.props.cell.id, elementType)
+    this.props.actions.changeElementType(elementType)
   }
 
   changeElementID(event) {
     let elementID = event.target.value.trim()
-    this.props.actions.changeDOMElementID(this.props.cell.id, elementID)
+    this.props.actions.changeDOMElementID(elementID)
   }
 
   // FIXME!! need to Override enterEditMode for DOMCell to focus the inputs
