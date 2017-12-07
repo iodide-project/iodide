@@ -8,7 +8,7 @@ We'd really appreciate feedback of any kind -- bug reposrt, feature requests, ge
 
 A notebook-style browser-based IDE for javascript. One piece of a larger goal - scientific computing in the browser with JS, the DOM, and other web technologies.
 
-![](https://www.dropbox.com/s/rmxkrcsfuxbjywq/NOTEBOOK.gif?dl=0)
+![](https://media.giphy.com/media/xT0xeJdYMwA8GvEdCE/giphy.gif)
 
 # Setup
 
