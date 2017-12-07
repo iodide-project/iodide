@@ -85,7 +85,7 @@ let cellReducer = function (state = newNotebook(), action) {
       {cells: moveCell(state.cells, getSelectedCellId(state), 'down')}
     )
   }
-  case 'UPDATE_CELL':
+  case 'UPDATE_INPUT_CONTENT':
     return newStateWithSelectedCellPropertySet(state,'content',action.content)
 
   case 'CHANGE_ELEMENT_TYPE':
@@ -125,7 +125,7 @@ let cellReducer = function (state = newNotebook(), action) {
     return newStateWithSelectedCellPropertySet(state,
       'rendered',false)
 
-  case 'RENDER_CELL':
+  case 'EVALUATE_CELL':
     if (typeof action.id === 'undefined') return state
       
     var newState = Object.assign({}, state)

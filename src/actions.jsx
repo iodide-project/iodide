@@ -53,7 +53,7 @@ let actions = {
   },
   updateInputContent: function (cellID, text) {
     return {
-      type: 'UPDATE_CELL',
+      type: 'UPDATE_INPUT_CONTENT',
       id: cellID,
       content: text
     }
@@ -73,7 +73,7 @@ let actions = {
   },
   renderCell: function (cellID, evaluateCell = true) {
     return {
-      type: 'RENDER_CELL',
+      type: 'EVALUATE_CELL',
       id: cellID,
       evaluateCell: evaluateCell
     }

@@ -6,7 +6,7 @@ import { newNotebook } from './state-prototypes.js'
 let store = createStore(
   reducer, newNotebook(),
   compose(applyMiddleware(createLogger({
-    predicate: (getState, action) => action.type !== 'UPDATE_CELL'
+    predicate: (getState, action) => action.type !== 'UPDATE_INPUT_CONTENT'
   })))
 )
 
