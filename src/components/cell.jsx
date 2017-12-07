@@ -349,7 +349,6 @@ class DOMCell extends GenericCell {
 
   outputComponent() {
     let elem
-    // {domtype}#{elementID}
     let content = parseDOMCellContent(this.props.cell.content)
     if (content.elem !== '' && content.elem !== undefined) {
       try {
