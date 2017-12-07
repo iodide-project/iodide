@@ -297,7 +297,7 @@ class MarkdownCell extends GenericCell {
   enterEditMode() {
     if (this.props.viewMode == 'editor') {
       super.enterEditMode()
-      this.props.actions.markCellNotRendered(this.props.cell.id)
+      this.props.actions.markCellNotRendered()
     }
   }
 

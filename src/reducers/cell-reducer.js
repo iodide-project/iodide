@@ -224,7 +224,6 @@ let cellReducer = function (state = newNotebook(), action) {
     Object.keys(window)
       .filter(g => !initialVariables.has(g))
       .forEach(g => {declaredProperties[g] = window[g]})
-    // cells[index] = thisCell
     nextState = Object.assign({}, newState, {cells}, {declaredProperties})
     return nextState
   }

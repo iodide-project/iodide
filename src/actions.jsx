@@ -90,10 +90,9 @@ let actions = {
       collapsedState: collapsedState
     }
   },
-  markCellNotRendered: function (cellID) {
+  markCellNotRendered: function () {
     return {
       type: 'MARK_CELL_NOT_RENDERED',
-      id: cellID
     }
   },
   cellUp: function () {
