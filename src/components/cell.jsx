@@ -331,60 +331,34 @@ class MarkdownCell extends GenericCell {
   }
 }
 
+
+function parseDOMCellContent(content) {
+  let elems = content.split('#')
+  let elem = elems[0]
+  let elemID
+  if (elems.length > 1) {
+    elemID = elems[1]
+  } else {
+    elemID = undefined
+  }
+  return {elem, elemID}
+}
+
 class DOMCell extends GenericCell {
   constructor(props) {
     super(props)
-    // explicitly bind "this" for all methods in constructors
-    this.changeElementType = this.changeElementType.bind(this)
-    this.changeElementID = this.changeElementID.bind(this)
-    this.hasEditor = false
   }
 
   componentWillMount() {
-    if (!this.props.cell.hasOwnProperty('elementType')) this.props.actions.changeElementType('div')
-    if (!this.props.cell.hasOwnProperty('domElementID')) this.props.actions.changeDOMElementID('dom-cell-' + this.props.cell.id)
-  }
-
-  changeElementType(event) {
-    let elementType = event.target.value.trim()
-    this.props.actions.changeElementType(elementType)
-  }
-
-  changeElementID(event) {
-    let elementID = event.target.value.trim()
-    this.props.actions.changeDOMElementID(elementID)
-  }
-
-  // FIXME!! need to Override enterEditMode for DOMCell to focus the inputs
-  //     enterEditMode(){
-  //         super.enterEditMode()
-  //         if (this.hasEditor) this.refs.editor.focus()
-  //     }
-
-  inputComponent() {
-    return (
-      <div className='dom-cell-elementType'
-        style={{display: this.props.cell.selected ? 'inherit' : 'none'}}>
-        <Form className='dom-inputs' inline>
-          <FormGroup bsSize='small' controlId={'dom-' + this.props.cell.id}>
-            <ControlLabel className='right-spacer'>tag</ControlLabel>
-            <FormControl className='right-spacer' type='text'
-              onChange={this.changeElementType}
-              value={this.props.cell.elementType}
-              placeholder='div, svg, etc.' />
-            <ControlLabel className='right-spacer'>css ID</ControlLabel>
-            <FormControl type='text' onChange={this.changeElementID}
-              value={this.props.cell.domElementID} placeholder='id' />
-          </FormGroup>
-        </Form>
-      </div>
-    )
+  
   }
 
   outputComponent() {
     let elem
-    if (this.props.cell.elementType.length) {
-      elem = createElement(this.props.cell.elementType, {id: this.props.cell.domElementID})
+    // {domtype}#{elementID}
+    let content = parseDOMCellContent(this.props.cell.content)
+    if (content.elem !== '' && content.elem !== undefined) {
+      elem = createElement(content.elem, {id: content.elemID})
     } else {
       elem = <div className='dom-cell-error'>please add an elem type</div>
     }
@@ -423,6 +397,7 @@ class HistoryCell extends GenericCell {
 function jsReturnValue(cell) {
   let resultElem
   let returnedSomething
+  if (cell.cellType === 'dom') returnedSomething = false
   if (cell.value == undefined && !cell.rendered) returnedSomething = false
   if (cell.value !== undefined) returnedSomething = true
   if (cell.value == undefined && cell.rendered) returnedSomething = true

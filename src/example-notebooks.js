@@ -1,6 +1,6 @@
 const exampleNotebooks = []
 
-import evictions from '../examples/evictions-by-san-francisco-neighborhood--1999-2015.json'
+import evictions from '../examples/eviction-notices-by-sf-neighborhood--1999-2015.json'
 import introduction from '../examples/what-does-a-javascript-notebook-look-like-.json'
 import ffusers from '../examples/a-multi-dimensional-view-of-firefox-users.json'
 
