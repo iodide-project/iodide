@@ -16,16 +16,6 @@ function viewModeIsPresentation(){
   return store.getState().viewMode === 'presentation'
 }
 
-function getSelectedCellId(){
-  let cells = store.getState().cells
-  let index = cells.findIndex((c)=>{return c.selected})
-  if (index > -1) {
-    return cells[index].id
-  } else {
-    return undefined // for now
-  }
-}
-
 function getCellBelowSelectedId(){
   let cells = store.getState().cells
   let index = cells.findIndex((c)=>{return c.selected})
@@ -81,7 +71,6 @@ export {
   prettyDate,
   formatDateString,
   getCellById,
-  getSelectedCellId,
   getCellBelowSelectedId, getCellAboveSelectedId,
   isCommandMode,
   isEditMode,

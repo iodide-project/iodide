@@ -1,7 +1,6 @@
 import {store} from './store.jsx'
 import actions from './actions.jsx'
-import {getSelectedCellId, isCommandMode, isEditMode,
-  viewModeIsEditor, viewModeIsPresentation,
+import {isCommandMode,  viewModeIsEditor,
   getCellBelowSelectedId, getCellAboveSelectedId} from './notebook-utils'
 
 let jupyterKeybindings = []

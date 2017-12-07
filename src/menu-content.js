@@ -1,4 +1,4 @@
-import {prettyDate, formatDateString, getSelectedCellId} from './notebook-utils'
+import {prettyDate, formatDateString} from './notebook-utils'
 import exampleNotebooks from './example-notebooks.jsx'
 import settings from './settings.jsx'
 const AUTOSAVE = settings.labels.AUTOSAVE
@@ -140,32 +140,20 @@ menuItems.savedNotebooks = {
 menuItems.addCellBelow = {
   primaryText: 'Add Cell Below', 
   secondaryText:'B',
-  callback: function(){
-    let currentlySelectedId = getSelectedCellId()
-    if (currentlySelectedId != undefined) {
-      this.props.actions.insertCell('javascript','below')
-    }
-  }
+  callback: function(){ this.props.actions.insertCell('javascript','below') }
 }
 
 menuItems.addCellAbove = {
   primaryText: 'Add Cell Above', 
   secondaryText:'A',
-  callback: function(){
-    let currentlySelectedId = getSelectedCellId()
-    if (currentlySelectedId != undefined) {
-      this.props.actions.insertCell('javascript','above')
-    }
-  }
+  callback: function(){ this.props.actions.insertCell('javascript','above') }
 }
 
 menuItems.deleteCell = {
   primaryText: 'Delete Cell', 
   secondaryText: '\u21E7 \u232b', 
   callback: function(){
-    let currentlySelectedId = getSelectedCellId()
-    if (currentlySelectedId != undefined
-            && this.props.mode == 'command') {
+    if (this.props.mode == 'command') {
       this.props.actions.deleteCell()
     }
   }

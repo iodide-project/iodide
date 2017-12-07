@@ -61,17 +61,12 @@ let cellReducer = function (state = newNotebook(), action) {
   }
 
   case 'SELECT_CELL':{
-    if (typeof action.id === 'undefined') return state
-
     let cells = state.cells.slice()
+    cells.forEach((c)=>c.selected=false)
     let index = cells.findIndex(c=>c.id===action.id)
     let thisCell = cells[index]
-    cells.forEach((c)=>c.selected=false)
     thisCell.selected = true
-    cells[index] = thisCell
-
     if (action.scrollToCell) { scrollToCellIfNeeded(thisCell.id) }
-
     let nextState = Object.assign({}, state, {cells})
     return nextState
   }

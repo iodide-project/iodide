@@ -22,7 +22,6 @@ import FastForward from 'material-ui/svg-icons/av/fast-forward'
 
 import settings from './settings.jsx'
 import {menuItems, getSavedNotebooks} from './menu-content'
-import {getSelectedCellId} from './notebook-utils'
 
 const AUTOSAVE = settings.labels.AUTOSAVE
 
