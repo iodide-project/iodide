@@ -82,16 +82,16 @@ class MainMenu extends React.Component {
     this.props.actions.runAllCells()
     if (this.props.pageMode !== 'command') this.props.actions.changeMode('command')
   }
-	
-  runCell(render) {
-    this.props.actions.renderCell(getSelectedCellId())
+
+  runCell() {
+    this.props.actions.evaluateCell()
     if (this.props.pageMode !== 'command') this.props.actions.changeMode('command')
   }
 
   insertCell() {
     this.props.actions.insertCell('javascript', getSelectedCellId(), 1)
   }
-	
+
   cellUp(){
     this.props.actions.cellUp()
   }

@@ -123,15 +123,15 @@ let SELECT_DOWN = [['down'], function(e){
 }
 ]
 
-let RENDER_CELL = [['mod+enter'], function(){
+let EVALUATE_CELL = [['mod+enter'], function(){
   dispatcher.changeMode('command')
-  dispatcher.renderCell(getSelectedCellId())
+  dispatcher.evaluateCell()
 }]
 
-let RENDER_AND_SELECT_BELOW = [['shift+enter'], function(e){
+let EVAL_AND_SELECT_BELOW = [['shift+enter'], function(e){
   if (viewModeIsEditor()) {
     dispatcher.changeMode('command')
-    dispatcher.renderCell(getSelectedCellId())
+    dispatcher.evaluateCell()
     let cellBelowId = getCellBelowSelectedId()
     if (cellBelowId){
       dispatcher.selectCell(cellBelowId, true)
@@ -176,8 +176,8 @@ jupyterKeybindings.push(MOVE_UP)
 jupyterKeybindings.push(MOVE_DOWN)
 jupyterKeybindings.push(EDIT_MODE)
 jupyterKeybindings.push(COMMAND_MODE)
-jupyterKeybindings.push(RENDER_CELL)
-jupyterKeybindings.push(RENDER_AND_SELECT_BELOW)
+jupyterKeybindings.push(EVALUATE_CELL)
+jupyterKeybindings.push(EVAL_AND_SELECT_BELOW)
 jupyterKeybindings.push(DELETE_CELL)
 jupyterKeybindings.push(SAVE_NOTEBOOK)
 jupyterKeybindings.push(EXPORT_NOTEBOOK)

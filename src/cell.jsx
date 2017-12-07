@@ -52,7 +52,7 @@ class GenericCell extends React.Component {
       autoRefresh: true,
     }
     // explicitly bind "this" for all methods in constructors
-    this.renderCell = this.renderCell.bind(this)
+    this.evaluateCell = this.evaluateCell.bind(this)
     this.cellUp = this.cellUp.bind(this)
     this.cellDown = this.cellDown.bind(this)
     this.deleteCell = this.deleteCell.bind(this)
@@ -67,8 +67,8 @@ class GenericCell extends React.Component {
     this.outputComponent = this.outputComponent.bind(this)
   }
 
-  renderCell() {
-    this.props.actions.renderCell(this.props.cell.id)
+  evaluateCell() {
+    this.props.actions.evaluateCell()
   }
 
   cellUp() {

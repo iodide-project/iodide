@@ -34,7 +34,7 @@ let cellReducer = function (state = newNotebook(), action) {
     state.cells.forEach(c=>{
       if (!breakThis) {
         nextState = cellReducer(nextState, {type: 'SELECT_CELL', id: c.id})
-        nextState = Object.assign({}, cellReducer(nextState, {type:'RENDER_CELL', id: c.id, evaluateCell: true}))
+        nextState = Object.assign({}, cellReducer(nextState, {type:'EVALUATE_CELL', id: c.id, evaluateCell: true}))
         let ind = nextState.cells.findIndex(ci=>ci.id === c.id)
         if (nextState.cells[ind].evalStatus === evalStatuses.ERROR) {
           breakThis = true

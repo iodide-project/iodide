@@ -71,7 +71,7 @@ let actions = {
       id: cellID
     }
   },
-  renderCell: function () {
+  evaluateCell: function () {
     return {
       type: 'EVALUATE_CELL'
     }
