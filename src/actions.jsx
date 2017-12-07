@@ -64,12 +64,6 @@ let actions = {
       cellType: cellType
     }
   },
-  clearCellBeforeEvaluation: function (cellID) {
-    return {
-      type: 'CLEAR_CELL_BEFORE_EVALUATION',
-      id: cellID
-    }
-  },
   evaluateCell: function () {
     return {
       type: 'EVALUATE_CELL'

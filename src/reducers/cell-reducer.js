@@ -116,11 +116,6 @@ let cellReducer = function (state = newNotebook(), action) {
     break
   }
 
-  case 'CLEAR_CELL_BEFORE_EVALUATION':
-    return newStateWithSelectedCellPropertiesSet(state,
-      ['executionStatus','value'],
-      ['*',undefined])
-
   case 'MARK_CELL_NOT_RENDERED':
     return newStateWithSelectedCellPropertySet(state,
       'rendered',false)
