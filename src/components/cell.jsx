@@ -11,8 +11,6 @@ import matchbrackets from 'codemirror/addon/edit/matchbrackets'
 import closebrackets from 'codemirror/addon/edit/closebrackets'
 import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
-import {FormGroup, FormControl,
-  ControlLabel, Form} from 'react-bootstrap'
 import _ from 'lodash'
 import ReactTable from 'react-table'
 import JSONTree from 'react-json-tree'
