@@ -6,9 +6,9 @@ We'd really appreciate feedback of any kind -- bug reposrt, feature requests, ge
 
 # The javascript notebook
 
-A notebook-style browser-based IDE for javascript. One piece of a larger goal - scientific computing in the browser with JS, the DOM, and other web technologies.
+This repository began as an early answer to the question: __can we do scientific computing without ever leaving the browser?__ We are building a modern, browser-first notebook-style IDE that capitalizes on web technologies for interative / literate / inquisitive computing. The notebook borrows inspiration from RStudio, Jupyter, Carbide, and many other computing environments.
 
-![](https://media.giphy.com/media/3ov9jNSI7tuq5tELfO/giphy.gif)
+![](https://media.giphy.com/media/xT0xeJdYMwA8GvEdCE/giphy.gif)
 
 # Setup
 
@@ -16,7 +16,11 @@ Run `npm install` after cloning this repository.
 
 ## Building
 
-Run './node_modules/.bin/webpack --watch' to build & monitor any new file changes.
+Run `npm run build` to build & monitor any new file changes.
+
+## Testing
+
+Run `npm test` to run the test suite.
 
 # Using the notebook
 
