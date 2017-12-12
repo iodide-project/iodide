@@ -245,8 +245,8 @@ class ViewModeToggleButton extends React.Component {
 
   render() {
     let buttonString
-    if (this.props.viewMode=='presentation'){buttonString='Presentation'}
-    else if (this.props.viewMode=='editor'){buttonString='Editor'}
+    if (this.props.viewMode=='presentation'){buttonString='Edit'}
+    else if (this.props.viewMode=='editor'){buttonString='View'}
     return (
       <FlatButton style={{color:this.props.textColor || '#fafafa'}} onClick={this.toggleViewMode} hoverColor={this.props.hoverColor || 'darkgray'} label={buttonString} />
     )

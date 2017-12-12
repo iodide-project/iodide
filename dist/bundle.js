@@ -101738,9 +101738,9 @@ class ViewModeToggleButton extends __WEBPACK_IMPORTED_MODULE_0_react___default.a
   render() {
     let buttonString;
     if (this.props.viewMode == 'presentation') {
-      buttonString = 'Presentation';
+      buttonString = 'Edit';
     } else if (this.props.viewMode == 'editor') {
-      buttonString = 'Editor';
+      buttonString = 'View';
     }
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6_material_ui_FlatButton___default.a, { style: { color: this.props.textColor || '#fafafa' }, onClick: this.toggleViewMode, hoverColor: this.props.hoverColor || 'darkgray', label: buttonString });
   }
