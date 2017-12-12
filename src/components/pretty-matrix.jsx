@@ -4,7 +4,7 @@ import nb from '../../tools/nb.js'
 
 function cellText(matrixLike,i,j){
   let [numRows, numCols] = nb.shape(matrixLike)
-    var text =''
+  let text =''
   if (_.isNumber(i) && _.isNumber(j)) {
     text = nb.prettyFormatNumber(matrixLike[i][j],6)
   }
@@ -17,7 +17,7 @@ function cellText(matrixLike,i,j){
 function makeMatrixText(matrixLike,maxDims){
   let [numRows, numCols] = nb.shape(matrixLike)
 
-    if (numRows>maxDims[0]){
+  if (numRows>maxDims[0]){
     var halfDim = Math.round(maxDims[0]/2)
     var rowInds = _.range(0,halfDim).concat('⋮', _.range(numRows-halfDim,numRows))
   } else {
@@ -40,13 +40,13 @@ function makeMatrixText(matrixLike,maxDims){
 class PrettyMatrix extends React.Component {
   constructor(props) {
     super(props)
-        this.matrix = this.props.matrix
-        this.maxDims = this.props.maxDims==undefined ? [10,10] : this.props.maxDims;
+    this.matrix = this.props.matrix
+    this.maxDims = this.props.maxDims==undefined ? [10,10] : this.props.maxDims;
     [this.numRows, this.numCols] =  nb.shape(this.matrix)
-    }
+  }
 
   cellText(i,j){
-    var text =''
+    let text =''
     if (_.isNumber(i) && _.isNumber(j)) {
       text = nb.prettyFormatNumber(this.matrix[i][j],6)
     }
@@ -57,7 +57,7 @@ class PrettyMatrix extends React.Component {
   }
 
   render() {
-    var [matrix, maxDims, numRows, numCols] = [
+    let [matrix, maxDims, numRows, numCols] = [
       this.matrix, this.maxDims, this.numRows, this.numCols]
 
     if (numRows>maxDims[0]){
@@ -86,14 +86,14 @@ class PrettyMatrix extends React.Component {
         </tbody>
       </table>
     )
-    }
+  }
 }
 
 
 class SimpleTable extends React.Component {
   constructor(props) {
     super(props)
-    }
+  }
 
   render() {
     return (
@@ -109,7 +109,7 @@ class SimpleTable extends React.Component {
         </tbody>
       </table>
     )
-    }
+  }
 }
 
 

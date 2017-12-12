@@ -46,20 +46,12 @@ class Page extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    // console.log(this.props)
-    // console.log(nextProps)
-    // console.log(this.props==nextProps)
-    // console.log(this.props===nextProps)
-    // console.log(deepEqual(this.props,nextProps))
-    // return deepEqual(this.props,nextProps)
   }
 
-  componentDidUpdate(prevProps,prevState){
-    console.log('page update')
+  componentDidUpdate(prevProps, prevState){
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    console.log('page deepequal', deepEqual(this.props,nextProps))
     return !deepEqual(this.props,nextProps)
   }
 

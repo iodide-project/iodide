@@ -47158,7 +47158,6 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 
   shouldComponentUpdate(nextProps, nextState) {
     let propsEqual = __WEBPACK_IMPORTED_MODULE_3_deep_equal___default()(this.props, nextProps);
-    console.log('cell deepequal', this.props.id, propsEqual);
     return !propsEqual;
   }
 
@@ -47169,7 +47168,6 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('componentDidUpdate', this.props.cell.id);
     if (this.props.cell.selected && this.refs.hasOwnProperty('editor') && this.props.pageMode === 'edit') {
       this.refs.editor.focus();
     }
@@ -47183,7 +47181,6 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
   }
 
   inputComponent() {
-    console.log('inputComponent', this.props.cell.id);
     let editorOptions = Object.assign({}, this.editorOptions, { readOnly: this.props.viewMode === 'presentation' ? 'nocursor' : false });
 
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47204,7 +47201,6 @@ class GenericCell extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
   }
 
   render() {
-    console.log('cell render', this.props.cell.id);
     let cellSelected = this.props.cell.selected ? 'selected-cell ' : '';
     let editorMode = this.props.cell.selected && this.props.pageMode === 'edit' ? 'edit-mode ' : 'command-mode ';
     let cellId = this.props.cell.id;
@@ -47537,7 +47533,6 @@ function jsReturnValue(cell) {
 }
 
 function mapStateToPropsForCells(state, ownProps) {
-  console.log('mapStateToPropsForCells');
   let cell = Object(__WEBPACK_IMPORTED_MODULE_23__notebook_utils_js__["d" /* getCellById */])(state.cells, ownProps.cellId);
   return {
     display: true,
@@ -63875,21 +63870,11 @@ class Page extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    // console.log(this.props)
-    // console.log(nextProps)
-    // console.log(this.props==nextProps)
-    // console.log(this.props===nextProps)
-    // console.log(deepEqual(this.props,nextProps))
-    // return deepEqual(this.props,nextProps)
-  }
+  componentWillReceiveProps(nextProps) {}
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log('page update');
-  }
+  componentDidUpdate(prevProps, prevState) {}
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log('page deepequal', __WEBPACK_IMPORTED_MODULE_3_deep_equal___default()(this.props, nextProps));
     return !__WEBPACK_IMPORTED_MODULE_3_deep_equal___default()(this.props, nextProps);
   }
 
@@ -80830,7 +80815,7 @@ class CellRow extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   }
 
   handleCollapseButtonClick() {
-    var nextCollapsedState;
+    let nextCollapsedState;
     switch (this.props.collapsedState) {
       case 'COLLAPSED':
         nextCollapsedState = 'EXPANDED';
@@ -80896,9 +80881,8 @@ function mapStateToProps_CellRows(state, ownProps) {
       break;
   }
   let executionString = ownProps.rowType === 'input' ? `[${cell.executionStatus}]` : '';
-  // console.log("cellRow",cell)
-  // console.log(collapsedState)
-  var collapseButtonLabel;
+
+  let collapseButtonLabel;
   if (collapsedState === 'COLLAPSED') {
     collapseButtonLabel = ownProps.rowType === 'input' ? cell.cellType : 'output';
   } else {
@@ -100348,7 +100332,7 @@ module.exports = matchAt;
 
 function cellText(matrixLike, i, j) {
   let [numRows, numCols] = __WEBPACK_IMPORTED_MODULE_2__tools_nb_js__["a" /* default */].shape(matrixLike);
-  var text = '';
+  let text = '';
   if (__WEBPACK_IMPORTED_MODULE_1_lodash___default.a.isNumber(i) && __WEBPACK_IMPORTED_MODULE_1_lodash___default.a.isNumber(j)) {
     text = __WEBPACK_IMPORTED_MODULE_2__tools_nb_js__["a" /* default */].prettyFormatNumber(matrixLike[i][j], 6);
   } else if (__WEBPACK_IMPORTED_MODULE_1_lodash___default.a.isString(i) && __WEBPACK_IMPORTED_MODULE_1_lodash___default.a.isString(j)) {
@@ -100389,7 +100373,7 @@ class PrettyMatrix extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
   }
 
   cellText(i, j) {
-    var text = '';
+    let text = '';
     if (__WEBPACK_IMPORTED_MODULE_1_lodash___default.a.isNumber(i) && __WEBPACK_IMPORTED_MODULE_1_lodash___default.a.isNumber(j)) {
       text = __WEBPACK_IMPORTED_MODULE_2__tools_nb_js__["a" /* default */].prettyFormatNumber(this.matrix[i][j], 6);
     } else if (__WEBPACK_IMPORTED_MODULE_1_lodash___default.a.isString(i) && __WEBPACK_IMPORTED_MODULE_1_lodash___default.a.isString(j)) {
@@ -100403,7 +100387,7 @@ class PrettyMatrix extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
   }
 
   render() {
-    var [matrix, maxDims, numRows, numCols] = [this.matrix, this.maxDims, this.numRows, this.numCols];
+    let [matrix, maxDims, numRows, numCols] = [this.matrix, this.maxDims, this.numRows, this.numCols];
 
     if (numRows > maxDims[0]) {
       var halfDim = Math.round(maxDims[0] / 2);
@@ -101532,7 +101516,6 @@ class NotebookHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compo
   }
 
   render() {
-    console.log('NotebookHeader render');
     let histContents = [];
     if (this.props.history.length) {
       histContents = this.props.history.filter(cell => cell.content.length).map((cell, i) => {

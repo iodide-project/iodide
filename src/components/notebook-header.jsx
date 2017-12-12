@@ -73,7 +73,6 @@ class NotebookHeader extends React.Component {
   }
 
   render() {
-    console.log('NotebookHeader render')
     let histContents = []
     if (this.props.history.length) {
       histContents = this.props.history.filter(cell=>cell.content.length).map((cell,i)=> {
