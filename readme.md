@@ -34,7 +34,7 @@ We've modeled much of the experience on Jupyter as our jumping-off point, with a
 
 Please join us! The notebook is written using React+Redux, which, if you haven't used them, are pretty delightful -- there's some learning curve, but even for non-professional webdevs (like me) that curve is not too steep, and the mental model is clean and powerful.
 
-You can view our [principles and assumptions]( https://docs.google.com/document/d/1KcELJ15hxvDBy4Qb8TzTZ1Lk_4kaSXjvzpcg3M0cQRg/edit# ) for this project here. We have a number of vague ideas about some aspects of this project.
+You can view our [principles and assumptions]( https://docs.google.com/document/d/1KcELJ15hxvDBy4Qb8TzTZ1Lk_4kaSXjvzpcg3M0cQRg/edit# ) for this project here.
 
 Feel free to join our Slack channel: `#scientific-computing`
 
