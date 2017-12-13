@@ -44,6 +44,7 @@ You can view our [principles and assumptions]( https://docs.google.com/document/
 
 Feel free to join our Slack channel: `#scientific-computing`
 
+And of course feel free to email us - bcolloran and hulmer - directly.
 
 ## Roadmap
 
