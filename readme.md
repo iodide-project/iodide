@@ -34,6 +34,12 @@ We've modeled much of the experience on Jupyter as our jumping-off point, with a
 
 Please join us! The notebook is written using React+Redux, which, if you haven't used them, are pretty delightful -- there's some learning curve, but even for non-professional webdevs (like me) that curve is not too steep, and the mental model is clean and powerful.
 
+We especially need help with:
+
+- thinking about where exactly JS computation should live. In a webworker? Should we stay in the main thread? How do we give native-feeling dom manipulation if we're not in the main thread?
+- test coverage for everything in our system.
+- demos, tutorials, and documentation. The more we have, and the better organized it is, the better.
+
 You can view our [principles and assumptions]( https://docs.google.com/document/d/1KcELJ15hxvDBy4Qb8TzTZ1Lk_4kaSXjvzpcg3M0cQRg/edit# ) for this project here.
 
 Feel free to join our Slack channel: `#scientific-computing`
