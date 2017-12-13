@@ -26,7 +26,7 @@ Run `npm test` to run the test suite.
 
 Because our notebook is 100% client-side, you can just open up the file `index.html` in your browser. Three example notebooks are included under "saved notebooks" in the hamburger menu.
 
-For now, work can be saved to local storage using the "Save Notebook <ctrl-s>" menu item, or exported to a json file with "Export Notebook <ctrl-e>" (I had an issues with local storage getting corrupted early on, so I export periodically).
+For now, work can be saved to local storage using the "Save Notebook <ctrl-s>" menu item, or exported to a json file with "Export Notebook <ctrl-e>" (for the time being, we advise periodically exporting any code you care about).
 
 We've modeled much of the experience on Jupyter as our jumping-off point, with a few additions. Check out our milestones & issues to see the direction we're going.
 
