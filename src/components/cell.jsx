@@ -365,7 +365,7 @@ class HistoryCell extends GenericCell {
       options={options} />
 
     return (
-      <div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
+      <div id={'cell-' + this.props.cell.id} className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
         <div className='cell history-cell'>
           <div className='history-content'>{mainElem}</div>
           <div className='history-date'>{this.props.cell.lastRan.toUTCString()}</div>

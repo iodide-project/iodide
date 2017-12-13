@@ -47408,7 +47408,7 @@ class HistoryCell extends GenericCell {
 
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
-      { className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') },
+      { id: 'cell-' + this.props.cell.id, className: 'cell-container ' + (this.props.display ? '' : 'hidden-cell') },
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { className: 'cell history-cell' },
