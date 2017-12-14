@@ -209,6 +209,13 @@ menuItems.changeCellTypeToDOM= {
     this.props.actions.changeCellType('dom')
   }}
 
+menuItems.changeCellTypeToCSS= {
+  primaryText: 'css', 
+  secondaryText: ' ',
+  callback: function() {
+    this.props.actions.changeCellType('css')
+  }}
+
 menuItems.cell = {
   primaryText: 'Cell',
   childrenClass: 'medium-menu',
@@ -224,7 +231,8 @@ menuItems.cell = {
     menuItems.changeCellTypeToMarkdown, 
     menuItems.changeCellTypeToRaw,
     menuItems.changeCellTypeToExternal, 
-    menuItems.changeCellTypeToDOM
+    menuItems.changeCellTypeToDOM,
+    menuItems.changeCellTypeToCSS
   ]
 } 
 
