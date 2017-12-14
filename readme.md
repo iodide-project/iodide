@@ -54,6 +54,7 @@ There are a bunch of features that we know we want to build to make this compell
   * Bundling code with editor
   * export/import just the “jsmd” -- text mode with cell divisions rather than a JSON blob (good for diff tools and texty tools)
   * Export/import to gists or other external repos
+* Needs built in help -- kbd shortcut palette a la jupyter, links to tutorial and example NBs, etc
 * r-studio mode
 * editor improvements
   * fuzzy autocomplete, code hints
