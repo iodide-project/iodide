@@ -113014,14 +113014,14 @@ menuItems.changeCellTypeToExternal = {
 };
 menuItems.changeCellTypeToDOM = {
   primaryText: 'DOM',
-  secondaryText: ' ',
+  secondaryText: 'D',
   callback: function () {
     this.props.actions.changeCellType('dom');
   } };
 
 menuItems.changeCellTypeToCSS = {
-  primaryText: 'css',
-  secondaryText: ' ',
+  primaryText: 'CSS',
+  secondaryText: 'C',
   callback: function () {
     this.props.actions.changeCellType('css');
   } };
@@ -114345,6 +114345,14 @@ let RAW_MODE = [['r'], function () {
   if (Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils__["e" /* isCommandMode */])()) dispatcher.changeCellType('raw');
 }];
 
+let CSS_MODE = [['c'], function () {
+  if (Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils__["e" /* isCommandMode */])()) dispatcher.changeCellType('css');
+}];
+
+let DOM_MODE = [['d'], function () {
+  if (Object(__WEBPACK_IMPORTED_MODULE_2__notebook_utils__["e" /* isCommandMode */])()) dispatcher.changeCellType('dom');
+}];
+
 let SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function (e) {
   if (e.preventDefault) {
     e.preventDefault();
@@ -114456,6 +114464,8 @@ jupyterKeybindings.push(JAVASCRIPT_MODE);
 jupyterKeybindings.push(MARKDOWN_MODE);
 jupyterKeybindings.push(EXTERNAL_DEPENDENCIES_MODE);
 jupyterKeybindings.push(RAW_MODE);
+jupyterKeybindings.push(CSS_MODE);
+jupyterKeybindings.push(DOM_MODE);
 jupyterKeybindings.push(SELECT_UP);
 jupyterKeybindings.push(SELECT_DOWN);
 jupyterKeybindings.push(ADD_CELL_ABOVE);

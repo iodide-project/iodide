@@ -63,6 +63,16 @@ let RAW_MODE = [['r'], function(){
 }
 ]
 
+let CSS_MODE = [['c'], function(){
+  if (isCommandMode()) dispatcher.changeCellType('css')
+}
+]
+
+let DOM_MODE = [['d'], function(){
+  if (isCommandMode()) dispatcher.changeCellType('dom')
+}
+]
+
 let SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function(e){
   if (e.preventDefault) {
     e.preventDefault()
@@ -169,6 +179,8 @@ jupyterKeybindings.push(JAVASCRIPT_MODE)
 jupyterKeybindings.push(MARKDOWN_MODE)
 jupyterKeybindings.push(EXTERNAL_DEPENDENCIES_MODE)
 jupyterKeybindings.push(RAW_MODE)
+jupyterKeybindings.push(CSS_MODE)
+jupyterKeybindings.push(DOM_MODE)
 jupyterKeybindings.push(SELECT_UP)
 jupyterKeybindings.push(SELECT_DOWN)
 jupyterKeybindings.push(ADD_CELL_ABOVE)
