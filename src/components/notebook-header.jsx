@@ -80,7 +80,7 @@ class NotebookHeader extends React.Component {
         return cellComponent
       })
     } else {
-      histContents.push(<div className='no-history'>No History</div>)
+      histContents.push(<div className='no-history' key={'history_empty'}>No History</div>)
     }
 
     return (
