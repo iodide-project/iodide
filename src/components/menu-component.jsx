@@ -89,7 +89,7 @@ class MainMenu extends React.Component {
   }
 
   insertCell() {
-    this.props.actions.insertCell('javascript', "below")
+    this.props.actions.insertCell('javascript', 'below')
   }
 
   cellUp(){

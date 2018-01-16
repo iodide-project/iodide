@@ -6,6 +6,8 @@ import {bindActionCreators} from 'redux'
 import deepEqual from 'deep-equal'
 import CodeMirror from '@skidding/react-codemirror'
 import js from 'codemirror/mode/javascript/javascript'
+import css from 'codemirror/mode/css/css'
+
 import markdown from 'codemirror/mode/markdown/markdown'
 import matchbrackets from 'codemirror/addon/edit/matchbrackets'
 import closebrackets from 'codemirror/addon/edit/closebrackets'
@@ -348,6 +350,18 @@ class DOMCell extends GenericCell {
   }
 }
 
+class CSSCell extends GenericCell {
+  constructor(props) {
+    super(props)
+  }
+
+  outputComponent() {
+    return <style>
+      {this.props.cell.content}
+    </style>
+  }
+}
+
 class HistoryCell extends GenericCell {
   constructor(props) {
     super(props)
@@ -365,7 +379,7 @@ class HistoryCell extends GenericCell {
       options={options} />
 
     return (
-      <div className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
+      <div id={'cell-' + this.props.cell.id} className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
         <div className='cell history-cell'>
           <div className='history-content'>{mainElem}</div>
           <div className='history-date'>{this.props.cell.lastRan.toUTCString()}</div>
@@ -490,6 +504,7 @@ let JavascriptCell_connected = connect(mapStateToPropsForCells, mapDispatchToPro
 let MarkdownCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(MarkdownCell)
 let RawCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(RawCell)
 let DOMCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(DOMCell)
+let CSSCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(CSSCell)
 let ExternalDependencyCell_connected = connect(mapStateToPropsForExternalDependency, mapDispatchToProps)(ExternalDependencyCell)
 
 // export JavascriptCell_connected as JavascriptCell
@@ -497,6 +512,8 @@ export {JavascriptCell_connected as JavascriptCell,
   MarkdownCell_connected as MarkdownCell,
   RawCell_connected as RawCell,
   DOMCell_connected as DOMCell,
+  CSSCell_connected as CSSCell,
   ExternalDependencyCell_connected as ExternalDependencyCell,
   HistoryCell,
+  
 }

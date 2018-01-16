@@ -6,7 +6,7 @@ import deepEqual from 'deep-equal'
 
 import {JavascriptCell, MarkdownCell,
   RawCell, HistoryCell, DOMCell,
-  ExternalDependencyCell} from './cell.jsx'
+  ExternalDependencyCell, CSSCell} from './cell.jsx'
 import { NotebookHeader } from './notebook-header.jsx'
 
 import settings from '../settings.js'
@@ -67,6 +67,8 @@ class Page extends React.Component {
         return <RawCell cellId={id} key={id}/>
       case 'external dependencies':
         return <ExternalDependencyCell cellId={id} key={id} />
+      case 'css':
+        return <CSSCell cellId={id} key={id} />
       case 'dom':
         return <DOMCell cellId={id} key={id}/>
       }
