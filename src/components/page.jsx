@@ -20,7 +20,7 @@ const AUTOSAVE = settings.labels.AUTOSAVE
 class Page extends React.Component {
   constructor(props) {
     super(props)
-    this.props.actions.newNotebook()
+    // this.props.actions.newNotebook()
     this.enterCommandModeOnClickOutOfCell = this.enterCommandModeOnClickOutOfCell.bind(this)
 
     keyBinding('jupyter', this)
