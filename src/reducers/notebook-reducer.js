@@ -1,4 +1,5 @@
 import { newNotebook, newCell, blankState } from '../state-prototypes.js'
+import {exportJsmdBundle} from '../jsmd-tools'
 
 function clearHistory(loadedState) {
   // remove history and declared properties before exporting the state.
@@ -26,11 +27,11 @@ let notebookReducer = function (state = newNotebook(), action) {
   case 'EXPORT_NOTEBOOK': {
     nextState = Object.assign({}, state)
     clearHistory(nextState)
-    let dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(nextState))
+    let dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(exportJsmdBundle(nextState))
     let dlAnchorElem = document.getElementById('export-anchor')
     dlAnchorElem.setAttribute('href', dataStr)
     title = nextState.title === undefined ? 'new-notebook' : nextState.title
-    let filename = title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json'
+    let filename = title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.html'
     dlAnchorElem.setAttribute('download', filename)
     dlAnchorElem.click()
       

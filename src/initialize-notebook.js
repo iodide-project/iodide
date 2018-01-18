@@ -1,4 +1,4 @@
-import { parseJsmd } from './jsmd-parser'
+import { parseJsmd } from './jsmd-tools'
 import { newNotebook, blankState, newCell} from './state-prototypes'
 
 const jsmdCellTypeMap = new Map([
@@ -19,6 +19,7 @@ function initializeNotebook(){
   // console.log(jsmdElt.innerHTML)
   if (jsmdElt){
     let {cells, parseWarnings} = parseJsmd(jsmdElt.innerHTML)
+    console.log(parseWarnings)
     // console.log('cells', cells)
     // initialize a blank notebook
     let initialState = blankState()

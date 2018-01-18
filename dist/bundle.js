@@ -39049,12 +39049,10 @@ function newCellID(cells) {
 }
 
 function newCell(cells, cellType) {
-  let outputCollapseDefault;
-  if (cellType == 'dom' || cellType == 'dom') {
-    outputCollapseDefault = 'COLLAPSED';
-  } else {
-    outputCollapseDefault = 'EXPANDED';
-  }
+  // let outputCollapseDefault
+  // if (cellType=='dom' || cellType=='dom'){
+  //   outputCollapseDefault = 'COLLAPSED'
+  // } else {outputCollapseDefault = 'EXPANDED'}
   return {
     content: '',
     id: newCellID(cells),
@@ -39070,9 +39068,9 @@ function newCell(cells, cellType) {
     // these track the collapsed state of input and outputs
     // must be one of "COLLAPSED" "SCROLLABLE" "EXPANDED"
     collapseEditViewInput: 'EXPANDED',
-    collapseEditViewOutput: outputCollapseDefault,
+    collapseEditViewOutput: 'EXPANDED',
     collapsePresentationViewInput: 'COLLAPSED',
-    collapsePresentationViewOutput: outputCollapseDefault
+    collapsePresentationViewOutput: 'EXPANDED'
   };
 }
 
@@ -80947,6 +80945,8 @@ function reduceReducers(...reducers) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__state_prototypes_js__ = __webpack_require__(141);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__jsmd_tools__ = __webpack_require__(707);
+
 
 
 function clearHistory(loadedState) {
@@ -80976,11 +80976,11 @@ let notebookReducer = function (state = Object(__WEBPACK_IMPORTED_MODULE_0__stat
       {
         nextState = Object.assign({}, state);
         clearHistory(nextState);
-        let dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(nextState));
+        let dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(Object(__WEBPACK_IMPORTED_MODULE_1__jsmd_tools__["a" /* exportJsmdBundle */])(nextState));
         let dlAnchorElem = document.getElementById('export-anchor');
         dlAnchorElem.setAttribute('href', dataStr);
         title = nextState.title === undefined ? 'new-notebook' : nextState.title;
-        let filename = title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
+        let filename = title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.html';
         dlAnchorElem.setAttribute('download', filename);
         dlAnchorElem.click();
 
@@ -113160,7 +113160,7 @@ jupyterKeybindings.push(SHOW_HISTORY);
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return initializeNotebook; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__jsmd_parser__ = __webpack_require__(706);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__jsmd_tools__ = __webpack_require__(707);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__state_prototypes__ = __webpack_require__(141);
 
 
@@ -113173,7 +113173,8 @@ function initializeNotebook() {
   // console.log(jsmdElt)
   // console.log(jsmdElt.innerHTML)
   if (jsmdElt) {
-    let { cells, parseWarnings } = Object(__WEBPACK_IMPORTED_MODULE_0__jsmd_parser__["a" /* parseJsmd */])(jsmdElt.innerHTML);
+    let { cells, parseWarnings } = Object(__WEBPACK_IMPORTED_MODULE_0__jsmd_tools__["b" /* parseJsmd */])(jsmdElt.innerHTML);
+    console.log(parseWarnings);
     // console.log('cells', cells)
     // initialize a blank notebook
     let initialState = Object(__WEBPACK_IMPORTED_MODULE_1__state_prototypes__["a" /* blankState */])();
@@ -113201,13 +113202,19 @@ function initializeNotebook() {
 
 
 /***/ }),
-/* 706 */
+/* 706 */,
+/* 707 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return parseJsmd; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return parseJsmd; });
 /* unused harmony export jsmdValidCellTypes */
 /* unused harmony export jsmdValidCellSettings */
+/* unused harmony export stringifyStateToJsmd */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return exportJsmdBundle; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__state_prototypes__ = __webpack_require__(141);
+
+
 const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'dom', 'resource'];
 
 const jsmdValidCellSettings = ['collapseEditViewInput', 'collapseEditViewOutput', 'collapsePresentationViewInput', 'collapsePresentationViewOutput'];
@@ -113220,7 +113227,7 @@ function parseJsmd(jsmd) {
       str = str.substring(2);
     }
     return str;
-  }).filter(str => str !== '').map(str => {
+  }).map(str => str.trim()).filter(str => str !== '').map((str, i) => {
     let firstLineBreak = str.indexOf('\n');
     let firstLine = str.substring(0, firstLineBreak).trim();
     let firstLineFirstSpace = firstLine.indexOf(' ');
@@ -113236,9 +113243,9 @@ function parseJsmd(jsmd) {
       try {
         settings = JSON.parse(firstLine.substring(firstLineFirstSpace + 1));
       } catch (e) {
-        parseWarnings.push({ parseError: 'failed to parse cell settings',
+        parseWarnings.push({ parseError: 'failed to parse cell settings, using defaults',
           details: firstLine,
-          jsError: e
+          jsError: e.name + ': ' + e.message
         });
       }
     }
@@ -113258,7 +113265,7 @@ function parseJsmd(jsmd) {
     // if the cell type is not valid, set it to js
     if (jsmdValidCellTypes.indexOf(cellType) === -1) {
       parseWarnings.push({ parseError: 'invalid cell type, converted to js cell',
-        details: cellType });
+        details: `cellType: ${cellType} cellNum:${i} raw string: ${str}` });
       cellType = 'js';
     }
 
@@ -113268,8 +113275,8 @@ function parseJsmd(jsmd) {
         content = JSON.parse(content);
       } catch (e) {
         parseWarnings.push({ parseError: 'Failed to parse notebook settings from meta cell. Using default settings.',
-          details: firstLine,
-          jsError: e
+          details: content,
+          jsError: e.name + ': ' + e.message
         });
       }
     }
@@ -113278,8 +113285,77 @@ function parseJsmd(jsmd) {
       content: content
     };
   });
-
+  // console.log(parseWarnings)
   return { cells, parseWarnings };
+}
+
+const cellTypeToJsmdMap = new Map([['javascript', 'js'], ['markdown', 'md'], ['external dependencies', 'resource'], ['dom', 'dom'], ['raw', 'raw']]);
+
+const jsmdValidNotebookSettings = ['title', 'viewMode'];
+
+function stringifyStateToJsmd(state) {
+  let defaultState = Object(__WEBPACK_IMPORTED_MODULE_0__state_prototypes__["c" /* newNotebook */])();
+  let defaultCell = defaultState.cells[0];
+  // serialize cells. most of the work here is seeing if cell properties
+  // are in the jsmd valid list, and seeing if they are non-default
+  let cellsStr = state.cells.map(cell => {
+    let jsmdCellType = cellTypeToJsmdMap.get(cell.cellType);
+    let cellSettings = {};
+    for (let setting of jsmdValidCellSettings) {
+      if (cell.hasOwnProperty(setting) && cell[setting] !== defaultCell[setting]) {
+        cellSettings[setting] = cell[setting];
+      }
+    }
+    let cellSettingsStr = JSON.stringify(cellSettings);
+    cellSettingsStr = cellSettingsStr === '{}' ? '' : ' ' + cellSettingsStr;
+    return `%% ${jsmdCellType}${cellSettingsStr}
+${cell.content}`;
+  }).join('\n');
+
+  // serialize global settings. as above, check if state properties
+  // are in the jsmd valid list, and check if they are non-default
+  let metaSettings = {};
+  for (let setting of jsmdValidNotebookSettings) {
+    if (state.hasOwnProperty(setting) && state[setting] !== defaultState[setting]) {
+      metaSettings[setting] = state[setting];
+    }
+  }
+  let metaSettingsStr = JSON.stringify(metaSettings, undefined, 2);
+  metaSettingsStr = metaSettingsStr === '{}' ? '' : `%% meta
+${metaSettingsStr}
+`;
+  return metaSettingsStr + cellsStr;
+}
+
+function exportJsmdBundle(state) {
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Javascript Notebook</title>
+
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/react-table.css">
+<link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/eclipse.css">
+<link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/codemirror.css">
+<link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/page.css">
+
+</head>
+<body>
+
+<script id="jsmd" type="text/jsmd">
+${stringifyStateToJsmd(state)}
+</script>
+
+<div id='page'></div>
+<script src='https://mozilla.github.io/javascript-notebook/dist/ailerusApp_v0.0.1.js'></script>
+</body>
+</html>`;
 }
 
 
