@@ -3,10 +3,10 @@ function newCellID(cells) {
 }
 
 function newCell(cells, cellType){
-  let outputCollapseDefault
-  if (cellType=='dom' || cellType=='dom'){
-    outputCollapseDefault = 'COLLAPSED'
-  } else {outputCollapseDefault = 'EXPANDED'}
+  // let outputCollapseDefault
+  // if (cellType=='dom' || cellType=='dom'){
+  //   outputCollapseDefault = 'COLLAPSED'
+  // } else {outputCollapseDefault = 'EXPANDED'}
   return {
     content:'',
     id: newCellID(cells),
@@ -22,9 +22,9 @@ function newCell(cells, cellType){
     // these track the collapsed state of input and outputs
     // must be one of "COLLAPSED" "SCROLLABLE" "EXPANDED"
     collapseEditViewInput: 'EXPANDED',
-    collapseEditViewOutput: outputCollapseDefault,
+    collapseEditViewOutput: 'EXPANDED',
     collapsePresentationViewInput: 'COLLAPSED',
-    collapsePresentationViewOutput: outputCollapseDefault,
+    collapsePresentationViewOutput: 'EXPANDED',
   }
 }
 

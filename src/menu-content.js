@@ -121,7 +121,7 @@ menuItems.deleteNotebook = {
 }
 
 menuItems.exportNotebookAsJSON = {
-  primaryText: 'Export as JSON',
+  primaryText: 'Export Notebook',
   secondaryText: commandKey('E'),
   callback: function(){this.props.actions.exportNotebook()}
 }
