@@ -1,5 +1,5 @@
 import notebookReducer from '../src/reducers/notebook-reducer'
-import localStorageMock from '../__mocks__/localStorage'
+import localStorageMock from './mockLocalStorage'
 import { newNotebook, blankState, newCell } from '../src/state-prototypes.js'
 import * as utils from '../src/state-prototypes'
 
@@ -59,7 +59,7 @@ describe('saving / deleting localStorage-saved notebooks', ()=>{
 
   let SAVE_DELETE_NOTEBOOK_NAME = 'save-delete-notebook-tests'
   let state = exampleNotebookWithContent(SAVE_DELETE_NOTEBOOK_NAME)
-    
+
   it('should save via SAVE_NOTEBOOK',()=>{
     notebookReducer(state, {type: 'SAVE_NOTEBOOK'})
 
@@ -70,7 +70,7 @@ describe('saving / deleting localStorage-saved notebooks', ()=>{
   })
 
   it('should delete via DELETE_NOTEBOOK', ()=> {
-    notebookReducer(state, {type: 'DELETE_NOTEBOOK', title: SAVE_DELETE_NOTEBOOK_NAME})        
+    notebookReducer(state, {type: 'DELETE_NOTEBOOK', title: SAVE_DELETE_NOTEBOOK_NAME})
     expect(window.localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME)).toEqual(undefined)
   })
 })

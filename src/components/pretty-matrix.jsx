@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import nb from '../../tools/nb.js'
+import nb from '../tools/nb.js'
 
 function cellText(matrixLike,i,j){
   let [numRows, numCols] = nb.shape(matrixLike)
