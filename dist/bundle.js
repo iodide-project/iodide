@@ -111612,7 +111612,7 @@ menuItems.deleteNotebook = {
 };
 
 menuItems.exportNotebookAsJSON = {
-  primaryText: 'Export as JSON',
+  primaryText: 'Export bundle',
   secondaryText: commandKey('E'),
   callback: function () {
     this.props.actions.exportNotebook();
