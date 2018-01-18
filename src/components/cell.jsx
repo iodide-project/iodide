@@ -28,7 +28,7 @@ import {PrettyMatrix, SimpleTable, makeMatrixText} from './pretty-matrix.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
-import nb from '../../tools/nb.js'
+import nb from '../tools/nb.js'
 import sublime from '../codemirror-keymap-sublime.js'
 
 

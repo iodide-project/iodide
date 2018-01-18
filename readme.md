@@ -12,19 +12,22 @@ That's a lot to consider. So we decided to focus on building a Javascript-powere
 
 # Setup
 
-Run `npm install` after cloning this repository.
+Run `yarn install` after cloning this repository.
 
-## Building
+## Building / Running
 
-Run `npm run build` to build & monitor any new file changes.
+Run `yarn build` to build the webpack resources.
+
+You can start a dynamically recompiled version of the notebook by running `yarn start`. You can then connect to it
+at http://localhost:5000.
 
 ## Testing
 
-Run `npm test` to run the test suite.
+Run `yarn test` to run the test suite.
 
 # Using the notebook
 
-Because our notebook is 100% client-side, you can just open up the file `index.html` in your browser. Three example notebooks are included under "saved notebooks" in the hamburger menu.
+Three example notebooks are included under "saved notebooks" in the hamburger menu.
 
 For now, work can be saved to local storage using the "Save Notebook <ctrl-s>" menu item, or exported to a json file with "Export Notebook <ctrl-e>" (for the time being, we advise periodically exporting any code you care about).
 
