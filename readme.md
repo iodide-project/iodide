@@ -2,6 +2,8 @@
 
 # The javascript notebook
 
+[see our slide deck](https://docs.google.com/presentation/d/1yyMw2in7He4XNZtrowLU_J78wKRyFn2UAw9YRJjBsh4/edit#slide=id.p)
+
 This repository began as an early answer to the question: __can we do scientific computing without ever leaving the browser?__ We are building a modern, browser-first notebook-style IDE that capitalizes on web technologies for interative / literate / inquisitive computing. The notebook borrows inspiration from RStudio, Jupyter, Carbide, and many other computing environments.
 
 ![](https://media.giphy.com/media/xT0xeJdYMwA8GvEdCE/giphy.gif)
