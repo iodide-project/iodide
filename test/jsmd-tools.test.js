@@ -172,6 +172,7 @@ describe('jsmd stringifier test case 2', ()=>{
 {
   "title": "foo notebook"
 }
+
 %% js
 foo`
   it('simple state should serialize to jsmd correctly', ()=> {
@@ -196,8 +197,10 @@ describe('jsmd stringifier test case 3', ()=>{
   "title": "foo notebook",
   "viewMode": "presentation"
 }
+
 %% js {"collapseEditViewInput":"COLLAPSED"}
 foo
+
 %% md
 foo`
   it('cell settings should serialize to jsmd correctly', ()=> {
@@ -224,14 +227,19 @@ describe('jsmd stringifier test case 4', ()=>{
 {
   "title": "foo notebook"
 }
+
 %% js {"collapseEditViewInput":"COLLAPSED"}
 foo
+
 %% md
 foo
+
 %% resource
 foo
+
 %% dom
 foo
+
 %% raw
 foo`
   it('all cell types should serialize to jsmd correctly', ()=> {

@@ -122,9 +122,9 @@ function stringifyStateToJsmd(state){
     }
     let cellSettingsStr = JSON.stringify(cellSettings)
     cellSettingsStr = cellSettingsStr==='{}' ? '' : ' '+cellSettingsStr
-    return `%% ${jsmdCellType}${cellSettingsStr}
+    return `\n%% ${jsmdCellType}${cellSettingsStr}
 ${cell.content}`
-  }).join('\n')
+  }).join('\n').trim()
 
   // serialize global settings. as above, check if state properties
   // are in the jsmd valid list, and check if they are non-default
@@ -136,9 +136,7 @@ ${cell.content}`
     }
   }
   let metaSettingsStr = JSON.stringify(metaSettings,undefined,2)
-  metaSettingsStr = metaSettingsStr==='{}' ? '' : `%% meta
-${metaSettingsStr}
-`
+  metaSettingsStr = metaSettingsStr==='{}' ? '' : '%% meta\n' + metaSettingsStr + '\n\n'
   return metaSettingsStr+cellsStr
 }
 
