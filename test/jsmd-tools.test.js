@@ -11,10 +11,10 @@ let jsmdTestCase = `%% meta
 {"title": "What a web notebook looks like",
 "viewMode": "editor",
 "lastExport": "2017-12-13T17:46:16.207Z",
-"jsmdVersionHash": "example_hash_1234567890",
-"jsmdPreviousVersionHash": "example_hash_prev_1234567890",
-"ailerusAppVersion": "0.0.1",
-"ailerusAppLocation": "https://some.cdn.com/path/version/ailerusApp.js"
+"jsmdVersionHash": "42-example_hash_1234567890",
+"jsmdPreviousVersionHash": "41-example_hash_prev_1234567890",
+"iodideAppVersion": "0.0.1",
+"iodideAppLocation": "https://some.cdn.com/path/version/iodideApp.js"
 }
 
 %% md {"collapseEditViewInput": "SCROLLABLE", "collapseEditViewOutput": "COLLAPSED"}
@@ -54,10 +54,10 @@ spinCubeInTarget("#dom-cell-2")`
 let jsmdEx1Meta = {title: "What a web notebook looks like",
   viewMode: "editor",
   lastExport: "2017-12-13T17:46:16.207Z",
-  jsmdVersionHash: "example_hash_1234567890",
-  jsmdPreviousVersionHash: "example_hash_prev_1234567890",
-  ailerusAppVersion: "0.0.1",
-  ailerusAppLocation: "https://some.cdn.com/path/version/ailerusApp.js"
+  jsmdVersionHash: "42-example_hash_1234567890",
+  jsmdPreviousVersionHash: "41-example_hash_prev_1234567890",
+  iodideAppVersion: "0.0.1",
+  iodideAppLocation: "https://some.cdn.com/path/version/iodideApp.js"
 }
 
 describe('jsmd parser Ex 1', ()=>{
@@ -116,6 +116,28 @@ describe('jsmd parser test case 3', ()=>{
 })
 
 
+// this case is for an observed bug
+jsmdTestCase = `
+%% js
+`
+describe('jsmd parser test case 4', ()=>{
+  let jsmdParsed = parseJsmd(jsmdTestCase)
+  let cells = jsmdParsed.cells
+  let parseWarnings = jsmdParsed.parseWarnings
+  it('should have 1 cell', ()=> {
+    expect(cells.length).toEqual(1)
+  })
+  it('should have zero parse warnings', ()=> {
+    expect(parseWarnings.length).toEqual(0)
+  })
+  it('cell 0 should have no content', ()=> {
+    expect(cells[0].content).toEqual("")
+  })
+})
+
+
+
+
 // test error parsing and bad cell type conversion
 jsmdTestCase = `
 %% js {"collapseEditViewInput": badjson%@#$^
@@ -127,7 +149,7 @@ foo
 %% meta
 invalid_json_content for meta setings
 `
-describe('jsmd parser test case 3', ()=>{
+describe('jsmd parser test case 5', ()=>{
   let jsmdParsed = parseJsmd(jsmdTestCase)
   let cells = jsmdParsed.cells
   let parseWarnings = jsmdParsed.parseWarnings

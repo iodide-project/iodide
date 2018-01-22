@@ -23,74 +23,86 @@ function parseJsmd(jsmd){
     })
     .map(str=>str.trim())
     .filter(str=>str!=='')
-    .map( (str,i) => {
-      let firstLineBreak = str.indexOf('\n')
-      let firstLine = str.substring(0,firstLineBreak).trim()
-      let firstLineFirstSpace = firstLine.indexOf(' ')
-      let cellType, settings, content
-      
-      if (firstLineFirstSpace===-1){
-        // if there is NO space on the first line (after trimming), there are no cell settings
-        cellType = firstLine.toLowerCase()
-      } else {
-        // if there is a space on the first line (after trimming), there must be cell settings
-        cellType = firstLine.substring(0,firstLineFirstSpace).toLowerCase()
-        //make sure the cell settings parse as JSON
-        try {
-          settings = JSON.parse(firstLine.substring(firstLineFirstSpace+1))
-        } catch(e) {
-          parseWarnings.push(
-            {parseError: 'failed to parse cell settings, using defaults',
-              details: firstLine,
-              jsError: e.name + ': ' + e.message
-            }
-          )
-        }
-      }
-      //if settings exist and parsed ok, make sure that only valid cell settings are kept
-      if (settings) {
-        let settingsOut = {}
-        for (const key in settings){
-          if (jsmdValidCellSettings.indexOf(key)>-1){
-            settingsOut[key] = settings[key]
-          } else {
-            parseWarnings.push(
-              {parseError: 'invalid cell setting',
-                details: key}
-            )
-          }
-        } 
-        settings = settingsOut ? settingsOut : undefined
-      }
-      // if the cell type is not valid, set it to js
-      if (jsmdValidCellTypes.indexOf(cellType)===-1){
-        parseWarnings.push(
-          {parseError: 'invalid cell type, converted to js cell',
-            details: `cellType: ${cellType} cellNum:${i} raw string: ${str}`}
-        )
-        cellType = 'js'
-      }
-
-      content = str.substring(firstLineBreak+1).trim()
-      if (cellType ==='meta'){
-        try {
-          content = JSON.parse(content)
-        } catch (e) {
-          parseWarnings.push(
-            {parseError: 'Failed to parse notebook settings from meta cell. Using default settings.',
-              details: content,
-              jsError: e.name + ': ' + e.message
-            }
-          )
-        }
-      }
-      return { cellType: cellType,
-        settings: settings,
-        content: content
-      }
-    })
-  // console.log(parseWarnings)
+    .map((str,i) => parseCellString(str,i,parseWarnings))
   return {cells, parseWarnings}
+}
+
+function parseCellFirstLine(){}
+
+function parseCellString(str,i,parseWarnings) {
+  // note: this is nota a pure function, it mutates parseWarnings
+  let cellType, settings, content, firstLine
+  let firstLineBreak = str.indexOf('\n')
+  if (firstLineBreak===-1){
+    // a cell with only 1 line, and hence no content
+    firstLine = str
+    content = ''
+  } else {
+    firstLine = str.substring(0,firstLineBreak).trim()
+    content = str.substring(firstLineBreak+1).trim()
+  }
+  // let firstLine = str.substring(0,firstLineBreak).trim()
+  let firstLineFirstSpace = firstLine.indexOf(' ')
+  
+  
+  if (firstLineFirstSpace===-1){
+    // if there is NO space on the first line (after trimming), there are no cell settings
+    cellType = firstLine.toLowerCase()
+  } else {
+    // if there is a space on the first line (after trimming), there must be cell settings
+    cellType = firstLine.substring(0,firstLineFirstSpace).toLowerCase()
+    //make sure the cell settings parse as JSON
+    try {
+      settings = JSON.parse(firstLine.substring(firstLineFirstSpace+1))
+    } catch(e) {
+      parseWarnings.push(
+        {parseError: 'failed to parse cell settings, using defaults',
+          details: firstLine,
+          jsError: e.name + ': ' + e.message
+        }
+      )
+    }
+  }
+  //if settings exist and parsed ok, make sure that only valid cell settings are kept
+  if (settings) {
+    let settingsOut = {}
+    for (const key in settings){
+      if (jsmdValidCellSettings.indexOf(key)>-1){
+        settingsOut[key] = settings[key]
+      } else {
+        parseWarnings.push(
+          {parseError: 'invalid cell setting',
+            details: key}
+        )
+      }
+    } 
+    settings = settingsOut ? settingsOut : undefined
+  }
+  // if the cell type is not valid, set it to js
+  if (jsmdValidCellTypes.indexOf(cellType)===-1){
+    parseWarnings.push(
+      {parseError: 'invalid cell type, converted to js cell',
+        details: `cellType: ${cellType} cellNum:${i} raw string: ${str}`}
+    )
+    cellType = 'js'
+  }
+
+  if (cellType ==='meta'){
+    try {
+      content = JSON.parse(content)
+    } catch (e) {
+      parseWarnings.push(
+        {parseError: 'Failed to parse notebook settings from meta cell. Using default settings.',
+          details: content,
+          jsError: e.name + ': ' + e.message
+        }
+      )
+    }
+  }
+  return { cellType: cellType,
+    settings: settings,
+    content: content
+  }
 }
 
 const cellTypeToJsmdMap = new Map([
@@ -167,7 +179,7 @@ ${stringifyStateToJsmd(state)}
 </script>
 
 <div id='page'></div>
-<script src='https://mozilla.github.io/javascript-notebook/dist/ailerusApp_v0.0.1.js'></script>
+<script src='https://mozilla.github.io/javascript-notebook/dist/iodideApp_v0.0.1.js'></script>
 </body>
 </html>`
 }
