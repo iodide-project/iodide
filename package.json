@@ -36,8 +36,7 @@
     "react-redux": "^5.0.6",
     "react-table": "^6.6.0",
     "redux": "^3.7.2",
-    "redux-logger": "^3.0.6",
-    "webpack": "^3.5.2"
+    "redux-logger": "^3.0.6"
   },
   "devDependencies": {
     "@neutrinojs/jest": "^8.0.18",
