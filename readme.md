@@ -12,6 +12,8 @@ Having a scientific computing platform that solely uses web technologies has sev
 
 That's a lot to consider. So we decided to focus on building a Javascript-powered IDE to explore all of these ideas. By focusing on the notebook, we can begin to piece together the other bare necessities needed for a robust browser-based scientific computing platform while providing immediate value to data analysts.
 
+Read more about our core principles below; if our vision resonates with you, please consider contributing to the project!
+
 # Setup
 
 Run `yarn install` after cloning this repository.
@@ -37,34 +39,52 @@ We've modeled much of the experience on Jupyter as our jumping-off point, with a
 
 # Contributing
 
-Please join us! The notebook is written using React+Redux, which, if you haven't used them, are pretty delightful -- there's some learning curve, but even for non-professional webdevs (like me) that curve is not too steep, and the mental model is clean and powerful.
+Please join us! The notebook is written using React+Redux, which, if you haven't used them, are pretty delightful -- there's some learning curve, but even for non-professional webdevs the curve is not too steep, and the mental model is clean and powerful.
 
 We especially need help with:
 
-- thinking about where exactly JS computation should live. In a webworker? Should we stay in the main thread? How do we give native-feeling dom manipulation if we're not in the main thread?
 - test coverage for everything in our system.
 - demos, tutorials, and documentation. The more we have, and the better organized it is, the better.
 
-You can view our [principles and assumptions]( https://docs.google.com/document/d/1KcELJ15hxvDBy4Qb8TzTZ1Lk_4kaSXjvzpcg3M0cQRg/edit# ) for this project here.
+# Our core principles
+- Human factors come before everything else
+- Scientific computing and computation inquiry implies different needs than typically web development
+- We want to make the advantages of web tech available to scientists without requiring them to become fully fledged web devs
 
-Feel free to join our Slack channel: `#scientific-computing`
+## Secondary principles
+Flowing from those core principles, we have a number of secondary principles/objectives that revolve around the notion of reduce friction for people that want out the platform.
+- Portability is key -- users should be able to get up and running immediately and be able to start doing real work entirely within the browser. 
+    - Allowing the notebook to work with other client and/or server-side programs/components/tools (e.g. external editors, external compute kernels (other languages or big data thingies)) might be something cool to work on down the road, but is not an objective at the moment
+    - Addons to do things that the browser restricts or can’t do for some reason (file system access, halting hung scripts) could potentially be ok for power users, but cannot be a requirement to get going with a satisfactory experience.
+- No magic APIs -- users should (within reason) not have to learn about a ton of idiosyncrasies of the notebook to get up and running.
+    - Users need to be able to build off of existing work/examples/resources. Users need to be able to pull examples from bl.ocks.org or JSfiddle or Stackoverflow and have them run in the notebook without modification (within reason). This means, among other things, seamless access to all browser APIs is a hard requirement.
+    - Helper libraries are desirable, but they should just act like regular JS libraries and not require users to contort their mental model of how vanilla JS works, or pollute the regular JS environment. (Ex: it would be preferable to add a single namespaced helper lib than to dump a bunch of utility functions into the global scope).
+    - We want to support syntax extensions for mathematics, but we want them to be opt in, not something that a user will have to learn to be able to use a notebook.
+- Don’t innovate too much -- at least initially, we want to follow existing, familiar paradigms that will enable people to dive right in.
 
-And of course feel free to email us - bcolloran and hulmer - directly.
+You can read more about how these priciples have shaped the choices we've made so far [in our FAQ]( ../../wiki/FAQ )
+
+## Initial use case
+In building this tool, we will keep our eyes on a broad swath of computational inquiry use cases, and we’ll strive to avoid making decisions that limit the tools use to a specific domain. That said, it seems reasonable to initially target at least a subset of data science workflows we’ve been doing at Mozilla. This is a use case that we know well, and targeting this use case will make this tool immediately useful within Mozilla.
+
 
 ## Roadmap
 
 There are a bunch of features that we know we want to build to make this compelling. Here are a few in rough order of priority:
 
-* Export improvements
-  * Bundling code with editor
-  * export/import just the “jsmd” -- text mode with cell divisions rather than a JSON blob (good for diff tools and texty tools)
-  * Export/import to gists or other external repos
-* Needs built in help -- kbd shortcut palette a la jupyter, links to tutorial and example NBs, etc
-* r-studio mode
-* editor improvements
-  * fuzzy autocomplete, code hints
-  * IDEish syntax and error checking
-  * Special character insertion (greek, special operators, etc)
-  * Latex editing help (Lyx-like wysiwym preview for equation editing)
-* UI for importing local data from file (with drag and drop? Needed for XSS reasons, lack of filesystem access reasons)
-* extensive documentation, tutorials, and demos showcasing the vision
+- Export improvements
+    - Option to Inline bundle.js (rather than load from URL)
+    - Options to inline external libs in a saved snapshot
+    - Saving an “environment” (a la R and R Studio) with selected variables that were computed during a session
+        - serializing/compressing data inline (needed for bigger datasets),
+        - Estimate of total bundled size with all scripts and environment vars
+    - Export/import to gists, g-drive, dropbox, and other external repos
+- r-studio mode (direct editing of jsmd)
+- editor improvements
+    - Code editor
+        - Code hints, autocomplete
+        - Special character insertion (greek, special operators, etc)
+    - Latex editor
+        - hints, autocomplete (for latex, this includes special character insertion)
+        - Lyx-like wysiwyg preview for equation editing
+- UI for importing local data from file (with drag and drop? Needed for XSS reasons, lack of filesystem access reasons)
