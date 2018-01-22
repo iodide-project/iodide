@@ -46,9 +46,7 @@ We especially need help with:
 - test coverage for everything in our system.
 - demos, tutorials, and documentation. The more we have, and the better organized it is, the better.
 
-You can view our [principles and assumptions]( https://docs.google.com/document/d/1KcELJ15hxvDBy4Qb8TzTZ1Lk_4kaSXjvzpcg3M0cQRg/edit# ) for this project here.
-
-# The core principles behind our approach
+# Our core principles
 - Human factors come before everything else
 - Scientific computing and computation inquiry implies different needs than typically web development
 - We want to make the advantages of web tech available to scientists without requiring them to become fully fledged web devs
@@ -64,7 +62,7 @@ Flowing from those core principles, we have a number of secondary principles/obj
     - We want to support syntax extensions for mathematics, but we want them to be opt in, not something that a user will have to learn to be able to use a notebook.
 - Don’t innovate too much -- at least initially, we want to follow existing, familiar paradigms that will enable people to dive right in.
 
-you can read more about how this has shaped the choices we've made so far [in our FAQ]((../../wiki/FAQ)
+you can read more about how this has shaped the choices we've made so far [in our FAQ]( ../../wiki/FAQ )
 
 ## Initial use case
 In building this tool, we will keep our eyes on a broad swath of computational inquiry use cases, and we’ll strive to avoid making decisions that limit the tools use to a specific domain. That said, it seems reasonable to initially target at least a subset of data science workflows we’ve been doing at Mozilla. This is a use case that we know well, and targeting this use case will make this tool immediately useful within Mozilla.
