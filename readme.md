@@ -62,7 +62,7 @@ Flowing from those core principles, we have a number of secondary principles/obj
     - We want to support syntax extensions for mathematics, but we want them to be opt in, not something that a user will have to learn to be able to use a notebook.
 - Don’t innovate too much -- at least initially, we want to follow existing, familiar paradigms that will enable people to dive right in.
 
-you can read more about how this has shaped the choices we've made so far [in our FAQ]( ../../wiki/FAQ )
+You can read more about how these priciples have shaped the choices we've made so far [in our FAQ]( ../../wiki/FAQ )
 
 ## Initial use case
 In building this tool, we will keep our eyes on a broad swath of computational inquiry use cases, and we’ll strive to avoid making decisions that limit the tools use to a specific domain. That said, it seems reasonable to initially target at least a subset of data science workflows we’ve been doing at Mozilla. This is a use case that we know well, and targeting this use case will make this tool immediately useful within Mozilla.
@@ -72,16 +72,20 @@ In building this tool, we will keep our eyes on a broad swath of computational i
 
 There are a bunch of features that we know we want to build to make this compelling. Here are a few in rough order of priority:
 
-* Export improvements
-  * Bundling code with editor
-  * export/import just the “jsmd” -- text mode with cell divisions rather than a JSON blob (good for diff tools and texty tools)
-  * Export/import to gists or other external repos
-* Needs built in help -- kbd shortcut palette a la jupyter, links to tutorial and example NBs, etc
-* r-studio mode
-* editor improvements
-  * fuzzy autocomplete, code hints
-  * IDEish syntax and error checking
-  * Special character insertion (greek, special operators, etc)
-  * Latex editing help (Lyx-like wysiwym preview for equation editing)
-* UI for importing local data from file (with drag and drop? Needed for XSS reasons, lack of filesystem access reasons)
-* extensive documentation, tutorials, and demos showcasing the vision
+- Export improvements
+    - Option to Inline bundle.js (rather than load from URL)
+    - Options to inline external libs in a saved snapshot
+    - Saving an “environment” (a la R and R Studio) with selected variables that were computed during a session
+        - serializing/compressing data inline (needed for bigger datasets),
+        - Estimate of total bundled size with all scripts and environment vars
+    - export/import just the “jsmd” -- text mode with cell divisions rather than a JSON blob (good for diff tools and texty tools)
+    - Export/import to gists or other external repos
+- r-studio mode (direct editing of jsmd)
+- editor improvements
+    - Code editor
+        - Code hints, autocomplete
+        - Special character insertion (greek, special operators, etc)
+    - Latex editor
+        - hints, autocomplete (for latex, this includes special character insertion)
+        - Lyx-like wysiwyg preview for equation editing
+- UI for importing local data from file (with drag and drop? Needed for XSS reasons, lack of filesystem access reasons)
