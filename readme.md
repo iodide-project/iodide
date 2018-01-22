@@ -78,8 +78,7 @@ There are a bunch of features that we know we want to build to make this compell
     - Saving an “environment” (a la R and R Studio) with selected variables that were computed during a session
         - serializing/compressing data inline (needed for bigger datasets),
         - Estimate of total bundled size with all scripts and environment vars
-    - export/import just the “jsmd” -- text mode with cell divisions rather than a JSON blob (good for diff tools and texty tools)
-    - Export/import to gists or other external repos
+    - Export/import to gists, g-drive, dropbox, and other external repos
 - r-studio mode (direct editing of jsmd)
 - editor improvements
     - Code editor
