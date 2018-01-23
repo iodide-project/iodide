@@ -120,7 +120,7 @@ let cellReducer = function (state = newNotebook(), action) {
 
   case 'EVALUATE_CELL':{
     let newState = Object.assign({}, state)
-    let declaredProperties = newState.declaredProperties
+    let userDefinedVariables = newState.userDefinedVariables
     let cells = newState.cells.slice()
     let index = cells.findIndex(c=>c.id===getSelectedCellId(state))
     let thisCell = cells[index]
@@ -195,11 +195,11 @@ let cellReducer = function (state = newNotebook(), action) {
     }
     
     // ok. Now let's see if there are any new declared variables or libs
-    declaredProperties = {}
+    userDefinedVariables = {}
     Object.keys(window)
       .filter(g => !initialVariables.has(g))
-      .forEach(g => {declaredProperties[g] = window[g]})
-    nextState = Object.assign({}, newState, {cells}, {declaredProperties})
+      .forEach(g => {userDefinedVariables[g] = window[g]})
+    nextState = Object.assign({}, newState, {cells}, {userDefinedVariables})
     return nextState
   }
   case 'DELETE_CELL':{

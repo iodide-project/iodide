@@ -3,7 +3,7 @@ import {exportJsmdBundle} from '../jsmd-tools'
 
 function clearHistory(loadedState) {
   // remove history and declared properties before exporting the state.
-  loadedState.declaredProperties = {}
+  loadedState.userDefinedVariables = {}
   loadedState.history = []
   loadedState.externalDependencies = []
   loadedState.executionNumber = 0
@@ -14,14 +14,19 @@ function clearHistory(loadedState) {
   })
 }
 
+function clearUserDefinedVars(userDefinedVariables){
+  //remove user defined variables when loading/importing a new/saved NB
+  Object.keys(userDefinedVariables).forEach(varName => {delete window[varName]})
+}
+
 let notebookReducer = function (state = newNotebook(), action) {
-  
   let nextState
   let title
   let cells
 
   switch (action.type) {
   case 'NEW_NOTEBOOK':
+    clearUserDefinedVars(state.userDefinedVariables)
     return newNotebook()
 
   case 'EXPORT_NOTEBOOK': {
@@ -42,6 +47,7 @@ let notebookReducer = function (state = newNotebook(), action) {
     // note: loading a NB should always assign to a copy of the latest global
     // and per-cell state for backwards compatibility
     nextState = action.newState
+    clearUserDefinedVars(state.userDefinedVariables)
     clearHistory(nextState)
     cells = nextState.cells.map(
       cell => Object.assign(newCell(nextState.cells, cell.cellType), cell) )
@@ -66,9 +72,11 @@ let notebookReducer = function (state = newNotebook(), action) {
     window.localStorage.setItem(title, JSON.stringify(nextState))
     return Object.assign({}, state, {lastSaved})
   }
+
   case 'LOAD_NOTEBOOK': {
     // note: loading a NB should always assign to a copy of the latest global
     // and per-cell state for backwards compatibility
+    clearUserDefinedVars(state.userDefinedVariables)
     nextState = JSON.parse(window.localStorage.getItem(action.title))
     clearHistory(nextState)
     cells = nextState.cells.map(
@@ -76,12 +84,14 @@ let notebookReducer = function (state = newNotebook(), action) {
     nextState = Object.assign(blankState(), nextState, {cells})
     return nextState
   }
+
   case 'DELETE_NOTEBOOK': {
     title = action.title
     if (window.localStorage.hasOwnProperty(title)) window.localStorage.removeItem(title)
     nextState = (title === state.title) ? Object.assign({}, newNotebook()) : Object.assign({}, state)
     return nextState
   }
+
   case 'CHANGE_PAGE_TITLE':
     return Object.assign({}, state, {title: action.title})
 
@@ -95,7 +105,7 @@ let notebookReducer = function (state = newNotebook(), action) {
     if (mode == 'command') document.activeElement.blur()
     return Object.assign({}, state, {mode})
   }
-      
+
   case 'CHANGE_SIDE_PANE_MODE': {
     return Object.assign({}, state, {sidePaneMode: action.mode})
   }

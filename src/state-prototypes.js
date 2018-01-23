@@ -33,7 +33,7 @@ function blankState(){
   let initialState =  {
     title: undefined,
     cells: [],
-    declaredProperties:{},
+    userDefinedVariables:{},
     lastValue: undefined,
     lastSaved: undefined,
     mode: 'command', // command, edit

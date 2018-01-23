@@ -261,7 +261,7 @@ function mapStateToProps(state) {
     mode: state.mode,
     viewMode: state.viewMode,
     title: state.title,
-    declaredVariables: state.declaredProperties,
+    declaredVariables: state.userDefinedVariables,
     sidePaneMode: state.sidePaneMode,
     lastSaved: state.lastSaved,
     history: state.history,
