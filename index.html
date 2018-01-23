@@ -11,9 +11,6 @@
 <link rel="stylesheet" type="text/css" href="dist/eclipse.css">
 <link rel="stylesheet" type="text/css" href="dist/codemirror.css">
 <link rel="stylesheet" type="text/css" href="dist/page.css">
-<script src='tools/nd.js'></script>
-<script src='ext_resources/ndarray.js'></script>
-<script src='ext_resources/ndarray-ops.js'></script>
 </head>
 <body>
 <script id="jsmd" type="text/jsmd">
@@ -76,7 +73,10 @@ the cell below allows you to load external scripts
 https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js
 
 %% js
-// now let's define a JS function that does something cool. let's also add a really long comment so that we can make sure horizontal scrolling works as desired.
+// now let's define a JS function that does something cool.
+// the function below will make a cube spin around in the DOM element specified
+// by the query selector that is given as an argument
+
 function spinCubeInTarget(targetSelector) {
     //'use strict';
     var width = 400, height = 300
