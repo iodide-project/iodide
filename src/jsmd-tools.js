@@ -153,24 +153,22 @@ ${cell.content}`
 }
 
 
+let appVersionString = '0.0.1'
+
 function exportJsmdBundle(state){
   return `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Javascript Notebook</title>
-
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-rel="stylesheet">
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/react-table.css">
 <link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/eclipse.css">
 <link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/codemirror.css">
 <link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/page.css">
-
 </head>
 <body>
 
@@ -179,7 +177,7 @@ ${stringifyStateToJsmd(state)}
 </script>
 
 <div id='page'></div>
-<script src='https://mozilla.github.io/javascript-notebook/dist/iodideApp_v0.0.1.js'></script>
+<script src='https://mozilla.github.io/javascript-notebook/dist/iodideApp${appVersionString}.js'></script>
 </body>
 </html>`
 }
