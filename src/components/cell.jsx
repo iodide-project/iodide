@@ -15,7 +15,6 @@ import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
 import _ from 'lodash'
 import ReactTable from 'react-table'
-import JSONTree from 'react-json-tree'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -24,11 +23,10 @@ import ErrorCircle from 'material-ui/svg-icons/alert/error'
 import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 
 import CellRow from './cell-row.jsx'
-import {PrettyMatrix, SimpleTable, makeMatrixText} from './pretty-matrix.jsx'
+import formatOutput from './output.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
-import nb from '../tools/nb.js'
 import sublime from '../codemirror-keymap-sublime.js'
 
 
@@ -256,7 +254,7 @@ class JavascriptCell extends GenericCell {
   }
 
   outputComponent() {
-    return jsReturnValue(this.props.cell)
+    return formatOutput(this.props.cell)
   }
 }
 
@@ -388,84 +386,6 @@ class HistoryCell extends GenericCell {
       </div>
     )
   }
-}
-
-function jsReturnValue(cell) {
-  let resultElem
-  let returnedSomething
-  if (cell.cellType === 'dom') returnedSomething = false
-  if (cell.value == undefined && !cell.rendered) returnedSomething = false
-  if (cell.value !== undefined) returnedSomething = true
-  if (cell.value == undefined && cell.rendered) returnedSomething = true
-  if (returnedSomething) {
-    if (cell.value == undefined) {
-      resultElem = <div className='data-set-info'>undefined</div>
-    } else if (nb.isRowDf(cell.value)) {
-      let columns = Object.keys(cell.value[0]).map((k) => ({Header: k, accessor: k}))
-      var dataSetInfo = `array of objects: ${cell.value.length} rows, ${columns.length} columns`
-      resultElem = (<div>
-        <div className='data-set-info'>{dataSetInfo}</div>
-        <ReactTable
-          data={cell.value}
-          columns={columns}
-          showPaginationTop
-          showPaginationBottom={false}
-          pageSizeOptions={[5, 10, 25, 50, 100]}
-          defaultPageSize={25}
-        />
-      </div>)
-    } else if (nb.isMatrix(cell.value)) {
-      let shape = nb.shape(cell.value)
-      var dataSetInfo = `${shape[0]} × ${shape[1]} matrix (array of arrays)`
-      let tabledata = makeMatrixText(cell.value, [10, 10])
-      resultElem = (<div>
-        <div className='data-set-info'>{dataSetInfo}</div>
-        <SimpleTable tabledata={tabledata} />
-      </div>)
-    } else if (_.isArray(cell.value)) {
-      var dataSetInfo = `${cell.value.length} element array`
-      let len = cell.value.length
-      if (len < 500) {
-        var arrayOutput = `[${cell.value.join(', ')}]`
-      } else {
-        var arrayOutput = `[${cell.value.slice(0, 100).join(', ')}, ... , ${cell.value.slice(len - 100, len).join(', ')}]`
-      }
-      resultElem = (<div>
-        <div className='data-set-info'>{dataSetInfo}</div>
-        <div className='array-output'>{arrayOutput}</div>
-      </div>)
-    } else {
-      resultElem = <JSONTree
-        data={cell.value}
-        shouldExpandNode={(keyName, data, level) => {
-          return false
-        }}
-        hideRoot={false}
-        theme={{
-          scheme: 'bright',
-          author: 'chris kempson (http://chriskempson.com)',
-          base00: '#000000',
-          base01: '#303030',
-          base02: '#505050',
-          base03: '#b0b0b0',
-          base04: '#d0d0d0',
-          base05: '#e0e0e0',
-          base06: '#f5f5f5',
-          base07: '#ffffff',
-          base08: '#fb0120',
-          base09: '#fc6d24',
-          base0A: '#fda331',
-          base0B: '#a1c659',
-          base0C: '#76c7b7',
-          base0D: '#6fb3d2',
-          base0E: '#d381c3',
-          base0F: '#be643c',
-        }} />
-    }
-  } else {
-    resultElem = <div className='empty-resultset' />
-  }
-  return resultElem
 }
 
 function mapStateToPropsForCells(state, ownProps) {
