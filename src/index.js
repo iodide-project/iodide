@@ -18,4 +18,4 @@ import './tools/nd.js';
 render(
   <Provider store={store}>
     <Page />
-  </Provider>, document.getElementById('root'))
+  </Provider>, document.getElementById('page'))

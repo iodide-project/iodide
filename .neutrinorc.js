@@ -3,6 +3,6 @@
 module.exports = {
   use: [
     '@neutrinojs/jest',
-    '@neutrinojs/react',
+    ['@neutrinojs/react', { html: { appMountId: 'page' } }]
   ]
 };
