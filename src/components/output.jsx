@@ -9,43 +9,18 @@ import {PrettyMatrix, SimpleTable, makeMatrixText} from './pretty-matrix.jsx'
 import nb from '../tools/nb.js'
 
 
-class OutputHandler extends React.Component {
-  static should_handle(cell) {
-    return false;
-  }
+const dataFrameHandler = {
+  shouldHandle: value => {
+    return nb.isRowDf(value)
+  },
 
-  static format(cell) {
-    return <div className='empty-resultset' />
-  }
-}
-
-
-class UndefinedHandler extends OutputHandler {
-  static should_handle(cell) {
-    return (cell.value == undefined)
-  }
-
-  static format(cell) {
-    if (cell.rendered) {
-      return <div className='data-set-info'>undefined</div>
-    } else {
-      return <div className='empty-resultset' />
-    }
-  }
-}
-
-class DataFrameHandler extends OutputHandler {
-  static should_handle(cell) {
-    return nb.isRowDf(cell.value)
-  }
-
-  static format(cell) {
-    let columns = Object.keys(cell.value[0]).map((k) => ({Header: k, accessor: k}))
-    var dataSetInfo = `array of objects: ${cell.value.length} rows, ${columns.length} columns`
+  render: value => {
+    let columns = Object.keys(value[0]).map((k) => ({Header: k, accessor: k}))
+    var dataSetInfo = `array of objects: ${value.length} rows, ${columns.length} columns`
     return (<div>
         <div className='data-set-info'>{dataSetInfo}</div>
         <ReactTable
-        data={cell.value}
+        data={value}
         columns={columns}
         showPaginationTop
         showPaginationBottom={false}
@@ -56,15 +31,15 @@ class DataFrameHandler extends OutputHandler {
   }
 }
 
-class MatrixHandler extends OutputHandler {
-  static should_handle(cell) {
-    return nb.isMatrix(cell.value)
-  }
+const matrixHandler = {
+  shouldHandle: value => {
+    return nb.isMatrix(value)
+  },
 
-  static format(cell) {
-    let shape = nb.shape(cell.value)
+  render: value => {
+    let shape = nb.shape(value)
     var dataSetInfo = `${shape[0]} × ${shape[1]} matrix (array of arrays)`
-    let tabledata = makeMatrixText(cell.value, [10, 10])
+    let tabledata = makeMatrixText(value, [10, 10])
     return (<div>
       <div className='data-set-info'>{dataSetInfo}</div>
       <SimpleTable tabledata={tabledata} />
@@ -72,18 +47,18 @@ class MatrixHandler extends OutputHandler {
   }
 }
 
-class ArrayHandler extends OutputHandler {
-  static should_handle(cell) {
-    return _.isArray(cell.value)
-  }
+const arrayHandler = {
+  shouldHandle: value => {
+    return _.isArray(value)
+  },
 
-  static format(cell) {
-    var dataSetInfo = `${cell.value.length} element array`
-    let len = cell.value.length
+  render: value => {
+    var dataSetInfo = `${value.length} element array`
+    let len = value.length
     if (len < 500) {
-      var arrayOutput = `[${cell.value.join(', ')}]`
+      var arrayOutput = `[${value.join(', ')}]`
     } else {
-      var arrayOutput = `[${cell.value.slice(0, 100).join(', ')}, ... , ${cell.value.slice(len - 100, len).join(', ')}]`
+      var arrayOutput = `[${value.slice(0, 100).join(', ')}, ... , ${value.slice(len - 100, len).join(', ')}]`
     }
     return (<div>
       <div className='data-set-info'>{dataSetInfo}</div>
@@ -92,14 +67,31 @@ class ArrayHandler extends OutputHandler {
   }
 }
 
-class DefaultHandler extends OutputHandler {
-  static should_handle(cell) {
-    return true;
-  }
+const scalarHandler = {
+  scalarTypes: {
+    'undefined': true,
+    string: true,
+    number: true
+  },
 
-  static format(cell) {
+  shouldHandle: value => {
+    return (typeof(value) in scalarHandler.scalarTypes)
+  },
+
+  render: value => {
+    // TODO: This probably needs a new CSS class
+    return <div className='array-output'>{value}</div>
+  }
+}
+
+const defaultHandler = {
+  shouldHandle: value => {
+    return true;
+  },
+
+  render: value => {
     return <JSONTree
-             data={cell.value}
+             data={value}
              shouldExpandNode={(keyName, data, level) => {
                  return false
              }}
@@ -128,24 +120,26 @@ class DefaultHandler extends OutputHandler {
 }
 
 let handlers = [
-  UndefinedHandler,
-  DataFrameHandler,
-  MatrixHandler,
-  ArrayHandler,
-  DefaultHandler
+  dataFrameHandler,
+  matrixHandler,
+  arrayHandler,
+  scalarHandler,
+  defaultHandler
 ]
 
-export default function formatOutput(cell) {
-  if (cell.cellType === 'dom') return <div className='empty-resultset' />
+export default class CellOutput extends React.Component {
+  render() {
+    let value = this.props.valueToRender
 
-  for (let i = 0; i < handlers.length; i++) {
-    if (handlers[i].should_handle(cell)) {
-      let resultElem = handlers[i].format(cell)
-      if (resultElem !== undefined) {
-        return resultElem
+    for (let handler of handlers) {
+      if (handler.shouldHandle(value)) {
+        let resultElem = handler.render(value)
+        if (resultElem !== undefined) {
+          return resultElem
+        }
       }
     }
-  }
 
-  return <div className='empty-resultset' />
+    return <div className='empty-resultset' />
+  }
 }

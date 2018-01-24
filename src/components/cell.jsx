@@ -23,7 +23,7 @@ import ErrorCircle from 'material-ui/svg-icons/alert/error'
 import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 
 import CellRow from './cell-row.jsx'
-import formatOutput from './output.jsx'
+import CellOutput from './output.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
@@ -254,7 +254,13 @@ class JavascriptCell extends GenericCell {
   }
 
   outputComponent() {
-    return formatOutput(this.props.cell)
+    let cell = this.props.cell
+    if (cell.cellType == 'dom' ||
+        (cell.value == undefined && !cell.rendered)) {
+      return <div className='empty-resultset' />
+    } else {
+      return <CellOutput valueToRender={cell.value} />
+    }
   }
 }
 
