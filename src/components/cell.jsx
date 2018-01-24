@@ -254,7 +254,7 @@ class JavascriptCell extends GenericCell {
   }
 
   outputComponent() {
-    let cell = this.props.cell
+    const cell = this.props.cell
     if (cell.cellType == 'dom' ||
         (cell.value == undefined && !cell.rendered)) {
       return <div className='empty-resultset' />
