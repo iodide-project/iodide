@@ -8,6 +8,18 @@ import {PrettyMatrix, SimpleTable, makeMatrixText} from './pretty-matrix.jsx'
 
 import nb from '../tools/nb.js'
 
+const renderMethodHandler = {
+  shouldHandle: value => {
+    return (value != undefined && typeof value.render === 'function')
+  },
+
+  render: value => {
+    const output = value.render()
+    if (typeof output === 'string') {
+      return <div dangerouslySetInnerHTML={{__html: output}} />
+    }
+  }
+}
 
 const dataFrameHandler = {
   shouldHandle: value => {
@@ -120,6 +132,7 @@ const defaultHandler = {
 }
 
 let handlers = [
+  renderMethodHandler,
   dataFrameHandler,
   matrixHandler,
   arrayHandler,
