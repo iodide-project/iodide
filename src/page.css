@@ -455,6 +455,11 @@ div.history-cells {
 	padding-right:20px
 }
 
+div.history-cells .CodeMirror {
+  height: auto;
+}
+
+
 div.history-content {
 		outline:1px solid lightgray;
 

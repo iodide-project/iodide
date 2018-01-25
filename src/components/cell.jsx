@@ -366,34 +366,6 @@ class CSSCell extends GenericCell {
   }
 }
 
-class HistoryCell extends GenericCell {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    let options = {
-      lineNumbers: true,
-      readOnly: true,
-      mode: this.props.cell.cellType,
-      theme: 'eclipse',
-    }
-    let mainElem = <CodeMirror ref='editor'
-      value={this.props.cell.content}
-      options={options} />
-
-    return (
-      <div id={'cell-' + this.props.cell.id} className={'cell-container ' + (this.props.display ? '' : 'hidden-cell')}>
-        <div className='cell history-cell'>
-          <div className='history-content'>{mainElem}</div>
-          <div className='history-date'>{this.props.cell.lastRan.toUTCString()}</div>
-        </div>
-        <div className={'cell-controls'} />
-      </div>
-    )
-  }
-}
-
 function mapStateToPropsForCells(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {
@@ -440,6 +412,4 @@ export {JavascriptCell_connected as JavascriptCell,
   DOMCell_connected as DOMCell,
   CSSCell_connected as CSSCell,
   ExternalDependencyCell_connected as ExternalDependencyCell,
-  HistoryCell,
-  
 }
