@@ -2,6 +2,7 @@
 
 import React from 'react'
 
+import _ from 'lodash'
 import JSONTree from 'react-json-tree'
 
 import {PrettyMatrix, SimpleTable, makeMatrixText} from './pretty-matrix.jsx'
@@ -27,18 +28,18 @@ const dataFrameHandler = {
   },
 
   render: value => {
-    let columns = Object.keys(value[0]).map((k) => ({Header: k, accessor: k}))
-    var dataSetInfo = `array of objects: ${value.length} rows, ${columns.length} columns`
+    const columns = Object.keys(value[0]).map((k) => ({Header: k, accessor: k}))
+    const dataSetInfo = `array of objects: ${value.length} rows, ${columns.length} columns`
     return (<div>
-        <div className='data-set-info'>{dataSetInfo}</div>
-        <ReactTable
+      <div className='data-set-info'>{dataSetInfo}</div>
+      <ReactTable
         data={value}
         columns={columns}
         showPaginationTop
         showPaginationBottom={false}
         pageSizeOptions={[5, 10, 25, 50, 100]}
         defaultPageSize={25}
-        />
+      />
     </div>)
   }
 }
@@ -49,9 +50,9 @@ const matrixHandler = {
   },
 
   render: value => {
-    let shape = nb.shape(value)
-    var dataSetInfo = `${shape[0]} × ${shape[1]} matrix (array of arrays)`
-    let tabledata = makeMatrixText(value, [10, 10])
+    const shape = nb.shape(value)
+    const dataSetInfo = `${shape[0]} × ${shape[1]} matrix (array of arrays)`
+    const tabledata = makeMatrixText(value, [10, 10])
     return (<div>
       <div className='data-set-info'>{dataSetInfo}</div>
       <SimpleTable tabledata={tabledata} />
@@ -65,8 +66,8 @@ const arrayHandler = {
   },
 
   render: value => {
-    var dataSetInfo = `${value.length} element array`
-    let len = value.length
+    const dataSetInfo = `${value.length} element array`
+    const len = value.length
     if (len < 500) {
       var arrayOutput = `[${value.join(', ')}]`
     } else {
