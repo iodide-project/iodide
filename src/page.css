@@ -223,6 +223,11 @@ div.selected-cell.edit-mode div.input div.main-component {
 div.CodeMirror{
   background: #f9f9f9;
 }
+
+div.CodeMirror-gutters{
+  background: #fff;
+}
+
 div.EXPANDED div.main-component div.CodeMirror{
 	  height: auto
 }
