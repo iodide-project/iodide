@@ -15,81 +15,81 @@ import sublime from '../codemirror-keymap-sublime'
 import actions from '../actions'
 
 class CellEditor extends React.Component {
-    constructor(props) {
-        super(props)
-        this.editorOptions = {
-            lineNumbers: false,
-            mode: this.props.cellType,
-            lineWrapping: false,
-            theme: 'eclipse',
-            autoRefresh: true,
-            readOnly: this.props.viewMode=="presentation"
-        }
-        // explicitly bind "this" for all methods in constructors
-        this.getEditorElementRef = this.getEditorElementRef.bind(this)
-        this.handleFocusChange = this.handleFocusChange.bind(this)
-        this.enterEditMode = this.enterEditMode.bind(this)
-        this.updateInputContent = this.updateInputContent.bind(this)
+  constructor(props) {
+    super(props)
+    this.editorOptions = {
+      lineNumbers: false,
+      mode: this.props.cellType,
+      lineWrapping: false,
+      theme: 'eclipse',
+      autoRefresh: true,
+      readOnly: this.props.viewMode==='presentation'
     }
+    // explicitly bind "this" for all methods in constructors
+    this.getEditorElementRef = this.getEditorElementRef.bind(this)
+    this.handleFocusChange = this.handleFocusChange.bind(this)
+    this.enterEditMode = this.enterEditMode.bind(this)
+    this.updateInputContent = this.updateInputContent.bind(this)
+  }
 
-    getEditorElementRef(editorElt){
-        this.editor = editorElt
-    }
+  getEditorElementRef(editorElt){
+    this.editor = editorElt
+  }
 
-    handleFocusChange(focused){
-        if (focused && this.props.viewMode!=='editor'){
-            if (!this.props.cellSelected) this.props.actions.selectCell(this.props.cellId)
-            if (!this.props.pageMode!='edit') this.props.actions.changeMode('edit')
-        }
+  handleFocusChange(focused){
+    if (focused && this.props.viewMode!=='editor'){
+      if (!this.props.cellSelected) this.props.actions.selectCell(this.props.cellId)
+      if (!this.props.pageMode!='edit') this.props.actions.changeMode('edit')
     }
+  }
 
-    updateInputContent(content) {
-        this.props.actions.updateInputContent(content)
-    }
+  updateInputContent(content) {
+    this.props.actions.updateInputContent(content)
+  }
 
-    render(){
-        return (
-            <div className="editor" >
-                <CodeMirror ref={this.getEditorElementRef}
-                    value={this.props.content}
-                    options={this.editorOptions}
-                    onChange={this.updateInputContent} 
-                    onFocusChange={this.handleFocusChange}}
-                />
-            </div>
-        )
-    }
+  render(){
+    return (
+      <div className="editor" >
+        <CodeMirror ref={this.getEditorElementRef}
+          value={this.props.content}
+          options={this.editorOptions}
+          onChange={this.updateInputContent} 
+          onFocusChange={this.handleFocusChange}
+        />
+      </div>
+    )
+  }
 
-    componentDidMount(){
-        if (this.props.cellSelected
-            && this.refs.hasOwnProperty('editor')
-            && this.props.pageMode == 'edit') {
-            this.editor.focus()
-        }
+  componentDidMount(){
+    if (this.props.cellSelected
+      && this.refs.hasOwnProperty('editor')
+      && this.props.pageMode == 'edit') {
+      this.editor.focus()
     }
+  }
 
-    componentDidUpdate(prevProps,prevState){
-        if (this.props.cellSelected && this.props.pageMode == 'edit') {
-            this.editor.focus()
-        }
-        if (this.props.pageMode!='edit' || this.props.viewMode!='editor') {
-            this.editor.getCodeMirror().display.input.textarea.blur()
-        }
+  componentDidUpdate(prevProps,prevState){
+    if (this.props.cellSelected && this.props.pageMode == 'edit') {
+      this.editor.focus()
     }
+    if (this.props.pageMode!='edit' || this.props.viewMode!='editor') {
+      this.editor.getCodeMirror().display.input.textarea.blur()
+    }
+  }
 }
 
-function mapStateToPropsForCells(state,ownProps) {
-    let cellId = ownProps.cellId
-    let cell = getCellById(state.cells, cellId) 
-    return {
-        readOnly: ownProps.readOnly,
-        pageMode: state.mode,
-        viewMode: state.viewMode,
-        cellSelected: cell.selected,
-        cellType: cell.cellType,
-        content: cell.content,
-        cellId: cellId
-    }
+function mapStateToProps(state,ownProps) {
+  let cellId = ownProps.cellId
+  let cell = getCellById(state.cells, cellId) 
+  return {
+    readOnly: ownProps.readOnly,
+    pageMode: state.mode,
+    viewMode: state.viewMode,
+    cellSelected: cell.selected,
+    cellType: cell.cellType,
+    content: cell.content,
+    cellId: cellId
+  }
 }
 
 function mapDispatchToProps(dispatch) {
