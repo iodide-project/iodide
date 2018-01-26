@@ -16,7 +16,13 @@ function clearHistory(loadedState) {
 
 function clearUserDefinedVars(userDefinedVariables){
   //remove user defined variables when loading/importing a new/saved NB
-  Object.keys(userDefinedVariables).forEach(varName => {delete window[varName]})
+  Object.keys(userDefinedVariables).forEach(varName => {
+    try {
+      delete window[varName]
+    } catch(e) {
+      console.log(e)
+    }
+  })
 }
 
 let notebookReducer = function (state = newNotebook(), action) {
