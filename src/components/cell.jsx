@@ -45,40 +45,12 @@ class GenericCell extends React.Component {
       theme: 'eclipse',
       autoRefresh: true,
     }
-    // explicitly bind "this" for all methods in constructors
-    this.evaluateCell = this.evaluateCell.bind(this)
-    this.cellUp = this.cellUp.bind(this)
-    this.cellDown = this.cellDown.bind(this)
-    this.deleteCell = this.deleteCell.bind(this)
-    this.changeCellType = this.changeCellType.bind(this)
+
     this.handleCellClick = this.handleCellClick.bind(this)
     this.enterEditMode = this.enterEditMode.bind(this)
-    // this.handleCollapseButtonClick = this.handleCollapseButtonClick.bind(this)
-    // this.handleCollapseInputClick = this.handleCollapseInputClick.bind(this)
-    // this.handleCollapseOutputClick = this.handleCollapseOutputClick.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
     this.inputComponent = this.inputComponent.bind(this)
     this.outputComponent = this.outputComponent.bind(this)
-  }
-
-  evaluateCell() {
-    this.props.actions.evaluateCell()
-  }
-
-  cellUp() {
-    this.props.actions.cellUp()
-  }
-
-  cellDown() {
-    this.props.actions.cellDown()
-  }
-
-  deleteCell() {
-    this.props.actions.deleteCell()
-  }
-
-  changeCellType(cellType, evt) {
-    this.props.actions.changeCellType(cellType)
   }
 
   handleCellClick(e) {
