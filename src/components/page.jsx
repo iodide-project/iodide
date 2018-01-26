@@ -7,6 +7,9 @@ import deepEqual from 'deep-equal'
 import {JavascriptCell, MarkdownCell,
   RawCell, DOMCell,
   ExternalDependencyCell, CSSCell} from './cell.jsx'
+
+import {JsCell} from './cell2.jsx'
+
 import { NotebookHeader } from './notebook-header.jsx'
 
 import settings from '../settings.js'
@@ -74,14 +77,13 @@ class Page extends React.Component {
       }
     })
 
-    let sp = <span></span>
     return (
       <div id="notebook-container"
         className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''}
         onMouseDown={this.enterCommandModeOnClickOutOfCell}>
         <NotebookHeader />
         <div id='cells' className={this.props.viewMode}>
-            	{bodyContent}
+          {bodyContent}
         </div>
       </div>
     )
