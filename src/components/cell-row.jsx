@@ -57,7 +57,7 @@ class CellRow extends React.Component {
           {this.props.collapseButtonLabel}
         </div>
         <div className={'main-component'}>
-          {this.props.mainComponent}
+          {this.props.children}
         </div>
       </div>
     )

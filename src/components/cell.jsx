@@ -178,12 +178,12 @@ class GenericCell extends React.Component {
       <div id={'cell-' + cellId}
         className={cellClass}
         onMouseDown={this.handleCellClick} >
-        <CellRow cellId={cellId}
-          rowType={'input'}
-          mainComponent={this.inputComponent()} />
-        <CellRow cellId={cellId}
-          rowType={'output'}
-          mainComponent={this.outputComponent()} />
+        <CellRow cellId={cellId} rowType={'input'}>
+          {this.inputComponent()}
+        </CellRow>
+        <CellRow cellId={cellId} rowType={'output'}>
+          {this.outputComponent()}
+        </CellRow>
       </div>
     )
   }
