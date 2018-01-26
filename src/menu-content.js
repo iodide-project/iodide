@@ -67,13 +67,14 @@ function getSavedNotebooks (elem) {
       })
       .map((n)=> {
         let lastSaved = JSON.parse(localStorage[n]).lastSaved
-        return {primaryText:n, secondaryText: prettyDate(formatDateString(lastSaved)), callback: openLocalStorageNotebook(n)}
+        return {primaryText:n, secondaryText: prettyDate(formatDateString(lastSaved)), callback: openLocalStorageNotebook(n), lastSaved: Date.parse(lastSaved)}
         // return <MenuItem
         // 	primaryText={n}
         // 	secondaryText={prettyDate(formatDateString(lastSaved))}
         // />
-      })	
-    savedNBs.unshift({name: 'Saved Notebooks', itemType: 'Subheader'})	
+      })
+    savedNBs.sort((a, b) => b.lastSaved - a.lastSaved)
+    savedNBs.unshift({name: 'Saved Notebooks', itemType: 'Subheader'})
   }
   exampleNBs = exampleNotebooks.map((nb)=>{
     let lastSaved = nb.lastSaved
