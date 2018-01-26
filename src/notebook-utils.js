@@ -15,20 +15,26 @@ function viewModeIsPresentation(){
 function getCellBelowSelectedId(){
   let cells = store.getState().cells
   let index = cells.findIndex((c)=>{return c.selected})
-  if (0<=index && index<(cells.length-1)) {
+  if (index===cells.length-1){
+    // if there is no cell below, return this cell's id
+    return cells[index].id
+  } else if (0<=index && index<(cells.length-1)) {
     return cells[index+1].id
   } else {
-    return undefined // for now
+    throw new Error('no cell currently selected')
   }
 }
 
 function getCellAboveSelectedId(){
   let cells = store.getState().cells
   let index = cells.findIndex((c)=>{return c.selected})
-  if (0<index && index<=(cells.length-1)) {
+  if (index===0){
+    // if there is no cell above, return this cell's id
+    return cells[index].id
+  } else if (0<index && index<=(cells.length-1)) {
     return cells[index-1].id
   } else {
-    return undefined // for now
+    throw new Error('no cell currently selected')
   }
 }
 
