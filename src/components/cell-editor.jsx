@@ -12,6 +12,7 @@ import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
 import sublime from '../codemirror-keymap-sublime'
 
+import {getCellById} from '../notebook-utils.js'
 import actions from '../actions'
 
 class CellEditor extends React.Component {
@@ -28,7 +29,7 @@ class CellEditor extends React.Component {
     // explicitly bind "this" for all methods in constructors
     this.getEditorElementRef = this.getEditorElementRef.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
-    this.enterEditMode = this.enterEditMode.bind(this)
+    // this.enterEditMode = this.enterEditMode.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
   }
 
@@ -36,11 +37,21 @@ class CellEditor extends React.Component {
     this.editor = editorElt
   }
 
-  handleFocusChange(focused){
-    if (focused && this.props.viewMode!=='editor'){
-      if (!this.props.cellSelected) this.props.actions.selectCell(this.props.cellId)
-      if (!this.props.pageMode!='edit') this.props.actions.changeMode('edit')
+  // handleFocusChange(focused){
+  //   if (focused && this.props.viewMode!=='editor'){
+  //     if (!this.props.cellSelected) this.props.actions.selectCell(this.props.cellId)
+  //     if (!this.props.pageMode!='edit') this.props.actions.changeMode('edit')
+  //   }
+  // }
+
+  handleFocusChange() {
+    if (this.props.viewMode === 'editor') {
+      if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id)
+      if (!this.props.pageMode !== 'edit' && this.props.viewMode === 'editor') {
+        this.props.actions.changeMode('edit')
+      }
     }
+    // if (this.hasEditor) this.refs.editor.focus()
   }
 
   updateInputContent(content) {
@@ -79,6 +90,8 @@ class CellEditor extends React.Component {
 }
 
 function mapStateToProps(state,ownProps) {
+  console.log(state)
+  console.log(ownProps)
   let cellId = ownProps.cellId
   let cell = getCellById(state.cells, cellId) 
   return {
