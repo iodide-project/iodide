@@ -21,13 +21,9 @@ class JavascriptCell extends GenericCell {
   }
 
   outputComponent() {
-    const cell = this.props.cell
-    if (cell.cellType == 'dom' ||
-        (cell.value == undefined && !cell.rendered)) {
-      return <div className='empty-resultset' />
-    } else {
-      return <CellOutput valueToRender={cell.value} />
-    }
+      return <CellOutput
+        valueToRender={this.props.value}
+        renderValue={this.props.rendered} />
   }
 }
 
@@ -41,7 +37,11 @@ function mapStateToPropsForCells(state, ownProps) {
     pageMode: state.mode,
     viewMode: state.viewMode,
     ref: 'cell' + cell.id,
+    // TODO: remove need to pass all of cell; this is needed for the
+    // parent GenericCell class
     cell: Object.assign({}, cell),
+    value: cell.value,
+    rendered: cell.rendered,
     id: cell.id,
   }
 }

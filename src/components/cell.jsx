@@ -6,7 +6,6 @@ import {bindActionCreators} from 'redux'
 import deepEqual from 'deep-equal'
 
 import CellRow from './cell-row.jsx'
-// import CellOutput from './output.jsx'
 import CellEditor from './cell-editor.jsx'
 
 import actions from '../actions.js'
@@ -31,36 +30,22 @@ class GenericCell extends React.Component {
     }
 
     this.handleCellClick = this.handleCellClick.bind(this)
-    this.enterEditMode = this.enterEditMode.bind(this)
-    this.updateInputContent = this.updateInputContent.bind(this)
     this.inputComponent = this.inputComponent.bind(this)
     this.outputComponent = this.outputComponent.bind(this)
-    this.getEditorElementRef = this.getEditorElementRef.bind(this)
     this.editorElementRefCallback = this.editorElementRefCallback.bind(this)
     
   }
 
   handleCellClick(e) {
-    console.log("this.refs", this.refs)
-    console.log("this", this)
+    console.log("handleCellClick")
     if (this.props.viewMode === 'editor') {
       let scrollToCell = false
-      if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id, scrollToCell)
-      if (this.props.pageMode === 'edit' &&
-                (this.hasEditor && !this.editor.getCodeMirror().display.wrapper.contains(e.target))) {
-        this.props.actions.changeMode('command')
+      if (!this.props.cell.selected) {
+        this.props.actions.selectCell(this.props.cell.id, scrollToCell)
       }
     }
   }
 
-  enterEditMode() {
-    if (this.props.viewMode === 'editor') {
-      if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id)
-      if (!this.props.pageMode !== 'edit' && this.props.viewMode === 'editor') {
-        this.props.actions.changeMode('edit')
-      }
-    }
-  }
 
   shouldComponentUpdate(nextProps, nextState) {
     let propsEqual = deepEqual(this.props, nextProps)
@@ -68,17 +53,10 @@ class GenericCell extends React.Component {
   }
 
 
-  getEditorElementRef(cmEditor){
-    this.editor = cmEditor.passEditorElementRefUp()
-  }
 
   editorElementRefCallback(ref){
     // see https://reactjs.org/docs/refs-and-the-dom.html#exposing-dom-refs-to-parent-components
     this.editor = ref
-  }
-
-  updateInputContent(content) {
-    this.props.actions.updateInputContent(content)
   }
 
   inputComponent() {

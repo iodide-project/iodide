@@ -18,6 +18,7 @@ import actions from '../actions'
 class CellEditor extends React.Component {
   constructor(props) {
     super(props)
+    // default editor options are for JS
     this.editorOptions = Object.assign(
       {lineNumbers: false,
         mode: this.props.cellType,
@@ -36,21 +37,22 @@ class CellEditor extends React.Component {
   storeEditorElementRef(editorElt){
     this.editor = editorElt
     //pass this cm instance ref up to the parent cell with this callback
-    this.props.inputRef(editorElt)
+    if (this.props.inputRef) { this.props.inputRef(editorElt) }
   }
 
   handleFocusChange(focused) {
-    // it's essential to only trigger these actions when this *is already focused*,
-    // because if a CHANGE_MODE is triggered in command mode, it will cause the
-    // active element to be blurred, which will cause a focus change, which will
-    // fire the actions below in the middle of the CHANGE_MODE state update.
+    console.log("handleFocusChange", focused)
     if (focused && this.props.viewMode === 'editor') {
-      if (!this.props.cellSelected) this.props.actions.selectCell(this.props.cellId)
+      if (!this.props.cellSelected) {
+        this.props.actions.selectCell(this.props.cellId)
+      }
       if (!this.props.pageMode !== 'edit' && this.props.viewMode === 'editor') {
         this.props.actions.changeMode('edit')
       }
+    } else if (!focused && this.props.viewMode === 'editor') {
+      console.log("handleFocusChange, focus lost -> command mode", focused)
+      this.props.actions.changeMode('command')
     }
-    // if (this.hasEditor) this.refs.editor.focus()
   }
 
   updateInputContent(content) {
@@ -83,13 +85,20 @@ class CellEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps,prevState){
+    console.log("componentDidUpdate, editor num:", this.props.cellId, this.editor)
   // console.log("editor - componentDidUpdate - this", this)
     if (this.props.cellSelected && this.props.pageMode == 'edit') {
+      console.log("componentDidUpdate, focusing:", this.props.cellId, this.editor)
       this.editor.focus()
+    }
+    if (!this.props.cellSelected && this.props.pageMode == 'edit') {
+      console.log("componentDidUpdate, blurring:", this.props.cellId, this.editor)
+      this.editor.getCodeMirror().display.input.textarea.blur()
     }
     if (this.props.pageMode!='edit' || this.props.viewMode!='editor') {
       this.editor.getCodeMirror().display.input.textarea.blur()
     }
+
   }
 }
 

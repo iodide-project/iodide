@@ -143,6 +143,10 @@ let handlers = [
 
 export default class CellOutput extends React.Component {
   render() {
+    if (!this.props.renderValue){
+      return <div className='empty-resultset' />
+    }
+
     let value = this.props.valueToRender
 
     for (let handler of handlers) {

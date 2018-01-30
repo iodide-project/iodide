@@ -16,8 +16,10 @@ class MarkdownCell extends GenericCell {
   }
 
   enterEditMode = () => {
-    if (this.props.viewMode == 'editor') {
-      super.enterEditMode()
+    if (this.props.viewMode === 'editor') {
+      if (this.props.pageMode !== 'edit') {
+        this.props.actions.changeMode('edit')
+      }
       this.props.actions.markCellNotRendered()
     }
   }
