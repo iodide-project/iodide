@@ -108,7 +108,7 @@ let notebookReducer = function (state = newNotebook(), action) {
 
   case 'CHANGE_MODE':{
     let mode = action.mode
-    if (mode == 'command') document.activeElement.blur()
+    if (mode === 'command') document.activeElement.blur()
     return Object.assign({}, state, {mode})
   }
 

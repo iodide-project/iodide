@@ -18,35 +18,41 @@ import actions from '../actions'
 class CellEditor extends React.Component {
   constructor(props) {
     super(props)
-    this.editorOptions = {
-      lineNumbers: false,
-      mode: this.props.cellType,
-      lineWrapping: false,
-      theme: 'eclipse',
-      autoRefresh: true,
-      readOnly: this.props.viewMode==='presentation'
-    }
+    this.editorOptions = Object.assign(
+      {lineNumbers: false,
+        mode: this.props.cellType,
+        lineWrapping: false,
+        theme: 'eclipse',
+        autoRefresh: true,
+        readOnly: this.props.viewMode==='presentation'
+      }, props.editorOptions )
     // explicitly bind "this" for all methods in constructors
-    this.getEditorElementRef = this.getEditorElementRef.bind(this)
+    this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
     // this.enterEditMode = this.enterEditMode.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
+    // this.passEditorElementRefUp = this.passEditorElementRefUp.bind(this)
+    this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
   }
 
-  getEditorElementRef(editorElt){
+  storeEditorElementRef(editorElt){
     this.editor = editorElt
+    //pass this cm instance ref up to the parent cell with this callback
+    this.props.inputRef(editorElt)
   }
 
-  // handleFocusChange(focused){
-  //   if (focused && this.props.viewMode!=='editor'){
-  //     if (!this.props.cellSelected) this.props.actions.selectCell(this.props.cellId)
-  //     if (!this.props.pageMode!='edit') this.props.actions.changeMode('edit')
-  //   }
+  // passEditorElementRefUp(){
+  //   return this.editor
   // }
 
-  handleFocusChange() {
-    if (this.props.viewMode === 'editor') {
-      if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id)
+  handleFocusChange(focused) {
+    console.log("handleFocusChange", focused, this)
+    // it's essential to only trigger these actions when this *is already focused*,
+    // because if a CHANGE_MODE is triggered in command mode, it will cause the
+    // active element to be blurred, which will cause a focus change, which will
+    // fire the actions below in the middle of the CHANGE_MODE state update.
+    if (focused && this.props.viewMode === 'editor') {
+      if (!this.props.cellSelected) this.props.actions.selectCell(this.props.cellId)
       if (!this.props.pageMode !== 'edit' && this.props.viewMode === 'editor') {
         this.props.actions.changeMode('edit')
       }
@@ -60,8 +66,11 @@ class CellEditor extends React.Component {
 
   render(){
     return (
-      <div className="editor" >
-        <CodeMirror ref={this.getEditorElementRef}
+      <div className="editor"
+        onClick = {this.props.onContainerClick}
+        style = {this.props.containerStyle}
+      >
+        <CodeMirror ref={this.storeEditorElementRef}
           value={this.props.content}
           options={this.editorOptions}
           onChange={this.updateInputContent} 
@@ -72,6 +81,7 @@ class CellEditor extends React.Component {
   }
 
   componentDidMount(){
+    // console.log("editor - componentDidMount - this", this)
     if (this.props.cellSelected
       && this.refs.hasOwnProperty('editor')
       && this.props.pageMode == 'edit') {
@@ -80,6 +90,7 @@ class CellEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps,prevState){
+  // console.log("editor - componentDidUpdate - this", this)
     if (this.props.cellSelected && this.props.pageMode == 'edit') {
       this.editor.focus()
     }
@@ -89,9 +100,14 @@ class CellEditor extends React.Component {
   }
 }
 
+
+
+
+
+
 function mapStateToProps(state,ownProps) {
-  console.log(state)
-  console.log(ownProps)
+  // console.log(state)
+  // console.log(ownProps)
   let cellId = ownProps.cellId
   let cell = getCellById(state.cells, cellId) 
   return {

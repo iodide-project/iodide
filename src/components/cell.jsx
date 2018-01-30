@@ -24,6 +24,7 @@ import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 
 import CellRow from './cell-row.jsx'
 import CellOutput from './output.jsx'
+import CellEditor from './cell-editor.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
@@ -51,14 +52,19 @@ class GenericCell extends React.Component {
     this.updateInputContent = this.updateInputContent.bind(this)
     this.inputComponent = this.inputComponent.bind(this)
     this.outputComponent = this.outputComponent.bind(this)
+    this.getEditorElementRef = this.getEditorElementRef.bind(this)
+    this.editorElementRefCallback = this.editorElementRefCallback.bind(this)
+    
   }
 
   handleCellClick(e) {
+    console.log("this.refs", this.refs)
+    console.log("this", this)
     if (this.props.viewMode === 'editor') {
       let scrollToCell = false
       if (!this.props.cell.selected) this.props.actions.selectCell(this.props.cell.id, scrollToCell)
       if (this.props.pageMode === 'edit' &&
-                (this.hasEditor && !this.refs.editor.getCodeMirror().display.wrapper.contains(e.target))) {
+                (this.hasEditor && !this.editor.getCodeMirror().display.wrapper.contains(e.target))) {
         this.props.actions.changeMode('command')
       }
     }
@@ -79,24 +85,33 @@ class GenericCell extends React.Component {
     return !propsEqual
   }
 
-  componentDidMount() {
-    if (this.props.cell.selected &&
-            this.refs.hasOwnProperty('editor') &&
-            this.props.pageMode === 'edit') {
-      this.refs.editor.focus()
-    }
+  // componentDidMount() {
+  //   if (this.props.cell.selected &&
+  //         this.hasEditor &&
+  //         this.props.pageMode === 'edit') {
+  //     this.editor.focus()
+  //   }
+  // }
+
+  getEditorElementRef(cmEditor){
+    this.editor = cmEditor.passEditorElementRefUp()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.cell.selected &&
-            this.refs.hasOwnProperty('editor') &&
-            this.props.pageMode === 'edit') {
-      this.refs.editor.focus()
-    }
-    if (this.hasEditor && this.props.pageMode !== 'edit') {
-      this.refs.editor.getCodeMirror().display.input.textarea.blur()
-    }
+  editorElementRefCallback(ref){
+    // see https://reactjs.org/docs/refs-and-the-dom.html#exposing-dom-refs-to-parent-components
+    this.editor = ref
   }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.cell.selected &&
+  //           this.refs.hasOwnProperty('editor') &&
+  //           this.props.pageMode === 'edit') {
+  //     this.refs.editor.focus()
+  //   }
+  //   if (this.hasEditor && this.props.pageMode !== 'edit') {
+  //     this.editor.getCodeMirror().display.input.textarea.blur()
+  //   }
+  // }
 
   updateInputContent(content) {
     this.props.actions.updateInputContent(content)
@@ -109,15 +124,16 @@ class GenericCell extends React.Component {
     )
 
     return (
-      <div className='editor' >
-        <CodeMirror ref='editor'
-          value={this.props.cell.content}
-          onChange={this.updateInputContent}
-          onFocusChange={(focus) => {
-            if (focus && this.props.pageMode !== 'edit') this.enterEditMode()
-          }}
-          options={editorOptions} />
-      </div>
+      <CellEditor inputRef={this.editorElementRefCallback} cellId={this.props.cell.id}/>
+      // <div className='editor' >
+      //   <CodeMirror ref='editor'
+      //     value={this.props.cell.content}
+      //     onChange={this.updateInputContent}
+      //     onFocusChange={(focus) => {
+      //       if (focus && this.props.pageMode !== 'edit') this.enterEditMode()
+      //     }}
+      //     options={editorOptions} />
+      // </div>
     )
   }
 
@@ -161,6 +177,106 @@ class GenericCell extends React.Component {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class MarkdownCell extends GenericCell {
+  constructor(props) {
+    super(props)
+    this.editorOptions.lineWrapping = true
+  }
+
+  enterEditMode = () => {
+    if (this.props.viewMode == 'editor') {
+      super.enterEditMode()
+      this.props.actions.markCellNotRendered()
+    }
+  }
+
+  inputComponent = () => {
+    let editorDisplayStyle = (
+      !this.props.cell.rendered ||
+            (this.props.cell.selected &&
+                this.props.pageMode == 'edit')
+    ) ? 'block' : 'none'
+
+    return (
+      <CellEditor
+        inputRef={this.editorElementRefCallback}
+        cellId={this.props.cell.id}
+        containerStyle={{display: editorDisplayStyle}}
+        onContainerClick={this.enterEditMode}
+        editorOptions = {{lineWrapping: true}}
+      />
+    )
+  }
+
+  outputComponent = () => {
+    // the rendered MD is shown if this cell is NOT being edited
+    // and if this.props.cell.rendered
+    let resultDisplayStyle = ((
+      this.props.cell.rendered &&
+            !(this.props.cell.selected &&
+                this.props.pageMode == 'edit')
+    ) ? 'block' : 'none')
+    return <div onDoubleClick={this.enterEditMode}
+      style={{display: resultDisplayStyle}}
+      dangerouslySetInnerHTML={{__html: this.props.cell.value}} />
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class JavascriptCell extends GenericCell {
+  constructor(props) {
+    super(props)
+    this.editorOptions.lineNumbers = true
+    this.editorOptions.matchBrackets = true
+    this.editorOptions.autoCloseBrackets = true
+    this.editorOptions.keyMap = 'sublime'
+    this.outputComponent = this.outputComponent.bind(this)
+  }
+
+  outputComponent() {
+    const cell = this.props.cell
+    if (cell.cellType == 'dom' ||
+        (cell.value == undefined && !cell.rendered)) {
+      return <div className='empty-resultset' />
+    } else {
+      return <CellOutput valueToRender={cell.value} />
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
 class ExternalDependencyCell extends GenericCell {
   constructor(props) {
     super(props)
@@ -200,6 +316,16 @@ class ExternalDependencyCell extends GenericCell {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
 class RawCell extends GenericCell {
   constructor(props) {
     super(props)
@@ -215,80 +341,23 @@ class RawCell extends GenericCell {
   }
 }
 
-class JavascriptCell extends GenericCell {
-  constructor(props) {
-    super(props)
-    this.editorOptions.lineNumbers = true
-    this.editorOptions.matchBrackets = true
-    this.editorOptions.autoCloseBrackets = true
-    this.editorOptions.keyMap = 'sublime'
-    this.outputComponent = this.outputComponent.bind(this)
-  }
-
-  outputComponent() {
-    const cell = this.props.cell
-    if (cell.cellType == 'dom' ||
-        (cell.value == undefined && !cell.rendered)) {
-      return <div className='empty-resultset' />
-    } else {
-      return <CellOutput valueToRender={cell.value} />
-    }
-  }
-}
 
 
 
-class MarkdownCell extends GenericCell {
-  constructor(props) {
-    super(props)
-    this.editorOptions.lineWrapping = true
-    this.enterEditMode = this.enterEditMode.bind(this)
-    this.inputComponent = this.inputComponent.bind(this)
-    this.outputComponent = this.outputComponent.bind(this)
-  }
 
-  enterEditMode() {
-    if (this.props.viewMode == 'editor') {
-      super.enterEditMode()
-      this.props.actions.markCellNotRendered()
-    }
-  }
 
-  inputComponent() {
-    let editorDisplayStyle = (
-      !this.props.cell.rendered ||
-            (this.props.cell.selected &&
-                this.props.pageMode == 'edit')
-    ) ? 'block' : 'none'
 
-    let cmInstance = <CodeMirror ref='editor'
-      value={this.props.cell.content}
-      onChange={this.updateInputContent}
-      onFocus={this.enterEditMode}
-      options={this.editorOptions} />
 
-    return (
-      <div className='editor'
-        style={{display: editorDisplayStyle}}
-        onClick={this.enterEditMode}>
-        {cmInstance}
-      </div>
-    )
-  }
 
-  outputComponent() {
-    // the rendered MD is shown if this cell is NOT being edited
-    // and if this.props.cell.rendered
-    let resultDisplayStyle = ((
-      this.props.cell.rendered &&
-            !(this.props.cell.selected &&
-                this.props.pageMode == 'edit')
-    ) ? 'block' : 'none')
-    return <div onDoubleClick={this.enterEditMode}
-      style={{display: resultDisplayStyle}}
-      dangerouslySetInnerHTML={{__html: this.props.cell.value}} />
-  }
-}
+
+
+
+
+
+
+
+
+
 
 
 function parseDOMCellContent(content) {
@@ -326,6 +395,14 @@ class DOMCell extends GenericCell {
   }
 }
 
+
+
+
+
+
+
+
+
 class CSSCell extends GenericCell {
   constructor(props) {
     super(props)
@@ -337,6 +414,15 @@ class CSSCell extends GenericCell {
     </style>
   }
 }
+
+
+
+
+
+
+
+
+
 
 function mapStateToPropsForCells(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
