@@ -1,16 +1,9 @@
 import React, {createElement} from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import deepEqual from 'deep-equal'
+
 import CodeMirror from '@skidding/react-codemirror'
 import js from 'codemirror/mode/javascript/javascript'
 import css from 'codemirror/mode/css/css'
 
-import CellRow from './cell-row.jsx'
-import CellOutput from './output.jsx'
-
-import actions from '../actions.js'
-import {getCellById} from '../notebook-utils.js'
 import sublime from '../codemirror-keymap-sublime.js'
 
 class HistoryItem extends React.Component {
