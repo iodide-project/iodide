@@ -4,12 +4,12 @@ import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
 
-import {RawCell} from './cell-raw.jsx'
-import {DOMCell} from './cell-dom.jsx'
-import {ExternalDependencyCell} from './cell-external-resource.jsx'
-import {CSSCell} from './cell-css.jsx'
-import {MarkdownCell} from './cell-markdown.jsx'
-import {JavascriptCell} from './cell-javascript.jsx'
+import {RawCell} from './cell-type-raw.jsx'
+import {DOMCell} from './cell-type-dom.jsx'
+import {ExternalDependencyCell} from './cell-type-external-resource.jsx'
+import {CSSCell} from './cell-type-css.jsx'
+import {MarkdownCell} from './cell-type-markdown.jsx'
+import {JavascriptCell} from './cell-type-javascript.jsx'
 
 
 import {JsCell} from './cell2.jsx'
