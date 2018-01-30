@@ -2,7 +2,6 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
 import {GenericCell} from './cell.jsx'
-import CellEditor from './cell-editor.jsx'
 import CellOutput from './output.jsx'
 
 import actions from '../actions.js'

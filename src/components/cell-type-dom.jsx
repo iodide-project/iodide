@@ -2,16 +2,9 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
 import {GenericCell} from './cell.jsx'
-import CellEditor from './cell-editor.jsx'
-import CellOutput from './output.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
-
-
-
-
-
 
 
 
@@ -26,6 +19,8 @@ function parseDOMCellContent(content) {
   }
   return {elem, elemID}
 }
+
+
 
 class DOMCell extends GenericCell {
   constructor(props) {
@@ -49,10 +44,6 @@ class DOMCell extends GenericCell {
     return elem
   }
 }
-
-
-
-
 
 
 
