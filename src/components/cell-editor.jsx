@@ -29,9 +29,7 @@ class CellEditor extends React.Component {
     // explicitly bind "this" for all methods in constructors
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
-    // this.enterEditMode = this.enterEditMode.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
-    // this.passEditorElementRefUp = this.passEditorElementRefUp.bind(this)
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
   }
 
@@ -41,12 +39,7 @@ class CellEditor extends React.Component {
     this.props.inputRef(editorElt)
   }
 
-  // passEditorElementRefUp(){
-  //   return this.editor
-  // }
-
   handleFocusChange(focused) {
-    console.log("handleFocusChange", focused, this)
     // it's essential to only trigger these actions when this *is already focused*,
     // because if a CHANGE_MODE is triggered in command mode, it will cause the
     // active element to be blurred, which will cause a focus change, which will

@@ -4,31 +4,14 @@ import React, {createElement} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import deepEqual from 'deep-equal'
-import CodeMirror from '@skidding/react-codemirror'
-import js from 'codemirror/mode/javascript/javascript'
-import css from 'codemirror/mode/css/css'
-
-import markdown from 'codemirror/mode/markdown/markdown'
-import matchbrackets from 'codemirror/addon/edit/matchbrackets'
-import closebrackets from 'codemirror/addon/edit/closebrackets'
-import autorefresh from 'codemirror/addon/display/autorefresh'
-import comment from 'codemirror/addon/comment/comment'
-import _ from 'lodash'
-import ReactTable from 'react-table'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import CheckCircle from 'material-ui/svg-icons/action/check-circle'
-import ErrorCircle from 'material-ui/svg-icons/alert/error'
-import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 
 import CellRow from './cell-row.jsx'
-import CellOutput from './output.jsx'
+// import CellOutput from './output.jsx'
 import CellEditor from './cell-editor.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
-import sublime from '../codemirror-keymap-sublime.js'
+// import sublime from '../codemirror-keymap-sublime.js'
 
 
 class GenericCell extends React.Component {
@@ -77,7 +60,6 @@ class GenericCell extends React.Component {
         this.props.actions.changeMode('edit')
       }
     }
-    // if (this.hasEditor) this.refs.editor.focus()
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -85,13 +67,6 @@ class GenericCell extends React.Component {
     return !propsEqual
   }
 
-  // componentDidMount() {
-  //   if (this.props.cell.selected &&
-  //         this.hasEditor &&
-  //         this.props.pageMode === 'edit') {
-  //     this.editor.focus()
-  //   }
-  // }
 
   getEditorElementRef(cmEditor){
     this.editor = cmEditor.passEditorElementRefUp()
@@ -102,17 +77,6 @@ class GenericCell extends React.Component {
     this.editor = ref
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.cell.selected &&
-  //           this.refs.hasOwnProperty('editor') &&
-  //           this.props.pageMode === 'edit') {
-  //     this.refs.editor.focus()
-  //   }
-  //   if (this.hasEditor && this.props.pageMode !== 'edit') {
-  //     this.editor.getCodeMirror().display.input.textarea.blur()
-  //   }
-  // }
-
   updateInputContent(content) {
     this.props.actions.updateInputContent(content)
   }
@@ -122,19 +86,10 @@ class GenericCell extends React.Component {
       this.editorOptions,
       {readOnly: (this.props.viewMode === 'presentation' ? 'nocursor' : false)}
     )
-
-    return (
-      <CellEditor inputRef={this.editorElementRefCallback} cellId={this.props.cell.id}/>
-      // <div className='editor' >
-      //   <CodeMirror ref='editor'
-      //     value={this.props.cell.content}
-      //     onChange={this.updateInputContent}
-      //     onFocusChange={(focus) => {
-      //       if (focus && this.props.pageMode !== 'edit') this.enterEditMode()
-      //     }}
-      //     options={editorOptions} />
-      // </div>
-    )
+    return <CellEditor
+      inputRef={this.editorElementRefCallback}
+      cellId={this.props.cell.id}
+    />
   }
 
   outputComponent() {
@@ -179,295 +134,4 @@ class GenericCell extends React.Component {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-class MarkdownCell extends GenericCell {
-  constructor(props) {
-    super(props)
-    this.editorOptions.lineWrapping = true
-  }
-
-  enterEditMode = () => {
-    if (this.props.viewMode == 'editor') {
-      super.enterEditMode()
-      this.props.actions.markCellNotRendered()
-    }
-  }
-
-  inputComponent = () => {
-    let editorDisplayStyle = (
-      !this.props.cell.rendered ||
-            (this.props.cell.selected &&
-                this.props.pageMode == 'edit')
-    ) ? 'block' : 'none'
-
-    return (
-      <CellEditor
-        inputRef={this.editorElementRefCallback}
-        cellId={this.props.cell.id}
-        containerStyle={{display: editorDisplayStyle}}
-        onContainerClick={this.enterEditMode}
-        editorOptions = {{lineWrapping: true}}
-      />
-    )
-  }
-
-  outputComponent = () => {
-    // the rendered MD is shown if this cell is NOT being edited
-    // and if this.props.cell.rendered
-    let resultDisplayStyle = ((
-      this.props.cell.rendered &&
-            !(this.props.cell.selected &&
-                this.props.pageMode == 'edit')
-    ) ? 'block' : 'none')
-    return <div onDoubleClick={this.enterEditMode}
-      style={{display: resultDisplayStyle}}
-      dangerouslySetInnerHTML={{__html: this.props.cell.value}} />
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-class JavascriptCell extends GenericCell {
-  constructor(props) {
-    super(props)
-    this.editorOptions.lineNumbers = true
-    this.editorOptions.matchBrackets = true
-    this.editorOptions.autoCloseBrackets = true
-    this.editorOptions.keyMap = 'sublime'
-    this.outputComponent = this.outputComponent.bind(this)
-  }
-
-  outputComponent() {
-    const cell = this.props.cell
-    if (cell.cellType == 'dom' ||
-        (cell.value == undefined && !cell.rendered)) {
-      return <div className='empty-resultset' />
-    } else {
-      return <CellOutput valueToRender={cell.value} />
-    }
-  }
-}
-
-
-
-
-
-
-
-
-
-
-class ExternalDependencyCell extends GenericCell {
-  constructor(props) {
-    super(props)
-  }
-
-  outputComponent() {
-    if (this.props.cell.value == undefined) return undefined
-    let outs = this.props.cell.value.map((d) => {
-      let statusExplanation
-      let statusIcon = d.status === undefined
-        ? <UnloadedCircle />
-        : (d.status === 'loaded'
-          ? <CheckCircle color='lightblue' />
-          : <ErrorCircle color='firebrick' />
-
-        )
-      if (d.hasOwnProperty('statusExplanation')) {
-        statusExplanation = <div className='dependency-status-explanation'>{d.statusExplanation}</div>
-      }
-      return (
-        <div className='dependency-container'>
-          <div className='dependency-row'>
-            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-              {statusIcon}
-            </MuiThemeProvider>
-            <div className='dependency-src'>{d.src}</div>
-          </div>
-          {statusExplanation}
-        </div>
-      )
-    })
-    return (
-      <div className='dependency-output'>
-        {outs}
-      </div>
-    )
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-class RawCell extends GenericCell {
-  constructor(props) {
-    super(props)
-  }
-
-  componentWillMount() {
-    // FIXME: this is of a hack to make sure that the output for raw cells
-    // is set to COLLAPSED in presentation View
-    this.props.actions.setCellCollapsedState(
-      'presentation',
-      'output',
-      'COLLAPSED')
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function parseDOMCellContent(content) {
-  let elems = content.split('#')
-  let elem = elems[0]
-  let elemID
-  if (elems.length > 1) {
-    elemID = elems[1]
-  } else {
-    elemID = undefined
-  }
-  return {elem, elemID}
-}
-
-class DOMCell extends GenericCell {
-  constructor(props) {
-    super(props)
-  }
-
-  outputComponent() {
-    let elem
-    let content = parseDOMCellContent(this.props.cell.content)
-    if (content.elem !== '' && content.elem !== undefined) {
-      try {
-        elem = createElement(content.elem, {id: content.elemID})
-      } catch (err) {
-        console.error(`elem ${content.elem} is not valid`)
-        elem = <div className='dom-cell-error'>{content.elem} is not valid</div>
-      }
-      
-    } else {
-      elem = <div className='dom-cell-error'>please add an elem type</div>
-    }
-    return elem
-  }
-}
-
-
-
-
-
-
-
-
-
-class CSSCell extends GenericCell {
-  constructor(props) {
-    super(props)
-  }
-
-  outputComponent() {
-    return <style>
-      {this.props.cell.content}
-    </style>
-  }
-}
-
-
-
-
-
-
-
-
-
-
-function mapStateToPropsForCells(state, ownProps) {
-  let cell = getCellById(state.cells, ownProps.cellId)
-  return {
-    display: true,
-    pageMode: state.mode,
-    viewMode: state.viewMode,
-    ref: 'cell' + cell.id,
-    cell: Object.assign({}, cell),
-    id: cell.id,
-  }
-}
-
-function mapStateToPropsForExternalDependency(state, ownProps) {
-  let cell = getCellById(state.cells, ownProps.cellId)
-  return {
-    display: true,
-    pageMode: state.mode,
-    viewMode: state.viewMode,
-    ref: 'cell' + cell.id,
-    cell: Object.assign({}, cell),
-    id: cell.id,
-    dependencies: cell.dependencies, // Object.assign({}, cell.dependencies || [])
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch),
-  }
-}
-
-// export default connect(mapStateToProps, mapDispatchToProps)(Page)
-let JavascriptCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(JavascriptCell)
-let MarkdownCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(MarkdownCell)
-let RawCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(RawCell)
-let DOMCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(DOMCell)
-let CSSCell_connected = connect(mapStateToPropsForCells, mapDispatchToProps)(CSSCell)
-let ExternalDependencyCell_connected = connect(mapStateToPropsForExternalDependency, mapDispatchToProps)(ExternalDependencyCell)
-
-// export JavascriptCell_connected as JavascriptCell
-export {JavascriptCell_connected as JavascriptCell,
-  MarkdownCell_connected as MarkdownCell,
-  RawCell_connected as RawCell,
-  DOMCell_connected as DOMCell,
-  CSSCell_connected as CSSCell,
-  ExternalDependencyCell_connected as ExternalDependencyCell,
-}
+export {GenericCell}
