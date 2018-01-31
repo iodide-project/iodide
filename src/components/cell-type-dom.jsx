@@ -1,12 +1,13 @@
+import React, {createElement} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
-import {GenericCell} from './cell.jsx'
+import {TwoRowCell} from './two-row-cell.jsx'
+import CellOutput from './output.jsx'
+import CellEditor from './cell-editor.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
-
-
 
 function parseDOMCellContent(content) {
   let elems = content.split('#')
@@ -21,15 +22,10 @@ function parseDOMCellContent(content) {
 }
 
 
-
-class DOMCell extends GenericCell {
-  constructor(props) {
-    super(props)
-  }
-
-  outputComponent() {
+class DOMCell extends React.Component {
+  outputComponent = () => {
     let elem
-    let content = parseDOMCellContent(this.props.cell.content)
+    let content = parseDOMCellContent(this.props.content)
     if (content.elem !== '' && content.elem !== undefined) {
       try {
         elem = createElement(content.elem, {id: content.elemID})
@@ -43,6 +39,18 @@ class DOMCell extends GenericCell {
     }
     return elem
   }
+
+  render() {
+  return (
+    <TwoRowCell
+      cellId={this.props.cellId}
+      row1 = {
+        <CellEditor cellId={this.props.cellId} />
+      }
+      row2 = { this.outputComponent() }
+    />
+    )
+  }
 }
 
 
@@ -50,12 +58,9 @@ class DOMCell extends GenericCell {
 function mapStateToPropsForCells(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {
-    display: true,
-    pageMode: state.mode,
-    viewMode: state.viewMode,
-    ref: 'cell' + cell.id,
-    cell: Object.assign({}, cell),
-    id: cell.id,
+    content: cell.content,
+    rendered: cell.rendered,
+    cellId: cell.id,
   }
 }
 
@@ -65,6 +70,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const connectedCell = connect(mapStateToPropsForCells, mapDispatchToProps)(DOMCell)
-export {connectedCell as DOMCell}
-
+export default connect(mapStateToPropsForCells, mapDispatchToProps)(DOMCell)

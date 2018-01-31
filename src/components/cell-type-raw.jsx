@@ -1,45 +1,35 @@
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import {GenericCell} from './cell.jsx'
+import CellEditor from './cell-editor.jsx'
+import OneRowCell from './one-row-cell.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
 
 
-
-
-
-class RawCell extends GenericCell {
-  constructor(props) {
-    super(props)
-  }
-
-  componentWillMount() {
-    // FIXME: this is of a hack to make sure that the output for raw cells
-    // is set to COLLAPSED in presentation View
-    this.props.actions.setCellCollapsedState(
-      'presentation',
-      'output',
-      'COLLAPSED')
+class RawCell extends React.Component {
+  render() {
+    return (
+      <OneRowCell cellId={this.props.cellId}>
+        <CellEditor
+          cellId={this.props.cellId}
+          editorOptions = {{
+            matchBrackets: false,
+            autoCloseBrackets: false,
+          }}
+        />
+      </OneRowCell>
+    )
   }
 }
 
 
-
-
-
-
-
-function mapStateToPropsForCells(state, ownProps) {
+function mapStateToProps(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {
-    display: true,
-    pageMode: state.mode,
-    viewMode: state.viewMode,
-    ref: 'cell' + cell.id,
-    cell: Object.assign({}, cell),
-    id: cell.id,
+    cellId: cell.id,
   }
 }
 
@@ -49,6 +39,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const connectedCell = connect(mapStateToPropsForCells, mapDispatchToProps)(RawCell)
-export {connectedCell as RawCell}
-
+export default connect(mapStateToProps, mapDispatchToProps)(RawCell)

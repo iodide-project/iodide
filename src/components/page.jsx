@@ -3,12 +3,12 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
-import RawCell from './cell2-type-raw.jsx'
-import DOMCell from './cell2-type-dom.jsx'
-import ExternalDependencyCell from './cell2-type-external-resource.jsx'
-import CSSCell from './cell2-type-css.jsx'
-import JsCell from './cell2-type-js.jsx'
-import MarkdownCell from './cell2-type-markdown.jsx'
+import RawCell from './cell-type-raw.jsx'
+import DOMCell from './cell-type-dom.jsx'
+import ExternalDependencyCell from './cell-type-external-resource.jsx'
+import CSSCell from './cell-type-css.jsx'
+import JsCell from './cell-type-javascript.jsx'
+import MarkdownCell from './cell-type-markdown.jsx'
 
 import { NotebookHeader } from './notebook-header.jsx'
 

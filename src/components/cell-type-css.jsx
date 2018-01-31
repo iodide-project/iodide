@@ -1,33 +1,33 @@
-import {GenericCell} from './cell.jsx'
+import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import CellEditor from './cell-editor.jsx'
+import OneRowCell from './one-row-cell.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
 
 
-class CSSCell extends GenericCell {
-  constructor(props) {
-    super(props)
-  }
-
-  outputComponent() {
-    return <style>
-      {this.props.cell.content}
-    </style>
+class CSSCell extends React.Component {
+  render() {
+    return (
+      <OneRowCell cellId={this.props.cellId}>
+        <CellEditor cellId={this.props.cellId}/>
+        <style>
+          {this.props.content}
+        </style>
+      </OneRowCell>
+    )
   }
 }
 
-function mapStateToPropsForCells(state, ownProps) {
+
+function mapStateToProps(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {
-    display: true,
-    pageMode: state.mode,
-    viewMode: state.viewMode,
-    ref: 'cell' + cell.id,
-    cell: Object.assign({}, cell),
-    id: cell.id,
+    content: cell.content,
+    cellId: cell.id,
   }
 }
 
@@ -36,6 +36,5 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(actions, dispatch),
   }
 }
-const CSSCellConnected = connect(mapStateToPropsForCells, mapDispatchToProps)(CSSCell)
-export {CSSCellConnected as CSSCell}
 
+export default connect(mapStateToProps, mapDispatchToProps)(CSSCell)

@@ -25,8 +25,11 @@ class CellEditor extends React.Component {
       {lineNumbers: false,
         mode: this.props.cellType,
         lineWrapping: false,
+        matchBrackets: true,
+        autoCloseBrackets: true,
         theme: 'eclipse',
         autoRefresh: true,
+        lineNumbers: true,
         readOnly: this.props.viewMode==='presentation'
       }, props.editorOptions )
     // explicitly bind "this" for all methods in constructors
