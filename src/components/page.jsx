@@ -48,12 +48,6 @@ class Page extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
-  }
-
-  componentDidUpdate(prevProps, prevState){
-  }
-
   shouldComponentUpdate(nextProps, nextState){
     return !deepEqual(this.props,nextProps)
   }
@@ -92,9 +86,6 @@ class Page extends React.Component {
 }
 
 function mapStateToProps(state) {
-  // FIXME: don't pass full state
-  // re cells: only pass list of cell ids
-  // return state
   return {
     mode: state.mode,
     cellIds: state.cells.map(c => c.id),
