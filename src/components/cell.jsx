@@ -10,8 +10,6 @@ import CellEditor from './cell-editor.jsx'
 
 import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
-// import sublime from '../codemirror-keymap-sublime.js'
-
 
 class GenericCell extends React.Component {
   /* Generic cell implements a basic cell with a code mirror editor
@@ -36,7 +34,7 @@ class GenericCell extends React.Component {
     
   }
 
-  handleCellClick(e) {
+  handleCellClick() {
     console.log("handleCellClick")
     if (this.props.viewMode === 'editor') {
       let scrollToCell = false
@@ -46,15 +44,7 @@ class GenericCell extends React.Component {
     }
   }
 
-
-  shouldComponentUpdate(nextProps, nextState) {
-    let propsEqual = deepEqual(this.props, nextProps)
-    return !propsEqual
-  }
-
-
-
-  editorElementRefCallback(ref){
+  editorElementRefCallback(ref) {
     // see https://reactjs.org/docs/refs-and-the-dom.html#exposing-dom-refs-to-parent-components
     this.editor = ref
   }
@@ -72,6 +62,11 @@ class GenericCell extends React.Component {
 
   outputComponent() {
     return <div />
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    let propsEqual = deepEqual(this.props, nextProps)
+    return !propsEqual
   }
 
   render() {

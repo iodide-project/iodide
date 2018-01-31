@@ -58,10 +58,6 @@ class MarkdownCell extends GenericCell {
 
 
 
-
-
-
-
 function mapStateToPropsForCells(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {

@@ -6,6 +6,8 @@ import deepEqual from 'deep-equal'
 import CodeMirror from '@skidding/react-codemirror'
 import js from 'codemirror/mode/javascript/javascript'
 import markdown from 'codemirror/mode/markdown/markdown'
+import css from 'codemirror/mode/css/css'
+
 import matchbrackets from 'codemirror/addon/edit/matchbrackets'
 import closebrackets from 'codemirror/addon/edit/closebrackets'
 import autorefresh from 'codemirror/addon/display/autorefresh'
@@ -41,7 +43,7 @@ class CellEditor extends React.Component {
   }
 
   handleFocusChange(focused) {
-    console.log("handleFocusChange", focused)
+    // console.log("handleFocusChange", focused)
     if (focused && this.props.viewMode === 'editor') {
       if (!this.props.cellSelected) {
         this.props.actions.selectCell(this.props.cellId)
@@ -50,7 +52,7 @@ class CellEditor extends React.Component {
         this.props.actions.changeMode('edit')
       }
     } else if (!focused && this.props.viewMode === 'editor') {
-      console.log("handleFocusChange, focus lost -> command mode", focused)
+      // console.log("handleFocusChange, focus lost -> command mode", focused)
       this.props.actions.changeMode('command')
     }
   }
@@ -85,14 +87,14 @@ class CellEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps,prevState){
-    console.log("componentDidUpdate, editor num:", this.props.cellId, this.editor)
+    // console.log("componentDidUpdate, editor num:", this.props.cellId, this.editor)
   // console.log("editor - componentDidUpdate - this", this)
     if (this.props.cellSelected && this.props.pageMode == 'edit') {
-      console.log("componentDidUpdate, focusing:", this.props.cellId, this.editor)
+      // console.log("componentDidUpdate, focusing:", this.props.cellId, this.editor)
       this.editor.focus()
     }
     if (!this.props.cellSelected && this.props.pageMode == 'edit') {
-      console.log("componentDidUpdate, blurring:", this.props.cellId, this.editor)
+      // console.log("componentDidUpdate, blurring:", this.props.cellId, this.editor)
       this.editor.getCodeMirror().display.input.textarea.blur()
     }
     if (this.props.pageMode!='edit' || this.props.viewMode!='editor') {
