@@ -37,19 +37,17 @@ div#cells {
 	padding-top:20px;
 	padding-left: 40px;
 	padding-right: 40px;
+	padding-bottom:60px;
 	
-	display: flex;
+	/* display: flex;
 	flex-wrap: wrap;
-	justify-content: flex-end;
+	justify-content: flex-end; */
 }
 
 h1.overlay-title {
 	padding-left:20px;
 	font-size:20px
 }
-
-
-
 
 body  p {
     margin: 20px 0;
@@ -107,6 +105,7 @@ div#cells.presentation div.cell-container{
 div#cells.presentation .collapse-both.cell-container{
 	width: auto;
 	flex-direction: row;
+	display: none; /* these will be removed w/ @bcolloran's new cell refactor */
 }
 
 div#cells.presentation .collapse-both .status{
@@ -164,8 +163,9 @@ div.status{
 }
 
 div#cells.presentation div.status{
-		visibility: hidden;
-    height: 0px
+	display: none;
+	height: 0px;
+	width:0px !important;
 }
 
 div.collapse-button{

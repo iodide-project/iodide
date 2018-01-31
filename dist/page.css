@@ -34,7 +34,7 @@ div#cells {
 	padding-top:20px;
 	padding-left: 40px;
 	padding-right: 40px;
-	
+	margin-bottom:40px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: flex-end;
