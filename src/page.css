@@ -1,10 +1,12 @@
-/* top-level styles */
-
 html,body {
 	font-family: 'Open Sans', sans-serif;
 	height:100%;
 	margin:0;
 	padding:0;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #333;
+	background-color: #fff;
 }
 
 div#page {
@@ -31,19 +33,45 @@ div#headerbar {
 
 div#cells {
 	overflow-y: auto;
-	width: 100%;
+	
 	padding-top:20px;
 	padding-left: 40px;
 	padding-right: 40px;
+	padding-bottom:60px;
 	
-	display: flex;
+	/* display: flex;
 	flex-wrap: wrap;
-	justify-content: flex-end;
+	justify-content: flex-end; */
 }
 
 h1.overlay-title {
 	padding-left:20px;
 	font-size:20px
+}
+
+body  p {
+    margin: 20px 0;
+    font-size: 1.0625rem;
+    line-height: 1.625rem;
+    font-weight: 400;
+    font-style: normal;
+    color: #222;
+}
+
+a {
+	color: #337ab7;
+	text-decoration: none;
+	cursor: pointer;
+  }
+
+a:hover,
+a:focus {
+color: #23527c;
+text-decoration: underline;
+}
+a:focus {
+outline: 5px auto -webkit-focus-ring-color;
+outline-offset: -2px;
 }
 
 
@@ -77,6 +105,7 @@ div#cells.presentation div.cell-container{
 div#cells.presentation .collapse-both.cell-container{
 	width: auto;
 	flex-direction: row;
+	display: none; /* these will be removed w/ @bcolloran's new cell refactor */
 }
 
 div#cells.presentation .collapse-both .status{
@@ -134,8 +163,9 @@ div.status{
 }
 
 div#cells.presentation div.status{
-		visibility: hidden;
-    height: 0px
+	display: none;
+	height: 0px;
+	width:0px !important;
 }
 
 div.collapse-button{
