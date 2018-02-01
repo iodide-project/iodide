@@ -42,12 +42,31 @@ describe("CSSCell_unconnected react component", () => {
     expect(cell().find(CellEditor).length).toBe(1)
   })
 
+  it("sets the CellEditor cellId prop to be the CSSCell cellId input prop", () => {
+    expect(cell().find(CellEditor).props().cellId)
+      .toBe(props.cellId)
+  })
+
   it("always renders one OneRowCell", () => {
     expect(cell().find(OneRowCell).length).toBe(1)
   })
 
+  it("sets the OneRowCell cellId prop to be the CSSCell cellId input prop", () => {
+    expect(cell().find(OneRowCell).props().cellId)
+      .toBe(props.cellId)
+  })
+
+
   it("is a OneRowCell with two children", () => {
     expect(cell().find(OneRowCell).children().length).toBe(2)
+  })
+
+  it("has a cell CellEditor within its OneRowCell", () => {
+    expect(cell().find(CellEditor).parent().is(OneRowCell)).toEqual(true)
+  })
+
+  it("has a cell style elt within its OneRowCell", () => {
+    expect(cell().find("style").parent().is(OneRowCell)).toEqual(true)
   })
 })
 
