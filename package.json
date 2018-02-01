@@ -39,8 +39,8 @@
     "redux-logger": "^3.0.6"
   },
   "devDependencies": {
-    "@neutrinojs/jest": "^8.0.18",
-    "@neutrinojs/react": "^8.0.13",
-    "neutrino": "^8.0.18"
+    "@neutrinojs/jest": "^8.1.0",
+    "@neutrinojs/react": "^8.1.0",
+    "neutrino": "^8.1.0"
   }
 }
