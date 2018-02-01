@@ -1,6 +1,6 @@
 ### early alpha - subject to breakage, changes, argument, refactors
 
-# The javascript notebook
+# The Iodide notebook
 
 [see our slide deck](https://docs.google.com/presentation/d/1yyMw2in7He4XNZtrowLU_J78wKRyFn2UAw9YRJjBsh4/edit#slide=id.p)
 
