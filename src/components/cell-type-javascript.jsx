@@ -1,49 +1,46 @@
-import React, {createElement} from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
-import {TwoRowCell} from './two-row-cell.jsx'
+import TwoRowCell from './two-row-cell.jsx'
 import CellOutput from './output.jsx'
 import CellEditor from './cell-editor.jsx'
 
-import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
 
 
 
-class JsCell extends React.Component {
+export class JsCell_unconnected extends React.Component {
+  static propTypes = {
+    cellId: PropTypes.number.isRequired,
+    value: PropTypes.any,
+    rendered: PropTypes.bool.isRequired,
+  }
+
   render() {
-  return (
-    <TwoRowCell
-      cellId={this.props.cellId}
-      row1 = {
-        <CellEditor cellId={this.props.cellId} />
-      }
-      row2 = {
-        <CellOutput
-          valueToRender={this.props.value}
-          renderValue={this.props.rendered} />
-      }
-    />
+    let row1 = <CellEditor cellId={this.props.cellId} />
+    let row2 = <CellOutput
+            valueToRender={this.props.value}
+            renderValue={this.props.rendered} />
+    return (
+      <TwoRowCell
+        cellId={this.props.cellId}
+        row1 = {row1}
+        row2 = {row2}
+      />
     )
   }
 }
 
 
-
-function mapStateToPropsForCells(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {
     value: cell.value,
     rendered: cell.rendered,
-    cellId: cell.id,
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch),
-  }
-}
 
-export default connect(mapStateToPropsForCells, mapDispatchToProps)(JsCell)
+export default connect(mapStateToProps)(JsCell_unconnected)

@@ -6,11 +6,10 @@ import CellRow from './cell-row.jsx'
 import CellEditor from './cell-editor.jsx'
 import {CellContainer} from './cell-container.jsx'
 
-import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
 
 
-class TwoRowCell extends React.Component {
+export class TwoRowCell_unconnected extends React.Component {
   render() {
     let cellId = this.props.cellId
     let cellType = this.props.cell.cellType
@@ -49,25 +48,13 @@ class TwoRowCell extends React.Component {
 }
 
 
-function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {
-    // display: true,
     pageMode: state.mode,
     viewMode: state.viewMode,
-    // ref: 'cell' + cell.id,
     cell: Object.assign({}, cell),
-    // value: cell.value,
-    // rendered: cell.rendered,
-    id: cell.id,
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch),
-  }
-}
-
-let TwoRowCell_connected = connect(mapStateToProps, mapDispatchToProps)(TwoRowCell)
-export {TwoRowCell_connected as TwoRowCell}
+export default connect(mapStateToProps)(TwoRowCell_unconnected)

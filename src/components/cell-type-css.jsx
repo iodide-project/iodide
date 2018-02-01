@@ -1,15 +1,19 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import CellEditor from './cell-editor.jsx'
 import OneRowCell from './one-row-cell.jsx'
 
-import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
 
+export class CSSCell_unconnected extends React.Component {
+  static propTypes = {
+    cellId: PropTypes.number.isRequired,
+    content: PropTypes.string.isRequired,
+  }
 
-class CSSCell extends React.Component {
   render() {
     return (
       <OneRowCell cellId={this.props.cellId}>
@@ -23,18 +27,11 @@ class CSSCell extends React.Component {
 }
 
 
-function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {
     content: cell.content,
-    cellId: cell.id,
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch),
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CSSCell)
+export default connect(mapStateToProps)(CSSCell_unconnected)

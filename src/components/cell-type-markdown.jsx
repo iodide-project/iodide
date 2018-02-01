@@ -2,7 +2,7 @@ import React, {createElement} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
-import {TwoRowCell} from './two-row-cell.jsx'
+import TwoRowCell from './two-row-cell.jsx'
 import CellOutput from './output.jsx'
 import CellEditor from './cell-editor.jsx'
 
