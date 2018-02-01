@@ -29,10 +29,6 @@ class CellContainer extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    let propsEqual = deepEqual(this.props, nextProps)
-    return !propsEqual
-  }
 
   render() {
     return (

@@ -2984,7 +2984,7 @@ escope@^3.6.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint-plugin-jest@^21.0.2, eslint-plugin-jest@^21.4.2:
+eslint-plugin-jest@^21.4.2:
   version "21.7.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-21.7.0.tgz#651f1c6ce999af3ac59ab8bf8a376d742fd0fc23"
 
@@ -5799,26 +5799,6 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-neutrino-middleware-loader-merge@^7.4.0:
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/neutrino-middleware-loader-merge/-/neutrino-middleware-loader-merge-7.4.0.tgz#437200a53af09277af5b01704b30982ebf70c5ec"
-  dependencies:
-    deepmerge "^1.5.2"
-
-neutrino-preset-jest@^7.4.0:
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/neutrino-preset-jest/-/neutrino-preset-jest-7.4.0.tgz#2935f3d860f1e620bc0fdd7198d8119b7f9d2d23"
-  dependencies:
-    babel-core "^6.26.0"
-    babel-plugin-transform-es2015-modules-commonjs "^6.26.0"
-    babel-preset-jest "^21.0.2"
-    deepmerge "^1.5.1"
-    eslint-plugin-jest "^21.0.2"
-    jest-cli "^21.0.2"
-    neutrino-middleware-loader-merge "^7.4.0"
-    ramda "^0.24.1"
-    yargs "^9.0.1"
-
 neutrino@^8.1.0:
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/neutrino/-/neutrino-8.1.1.tgz#bd87d2691753ecd43ff0a6a1e52832690e616523"
@@ -6900,10 +6880,6 @@ raf@^3.4.0:
 railroad-diagrams@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/railroad-diagrams/-/railroad-diagrams-1.0.0.tgz#eb7e6267548ddedfb899c1b90e57374559cddb7e"
-
-ramda@^0.24.1:
-  version "0.24.1"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.24.1.tgz#c3b7755197f35b8dc3502228262c4c91ddb6b857"
 
 ramda@^0.25.0:
   version "0.25.0"
@@ -9019,7 +8995,7 @@ yargs@^8.0.2:
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
 
-yargs@^9.0.0, yargs@^9.0.1:
+yargs@^9.0.0:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-9.0.1.tgz#52acc23feecac34042078ee78c0c007f5085db4c"
   dependencies:

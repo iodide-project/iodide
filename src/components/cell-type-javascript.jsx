@@ -22,7 +22,7 @@ export class JsCell_unconnected extends React.Component {
     let row1 = <CellEditor cellId={this.props.cellId} />
     let row2 = <CellOutput
             valueToRender={this.props.value}
-            renderValue={this.props.rendered} />
+            render={this.props.rendered} />
     return (
       <TwoRowCell
         cellId={this.props.cellId}

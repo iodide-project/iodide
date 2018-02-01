@@ -98,7 +98,6 @@ function addExternalDependency(dep){
       elem.text = xhrObj.responseText
       outElem.status = 'loaded'
     } catch(err) {
-      // console.log(err)
       outElem.status = 'error'
       outElem.statusExplanation = err.message
     }

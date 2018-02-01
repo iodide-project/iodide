@@ -46,7 +46,6 @@ class CellEditor extends React.Component {
   }
 
   handleFocusChange(focused) {
-    // console.log("handleFocusChange", focused)
     if (focused && this.props.viewMode === 'editor') {
       if (!this.props.cellSelected) {
         this.props.actions.selectCell(this.props.cellId)
@@ -55,7 +54,6 @@ class CellEditor extends React.Component {
         this.props.actions.changeMode('edit')
       }
     } else if (!focused && this.props.viewMode === 'editor') {
-      // console.log("handleFocusChange, focus lost -> command mode", focused)
       this.props.actions.changeMode('command')
     }
   }
@@ -81,7 +79,6 @@ class CellEditor extends React.Component {
   }
 
   componentDidMount(){
-    // console.log("editor - componentDidMount - this", this)
     if (this.props.cellSelected
       && this.refs.hasOwnProperty('editor')
       && this.props.pageMode == 'edit') {
@@ -90,14 +87,10 @@ class CellEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps,prevState){
-    // console.log("componentDidUpdate, editor num:", this.props.cellId, this.editor)
-  // console.log("editor - componentDidUpdate - this", this)
     if (this.props.cellSelected && this.props.pageMode == 'edit') {
-      // console.log("componentDidUpdate, focusing:", this.props.cellId, this.editor)
       this.editor.focus()
     }
     if (!this.props.cellSelected && this.props.pageMode == 'edit') {
-      // console.log("componentDidUpdate, blurring:", this.props.cellId, this.editor)
       this.editor.getCodeMirror().display.input.textarea.blur()
     }
     if (this.props.pageMode!='edit' || this.props.viewMode!='editor') {
@@ -113,8 +106,6 @@ class CellEditor extends React.Component {
 
 
 function mapStateToProps(state,ownProps) {
-  // console.log(state)
-  // console.log(ownProps)
   let cellId = ownProps.cellId
   let cell = getCellById(state.cells, cellId) 
   return {

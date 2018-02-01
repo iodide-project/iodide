@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -9,7 +10,10 @@ import actions from '../actions.js'
 import {getCellById} from '../notebook-utils.js'
 
 
-class RawCell extends React.Component {
+export class RawCell_unconnected extends React.Component {
+  static propTypes = {
+    cellId: PropTypes.number.isRequired,
+  }
   render() {
     return (
       <OneRowCell cellId={this.props.cellId}>
@@ -25,18 +29,4 @@ class RawCell extends React.Component {
   }
 }
 
-
-function mapStateToProps(state, ownProps) {
-  let cell = getCellById(state.cells, ownProps.cellId)
-  return {
-    cellId: cell.id,
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch),
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(RawCell)
+export default connect()(RawCell_unconnected)

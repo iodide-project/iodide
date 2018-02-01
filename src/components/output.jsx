@@ -143,7 +143,7 @@ let handlers = [
 
 export default class CellOutput extends React.Component {
   render() {
-    if (!this.props.renderValue){
+    if (!this.props.render){
       return <div className='empty-resultset' />
     }
 

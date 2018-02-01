@@ -1,7 +1,7 @@
 import React from "react"
 import { shallow, render } from "enzyme"
 
-import JavascriptCell, {JsCell_unconnected as JsCell,
+import {JsCell_unconnected as JsCell,
   mapStateToProps} from '../src/components/cell-type-javascript.jsx'
 import CellEditor from '../src/components/cell-editor.jsx'
 import TwoRowCell from '../src/components/two-row-cell.jsx'
@@ -68,7 +68,7 @@ describe("JsCell_unconnected react component", () => {
 
   it("sets the CellOutput renderValue prop to be the JsCell's value prop", () => {
     expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row2).props().renderValue)
+        .props().row2).props().render)
       .toBe(props.rendered)
   })
 
