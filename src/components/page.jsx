@@ -3,10 +3,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
+import RawCell from './cell-type-raw.jsx'
+import DOMCell from './cell-type-dom.jsx'
+import ExternalDependencyCell from './cell-type-external-resource.jsx'
+import CSSCell from './cell-type-css.jsx'
+import JsCell from './cell-type-javascript.jsx'
+import MarkdownCell from './cell-type-markdown.jsx'
 
-import {JavascriptCell, MarkdownCell,
-  RawCell, HistoryCell, DOMCell,
-  ExternalDependencyCell, CSSCell} from './cell.jsx'
 import { NotebookHeader } from './notebook-header.jsx'
 
 import settings from '../settings.js'
@@ -45,12 +48,6 @@ class Page extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
-  }
-
-  componentDidUpdate(prevProps, prevState){
-  }
-
   shouldComponentUpdate(nextProps, nextState){
     return !deepEqual(this.props,nextProps)
   }
@@ -60,7 +57,8 @@ class Page extends React.Component {
       // let id = cell.id
       switch (this.props.cellTypes[i]){
       case 'javascript':
-        return <JavascriptCell cellId={id} key={id}/> 
+        // return <JavascriptCell cellId={id} key={id}/> 
+        return <JsCell cellId={id} key={id}/> 
       case 'markdown':
         return <MarkdownCell cellId={id} key={id}/>
       case 'raw':
@@ -74,14 +72,13 @@ class Page extends React.Component {
       }
     })
 
-    let sp = <span></span>
     return (
       <div id="notebook-container"
         className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''}
         onMouseDown={this.enterCommandModeOnClickOutOfCell}>
         <NotebookHeader />
         <div id='cells' className={this.props.viewMode}>
-            	{bodyContent}
+          {bodyContent}
         </div>
       </div>
     )
@@ -89,9 +86,6 @@ class Page extends React.Component {
 }
 
 function mapStateToProps(state) {
-  // FIXME: don't pass full state
-  // re cells: only pass list of cell ids
-  // return state
   return {
     mode: state.mode,
     cellIds: state.cells.map(c => c.id),

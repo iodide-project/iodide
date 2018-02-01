@@ -13,14 +13,10 @@ const jsmdCellTypeMap = new Map([
 ])
 
 function initializeNotebook(){
-  // console.log('initializeNotebook')
   let jsmdElt = document.getElementById('jsmd')
-  // console.log(jsmdElt)
-  // console.log(jsmdElt.innerHTML)
   if (jsmdElt){
     let {cells, parseWarnings} = parseJsmd(jsmdElt.innerHTML)
     console.log(parseWarnings)
-    // console.log('cells', cells)
     // initialize a blank notebook
     let initialState = blankState()
     // add top-level meta settings if any exist
@@ -43,8 +39,6 @@ function initializeNotebook(){
       )
     // set cell 0  to be the selected cell
     initialState.cells[0].selected = true
-    // console.log('initialState')
-    // console.log(initialState)
     return initialState
     // return newNotebook()
   } else {

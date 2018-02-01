@@ -3,7 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import {HistoryCell} from './cell.jsx'
+import {HistoryItem} from './history-item.jsx'
 import {Toolbar, ToolbarGroup,
   ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
 import {red500, yellow500, blue500, grey900,grey50} from 'material-ui/styles/colors'
@@ -76,7 +76,7 @@ class NotebookHeader extends React.Component {
     let histContents = []
     if (this.props.history.length) {
       histContents = this.props.history.filter(cell=>cell.content.length).map((cell,i)=> {
-        let cellComponent = <HistoryCell display={true} ref={'cell'+cell.id} actions={this.props.actions} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
+        let cellComponent = <HistoryItem display={true} ref={'cell'+cell.id} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
         return cellComponent
       })
     } else {

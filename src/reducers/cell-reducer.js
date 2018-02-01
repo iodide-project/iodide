@@ -138,13 +138,9 @@ let cellReducer = function (state = newNotebook(), action) {
       let output
       let code = thisCell.content
       if (code.slice(0,12)=='\'use matrix\'' || code.slice(0,12)=='"use matrix"'){
-        // console.log('---transpiling code---')
         try {
           code = tjsm.transpile(thisCell.content)
-          // console.log('---transpiled code---')
-          // console.log(code)
         } catch(e) {
-          // console.log('---transpilation failed---')
           e.constructor('transpilation failed: ' + e.message)
         }
       }
