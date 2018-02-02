@@ -102,12 +102,16 @@ function addExternalDependency(dep){
       outElem.statusExplanation = err.message
     }
   } else if (depType === 'css') {
-    //<link rel="stylesheet" type="text/css" href="mystyles.css" media="screen" />
     elem = document.createElement('link')
     elem.rel = 'stylesheet'
     elem.type = 'text/css'
     elem.href = src
-    outElem.status = 'loaded'
+    if (elem.sizes.length === 0) { 
+      outElem.status = 'error'
+      outElem.statusExplanation = 'style sheet is empty'
+    } else {
+      outElem.status = 'loaded'
+    }
   } else {
     outElem.status = 'error'
     outElem.statusExplanation = 'unknown dependency type.'
