@@ -19,7 +19,8 @@ import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 class ExternalResourceCell extends React.Component {
   outputComponent = () => {
     if (this.props.value == undefined) return undefined
-    let outs = this.props.value.map((d,i) => {
+    let outs = this.props.value.filter(d => d.src !== '').map((d,i) => {
+
       let statusExplanation
       let statusIcon = d.status === undefined
         ? <UnloadedCircle />
@@ -28,7 +29,7 @@ class ExternalResourceCell extends React.Component {
           : <ErrorCircle color='firebrick' />
         )
       if (d.hasOwnProperty('statusExplanation')) {
-        statusExplanation = <div className='dependency-status-explanation'>{d.statusExplanation}</div>
+        statusExplanation = <div key={i} className='dependency-status-explanation'>{d.statusExplanation}</div>
       }
       return (
         <div className='dependency-container' key={`erc-${this.props.cellId}-${i}`}>
