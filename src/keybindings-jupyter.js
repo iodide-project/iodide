@@ -126,7 +126,8 @@ let SELECT_UP = [['up'], function(e){
     } else { // internet explorer
       e.returnValue = false
     }
-    dispatcher.selectCell(getCellAboveSelectedId(), true)
+    let cellAboveId = getCellAboveSelectedId()
+    if (cellAboveId!==null) { dispatcher.selectCell(cellAboveId, true) }
   }
 }
 ]
@@ -139,7 +140,8 @@ let SELECT_DOWN = [['down'], function(e){
     } else { // internet explorer
       e.returnValue = false
     }
-    dispatcher.selectCell(getCellBelowSelectedId(), true)
+    let cellBelowId = getCellBelowSelectedId()
+    if (cellBelowId!==null) { dispatcher.selectCell(cellBelowId, true) }
   }
 }
 ]
@@ -154,9 +156,10 @@ let EVAL_AND_SELECT_BELOW = [['shift+enter'], function(){
     dispatcher.changeMode('command')
     dispatcher.evaluateCell()
     let cellBelowId = getCellBelowSelectedId()
-    if (cellBelowId){
+    if (cellBelowId!==null){
       dispatcher.selectCell(cellBelowId, true)
     } else {
+      // if cellBelowId *is* null, need to add a new cell.
       dispatcher.addCell('javascript')
       dispatcher.selectCell(getCellBelowSelectedId(), true)
     }
