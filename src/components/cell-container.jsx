@@ -20,7 +20,6 @@ class CellContainer extends React.Component {
   }
 
   handleCellClick = (e) => {
-    console.log("handleCellClick")
     if (this.props.viewMode === 'editor') {
       let scrollToCell = false
       if (!this.props.selected) {
