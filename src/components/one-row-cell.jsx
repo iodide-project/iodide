@@ -2,34 +2,32 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import CellRow from './cell-row.jsx'
-import CellEditor from './cell-editor.jsx'
-import {CellContainer} from './cell-container.jsx'
+import CellRow from './cell-row'
+import { CellContainer } from './cell-container'
 
-import actions from '../actions.js'
-import {getCellById} from '../notebook-utils.js'
+import actions from '../actions'
+import { getCellById } from '../notebook-utils'
 
 
 class OneRowCell extends React.Component {
   render() {
-    let cellId = this.props.cellId
-    let cellType = this.props.cellType
+    const { cellId, cellType } = this.props
 
-    let cellSelected = (
+    const cellSelected = (
       this.props.cellSelected ? 'selected-cell ' : ''
     )
-    let editorMode = (
+    const editorMode = (
       (this.props.cellSelected && this.props.pageMode === 'edit')
         ? 'edit-mode ' : 'command-mode '
     )
 
-    let cellClass = ['cell-container', cellSelected,
+    const cellClass = ['cell-container', cellSelected,
       editorMode, cellType].join(' ')
 
     return (
       <CellContainer cellId={cellId} cellClass={cellClass}>
-        <CellRow cellId={cellId} rowType={'input'}>
-            {this.props.children}
+        <CellRow cellId={cellId} rowType="input">
+          {this.props.children}
         </CellRow>
       </CellContainer>
     )
@@ -38,7 +36,7 @@ class OneRowCell extends React.Component {
 
 
 function mapStateToProps(state, ownProps) {
-  let cell = getCellById(state.cells, ownProps.cellId)
+  const cell = getCellById(state.cells, ownProps.cellId)
   return {
     pageMode: state.mode,
     // viewMode: state.viewMode,

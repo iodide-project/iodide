@@ -20,8 +20,11 @@
   },
   "dependencies": {
     "@skidding/react-codemirror": "^1.0.0",
+    "acorn": "^5.4.1",
     "astring": "^1.2.0",
+    "codemirror": "^5.34.0",
     "codemirror-no-newlines": "^1.0.2",
+    "deep-equal": "^1.0.1",
     "font-awesome": "^4.7.0",
     "fuse.js": "^3.2.0",
     "lodash": "^4.17.4",
@@ -30,6 +33,7 @@
     "material-ui": "^0.20.0",
     "mousetrap": "^1.6.1",
     "opensans-npm-webfont": "^1.0.0",
+    "prop-types": "^15.6.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-json-tree": "^0.10.9",
@@ -39,6 +43,7 @@
     "redux-logger": "^3.0.6"
   },
   "devDependencies": {
+    "@neutrinojs/airbnb": "^8.1.1",
     "@neutrinojs/jest": "^8.1.0",
     "@neutrinojs/react": "^8.1.0",
     "enzyme": "^3.3.0",

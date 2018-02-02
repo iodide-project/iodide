@@ -1,18 +1,16 @@
-import React, {createElement} from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 
-import TwoRowCell from './two-row-cell.jsx'
-import CellOutput from './output.jsx'
-import CellEditor from './cell-editor.jsx'
+import TwoRowCell from './two-row-cell'
+import CellEditor from './cell-editor'
 
-import actions from '../actions.js'
-import {getCellById} from '../notebook-utils.js'
-
+import actions from '../actions'
+import { getCellById } from '../notebook-utils'
 
 
-export class MarkdownCell_unconnected extends React.Component {
+export class MarkdownCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
     value: PropTypes.string,
@@ -32,10 +30,11 @@ export class MarkdownCell_unconnected extends React.Component {
   }
 
   render() {
-    let resultDisplayStyle,editorDisplayStyle
+    let resultDisplayStyle
+    let editorDisplayStyle
     if (this.props.rendered &&
           !(this.props.cellSelected &&
-            this.props.pageMode == 'edit')){
+            this.props.pageMode === 'edit')) {
       resultDisplayStyle = 'block'
       editorDisplayStyle = 'none'
     } else {
@@ -43,38 +42,36 @@ export class MarkdownCell_unconnected extends React.Component {
       editorDisplayStyle = 'block'
     }
 
-    let row1 = <CellEditor
-          cellId={this.props.cellId}
-          containerStyle={{display: editorDisplayStyle}}
-          onContainerClick={this.enterEditMode}
-          editorOptions = {{
+    const row1 = (<CellEditor
+      cellId={this.props.cellId}
+      containerStyle={{ display: editorDisplayStyle }}
+      onContainerClick={this.enterEditMode}
+      editorOptions={{
             lineWrapping: true,
             matchBrackets: false,
             autoCloseBrackets: false,
             lineNumbers: false,
           }}
-        />
-      
-    let row2 = <div
-          className = 'user-markdown'
-          onDoubleClick={this.enterEditMode}
-          style={{display: resultDisplayStyle}}
-          dangerouslySetInnerHTML={{__html: this.props.value}}
-        />
+    />)
 
-    return <TwoRowCell
-        cellId={this.props.cellId}
-        row1 = {row1}
-        row2 = {row2}
-      />
+    const row2 = (<div
+      className="user-markdown"
+      onDoubleClick={this.enterEditMode}
+      style={{ display: resultDisplayStyle }}
+      dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
+    />)
+
+    return (<TwoRowCell
+      cellId={this.props.cellId}
+      row1={row1}
+      row2={row2}
+    />)
   }
-
 }
 
 
-
 export function mapStateToProps(state, ownProps) {
-  let cell = getCellById(state.cells, ownProps.cellId)
+  const cell = getCellById(state.cells, ownProps.cellId)
   return {
     value: cell.value,
     rendered: cell.rendered,
@@ -90,4 +87,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MarkdownCell_unconnected)
+export default connect(mapStateToProps, mapDispatchToProps)(MarkdownCellUnconnected)

@@ -1,4 +1,4 @@
-let settings = {}
+const settings = {}
 
 settings.labels = {}
 settings.labels.AUTOSAVE = 'AUTOSAVE: '

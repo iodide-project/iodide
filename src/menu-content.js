@@ -1,221 +1,240 @@
-import {prettyDate, formatDateString} from './notebook-utils'
-import exampleNotebooks from './example-notebooks.js'
-import settings from './settings.js'
-const AUTOSAVE = settings.labels.AUTOSAVE
+import { prettyDate, formatDateString } from './notebook-utils'
+import exampleNotebooks from './example-notebooks'
+import settings from './settings'
 
-let oscpu = window.navigator.oscpu || window.navigator.platform
-let OSName='Unknown OS'
-if (oscpu.indexOf('Win')!=-1) OSName='Windows'
-if (oscpu.indexOf('Mac')!=-1) OSName='MacOS'
-if (oscpu.indexOf('X11')!=-1) OSName='UNIX'
-if (oscpu.indexOf('Linux')!=-1) OSName='Linux'
+const { AUTOSAVE } = settings.labels
+
+const oscpu = window.navigator.oscpu || window.navigator.platform
+let OSName = 'Unknown OS'
+if (oscpu.indexOf('Win') !== -1) OSName = 'Windows'
+if (oscpu.indexOf('Mac') !== -1) OSName = 'MacOS'
+if (oscpu.indexOf('X11') !== -1) OSName = 'UNIX'
+if (oscpu.indexOf('Linux') !== -1) OSName = 'Linux'
 
 function commandKey(key) {
   let ctr = 'Ctrl '
   if (OSName === 'MacOS') {
-    ctr= '⌘ '
+    ctr = '⌘ '
   }
   return ctr + key
 }
 
-//document.write('Your OS: '+OSName);
+// document.write('Your OS: '+OSName);
 
-function getSavedNotebooks (elem) {
-
-  let openLocalStorageNotebook = name => {
-    return ()=>{
-      elem.props.actions.loadNotebook(name)
-    }   
+function getSavedNotebooks(elem) {
+  const openLocalStorageNotebook = name => () => {
+    elem.props.actions.loadNotebook(name)
   }
 
-  let openExampleNotebook = notebook => {
-    let nbs = exampleNotebooks
-    let thisNotebook = notebook
+  const openExampleNotebook = (notebook) => {
+    const nbs = exampleNotebooks
+    const thisNotebook = notebook
     return () => {
-      let notebook = nbs.filter((nb)=>{return nb.title === thisNotebook.title})[0]
-      elem.props.actions.importNotebook(notebook)
+      const matchingNotebook = nbs.filter(nb => nb.title === thisNotebook.title)[0]
+      elem.props.actions.importNotebook(matchingNotebook)
     }
   }
 
   let currentNotebooks = []
-  let autosaveNBs=[], savedNBs=[], exampleNBs=[]
+  let autosaveNBs = []
+  let savedNBs = []
+  let exampleNBs = []
 
-  let autosave = Object.keys(localStorage).filter((n)=>n.includes(AUTOSAVE))
+  const autosaves = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))
 
-  if (autosave.length) {
-    autosave = autosave[0]
-    let lastSaved = JSON.parse(localStorage[autosave]).lastSaved
-    if (lastSaved!== undefined) lastSaved = prettyDate(formatDateString(lastSaved))
-    lastSaved = (lastSaved!== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
-    let displayTitle = autosave.replace(AUTOSAVE, '')
+  if (autosaves.length) {
+    const [autosave] = autosaves
+    let { lastSaved } = JSON.parse(localStorage[autosave])
+    if (lastSaved !== undefined) lastSaved = prettyDate(formatDateString(lastSaved))
+    lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
+    const displayTitle = autosave.replace(AUTOSAVE, '')
     autosaveNBs = [
-      {name: 'Auto-Saved', itemType: 'Subheader'},
-      {primaryText: displayTitle, secondaryText: lastSaved, callback: openLocalStorageNotebook(autosave)}
+      {
+        name: 'Auto-Saved',
+        itemType: 'Subheader',
+      },
+      {
+        primaryText: displayTitle,
+        secondaryText: lastSaved,
+        callback: openLocalStorageNotebook(autosave),
+      },
     ]
-  } 
-  let saves = Object.keys(localStorage)
+  }
+  const saves = Object.keys(localStorage)
   if (saves.length) {
     savedNBs = saves
-      .filter((n)=>!n.includes(AUTOSAVE))
-      .filter((n)=> {
+      .filter(n => !n.includes(AUTOSAVE))
+      .filter((n) => {
         try {
-          JSON.parse(localStorage[n]).lastSaved
+          JSON.parse(localStorage[n]).lastSaved // eslint-disable-line
           return true
-        } catch(err) {
+        } catch (err) {
           return false
         }
       })
-      .map((n)=> {
-        let lastSaved = JSON.parse(localStorage[n]).lastSaved
-        return {primaryText:n, secondaryText: prettyDate(formatDateString(lastSaved)), callback: openLocalStorageNotebook(n), lastSaved: Date.parse(lastSaved)}
+      .map((n) => {
+        const { lastSaved } = JSON.parse(localStorage[n])
+        return {
+          primaryText: n,
+          secondaryText: prettyDate(formatDateString(lastSaved)),
+          callback: openLocalStorageNotebook(n),
+          lastSaved: Date.parse(lastSaved),
+        }
         // return <MenuItem
-        // 	primaryText={n}
-        // 	secondaryText={prettyDate(formatDateString(lastSaved))}
+        //  primaryText={n}
+        //  secondaryText={prettyDate(formatDateString(lastSaved))}
         // />
       })
     savedNBs.sort((a, b) => b.lastSaved - a.lastSaved)
-    savedNBs.unshift({name: 'Saved Notebooks', itemType: 'Subheader'})
+    savedNBs.unshift({ name: 'Saved Notebooks', itemType: 'Subheader' })
   }
-  exampleNBs = exampleNotebooks.map((nb)=>{
-    let lastSaved = nb.lastSaved
-    return {primaryText: nb.title, secondaryText: prettyDate(formatDateString(lastSaved)), callback: openExampleNotebook(nb)}
+  exampleNBs = exampleNotebooks.map((nb) => {
+    const { lastSaved } = nb
+    return {
+      primaryText: nb.title,
+      secondaryText: prettyDate(formatDateString(lastSaved)),
+      callback: openExampleNotebook(nb),
+    }
     // return <MenuItem
-    // 	primaryText={nb.title}
-    // 	secondaryText={prettyDate(formatDateString(lastSaved))}
+    //  primaryText={nb.title}
+    //  secondaryText={prettyDate(formatDateString(lastSaved))}
     // />
   })
 
-  exampleNBs.unshift({name: 'Examples', itemType: 'Subheader'})
-		
+  exampleNBs.unshift({ name: 'Examples', itemType: 'Subheader' })
+
   if (exampleNBs.length && (autosaveNBs.length || savedNBs.length)) {
-    exampleNBs.unshift({itemType: 'Divider'})
+    exampleNBs.unshift({ itemType: 'Divider' })
   }
 
   if (savedNBs.length && autosaveNBs.length) {
-    savedNBs.unshift({itemType: 'Divider'})
+    savedNBs.unshift({ itemType: 'Divider' })
   }
 
   currentNotebooks = currentNotebooks.concat(autosaveNBs).concat(savedNBs).concat(exampleNBs)
   return currentNotebooks
 }
 
-let menuItems = {}
-
+const menuItems = {}
 
 
 menuItems.newNotebook = {
-  primaryText: 'New Notebook', 
-  secondaryText: commandKey('N'), 
-  callback: function(){this.props.actions.newNotebook()}
+  primaryText: 'New Notebook',
+  secondaryText: commandKey('N'),
+  callback() { this.props.actions.newNotebook() },
 }
 
 menuItems.saveNotebook = {
-  primaryText: 'Save Notebook', 
-  secondaryText: commandKey('S'), 
-  callback: function(){this.props.actions.saveNotebook()}
+  primaryText: 'Save Notebook',
+  secondaryText: commandKey('S'),
+  callback() { this.props.actions.saveNotebook() },
 }
 
 menuItems.deleteNotebook = {
-  primaryText: 'Delete Notebook', 
-  secondaryText:' ', 
-  callback: function(){this.deleteNotebook(this.props.title)}
+  primaryText: 'Delete Notebook',
+  secondaryText: ' ',
+  callback() { this.deleteNotebook(this.props.title) },
 }
 
 menuItems.exportNotebookAsJSON = {
   primaryText: 'Export Notebook',
   secondaryText: commandKey('E'),
-  callback: function(){this.props.actions.exportNotebook()}
+  callback() { this.props.actions.exportNotebook() },
 }
 menuItems.importNotebookFromJSON = {
   primaryText: 'Import from JSON',
-  callback: function(){document.getElementById('import-notebook').click()
-  }}
+  callback() {
+    document.getElementById('import-notebook').click()
+  },
+}
 
 menuItems.savedNotebooks = {
   primaryText: 'Saved Notebooks',
   menuItems: getSavedNotebooks,
-  childrenClass: 'large-menu'
+  childrenClass: 'large-menu',
 }
 
 
 menuItems.addCellBelow = {
-  primaryText: 'Add Cell Below', 
-  secondaryText:'B',
-  callback: function(){ this.props.actions.insertCell('javascript','below') }
+  primaryText: 'Add Cell Below',
+  secondaryText: 'B',
+  callback() { this.props.actions.insertCell('javascript', 'below') },
 }
 
 menuItems.addCellAbove = {
-  primaryText: 'Add Cell Above', 
-  secondaryText:'A',
-  callback: function(){ this.props.actions.insertCell('javascript','above') }
+  primaryText: 'Add Cell Above',
+  secondaryText: 'A',
+  callback() { this.props.actions.insertCell('javascript', 'above') },
 }
 
 menuItems.deleteCell = {
-  primaryText: 'Delete Cell', 
-  secondaryText: '\u21E7 \u232b', 
-  callback: function(){
-    if (this.props.mode == 'command') {
+  primaryText: 'Delete Cell',
+  secondaryText: '\u21E7 \u232b',
+  callback() {
+    if (this.props.mode === 'command') {
       this.props.actions.deleteCell()
     }
-  }
+  },
 }
-menuItems.foldUnfoldAllCells = {primaryText: 'Fold / Unfold All Cells'}
+menuItems.foldUnfoldAllCells = { primaryText: 'Fold / Unfold All Cells' }
 
 menuItems.moveCellUp = {
-  primaryText: 'Move Cell Up', 
+  primaryText: 'Move Cell Up',
   secondaryText: '\u21E7 \u2191',
-  callback: function(){
+  callback() {
     this.props.actions.cellUp()
-  }
+  },
 }
 menuItems.moveCellDown = {
   primaryText: 'Move Cell Down',
   secondaryText: '\u21E7 \u2193',
-  callback: function(){
+  callback() {
     this.props.actions.cellDown()
-  }
+  },
 }
 menuItems.changeCellTypeToJavascript = {
-  primaryText: 'Javascript', 
-  secondaryText:'J', 
-  callback: function(){
+  primaryText: 'Javascript',
+  secondaryText: 'J',
+  callback() {
     this.props.actions.changeCellType('javascript')
-  }
+  },
 }
 menuItems.changeCellTypeToMarkdown = {
-  primaryText: 'Markdown', 
-  secondaryText:'M',
-  callback: function() {
+  primaryText: 'Markdown',
+  secondaryText: 'M',
+  callback() {
     this.props.actions.changeCellType('markdown')
-  }
+  },
 }
 menuItems.changeCellTypeToRaw = {
-  primaryText: 'Raw', 
-  secondaryText:'R',
-  callback: function() {
+  primaryText: 'Raw',
+  secondaryText: 'R',
+  callback() {
     this.props.actions.changeCellType('raw')
-  }
+  },
 }
 menuItems.changeCellTypeToExternal = {
-  primaryText: 'External Dependencies', 
-  secondaryText:'E',
-  callback: function() {
+  primaryText: 'External Dependencies',
+  secondaryText: 'E',
+  callback() {
     this.props.actions.changeCellType('external dependencies')
-  }
+  },
 }
-menuItems.changeCellTypeToDOM= {
-  primaryText: 'DOM', 
+menuItems.changeCellTypeToDOM = {
+  primaryText: 'DOM',
   secondaryText: 'D',
-  callback: function() {
+  callback() {
     this.props.actions.changeCellType('dom')
-  }}
+  },
+}
 
-menuItems.changeCellTypeToCSS= {
-  primaryText: 'CSS', 
+menuItems.changeCellTypeToCSS = {
+  primaryText: 'CSS',
   secondaryText: 'C',
-  callback: function() {
+  callback() {
     this.props.actions.changeCellType('css')
-  }}
+  },
+}
 
 
 menuItems.cell = {
@@ -224,44 +243,47 @@ menuItems.cell = {
   menuItems: [
     menuItems.moveCellUp,
     menuItems.moveCellDown,
-    menuItems.addCellBelow, 
-    menuItems.addCellAbove, 
-    menuItems.deleteCell, 
-    {itemType: 'Divider', className: 'cell-menu'},
-    {itemType: 'Subheader', name: 'change cell type to ... '},
-    menuItems.changeCellTypeToJavascript, 
-    menuItems.changeCellTypeToMarkdown, 
+    menuItems.addCellBelow,
+    menuItems.addCellAbove,
+    menuItems.deleteCell,
+    { itemType: 'Divider', className: 'cell-menu' },
+    { itemType: 'Subheader', name: 'change cell type to ... ' },
+    menuItems.changeCellTypeToJavascript,
+    menuItems.changeCellTypeToMarkdown,
     menuItems.changeCellTypeToRaw,
-    menuItems.changeCellTypeToExternal, 
+    menuItems.changeCellTypeToExternal,
     menuItems.changeCellTypeToDOM,
-    menuItems.changeCellTypeToCSS
-  ]
-} 
+    menuItems.changeCellTypeToCSS,
+  ],
+}
 
 menuItems.viewDeclaredVariables = {
   primaryText: 'Declared Variables',
   secondaryText: commandKey('D'),
-  callback: function() {
+  callback() {
     this.props.actions.changeSidePaneMode('declared variables')
-  }
+  },
 }
 
 menuItems.viewHistory = {
   primaryText: 'Execution History',
   secondaryText: commandKey('H'),
-  callback: function() {
+  callback() {
     this.props.actions.changeSidePaneMode('history')
-  }
+  },
 }
 
 menuItems.view = {
   primaryText: 'View',
-  childrenClass:'medium-menu',
-  menuItems: [menuItems.viewDeclaredVariables, menuItems.viewHistory]
+  childrenClass: 'medium-menu',
+  menuItems: [menuItems.viewDeclaredVariables, menuItems.viewHistory],
 }
 
-menuItems.fileAnIssue = {primaryText: 'File An Issue ... ', callback: function(){
-  window.open('https://github.com/mozilla/javascript-notebook/issues/new')
-}}
+menuItems.fileAnIssue = {
+  primaryText: 'File An Issue ... ',
+  callback() {
+    window.open('https://github.com/mozilla/javascript-notebook/issues/new')
+  },
+}
 
-export {menuItems, getSavedNotebooks}
+export { menuItems, getSavedNotebooks }

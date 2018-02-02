@@ -1,1 +1,6 @@
+src/transpile-jsm.js
 src/codemirror-keymap-sublime.js
+src/tools/dataset.js
+src/tools/nb.js
+src/tools/nb-tools.js
+src/tools/nd.js

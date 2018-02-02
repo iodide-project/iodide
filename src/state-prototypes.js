@@ -1,16 +1,16 @@
 function newCellID(cells) {
-  return Math.max(-1,...cells.map(c=>c.id))+1
+  return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-function newCell(cells, cellType){
+function newCell(cells, cellType) {
   // let outputCollapseDefault
   // if (cellType=='dom' || cellType=='dom'){
   //   outputCollapseDefault = 'COLLAPSED'
   // } else {outputCollapseDefault = 'EXPANDED'}
   return {
-    content:'',
+    content: '',
     id: newCellID(cells),
-    cellType: cellType,
+    cellType,
     value: undefined,
     rendered: false,
     selected: false,
@@ -29,26 +29,26 @@ function newCell(cells, cellType){
 }
 
 
-function blankState(){
-  let initialState =  {
+function blankState() {
+  const initialState = {
     title: undefined,
     cells: [],
-    userDefinedVariables:{},
+    userDefinedVariables: {},
     lastValue: undefined,
     lastSaved: undefined,
     mode: 'command', // command, edit
     viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
-    history:[],
-    externalDependencies:[],
-    executionNumber: 1
+    history: [],
+    externalDependencies: [],
+    executionNumber: 1,
   }
   return initialState
 }
 
-function newNotebook(){
+function newNotebook() {
   // initialize a blank notebook
-  let initialState = blankState()
+  const initialState = blankState()
   // push a blank new cell into  into cells
   initialState.cells.push(newCell(initialState.cells, 'javascript'))
   // set the cell that was just pushed to be the selected cell
