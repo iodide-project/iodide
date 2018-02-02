@@ -23,7 +23,8 @@ describe("CSSCell_unconnected react component", () => {
   beforeEach(() => {
     props = {
       cellId: 5,
-      content: 'h1 {color:pink}'
+      value: 'h1 {color:pink}',
+      rendered: false
     }
     mountedCell = undefined
   })
@@ -33,9 +34,15 @@ describe("CSSCell_unconnected react component", () => {
     expect(styleElts.length).toBe(1)
   })
 
-  it("the style elt has the correct content", () => {
+  it("the style elt has the correct value if rendered===true", () => {
+    props.rendered = true
     const styleElts = cell().find("style")
     expect(styleElts.text()).toEqual('h1 {color:pink}')
+  })
+
+  it("the style elt is empty if rendered==false", () => {
+    const styleElts = cell().find("style")
+    expect(styleElts.text()).toEqual('')
   })
 
   it("always renders one CellEditor", () => {
@@ -74,12 +81,18 @@ describe("CSSCell_unconnected react component", () => {
 
 describe("CSSCell mapStateToProps", () => {
   const state = {cells:[
-    {id:5, content:'h1 {color:pink}'},
-    {id:3, content:'h1 {color:blue}'}]}
+    {id:5, value:'h1 {color:pink}', rendered:true},
+    {id:3, value:'h1 {color:blue}', rendered:false}]}
 
   it("should return the content of the correct cells", () => {
     let ownProps = {cellId:5}
     expect(mapStateToProps(state, ownProps))
-      .toEqual({content:'h1 {color:pink}'})
+      .toEqual({value:'h1 {color:pink}', rendered:true})
+  })
+
+  it("should return the content of the correct cells", () => {
+    let ownProps = {cellId:3}
+    expect(mapStateToProps(state, ownProps))
+      .toEqual({value:'h1 {color:blue}',rendered:false})
   })
 })

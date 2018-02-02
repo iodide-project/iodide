@@ -11,7 +11,8 @@ import {getCellById} from '../notebook-utils.js'
 export class CSSCell_unconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
-    content: PropTypes.string.isRequired,
+    value: PropTypes.any.isRequired,
+    rendered: PropTypes.bool.isRequired,
   }
 
   render() {
@@ -30,7 +31,6 @@ export class CSSCell_unconnected extends React.Component {
 export function mapStateToProps(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {
-    content: cell.content,
     value: cell.value,
     rendered: cell.rendered
   }
