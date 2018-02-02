@@ -186,6 +186,9 @@ let cellReducer = function (state = newNotebook(), action) {
       }
       newState.executionNumber++
       thisCell.executionStatus = ''+newState.executionNumber
+    } else if (thisCell.cellType === 'css') {
+      thisCell.rendered = true
+      thisCell.value = thisCell.content
     } else {
       thisCell.rendered = false
     }

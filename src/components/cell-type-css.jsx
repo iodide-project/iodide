@@ -19,7 +19,7 @@ export class CSSCell_unconnected extends React.Component {
       <OneRowCell cellId={this.props.cellId}>
         <CellEditor cellId={this.props.cellId}/>
         <style>
-          {this.props.content}
+          {this.props.rendered && this.props.value}
         </style>
       </OneRowCell>
     )
@@ -31,6 +31,8 @@ export function mapStateToProps(state, ownProps) {
   let cell = getCellById(state.cells, ownProps.cellId)
   return {
     content: cell.content,
+    value: cell.value,
+    rendered: cell.rendered
   }
 }
 
