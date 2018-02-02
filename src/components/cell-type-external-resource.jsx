@@ -20,7 +20,7 @@ class ExternalResourceCell extends React.Component {
   outputComponent = () => {
     if (this.props.value == undefined) return undefined
     let outs = this.props.value.filter(d => d.src !== '').map((d,i) => {
-
+      
       let statusExplanation
       let statusIcon = d.status === undefined
         ? <UnloadedCircle />

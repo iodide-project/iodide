@@ -107,7 +107,6 @@ class MainMenu extends React.Component {
     return (
       <ToolbarGroup firstChild={this.props.firstChild}>
         <IconMenu
-          tooltip='menu'
           style={{fontSize:'12px'}}
           iconButtonElement={<IconButton><MenuIcon color={grey50} /></IconButton>}
           anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
