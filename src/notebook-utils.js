@@ -15,9 +15,10 @@ function viewModeIsPresentation(){
 function getCellBelowSelectedId(){
   let cells = store.getState().cells
   let index = cells.findIndex((c)=>{return c.selected})
+  console.log(index)
   if (index===cells.length-1){
-    // if there is no cell below, return this cell's id
-    return cells[index].id
+    // if there is no cell below, return null
+    return null
   } else if (0<=index && index<(cells.length-1)) {
     return cells[index+1].id
   } else {
@@ -28,9 +29,10 @@ function getCellBelowSelectedId(){
 function getCellAboveSelectedId(){
   let cells = store.getState().cells
   let index = cells.findIndex((c)=>{return c.selected})
+  console.log(index)
   if (index===0){
-    // if there is no cell above, return this cell's id
-    return cells[index].id
+    // if there is no cell above, return null
+    return null
   } else if (0<index && index<=(cells.length-1)) {
     return cells[index-1].id
   } else {
