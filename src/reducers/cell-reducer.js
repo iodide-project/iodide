@@ -3,11 +3,13 @@ import { newCell, newNotebook } from '../state-prototypes.js'
 import {moveCell,scrollToCellIfNeeded,
   addExternalDependency,
   getSelectedCellId,
+  getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
-  // newStateWithSelectedCellPropertiesSet,
   newStateWithSelectedCellPropsAssigned} from './cell-reducer-utils.js'
 
 import tjsm from '../transpile-jsm.js'
+
+// import {getCellBelowSelectedId} from '../notebook-utils.js'
 
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
@@ -73,10 +75,12 @@ let cellReducer = function (state = newNotebook(), action) {
   }
 
   case 'CELL_UP':
+    scrollToCellIfNeeded(getSelectedCellId(state))
     return Object.assign({}, state,
       {cells: moveCell(state.cells, getSelectedCellId(state), 'up')})
 
   case 'CELL_DOWN':
+    scrollToCellIfNeeded(getCellBelowSelectedId(state))
     return Object.assign({}, state,
       {cells: moveCell(state.cells, getSelectedCellId(state), 'down')})
   

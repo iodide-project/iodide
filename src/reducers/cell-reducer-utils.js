@@ -132,6 +132,19 @@ function getSelectedCellId(state){
   }
 }
 
+function getCellBelowSelectedId(state){
+  let cells = state.cells
+  let index = cells.findIndex((c)=>{return c.selected})
+  if (index===cells.length-1){
+    // if there is no cell below, return this cell's id
+    return cells[index].id
+  } else if (0<=index && index<(cells.length-1)) {
+    return cells[index+1].id
+  } else {
+    throw new Error('no cell currently selected')
+  }
+}
+
 function getSelectedCell(state){
   let cells = state.cells
   let index = cells.findIndex((c)=>{return c.selected})
@@ -161,5 +174,7 @@ export {
   scrollToCellIfNeeded,
   addExternalDependency,
   getSelectedCellId,
+  getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
-  newStateWithSelectedCellPropsAssigned}
+  newStateWithSelectedCellPropsAssigned
+}
