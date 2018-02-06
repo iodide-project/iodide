@@ -1,7 +1,7 @@
 import React from "react"
 import { shallow, render } from "enzyme"
 
-import {JsCell_unconnected as JsCell,
+import {JsCellUnconnected as JsCell,
   mapStateToProps} from '../src/components/cell-type-javascript.jsx'
 import CellEditor from '../src/components/cell-editor.jsx'
 import TwoRowCell from '../src/components/two-row-cell.jsx'

@@ -105,7 +105,11 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'DELETE_NOTEBOOK': {
       ({ title } = action)
-      if (Object.prototype.hasOwnProperty.call(window.localStorage, title)) {
+
+      // FIXME: for some reason, airbnb-eslint doesn't like using hasOwnProperty
+      // but changing to the recommended syntax breaks a test b/c our localStorage
+      // mock is bare-bones. We could upgrade the mock or change the approach
+      if (window.localStorage.hasOwnProperty(title)) { // eslint-disable-line
         window.localStorage.removeItem(title)
       }
       nextState = (

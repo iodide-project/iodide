@@ -1,7 +1,7 @@
 import React from "react"
 import { shallow } from "enzyme"
 
-import {CSSCell_unconnected as CSSCell,
+import {CSSCellUnconnected as CSSCell,
   mapStateToProps} from '../src/components/cell-type-css.jsx'
 import CellEditor from '../src/components/cell-editor.jsx'
 import OneRowCell from '../src/components/one-row-cell.jsx'

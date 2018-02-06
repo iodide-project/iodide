@@ -1,13 +1,13 @@
 import React from "react"
 import { shallow } from "enzyme"
 
-import {RawCell_unconnected as RawCell} from '../src/components/cell-type-raw.jsx'
+import {RawCellUnconnected as RawCell} from '../src/components/cell-type-raw.jsx'
 import CellEditor from '../src/components/cell-editor.jsx'
 import OneRowCell from '../src/components/one-row-cell.jsx'
 
 
 
-describe("RawCell_unconnected react component", () => {
+describe("RawCellUnconnected react component", () => {
   let props
   let mountedCell
   const cell = () => {
