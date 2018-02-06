@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "@skidding/react-codemirror": "^1.0.0",
-    "astring": "^1.2.0",
     "codemirror-no-newlines": "^1.0.2",
     "font-awesome": "^4.7.0",
     "fuse.js": "^3.2.0",

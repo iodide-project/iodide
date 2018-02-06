@@ -13,8 +13,6 @@ import './page.css'
 import Page from './components/page.jsx'
 import {store} from './store.js'
 
-import './tools/nd.js'
-
 render(
   <Provider store={store}>
     <Page />

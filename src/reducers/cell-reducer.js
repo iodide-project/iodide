@@ -7,10 +7,6 @@ import {moveCell,scrollToCellIfNeeded,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned} from './cell-reducer-utils.js'
 
-import tjsm from '../transpile-jsm.js'
-
-// import {getCellBelowSelectedId} from '../notebook-utils.js'
-
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 
@@ -141,13 +137,14 @@ let cellReducer = function (state = newNotebook(), action) {
 
       let output
       let code = thisCell.content
-      if (code.slice(0,12)=='\'use matrix\'' || code.slice(0,12)=='"use matrix"'){
-        try {
-          code = tjsm.transpile(thisCell.content)
-        } catch(e) {
-          e.constructor('transpilation failed: ' + e.message)
-        }
-      }
+      // commenting out the transpilation code for now, but don't delete -bcolloran
+      // if (code.slice(0,12)=='\'use matrix\'' || code.slice(0,12)=='"use matrix"'){
+      //   try {
+      //     code = tjsm.transpile(thisCell.content)
+      //   } catch(e) {
+      //     e.constructor('transpilation failed: ' + e.message)
+      //   }
+      // }
 
       try {
         output = window.eval(code)
