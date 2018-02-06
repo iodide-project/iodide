@@ -1,14 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
-import CellEditor from './cell-editor.jsx'
-import OneRowCell from './one-row-cell.jsx'
+import CellEditor from './cell-editor'
+import OneRowCell from './one-row-cell'
 
-import {getCellById} from '../notebook-utils.js'
+import { getCellById } from '../notebook-utils'
 
-export class CSSCell_unconnected extends React.Component {
+export class CSSCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
     value: PropTypes.any.isRequired,
@@ -18,7 +17,7 @@ export class CSSCell_unconnected extends React.Component {
   render() {
     return (
       <OneRowCell cellId={this.props.cellId}>
-        <CellEditor cellId={this.props.cellId}/>
+        <CellEditor cellId={this.props.cellId} />
         <style>
           {this.props.rendered && this.props.value}
         </style>
@@ -29,11 +28,11 @@ export class CSSCell_unconnected extends React.Component {
 
 
 export function mapStateToProps(state, ownProps) {
-  let cell = getCellById(state.cells, ownProps.cellId)
+  const cell = getCellById(state.cells, ownProps.cellId)
   return {
     value: cell.value,
-    rendered: cell.rendered
+    rendered: cell.rendered,
   }
 }
 
-export default connect(mapStateToProps)(CSSCell_unconnected)
+export default connect(mapStateToProps)(CSSCellUnconnected)

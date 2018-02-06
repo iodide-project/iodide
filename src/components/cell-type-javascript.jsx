@@ -1,17 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
 
-import TwoRowCell from './two-row-cell.jsx'
-import CellOutput from './output.jsx'
-import CellEditor from './cell-editor.jsx'
+import TwoRowCell from './two-row-cell'
+import CellOutput from './output'
+import CellEditor from './cell-editor'
 
-import {getCellById} from '../notebook-utils.js'
-
+import { getCellById } from '../notebook-utils'
 
 
-export class JsCell_unconnected extends React.Component {
+export class JsCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
     value: PropTypes.any,
@@ -19,15 +17,16 @@ export class JsCell_unconnected extends React.Component {
   }
 
   render() {
-    let row1 = <CellEditor cellId={this.props.cellId} />
-    let row2 = <CellOutput
-            valueToRender={this.props.value}
-            render={this.props.rendered} />
+    const row1 = <CellEditor cellId={this.props.cellId} />
+    const row2 = (<CellOutput
+      valueToRender={this.props.value}
+      render={this.props.rendered}
+    />)
     return (
       <TwoRowCell
         cellId={this.props.cellId}
-        row1 = {row1}
-        row2 = {row2}
+        row1={row1}
+        row2={row2}
       />
     )
   }
@@ -35,7 +34,7 @@ export class JsCell_unconnected extends React.Component {
 
 
 export function mapStateToProps(state, ownProps) {
-  let cell = getCellById(state.cells, ownProps.cellId)
+  const cell = getCellById(state.cells, ownProps.cellId)
   return {
     value: cell.value,
     rendered: cell.rendered,
@@ -43,4 +42,4 @@ export function mapStateToProps(state, ownProps) {
 }
 
 
-export default connect(mapStateToProps)(JsCell_unconnected)
+export default connect(mapStateToProps)(JsCellUnconnected)

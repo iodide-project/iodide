@@ -1,4 +1,4 @@
-import {newNotebook} from './state-prototypes'
+import { newNotebook } from './state-prototypes'
 
 const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'dom', 'resource']
 
@@ -6,156 +6,158 @@ const jsmdValidCellSettings = [
   'collapseEditViewInput',
   'collapseEditViewOutput',
   'collapsePresentationViewInput',
-  'collapsePresentationViewOutput'
+  'collapsePresentationViewOutput',
 ]
 
-
-function parseJsmd(jsmd){
-  const parseWarnings = []
-  let cells = jsmd
-    .split('\n%%')
-    .map( (str,cellNum) => {
-      //if this is the first cell, and it starts with "%%", drop those chars
-      if (cellNum===0 && str.substring(0,2)=='%%'){
-        str = str.substring(2)
-      }
-      return str
-    })
-    .map(str=>str.trim())
-    .filter(str=>str!=='')
-    .map((str,i) => parseCellString(str,i,parseWarnings))
-  return {cells, parseWarnings}
-}
-
-function parseCellFirstLine(){}
-
-function parseCellString(str,i,parseWarnings) {
+function parseCellString(str, i, parseWarnings) {
   // note: this is nota a pure function, it mutates parseWarnings
-  let cellType, settings, content, firstLine
-  let firstLineBreak = str.indexOf('\n')
-  if (firstLineBreak===-1){
+  let cellType
+  let settings
+  let content
+  let firstLine
+  const firstLineBreak = str.indexOf('\n')
+  if (firstLineBreak === -1) {
     // a cell with only 1 line, and hence no content
     firstLine = str
     content = ''
   } else {
-    firstLine = str.substring(0,firstLineBreak).trim()
-    content = str.substring(firstLineBreak+1).trim()
+    firstLine = str.substring(0, firstLineBreak).trim()
+    content = str.substring(firstLineBreak + 1).trim()
   }
   // let firstLine = str.substring(0,firstLineBreak).trim()
-  let firstLineFirstSpace = firstLine.indexOf(' ')
-  
-  
-  if (firstLineFirstSpace===-1){
+  const firstLineFirstSpace = firstLine.indexOf(' ')
+
+
+  if (firstLineFirstSpace === -1) {
     // if there is NO space on the first line (after trimming), there are no cell settings
     cellType = firstLine.toLowerCase()
   } else {
     // if there is a space on the first line (after trimming), there must be cell settings
-    cellType = firstLine.substring(0,firstLineFirstSpace).toLowerCase()
-    //make sure the cell settings parse as JSON
+    cellType = firstLine.substring(0, firstLineFirstSpace).toLowerCase()
+    // make sure the cell settings parse as JSON
     try {
-      settings = JSON.parse(firstLine.substring(firstLineFirstSpace+1))
-    } catch(e) {
-      parseWarnings.push(
-        {parseError: 'failed to parse cell settings, using defaults',
-          details: firstLine,
-          jsError: e.name + ': ' + e.message
-        }
-      )
+      settings = JSON.parse(firstLine.substring(firstLineFirstSpace + 1))
+    } catch (e) {
+      parseWarnings.push({
+        parseError: 'failed to parse cell settings, using defaults',
+        details: firstLine,
+        jsError: `${e.name}: ${e.message}`,
+      })
     }
   }
-  //if settings exist and parsed ok, make sure that only valid cell settings are kept
+  // if settings exist and parsed ok, make sure that only valid cell settings are kept
   if (settings) {
-    let settingsOut = {}
-    for (const key in settings){
-      if (jsmdValidCellSettings.indexOf(key)>-1){
+    const settingsOut = {}
+    for (const key in settings) {
+      if (jsmdValidCellSettings.indexOf(key) > -1) {
         settingsOut[key] = settings[key]
       } else {
-        parseWarnings.push(
-          {parseError: 'invalid cell setting',
-            details: key}
-        )
+        parseWarnings.push({
+          parseError: 'invalid cell setting',
+          details: key,
+        })
       }
-    } 
-    settings = settingsOut ? settingsOut : undefined
+    }
+    settings = settingsOut || undefined
   }
   // if the cell type is not valid, set it to js
-  if (jsmdValidCellTypes.indexOf(cellType)===-1){
-    parseWarnings.push(
-      {parseError: 'invalid cell type, converted to js cell',
-        details: `cellType: ${cellType} cellNum:${i} raw string: ${str}`}
-    )
+  if (jsmdValidCellTypes.indexOf(cellType) === -1) {
+    parseWarnings.push({
+      parseError: 'invalid cell type, converted to js cell',
+      details: `cellType: ${cellType} cellNum:${i} raw string: ${str}`,
+    })
     cellType = 'js'
   }
 
-  if (cellType ==='meta'){
+  if (cellType === 'meta') {
     try {
       content = JSON.parse(content)
     } catch (e) {
-      parseWarnings.push(
-        {parseError: 'Failed to parse notebook settings from meta cell. Using default settings.',
-          details: content,
-          jsError: e.name + ': ' + e.message
-        }
-      )
+      parseWarnings.push({
+        parseError: 'Failed to parse notebook settings from meta cell. Using default settings.',
+        details: content,
+        jsError: `${e.name}: ${e.message}`,
+      })
     }
   }
-  return { cellType: cellType,
-    settings: settings,
-    content: content
+  return {
+    cellType,
+    settings,
+    content,
   }
 }
 
+function parseJsmd(jsmd) {
+  const parseWarnings = []
+  const cells = jsmd
+    .split('\n%%')
+    .map((str, cellNum) => {
+      // if this is the first cell, and it starts with "%%", drop those chars
+      let sstr
+      if (cellNum === 0 && str.substring(0, 2) === '%%') {
+        sstr = str.substring(2)
+      } else {
+        sstr = str
+      }
+      return sstr
+    })
+    .map(str => str.trim())
+    .filter(str => str !== '')
+    .map((str, i) => parseCellString(str, i, parseWarnings))
+  return { cells, parseWarnings }
+}
+
 const cellTypeToJsmdMap = new Map([
-  ['javascript','js'],
-  ['markdown','md'],
-  ['external dependencies','resource'],
-  ['dom','dom'],
-  ['raw','raw'],
+  ['javascript', 'js'],
+  ['markdown', 'md'],
+  ['external dependencies', 'resource'],
+  ['dom', 'dom'],
+  ['raw', 'raw'],
 ])
 
 const jsmdValidNotebookSettings = [
   'title',
-  'viewMode'
+  'viewMode',
 ]
 
-function stringifyStateToJsmd(state){
-  let defaultState = newNotebook()
-  let defaultCell = defaultState.cells[0]
+function stringifyStateToJsmd(state) {
+  const defaultState = newNotebook()
+  const defaultCell = defaultState.cells[0]
   // serialize cells. most of the work here is seeing if cell properties
   // are in the jsmd valid list, and seeing if they are non-default
-  let cellsStr = state.cells.map(cell=>{
-    let jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
-    let cellSettings = {}
-    for (let setting of jsmdValidCellSettings){
-      if (cell.hasOwnProperty(setting)
-        && cell[setting]!==defaultCell[setting]){
+  const cellsStr = state.cells.map((cell) => {
+    const jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
+    const cellSettings = {}
+    for (const setting of jsmdValidCellSettings) {
+      if (Object.prototype.hasOwnProperty.call(cell, setting)
+        && cell[setting] !== defaultCell[setting]) {
         cellSettings[setting] = cell[setting]
       }
     }
     let cellSettingsStr = JSON.stringify(cellSettings)
-    cellSettingsStr = cellSettingsStr==='{}' ? '' : ' '+cellSettingsStr
+    cellSettingsStr = cellSettingsStr === '{}' ? '' : ` ${cellSettingsStr}`
     return `\n%% ${jsmdCellType}${cellSettingsStr}
 ${cell.content}`
   }).join('\n').trim()
 
   // serialize global settings. as above, check if state properties
   // are in the jsmd valid list, and check if they are non-default
-  let metaSettings = {}
-  for (let setting of jsmdValidNotebookSettings){
-    if (state.hasOwnProperty(setting)
-      && state[setting]!==defaultState[setting]){
+  const metaSettings = {}
+  for (const setting of jsmdValidNotebookSettings) {
+    if (Object.prototype.hasOwnProperty.call(state, setting)
+      && state[setting] !== defaultState[setting]) {
       metaSettings[setting] = state[setting]
     }
   }
-  let metaSettingsStr = JSON.stringify(metaSettings,undefined,2)
-  metaSettingsStr = metaSettingsStr==='{}' ? '' : '%% meta\n' + metaSettingsStr + '\n\n'
-  return metaSettingsStr+cellsStr
+  let metaSettingsStr = JSON.stringify(metaSettings, undefined, 2)
+  metaSettingsStr = metaSettingsStr === '{}' ? '' : `%% meta\n${metaSettingsStr}\n\n`
+  return metaSettingsStr + cellsStr
 }
 
 
-let appVersionString = '0.0.1'
+const appVersionString = '0.0.1'
 
-function exportJsmdBundle(state){
+function exportJsmdBundle(state) {
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -187,5 +189,5 @@ export {
   jsmdValidCellTypes,
   jsmdValidCellSettings,
   stringifyStateToJsmd,
-  exportJsmdBundle
+  exportJsmdBundle,
 }

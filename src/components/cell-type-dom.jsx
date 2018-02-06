@@ -1,62 +1,53 @@
-import React, {createElement} from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import React, { createElement } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import TwoRowCell from './two-row-cell.jsx'
-import CellOutput from './output.jsx'
-import CellEditor from './cell-editor.jsx'
+import TwoRowCell from './two-row-cell'
+import CellEditor from './cell-editor'
 
-import actions from '../actions.js'
-import {getCellById} from '../notebook-utils.js'
+import actions from '../actions'
+import { getCellById } from '../notebook-utils'
 
 function parseDOMCellContent(content) {
-  let elems = content.split('#')
-  let elem = elems[0]
-  let elemID
-  if (elems.length > 1) {
-    elemID = elems[1]
-  } else {
-    elemID = undefined
-  }
-  return {elem, elemID}
+  const elems = content.split('#')
+  const [elem, elemID] = elems
+  return { elem, elemID }
 }
 
 
 class DOMCell extends React.Component {
   outputComponent = () => {
     let elem
-    let content = parseDOMCellContent(this.props.content)
+    const content = parseDOMCellContent(this.props.content)
     if (content.elem !== '' && content.elem !== undefined) {
       try {
-        elem = createElement(content.elem, {id: content.elemID})
+        elem = createElement(content.elem, { id: content.elemID })
       } catch (err) {
         console.error(`elem ${content.elem} is not valid`)
-        elem = <div className='dom-cell-error'>{content.elem} is not valid</div>
+        elem = <div className="dom-cell-error">{content.elem} is not valid</div>
       }
-      
     } else {
-      elem = <div className='dom-cell-error'>please add an elem type</div>
+      elem = <div className="dom-cell-error">please add an elem type</div>
     }
     return elem
   }
 
   render() {
-  return (
-    <TwoRowCell
-      cellId={this.props.cellId}
-      row1 = {
-        <CellEditor cellId={this.props.cellId} />
+    return (
+      <TwoRowCell
+        cellId={this.props.cellId}
+        row1={
+          <CellEditor cellId={this.props.cellId} />
       }
-      row2 = { this.outputComponent() }
-    />
+        row2={this.outputComponent()}
+      />
     )
   }
 }
 
 
-
 function mapStateToPropsForCells(state, ownProps) {
-  let cell = getCellById(state.cells, ownProps.cellId)
+  const cell = getCellById(state.cells, ownProps.cellId)
   return {
     content: cell.content,
     rendered: cell.rendered,

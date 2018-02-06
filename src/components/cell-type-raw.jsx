@@ -1,16 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
-import CellEditor from './cell-editor.jsx'
-import OneRowCell from './one-row-cell.jsx'
-
-import actions from '../actions.js'
-import {getCellById} from '../notebook-utils.js'
+import CellEditor from './cell-editor'
+import OneRowCell from './one-row-cell'
 
 
-export class RawCell_unconnected extends React.Component {
+export class RawCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
   }
@@ -19,7 +15,7 @@ export class RawCell_unconnected extends React.Component {
       <OneRowCell cellId={this.props.cellId}>
         <CellEditor
           cellId={this.props.cellId}
-          editorOptions = {{
+          editorOptions={{
             matchBrackets: false,
             autoCloseBrackets: false,
           }}
@@ -29,4 +25,4 @@ export class RawCell_unconnected extends React.Component {
   }
 }
 
-export default connect()(RawCell_unconnected)
+export default connect()(RawCellUnconnected)

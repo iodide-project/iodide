@@ -1,13 +1,13 @@
 import { applyMiddleware, compose, createStore } from 'redux'
+import { createLogger } from 'redux-logger'
 import reducer from './reducers/reducer'
-import  { createLogger } from 'redux-logger'
 import { initializeNotebook } from './initialize-notebook'
 
-let store = createStore(
+const store = createStore(
   reducer, initializeNotebook(),
   compose(applyMiddleware(createLogger({
-    predicate: (getState, action) => action.type !== 'UPDATE_INPUT_CONTENT'
-  })))
+    predicate: (getState, action) => action.type !== 'UPDATE_INPUT_CONTENT',
+  }))),
 )
 
-export {store}
+export { store }

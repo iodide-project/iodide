@@ -1,27 +1,25 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
-import CellRow from './cell-row.jsx'
-import CellEditor from './cell-editor.jsx'
-import {CellContainer} from './cell-container.jsx'
+import CellRow from './cell-row'
+import { CellContainer } from './cell-container'
 
-import {getCellById} from '../notebook-utils.js'
+import { getCellById } from '../notebook-utils'
 
 
-export class TwoRowCell_unconnected extends React.Component {
+export class TwoRowCellUnconnected extends React.Component {
   render() {
-    let cellId = this.props.cellId
-    let cellType = this.props.cell.cellType
+    const { cellId, cellType } = this.props
 
-    let cellSelected = (
+    const cellSelected = (
       this.props.cell.selected ? 'selected-cell ' : ''
     )
-    let editorMode = (
+    const editorMode = (
       (this.props.cell.selected && this.props.pageMode === 'edit')
         ? 'edit-mode ' : 'command-mode '
     )
-    let collapseInput, collapseOutput
+    let collapseInput
+    let collapseOutput
     if (this.props.viewMode === 'presentation') {
       collapseInput = this.props.cell.collapsePresentationViewInput
       collapseOutput = this.props.cell.collapsePresentationViewOutput
@@ -29,18 +27,18 @@ export class TwoRowCell_unconnected extends React.Component {
       collapseInput = this.props.cell.collapseEditViewInput
       collapseOutput = this.props.cell.collapseEditViewOutput
     }
-    let collapseBoth = (collapseInput === 'COLLAPSED' &&
+    const collapseBoth = (collapseInput === 'COLLAPSED' &&
             collapseOutput === 'COLLAPSED') ? 'collapse-both' : ''
-    let cellClass = ['cell-container', cellSelected,
+    const cellClass = ['cell-container', cellSelected,
       editorMode, cellType, collapseBoth].join(' ')
 
     return (
       <CellContainer cellId={cellId} cellClass={cellClass}>
-        <CellRow cellId={cellId} rowType={'input'}>
-            {this.props.row1}
+        <CellRow cellId={cellId} rowType="input">
+          {this.props.row1}
         </CellRow>
-        <CellRow cellId={cellId} rowType={'output'}>
-            {this.props.row2}
+        <CellRow cellId={cellId} rowType="output">
+          {this.props.row2}
         </CellRow>
       </CellContainer>
     )
@@ -49,7 +47,7 @@ export class TwoRowCell_unconnected extends React.Component {
 
 
 export function mapStateToProps(state, ownProps) {
-  let cell = getCellById(state.cells, ownProps.cellId)
+  const cell = getCellById(state.cells, ownProps.cellId)
   return {
     pageMode: state.mode,
     viewMode: state.viewMode,
@@ -57,4 +55,4 @@ export function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps)(TwoRowCell_unconnected)
+export default connect(mapStateToProps)(TwoRowCellUnconnected)

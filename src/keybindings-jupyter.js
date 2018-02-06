@@ -1,162 +1,164 @@
-import {store} from './store'
+import { store } from './store'
 import actions from './actions'
-import {isCommandMode,
+import { isCommandMode,
   viewModeIsEditor,
   getCellBelowSelectedId,
-  getCellAboveSelectedId} from './notebook-utils'
+  getCellAboveSelectedId } from './notebook-utils'
 
-let jupyterKeybindings = []
+const jupyterKeybindings = []
 
 // this just allows calling:
 // dispatcher.action(params)
 // instead of
 // store.dispatch(actions.action(...params)
-let dispatcher = {}
-for (let action in actions){
-  dispatcher[action] = (...params) => (store.dispatch(actions[action](...params)))
+const dispatcher = {}
+for (const action in actions) {
+  if (Object.prototype.hasOwnProperty.call(actions, action)) {
+    dispatcher[action] = (...params) => (store.dispatch(actions[action](...params)))
+  }
 }
 
 
-let MOVE_UP = [['shift+up'], function(e){
+const MOVE_UP = [['shift+up'], (e) => {
   if (isCommandMode()) {
     if (e.preventDefault) {
       e.preventDefault()
     }
     dispatcher.cellUp()
   }
-}
+},
 ]
 
-let MOVE_DOWN = [['shift+down'], function(e){
+const MOVE_DOWN = [['shift+down'], (e) => {
   if (isCommandMode()) {
     if (e.preventDefault) {
       e.preventDefault()
     }
     dispatcher.cellDown()
   }
-}
+},
 ]
 
-let ADD_CELL_ABOVE = [['a'], function(){
+const ADD_CELL_ABOVE = [['a'], () => {
   if (isCommandMode()) {
     dispatcher.insertCell('javascript', 'above')
     dispatcher.selectCell(getCellAboveSelectedId(), true)
   }
-}
+},
 ]
 
-let ADD_CELL_BELOW = [['b'], function(){
+const ADD_CELL_BELOW = [['b'], () => {
   if (isCommandMode()) {
     dispatcher.insertCell('javascript', 'below')
     dispatcher.selectCell(getCellBelowSelectedId(), true)
   }
-}
+},
 ]
 
-let JAVASCRIPT_MODE = [['j'], function(){
+const JAVASCRIPT_MODE = [['j'], () => {
   if (isCommandMode()) dispatcher.changeCellType('javascript')
-}
+},
 ]
 
-let MARKDOWN_MODE = [['m'], function(){
+const MARKDOWN_MODE = [['m'], () => {
   if (isCommandMode()) dispatcher.changeCellType('markdown')
-}
+},
 ]
 
-let EXTERNAL_DEPENDENCIES_MODE = [['e'], function(){
+const EXTERNAL_DEPENDENCIES_MODE = [['e'], () => {
   if (isCommandMode()) dispatcher.changeCellType('external dependencies')
-}
+},
 ]
 
-let RAW_MODE = [['r'], function(){
+const RAW_MODE = [['r'], () => {
   if (isCommandMode()) dispatcher.changeCellType('raw')
-}
+},
 ]
 
-let CSS_MODE = [['c'], function(){
+const CSS_MODE = [['c'], () => {
   if (isCommandMode()) dispatcher.changeCellType('css')
-}
+},
 ]
 
-let DOM_MODE = [['d'], function(){
+const DOM_MODE = [['d'], () => {
   if (isCommandMode()) dispatcher.changeCellType('dom')
-}
+},
 ]
 
-let SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], function(e){
+const SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], (e) => {
   if (e.preventDefault) {
     e.preventDefault()
-  } else {e.returnValue = false }
+  } else { e.returnValue = false }
   dispatcher.saveNotebook(store.getState().title)
 }]
 
-let EXPORT_NOTEBOOK = [['ctrl+e', 'meta+e'], function(){
+const EXPORT_NOTEBOOK = [['ctrl+e', 'meta+e'], () => {
   // if (e.preventDfault) e.preventDefault()
   // else e.returnValue = false
   dispatcher.exportNotebook()
 }]
 
-let SHOW_DECLARED_VARIABLES = [['ctrl+d', 'meta+d'], function(e){
+const SHOW_DECLARED_VARIABLES = [['ctrl+d', 'meta+d'], (e) => {
   if (e.preventDefault) {
     e.preventDefault()
-  } else {e.returnValue = false }
-  if (store.getState().sidePaneMode !=='declared variables'){
+  } else { e.returnValue = false }
+  if (store.getState().sidePaneMode !== 'declared variables') {
     dispatcher.changeSidePaneMode('declared variables')
   } else {
     dispatcher.changeSidePaneMode()
   }
 }]
 
-let SHOW_HISTORY = [['ctrl+h', 'meta+h'], function(e){
+const SHOW_HISTORY = [['ctrl+h', 'meta+h'], (e) => {
   if (e.preventDefault) {
     e.preventDefault()
-  } else {e.returnValue = false }
-  if (store.getState().sidePaneMode !=='history'){
+  } else { e.returnValue = false }
+  if (store.getState().sidePaneMode !== 'history') {
     dispatcher.changeSidePaneMode('history')
   } else {
     dispatcher.changeSidePaneMode()
   }
 }]
 
-let SELECT_UP = [['up'], function(e){
-  if (isCommandMode()){
+const SELECT_UP = [['up'], (e) => {
+  if (isCommandMode()) {
     // e.preventDefault blocks kbd scrolling of entire window
     if (e.preventDefault) {
       e.preventDefault()
     } else { // internet explorer
       e.returnValue = false
     }
-    let cellAboveId = getCellAboveSelectedId()
-    if (cellAboveId!==null) { dispatcher.selectCell(cellAboveId, true) }
+    const cellAboveId = getCellAboveSelectedId()
+    if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true) }
   }
-}
+},
 ]
 
-let SELECT_DOWN = [['down'], function(e){
-  if (isCommandMode()){
+const SELECT_DOWN = [['down'], (e) => {
+  if (isCommandMode()) {
     // e.preventDefault blocks kbd scrolling of entire window
     if (e.preventDefault) {
       e.preventDefault()
     } else { // internet explorer
       e.returnValue = false
     }
-    let cellBelowId = getCellBelowSelectedId()
-    if (cellBelowId!==null) { dispatcher.selectCell(cellBelowId, true) }
+    const cellBelowId = getCellBelowSelectedId()
+    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
   }
-}
+},
 ]
 
-let EVALUATE_CELL = [['mod+enter'], function(){
+const EVALUATE_CELL = [['mod+enter'], () => {
   dispatcher.changeMode('command')
   dispatcher.evaluateCell()
 }]
 
-let EVAL_AND_SELECT_BELOW = [['shift+enter'], function(){
+const EVAL_AND_SELECT_BELOW = [['shift+enter'], () => {
   if (viewModeIsEditor()) {
     dispatcher.changeMode('command')
     dispatcher.evaluateCell()
-    let cellBelowId = getCellBelowSelectedId()
-    if (cellBelowId!==null){
+    const cellBelowId = getCellBelowSelectedId()
+    if (cellBelowId !== null) {
       dispatcher.selectCell(cellBelowId, true)
     } else {
       // if cellBelowId *is* null, need to add a new cell.
@@ -164,15 +166,14 @@ let EVAL_AND_SELECT_BELOW = [['shift+enter'], function(){
       dispatcher.selectCell(getCellBelowSelectedId(), true)
     }
   }
-    
 }]
 
-let COMMAND_MODE = [['esc'], function(){
+const COMMAND_MODE = [['esc'], () => {
   dispatcher.changeMode('command')
 }]
 
-let EDIT_MODE = [['enter', 'return'], function(e){
-  if (isCommandMode()){
+const EDIT_MODE = [['enter', 'return'], (e) => {
+  if (isCommandMode()) {
     // e.preventDefault blocks inserting a newline when you transition to edit mode
     if (e.preventDefault) {
       e.preventDefault()
@@ -183,9 +184,9 @@ let EDIT_MODE = [['enter', 'return'], function(e){
   }
 }]
 
-let DELETE_CELL = [['shift+del', 'shift+backspace'], function(){
+const DELETE_CELL = [['shift+del', 'shift+backspace'], () => {
   if (isCommandMode()) dispatcher.deleteCell()
-}
+},
 ]
 
 jupyterKeybindings.push(JAVASCRIPT_MODE)

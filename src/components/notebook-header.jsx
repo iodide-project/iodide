@@ -3,10 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import {HistoryItem} from './history-item.jsx'
-import {Toolbar, ToolbarGroup,
-  ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
-import {red500, yellow500, blue500, grey900,grey50} from 'material-ui/styles/colors'
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
 
 import FlatButton from 'material-ui/FlatButton'
 import IconButton from 'material-ui/IconButton'
@@ -18,30 +15,18 @@ import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-import DropDownMenu from 'material-ui/DropDownMenu'
-import Subheader from 'material-ui/Subheader'
-import AppBar from 'material-ui/AppBar'
-import Paper from 'material-ui/Paper'
-import Menu from 'material-ui/Menu'
-import MenuItem from 'material-ui/MenuItem'
-import Divider from 'material-ui/Divider'
-import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
-import FontIcon from 'material-ui/FontIcon'
-
 import Drawer from 'material-ui/Drawer'
 
-import MainMenu from './menu-component.jsx'
-import DeclaredVariables from './declared-variables.jsx'
+import { HistoryItem } from './history-item'
+import MainMenu from './menu-component'
+import DeclaredVariables from './declared-variables'
 
-import Title from './title.jsx'
+import Title from './title'
 
-import {prettyDate, formatDateString} from '../notebook-utils.js'
-import actions from '../actions.js'
-import settings from '../settings.js'
+import { prettyDate } from '../notebook-utils'
+import actions from '../actions'
 
 // TODO: replace settings w/ a settings file that we can share everywhere.
-
-const AUTOSAVE = settings.labels.AUTOSAVE
 
 function stateIsValid(state) {
   // TODO - fill this out and figure out if everything is in order.
@@ -52,17 +37,16 @@ class NotebookHeader extends React.Component {
   constructor(props) {
     super(props)
     this.notebookFileImport = this.notebookFileImport.bind(this)
-    this.state = {previousMode: props.mode}
   }
 
   notebookFileImport(evt) {
-    let fn = evt.target.files[0]
-    let reader = new FileReader()
+    const fn = evt.target.files[0]
+    const reader = new FileReader()
     reader.onload = (result) => {
       let newState
       try {
-        newState = JSON.parse(result.target.result)  
-      } catch(e) {
+        newState = JSON.parse(result.target.result)
+      } catch (e) {
         console.error(e)
       }
       if (stateIsValid(newState)) {
@@ -75,62 +59,71 @@ class NotebookHeader extends React.Component {
   render() {
     let histContents = []
     if (this.props.history.length) {
-      histContents = this.props.history.filter(cell=>cell.content.length).map((cell,i)=> {
-        let cellComponent = <HistoryItem display={true} ref={'cell'+cell.id} cell={cell} id={i+'-'+cell.id} key={'history'+i} />
+      histContents = this.props.history.filter(cell => cell.content.length).map((cell, i) => {
+        // TODO: Don't use array indices in keys (See react/no-array-index-key linter)
+        const cellComponent = <HistoryItem display ref={`cell${cell.id}`} cell={cell} id={`${i}-${cell.id}`} key={`history${i}`} />  // eslint-disable-line
         return cellComponent
       })
     } else {
-      histContents.push(<div className='no-history' key={'history_empty'}>No History</div>)
+      histContents.push(<div className="no-history" key="history_empty">No History</div>)
     }
 
     return (
-      <div className='notebook-header'>
-        <input id='import-notebook' 
-          name='file'
-          type='file' style={{display:'none'}} onChange={this.notebookFileImport} 
+      <div className="notebook-header">
+        <input
+          id="import-notebook"
+          name="file"
+          type="file"
+          style={{ display: 'none' }}
+          onChange={this.notebookFileImport}
         />
-        <a id='export-anchor' style={{display: 'none'}} ></a>
-        <div className='notebook-menu' style={{display: this.props.viewMode === 'editor' ? 'block' : 'none'}}>
-          <EditorMenu actions={this.props.actions}
+        <a id="export-anchor" style={{ display: 'none' }} />
+        <div className="notebook-menu" style={{ display: this.props.viewMode === 'editor' ? 'block' : 'none' }}>
+          <EditorMenu
+            actions={this.props.actions}
             mode={this.props.mode}
             viewMode={this.props.viewMode}
             title={this.props.title}
             sidePaneMode={this.props.sidePaneMode}
-            lastSaved={this.props.lastSaved} />
+            lastSaved={this.props.lastSaved}
+          />
         </div>
-        <div className='presentation-menu' style={{display: (this.props.viewMode === 'presentation' ? 'block' : 'none')}} >
+        <div className="presentation-menu" style={{ display: (this.props.viewMode === 'presentation' ? 'block' : 'none') }} >
           <PresentationMenu
             mode={this.props.mode}
             viewMode={this.props.viewMode}
             title={this.props.title}
             actions={this.props.actions}
             sidePaneMode={this.props.sidePaneMode}
-            lastSaved={this.props.lastSaved} />
+            lastSaved={this.props.lastSaved}
+          />
         </div>
 
         <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-          <Drawer 
-            width={600} 
+          <Drawer
+            width={600}
             docked={false}
-            open={this.props.sidePaneMode==='declared variables'} 
-            openSecondary={true}
-            overlayStyle={{backgroundColor: 'none'}}
-            onRequestChange={(open, request) => {this.props.actions.changeSidePaneMode(undefined)} } >
-            <h1 className='overlay-title'>Declared Variables</h1>
+            open={this.props.sidePaneMode === 'declared variables'}
+            openSecondary
+            overlayStyle={{ backgroundColor: 'none' }}
+            onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
+          >
+            <h1 className="overlay-title">Declared Variables</h1>
             <DeclaredVariables variables={this.props.declaredVariables} />
           </Drawer>
         </MuiThemeProvider>
 
         <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-          <Drawer 
-            width={600} 
+          <Drawer
+            width={600}
             docked={false}
-            open={this.props.sidePaneMode==='history'} 
-            openSecondary={true}
-            overlayStyle={{backgroundColor: 'none'}}
-            onRequestChange={(open, request) => {this.props.actions.changeSidePaneMode(undefined)} } >
-            <h1 className='overlay-title'>Execution History</h1>
-            <div className='history-cells'> {histContents} </div>
+            open={this.props.sidePaneMode === 'history'}
+            openSecondary
+            overlayStyle={{ backgroundColor: 'none' }}
+            onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
+          >
+            <h1 className="overlay-title">Execution History</h1>
+            <div className="history-cells"> {histContents} </div>
           </Drawer>
         </MuiThemeProvider>
       </div>
@@ -139,44 +132,23 @@ class NotebookHeader extends React.Component {
 }
 
 
-
-
-
-
-
 class PresentationMenu extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return (
-      <div className='presentation-header'>
-        <div className='view-mode-toggle-from-presentation'> 
+      <div className="presentation-header">
+        <div className="view-mode-toggle-from-presentation">
           <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-            <ViewModeToggleButton textColor='black' actions={this.props.actions} viewMode={this.props.viewMode} />
+            <ViewModeToggleButton textColor="black" actions={this.props.actions} viewMode={this.props.viewMode} />
           </MuiThemeProvider>
         </div>
-        <h1 className='presentation-title' style={{color: this.props.title === undefined ? 'gray' : 'black'}}>{this.props.title || 'new notebook'}</h1>
+        <h1 className="presentation-title" style={{ color: this.props.title === undefined ? 'gray' : 'black' }}>{this.props.title || 'new notebook'}</h1>
       </div>
     )
   }
 }
 
 
-
-
-
-
-
-
-
 class EditorMenu extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {previousMode: props.mode}
-  }
-
   changeSidePaneMode(sidePaneMode) {
     if (this.props.sidePaneMode === sidePaneMode) this.props.actions.changeSidePaneMode(undefined)
     else this.props.actions.changeSidePaneMode(sidePaneMode)
@@ -185,33 +157,37 @@ class EditorMenu extends React.Component {
   render() {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <Toolbar style={{backgroundColor: 'black'}}>
-          <MainMenu 
-            isFirstChild={true}
-            actions={this.props.actions} 
+        <Toolbar style={{ backgroundColor: 'black' }}>
+          <MainMenu
+            isFirstChild
+            actions={this.props.actions}
             mode={this.props.mode}
             title={this.props.title}
             viewMode={this.props.viewMode}
             sidePaneMode={this.props.sidePaneMode}
             lastSaved={this.props.lastSaved}
           />
-          <ToolbarGroup className='title-field'>
-            <Title actions={this.props.actions}
+          <ToolbarGroup className="title-field">
+            <Title
+              actions={this.props.actions}
               title={this.props.title}
-              pageMode={this.props.mode} />
+              pageMode={this.props.mode}
+            />
           </ToolbarGroup>
-          <ToolbarGroup id='notebook-view-mode-controls' className='mode-buttons'>
-            <ToolbarTitle style={{fontSize:'13px', color:'lightgray', fontStyle: 'italic'}} text={this.props.lastSaved === undefined ? ' ' : 'last saved: ' + prettyDate(this.props.lastSaved)} />
-            <IconButton 
-              tooltip='Declared Variables'
-              style={{color: '#fafafa'}} 
-              onClick={()=>{this.props.actions.changeSidePaneMode('declared variables')}} >
+          <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons">
+            <ToolbarTitle style={{ fontSize: '13px', color: 'lightgray', fontStyle: 'italic' }} text={this.props.lastSaved === undefined ? ' ' : `last saved: ${prettyDate(this.props.lastSaved)}`} />
+            <IconButton
+              tooltip="Declared Variables"
+              style={{ color: '#fafafa' }}
+              onClick={() => { this.props.actions.changeSidePaneMode('declared variables') }}
+            >
               <ArrowDropDown />
             </IconButton>
-            <IconButton 
-              tooltip='History'
-              style={{color: '#fafafa'}} 
-              onClick={()=>{this.props.actions.changeSidePaneMode('history') }} >
+            <IconButton
+              tooltip="History"
+              style={{ color: '#fafafa' }}
+              onClick={() => { this.props.actions.changeSidePaneMode('history') }}
+            >
               <HistoryIcon />
             </IconButton>
             <ViewModeToggleButton actions={this.props.actions} viewMode={this.props.viewMode} />
@@ -223,37 +199,32 @@ class EditorMenu extends React.Component {
 }
 
 
-
-
-
-
-
 class ViewModeToggleButton extends React.Component {
   constructor(props) {
     super(props)
     this.toggleViewMode = this.toggleViewMode.bind(this)
   }
 
-  toggleViewMode(){
-    if (this.props.viewMode=='presentation') {
+  toggleViewMode() {
+    if (this.props.viewMode === 'presentation') {
       this.props.actions.setViewMode('editor')
-    } else if (this.props.viewMode=='editor'){
+    } else if (this.props.viewMode === 'editor') {
       this.props.actions.setViewMode('presentation')
     }
   }
 
   render() {
     let buttonString
-    if (this.props.viewMode=='presentation'){buttonString='Edit'}
-    else if (this.props.viewMode=='editor'){buttonString='View'}
+    if (this.props.viewMode === 'presentation') {
+      buttonString = 'Edit'
+    } else if (this.props.viewMode === 'editor') {
+      buttonString = 'View'
+    }
     return (
-      <FlatButton style={{color:this.props.textColor || '#fafafa'}} onClick={this.toggleViewMode} hoverColor={this.props.hoverColor || 'darkgray'} label={buttonString} />
+      <FlatButton style={{ color: this.props.textColor || '#fafafa' }} onClick={this.toggleViewMode} hoverColor={this.props.hoverColor || 'darkgray'} label={buttonString} />
     )
   }
 }
-
-
-
 
 
 function mapStateToProps(state) {
@@ -265,15 +236,15 @@ function mapStateToProps(state) {
     sidePaneMode: state.sidePaneMode,
     lastSaved: state.lastSaved,
     history: state.history,
-    currentTitle: state.title
+    currentTitle: state.title,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(actions, dispatch),
   }
 }
-let NotebookHeader_connected = connect(mapStateToProps, mapDispatchToProps)(NotebookHeader)
-export {NotebookHeader_connected as NotebookHeader}
+const NotebookHeaderConnected = connect(mapStateToProps, mapDispatchToProps)(NotebookHeader)
+export { NotebookHeaderConnected as NotebookHeader }
 // export {NotebookHeader}

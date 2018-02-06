@@ -4,8 +4,11 @@ import JSONTree from 'react-json-tree'
 class DeclaredVariables extends React.Component {
   render() {
     return (
-      <div className='declared-variables'>
-        <JSONTree data={this.props.variables} hideRoot={false} theme={{
+      <div className="declared-variables">
+        <JSONTree
+          data={this.props.variables}
+          hideRoot={false}
+          theme={{
           scheme: 'bright',
           author: 'chris kempson (http://chriskempson.com)',
           base00: '#000000',
@@ -23,8 +26,9 @@ class DeclaredVariables extends React.Component {
           base0C: '#76c7b7',
           base0D: '#6fb3d2',
           base0E: '#d381c3',
-          base0F: '#be643c'
-        }} />
+          base0F: '#be643c',
+        }}
+        />
       </div>)
   }
 }

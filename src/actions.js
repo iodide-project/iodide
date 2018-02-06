@@ -1,143 +1,145 @@
-let actions = {
-  importNotebook: function (newState) {
+const actions = {
+  importNotebook(newState) {
     return {
       type: 'IMPORT_NOTEBOOK',
-      newState: newState
+      newState,
     }
   },
-  exportNotebook: function () {
+  exportNotebook() {
     return {
-      type: 'EXPORT_NOTEBOOK'
+      type: 'EXPORT_NOTEBOOK',
     }
   },
-  saveNotebook: function (title = undefined , autosave = false) {
+  saveNotebook(title = undefined, autosave = false) {
     return {
       type: 'SAVE_NOTEBOOK',
-      title: title,
-      autosave}
+      title,
+      autosave,
+    }
   },
-  loadNotebook: function (title) {
+  loadNotebook(title) {
     return {
       type: 'LOAD_NOTEBOOK',
-      title: title
+      title,
     }
   },
-  deleteNotebook: function (title) {
+  deleteNotebook(title) {
     return {
       type: 'DELETE_NOTEBOOK',
-      title: title
+      title,
     }
   },
-  newNotebook: function () {
+  newNotebook() {
     return {
-      type: 'NEW_NOTEBOOK'
+      type: 'NEW_NOTEBOOK',
     }
   },
-  changePageTitle: function (title) {
+  changePageTitle(title) {
     return {
       type: 'CHANGE_PAGE_TITLE',
-      title: title
+      title,
     }
   },
-  changeMode: function (mode) {
+  changeMode(mode) {
     return {
       type: 'CHANGE_MODE',
-      mode: mode
+      mode,
     }
   },
-  setViewMode: function (viewMode) {
+  setViewMode(viewMode) {
     return {
       type: 'SET_VIEW_MODE',
-      viewMode: viewMode
+      viewMode,
     }
   },
-  updateInputContent: function (text) {
+  updateInputContent(text) {
     return {
       type: 'UPDATE_INPUT_CONTENT',
-      content: text
+      content: text,
     }
   },
-  changeCellType: function (cellType) {
+  changeCellType(cellType) {
     return {
       type: 'CHANGE_CELL_TYPE',
-      cellType: cellType
+      cellType,
     }
   },
-  evaluateCell: function () {
+  evaluateCell() {
     return {
-      type: 'EVALUATE_CELL'
+      type: 'EVALUATE_CELL',
     }
   },
-  runAllCells: function () {
+  runAllCells() {
     return {
-      type: 'RUN_ALL_CELLS'
+      type: 'RUN_ALL_CELLS',
     }
   },
-  setCellCollapsedState: function (viewMode, rowType, collapsedState) {
+  setCellCollapsedState(viewMode, rowType, collapsedState) {
     return {
       type: 'SET_CELL_COLLAPSED_STATE',
-      viewMode: viewMode,
-      rowType: rowType,
-      collapsedState: collapsedState
+      viewMode,
+      rowType,
+      collapsedState,
     }
   },
-  markCellNotRendered: function () {
+  markCellNotRendered() {
     return {
       type: 'MARK_CELL_NOT_RENDERED',
     }
   },
-  cellUp: function () {
+  cellUp() {
     return {
-      type: 'CELL_UP'
+      type: 'CELL_UP',
     }
   },
-  cellDown: function () {
+  cellDown() {
     return {
-      type: 'CELL_DOWN'
+      type: 'CELL_DOWN',
     }
   },
-  insertCell: function (cellType, direction) {
+  insertCell(cellType, direction) {
     return {
       type: 'INSERT_CELL',
-      cellType: cellType,
-      direction: direction
+      cellType,
+      direction,
     }
   },
-  addCell: function (cellType) {
+  addCell(cellType) {
     return {
       type: 'ADD_CELL',
-      cellType: cellType
+      cellType,
     }
   },
-  selectCell: function (cellID, scrollToCell = false) {
+  selectCell(cellID, scrollToCell = false) {
     return {
       type: 'SELECT_CELL',
       id: cellID,
-      scrollToCell: scrollToCell
+      scrollToCell,
     }
   },
-  deleteCell: function () {
+  deleteCell() {
     return {
       type: 'DELETE_CELL',
     }
   },
-  changeElementType: function (elementType) {
+  changeElementType(elementType) {
     return {
       type: 'CHANGE_ELEMENT_TYPE',
-      elementType: elementType
+      elementType,
     }
   },
-  changeDOMElementID: function (elemID) {
+  changeDOMElementID(elemID) {
     return {
       type: 'CHANGE_DOM_ELEMENT_ID',
-      elemID: elemID
+      elemID,
     }
   },
-  changeSidePaneMode: function (mode) {
+  changeSidePaneMode(mode) {
     return {
       type: 'CHANGE_SIDE_PANE_MODE',
-      mode}
-  }
+      mode,
+    }
+  },
 }
 
 export default actions

@@ -3,22 +3,21 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
-import RawCell from './cell-type-raw.jsx'
-import DOMCell from './cell-type-dom.jsx'
-import ExternalDependencyCell from './cell-type-external-resource.jsx'
-import CSSCell from './cell-type-css.jsx'
-import JsCell from './cell-type-javascript.jsx'
-import MarkdownCell from './cell-type-markdown.jsx'
+import RawCell from './cell-type-raw'
+import DOMCell from './cell-type-dom'
+import ExternalDependencyCell from './cell-type-external-resource'
+import CSSCell from './cell-type-css'
+import JsCell from './cell-type-javascript'
+import MarkdownCell from './cell-type-markdown'
 
-import { NotebookHeader } from './notebook-header.jsx'
+import { NotebookHeader } from './notebook-header'
 
-import settings from '../settings.js'
-import { prettyDate} from '../notebook-utils.js'
-import keyBinding from '../keybindings.js'
-import actions from '../actions.js'
+import settings from '../settings'
+import keyBinding from '../keybindings'
+import actions from '../actions'
 
 
-const AUTOSAVE = settings.labels.AUTOSAVE
+const { AUTOSAVE } = settings.labels
 
 class Page extends React.Component {
   constructor(props) {
@@ -27,57 +26,66 @@ class Page extends React.Component {
     this.enterCommandModeOnClickOutOfCell = this.enterCommandModeOnClickOutOfCell.bind(this)
 
     keyBinding('jupyter', this)
-    setInterval(()=>{
+    setInterval(() => {
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
-      let notebooks = Object.keys(localStorage)
-      let autos = notebooks.filter((n)=>n.includes(AUTOSAVE))
+      const notebooks = Object.keys(localStorage)
+      const autos = notebooks.filter(n => n.includes(AUTOSAVE))
       if (autos.length) {
-        autos.forEach((n)=>{
+        autos.forEach((n) => {
           this.props.actions.deleteNotebook(n)
         })
       }
-      this.props.actions.saveNotebook(AUTOSAVE + (this.props.title == undefined ? 'new notebook' : this.props.title), true)
-    },1000*60)
+      this.props.actions.saveNotebook(
+        AUTOSAVE + (this.props.title === undefined ? 'new notebook' : this.props.title),
+        true,
+      )
+    }, 1000 * 60)
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !deepEqual(this.props, nextProps)
   }
 
   enterCommandModeOnClickOutOfCell(e) {
-    //check whther the click is (1) directly in div#cells (2) in any element contained in the notebook header
+    // check whther the click is (1) directly in div#cells (2) in any element
+    // contained in the notebook header
     if (e.target.id.includes('cells') ||
         document.querySelector('.notebook-header').contains(e.target)) {
-      if (this.props.mode != 'command') this.props.actions.changeMode('command')
+      if (this.props.mode !== 'command') this.props.actions.changeMode('command')
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    return !deepEqual(this.props,nextProps)
-  }
-
-  render () {
-    let bodyContent = this.props.cellIds.map( (id,i) => {
+  render() {
+    const bodyContent = this.props.cellIds.map((id, i) => {
       // let id = cell.id
-      switch (this.props.cellTypes[i]){
-      case 'javascript':
-        // return <JavascriptCell cellId={id} key={id}/> 
-        return <JsCell cellId={id} key={id}/> 
-      case 'markdown':
-        return <MarkdownCell cellId={id} key={id}/>
-      case 'raw':
-        return <RawCell cellId={id} key={id}/>
-      case 'external dependencies':
-        return <ExternalDependencyCell cellId={id} key={id} />
-      case 'css':
-        return <CSSCell cellId={id} key={id} />
-      case 'dom':
-        return <DOMCell cellId={id} key={id}/>
+      switch (this.props.cellTypes[i]) {
+        case 'javascript':
+        // return <JavascriptCell cellId={id} key={id}/>
+          return <JsCell cellId={id} key={id} />
+        case 'markdown':
+          return <MarkdownCell cellId={id} key={id} />
+        case 'raw':
+          return <RawCell cellId={id} key={id} />
+        case 'external dependencies':
+          return <ExternalDependencyCell cellId={id} key={id} />
+        case 'css':
+          return <CSSCell cellId={id} key={id} />
+        case 'dom':
+          return <DOMCell cellId={id} key={id} />
+        default:
+          // TODO: Use better class for inline error
+          return <div>Unknown cell type {this.props.cellTypes[i]}</div>
       }
     })
 
     return (
-      <div id="notebook-container"
-        className={this.props.viewMode==='presentation' ? 'presentation-mode' : ''}
-        onMouseDown={this.enterCommandModeOnClickOutOfCell}>
+      <div
+        id="notebook-container"
+        className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
+        onMouseDown={this.enterCommandModeOnClickOutOfCell}
+      >
         <NotebookHeader />
-        <div id='cells' className={this.props.viewMode}>
+        <div id="cells" className={this.props.viewMode}>
           {bodyContent}
         </div>
       </div>
@@ -91,13 +99,13 @@ function mapStateToProps(state) {
     cellIds: state.cells.map(c => c.id),
     cellTypes: state.cells.map(c => c.cellType),
     viewMode: state.viewMode,
-    title: state.title
+    title: state.title,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(actions, dispatch),
   }
 }
 
