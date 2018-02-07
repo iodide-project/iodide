@@ -1,6 +1,6 @@
 {
-  "name": "js-notebook",
-  "version": "0.0.1",
+  "name": "iodide",
+  "version": "0.0.2",
   "description": "A notebook-style interface for literate programming in javascript.",
   "main": "index.jsx",
   "author": "Iodide Project Team",
@@ -49,6 +49,7 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "create-file-webpack": "^1.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-15": "^1.0.5",
     "eslint": "^4.12.1",

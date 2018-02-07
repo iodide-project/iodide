@@ -10,8 +10,13 @@ import { render } from 'react-dom'
 // import 'react-table/react-table.css'
 // import './page.css'
 
+import HtmlTemplate from './html-template'
+
 import Page from './components/page.jsx'
 import { store } from './store'
+
+console.log(HtmlTemplate)
+console.log(IODIDE_VERSION)
 
 render(
   <Provider store={store}>

@@ -1,4 +1,6 @@
 import { newNotebook } from './state-prototypes'
+import htmlTemplate from './html-template'
+import _ from 'lodash'
 
 const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'dom', 'resource']
 
@@ -154,34 +156,16 @@ ${cell.content}`
   return metaSettingsStr + cellsStr
 }
 
-
-const appVersionString = '0.0.1'
-
 function exportJsmdBundle(state) {
-  return `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Javascript Notebook</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/react-table.css">
-<link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/eclipse.css">
-<link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/codemirror.css">
-<link rel="stylesheet" type="text/css" href="https://mozilla.github.io/javascript-notebook/dist/page.css">
-</head>
-<body>
-
-<script id="jsmd" type="text/jsmd">
-${stringifyStateToJsmd(state)}
-</script>
-
-<div id='page'></div>
-<script src='https://mozilla.github.io/javascript-notebook/dist/iodideApp${appVersionString}.js'></script>
-</body>
-</html>`
+  const htmlTemplateCompiler = _.template(htmlTemplate)
+  return htmlTemplateCompiler({
+    NOTEBOOK_TITLE: state.title,
+    APP_PATH_STRING: '',
+    CSS_PATH_STRING: '',
+    APP_VERSION_STRING: IODIDE_VERSION,
+    JSMD: ''
+  })
+  
 }
 
 export {
