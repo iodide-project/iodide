@@ -15,7 +15,9 @@ module.exports = {
       "react"
   ],
   "globals":{
-    "IODIDE_VERSION":false
+    "IODIDE_VERSION":false,
+    "IODIDE_CSS_PATH":false,
+    "IODIDE_JS_PATH":false,
   },
   "rules": {
     "semi": ["off"],
