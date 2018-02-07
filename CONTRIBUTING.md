@@ -4,7 +4,7 @@ Thank you for your interest in contributing to IODIDE! There are many ways to co
 
 ## Code of Conduct
 
-IODIDE has adopted a [Code of Conduct](#coming-soon) that we expect all contributors and core members to adhere to.
+IODIDE has adopted a [Code of Conduct](CODE-OF-CONDUCT.md) that we expect all contributors and core members to adhere to.
 
 ## Development
 
@@ -14,7 +14,7 @@ We’ll do our best to keep `master` in a non-breaking state, ideally with tests
 
 IODIDE follows semantic versioning (http://semver.org/) - major versions for breaking changes (x.0.0), minor versions for new features (0.x.0), and patches for bug fixes (0.0.x).
 
-All non-trivial changes per release will be recorded in [CHANGELOG.md](#coming-soon).
+We keep a file, [CHANGELOG.md](CHANGELOG.md), outlining changes to IODIDE in each release. We like to think of the audience for changelogs as non-developers who primarily run the latest stable. So the change log will primarily outline user-visible changes such as new features and deprecations, and will exclude things that might otherwise be inconsequential to the end user experience, such as infrastructure or refactoring. 
 
 ## Bugs & Issues
 
