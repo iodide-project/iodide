@@ -18,29 +18,9 @@ We keep a file, [CHANGELOG.md](CHANGELOG.md), outlining changes to IODIDE in eac
 
 ## Bugs & Issues
 
-We use [Github Issues](https://github.com/mozilla/iodide/issues) for announcing and discussing bugs and features. Use [this link](https://github.com/mozilla/iodide/issues/new) to report an bug or issue. If you have the chance, please search the existing issues before reporting a bug. It's possible that someone else has already reported your error. This doesn't always work, and sometimes it's hard to know what to search for, so consider this extra credit. We won't mind if you accidentally file a duplicate report.
-
-
+We use [Github Issues](https://github.com/mozilla/iodide/issues) for announcing and discussing bugs and features. Use [this link](https://github.com/mozilla/iodide/issues/new) to report an bug or issue. We provide a template to give you a guide for how to file optimally. If you have the chance, please search the existing issues before reporting a bug. It's possible that someone else has already reported your error. This doesn't always work, and sometimes it's hard to know what to search for, so consider this extra credit. We won't mind if you accidentally file a duplicate report.
 
 Core contributors are monitoring new issues & comments all the time, and will label & organize issues to align with development priorities.
-
-The best way to get your issue addressed is to provide an example. The best method of doing this is attaching an IODIDE notebook demonstrating the error, or clear steps to reproduce. 
-
-This may be confusing, especially if you’re new to all of this but want to report a bug. Either way, you can follow this template for filing a bug:
-
-```<short summary of the bug>
-
-I tried this out:
-
-<code sample or exact steps that causes the bug>
-
-I expected to see this happen: <explanation>
-
-Instead, this happened: <explanation>
-
-(OPTIONAL) notebook that reproduces bug: <link to the notebook that reproduces the bug, or just inline it in the issue>
-```
-
 
 ## How to Contribute
 
@@ -54,24 +34,38 @@ If you’d like to fix a currently-filed issue, please take a look at the commen
 
 We use [Jest](https://facebook.github.io/jest/) as our testing framework. Every PR will automatically run through our tests, and our test framework will alert you on Github if your PR doesn’t pass all of them. If your PR fails a test, try to figure out whether or not you can update your code to make the test pass again, or ask for help. As a policy we will not accept a PR that fails any of our tests, and will likely ask you to add tests if your PR adds new functionality. Writing tests can be scary, but they make open-source contributions easier for everyone to assess. Take a moment and look through how we’ve written our tests, and try to make your tests match. If you are having trouble, we can help you get started on our test-writing journey. 
 
+We also rely on linting as a way of standardizing low-level style choices in the code. We use [Airbnb's Javascript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react). The use of a linter in your development worflow means you can focus on the higher-level aspects of style. As such we will likely not accept any PRs that fail linting. If this feels like a hassle, we'd recommend roughly following the Development Workflow below so you don't have to sweat this detail!
 
 ## Contribution Prerequisites
 <FILL IN HERE>
-
 
 ## Development Workflow
 
 <FILL IN HERE>
 
-
 ## Style Guide
 
-<FILL IN HERE>
+To reiterate, if you follow our Development Workflow, linting will take care of low-level style and formatting issues.
+
+On a middle level, the best approach to ensuring your contributions are in the right style is to follow the example of any of the other components in the repository.
+
+On a very high level, our goal is to make the source code for IODIDE simple as possible for users who are new to JS. To quote the famous [PEP-20 -- The Zen of Python](https://www.python.org/dev/peps/pep-0020/):
+
+```
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+...
+```
 
 
 ## License
 
-All contributions to IODIDE will be licensed under the [Mozilla Public License 2.0 (MPL 2.0)](https://www.mozilla.org/en-US/MPL/2.0/). This is considered a "weak copyleft" license. Check out the [tl;drLegal entry](https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2)) for more information, as well as Mozilla's [MPL 2.0 FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/).
+All contributions to IODIDE will be licensed under the [Mozilla Public License 2.0 (MPL 2.0)](https://www.mozilla.org/en-US/MPL/2.0/). This is considered a "weak copyleft" license. Check out the [tl;drLegal entry](https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2)) for more information, as well as Mozilla's [MPL 2.0 FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/) if you need further clarification on what is and isn't permitted.
 
 
 ## Get in Touch
