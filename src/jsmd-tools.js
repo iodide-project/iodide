@@ -160,10 +160,10 @@ function exportJsmdBundle(state) {
   const htmlTemplateCompiler = _.template(htmlTemplate)
   return htmlTemplateCompiler({
     NOTEBOOK_TITLE: state.title,
-    APP_PATH_STRING: '',
-    CSS_PATH_STRING: '',
+    APP_PATH_STRING: 'https://mozilla.github.io/javascript-notebook/dist/',
+    CSS_PATH_STRING: 'https://mozilla.github.io/javascript-notebook/dist/',
     APP_VERSION_STRING: IODIDE_VERSION,
-    JSMD: '',
+    JSMD: stringifyStateToJsmd(state),
   })
 }
 
