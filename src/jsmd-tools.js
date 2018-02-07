@@ -1,6 +1,6 @@
+import _ from 'lodash'
 import { newNotebook } from './state-prototypes'
 import htmlTemplate from './html-template'
-import _ from 'lodash'
 
 const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'dom', 'resource']
 
@@ -163,9 +163,8 @@ function exportJsmdBundle(state) {
     APP_PATH_STRING: '',
     CSS_PATH_STRING: '',
     APP_VERSION_STRING: IODIDE_VERSION,
-    JSMD: ''
+    JSMD: '',
   })
-  
 }
 
 export {
