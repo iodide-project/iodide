@@ -1,4 +1,4 @@
-(short summary of the bug)
+Short summary of the bug. Please include the IODIDE version number where you found the bug
 
 ### What I Did
 
