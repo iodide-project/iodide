@@ -10,13 +10,8 @@ import 'react-table/react-table.css'
 import '../node_modules/katex/dist/katex.min.css'
 import './page.css'
 
-import HtmlTemplate from './html-template'
-
 import Page from './components/page'
 import { store } from './store'
-
-console.log(HtmlTemplate)
-console.log(IODIDE_VERSION)
 
 render(
   <Provider store={store}>
