@@ -1,24 +1,10 @@
 module.exports = {
+  "parser": "babel-eslint",
   "env": {
-    "browser": true,
-    "es6": true
+      "browser": true,
+      "node": true
   },
-  "extends": ["airbnb"],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true,
-      "jsx": true
-    },
-    "sourceType": "module"
-  },
-  "plugins": [
-      "react"
-  ],
-  "globals":{
-    "IODIDE_VERSION":false,
-    "IODIDE_CSS_PATH":false,
-    "IODIDE_JS_PATH":false,
-  },
+  "extends": "airbnb",
   "rules": {
     "semi": ["off"],
     // Restricting for..of seems pretty controversial, let's disable that.
@@ -47,5 +33,5 @@ module.exports = {
     "no-console": ["off"],
     // Prefer default exports
     "import/prefer-default-export": ["off"],
-  }
-};
+  },
+}

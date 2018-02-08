@@ -50,6 +50,7 @@ module.exports = (env) => {
           options: {
             // eslint options (if necessary)
             emitWarning: true,
+            emitError: true,
           },
         },
         {
