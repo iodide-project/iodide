@@ -45,7 +45,7 @@ We also rely on linting as a way of standardizing low-level style choices in the
 
 `npm run lint` will lint everything in `src/`. Please make sure all your contributions pass the linter.
 
-`npm run start` writes development versions of the Iodide app resources to `dev/`. To run your dev notebook, just open the file `dev/iodide.dev.html` in your browser. All changes to the code will be detected and bundled into `dev/`
+`npm run start` writes development versions of the Iodide app resources to `dev/`. To run your dev notebook, just open the file `dev/iodide.dev.html` in your browser. All changes to the code will be detected and bundled into `dev/`.
 
 `npm run build`  will write deployable versions of the Iodide app resources to `prod/`. This builds just once, and does not watch your files for changes.
 
