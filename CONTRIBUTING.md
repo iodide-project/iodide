@@ -39,6 +39,7 @@ We also rely on linting as a way of standardizing low-level style choices in the
 ## Contribution Prerequisites
 
 - You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/).
+- You should have some familiarity with React, Redux, modern ECMAScript.
 - You should have some familiarity with how Git works.
 
 ## Development Workflow
@@ -46,6 +47,8 @@ We also rely on linting as a way of standardizing low-level style choices in the
 `npm run lint` will lint everything in `src/`. Please make sure all your contributions pass the linter.
 
 `npm run start` writes development versions of the Iodide app resources to `dev/`. To run your dev notebook, just open the file `dev/iodide.dev.html` in your browser. All changes to the code will be detected and bundled into `dev/`.
+
+In dev mode, resource paths are set to be relative to the `dev/` directory. Thus, when you export a notebook from a dev notebook, you need to be sure to save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js/css/font files.
 
 `npm run build`  will write deployable versions of the Iodide app resources to `prod/`. This builds just once, and does not watch your files for changes.
 
