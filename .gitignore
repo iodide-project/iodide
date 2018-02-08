@@ -1,6 +1,8 @@
 # App-specific
 dist/
 build/
+prod/
+dev/
 
 # Logs
 logs
