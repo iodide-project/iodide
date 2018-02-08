@@ -82,10 +82,4 @@ All contributions to IODIDE will be licensed under the [Mozilla Public License 2
 
 ## Get in Touch
 
-IRC / GITTER: <INSERT HERE>
-MAILING LIST?: <INSERT HERE>
-
-
-## Meeting Notes
-
-The IODIDE team meets once a week to discuss the development of IODIDE, future plans, and priorities. You can find the meeting notes in a dedicated repository.
+- __IRC:__ [#iodide](https://client00.chat.mibbit.com/?server=irc.mozilla.org&channel=%23iodide) channel over at irc.mozilla.org
