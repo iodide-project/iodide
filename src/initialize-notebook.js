@@ -14,7 +14,9 @@ const jsmdCellTypeMap = new Map([
 
 function initializeNotebook() {
   const jsmdElt = document.getElementById('jsmd')
-  if (jsmdElt) {
+  if (jsmdElt &&
+      jsmdElt.innerHTML &&
+      jsmdElt.innerHTML.trim() !== '') {
     const parsed = parseJsmd(jsmdElt.innerHTML)
     let { cells } = parsed
     const { parseWarnings } = parsed

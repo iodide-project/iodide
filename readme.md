@@ -16,18 +16,27 @@ Read more about our core principles below; if our vision resonates with you, ple
 
 # Setup
 
-Run `yarn install` after cloning this repository.
+Run `npm install` after cloning this repository.
 
-## Building / Running
+## Running/Building
 
-Run `yarn build` to build the webpack resources.
+### Development mode
 
-You can start a dynamically recompiled version of the notebook by running `yarn start`. You can then connect to it
-at http://localhost:5000.
+Use `npm run start` to write development versions of the Iodide app resources to `dev/`. To run your dev notebook, just open the file `dev/iodide.dev.html` in your browser.
+
+`npm run start` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually.
+
+In dev mode, resource paths are set to be relative to the `dev/` directory. Thus, you export a notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js/css/font files.
+
+### Production mode 
+
+Use `npm run build` to write deployable versions of the Iodide app resources to `prod/`. This builds just once, and does not watch your files for changes.
+
+The files built in prod mode have resource paths set to fixed web addresses, not relative paths (this is a required for exported notebooks to be portable). This means that if you open the file `prod/iodide.${VERSION}.html` in your browser, it will _not_ load the js/css/font resources located in `prod/`, it will load them from the hard-coded web address (if they exist at that location). Once the js/css/fonts are uploaded to the matching URI, the file `prod/iodide.${VERSION}.html` (as well as any notebook exported from it) should run correctly from any local filesystem location or web address.
 
 ## Testing
 
-Run `yarn test` to run the test suite.
+Run `npm test` to run the test suite.
 
 # Using the notebook
 

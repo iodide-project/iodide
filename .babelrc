@@ -1,0 +1,9 @@
+{
+  "presets" : ['es2016', "react"],
+  "plugins" : ["transform-class-properties"],
+  "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
+}

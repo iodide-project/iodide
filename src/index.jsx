@@ -4,10 +4,10 @@ import { render } from 'react-dom'
 
 import 'font-awesome/css/font-awesome.css'
 import 'opensans-npm-webfont/style.css'
-
 import 'codemirror/theme/eclipse.css'
 import 'codemirror/lib/codemirror.css'
 import 'react-table/react-table.css'
+import '../node_modules/katex/dist/katex.min.css'
 import './page.css'
 
 import Page from './components/page'
