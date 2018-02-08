@@ -108,12 +108,6 @@ function addExternalDependency(dep) {
     elem.type = 'text/css'
     elem.href = src
     outElem.status = 'loaded'
-    // if (elem.sizes.length === 0) {
-    //   outElem.status = 'error'
-    //   outElem.statusExplanation = 'style sheet is empty'
-    // } else {
-    //   outElem.status = 'loaded'
-    // }
   } else {
     outElem.status = 'error'
     outElem.statusExplanation = 'unknown dependency type.'
