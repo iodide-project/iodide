@@ -37,11 +37,23 @@ We use [Jest](https://facebook.github.io/jest/) as our testing framework. Every 
 We also rely on linting as a way of standardizing low-level style choices in the code. We use [Airbnb's Javascript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react). The use of a linter in your development worflow means you can focus on the higher-level aspects of style. As such we will likely not accept any PRs that fail linting. If this feels like a hassle, we'd recommend roughly following the Development Workflow below so you don't have to sweat this detail!
 
 ## Contribution Prerequisites
-<FILL IN HERE>
+
+- You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/).
+- You should have some familiarity with how Git works.
 
 ## Development Workflow
 
-<FILL IN HERE>
+`npm run lint` will lint everything in `src/`. Please make sure all your contributions pass the linter.
+
+`npm run start` writes development versions of the Iodide app resources to `dev/`. To run your dev notebook, just open the file `dev/iodide.dev.html` in your browser. All changes to the code will be detected and bundled into `dev/`
+
+`npm run build`  will write deployable versions of the Iodide app resources to `prod/`. This builds just once, and does not watch your files for changes.
+
+The files built in prod mode have resource paths set to fixed web addresses, not relative paths (this is a required for exported notebooks to be portable). This means that if you open the file `prod/iodide.${VERSION}.html` in your browser, it will not load the js/css/font resources located in `prod/`, it will load them from the hard-coded web address (if they exist at that location). Once the js/css/fonts are uploaded to the matching URI, the file `prod/iodide.${VERSION}.html` (as well as any notebook exported from it) should run correctly from any local filesystem location or web address.
+
+`npm test` runs the test suite. If you are hoping to submit a PR for your changes, it is vital that the test suite passes.
+
+
 
 ## Style Guide
 
