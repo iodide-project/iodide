@@ -14,9 +14,6 @@ import Page from './components/page'
 import { store } from './store'
 
 import './tools/nd'
-import nb_api from './api'
-
-window.nb_api = nb_api
 
 render(
   <Provider store={store}>

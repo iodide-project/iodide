@@ -10,6 +10,8 @@ import { moveCell, scrollToCellIfNeeded,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned } from './cell-reducer-utils'
 
+import {handlePlugin} from '../api.js'
+
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
 MD.use(MarkdownItKatex)
@@ -213,7 +215,10 @@ const cellReducer = (state = newNotebook(), action) => {
       userDefinedVariables = {}
       Object.keys(window)
         .filter(g => !initialVariables.has(g))
-        .forEach((g) => { userDefinedVariables[g] = window[g] })
+        .forEach((g) => {
+          userDefinedVariables[g] = window[g]
+          handlePlugin(g, userDefinedVariables[g])
+        })
       nextState = Object.assign({}, newState, { cells }, { userDefinedVariables })
       return nextState
     }
