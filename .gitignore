@@ -1,5 +1,4 @@
 # App-specific
-dist/
 build/
 prod/
 dev/
