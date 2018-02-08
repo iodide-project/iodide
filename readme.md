@@ -36,7 +36,7 @@ The files built in prod mode have resource paths set to fixed web addresses, not
 
 ## Testing
 
-Run `npm test` to run the test suite.
+Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.
 
 # Using the notebook
 
