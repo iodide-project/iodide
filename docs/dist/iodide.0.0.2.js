@@ -45468,8 +45468,8 @@ function exportJsmdBundle(state) {
   const htmlTemplateCompiler = __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.template(__WEBPACK_IMPORTED_MODULE_2__html_template___default.a);
   return htmlTemplateCompiler({
     NOTEBOOK_TITLE: state.title,
-    APP_PATH_STRING: "https://mozilla.github.io/iodide/dist/",
-    CSS_PATH_STRING: "https://mozilla.github.io/iodide/dist/",
+    APP_PATH_STRING: "https://iodide-project.github.io/iodide/dist/",
+    CSS_PATH_STRING: "https://iodide-project.github.io/iodide/dist/",
     APP_VERSION_STRING: "0.0.2",
     JSMD: stringifyStateToJsmd(state)
   });

@@ -20,8 +20,8 @@ const htmlTemplateCompiler = _.template(htmlTemplate)
 module.exports = (env) => {
   if (env === 'prod') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
-    APP_PATH_STRING = 'https://mozilla.github.io/iodide/dist/'
-    CSS_PATH_STRING = 'https://mozilla.github.io/iodide/dist/'
+    APP_PATH_STRING = 'https://iodide-project.github.io/iodide/dist/'
+    CSS_PATH_STRING = 'https://iodide-project.github.io/iodide/dist/'
   } else if (env === 'dev') {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
     APP_VERSION_STRING = 'dev'
