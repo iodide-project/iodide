@@ -1,3 +1,5 @@
+/* global IODIDE_JS_PATH IODIDE_CSS_PATH IODIDE_VERSION */
+
 import _ from 'lodash'
 import { newNotebook } from './state-prototypes'
 import htmlTemplate from './html-template'
