@@ -1,5 +1,6 @@
 # App-specific
-dist/bundle.js.map
+dist/
+build/
 
 # Logs
 logs
