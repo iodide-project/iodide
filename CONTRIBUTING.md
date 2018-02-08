@@ -39,8 +39,8 @@ We also rely on linting as a way of standardizing low-level style choices in the
 ## Contribution Prerequisites
 
 - You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/).
-- You should have some familiarity with React, Redux, modern ECMAScript.
-- You should have some familiarity with how Git works.
+- You should have some familiarity with React, Redux, modern ECMAScript, or be willing to learn.
+- You should have some familiarity with how Git works, or be willing ot learn.
 
 ## Development Workflow
 
