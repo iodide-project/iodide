@@ -99,3 +99,7 @@ There are a bunch of features that we know we want to build to make this compell
         - hints, autocomplete (for latex, this includes special character insertion)
         - Lyx-like wysiwyg preview for equation editing
 - UI for importing local data from file (with drag and drop? Needed for XSS reasons, lack of filesystem access reasons)
+
+## License
+
+The __IODIDE__ code is shared under the terms of the [Mozilla Public License v2.0](http://www.mozilla.org/MPL/2.0/). See the `LICENSE` file at the root of the repository
