@@ -7,9 +7,18 @@ import CheckCircle from 'material-ui/svg-icons/action/check-circle'
 import ErrorCircle from 'material-ui/svg-icons/alert/error'
 import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 
-export default class ExternalResourceOutputHandler extends React.Component {
-  render() {
-    const outs = this.props.value.filter(d => d.src !== '').map((d, i) => {
+
+const externalResourceHandler = {
+  shouldHandle: (value) => {
+    // check to see if value is an array, and that the objects in array have `src`.
+    // this seems like a weird way to do it. I just want to say TRUE
+    // if it is being called the way I want.
+    const valueIsArray = Object.prototype.toString.call(value) === '[object Array]'
+    const valueItemsHaveSourceField = value.every(v => v.hasOwnProperty('src'))
+    return valueIsArray && valueItemsHaveSourceField
+  },
+  render: (value) => {
+    const outs = value.filter(d => d.src !== '').map((d, i) => {
       let statusExplanation
       let statusIcon
       let source = d.src.split('/')
@@ -20,47 +29,38 @@ export default class ExternalResourceOutputHandler extends React.Component {
           <div
             key={j}
             style={{
-                  fontSize: '12px',
-                  borderRadius: '12px',
-                  padding: '3px 8px 3px 8px',
-                  marginRight: '6px',
-                  backgroundColor: 'lightgray',
-                  }}
+                fontSize: '12px',
+                borderRadius: '12px',
+                padding: '3px 8px 3px 8px',
+                marginRight: '6px',
+                backgroundColor: 'lightgray',
+                }}
           >{v}
           </div>
         ))
 
-      if (d.status === undefined) {
-        statusIcon = <UnloadedCircle />
-      } else {
-        statusIcon = (d.status === 'loaded'
-          ? <CheckCircle color="lightblue" />
-          : <ErrorCircle color="firebrick" />
-        )
-      }
-      if (Object.prototype.hasOwnProperty.call(d, 'statusExplanation')) {
-        // TODO: Don't use an array index as a key here (See react/no-array-index-key linter)
-              statusExplanation = <div key={i} className="dependency-status-explanation">{d.statusExplanation}</div>  // eslint-disable-line
+      if (d.status === undefined) statusIcon = <UnloadedCircle />
+      else statusIcon = (d.status === 'loaded' ? <CheckCircle color="lightblue" /> : <ErrorCircle color="firebrick" />)
+
+      if (d.hasOwnProperty('statusExplanation')) {
+        statusExplanation = <div key={d.src} className="dependency-status-explanation">{d.statusExplanation}</div>
       }
       return (
-      // TODO: Don't use an array index as a key here (See react/no-array-index-key linter)
-      /* eslint-disable */
-                <div className="dependency-container" key={`erc-${this.props.cellId}-${i}`}>
-                  <div className="dependency-row">
-                  <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-                      {statusIcon}
-                  </MuiThemeProvider>
-                  <div style={{display:'flex', flexWrap:'wrap', lineHeight: '1.5em'}}>
-                    <div className="dependency-src"><a href={d.src} target='_blank'>{source}</a></div>
-                    { introducedVariables }
-                  </div>
-                    
-                  </div>
-                  {statusExplanation}
-                  
-      
-                </div>
-              /* eslint-enable */
+        <div className="dependency-container" key={d.src}>
+          <div className="dependency-row">
+            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+              {statusIcon}
+            </MuiThemeProvider>
+            <div style={{ display: 'flex', flexWrap: 'wrap', lineHeight: '1.5em' }}>
+              <div className="dependency-src"><a href={d.src} target="_blank">{source}</a></div>
+              { introducedVariables }
+            </div>
+
+          </div>
+          { statusExplanation }
+
+
+        </div>
       )
     })
     return (
@@ -68,5 +68,7 @@ export default class ExternalResourceOutputHandler extends React.Component {
         {outs}
       </div>
     )
-  }
+  },
 }
+
+export default externalResourceHandler

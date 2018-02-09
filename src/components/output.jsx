@@ -9,6 +9,8 @@ import ReactTable from 'react-table'
 
 import { SimpleTable, makeMatrixText } from './pretty-matrix'
 
+import externalResourceHandler from './output-handler-external-resource'
+
 import nb from '../tools/nb'
 
 const renderMethodHandler = {
@@ -94,8 +96,8 @@ const scalarHandler = {
   render: value =>
   // TODO: This probably needs a new CSS class
     <div className="array-output">{value}</div>,
-
 }
+
 
 const defaultHandler = {
   shouldHandle: () => true,
