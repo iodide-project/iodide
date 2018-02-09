@@ -7,27 +7,21 @@ import CheckCircle from 'material-ui/svg-icons/action/check-circle'
 import ErrorCircle from 'material-ui/svg-icons/alert/error'
 import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 
+// this is merely a presentational component, and as such can be passed
+// all the data it needs.
+export default class ExternalResourceOutput extends React.Component {
+  render() {
+    if (this.props.value === undefined) return <div />
 
-const externalResourceHandler = {
-  shouldHandle: (value) => {
-    // check to see if value is an array, and that the objects in array have `src`.
-    // this seems like a weird way to do it. I just want to say TRUE
-    // if it is being called the way I want.
-    const valueIsArray = Object.prototype.toString.call(value) === '[object Array]'
-    const valueItemsHaveSourceField = value.every(v => v.hasOwnProperty('src'))
-    return valueIsArray && valueItemsHaveSourceField
-  },
-  render: (value) => {
-    const outs = value.filter(d => d.src !== '').map((d, i) => {
+    const outs = this.props.value.filter(d => d.src !== '').map((d) => {
       let statusExplanation
       let statusIcon
       let source = d.src.split('/')
       source = source[source.length - 1]
 
-      const introducedVariables = (d.variables || []).map((v, j) =>
+      const introducedVariables = (d.variables || []).map(v =>
         (
           <div
-            key={j}
             style={{
                 fontSize: '12px',
                 borderRadius: '12px',
@@ -42,7 +36,7 @@ const externalResourceHandler = {
       if (d.status === undefined) statusIcon = <UnloadedCircle />
       else statusIcon = (d.status === 'loaded' ? <CheckCircle color="lightblue" /> : <ErrorCircle color="firebrick" />)
 
-      if (d.hasOwnProperty('statusExplanation')) {
+      if (Object.prototype.hasOwnProperty.call(d, 'statusExplanation')) {
         statusExplanation = <div key={d.src} className="dependency-status-explanation">{d.statusExplanation}</div>
       }
       return (
@@ -68,7 +62,5 @@ const externalResourceHandler = {
         {outs}
       </div>
     )
-  },
+  }
 }
-
-export default externalResourceHandler

@@ -12,6 +12,7 @@ import { getCellById } from '../notebook-utils'
 export class ExternalResourceCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
+    value: PropTypes.array.isRequired,
   }
 
   render() {
@@ -19,7 +20,7 @@ export class ExternalResourceCellUnconnected extends React.Component {
       <TwoRowCell
         cellId={this.props.cellId}
         row1={<CellEditor cellId={this.props.cellId} />}
-        row2={<ExternalResourceOutputHandler cellId={this.props.cellId} />}
+        row2={<ExternalResourceOutputHandler value={this.props.value} />}
       />
     )
   }
