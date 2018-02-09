@@ -1,4 +1,5 @@
 import React from 'react'
+import Helmet from 'react-helmet'
 
 class Title extends React.Component {
   constructor(props) {
@@ -6,6 +7,7 @@ class Title extends React.Component {
     this.state = { previousMode: props.pageMode }
     this.onBlur = this.onBlur.bind(this)
     this.onFocus = this.onFocus.bind(this)
+    this.getTitle = this.getTitle.bind(this)
     this.changeTitle = this.changeTitle.bind(this)
     this.enterTitleEditMode = this.enterTitleEditMode.bind(this)
   }
@@ -22,6 +24,10 @@ class Title extends React.Component {
     }
   }
 
+  getTitle() {
+    if (this.props.pageMode !== 'title-edit') return (this.props.title || "New Notebook") + ' - Iodide'
+  }
+
   changeTitle(evt) {
     // this.props.actions.changeMode('title-edit')
     this.props.actions.changePageTitle(evt.target.value)
@@ -35,6 +41,7 @@ class Title extends React.Component {
   render() {
     const elem = (
       <div className={`title-field-contents ${this.props.pageMode !== 'title-edit' ? 'unselected-title-field' : ''}`}>
+        <Helmet title={this.getTitle()} />
         <input
           ref="titleEditor" // eslint-disable-line
           onBlur={this.onBlur}
