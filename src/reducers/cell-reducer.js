@@ -182,22 +182,24 @@ const cellReducer = (state = newNotebook(), action) => {
         thisCell.evalStatus = evalStatuses.SUCCESS
       } else if (thisCell.cellType === 'external dependencies') {
         const dependencies = thisCell.content.split('\n').filter(d => d.trim().slice(0, 2) !== '//')
-        const outValue = dependencies.map(addExternalDependency)
+        const newValues = dependencies
+          .filter(d => !newState.externalDependencies.includes(d))
+          .map(addExternalDependency)
 
-        outValue.forEach((d) => {
+        newValues.forEach((d) => {
           if (!newState.externalDependencies.includes(d.src)) {
             newState.externalDependencies.push(d.src)
           }
         })
-        thisCell.evalStatus = outValue.map(d => d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
-        thisCell.value = outValue
+        thisCell.evalStatus = newValues.map(d => d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
+        thisCell.value = new Array(...[...thisCell.value || [], ...newValues])
         thisCell.rendered = true
         // add to newState.history
-        if (outValue.length) {
+        if (newValues.length) {
           newState.history.push({
             cellID: thisCell.id,
             lastRan: new Date(),
-            content: `// added external dependencies:\n${outValue.map(s => `// ${s.src}`).join('\n')}`,
+            content: `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
           })
         }
         newState.executionNumber += 1
@@ -213,7 +215,9 @@ const cellReducer = (state = newNotebook(), action) => {
       userDefinedVariables = {}
       Object.keys(window)
         .filter(g => !initialVariables.has(g))
-        .forEach((g) => { userDefinedVariables[g] = window[g] })
+        .forEach((g) => {
+          userDefinedVariables[g] = window[g]
+        })
       nextState = Object.assign({}, newState, { cells }, { userDefinedVariables })
       return nextState
     }
