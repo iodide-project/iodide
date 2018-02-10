@@ -71,7 +71,7 @@ class MainMenu extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isModalOpen: false,
+      isDeleteNotebookDialogOpen: false,
     }
     this.insertCell = this.insertCell.bind(this)
     this.cellUp = this.cellUp.bind(this)
@@ -79,25 +79,25 @@ class MainMenu extends React.Component {
     this.runCell = this.runCell.bind(this)
     this.deleteNotebook = this.deleteNotebook.bind(this)
     this.runAllCells = this.runAllCells.bind(this)
-    this.switchModal = this.switchModal.bind(this)
-    this.closeModalAndDeleteNotebook = this.closeModalAndDeleteNotebook.bind(this)
+    this.switchDeleteNotebookDialog = this.switchDeleteNotebookDialog.bind(this)
+    this.closeDialogAndDeleteNotebook = this.closeDialogAndDeleteNotebook.bind(this)
   }
 
-  switchModal() {
+  switchDeleteNotebookDialog() {
     this.setState({
-      isModalOpen: !this.state.isModalOpen,
+      isDeleteNotebookDialogOpen: !this.state.isDeleteNotebookDialogOpen,
     })
   }
 
-  closeModalAndDeleteNotebook() {
+  closeDialogAndDeleteNotebook() {
     this.setState({
-      isModalOpen: !this.state.isModalOpen,
+      isDeleteNotebookDialogOpen: !this.state.isDeleteNotebookDialogOpen,
     })
     this.props.actions.deleteNotebook(this.props.title)
   }
 
   deleteNotebook(notebook) {
-    this.switchModal()
+    this.switchDeleteNotebookDialog()
   }
 
   runAllCells() {
@@ -124,16 +124,16 @@ class MainMenu extends React.Component {
 
 
   render() {
-    const actions = [
+    const deleteNotebookDialogOptions = [
       <FlatButton
         label="Cancel"
         primary
-        onClick={this.switchModal}
+        onClick={this.switchDeleteNotebookDialog}
       />,
       <FlatButton
-        label="Submit"
+        label="Delete"
         primary
-        onClick={this.closeModalAndDeleteNotebook}
+        onClick={this.closeDialogAndDeleteNotebook}
       />,
     ];
     const mc = menuComponents(menuItems, this)
@@ -141,10 +141,11 @@ class MainMenu extends React.Component {
     return (
       <ToolbarGroup firstChild={this.props.firstChild}>
         <Dialog
-          open={this.state.isModalOpen}
-          title="Are you sure you want to delete this file?"
-          actions={actions}
-        />
+          open={this.state.isDeleteNotebookDialogOpen}
+          actions={deleteNotebookDialogOptions}
+        >
+        Delete Notebook?
+        </Dialog>
         <IconMenu
           style={{ fontSize: '12px' }}
           iconButtonElement={<IconButton><MenuIcon color={grey50} /></IconButton>}
