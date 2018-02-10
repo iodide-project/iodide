@@ -4,7 +4,7 @@
   "description": "A notebook-style interface for literate programming in javascript.",
   "main": "index.jsx",
   "author": "Iodide Project Team",
-  "license": "Mozilla Public License 2.0",
+  "license": "MPL-2.0",
   "scripts": {
     "test": "jest --no-cache",
     "start": "webpack --watch --env dev",
