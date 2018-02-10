@@ -14,6 +14,8 @@ import UpArrow from 'material-ui/svg-icons/navigation/arrow-upward'
 import DownArrow from 'material-ui/svg-icons/navigation/arrow-downward'
 import PlayButton from 'material-ui/svg-icons/av/play-arrow'
 import FastForward from 'material-ui/svg-icons/av/fast-forward'
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 import { menuItems } from '../menu-content'
 
@@ -68,16 +70,34 @@ function menuComponents(items, parentComponent) {
 class MainMenu extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      isDeleteNotebookDialogOpen: false,
+    }
     this.insertCell = this.insertCell.bind(this)
     this.cellUp = this.cellUp.bind(this)
     this.cellDown = this.cellDown.bind(this)
     this.runCell = this.runCell.bind(this)
     this.deleteNotebook = this.deleteNotebook.bind(this)
     this.runAllCells = this.runAllCells.bind(this)
+    this.switchDeleteNotebookDialog = this.switchDeleteNotebookDialog.bind(this)
+    this.closeDialogAndDeleteNotebook = this.closeDialogAndDeleteNotebook.bind(this)
+  }
+
+  switchDeleteNotebookDialog() {
+    this.setState({
+      isDeleteNotebookDialogOpen: !this.state.isDeleteNotebookDialogOpen,
+    })
+  }
+
+  closeDialogAndDeleteNotebook() {
+    this.setState({
+      isDeleteNotebookDialogOpen: !this.state.isDeleteNotebookDialogOpen,
+    })
+    this.props.actions.deleteNotebook(this.props.title)
   }
 
   deleteNotebook(notebook) {
-    this.props.actions.deleteNotebook(notebook)
+    this.switchDeleteNotebookDialog()
   }
 
   runAllCells() {
@@ -104,10 +124,28 @@ class MainMenu extends React.Component {
 
 
   render() {
+    const deleteNotebookDialogOptions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onClick={this.switchDeleteNotebookDialog}
+      />,
+      <FlatButton
+        label="Delete"
+        primary
+        onClick={this.closeDialogAndDeleteNotebook}
+      />,
+    ];
     const mc = menuComponents(menuItems, this)
 
     return (
       <ToolbarGroup firstChild={this.props.firstChild}>
+        <Dialog
+          open={this.state.isDeleteNotebookDialogOpen}
+          actions={deleteNotebookDialogOptions}
+        >
+        Delete Notebook?
+        </Dialog>
         <IconMenu
           style={{ fontSize: '12px' }}
           iconButtonElement={<IconButton><MenuIcon color={grey50} /></IconButton>}
