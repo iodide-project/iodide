@@ -14,6 +14,8 @@ import UpArrow from 'material-ui/svg-icons/navigation/arrow-upward'
 import DownArrow from 'material-ui/svg-icons/navigation/arrow-downward'
 import PlayButton from 'material-ui/svg-icons/av/play-arrow'
 import FastForward from 'material-ui/svg-icons/av/fast-forward'
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 import { menuItems } from '../menu-content'
 
@@ -68,16 +70,34 @@ function menuComponents(items, parentComponent) {
 class MainMenu extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      isModalOpen: false,
+    }
     this.insertCell = this.insertCell.bind(this)
     this.cellUp = this.cellUp.bind(this)
     this.cellDown = this.cellDown.bind(this)
     this.runCell = this.runCell.bind(this)
     this.deleteNotebook = this.deleteNotebook.bind(this)
     this.runAllCells = this.runAllCells.bind(this)
+    this.switchModal = this.switchModal.bind(this)
+    this.closeModalAndDeleteNotebook = this.closeModalAndDeleteNotebook.bind(this)
+  }
+
+  switchModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen,
+    })
+  }
+
+  closeModalAndDeleteNotebook() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen,
+    })
+    this.props.actions.deleteNotebook(this.props.title)
   }
 
   deleteNotebook(notebook) {
-    this.props.actions.deleteNotebook(notebook)
+    this.switchModal()
   }
 
   runAllCells() {
@@ -104,10 +124,27 @@ class MainMenu extends React.Component {
 
 
   render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onClick={this.switchModal}
+      />,
+      <FlatButton
+        label="Submit"
+        primary
+        onClick={this.closeModalAndDeleteNotebook}
+      />,
+    ];
     const mc = menuComponents(menuItems, this)
 
     return (
       <ToolbarGroup firstChild={this.props.firstChild}>
+        <Dialog
+          open={this.state.isModalOpen}
+          title="Are you sure you want to delete this file?"
+          actions={actions}
+        />
         <IconMenu
           style={{ fontSize: '12px' }}
           iconButtonElement={<IconButton><MenuIcon color={grey50} /></IconButton>}
