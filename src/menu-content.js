@@ -45,7 +45,6 @@ function getSavedNotebooks(elem) {
   if (autosaves.length) {
     const [autosave] = autosaves
     let { lastSaved } = JSON.parse(localStorage[autosave])
-    if (lastSaved !== undefined) lastSaved = prettyDate(formatDateString(lastSaved))
     lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
     const displayTitle = autosave.replace(AUTOSAVE, '')
     autosaveNBs = [

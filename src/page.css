@@ -546,6 +546,7 @@ div.declared-variables {
 /* for Github-flavored Markdown */
 table {
     display: block;
+    border-spacing: 0;
     overflow: auto;
     width: 100%;
 }
