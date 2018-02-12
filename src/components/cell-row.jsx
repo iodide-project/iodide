@@ -13,7 +13,7 @@ class CellRow extends React.Component {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     collapsedState: PropTypes.string,
     rowType: PropTypes.string,
-    action: PropTypes.shape({
+    actions: PropTypes.shape({
       setCellCollapsedState: PropTypes.func.isRequired,
     }).isRequired,
     collapseButtonLabel: PropTypes.string.isRequired,

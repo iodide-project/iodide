@@ -141,7 +141,7 @@ const handlers = [
 export default class CellOutput extends React.Component {
   static propTypes = {
     render: PropTypes.bool.isRequired,
-    valueToRender: PropTypes.any.isRequired,
+    valueToRender: PropTypes.any,
   }
   render() {
     if (!this.props.render) {

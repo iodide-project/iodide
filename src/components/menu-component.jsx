@@ -73,7 +73,7 @@ class MainMenu extends React.Component {
     title: PropTypes.string,
     pageMode: PropTypes.oneOf(['command', 'edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    action: PropTypes.shape({
+    actions: PropTypes.shape({
       changeMode: PropTypes.func.isRequired,
       runAllCells: PropTypes.func.isRequired,
       evaluateCell: PropTypes.func.isRequired,

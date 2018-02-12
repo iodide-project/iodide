@@ -20,9 +20,6 @@ class ExternalResourceCell extends React.Component {
   static propTypes = {
     value: PropTypes.array,
     cellId: PropTypes.number.isRequired,
-    action: PropTypes.shape({
-      bindActionCreators: PropTypes.func.isRequired,
-    }).isRequired,
   }
 
   outputComponent = () => {

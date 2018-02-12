@@ -12,10 +12,10 @@ class CellContainer extends React.Component {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
     cellClass: PropTypes.string,
-    children: PropTypes.element,
+    children: PropTypes.node,
     pageMode: PropTypes.oneOf(['command', 'edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    action: PropTypes.shape({
+    actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
     }).isRequired,
   }
@@ -47,6 +47,7 @@ function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
   return {
     cellId: cell.id,
+    selected: cell.selected,
     pageMode: state.mode,
     viewMode: state.viewMode,
   }
