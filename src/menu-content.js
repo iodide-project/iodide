@@ -244,7 +244,6 @@ menuItems.cell = {
     menuItems.changeCellTypeToMarkdown,
     menuItems.changeCellTypeToRaw,
     menuItems.changeCellTypeToExternal,
-    menuItems.changeCellTypeToDOM,
     menuItems.changeCellTypeToCSS,
   ],
 }
