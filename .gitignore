@@ -62,4 +62,7 @@ typings/
 # dotenv environment variables file
 .env
 ext_resources/
-build/
+
+# jetbrains IDE specifics
+.idea
+.DS_Store

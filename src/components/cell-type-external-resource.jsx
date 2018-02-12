@@ -8,6 +8,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
 import ErrorCircle from 'material-ui/svg-icons/alert/error'
 import UnloadedCircle from 'material-ui/svg-icons/content/remove'
+import PropTypes from 'prop-types';
 
 import TwoRowCell from './two-row-cell'
 import CellEditor from './cell-editor'
@@ -16,6 +17,14 @@ import actions from '../actions'
 import { getCellById } from '../notebook-utils'
 
 class ExternalResourceCell extends React.Component {
+  static propTypes = {
+    value: PropTypes.array,
+    cellId: PropTypes.number.isRequired,
+    action: PropTypes.shape({
+      bindActionCreators: PropTypes.func.isRequired,
+    }).isRequired,
+  }
+
   outputComponent = () => {
     if (this.props.value === undefined) return undefined
     const outs = this.props.value.filter(d => d.src !== '').map((d, i) => {

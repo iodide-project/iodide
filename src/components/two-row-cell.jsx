@@ -1,13 +1,29 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
 
 import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
-
 import { getCellById } from '../notebook-utils'
 
 
 export class TwoRowCellUnconnected extends React.Component {
+  static propTypes = {
+    cell: PropTypes.shape({
+      selected: PropTypes.bool.isRequired,
+      collapsePresentationViewInput: PropTypes.string,
+      collapsePresentationViewOutput: PropTypes.string,
+      collapseEditViewInput: PropTypes.string,
+      collapseEditViewOutput: PropTypes.string,
+    }).isRequired,
+    cellId: PropTypes.number.isRequired,
+    cellType: PropTypes.string,
+    pageMode: PropTypes.oneOf(['command', 'edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    row1: PropTypes.element,
+    row2: PropTypes.element,
+  }
+
   render() {
     const { cellId, cellType } = this.props
 
@@ -28,7 +44,7 @@ export class TwoRowCellUnconnected extends React.Component {
       collapseOutput = this.props.cell.collapseEditViewOutput
     }
     const collapseBoth = (collapseInput === 'COLLAPSED' &&
-            collapseOutput === 'COLLAPSED') ? 'collapse-both' : ''
+      collapseOutput === 'COLLAPSED') ? 'collapse-both' : ''
     const cellClass = ['cell-container', cellSelected,
       editorMode, cellType, collapseBoth].join(' ')
 
