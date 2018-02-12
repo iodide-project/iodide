@@ -1,4 +1,6 @@
 # The Iodide notebook
+[![Build Status](https://travis-ci.org/iodide-project/iodide.svg?branch=master)](https://travis-ci.org/iodide-project/iodide)
+
 
 ### early alpha - subject to breakage, changes, argument, refactors
 
