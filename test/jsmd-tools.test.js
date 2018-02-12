@@ -43,10 +43,6 @@ the cell below allows you to load external scripts
 %% resource
 https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js
  
- %%
-%%
-%% dom
-div#dom-cell-2
 %% js   
 // above this is a DOM cell, which we can also target
 spinCubeInTarget("#dom-cell-2")`
@@ -65,10 +61,10 @@ describe('jsmd parser Ex 1', ()=>{
   let cells = jsmdParsed.cells
   let parseWarnings = jsmdParsed.parseWarnings
   it('new cells should start with "\n%%" or "%%" at the start of the file. drop empty cells.', ()=> {
-    expect(cells.length).toEqual(8)
+    expect(cells.length).toEqual(7)
   })
   it('should have correct cell types', ()=> {
-    expect(cells.map(c => c.cellType)).toEqual(['meta','md','js','raw','md','resource','dom','js'])
+    expect(cells.map(c => c.cellType)).toEqual(['meta','md','js','raw','md','resource','js'])
   })
   it('should only have cell settings in the jsmdValidCellSettings list', ()=> {
     expect(cells.map(c => c.cellType)).toEqual(expect.arrayContaining(jsmdValidCellTypes))
@@ -237,7 +233,7 @@ describe('jsmd stringifier test case 4', ()=>{
   state.cells[0].content = 'foo'
   state.cells[0].collapseEditViewInput = 'COLLAPSED'
 
-  let cellTypes = ['markdown','external dependencies','dom','raw']
+  let cellTypes = ['markdown','external dependencies','raw']
   cellTypes.forEach(
     (cellType,i) => {
       state.cells.push(newCell(state.cells, cellType))
@@ -257,9 +253,6 @@ foo
 foo
 
 %% resource
-foo
-
-%% dom
 foo
 
 %% raw
