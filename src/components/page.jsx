@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
@@ -20,6 +21,18 @@ import actions from '../actions'
 const { AUTOSAVE } = settings.labels
 
 class Page extends React.Component {
+  static propTypes = {
+    mode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    actions: PropTypes.shape({
+      deleteNotebook: PropTypes.func.isRequired,
+      saveNotebook: PropTypes.func.isRequired,
+      changeMode: PropTypes.func.isRequired,
+    }).isRequired,
+    title: PropTypes.string,
+    cellIds: PropTypes.array,
+    cellTypes: PropTypes.array,
+  }
   constructor(props) {
     super(props)
     // this.props.actions.newNotebook()

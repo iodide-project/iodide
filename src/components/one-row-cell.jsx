@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -10,6 +11,13 @@ import { getCellById } from '../notebook-utils'
 
 
 class OneRowCell extends React.Component {
+  static propTypes = {
+    cellId: PropTypes.number.isRequired,
+    cellType: PropTypes.string,
+    pageMode: PropTypes.oneOf(['command', 'edit']),
+    children: PropTypes.element,
+    cellSelected: PropTypes.bool.isRequired,
+  }
   render() {
     const { cellId, cellType } = this.props
 
