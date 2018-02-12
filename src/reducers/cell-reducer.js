@@ -138,7 +138,9 @@ const cellReducer = (state = newNotebook(), action) => {
       const newState = Object.assign({}, state)
       let { userDefinedVariables } = newState
       const cells = newState.cells.slice()
-      const index = cells.findIndex(c => c.id === getSelectedCellId(state))
+      let { cellId } = action
+      if (cellId === undefined) { cellId = getSelectedCellId(state) }
+      const index = cells.findIndex(c => c.id === cellId)
       const thisCell = cells[index]
 
       if (thisCell.cellType === 'javascript') {

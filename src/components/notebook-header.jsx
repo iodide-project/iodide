@@ -86,6 +86,8 @@ class NotebookHeader extends React.Component {
             title={this.props.title}
             sidePaneMode={this.props.sidePaneMode}
             lastSaved={this.props.lastSaved}
+            cellIdList={this.props.cellIdList}
+            cellTypeList={this.props.cellTypeList}
           />
         </div>
         <div className="presentation-menu" style={{ display: (this.props.viewMode === 'presentation' ? 'block' : 'none') }} >
@@ -166,6 +168,8 @@ class EditorMenu extends React.Component {
             viewMode={this.props.viewMode}
             sidePaneMode={this.props.sidePaneMode}
             lastSaved={this.props.lastSaved}
+            cellIdList={this.props.cellIdList}
+            cellTypeList={this.props.cellTypeList}
           />
           <ToolbarGroup className="title-field">
             <Title
@@ -237,6 +241,8 @@ function mapStateToProps(state) {
     lastSaved: state.lastSaved,
     history: state.history,
     currentTitle: state.title,
+    cellIdList: state.cells.map(c => c.id),
+    cellTypeList: state.cells.map(c => c.cellType),
   }
 }
 
