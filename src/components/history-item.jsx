@@ -1,8 +1,18 @@
 import React from 'react'
 
 import CodeMirror from '@skidding/react-codemirror'
+import PropTypes from 'prop-types';
 
 class HistoryItem extends React.Component {
+  static propTypes = {
+    cell: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      content: PropTypes.string,
+      display: PropTypes.bool,
+      lastRan: PropTypes.string,
+    }).isRequired,
+  }
+
   render() {
     const options = {
       lineNumbers: true,

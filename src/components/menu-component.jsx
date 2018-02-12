@@ -16,6 +16,7 @@ import PlayButton from 'material-ui/svg-icons/av/play-arrow'
 import FastForward from 'material-ui/svg-icons/av/fast-forward'
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import PropTypes from 'prop-types';
 
 import { menuItems } from '../menu-content'
 
@@ -68,6 +69,21 @@ function menuComponents(items, parentComponent) {
 
 
 class MainMenu extends React.Component {
+  static propTypes = {
+    title: PropTypes.string,
+    pageMode: PropTypes.oneOf(['command', 'edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    action: PropTypes.shape({
+      changeMode: PropTypes.func.isRequired,
+      runAllCells: PropTypes.func.isRequired,
+      evaluateCell: PropTypes.func.isRequired,
+      insertCell: PropTypes.func.isRequired,
+      cellUp: PropTypes.func.isRequired,
+      cellDown: PropTypes.func.isRequired,
+    }).isRequired,
+    firstChild: PropTypes.bool,
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -144,7 +160,7 @@ class MainMenu extends React.Component {
           open={this.state.isDeleteNotebookDialogOpen}
           actions={deleteNotebookDialogOptions}
         >
-        Delete Notebook?
+          Delete Notebook?
         </Dialog>
         <IconMenu
           style={{ fontSize: '12px' }}
