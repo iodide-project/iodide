@@ -8,7 +8,6 @@ const jsmdCellTypeMap = new Map([
   ['markdown', 'markdown'],
   ['external', 'external dependencies'],
   ['resource', 'external dependencies'],
-  ['dom', 'dom'],
   ['raw', 'raw'],
 ])
 

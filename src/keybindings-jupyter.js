@@ -80,11 +80,6 @@ const CSS_MODE = [['c'], () => {
 },
 ]
 
-const DOM_MODE = [['d'], () => {
-  if (isCommandMode()) dispatcher.changeCellType('dom')
-},
-]
-
 const SAVE_NOTEBOOK = [['ctrl+s', 'meta+s'], (e) => {
   if (e.preventDefault) {
     e.preventDefault()
@@ -194,7 +189,6 @@ jupyterKeybindings.push(MARKDOWN_MODE)
 jupyterKeybindings.push(EXTERNAL_DEPENDENCIES_MODE)
 jupyterKeybindings.push(RAW_MODE)
 jupyterKeybindings.push(CSS_MODE)
-jupyterKeybindings.push(DOM_MODE)
 jupyterKeybindings.push(SELECT_UP)
 jupyterKeybindings.push(SELECT_DOWN)
 jupyterKeybindings.push(ADD_CELL_ABOVE)
