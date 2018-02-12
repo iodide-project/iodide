@@ -1,6 +1,7 @@
 /* Output handlers */
 
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import _ from 'lodash'
 import JSONTree from 'react-json-tree'
@@ -138,6 +139,10 @@ const handlers = [
 ]
 
 export default class CellOutput extends React.Component {
+  static propTypes = {
+    render: PropTypes.bool.isRequired,
+    valueToRender: PropTypes.string,
+  }
   render() {
     if (!this.props.render) {
       return <div className="empty-resultset" />
