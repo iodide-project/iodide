@@ -1,4 +1,4 @@
-Short summary of the bug. Please include the IODIDE version number where you found the bug
+Short summary of the bug. Please include the IODIDE version number where you found the bug - if you are just running locally (building for dev or prod) you can put MASTER
 
 ### What I Did
 
