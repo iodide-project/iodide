@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
@@ -10,6 +11,10 @@ import UnloadedCircle from 'material-ui/svg-icons/content/remove'
 // this is merely a presentational component, and as such can be passed
 // all the data it needs.
 export default class ExternalResourceOutput extends React.Component {
+  static propTypes = {
+    value: PropTypes.array,
+  }
+
   render() {
     if (this.props.value === undefined) return <div />
 

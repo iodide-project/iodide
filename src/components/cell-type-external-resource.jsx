@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 
 import TwoRowCell from './two-row-cell'
 import CellEditor from './cell-editor'
@@ -12,7 +11,7 @@ import { getCellById } from '../notebook-utils'
 export class ExternalResourceCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
-    value: PropTypes.array.isRequired,
+    value: PropTypes.array,
   }
 
   render() {
