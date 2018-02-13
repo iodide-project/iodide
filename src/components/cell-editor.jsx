@@ -34,24 +34,25 @@ class CellEditor extends React.Component {
       updateInputContent: PropTypes.func.isRequired,
     }).isRequired,
     inputRef: PropTypes.func,
-    // onContainerClick: PropTypes.func.isRequired,
-    // containerStyle: PropTypes.string,
+    onContainerClick: PropTypes.func,
+    containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
   }
 
   constructor(props) {
     super(props)
     // default editor options are for JS
-    this.editorOptions = Object.assign({
-      mode: this.props.cellType,
-      lineWrapping: false,
-      matchBrackets: true,
-      autoCloseBrackets: true,
-      theme: 'eclipse',
-      autoRefresh: true,
-      lineNumbers: true,
-      readOnly: this.props.viewMode === 'presentation',
-    }, props.editorOptions)
+    // this.editorOptions = Object.assign({
+    //   mode: this.props.cellType,
+    //   lineWrapping: false,
+    //   matchBrackets: true,
+    //   autoCloseBrackets: true,
+    //   theme: 'eclipse',
+    //   autoRefresh: true,
+    //   lineNumbers: true,
+    //   comment: this.props.cellType === 'javascript',
+    //   readOnly: this.props.viewMode === 'presentation',
+    // }, props.editorOptions)
     // explicitly bind "this" for all methods in constructors
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
@@ -105,16 +106,28 @@ class CellEditor extends React.Component {
   }
 
   render() {
+    const editorOptions = Object.assign({
+      mode: this.props.cellType,
+      lineWrapping: false,
+      matchBrackets: true,
+      autoCloseBrackets: true,
+      theme: 'eclipse',
+      autoRefresh: true,
+      lineNumbers: true,
+      comment: this.props.cellType === 'javascript',
+      readOnly: this.props.viewMode === 'presentation',
+    }, this.props.editorOptions)
+
     return (
       <div
         className="editor"
         // onClick={this.props.onContainerClick}
-        // style={this.props.containerStyle}
+        style={this.props.containerStyle}
       >
         <CodeMirror
           ref={this.storeEditorElementRef}
           value={this.props.content}
-          options={this.editorOptions}
+          options={editorOptions}
           onChange={this.updateInputContent}
           onFocusChange={this.handleFocusChange}
         />

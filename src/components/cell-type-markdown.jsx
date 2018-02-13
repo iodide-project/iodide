@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 
-import TwoRowCell from './two-row-cell'
+// import TwoRowCell from './two-row-cell'
+import OneRowCell from './one-row-cell'
+
 import CellEditor from './cell-editor'
 
 import actions from '../actions'
@@ -61,11 +63,17 @@ export class MarkdownCellUnconnected extends React.Component {
       dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
     />)
 
-    return (<TwoRowCell
-      cellId={this.props.cellId}
-      row1={row1}
-      row2={row2}
-    />)
+    // return (<TwoRowCell
+    //   cellId={this.props.cellId}
+    //   row1={row1}
+    //   row2={row2}
+    // />)
+    return (
+      <OneRowCell cellId={this.props.cellId}>
+        {row1}
+        {row2}
+      </OneRowCell>
+    )
   }
 }
 

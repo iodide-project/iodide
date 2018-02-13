@@ -92,11 +92,28 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'CHANGE_DOM_ELEMENT_ID':
       return newStateWithSelectedCellPropertySet(state, 'domElementID', action.elemID)
 
-    case 'CHANGE_CELL_TYPE':
+    case 'CHANGE_CELL_TYPE': {
+      // create a new cell of the given type to get the defaults that
+      // need to be applied to the cell being changed
+      const {
+        collapseEditViewInput,
+        collapsePresentationViewInput,
+        collapseEditViewOutput,
+        collapsePresentationViewOutput,
+      } = newCell(state.cells, action.cellType)
       return newStateWithSelectedCellPropsAssigned(
         state,
-        { cellType: action.cellType, value: undefined, rendered: false },
+        {
+          cellType: action.cellType,
+          value: undefined,
+          rendered: false,
+          collapseEditViewInput,
+          collapsePresentationViewInput,
+          collapseEditViewOutput,
+          collapsePresentationViewOutput,
+        },
       )
+    }
     // return newStateWithSelectedCellPropertiesSet(state,
     //   ['cellType','value','rendered'],
     //   [action.cellType,undefined,false])

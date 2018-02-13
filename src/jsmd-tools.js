@@ -1,7 +1,7 @@
 /* global IODIDE_JS_PATH IODIDE_CSS_PATH IODIDE_VERSION */
 
 import _ from 'lodash'
-import { newNotebook } from './state-prototypes'
+import { newNotebook, blankState, newCell } from './state-prototypes'
 import htmlTemplate from './html-template'
 
 const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource']
@@ -11,6 +11,30 @@ const jsmdValidCellSettings = [
   'collapseEditViewOutput',
   'collapsePresentationViewInput',
   'collapsePresentationViewOutput',
+]
+
+const jsmdCellTypeMap = new Map([
+  ['js', 'javascript'],
+  ['javascript', 'javascript'],
+  ['md', 'markdown'],
+  ['markdown', 'markdown'],
+  ['external', 'external dependencies'],
+  ['resource', 'external dependencies'],
+  ['dom', 'dom'],
+  ['raw', 'raw'],
+])
+
+const cellTypeToJsmdMap = new Map([
+  ['javascript', 'js'],
+  ['markdown', 'md'],
+  ['external dependencies', 'resource'],
+  ['dom', 'dom'],
+  ['raw', 'raw'],
+])
+
+const jsmdValidNotebookSettings = [
+  'title',
+  'viewMode',
 ]
 
 function parseCellString(str, i, parseWarnings) {
@@ -111,29 +135,50 @@ function parseJsmd(jsmd) {
   return { cells, parseWarnings }
 }
 
-const cellTypeToJsmdMap = new Map([
-  ['javascript', 'js'],
-  ['markdown', 'md'],
-  ['external dependencies', 'resource'],
-  ['raw', 'raw'],
-])
+function stateFromJsmd(jsmdString) {
+  const parsed = parseJsmd(jsmdString)
+  let { cells } = parsed
+  const { parseWarnings } = parsed
+  if (parseWarnings.length > 0) {
+    console.warn('JSMD parse errors', parseWarnings)
+  }
+  // initialize a blank notebook
+  const initialState = blankState()
+  // add top-level meta settings if any exist
+  const meta = cells.filter(c => c.cellType === 'meta')[0]
+  if (meta) {
+    Object.assign(initialState, meta.content)
+  }
 
-const jsmdValidNotebookSettings = [
-  'title',
-  'viewMode',
-]
+  cells = cells
+    .filter(c => c.cellType !== 'meta')
+    .forEach((c) => {
+      const cell = Object.assign(
+        newCell(initialState.cells, jsmdCellTypeMap.get(c.cellType)),
+        c.settings,
+        { content: c.content },
+      )
+      initialState.cells.push(cell)
+    })
+  // set cell 0  to be the selected cell
+  initialState.cells[0].selected = true
+  return initialState
+}
+
 
 function stringifyStateToJsmd(state) {
   const defaultState = newNotebook()
-  const defaultCell = defaultState.cells[0]
+  let defaultCellPrototype = defaultState.cells[0]
   // serialize cells. most of the work here is seeing if cell properties
-  // are in the jsmd valid list, and seeing if they are non-default
+  // are in the jsmd valid list, and seeing if they are not default
+  // values for this cell type
   const cellsStr = state.cells.map((cell) => {
     const jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
+    defaultCellPrototype = newCell(defaultState.cells, cell.cellType)
     const cellSettings = {}
     for (const setting of jsmdValidCellSettings) {
       if (Object.prototype.hasOwnProperty.call(cell, setting)
-        && cell[setting] !== defaultCell[setting]) {
+        && cell[setting] !== defaultCellPrototype[setting]) {
         cellSettings[setting] = cell[setting]
       }
     }
@@ -170,6 +215,7 @@ function exportJsmdBundle(state) {
 
 export {
   parseJsmd,
+  stateFromJsmd,
   jsmdValidCellTypes,
   jsmdValidCellSettings,
   stringifyStateToJsmd,
