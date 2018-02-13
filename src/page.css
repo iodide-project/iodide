@@ -662,10 +662,18 @@ table tr:nth-child(2n) {
 }
 
 .dependency-src {
-  margin-left: 10px;
-  font-size: 12px;
-  font-style: italic;
+	font-size:13px;
+	margin: 3px 10px 3px 8px;
 
+}
+
+.dependency-src a {
+	color: black;	
+	font-weight:normal
+}
+
+.dependency-src a:hover {
+	text-decoration: underline
 }
 
 .dependency-status-explanation {

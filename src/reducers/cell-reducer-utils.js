@@ -115,7 +115,15 @@ function addExternalDependency(dep) {
     outElem.dependencyType = depType
     return outElem
   }
+
+  const initialWindow = Object.keys(window)
+
   head.appendChild(elem)
+
+  const newWindow = Object.keys(window)
+
+  outElem.variables = newWindow.filter(v => !initialWindow.includes(v))
+
   outElem.src = src
   outElem.dependencyType = depType
 
