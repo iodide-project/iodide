@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 class HistoryItem extends React.Component {
   static propTypes = {
     cell: PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      cellID: PropTypes.number.isRequired,
       content: PropTypes.string,
       display: PropTypes.bool,
-      lastRan: PropTypes.string,
+      lastRan: PropTypes.instanceOf(Date),
     }).isRequired,
   }
 
@@ -24,11 +24,10 @@ class HistoryItem extends React.Component {
       ref="editor" // eslint-disable-line
       value={this.props.cell.content}
       options={options}
-    />)
-
+    />)    
     return (
       <div
-        id={`cell-${this.props.cell.id}`}
+        id={`cell-${this.props.cell.cellID}`}
         className={`cell-container ${this.props.display ? '' : 'hidden-cell'}`}
       >
         <div className="cell history-cell">
