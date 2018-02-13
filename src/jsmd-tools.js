@@ -166,15 +166,17 @@ function stateFromJsmd(jsmdString) {
 
 function stringifyStateToJsmd(state) {
   const defaultState = newNotebook()
-  const defaultCell = defaultState.cells[0]
+  let defaultCellPrototype = defaultState.cells[0]
   // serialize cells. most of the work here is seeing if cell properties
-  // are in the jsmd valid list, and seeing if they are non-default
+  // are in the jsmd valid list, and seeing if they are not default
+  // values for this cell type
   const cellsStr = state.cells.map((cell) => {
     const jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
+    defaultCellPrototype = newCell(defaultState.cells, cell.cellType)
     const cellSettings = {}
     for (const setting of jsmdValidCellSettings) {
       if (Object.prototype.hasOwnProperty.call(cell, setting)
-        && cell[setting] !== defaultCell[setting]) {
+        && cell[setting] !== defaultCellPrototype[setting]) {
         cellSettings[setting] = cell[setting]
       }
     }

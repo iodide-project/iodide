@@ -42,17 +42,17 @@ class CellEditor extends React.Component {
   constructor(props) {
     super(props)
     // default editor options are for JS
-    this.editorOptions = Object.assign({
-      mode: this.props.cellType,
-      lineWrapping: false,
-      matchBrackets: true,
-      autoCloseBrackets: true,
-      theme: 'eclipse',
-      autoRefresh: true,
-      lineNumbers: true,
-      comment: this.props.cellType === 'javascript',
-      readOnly: this.props.viewMode === 'presentation',
-    }, props.editorOptions)
+    // this.editorOptions = Object.assign({
+    //   mode: this.props.cellType,
+    //   lineWrapping: false,
+    //   matchBrackets: true,
+    //   autoCloseBrackets: true,
+    //   theme: 'eclipse',
+    //   autoRefresh: true,
+    //   lineNumbers: true,
+    //   comment: this.props.cellType === 'javascript',
+    //   readOnly: this.props.viewMode === 'presentation',
+    // }, props.editorOptions)
     // explicitly bind "this" for all methods in constructors
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
@@ -106,6 +106,18 @@ class CellEditor extends React.Component {
   }
 
   render() {
+    const editorOptions = Object.assign({
+      mode: this.props.cellType,
+      lineWrapping: false,
+      matchBrackets: true,
+      autoCloseBrackets: true,
+      theme: 'eclipse',
+      autoRefresh: true,
+      lineNumbers: true,
+      comment: this.props.cellType === 'javascript',
+      readOnly: this.props.viewMode === 'presentation',
+    }, this.props.editorOptions)
+
     return (
       <div
         className="editor"
@@ -115,7 +127,7 @@ class CellEditor extends React.Component {
         <CodeMirror
           ref={this.storeEditorElementRef}
           value={this.props.content}
-          options={this.editorOptions}
+          options={editorOptions}
           onChange={this.updateInputContent}
           onFocusChange={this.handleFocusChange}
         />
