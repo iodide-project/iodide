@@ -3,44 +3,77 @@
   "title": "What a web notebook looks like"
 }
 
-%% md
+%% md {"collapsePresentationViewInput":"EXPANDED","collapsePresentationViewOutput":"EXPANDED"}
 # Welcome to Iodide!
 
-Let's get started! We'll start out right away with some pointers on how to navigate within the notebook and run cells.
+Let's get started! You can just start trying things out, or you can follow the steps described below to get a quick introduction. Just read along and click or enter keystrokes when instucted.
 
-If you've just landed on this page and haven't yet clicked on anything, you should be in `command mode`, and the top cell should be selected -- but just to make sure, press `esc`. Pressing `esc` at any time will return you to command mode.
+The first thing you'll need to know is how to navigate within the notebook and run cells.
 
-Now that you're in `command mode`, try pressing the `up` and `down` arrow keys a few times. As you press up and down, the currently selected cell will move up and down. You can tell which cell is currently selected because it has a darker outline than non-selected cells.
+If you've just landed on this page and haven't yet clicked on anything, you should be in _command mode_, and the top cell should be selected -- but just to make sure, press `esc`. Pressing `esc` at any time will return you to command mode.
 
-The cell containing this text is a `markdown cell`, but it hasn't yet been evaluated; press `ctrl+enter` to evaluate it now.
+Now that you're in command mode, try pressing the `up` and `down` arrow keys a few times. As you press up and down, the you'll select the next or previous cell. You can tell which cell is currently selected because it has a darker outline than non-selected cells.
 
-If you pressed `ctrl+enter` with the cell selected, it will have re-rendered as presentational text.
+The cell containing this text is a _markdown cell_, but it hasn't yet been evaluated. Select this cell by moving to it with your keyboard (press the `up` key until it this cell is selected) or clicking on it.
 
-Now press `enter`. The plain markdown will reappear. Pressing `enter` in command mode will allow you to edit the currently selected cell.
+Once this cell is selected, press `ctrl+enter` to evaluate it.
+
+%% md
+If you pressed `ctrl+enter` with the cell above selected, that cell will have re-rendered as presentational text, and it will still be selected.
+
+Without changing your selection press `enter`. The plain markdown will reappear. Pressing `enter` in command mode will allow you to edit the currently selected cell.
+
+Now, evaluate the cell above again and advance to this cell by pressing `shift+enter`.
 
 If you've used Jupyter, these keyboard shortcuts should be familiar -- we've tried to follow Jupyter's keyboard navigation closely so that people familiar with Jupyter will be able to get up and running quickly.
 
-To evaluate this cell and advance to the next, press `shift+enter`
+Of course, you can also navigate with your mouse. To edit a rendered markdown cell, you can double click the cell. Go head and double click the rendered markdown cell above. Try editing the cell and press `shift+enter` to render once more.
 
-Of course, you can also navigate with your mouse. To edit a rendered `markdown cell`, you can double click the cell. To edit any other cell, just click on the text editor within that cell.
+To edit any other cell, just click on the text editor within that cell.
 
 %% js
-// this is a JS code cell. We can use normal JS and browser APIs.
-// try `ctrl+enter` a few times to evaluate without advancing
+// Now click in this JS code cell.
 
-// try to mke a change
+// We can use any normally available browser API. In this little snippet,
+// we produce a matrix of random numbers using the built-in Math API
 
+// Press `ctrl+enter` a few times to evaluate without advancing.
+
+// Now to try making a change to the code below, and evaluate
+// your changes.
+
+tableSize = 1000
 range = []
-for (let i=0; i<10; i++){range.push(i)}
-A = range.map( (x,i) => range.map( (y,j) => (Math.random()+i-.5)))
+for (let i=0; i<tableSize; i++){range.push(i)}
+A = range.map( (x,i) => range.map( (y,j) => (Math.random() + i + j )))
 
-%% md
-## Markdown cell
+%% md {"collapsePresentationViewInput":"EXPANDED","collapsePresentationViewOutput":"EXPANDED"}
+The cell below this is an _external resource cell_, which allows you to load external scripts and css file. It can be evaluated just like any other cell with `ctrl+enter` or `shift+enter`.
 
-This is written in a **Markdown cell**, which supports normal _MD formating)_
+When a resource is successfully loaded, you will see a green checkmark. If a resource fails to load, you'll see a red exclamation point.
 
+Let's go ahead and load the library "three.js", which we'll use a little farther below. Let's also try to load a fake resource to see what an error looks like.
 
-Markdown cells also support LaTeX
+%% resource
+https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js
+https://fake.url.com/that/will/give/an/error.js
+
+%% raw
+This, for whatever it's worth, is a raw cell. It's available in Jupyter, so we have it too. It's not clear what the use case is, but it's here in case you want it.
+Notice that raw cells don't wrap (unlike MD cell editors)
+
+%% md {"collapsePresentationViewInput":"EXPANDED","collapsePresentationViewOutput":"EXPANDED"}
+Markdown cells support the full range of normal markdown formatting, like _multiple_ **levels** of ***emphasis***,
+# headings 
+## of different
+### sizes
+
+```
+and multiline raw text blocks
+    (that are great for code snippets)
+```
+
+Markdown cells also support LaTeX, like this:
 
 $$
 \left[\begin{array}{c}
@@ -62,19 +95,19 @@ Y_{t,i}-\rho_{\omega}\omega_{t-1,i}^{2}+\epsilon_{Y}
 \end{array}\right]
 $$
 
-%% raw
-this is a raw cell. it's available in jupyter, so we have it too. not clear what the use case is, but it's here in case you want it.
-notice that raw cells don't wrap (unlike MD cell editors)
+You can also use in-line html, which is very handy for creating DOM elements within the flow of a narrative that you can then manipulate with. This is great for adding plots and figures.
 
-%% md
-## External resource cell
-the cell below allows you to load external scripts
+Let's create a `div` right below:
 
-%% resource
-https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js
+<div id="targetDiv"></div>
 
-%% js
-// now let's define a JS function that does something cool. let's also add a really long comment so that we can make sure horizontal scrolling works as desired.
+...in a moment, we'll put something fancy right above this line.
+
+Go ahead and evaluate this cell and move to the next one
+
+%% js {"collapseEditViewInput":"SCROLLABLE"}
+// We'll now define a real JS function that does something cool. We'll also letadd a really long comment so that we can make sure horizontal scrolling works as desired.
+// Go ahead and evaluate this cell
 function spinCubeInTarget(targetSelector) {
     //'use strict';
     var width = 400, height = 300
@@ -102,11 +135,11 @@ function spinCubeInTarget(targetSelector) {
     render();
 }
 
-%% md
-### Demo of targeting elements within a markdown cell
-Markdown supports inline HTML, so we can put a div in the flow of our narrative, and target that div with normal browser APIs. Below this paragraph is a div with id="targetDiv":
-<div id="targetDiv"></div>
-We'll target that div with the THREE.js example we defined above.
+spinCubeInTarget("#targetDiv")
+
+%% md {"collapsePresentationViewInput":"EXPANDED","collapsePresentationViewOutput":"EXPANDED"}
+If you followed all the steps described, you should now see a cube spinning in the markdown cell above!
+
+Note that if you make any changes to that markdown cell, you will have to re-run the function `spinCubeInTarget("#targetDiv")`, because each time you change a markdown cell it's contents have to be regenerated, which will overwrite changes you've made to it with code.
 
 %% js
-spinCubeInTarget("#targetDiv")
