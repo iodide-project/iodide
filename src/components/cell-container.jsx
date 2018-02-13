@@ -1,13 +1,25 @@
-
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import actions from '../actions'
 import { getCellById } from '../notebook-utils'
+import PropTypes from 'prop-types';
 
 
 class CellContainer extends React.Component {
+  static propTypes = {
+    selected: PropTypes.bool.isRequired,
+    cellId: PropTypes.number.isRequired,
+    cellClass: PropTypes.string,
+    children: PropTypes.node,
+    pageMode: PropTypes.oneOf(['command', 'edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    actions: PropTypes.shape({
+      selectCell: PropTypes.func.isRequired,
+    }).isRequired,
+  }
+
   handleCellClick = () => {
     if (this.props.viewMode === 'editor') {
       const scrollToCell = false
@@ -35,6 +47,7 @@ function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
   return {
     cellId: cell.id,
+    selected: cell.selected,
     pageMode: state.mode,
     viewMode: state.viewMode,
   }

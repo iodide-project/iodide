@@ -45,7 +45,6 @@ function getSavedNotebooks(elem) {
   if (autosaves.length) {
     const [autosave] = autosaves
     let { lastSaved } = JSON.parse(localStorage[autosave])
-    if (lastSaved !== undefined) lastSaved = prettyDate(formatDateString(lastSaved))
     lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
     const displayTitle = autosave.replace(AUTOSAVE, '')
     autosaveNBs = [
@@ -220,13 +219,6 @@ menuItems.changeCellTypeToExternal = {
     this.props.actions.changeCellType('external dependencies')
   },
 }
-menuItems.changeCellTypeToDOM = {
-  primaryText: 'DOM',
-  secondaryText: 'D',
-  callback() {
-    this.props.actions.changeCellType('dom')
-  },
-}
 
 menuItems.changeCellTypeToCSS = {
   primaryText: 'CSS',
@@ -252,7 +244,6 @@ menuItems.cell = {
     menuItems.changeCellTypeToMarkdown,
     menuItems.changeCellTypeToRaw,
     menuItems.changeCellTypeToExternal,
-    menuItems.changeCellTypeToDOM,
     menuItems.changeCellTypeToCSS,
   ],
 }

@@ -4,8 +4,22 @@ import { bindActionCreators } from 'redux'
 
 import { getCellById } from '../notebook-utils'
 import actions from '../actions'
+import PropTypes from 'prop-types';
 
 class CellRow extends React.Component {
+  static propTypes = {
+    executionString: PropTypes.string,
+    pageMode: PropTypes.oneOf(['command', 'edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    collapsedState: PropTypes.string,
+    rowType: PropTypes.string,
+    actions: PropTypes.shape({
+      setCellCollapsedState: PropTypes.func.isRequired,
+    }).isRequired,
+    collapseButtonLabel: PropTypes.string.isRequired,
+    children: PropTypes.element,
+  }
+
   constructor(props) {
     super(props)
     // explicitly bind "this" for all methods in constructors
@@ -17,9 +31,9 @@ class CellRow extends React.Component {
     // note: entering editMode is only allowed from editorView
     // thus, we only need to check the editorView collapsed state
     if (this.props.viewMode === 'editor' &&
-                this.props.pageMode === 'edit' &&
-                this.props.rowType === 'input' &&
-                this.props.collapsedState === 'COLLAPSED') {
+      this.props.pageMode === 'edit' &&
+      this.props.rowType === 'input' &&
+      this.props.collapsedState === 'COLLAPSED') {
       this.props.actions.setCellCollapsedState(
         this.props.viewMode,
         'input',

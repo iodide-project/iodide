@@ -1,14 +1,16 @@
-### early alpha - subject to breakage, changes, argument, refactors
-
+[![Build Status](https://travis-ci.org/iodide-project/iodide.svg?branch=master)](https://travis-ci.org/iodide-project/iodide)
 # The Iodide notebook
 
-[see our slide deck](https://docs.google.com/presentation/d/1yyMw2in7He4XNZtrowLU_J78wKRyFn2UAw9YRJjBsh4/edit#slide=id.p)
 
-This repository began as an early answer to the question: __can we do scientific computing without ever leaving the browser?__ We are building a modern, browser-first notebook-style IDE that capitalizes on web technologies for interative / literate / inquisitive computing. The notebook borrows inspiration from RStudio, Jupyter, Carbide, and many other computing environments.
+### early alpha - subject to breakage, changes, argument, refactors
+
+_Try it in your browser [right now](https://iodide-project.github.io/iodide/)!_
+
+The Iodide notebook seeks to answer one question: __can we do scientific computing without ever leaving the browser?__ We are building a modern, browser-first notebook-style IDE that utlilizes web technologies for interative / literate / inquisitive computing. The notebook borrows inspiration from RStudio, Jupyter, Carbide, and many other computing environments.
 
 ![](https://media.giphy.com/media/xT0xeJdYMwA8GvEdCE/giphy.gif)
 
-Having a scientific computing platform that solely uses web technologies has several big benefits. First, the DOM is the best presentation layer in the world, but most scientific computing platforms treat it as an afterthought. Having your analyses as close to the DOM as you can get solves the "last mile" problem common with other platforms. Second, thanks to advances in Javascript and other wonderful technologies like WebAssembly, JS is fast now. JS's main challenge is a lack of decent libraries for scientific computing like NumPy, SciPy, and Pandas for Python, which is surmountable. Finally, JS syntax is not ergonomic for scientific computing tasks. But thanks to transpilation, we can extend the JS syntax just enough for matrix notation, broadcasting, and other basic scientific computing tasks. Finally, we're at a point in computing history where many scientists know at least a little javascript, and many programmers are very well-versed, so we do not face a labor issue for building tools & activating the community.
+Having a scientific computing platform that solely uses web technologies has several big benefits. First, the DOM is the best presentation layer in the world, but most scientific computing platforms treat it as an afterthought. Having your analyses adjacent to the DOM solves the "last mile" problem common with other platforms. Second, thanks to advances in Javascript and other wonderful technologies like WebAssembly, JS is fast now. JS's main challenge is a lack of decent libraries for scientific computing like NumPy, SciPy, and Pandas for Python, which is surmountable. Finally, JS syntax is not ergonomic for scientific computing tasks. But thanks to transpilation, we can extend the JS syntax just enough for matrix notation, broadcasting, and other basic scientific computing tasks. Finally, we're at a point in computing history where many scientists know at least a little javascript, and many programmers are very well-versed, so we do not face a labor issue for building tools & activating the community.
 
 That's a lot to consider. So we decided to focus on building a Javascript-powered IDE to explore all of these ideas. By focusing on the notebook, we can begin to piece together the other bare necessities needed for a robust browser-based scientific computing platform while providing immediate value to data analysts.
 
@@ -36,7 +38,7 @@ The files built in prod mode have resource paths set to fixed web addresses, not
 
 ## Testing
 
-Run `npm test` to run the test suite.
+Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.
 
 # Using the notebook
 
@@ -49,6 +51,8 @@ We've modeled much of the experience on Jupyter as our jumping-off point, with a
 # Contributing
 
 Please join us! The notebook is written using React+Redux, which, if you haven't used them, are pretty delightful -- there's some learning curve, but even for non-professional webdevs the curve is not too steep, and the mental model is clean and powerful.
+
+See our ["How to Contribute" page](CONTRIBUTING.md) for more information.
 
 We especially need help with:
 
@@ -97,3 +101,7 @@ There are a bunch of features that we know we want to build to make this compell
         - hints, autocomplete (for latex, this includes special character insertion)
         - Lyx-like wysiwyg preview for equation editing
 - UI for importing local data from file (with drag and drop? Needed for XSS reasons, lack of filesystem access reasons)
+
+## License
+
+The __IODIDE__ code is shared under the terms of the [Mozilla Public License v2.0](http://www.mozilla.org/MPL/2.0/). See the `LICENSE` file at the root of the repository.

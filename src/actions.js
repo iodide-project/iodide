@@ -64,9 +64,10 @@ const actions = {
       cellType,
     }
   },
-  evaluateCell() {
+  evaluateCell(cellId) {
     return {
       type: 'EVALUATE_CELL',
+      cellId,
     }
   },
   runAllCells() {

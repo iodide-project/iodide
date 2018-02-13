@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types';
 
 /* eslint-disable */
 import CodeMirror from '@skidding/react-codemirror'
@@ -19,6 +20,25 @@ import { getCellById } from '../notebook-utils'
 import actions from '../actions'
 
 class CellEditor extends React.Component {
+  static propTypes = {
+    // readOnly: PropTypes.bool.isRequired,
+    cellSelected: PropTypes.bool.isRequired,
+    cellId: PropTypes.number.isRequired,
+    cellType: PropTypes.string,
+    content: PropTypes.string,
+    pageMode: PropTypes.oneOf(['command', 'edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    actions: PropTypes.shape({
+      selectCell: PropTypes.func.isRequired,
+      changeMode: PropTypes.func.isRequired,
+      updateInputContent: PropTypes.func.isRequired,
+    }).isRequired,
+    inputRef: PropTypes.func,
+    // onContainerClick: PropTypes.func.isRequired,
+    // containerStyle: PropTypes.string,
+    editorOptions: PropTypes.object,
+  }
+
   constructor(props) {
     super(props)
     // default editor options are for JS
@@ -75,7 +95,9 @@ class CellEditor extends React.Component {
   storeEditorElementRef(editorElt) {
     this.editor = editorElt
     // pass this cm instance ref up to the parent cell with this callback
-    if (this.props.inputRef) { this.props.inputRef(editorElt) }
+    if (this.props.inputRef) {
+      this.props.inputRef(editorElt)
+    }
   }
 
   updateInputContent(content) {
@@ -86,8 +108,8 @@ class CellEditor extends React.Component {
     return (
       <div
         className="editor"
-        onClick={this.props.onContainerClick}
-        style={this.props.containerStyle}
+        // onClick={this.props.onContainerClick}
+        // style={this.props.containerStyle}
       >
         <CodeMirror
           ref={this.storeEditorElementRef}
@@ -106,7 +128,7 @@ function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
   return {
-    readOnly: ownProps.readOnly,
+    // readOnly: ownProps.readOnly,
     pageMode: state.mode,
     viewMode: state.viewMode,
     cellSelected: cell.selected,

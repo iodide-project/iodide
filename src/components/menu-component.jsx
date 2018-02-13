@@ -14,6 +14,9 @@ import UpArrow from 'material-ui/svg-icons/navigation/arrow-upward'
 import DownArrow from 'material-ui/svg-icons/navigation/arrow-downward'
 import PlayButton from 'material-ui/svg-icons/av/play-arrow'
 import FastForward from 'material-ui/svg-icons/av/fast-forward'
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import PropTypes from 'prop-types';
 
 import { menuItems } from '../menu-content'
 
@@ -66,23 +69,72 @@ function menuComponents(items, parentComponent) {
 
 
 class MainMenu extends React.Component {
+  static propTypes = {
+    title: PropTypes.string,
+    pageMode: PropTypes.oneOf(['command', 'edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    actions: PropTypes.shape({
+      changeMode: PropTypes.func.isRequired,
+      runAllCells: PropTypes.func.isRequired,
+      evaluateCell: PropTypes.func.isRequired,
+      insertCell: PropTypes.func.isRequired,
+      cellUp: PropTypes.func.isRequired,
+      cellDown: PropTypes.func.isRequired,
+    }).isRequired,
+    firstChild: PropTypes.bool,
+  }
+
   constructor(props) {
     super(props)
+    this.state = {
+      isDeleteNotebookDialogOpen: false,
+    }
     this.insertCell = this.insertCell.bind(this)
     this.cellUp = this.cellUp.bind(this)
     this.cellDown = this.cellDown.bind(this)
     this.runCell = this.runCell.bind(this)
     this.deleteNotebook = this.deleteNotebook.bind(this)
     this.runAllCells = this.runAllCells.bind(this)
+    this.switchDeleteNotebookDialog = this.switchDeleteNotebookDialog.bind(this)
+    this.closeDialogAndDeleteNotebook = this.closeDialogAndDeleteNotebook.bind(this)
   }
 
-  deleteNotebook(notebook) {
-    this.props.actions.deleteNotebook(notebook)
+  switchDeleteNotebookDialog() {
+    this.setState({
+      isDeleteNotebookDialogOpen: !this.state.isDeleteNotebookDialogOpen,
+    })
+  }
+
+  closeDialogAndDeleteNotebook() {
+    this.setState({
+      isDeleteNotebookDialogOpen: !this.state.isDeleteNotebookDialogOpen,
+    })
+    this.props.actions.deleteNotebook(this.props.title)
+  }
+
+  deleteNotebook() {
+    this.switchDeleteNotebookDialog()
   }
 
   runAllCells() {
-    this.props.actions.runAllCells()
-    if (this.props.pageMode !== 'command') this.props.actions.changeMode('command')
+    // first evaluate all MD and dom cells, b/c they might include dom elts targeted by other cells
+    this.props.cellIdList.forEach((cellId, i) => {
+      if (this.props.cellTypeList[i] === 'markdown' ||
+          this.props.cellTypeList[i] === 'dom') {
+        this.props.actions.evaluateCell(cellId)
+      }
+    })
+    window.setTimeout(
+      () => {
+        this.props.cellIdList.forEach((cellId, i) => {
+          if (this.props.cellTypeList[i] !== 'markdown' &&
+              this.props.cellTypeList[i] !== 'dom') {
+            this.props.actions.evaluateCell(cellId)
+          }
+        })
+      },
+      42, // wait a few milliseconds to let React DOM updates flush
+    )
   }
 
   runCell() {
@@ -104,10 +156,28 @@ class MainMenu extends React.Component {
 
 
   render() {
+    const deleteNotebookDialogOptions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onClick={this.switchDeleteNotebookDialog}
+      />,
+      <FlatButton
+        label="Delete"
+        primary
+        onClick={this.closeDialogAndDeleteNotebook}
+      />,
+    ];
     const mc = menuComponents(menuItems, this)
 
     return (
       <ToolbarGroup firstChild={this.props.firstChild}>
+        <Dialog
+          open={this.state.isDeleteNotebookDialogOpen}
+          actions={deleteNotebookDialogOptions}
+        >
+          Delete Notebook?
+        </Dialog>
         <IconMenu
           style={{ fontSize: '12px' }}
           iconButtonElement={<IconButton><MenuIcon color={grey50} /></IconButton>}

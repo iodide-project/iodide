@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { newNotebook, blankState, newCell } from './state-prototypes'
 import htmlTemplate from './html-template'
 
-const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'dom', 'resource']
+const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource']
 
 const jsmdValidCellSettings = [
   'collapseEditViewInput',
@@ -162,6 +162,7 @@ function stateFromJsmd(jsmdString) {
   initialState.cells[0].selected = true
   return initialState
 }
+
 
 
 function stringifyStateToJsmd(state) {
