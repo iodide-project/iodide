@@ -22,7 +22,7 @@ Objects are output as a tree with collapsible parts
 let obj = {'lat': 42, 'lon': 49}
 obj
 
-%% md {"collapseEditViewInput":"SCROLLABLE"}
+%% md
 Arrays are displayed like Javascript arrays
 
 %% js
@@ -32,7 +32,7 @@ for (let i = 0; i < 100; ++i) {
 }
 array
 
-%% md {"collapseEditViewInput":"SCROLLABLE","collapseEditViewOutput":"SCROLLABLE"}
+%% md
 Multidimensional arrays are shown in a table
 
 %% js

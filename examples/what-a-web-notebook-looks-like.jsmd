@@ -34,7 +34,7 @@ range = []
 for (let i=0; i<10; i++){range.push(i)}
 A = range.map( (x,i) => range.map( (y,j) => (Math.random()+i-.5)))
 
-%% md {"collapsePresentationViewOutput":"COLLAPSED"}
+%% md
 ## Markdown cell
 
 This is written in a **Markdown cell**, which supports normal _MD formating)_
