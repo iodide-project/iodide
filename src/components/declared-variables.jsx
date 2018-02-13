@@ -1,10 +1,17 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import JSONTree from 'react-json-tree'
 
 class DeclaredVariables extends React.Component {
+  static propTypes = {
+    variables: PropTypes.object,
+  }
+
   render() {
     return (
       <div className="declared-variables">
+        {/* {typeof(this.props.variables)} */}
+        {/* {this.props.variables} */}
         <JSONTree
           data={this.props.variables}
           hideRoot={false}
