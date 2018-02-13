@@ -107,12 +107,7 @@ function addExternalDependency(dep) {
     elem.rel = 'stylesheet'
     elem.type = 'text/css'
     elem.href = src
-    if (elem.sizes.length === 0) {
-      outElem.status = 'error'
-      outElem.statusExplanation = 'style sheet is empty'
-    } else {
-      outElem.status = 'loaded'
-    }
+    outElem.status = 'loaded'
   } else {
     outElem.status = 'error'
     outElem.statusExplanation = 'unknown dependency type.'
@@ -120,7 +115,15 @@ function addExternalDependency(dep) {
     outElem.dependencyType = depType
     return outElem
   }
+
+  const initialWindow = Object.keys(window)
+
   head.appendChild(elem)
+
+  const newWindow = Object.keys(window)
+
+  outElem.variables = newWindow.filter(v => !initialWindow.includes(v))
+
   outElem.src = src
   outElem.dependencyType = depType
 
