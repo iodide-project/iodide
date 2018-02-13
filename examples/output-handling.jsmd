@@ -1,0 +1,61 @@
+%% meta
+{
+  "title": "Output Handling"
+}
+
+%% md
+## This notebook demonstrates some of the output handling features
+
+%% md
+Scalar values are simply output verbatim
+
+%% js
+42
+
+%% js
+'foobar'
+
+%% md
+Objects are output as a tree with collapsible parts
+
+%% js
+let obj = {'lat': 42, 'lon': 49}
+obj
+
+%% md {"collapseEditViewInput":"SCROLLABLE"}
+Arrays are displayed like Javascript arrays
+
+%% js
+let array = []
+for (let i = 0; i < 100; ++i) {
+  array.push(i * i)
+}
+array
+
+%% md {"collapseEditViewInput":"SCROLLABLE","collapseEditViewOutput":"SCROLLABLE"}
+Multidimensional arrays are shown in a table
+
+%% js
+range = []
+for (let i=0; i<10; i++){range.push(i)}
+A = range.map( (x,i) => range.map( (y,j) => (Math.random()+i-.5)))
+
+%% md
+Objects can define their own custom output by adding a `render` method.
+
+In the example below, a custom class, `GeoLocation`, is used to represent a geographic location by latitude and longitude.  When rendering the output, the Google Maps Static Image API is used to display a  thumbnail map for the location.
+
+%% js
+var GeoLocation = class GeoLocation {
+  constructor(lat, lon) {
+    this.lat = lat
+    this.lon = lon
+  }
+  
+  render() {
+    return '<img src="https://maps.googleapis.com/maps/api/staticmap?center=' + this.lat + ',' + this.lon + '&zoom=17&size=600x300&maptype=roadmap"/>'
+  }
+}
+
+%% js
+new GeoLocation(37.387315,-122.060009)

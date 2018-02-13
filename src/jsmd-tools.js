@@ -164,7 +164,6 @@ function stateFromJsmd(jsmdString) {
 }
 
 
-
 function stringifyStateToJsmd(state) {
   const defaultState = newNotebook()
   const defaultCell = defaultState.cells[0]
