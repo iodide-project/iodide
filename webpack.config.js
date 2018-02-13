@@ -3,10 +3,15 @@ const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const _ = require('lodash')
+const git_rev = require('git-rev-sync')
 
 const htmlTemplate = require('./src/html-template.js')
 
-let APP_VERSION_STRING = require('./package.json').version
+if (git_rev.isTagDirty()) {
+  APP_VERSION_STRING = git_rev.long()
+} else {
+  APP_VERSION_STRING = git_rev.tag()
+}
 
 const APP_DIR = path.resolve(__dirname, 'src/')
 const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
@@ -21,8 +26,12 @@ const htmlTemplateCompiler = _.template(htmlTemplate)
 module.exports = (env) => {
   if (env === 'prod') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
-    APP_PATH_STRING = 'https://iodide-project.github.io/iodide/dist/'
-    CSS_PATH_STRING = 'https://iodide-project.github.io/iodide/dist/'
+    if (git_rev.isTagDirty()) {
+      APP_PATH_STRING = 'https://iodide-project.github.io/master/'
+    } else {
+      APP_PATH_STRING = 'https://iodide-project.github.io/iodide/dist/'
+    }
+    CSS_PATH_STRING = APP_PATH_STRING
   } else if (env === 'dev') {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
     APP_VERSION_STRING = 'dev'
