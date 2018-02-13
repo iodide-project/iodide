@@ -139,7 +139,9 @@ function stateFromJsmd(jsmdString) {
   const parsed = parseJsmd(jsmdString)
   let { cells } = parsed
   const { parseWarnings } = parsed
-  console.log(parseWarnings)
+  if (parseWarnings.length > 0) {
+    console.warn('JSMD parse errors', parseWarnings)
+  }
   // initialize a blank notebook
   const initialState = blankState()
   // add top-level meta settings if any exist

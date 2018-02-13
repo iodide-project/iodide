@@ -142,9 +142,6 @@ describe("MarkdownCell_unconnected react component", () => {
   })
 
   it("both the editor and output recieve enterEditMode() as props", () => {
-    console.log(cell())
-    console.log(cell().enterEditMode)
-    console.log(cell().wrap(cell().find(CellEditor)).props().onContainerClick)
     expect(cell().wrap(cell().find(CellEditor)).props().onContainerClick)
       .toEqual(cell().instance().enterEditMode)
     expect(cell().wrap(cell().find("div")).props().onDoubleClick)
