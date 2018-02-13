@@ -30,6 +30,7 @@ export class CSSCellUnconnected extends React.Component {
 export function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
   return {
+    cellId: cell.id,
     value: cell.value,
     rendered: cell.rendered,
   }
