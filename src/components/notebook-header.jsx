@@ -75,7 +75,7 @@ class NotebookHeader extends React.Component {
     if (this.props.history.length) {
       histContents = this.props.history.filter(cell => cell.content.length).map((cell, i) => {
         // TODO: Don't use array indices in keys (See react/no-array-index-key linter)
-        const cellComponent = <HistoryItem display ref={`cell${cell.id}`} cell={cell} id={`${i}-${cell.id}`} key={`history${i}`} />  // eslint-disable-line
+        const cellComponent = <HistoryItem display ref={`cell${cell.cellID}`} cell={cell} id={`${i}-${cell.cellID}`} key={`history${i}`} />  // eslint-disable-line
         return cellComponent
       })
     } else {
