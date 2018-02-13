@@ -78,9 +78,9 @@ describe('ExternalResourceCellUnconnected contains the expected child components
 })
 
 describe('ExternalResourceCell mapStateToProps', () => {
-  const state =     props = {
+  const state = {
     cells: [{
-      cellId: 5,
+      id: 5,
       value: [
         {
           src: 'http://whatever.com/cdn/a-library.js',
@@ -102,17 +102,12 @@ describe('ExternalResourceCell mapStateToProps', () => {
           statusExplanation: STANDARD_NETWORK_ERROR,
         },
       ],
-  }}]}
+    }],
+  }
 
-  it("should return the 'rendered' of the correct cell if value is undefined", () => {
+  it('should have the right number of value entries', () => {
     const ownProps = { cellId: 5 }
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({ rendered: false })
-  })
-
-  it("should return 'rendered' and 'value' of the correct cells", () => {
-    const ownProps = { cellId: 3 }
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({ value: 3.14, rendered: true })
+    expect(mapStateToProps(state, ownProps).value.length)
+      .toEqual(4)
   })
 })

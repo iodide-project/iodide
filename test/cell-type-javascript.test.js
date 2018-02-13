@@ -20,7 +20,7 @@ describe('JsCell_unconnected react component', () => {
   let mountedCell
   const cell = () => {
     if (!mountedCell) {
-      mountedCell = shallow(<JsCell {...props} />)
+      mountedCell = shallow(<JsCell {...props} />,)
     }
     return mountedCell
   }
@@ -72,13 +72,12 @@ describe('JsCell_unconnected react component', () => {
   })
 })
 
-
 describe('JsCell mapStateToProps', () => {
-  const state = {
-    cells: [
-      { id: 5, rendered: false },
-      { id: 3, value: 3.14, rendered: true }],
-  }
+  const state = { 
+cells: [
+    { id: 5, rendered: false },
+    { id: 3, value: 3.14, rendered: true }]
+ }
 
   it("should return the 'rendered' of the correct cell if value is undefined", () => {
     const ownProps = { cellId: 5 }
