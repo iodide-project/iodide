@@ -22,6 +22,7 @@ export default class ExternalResourceOutput extends React.Component {
       const introducedVariables = (d.variables || []).map(v =>
         (
           <div
+            key={`${source}-${v}`}
             style={{
                 fontSize: '12px',
                 borderRadius: '12px',
