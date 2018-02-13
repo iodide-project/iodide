@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 class HistoryItem extends React.Component {
   static propTypes = {
     cell: PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      // id: PropTypes.number.isRequired,
       content: PropTypes.string,
       display: PropTypes.bool,
-      lastRan: PropTypes.string,
+      lastRan: PropTypes.instanceOf(Date),
     }).isRequired,
   }
 

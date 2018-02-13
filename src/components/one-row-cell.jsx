@@ -15,7 +15,7 @@ class OneRowCell extends React.Component {
     cellId: PropTypes.number.isRequired,
     cellType: PropTypes.string,
     pageMode: PropTypes.oneOf(['command', 'edit']),
-    children: PropTypes.element,
+    children: PropTypes.node,
     cellSelected: PropTypes.bool.isRequired,
   }
   render() {

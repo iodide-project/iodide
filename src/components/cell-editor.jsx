@@ -34,8 +34,8 @@ class CellEditor extends React.Component {
       updateInputContent: PropTypes.func.isRequired,
     }).isRequired,
     inputRef: PropTypes.func,
-    // onContainerClick: PropTypes.func.isRequired,
-    // containerStyle: PropTypes.string,
+    onContainerClick: PropTypes.func,
+    containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
   }
 
@@ -50,6 +50,7 @@ class CellEditor extends React.Component {
       theme: 'eclipse',
       autoRefresh: true,
       lineNumbers: true,
+      comment: this.props.cellType === 'javascript',
       readOnly: this.props.viewMode === 'presentation',
     }, props.editorOptions)
     // explicitly bind "this" for all methods in constructors
@@ -109,7 +110,7 @@ class CellEditor extends React.Component {
       <div
         className="editor"
         // onClick={this.props.onContainerClick}
-        // style={this.props.containerStyle}
+        style={this.props.containerStyle}
       >
         <CodeMirror
           ref={this.storeEditorElementRef}
