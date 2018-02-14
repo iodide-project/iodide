@@ -51,6 +51,7 @@ const dataFrameHandler = {
           showPaginationTop
           showPaginationBottom={false}
           pageSizeOptions={[5, 10, 25, 50, 100]}
+          minRows={0}
           defaultPageSize={25}
         />
       </div>
