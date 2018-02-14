@@ -13,7 +13,7 @@ script:
 
 before_deploy:
   - npm run build
-  - cp prod/iodide.${TRAVIS_COMMIT}.html prod/index.html
+  - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
 
 deploy:
   provider: pages

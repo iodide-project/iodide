@@ -8,7 +8,7 @@ const git_rev = require('git-rev-sync')
 const htmlTemplate = require('./src/html-template.js')
 
 if (git_rev.isTagDirty()) {
-  APP_VERSION_STRING = git_rev.long()
+  APP_VERSION_STRING = git_rev.branch()
 } else {
   APP_VERSION_STRING = git_rev.tag()
 }
