@@ -120,25 +120,33 @@ const menuItems = {}
 menuItems.newNotebook = {
   primaryText: 'New Notebook',
   secondaryText: commandKey('N'),
-  callback() { this.props.actions.newNotebook() },
+  callback() {
+    this.props.actions.newNotebook()
+  },
 }
 
 menuItems.saveNotebook = {
   primaryText: 'Save Notebook',
   secondaryText: commandKey('S'),
-  callback() { this.props.actions.saveNotebook() },
+  callback() {
+    this.props.actions.saveNotebook()
+  },
 }
 
 menuItems.deleteNotebook = {
   primaryText: 'Delete Notebook',
   secondaryText: ' ',
-  callback() { this.deleteNotebook(this.props.title) },
+  callback() {
+    this.deleteNotebook(this.props.title)
+  },
 }
 
 menuItems.exportNotebookAsJSON = {
   primaryText: 'Export Notebook',
   secondaryText: commandKey('E'),
-  callback() { this.props.actions.exportNotebook() },
+  callback() {
+    this.props.actions.exportNotebook()
+  },
 }
 menuItems.importNotebookFromJSON = {
   primaryText: 'Import from JSON',
@@ -157,13 +165,17 @@ menuItems.savedNotebooks = {
 menuItems.addCellBelow = {
   primaryText: 'Add Cell Below',
   secondaryText: 'B',
-  callback() { this.props.actions.insertCell('javascript', 'below') },
+  callback() {
+    this.props.actions.insertCell('javascript', 'below')
+  },
 }
 
 menuItems.addCellAbove = {
   primaryText: 'Add Cell Above',
   secondaryText: 'A',
-  callback() { this.props.actions.insertCell('javascript', 'above') },
+  callback() {
+    this.props.actions.insertCell('javascript', 'above')
+  },
 }
 
 menuItems.deleteCell = {
@@ -244,6 +256,14 @@ menuItems.cell = {
     menuItems.changeCellTypeToMarkdown,
     menuItems.changeCellTypeToRaw,
     menuItems.changeCellTypeToExternal,
+    menuItems.changeCellTypeToCSS,
+  ],
+  types: [
+    menuItems.changeCellTypeToJavascript,
+    menuItems.changeCellTypeToMarkdown,
+    menuItems.changeCellTypeToRaw,
+    menuItems.changeCellTypeToExternal,
+    menuItems.changeCellTypeToDOM,
     menuItems.changeCellTypeToCSS,
   ],
 }

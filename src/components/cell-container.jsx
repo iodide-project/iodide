@@ -1,11 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
 import PropTypes from 'prop-types';
 
 import actions from '../actions'
 import { getCellById } from '../notebook-utils'
-
+import { menuItems } from '../menu-content';
 
 class CellContainer extends React.Component {
   static propTypes = {
@@ -30,6 +33,16 @@ class CellContainer extends React.Component {
   }
 
   render() {
+    const cellTypes = menuItems.cell.types.map((type, index) => (
+      <MenuItem
+        value={index}
+        primaryText={type.primaryText}
+        onClick={(e) => {
+          e.preventDefault();
+          type.callback.call(this);
+        }}
+        key={`cell-${this.props.cellId}-${type.primaryText}`}
+      />));
     const cellClass = `cell-container ${
       this.props.cellType
     } ${
@@ -48,6 +61,15 @@ class CellContainer extends React.Component {
         onMouseDown={this.handleCellClick}
       >
         {this.props.children}
+        <div className="cell-type-container">
+          <MuiThemeProvider>
+            <SelectField
+              value={menuItems.cell.types.findIndex(type => type.primaryText.toLowerCase() === this.props.cellType.toLowerCase())}
+              children={cellTypes}
+              className="type-select"
+            />
+          </MuiThemeProvider>
+        </div>
       </div>
     )
   }
@@ -58,6 +80,7 @@ function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
   return {
     cellId: cell.id,
+    cellType: cell.cellType,
     selected: cell.selected,
     pageMode: state.mode,
     viewMode: state.viewMode,

@@ -91,11 +91,51 @@ div.cell-container {
   width: calc(100%);
 }
 
+.cell-container .cell-type-container {
+  padding-left: 28px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cell-type-container .type-select {
+  font-size: 14px !important;
+  line-height: 14px !important;
+  width: fit-content !important;
+  height: 44px !important;
+  font-family: inherit !important;
+  overflow: hidden;
+  cursor: auto;
+}
+
 div#cells.presentation {
 }
 
 div#cells.presentation div.cell-container {
   outline: none;
+  margin-top: 1px;
+  margin-bottom: 0px;
+}
+
+div#cells.presentation .collapse-both.cell-container {
+  width: auto;
+  flex-direction: row;
+  display: none; /* these will be removed w/ @bcolloran's new cell refactor */
+}
+
+div#cells.presentation .collapse-both .status {
+  display: none;
+}
+
+div#cells.presentation .collapse-both div.collapse-button {
+  /* FIXME this negative margin is a sucky hack, but i don't know
+      where the three pixel gap between the collapse buttons was coming from*/
+  margin: -1.5px;
+  outline: none;
+  border: 1px solid #ddd;
+}
+
+div#cells.presentation .markdown .collapse-button,
+div#cells.presentation .dom .collapse-button {
   margin-top: 0px;
   margin-bottom: 0px;
   padding-top: 0px;
@@ -107,6 +147,48 @@ div#cells.presentation .collapse-button {
   height: 0px
 }
 
+div#cells.presentation .collapse-both .input div.collapse-button {
+  border-radius: 4px 0px 0px 4px;
+}
+
+div#cells.presentation .collapse-both .output div.collapse-button {
+  border-radius: 0px 4px 4px 0px;
+}
+
+div#cells.presentation .collapse-both .main-component {
+  display: none;
+}
+
+div#cells.presentation div.external div.COLLAPSED.output .collapse-button,
+div#cells.presentation div.raw div.COLLAPSED.output .collapse-button {
+  display: none;
+}
+
+div#cells.presentation div.external div.COLLAPSED.input .collapse-button,
+div#cells.presentation div.raw div.COLLAPSED.input .collapse-button {
+  border-radius: 4px;
+}
+
+div.cell-row {
+  display: flex;
+  padding: 1px;
+}
+
+div.status {
+  font-family: monospace;
+  white-space: pre;
+  flex-basis: 50px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  text-align: right;
+  color: #aaa
+}
+
+div#cells.presentation div.status {
+  display: none;
+  height: 0px;
+  width: 0px !important;
+}
 
 div#cells.presentation div.cell-row.COLLAPSED {
   display: none;
@@ -144,6 +226,7 @@ div.collapse-button {
   vertical-align: middle;
   font-size: 12px;
   line-height: 1.6;
+  cursor: pointer;
 }
 
 div.raw div.collapse-button:hover,
@@ -191,6 +274,7 @@ div.COLLAPSED div.input div.main-component {
   outline: 1px solid #f1f1f1;
 }
 
+div.javascript div.SCROLLABLE div.main-component {
 /*div.cell-row.SCROLLABLE div.main-component {
   overflow: auto;
 }*/
@@ -251,7 +335,9 @@ div.SCROLLABLE.output .main-component {
   outline: 1px solid #ddd;
 }
 
-
+div.selected-cell.command-mode {
+  outline: 2px solid #ccc;
+}
 
 span.display-cell-title {
   display: inline-block;
@@ -636,6 +722,9 @@ table tr:nth-child(2n) {
 }
 
 .dependency-src {
+  margin-left: 10px;
+  font-size: 12px;
+  font-style: italic;
 	font-size:13px;
 	margin: 3px 10px 3px 8px;
 
