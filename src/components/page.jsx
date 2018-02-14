@@ -1,10 +1,10 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
 import RawCell from './cell-type-raw'
-import DOMCell from './cell-type-dom'
 import ExternalDependencyCell from './cell-type-external-resource'
 import CSSCell from './cell-type-css'
 import JsCell from './cell-type-javascript'
@@ -20,6 +20,18 @@ import actions from '../actions'
 const { AUTOSAVE } = settings.labels
 
 class Page extends React.Component {
+  static propTypes = {
+    mode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    actions: PropTypes.shape({
+      deleteNotebook: PropTypes.func.isRequired,
+      saveNotebook: PropTypes.func.isRequired,
+      changeMode: PropTypes.func.isRequired,
+    }).isRequired,
+    title: PropTypes.string,
+    cellIds: PropTypes.array,
+    cellTypes: PropTypes.array,
+  }
   constructor(props) {
     super(props)
     // this.props.actions.newNotebook()
@@ -70,8 +82,6 @@ class Page extends React.Component {
           return <ExternalDependencyCell cellId={id} key={id} />
         case 'css':
           return <CSSCell cellId={id} key={id} />
-        case 'dom':
-          return <DOMCell cellId={id} key={id} />
         default:
           // TODO: Use better class for inline error
           return <div>Unknown cell type {this.props.cellTypes[i]}</div>

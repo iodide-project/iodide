@@ -1,8 +1,10 @@
-# The Iodide notebook
 [![Build Status](https://travis-ci.org/iodide-project/iodide.svg?branch=master)](https://travis-ci.org/iodide-project/iodide)
+# The Iodide notebook
 
 
 ### early alpha - subject to breakage, changes, argument, refactors
+
+_Try it in your browser [right now](https://iodide-project.github.io/iodide/)!_
 
 The Iodide notebook seeks to answer one question: __can we do scientific computing without ever leaving the browser?__ We are building a modern, browser-first notebook-style IDE that utlilizes web technologies for interative / literate / inquisitive computing. The notebook borrows inspiration from RStudio, Jupyter, Carbide, and many other computing environments.
 

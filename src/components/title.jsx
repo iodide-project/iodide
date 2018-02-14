@@ -1,7 +1,18 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 
 class Title extends React.Component {
+  static propTypes = {
+    pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
+    actions: PropTypes.shape({
+      changeMode: PropTypes.func.isRequired,
+      changePageTitle: PropTypes.func.isRequired,
+    }).isRequired,
+    title: PropTypes.string,
+    textColor: PropTypes.string,
+    hoverColor: PropTypes.string,
+  }
   constructor(props) {
     super(props)
     this.state = { previousMode: props.pageMode }

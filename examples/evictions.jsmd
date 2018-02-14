@@ -1,0 +1,118 @@
+%% meta
+{
+  "title": "Eviction Notices by SF Neighborhood, 1999-2015"
+}
+
+%% md
+<div id="by-neighborhood"></div>
+
+## Eviction Notices
+
+The above visualization provides the rate at which eviction notices have been served in San Francisco, yearly, from 1997 onward.
+
+There are typical legal reasons for eviction notices - a tenant may be behind in rent, or perhaps violating the lease in a way that, to the property owner or manager, merits eviction. In many cases, however, owners pursue legal means to push out residents in order to charge more in rent for a property.
+
+%% md
+## Code
+
+%% resource
+https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js
+https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.13.0/metricsgraphics.min.js
+https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.13.0/metricsgraphics.min.css
+
+%% js
+//'by-neighborhood.csv'
+getData = function(url) {
+  var re = new XMLHttpRequest()
+  re.open('GET', url, false)
+  re.send(null)
+  return re.response
+}
+let URL = 'https://gist.githubusercontent.com/hamilton/67d7904af5cd696ec2b12450b69bd657/raw/15d83f7f281c3e5de2ca3359529ef041b47fcbf6/css'
+var data = d3.csvParse(getData(URL))
+data
+
+%% js
+var strip_punctuation = function(s) {
+    var punctuationless = s.replace(/[^a-zA-Z0-9 _]+/g, '');
+    var finalString = punctuationless.replace(/ +?/g, '');
+    return finalString;
+}
+
+function showNeighborhoodEvictions(data) {
+    data = MG.convert.date(data, 'date');
+    data = MG.convert.number(data, 'count');
+    var each_neighborhood = {};
+    var which_neighborhoods = {};
+    data.forEach(function(d){
+        var n=d.nbrhd;
+        if (!each_neighborhood.hasOwnProperty(n)) each_neighborhood[n]=[];
+        each_neighborhood[n].push(MG.clone(d));
+        if (!which_neighborhoods.hasOwnProperty(n)) which_neighborhoods[n]=0;
+        which_neighborhoods[n]+= d.count;
+    })
+    // sort by most active neighborhoods
+    var nord=[];
+    Object.keys(which_neighborhoods).forEach(function(d){
+        nord.push([which_neighborhoods[d], d]);
+    })
+    nord.sort(function(a,b){return b[0]-a[0]});
+    nord = nord.map(function(d){return d[1]});
+    var c = 0;
+    d3.select('div#by-neighborhood div').remove()
+    var neigh = d3.select('div#by-neighborhood').append('div');
+    neigh
+      .style('display', 'flex')
+      .style('justify-content', 'space-evenly')
+      .style('flex-flow', 'row wrap')
+      .style('width', '1000px')
+    .style('margin', 'auto')
+
+    var test = nord.slice(1,4).map(function(n){
+        return each_neighborhood[n];
+    });
+  
+    nord.forEach(function(neighborhood,i){
+        if (c < 24){
+            var n = strip_punctuation(neighborhood)
+            var all = neigh.append('div').classed(n, true)
+                .classed('neighborhood', true)
+                .style('margin', 'auto')
+                .style('width', '166px')
+                .style('height', '160px')
+
+            MG.data_graphic({
+                title: neighborhood,
+                data: each_neighborhood[neighborhood],
+                width: 175,
+                height:155,
+                max_y:350,
+                mouseover_align:'center',
+                left: i===0 ? 30 : 15,
+                right:i===0 ? 15 : 15,
+                top:45,
+                xax_count:3,
+                y_axis: i == 0 ? true : false,
+                min_x: new Date('1996-12-31'),
+                show_secondary_x_label: false,
+                area:false,
+                linked:true,
+                color:'black',
+                xax_format: function(d){return d3.timeFormat('%Y')(d)},
+                x_rollover_format: '%Y  ',
+                y_rollover_format: function(d) { return d.count + ' notices'},
+                target: 'div.'+n,
+                x_accessor: 'date',
+                y_accessor: 'count',
+                small_text: false,
+            });
+            //if (c+1 % 6 === 0) row = neigh.append('div').classed('row', true);
+
+        }
+        c +=1;
+
+    })
+}
+
+%% js
+showNeighborhoodEvictions(data)

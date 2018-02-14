@@ -136,6 +136,13 @@ div#cells.presentation .collapse-both div.collapse-button {
 
 div#cells.presentation .markdown .collapse-button,
 div#cells.presentation .dom .collapse-button {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+div#cells.presentation .collapse-button {
   visibility: hidden;
   height: 0px
 }
@@ -183,6 +190,33 @@ div#cells.presentation div.status {
   width: 0px !important;
 }
 
+div#cells.presentation div.cell-row.COLLAPSED {
+  display: none;
+}
+
+div#cells.presentation div.status {
+  display: none;
+  height: 0px;
+  width: 0px !important;
+}
+
+div.cell-row {
+  display: flex;
+  padding: 1px;
+}
+
+div.status {
+  font-family: monospace;
+  white-space: pre;
+  flex-basis: 50px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  text-align: right;
+  color: #aaa
+}
+
+
+
 div.collapse-button {
   margin-right: 3px;
   margin-left: 3px;
@@ -200,6 +234,7 @@ div.external div.collapse-button:hover,
 div.javascript div.collapse-button:hover {
   background: #fbfbfb;
   outline: 1px solid #ddd;
+  cursor: pointer;
 }
 
 div.main-component {
@@ -240,6 +275,11 @@ div.COLLAPSED div.input div.main-component {
 }
 
 div.javascript div.SCROLLABLE div.main-component {
+/*div.cell-row.SCROLLABLE div.main-component {
+  overflow: auto;
+}*/
+
+div.cell-row.SCROLLABLE {
   overflow: auto;
 }
 
@@ -264,6 +304,10 @@ div.selected-cell {
 
 div.selected-cell.edit-mode div.input div.main-component {
   outline: 1px solid #bbb;
+}
+
+div.selected-cell.command-mode {
+  outline: 2px solid #ccc;
 }
 
 div.CodeMirror {
@@ -681,9 +725,19 @@ table tr:nth-child(2n) {
   margin-left: 10px;
   font-size: 12px;
   font-style: italic;
+	font-size:13px;
+	margin: 3px 10px 3px 8px;
 
 }
 
+.dependency-src a {
+	color: black;	
+	font-weight:normal
+}
+
+.dependency-src a:hover {
+	text-decoration: underline
+}
 .dependency-status-explanation {
   margin-left: 35px;
   font-size: 11px;
@@ -692,4 +746,11 @@ table tr:nth-child(2n) {
 }
 
 .dependency-status-explanation:before {
+}
+
+code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
 }

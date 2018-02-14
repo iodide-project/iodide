@@ -4,12 +4,25 @@ import { bindActionCreators } from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
+import PropTypes from 'prop-types';
 
 import actions from '../actions'
 import { getCellById } from '../notebook-utils'
 import { menuItems } from '../menu-content';
 
 class CellContainer extends React.Component {
+  static propTypes = {
+    selected: PropTypes.bool.isRequired,
+    cellId: PropTypes.number.isRequired,
+    // cellClass: PropTypes.string,
+    children: PropTypes.node,
+    pageMode: PropTypes.oneOf(['command', 'edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    actions: PropTypes.shape({
+      selectCell: PropTypes.func.isRequired,
+    }).isRequired,
+  }
+
   handleCellClick = () => {
     if (this.props.viewMode === 'editor') {
       const scrollToCell = false
@@ -30,11 +43,21 @@ class CellContainer extends React.Component {
         }}
         key={`cell-${this.props.cellId}-${type.primaryText}`}
       />));
+    const cellClass = `cell-container ${
+      this.props.cellType
+    } ${
+      this.props.cellClass
+    } ${
+      this.props.selected ? 'selected-cell' : ''
+    } ${
+      (this.props.selected && this.props.pageMode === 'edit') ?
+        'edit-mode ' : 'command-mode '
+    }`
 
     return (
       <div
         id={`cell-${this.props.cellId}`}
-        className={this.props.cellClass}
+        className={cellClass}
         onMouseDown={this.handleCellClick}
       >
         {this.props.children}
@@ -58,8 +81,10 @@ function mapStateToProps(state, ownProps) {
   return {
     cellId: cell.id,
     cellType: cell.cellType,
+    selected: cell.selected,
     pageMode: state.mode,
     viewMode: state.viewMode,
+    cellType: cell.cellType,
   }
 }
 

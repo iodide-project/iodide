@@ -1,11 +1,25 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types';
 
 import { getCellById } from '../notebook-utils'
 import actions from '../actions'
 
 class CellRow extends React.Component {
+  static propTypes = {
+    executionString: PropTypes.string,
+    pageMode: PropTypes.oneOf(['command', 'edit']),
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    collapsedState: PropTypes.string,
+    rowType: PropTypes.string,
+    actions: PropTypes.shape({
+      setCellCollapsedState: PropTypes.func.isRequired,
+    }).isRequired,
+    // collapseButtonLabel: PropTypes.string.isRequired,
+    children: PropTypes.node,
+  }
+
   constructor(props) {
     super(props)
     // explicitly bind "this" for all methods in constructors
@@ -17,9 +31,9 @@ class CellRow extends React.Component {
     // note: entering editMode is only allowed from editorView
     // thus, we only need to check the editorView collapsed state
     if (this.props.viewMode === 'editor' &&
-                this.props.pageMode === 'edit' &&
-                this.props.rowType === 'input' &&
-                this.props.collapsedState === 'COLLAPSED') {
+      this.props.pageMode === 'edit' &&
+      this.props.rowType === 'input' &&
+      this.props.collapsedState === 'COLLAPSED') {
       this.props.actions.setCellCollapsedState(
         this.props.viewMode,
         'input',
@@ -38,7 +52,7 @@ class CellRow extends React.Component {
         nextCollapsedState = 'SCROLLABLE'
         break
       case 'SCROLLABLE':
-        nextCollapsedState = 'COLLAPSED'
+        nextCollapsedState = 'EXPANDED'
         break
       default:
         throw Error(`Unknown collapsedState ${this.props.collapsedState}`)
@@ -60,7 +74,7 @@ class CellRow extends React.Component {
           className="collapse-button"
           onClick={this.handleCollapseButtonClick}
         >
-          {this.props.collapseButtonLabel}
+          {/* this.props.collapseButtonLabel */}
         </div>
         <div className="main-component">
           {this.props.children}
@@ -89,21 +103,22 @@ function mapStateToPropsCellRows(state, ownProps) {
     default:
       throw Error(`Unsupported viewMode,rowType ${state.viewMode},${ownProps.rowType}`)
   }
-  const executionString = (ownProps.rowType === 'input') ? `[${cell.executionStatus}]` : ''
+  const executionString = (ownProps.rowType === 'input'
+    && cell.cellType === 'javascript') ? `[${cell.executionStatus}]` : ''
 
-  let collapseButtonLabel
-  if (collapsedState === 'COLLAPSED') {
-    collapseButtonLabel = (ownProps.rowType === 'input') ? cell.cellType : 'output'
-  } else {
-    collapseButtonLabel = ''
-  }
+  // let collapseButtonLabel
+  // if (collapsedState === 'COLLAPSED') {
+  //   collapseButtonLabel = (ownProps.rowType === 'input') ? cell.cellType : 'output'
+  // } else {
+  //   collapseButtonLabel = ''
+  // }
   return {
     pageMode: state.mode,
     viewMode: state.viewMode,
     cellType: cell.cellType,
     executionString,
     collapsedState,
-    collapseButtonLabel,
+    // collapseButtonLabel,
   }
 }
 

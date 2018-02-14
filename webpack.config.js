@@ -9,6 +9,7 @@ const htmlTemplate = require('./src/html-template.js')
 let APP_VERSION_STRING = require('./package.json').version
 
 const APP_DIR = path.resolve(__dirname, 'src/')
+const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
 let BUILD_DIR
 let APP_PATH_STRING
@@ -68,6 +69,11 @@ module.exports = (env) => {
         {
           test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
           loader: `file-loader?name=iodide.${APP_VERSION_STRING}.fonts/[name].[ext]`,
+        },
+        {
+          test: /\.jsmd$/,
+          include: EXAMPLE_DIR,
+          loader: 'raw-loader',
         },
       ],
     },
