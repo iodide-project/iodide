@@ -114,7 +114,7 @@ function blankState() {
     sidePaneMode: undefined,
     history: [],
     externalDependencies: [],
-    executionNumber: 1,
+    executionNumber: 0,
   }
   return initialState
 }
