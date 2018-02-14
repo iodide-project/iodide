@@ -92,8 +92,6 @@ If you find yourself using the same output handler in a lot of notebooks, this
 is a great candidate for something to put in an external library.
 
 %% js
-var React = require('React')
-
 const GeoLocationOutputHandler = {
     shouldHandle: function(value) {
         return (typeof value === 'object') && 'lat' in value && 'lon' in value
