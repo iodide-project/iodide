@@ -7,10 +7,12 @@ html, body {
   line-height: 1.42857143;
   color: #333;
   background-color: #fff;
+  overflow: hidden;
 }
 
 div#page {
   height: 100%;
+  overflow: hidden;
 }
 
 div#notebook-container {
@@ -31,8 +33,8 @@ div#headerbar {
 }
 
 div#cells {
+  height: 100%;
   overflow-y: auto;
-
   padding-top: 20px;
   padding-left: 40px;
   padding-right: 40px;
