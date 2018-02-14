@@ -27,7 +27,20 @@ const dataFrameHandler = {
   shouldHandle: value => nb.isRowDf(value),
 
   render: (value) => {
-    const columns = Object.keys(value[0]).map(k => ({ Header: k, accessor: k }))
+    const columns = Object.keys(value[0])
+      .map(k => ({
+        Header: k,
+        accessor: k,
+        Cell: (cell) => {
+          if (Object.prototype.toString.call(cell.value) === '[object Date]') {
+            return cell.value.toString()
+          }
+          if (Object.prototype.toString.call(cell.value) === '[object Object]') {
+            return JSON.stringify(cell.value)
+          }
+          return cell.value
+        },
+      }))
     const dataSetInfo = `array of objects: ${value.length} rows, ${columns.length} columns`
     return (
       <div>
