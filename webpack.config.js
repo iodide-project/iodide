@@ -8,7 +8,12 @@ const git_rev = require('git-rev-sync')
 const htmlTemplate = require('./src/html-template.js')
 
 if (git_rev.isTagDirty()) {
-  APP_VERSION_STRING = git_rev.branch()
+  if (process.env.TRAVIS_BRANCH !== undefined) {
+    // On Travis-CI, the git branches are detached so use env variable instead
+    APP_VERSION_STRING = process.env.TRAVIS_BRANCH
+  } else {
+    APP_VERSION_STRING = git_rev.branch()
+  }
 } else {
   APP_VERSION_STRING = git_rev.tag()
 }
