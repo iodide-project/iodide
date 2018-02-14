@@ -7,10 +7,3 @@ install:
 script:
   - npm run lint
   - npm test
-notifications:
-  irc:
-    channels:
-      - "irc.mozilla.org#iodide"
-    on_success: change
-    on_failure: always
-    use_notice: true
