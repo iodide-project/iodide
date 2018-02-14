@@ -1,9 +1,32 @@
 language: node_js
+
 node_js:
   - "lts/*"
   - "8"
+
 install:
   - npm install
+
 script:
   - npm run lint
   - npm test
+
+before_deploy:
+  - npm run build
+  - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
+
+deploy:
+  provider: pages
+  github-token: "$GITHUB_TOKEN"
+  skip-cleanup: true
+  keep-history: false
+  repo: iodide-project/master
+  verbose: false
+  local-dir: prod
+  target-branch: master
+  on:
+    branch: master
+
+env:
+  global:
+    secure: "xdWpZfWZvPTzY25ayFaC/62vceytA3jT6RdQIlhp9QOKvNYe5qiD4eviP+LflJhvc7gTNysYIidtWLhYqSqWU7GRLeHtfplJ6hXsZrPnI9CJiG+Ng9OIp7VShPb+q1RurdHMY/33TEXTk95KhA+9tQ4s8hyri1boqX48xcPWoIWH/ozqwkz3H0rWjzc7HX02D+TcE19PEdpH8eJCQa7dwAygFqc/kx5B5PoBZB6R756614CjaaPiQft3OfI8k7R15lExinoMiHpTFLmcFODZ8UPm0t2AD6GqmzRrXyTRqPkRQNRYG2mAr8RMaPkYk26piPmlNFKoWanPnu+Iq+plT6Adc57P0VPYT/a2QyiGhD1+5n08Bflz5AdDrSN/Qb3PXJDCQscqDGUjwfMKT+Jigt2L6Q1jSe3BZrhikb2+koSRS6g+bCpfu23iS2fog2P3n8npGv90EnUp3Zdgj8XcARLXxxb6hfFDZYUq2H8dEasKvxrZFDGjDECA5m4olNkZHSgHsU2zqNgzvNBQcICQ6+rHn5CWmO8WD5er+BnJoUl+mARSxhmkqdtVF+oR0KOhAWzeRvCEwqjHJ2o33kd0/cifjjc3w3ODNi8kXcpFYW5rQVHvRTx9dPXbhvRT2TyeZViA/j6PUMAcqeLw0Lgy57dFmE/0M8oJzqM8sz+mJF4="

@@ -65,6 +65,7 @@
     "eslint-plugin-react": "^7.6.1",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
+    "git-rev-sync": "^1.9.1",
     "jest": "^21.2.1",
     "jest-cli": "^22.1.4",
     "neutrino": "^8.1.0",
