@@ -163,16 +163,23 @@ export default class CellOutput extends React.Component {
       let shouldHandle = false
       try {
         shouldHandle = handler.shouldHandle(value)
-      } catch(error) {
-        console.log("An output handler threw an exception in shouldHandle")
+      } catch (error) {
+        console.log('An output handler threw an exception in shouldHandle')
       }
       if (shouldHandle) {
-        const resultElem = handler.render(value)
+        var resultElem = handler.render(value)
+        /* eslint-disable */
         if (typeof resultElem === 'string') {
-          return <div dangerouslySetInnerHTML={{__html: resultElem}} />
-        } else if (resultElem !== undefined) {
+          return <div dangerouslySetInnerHTML={{ __html: resultElem }} />
+        } else if (resultElem.tagName !== undefined) {
+          return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} />
+        } else if (resultElem.type !== undefined) {
           return resultElem
+        } else {
+          console.log('Unknown output handler result type from ' + handler)
+          // Fallback to other handlers if it's something invalid
         }
+        /* eslint-enable */
       }
     }
 

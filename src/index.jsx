@@ -13,10 +13,9 @@ import './page.css'
 import Page from './components/page'
 import { store } from './store'
 
-import './tools/nd'
-import nb_api from './api'
+import io from './api'
 
-window.nb_api = nb_api
+window.io = io
 
 render(
   <Provider store={store}>

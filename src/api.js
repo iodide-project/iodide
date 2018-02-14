@@ -1,11 +1,10 @@
 // The "Public API" for notebooks. This lets notebooks and third-party plugins
 // extend and manipulate the notebook
 
-import React from 'react'
-import { addOutputHandler } from './components/output.jsx'
+import { addOutputHandler } from './components/output'
 
-export const nb_api = {
-  'addOutputHandler': addOutputHandler
+export const io = {
+  addOutputHandler,
 }
 
-export default nb_api
+export default io

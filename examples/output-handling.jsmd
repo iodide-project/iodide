@@ -41,9 +41,20 @@ for (let i=0; i<10; i++){range.push(i)}
 A = range.map( (x,i) => range.map( (y,j) => (Math.random()+i-.5)))
 
 %% md
+## Objects with a render method
+
 Objects can define their own custom output by adding a `render` method.
 
-In the example below, a custom class, `GeoLocation`, is used to represent a geographic location by latitude and longitude.  When rendering the output, the Google Maps Static Image API is used to display a  thumbnail map for the location.
+This method may return any of the following:
+
+- A string containing HTML
+
+- A [DOM Element](https://developer.mozilla.org/en-US/docs/Web/API/Element)
+
+In the example below, a custom class, `GeoLocation`, is used to represent a
+geographic location by latitude and longitude. When rendering the output, the
+Google Maps Static Image API is used to display a thumbnail map for the
+location.
 
 %% js
 var GeoLocation = class GeoLocation {
@@ -51,11 +62,60 @@ var GeoLocation = class GeoLocation {
     this.lat = lat
     this.lon = lon
   }
-  
+
   render() {
+    // return a string containing HTML
     return '<img src="https://maps.googleapis.com/maps/api/staticmap?center=' + this.lat + ',' + this.lon + '&zoom=17&size=600x300&maptype=roadmap"/>'
   }
 }
 
 %% js
 new GeoLocation(37.387315,-122.060009)
+
+%% md
+## Custom output handlers
+
+If you don't want to change the implementation of your class, you can also
+provide an external output handler. This handler must implement two static
+methods:
+
+1. `shouldHandle` is given a value and must return `true` if the handler wants
+   to handle the value.
+
+2. `render` is given the value, and returns what should be rendered. Again, this
+   can be an HTML string, or DOM Element.
+
+You then tell Iodide about your custom output handler by passing it to
+`io.addOutputHandler`.
+
+If you find yourself using the same output handler in a lot of notebooks, this
+is a great candidate for something to put in an external library.
+
+%% js
+var React = require('React')
+
+const GeoLocationOutputHandler = {
+    shouldHandle: function(value) {
+        return (typeof value === 'object') && 'lat' in value && 'lon' in value
+    },
+
+    render: function(value) {
+        // return a HTMLElement, as created by document.createElement
+        var img = document.createElement('img')
+        img.src = 'https://maps.googleapis.com/maps/api/staticmap?center=' + value.lat + ',' + value.lon + '&zoom=17&size=600x300&maptype=roadmap'
+        return img
+
+        // TODO: Add a React component example
+    }
+}
+
+io.addOutputHandler(GeoLocationOutputHandler)
+
+%% md
+Now that we've defined the custom output handler, it will be used to display any
+object with `lat` and `lon` members, even though it's not an instance of a
+specialized class.
+
+%%js
+var x = {lat: 37.387315, lon: -122.060009}
+x
