@@ -219,13 +219,6 @@ menuItems.changeCellTypeToExternal = {
     this.props.actions.changeCellType('external dependencies')
   },
 }
-menuItems.changeCellTypeToDOM = {
-  primaryText: 'DOM',
-  secondaryText: 'D',
-  callback() {
-    this.props.actions.changeCellType('dom')
-  },
-}
 
 menuItems.changeCellTypeToCSS = {
   primaryText: 'CSS',
@@ -251,7 +244,6 @@ menuItems.cell = {
     menuItems.changeCellTypeToMarkdown,
     menuItems.changeCellTypeToRaw,
     menuItems.changeCellTypeToExternal,
-    menuItems.changeCellTypeToDOM,
     menuItems.changeCellTypeToCSS,
   ],
 }

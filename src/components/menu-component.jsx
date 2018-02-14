@@ -73,7 +73,7 @@ class MainMenu extends React.Component {
     title: PropTypes.string,
     pageMode: PropTypes.oneOf(['command', 'edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    action: PropTypes.shape({
+    actions: PropTypes.shape({
       changeMode: PropTypes.func.isRequired,
       runAllCells: PropTypes.func.isRequired,
       evaluateCell: PropTypes.func.isRequired,
@@ -112,13 +112,29 @@ class MainMenu extends React.Component {
     this.props.actions.deleteNotebook(this.props.title)
   }
 
-  deleteNotebook(notebook) {
+  deleteNotebook() {
     this.switchDeleteNotebookDialog()
   }
 
   runAllCells() {
-    this.props.actions.runAllCells()
-    if (this.props.pageMode !== 'command') this.props.actions.changeMode('command')
+    // first evaluate all MD and dom cells, b/c they might include dom elts targeted by other cells
+    this.props.cellIdList.forEach((cellId, i) => {
+      if (this.props.cellTypeList[i] === 'markdown' ||
+          this.props.cellTypeList[i] === 'dom') {
+        this.props.actions.evaluateCell(cellId)
+      }
+    })
+    window.setTimeout(
+      () => {
+        this.props.cellIdList.forEach((cellId, i) => {
+          if (this.props.cellTypeList[i] !== 'markdown' &&
+              this.props.cellTypeList[i] !== 'dom') {
+            this.props.actions.evaluateCell(cellId)
+          }
+        })
+      },
+      42, // wait a few milliseconds to let React DOM updates flush
+    )
   }
 
   runCell() {

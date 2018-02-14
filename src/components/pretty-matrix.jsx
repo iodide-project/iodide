@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import nb from '../tools/nb'
 
@@ -39,6 +40,10 @@ function makeMatrixText(matrixLike, maxDims) {
 }
 
 class PrettyMatrix extends React.Component {
+  static propTypes = {
+    matrix: PropTypes.array,
+    maxDims: PropTypes.array,
+  }
   constructor(props) {
     super(props)
     this.matrix = this.props.matrix

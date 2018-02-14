@@ -4,7 +4,7 @@ import { shallow, render, mount } from "enzyme"
 import MarkdownCell, {MarkdownCellUnconnected,
   mapStateToProps} from '../src/components/cell-type-markdown.jsx'
 import CellEditor from '../src/components/cell-editor.jsx'
-import TwoRowCell from '../src/components/two-row-cell.jsx'
+import OneRowCell from '../src/components/one-row-cell.jsx'
 
 import { Provider } from 'react-redux'
 
@@ -36,56 +36,72 @@ describe("MarkdownCell_unconnected react component", () => {
     mountedCell = undefined
   })
 
-  it("always renders one TwoRowCell", () => {
-    expect(cell().find(TwoRowCell).length).toBe(1)
+  it("always renders one OneRowCell", () => {
+    expect(cell().find(OneRowCell).length).toBe(1)
   })
 
-  it("sets the TwoRowCell cellId prop to be the MarkdownCell's cellId prop", () => {
-    expect(cell().find(TwoRowCell).props().cellId)
+  it("sets the OneRowCell cellId prop to be the MarkdownCell's cellId prop", () => {
+    expect(cell().find(OneRowCell).props().cellId)
       .toBe(props.cellId)
   })
 
-  it("the TwoRowCell always has a row1 prop that is a CellEditor", () => {
-    expect(cell().wrap(cell().find(TwoRowCell)
-      .props().row1).find(CellEditor)).toHaveLength(1)
+  it("the OneRowCell should have two children", () => {
+    expect(cell().find(OneRowCell).props().children).toHaveLength(2)
   })
 
-  it("sets the CellEditor cellId prop to be the MarkdownCell's cellId prop", () => {
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row1).props().cellId)
-      .toBe(props.cellId)
+  it("the OneRowCell always has a child that is a CellEditor", () => {
+    expect(cell().wrap(cell().find(OneRowCell)
+      .props().children).find(CellEditor)).toHaveLength(1)
   })
 
-  it("the TwoRowCell always has a row2 prop that is a div", () => {
-    expect(cell().wrap(cell().find(TwoRowCell)
-      .props().row2).find("div")).toHaveLength(1)
+
+  it("the OneRowCell always has a child that is is a div", () => {
+    expect(cell().wrap(cell().find(OneRowCell)
+      .props().children).find("div")).toHaveLength(1)
   })
 
   it("editor shown if MD not rendered", () => {
     props.rendered = false
     props.pageMode = 'command'
     props.cellSelected = true
-    
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row1).props().containerStyle)
+    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
       .toEqual({display: 'block'})
 
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row2).props().style)
+    expect(cell().wrap(cell().find("div")).props().style)
       .toEqual({display: 'none'})
   })
 
-  it("MD shown if rendered and in command mode", () => {
+  it("editor not shown if MD is rendered, and not editing", () => {
     props.rendered = true
     props.pageMode = 'command'
     props.cellSelected = true
-    
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row1).props().containerStyle)
+    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
       .toEqual({display: 'none'})
 
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row2).props().style)
+    expect(cell().wrap(cell().find("div")).props().style)
+      .toEqual({display: 'block'})
+      
+  })
+
+  it("MD shown if rendered and in command mode, whether cell selected or not", () => {
+    props.rendered = true
+    props.pageMode = 'command'
+    props.cellSelected = true
+    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
+      .toEqual({display: 'none'})
+
+    expect(cell().wrap(cell().find("div")).props().style)
+      .toEqual({display: 'block'})
+      
+  })
+
+  it("MD shown if rendered and in command mode, whether cell selected or not", () => {
+    props.rendered = true
+    props.pageMode = 'command'
+    props.cellSelected = false
+    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
+      .toEqual({display: 'none'})
+    expect(cell().wrap(cell().find("div")).props().style)
       .toEqual({display: 'block'})
   })
 
@@ -93,13 +109,9 @@ describe("MarkdownCell_unconnected react component", () => {
     props.rendered = true
     props.pageMode = 'command'
     props.cellSelected = false
-    
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row1).props().containerStyle)
+    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
       .toEqual({display: 'none'})
-
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row2).props().style)
+    expect(cell().wrap(cell().find("div")).props().style)
       .toEqual({display: 'block'})
   })
 
@@ -107,13 +119,9 @@ describe("MarkdownCell_unconnected react component", () => {
     props.rendered = true
     props.pageMode = 'edit'
     props.cellSelected = false
-    
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row1).props().containerStyle)
+    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
       .toEqual({display: 'none'})
-
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row2).props().style)
+    expect(cell().wrap(cell().find("div")).props().style)
       .toEqual({display: 'block'})
   })
 
@@ -121,25 +129,24 @@ describe("MarkdownCell_unconnected react component", () => {
     props.rendered = true
     props.pageMode = 'edit'
     props.cellSelected = true
-    
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row1).props().containerStyle)
+    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
       .toEqual({display: 'block'})
-
-    expect(cell().wrap(cell().find(TwoRowCell)
-        .props().row2).props().style)
+    expect(cell().wrap(cell().find("div")).props().style)
       .toEqual({display: 'none'})
   })
 
-  // it("both the editor and output recieve enterEditMode() as props", () => {
-  //   expect(cell().wrap(cell().find(TwoRowCell)
-  //       .props().row1).props().onContainerClick)
-  //     .toEqual(cell().enterEditMode)
+  it("div should have dangerouslySetInnerHTML", () => {
+    props.value = 'html string'
+    expect(cell().wrap(cell().find("div")).props().dangerouslySetInnerHTML)
+      .toEqual({__html: props.value})
+  })
 
-  //   expect(cell().wrap(cell().find(TwoRowCell)
-  //       .props().row2).props().onDoubleClick)
-  //     .toEqual(cell().enterEditMode)
-  // })
+  it("both the editor and output recieve enterEditMode() as props", () => {
+    expect(cell().wrap(cell().find(CellEditor)).props().onContainerClick)
+      .toEqual(cell().instance().enterEditMode)
+    expect(cell().wrap(cell().find("div")).props().onDoubleClick)
+      .toEqual(cell().instance().enterEditMode)
+  })
 
 })
 
@@ -182,8 +189,8 @@ describe("MarkdownCell_unconnected react component", () => {
 //     mountedCell = undefined
 //   })
 
-//   it("always renders one TwoRowCell", () => {
-//     expect(cell().find(TwoRowCell).length).toBe(1)
+//   it("always renders one OneRowCell", () => {
+//     expect(cell().find(OneRowCell).length).toBe(1)
 //   })
 // })
 

@@ -1,21 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types';
 
 import actions from '../actions'
 import { getCellById } from '../notebook-utils'
-import PropTypes from 'prop-types';
 
 
 class CellContainer extends React.Component {
   static propTypes = {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
-    cellClass: PropTypes.string,
-    children: PropTypes.element,
+    // cellClass: PropTypes.string,
+    children: PropTypes.node,
     pageMode: PropTypes.oneOf(['command', 'edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    action: PropTypes.shape({
+    actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
     }).isRequired,
   }
@@ -30,10 +30,21 @@ class CellContainer extends React.Component {
   }
 
   render() {
+    const cellClass = `cell-container ${
+      this.props.cellType
+    } ${
+      this.props.cellClass
+    } ${
+      this.props.selected ? 'selected-cell' : ''
+    } ${
+      (this.props.selected && this.props.pageMode === 'edit') ?
+        'edit-mode ' : 'command-mode '
+    }`
+
     return (
       <div
         id={`cell-${this.props.cellId}`}
-        className={this.props.cellClass}
+        className={cellClass}
         onMouseDown={this.handleCellClick}
       >
         {this.props.children}
@@ -47,8 +58,10 @@ function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
   return {
     cellId: cell.id,
+    selected: cell.selected,
     pageMode: state.mode,
     viewMode: state.viewMode,
+    cellType: cell.cellType,
   }
 }
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -34,6 +35,19 @@ function stateIsValid(state) {
 }
 
 class NotebookHeader extends React.Component {
+  static propTypes = {
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    sidePaneMode: PropTypes.oneOf(['history', 'declared variables']),
+    mode: PropTypes.oneOf(['title-edit', 'command', 'edit']),
+    title: PropTypes.string,
+    lastSaved: PropTypes.string,
+    actions: PropTypes.shape({
+      importNotebook: PropTypes.func.isRequired,
+      changeSidePaneMode: PropTypes.func.isRequired,
+    }).isRequired,
+    history: PropTypes.array,
+    declaredVariables: PropTypes.object,
+  }
   constructor(props) {
     super(props)
     this.notebookFileImport = this.notebookFileImport.bind(this)
@@ -86,6 +100,8 @@ class NotebookHeader extends React.Component {
             title={this.props.title}
             sidePaneMode={this.props.sidePaneMode}
             lastSaved={this.props.lastSaved}
+            cellIdList={this.props.cellIdList}
+            cellTypeList={this.props.cellTypeList}
           />
         </div>
         <div className="presentation-menu" style={{ display: (this.props.viewMode === 'presentation' ? 'block' : 'none') }} >
@@ -133,6 +149,10 @@ class NotebookHeader extends React.Component {
 
 
 class PresentationMenu extends React.Component {
+  static propTypes = {
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    title: PropTypes.string,
+  }
   render() {
     return (
       <div className="presentation-header">
@@ -149,6 +169,16 @@ class PresentationMenu extends React.Component {
 
 
 class EditorMenu extends React.Component {
+  static propTypes = {
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    sidePaneMode: PropTypes.oneOf(['history', 'declared variables']),
+    mode: PropTypes.oneOf(['title-edit', 'command', 'edit']),
+    actions: PropTypes.shape({
+      changeSidePaneMode: PropTypes.func.isRequired,
+    }).isRequired,
+    title: PropTypes.string,
+    lastSaved: PropTypes.string,
+  }
   changeSidePaneMode(sidePaneMode) {
     if (this.props.sidePaneMode === sidePaneMode) this.props.actions.changeSidePaneMode(undefined)
     else this.props.actions.changeSidePaneMode(sidePaneMode)
@@ -166,6 +196,8 @@ class EditorMenu extends React.Component {
             viewMode={this.props.viewMode}
             sidePaneMode={this.props.sidePaneMode}
             lastSaved={this.props.lastSaved}
+            cellIdList={this.props.cellIdList}
+            cellTypeList={this.props.cellTypeList}
           />
           <ToolbarGroup className="title-field">
             <Title
@@ -200,6 +232,14 @@ class EditorMenu extends React.Component {
 
 
 class ViewModeToggleButton extends React.Component {
+  static propTypes = {
+    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    actions: PropTypes.shape({
+      setViewMode: PropTypes.func.isRequired,
+    }).isRequired,
+    textColor: PropTypes.string,
+    hoverColor: PropTypes.string,
+  }
   constructor(props) {
     super(props)
     this.toggleViewMode = this.toggleViewMode.bind(this)
@@ -237,6 +277,8 @@ function mapStateToProps(state) {
     lastSaved: state.lastSaved,
     history: state.history,
     currentTitle: state.title,
+    cellIdList: state.cells.map(c => c.id),
+    cellTypeList: state.cells.map(c => c.cellType),
   }
 }
 

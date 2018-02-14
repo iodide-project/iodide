@@ -2,11 +2,84 @@ function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
+// function newCellRow(collapseEditView, collapsePresentationView) {
+//   // these track the collapsed state of cell row
+//   // must be one of "HIDDEN", "SCROLL", "EXPAND"
+//   return { collapseEditView, collapsePresentationView }
+// }
+
+// function newCellRows(cellType) {
+//   switch (cellType) {
+//     case 'javascript':
+//       return [
+//         newCellRow('EXPAND', 'HIDDEN'),
+//         newCellRow('EXPAND', 'HIDDEN'),
+//       ]
+//     case 'markdown':
+//       return [
+//         newCellRow('EXPAND', 'EXPAND'),
+//       ]
+//     case 'external dependencies':
+//       return [
+//         newCellRow('EXPAND', 'HIDDEN'),
+//         newCellRow('EXPAND', 'HIDDEN'),
+//       ]
+//     case 'css':
+//       return [
+//         newCellRow('EXPAND', 'HIDDEN'),
+//       ]
+//     case 'raw':
+//       return [
+//         newCellRow('EXPAND', 'HIDDEN'),
+//       ]
+//     default:
+//       throw Error(`Unsupported cellType: ${cellType}`)
+//   }
+// }
+
 function newCell(cells, cellType) {
   // let outputCollapseDefault
   // if (cellType=='dom' || cellType=='dom'){
   //   outputCollapseDefault = 'COLLAPSED'
   // } else {outputCollapseDefault = 'EXPANDED'}
+  let collapseEditViewInput
+  let collapseEditViewOutput
+  let collapsePresentationViewInput
+  let collapsePresentationViewOutput
+  switch (cellType) {
+    case 'javascript':
+      collapseEditViewInput = 'EXPANDED'
+      collapsePresentationViewInput = 'COLLAPSED'
+      collapseEditViewOutput = 'EXPANDED'
+      collapsePresentationViewOutput = 'COLLAPSED'
+      break
+    case 'markdown':
+      collapseEditViewInput = 'EXPANDED'
+      collapsePresentationViewInput = 'EXPANDED'
+      collapseEditViewOutput = 'EXPANDED'
+      collapsePresentationViewOutput = 'EXPANDED'
+      break
+    case 'external dependencies':
+      collapseEditViewInput = 'EXPANDED'
+      collapsePresentationViewInput = 'COLLAPSED'
+      collapseEditViewOutput = 'EXPANDED'
+      collapsePresentationViewOutput = 'COLLAPSED'
+      break
+    case 'css':
+      collapseEditViewInput = 'EXPANDED'
+      collapsePresentationViewInput = 'COLLAPSED'
+      collapseEditViewOutput = undefined
+      collapsePresentationViewOutput = undefined
+      break
+    case 'raw':
+      collapseEditViewInput = 'EXPANDED'
+      collapsePresentationViewInput = 'COLLAPSED'
+      collapseEditViewOutput = undefined
+      collapsePresentationViewOutput = undefined
+      break
+    default:
+      throw Error(`Unsupported cellType: ${cellType}`)
+  }
   return {
     content: '',
     id: newCellID(cells),
@@ -21,13 +94,13 @@ function newCell(cells, cellType) {
     evaluationOld: true,
     // these track the collapsed state of input and outputs
     // must be one of "COLLAPSED" "SCROLLABLE" "EXPANDED"
-    collapseEditViewInput: 'EXPANDED',
-    collapseEditViewOutput: 'EXPANDED',
-    collapsePresentationViewInput: 'COLLAPSED',
-    collapsePresentationViewOutput: 'EXPANDED',
+    collapseEditViewInput,
+    collapseEditViewOutput,
+    collapsePresentationViewInput,
+    collapsePresentationViewOutput,
+    // rowState: newCellRows(cellType),
   }
 }
-
 
 function blankState() {
   const initialState = {

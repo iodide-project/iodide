@@ -92,11 +92,28 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'CHANGE_DOM_ELEMENT_ID':
       return newStateWithSelectedCellPropertySet(state, 'domElementID', action.elemID)
 
-    case 'CHANGE_CELL_TYPE':
+    case 'CHANGE_CELL_TYPE': {
+      // create a new cell of the given type to get the defaults that
+      // need to be applied to the cell being changed
+      const {
+        collapseEditViewInput,
+        collapsePresentationViewInput,
+        collapseEditViewOutput,
+        collapsePresentationViewOutput,
+      } = newCell(state.cells, action.cellType)
       return newStateWithSelectedCellPropsAssigned(
         state,
-        { cellType: action.cellType, value: undefined, rendered: false },
+        {
+          cellType: action.cellType,
+          value: undefined,
+          rendered: false,
+          collapseEditViewInput,
+          collapsePresentationViewInput,
+          collapseEditViewOutput,
+          collapsePresentationViewOutput,
+        },
       )
+    }
     // return newStateWithSelectedCellPropertiesSet(state,
     //   ['cellType','value','rendered'],
     //   [action.cellType,undefined,false])
@@ -138,7 +155,9 @@ const cellReducer = (state = newNotebook(), action) => {
       const newState = Object.assign({}, state)
       let { userDefinedVariables } = newState
       const cells = newState.cells.slice()
-      const index = cells.findIndex(c => c.id === getSelectedCellId(state))
+      let { cellId } = action
+      if (cellId === undefined) { cellId = getSelectedCellId(state) }
+      const index = cells.findIndex(c => c.id === cellId)
       const thisCell = cells[index]
 
       if (thisCell.cellType === 'javascript') {
@@ -182,22 +201,24 @@ const cellReducer = (state = newNotebook(), action) => {
         thisCell.evalStatus = evalStatuses.SUCCESS
       } else if (thisCell.cellType === 'external dependencies') {
         const dependencies = thisCell.content.split('\n').filter(d => d.trim().slice(0, 2) !== '//')
-        const outValue = dependencies.map(addExternalDependency)
+        const newValues = dependencies
+          .filter(d => !newState.externalDependencies.includes(d))
+          .map(addExternalDependency)
 
-        outValue.forEach((d) => {
+        newValues.forEach((d) => {
           if (!newState.externalDependencies.includes(d.src)) {
             newState.externalDependencies.push(d.src)
           }
         })
-        thisCell.evalStatus = outValue.map(d => d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
-        thisCell.value = outValue
+        thisCell.evalStatus = newValues.map(d => d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
+        thisCell.value = new Array(...[...thisCell.value || [], ...newValues])
         thisCell.rendered = true
         // add to newState.history
-        if (outValue.length) {
+        if (newValues.length) {
           newState.history.push({
             cellID: thisCell.id,
             lastRan: new Date(),
-            content: `// added external dependencies:\n${outValue.map(s => `// ${s.src}`).join('\n')}`,
+            content: `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
           })
         }
         newState.executionNumber += 1

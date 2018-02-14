@@ -1,0 +1,145 @@
+%% meta
+{
+  "title": "What a web notebook looks like"
+}
+
+%% md {"collapsePresentationViewInput":"EXPANDED","collapsePresentationViewOutput":"EXPANDED"}
+# Welcome to Iodide!
+
+Let's get started! You can just start trying things out, or you can follow the steps described below to get a quick introduction. Just read along and click or enter keystrokes when instucted.
+
+The first thing you'll need to know is how to navigate within the notebook and run cells.
+
+If you've just landed on this page and haven't yet clicked on anything, you should be in _command mode_, and the top cell should be selected -- but just to make sure, press `esc`. Pressing `esc` at any time will return you to command mode.
+
+Now that you're in command mode, try pressing the `up` and `down` arrow keys a few times. As you press up and down, the you'll select the next or previous cell. You can tell which cell is currently selected because it has a darker outline than non-selected cells.
+
+The cell containing this text is a _markdown cell_, but it hasn't yet been evaluated. Select this cell by moving to it with your keyboard (press the `up` key until it this cell is selected) or clicking on it.
+
+Once this cell is selected, press `ctrl+enter` to evaluate it.
+
+%% md
+If you pressed `ctrl+enter` with the cell above selected, that cell will have re-rendered as presentational text, and it will still be selected.
+
+Without changing your selection press `enter`. The plain markdown will reappear. Pressing `enter` in command mode will allow you to edit the currently selected cell.
+
+Now, evaluate the cell above again and advance to this cell by pressing `shift+enter`.
+
+If you've used Jupyter, these keyboard shortcuts should be familiar -- we've tried to follow Jupyter's keyboard navigation closely so that people familiar with Jupyter will be able to get up and running quickly.
+
+Of course, you can also navigate with your mouse. To edit a rendered markdown cell, you can double click the cell. Go head and double click the rendered markdown cell above. Try editing the cell and press `shift+enter` to render once more.
+
+To edit any other cell, just click on the text editor within that cell.
+
+%% js
+// Now click in this JS code cell.
+
+// We can use any normally available browser API. In this little snippet,
+// we produce a matrix of random numbers using the built-in Math API
+
+// Press `ctrl+enter` a few times to evaluate without advancing.
+
+// Now to try making a change to the code below, and evaluate
+// your changes.
+
+tableSize = 1000
+range = []
+for (let i=0; i<tableSize; i++){range.push(i)}
+A = range.map( (x,i) => range.map( (y,j) => (Math.random() + i + j )))
+
+%% md {"collapsePresentationViewInput":"EXPANDED","collapsePresentationViewOutput":"EXPANDED"}
+The cell below this is an _external resource cell_, which allows you to load external scripts and css file. It can be evaluated just like any other cell with `ctrl+enter` or `shift+enter`.
+
+When a resource is successfully loaded, you will see a green checkmark. If a resource fails to load, you'll see a red exclamation point.
+
+Let's go ahead and load the library "three.js", which we'll use a little farther below. Let's also try to load a fake resource to see what an error looks like.
+
+%% resource
+https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js
+https://fake.url.com/that/will/give/an/error.js
+
+%% raw
+This, for whatever it's worth, is a raw cell. It's available in Jupyter, so we have it too. It's not clear what the use case is, but it's here in case you want it.
+Notice that raw cells don't wrap (unlike MD cell editors)
+
+%% md {"collapsePresentationViewInput":"EXPANDED","collapsePresentationViewOutput":"EXPANDED"}
+Markdown cells support the full range of normal markdown formatting, like _multiple_ **levels** of ***emphasis***,
+# headings 
+## of different
+### sizes
+
+```
+and multiline raw text blocks
+    (that are great for code snippets)
+```
+
+Markdown cells also support LaTeX, like this:
+
+$$
+\left[\begin{array}{c}
+\mathbf{x}_{t,i}\\
+\mathbf{v}_{t,i}\\
+\theta_{t,i}\\
+\omega_{t,i}
+\end{array}\right]  =  \left[\begin{array}{c}
+\mathbf{x}_{t-1,i}\\
+\mathbf{v}_{t-1,i}\\
+\theta_{t-1,i}\\
+\omega_{t-1,i}
+\end{array}\right]+\Delta\left[\begin{array}{c}
+\mathbf{v}_{t-1,i}\\
+\left(T_{t,i}+\epsilon_{T}\right)cos\left(\theta_{t-1,i}\right)-\rho_{\mathbf{v}}\left\Vert \mathbf{v}_{t-1,i}\right\Vert ^{2}\frac{\mathbf{v}_{t-1,i}}{\left\Vert \mathbf{v}_{t-1,i}\right\Vert }\\
+\left(T_{t,i}+\epsilon_{T}\right)sin\left(\theta_{t-1,i}\right)-\rho_{\mathbf{v}}\left\Vert \mathbf{v}_{t-1,i}\right\Vert ^{2}\frac{\mathbf{v}_{t-1,i}}{\left\Vert \mathbf{v}_{t-1,i}\right\Vert }\\
+\omega_{t-1,i}\\
+Y_{t,i}-\rho_{\omega}\omega_{t-1,i}^{2}+\epsilon_{Y}
+\end{array}\right]
+$$
+
+You can also use in-line html, which is very handy for creating DOM elements within the flow of a narrative that you can then manipulate with. This is great for adding plots and figures.
+
+Let's create a `div` right below:
+
+<div id="targetDiv"></div>
+
+...in a moment, we'll put something fancy right above this line.
+
+Go ahead and evaluate this cell and move to the next one
+
+%% js {"collapseEditViewInput":"SCROLLABLE"}
+// We'll now define a real JS function that does something cool. We'll also letadd a really long comment so that we can make sure horizontal scrolling works as desired.
+// Go ahead and evaluate this cell
+function spinCubeInTarget(targetSelector) {
+    //'use strict';
+    var width = 400, height = 300
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 100);
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(width, height);
+    document.body.querySelector(targetSelector).appendChild(renderer.domElement);
+    var geometry = new THREE.CubeGeometry(5, 5, 5);
+    var material = new THREE.MeshLambertMaterial({color: 0x00fff0 });
+    var cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    camera.position.z = 12; 
+    var pointLight = new THREE.PointLight(0xFFFFFF);
+    pointLight.position.z = 130;
+    scene.add(pointLight);
+    var reqAnimFrame = window.requestAnimationFrame
+    var render = function() {
+        reqAnimFrame(render);
+        var delta = Math.random() * (0.06 - 0.02) + 0.03;
+        cube.rotation.x += delta;
+        cube.rotation.y += delta;
+        renderer.render(scene, camera);
+    };
+    render();
+}
+
+spinCubeInTarget("#targetDiv")
+
+%% md {"collapsePresentationViewInput":"EXPANDED","collapsePresentationViewOutput":"EXPANDED"}
+If you followed all the steps described, you should now see a cube spinning in the markdown cell above!
+
+Note that if you make any changes to that markdown cell, you will have to re-run the function `spinCubeInTarget("#targetDiv")`, because each time you change a markdown cell it's contents have to be regenerated, which will overwrite changes you've made to it with code.
+
+%% js
