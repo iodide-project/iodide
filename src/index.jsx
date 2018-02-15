@@ -13,6 +13,10 @@ import './page.css'
 import Page from './components/page'
 import { store } from './store'
 
+import { iodide } from './api'
+
+window.iodide = iodide
+
 render(
   <Provider store={store}>
     <Page />

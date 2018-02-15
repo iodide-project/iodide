@@ -11,6 +11,8 @@ import { SimpleTable, makeMatrixText } from './pretty-matrix'
 
 import nb from '../tools/nb'
 
+// TODO: Use interface-js (or similar) to enforce interfaces
+
 const renderMethodHandler = {
   shouldHandle: value => (value !== undefined && typeof value.render === 'function'),
 
@@ -152,6 +154,13 @@ const handlers = [
   defaultHandler,
 ]
 
+export function addOutputHandler(handler) {
+  // TODO: We may want to be smarter about inserting handlers at
+  // certain places in the handler array.  Right now, this just
+  // puts the new handler at the front.
+  handlers.unshift(handler)
+}
+
 export default class CellOutput extends React.Component {
   static propTypes = {
     render: PropTypes.bool.isRequired,
@@ -165,11 +174,26 @@ export default class CellOutput extends React.Component {
     const value = this.props.valueToRender
 
     for (const handler of handlers) {
-      if (handler.shouldHandle(value)) {
+      let shouldHandle = false
+      try {
+        shouldHandle = handler.shouldHandle(value)
+      } catch (error) {
+        console.log('An output handler threw an exception in shouldHandle')
+      }
+      if (shouldHandle) {
         const resultElem = handler.render(value)
-        if (resultElem !== undefined) {
+        /* eslint-disable */
+        if (typeof resultElem === 'string') {
+          return <div dangerouslySetInnerHTML={{ __html: resultElem }} />
+        } else if (resultElem.tagName !== undefined) {
+          return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} />
+        } else if (resultElem.type !== undefined) {
           return resultElem
+        } else {
+          console.log('Unknown output handler result type from ' + handler)
+          // Fallback to other handlers if it's something invalid
         }
+        /* eslint-enable */
       }
     }
 
