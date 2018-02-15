@@ -1,8 +1,8 @@
-let localStorage = {}
+const localStorage = {}
 
-export default {  
+export default {
   setItem(key, value) {
-    return Object.assign(localStorage, {[key]: value})
+    return Object.assign(localStorage, { [key]: value })
   },
   getItem(key) {
     return localStorage[key]
@@ -12,11 +12,11 @@ export default {
     return localStorage
   },
   hasOwnProperty(key) {
-    return localStorage.hasOwnProperty(key)
+    return Object.prototype.hasOwnProperty.call(localStorage, key)
   },
   clear() {
-    localStorage = {}
-  }
+    Object.keys(localStorage).forEach(k => delete localStorage[k])
+  },
 }
 
-export {localStorage}
+export { localStorage }
