@@ -167,7 +167,7 @@ export default class CellOutput extends React.Component {
         console.log('An output handler threw an exception in shouldHandle')
       }
       if (shouldHandle) {
-        var resultElem = handler.render(value)
+        const resultElem = handler.render(value)
         /* eslint-disable */
         if (typeof resultElem === 'string') {
           return <div dangerouslySetInnerHTML={{ __html: resultElem }} />
