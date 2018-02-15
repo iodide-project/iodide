@@ -12,6 +12,8 @@ module.exports = {
     "no-restricted-syntax": ["off"],
     // Allow i++ in the final clause of a for loop
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }] ,
+    // Allow JSX in .js files
+    "react/jsx-filename-extension": ["off"],
     // ------------------------------------------------------------
     // TODO: The following lints are probably good to have in the long run,
     // but are disabled for now to get to zero lint
