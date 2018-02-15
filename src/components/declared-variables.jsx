@@ -1,7 +1,11 @@
 import React from 'react'
 import JSONTree from 'react-json-tree'
+import PropTypes from 'prop-types'
 
 class DeclaredVariables extends React.Component {
+  static propTypes = {
+    variables: PropTypes.object,
+  }
   render() {
     return (
       <div className="declared-variables">
