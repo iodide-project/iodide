@@ -13,9 +13,9 @@ import './page.css'
 import Page from './components/page'
 import { store } from './store'
 
-import io from './api'
+import { iodide } from './api'
 
-window.io = io
+window.iodide = iodide
 
 render(
   <Provider store={store}>

@@ -86,7 +86,7 @@ methods:
    can be an HTML string, or DOM Element.
 
 You then tell Iodide about your custom output handler by passing it to
-`io.addOutputHandler`.
+`iodide.addOutputHandler`.
 
 If you find yourself using the same output handler in a lot of notebooks, this
 is a great candidate for something to put in an external library.
@@ -107,7 +107,7 @@ const GeoLocationOutputHandler = {
     }
 }
 
-io.addOutputHandler(GeoLocationOutputHandler)
+iodide.addOutputHandler(GeoLocationOutputHandler)
 
 %% md
 Now that we've defined the custom output handler, it will be used to display any

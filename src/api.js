@@ -3,8 +3,8 @@
 
 import { addOutputHandler } from './components/output'
 
-export const io = {
+export const iodide = {
   addOutputHandler,
 }
 
-export default io
+export default iodide
