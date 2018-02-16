@@ -11,24 +11,22 @@ import { SimpleTable, makeMatrixText } from './pretty-matrix'
 
 import nb from '../tools/nb'
 
-function renderValue(value, ignoreHandlers = []) {
+function renderValue(value, inContainer = false) {
   for (const handler of handlers) {
-    if (!ignoreHandlers.includes(handler)) {
-      if (handler.shouldHandle(value)) {
-        const resultElem = handler.render(value)
-        /* eslint-disable */
-        if (typeof resultElem === 'string') {
-          return <div dangerouslySetInnerHTML={{ __html: resultElem }} />
-        } else if (resultElem.tagName !== undefined) {
-          return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} />
-        } else if (resultElem.type !== undefined) {
-          return resultElem
-        } else {
-          console.log('Unknown output handler result type from ' + handler)
-          // Fallback to other handlers if it's something invalid
-        }
-        /* eslint-enable */
+    if (handler.shouldHandle(value, inContainer)) {
+      const resultElem = handler.render(value, inContainer)
+      /* eslint-disable */
+      if (typeof resultElem === 'string') {
+        return <div dangerouslySetInnerHTML={{ __html: resultElem }} />
+      } else if (resultElem.tagName !== undefined) {
+        return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} />
+      } else if (resultElem.type !== undefined) {
+        return resultElem
+      } else {
+        console.log('Unknown output handler result type from ' + handler)
+        // Fallback to other handlers if it's something invalid
       }
+      /* eslint-enable */
     }
   }
 }
@@ -48,8 +46,8 @@ const undefinedHandler = {
 const renderMethodHandler = {
   shouldHandle: value => (value !== undefined && typeof value.render === 'function'),
 
-  render: (value) => {
-    const output = value.render()
+  render: (value, inContainer) => {
+    const output = value.render(inContainer)
     if (typeof output === 'string') {
       return <div dangerouslySetInnerHTML={{ __html: output }} /> // eslint-disable-line
     }
@@ -58,14 +56,14 @@ const renderMethodHandler = {
 }
 
 const dataFrameHandler = {
-  shouldHandle: value => nb.isRowDf(value),
+  shouldHandle: (value, inContainer) => !inContainer && nb.isRowDf(value),
 
   render: (value) => {
     const columns = Object.keys(value[0])
       .map(k => ({
         Header: k,
         accessor: k,
-        Cell: cell => renderValue(cell.value, [dataFrameHandler]),
+        Cell: cell => renderValue(cell.value, true),
       }))
     const dataSetInfo = `array of objects: ${value.length} rows, ${columns.length} columns`
     let pageSize = value.length > 10 ? 10 : value.length
@@ -87,7 +85,7 @@ const dataFrameHandler = {
 }
 
 const matrixHandler = {
-  shouldHandle: value => nb.isMatrix(value),
+  shouldHandle: (value, inContainer) => !inContainer && nb.isMatrix(value),
 
   render: (value) => {
     const shape = nb.shape(value)
@@ -103,7 +101,7 @@ const matrixHandler = {
 }
 
 const arrayHandler = {
-  shouldHandle: value => _.isArray(value),
+  shouldHandle: (value, inContainer) => !inContainer && _.isArray(value),
 
   render: (value) => {
     const dataSetInfo = `${value.length} element array`
@@ -113,7 +111,7 @@ const arrayHandler = {
 
     function addValues(start, end) {
       for (let i = start; i < end; i++) {
-        values.push(renderValue(value[i]))
+        values.push(renderValue(value[i], true))
         if (i !== end - 1) {
           values.push(', ')
         }
