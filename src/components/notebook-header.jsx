@@ -125,10 +125,10 @@ class NotebookHeader extends React.Component {
             overlayStyle={{ backgroundColor: 'none' }}
             onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
           >
-            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons">
+            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons" style={{ float: 'left' }}>
               <IconButton
                 tooltip="Close"
-                style={{ color: '#fafafa' }}
+                style={{ color: '#fafafa', margin: '5px' }}
                 onClick={() => { this.props.actions.changeSidePaneMode(undefined) }}
               >
                 <Close />
@@ -148,10 +148,10 @@ class NotebookHeader extends React.Component {
             overlayStyle={{ backgroundColor: 'none' }}
             onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
           >
-            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons">
+            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons" style={{ float: 'left' }}>
               <IconButton
                 tooltip="Close"
-                style={{ color: '#fafafa' }}
+                style={{ color: '#fafafa', margin: '5px' }}
                 onClick={() => { this.props.actions.changeSidePaneMode(undefined) }}
               >
                 <Close />
