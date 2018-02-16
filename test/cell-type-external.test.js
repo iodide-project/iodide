@@ -1,15 +1,11 @@
 import React from 'react'
-import { shallow, render } from 'enzyme'
-import { Provider } from 'react-redux'
-import configureStore from 'redux-mock-store'
+import { shallow } from 'enzyme'
 
 import { ExternalResourceCellUnconnected as ExternalResourceCell,
-  mapStateToProps } from '../src/components/cell-type-external-resource.jsx'
-import CellEditor from '../src/components/cell-editor.jsx'
-import TwoRowCell from '../src/components/two-row-cell.jsx'
-import ExternalResourceOutput from '../src/components/output-handler-external-resource.jsx'
-
-const mockStore = configureStore()
+  mapStateToProps } from '../src/components/cell-type-external-resource'
+import CellEditor from '../src/components/cell-editor'
+import TwoRowCell from '../src/components/two-row-cell'
+import ExternalResourceOutput from '../src/components/output-handler-external-resource'
 
 const STANDARD_NETWORK_ERROR = 'A network error occurred.'
 

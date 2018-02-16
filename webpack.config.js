@@ -58,13 +58,14 @@ module.exports = (env) => {
       rules: [
         {
           enforce: 'pre',
-          test: /\.js$/,
+          test: /\.jsx?$/,
           exclude: /node_modules/,
           loader: 'eslint-loader',
           options: {
             // eslint options (if necessary)
             emitWarning: true,
             emitError: true,
+            extensions: ['.jsx', '.js']
           },
         },
         {

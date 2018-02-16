@@ -36,7 +36,10 @@ class Title extends React.Component {
   }
 
   getTitle() {
-    if (this.props.pageMode !== 'title-edit') return (this.props.title || "New Notebook") + ' - Iodide'
+    if (this.props.pageMode !== 'title-edit') {
+      return `${this.props.title || 'New Notebook'} - Iodide`
+    }
+    return undefined
   }
 
   changeTitle(evt) {
