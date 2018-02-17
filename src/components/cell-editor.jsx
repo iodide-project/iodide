@@ -26,7 +26,7 @@ class CellEditor extends React.Component {
     cellId: PropTypes.number.isRequired,
     cellType: PropTypes.string,
     content: PropTypes.string,
-    pageMode: PropTypes.oneOf(['command', 'edit']),
+    pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
