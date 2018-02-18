@@ -2,7 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import TwoRowCell from './two-row-cell'
+import CellRow from './cell-row'
+import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
 import ExternalResourceOutputHandler from './output-handler-external-resource'
 
@@ -16,11 +17,14 @@ export class ExternalResourceCellUnconnected extends React.Component {
 
   render() {
     return (
-      <TwoRowCell
-        cellId={this.props.cellId}
-        row1={<CellEditor cellId={this.props.cellId} />}
-        row2={<ExternalResourceOutputHandler value={this.props.value} />}
-      />
+      <CellContainer cellId={this.props.cellId}>
+        <CellRow cellId={this.props.cellId} rowType="input">
+          <CellEditor cellId={this.props.cellId} />
+        </CellRow>
+        <CellRow cellId={this.props.cellId} rowType="output">
+          <ExternalResourceOutputHandler value={this.props.value} />
+        </CellRow>
+      </CellContainer>
     )
   }
 }

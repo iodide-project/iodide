@@ -3,8 +3,9 @@ import { shallow } from 'enzyme'
 
 import { ExternalResourceCellUnconnected as ExternalResourceCell,
   mapStateToProps } from '../src/components/cell-type-external-resource'
+import { CellContainer } from '../src/components/cell-container'
+import CellRow from '../src/components/cell-row'
 import CellEditor from '../src/components/cell-editor'
-import TwoRowCell from '../src/components/two-row-cell'
 import ExternalResourceOutput from '../src/components/output-handler-external-resource'
 
 const STANDARD_NETWORK_ERROR = 'A network error occurred.'
@@ -47,29 +48,58 @@ describe('ExternalResourceCellUnconnected contains the expected child components
     mountedCell = undefined
   })
 
-  it('always renders one TwoRowCell', () => {
-    expect(cell().find(TwoRowCell).length).toBe(1)
+  it('always renders one CellContainer', () => {
+    expect(cell().find(CellContainer).length).toBe(1)
   })
 
-  it("sets the TwoRowCell cellId prop to be the ExternalResourceCells's cellId prop", () => {
-    expect(cell().find(TwoRowCell).props().cellId)
+  it('always renders two CellRow inside CellContainer', () => {
+    expect(cell().wrap(cell().find(CellContainer))
+      .find(CellRow)).toHaveLength(2)
+  })
+
+  it('always renders one CellEditor inside first CellRow', () => {
+    expect(cell().wrap(cell().find(CellRow).at(0))
+      .find(CellEditor)).toHaveLength(1)
+  })
+
+  it('always renders one ExternalResourceOutput inside second CellRow', () => {
+    expect(cell().wrap(cell().find(CellRow).at(1))
+      .find(ExternalResourceOutput)).toHaveLength(1)
+  })
+
+  it("sets the CellContainer cellId prop to be the ExternalResourceCells's cellId prop", () => {
+    expect(cell().find(CellContainer).props().cellId)
       .toBe(props.cellId)
   })
 
-  it('the TwoRowCell always has a row1 prop that is a CellEditor', () => {
-    expect(cell().wrap(cell().find(TwoRowCell)
-      .props().row1).find(CellEditor)).toHaveLength(1)
-  })
-
-  it("sets the CellEditor cellId prop to be the ExternalResourceCell's cellId prop", () => {
-    expect(cell().wrap(cell().find(TwoRowCell)
-      .props().row1).props().cellId)
+  it("sets the first CellRow cellId prop to be the ExternalResourceCells's cellId prop", () => {
+    expect(cell().find(CellRow).at(0).props().cellId)
       .toBe(props.cellId)
   })
 
-  it('the TwoRowCell always has a row2 prop that is an ExternalResourceOutput', () => {
-    expect(cell().wrap(cell().find(TwoRowCell)
-      .props().row2).find(ExternalResourceOutput)).toHaveLength(1)
+  it('sets the first CellRow rowType prop to be input', () => {
+    expect(cell().find(CellRow).at(0).props().rowType)
+      .toBe('input')
+  })
+
+  it("sets the second CellRow cellId prop to be the ExternalResourceCells's cellId prop", () => {
+    expect(cell().find(CellRow).at(1).props().cellId)
+      .toBe(props.cellId)
+  })
+
+  it('sets the second CellRow rowType prop to be output', () => {
+    expect(cell().find(CellRow).at(1).props().rowType)
+      .toBe('output')
+  })
+
+  it("sets the CellEditor cellId prop to be the ExternalResourceCells's cellId prop", () => {
+    expect(cell().find(CellEditor).props().cellId)
+      .toBe(props.cellId)
+  })
+
+  it("sets the ExternalResourceOutput value prop to be the ExternalResourceCells's value prop", () => {
+    expect(cell().find(ExternalResourceOutput).props().value)
+      .toBe(props.value)
   })
 })
 
