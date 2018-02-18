@@ -44,32 +44,28 @@ export class MarkdownCellUnconnected extends React.Component {
       editorDisplayStyle = 'block'
     }
 
-    const row1 = (<CellEditor
-      cellId={this.props.cellId}
-      containerStyle={{ display: editorDisplayStyle }}
-      onContainerClick={this.enterEditMode}
-      editorOptions={{
-            lineWrapping: true,
-            matchBrackets: false,
-            autoCloseBrackets: false,
-            lineNumbers: false,
-          }}
-    />)
-
-    const row2 = (<div
-      className="user-markdown"
-      onDoubleClick={this.enterEditMode}
-      style={{ display: resultDisplayStyle }}
-      dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
-    />)
-
     return (
       <CellContainer cellId={this.props.cellId}>
         <CellRow cellId={this.props.cellId} rowType="input">
-          {row1}
+          <CellEditor
+            cellId={this.props.cellId}
+            containerStyle={{ display: editorDisplayStyle }}
+            onContainerClick={this.enterEditMode}
+            editorOptions={{
+              lineWrapping: true,
+              matchBrackets: false,
+              autoCloseBrackets: false,
+              lineNumbers: false,
+            }}
+          />
         </CellRow>
         <CellRow cellId={this.props.cellId} rowType="output">
-          {row2}
+          <div
+            className="user-markdown"
+            onDoubleClick={this.enterEditMode}
+            style={{ display: resultDisplayStyle }}
+            dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
+          />
         </CellRow>
       </CellContainer>
     )
