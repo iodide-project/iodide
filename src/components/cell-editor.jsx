@@ -41,18 +41,6 @@ class CellEditor extends React.Component {
 
   constructor(props) {
     super(props)
-    // default editor options are for JS
-    // this.editorOptions = Object.assign({
-    //   mode: this.props.cellType,
-    //   lineWrapping: false,
-    //   matchBrackets: true,
-    //   autoCloseBrackets: true,
-    //   theme: 'eclipse',
-    //   autoRefresh: true,
-    //   lineNumbers: true,
-    //   comment: this.props.cellType === 'javascript',
-    //   readOnly: this.props.viewMode === 'presentation',
-    // }, props.editorOptions)
     // explicitly bind "this" for all methods in constructors
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
@@ -114,7 +102,8 @@ class CellEditor extends React.Component {
       theme: 'eclipse',
       autoRefresh: true,
       lineNumbers: true,
-      comment: this.props.cellType === 'javascript',
+      keyMap: "sublime",
+      comment: true,//this.props.cellType === 'javascript',
       readOnly: this.props.viewMode === 'presentation',
     }, this.props.editorOptions)
 
