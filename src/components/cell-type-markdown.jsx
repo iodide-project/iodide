@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 
-// import TwoRowCell from './two-row-cell'
-import OneRowCell from './one-row-cell'
+import CellRow from './cell-row'
+import { CellContainer } from './cell-container'
 
 import CellEditor from './cell-editor'
 
@@ -44,35 +44,30 @@ export class MarkdownCellUnconnected extends React.Component {
       editorDisplayStyle = 'block'
     }
 
-    const row1 = (<CellEditor
-      cellId={this.props.cellId}
-      containerStyle={{ display: editorDisplayStyle }}
-      onContainerClick={this.enterEditMode}
-      editorOptions={{
-            lineWrapping: true,
-            matchBrackets: false,
-            autoCloseBrackets: false,
-            lineNumbers: false,
-          }}
-    />)
-
-    const row2 = (<div
-      className="user-markdown"
-      onDoubleClick={this.enterEditMode}
-      style={{ display: resultDisplayStyle }}
-      dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
-    />)
-
-    // return (<TwoRowCell
-    //   cellId={this.props.cellId}
-    //   row1={row1}
-    //   row2={row2}
-    // />)
     return (
-      <OneRowCell cellId={this.props.cellId}>
-        {row1}
-        {row2}
-      </OneRowCell>
+      <CellContainer cellId={this.props.cellId}>
+        <CellRow cellId={this.props.cellId} rowType="input">
+          <CellEditor
+            cellId={this.props.cellId}
+            containerStyle={{ display: editorDisplayStyle }}
+            onContainerClick={this.enterEditMode}
+            editorOptions={{
+              lineWrapping: true,
+              matchBrackets: false,
+              autoCloseBrackets: false,
+              lineNumbers: false,
+            }}
+          />
+        </CellRow>
+        <CellRow cellId={this.props.cellId} rowType="output">
+          <div
+            className="user-markdown"
+            onDoubleClick={this.enterEditMode}
+            style={{ display: resultDisplayStyle }}
+            dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
+          />
+        </CellRow>
+      </CellContainer>
     )
   }
 }

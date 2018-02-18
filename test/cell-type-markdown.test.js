@@ -2,7 +2,8 @@ import { shallow } from 'enzyme'
 import React from 'react'
 import { MarkdownCellUnconnected, mapStateToProps } from '../src/components/cell-type-markdown'
 import CellEditor from '../src/components/cell-editor'
-import OneRowCell from '../src/components/one-row-cell'
+import CellRow from '../src/components/cell-row'
+import { CellContainer } from '../src/components/cell-container'
 
 describe('MarkdownCell_unconnected react component', () => {
   let props
@@ -26,27 +27,48 @@ describe('MarkdownCell_unconnected react component', () => {
     mountedCell = undefined
   })
 
-  it('always renders one OneRowCell', () => {
-    expect(cell().find(OneRowCell).length).toBe(1)
+  it('always renders one CellContainer', () => {
+    expect(cell().find(CellContainer).length).toBe(1)
   })
 
-  it("sets the OneRowCell cellId prop to be the MarkdownCell's cellId prop", () => {
-    expect(cell().find(OneRowCell).props().cellId)
+  it("sets the CellContainer cellId prop to be the MarkdownCell's cellId prop", () => {
+    expect(cell().find(CellContainer).props().cellId)
       .toBe(props.cellId)
   })
 
-  it('the OneRowCell should have two children', () => {
-    expect(cell().find(OneRowCell).props().children).toHaveLength(2)
+  it('the CellContainer should have two CellRow', () => {
+    expect(cell().wrap(cell().find(CellContainer))
+      .find(CellRow)).toHaveLength(2)
   })
 
-  it('the OneRowCell always has a child that is a CellEditor', () => {
-    expect(cell().wrap(cell().find(OneRowCell)
+  it("sets the first CellRow cellId prop to be the MarkdownCell's cellId prop", () => {
+    expect(cell().find(CellRow).at(0).props().cellId)
+      .toBe(props.cellId)
+  })
+
+  it('sets the first CellRow rowType prop to be input', () => {
+    expect(cell().find(CellRow).at(0).props().rowType)
+      .toBe('input')
+  })
+
+  it('sets the second CellRow rowType prop to be output', () => {
+    expect(cell().find(CellRow).at(1).props().rowType)
+      .toBe('output')
+  })
+
+  it("sets the second CellRow cellId prop to be the MarkdownCell's cellId prop", () => {
+    expect(cell().find(CellRow).at(1).props().cellId)
+      .toBe(props.cellId)
+  })
+
+  it('the first CellRow always has a child that is a CellEditor', () => {
+    expect(cell().wrap(cell().find(CellRow).at(0)
       .props().children).find(CellEditor)).toHaveLength(1)
   })
 
 
-  it('the OneRowCell always has a child that is is a div', () => {
-    expect(cell().wrap(cell().find(OneRowCell)
+  it('the second CellRow always has a child that is is a div', () => {
+    expect(cell().wrap(cell().find(CellRow).at(1)
       .props().children).find('div')).toHaveLength(1)
   })
 
