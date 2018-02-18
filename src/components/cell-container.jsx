@@ -13,7 +13,7 @@ class CellContainer extends React.Component {
     cellId: PropTypes.number.isRequired,
     // cellClass: PropTypes.string,
     children: PropTypes.node,
-    pageMode: PropTypes.oneOf(['command', 'edit']),
+    pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,

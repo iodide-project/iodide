@@ -9,7 +9,7 @@ import actions from '../actions'
 class CellRow extends React.Component {
   static propTypes = {
     executionString: PropTypes.string,
-    pageMode: PropTypes.oneOf(['command', 'edit']),
+    pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     collapsedState: PropTypes.string,
     rowType: PropTypes.string,
