@@ -2,8 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import CellRow from './cell-row'
+import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
-import OneRowCell from './one-row-cell'
 
 
 export class RawCellUnconnected extends React.Component {
@@ -12,15 +13,17 @@ export class RawCellUnconnected extends React.Component {
   }
   render() {
     return (
-      <OneRowCell cellId={this.props.cellId}>
-        <CellEditor
-          cellId={this.props.cellId}
-          editorOptions={{
-            matchBrackets: false,
-            autoCloseBrackets: false,
-          }}
-        />
-      </OneRowCell>
+      <CellContainer cellId={this.props.cellId}>
+        <CellRow cellId={this.props.cellId} rowType="input">
+          <CellEditor
+            cellId={this.props.cellId}
+            editorOptions={{
+              matchBrackets: false,
+              autoCloseBrackets: false,
+            }}
+          />
+        </CellRow>
+      </CellContainer>
     )
   }
 }
