@@ -2,8 +2,9 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 import { RawCellUnconnected as RawCell } from '../src/components/cell-type-raw'
+import { CellContainer } from '../src/components/cell-container'
+import CellRow from '../src/components/cell-row'
 import CellEditor from '../src/components/cell-editor'
-import OneRowCell from '../src/components/one-row-cell'
 
 
 describe('RawCellUnconnected react component', () => {
@@ -23,28 +24,36 @@ describe('RawCellUnconnected react component', () => {
     mountedCell = undefined
   })
 
-  it('always renders one OneRowCell', () => {
-    expect(cell().find(OneRowCell).length).toBe(1)
+  it('always renders one CellContainer', () => {
+    expect(cell().find(CellContainer).length).toBe(1)
   })
 
-  it('sets the OneRowCell cellId prop to be the RawCell cellId input prop', () => {
-    expect(cell().find(OneRowCell).props().cellId)
+  it('always renders one CellRow inside CellContainer', () => {
+    expect(cell().wrap(cell().find(CellContainer))
+      .find(CellRow)).toHaveLength(1)
+  })
+
+  it('always renders one CellEditor inside CellRow', () => {
+    expect(cell().wrap(cell().find(CellRow))
+      .find(CellEditor)).toHaveLength(1)
+  })
+
+  it("sets the CellContainer cellId prop to be the RawCell's cellId prop", () => {
+    expect(cell().find(CellContainer).props().cellId)
       .toBe(props.cellId)
   })
 
-  it('is a OneRowCell with one child', () => {
-    expect(cell().find(OneRowCell).children().length).toBe(1)
+  it("sets the CellRow cellId prop to be the RawCell's cellId prop", () => {
+    expect(cell().find(CellRow).props().cellId)
+      .toBe(props.cellId)
   })
 
-  it('has a cell CellEditor within its OneRowCell', () => {
-    expect(cell().find(CellEditor).parent().is(OneRowCell)).toEqual(true)
+  it('sets the CellRow rowType prop to be input', () => {
+    expect(cell().find(CellRow).props().rowType)
+      .toBe('input')
   })
 
-  it('always renders one CellEditor', () => {
-    expect(cell().find(CellEditor).length).toBe(1)
-  })
-
-  it('sets the CellEditor cellId prop to be the RawCell cellId input prop', () => {
+  it("sets the CellEditor cellId prop to be the RawCell's cellId prop", () => {
     expect(cell().find(CellEditor).props().cellId)
       .toBe(props.cellId)
   })
