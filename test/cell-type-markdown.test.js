@@ -198,9 +198,6 @@ describe('MarkdownCell_unconnected react component', () => {
 //     mountedCell = undefined
 //   })
 
-//   it("always renders one OneRowCell", () => {
-//     expect(cell().find(OneRowCell).length).toBe(1)
-//   })
 // })
 
 
