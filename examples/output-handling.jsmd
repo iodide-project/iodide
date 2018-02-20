@@ -99,7 +99,7 @@ const GeoLocationOutputHandler = {
 
     render: function(value) {
         // return a HTMLElement, as created by document.createElement
-        var img = document.createElement('img')
+        let img = document.createElement('img')
         img.src = 'https://maps.googleapis.com/maps/api/staticmap?center=' + value.lat + ',' + value.lon + '&zoom=17&size=600x300&maptype=roadmap'
         return img
 
@@ -114,6 +114,44 @@ Now that we've defined the custom output handler, it will be used to display any
 object with `lat` and `lon` members, even though it's not an instance of a
 specialized class.
 
-%%js
+%% js
 var x = {lat: 37.387315, lon: -122.060009}
+x
+
+%% md
+## Output handlers in containers
+
+Custom output handlers are also used when displaying containers (arrays, data frames, matrices etc.).
+
+When the output handler is used in a container, it is passed a second argument, `inContainer`, set to `true`.  Output handlers can use this argument to output a smaller version of the output more suitable for display inside of a larger container.
+
+The following example is another version of the `GeoLocation` output handler that uses the `inContainer` flag to output a smaller image.
+
+%% js
+const GeoLocationOutputHandler = {
+    shouldHandle: function(value) {
+        return (typeof value === 'object') && 'lat' in value && 'lon' in value
+    },
+
+    render: function(value, inContainer) {
+        // return a HTMLElement, as created by document.createElement
+        let img = document.createElement('img')
+        let size = inContainer ? "150x100" : "600x300"
+        img.src = 'https://maps.googleapis.com/maps/api/staticmap?center=' + value.lat + ',' + value.lon +
+          '&zoom=17&size=' + size + '&maptype=roadmap'
+        return img
+    }
+}
+
+iodide.addOutputHandler(GeoLocationOutputHandler)
+
+%% md
+Display `GeoLocation` objects inside of a data frame.
+
+%% js
+let x = [
+  {name: "MTV", date: new Date(), data: {a: 42, b: 50}, loc: {lat: 37.387315, lon: -122.060009}},
+  {name: "SFO", date: new Date(), data: {a: 32, b: 92}, loc: {lat: 37.789729, lon: -122.388433}},
+  {name: "TOR", date: new Date(), data: {a: 23, b: 29}, loc: {lat: 43.647458, lon: -79.394170}}
+]
 x
