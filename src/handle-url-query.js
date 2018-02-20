@@ -34,8 +34,6 @@ function handleUrlQuery() {
   const queryParams = decodeQueryParams(window.location.search.substr(1).split('&'));
   if ({}.hasOwnProperty.call(queryParams, 'url')) {
     loadJsmdFromNotebookUrl(queryParams.url)
-  } else if ({}.hasOwnProperty.call(queryParams, 'iodide-example')) {
-    loadJsmdFromNotebookUrl(`https://raw.githubusercontent.com/iodide-project/iodide-examples/master/${queryParams['iodide-example']}`)
   } else if ({}.hasOwnProperty.call(queryParams, 'gist')) {
     loadJsmdFromNotebookUrl(`https://gist.githubusercontent.com/${queryParams.gist}/raw/`)
   }
