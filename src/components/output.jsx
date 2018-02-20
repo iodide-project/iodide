@@ -29,6 +29,7 @@ function renderValue(value, inContainer = false) {
       /* eslint-enable */
     }
   }
+  return undefined
 }
 
 const nullHandler = {
@@ -66,7 +67,7 @@ const dataFrameHandler = {
         Cell: cell => renderValue(cell.value, true),
       }))
     const dataSetInfo = `array of objects: ${value.length} rows, ${columns.length} columns`
-    let pageSize = value.length > 10 ? 10 : value.length
+    const pageSize = value.length > 10 ? 10 : value.length
     return (
       <div>
         <div className="data-set-info">{dataSetInfo}</div>
@@ -107,7 +108,7 @@ const arrayHandler = {
     const dataSetInfo = `${value.length} element array`
     const len = value.length
 
-    let values = []
+    const values = []
 
     function addValues(start, end) {
       for (let i = start; i < end; i++) {
