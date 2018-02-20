@@ -2,8 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import CellRow from './cell-row'
+import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
-import OneRowCell from './one-row-cell'
 
 import { getCellById } from '../notebook-utils'
 
@@ -16,12 +17,14 @@ export class CSSCellUnconnected extends React.Component {
 
   render() {
     return (
-      <OneRowCell cellId={this.props.cellId}>
-        <CellEditor cellId={this.props.cellId} />
-        <style>
-          {this.props.rendered && this.props.value}
-        </style>
-      </OneRowCell>
+      <CellContainer cellId={this.props.cellId}>
+        <CellRow cellId={this.props.cellId} rowType="input">
+          <CellEditor cellId={this.props.cellId} />
+          <style>
+            {this.props.rendered && this.props.value}
+          </style>
+        </CellRow>
+      </CellContainer>
     )
   }
 }

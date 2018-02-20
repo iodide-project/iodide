@@ -4,7 +4,8 @@ import { shallow } from 'enzyme'
 import { CSSCellUnconnected as CSSCell,
   mapStateToProps } from '../src/components/cell-type-css'
 import CellEditor from '../src/components/cell-editor'
-import OneRowCell from '../src/components/one-row-cell'
+import { CellContainer } from '../src/components/cell-container'
+import CellRow from '../src/components/cell-row'
 
 
 describe('CSSCell_unconnected react component', () => {
@@ -26,9 +27,25 @@ describe('CSSCell_unconnected react component', () => {
     mountedCell = undefined
   })
 
-  it('always renders one style elt', () => {
-    const styleElts = cell().find('style')
-    expect(styleElts.length).toBe(1)
+  it('always renders one CellContainer', () => {
+    expect(cell().find(CellContainer).length).toBe(1)
+  })
+
+  it('always renders one CellRow inside CellContainer', () => {
+    expect(cell().wrap(cell().find(CellContainer))
+      .find(CellRow)).toHaveLength(1)
+  })
+
+  it('is a CellRow with two children', () => {
+    expect(cell().find(CellRow).children().length).toBe(2)
+  })
+
+  it('always renders one CellEditor inside CellRow', () => {
+    expect(cell().find(CellEditor).parent().is(CellRow)).toEqual(true)
+  })
+
+  it('always renders one style elt inside CellRow', () => {
+    expect(cell().find('style').parent().is(CellRow)).toEqual(true)
   })
 
   it('the style elt has the correct value if rendered===true', () => {
@@ -42,35 +59,24 @@ describe('CSSCell_unconnected react component', () => {
     expect(styleElts.text()).toEqual('')
   })
 
-  it('always renders one CellEditor', () => {
-    expect(cell().find(CellEditor).length).toBe(1)
+  it("sets the CellContainer cellId prop to be the CSSCell's cellId prop", () => {
+    expect(cell().find(CellContainer).props().cellId)
+      .toBe(props.cellId)
+  })
+
+  it("sets the CellRow cellId prop to be the CSSCell's cellId prop", () => {
+    expect(cell().find(CellRow).props().cellId)
+      .toBe(props.cellId)
+  })
+
+  it('sets the CellRow rowType prop to be input', () => {
+    expect(cell().find(CellRow).props().rowType)
+      .toBe('input')
   })
 
   it('sets the CellEditor cellId prop to be the CSSCell cellId input prop', () => {
     expect(cell().find(CellEditor).props().cellId)
       .toBe(props.cellId)
-  })
-
-  it('always renders one OneRowCell', () => {
-    expect(cell().find(OneRowCell).length).toBe(1)
-  })
-
-  it('sets the OneRowCell cellId prop to be the CSSCell cellId input prop', () => {
-    expect(cell().find(OneRowCell).props().cellId)
-      .toBe(props.cellId)
-  })
-
-
-  it('is a OneRowCell with two children', () => {
-    expect(cell().find(OneRowCell).children().length).toBe(2)
-  })
-
-  it('has a cell CellEditor within its OneRowCell', () => {
-    expect(cell().find(CellEditor).parent().is(OneRowCell)).toEqual(true)
-  })
-
-  it('has a cell style elt within its OneRowCell', () => {
-    expect(cell().find('style').parent().is(OneRowCell)).toEqual(true)
   })
 })
 
