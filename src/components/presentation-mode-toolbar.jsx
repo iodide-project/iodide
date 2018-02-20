@@ -7,7 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import ViewModeToggleButton from './view-mode-toggle-button'
 
-class PresentationMenu extends React.Component {
+class PresentationModeToolbar extends React.Component {
   static propTypes = {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     title: PropTypes.string,
@@ -20,10 +20,9 @@ class PresentationMenu extends React.Component {
             <ViewModeToggleButton textColor="black" actions={this.props.actions} viewMode={this.props.viewMode} />
           </MuiThemeProvider>
         </div>
-        <h1 className="presentation-title" style={{ color: this.props.title === undefined ? 'gray' : 'black' }}>{this.props.title || 'new notebook'}</h1>
       </div>
     )
   }
 }
 
-export default PresentationMenu
+export default PresentationModeToolbar

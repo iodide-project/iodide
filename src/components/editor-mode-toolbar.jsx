@@ -19,7 +19,7 @@ import Title from './title'
 import { prettyDate } from '../notebook-utils'
 
 
-class EditorMenu extends React.Component {
+class EditorModeToolbar extends React.Component {
   static propTypes = {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     sidePaneMode: PropTypes.oneOf(['history', 'declared variables']),
@@ -81,4 +81,4 @@ class EditorMenu extends React.Component {
   }
 }
 
-export default EditorMenu
+export default EditorModeToolbar

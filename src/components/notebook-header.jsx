@@ -17,8 +17,8 @@ import Drawer from 'material-ui/Drawer'
 
 import { HistoryItem } from './history-item'
 import DeclaredVariables from './declared-variables'
-import PresentationMenu from './presentation-menu'
-import EditorMenu from './editor-menu'
+import PresentationModeToolbar from './presentation-mode-toolbar'
+import EditorModeToolbar from './editor-mode-toolbar'
 
 import actions from '../actions'
 
@@ -88,7 +88,7 @@ class NotebookHeader extends React.Component {
         />
         <a id="export-anchor" style={{ display: 'none' }} />
         <div className="notebook-menu" style={{ display: this.props.viewMode === 'editor' ? 'block' : 'none' }}>
-          <EditorMenu
+          <EditorModeToolbar
             actions={this.props.actions}
             mode={this.props.mode}
             viewMode={this.props.viewMode}
@@ -100,7 +100,7 @@ class NotebookHeader extends React.Component {
           />
         </div>
         <div className="presentation-menu" style={{ display: (this.props.viewMode === 'presentation' ? 'block' : 'none') }} >
-          <PresentationMenu
+          <PresentationModeToolbar
             mode={this.props.mode}
             viewMode={this.props.viewMode}
             title={this.props.title}
