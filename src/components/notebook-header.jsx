@@ -10,6 +10,7 @@ import FlatButton from 'material-ui/FlatButton'
 import IconButton from 'material-ui/IconButton'
 import HistoryIcon from 'material-ui/svg-icons/action/history'
 import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down'
+import Close from 'material-ui/svg-icons/navigation/close'
 
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
@@ -124,6 +125,15 @@ class NotebookHeader extends React.Component {
             overlayStyle={{ backgroundColor: 'none' }}
             onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
           >
+            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons" style={{ float: 'left' }}>
+              <IconButton
+                tooltip="Close"
+                style={{ color: '#fafafa', margin: '5px' }}
+                onClick={() => { this.props.actions.changeSidePaneMode(undefined) }}
+              >
+                <Close />
+              </IconButton>
+            </ToolbarGroup>
             <h1 className="overlay-title">Declared Variables</h1>
             <DeclaredVariables variables={this.props.declaredVariables} />
           </Drawer>
@@ -138,6 +148,15 @@ class NotebookHeader extends React.Component {
             overlayStyle={{ backgroundColor: 'none' }}
             onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
           >
+            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons" style={{ float: 'left' }}>
+              <IconButton
+                tooltip="Close"
+                style={{ color: '#fafafa', margin: '5px' }}
+                onClick={() => { this.props.actions.changeSidePaneMode(undefined) }}
+              >
+                <Close />
+              </IconButton>
+            </ToolbarGroup>
             <h1 className="overlay-title">Execution History</h1>
             <div className="history-cells"> {histContents} </div>
           </Drawer>
