@@ -54,4 +54,11 @@ describe('keybindings and keybinding callbacks', () => {
   it('should output an array for the keybinding', () => {
     expect(nb1.keybindings).toBeInstanceOf(Array)
   })
+
+  it('should tell you if it has keybindings or not', (() => {
+    const nb3 = new NotebookTask({ title: 'okokok', callback: () => {} })
+    const nb4 = new NotebookTask({ title: 'ok2', keybindings: ['meta+s'], callback: () => {} })
+    expect(nb3.hasKeybinding()).toBe(false)
+    expect(nb4.hasKeybinding()).toBe(true)
+  }))
 })
