@@ -220,7 +220,6 @@ describe('MarkdownCell_unconnected react component', () => {
 })
 
 
-
 describe('MarkdownCell mapStateToProps', () => {
   const state = {
     cells: [{
