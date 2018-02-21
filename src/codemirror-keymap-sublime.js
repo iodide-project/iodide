@@ -136,7 +136,7 @@
   }
 
 
-// these shorcuts conflict with notebook shortcuts
+// these shortcuts conflict with notebook shortcuts
   // cmds[map[ctrl + "Enter"] = "insertLineAfter"] = function(cm) { return insertLine(cm, false); };
   // cmds[map["Shift-" + ctrl + "Enter"] = "insertLineBefore"] = function(cm) { return insertLine(cm, true); };
 
@@ -146,31 +146,35 @@
     while (end < line.length && CodeMirror.isWordChar(line.charAt(end))) ++end;
     return {from: Pos(pos.line, start), to: Pos(pos.line, end), word: line.slice(start, end)};
   }
-
-  cmds[map[ctrl + "D"] = "selectNextOccurrence"] = function(cm) {
-    var from = cm.getCursor("from"), to = cm.getCursor("to");
-    var fullWord = cm.state.sublimeFindFullWord == cm.doc.sel;
-    if (CodeMirror.cmpPos(from, to) == 0) {
-      var word = wordAt(cm, from);
-      if (!word.word) return;
-      cm.setSelection(word.from, word.to);
-      fullWord = true;
-    } else {
-      var text = cm.getRange(from, to);
-      var query = fullWord ? new RegExp("\\b" + text + "\\b") : text;
-      var cur = cm.getSearchCursor(query, to);
-      var found = cur.findNext();
-      if (!found) {
-        cur = cm.getSearchCursor(query, Pos(cm.firstLine(), 0));
-        found = cur.findNext();
-      }
-      if (!found || isSelectedRange(cm.listSelections(), cur.from(), cur.to()))
-        return CodeMirror.Pass
-      cm.addSelection(cur.from(), cur.to());
-    }
-    if (fullWord)
-      cm.state.sublimeFindFullWord = cm.doc.sel;
-  };
+  
+// this shortcut conflicts with a notebook shortcut
+// simply not defining it here would lead to codemirror using the default key binding (which is deleteLine).
+// instead, overwrite the default ctrl-D key binding with an empty function.
+  cmds[map[ctrl + "D"] = "doNothing"] = function(cm) {};
+  // cmds[map[ctrl + "D"] = "selectNextOccurrence"] = function(cm) {
+  //   var from = cm.getCursor("from"), to = cm.getCursor("to");
+  //   var fullWord = cm.state.sublimeFindFullWord == cm.doc.sel;
+  //   if (CodeMirror.cmpPos(from, to) == 0) {
+  //     var word = wordAt(cm, from);
+  //     if (!word.word) return;
+  //     cm.setSelection(word.from, word.to);
+  //     fullWord = true;
+  //   } else {
+  //     var text = cm.getRange(from, to);
+  //     var query = fullWord ? new RegExp("\\b" + text + "\\b") : text;
+  //     var cur = cm.getSearchCursor(query, to);
+  //     var found = cur.findNext();
+  //     if (!found) {
+  //       cur = cm.getSearchCursor(query, Pos(cm.firstLine(), 0));
+  //       found = cur.findNext();
+  //     }
+  //     if (!found || isSelectedRange(cm.listSelections(), cur.from(), cur.to()))
+  //       return CodeMirror.Pass
+  //     cm.addSelection(cur.from(), cur.to());
+  //   }
+  //   if (fullWord)
+  //     cm.state.sublimeFindFullWord = cm.doc.sel;
+  // };
 
   function addCursorToSelection(cm, dir) {
     var ranges = cm.listSelections(), newRanges = [];
