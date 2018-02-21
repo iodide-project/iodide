@@ -9,7 +9,6 @@ function keyBinding(elem) {
   Object.keys(TASKS).forEach((t) => {
     const task = TASKS[t]
     if (task.hasKeybinding()) {
-      console.log(task.title, task.keybindings, task.keybindingCallback.bind(elem))
       Mousetrap.bind(task.keybindings, task.keybindingCallback.bind(elem))
     }
   })
