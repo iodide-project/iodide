@@ -11,44 +11,13 @@ import { SimpleTable, makeMatrixText } from './pretty-matrix'
 
 import nb from '../tools/nb'
 
-function renderValue(value, inContainer = false) {
-  for (const handler of handlers) {
-    if (handler.shouldHandle(value, inContainer)) {
-      const resultElem = handler.render(value, inContainer)
-      /* eslint-disable */
-      if (typeof resultElem === 'string') {
-        return <div dangerouslySetInnerHTML={{ __html: resultElem }} />
-      } else if (resultElem.tagName !== undefined) {
-        return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} />
-      } else if (resultElem.type !== undefined) {
-        return resultElem
-      } else {
-        console.log('Unknown output handler result type from ' + handler)
-        // Fallback to other handlers if it's something invalid
-      }
-      /* eslint-enable */
-    }
-  }
-  return undefined
-}
-
-const nullHandler = {
-  shouldHandle: value => (value === null),
-
-  render: () => <pre>null</pre>,
-}
-
-const undefinedHandler = {
-  shouldHandle: value => (value === undefined),
-
-  render: () => <pre>undefined</pre>,
-}
+// TODO: Use interface-js (or similar) to enforce interfaces
 
 const renderMethodHandler = {
   shouldHandle: value => (value !== undefined && typeof value.render === 'function'),
 
-  render: (value, inContainer) => {
-    const output = value.render(inContainer)
+  render: (value) => {
+    const output = value.render()
     if (typeof output === 'string') {
       return <div dangerouslySetInnerHTML={{ __html: output }} /> // eslint-disable-line
     }
@@ -57,17 +26,24 @@ const renderMethodHandler = {
 }
 
 const dataFrameHandler = {
-  shouldHandle: (value, inContainer) => !inContainer && nb.isRowDf(value),
+  shouldHandle: value => nb.isRowDf(value),
 
   render: (value) => {
     const columns = Object.keys(value[0])
       .map(k => ({
         Header: k,
         accessor: k,
-        Cell: cell => renderValue(cell.value, true),
+        Cell: (cell) => {
+          if (Object.prototype.toString.call(cell.value) === '[object Date]') {
+            return cell.value.toString()
+          }
+          if (Object.prototype.toString.call(cell.value) === '[object Object]') {
+            return JSON.stringify(cell.value)
+          }
+          return cell.value
+        },
       }))
     const dataSetInfo = `array of objects: ${value.length} rows, ${columns.length} columns`
-    const pageSize = value.length > 10 ? 10 : value.length
     return (
       <div>
         <div className="data-set-info">{dataSetInfo}</div>
@@ -78,7 +54,7 @@ const dataFrameHandler = {
           showPaginationBottom={false}
           pageSizeOptions={[5, 10, 25, 50, 100]}
           minRows={0}
-          defaultPageSize={pageSize}
+          defaultPageSize={25}
         />
       </div>
     )
@@ -86,7 +62,7 @@ const dataFrameHandler = {
 }
 
 const matrixHandler = {
-  shouldHandle: (value, inContainer) => !inContainer && nb.isMatrix(value),
+  shouldHandle: value => nb.isMatrix(value),
 
   render: (value) => {
     const shape = nb.shape(value)
@@ -102,50 +78,29 @@ const matrixHandler = {
 }
 
 const arrayHandler = {
-  shouldHandle: (value, inContainer) => !inContainer && _.isArray(value),
+  shouldHandle: value => _.isArray(value),
 
   render: (value) => {
     const dataSetInfo = `${value.length} element array`
     const len = value.length
-
-    const values = []
-
-    function addValues(start, end) {
-      for (let i = start; i < end; i++) {
-        values.push(renderValue(value[i], true))
-        if (i !== end - 1) {
-          values.push(', ')
-        }
-      }
-    }
-
-    values.push('[')
+    let arrayOutput
     if (len < 500) {
-      addValues(0, len)
+      arrayOutput = `[${value.join(', ')}]`
     } else {
-      addValues(0, 100)
-      values.push(' … ')
-      addValues(len - 100, len)
+      arrayOutput = `[${value.slice(0, 100).join(', ')}, ... , ${value.slice(len - 100, len).join(', ')}]`
     }
-    values.push(']')
-
     return (
       <div>
         <div className="data-set-info">{dataSetInfo}</div>
-        {values}
+        <div className="array-output">{arrayOutput}</div>
       </div>
     )
   },
 }
 
-const dateHandler = {
-  shouldHandle: value => Object.prototype.toString.call(value) === '[object Date]',
-
-  render: value => value.toString(),
-}
-
 const scalarHandler = {
   scalarTypes: {
+    undefined: true,
     string: true,
     number: true,
   },
@@ -154,7 +109,7 @@ const scalarHandler = {
 
   render: value =>
   // TODO: This probably needs a new CSS class
-    <span className="array-output">{value}</span>,
+    <div className="array-output">{value}</div>,
 
 }
 
@@ -191,13 +146,10 @@ const defaultHandler = {
 }
 
 const handlers = [
-  nullHandler,
-  undefinedHandler,
   renderMethodHandler,
   dataFrameHandler,
   matrixHandler,
   arrayHandler,
-  dateHandler,
   scalarHandler,
   defaultHandler,
 ]
@@ -214,18 +166,37 @@ export default class CellOutput extends React.Component {
     render: PropTypes.bool.isRequired,
     valueToRender: PropTypes.any,
   }
-
   render() {
-    if (!this.props.render ||
-        this.props.valueToRender === undefined) {
+    if (!this.props.render) {
       return <div className="empty-resultset" />
     }
 
     const value = this.props.valueToRender
-    const resultElem = renderValue(value)
-    if (resultElem !== undefined) {
-      return resultElem
+
+    for (const handler of handlers) {
+      let shouldHandle = false
+      try {
+        shouldHandle = handler.shouldHandle(value)
+      } catch (error) {
+        console.log('An output handler threw an exception in shouldHandle')
+      }
+      if (shouldHandle) {
+        const resultElem = handler.render(value)
+        /* eslint-disable */
+        if (typeof resultElem === 'string') {
+          return <div dangerouslySetInnerHTML={{ __html: resultElem }} />
+        } else if (resultElem.tagName !== undefined) {
+          return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} />
+        } else if (resultElem.type !== undefined) {
+          return resultElem
+        } else {
+          console.log('Unknown output handler result type from ' + handler)
+          // Fallback to other handlers if it's something invalid
+        }
+        /* eslint-enable */
+      }
     }
+
     return <div className="empty-resultset" />
   }
 }

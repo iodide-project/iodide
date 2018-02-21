@@ -4,11 +4,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { ToolbarGroup } from 'material-ui/Toolbar'
-
-import IconButton from 'material-ui/IconButton'
-import Close from 'material-ui/svg-icons/navigation/close'
-
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
@@ -17,8 +12,8 @@ import Drawer from 'material-ui/Drawer'
 
 import { HistoryItem } from './history-item'
 import DeclaredVariables from './declared-variables'
-import PresentationModeToolbar from './presentation-mode-toolbar'
-import EditorModeToolbar from './editor-mode-toolbar'
+import PresentationMenu from './presentation-menu'
+import EditorMenu from './editor-menu'
 
 import actions from '../actions'
 
@@ -88,7 +83,7 @@ class NotebookHeader extends React.Component {
         />
         <a id="export-anchor" style={{ display: 'none' }} />
         <div className="notebook-menu" style={{ display: this.props.viewMode === 'editor' ? 'block' : 'none' }}>
-          <EditorModeToolbar
+          <EditorMenu
             actions={this.props.actions}
             mode={this.props.mode}
             viewMode={this.props.viewMode}
@@ -100,7 +95,7 @@ class NotebookHeader extends React.Component {
           />
         </div>
         <div className="presentation-menu" style={{ display: (this.props.viewMode === 'presentation' ? 'block' : 'none') }} >
-          <PresentationModeToolbar
+          <PresentationMenu
             mode={this.props.mode}
             viewMode={this.props.viewMode}
             title={this.props.title}
@@ -119,15 +114,6 @@ class NotebookHeader extends React.Component {
             overlayStyle={{ backgroundColor: 'none' }}
             onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
           >
-            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons" style={{ float: 'left' }}>
-              <IconButton
-                tooltip="Close"
-                style={{ color: '#fafafa', margin: '5px' }}
-                onClick={() => { this.props.actions.changeSidePaneMode(undefined) }}
-              >
-                <Close />
-              </IconButton>
-            </ToolbarGroup>
             <h1 className="overlay-title">Declared Variables</h1>
             <DeclaredVariables variables={this.props.declaredVariables} />
           </Drawer>
@@ -142,15 +128,6 @@ class NotebookHeader extends React.Component {
             overlayStyle={{ backgroundColor: 'none' }}
             onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
           >
-            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons" style={{ float: 'left' }}>
-              <IconButton
-                tooltip="Close"
-                style={{ color: '#fafafa', margin: '5px' }}
-                onClick={() => { this.props.actions.changeSidePaneMode(undefined) }}
-              >
-                <Close />
-              </IconButton>
-            </ToolbarGroup>
             <h1 className="overlay-title">Execution History</h1>
             <div className="history-cells"> {histContents} </div>
           </Drawer>
