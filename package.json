@@ -34,6 +34,7 @@
     "mousetrap": "^1.6.1",
     "opensans-npm-webfont": "^1.0.0",
     "prop-types": "^15.6.0",
+    "query-string": "^5.1.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-helmet": "^5.2.0",

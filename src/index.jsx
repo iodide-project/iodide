@@ -12,6 +12,7 @@ import './page.css'
 
 import Page from './components/page'
 import { store } from './store'
+import handleUrlQuery from './handle-url-query'
 
 import { iodide } from './api'
 
@@ -23,3 +24,5 @@ render(
   </Provider>,
   document.getElementById('page'),
 )
+
+handleUrlQuery()

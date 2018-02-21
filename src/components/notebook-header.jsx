@@ -4,14 +4,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
+import { ToolbarGroup } from 'material-ui/Toolbar'
 
-import FlatButton from 'material-ui/FlatButton'
 import IconButton from 'material-ui/IconButton'
-import HistoryIcon from 'material-ui/svg-icons/action/history'
-import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down'
+import Close from 'material-ui/svg-icons/navigation/close'
 
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
@@ -19,12 +16,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Drawer from 'material-ui/Drawer'
 
 import { HistoryItem } from './history-item'
-import MainMenu from './menu-component'
 import DeclaredVariables from './declared-variables'
+import PresentationModeToolbar from './presentation-mode-toolbar'
+import EditorModeToolbar from './editor-mode-toolbar'
 
-import Title from './title'
-
-import { prettyDate } from '../notebook-utils'
 import actions from '../actions'
 
 // TODO: replace settings w/ a settings file that we can share everywhere.
@@ -93,7 +88,7 @@ class NotebookHeader extends React.Component {
         />
         <a id="export-anchor" style={{ display: 'none' }} />
         <div className="notebook-menu" style={{ display: this.props.viewMode === 'editor' ? 'block' : 'none' }}>
-          <EditorMenu
+          <EditorModeToolbar
             actions={this.props.actions}
             mode={this.props.mode}
             viewMode={this.props.viewMode}
@@ -105,7 +100,7 @@ class NotebookHeader extends React.Component {
           />
         </div>
         <div className="presentation-menu" style={{ display: (this.props.viewMode === 'presentation' ? 'block' : 'none') }} >
-          <PresentationMenu
+          <PresentationModeToolbar
             mode={this.props.mode}
             viewMode={this.props.viewMode}
             title={this.props.title}
@@ -124,6 +119,15 @@ class NotebookHeader extends React.Component {
             overlayStyle={{ backgroundColor: 'none' }}
             onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
           >
+            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons" style={{ float: 'left' }}>
+              <IconButton
+                tooltip="Close"
+                style={{ color: '#fafafa', margin: '5px' }}
+                onClick={() => { this.props.actions.changeSidePaneMode(undefined) }}
+              >
+                <Close />
+              </IconButton>
+            </ToolbarGroup>
             <h1 className="overlay-title">Declared Variables</h1>
             <DeclaredVariables variables={this.props.declaredVariables} />
           </Drawer>
@@ -138,6 +142,15 @@ class NotebookHeader extends React.Component {
             overlayStyle={{ backgroundColor: 'none' }}
             onRequestChange={() => { this.props.actions.changeSidePaneMode(undefined) }}
           >
+            <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons" style={{ float: 'left' }}>
+              <IconButton
+                tooltip="Close"
+                style={{ color: '#fafafa', margin: '5px' }}
+                onClick={() => { this.props.actions.changeSidePaneMode(undefined) }}
+              >
+                <Close />
+              </IconButton>
+            </ToolbarGroup>
             <h1 className="overlay-title">Execution History</h1>
             <div className="history-cells"> {histContents} </div>
           </Drawer>
@@ -146,126 +159,6 @@ class NotebookHeader extends React.Component {
     )
   }
 }
-
-
-class PresentationMenu extends React.Component {
-  static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    title: PropTypes.string,
-  }
-  render() {
-    return (
-      <div className="presentation-header">
-        <div className="view-mode-toggle-from-presentation">
-          <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-            <ViewModeToggleButton textColor="black" actions={this.props.actions} viewMode={this.props.viewMode} />
-          </MuiThemeProvider>
-        </div>
-        <h1 className="presentation-title" style={{ color: this.props.title === undefined ? 'gray' : 'black' }}>{this.props.title || 'new notebook'}</h1>
-      </div>
-    )
-  }
-}
-
-
-class EditorMenu extends React.Component {
-  static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    sidePaneMode: PropTypes.oneOf(['history', 'declared variables']),
-    mode: PropTypes.oneOf(['title-edit', 'command', 'edit']),
-    actions: PropTypes.shape({
-      changeSidePaneMode: PropTypes.func.isRequired,
-    }).isRequired,
-    title: PropTypes.string,
-    lastSaved: PropTypes.string,
-  }
-  changeSidePaneMode(sidePaneMode) {
-    if (this.props.sidePaneMode === sidePaneMode) this.props.actions.changeSidePaneMode(undefined)
-    else this.props.actions.changeSidePaneMode(sidePaneMode)
-  }
-
-  render() {
-    return (
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <Toolbar style={{ backgroundColor: 'black' }}>
-          <MainMenu
-            isFirstChild
-            actions={this.props.actions}
-            mode={this.props.mode}
-            title={this.props.title}
-            viewMode={this.props.viewMode}
-            sidePaneMode={this.props.sidePaneMode}
-            lastSaved={this.props.lastSaved}
-            cellIdList={this.props.cellIdList}
-            cellTypeList={this.props.cellTypeList}
-          />
-          <ToolbarGroup className="title-field">
-            <Title
-              actions={this.props.actions}
-              title={this.props.title}
-              pageMode={this.props.mode}
-            />
-          </ToolbarGroup>
-          <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons">
-            <ToolbarTitle style={{ fontSize: '13px', color: 'lightgray', fontStyle: 'italic' }} text={this.props.lastSaved === undefined ? ' ' : `last saved: ${prettyDate(this.props.lastSaved)}`} />
-            <IconButton
-              tooltip="Declared Variables"
-              style={{ color: '#fafafa' }}
-              onClick={() => { this.props.actions.changeSidePaneMode('declared variables') }}
-            >
-              <ArrowDropDown />
-            </IconButton>
-            <IconButton
-              tooltip="History"
-              style={{ color: '#fafafa' }}
-              onClick={() => { this.props.actions.changeSidePaneMode('history') }}
-            >
-              <HistoryIcon />
-            </IconButton>
-            <ViewModeToggleButton actions={this.props.actions} viewMode={this.props.viewMode} />
-          </ToolbarGroup>
-        </Toolbar>
-      </MuiThemeProvider>
-    )
-  }
-}
-
-
-class ViewModeToggleButton extends React.Component {
-  static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    actions: PropTypes.shape({
-      setViewMode: PropTypes.func.isRequired,
-    }).isRequired,
-    textColor: PropTypes.string,
-    hoverColor: PropTypes.string,
-  }
-  constructor(props) {
-    super(props)
-    this.toggleViewMode = this.toggleViewMode.bind(this)
-  }
-
-  toggleViewMode() {
-    if (this.props.viewMode === 'presentation') {
-      this.props.actions.setViewMode('editor')
-    } else if (this.props.viewMode === 'editor') {
-      this.props.actions.setViewMode('presentation')
-    }
-  }
-
-  render() {
-    let buttonString
-    if (this.props.viewMode === 'presentation') {
-      buttonString = 'Edit'
-    } else if (this.props.viewMode === 'editor') {
-      buttonString = 'View'
-    }
-    return (
-      <FlatButton style={{ color: this.props.textColor || '#fafafa' }} onClick={this.toggleViewMode} hoverColor={this.props.hoverColor || 'darkgray'} label={buttonString} />
-    )
-  }
-}
-
 
 function mapStateToProps(state) {
   return {
