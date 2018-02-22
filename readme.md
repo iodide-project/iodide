@@ -4,7 +4,7 @@
 
 ### early alpha - subject to breakage, changes, argument, refactors
 
-_Try it in your browser [right now](https://iodide-project.github.io/master/?url=https://raw.githubusercontent.com/iodide-project/iodide-examples/master/what-a-web-notebook-looks-like.html)!_
+_Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)!_
 
 The Iodide notebook seeks to answer one question: __can we do scientific computing without ever leaving the browser?__ We are building a modern, browser-first notebook-style IDE that utlilizes web technologies for interative / literate / inquisitive computing. The notebook borrows inspiration from RStudio, Jupyter, Carbide, and many other computing environments.
 
