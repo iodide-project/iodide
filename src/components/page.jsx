@@ -37,7 +37,7 @@ class Page extends React.Component {
     // this.props.actions.newNotebook()
     this.enterCommandModeOnClickOutOfCell = this.enterCommandModeOnClickOutOfCell.bind(this)
 
-    keyBinding(this)
+    keyBinding()
     setInterval(() => {
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
       const notebooks = Object.keys(localStorage)

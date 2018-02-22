@@ -4,6 +4,7 @@ const TASK_ERRORS = {
   argumentMustBeObject: 'must provide an object as an argument',
   noTitleSupplied: 'no title supplied',
   callbackIsNotFunction: 'the callback supplied is not a function',
+  keybindingsNotArray: 'keybindings must be in the form of an array',
 }
 
 export { TASK_ERRORS }
@@ -19,13 +20,20 @@ export default class NotebookTask {
     if (args.keybindingCallback && !args.keybindings) {
       throw new TypeError(TASK_ERRORS.noKeybindingsWithCallback)
     }
+
+    if (args.keybindings && !Array.isArray(args.keybindings)) {
+      throw new TypeError(TASK_ERRORS.keybindingsNotArray)
+    }
     if (typeof args.callback !== 'function' && args.callback !== undefined) {
       throw new TypeError(TASK_ERRORS.callbackIsNotFunction)
     }
+    if (!args.title) throw new TypeError(TASK_ERRORS.noTitleSupplied)
 
     this.args = args
-
-    if (!args.title) throw new TypeError(TASK_ERRORS.noTitleSupplied)
+    if (this.args.callback) this.args.callback = this.args.callback.bind(this)
+    if (this.args.keybindingCallback) {
+      this.args.keybindingCallback = this.args.keybindingCallback.bind(this)
+    }
   }
 
   get keybindingCallback() {

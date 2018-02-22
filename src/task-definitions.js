@@ -28,20 +28,27 @@ function commandKey(key) {
   return ctr + key
 }
 
-const TASKS = {}
+function preventDefault(e) {
+  if (e.preventDefault) {
+    e.preventDefault()
+  } else {
+    e.returnValue = false
+  }
+}
+const tasks = {}
 
-TASKS.EvaluateCell = new NotebookTask({
+tasks.evaluateCell = new NotebookTask({
   title: 'Evaluate Cell',
   keybindings: ['mod+enter'],
 
-  keybindingCallback() {
+  callback() {
     dispatcher.changeMode('command')
     dispatcher.evaluateCell()
   },
 })
 
-TASKS.EvaluateAndSelectBelow = new NotebookTask({
-  title: 'Evaluate and Select Below',
+tasks.evaluateCellAndSelectBelow = new NotebookTask({
+  title: 'Evaluate Cell and Select Below',
   keybindings: ['shift+enter'],
 
   keybindingCallback() {
@@ -60,101 +67,87 @@ TASKS.EvaluateAndSelectBelow = new NotebookTask({
   },
 })
 
-TASKS.MoveCellUp = new NotebookTask({
+tasks.moveCellUp = new NotebookTask({
   title: 'Move Cell Up',
   displayKeybinding: '\u21E7 \u2191',
   keybindings: ['shift+up'],
 
   callback() {
-    this.props.actions.cellUp()
+    dispatcher.cellUp()
   },
   keybindingCallback(e) {
     if (isCommandMode()) {
-      if (e.preventDefault) {
-        e.preventDefault()
-      }
-      dispatcher.cellUp()
+      preventDefault(e)
+      this.callback()
+      // dispatcher.cellUp()
     }
   },
 })
 
 
-TASKS.MoveCellDown = new NotebookTask({
+tasks.moveCellDown = new NotebookTask({
   title: 'Move Cell Down',
   displayKeybinding: '\u21E7 \u2193',
   keybindings: ['shift+down'],
 
-  callback() {
-    this.props.actions.changeCellType('javascript')
-  },
+  callback() { dispatcher.cellDown() },
   keybindingCallback(e) {
     if (isCommandMode()) {
-      if (e.preventDefault) {
-        e.preventDefault()
-      }
-      dispatcher.cellDown()
+      preventDefault(e)
+      this.callback()
     }
   },
 })
 
 
-TASKS.SelectUp = new NotebookTask({
+tasks.selectUp = new NotebookTask({
   title: 'Select Cell Above',
   displayKeybinding: '\u2191',
   keybindings: ['up'],
 
+  callback() {
+    const cellAboveId = getCellAboveSelectedId()
+    if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true) }
+  },
   keybindingCallback(e) {
     if (isCommandMode()) {
-      // e.preventDefault blocks kbd scrolling of entire window
-      if (e.preventDefault) {
-        e.preventDefault()
-      } else { // internet explorer
-        e.returnValue = false
-      }
-      const cellAboveId = getCellAboveSelectedId()
-      if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true) }
+      preventDefault(e)
+      this.callback()
     }
   },
 })
 
-TASKS.SelectDown = new NotebookTask({
+tasks.selectDown = new NotebookTask({
   title: 'Select Cell Down',
   displayKeybinding: '\u2193',
   keybindings: ['down'],
 
+  callback() {
+    const cellBelowId = getCellBelowSelectedId()
+    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
+  },
   keybindingCallback(e) {
     if (isCommandMode()) {
-      // e.preventDefault blocks kbd scrolling of entire window
-      if (e.preventDefault) {
-        e.preventDefault()
-      } else { // internet explorer
-        e.returnValue = false
-      }
-      const cellBelowId = getCellBelowSelectedId()
-      if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
+      preventDefault(e)
+      this.callback()
     }
   },
 })
 
-
-TASKS.AddCellAbove = new NotebookTask({
+tasks.addCellAbove = new NotebookTask({
   title: 'Add Cell Above',
   keybindings: ['a'],
   displayKeybinding: 'a',
-
   callback() {
     dispatcher.insertCell('javascript', 'above')
     dispatcher.selectCell(getCellAboveSelectedId(), true)
   },
   keybindingCallback() {
-    if (isCommandMode()) {
-      dispatcher.insertCell('javascript', 'above')
-      dispatcher.selectCell(getCellAboveSelectedId(), true)
-    }
+    if (isCommandMode()) { this.callback() }
   },
 })
 
-TASKS.AddCellBelow = new NotebookTask({
+tasks.addCellBelow = new NotebookTask({
   title: 'Add Cell Below',
   keybindings: ['b'],
   displayKeybinding: 'b',
@@ -164,25 +157,22 @@ TASKS.AddCellBelow = new NotebookTask({
     dispatcher.selectCell(getCellBelowSelectedId(), true)
   },
   keybindingCallback() {
-    if (isCommandMode()) {
-      dispatcher.insertCell('javascript', 'below')
-      dispatcher.selectCell(getCellBelowSelectedId(), true)
-    }
+    if (isCommandMode()) { this.callback() }
   },
 })
 
-TASKS.DeleteCell = new NotebookTask({
+tasks.deleteCell = new NotebookTask({
   title: 'Delete Cell',
   keybindings: ['shift+del', 'shift+backspace'],
   displayKeybinding: '\u21E7 \u232b',
 
   callback() { dispatcher.deleteCell() },
   keybindingCallback() {
-    if (isCommandMode()) dispatcher.deleteCell()
+    if (isCommandMode()) { this.callback() }
   },
 })
 
-TASKS.ChangeToJavascriptCell = new NotebookTask({
+tasks.changeToJavascriptCell = new NotebookTask({
   title: 'Change to Javascript',
   keybindings: ['j'],
   displayKeybinding: 'J',
@@ -191,11 +181,11 @@ TASKS.ChangeToJavascriptCell = new NotebookTask({
     dispatcher.changeCellType('javascript')
   },
   keybindingCallback() {
-    if (isCommandMode()) dispatcher.changeCellType('javascript')
+    if (isCommandMode()) { this.callback() }
   },
 })
 
-TASKS.ChangeToMarkdownCell = new NotebookTask({
+tasks.changeToMarkdownCell = new NotebookTask({
   title: 'Change to Markdown',
   keybindings: ['m'],
   displayKeybinding: 'M',
@@ -204,11 +194,11 @@ TASKS.ChangeToMarkdownCell = new NotebookTask({
     dispatcher.changeCellType('markdown')
   },
   keybindingCallback() {
-    if (isCommandMode()) dispatcher.changeCellType('markdown')
+    if (isCommandMode()) { this.callback() }
   },
 })
 
-TASKS.ChangeToExternalResourceCell = new NotebookTask({
+tasks.changeToExternalResourceCell = new NotebookTask({
   title: 'Change to External Resource',
   keybindings: ['e'],
   displayKeybinding: 'E',
@@ -217,11 +207,11 @@ TASKS.ChangeToExternalResourceCell = new NotebookTask({
     dispatcher.changeCellType('external dependencies')
   },
   keybindingCallback() {
-    if (isCommandMode()) dispatcher.changeCellType('external dependencies')
+    if (isCommandMode()) { this.callback() }
   },
 })
 
-TASKS.ChangeToRawCell = new NotebookTask({
+tasks.changeToRawCell = new NotebookTask({
   title: 'Change to Raw',
   keybindings: ['r'],
   displayKeybinding: 'R',
@@ -230,65 +220,56 @@ TASKS.ChangeToRawCell = new NotebookTask({
     dispatcher.changeCellType('raw')
   },
   keybindingCallback() {
-    if (isCommandMode()) dispatcher.changeCellType('raw')
+    if (isCommandMode()) { this.callback() }
   },
 })
 
-TASKS.ChangeToCSSCell = new NotebookTask({
+tasks.changeToCSSCell = new NotebookTask({
   title: 'Change to CSS',
   keybindings: ['c'],
   displayKeybinding: 'C',
 
-  callback() {
-    dispatcher.changeCellType('css')
-  },
+  callback() { dispatcher.changeCellType('css') },
   keybindingCallback() {
-    if (isCommandMode()) dispatcher.changeCellType('css')
+    if (isCommandMode()) { this.callback() }
   },
 })
 
-TASKS.EditMode = new NotebookTask({
+tasks.changeToEditMode = new NotebookTask({
   title: 'Change to Edit Mode',
   keybindings: ['enter', 'return'],
-  displayKeybinding: '⎋',
+  displayKeybinding: 'enter',
+
+  callback() { dispatcher.changeMode('edit') },
 
   keybindingCallback(e) {
     if (isCommandMode()) {
-    // e.preventDefault blocks inserting a newline when you transition to edit mode
-      if (e.preventDefault) {
-        e.preventDefault()
-      } else { // internet explorer
-        e.returnValue = false
-      }
-      dispatcher.changeMode('edit')
+      preventDefault(e)
+      this.callback()
     }
   },
 })
 
-TASKS.CommandMode = new NotebookTask({
+tasks.changeToCommandMode = new NotebookTask({
   title: 'Change to Command Mode',
   keybindings: ['esc'],
 
-  callback() {
-    dispatcher.changeMode('command')
-  },
+  callback() { dispatcher.changeMode('command') },
 })
 
-TASKS.SaveNotebook = new NotebookTask({
+tasks.saveNotebook = new NotebookTask({
   title: 'Save Notebook',
   keybindings: ['ctrl+s', 'meta+s'],
   displayKeybinding: commandKey('S'),
 
   callback() { dispatcher.saveNotebook(store.getState().title) },
   keybindingCallback(e) {
-    if (e.preventDefault) {
-      e.preventDefault()
-    } else { e.returnValue = false }
-    dispatcher.saveNotebook(store.getState().title)
+    preventDefault(e)
+    this.callback()
   },
 })
 
-TASKS.ExportNotebook = new NotebookTask({
+tasks.exportNotebook = new NotebookTask({
   title: 'Export Notebook',
   keybindings: ['ctrl+e', 'meta+e'],
   displayKeybinding: commandKey('E'),
@@ -296,7 +277,7 @@ TASKS.ExportNotebook = new NotebookTask({
   callback() { dispatcher.exportNotebook() },
 })
 
-TASKS.ToggleDeclaredVariablesPane = new NotebookTask({
+tasks.toggleDeclaredVariablesPane = new NotebookTask({
   title: 'Toggle the Declared Variables Pane',
   keybindings: ['ctrl+d', 'meta+d'],
   displayKeybinding: commandKey('D'),
@@ -309,18 +290,12 @@ TASKS.ToggleDeclaredVariablesPane = new NotebookTask({
     }
   },
   keybindingCallback(e) {
-    if (e.preventDefault) {
-      e.preventDefault()
-    } else { e.returnValue = false }
-    if (store.getState().sidePaneMode !== 'declared variables') {
-      dispatcher.changeSidePaneMode('declared variables')
-    } else {
-      dispatcher.changeSidePaneMode()
-    }
+    preventDefault(e)
+    this.callback()
   },
 })
 
-TASKS.ToggleHistoryPane = new NotebookTask({
+tasks.toggleHistoryPane = new NotebookTask({
   title: 'Toggle the History Pane',
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: commandKey('H'),
@@ -333,15 +308,9 @@ TASKS.ToggleHistoryPane = new NotebookTask({
     }
   },
   keybindingCallback(e) {
-    if (e.preventDefault) {
-      e.preventDefault()
-    } else { e.returnValue = false }
-    if (store.getState().sidePaneMode !== 'history') {
-      dispatcher.changeSidePaneMode('history')
-    } else {
-      dispatcher.changeSidePaneMode()
-    }
+    preventDefault(e)
+    this.callback()
   },
 })
 
-export default TASKS
+export default tasks

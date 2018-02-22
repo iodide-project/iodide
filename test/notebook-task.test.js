@@ -27,7 +27,7 @@ describe('title element is required, and alternate title getters default to titl
   it('should have the getter return the title element', () => {
     expect(nb1.title).toBe(nbName)
   })
-  it('should allow menuLabel to be menuTitle, if present', () => {
+  it('should allow menuTitle to be the set menuTitle, if present', () => {
     expect(nb1.menuTitle).toBe(nbMenuTitle)
   })
   it('should default to default title if menuTitle was not declared', () => {
@@ -48,6 +48,10 @@ describe('keybindings and keybinding callbacks', () => {
   it('should throw an error if you have provided a keybindingCallback but no keybindings', () => {
     expect(() => new NotebookTask({ keybindingCallback: () => {} }))
       .toThrowError(TASK_ERRORS.noKeybindingsWithCallback)
+  })
+  it('should throw an error if you did not pass in an array for keybindings', () => {
+    expect(() => new NotebookTask({ keybindings: 'not an array', keybindingCallback: () => {}, title: 'whatever dude' }))
+      .toThrowError(TASK_ERRORS.keybindingsNotArray)
   })
   const nb1 = new NotebookTask({ title: 'ok1', keybindings: ['meta+s'], callback: () => {} })
   it('should output an array for the keybinding', () => {
