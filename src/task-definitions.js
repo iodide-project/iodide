@@ -28,13 +28,6 @@ function commandKey(key) {
   return ctr + key
 }
 
-function preventDefault(e) {
-  if (e.preventDefault) {
-    e.preventDefault()
-  } else {
-    e.returnValue = false
-  }
-}
 const tasks = {}
 
 tasks.evaluateCell = new UserTask({
@@ -50,19 +43,17 @@ tasks.evaluateCell = new UserTask({
 tasks.evaluateCellAndSelectBelow = new UserTask({
   title: 'Evaluate Cell and Select Below',
   keybindings: ['shift+enter'],
-
-  keybindingCallback() {
-    if (viewModeIsEditor()) {
-      dispatcher.changeMode('command')
-      dispatcher.evaluateCell()
-      const cellBelowId = getCellBelowSelectedId()
-      if (cellBelowId !== null) {
-        dispatcher.selectCell(cellBelowId, true)
-      } else {
-      // if cellBelowId *is* null, need to add a new cell.
-        dispatcher.addCell('javascript')
-        dispatcher.selectCell(getCellBelowSelectedId(), true)
-      }
+  keybindingPrecondition: viewModeIsEditor,
+  callback() {
+    dispatcher.changeMode('command')
+    dispatcher.evaluateCell()
+    const cellBelowId = getCellBelowSelectedId()
+    if (cellBelowId !== null) {
+      dispatcher.selectCell(cellBelowId, true)
+    } else {
+    // if cellBelowId *is* null, need to add a new cell.
+      dispatcher.addCell('javascript')
+      dispatcher.selectCell(getCellBelowSelectedId(), true)
     }
   },
 })
@@ -71,16 +62,10 @@ tasks.moveCellUp = new UserTask({
   title: 'Move Cell Up',
   displayKeybinding: '\u21E7 \u2191',
   keybindings: ['shift+up'],
-
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
   callback() {
     dispatcher.cellUp()
-  },
-  keybindingCallback(e) {
-    if (isCommandMode()) {
-      preventDefault(e)
-      this.callback()
-      // dispatcher.cellUp()
-    }
   },
 })
 
@@ -89,14 +74,9 @@ tasks.moveCellDown = new UserTask({
   title: 'Move Cell Down',
   displayKeybinding: '\u21E7 \u2193',
   keybindings: ['shift+down'],
-
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
   callback() { dispatcher.cellDown() },
-  keybindingCallback(e) {
-    if (isCommandMode()) {
-      preventDefault(e)
-      this.callback()
-    }
-  },
 })
 
 
@@ -104,16 +84,11 @@ tasks.selectUp = new UserTask({
   title: 'Select Cell Above',
   displayKeybinding: '\u2191',
   keybindings: ['up'],
-
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
   callback() {
     const cellAboveId = getCellAboveSelectedId()
     if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true) }
-  },
-  keybindingCallback(e) {
-    if (isCommandMode()) {
-      preventDefault(e)
-      this.callback()
-    }
   },
 })
 
@@ -121,16 +96,11 @@ tasks.selectDown = new UserTask({
   title: 'Select Cell Down',
   displayKeybinding: '\u2193',
   keybindings: ['down'],
-
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
   callback() {
     const cellBelowId = getCellBelowSelectedId()
     if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
-  },
-  keybindingCallback(e) {
-    if (isCommandMode()) {
-      preventDefault(e)
-      this.callback()
-    }
   },
 })
 
@@ -138,12 +108,10 @@ tasks.addCellAbove = new UserTask({
   title: 'Add Cell Above',
   keybindings: ['a'],
   displayKeybinding: 'a',
+  keybindingPrecondition: isCommandMode,
   callback() {
     dispatcher.insertCell('javascript', 'above')
     dispatcher.selectCell(getCellAboveSelectedId(), true)
-  },
-  keybindingCallback() {
-    if (isCommandMode()) { this.callback() }
   },
 })
 
@@ -151,13 +119,11 @@ tasks.addCellBelow = new UserTask({
   title: 'Add Cell Below',
   keybindings: ['b'],
   displayKeybinding: 'b',
+  keybindingPrecondition: isCommandMode,
 
   callback() {
     dispatcher.insertCell('javascript', 'below')
     dispatcher.selectCell(getCellBelowSelectedId(), true)
-  },
-  keybindingCallback() {
-    if (isCommandMode()) { this.callback() }
   },
 })
 
@@ -165,23 +131,17 @@ tasks.deleteCell = new UserTask({
   title: 'Delete Cell',
   keybindings: ['shift+del', 'shift+backspace'],
   displayKeybinding: '\u21E7 \u232b',
-
+  keybindingPrecondition: isCommandMode,
   callback() { dispatcher.deleteCell() },
-  keybindingCallback() {
-    if (isCommandMode()) { this.callback() }
-  },
 })
 
 tasks.changeToJavascriptCell = new UserTask({
   title: 'Change to Javascript',
   keybindings: ['j'],
   displayKeybinding: 'J',
-
+  keybindingPrecondition: isCommandMode,
   callback() {
     dispatcher.changeCellType('javascript')
-  },
-  keybindingCallback() {
-    if (isCommandMode()) { this.callback() }
   },
 })
 
@@ -189,12 +149,9 @@ tasks.changeToMarkdownCell = new UserTask({
   title: 'Change to Markdown',
   keybindings: ['m'],
   displayKeybinding: 'M',
-
+  keybindingPrecondition: isCommandMode,
   callback() {
     dispatcher.changeCellType('markdown')
-  },
-  keybindingCallback() {
-    if (isCommandMode()) { this.callback() }
   },
 })
 
@@ -202,12 +159,9 @@ tasks.changeToExternalResourceCell = new UserTask({
   title: 'Change to External Resource',
   keybindings: ['e'],
   displayKeybinding: 'E',
-
+  keybindingPrecondition: isCommandMode,
   callback() {
     dispatcher.changeCellType('external dependencies')
-  },
-  keybindingCallback() {
-    if (isCommandMode()) { this.callback() }
   },
 })
 
@@ -215,45 +169,32 @@ tasks.changeToRawCell = new UserTask({
   title: 'Change to Raw',
   keybindings: ['r'],
   displayKeybinding: 'R',
-
-  callback() {
-    dispatcher.changeCellType('raw')
-  },
-  keybindingCallback() {
-    if (isCommandMode()) { this.callback() }
-  },
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.changeCellType('raw') },
 })
 
 tasks.changeToCSSCell = new UserTask({
   title: 'Change to CSS',
   keybindings: ['c'],
   displayKeybinding: 'C',
-
+  keybindingPrecondition: isCommandMode,
   callback() { dispatcher.changeCellType('css') },
-  keybindingCallback() {
-    if (isCommandMode()) { this.callback() }
-  },
+
 })
 
 tasks.changeToEditMode = new UserTask({
   title: 'Change to Edit Mode',
   keybindings: ['enter', 'return'],
   displayKeybinding: 'enter',
-
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
   callback() { dispatcher.changeMode('edit') },
-
-  keybindingCallback(e) {
-    if (isCommandMode()) {
-      preventDefault(e)
-      this.callback()
-    }
-  },
 })
 
 tasks.changeToCommandMode = new UserTask({
   title: 'Change to Command Mode',
   keybindings: ['esc'],
-
+  preventDefaultKeybinding: true,
   callback() { dispatcher.changeMode('command') },
 })
 
@@ -261,19 +202,14 @@ tasks.saveNotebook = new UserTask({
   title: 'Save Notebook',
   keybindings: ['ctrl+s', 'meta+s'],
   displayKeybinding: commandKey('S'),
-
+  preventDefaultKeybinding: true,
   callback() { dispatcher.saveNotebook(store.getState().title) },
-  keybindingCallback(e) {
-    preventDefault(e)
-    this.callback()
-  },
 })
 
 tasks.exportNotebook = new UserTask({
   title: 'Export Notebook',
   keybindings: ['ctrl+e', 'meta+e'],
   displayKeybinding: commandKey('E'),
-
   callback() { dispatcher.exportNotebook() },
 })
 
@@ -281,7 +217,7 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
   keybindings: ['ctrl+d', 'meta+d'],
   displayKeybinding: commandKey('D'),
-
+  preventDefaultKeybinding: true,
   callback() {
     if (store.getState().sidePaneMode !== 'declared variables') {
       dispatcher.changeSidePaneMode('declared variables')
@@ -289,16 +225,14 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
       dispatcher.changeSidePaneMode()
     }
   },
-  keybindingCallback(e) {
-    preventDefault(e)
-    this.callback()
-  },
+
 })
 
 tasks.toggleHistoryPane = new UserTask({
   title: 'Toggle the History Pane',
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: commandKey('H'),
+  preventDefaultKeybinding: true,
 
   callback() {
     if (store.getState().sidePaneMode !== 'history') {
@@ -306,10 +240,6 @@ tasks.toggleHistoryPane = new UserTask({
     } else {
       dispatcher.changeSidePaneMode()
     }
-  },
-  keybindingCallback(e) {
-    preventDefault(e)
-    this.callback()
   },
 })
 

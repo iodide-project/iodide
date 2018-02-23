@@ -9,6 +9,14 @@ const TASK_ERRORS = {
 
 export { TASK_ERRORS }
 
+function preventDefault(e) {
+  if (e.preventDefault) {
+    e.preventDefault()
+  } else {
+    e.returnValue = false
+  }
+}
+
 export default class UserTask {
   constructor(args) {
     if (!(args instanceof Object && args.constructor === Object)) {
@@ -37,7 +45,13 @@ export default class UserTask {
   }
 
   get keybindingCallback() {
-    return this.args.keybindingCallback || this.args.callback
+    return this.args.keybindingCallback || ((e) => {
+      if ('keybindingPrecondition' in this.args) {
+        if (!this.args.keybindingPrecondition()) return
+      }
+      if (this.args.preventDefaultKeybinding) { preventDefault(e) }
+      this.args.callback()
+    })
   }
 
   get keybindings() {
