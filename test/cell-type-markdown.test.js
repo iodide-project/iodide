@@ -8,6 +8,9 @@ import { CellContainer } from '../src/components/cell-container'
 describe('MarkdownCell_unconnected react component', () => {
   let props
   let mountedCell
+  let markCellNotRendered
+  let changeMode
+
   const cell = () => {
     if (!mountedCell) {
       mountedCell = shallow(<MarkdownCellUnconnected {...props} />)
@@ -16,6 +19,8 @@ describe('MarkdownCell_unconnected react component', () => {
   }
 
   beforeEach(() => {
+    markCellNotRendered = jest.fn()
+    changeMode = jest.fn()
     props = {
       cellId: 1,
       value: 'a _markdown_ string',
@@ -23,6 +28,7 @@ describe('MarkdownCell_unconnected react component', () => {
       cellSelected: false,
       pageMode: 'command',
       viewMode: 'editor',
+      actions: { markCellNotRendered, changeMode },
     }
     mountedCell = undefined
   })
@@ -157,48 +163,61 @@ describe('MarkdownCell_unconnected react component', () => {
     expect(cell().wrap(cell().find('div')).props().onDoubleClick)
       .toEqual(cell().instance().enterEditMode)
   })
+
+  it('if MD shown & view==editor, dblclick on MD div fires markCellNotRendered AND changeMode', () => {
+    // the following props guarantee MD is shown
+    props.rendered = true
+    props.pageMode = 'command'
+    // props for test
+    props.viewMode = 'editor'
+    cell().find('div').simulate('dblclick')
+    expect(cell().wrap(cell().find('div')).props().style)
+      .toEqual({ display: 'block' })
+    expect(changeMode.mock.calls.length).toBe(1)
+    expect(markCellNotRendered.mock.calls.length).toBe(1)
+  })
+
+  it('if MD shown & view==editor & mode==edit dblclick on MD div fires markCellNotRendered only', () => {
+    // the following props guarantee MD is shown
+    props.rendered = true
+    props.pageMode = 'edit'
+    // props for test
+    props.viewMode = 'editor'
+    cell().find('div').simulate('dblclick')
+    expect(cell().wrap(cell().find('div')).props().style)
+      .toEqual({ display: 'block' })
+    expect(changeMode.mock.calls.length).toBe(0)
+    expect(markCellNotRendered.mock.calls.length).toBe(1)
+  })
+
+  it('if editor shown & view==editor & mode!==edit, click on editor fires markCellNotRendered AND changeMode', () => {
+    // the following prop guarantees editor is shown
+    props.rendered = false
+    // props for test
+    props.pageMode = 'command'
+    props.viewMode = 'editor'
+    cell().find(CellEditor).simulate('containerClick')
+    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
+      .toEqual({ display: 'block' })
+    expect(markCellNotRendered.mock.calls.length).toBe(1)
+    expect(changeMode.mock.calls.length).toBe(1)
+  })
+
+  it('if editor shown & view==editor & mode==edit, click on editor fires markCellNotRendered only', () => {
+    // the following prop guarantees editor is shown
+    props.rendered = false
+    // props for test
+    props.pageMode = 'edit'
+    props.viewMode = 'editor'
+
+    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
+      .toEqual({ display: 'block' })
+
+    cell().find(CellEditor).simulate('containerClick')
+    expect(markCellNotRendered.mock.calls.length).toBe(1)
+    expect(changeMode.mock.calls.length).toBe(0)
+  })
 })
-
-
-// import {store} from '../src/store.js'
-// import {newNotebook} from '../src/state-prototypes.js'
-
-// // render(
-// //   <Provider store={store}>
-// //     <Page />
-// //   </Provider>
-
-// // const mockStore = configureStore()
-// // const initialState = newNotebook()
-// // const store = mockStore(initialState);
-
-// describe("MarkdownCell connected component actions integration test", () => {
-//   let props
-//   let mountedCell
-//   const cell = () => {
-//     if (!mountedCell) {
-//       mountedCell = mount(
-//         <Provider store={store}>
-//           <MarkdownCell {...props} />
-//         </Provider>
-//       ,{context: {store}})
-//     }
-//     return mountedCell
-//   }
-
-//   beforeEach(() => {
-//     props = {
-//       cellId: 1,
-//       value: 'a _markdown_ string',
-//       rendered: true,
-//       cellSelected: false,
-//       pageMode: 'command',
-//       viewMode: 'editor',
-//     }
-//     mountedCell = undefined
-//   })
-
-// })
 
 
 describe('MarkdownCell mapStateToProps', () => {
