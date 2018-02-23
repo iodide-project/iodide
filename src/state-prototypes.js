@@ -47,6 +47,7 @@ function newCell(cells, cellType) {
   let collapsePresentationViewInput
   let collapsePresentationViewOutput
   switch (cellType) {
+    case 'python':
     case 'javascript':
       collapseEditViewInput = 'EXPANDED'
       collapsePresentationViewInput = 'COLLAPSED'

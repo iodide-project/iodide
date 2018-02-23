@@ -1,0 +1,123 @@
+%% meta
+{
+  "title": "Python"
+}
+
+%% md
+# Pyodide
+
+Pyodide adds support for Python in an Iodide notebook, running inside your browser.
+
+**This is early days.  Everything here is subject to change.**
+
+(A major shortcoming is that `print` doesn't work from Python yet, which makes some of the examples below more contrived than they need to be.)
+
+First, let's use an external resources cell to load the Python interpreter.
+
+%% resource {"collapseEditViewOutput":"SCROLLABLE"}
+https://iodide-project.github.io/pyodide-demo/python.asm.js
+
+%% md
+## Make a Python cell.  Import stuff and use it.
+
+Most of the standard library (at least the parts that make sense) are here and available to use.
+
+%% py
+# python
+import sys
+sys.version
+
+%% md
+## Basic data types
+
+The basic data types (None, bool, ints, floats, lists, and dicts) are converted from Python to Javascript when they are output and displayed using the standard mechanisms in Iodide.
+
+%% py
+[0, 1, 32.0, 'foo', {'a': 10, b: '20'}, b'bytes']
+
+%% md
+All other data types (such as class instances, functions, File objects etc.) are returned to Javascript as "opaque raw pointers".  They are there on the Javascript side, but you can't really do anything useful with them other than pass them around.
+
+(I have some ideas about how to make them useful, though, in the future).
+
+%% py
+class Foo:
+  def __init__(self, val):
+    self.val = val
+foo = Foo(42)
+foo
+
+%% md
+## Exceptions
+
+Python exceptions are currently just converted to strings and returned to Javascript.
+
+Eventually, these should get re-thrown as proper Javascript exceptions.
+
+%% py
+x = 5 / 0
+
+%% md
+## Functions
+
+It ain't real unless you can calculate Fibonacci.
+
+%% py
+def fib(n):
+    if n < 2:
+        return n
+    return fib(n-2) + fib(n-1)
+
+list(map(fib, range(10)))
+
+%% md
+## Unified namespace
+
+The Python and Javascript sides share a single unified global namespace.
+
+So, you can set a value in Javascript code:
+
+%% js
+// javascript
+secret = "Wklv#lv#olnh#pdjlf$"
+
+%% md
+...and use it from Python:
+
+%% py
+# python
+decoded = ''.join(chr(ord(x) - 3) for x in secret)
+
+%% md
+...and then get it back from Javascript:
+
+%% js
+decoded
+
+%% md
+## World DOMination
+
+You can get to all of the cool stuff in your browser from Python, too.
+
+For example, get the title of the document:
+
+%% py {"collapseEditViewInput":"SCROLLABLE"}
+# python
+document.title
+
+%% md
+You can set it, too:
+
+%% py
+# python
+document.title = 'My mind is blown'
+
+%% md
+We can set up a special `div` element from a markdown cell, and then manipulate it from Python.
+
+<div id="targetDiv">This is a div we'll target from Python</div>
+
+%% py {"collapseEditViewInput":"SCROLLABLE"}
+# python
+# Turn the div red
+document.getElementById("targetDiv").setAttribute("style", "background-color: red")

@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { newNotebook, blankState, newCell } from './state-prototypes'
 import htmlTemplate from './html-template'
 
-const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource']
+const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource', 'py']
 
 const jsmdValidCellSettings = [
   'collapseEditViewInput',
@@ -22,6 +22,7 @@ const jsmdCellTypeMap = new Map([
   ['resource', 'external dependencies'],
   ['dom', 'dom'],
   ['raw', 'raw'],
+  ['py', 'python'],
 ])
 
 const cellTypeToJsmdMap = new Map([
@@ -30,6 +31,7 @@ const cellTypeToJsmdMap = new Map([
   ['external dependencies', 'resource'],
   ['dom', 'dom'],
   ['raw', 'raw'],
+  ['python', 'py'],
 ])
 
 const jsmdValidNotebookSettings = [

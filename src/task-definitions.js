@@ -145,6 +145,16 @@ tasks.changeToJavascriptCell = new UserTask({
   },
 })
 
+tasks.changeToPythonCell = new UserTask({
+  title: 'Change to Python',
+  keybindings: ['p'],
+  displayKeybinding: 'P',
+  keybindingPrecondition: isCommandMode,
+  callback() {
+    dispatcher.changeCellType('python')
+  },
+})
+
 tasks.changeToMarkdownCell = new UserTask({
   title: 'Change to Markdown',
   keybindings: ['m'],

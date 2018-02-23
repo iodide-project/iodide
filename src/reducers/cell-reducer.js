@@ -160,7 +160,7 @@ const cellReducer = (state = newNotebook(), action) => {
       const index = cells.findIndex(c => c.id === cellId)
       const thisCell = cells[index]
 
-      if (thisCell.cellType === 'javascript') {
+      if (thisCell.cellType === 'javascript' || thisCell.cellType === 'python') {
       // add to newState.history
         newState.history.push({
           cellID: thisCell.id,
@@ -180,14 +180,20 @@ const cellReducer = (state = newNotebook(), action) => {
         //     e.constructor(`transpilation failed: ${e.message}`)
         //   }
         // }
-        try {
-          output = window.eval(code)  // eslint-disable-line
+        if (thisCell.cellType === 'javascript') {
+          try {
+            output = window.eval(code)  // eslint-disable-line
+            thisCell.evalStatus = evalStatuses.SUCCESS
+          } catch (e) {
+            const err = e.constructor(`Error in Evaled Script: ${e.message}`)
+            err.lineNumber = (e.lineNumber - err.lineNumber) + 3
+            output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+            thisCell.evalStatus = evalStatuses.ERROR
+          }
+        } else { // cellType === 'python'
+          console.log(JSON.stringify(code))
+          output = window.Module.runPython(code)  // eslint-disable-line
           thisCell.evalStatus = evalStatuses.SUCCESS
-        } catch (e) {
-          const err = e.constructor(`Error in Evaled Script: ${e.message}`)
-          err.lineNumber = (e.lineNumber - err.lineNumber) + 3
-          output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
-          thisCell.evalStatus = evalStatuses.ERROR
         }
         thisCell.rendered = true
         if (output !== undefined) { thisCell.value = output }
