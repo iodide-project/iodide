@@ -9,7 +9,7 @@ const TASK_ERRORS = {
 
 export { TASK_ERRORS }
 
-export default class NotebookTask {
+export default class UserTask {
   constructor(args) {
     if (!(args instanceof Object && args.constructor === Object)) {
       throw new TypeError(TASK_ERRORS.argumentMustBeObject)

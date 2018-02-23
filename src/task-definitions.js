@@ -1,4 +1,4 @@
-import NotebookTask from './notebook-task'
+import UserTask from './user-task'
 import { store } from './store'
 import actions from './actions'
 import { isCommandMode,
@@ -37,7 +37,7 @@ function preventDefault(e) {
 }
 const tasks = {}
 
-tasks.evaluateCell = new NotebookTask({
+tasks.evaluateCell = new UserTask({
   title: 'Evaluate Cell',
   keybindings: ['mod+enter'],
 
@@ -47,7 +47,7 @@ tasks.evaluateCell = new NotebookTask({
   },
 })
 
-tasks.evaluateCellAndSelectBelow = new NotebookTask({
+tasks.evaluateCellAndSelectBelow = new UserTask({
   title: 'Evaluate Cell and Select Below',
   keybindings: ['shift+enter'],
 
@@ -67,7 +67,7 @@ tasks.evaluateCellAndSelectBelow = new NotebookTask({
   },
 })
 
-tasks.moveCellUp = new NotebookTask({
+tasks.moveCellUp = new UserTask({
   title: 'Move Cell Up',
   displayKeybinding: '\u21E7 \u2191',
   keybindings: ['shift+up'],
@@ -85,7 +85,7 @@ tasks.moveCellUp = new NotebookTask({
 })
 
 
-tasks.moveCellDown = new NotebookTask({
+tasks.moveCellDown = new UserTask({
   title: 'Move Cell Down',
   displayKeybinding: '\u21E7 \u2193',
   keybindings: ['shift+down'],
@@ -100,7 +100,7 @@ tasks.moveCellDown = new NotebookTask({
 })
 
 
-tasks.selectUp = new NotebookTask({
+tasks.selectUp = new UserTask({
   title: 'Select Cell Above',
   displayKeybinding: '\u2191',
   keybindings: ['up'],
@@ -117,7 +117,7 @@ tasks.selectUp = new NotebookTask({
   },
 })
 
-tasks.selectDown = new NotebookTask({
+tasks.selectDown = new UserTask({
   title: 'Select Cell Down',
   displayKeybinding: '\u2193',
   keybindings: ['down'],
@@ -134,7 +134,7 @@ tasks.selectDown = new NotebookTask({
   },
 })
 
-tasks.addCellAbove = new NotebookTask({
+tasks.addCellAbove = new UserTask({
   title: 'Add Cell Above',
   keybindings: ['a'],
   displayKeybinding: 'a',
@@ -147,7 +147,7 @@ tasks.addCellAbove = new NotebookTask({
   },
 })
 
-tasks.addCellBelow = new NotebookTask({
+tasks.addCellBelow = new UserTask({
   title: 'Add Cell Below',
   keybindings: ['b'],
   displayKeybinding: 'b',
@@ -161,7 +161,7 @@ tasks.addCellBelow = new NotebookTask({
   },
 })
 
-tasks.deleteCell = new NotebookTask({
+tasks.deleteCell = new UserTask({
   title: 'Delete Cell',
   keybindings: ['shift+del', 'shift+backspace'],
   displayKeybinding: '\u21E7 \u232b',
@@ -172,7 +172,7 @@ tasks.deleteCell = new NotebookTask({
   },
 })
 
-tasks.changeToJavascriptCell = new NotebookTask({
+tasks.changeToJavascriptCell = new UserTask({
   title: 'Change to Javascript',
   keybindings: ['j'],
   displayKeybinding: 'J',
@@ -185,7 +185,7 @@ tasks.changeToJavascriptCell = new NotebookTask({
   },
 })
 
-tasks.changeToMarkdownCell = new NotebookTask({
+tasks.changeToMarkdownCell = new UserTask({
   title: 'Change to Markdown',
   keybindings: ['m'],
   displayKeybinding: 'M',
@@ -198,7 +198,7 @@ tasks.changeToMarkdownCell = new NotebookTask({
   },
 })
 
-tasks.changeToExternalResourceCell = new NotebookTask({
+tasks.changeToExternalResourceCell = new UserTask({
   title: 'Change to External Resource',
   keybindings: ['e'],
   displayKeybinding: 'E',
@@ -211,7 +211,7 @@ tasks.changeToExternalResourceCell = new NotebookTask({
   },
 })
 
-tasks.changeToRawCell = new NotebookTask({
+tasks.changeToRawCell = new UserTask({
   title: 'Change to Raw',
   keybindings: ['r'],
   displayKeybinding: 'R',
@@ -224,7 +224,7 @@ tasks.changeToRawCell = new NotebookTask({
   },
 })
 
-tasks.changeToCSSCell = new NotebookTask({
+tasks.changeToCSSCell = new UserTask({
   title: 'Change to CSS',
   keybindings: ['c'],
   displayKeybinding: 'C',
@@ -235,7 +235,7 @@ tasks.changeToCSSCell = new NotebookTask({
   },
 })
 
-tasks.changeToEditMode = new NotebookTask({
+tasks.changeToEditMode = new UserTask({
   title: 'Change to Edit Mode',
   keybindings: ['enter', 'return'],
   displayKeybinding: 'enter',
@@ -250,14 +250,14 @@ tasks.changeToEditMode = new NotebookTask({
   },
 })
 
-tasks.changeToCommandMode = new NotebookTask({
+tasks.changeToCommandMode = new UserTask({
   title: 'Change to Command Mode',
   keybindings: ['esc'],
 
   callback() { dispatcher.changeMode('command') },
 })
 
-tasks.saveNotebook = new NotebookTask({
+tasks.saveNotebook = new UserTask({
   title: 'Save Notebook',
   keybindings: ['ctrl+s', 'meta+s'],
   displayKeybinding: commandKey('S'),
@@ -269,7 +269,7 @@ tasks.saveNotebook = new NotebookTask({
   },
 })
 
-tasks.exportNotebook = new NotebookTask({
+tasks.exportNotebook = new UserTask({
   title: 'Export Notebook',
   keybindings: ['ctrl+e', 'meta+e'],
   displayKeybinding: commandKey('E'),
@@ -277,7 +277,7 @@ tasks.exportNotebook = new NotebookTask({
   callback() { dispatcher.exportNotebook() },
 })
 
-tasks.toggleDeclaredVariablesPane = new NotebookTask({
+tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
   keybindings: ['ctrl+d', 'meta+d'],
   displayKeybinding: commandKey('D'),
@@ -295,7 +295,7 @@ tasks.toggleDeclaredVariablesPane = new NotebookTask({
   },
 })
 
-tasks.toggleHistoryPane = new NotebookTask({
+tasks.toggleHistoryPane = new UserTask({
   title: 'Toggle the History Pane',
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: commandKey('H'),
