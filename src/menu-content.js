@@ -19,8 +19,6 @@ function commandKey(key) {
   return ctr + key
 }
 
-// document.write('Your OS: '+OSName);
-
 function getSavedNotebooks(elem) {
   const openLocalStorageNotebook = name => () => {
     elem.props.actions.loadNotebook(name)
