@@ -217,6 +217,7 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
   keybindings: ['ctrl+d', 'meta+d'],
   displayKeybinding: commandKey('D'),
+  keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
   callback() {
     if (store.getState().sidePaneMode !== 'declared variables') {
