@@ -15,7 +15,7 @@ Pyodide adds support for Python in an Iodide notebook, running inside your brows
 First, let's use an external resources cell to load the Python interpreter.
 
 %% resource {"collapseEditViewOutput":"SCROLLABLE"}
-https://iodide-project.github.io/pyodide-demo/python.asm.js
+https://iodide-project.github.io/pyodide-demo/pyodide.js
 
 %% md
 ## Make a Python cell.  Import stuff and use it.
