@@ -1,4 +1,5 @@
 import UserTask from './user-task'
+import ExternalLinkTask from './external-link-task'
 import { store } from './store'
 import actions from './actions'
 import { isCommandMode,
@@ -137,6 +138,7 @@ tasks.deleteCell = new UserTask({
 
 tasks.changeToJavascriptCell = new UserTask({
   title: 'Change to Javascript',
+  menuTitle: 'Javascript',
   keybindings: ['j'],
   displayKeybinding: 'J',
   keybindingPrecondition: isCommandMode,
@@ -147,6 +149,7 @@ tasks.changeToJavascriptCell = new UserTask({
 
 tasks.changeToMarkdownCell = new UserTask({
   title: 'Change to Markdown',
+  menuTitle: 'Markdown',
   keybindings: ['m'],
   displayKeybinding: 'M',
   keybindingPrecondition: isCommandMode,
@@ -157,6 +160,7 @@ tasks.changeToMarkdownCell = new UserTask({
 
 tasks.changeToExternalResourceCell = new UserTask({
   title: 'Change to External Resource',
+  menuTitle: 'External Resource',
   keybindings: ['e'],
   displayKeybinding: 'E',
   keybindingPrecondition: isCommandMode,
@@ -167,6 +171,7 @@ tasks.changeToExternalResourceCell = new UserTask({
 
 tasks.changeToRawCell = new UserTask({
   title: 'Change to Raw',
+  menuTitle: 'Raw',
   keybindings: ['r'],
   displayKeybinding: 'R',
   keybindingPrecondition: isCommandMode,
@@ -175,6 +180,7 @@ tasks.changeToRawCell = new UserTask({
 
 tasks.changeToCSSCell = new UserTask({
   title: 'Change to CSS',
+  menuTitle: 'CSS',
   keybindings: ['c'],
   displayKeybinding: 'C',
   keybindingPrecondition: isCommandMode,
@@ -198,6 +204,13 @@ tasks.changeToCommandMode = new UserTask({
   callback() { dispatcher.changeMode('command') },
 })
 
+tasks.createNewNotebook = new UserTask({
+  title: 'New Notebook',
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.newNotebook() },
+
+})
+
 tasks.saveNotebook = new UserTask({
   title: 'Save Notebook',
   keybindings: ['ctrl+s', 'meta+s'],
@@ -205,6 +218,7 @@ tasks.saveNotebook = new UserTask({
   preventDefaultKeybinding: true,
   callback() { dispatcher.saveNotebook(store.getState().title) },
 })
+
 
 tasks.exportNotebook = new UserTask({
   title: 'Export Notebook',
@@ -215,9 +229,9 @@ tasks.exportNotebook = new UserTask({
 
 tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
+  menuTitle: 'Declared Variables',
   keybindings: ['ctrl+d', 'meta+d'],
   displayKeybinding: commandKey('D'),
-  keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
   callback() {
     if (store.getState().sidePaneMode !== 'declared variables') {
@@ -231,6 +245,7 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
 
 tasks.toggleHistoryPane = new UserTask({
   title: 'Toggle the History Pane',
+  menuTitle: 'History',
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: commandKey('H'),
   preventDefaultKeybinding: true,
@@ -242,6 +257,12 @@ tasks.toggleHistoryPane = new UserTask({
       dispatcher.changeSidePaneMode()
     }
   },
+})
+
+tasks.fileAnIssue = new ExternalLinkTask({
+  title: 'File an Issue',
+  menuTitle: 'File an Issue ...',
+  url: 'http://github.com/iodide-project/iodide/issues/new',
 })
 
 export default tasks

@@ -1,13 +1,6 @@
 import React from 'react'
 
-import IconMenu from 'material-ui/IconMenu'
 import IconButton from 'material-ui/IconButton'
-import { grey50 } from 'material-ui/styles/colors'
-import MenuIcon from 'material-ui/svg-icons/navigation/menu'
-import Subheader from 'material-ui/Subheader'
-import MenuItem from 'material-ui/MenuItem'
-import Divider from 'material-ui/Divider'
-import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
 import { ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar'
 import AddButton from 'material-ui/svg-icons/content/add'
 import UpArrow from 'material-ui/svg-icons/navigation/arrow-upward'
@@ -18,54 +11,54 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import PropTypes from 'prop-types';
 
-import { menuItems } from '../menu-content'
+import EditorToolbarMenu from './toolbar/editor-toolbar-menu'
 
 
-function transformToMaterialUIComponent(item, parentComponent, childrenClass = false) {
-  if (Object.prototype.hasOwnProperty.call(item, 'itemType')) {
-    if (item.itemType === 'Divider') {
-      return <Divider />
-    }
-    if (item.itemType === 'Subheader') {
-      return <Subheader> {item.name} </Subheader>
-    }
-  } else {
-    const out = {}
-    out.primaryText = item.primaryText
-    out.secondaryText = item.secondaryText || ' '
-    if (Object.prototype.hasOwnProperty.call(item, 'menuItems')) {
-      if (typeof item.menuItems === 'function') {
-        out.menuItems = item.menuItems(parentComponent)
-      } else {
-        out.menuItems = item.menuItems
-      }
-      out.menuItems = out.menuItems.map(subitem =>
-        transformToMaterialUIComponent(subitem, parentComponent, item.childrenClass))
-    }
-    if (Object.prototype.hasOwnProperty.call(item, 'menuItems')) {
-      out.rightIcon = <ArrowDropRight />
-    }
-    out.className = item.className || ''
-    if (childrenClass) {
-      out.className += ` ${childrenClass}`
-    }
-    out.style = { fontSize: '13px', width: '300px !important' }
-    if (Object.prototype.hasOwnProperty.call(item, 'callback')) {
-      out.onClick = item.callback.bind(parentComponent)
-    }
-    return <MenuItem {...out} />
-  }
+// function transformToMaterialUIComponent(item, parentComponent, childrenClass = false) {
+//   if (Object.prototype.hasOwnProperty.call(item, 'itemType')) {
+//     if (item.itemType === 'Divider') {
+//       return <Divider />
+//     }
+//     if (item.itemType === 'Subheader') {
+//       return <Subheader> {item.name} </Subheader>
+//     }
+//   } else {
+//     const out = {}
+//     out.primaryText = item.primaryText
+//     out.secondaryText = item.secondaryText || ' '
+//     if (Object.prototype.hasOwnProperty.call(item, 'menuItems')) {
+//       if (typeof item.menuItems === 'function') {
+//         out.menuItems = item.menuItems(parentComponent)
+//       } else {
+//         out.menuItems = item.menuItems
+//       }
+//       out.menuItems = out.menuItems.map(subitem =>
+//         transformToMaterialUIComponent(subitem, parentComponent, item.childrenClass))
+//     }
+//     if (Object.prototype.hasOwnProperty.call(item, 'menuItems')) {
+//       out.rightIcon = <ArrowDropRight />
+//     }
+//     out.className = item.className || ''
+//     if (childrenClass) {
+//       out.className += ` ${childrenClass}`
+//     }
+//     out.style = { fontSize: '13px', width: '300px !important' }
+//     if (Object.prototype.hasOwnProperty.call(item, 'callback')) {
+//       out.onClick = item.callback.bind(parentComponent)
+//     }
+//     return <MenuItem {...out} />
+//   }
 
-  throw Error('Could not transform to component')
-}
+//   throw Error('Could not transform to component')
+// }
 
-function menuComponents(items, parentComponent) {
-  const out = {}
-  Object.keys(items).forEach((k) => {
-    out[k] = transformToMaterialUIComponent(items[k], parentComponent)
-  })
-  return out
-}
+// function menuComponents(items, parentComponent) {
+//   const out = {}
+//   Object.keys(items).forEach((k) => {
+//     out[k] = transformToMaterialUIComponent(items[k], parentComponent)
+//   })
+//   return out
+// }
 
 
 class MainMenu extends React.Component {
@@ -168,7 +161,7 @@ class MainMenu extends React.Component {
         onClick={this.closeDialogAndDeleteNotebook}
       />,
     ];
-    const mc = menuComponents(menuItems, this)
+    // const mc = menuComponents(menuItems, this)
 
     return (
       <ToolbarGroup firstChild={this.props.firstChild}>
@@ -178,31 +171,8 @@ class MainMenu extends React.Component {
         >
           Delete Notebook?
         </Dialog>
-        <IconMenu
-          style={{ fontSize: '12px' }}
-          iconButtonElement={<IconButton><MenuIcon color={grey50} /></IconButton>}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          menuStyle={{ width: '400px !important' }}
-          listStyle={{ width: '350px !important' }}
-          desktop
-          className="menu-button"
-        >
 
-          {mc.newNotebook}
-          {mc.saveNotebook}
-          {mc.deleteNotebook}
-          {mc.importNotebookFromJSON}
-          {mc.exportNotebookAsJSON}
-
-          {mc.savedNotebooks}
-          <Divider />
-          {mc.cell}
-          <Divider />
-          {mc.view}
-          <Divider />
-          {mc.fileAnIssue}
-        </IconMenu>
+        <EditorToolbarMenu />
 
         <IconButton
           tooltip="insert cell"
