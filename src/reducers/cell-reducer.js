@@ -192,7 +192,7 @@ const cellReducer = (state = newNotebook(), action) => {
           }
         } else { // cellType === 'python'
           console.log(JSON.stringify(code))
-          output = window.Module.runPython(code)  // eslint-disable-line
+          output = window.pyodide.runPython(code)  // eslint-disable-line
           thisCell.evalStatus = evalStatuses.SUCCESS
         }
         thisCell.rendered = true
