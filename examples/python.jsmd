@@ -36,16 +36,46 @@ The basic data types (None, bool, ints, floats, lists, and dicts) are converted 
 [0, 1, 32.0, 'foo', {'a': 10, b: '20'}, b'bytes']
 
 %% md
-All other data types (such as class instances, functions, File objects etc.) are returned to Javascript as "opaque raw pointers".  They are there on the Javascript side, but you can't really do anything useful with them other than pass them around.
+## Custom data types
 
-(I have some ideas about how to make them useful, though, in the future).
+All other data types (such as class instances, functions, File objects etc.) are returned to Javascript as special proxy objects that you can interact with, though the syntax is a little cumbersome.
+
+For example, say we had the following Python function that we wanted to call from Javascript:
 
 %% py
+def square(x, integer=False):
+  if integer:
+    x = int(x)
+  return x * x
+
+%% md
+To call a Python callable from Javascript, we use its `call` method, which takes two arguments: the positional arguments as an array, and the keyword arguments as an object.
+
+%% js
+// javascript
+square.call([2.5], {integer: true})
+
+%% md
+This is equivalent to the following Python:
+
+%% py
+square(2.5, integer=True)
+
+%% md
+You can also get the attributes of objects in a similar way.  Say we had an instance of the following Python custom class:
+
+%% py {"collapseEditViewInput":"SCROLLABLE"}
 class Foo:
   def __init__(self, val):
     self.val = val
 foo = Foo(42)
 foo
+
+%% md
+We can get the value of its `val` property as so:
+
+%% js
+foo.getattr("val")
 
 %% md
 ## Exceptions
