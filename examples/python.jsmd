@@ -80,9 +80,9 @@ foo.getattr("val")
 %% md
 ## Exceptions
 
-Python exceptions are currently just converted to strings and returned to Javascript.
+Python exceptions are converted to Javascript exceptions.
 
-Eventually, these should get re-thrown as proper Javascript exceptions.
+[They currently don't have tracebacks or other metadata].
 
 %% py
 x = 5 / 0

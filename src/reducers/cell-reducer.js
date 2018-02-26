@@ -180,19 +180,22 @@ const cellReducer = (state = newNotebook(), action) => {
         //     e.constructor(`transpilation failed: ${e.message}`)
         //   }
         // }
-        if (thisCell.cellType === 'javascript') {
-          try {
+        try {
+          if (thisCell.cellType === 'javascript') {
             output = window.eval(code)  // eslint-disable-line
             thisCell.evalStatus = evalStatuses.SUCCESS
-          } catch (e) {
-            const err = e.constructor(`Error in Evaled Script: ${e.message}`)
-            err.lineNumber = (e.lineNumber - err.lineNumber) + 3
-            output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
-            thisCell.evalStatus = evalStatuses.ERROR
+          } else { // cellType === 'python'
+            output = window.pyodide.runPython(code)  // eslint-disable-line
+            if (output instanceof Error) {
+              throw output
+            }
+            thisCell.evalStatus = evalStatuses.SUCCESS
           }
-        } else { // cellType === 'python'
-          output = window.pyodide.runPython(code)  // eslint-disable-line
-          thisCell.evalStatus = evalStatuses.SUCCESS
+        } catch (e) {
+          const err = e.constructor(`Error in Evaled Script: ${e.message}`)
+          err.lineNumber = (e.lineNumber - err.lineNumber) + 3
+          output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+          thisCell.evalStatus = evalStatuses.ERROR
         }
         thisCell.rendered = true
         if (output !== undefined) { thisCell.value = output }
