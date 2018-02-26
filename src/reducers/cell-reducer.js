@@ -191,7 +191,6 @@ const cellReducer = (state = newNotebook(), action) => {
             thisCell.evalStatus = evalStatuses.ERROR
           }
         } else { // cellType === 'python'
-          console.log(JSON.stringify(code))
           output = window.pyodide.runPython(code)  // eslint-disable-line
           thisCell.evalStatus = evalStatuses.SUCCESS
         }
