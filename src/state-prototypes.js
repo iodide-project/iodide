@@ -1,85 +1,96 @@
+import { Enum } from 'enumify'
+
+class rowOverflow extends Enum {}
+rowOverflow.initEnum({
+  VISIBLE: {
+    get nextOverflow() { return rowOverflow.SCROLL },
+    jsmdName: 'VISIBLE',
+    cssName: 'EXPANDED',
+  },
+  HIDDEN: {
+    get nextOverflow() { return rowOverflow.VISIBLE },
+    jsmdName: 'HIDDEN',
+    cssName: 'COLLAPSED',
+  },
+  SCROLL: {
+    get nextOverflow() { return rowOverflow.HIDDEN },
+    jsmdName: 'SCROLL',
+    cssName: 'SCROLLABLE',
+  },
+})
+
+
+// class cellTypes extends Enum {}
+// cellTypes.initEnum({
+//   JS: {
+//     prettyName: 'Javascript',
+//     jsmdName: 'js',
+//   },
+//   MD: {
+//     prettyName: 'Markdown',
+//     jsmdName: 'md',
+//   },
+//   CSS: {
+//     prettyName: 'CSS',
+//     jsmdName: 'css',
+//   },
+//   RESOURCE: {
+//     prettyName: 'External resource',
+//     jsmdName: 'resource',
+//   },
+//   RAW: {
+//     prettyName: 'Raw text',
+//     jsmdName: 'raw',
+//   },
+// })
+
+// class appView extends Enum {}
+// appView.initEnum(['EXPLORE', 'REPORT'])
+
+// class appMode extends Enum {}
+// appMode.initEnum(['COMMAND', 'EDIT', 'TITLE', 'MENU'])
+
 function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-// function newCellRow(collapseEditView, collapsePresentationView) {
-//   // these track the collapsed state of cell row
-//   // must be one of "HIDDEN", "SCROLL", "EXPAND"
-//   return { collapseEditView, collapsePresentationView }
-// }
+function newCellRow(rowType, REPORT, EXPORE) {
+  // these track the collapsed state of cell row in the two views
+  // must be one of "HIDDEN", "SCROLL", "VISIBLE"
+  return { rowType, REPORT, EXPORE }
+}
 
-// function newCellRows(cellType) {
-//   switch (cellType) {
-//     case 'javascript':
-//       return [
-//         newCellRow('EXPAND', 'HIDDEN'),
-//         newCellRow('EXPAND', 'HIDDEN'),
-//       ]
-//     case 'markdown':
-//       return [
-//         newCellRow('EXPAND', 'EXPAND'),
-//       ]
-//     case 'external dependencies':
-//       return [
-//         newCellRow('EXPAND', 'HIDDEN'),
-//         newCellRow('EXPAND', 'HIDDEN'),
-//       ]
-//     case 'css':
-//       return [
-//         newCellRow('EXPAND', 'HIDDEN'),
-//       ]
-//     case 'raw':
-//       return [
-//         newCellRow('EXPAND', 'HIDDEN'),
-//       ]
-//     default:
-//       throw Error(`Unsupported cellType: ${cellType}`)
-//   }
-// }
-
-function newCell(cells, cellType) {
-  // let outputCollapseDefault
-  // if (cellType=='dom' || cellType=='dom'){
-  //   outputCollapseDefault = 'COLLAPSED'
-  // } else {outputCollapseDefault = 'EXPANDED'}
-  let collapseEditViewInput
-  let collapseEditViewOutput
-  let collapsePresentationViewInput
-  let collapsePresentationViewOutput
+function newCellRows(cellType) {
   switch (cellType) {
     case 'javascript':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'COLLAPSED'
-      collapseEditViewOutput = 'EXPANDED'
-      collapsePresentationViewOutput = 'COLLAPSED'
-      break
+      return [
+        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
+        newCellRow('output', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
+      ]
     case 'markdown':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'EXPANDED'
-      collapseEditViewOutput = 'EXPANDED'
-      collapsePresentationViewOutput = 'EXPANDED'
-      break
+      return [
+        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.VISIBLE),
+        newCellRow('output', rowOverflow.VISIBLE, rowOverflow.VISIBLE),
+      ]
     case 'external dependencies':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'COLLAPSED'
-      collapseEditViewOutput = 'EXPANDED'
-      collapsePresentationViewOutput = 'COLLAPSED'
-      break
+      return [
+        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
+        newCellRow('output', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
+      ]
     case 'css':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'COLLAPSED'
-      collapseEditViewOutput = undefined
-      collapsePresentationViewOutput = undefined
-      break
+      return [
+        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
+      ]
     case 'raw':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'COLLAPSED'
-      collapseEditViewOutput = undefined
-      collapsePresentationViewOutput = undefined
-      break
+      return [
+        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
+      ]
     default:
       throw Error(`Unsupported cellType: ${cellType}`)
   }
+}
+
+function newCell(cells, cellType) {
   return {
     content: '',
     id: newCellID(cells),
@@ -92,13 +103,7 @@ function newCell(cells, cellType) {
     // evaluationOld set to true if the content of the editor changes from whatever
     // produced the most recent output value
     evaluationOld: true,
-    // these track the collapsed state of input and outputs
-    // must be one of "COLLAPSED" "SCROLLABLE" "EXPANDED"
-    collapseEditViewInput,
-    collapseEditViewOutput,
-    collapsePresentationViewInput,
-    collapsePresentationViewOutput,
-    // rowState: newCellRows(cellType),
+    rows: newCellRows(cellType),
   }
 }
 
@@ -134,4 +139,5 @@ export {
   newNotebook,
   blankState,
   newCell,
+  rowOverflow,
 }

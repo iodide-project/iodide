@@ -5,16 +5,17 @@ import PropTypes from 'prop-types';
 
 import { getCellById } from '../notebook-utils'
 import actions from '../actions'
+import { rowOverflow as rowOverflowEnum } from '../state-prototypes'
 
 class CellRow extends React.Component {
   static propTypes = {
     executionString: PropTypes.string,
     pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    collapsedState: PropTypes.string,
+    rowOverflow: PropTypes.instanceOf(rowOverflowEnum),
     rowType: PropTypes.string,
     actions: PropTypes.shape({
-      setCellCollapsedState: PropTypes.func.isRequired,
+      setCellRowCollapsedState: PropTypes.func.isRequired,
     }).isRequired,
     // collapseButtonLabel: PropTypes.string.isRequired,
     children: PropTypes.node,
@@ -27,46 +28,36 @@ class CellRow extends React.Component {
   }
 
   componentDidUpdate() {
-    // uncollapse the editor upon entering edit mode.
-    // note: entering editMode is only allowed from editorView
+    // if this is an input row, uncollapse
+    // the editor upon entering edit mode.
+    // note: entering editMode is only allowed from editor View
     // thus, we only need to check the editorView collapsed state
     if (this.props.viewMode === 'editor' &&
       this.props.pageMode === 'edit' &&
       this.props.rowType === 'input' &&
-      this.props.collapsedState === 'COLLAPSED') {
-      this.props.actions.setCellCollapsedState(
-        this.props.viewMode,
+      this.props.rowOverflow === rowOverflowEnum.HIDDEN) {
+      this.props.actions.setCellRowCollapsedState(
+        'editor',
         'input',
-        'SCROLLABLE',
+        rowOverflowEnum.SCROLL,
       )
     }
   }
 
   handleCollapseButtonClick() {
-    let nextCollapsedState
-    switch (this.props.collapsedState) {
-      case 'COLLAPSED':
-        nextCollapsedState = 'EXPANDED'
-        break
-      case 'EXPANDED':
-        nextCollapsedState = 'SCROLLABLE'
-        break
-      case 'SCROLLABLE':
-        nextCollapsedState = 'EXPANDED'
-        break
-      default:
-        throw Error(`Unknown collapsedState ${this.props.collapsedState}`)
+    // the collapse button should only work in EXPLORE view
+    if (this.props.viewMode === 'editor') {
+      this.props.actions.setCellRowCollapsedState(
+        'editor',
+        this.props.rowType,
+        this.props.rowOverflow.nextOverflow,
+      )
     }
-    this.props.actions.setCellCollapsedState(
-      this.props.viewMode,
-      this.props.rowType,
-      nextCollapsedState,
-    )
   }
 
   render() {
     return (
-      <div className={`cell-row ${this.props.rowType} ${this.props.collapsedState}`}>
+      <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow.cssName}`}>
         <div className="status">
           {this.props.executionString}
         </div>
@@ -86,25 +77,52 @@ class CellRow extends React.Component {
 
 function mapStateToPropsCellRows(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
-  let collapsedState
-  switch (`${state.viewMode},${ownProps.rowType}`) {
-    case 'presentation,input':
-      collapsedState = cell.collapsePresentationViewInput
+  console.log('cell', cell)
+  console.log('cell.rows', cell.rows)
+  const row = cell.rows.filter(r => r.rowType === ownProps.rowType)[0]
+  console.log('row', row)
+  console.log('ownProps.rowType', ownProps.rowType)
+  let view
+  // this block can be deprecated if we move to enums for VIEWs
+  switch (state.viewMode) {
+    case 'editor':
+      view = 'REPORT'
       break
-    case 'presentation,output':
-      collapsedState = cell.collapsePresentationViewOutput
-      break
-    case 'editor,input':
-      collapsedState = cell.collapseEditViewInput
-      break
-    case 'editor,output':
-      collapsedState = cell.collapseEditViewOutput
+    case 'presentation':
+      view = 'EXPLORE'
       break
     default:
-      throw Error(`Unsupported viewMode,rowType ${state.viewMode},${ownProps.rowType}`)
+      throw Error(`Unsupported viewMode: ${state.viewMode}`)
   }
-  const executionString = (ownProps.rowType === 'input'
+  const rowOverflow = row[view]
+  const executionString = (row.rowType === 'input'
     && cell.cellType === 'javascript') ? `[${cell.executionStatus}]` : ''
+
+  return {
+    pageMode: state.mode,
+    viewMode: state.viewMode,
+    cellType: cell.cellType,
+    executionString,
+    rowOverflow,
+    // collapseButtonLabel,
+  }
+  // let collapsedState
+  // switch (`${state.viewMode},${ownProps.rowType}`) {
+  //   case 'presentation,input':
+  //     collapsedState = cell.collapsePresentationViewInput
+  //     break
+  //   case 'presentation,output':
+  //     collapsedState = cell.collapsePresentationViewOutput
+  //     break
+  //   case 'editor,input':
+  //     collapsedState = cell.collapseEditViewInput
+  //     break
+  //   case 'editor,output':
+  //     collapsedState = cell.collapseEditViewOutput
+  //     break
+  //   default:
+  //     throw Error(`Unsupported viewMode,rowType ${state.viewMode},${ownProps.rowType}`)
+  // }
 
   // let collapseButtonLabel
   // if (collapsedState === 'COLLAPSED') {
@@ -112,14 +130,6 @@ function mapStateToPropsCellRows(state, ownProps) {
   // } else {
   //   collapseButtonLabel = ''
   // }
-  return {
-    pageMode: state.mode,
-    viewMode: state.viewMode,
-    cellType: cell.cellType,
-    executionString,
-    collapsedState,
-    // collapseButtonLabel,
-  }
 }
 
 function mapDispatchToPropsCellRows(dispatch) {

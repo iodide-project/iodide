@@ -7,10 +7,10 @@ import htmlTemplate from './html-template'
 const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource']
 
 const jsmdValidCellSettings = [
-  'collapseEditViewInput',
-  'collapseEditViewOutput',
-  'collapsePresentationViewInput',
-  'collapsePresentationViewOutput',
+  // 'collapseEditViewInput',
+  // 'collapseEditViewOutput',
+  // 'collapsePresentationViewInput',
+  // 'collapsePresentationViewOutput',
 ]
 
 const jsmdCellTypeMap = new Map([
@@ -162,6 +162,7 @@ function stateFromJsmd(jsmdString) {
     })
   // set cell 0  to be the selected cell
   initialState.cells[0].selected = true
+  console.log(initialState)
   return initialState
 }
 

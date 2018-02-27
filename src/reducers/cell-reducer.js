@@ -8,7 +8,9 @@ import { moveCell, scrollToCellIfNeeded,
   getSelectedCellId,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
-  newStateWithSelectedCellPropsAssigned } from './cell-reducer-utils'
+  newStateWithSelectedCellPropsAssigned,
+  newStateWithRowPropsSet
+  } from './cell-reducer-utils'
 
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
@@ -118,31 +120,43 @@ const cellReducer = (state = newNotebook(), action) => {
     //   ['cellType','value','rendered'],
     //   [action.cellType,undefined,false])
 
-    case 'SET_CELL_COLLAPSED_STATE': {
-      switch (`${action.viewMode},${action.rowType}`) {
-        case 'presentation,input':
-          return newStateWithSelectedCellPropertySet(
-            state,
-            'collapsePresentationViewInput', action.collapsedState,
-          )
-        case 'presentation,output':
-          return newStateWithSelectedCellPropertySet(
-            state,
-            'collapsePresentationViewOutput', action.collapsedState,
-          )
-        case 'editor,input':
-          return newStateWithSelectedCellPropertySet(
-            state,
-            'collapseEditViewInput', action.collapsedState,
-          )
-        case 'editor,output':
-          return newStateWithSelectedCellPropertySet(
-            state,
-            'collapseEditViewOutput', action.collapsedState,
-          )
-        default:
-          throw Error(`Invalid viewMode,rowType ${action.viewMode},${action.rowType}`)
-      }
+    // case 'SET_CELL_COLLAPSED_STATE': {
+    //   switch (`${action.viewMode},${action.rowType}`) {
+    //     case 'presentation,input':
+    //       return newStateWithSelectedCellPropertySet(
+    //         state,
+    //         'collapsePresentationViewInput', action.collapsedState,
+    //       )
+    //     case 'presentation,output':
+    //       return newStateWithSelectedCellPropertySet(
+    //         state,
+    //         'collapsePresentationViewOutput', action.collapsedState,
+    //       )
+    //     case 'editor,input':
+    //       return newStateWithSelectedCellPropertySet(
+    //         state,
+    //         'collapseEditViewInput', action.collapsedState,
+    //       )
+    //     case 'editor,output':
+    //       return newStateWithSelectedCellPropertySet(
+    //         state,
+    //         'collapseEditViewOutput', action.collapsedState,
+    //       )
+    //     default:
+    //       throw Error(`Invalid viewMode,rowType ${action.viewMode},${action.rowType}`)
+    //   }
+    // }
+
+    case 'SET_CELL_ROW_COLLAPSE_STATE': {
+      let { cellId } = action
+      if (cellId === undefined) { cellId = getSelectedCellId(state) }
+      return newStateWithRowPropsSet(
+        state,
+        cellId,
+        action.rowType,
+        action.viewMode,
+        action.rowOverflow,
+      )
     }
 
     case 'MARK_CELL_NOT_RENDERED':
