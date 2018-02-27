@@ -4,10 +4,11 @@ import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
 
 export default class NotebookMenuSubsection extends React.Component {
   render() {
-    const children = React.Children.map(this.props.children, c => React.cloneElement(c, { className: 'medium-menu' }))
+    const children = React.Children.map(this.props.children, c => React.cloneElement(c, { className: ' medium-menu', width: 256 }))
     return (
       <MenuItem
-        style={{ fontSize: '13px', width: '400px !important' }}
+        innerDivStyle={{ width: '200px !important' }}
+        style={{ fontSize: '13px' }}
         primaryText={this.props.title}
         rightIcon={<ArrowDropRight />}
         menuItems={children}

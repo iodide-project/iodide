@@ -6,6 +6,7 @@ import React from 'react'
 export default class NotebookMenuItem extends React.Component {
   render() {
     return (<MenuItem
+      className={this.props.className || undefined}
       key={this.props.task.title}
       style={{ fontSize: '13px', width: '300px !important' }}
       primaryText={this.props.task.menuTitle}

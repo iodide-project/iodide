@@ -6,10 +6,10 @@ export default class NotebookIconMenu extends React.Component {
     return (
       <IconMenu
         iconButtonElement={this.props.icon}
-        anchorOrigin={this.props.anchorOrigin || { horizontal: 'left', vertical: 'bottom' }}
-        targetOrigin={this.props.targetOrigin || { horizontal: 'left', vertical: 'top' }}
-        menuStyle={{ width: '500px !important' }}
-        listStyle={{ width: '500px !important' }}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+        menuStyle={{ width: '400px !important' }}
+        listStyle={{ width: '350px !important' }}
         desktop
         className="menu-button"
       >
@@ -18,3 +18,6 @@ export default class NotebookIconMenu extends React.Component {
     )
   }
 }
+
+// menuStyle={{ width: '400px !important' }}
+// listStyle={{ width: '300px !important' }}

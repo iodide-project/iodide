@@ -4,6 +4,7 @@ import { store } from './store'
 import actions from './actions'
 import { isCommandMode,
   viewModeIsEditor,
+  getCells,
   getCellBelowSelectedId,
   getCellAboveSelectedId } from './notebook-utils'
 
@@ -38,6 +39,31 @@ tasks.evaluateCell = new UserTask({
   callback() {
     dispatcher.changeMode('command')
     dispatcher.evaluateCell()
+  },
+})
+
+tasks.evaluateAllCells = new UserTask({
+  title: 'Evaluate All Cells',
+  menuTitle: 'evaluate all cells',
+  callback() {
+    const cells = getCells()
+    cells.forEach((cell) => {
+      if (cell.cellType === 'markdown' ||
+          cell.cellType === 'dom') {
+        dispatcher.evaluateCell(cell.id)
+      }
+    })
+    window.setTimeout(
+      () => {
+        cells.forEach((cell) => {
+          if (cell.cellType !== 'markdown' &&
+              cell.cellType !== 'dom') {
+            dispatcher.evaluateCell(cell.id)
+          }
+        })
+      },
+      42, // wait a few milliseconds to let React DOM updates flush
+    )
   },
 })
 
@@ -185,7 +211,16 @@ tasks.changeToCSSCell = new UserTask({
   displayKeybinding: 'C',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.changeCellType('css') },
+})
 
+tasks.changeMode = new UserTask({
+  title: 'Change Mode',
+  callback(mode) { dispatcher.changeMode(mode) },
+})
+
+tasks.changeToMenuMode = new UserTask({
+  title: 'Change to Menu Mode',
+  callback() { dispatcher.changeMode('title-edit') },
 })
 
 tasks.changeToEditMode = new UserTask({
@@ -204,11 +239,15 @@ tasks.changeToCommandMode = new UserTask({
   callback() { dispatcher.changeMode('command') },
 })
 
+tasks.changeTitle = new UserTask({
+  title: 'Change Title',
+  callback(t) { dispatcher.changePageTitle(t) },
+})
+
 tasks.createNewNotebook = new UserTask({
   title: 'New Notebook',
   preventDefaultKeybinding: true,
   callback() { dispatcher.newNotebook() },
-
 })
 
 tasks.saveNotebook = new UserTask({
@@ -218,7 +257,6 @@ tasks.saveNotebook = new UserTask({
   preventDefaultKeybinding: true,
   callback() { dispatcher.saveNotebook(store.getState().title) },
 })
-
 
 tasks.exportNotebook = new UserTask({
   title: 'Export Notebook',
@@ -240,7 +278,6 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
       dispatcher.changeSidePaneMode()
     }
   },
-
 })
 
 tasks.toggleHistoryPane = new UserTask({
@@ -256,6 +293,20 @@ tasks.toggleHistoryPane = new UserTask({
     } else {
       dispatcher.changeSidePaneMode()
     }
+  },
+})
+
+tasks.setViewModeToEditor = new UserTask({
+  title: 'Set View Mode to Editor',
+  callback() {
+    dispatcher.setViewMode('editor')
+  },
+})
+
+tasks.setViewModeToPresentation = new UserTask({
+  title: 'Set View Mode to Presentation',
+  callback() {
+    dispatcher.setViewMode('presentation')
   },
 })
 

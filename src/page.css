@@ -539,7 +539,12 @@ table tr:nth-child(2n) {
   display: flex !important;
   justify-content: space-between;
   flex-flow: row wrap;
+  width: 240px;
+}
 
+.medium-menu {
+  outline:1px solid yellow
+  
 }
 
 .medium-menu div div {
@@ -551,7 +556,7 @@ table tr:nth-child(2n) {
 
 .medium-menu div div div:first-child {
   order: 1;
-  width: 60px;
+  width: 40px;
   justify-content: flex-end;
   font-size: 12px;
 
@@ -560,7 +565,7 @@ table tr:nth-child(2n) {
 
 .medium-menu div div div:nth-child(2) {
   float: initial !important;
-  width: 145px;
+  width: 155px;
   overflow: hidden;
   order: 0;
 }
