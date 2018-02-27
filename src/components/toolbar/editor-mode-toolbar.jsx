@@ -14,7 +14,7 @@ import ViewControls from './view-controls'
 
 import EditorModeTitle from './editor-mode-title'
 
-export class EditorModeToolbar extends React.Component {
+export class EditorModeToolbarUnconnected extends React.Component {
   static propTypes = {
     viewMode: PropTypes.string,
   }
@@ -38,4 +38,4 @@ export function mapStateToProps(state) {
   return { viewMode: state.viewMode }
 }
 
-export default connect(mapStateToProps)(EditorModeToolbar)
+export default connect(mapStateToProps)(EditorModeToolbarUnconnected)
