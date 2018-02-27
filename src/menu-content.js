@@ -1,6 +1,8 @@
 import { prettyDate, formatDateString } from './notebook-utils'
 import exampleNotebooks from './example-notebooks'
 import settings from './settings'
+import { stateFromJsmd } from './jsmd-tools'
+
 
 const { AUTOSAVE } = settings.labels
 
@@ -17,6 +19,22 @@ function commandKey(key) {
     ctr = '⌘ '
   }
   return ctr + key
+}
+
+function jsonOrJsmdParse(string) {
+  let nextState
+  try {
+    nextState = JSON.parse(string)
+    console.log()
+    console.log(`"${nextState.title}"" is currently saved in localStorage as JSON.
+  --- Saving as JSON is deprecated!!! ---
+Please take a minute open any saved notebooks you care about and resave them with ctrl+s.
+This will update them to jsmd.
+`)
+  } catch (e) {
+    nextState = stateFromJsmd(string)
+  }
+  return nextState
 }
 
 function getSavedNotebooks(elem) {
@@ -42,7 +60,7 @@ function getSavedNotebooks(elem) {
 
   if (autosaves.length) {
     const [autosave] = autosaves
-    let { lastSaved } = JSON.parse(localStorage[autosave])
+    let { lastSaved } = jsonOrJsmdParse(localStorage[autosave])
     lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
     const displayTitle = autosave.replace(AUTOSAVE, '')
     autosaveNBs = [
@@ -63,14 +81,14 @@ function getSavedNotebooks(elem) {
       .filter(n => !n.includes(AUTOSAVE))
       .filter((n) => {
         try {
-          JSON.parse(localStorage[n]).lastSaved // eslint-disable-line
+          jsonOrJsmdParse(localStorage[n]).lastSaved // eslint-disable-line
           return true
         } catch (err) {
           return false
         }
       })
       .map((n) => {
-        const { lastSaved } = JSON.parse(localStorage[n])
+        const { lastSaved } = jsonOrJsmdParse(localStorage[n])
         return {
           primaryText: n,
           secondaryText: prettyDate(formatDateString(lastSaved)),
