@@ -6,7 +6,7 @@ import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-import ViewModeToggleButton from './toolbar/view-mode-toggle-button'
+import ViewModeToggleButton from './view-mode-toggle-button'
 
 export class PresentationModeToolbarUnconnected extends React.Component {
   static propTypes = {
