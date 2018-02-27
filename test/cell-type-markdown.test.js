@@ -24,7 +24,6 @@ describe('MarkdownCell_unconnected react component', () => {
     props = {
       cellId: 1,
       value: 'a _markdown_ string',
-      // rendered: true,
       showMarkdown: true,
       pageMode: 'command',
       viewMode: 'editor',

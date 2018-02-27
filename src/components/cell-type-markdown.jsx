@@ -16,7 +16,6 @@ export class MarkdownCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
     value: PropTypes.string,
-    // rendered: PropTypes.bool.isRequired,
     showMarkdown: PropTypes.bool.isRequired,
     pageMode: PropTypes.oneOf(['command', 'edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
