@@ -1,6 +1,11 @@
 import notebookReducer from '../src/reducers/notebook-reducer'
 import localStorageMock from './mockLocalStorage'
 import { newNotebook, blankState, newCell } from '../src/state-prototypes'
+import {
+  // exportJsmdBundle, we'll need to test this
+  // stringifyStateToJsmd, we'll need to test this
+  stateFromJsmd,
+} from '../src/jsmd-tools'
 
 
 window.localStorage = localStorageMock
@@ -48,16 +53,16 @@ describe('importing a notebook via state', () => {
   })
 })
 
+
 describe('saving / deleting localStorage-saved notebooks', () => {
   // this will do enough for now.
-
   const SAVE_DELETE_NOTEBOOK_NAME = 'save-delete-notebook-tests'
   const state = exampleNotebookWithContent(SAVE_DELETE_NOTEBOOK_NAME)
 
   it('should save via SAVE_NOTEBOOK', () => {
     notebookReducer(state, { type: 'SAVE_NOTEBOOK' })
 
-    const savedNotebook = JSON.parse(window.localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME))
+    const savedNotebook = stateFromJsmd(window.localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME))
     expect(savedNotebook.title).toEqual(state.title)
     expect(savedNotebook.lastSaved).toBeDefined()
     expect(savedNotebook.cells).toEqual(state.cells)

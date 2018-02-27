@@ -1,5 +1,5 @@
 import { newNotebook, newCell, blankState } from '../state-prototypes'
-import { exportJsmdBundle } from '../jsmd-tools'
+import { exportJsmdBundle, stringifyStateToJsmd, stateFromJsmd } from '../jsmd-tools'
 
 function clearHistory(loadedState) {
   // TODO: Don't assign to passed parameter
@@ -87,16 +87,26 @@ const notebookReducer = (state = newNotebook(), action) => {
       } else {
         ({ title } = state)
       }
-      window.localStorage.setItem(title, JSON.stringify(nextState))
+      window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
       return Object.assign({}, state, { lastSaved })
     }
 
     case 'LOAD_NOTEBOOK': {
-    // note: loading a NB should always assign to a copy of the latest global
-    // and per-cell state for backwards compatibility
       clearUserDefinedVars(state.userDefinedVariables)
-      nextState = JSON.parse(window.localStorage.getItem(action.title))
+      try {
+        nextState = JSON.parse(window.localStorage.getItem(action.title))
+        console.log()
+        console.log(`"${nextState.title}" is currently saved in localStorage as JSON.
+  --- Saving as JSON is deprecated!!! ---
+Please take a minute open any saved notebooks you care about and resave them with ctrl+s.
+This will update them to jsmd.
+`)
+      } catch (e) {
+        nextState = stateFromJsmd(window.localStorage.getItem(action.title))
+      }
       clearHistory(nextState)
+      // note: loading a NB should always assign to a copy of the latest global
+      // and per-cell state for backwards compatibility
       cells = nextState.cells.map(cell =>
         Object.assign(newCell(nextState.cells, cell.cellType), cell))
       nextState = Object.assign(blankState(), nextState, { cells })
