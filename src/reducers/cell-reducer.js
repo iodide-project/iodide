@@ -9,8 +9,8 @@ import { moveCell, scrollToCellIfNeeded,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
-  newStateWithRowPropsSet
-  } from './cell-reducer-utils'
+  newStateWithRowPropsSet,
+} from './cell-reducer-utils'
 
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
@@ -95,57 +95,19 @@ const cellReducer = (state = newNotebook(), action) => {
       return newStateWithSelectedCellPropertySet(state, 'domElementID', action.elemID)
 
     case 'CHANGE_CELL_TYPE': {
-      // create a new cell of the given type to get the defaults that
-      // need to be applied to the cell being changed
-      const {
-        collapseEditViewInput,
-        collapsePresentationViewInput,
-        collapseEditViewOutput,
-        collapsePresentationViewOutput,
-      } = newCell(state.cells, action.cellType)
+      // create a newCell of the given type to get the defaults that
+      // will need to be updated for the new cell type
+      const { rows } = newCell(state.cells, action.cellType)
       return newStateWithSelectedCellPropsAssigned(
         state,
         {
           cellType: action.cellType,
           value: undefined,
           rendered: false,
-          collapseEditViewInput,
-          collapsePresentationViewInput,
-          collapseEditViewOutput,
-          collapsePresentationViewOutput,
+          rows,
         },
       )
     }
-    // return newStateWithSelectedCellPropertiesSet(state,
-    //   ['cellType','value','rendered'],
-    //   [action.cellType,undefined,false])
-
-    // case 'SET_CELL_COLLAPSED_STATE': {
-    //   switch (`${action.viewMode},${action.rowType}`) {
-    //     case 'presentation,input':
-    //       return newStateWithSelectedCellPropertySet(
-    //         state,
-    //         'collapsePresentationViewInput', action.collapsedState,
-    //       )
-    //     case 'presentation,output':
-    //       return newStateWithSelectedCellPropertySet(
-    //         state,
-    //         'collapsePresentationViewOutput', action.collapsedState,
-    //       )
-    //     case 'editor,input':
-    //       return newStateWithSelectedCellPropertySet(
-    //         state,
-    //         'collapseEditViewInput', action.collapsedState,
-    //       )
-    //     case 'editor,output':
-    //       return newStateWithSelectedCellPropertySet(
-    //         state,
-    //         'collapseEditViewOutput', action.collapsedState,
-    //       )
-    //     default:
-    //       throw Error(`Invalid viewMode,rowType ${action.viewMode},${action.rowType}`)
-    //   }
-    // }
 
     case 'SET_CELL_ROW_COLLAPSE_STATE': {
       let { cellId } = action

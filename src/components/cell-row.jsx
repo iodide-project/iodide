@@ -104,32 +104,7 @@ function mapStateToPropsCellRows(state, ownProps) {
     cellType: cell.cellType,
     executionString,
     rowOverflow,
-    // collapseButtonLabel,
   }
-  // let collapsedState
-  // switch (`${state.viewMode},${ownProps.rowType}`) {
-  //   case 'presentation,input':
-  //     collapsedState = cell.collapsePresentationViewInput
-  //     break
-  //   case 'presentation,output':
-  //     collapsedState = cell.collapsePresentationViewOutput
-  //     break
-  //   case 'editor,input':
-  //     collapsedState = cell.collapseEditViewInput
-  //     break
-  //   case 'editor,output':
-  //     collapsedState = cell.collapseEditViewOutput
-  //     break
-  //   default:
-  //     throw Error(`Unsupported viewMode,rowType ${state.viewMode},${ownProps.rowType}`)
-  // }
-
-  // let collapseButtonLabel
-  // if (collapsedState === 'COLLAPSED') {
-  //   collapseButtonLabel = (ownProps.rowType === 'input') ? cell.cellType : 'output'
-  // } else {
-  //   collapseButtonLabel = ''
-  // }
 }
 
 function mapDispatchToPropsCellRows(dispatch) {
