@@ -96,35 +96,6 @@ describe('MarkdownCell_unconnected react component', () => {
       .toEqual({ display: 'none' })
   })
 
-  // it('editor not shown if editing, even if MD is rendered', () => {
-  //   props.rendered = true
-  //   props.beingEdited = true
-  //   expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-  //     .toEqual({ display: 'block' })
-
-  //   expect(cell().wrap(cell().find('div')).props().style)
-  //     .toEqual({ display: 'none' })
-  // })
-
-  // it('editor shown if being Edited, also if MD not rendered', () => {
-  //   props.rendered = false
-  //   props.beingEdited = true
-  //   expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-  //     .toEqual({ display: 'block' })
-
-  //   expect(cell().wrap(cell().find('div')).props().style)
-  //     .toEqual({ display: 'none' })
-  // })
-
-  // it('editor shown if MD is not rendered, even if not editing the cell', () => {
-  //   props.rendered = false
-  //   props.beingEdited = false
-  //   expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-  //     .toEqual({ display: 'block' })
-  //   expect(cell().wrap(cell().find('div')).props().style)
-  //     .toEqual({ display: 'none' })
-  // })
-
   it('div should have dangerouslySetInnerHTML', () => {
     props.value = 'html string'
     expect(cell().wrap(cell().find('div')).props().dangerouslySetInnerHTML)
