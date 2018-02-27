@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 
 import AddButton from 'material-ui/svg-icons/content/add'
 import UpArrow from 'material-ui/svg-icons/navigation/arrow-upward'
@@ -8,7 +9,6 @@ import FastForward from 'material-ui/svg-icons/av/fast-forward'
 import { ToolbarGroup } from 'material-ui/Toolbar'
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import PropTypes from 'prop-types';
 
 import EditorToolbarMenu from './editor-toolbar-menu'
 import NotebookTaskButton from './notebook-task-button'
@@ -18,9 +18,6 @@ import tasks from '../../task-definitions'
 
 export default class EditorModeMenu extends React.Component {
   static propTypes = {
-    title: PropTypes.string,
-    pageMode: PropTypes.oneOf(['command', 'edit']),
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
     firstChild: PropTypes.bool,
   }
 

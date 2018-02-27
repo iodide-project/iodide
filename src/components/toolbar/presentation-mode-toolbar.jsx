@@ -31,7 +31,7 @@ export class PresentationModeToolbarUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   return {
-    viewMode: state.mode,
+    viewMode: state.viewMode,
   }
 }
 

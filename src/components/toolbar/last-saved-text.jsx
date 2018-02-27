@@ -1,9 +1,13 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { ToolbarTitle } from 'material-ui/Toolbar'
 import { connect } from 'react-redux'
 import { prettyDate } from '../../notebook-utils'
 
 export class LastSavedTextUnconnected extends React.Component {
+  static propTypes = {
+    lastSaved: PropTypes.object,
+  }
   render() {
     return (<ToolbarTitle
       style={{ fontSize: '13px', color: 'lightgray', fontStyle: 'italic' }}

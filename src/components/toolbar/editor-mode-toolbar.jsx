@@ -1,4 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
+import { connect } from 'react-redux'
 
 import { Toolbar } from 'material-ui/Toolbar'
 
@@ -11,18 +14,28 @@ import ViewControls from './view-controls'
 
 import EditorModeTitle from './editor-mode-title'
 
-class EditorModeToolbar extends React.Component {
+export class EditorModeToolbar extends React.Component {
+  static propTypes = {
+    viewMode: PropTypes.string,
+  }
   render() {
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <Toolbar style={{ backgroundColor: 'black' }}>
-          <EditorModeMenu isFirstChild />
-          <EditorModeTitle />
-          <ViewControls />
-        </Toolbar>
-      </MuiThemeProvider>
+      <div className="notebook-menu" style={{ display: this.props.viewMode === 'editor' ? 'block' : 'none' }}>
+        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+          <Toolbar style={{ backgroundColor: 'black' }}>
+            <EditorModeMenu isFirstChild />
+            <EditorModeTitle />
+            <ViewControls />
+          </Toolbar>
+        </MuiThemeProvider>
+      </div>
+
     )
   }
 }
 
-export default EditorModeToolbar
+export function mapStateToProps(state) {
+  return { viewMode: state.viewMode }
+}
+
+export default connect(mapStateToProps)(EditorModeToolbar)

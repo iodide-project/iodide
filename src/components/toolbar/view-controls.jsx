@@ -25,7 +25,7 @@ export default class ViewControls extends React.Component {
           <HistoryIcon />
         </NotebookTaskButton>
 
-        <ViewModeToggleButton actions={this.props.actions} viewMode={this.props.viewMode} />
+        <ViewModeToggleButton />
 
       </ToolbarGroup>
 

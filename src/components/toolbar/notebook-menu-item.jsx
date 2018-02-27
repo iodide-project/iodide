@@ -1,9 +1,22 @@
 // need currentlySelectedCellType() == 'javascript' or whatever
 // checked={true}
-import MenuItem from 'material-ui/MenuItem'
+
 import React from 'react'
+import PropTypes from 'prop-types'
+import MenuItem from 'material-ui/MenuItem'
+
+import UserTask from '../../user-task'
+import ExternalLinkTask from '../../external-link-task'
+
 
 export default class NotebookMenuItem extends React.Component {
+  static propTypes = {
+    className: PropTypes.string,
+    task: PropTypes.oneOfType([
+      PropTypes.instanceOf(UserTask),
+      PropTypes.instanceOf(ExternalLinkTask),
+    ]),
+  }
   render() {
     return (<MenuItem
       className={this.props.className || undefined}

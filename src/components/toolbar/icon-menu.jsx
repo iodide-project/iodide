@@ -1,7 +1,11 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import IconMenu from 'material-ui/IconMenu'
 
 export default class NotebookIconMenu extends React.Component {
+  static propTypes = {
+    iconButtonElement: PropTypes.any,
+  }
   render() {
     return (
       <IconMenu
