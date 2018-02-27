@@ -9,7 +9,7 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-import EditorModeMenu from './editor-mode-menu'
+import EditorModeControls from './editor-mode-controls'
 import ViewControls from './view-controls'
 
 import EditorModeTitle from './editor-mode-title'
@@ -23,7 +23,7 @@ export class EditorModeToolbarUnconnected extends React.Component {
       <div className="notebook-menu" style={{ display: this.props.viewMode === 'editor' ? 'block' : 'none' }}>
         <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
           <Toolbar style={{ backgroundColor: 'black' }}>
-            <EditorModeMenu isFirstChild />
+            <EditorModeControls isFirstChild />
             <EditorModeTitle />
             <ViewControls />
           </Toolbar>

@@ -16,7 +16,7 @@ import NotebookTaskButton from './notebook-task-button'
 import tasks from '../../task-definitions'
 
 
-export default class EditorModeMenu extends React.Component {
+export default class EditorModeControls extends React.Component {
   static propTypes = {
     firstChild: PropTypes.bool,
   }
