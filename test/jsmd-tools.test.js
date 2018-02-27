@@ -4,6 +4,7 @@ import { parseJsmd,
   stringifyStateToJsmd } from './../src/jsmd-tools'
 
 import { newNotebook, newCell } from '../src/state-prototypes'
+import { formatDateString } from '../src/notebook-utils'
 
 
 let jsmdTestCase = `%% meta
@@ -168,8 +169,14 @@ describe('jsmd parser test case 5', () => {
 describe('jsmd stringifier test case 1', () => {
   const state = newNotebook()
   state.cells[0].content = 'foo'
-  const jsmd = stringifyStateToJsmd(state)
-  const jsmdExpected = `%% js
+  const exportAt = formatDateString(new Date())
+  const jsmd = stringifyStateToJsmd(state, exportAt)
+  const jsmdExpected = `%% meta
+{
+  "exportAt": "${exportAt}"
+}
+
+%% js
 foo`
   it('simple state with default global setting should serialize to jsmd correctly', () => {
     expect(jsmd).toEqual(jsmdExpected)
@@ -180,10 +187,12 @@ describe('jsmd stringifier test case 2', () => {
   const state = newNotebook()
   state.cells[0].content = 'foo'
   state.title = 'foo notebook'
-  const jsmd = stringifyStateToJsmd(state)
+  const exportAt = formatDateString(new Date())
+  const jsmd = stringifyStateToJsmd(state, exportAt)
   const jsmdExpected = `%% meta
 {
-  "title": "foo notebook"
+  "title": "foo notebook",
+  "exportAt": "${exportAt}"
 }
 
 %% js
@@ -204,11 +213,13 @@ describe('jsmd stringifier test case 3', () => {
   state.cells.push(newCell(state.cells, 'markdown'))
   state.cells[1].content = 'foo'
 
-  const jsmd = stringifyStateToJsmd(state)
+  const exportAt = formatDateString(new Date())
+  const jsmd = stringifyStateToJsmd(state, exportAt)
   const jsmdExpected = `%% meta
 {
   "title": "foo notebook",
-  "viewMode": "presentation"
+  "viewMode": "presentation",
+  "exportAt": "${exportAt}"
 }
 
 %% js {"collapseEditViewInput":"COLLAPSED"}
@@ -234,10 +245,12 @@ describe('jsmd stringifier test case 4', () => {
     state.cells[i + 1].content = 'foo'
   })
 
-  const jsmd = stringifyStateToJsmd(state)
+  const exportAt = formatDateString(new Date())
+  const jsmd = stringifyStateToJsmd(state, exportAt)
   const jsmdExpected = `%% meta
 {
-  "title": "foo notebook"
+  "title": "foo notebook",
+  "exportAt": "${exportAt}"
 }
 
 %% js {"collapseEditViewInput":"COLLAPSED"}
