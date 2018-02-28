@@ -553,7 +553,12 @@ table tr:nth-child(2n) {
   max-height:32px !important; 
 }
 
+.primary-menu-item {
+}
+
 .secondary-menu-item {
+
+  text-align:right;
   padding:0px !important;
   padding-left:16px !important;
 

@@ -35,11 +35,13 @@ export default class NotebookMenuItem extends React.Component {
   render() {
     return (
       <MenuItem
+        dense
         className={this.props.className || undefined}
         key={this.props.task.title}
         onClick={this.props.task.callback}
       >
         <ListItemText
+          classes={{ root: 'primary-menu-item' }}
           primary={this.props.task.menuTitle}
         />
         <ListItemText

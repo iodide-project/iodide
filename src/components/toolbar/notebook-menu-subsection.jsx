@@ -46,16 +46,21 @@ export default class notebookMenuSubsection extends React.Component {
     const { anchorElement } = this.state
     return (
       <MenuItem
+        dense
         aria-label="more"
         aria-owns={anchorElement ? 'sub-menu' : null}
         aria-haspopup="true"
         onClick={this.handleClick}
         style={{ color: 'white' }}
       >
-        <ListItemText primary={this.props.title} />
+        <ListItemText
+          classes={{ root: 'primary-menu-item' }}
+          primary={this.props.title}
+        />
         <ListItemText
           classes={{ root: 'secondary-menu-item' }}
           primary={<ChevronRight style={{ width: 16, height: 16, marginTop: 5 }} />}
+          secondary
         />
         <Menu
           id="sub-menu"
