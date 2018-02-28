@@ -539,12 +539,7 @@ table tr:nth-child(2n) {
   display: flex !important;
   justify-content: space-between;
   flex-flow: row wrap;
-  width: 240px;
-}
-
-.medium-menu {
-  outline:1px solid yellow
-  
+  max-height:32px !important; 
 }
 
 .medium-menu div div {
@@ -556,19 +551,19 @@ table tr:nth-child(2n) {
 
 .medium-menu div div div:first-child {
   order: 1;
-  width: 40px;
+  width: 20px;
   justify-content: flex-end;
   font-size: 12px;
 
   display: block;
 }
 
-.medium-menu div div div:nth-child(2) {
+/* .medium-menu div div div:nth-child(2) {
   float: initial !important;
-  width: 155px;
+  width: 225px;
   overflow: hidden;
   order: 0;
-}
+} */
 
 .large-menu {
   display: flex !important;
@@ -584,20 +579,20 @@ table tr:nth-child(2n) {
   flex-flow: row wrap;
 }
 
-.large-menu div div div:first-child {
+/* .large-menu div div div:first-child {
   order: 1;
-  width: 120px;
+  width: 250px;
   justify-content: flex-end;
   font-size: 12px;
   display: block;
-}
+} */
 
-.large-menu div div div:nth-child(2) {
+/* .large-menu div div div:nth-child(2) {
   float: initial !important;
   width: 280px;
   text-overflow: ellipsis;
   order: 0;
-}
+} */
 
 .main-bar {
   background-color: black
