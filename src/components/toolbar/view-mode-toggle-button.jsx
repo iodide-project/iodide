@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import FlatButton from 'material-ui/FlatButton'
+import Button from 'material-ui/Button'
 
 import tasks from '../../task-definitions'
 
@@ -26,12 +26,14 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
 
   render() {
     return (
-      <FlatButton
+      <Button
         style={{ color: this.props.textColor || '#fafafa' }}
         onClick={this.toggleViewMode}
         hoverColor={this.props.hoverColor || 'darkgray'}
-        label={this.props.viewMode === 'presentation' ? 'Edit' : 'View'}
-      />
+        mini
+      >
+        {this.props.viewMode === 'presentation' ? 'Edit' : 'View'}
+      </Button>
     )
   }
 }

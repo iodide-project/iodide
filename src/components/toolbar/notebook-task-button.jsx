@@ -5,6 +5,7 @@ import IconButton from 'material-ui/IconButton'
 import UserTask from '../../user-task'
 import ExternalLinkTask from '../../external-link-task'
 
+// TODO - implement tooltip again
 export default class NotebookTaskFunction extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -13,11 +14,11 @@ export default class NotebookTaskFunction extends React.Component {
       PropTypes.instanceOf(ExternalLinkTask),
     ]),
   }
+  static muiName='IconButton'
   render() {
     return (
       <IconButton
         className="menu-button"
-        tooltip={this.props.task.title}
         style={this.props.style || { color: '#fafafa' }}
         onClick={this.props.task.callback}
       >

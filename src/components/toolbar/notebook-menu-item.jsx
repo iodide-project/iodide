@@ -3,8 +3,8 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import MenuItem from 'material-ui/MenuItem'
-
+import MenuItem from 'material-ui/Menu/MenuItem'
+import { ListItemText } from 'material-ui/List';
 import UserTask from '../../user-task'
 import ExternalLinkTask from '../../external-link-task'
 
@@ -33,13 +33,22 @@ export default class NotebookMenuItem extends React.Component {
   }
   static muiName = 'MenuItem'
   render() {
-    return (<MenuItem
-      className={this.props.className || undefined}
-      key={this.props.task.title}
-      style={{ fontSize: '13px', minHeight: '36px !important', lineHeight: '36px' }}
-      primaryText={this.props.task.menuTitle}
-      secondaryText={this.props.task.displayKeybinding}
-      onClick={this.props.task.callback}
-    />)
+    return (
+      <MenuItem
+        className={this.props.className || undefined}
+        key={this.props.task.title}
+        onClick={this.props.task.callback}
+      >
+        <ListItemText
+          primary={this.props.task.menuTitle}
+        />
+        <ListItemText
+          classes={{ root: 'secondary-menu-item' }}
+          primary={this.props.task.displayKeybinding}
+          secondary
+        />
+
+      </MenuItem>
+    )
   }
 }

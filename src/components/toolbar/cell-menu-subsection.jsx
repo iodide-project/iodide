@@ -1,5 +1,5 @@
 import React from 'react'
-import Paper from 'material-ui/Paper'
+// import Paper from 'material-ui/Paper'
 import NotebookMenuItem from './notebook-menu-item'
 import NotebookMenuDivider from './notebook-menu-divider'
 import NotebookMenuHeader from './notebook-menu-header'
@@ -24,7 +24,7 @@ import tasks from '../../task-definitions'
 //   <NotebookMenuItem key={tasks.changeToRawCell.title} task={tasks.changeToRawCell} />]
 
 export default (
-  <Paper style={{ width: '280px' }}>
+  <div>
     <NotebookMenuItem key={tasks.moveCellUp.title} task={tasks.moveCellUp} />
     <NotebookMenuItem key={tasks.moveCellDown.title} task={tasks.moveCellDown} />
     <NotebookMenuItem key={tasks.addCellBelow.title} task={tasks.addCellBelow} />
@@ -42,4 +42,4 @@ export default (
       task={tasks.changeToExternalResourceCell}
     />
     <NotebookMenuItem key={tasks.changeToRawCell.title} task={tasks.changeToRawCell} />
-  </Paper>)
+  </div>)

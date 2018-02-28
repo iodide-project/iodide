@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ToolbarTitle } from 'material-ui/Toolbar'
+import Typography from 'material-ui/Typography'
 import { connect } from 'react-redux'
 import { prettyDate } from '../../notebook-utils'
 
@@ -9,10 +9,19 @@ export class LastSavedTextUnconnected extends React.Component {
     lastSaved: PropTypes.object,
   }
   render() {
-    return (<ToolbarTitle
-      style={{ fontSize: '13px', color: 'lightgray', fontStyle: 'italic' }}
-      text={this.props.lastSaved === undefined ? ' ' : `last saved: ${prettyDate(this.props.lastSaved)}`}
-    />)
+    return (
+      <Typography
+        style={{
+          fontSize: '13px',
+          color: 'lightgray',
+          fontStyle: 'italic',
+          outline: '1px solid yellow',
+          width: '200px',
+          textAlign: 'right',
+}}
+      >
+        {this.props.lastSaved === undefined ? ' ' : `last saved: ${prettyDate(this.props.lastSaved)}`}
+      </Typography>)
   }
 }
 

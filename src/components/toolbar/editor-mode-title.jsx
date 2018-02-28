@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 
-import { ToolbarGroup } from 'material-ui/Toolbar'
+// import { ToolbarGroup } from 'material-ui/Toolbar'
 import { connect } from 'react-redux'
 
 import tasks from '../../task-definitions'
@@ -40,7 +40,7 @@ export class TitleUnconnected extends React.Component {
 
   render() {
     const elem = (
-      <ToolbarGroup className="title-field">
+      <div className="title-field" style={{ outline: '1px solid orange' }}>
         <div className={`title-field-contents ${this.props.pageMode !== 'title-edit' ? 'unselected-title-field' : ''}`}>
           <Helmet title={this.getTitle()} />
           <input
@@ -55,8 +55,7 @@ export class TitleUnconnected extends React.Component {
             }}
           />
         </div>
-      </ToolbarGroup>
-
+      </div>
     )
     return elem
   }

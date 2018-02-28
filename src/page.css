@@ -324,8 +324,19 @@ div.dom-cell-error {
 /************************************************/
 /* header bar styles */
 
+div.editor-mode-controls {
+  width: 300px; outline: 1px solid green
+}
+
+div.view-controls {
+  width: 400px;
+  display:flex;
+  align-items:center;
+  outline:1px solid red;
+}
+
 div.title-field {
-  width: 100%;
+  width: calc( 100% - 400px - 300px );
 }
 
 div.title-field-contents {
@@ -540,6 +551,12 @@ table tr:nth-child(2n) {
   justify-content: space-between;
   flex-flow: row wrap;
   max-height:32px !important; 
+}
+
+.secondary-menu-item {
+  padding:0px !important;
+  padding-left:16px !important;
+
 }
 
 .medium-menu div div {

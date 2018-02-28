@@ -3,6 +3,7 @@ import React from 'react'
 import PresentationModeToolbar from './toolbar/presentation-mode-toolbar'
 import EditorModeToolbar from './toolbar/editor-mode-toolbar'
 
+
 import DeclaredVariablesPane from './toolbar/declared-variables-pane'
 import HistoryPane from './toolbar/history-pane'
 
