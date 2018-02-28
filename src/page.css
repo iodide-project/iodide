@@ -553,6 +553,11 @@ table tr:nth-child(2n) {
   max-height:32px !important; 
 }
 
+.main-menu-item {
+  max-height:32px !important;
+  line-height:32px !important;
+}
+
 .primary-menu-item {
 }
 

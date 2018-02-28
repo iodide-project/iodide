@@ -36,7 +36,7 @@ export default class NotebookMenuItem extends React.Component {
     return (
       <MenuItem
         dense
-        className={this.props.className || undefined}
+        classes={{ root: 'main-menu-item' }}
         key={this.props.task.title}
         onClick={this.props.task.callback}
       >
