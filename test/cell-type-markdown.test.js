@@ -24,8 +24,7 @@ describe('MarkdownCell_unconnected react component', () => {
     props = {
       cellId: 1,
       value: 'a _markdown_ string',
-      rendered: true,
-      cellSelected: false,
+      showMarkdown: true,
       pageMode: 'command',
       viewMode: 'editor',
       actions: { markCellNotRendered, changeMode },
@@ -78,21 +77,8 @@ describe('MarkdownCell_unconnected react component', () => {
       .props().children).find('div')).toHaveLength(1)
   })
 
-  it('editor shown if MD not rendered', () => {
-    props.rendered = false
-    props.pageMode = 'command'
-    props.cellSelected = true
-    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-      .toEqual({ display: 'block' })
-
-    expect(cell().wrap(cell().find('div')).props().style)
-      .toEqual({ display: 'none' })
-  })
-
-  it('editor not shown if MD is rendered, and not editing', () => {
-    props.rendered = true
-    props.pageMode = 'command'
-    props.cellSelected = true
+  it('correct display styles set if showMarkdown===true', () => {
+    props.showMarkdown = true
     expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
       .toEqual({ display: 'none' })
 
@@ -100,53 +86,11 @@ describe('MarkdownCell_unconnected react component', () => {
       .toEqual({ display: 'block' })
   })
 
-  it('MD shown if rendered and in command mode, whether cell selected or not', () => {
-    props.rendered = true
-    props.pageMode = 'command'
-    props.cellSelected = true
-    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-      .toEqual({ display: 'none' })
-
-    expect(cell().wrap(cell().find('div')).props().style)
-      .toEqual({ display: 'block' })
-  })
-
-  it('MD shown if rendered and in command mode, whether cell selected or not', () => {
-    props.rendered = true
-    props.pageMode = 'command'
-    props.cellSelected = false
-    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-      .toEqual({ display: 'none' })
-    expect(cell().wrap(cell().find('div')).props().style)
-      .toEqual({ display: 'block' })
-  })
-
-  it('MD shown if rendered and in command mode', () => {
-    props.rendered = true
-    props.pageMode = 'command'
-    props.cellSelected = false
-    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-      .toEqual({ display: 'none' })
-    expect(cell().wrap(cell().find('div')).props().style)
-      .toEqual({ display: 'block' })
-  })
-
-  it('MD shown if rendered and in edit mode but another cell is selected', () => {
-    props.rendered = true
-    props.pageMode = 'edit'
-    props.cellSelected = false
-    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-      .toEqual({ display: 'none' })
-    expect(cell().wrap(cell().find('div')).props().style)
-      .toEqual({ display: 'block' })
-  })
-
-  it('editor shown if in edit mode and cell selected', () => {
-    props.rendered = true
-    props.pageMode = 'edit'
-    props.cellSelected = true
+  it('correct display styles set if showMarkdown===false', () => {
+    props.showMarkdown = false
     expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
       .toEqual({ display: 'block' })
+
     expect(cell().wrap(cell().find('div')).props().style)
       .toEqual({ display: 'none' })
   })
@@ -165,10 +109,7 @@ describe('MarkdownCell_unconnected react component', () => {
   })
 
   it('if MD shown & view==editor, dblclick on MD div fires markCellNotRendered AND changeMode', () => {
-    // the following props guarantee MD is shown
-    props.rendered = true
-    props.pageMode = 'command'
-    // props for test
+    props.showMarkdown = true
     props.viewMode = 'editor'
     cell().find('div').simulate('dblclick')
     expect(cell().wrap(cell().find('div')).props().style)
@@ -178,10 +119,9 @@ describe('MarkdownCell_unconnected react component', () => {
   })
 
   it('if MD shown & view==editor & mode==edit dblclick on MD div fires markCellNotRendered only', () => {
-    // the following props guarantee MD is shown
-    props.rendered = true
-    props.pageMode = 'edit'
+    props.showMarkdown = true
     // props for test
+    props.pageMode = 'edit'
     props.viewMode = 'editor'
     cell().find('div').simulate('dblclick')
     expect(cell().wrap(cell().find('div')).props().style)
@@ -191,9 +131,7 @@ describe('MarkdownCell_unconnected react component', () => {
   })
 
   it('if editor shown & view==editor & mode!==edit, click on editor fires markCellNotRendered AND changeMode', () => {
-    // the following prop guarantees editor is shown
-    props.rendered = false
-    // props for test
+    props.showMarkdown = false
     props.pageMode = 'command'
     props.viewMode = 'editor'
     cell().find(CellEditor).simulate('containerClick')
@@ -204,9 +142,7 @@ describe('MarkdownCell_unconnected react component', () => {
   })
 
   it('if editor shown & view==editor & mode==edit, click on editor fires markCellNotRendered only', () => {
-    // the following prop guarantees editor is shown
-    props.rendered = false
-    // props for test
+    props.showMarkdown = false
     props.pageMode = 'edit'
     props.viewMode = 'editor'
 
@@ -221,27 +157,76 @@ describe('MarkdownCell_unconnected react component', () => {
 
 
 describe('MarkdownCell mapStateToProps', () => {
-  const state = {
-    cells: [{
-      id: 5,
-      value: '#MD string',
-      rendered: true,
-      selected: true,
-    },
-    ],
-    mode: 'edit',
-    viewMode: 'presentation',
-  }
+  let state
 
-  it("should return the 'rendered' of the correct cell if value is undefined", () => {
+  const markdownShownVariants = [
+    { selected: true, mode: 'not_edit', rendered: true },
+    { selected: false, mode: 'edit', rendered: true },
+    { selected: false, mode: 'not_edit', rendered: true },
+  ]
+
+  const markdownNotShownVariants = [
+    { selected: true, mode: 'edit', rendered: true },
+
+    { selected: true, mode: 'edit', rendered: false },
+    { selected: true, mode: 'not_edit', rendered: false },
+    { selected: false, mode: 'edit', rendered: false },
+    { selected: false, mode: 'not_edit', rendered: false },
+  ]
+
+  beforeEach(() => {
+    state = {
+      cells: [{
+        id: 5,
+        value: '#MD string',
+        rendered: true,
+        selected: true,
+      },
+      ],
+      mode: 'edit',
+      viewMode: 'presentation',
+    }
+  })
+
+  it('should return the basic info for the correct cell', () => {
     const ownProps = { cellId: 5 }
     expect(mapStateToProps(state, ownProps))
       .toEqual({
         value: '#MD string',
-        rendered: true,
-        cellSelected: true,
+        showMarkdown: false,
         pageMode: 'edit',
         viewMode: 'presentation',
       })
+  })
+
+  markdownShownVariants.forEach((stateMods) => {
+    it(`should have showMarkdown:true for ${JSON.stringify(stateMods)}`, () => {
+      state.cells[0].rendered = stateMods.rendered
+      state.cells[0].selected = stateMods.selected
+      state.mode = stateMods.mode
+      const ownProps = { cellId: 5 }
+      expect(mapStateToProps(state, ownProps))
+        .toEqual({
+          value: '#MD string',
+          showMarkdown: true,
+          pageMode: stateMods.mode,
+          viewMode: 'presentation',
+        })
+    })
+  })
+  markdownNotShownVariants.forEach((stateMods) => {
+    it(`should have showMarkdown:false for ${JSON.stringify(stateMods)}`, () => {
+      state.cells[0].rendered = stateMods.rendered
+      state.cells[0].selected = stateMods.selected
+      state.mode = stateMods.mode
+      const ownProps = { cellId: 5 }
+      expect(mapStateToProps(state, ownProps))
+        .toEqual({
+          value: '#MD string',
+          showMarkdown: false,
+          pageMode: stateMods.mode,
+          viewMode: 'presentation',
+        })
+    })
   })
 })
