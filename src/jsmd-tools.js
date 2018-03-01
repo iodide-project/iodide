@@ -35,6 +35,7 @@ const cellTypeToJsmdMap = new Map([
 const jsmdValidNotebookSettings = [
   'title',
   'viewMode',
+  'lastSaved',
 ]
 
 function parseCellString(str, i, parseWarnings) {
