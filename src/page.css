@@ -461,7 +461,7 @@ div.last-saved {
 /* side pane styles */
 
 .side-pane {
-  width:500px !important;
+  width:575px !important;
   top: 64px !important;
   border: none !important;
   border-left: 2px solid lightgray !important;
@@ -469,6 +469,7 @@ div.last-saved {
 
 .pane-title {
   margin:5px;
+  margin-right:0px;
   display:flex;
   align-items: center;
 }
@@ -531,7 +532,6 @@ i.close-side-pane:hover {
 }
 
 div.declared-variables {
-  width: 100%;
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 10px;
