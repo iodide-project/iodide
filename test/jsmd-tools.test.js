@@ -7,7 +7,7 @@ import { newNotebook, newCell } from '../src/state-prototypes'
 
 
 // this can be defined once for all test cases
-const exportAt = new Date().toISOString()
+const lastExport = new Date().toISOString()
 
 let jsmdTestCase = `%% meta
 {"title": "What a web notebook looks like",
@@ -171,10 +171,10 @@ describe('jsmd parser test case 5', () => {
 describe('jsmd stringifier test case 1', () => {
   const state = newNotebook()
   state.cells[0].content = 'foo'
-  const jsmd = stringifyStateToJsmd(state, exportAt)
+  const jsmd = stringifyStateToJsmd(state, lastExport)
   const jsmdExpected = `%% meta
 {
-  "exportAt": "${exportAt}"
+  "lastExport": "${lastExport}"
 }
 
 %% js
@@ -188,11 +188,11 @@ describe('jsmd stringifier test case 2', () => {
   const state = newNotebook()
   state.cells[0].content = 'foo'
   state.title = 'foo notebook'
-  const jsmd = stringifyStateToJsmd(state, exportAt)
+  const jsmd = stringifyStateToJsmd(state, lastExport)
   const jsmdExpected = `%% meta
 {
   "title": "foo notebook",
-  "exportAt": "${exportAt}"
+  "lastExport": "${lastExport}"
 }
 
 %% js
@@ -213,12 +213,12 @@ describe('jsmd stringifier test case 3', () => {
   state.cells.push(newCell(state.cells, 'markdown'))
   state.cells[1].content = 'foo'
 
-  const jsmd = stringifyStateToJsmd(state, exportAt)
+  const jsmd = stringifyStateToJsmd(state, lastExport)
   const jsmdExpected = `%% meta
 {
   "title": "foo notebook",
   "viewMode": "presentation",
-  "exportAt": "${exportAt}"
+  "lastExport": "${lastExport}"
 }
 
 %% js {"collapseEditViewInput":"COLLAPSED"}
@@ -244,11 +244,11 @@ describe('jsmd stringifier test case 4', () => {
     state.cells[i + 1].content = 'foo'
   })
 
-  const jsmd = stringifyStateToJsmd(state, exportAt)
+  const jsmd = stringifyStateToJsmd(state, lastExport)
   const jsmdExpected = `%% meta
 {
   "title": "foo notebook",
-  "exportAt": "${exportAt}"
+  "lastExport": "${lastExport}"
 }
 
 %% js {"collapseEditViewInput":"COLLAPSED"}

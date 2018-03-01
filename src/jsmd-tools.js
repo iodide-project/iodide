@@ -200,7 +200,7 @@ ${cell.content}`
       metaSettings[setting] = state[setting]
     }
   }
-  metaSettings.exportAt = exportDatetimeString
+  metaSettings.lastExport = exportDatetimeString
   let metaSettingsStr = JSON.stringify(metaSettings, undefined, 2)
   metaSettingsStr = metaSettingsStr === '{}' ? '' : `%% meta\n${metaSettingsStr}\n\n`
   return metaSettingsStr + cellsStr
