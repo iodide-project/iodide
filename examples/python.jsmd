@@ -10,12 +10,12 @@ Pyodide adds support for Python in an Iodide notebook, running inside your brows
 
 **This is early days.  Everything here is subject to change.**
 
-(A major shortcoming is that `print` doesn't work from Python yet, which makes some of the examples below more contrived than they need to be.)
+(A major shortcoming is that `print` from Python currently prints to the Javascript debugger console, rather than to the notebook cell, so some of these examples are more contrived than they need to be.)
 
 First, let's use an external resources cell to load the Python interpreter.
 
 %% resource {"collapseEditViewOutput":"SCROLLABLE"}
-https://iodide-project.github.io/pyodide-demo/pyodide.js
+http://iodide-project.github.io/pyodide-demo/pyodide.js
 
 %% md
 ## Make a Python cell.  Import stuff and use it.
@@ -33,16 +33,47 @@ sys.version
 The basic data types (None, bool, ints, floats, lists, and dicts) are converted from Python to Javascript when they are output and displayed using the standard mechanisms in Iodide.
 
 %% py
-[0, 1, 32.0, 'foo', {'a': 10, b: '20'}, b'bytes']
+[0, 1, 32.0, 'foo', {'a': 10, 'b': '20'}, b'bytes']
+
+%% md
+## Sharing objects between Python and Javascript
+
+The Python and Javascript sides can pass objects back and forth.
+
+So, you can set a value in Javascript code:
+
+%% js
+// javascript
+secret = "Wklv#lv#olnh#pdjlf$"
+
+%% md
+...and use it from Python by using `from js import ...`:
+
+%% py
+# python
+from js import secret
+
+decoded = ''.join(chr(ord(x) - 3) for x in secret)
+
+%% py
+...and then get it back from Javascript using `pyodide.pyimport`:
+
+%% js
+// javascript
+var decoded = pyodide.pyimport("decoded")
+decoded
 
 %% md
 ## Custom data types
 
-All other data types (such as class instances, functions, File objects etc.) are returned to Javascript as special proxy objects that you can interact with, though the syntax is a little cumbersome.
+Non-basic data types, such as class instances, functions, File objects etc., can also be passed between Python and Javascript.
+
+### Using Python objects from Javascript
 
 For example, say we had the following Python function that we wanted to call from Javascript:
 
 %% py
+# python
 def square(x, integer=False):
   if integer:
     x = int(x)
@@ -53,18 +84,21 @@ To call a Python callable from Javascript, we use its `call` method, which takes
 
 %% js
 // javascript
+var square = pyodide.pyimport("square")
 square.call([2.5], {integer: true})
 
 %% md
-This is equivalent to the following Python:
+This is equivalent to the following Python syntax:
 
 %% py
+# python
 square(2.5, integer=True)
 
 %% md
 You can also get the attributes of objects in a similar way.  Say we had an instance of the following Python custom class:
 
 %% py {"collapseEditViewInput":"SCROLLABLE"}
+# python
 class Foo:
   def __init__(self, val):
     self.val = val
@@ -75,64 +109,46 @@ foo
 We can get the value of its `val` property as so:
 
 %% js
+// javascript
+var foo = pyodide.pyimport("foo")
 foo.getattr("val")
+
+%% md
+### Using Javascript objects from Python
+
+Likewise, you can use Javascript objects from Python, and since the overloading features of Python are a little more dynamic, the syntax for doing so is also a little bit easier.
+
+%% js
+// javascript
+function square(x) {
+  return x*x;
+}
+
+%% md
+To call this function from Python...
+
+%% py
+from js import square
+square(4)
 
 %% md
 ## Exceptions
 
-Python exceptions are converted to Javascript exceptions.
-
-[They currently don't have tracebacks or other metadata].
+Python exceptions are converted to Javascript exceptions, and they include tracebacks.
 
 %% py
 x = 5 / 0
 
 %% md
-## Functions
-
-It ain't real unless you can calculate Fibonacci.
-
-%% py
-def fib(n):
-    if n < 2:
-        return n
-    return fib(n-2) + fib(n-1)
-
-list(map(fib, range(10)))
-
-%% md
-## Unified namespace
-
-The Python and Javascript sides share a single unified global namespace.
-
-So, you can set a value in Javascript code:
-
-%% js
-// javascript
-secret = "Wklv#lv#olnh#pdjlf$"
-
-%% md
-...and use it from Python:
-
-%% py
-# python
-decoded = ''.join(chr(ord(x) - 3) for x in secret)
-
-%% md
-...and then get it back from Javascript:
-
-%% js
-decoded
-
-%% md
 ## World DOMination
 
-You can get to all of the cool stuff in your browser from Python, too.
+By using `from js import document`, you can easily access the Web API from Python.
 
 For example, get the title of the document:
 
 %% py {"collapseEditViewInput":"SCROLLABLE"}
 # python
+from js import document
 document.title
 
 %% md
