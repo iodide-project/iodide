@@ -6,6 +6,9 @@ import { parseJsmd,
 import { newNotebook, newCell } from '../src/state-prototypes'
 
 
+// this can be defined once for all test cases
+const lastExport = new Date().toISOString()
+
 let jsmdTestCase = `%% meta
 {"title": "What a web notebook looks like",
 "viewMode": "editor",
@@ -168,8 +171,13 @@ describe('jsmd parser test case 5', () => {
 describe('jsmd stringifier test case 1', () => {
   const state = newNotebook()
   state.cells[0].content = 'foo'
-  const jsmd = stringifyStateToJsmd(state)
-  const jsmdExpected = `%% js
+  const jsmd = stringifyStateToJsmd(state, lastExport)
+  const jsmdExpected = `%% meta
+{
+  "lastExport": "${lastExport}"
+}
+
+%% js
 foo`
   it('simple state with default global setting should serialize to jsmd correctly', () => {
     expect(jsmd).toEqual(jsmdExpected)
@@ -180,10 +188,11 @@ describe('jsmd stringifier test case 2', () => {
   const state = newNotebook()
   state.cells[0].content = 'foo'
   state.title = 'foo notebook'
-  const jsmd = stringifyStateToJsmd(state)
+  const jsmd = stringifyStateToJsmd(state, lastExport)
   const jsmdExpected = `%% meta
 {
-  "title": "foo notebook"
+  "title": "foo notebook",
+  "lastExport": "${lastExport}"
 }
 
 %% js
@@ -204,11 +213,12 @@ describe('jsmd stringifier test case 3', () => {
   state.cells.push(newCell(state.cells, 'markdown'))
   state.cells[1].content = 'foo'
 
-  const jsmd = stringifyStateToJsmd(state)
+  const jsmd = stringifyStateToJsmd(state, lastExport)
   const jsmdExpected = `%% meta
 {
   "title": "foo notebook",
-  "viewMode": "presentation"
+  "viewMode": "presentation",
+  "lastExport": "${lastExport}"
 }
 
 %% js {"collapseEditViewInput":"COLLAPSED"}
@@ -234,10 +244,11 @@ describe('jsmd stringifier test case 4', () => {
     state.cells[i + 1].content = 'foo'
   })
 
-  const jsmd = stringifyStateToJsmd(state)
+  const jsmd = stringifyStateToJsmd(state, lastExport)
   const jsmdExpected = `%% meta
 {
-  "title": "foo notebook"
+  "title": "foo notebook",
+  "lastExport": "${lastExport}"
 }
 
 %% js {"collapseEditViewInput":"COLLAPSED"}
