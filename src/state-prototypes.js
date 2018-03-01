@@ -1,25 +1,23 @@
-import { Enum } from 'enumify'
+// import { Enum } from 'enumify'
 
-class rowOverflow extends Enum {}
-rowOverflow.initEnum({
-  VISIBLE: {
-    get nextOverflow() { return rowOverflow.SCROLL },
-    jsmdName: 'VISIBLE',
-    cssName: 'EXPANDED',
-  },
-  HIDDEN: {
-    get nextOverflow() { return rowOverflow.VISIBLE },
-    jsmdName: 'HIDDEN',
-    cssName: 'COLLAPSED',
-  },
-  SCROLL: {
-    get nextOverflow() { return rowOverflow.HIDDEN },
-    jsmdName: 'SCROLL',
-    cssName: 'SCROLLABLE',
-  },
-})
-
-
+// class rowOverflow extends Enum {}
+// rowOverflow.initEnum({
+//   VISIBLE: {
+//     get nextOverflow() { return rowOverflow.SCROLL },
+//     jsmdName: 'VISIBLE',
+//     cssName: 'EXPANDED',
+//   },
+//   HIDDEN: {
+//     get nextOverflow() { return rowOverflow.VISIBLE },
+//     jsmdName: 'HIDDEN',
+//     cssName: 'COLLAPSED',
+//   },
+//   SCROLL: {
+//     get nextOverflow() { return rowOverflow.HIDDEN },
+//     jsmdName: 'SCROLL',
+//     cssName: 'SCROLLABLE',
+//   },
+// })
 // class cellTypes extends Enum {}
 // cellTypes.initEnum({
 //   JS: {
@@ -49,6 +47,22 @@ rowOverflow.initEnum({
 
 // class appMode extends Enum {}
 // appMode.initEnum(['COMMAND', 'EDIT', 'TITLE', 'MENU'])
+
+// This is a very simple enum-like class that will always return strings.
+// Returning strings is required to keep things simple+serializable in the redux store.
+// The only reason we wrap this in a little class it to expose the convenience
+// `contains` and `values`
+const stringEnum = class {
+  constructor(vals) {
+    vals.forEach(function (v) { this[v] = v })
+    Object.freeze(this)
+  }
+  values() { return Object.keys(this) }
+  contains(key) { return Object.keys(this).indexOf(key) >= 0 }
+}
+
+const rowOverflowEnum = stringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
+const rowTypeEnum = stringEnum('input', 'output')
 
 function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
