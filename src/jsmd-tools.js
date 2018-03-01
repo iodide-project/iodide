@@ -73,16 +73,10 @@ function parseCellChunk(chunkType, content, settings, str, chunkNum, parseWarnin
   }
 
   const cell = newCell([{ id: chunkNum }], cellType)
-  // if settings exist and parsed ok, make sure that only valid cell settings are kept
-  // jsmdValidCellSettingPaths.forEach((path) => {
-  //   if (settings && settings[path] !== undefined) {
-  //     _.set(cell, path, settings[path])
-  //   }
-  // })
+  // make sure that only valid cell settings are kept
   Object.keys(settings).forEach((path) => {
     if (_.includes(jsmdValidCellSettingPaths, path)) {
       _.set(cell, path, settings[path])
-      // _.set(settingsOut, path, settings[path])
     } else {
       parseWarnings.push({
         parseError: 'invalid cell setting path',
@@ -90,19 +84,7 @@ function parseCellChunk(chunkType, content, settings, str, chunkNum, parseWarnin
       })
     }
   })
-  
-  //   for (const path in settings) {
-  //     if (_.includes(jsmdValidCellSettingPaths, path)) {
-  //       _.set(settingsOut, path, settings[path])
-  //     } else {
-  //       parseWarnings.push({
-  //         parseError: 'invalid cell setting path',
-  //         details: path,
-  //       })
-  //     }
-  //   }
-  //   settings = settingsOut || undefined
-  // }
+
   return { chunkType: 'cell', cell }
 }
 
@@ -202,7 +184,9 @@ function stateFromJsmd(jsmdString) {
 }
 
 
-function stringifyStateToJsmd(state) {
+function stringifyStateToJsmd(state, exportDatetimeString) {
+  // we pass in exportDatetimeString as a string to keep this function
+  // **functional** -- makes testing easier
   const defaultState = newNotebook()
   // let defaultCellPrototype = defaultState.cells[0]
   // serialize cells. most of the work here is seeing if cell properties
@@ -216,12 +200,6 @@ function stringifyStateToJsmd(state) {
       cell,
       defaultCell,
     )
-    // for (const setting of jsmdValidCellSettings) {
-    //   if (Object.prototype.hasOwnProperty.call(cell, setting)
-    //     && cell[setting] !== defaultCellPrototype[setting]) {
-    //     cellSettings[setting] = cell[setting]
-    //   }
-    // }
     let cellSettingsStr = JSON.stringify(cellSettings)
     cellSettingsStr = cellSettingsStr === '{}' ? '' : ` ${cellSettingsStr}`
     return `\n%% ${jsmdCellType}${cellSettingsStr}
@@ -237,6 +215,7 @@ ${cell.content}`
       metaSettings[setting] = state[setting]
     }
   }
+  metaSettings.lastExport = exportDatetimeString
   let metaSettingsStr = JSON.stringify(metaSettings, undefined, 2)
   metaSettingsStr = metaSettingsStr === '{}' ? '' : `%% meta\n${metaSettingsStr}\n\n`
   return metaSettingsStr + cellsStr
@@ -249,7 +228,7 @@ function exportJsmdBundle(state) {
     APP_PATH_STRING: IODIDE_JS_PATH,
     CSS_PATH_STRING: IODIDE_CSS_PATH,
     APP_VERSION_STRING: IODIDE_VERSION,
-    JSMD: stringifyStateToJsmd(state),
+    JSMD: stringifyStateToJsmd(state, new Date().toISOString()),
   })
 }
 
