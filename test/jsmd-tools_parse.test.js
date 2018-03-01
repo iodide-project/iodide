@@ -1,5 +1,4 @@
 /* global it describe expect */
-import _ from 'lodash'
 import { parseJsmd,
   stateFromJsmd,
 } from './../src/jsmd-tools'
@@ -48,16 +47,6 @@ https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js
 %% js
 // above this is a DOM cell, which we can also target
 spinCubeInTarget("#dom-cell-2")`
-
-const jsmdEx1Meta = {
-  title: 'What a web notebook looks like',
-  viewMode: 'editor',
-  lastExport: '2017-12-13T17:46:16.207Z',
-  jsmdVersionHash: '42-example_hash_1234567890',
-  jsmdPreviousVersionHash: '41-example_hash_prev_1234567890',
-  iodideAppVersion: '0.0.1',
-  iodideAppLocation: 'https://some.cdn.com/path/version/iodideApp.js',
-}
 
 describe('jsmd parser Ex 1', () => {
   const { parseWarnings } = parseJsmd(jsmdTestCase)
