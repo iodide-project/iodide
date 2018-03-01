@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { getCellById } from '../notebook-utils'
 import actions from '../actions'
-import { rowOverflow as rowOverflowEnum } from '../state-prototypes'
+import { rowOverflowEnum } from '../state-prototypes'
 
 class CellRow extends React.Component {
   static propTypes = {
@@ -77,11 +77,8 @@ class CellRow extends React.Component {
 
 function mapStateToPropsCellRows(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
-  // console.log('cell', cell)
-  // console.log('cell.rows', cell.rows)
-  const row = cell.rows.filter(r => r.rowType === ownProps.rowType)[0]
-  // console.log('row', row)
-  // console.log('ownProps.rowType', ownProps.rowType)
+  // const row = cell.rows.filter(r => r.rowType === ownProps.rowType)[0]
+
   let view
   // this block can be deprecated if we move to enums for VIEWs
   switch (state.viewMode) {
@@ -94,8 +91,8 @@ function mapStateToPropsCellRows(state, ownProps) {
     default:
       throw Error(`Unsupported viewMode: ${state.viewMode}`)
   }
-  const rowOverflow = row[view]
-  const executionString = (row.rowType === 'input'
+  const rowOverflow = cell.rowSettings[view][ownProps.rowType]
+  const executionString = (ownProps.rowType === 'input'
     && cell.cellType === 'javascript') ? `[${cell.executionStatus}]` : ''
 
   return {

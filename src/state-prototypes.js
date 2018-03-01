@@ -1,47 +1,3 @@
-// import { Enum } from 'enumify'
-
-// class rowOverflow extends Enum {}
-// rowOverflow.initEnum({
-//   VISIBLE: {
-//     get nextOverflow() { return rowOverflow.SCROLL },
-//     jsmdName: 'VISIBLE',
-//     cssName: 'EXPANDED',
-//   },
-//   HIDDEN: {
-//     get nextOverflow() { return rowOverflow.VISIBLE },
-//     jsmdName: 'HIDDEN',
-//     cssName: 'COLLAPSED',
-//   },
-//   SCROLL: {
-//     get nextOverflow() { return rowOverflow.HIDDEN },
-//     jsmdName: 'SCROLL',
-//     cssName: 'SCROLLABLE',
-//   },
-// })
-// class cellTypes extends Enum {}
-// cellTypes.initEnum({
-//   JS: {
-//     prettyName: 'Javascript',
-//     jsmdName: 'js',
-//   },
-//   MD: {
-//     prettyName: 'Markdown',
-//     jsmdName: 'md',
-//   },
-//   CSS: {
-//     prettyName: 'CSS',
-//     jsmdName: 'css',
-//   },
-//   RESOURCE: {
-//     prettyName: 'External resource',
-//     jsmdName: 'resource',
-//   },
-//   RAW: {
-//     prettyName: 'Raw text',
-//     jsmdName: 'raw',
-//   },
-// })
-
 // class appView extends Enum {}
 // appView.initEnum(['EXPLORE', 'REPORT'])
 
@@ -52,53 +8,86 @@
 // Returning strings is required to keep things simple+serializable in the redux store.
 // The only reason we wrap this in a little class it to expose the convenience
 // `contains` and `values`
-const stringEnum = class {
-  constructor(vals) {
-    vals.forEach(function (v) { this[v] = v })
+const StringEnum = class {
+  constructor(...vals) {
+    vals.forEach((v) => {
+      if (v === 'values' || v === 'contains') { throw Error(`disallowed enum name: ${v}`) }
+      this[v] = v
+    })
     Object.freeze(this)
   }
   values() { return Object.keys(this) }
   contains(key) { return Object.keys(this).indexOf(key) >= 0 }
 }
 
-const rowOverflowEnum = stringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
-const rowTypeEnum = stringEnum('input', 'output')
+const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
+// const rowTypeEnum = new StringEnum('input', 'output')
+// const cellTypeEnum = new StringEnum(
+// 'javascript', 'markdown', 'raw', 'css', 'external dependencies')
+// const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'presentation'
+// const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
 
 function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-function newCellRow(rowType, REPORT, EXPORE) {
-  // these track the collapsed state of cell row in the two views
-  // must be one of "HIDDEN", "SCROLL", "VISIBLE"
-  return { rowType, REPORT, EXPORE }
-}
+// function newCellRow(rowType, EXPLORE, REPORT) {
+//   // these track the collapsed state of cell row in the two views
+//   // must be one of "HIDDEN", "SCROLL", "VISIBLE"
+//   return { rowType, EXPLORE, REPORT }
+// }
 
-function newCellRows(cellType) {
+function newCellRowSettings(cellType) {
   switch (cellType) {
     case 'javascript':
-      return [
-        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
-        newCellRow('output', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
-      ]
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+          output: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.HIDDEN,
+          output: rowOverflowEnum.HIDDEN,
+        },
+      }
     case 'markdown':
-      return [
-        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.VISIBLE),
-        newCellRow('output', rowOverflow.VISIBLE, rowOverflow.VISIBLE),
-      ]
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+          output: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.HIDDEN,
+          output: rowOverflowEnum.HIDDEN,
+        },
+      }
     case 'external dependencies':
-      return [
-        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
-        newCellRow('output', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
-      ]
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.HIDDEN,
+        },
+      }
     case 'css':
-      return [
-        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
-      ]
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.HIDDEN,
+        },
+      }
     case 'raw':
-      return [
-        newCellRow('input', rowOverflow.VISIBLE, rowOverflow.HIDDEN),
-      ]
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.HIDDEN,
+        },
+      }
     default:
       throw Error(`Unsupported cellType: ${cellType}`)
   }
@@ -117,7 +106,7 @@ function newCell(cells, cellType) {
     // evaluationOld set to true if the content of the editor changes from whatever
     // produced the most recent output value
     evaluationOld: true,
-    rows: newCellRows(cellType),
+    rowSettings: newCellRowSettings(cellType),
   }
 }
 
@@ -153,5 +142,5 @@ export {
   newNotebook,
   blankState,
   newCell,
-  rowOverflow,
+  rowOverflowEnum,
 }

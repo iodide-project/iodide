@@ -6,12 +6,6 @@ import htmlTemplate from './html-template'
 
 const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource']
 
-const jsmdValidCellSettings = [
-  // 'collapseEditViewInput',
-  // 'collapseEditViewOutput',
-  // 'collapsePresentationViewInput',
-  // 'collapsePresentationViewOutput',
-]
 
 const jsmdCellTypeMap = new Map([
   ['js', 'javascript'],
@@ -37,9 +31,24 @@ const jsmdValidNotebookSettings = [
   'viewMode',
   'lastSaved',
 ]
+const jsmdValidCellSettingPaths = [
+  'rowSettings.REPORT.input',
+  'rowSettings.REPORT.output',
+]
+
+function getNonDefaultValuesForPaths(paths, target, template) {
+  const out = {}
+  paths.forEach((p) => {
+    if (_.get(target, p) !== _.get(template, p)) {
+      out[p] = _.get(target, p)
+    }
+  })
+  return out
+}
+
 
 function parseCellString(str, i, parseWarnings) {
-  // note: this is nota a pure function, it mutates parseWarnings
+  // note: this is not a pure function, it mutates parseWarnings
   let cellType
   let settings
   let content
@@ -77,13 +86,17 @@ function parseCellString(str, i, parseWarnings) {
   // if settings exist and parsed ok, make sure that only valid cell settings are kept
   if (settings) {
     const settingsOut = {}
-    for (const key in settings) {
-      if (jsmdValidCellSettings.indexOf(key) > -1) {
-        settingsOut[key] = settings[key]
+    console.log("content",content)
+    for (const path in settings) {
+      if (_.includes(jsmdValidCellSettingPaths, path)) {
+        _.set(settingsOut, path, settings[path])
+        console.log("path",path)
+        console.log("settingsOut",settingsOut)
+        console.log("settings[path]",settings[path])
       } else {
         parseWarnings.push({
-          parseError: 'invalid cell setting',
-          details: key,
+          parseError: 'invalid cell setting path',
+          details: path,
         })
       }
     }
@@ -107,6 +120,7 @@ function parseCellString(str, i, parseWarnings) {
         details: content,
         jsError: `${e.name}: ${e.message}`,
       })
+      content = {} // set content back to empty object
     }
   }
   return {
@@ -138,7 +152,7 @@ function parseJsmd(jsmd) {
 
 function stateFromJsmd(jsmdString) {
   const parsed = parseJsmd(jsmdString)
-  let { cells } = parsed
+  const { cells } = parsed
   const { parseWarnings } = parsed
   if (parseWarnings.length > 0) {
     console.warn('JSMD parse errors', parseWarnings)
@@ -151,39 +165,57 @@ function stateFromJsmd(jsmdString) {
     Object.assign(initialState, meta.content)
   }
 
-  cells = cells
+  cells
     .filter(c => c.cellType !== 'meta')
     .forEach((c) => {
-      const cell = Object.assign(
-        newCell(initialState.cells, jsmdCellTypeMap.get(c.cellType)),
-        c.settings,
+      // console.log(
+      //   c,
+      //   { content: c.content },
+      //   c.settings,
+      //   newCell(initialState.cells, jsmdCellTypeMap.get(c.cellType)),
+      // )
+      const cell = _.defaultsDeep(
         { content: c.content },
+        c.settings,
+        newCell(initialState.cells, jsmdCellTypeMap.get(c.cellType)),
       )
+      // Object.assign(
+      //   newCell(initialState.cells, jsmdCellTypeMap.get(c.cellType)),
+      //   c.settings,
+      //   { content: c.content },
+      // )
       initialState.cells.push(cell)
     })
+  // if only a meta cell exists, return a default JS cell
+  if (initialState.cells.length === 0) {
+    initialState.cells.push(newCell(initialState.cells, 'javascript'))
+  }
   // set cell 0  to be the selected cell
   initialState.cells[0].selected = true
-  console.log(initialState)
   return initialState
 }
 
 
 function stringifyStateToJsmd(state) {
   const defaultState = newNotebook()
-  let defaultCellPrototype = defaultState.cells[0]
+  // let defaultCellPrototype = defaultState.cells[0]
   // serialize cells. most of the work here is seeing if cell properties
   // are in the jsmd valid list, and seeing if they are not default
   // values for this cell type
   const cellsStr = state.cells.map((cell) => {
     const jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
-    defaultCellPrototype = newCell(defaultState.cells, cell.cellType)
-    const cellSettings = {}
-    for (const setting of jsmdValidCellSettings) {
-      if (Object.prototype.hasOwnProperty.call(cell, setting)
-        && cell[setting] !== defaultCellPrototype[setting]) {
-        cellSettings[setting] = cell[setting]
-      }
-    }
+    const defaultCell = newCell(defaultState.cells, cell.cellType)
+    const cellSettings = getNonDefaultValuesForPaths(
+      jsmdValidCellSettingPaths,
+      cell,
+      defaultCell,
+    )
+    // for (const setting of jsmdValidCellSettings) {
+    //   if (Object.prototype.hasOwnProperty.call(cell, setting)
+    //     && cell[setting] !== defaultCellPrototype[setting]) {
+    //     cellSettings[setting] = cell[setting]
+    //   }
+    // }
     let cellSettingsStr = JSON.stringify(cellSettings)
     cellSettingsStr = cellSettingsStr === '{}' ? '' : ` ${cellSettingsStr}`
     return `\n%% ${jsmdCellType}${cellSettingsStr}
@@ -204,10 +236,6 @@ ${cell.content}`
   return metaSettingsStr + cellsStr
 }
 
-function stringifyRowVisibilty(rows){
-  
-}
-
 function exportJsmdBundle(state) {
   const htmlTemplateCompiler = _.template(htmlTemplate)
   return htmlTemplateCompiler({
@@ -223,7 +251,7 @@ export {
   parseJsmd,
   stateFromJsmd,
   jsmdValidCellTypes,
-  jsmdValidCellSettings,
+  jsmdValidCellSettingPaths,
   stringifyStateToJsmd,
   exportJsmdBundle,
 }

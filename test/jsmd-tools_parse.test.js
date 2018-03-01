@@ -1,0 +1,203 @@
+/* global it describe expect */
+import _ from 'lodash'
+import { parseJsmd,
+  stateFromJsmd,
+} from './../src/jsmd-tools'
+import { newNotebook } from '../src/state-prototypes'
+
+
+// import { newNotebook, newCell } from '../src/state-prototypes'
+
+
+let jsmdTestCase = `%% meta
+{"title": "What a web notebook looks like",
+"viewMode": "editor",
+"lastExport": "2017-12-13T17:46:16.207Z",
+"jsmdVersionHash": "42-example_hash_1234567890",
+"jsmdPreviousVersionHash": "41-example_hash_prev_1234567890",
+"iodideAppVersion": "0.0.1",
+"iodideAppLocation": "https://some.cdn.com/path/version/iodideApp.js"
+}
+
+%% md
+## Markdown cell
+
+This is written in a **Markdown cell**, which supports normal _MD formating)_
+Markdown cells also support Latex
+
+$$
+X_{t,i}
+$$
+
+%% js {"rowSettings.REPORT.input": "SCROLL", "rowSettings.REPORT.output": "VISIBLE"}
+// this is a JS code cell. We can use normal JS and browser APIs.
+range = []
+for (let i=0; i<10; i++){range.push(i)}
+A = range.map( (x,i) => range.map( (y,j) => (Math.random()+i-.5)))
+
+%% raw
+this is a raw cell. it's available in jupyter, so we have it too. not clear what the use case is, but it's here in case you want it. notice that raw cells don't wrap (unlike MD cell editors)
+
+%% md
+## External resource cell
+the cell below allows you to load external scripts
+
+%% resource
+https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js
+
+%% js
+// above this is a DOM cell, which we can also target
+spinCubeInTarget("#dom-cell-2")`
+
+const jsmdEx1Meta = {
+  title: 'What a web notebook looks like',
+  viewMode: 'editor',
+  lastExport: '2017-12-13T17:46:16.207Z',
+  jsmdVersionHash: '42-example_hash_1234567890',
+  jsmdPreviousVersionHash: '41-example_hash_prev_1234567890',
+  iodideAppVersion: '0.0.1',
+  iodideAppLocation: 'https://some.cdn.com/path/version/iodideApp.js',
+}
+
+describe('jsmd parser Ex 1', () => {
+  const { parseWarnings } = parseJsmd(jsmdTestCase)
+  const state = stateFromJsmd(jsmdTestCase)
+  const { cells } = state
+  // const { parseWarnings } = jsmdParsed
+
+  it('new cells should start with "\n%%" or "%%" at the start of the file. drop empty cells.', () => {
+    expect(cells.length).toEqual(6)
+  })
+  it('should have correct cell types', () => {
+    expect(cells.map(c => c.cellType)).toEqual([
+      'markdown', 'javascript', 'raw', 'markdown', 'external dependencies', 'javascript',
+    ])
+  })
+  it('should have zero parse warnings', () => {
+    expect(parseWarnings.length).toEqual(0)
+  })
+  it('cell 2 should have settings (1 of 2) "rowSettings.REPORT.input": "SCROLL"', () => {
+    expect(cells[2].rowSettings.REPORT.input).toEqual('SCROLL')
+  })
+  it('cell 2 should have settings (2 of 2) "rowSettings.REPORT.output": "VISIBLE"', () => {
+    expect(cells[2].rowSettings.REPORT.output).toEqual('VISIBLE')
+  })
+  it('should have correct meta settings: title', () => {
+    expect(state.title).toEqual('What a web notebook looks like')
+  })
+})
+
+
+jsmdTestCase = `
+
+%% js
+foo
+%% JS       {"rowSettings.REPORT.input":"SCROLL"}
+foo
+%%Js
+foo
+
+%%    jS     {"rowSettings.REPORT.output":"VISIBLE"}
+
+foo
+
+`
+
+describe('jsmd parser test case 3', () => {
+  const jsmdParsed = parseJsmd(jsmdTestCase)
+  const state = stateFromJsmd(jsmdTestCase)
+  const { cells } = state
+  const { parseWarnings } = jsmdParsed
+
+  it('should have 4 cells and not trip up on caps or whitespace', () => {
+    expect(cells.length).toEqual(4)
+  })
+  it('should have zero parse warnings', () => {
+    expect(parseWarnings.length).toEqual(0)
+  })
+  it('parseWarnings should be an empty array', () => {
+    expect(parseWarnings).toEqual([])
+  })
+  it('all cells should have cellType==js', () => {
+    expect(cells.map(c => c.cellType)).toEqual(expect.arrayContaining(['javascript']))
+  })
+})
+
+
+// this case is for an observed bug
+jsmdTestCase = `
+%% js
+`
+describe('jsmd parser test case 4', () => {
+  const jsmdParsed = parseJsmd(jsmdTestCase)
+  const state = stateFromJsmd(jsmdTestCase)
+  const { cells } = state
+  const { parseWarnings } = jsmdParsed
+
+  it('should have 1 cell', () => {
+    expect(cells.length).toEqual(1)
+  })
+  it('should have zero parse warnings', () => {
+    expect(parseWarnings.length).toEqual(0)
+  })
+  it('cell 0 should have no content', () => {
+    expect(cells[0].content).toEqual('')
+  })
+})
+
+
+// test error parsing and bad cell type conversion
+jsmdTestCase = `
+%% js {"collapseEditViewInput": badjson%@#$^
+foo
+%% js {"badcellsettingkey": "SCROLLABLE", "rowSettings.REPORT.output":"VISIBLE"}
+foo
+%% badcelltype {"rowSettings.REPORT.input":"SCROLL_carrots"}
+foo
+`
+describe('jsmd parser test case 5', () => {
+  const jsmdParsed = parseJsmd(jsmdTestCase)
+  const state = stateFromJsmd(jsmdTestCase)
+  const { cells } = state
+  const { parseWarnings } = jsmdParsed
+  it('should have 3 cells (%% meta is not converted to a cell)', () => {
+    expect(cells.length).toEqual(3)
+  })
+  it('should have 3 parse warnings', () => {
+    expect(parseWarnings.length).toEqual(3)
+  })
+  it('all cells should have cellType==js (bad cellTypes should convert to js)', () => {
+    expect(cells.map(c => c.cellType)).toEqual(['javascript', 'javascript', 'javascript'])
+  })
+  it('cell 1 should have "rowSettings.REPORT.output":"VISIBLE"', () => {
+    expect(cells[1].rowSettings.REPORT.output).toEqual('VISIBLE')
+  })
+  it('cell 2 should have "rowSettings.REPORT.output"=="SCROLL"', () => {
+    expect(cells[2].rowSettings.REPORT.input).toEqual('SCROLL_carrots')
+  })
+})
+
+// test bad meta parsing and creation of default JS cell
+jsmdTestCase = `
+%% meta
+invalid_json_content for meta setings
+`
+describe('jsmd parser test case 6', () => {
+  const jsmdParsed = parseJsmd(jsmdTestCase)
+  const state = stateFromJsmd(jsmdTestCase)
+  const { cells } = state
+  const { parseWarnings } = jsmdParsed
+  // console.log(parseWarnings)
+  it('should have 1 cells (%% meta is not converted to a cell)', () => {
+    expect(cells.length).toEqual(1)
+  })
+  it('should have 1 parse warning1', () => {
+    expect(parseWarnings.length).toEqual(1)
+  })
+  it('the cells should have cellType==js (bad cellTypes should convert to js)', () => {
+    expect(cells.map(c => c.cellType)).toEqual(['javascript'])
+  })
+  it('state should be a default notebook with no additions', () => {
+    expect(state).toEqual(newNotebook())
+  })
+})
