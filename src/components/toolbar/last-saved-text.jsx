@@ -6,7 +6,7 @@ import { prettyDate } from '../../notebook-utils'
 
 export class LastSavedTextUnconnected extends React.Component {
   static propTypes = {
-    lastSaved: PropTypes.object,
+    lastSaved: PropTypes.string,
   }
   render() {
     return (
