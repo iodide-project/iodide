@@ -11,6 +11,10 @@ import settings from '../../settings'
 const { AUTOSAVE } = settings.labels
 const autosave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0] //
 const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
+locallySaved.sort((a, b) => {
+  const p = _ => Date.parse(JSON.parse(localStorage[_]).lastSaved)
+  return p(b) - p(a)
+})
 
 const autoSave = getLocalStorageNotebook(autosave)
 
