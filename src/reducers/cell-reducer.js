@@ -160,7 +160,7 @@ const cellReducer = (state = newNotebook(), action) => {
       const index = cells.findIndex(c => c.id === cellId)
       const thisCell = cells[index]
 
-      if (thisCell.cellType === 'javascript') {
+      if (thisCell.cellType === 'javascript' || thisCell.cellType === 'python') {
       // add to newState.history
         newState.history.push({
           cellID: thisCell.id,
@@ -181,8 +181,16 @@ const cellReducer = (state = newNotebook(), action) => {
         //   }
         // }
         try {
-          output = window.eval(code)  // eslint-disable-line
-          thisCell.evalStatus = evalStatuses.SUCCESS
+          if (thisCell.cellType === 'javascript') {
+            output = window.eval(code)  // eslint-disable-line
+            thisCell.evalStatus = evalStatuses.SUCCESS
+          } else { // cellType === 'python'
+            output = window.pyodide.runPython(code)  // eslint-disable-line
+            if (output instanceof Error) {
+              throw output
+            }
+            thisCell.evalStatus = evalStatuses.SUCCESS
+          }
         } catch (e) {
           const err = e.constructor(`Error in Evaled Script: ${e.message}`)
           err.lineNumber = (e.lineNumber - err.lineNumber) + 3

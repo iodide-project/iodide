@@ -8,6 +8,7 @@ import CodeMirror from '@skidding/react-codemirror'
 import js from 'codemirror/mode/javascript/javascript'
 import markdown from 'codemirror/mode/markdown/markdown'
 import css from 'codemirror/mode/css/css'
+import python from 'codemirror/mode/python/python'
 
 import matchbrackets from 'codemirror/addon/edit/matchbrackets'
 import closebrackets from 'codemirror/addon/edit/closebrackets'

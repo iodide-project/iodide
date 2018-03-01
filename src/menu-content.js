@@ -228,6 +228,13 @@ menuItems.changeCellTypeToRaw = {
     this.props.actions.changeCellType('raw')
   },
 }
+menuItems.changeCellTypeToPython = {
+  primaryText: 'Python',
+  secondaryText: 'P',
+  callback() {
+    this.props.actions.changeCellType('python')
+  },
+}
 menuItems.changeCellTypeToExternal = {
   primaryText: 'External Dependencies',
   secondaryText: 'E',
@@ -257,6 +264,7 @@ menuItems.cell = {
     { itemType: 'Divider', className: 'cell-menu' },
     { itemType: 'Subheader', name: 'change cell type to ... ' },
     menuItems.changeCellTypeToJavascript,
+    menuItems.changeCellTypeToPython,
     menuItems.changeCellTypeToMarkdown,
     menuItems.changeCellTypeToRaw,
     menuItems.changeCellTypeToExternal,

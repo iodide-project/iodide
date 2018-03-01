@@ -9,6 +9,7 @@ import ExternalDependencyCell from './cell-type-external-resource'
 import CSSCell from './cell-type-css'
 import JsCell from './cell-type-javascript'
 import MarkdownCell from './cell-type-markdown'
+import PythonCell from './cell-type-python'
 
 import { NotebookHeader } from './notebook-header'
 
@@ -82,6 +83,8 @@ class Page extends React.Component {
           return <ExternalDependencyCell cellId={id} key={id} />
         case 'css':
           return <CSSCell cellId={id} key={id} />
+        case 'python':
+          return <PythonCell cellId={id} key={id} />
         default:
           // TODO: Use better class for inline error
           return <div>Unknown cell type {this.props.cellTypes[i]}</div>
