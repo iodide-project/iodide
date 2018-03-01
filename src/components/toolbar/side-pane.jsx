@@ -33,11 +33,7 @@ export class SidePaneUnconnected extends React.Component {
             classes={{ paperAnchorRight: 'side-pane' }}
             variant="persistent"
             anchor="right"
-            docked={false}
             open={this.props.sidePaneMode === this.props.openOnMode}
-            openSecondary
-            overlayStyle={{ backgroundColor: 'none' }}
-            onRequestChange={() => { this.props.task.callback() }}
           >
             <div className="pane-title">
               <NotebookTaskButton

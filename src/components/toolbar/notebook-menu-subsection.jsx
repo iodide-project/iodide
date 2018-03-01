@@ -6,27 +6,6 @@ import Menu from 'material-ui/Menu'
 
 import ChevronRight from 'material-ui-icons/ChevronRight'
 
-// export default class NotebookMenuSubsection extends React.Component {
-//   static propTypes = {
-//     title: PropTypes.string,
-//     className: PropTypes.string,
-//   }
-//   render() {
-//     const children = React.Children.map(
-//       this.props.children,
-//       c => React.cloneElement(c),
-//     )// , { className: this.props.className || '' }),)
-//     return (
-//       <MenuItem
-//         style={{ fontSize: '13px' }}
-//         primaryText={this.props.title}
-//         rightIcon={<ArrowDropRight />}
-//         menuItems={children}
-//       />
-//     )
-//   }
-// }
-
 export default class notebookMenuSubsection extends React.Component {
   constructor(props) {
     super(props)
@@ -60,7 +39,6 @@ export default class notebookMenuSubsection extends React.Component {
         <ListItemText
           classes={{ root: 'secondary-menu-item' }}
           primary={<ChevronRight style={{ width: 16, height: 16, marginTop: 5 }} />}
-          secondary
         />
         <Menu
           id="sub-menu"

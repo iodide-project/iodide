@@ -6,11 +6,11 @@ import MenuIcon from 'material-ui-icons/Menu'
 
 import tasks from '../../task-definitions'
 import NotebookMenuItem from './notebook-menu-item'
-import NotebookMenuSubsection from './notebook-menu-subsection'
 import NotebookMenuDivider from './notebook-menu-divider'
 
-import cellMenuSubsection from './cell-menu-subsection'
-import iodideExamplesSubsection from './iodide-examples-subsection'
+import CellMenuSubsection from './cell-menu-subsection'
+import SavedNotebooksAndExamplesSubsection from './saved-notebooks-and-examples-subsection'
+import ViewModeToggleSubsection from './view-mode-toggle-subsection'
 
 export default class EditorToolbarMenu extends React.Component {
   constructor(props) {
@@ -47,26 +47,18 @@ export default class EditorToolbarMenu extends React.Component {
           onClose={this.handleClose}
           anchorReference="anchorPosition"
           anchorPosition={{ top: 62, left: 30 }}
-
-          paperProps={{ width: 200 }}
         >
           <NotebookMenuItem task={tasks.createNewNotebook} />
+          <NotebookMenuItem task={tasks.saveNotebook} />
           <NotebookMenuItem task={tasks.exportNotebook} />
 
-          <NotebookMenuSubsection className="large-menu" title="saved notebooks ... ">
-            {iodideExamplesSubsection}
-          </NotebookMenuSubsection>
+          <SavedNotebooksAndExamplesSubsection />
 
-          <NotebookMenuSubsection className="medium-menu" title="cell ...">
-            {cellMenuSubsection}
-          </NotebookMenuSubsection>
+          <CellMenuSubsection />
 
           <NotebookMenuDivider />
 
-          <NotebookMenuSubsection title="view ...">
-            <NotebookMenuItem task={tasks.toggleHistoryPane} />
-            <NotebookMenuItem task={tasks.toggleDeclaredVariablesPane} />
-          </NotebookMenuSubsection>
+          <ViewModeToggleSubsection />
 
           <NotebookMenuDivider />
 

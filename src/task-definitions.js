@@ -6,7 +6,7 @@ import { isCommandMode,
   viewModeIsEditor,
   getCells,
   getCellBelowSelectedId,
-  getCellAboveSelectedId } from './notebook-utils'
+  getCellAboveSelectedId, prettyDate, formatDateString } from './notebook-utils'
 
 const dispatcher = {}
 for (const action in actions) {
@@ -321,5 +321,17 @@ tasks.seeAllExamples = new ExternalLinkTask({
   menuTitle: 'See All Examples ...',
   url: 'http://github.com/iodide-project/iodide-examples/',
 })
+
+export function getLocalStorageNotebook(name) {
+  let { lastSaved } = JSON.parse(localStorage[name])
+  lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
+  return new UserTask({
+    title: name,
+    secondaryText: lastSaved,
+    callback() {
+      dispatcher.loadNotebook(name)
+    },
+  })
+}
 
 export default tasks

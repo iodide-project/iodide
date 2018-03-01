@@ -565,6 +565,8 @@ table tr:nth-child(2n) {
 	width:292px !important
 } */
 
+#main-menu h3 {font-size:13px}
+
 .medium-menu {
   display: flex !important;
   justify-content: space-between;

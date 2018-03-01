@@ -58,6 +58,11 @@ export default class UserTask {
     return this.args.keybindings
   }
 
+  get secondaryText() {
+    // primarily things that go in keybinding spot, like "last saved" info
+    return this.args.secondaryText
+  }
+
   hasKeybinding() {
     return this.args.keybindings !== undefined && this.args.keybindings.length !== 0
   }

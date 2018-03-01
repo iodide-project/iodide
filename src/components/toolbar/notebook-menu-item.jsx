@@ -46,8 +46,7 @@ export default class NotebookMenuItem extends React.Component {
         />
         <ListItemText
           classes={{ root: 'secondary-menu-item' }}
-          primary={this.props.task.displayKeybinding}
-          secondary
+          primary={this.props.task.displayKeybinding || this.props.task.secondaryText}
         />
 
       </MenuItem>

@@ -29,7 +29,6 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
       <Button
         style={{ color: this.props.textColor || '#fafafa' }}
         onClick={this.toggleViewMode}
-        hoverColor={this.props.hoverColor || 'darkgray'}
         mini
       >
         {this.props.viewMode === 'presentation' ? 'Edit' : 'View'}

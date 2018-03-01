@@ -18,7 +18,7 @@ export class EditorModeToolbarUnconnected extends React.Component {
         className="notebook-menu"
         style={{ backgroundColor: 'black', height: '64px', display: this.props.viewMode === 'editor' ? 'block' : 'none' }}
       >
-        <Toolbar desktop>
+        <Toolbar>
           <EditorModeControls isFirstChild />
           <EditorModeTitle />
           <ViewControls />
