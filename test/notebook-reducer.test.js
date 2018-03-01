@@ -73,8 +73,8 @@ describe('saving / deleting localStorage-saved notebooks', () => {
   it('saved notebook should have correct cell, up to cell ids', () => {
     // note that cellIds may change between save/load, because jsmd does not store cellIds
     // let's reset all the cellIds in both
-    savedNotebook.cells.forEach((c, i) => { c.id = i })
-    state.cells.forEach((c, i) => { c.id = i })
+    savedNotebook.cells.forEach((c, i) => { c.id = i }) // eslint-disable-line
+    state.cells.forEach((c, i) => { c.id = i }) // eslint-disable-line
     expect(savedNotebook.cells).toEqual(state.cells)
   })
 
