@@ -204,6 +204,10 @@ ${cell.content}`
   return metaSettingsStr + cellsStr
 }
 
+function stringifyRowVisibilty(rows){
+  
+}
+
 function exportJsmdBundle(state) {
   const htmlTemplateCompiler = _.template(htmlTemplate)
   return htmlTemplateCompiler({

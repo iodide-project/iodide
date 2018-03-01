@@ -77,11 +77,11 @@ class CellRow extends React.Component {
 
 function mapStateToPropsCellRows(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
-  console.log('cell', cell)
-  console.log('cell.rows', cell.rows)
+  // console.log('cell', cell)
+  // console.log('cell.rows', cell.rows)
   const row = cell.rows.filter(r => r.rowType === ownProps.rowType)[0]
-  console.log('row', row)
-  console.log('ownProps.rowType', ownProps.rowType)
+  // console.log('row', row)
+  // console.log('ownProps.rowType', ownProps.rowType)
   let view
   // this block can be deprecated if we move to enums for VIEWs
   switch (state.viewMode) {
