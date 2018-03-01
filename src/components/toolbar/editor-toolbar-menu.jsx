@@ -1,20 +1,10 @@
 import React from 'react'
 
-// import MenuIcon from 'material-ui/svg-icons/navigation/menu'
-
-// import MoreVertIcon from 'material-ui-icons/MoreVert';
 import IconButton from 'material-ui/IconButton'
 import Menu from 'material-ui/Menu'
 import MenuIcon from 'material-ui-icons/Menu'
 
-// import { grey50 } from 'material-ui/styles/colors'
-// import IconButton from 'material-ui/IconButton'
-// import IconMenu from 'material-ui/IconMenu'
-// import MenuItem from 'material-ui/MenuItem'
-// import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
-
 import tasks from '../../task-definitions'
-// import IconMenu from './icon-menu'
 import NotebookMenuItem from './notebook-menu-item'
 import NotebookMenuSubsection from './notebook-menu-subsection'
 import NotebookMenuDivider from './notebook-menu-divider'

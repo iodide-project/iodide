@@ -1,15 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
 import { connect } from 'react-redux'
 
 import Toolbar from 'material-ui/Toolbar'
-// import AppBar from 'material-ui/AppBar'
 import EditorModeControls from './editor-mode-controls'
 import ViewControls from './view-controls'
 
 import EditorModeTitle from './editor-mode-title'
-//
+
 export class EditorModeToolbarUnconnected extends React.Component {
   static propTypes = {
     viewMode: PropTypes.string,

@@ -26,6 +26,7 @@ export default class ViewControls extends React.Component {
         <NotebookTaskButton task={tasks.toggleHistoryPane}>
           <HistoryIcon />
         </NotebookTaskButton>
+
         <DeclaredVariablesPane />
         <HistoryPane />
         <ViewModeToggleButton />

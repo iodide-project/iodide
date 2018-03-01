@@ -1,18 +1,15 @@
 import React from 'react'
-// import PropTypes from 'prop-types';
 
 import AddButton from 'material-ui-icons/Add'
 import UpArrow from 'material-ui-icons/ArrowUpward'
 import DownArrow from 'material-ui-icons/ArrowDownward'
 import PlayButton from 'material-ui-icons/PlayArrow'
 import FastForward from 'material-ui-icons/FastForward'
-// import ToolbarGroup from 'material-ui/ToolbarGroup'
 
 import EditorToolbarMenu from './editor-toolbar-menu'
 import NotebookTaskButton from './notebook-task-button'
 
 import tasks from '../../task-definitions'
-// ,
 
 export default class EditorModeControls extends React.Component {
   render() {
