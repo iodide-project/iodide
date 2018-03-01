@@ -6,7 +6,7 @@ import Menu from 'material-ui/Menu'
 
 import ChevronRight from 'material-ui-icons/ChevronRight'
 
-export default class notebookMenuSubsection extends React.Component {
+export default class NotebookMenuSubsection extends React.Component {
   constructor(props) {
     super(props)
     this.state = { anchorElement: null }
@@ -23,6 +23,10 @@ export default class notebookMenuSubsection extends React.Component {
   }
   render() {
     const { anchorElement } = this.state
+    const children = React.Children.map(
+      this.props.children,
+      c => React.cloneElement(c, { onClick: () => { this.handleClose(); this.props.onClick() } }),
+    )
     return (
       <MenuItem
         dense
@@ -48,7 +52,7 @@ export default class notebookMenuSubsection extends React.Component {
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         >
-          {this.props.children}
+          {children}
         </Menu>
       </MenuItem>
     )

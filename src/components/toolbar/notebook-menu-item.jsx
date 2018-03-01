@@ -8,6 +8,8 @@ import ExternalLinkTask from '../../external-link-task'
 export default class NotebookMenuItem extends React.Component {
   static propTypes = {
     className: PropTypes.string,
+    onClick: PropTypes.func,
+    submenuOnClick: PropTypes.func,
     task: PropTypes.oneOfType([
       PropTypes.instanceOf(UserTask),
       PropTypes.instanceOf(ExternalLinkTask),
@@ -20,7 +22,11 @@ export default class NotebookMenuItem extends React.Component {
         dense
         classes={{ root: 'main-menu-item' }}
         key={this.props.task.title}
-        onClick={this.props.task.callback}
+        onClick={() => {
+          this.props.task.callback()
+          this.props.onClick()
+          if (this.props.submenuOnClick) this.props.submenuOnClick()
+          }}
       >
         <ListItemText
           classes={{ root: 'primary-menu-item' }}

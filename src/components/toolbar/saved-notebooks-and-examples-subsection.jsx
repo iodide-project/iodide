@@ -26,7 +26,7 @@ const locallySavedMenuItems = locallySaved.map((l) => {
 export default class SavedNotebooksAndExamplesSubsection extends React.Component {
   render() {
     return (
-      <NotebookMenuSubsection title="notebooks ... " >
+      <NotebookMenuSubsection onClick={this.props.onClick} title="notebooks ... " >
         <NotebookMenuHeader key="autosave" title="Auto-Saved" />
         <NotebookMenuItem task={autoSave} key={autoSave.title} />
         <NotebookMenuDivider key="autosave-divider" />

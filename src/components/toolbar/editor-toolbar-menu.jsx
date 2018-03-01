@@ -1,9 +1,6 @@
 import React from 'react'
 
-import IconButton from 'material-ui/IconButton'
-import Menu from 'material-ui/Menu'
-import MenuIcon from 'material-ui-icons/Menu'
-
+import NotebookIconMenu from './icon-menu'
 import tasks from '../../task-definitions'
 import NotebookMenuItem from './notebook-menu-item'
 import NotebookMenuDivider from './notebook-menu-divider'
@@ -13,58 +10,25 @@ import SavedNotebooksAndExamplesSubsection from './saved-notebooks-and-examples-
 import ViewModeToggleSubsection from './view-mode-toggle-subsection'
 
 export default class EditorToolbarMenu extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      anchorElement: null,
-    }
-    this.handleClick = this.handleClick.bind(this)
-    this.handleClose = this.handleClose.bind(this)
-  }
-  handleClick(event) {
-    this.setState({ anchorElement: event.currentTarget })
-  }
-
-  handleClose() {
-    this.setState({ anchorElement: null })
-  }
-
   render() {
-    const { anchorElement } = this.state
     return (
-      <IconButton
-        aria-label="more"
-        aria-owns={anchorElement ? 'main-menu' : null}
-        aria-haspopup="true"
-        onClick={this.handleClick}
-        style={{ color: 'white' }}
-      >
-        <MenuIcon />
-        <Menu
-          id="main-menu"
-          anchorEl={this.state.anchorElement}
-          open={Boolean(anchorElement)}
-          onClose={this.handleClose}
-          anchorReference="anchorPosition"
-          anchorPosition={{ top: 62, left: 30 }}
-        >
-          <NotebookMenuItem task={tasks.createNewNotebook} />
-          <NotebookMenuItem task={tasks.saveNotebook} />
-          <NotebookMenuItem task={tasks.exportNotebook} />
+      <NotebookIconMenu>
+        <NotebookMenuItem task={tasks.createNewNotebook} />
+        <NotebookMenuItem task={tasks.saveNotebook} />
+        <NotebookMenuItem task={tasks.exportNotebook} />
 
-          <SavedNotebooksAndExamplesSubsection />
+        <SavedNotebooksAndExamplesSubsection />
 
-          <CellMenuSubsection />
+        <CellMenuSubsection />
 
-          <NotebookMenuDivider />
+        <NotebookMenuDivider />
 
-          <ViewModeToggleSubsection />
+        <ViewModeToggleSubsection />
 
-          <NotebookMenuDivider />
+        <NotebookMenuDivider />
 
-          <NotebookMenuItem task={tasks.fileAnIssue} />
-        </Menu>
-      </IconButton>
+        <NotebookMenuItem task={tasks.fileAnIssue} />
+      </NotebookIconMenu>
 
     )
   }
