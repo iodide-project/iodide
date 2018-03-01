@@ -1,7 +1,6 @@
 /* global it describe expect */
 import _ from 'lodash'
-import { jsmdValidCellTypes,
-  stringifyStateToJsmd } from './../src/jsmd-tools'
+import { stringifyStateToJsmd } from './../src/jsmd-tools'
 
 import { newNotebook, newCell } from '../src/state-prototypes'
 
@@ -42,7 +41,7 @@ describe('jsmd stringifier test case 3', () => {
   state.viewMode = 'presentation'
 
   state.cells[0].content = 'foo'
-  _.set(state, 'cells[0].rowSettings.REPORT.input','SCROLL')
+  _.set(state, 'cells[0].rowSettings.REPORT.input', 'SCROLL')
 
   state.cells.push(newCell(state.cells, 'markdown'))
   state.cells[1].content = 'foo'
@@ -63,7 +62,6 @@ foo`
     expect(jsmd).toEqual(jsmdExpected)
   })
 })
-
 
 
 describe('jsmd stringifier test case 4', () => {

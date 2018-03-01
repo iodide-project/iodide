@@ -59,12 +59,22 @@ describe('saving / deleting localStorage-saved notebooks', () => {
   const SAVE_DELETE_NOTEBOOK_NAME = 'save-delete-notebook-tests'
   const state = exampleNotebookWithContent(SAVE_DELETE_NOTEBOOK_NAME)
 
-  it('should save via SAVE_NOTEBOOK', () => {
-    notebookReducer(state, { type: 'SAVE_NOTEBOOK' })
+  notebookReducer(state, { type: 'SAVE_NOTEBOOK' })
+  const savedNotebook = stateFromJsmd(window.localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME))
 
-    const savedNotebook = stateFromJsmd(window.localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME))
+  it('saved notebook should have correct title', () => {
     expect(savedNotebook.title).toEqual(state.title)
+  })
+
+  it('saved notebook should have lastSaved time', () => {
     expect(savedNotebook.lastSaved).toBeDefined()
+  })
+
+  it('saved notebook should have correct cell, up to cell ids', () => {
+    // note that cellIds may change between save/load, because jsmd does not store cellIds
+    // let's reset all the cellIds in both
+    savedNotebook.cells.forEach((c, i) => { c.id = i })
+    state.cells.forEach((c, i) => { c.id = i })
     expect(savedNotebook.cells).toEqual(state.cells)
   })
 

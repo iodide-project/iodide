@@ -46,11 +46,70 @@ function getNonDefaultValuesForPaths(paths, target, template) {
   return out
 }
 
+function parseMetaChunk(content, parseWarnings) {
+  let metaSettings
+  try {
+    metaSettings = JSON.parse(content)
+  } catch (e) {
+    parseWarnings.push({
+      parseError: 'Failed to parse notebook settings from meta cell. Using default settings.',
+      details: content,
+      jsError: `${e.name}: ${e.message}`,
+    })
+    metaSettings = {} // set content back to empty object
+  }
+  return { chunkType: 'meta', iodideSettings: metaSettings }
+}
 
-function parseCellString(str, i, parseWarnings) {
+function parseCellChunk(chunkType, content, settings, str, chunkNum, parseWarnings) {
+  let cellType = jsmdCellTypeMap.get(chunkType)
+  // if the cell type is not valid, set it to js
+  if (jsmdValidCellTypes.indexOf(chunkType) === -1) {
+    parseWarnings.push({
+      parseError: 'invalid cell type, converted to js cell',
+      details: `chunkType: ${chunkType} chunkNum:${chunkNum} raw string: ${str}`,
+    })
+    cellType = 'javascript'
+  }
+
+  const cell = newCell([{ id: chunkNum }], cellType)
+  // if settings exist and parsed ok, make sure that only valid cell settings are kept
+  // jsmdValidCellSettingPaths.forEach((path) => {
+  //   if (settings && settings[path] !== undefined) {
+  //     _.set(cell, path, settings[path])
+  //   }
+  // })
+  Object.keys(settings).forEach((path) => {
+    if (_.includes(jsmdValidCellSettingPaths, path)) {
+      _.set(cell, path, settings[path])
+      // _.set(settingsOut, path, settings[path])
+    } else {
+      parseWarnings.push({
+        parseError: 'invalid cell setting path',
+        details: path,
+      })
+    }
+  })
+  
+  //   for (const path in settings) {
+  //     if (_.includes(jsmdValidCellSettingPaths, path)) {
+  //       _.set(settingsOut, path, settings[path])
+  //     } else {
+  //       parseWarnings.push({
+  //         parseError: 'invalid cell setting path',
+  //         details: path,
+  //       })
+  //     }
+  //   }
+  //   settings = settingsOut || undefined
+  // }
+  return { chunkType: 'cell', cell }
+}
+
+function parseJsmdChunk(str, i, parseWarnings) {
   // note: this is not a pure function, it mutates parseWarnings
-  let cellType
-  let settings
+  let chunkType
+  let settings = {}
   let content
   let firstLine
   const firstLineBreak = str.indexOf('\n')
@@ -68,10 +127,10 @@ function parseCellString(str, i, parseWarnings) {
 
   if (firstLineFirstSpace === -1) {
     // if there is NO space on the first line (after trimming), there are no cell settings
-    cellType = firstLine.toLowerCase()
+    chunkType = firstLine.toLowerCase()
   } else {
     // if there is a space on the first line (after trimming), there must be cell settings
-    cellType = firstLine.substring(0, firstLineFirstSpace).toLowerCase()
+    chunkType = firstLine.substring(0, firstLineFirstSpace).toLowerCase()
     // make sure the cell settings parse as JSON
     try {
       settings = JSON.parse(firstLine.substring(firstLineFirstSpace + 1))
@@ -83,61 +142,24 @@ function parseCellString(str, i, parseWarnings) {
       })
     }
   }
-  // if settings exist and parsed ok, make sure that only valid cell settings are kept
-  if (settings) {
-    const settingsOut = {}
-    console.log("content",content)
-    for (const path in settings) {
-      if (_.includes(jsmdValidCellSettingPaths, path)) {
-        _.set(settingsOut, path, settings[path])
-        console.log("path",path)
-        console.log("settingsOut",settingsOut)
-        console.log("settings[path]",settings[path])
-      } else {
-        parseWarnings.push({
-          parseError: 'invalid cell setting path',
-          details: path,
-        })
-      }
-    }
-    settings = settingsOut || undefined
-  }
-  // if the cell type is not valid, set it to js
-  if (jsmdValidCellTypes.indexOf(cellType) === -1) {
-    parseWarnings.push({
-      parseError: 'invalid cell type, converted to js cell',
-      details: `cellType: ${cellType} cellNum:${i} raw string: ${str}`,
-    })
-    cellType = 'js'
+  let chunkObject
+  if (chunkType === 'meta') {
+    chunkObject = parseMetaChunk(content, parseWarnings)
+  } else {
+    chunkObject = parseCellChunk(chunkType, content, settings, str, i, parseWarnings)
   }
 
-  if (cellType === 'meta') {
-    try {
-      content = JSON.parse(content)
-    } catch (e) {
-      parseWarnings.push({
-        parseError: 'Failed to parse notebook settings from meta cell. Using default settings.',
-        details: content,
-        jsError: `${e.name}: ${e.message}`,
-      })
-      content = {} // set content back to empty object
-    }
-  }
-  return {
-    cellType,
-    settings,
-    content,
-  }
+  return chunkObject
 }
 
 function parseJsmd(jsmd) {
   const parseWarnings = []
-  const cells = jsmd
+  const chunkObjects = jsmd
     .split('\n%%')
-    .map((str, cellNum) => {
-      // if this is the first cell, and it starts with "%%", drop those chars
+    .map((str, chunkNum) => {
+      // if this is the first chunk, and it starts with "%%", drop those chars
       let sstr
-      if (cellNum === 0 && str.substring(0, 2) === '%%') {
+      if (chunkNum === 0 && str.substring(0, 2) === '%%') {
         sstr = str.substring(2)
       } else {
         sstr = str
@@ -146,13 +168,13 @@ function parseJsmd(jsmd) {
     })
     .map(str => str.trim())
     .filter(str => str !== '')
-    .map((str, i) => parseCellString(str, i, parseWarnings))
-  return { cells, parseWarnings }
+    .map((str, i) => parseJsmdChunk(str, i, parseWarnings))
+  return { chunkObjects, parseWarnings }
 }
 
 function stateFromJsmd(jsmdString) {
   const parsed = parseJsmd(jsmdString)
-  const { cells } = parsed
+  const { chunkObjects } = parsed
   const { parseWarnings } = parsed
   if (parseWarnings.length > 0) {
     console.warn('JSMD parse errors', parseWarnings)
@@ -160,31 +182,15 @@ function stateFromJsmd(jsmdString) {
   // initialize a blank notebook
   const initialState = blankState()
   // add top-level meta settings if any exist
-  const meta = cells.filter(c => c.cellType === 'meta')[0]
+  const meta = chunkObjects.filter(c => c.chunkType === 'meta')[0]
   if (meta) {
-    Object.assign(initialState, meta.content)
+    Object.assign(initialState, meta.iodideSettings)
   }
 
-  cells
-    .filter(c => c.cellType !== 'meta')
+  chunkObjects
+    .filter(c => c.chunkType !== 'meta')
     .forEach((c) => {
-      // console.log(
-      //   c,
-      //   { content: c.content },
-      //   c.settings,
-      //   newCell(initialState.cells, jsmdCellTypeMap.get(c.cellType)),
-      // )
-      const cell = _.defaultsDeep(
-        { content: c.content },
-        c.settings,
-        newCell(initialState.cells, jsmdCellTypeMap.get(c.cellType)),
-      )
-      // Object.assign(
-      //   newCell(initialState.cells, jsmdCellTypeMap.get(c.cellType)),
-      //   c.settings,
-      //   { content: c.content },
-      // )
-      initialState.cells.push(cell)
+      initialState.cells.push(c.cell)
     })
   // if only a meta cell exists, return a default JS cell
   if (initialState.cells.length === 0) {

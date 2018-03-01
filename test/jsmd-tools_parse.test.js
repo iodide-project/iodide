@@ -77,13 +77,16 @@ describe('jsmd parser Ex 1', () => {
     expect(parseWarnings.length).toEqual(0)
   })
   it('cell 2 should have settings (1 of 2) "rowSettings.REPORT.input": "SCROLL"', () => {
-    expect(cells[2].rowSettings.REPORT.input).toEqual('SCROLL')
+    expect(cells[1].rowSettings.REPORT.input).toEqual('SCROLL')
   })
   it('cell 2 should have settings (2 of 2) "rowSettings.REPORT.output": "VISIBLE"', () => {
-    expect(cells[2].rowSettings.REPORT.output).toEqual('VISIBLE')
+    expect(cells[1].rowSettings.REPORT.output).toEqual('VISIBLE')
   })
   it('should have correct meta settings: title', () => {
     expect(state.title).toEqual('What a web notebook looks like')
+  })
+  it('should have correct meta settings: viewMode', () => {
+    expect(state.viewMode).toEqual('editor')
   })
 })
 
@@ -177,6 +180,7 @@ describe('jsmd parser test case 5', () => {
   })
 })
 
+
 // test bad meta parsing and creation of default JS cell
 jsmdTestCase = `
 %% meta
@@ -199,5 +203,29 @@ describe('jsmd parser test case 6', () => {
   })
   it('state should be a default notebook with no additions', () => {
     expect(state).toEqual(newNotebook())
+  })
+})
+
+// test multiple cell settings
+jsmdTestCase = `
+%% js {"rowSettings.REPORT.input": "VALUE_1", "rowSettings.REPORT.output":"VALUE_2"}
+foo
+`
+describe('jsmd parser test case 7, multiple cell settings', () => {
+  const jsmdParsed = parseJsmd(jsmdTestCase)
+  const state = stateFromJsmd(jsmdTestCase)
+  const { cells } = state
+  const { parseWarnings } = jsmdParsed
+  it('should have 1 cells', () => {
+    expect(cells.length).toEqual(1)
+  })
+  it('should have 0 parse warnings', () => {
+    expect(parseWarnings.length).toEqual(0)
+  })
+  it('cell 0 should have "rowSettings.REPORT.input":"VALUE_1"', () => {
+    expect(cells[0].rowSettings.REPORT.input).toEqual('VALUE_1')
+  })
+  it('cell 0 should have "rowSettings.REPORT.output"=="VALUE_2"', () => {
+    expect(cells[0].rowSettings.REPORT.output).toEqual('VALUE_2')
   })
 })
