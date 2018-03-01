@@ -7,19 +7,11 @@ import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
 import NotebookTaskButton from './notebook-task-button'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
+import DeclaredVariablesPane from './declared-variables-pane'
+import HistoryPane from './history-pane'
 
 import tasks from '../../task-definitions'
 
-// export default [
-//   <LastSavedText />,
-//   <NotebookTaskButton task={tasks.toggleDeclaredVariablesPane}>
-//     <ArrowDropDown />
-//   </NotebookTaskButton>,
-//   <NotebookTaskButton task={tasks.toggleHistoryPane}>
-//     <HistoryIcon />
-//   </NotebookTaskButton>,
-//   <ViewModeToggleButton />,
-// ]
 
 export default class ViewControls extends React.Component {
   render() {
@@ -34,7 +26,8 @@ export default class ViewControls extends React.Component {
         <NotebookTaskButton task={tasks.toggleHistoryPane}>
           <HistoryIcon />
         </NotebookTaskButton>
-
+        <DeclaredVariablesPane />
+        <HistoryPane />
         <ViewModeToggleButton />
 
       </div>

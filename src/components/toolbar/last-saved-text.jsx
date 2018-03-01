@@ -15,7 +15,6 @@ export class LastSavedTextUnconnected extends React.Component {
           fontSize: '13px',
           color: 'lightgray',
           fontStyle: 'italic',
-          outline: '1px solid yellow',
           width: '200px',
           textAlign: 'right',
 }}

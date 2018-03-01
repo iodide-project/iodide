@@ -2,27 +2,32 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { ToolbarGroup } from 'material-ui/Toolbar'
 import Drawer from 'material-ui/Drawer'
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 // import getMuiTheme from 'material-ui/styles/getMuiTheme'
 // import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 // import Close from 'material-ui/svg-icons/navigation/close'
-
-import Icon from 'material-ui/Icon'
-
-
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import Typography from 'material-ui/Typography'
+import Close from 'material-ui-icons/Close'
 import NotebookTaskButton from './notebook-task-button'
+import NotebookMenuDivider from './notebook-menu-divider'
 
 import { HistoryItem } from '../history-item'
 import tasks from '../../task-definitions'
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'light',
+  },
+})
 
 export class HistoryPaneUnconnected extends React.Component {
     static propTypes = {
       sidePaneMode: PropTypes.string,
       history: PropTypes.array,
     }
-
+    static muiName = 'Drawer'
     render() {
       let histContents = []
       if (this.props.history.length) {
@@ -35,29 +40,33 @@ export class HistoryPaneUnconnected extends React.Component {
         histContents.push(<div className="no-history" key="history_empty">No History</div>)
       }
       return (
-        <Drawer
-          width={600}
-          docked={false}
-          open={this.props.sidePaneMode === 'history'}
-          openSecondary
-          overlayStyle={{ backgroundColor: 'none' }}
-          onRequestChange={() => { tasks.toggleHistoryPane.callback() }}
-        >
-          <ToolbarGroup id="notebook-view-mode-controls" className="mode-buttons" style={{ float: 'left' }}>
-            <NotebookTaskButton
-              tooltip="Close"
-              task={tasks.toggleHistoryPane}
-              style={{ color: '#fafafa', margin: '5px' }}
-            >
-              <Icon>close</Icon>
+        <MuiThemeProvider theme={theme}>
 
-            </NotebookTaskButton>
+          <Drawer
+            classes={{ paperAnchorRight: 'side-pane' }}
+            variant="persistent"
+            anchor="right"
+            docked={false}
+            open={this.props.sidePaneMode === 'history'}
+            openSecondary
+            overlayStyle={{ backgroundColor: 'none' }}
+            onRequestChange={() => { tasks.toggleHistoryPane.callback() }}
+          >
+            <div className="pane-title">
+              <NotebookTaskButton
+                tooltip="Close"
+                task={tasks.toggleHistoryPane}
+                style={{ color: 'black', margin: '5px' }}
+              >
+                <Close />
+              </NotebookTaskButton>
+              <Typography variant="headline">History</Typography>
+            </div>
+            <NotebookMenuDivider />
+            <div className="history-cells"> {histContents} </div>
+          </Drawer>
+        </MuiThemeProvider>
 
-
-          </ToolbarGroup>
-          <h1 className="overlay-title">Execution History</h1>
-          <div className="history-cells"> {histContents} </div>
-        </Drawer>
       )
     }
 }

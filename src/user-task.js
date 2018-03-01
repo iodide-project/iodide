@@ -9,7 +9,7 @@ const TASK_ERRORS = {
 
 export { TASK_ERRORS }
 
-function preventDefault(e) {
+export function preventDefault(e) {
   if (e.preventDefault) {
     e.preventDefault()
   } else {

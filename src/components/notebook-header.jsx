@@ -4,10 +4,6 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import PresentationModeToolbar from './toolbar/presentation-mode-toolbar'
 import EditorModeToolbar from './toolbar/editor-mode-toolbar'
 
-
-import DeclaredVariablesPane from './toolbar/declared-variables-pane'
-import HistoryPane from './toolbar/history-pane'
-
 const theme = createMuiTheme({
   palette: {
     type: 'dark',
@@ -17,15 +13,14 @@ const theme = createMuiTheme({
 export default class NotebookHeader extends React.Component {
   render() {
     return (
-      <MuiThemeProvider theme={theme}>
-        <div className="notebook-header">
-          <a id="export-anchor" style={{ display: 'none' }} />
+      <div className="notebook-header">
+        <a id="export-anchor" style={{ display: 'none' }} />
+        <MuiThemeProvider theme={theme}>
           <EditorModeToolbar />
-          <PresentationModeToolbar />
-          <DeclaredVariablesPane />
-          <HistoryPane />
-        </div>
-      </MuiThemeProvider>
+        </MuiThemeProvider>
+        <PresentationModeToolbar />
+
+      </div>
     )
   }
 }

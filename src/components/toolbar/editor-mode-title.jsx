@@ -40,7 +40,7 @@ export class TitleUnconnected extends React.Component {
 
   render() {
     const elem = (
-      <div className="title-field" style={{ outline: '1px solid orange' }}>
+      <div className="title-field">
         <div className={`title-field-contents ${this.props.pageMode !== 'title-edit' ? 'unselected-title-field' : ''}`}>
           <Helmet title={this.getTitle()} />
           <input

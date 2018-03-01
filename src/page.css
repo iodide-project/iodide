@@ -325,18 +325,17 @@ div.dom-cell-error {
 /* header bar styles */
 
 div.editor-mode-controls {
-  width: 300px; outline: 1px solid green
+  width: 400px; 
 }
 
 div.view-controls {
   width: 400px;
   display:flex;
   align-items:center;
-  outline:1px solid red;
 }
 
 div.title-field {
-  width: calc( 100% - 400px - 300px );
+  width: calc( 100% - 400px - 400px );
 }
 
 div.title-field-contents {
@@ -461,7 +460,27 @@ div.last-saved {
 /************************************************/
 /* side pane styles */
 
-div.history-cell {
+.side-pane {
+  width:500px !important;
+  top: 64px !important;
+  border: none !important;
+  border-left: 2px solid lightgray !important;
+}
+
+.pane-title {
+  margin:5px;
+  display:flex;
+  align-items: center;
+}
+
+.pane-title .menu-button {
+  width: 32px;
+  height: 32px;
+  padding-bottom:0px
+}
+
+.pane-title .menu-button:hover {
+  outline: none;
 }
 
 div.history-cells {
