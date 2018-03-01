@@ -3,7 +3,6 @@
 import _ from 'lodash'
 import { newNotebook, blankState, newCell } from './state-prototypes'
 import htmlTemplate from './html-template'
-import { formatDateString } from './notebook-utils'
 
 const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource']
 
@@ -167,7 +166,9 @@ function stateFromJsmd(jsmdString) {
 }
 
 
-function stringifyStateToJsmd(state, exportAt) {
+function stringifyStateToJsmd(state, exportDatetimeString) {
+  // we pass in exportDatetimeString as a string to keep this function
+  // **functional** -- makes testing easier
   const defaultState = newNotebook()
   let defaultCellPrototype = defaultState.cells[0]
   // serialize cells. most of the work here is seeing if cell properties
@@ -198,7 +199,7 @@ ${cell.content}`
       metaSettings[setting] = state[setting]
     }
   }
-  metaSettings.exportAt = formatDateString(exportAt)
+  metaSettings.exportAt = exportDatetimeString
   let metaSettingsStr = JSON.stringify(metaSettings, undefined, 2)
   metaSettingsStr = metaSettingsStr === '{}' ? '' : `%% meta\n${metaSettingsStr}\n\n`
   return metaSettingsStr + cellsStr
@@ -211,7 +212,7 @@ function exportJsmdBundle(state) {
     APP_PATH_STRING: IODIDE_JS_PATH,
     CSS_PATH_STRING: IODIDE_CSS_PATH,
     APP_VERSION_STRING: IODIDE_VERSION,
-    JSMD: stringifyStateToJsmd(state, new Date()),
+    JSMD: stringifyStateToJsmd(state, new Date().toISOString()),
   })
 }
 
