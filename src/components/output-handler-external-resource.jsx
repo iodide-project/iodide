@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import CheckCircle from 'material-ui/svg-icons/action/check-circle'
-import ErrorCircle from 'material-ui/svg-icons/alert/error'
-import UnloadedCircle from 'material-ui/svg-icons/content/remove'
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+// import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+// import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import CheckCircle from 'material-ui-icons/CheckCircle'
+import ErrorCircle from 'material-ui-icons/Error'
+import UnloadedCircle from 'material-ui-icons/Remove'
 
 // this is merely a presentational component, and as such can be passed
 // all the data it needs.
@@ -40,7 +40,7 @@ export default class ExternalResourceOutput extends React.Component {
         ))
 
       if (d.status === undefined) statusIcon = <UnloadedCircle />
-      else statusIcon = (d.status === 'loaded' ? <CheckCircle color="lightblue" /> : <ErrorCircle color="firebrick" />)
+      else statusIcon = (d.status === 'loaded' ? <CheckCircle color="primary" /> : <ErrorCircle color="error" />)
 
       if (Object.prototype.hasOwnProperty.call(d, 'statusExplanation')) {
         statusExplanation = <div key={d.src} className="dependency-status-explanation">{d.statusExplanation}</div>
@@ -48,9 +48,7 @@ export default class ExternalResourceOutput extends React.Component {
       return (
         <div className="dependency-container" key={d.src}>
           <div className="dependency-row">
-            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-              {statusIcon}
-            </MuiThemeProvider>
+            {statusIcon}
             <div style={{ display: 'flex', flexWrap: 'wrap', lineHeight: '1.5em' }}>
               <div className="dependency-src"><a href={d.src} target="_blank">{source}</a></div>
               { introducedVariables }
