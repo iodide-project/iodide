@@ -10,7 +10,7 @@ import tasks from '../../task-definitions'
 export default class CellMenuSubsection extends React.Component {
   render() {
     return (
-      <NotebookMenuSubsection className="medium-menu" title="cell ...">
+      <NotebookMenuSubsection onClick={this.props.onClick} className="medium-menu" title="cell ...">
 
         <NotebookMenuItem key={tasks.moveCellUp.title} task={tasks.moveCellUp} />
         <NotebookMenuItem key={tasks.moveCellDown.title} task={tasks.moveCellDown} />

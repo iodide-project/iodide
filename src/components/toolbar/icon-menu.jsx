@@ -12,20 +12,20 @@ export default class NotebookIconMenu extends React.Component {
       anchorElement: null,
     }
     this.handleClick = this.handleClick.bind(this)
-    this.handleClose = this.handleClose.bind(this)
+    this.handleIconButtonClose = this.handleIconButtonClose.bind(this)
   }
   handleClick(event) {
     this.setState({ anchorElement: event.currentTarget })
   }
 
-  handleClose() {
+  handleIconButtonClose() {
     this.setState({ anchorElement: null })
   }
 
   render() {
     const { anchorElement } = this.state
     const children = React.Children.map(this.props.children, c =>
-      React.cloneElement(c, { onClick: this.handleClose }))
+      React.cloneElement(c, { onClick: this.handleIconButtonClose }))
     return (
       <IconButton
         aria-label="more"
@@ -39,7 +39,7 @@ export default class NotebookIconMenu extends React.Component {
           id="main-menu"
           anchorEl={this.state.anchorElement}
           open={Boolean(anchorElement)}
-          onClose={this.handleClose}
+          onClose={this.handleIconButtonClose}
           anchorReference="anchorPosition"
           anchorPosition={{ top: 62, left: 30 }}
         >

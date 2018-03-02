@@ -1,5 +1,4 @@
 import React from 'react'
-
 import MenuItem from 'material-ui/Menu/MenuItem'
 import { ListItemText } from 'material-ui/List';
 import Menu from 'material-ui/Menu'
@@ -29,8 +28,8 @@ export default class NotebookMenuSubsection extends React.Component {
         if (c === null || c === undefined) return undefined
         return React.cloneElement(c, {
           onClick: () => {
-            this.handleClose();
-            this.props.onClick()
+            this.handleClose()
+            if (this.props.onClick) this.props.onClick()
           },
         })
       },
