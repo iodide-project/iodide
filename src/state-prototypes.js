@@ -37,6 +37,14 @@ function newCellID(cells) {
 //   return { rowType, EXPLORE, REPORT }
 // }
 
+function nextOverflow(currentOverflow) {
+  return {
+    HIDDEN: 'VISIBLE',
+    VISIBLE: 'SCROLL',
+    SCROLL: 'HIDDEN',
+  }[currentOverflow]
+}
+
 function newCellRowSettings(cellType) {
   switch (cellType) {
     case 'javascript':
@@ -57,17 +65,19 @@ function newCellRowSettings(cellType) {
           output: rowOverflowEnum.VISIBLE,
         },
         REPORT: {
-          input: rowOverflowEnum.HIDDEN,
-          output: rowOverflowEnum.HIDDEN,
+          input: rowOverflowEnum.VISIBLE,
+          output: rowOverflowEnum.VISIBLE,
         },
       }
     case 'external dependencies':
       return {
         EXPLORE: {
           input: rowOverflowEnum.VISIBLE,
+          output: rowOverflowEnum.VISIBLE,
         },
         REPORT: {
           input: rowOverflowEnum.HIDDEN,
+          output: rowOverflowEnum.HIDDEN,
         },
       }
     case 'css':
@@ -143,4 +153,5 @@ export {
   blankState,
   newCell,
   rowOverflowEnum,
+  nextOverflow,
 }

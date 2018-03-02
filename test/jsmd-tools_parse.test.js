@@ -113,6 +113,9 @@ describe('jsmd parser test case 3', () => {
   it('all cells should have cellType==js', () => {
     expect(cells.map(c => c.cellType)).toEqual(expect.arrayContaining(['javascript']))
   })
+  it('all cells should have content=="foo"', () => {
+    expect(cells.map(c => c.content)).toEqual(expect.arrayContaining(['foo']))
+  })
 })
 
 
@@ -167,6 +170,9 @@ describe('jsmd parser test case 5', () => {
   it('cell 2 should have "rowSettings.REPORT.output"=="SCROLL"', () => {
     expect(cells[2].rowSettings.REPORT.input).toEqual('SCROLL_carrots')
   })
+  it('all cells should have content=="foo"', () => {
+    expect(cells.map(c => c.content)).toEqual(expect.arrayContaining(['foo']))
+  })
 })
 
 
@@ -198,7 +204,7 @@ describe('jsmd parser test case 6', () => {
 // test multiple cell settings
 jsmdTestCase = `
 %% js {"rowSettings.REPORT.input": "VALUE_1", "rowSettings.REPORT.output":"VALUE_2"}
-foo
+test cell
 `
 describe('jsmd parser test case 7, multiple cell settings', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
@@ -216,5 +222,55 @@ describe('jsmd parser test case 7, multiple cell settings', () => {
   })
   it('cell 0 should have "rowSettings.REPORT.output"=="VALUE_2"', () => {
     expect(cells[0].rowSettings.REPORT.output).toEqual('VALUE_2')
+  })
+  it('all cells should have content=="test cell"', () => {
+    expect(cells.map(c => c.content)).toEqual(expect.arrayContaining(['test cell']))
+  })
+})
+
+
+jsmdTestCase = `
+%% js
+
+
+foo
+foo
+foo
+
+
+foo
+
+
+
+
+foo
+
+
+
+
+`
+describe('jsmd parser test case 7, multi line cell content should parse ok', () => {
+  const jsmdParsed = parseJsmd(jsmdTestCase)
+  const state = stateFromJsmd(jsmdTestCase)
+  const { cells } = state
+  const { parseWarnings } = jsmdParsed
+  it('should have 1 cells', () => {
+    expect(cells.length).toEqual(1)
+  })
+  it('should have 0 parse warnings', () => {
+    expect(parseWarnings.length).toEqual(0)
+  })
+  it('multi line cell content should parse ok', () => {
+    expect(cells[0].content).toEqual(`foo
+foo
+foo
+
+
+foo
+
+
+
+
+foo`)
   })
 })
