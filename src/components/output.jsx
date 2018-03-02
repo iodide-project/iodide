@@ -132,7 +132,9 @@ const arrayHandler = {
     return (
       <div>
         <div className="data-set-info">{dataSetInfo}</div>
-        {values}
+        <div>
+          {values}
+        </div>
       </div>
     )
   },
