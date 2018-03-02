@@ -176,7 +176,6 @@ function newStateWithSelectedCellPropsAssigned(state, cellPropsToSet) {
 }
 
 function newStateWithRowOverflowSet(state, cellId, rowType, viewModeToSet, rowOverflow) {
-  console.log(cellId, rowType, viewModeToSet, rowOverflow)
   const cells = state.cells.slice()
   const cellIndex = cells.findIndex(c => c.id === cellId)
   const cell = cells[cellIndex]

@@ -186,7 +186,6 @@ describe('jsmd parser test case 6', () => {
   const state = stateFromJsmd(jsmdTestCase)
   const { cells } = state
   const { parseWarnings } = jsmdParsed
-  // console.log(parseWarnings)
   it('should have 1 cells (%% meta is not converted to a cell)', () => {
     expect(cells.length).toEqual(1)
   })

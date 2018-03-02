@@ -56,7 +56,6 @@ class CellRow extends React.Component {
   }
 
   render() {
-    console.log(`cell-row ${this.props.cellType} ${this.props.rowType} ${this.props.rowOverflow}`)
     return (
       <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
         <div className="status">
@@ -98,7 +97,6 @@ function mapStateToPropsCellRows(state, ownProps) {
   return {
     pageMode: state.mode,
     viewMode: state.viewMode,
-    cellType: cell.cellType,
     executionString,
     rowOverflow,
   }
