@@ -110,7 +110,7 @@ div#cells.presentation .collapse-button {
 }
 
 
-div#cells.presentation div.cell-row.COLLAPSED {
+div#cells.presentation div.cell-row.HIDDEN {
   display: none;
 }
 
@@ -169,7 +169,7 @@ div.markdown div.input div.main-component {
   outline: none;
 }
 
-div.COLLAPSED div.collapse-button {
+div.HIDDEN div.collapse-button {
   padding-top: 1px;
   padding-bottom: 2px;
   padding-left: 6px;
@@ -180,7 +180,7 @@ div.COLLAPSED div.collapse-button {
   margin-left: 24px;
 }
 
-div.COLLAPSED div.main-component {
+div.HIDDEN div.main-component {
   height: 18px;
   flex-shrink: 1;
   flex-basis: 0px;
@@ -189,15 +189,15 @@ div.COLLAPSED div.main-component {
   outline: none;
 }
 
-div.COLLAPSED div.input div.main-component {
+div.HIDDEN div.input div.main-component {
   outline: 1px solid #f1f1f1;
 }
 
-/*div.cell-row.SCROLLABLE div.main-component {
+/*div.cell-row.SCROLL div.main-component {
   overflow: auto;
 }*/
 
-div.cell-row.SCROLLABLE {
+div.cell-row.SCROLL {
   overflow: auto;
 }
 
@@ -236,19 +236,19 @@ div.CodeMirror-gutters {
   background: #fff;
 }
 
-div.EXPANDED div.main-component div.CodeMirror {
+div.VISIBLE div.main-component div.CodeMirror {
   height: auto
 }
 
-div.SCROLLABLE div.main-component div.CodeMirror {
+div.SCROLL div.main-component div.CodeMirror {
   height: auto;
 }
 
-div.SCROLLABLE div.main-component div.CodeMirror div.CodeMirror-scroll {
+div.SCROLL div.main-component div.CodeMirror div.CodeMirror-scroll {
   max-height: 300px;
 }
 
-div.SCROLLABLE.output .main-component {
+div.SCROLL.output .main-component {
   max-height: 300px;
   outline: 1px solid #ddd;
 }

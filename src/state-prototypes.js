@@ -1,85 +1,97 @@
+// This is a very simple enum-like class that will always return strings.
+// Returning strings is required to keep things simple+serializable in the redux store.
+// The only reason we wrap this in a little class it to expose the convenience
+// `contains` and `values`
+const StringEnum = class {
+  constructor(...vals) {
+    vals.forEach((v) => {
+      if (v === 'values' || v === 'contains') { throw Error(`disallowed enum name: ${v}`) }
+      this[v] = v
+    })
+    Object.freeze(this)
+  }
+  values() { return Object.keys(this) }
+  contains(key) { return Object.keys(this).indexOf(key) >= 0 }
+}
+
+const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
+// const rowTypeEnum = new StringEnum('input', 'output')
+// const cellTypeEnum = new StringEnum(
+// 'javascript', 'markdown', 'raw', 'css', 'external dependencies')
+// const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'presentation'
+// const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
+
 function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-// function newCellRow(collapseEditView, collapsePresentationView) {
-//   // these track the collapsed state of cell row
-//   // must be one of "HIDDEN", "SCROLL", "EXPAND"
-//   return { collapseEditView, collapsePresentationView }
-// }
+function nextOverflow(currentOverflow) {
+  return {
+    HIDDEN: 'VISIBLE',
+    VISIBLE: 'SCROLL',
+    SCROLL: 'HIDDEN',
+  }[currentOverflow]
+}
 
-// function newCellRows(cellType) {
-//   switch (cellType) {
-//     case 'javascript':
-//       return [
-//         newCellRow('EXPAND', 'HIDDEN'),
-//         newCellRow('EXPAND', 'HIDDEN'),
-//       ]
-//     case 'markdown':
-//       return [
-//         newCellRow('EXPAND', 'EXPAND'),
-//       ]
-//     case 'external dependencies':
-//       return [
-//         newCellRow('EXPAND', 'HIDDEN'),
-//         newCellRow('EXPAND', 'HIDDEN'),
-//       ]
-//     case 'css':
-//       return [
-//         newCellRow('EXPAND', 'HIDDEN'),
-//       ]
-//     case 'raw':
-//       return [
-//         newCellRow('EXPAND', 'HIDDEN'),
-//       ]
-//     default:
-//       throw Error(`Unsupported cellType: ${cellType}`)
-//   }
-// }
-
-function newCell(cells, cellType) {
-  // let outputCollapseDefault
-  // if (cellType=='dom' || cellType=='dom'){
-  //   outputCollapseDefault = 'COLLAPSED'
-  // } else {outputCollapseDefault = 'EXPANDED'}
-  let collapseEditViewInput
-  let collapseEditViewOutput
-  let collapsePresentationViewInput
-  let collapsePresentationViewOutput
+function newCellRowSettings(cellType) {
   switch (cellType) {
     case 'javascript':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'COLLAPSED'
-      collapseEditViewOutput = 'EXPANDED'
-      collapsePresentationViewOutput = 'COLLAPSED'
-      break
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+          output: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.HIDDEN,
+          output: rowOverflowEnum.HIDDEN,
+        },
+      }
     case 'markdown':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'EXPANDED'
-      collapseEditViewOutput = 'EXPANDED'
-      collapsePresentationViewOutput = 'EXPANDED'
-      break
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+          output: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.VISIBLE,
+          output: rowOverflowEnum.VISIBLE,
+        },
+      }
     case 'external dependencies':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'COLLAPSED'
-      collapseEditViewOutput = 'EXPANDED'
-      collapsePresentationViewOutput = 'COLLAPSED'
-      break
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+          output: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.HIDDEN,
+          output: rowOverflowEnum.HIDDEN,
+        },
+      }
     case 'css':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'COLLAPSED'
-      collapseEditViewOutput = undefined
-      collapsePresentationViewOutput = undefined
-      break
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.HIDDEN,
+        },
+      }
     case 'raw':
-      collapseEditViewInput = 'EXPANDED'
-      collapsePresentationViewInput = 'COLLAPSED'
-      collapseEditViewOutput = undefined
-      collapsePresentationViewOutput = undefined
-      break
+      return {
+        EXPLORE: {
+          input: rowOverflowEnum.VISIBLE,
+        },
+        REPORT: {
+          input: rowOverflowEnum.HIDDEN,
+        },
+      }
     default:
       throw Error(`Unsupported cellType: ${cellType}`)
   }
+}
+
+function newCell(cells, cellType) {
   return {
     content: '',
     id: newCellID(cells),
@@ -92,13 +104,7 @@ function newCell(cells, cellType) {
     // evaluationOld set to true if the content of the editor changes from whatever
     // produced the most recent output value
     evaluationOld: true,
-    // these track the collapsed state of input and outputs
-    // must be one of "COLLAPSED" "SCROLLABLE" "EXPANDED"
-    collapseEditViewInput,
-    collapseEditViewOutput,
-    collapsePresentationViewInput,
-    collapsePresentationViewOutput,
-    // rowState: newCellRows(cellType),
+    rowSettings: newCellRowSettings(cellType),
   }
 }
 
@@ -134,4 +140,6 @@ export {
   newNotebook,
   blankState,
   newCell,
+  rowOverflowEnum,
+  nextOverflow,
 }

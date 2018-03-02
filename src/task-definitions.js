@@ -328,7 +328,6 @@ function jsonOrJsmdParse(string) {
   let nextState
   try {
     nextState = JSON.parse(string)
-    console.log()
     console.log(`"${nextState.title}"" is currently saved in localStorage as JSON.
   --- Saving as JSON is deprecated!!! ---
 Please take a minute open any saved notebooks you care about and resave them with ctrl+s.

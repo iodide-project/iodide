@@ -75,12 +75,13 @@ const actions = {
       type: 'RUN_ALL_CELLS',
     }
   },
-  setCellCollapsedState(viewMode, rowType, collapsedState) {
+  setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId) {
     return {
-      type: 'SET_CELL_COLLAPSED_STATE',
+      type: 'SET_CELL_ROW_COLLAPSE_STATE',
       viewMode,
       rowType,
-      collapsedState,
+      rowOverflow,
+      cellId,
     }
   },
   markCellNotRendered() {
