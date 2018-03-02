@@ -1,5 +1,4 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
 import MenuItem from 'material-ui/Menu/MenuItem'
 import { ListItemText } from 'material-ui/List';
 import Menu from 'material-ui/Menu'
