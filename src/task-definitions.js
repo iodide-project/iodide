@@ -341,7 +341,9 @@ This will update them to jsmd.
 }
 
 export function getLocalStorageNotebook(name) {
-  let { lastSaved } = jsonOrJsmdParse(localStorage[name])
+  const localStorageEntry = localStorage.getItem(name)
+  if (localStorageEntry == null) return undefined
+  let { lastSaved } = jsonOrJsmdParse(localStorageEntry)
   lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
   return new UserTask({
     title: name,

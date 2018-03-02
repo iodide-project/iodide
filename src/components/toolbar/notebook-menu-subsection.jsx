@@ -25,7 +25,15 @@ export default class NotebookMenuSubsection extends React.Component {
     const { anchorElement } = this.state
     const children = React.Children.map(
       this.props.children,
-      c => React.cloneElement(c, { onClick: () => { this.handleClose(); this.props.onClick() } }),
+      (c) => {
+        if (c === null || c === undefined) return undefined
+        return React.cloneElement(c, {
+          onClick: () => {
+            this.handleClose();
+            this.props.onClick()
+          },
+        })
+      },
     )
     return (
       <MenuItem
