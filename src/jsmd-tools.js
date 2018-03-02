@@ -73,6 +73,7 @@ function parseCellChunk(chunkType, content, settings, str, chunkNum, parseWarnin
   }
 
   const cell = newCell([{ id: chunkNum }], cellType)
+  cell.content = content
   // make sure that only valid cell settings are kept
   Object.keys(settings).forEach((path) => {
     if (_.includes(jsmdValidCellSettingPaths, path)) {

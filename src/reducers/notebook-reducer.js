@@ -67,7 +67,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'SAVE_NOTEBOOK': {
       let lastSaved
       if (!action.autosave) {
-        lastSaved = new Date()
+        lastSaved = (new Date()).toISOString()
       } else {
         ({ lastSaved } = state)
       }
@@ -95,7 +95,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       clearUserDefinedVars(state.userDefinedVariables)
       try {
         nextState = JSON.parse(window.localStorage.getItem(action.title))
-        console.log()
         console.log(`"${nextState.title}" is currently saved in localStorage as JSON.
   --- Saving as JSON is deprecated!!! ---
 Please take a minute open any saved notebooks you care about and resave them with ctrl+s.

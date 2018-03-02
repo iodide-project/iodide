@@ -9,7 +9,7 @@ import { moveCell, scrollToCellIfNeeded,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
-  newStateWithRowPropsSet,
+  newStateWithRowOverflowSet,
 } from './cell-reducer-utils'
 
 
@@ -97,14 +97,14 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'CHANGE_CELL_TYPE': {
       // create a newCell of the given type to get the defaults that
       // will need to be updated for the new cell type
-      const { rows } = newCell(state.cells, action.cellType)
+      const { rowSettings } = newCell(state.cells, action.cellType)
       return newStateWithSelectedCellPropsAssigned(
         state,
         {
           cellType: action.cellType,
           value: undefined,
           rendered: false,
-          rows,
+          rowSettings,
         },
       )
     }
@@ -112,7 +112,7 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'SET_CELL_ROW_COLLAPSE_STATE': {
       let { cellId } = action
       if (cellId === undefined) { cellId = getSelectedCellId(state) }
-      return newStateWithRowPropsSet(
+      return newStateWithRowOverflowSet(
         state,
         cellId,
         action.rowType,

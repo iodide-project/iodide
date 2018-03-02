@@ -5,14 +5,14 @@ import PropTypes from 'prop-types';
 
 import { getCellById } from '../notebook-utils'
 import actions from '../actions'
-import { rowOverflowEnum } from '../state-prototypes'
+import { rowOverflowEnum, nextOverflow } from '../state-prototypes'
 
 class CellRow extends React.Component {
   static propTypes = {
     executionString: PropTypes.string,
     pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    rowOverflow: PropTypes.instanceOf(rowOverflowEnum),
+    rowOverflow: PropTypes.oneOf(rowOverflowEnum.values()),
     rowType: PropTypes.string,
     actions: PropTypes.shape({
       setCellRowCollapsedState: PropTypes.func.isRequired,
@@ -50,14 +50,14 @@ class CellRow extends React.Component {
       this.props.actions.setCellRowCollapsedState(
         'editor',
         this.props.rowType,
-        this.props.rowOverflow.nextOverflow,
+        nextOverflow(this.props.rowOverflow),
       )
     }
   }
 
   render() {
     return (
-      <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow.cssName}`}>
+      <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
         <div className="status">
           {this.props.executionString}
         </div>
@@ -83,10 +83,10 @@ function mapStateToPropsCellRows(state, ownProps) {
   // this block can be deprecated if we move to enums for VIEWs
   switch (state.viewMode) {
     case 'editor':
-      view = 'REPORT'
+      view = 'EXPLORE'
       break
     case 'presentation':
-      view = 'EXPLORE'
+      view = 'REPORT'
       break
     default:
       throw Error(`Unsupported viewMode: ${state.viewMode}`)
@@ -94,11 +94,9 @@ function mapStateToPropsCellRows(state, ownProps) {
   const rowOverflow = cell.rowSettings[view][ownProps.rowType]
   const executionString = (ownProps.rowType === 'input'
     && cell.cellType === 'javascript') ? `[${cell.executionStatus}]` : ''
-
   return {
     pageMode: state.mode,
     viewMode: state.viewMode,
-    cellType: cell.cellType,
     executionString,
     rowOverflow,
   }
