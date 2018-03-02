@@ -1,9 +1,3 @@
-// class appView extends Enum {}
-// appView.initEnum(['EXPLORE', 'REPORT'])
-
-// class appMode extends Enum {}
-// appMode.initEnum(['COMMAND', 'EDIT', 'TITLE', 'MENU'])
-
 // This is a very simple enum-like class that will always return strings.
 // Returning strings is required to keep things simple+serializable in the redux store.
 // The only reason we wrap this in a little class it to expose the convenience
@@ -30,12 +24,6 @@ const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
 function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
-
-// function newCellRow(rowType, EXPLORE, REPORT) {
-//   // these track the collapsed state of cell row in the two views
-//   // must be one of "HIDDEN", "SCROLL", "VISIBLE"
-//   return { rowType, EXPLORE, REPORT }
-// }
 
 function nextOverflow(currentOverflow) {
   return {
