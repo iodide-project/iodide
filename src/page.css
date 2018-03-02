@@ -486,11 +486,16 @@ div.last-saved {
 
 div.history-cells {
   padding-left: 20px;
-  padding-right: 20px
+  padding-right: 20px;
 }
 
 div.history-cells .CodeMirror {
   height: auto;
+}
+
+pre.history-item-code {
+  overflow:scroll;
+  padding:3px;
 }
 
 div.history-content {

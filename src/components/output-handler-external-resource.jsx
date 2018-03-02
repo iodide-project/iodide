@@ -40,7 +40,7 @@ export default class ExternalResourceOutput extends React.Component {
         ))
 
       if (d.status === undefined) statusIcon = <UnloadedCircle />
-      else statusIcon = (d.status === 'loaded' ? <CheckCircle color="lightblue" /> : <ErrorCircle color="firebrick" />)
+      else statusIcon = (d.status === 'loaded' ? <CheckCircle color="primary" /> : <ErrorCircle color="error" />)
 
       if (Object.prototype.hasOwnProperty.call(d, 'statusExplanation')) {
         statusExplanation = <div key={d.src} className="dependency-status-explanation">{d.statusExplanation}</div>

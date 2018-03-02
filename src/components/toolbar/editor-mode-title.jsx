@@ -49,7 +49,7 @@ export class TitleUnconnected extends React.Component {
             value={this.props.title || ''}
             placeholder="new notebook"
             onChange={(evt) => {
-              tasks.changeMode.callback('title-menu');
+              tasks.changeMode.callback('title-edit');
               tasks.changeTitle.callback(evt.target.value)
             }}
           />
