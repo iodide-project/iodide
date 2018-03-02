@@ -9,7 +9,7 @@ const TASK_ERRORS = {
 
 export { TASK_ERRORS }
 
-function preventDefault(e) {
+export function preventDefault(e) {
   if (e.preventDefault) {
     e.preventDefault()
   } else {
@@ -56,6 +56,11 @@ export default class UserTask {
 
   get keybindings() {
     return this.args.keybindings
+  }
+
+  get secondaryText() {
+    // primarily things that go in keybinding spot, like "last saved" info
+    return this.args.secondaryText
   }
 
   hasKeybinding() {

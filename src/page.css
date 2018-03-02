@@ -324,8 +324,18 @@ div.dom-cell-error {
 /************************************************/
 /* header bar styles */
 
+div.editor-mode-controls {
+  width: 400px; 
+}
+
+div.view-controls {
+  width: 400px;
+  display:flex;
+  align-items:center;
+}
+
 div.title-field {
-  width: 100%;
+  width: calc( 100% - 400px - 400px );
 }
 
 div.title-field-contents {
@@ -450,16 +460,42 @@ div.last-saved {
 /************************************************/
 /* side pane styles */
 
-div.history-cell {
+.side-pane {
+  width:575px !important;
+  top: 64px !important;
+  border: none !important;
+  border-left: 2px solid lightgray !important;
+}
+
+.pane-title {
+  margin:5px;
+  margin-right:0px;
+  display:flex;
+  align-items: center;
+}
+
+.pane-title .menu-button {
+  width: 32px;
+  height: 32px;
+  padding-bottom:0px
+}
+
+.pane-title .menu-button:hover {
+  outline: none;
 }
 
 div.history-cells {
   padding-left: 20px;
-  padding-right: 20px
+  padding-right: 20px;
 }
 
 div.history-cells .CodeMirror {
   height: auto;
+}
+
+pre.history-item-code {
+  overflow:scroll;
+  padding:3px;
 }
 
 div.history-content {
@@ -501,7 +537,6 @@ i.close-side-pane:hover {
 }
 
 div.declared-variables {
-  width: 100%;
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 10px;
@@ -535,10 +570,28 @@ table tr:nth-child(2n) {
 	width:292px !important
 } */
 
+#main-menu h3 {font-size:13px}
+
 .medium-menu {
   display: flex !important;
   justify-content: space-between;
   flex-flow: row wrap;
+  max-height:32px !important; 
+}
+
+.main-menu-item {
+  max-height:32px !important;
+  line-height:32px !important;
+}
+
+.primary-menu-item {
+}
+
+.secondary-menu-item {
+
+  text-align:right;
+  padding:0px !important;
+  padding-left:16px !important;
 
 }
 
@@ -551,19 +604,19 @@ table tr:nth-child(2n) {
 
 .medium-menu div div div:first-child {
   order: 1;
-  width: 60px;
+  width: 20px;
   justify-content: flex-end;
   font-size: 12px;
 
   display: block;
 }
 
-.medium-menu div div div:nth-child(2) {
+/* .medium-menu div div div:nth-child(2) {
   float: initial !important;
-  width: 145px;
+  width: 225px;
   overflow: hidden;
   order: 0;
-}
+} */
 
 .large-menu {
   display: flex !important;
@@ -579,20 +632,20 @@ table tr:nth-child(2n) {
   flex-flow: row wrap;
 }
 
-.large-menu div div div:first-child {
+/* .large-menu div div div:first-child {
   order: 1;
-  width: 120px;
+  width: 250px;
   justify-content: flex-end;
   font-size: 12px;
   display: block;
-}
+} */
 
-.large-menu div div div:nth-child(2) {
+/* .large-menu div div div:nth-child(2) {
   float: initial !important;
   width: 280px;
   text-overflow: ellipsis;
   order: 0;
-}
+} */
 
 .main-bar {
   background-color: black

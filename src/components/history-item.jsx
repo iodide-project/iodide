@@ -3,7 +3,7 @@ import React from 'react'
 import CodeMirror from '@skidding/react-codemirror'
 import PropTypes from 'prop-types';
 
-class HistoryItem extends React.Component {
+export default class HistoryItem extends React.Component {
   static propTypes = {
     cell: PropTypes.shape({
       // id: PropTypes.number.isRequired,
@@ -40,6 +40,3 @@ class HistoryItem extends React.Component {
     )
   }
 }
-
-
-export { HistoryItem }

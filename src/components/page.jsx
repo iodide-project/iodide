@@ -10,7 +10,7 @@ import CSSCell from './cell-type-css'
 import JsCell from './cell-type-javascript'
 import MarkdownCell from './cell-type-markdown'
 
-import { NotebookHeader } from './notebook-header'
+import NotebookHeader from './notebook-header'
 
 import settings from '../settings'
 import keyBinding from '../keybindings'
