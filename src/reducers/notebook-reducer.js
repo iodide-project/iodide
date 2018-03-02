@@ -67,7 +67,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'SAVE_NOTEBOOK': {
       let lastSaved
       if (!action.autosave) {
-        lastSaved = new Date()
+        lastSaved = (new Date()).toISOString()
       } else {
         ({ lastSaved } = state)
       }

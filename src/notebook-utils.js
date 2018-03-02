@@ -12,6 +12,9 @@ function viewModeIsPresentation() {
   return store.getState().viewMode === 'presentation'
 }
 
+function getCells() {
+  return store.getState().cells
+}
 
 function getCellBelowSelectedId() {
   const { cells } = store.getState()
@@ -73,6 +76,7 @@ function formatDateString(d) {
 }
 
 export {
+  getCells,
   prettyDate,
   formatDateString,
   getCellById,

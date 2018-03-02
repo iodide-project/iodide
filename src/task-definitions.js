@@ -1,10 +1,13 @@
 import UserTask from './user-task'
+import ExternalLinkTask from './external-link-task'
 import { store } from './store'
 import actions from './actions'
 import { isCommandMode,
   viewModeIsEditor,
+  getCells,
   getCellBelowSelectedId,
-  getCellAboveSelectedId } from './notebook-utils'
+  getCellAboveSelectedId, prettyDate, formatDateString } from './notebook-utils'
+import { stateFromJsmd } from './jsmd-tools'
 
 const dispatcher = {}
 for (const action in actions) {
@@ -37,6 +40,31 @@ tasks.evaluateCell = new UserTask({
   callback() {
     dispatcher.changeMode('command')
     dispatcher.evaluateCell()
+  },
+})
+
+tasks.evaluateAllCells = new UserTask({
+  title: 'Evaluate All Cells',
+  menuTitle: 'evaluate all cells',
+  callback() {
+    const cells = getCells()
+    cells.forEach((cell) => {
+      if (cell.cellType === 'markdown' ||
+          cell.cellType === 'dom') {
+        dispatcher.evaluateCell(cell.id)
+      }
+    })
+    window.setTimeout(
+      () => {
+        cells.forEach((cell) => {
+          if (cell.cellType !== 'markdown' &&
+              cell.cellType !== 'dom') {
+            dispatcher.evaluateCell(cell.id)
+          }
+        })
+      },
+      42, // wait a few milliseconds to let React DOM updates flush
+    )
   },
 })
 
@@ -137,6 +165,7 @@ tasks.deleteCell = new UserTask({
 
 tasks.changeToJavascriptCell = new UserTask({
   title: 'Change to Javascript',
+  menuTitle: 'Javascript',
   keybindings: ['j'],
   displayKeybinding: 'J',
   keybindingPrecondition: isCommandMode,
@@ -147,6 +176,7 @@ tasks.changeToJavascriptCell = new UserTask({
 
 tasks.changeToMarkdownCell = new UserTask({
   title: 'Change to Markdown',
+  menuTitle: 'Markdown',
   keybindings: ['m'],
   displayKeybinding: 'M',
   keybindingPrecondition: isCommandMode,
@@ -157,6 +187,7 @@ tasks.changeToMarkdownCell = new UserTask({
 
 tasks.changeToExternalResourceCell = new UserTask({
   title: 'Change to External Resource',
+  menuTitle: 'External Resource',
   keybindings: ['e'],
   displayKeybinding: 'E',
   keybindingPrecondition: isCommandMode,
@@ -167,6 +198,7 @@ tasks.changeToExternalResourceCell = new UserTask({
 
 tasks.changeToRawCell = new UserTask({
   title: 'Change to Raw',
+  menuTitle: 'Raw',
   keybindings: ['r'],
   displayKeybinding: 'R',
   keybindingPrecondition: isCommandMode,
@@ -175,11 +207,21 @@ tasks.changeToRawCell = new UserTask({
 
 tasks.changeToCSSCell = new UserTask({
   title: 'Change to CSS',
+  menuTitle: 'CSS',
   keybindings: ['c'],
   displayKeybinding: 'C',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.changeCellType('css') },
+})
 
+tasks.changeMode = new UserTask({
+  title: 'Change Mode',
+  callback(mode) { dispatcher.changeMode(mode) },
+})
+
+tasks.changeToMenuMode = new UserTask({
+  title: 'Change to Menu Mode',
+  callback() { dispatcher.changeMode('title-edit') },
 })
 
 tasks.changeToEditMode = new UserTask({
@@ -196,6 +238,17 @@ tasks.changeToCommandMode = new UserTask({
   keybindings: ['esc'],
   preventDefaultKeybinding: true,
   callback() { dispatcher.changeMode('command') },
+})
+
+tasks.changeTitle = new UserTask({
+  title: 'Change Title',
+  callback(t) { dispatcher.changePageTitle(t) },
+})
+
+tasks.createNewNotebook = new UserTask({
+  title: 'New Notebook',
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.newNotebook() },
 })
 
 tasks.saveNotebook = new UserTask({
@@ -215,9 +268,9 @@ tasks.exportNotebook = new UserTask({
 
 tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
+  menuTitle: 'Declared Variables',
   keybindings: ['ctrl+d', 'meta+d'],
   displayKeybinding: commandKey('D'),
-  keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
   callback() {
     if (store.getState().sidePaneMode !== 'declared variables') {
@@ -226,11 +279,11 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
       dispatcher.changeSidePaneMode()
     }
   },
-
 })
 
 tasks.toggleHistoryPane = new UserTask({
   title: 'Toggle the History Pane',
+  menuTitle: 'History',
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: commandKey('H'),
   preventDefaultKeybinding: true,
@@ -243,5 +296,62 @@ tasks.toggleHistoryPane = new UserTask({
     }
   },
 })
+
+tasks.setViewModeToEditor = new UserTask({
+  title: 'Set View Mode to Editor',
+  callback() {
+    dispatcher.setViewMode('editor')
+  },
+})
+
+tasks.setViewModeToPresentation = new UserTask({
+  title: 'Set View Mode to Presentation',
+  callback() {
+    dispatcher.setViewMode('presentation')
+  },
+})
+
+tasks.fileAnIssue = new ExternalLinkTask({
+  title: 'File an Issue',
+  menuTitle: 'File an Issue ...',
+  url: 'http://github.com/iodide-project/iodide/issues/new',
+})
+
+tasks.seeAllExamples = new ExternalLinkTask({
+  title: 'See All Examples',
+  menuTitle: 'See All Examples ...',
+  url: 'http://github.com/iodide-project/iodide-examples/',
+})
+
+
+function jsonOrJsmdParse(string) {
+  let nextState
+  try {
+    nextState = JSON.parse(string)
+    console.log()
+    console.log(`"${nextState.title}"" is currently saved in localStorage as JSON.
+  --- Saving as JSON is deprecated!!! ---
+Please take a minute open any saved notebooks you care about and resave them with ctrl+s.
+This will update them to jsmd.
+`)
+  } catch (e) {
+    nextState = stateFromJsmd(string)
+  }
+  return nextState
+}
+
+export function getLocalStorageNotebook(name) {
+  const localStorageEntry = localStorage.getItem(name)
+  if (localStorageEntry == null) return undefined
+  let { lastSaved } = jsonOrJsmdParse(localStorageEntry)
+  lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
+  return new UserTask({
+    title: name,
+    secondaryText: lastSaved,
+    callback() {
+      dispatcher.loadNotebook(name)
+    },
+  })
+}
 
 export default tasks
