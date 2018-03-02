@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@skidding/react-codemirror": "^1.0.0",
+    "ajv": "^6.2.0",
     "codemirror": "^5.34.0",
     "codemirror-no-newlines": "^1.0.2",
     "deep-equal": "^1.0.1",
@@ -43,6 +44,7 @@
     "react-redux": "^5.0.6",
     "react-table": "^6.6.0",
     "redux": "^3.7.2",
+    "redux-json-schema": "^1.0.0",
     "redux-logger": "^3.0.6"
   },
   "devDependencies": {
