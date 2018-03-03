@@ -11,7 +11,6 @@ export default class CellMenuSubsection extends React.Component {
   render() {
     return (
       <NotebookMenuSubsection onClick={this.props.onClick} className="medium-menu" title="cell ...">
-
         <NotebookMenuItem key={tasks.moveCellUp.title} task={tasks.moveCellUp} />
         <NotebookMenuItem key={tasks.moveCellDown.title} task={tasks.moveCellDown} />
         <NotebookMenuItem key={tasks.addCellBelow.title} task={tasks.addCellBelow} />
