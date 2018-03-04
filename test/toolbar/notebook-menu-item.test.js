@@ -41,3 +41,23 @@ describe('NotebookMenuItem children', () => {
       .props().primary).toBe('neat')
   })
 })
+
+describe('NotebookMenuItem fires callback from task when clicked', () => {
+  let sentinel = false
+  const nb = shallow(<NotebookMenuItem task={new UserTask({ title: 'ok', callback: () => { sentinel = true } })} />)
+  it('should upon click change the sentinel', () => {
+    nb.simulate('click')
+    expect(sentinel).toBe(true)
+  })
+})
+
+describe('NotebookMenuItem fires all additional onClick events', () => {
+  let sentinel = false
+  let innerSentinel = false
+  const nestedNB = shallow(<NotebookMenuItem onClick={() => { sentinel = true }} task={new UserTask({ title: 'ok', callback: () => { innerSentinel = true } })} />)
+  it('should also fire the onClick event as well when NotebookMenuItem is clicked', () => {
+    nestedNB.simulate('click')
+    expect(sentinel).toBe(true)
+    expect(innerSentinel).toBe(true)
+  })
+})
