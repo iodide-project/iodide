@@ -44,7 +44,6 @@
     "react-redux": "^5.0.6",
     "react-table": "^6.6.0",
     "redux": "^3.7.2",
-    "redux-json-schema": "^1.0.0",
     "redux-logger": "^3.0.6"
   },
   "devDependencies": {
