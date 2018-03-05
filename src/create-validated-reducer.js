@@ -6,7 +6,6 @@ import Ajv from 'ajv'
 class SchemaValidationError extends Error {
   constructor(message) {
     super(message)
-    console.log(message)
     this.message = message
     this.name = 'SchemaValidationError'
   }
@@ -14,8 +13,6 @@ class SchemaValidationError extends Error {
 
 const createValidatedReducer =
   (reducer, schema, options) => {
-    // console.log('reducer', reducer)
-    // console.log('schema', schema)
     const ajv = new Ajv(options)
     const validate = ajv.compile(schema)
 
@@ -24,7 +21,7 @@ const createValidatedReducer =
 
       if (!validate(futureState)) {
         console.warn(validate.errors)
-        // throw new SchemaValidationError(ajv.errorsText(validate.errors, { verbose: true }))
+        throw new SchemaValidationError(ajv.errorsText(validate.errors, { verbose: true }))
       }
 
       return futureState
