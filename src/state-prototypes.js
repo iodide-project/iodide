@@ -16,10 +16,68 @@ const StringEnum = class {
 
 const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
 // const rowTypeEnum = new StringEnum('input', 'output')
-// const cellTypeEnum = new StringEnum(
-// 'javascript', 'markdown', 'raw', 'css', 'external dependencies')
+const cellTypeEnum = new StringEnum(
+  'javascript',
+  'markdown',
+  'raw',
+  'css',
+  'external dependencies',
+)
 // const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'presentation'
 // const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
+
+
+const cellSchema = {
+  type: 'object',
+  properties: {
+    content: { type: 'string' }, // change to string with default '' or 'untitled'
+    id: { type: 'integer', minimum: 0 },
+    cellType: {
+      type: 'string',
+      enum: cellTypeEnum.values(),
+    },
+    value: {}, // empty schema, `value` can be anything
+    rendered: { type: 'boolean' },
+    selected: { type: 'boolean' },
+    executionStatus: { type: 'string' },
+    evalStatus: {}, // FIXME change to string ONLY
+    rowSettings: { type: 'object' },
+  },
+  additionalProperties: false,
+}
+// cellSchema.required = Object.keys(cellSchema.properties)
+// cellSchema.minProperties = Object.keys(cellSchema.properties).length
+
+const stateSchema = {
+  type: 'object',
+  properties: {
+    title: {}, // FIXME change to string ONLY with default '' or 'untitled'
+    cells: {
+      type: 'array',
+      items: cellSchema,
+    },
+    mode: {
+      type: 'string',
+      enum: ['command', 'edit', 'title-edit'],
+    },
+    viewMode: {
+      type: 'string',
+      enum: ['editor', 'presentation'],
+    },
+    history: {
+      type: 'array',
+    },
+    userDefinedVariables: { type: 'object' },
+    lastSaved: {}, // FIXME change to string ONLY with default 'never'
+    sidePaneMode: {}, // FIXME change to string ONLY
+    externalDependencies: { type: 'array' },
+    executionNumber: { type: 'integer', minimum: 0 },
+  },
+  additionalProperties: false,
+}
+// stateSchema.required = Object.keys(stateSchema.properties)
+// stateSchema.minProperties = Object.keys(stateSchema.properties).length
+
 
 function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
@@ -101,9 +159,6 @@ function newCell(cells, cellType) {
     selected: false,
     executionStatus: ' ',
     evalStatus: undefined,
-    // evaluationOld set to true if the content of the editor changes from whatever
-    // produced the most recent output value
-    evaluationOld: true,
     rowSettings: newCellRowSettings(cellType),
   }
 }
@@ -113,7 +168,6 @@ function blankState() {
     title: undefined,
     cells: [],
     userDefinedVariables: {},
-    lastValue: undefined,
     lastSaved: undefined,
     mode: 'command', // command, edit
     viewMode: 'editor', // editor, presentation
@@ -135,15 +189,6 @@ function newNotebook() {
   return initialState
 }
 
-
-const stateSchema = `
-{
-  "$id": "http://example.com/example.json",
-  "type": "object",
-  "definitions": {},
-  "$schema": "http://json-schema.org/draft-07/schema#"
-}
-`
 
 export {
   newNotebook,

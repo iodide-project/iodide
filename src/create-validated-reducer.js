@@ -1,4 +1,4 @@
-// from https://github.com/Prismatik/redux-json-schema
+// adapted from https://github.com/Prismatik/redux-json-schema
 // but npm wouldn't load the package correctly. No idea why.
 // MIT licensed
 import Ajv from 'ajv'
@@ -6,6 +6,7 @@ import Ajv from 'ajv'
 class SchemaValidationError extends Error {
   constructor(message) {
     super(message)
+    console.log(message)
     this.message = message
     this.name = 'SchemaValidationError'
   }
@@ -13,16 +14,17 @@ class SchemaValidationError extends Error {
 
 const createValidatedReducer =
   (reducer, schema, options) => {
+    // console.log('reducer', reducer)
+    // console.log('schema', schema)
     const ajv = new Ajv(options)
-    console.log('reducer', reducer)
-    console.log('schema', schema)
-    const validate = (typeof schema === 'string') ? ajv.getSchema(schema) : ajv.compile(schema)
+    const validate = ajv.compile(schema)
 
     const validatedReducer = (state, action) => {
       const futureState = reducer(state, action)
 
       if (!validate(futureState)) {
-        throw new SchemaValidationError(ajv.errorsText(validate.errors))
+        console.warn(validate.errors)
+        // throw new SchemaValidationError(ajv.errorsText(validate.errors, { verbose: true }))
       }
 
       return futureState

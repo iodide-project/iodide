@@ -6,7 +6,6 @@ import reducer from './reducers/reducer'
 import { initializeNotebook } from './initialize-notebook'
 import { stateSchema } from './state-prototypes'
 
-console.log('stateSchema', stateSchema)
 const store = createStore(
   createValidatedReducer(reducer, stateSchema),
   // reducer,
