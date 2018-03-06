@@ -44,6 +44,9 @@ the cell below allows you to load external scripts
 %% resource
 https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js
 
+%% css
+.text {text-align:center;}
+
 %% js
 // above this is a DOM cell, which we can also target
 spinCubeInTarget("#dom-cell-2")`
@@ -55,11 +58,11 @@ describe('jsmd parser Ex 1', () => {
   // const { parseWarnings } = jsmdParsed
 
   it('new cells should start with "\n%%" or "%%" at the start of the file. drop empty cells.', () => {
-    expect(cells.length).toEqual(6)
+    expect(cells.length).toEqual(7)
   })
   it('should have correct cell types', () => {
     expect(cells.map(c => c.cellType)).toEqual([
-      'markdown', 'javascript', 'raw', 'markdown', 'external dependencies', 'javascript',
+      'markdown', 'javascript', 'raw', 'markdown', 'external dependencies', 'css', 'javascript',
     ])
   })
   it('should have zero parse warnings', () => {

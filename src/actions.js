@@ -34,6 +34,11 @@ const actions = {
       type: 'NEW_NOTEBOOK',
     }
   },
+  clearVariables() {
+    return {
+      type: 'CLEAR_VARIABLES',
+    }
+  },
   changePageTitle(title) {
     return {
       type: 'CHANGE_PAGE_TITLE',

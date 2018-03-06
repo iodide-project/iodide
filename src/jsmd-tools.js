@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { newNotebook, blankState, newCell } from './state-prototypes'
 import htmlTemplate from './html-template'
 
-const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource']
+const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource', 'css']
 
 
 const jsmdCellTypeMap = new Map([
@@ -16,6 +16,7 @@ const jsmdCellTypeMap = new Map([
   ['resource', 'external dependencies'],
   ['dom', 'dom'],
   ['raw', 'raw'],
+  ['css', 'css'],
 ])
 
 const cellTypeToJsmdMap = new Map([
@@ -24,6 +25,7 @@ const cellTypeToJsmdMap = new Map([
   ['external dependencies', 'resource'],
   ['dom', 'dom'],
   ['raw', 'raw'],
+  ['css', 'css'],
 ])
 
 const jsmdValidNotebookSettings = [
