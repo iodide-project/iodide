@@ -663,11 +663,10 @@ table tr:nth-child(2n) {
   position: fixed;
   right: 20px;
   top: 10px;
+  z-index:100;
 }
 
 .presentation-header {
-  margin-bottom: 20px;
-  margin-top: 40px;
 }
 
 .presentation-title {
