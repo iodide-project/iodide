@@ -40,6 +40,7 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-helmet": "^5.2.0",
+    "react-inspector": "^2.2.2",
     "react-json-tree": "^0.10.9",
     "react-redux": "^5.0.6",
     "react-table": "^6.6.0",
