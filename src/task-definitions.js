@@ -266,6 +266,12 @@ tasks.exportNotebook = new UserTask({
   callback() { dispatcher.exportNotebook() },
 })
 
+tasks.clearVariables = new UserTask({
+  title: 'Clear Variables',
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.clearVariables() },
+})
+
 tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
   menuTitle: 'Declared Variables',

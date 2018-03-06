@@ -129,6 +129,13 @@ This will update them to jsmd.
       return nextState
     }
 
+    case 'CLEAR_VARIABLES': {
+      clearUserDefinedVars(state.userDefinedVariables)
+      nextState = Object.assign({}, state)
+      nextState.userDefinedVariables = {}
+      return nextState
+    }
+
     case 'CHANGE_PAGE_TITLE':
       return Object.assign({}, state, { title: action.title })
 
