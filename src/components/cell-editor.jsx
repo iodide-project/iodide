@@ -10,12 +10,14 @@ import markdown from 'codemirror/mode/markdown/markdown'
 import css from 'codemirror/mode/css/css'
 
 import matchbrackets from 'codemirror/addon/edit/matchbrackets'
+
 import closebrackets from 'codemirror/addon/edit/closebrackets'
 import autorefresh from 'codemirror/addon/display/autorefresh'
 import comment from 'codemirror/addon/comment/comment'
 import sublime from '../codemirror-keymap-sublime'
+import 'codemirror/addon/hint/show-hint'
+import 'codemirror/addon/hint/javascript-hint'
 /* eslint-enable */
-
 import { getCellById } from '../notebook-utils'
 import actions from '../actions'
 
@@ -93,6 +95,21 @@ class CellEditor extends React.Component {
     this.props.actions.updateInputContent(content)
   }
 
+  autoComplete = (cm) => {
+    const codeMirror = this.editor.getCodeMirrorInstance()
+    // hint options for specific plugin & general show-hint
+    // Other general hint config, like 'completeSingle' and 'completeOnSingleClick'
+    // should be specified here and will be honored
+    const hintOptions = {
+      disableKeywords: true,
+      completeSingle: false,
+      completeOnSingleClick: false,
+    }
+    // Reference the hint function imported here when including other hint addons
+    // or supply your own
+    codeMirror.showHint(cm, codeMirror.hint.javascript, hintOptions);
+  }
+
   render() {
     const editorOptions = Object.assign({
       mode: this.props.cellType,
@@ -103,6 +120,9 @@ class CellEditor extends React.Component {
       autoRefresh: true,
       lineNumbers: true,
       keyMap: 'sublime',
+      extraKeys: {
+        'Ctrl-Space': this.props.cellType === 'javascript' ? this.autoComplete : undefined,
+      },
       comment: this.props.cellType === 'javascript',
       readOnly: this.props.viewMode === 'presentation',
     }, this.props.editorOptions)
