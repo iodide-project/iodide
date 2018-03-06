@@ -24,7 +24,7 @@ export default class NotebookMenuItem extends React.Component {
         key={this.props.task.title}
         onClick={() => {
           this.props.task.callback()
-          this.props.onClick()
+          if (this.props.onClick) this.props.onClick()
           if (this.props.submenuOnClick) this.props.submenuOnClick()
           }}
       >

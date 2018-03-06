@@ -44,7 +44,7 @@ if (locallySaved.length) {
 export default class SavedNotebooksAndExamplesSubsection extends React.Component {
   render() {
     return (
-      <NotebookMenuSubsection onClick={this.props.onClick} title="notebooks ... " >
+      <NotebookMenuSubsection title="notebooks ... " {...this.props} >
         {autoSaveMenuItem ? <NotebookMenuHeader key="autosave" title="Auto-Saved" /> : undefined}
         {autoSaveMenuItem || undefined}
         {autoSaveMenuItem ? <NotebookMenuDivider key="autosave-divider" /> : undefined }

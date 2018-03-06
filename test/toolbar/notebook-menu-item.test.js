@@ -4,8 +4,8 @@ import { shallow } from 'enzyme'
 import MenuItem from 'material-ui/Menu/MenuItem'
 import { ListItemText } from 'material-ui/List'
 
-import NotebookMenuItem from '../src/components/toolbar/notebook-menu-item'
-import UserTask from '../src/user-task'
+import NotebookMenuItem from '../../src/components/toolbar/notebook-menu-item'
+import UserTask from '../../src/user-task'
 
 describe('NotebookMenuItem children', () => {
   let props
@@ -39,5 +39,25 @@ describe('NotebookMenuItem children', () => {
     const nb = shallow(<NotebookMenuItem task={new UserTask({ title: 'ok', callback: () => {}, secondaryText: 'neat' })} />)
     expect(nb.find(ListItemText).last()
       .props().primary).toBe('neat')
+  })
+})
+
+describe('NotebookMenuItem fires callback from task when clicked', () => {
+  let sentinel = false
+  const nb = shallow(<NotebookMenuItem task={new UserTask({ title: 'ok', callback: () => { sentinel = true } })} />)
+  it('should upon click change the sentinel', () => {
+    nb.simulate('click')
+    expect(sentinel).toBe(true)
+  })
+})
+
+describe('NotebookMenuItem fires all additional onClick events', () => {
+  let sentinel = false
+  let innerSentinel = false
+  const nestedNB = shallow(<NotebookMenuItem onClick={() => { sentinel = true }} task={new UserTask({ title: 'ok', callback: () => { innerSentinel = true } })} />)
+  it('should also fire the onClick event as well when NotebookMenuItem is clicked', () => {
+    nestedNB.simulate('click')
+    expect(sentinel).toBe(true)
+    expect(innerSentinel).toBe(true)
   })
 })
