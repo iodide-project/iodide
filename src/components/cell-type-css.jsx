@@ -11,7 +11,7 @@ import { getCellById } from '../notebook-utils'
 export class CSSCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
-    value: PropTypes.any.isRequired,
+    value: PropTypes.any,
     rendered: PropTypes.bool.isRequired,
   }
 
