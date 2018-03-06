@@ -21,9 +21,6 @@ const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
 // const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'presentation'
 // const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
 
-function newCellID(cells) {
-  return Math.max(-1, ...cells.map(c => c.id)) + 1
-}
 
 function nextOverflow(currentOverflow) {
   return {
@@ -91,10 +88,10 @@ function newCellRowSettings(cellType) {
   }
 }
 
-function newCell(cells, cellType) {
+function newCell(cellId, cellType) {
   return {
     content: '',
-    id: newCellID(cells),
+    id: cellId,
     cellType,
     value: undefined,
     rendered: false,
@@ -125,11 +122,19 @@ function blankState() {
   return initialState
 }
 
+function newCellID(cells) {
+  return Math.max(-1, ...cells.map(c => c.id)) + 1
+}
+
+function addNewCellToState(state, cellType) {
+  const nextCellId = newCellID(state.cells)
+  state.cells.push(newCell(nextCellId, cellType))
+  return state
+}
+
 function newNotebook() {
-  // initialize a blank notebook
-  const initialState = blankState()
-  // push a blank new cell into  into cells
-  initialState.cells.push(newCell(initialState.cells, 'javascript'))
+  // initialize a blank notebook and push a blank new cell into it
+  const initialState = addNewCellToState(blankState(), 'javascript')
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
   return initialState
@@ -142,4 +147,5 @@ export {
   newCell,
   rowOverflowEnum,
   nextOverflow,
+  addNewCellToState,
 }
