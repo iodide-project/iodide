@@ -3,7 +3,6 @@ import { shallow } from 'enzyme'
 
 import MenuItem from 'material-ui/Menu/MenuItem'
 import Menu from 'material-ui/Menu/Menu'
-import { ListItemText } from 'material-ui/List'
 
 import NotebookMenuSubsection from '../../src/components/toolbar/notebook-menu-subsection'
 import NotebookMenuItem from '../../src/components/toolbar/notebook-menu-item'
@@ -21,18 +20,23 @@ describe('A nested NotebookMenuSubsection', () => {
   // create a single nbmss with a single menu item in it.
   // test presence of nested menu item.
   // test click events for inner elment and propagation upward
-  let innerSentinel = false
-  let outerSentinel = false
-  const outerClick = () => { outerSentinel = true }
+  // let innerSentinel = false
+  // let outerSentinel = false
+  const outerClick = () => undefined /* outerSentinel = true */
   const nbSubsection = shallow((
     <NotebookMenuSubsection onClick={outerClick}>
-      <NotebookMenuItem task={new UserTask({ title: 'ok', callback: () => { console.log('wow!'); innerSentinel = true } })} />
+      <NotebookMenuItem task={new UserTask({
+        title: 'ok',
+        callback: () => { console.log('wow!'); /* innerSentinel = true }, */ },
+})}
+      />
     </NotebookMenuSubsection>
   ))
   it('should contain more than one NotebookMenuItem now', () => {
     expect(nbSubsection.find(NotebookMenuItem)).toHaveLength(1)
   })
-  // .simulate actually really struggles to simulate the click. We're not creating the right elements here.
+  // .simulate actually really struggles to simulate the click.
+  // We're not creating the right elements here.
   // it('should propagate the click events upward', () => {
   //   nbSubsection.simulate('click')
   //   nbSubsection.children().find(NotebookMenuItem).simulate('click')
