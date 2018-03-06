@@ -94,6 +94,8 @@ div.cell-container {
 }
 
 div#cells.presentation {
+  padding-top:0px;
+  padding-bottom:0px;
 }
 
 div#cells.presentation div.cell-container {
