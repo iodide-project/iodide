@@ -69,6 +69,7 @@ const stateSchema = {
     },
     userDefinedVariables: { type: 'object' },
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
+    lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
     externalDependencies: { type: 'array' },
     executionNumber: { type: 'integer', minimum: 0 },
