@@ -4,10 +4,6 @@ import { parseJsmd,
 } from './../src/jsmd-tools'
 import { newNotebook } from '../src/state-prototypes'
 
-
-// import { newNotebook, newCell } from '../src/state-prototypes'
-
-
 let jsmdTestCase = `%% meta
 {"title": "What a web notebook looks like",
 "viewMode": "editor",

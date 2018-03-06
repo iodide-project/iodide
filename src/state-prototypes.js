@@ -196,11 +196,13 @@ function newNotebook() {
 
 
 export {
+  newCell,
+  newCellID,
   newNotebook,
   blankState,
-  newCell,
-  rowOverflowEnum,
   nextOverflow,
   addNewCellToState,
+  // enums and schemas
+  rowOverflowEnum,
   stateSchema,
 }

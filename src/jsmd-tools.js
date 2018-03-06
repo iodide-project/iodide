@@ -74,7 +74,7 @@ function parseCellChunk(chunkType, content, settings, str, chunkNum, parseWarnin
     cellType = 'javascript'
   }
 
-  const cell = newCell([{ id: chunkNum }], cellType)
+  const cell = newCell(chunkNum, cellType)
   cell.content = content
   // make sure that only valid cell settings are kept
   Object.keys(settings).forEach((path) => {
@@ -179,7 +179,7 @@ function stateFromJsmd(jsmdString) {
     })
   // if only a meta cell exists, return a default JS cell
   if (initialState.cells.length === 0) {
-    initialState.cells.push(newCell(initialState.cells, 'javascript'))
+    initialState.cells.push(newCell(0, 'javascript'))
   }
   // set cell 0  to be the selected cell
   initialState.cells[0].selected = true
@@ -197,7 +197,7 @@ function stringifyStateToJsmd(state, exportDatetimeString) {
   // values for this cell type
   const cellsStr = state.cells.map((cell) => {
     const jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
-    const defaultCell = newCell(defaultState.cells, cell.cellType)
+    const defaultCell = newCell(0, cell.cellType)
     const cellSettings = getNonDefaultValuesForPaths(
       jsmdValidCellSettingPaths,
       cell,

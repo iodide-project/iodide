@@ -59,8 +59,8 @@ const notebookReducer = (state = newNotebook(), action) => {
       nextState = action.newState
       clearUserDefinedVars(state.userDefinedVariables)
       clearHistory(nextState)
-      cells = nextState.cells.map(cell =>
-        Object.assign(newCell(nextState.cells, cell.cellType), cell))
+      cells = nextState.cells.map((cell, i) =>
+        Object.assign(newCell(i, cell.cellType), cell))
       return Object.assign(blankState(), nextState, { cells })
     }
 
@@ -106,8 +106,8 @@ This will update them to jsmd.
       clearHistory(nextState)
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
-      cells = nextState.cells.map(cell =>
-        Object.assign(newCell(nextState.cells, cell.cellType), cell))
+      cells = nextState.cells.map((cell, i) =>
+        Object.assign(newCell(i, cell.cellType), cell))
       nextState = Object.assign(blankState(), nextState, { cells })
       return nextState
     }
