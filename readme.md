@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/iodide-project/iodide.svg?branch=master)](https://travis-ci.org/iodide-project/iodide)
 
 # The Iodide notebook
-## _"View source" for science_
+### _"View source" for science_
 
 _Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)!_
 
