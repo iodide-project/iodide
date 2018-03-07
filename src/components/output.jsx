@@ -158,6 +158,20 @@ const scalarHandler = {
 
 }
 
+const pythonHandler = {
+  shouldHandle: value => (
+    value.$$ !== undefined &&
+    value.$$.ptrType.name === 'Py*'),
+
+  /* eslint-disable */
+  render: value => (
+    <span className="array-output">
+      <span role="img" aria-label="py">🐍</span>
+      {pyodide.repr(value)}
+    </span>),
+  /* eslint-enable */
+}
+
 const defaultHandler = {
   shouldHandle: () => true,
 
@@ -199,6 +213,7 @@ const handlers = [
   arrayHandler,
   dateHandler,
   scalarHandler,
+  pythonHandler,
   defaultHandler,
 ]
 
