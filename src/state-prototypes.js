@@ -94,10 +94,12 @@ function newCellRowSettings(cellType) {
       return {
         EXPLORE: {
           input: rowOverflowEnum.VISIBLE,
+          sideeffect: rowOverflowEnum.VISIBLE,
           output: rowOverflowEnum.VISIBLE,
         },
         REPORT: {
           input: rowOverflowEnum.HIDDEN,
+          sideeffect: rowOverflowEnum.HIDDEN,
           output: rowOverflowEnum.HIDDEN,
         },
       }
