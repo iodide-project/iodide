@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/iodide-project/iodide.svg?branch=master)](https://travis-ci.org/iodide-project/iodide)
 
 # The Iodide notebook
-#### _"View source" for science_
+## _"View source" for science_
 
 _Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)!_
 
@@ -22,13 +22,17 @@ Luckily, that technology already exists: _the web browser_.
 ![](https://media.giphy.com/media/p3dqP6RwE82hBCe66y/giphy.gif)
 
 
-Iodide is modern, literate, and interactive programming environment that uses the strengths of the browser to let scientist work flexibly and collaboratively with minimal friction. With Iodide you can tell the story of your findings exactly how you want, leveraging the power of HTML+CSS to display your results in whatever way communicates them most effectively -- but still keeping the live, editable code only _one click away_. Because Iodide runs in the browser you already have, you can extend and modify the code without having to install any software, enabling you to collaborate frictionlessly.
+Iodide is a modern, literate, and interactive programming environment that uses the strengths of the browser to let scientist work flexibly and collaboratively with minimal friction. With Iodide you can tell the story of your findings exactly how you want, leveraging the power of HTML+CSS to display your results in whatever way communicates them most effectively -- but still keeping the live, editable code only _one click away_. Because Iodide runs in the browser you already have, you can extend and modify the code without having to install any software, enabling you to collaborate frictionlessly.
 
 And thanks to WebAssembly, working in the browser _does not_ mean that you have to work in Javascript. We're already working on getting [Python+Numpy+Pandas running in the browser](https://github.com/iodide-project/pyodide), and that's just the start. We envision a future in which you can have a workflow that allows you to do your data munging in Python, fit a quick model in R or JAGS, and then display your results with a live interactive d3+Javascript visualization... and all that within within a single, portable, sharable, and hackable file.
 
 Our focus is on delivering frictionless, human-centered tools to scientists. You can read more about our core principles below; if our vision resonates with you, please consider contributing to the project!
 
 _PS: We're working on a few other ways of making this in-browser workflow as ergomonic for scientific tasks as possible. Two of those key efforts will be (1) using modern JS transpilation tools to extend JS syntax just enough for matrix notation, broadcasting, and other basic scientific computing needs; and (2) compiling best-in-class C/C++ science libraries (and runtimes!) to Webassembly and wrapping them in ergonomic JS APIs. If either of those projects appeals to you, please reach out!_
+
+# Get in touch
+
+Please feel free to join our [Google group](https://groups.google.com/forum/#!forum/iodide-dev) to contact us and keep up with what we're working on.
 
 # Setup
 
@@ -56,9 +60,9 @@ Run `npm test` to run the test suite once, or `npm test --watch` to run the suit
 
 # Using the notebook
 
-Three example notebooks are included under "saved notebooks" in the hamburger menu.
+Visit our examples repo at https://github.com/iodide-project/iodide-examples to see demo notebooks
 
-For now, work can be saved to local storage using the "Save Notebook <ctrl-s>" menu item, or exported to a json file with "Export Notebook <ctrl-e>" (for the time being, we advise periodically exporting any code you care about).
+For now, work can be saved to local storage using the "Save Notebook <ctrl-s>" menu item, or exported with "Export Notebook <ctrl-e>", which allows you to download your work as HTML file that will run anywhere (for the time being, we advise periodically exporting any code you care about).
 
 We've modeled much of the experience on Jupyter as our jumping-off point, with a few additions. Check out our milestones & issues to see the direction we're going.
 
@@ -92,7 +96,7 @@ Flowing from those core principles, we have a number of secondary principles/obj
 You can read more about how these priciples have shaped the choices we've made so far [in our FAQ]( ../../wiki/FAQ )
 
 ## Initial use case
-In building this tool, we will keep our eyes on a broad swath of computational inquiry use cases, and we’ll strive to avoid making decisions that limit the tools use to a specific domain. That said, it seems reasonable to initially target at least a subset of data science workflows we’ve been doing at Mozilla. This is a use case that we know well, and targeting this use case will make this tool immediately useful within Mozilla.
+In building this tool, we will keep our eyes on a broad swath of computational inquiry use cases, and we’ll strive to avoid making decisions that limit the tools use to a specific domain. We're initially be targeting small to medium _N_ data science workflows, since these often come up at Mozilla and we're very familiar with them, but if your use case requires something that we haven't addressed yet, please leave us a message at our [Google group](https://groups.google.com/forum/#!forum/iodide-dev).
 
 
 ## Roadmap
@@ -109,13 +113,12 @@ There are a bunch of features that we know we want to build to make this compell
 - r-studio mode (direct editing of jsmd)
 - editor improvements
     - Code editor
-        - Code hints, autocomplete
         - Special character insertion (greek, special operators, etc)
     - Latex editor
         - hints, autocomplete (for latex, this includes special character insertion)
         - Lyx-like wysiwyg preview for equation editing
 - UI for importing local data from file (with drag and drop? Needed for XSS reasons, lack of filesystem access reasons)
 
-## License
+# License
 
 The __IODIDE__ code is shared under the terms of the [Mozilla Public License v2.0](http://www.mozilla.org/MPL/2.0/). See the `LICENSE` file at the root of the repository.
