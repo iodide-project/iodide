@@ -1,20 +1,34 @@
 [![Build Status](https://travis-ci.org/iodide-project/iodide.svg?branch=master)](https://travis-ci.org/iodide-project/iodide)
+
 # The Iodide notebook
-
-
-### early alpha - subject to breakage, changes, argument, refactors
+#### _"View source" for science_
 
 _Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)!_
 
-The Iodide notebook seeks to answer one question: __can we do scientific computing without ever leaving the browser?__ We are building a modern, browser-first notebook-style IDE that utlilizes web technologies for interative / literate / inquisitive computing. The notebook borrows inspiration from RStudio, Jupyter, Carbide, and many other computing environments.
+([More examples](https://github.com/iodide-project/iodide-examples))
 
-![](https://media.giphy.com/media/xT0xeJdYMwA8GvEdCE/giphy.gif)
+### Please note: Iodide is in early alpha, and still subject to breakage, changes, and overhauls
 
-Having a scientific computing platform that solely uses web technologies has several big benefits. First, the DOM is the best presentation layer in the world, but most scientific computing platforms treat it as an afterthought. Having your analyses adjacent to the DOM solves the "last mile" problem common with other platforms. Second, thanks to advances in Javascript and other wonderful technologies like WebAssembly, JS is fast now. JS's main challenge is a lack of decent libraries for scientific computing like NumPy, SciPy, and Pandas for Python, which is surmountable. Finally, JS syntax is not ergonomic for scientific computing tasks. But thanks to transpilation, we can extend the JS syntax just enough for matrix notation, broadcasting, and other basic scientific computing tasks. Finally, we're at a point in computing history where many scientists know at least a little javascript, and many programmers are very well-versed, so we do not face a labor issue for building tools & activating the community.
 
-That's a lot to consider. So we decided to focus on building a Javascript-powered IDE to explore all of these ideas. By focusing on the notebook, we can begin to piece together the other bare necessities needed for a robust browser-based scientific computing platform while providing immediate value to data analysts.
+Today, sharing scientific results is easier than ever. You can email a PDF, write up a Google doc, or post to your blog. You can embed plots, data tables, and even interactive visualizations. But what if you want people to be able to replicate and extend your results -- to take your results and “view source” to see how you arrived at your conclusions? Or even hack and remix them to ask their own questions?
 
-Read more about our core principles below; if our vision resonates with you, please consider contributing to the project!
+To do that now, you typically have a couple options. You could send your code along side your nice, clean PDF or HTML export, allowing you fine-grained control over your presentation, but requiring you to separate your presentable results from your code and to manage multiple files. Alternatively, you could share you results and code bundled together in a notebook format that mixes code with write-up; this has the advantage of keeping your code and results closely tied together, but the presentation can get a bit unwieldy, especially if you want to share your results with a less technical audience. And in either case, sharing your code will only allow your collaborators to replicate and extend your results if they are first able to replicate your whole setup -- if they can run your code with the same libraries, the same data, and the server access.
+
+If only there was a technology that was great for presenting documents and visualizations, that allows code to run anywhere with zero setup, and that all scientists and citizens had access to...
+
+Luckily, that technology already exists: _the web browser_.
+
+
+![](https://media.giphy.com/media/p3dqP6RwE82hBCe66y/giphy.gif)
+
+
+Iodide is modern, literate, and interactive programming environment that uses the strengths of the browser to let scientist work flexibly and collaboratively with minimal friction. With Iodide you can tell the story of your findings exactly how you want, leveraging the power of HTML+CSS to display your results in whatever way communicates them most effectively -- but still keeping the live, editable code only _one click away_. Because Iodide runs in the browser you already have, you can extend and modify the code without having to install any software, enabling you to collaborate frictionlessly.
+
+And thanks to WebAssembly, working in the browser _does not_ mean that you have to work in Javascript. We're already working on getting [Python+Numpy+Pandas running in the browser](https://github.com/iodide-project/pyodide), and that's just the start. We envision a future in which you can have a workflow that allows you to do your data munging in Python, fit a quick model in R or JAGS, and then display your results with a live interactive d3+Javascript visualization... and all that within within a single, portable, sharable, and hackable file.
+
+Our focus is on delivering frictionless, human-centered tools to scientists. You can read more about our core principles below; if our vision resonates with you, please consider contributing to the project!
+
+_PS: We're working on a few other ways of making this in-browser workflow as ergomonic for scientific tasks as possible. Two of those key efforts will be (1) using modern JS transpilation tools to extend JS syntax just enough for matrix notation, broadcasting, and other basic scientific computing needs; and (2) compiling best-in-class C/C++ science libraries (and runtimes!) to Webassembly and wrapping them in ergonomic JS APIs. If either of those projects appeals to you, please reach out!_
 
 # Setup
 
@@ -61,7 +75,7 @@ We especially need help with:
 
 # Our core principles
 - Human factors come before everything else
-- Scientific computing and computation inquiry implies different needs than typically web development
+- Scientific computing and computational inquiry implies different needs than typical software development
 - We want to make the advantages of web tech available to scientists without requiring them to become fully fledged web devs
 
 ## Secondary principles
