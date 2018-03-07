@@ -1,7 +1,7 @@
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 
-import { newCell, newNotebook } from '../state-prototypes'
+import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
 import { moveCell, scrollToCellIfNeeded,
   addExternalDependency,
@@ -47,7 +47,7 @@ const cellReducer = (state = newNotebook(), action) => {
       const cells = state.cells.slice()
       const index = cells.findIndex(c => c.id === getSelectedCellId(state))
       const direction = (action.direction === 'above') ? 0 : 1
-      const nextCell = newCell(state.cells, 'javascript')
+      const nextCell = newCell(newCellID(state.cells), 'javascript')
       cells.splice(index + direction, 0, nextCell)
       nextState = Object.assign({}, state, { cells })
       return nextState
@@ -55,7 +55,7 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'ADD_CELL': {
       nextState = Object.assign({}, state)
       const cells = nextState.cells.slice()
-      const nextCell = newCell(nextState.cells, action.cellType)
+      const nextCell = newCell(newCellID(nextState.cells), action.cellType)
       nextState = Object.assign({}, nextState, { cells: [...cells, nextCell] })
       return nextState
     }
@@ -97,7 +97,7 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'CHANGE_CELL_TYPE': {
       // create a newCell of the given type to get the defaults that
       // will need to be updated for the new cell type
-      const { rowSettings } = newCell(state.cells, action.cellType)
+      const { rowSettings } = newCell(-1, action.cellType)
       return newStateWithSelectedCellPropsAssigned(
         state,
         {
