@@ -23,6 +23,9 @@ export class JsCellUnconnected extends React.Component {
         <CellRow cellId={this.props.cellId} rowType="input">
           <CellEditor cellId={this.props.cellId} />
         </CellRow>
+        <CellRow cellId={this.props.cellId} rowType="sideeffect">
+          <div className="side-effect-target" />
+        </CellRow>
         <CellRow cellId={this.props.cellId} rowType="output">
           <CellOutput
             valueToRender={this.props.value}

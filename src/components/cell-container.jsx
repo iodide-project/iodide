@@ -11,7 +11,6 @@ class CellContainer extends React.Component {
   static propTypes = {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
-    // cellClass: PropTypes.string,
     children: PropTypes.node,
     pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
@@ -32,8 +31,6 @@ class CellContainer extends React.Component {
   render() {
     const cellClass = `cell-container ${
       this.props.cellType
-    } ${
-      this.props.cellClass
     } ${
       this.props.selected ? 'selected-cell' : ''
     } ${

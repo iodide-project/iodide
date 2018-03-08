@@ -1,6 +1,6 @@
 import notebookReducer from '../src/reducers/notebook-reducer'
 import localStorageMock from './mockLocalStorage'
-import { newNotebook, blankState, newCell } from '../src/state-prototypes'
+import { newNotebook, blankState, addNewCellToState } from '../src/state-prototypes'
 import {
   // exportJsmdBundle, we'll need to test this
   // stringifyStateToJsmd, we'll need to test this
@@ -13,9 +13,9 @@ window.localStorage = localStorageMock
 const EXAMPLE_NOTEBOOK_1 = 'example notebook with content'
 
 function exampleNotebookWithContent(title = EXAMPLE_NOTEBOOK_1) {
-  const state = newNotebook()
-  state.cells.push(newCell(state.cells, 'javascript'))
-  state.cells.push(newCell(state.cells, 'markdown'))
+  let state = newNotebook()
+  state = addNewCellToState(state, 'javascript')
+  state = addNewCellToState(state, 'markdown')
   state.cells[0].selected = true
   state.title = title
   return state

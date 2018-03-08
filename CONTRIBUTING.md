@@ -30,6 +30,8 @@ Please make pull requests against the `master` branch.
 
 If you’re looking for a way to jump in and contribute, our list of [`good first issues`](https://github.com/mozilla/iodide/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) is a great place to start.
 
+Regarding any UI changes, we are roughly following Google's [Material Design Guidelines](https://material.io/guidelines/), which has been made substantially easier to follow by using the [React Material UI library](https://github.com/mui-org/material-ui). If you are making a UI change, we'd advise to follow the guidelines and use the same library we're using. 
+
 If you’d like to fix a currently-filed issue, please take a look at the comment thread on the issue to ensure no one is already working on it. If no one has claimed the issue, make a comment stating you’d like to tackle it in a PR. If someone has claimed the issue but has not worked on it in a few weeks, make a comment asking if you can take over, and we’ll figure it out from there.
 
 We use [Jest](https://facebook.github.io/jest/) as our testing framework. Every PR will automatically run through our tests, and our test framework will alert you on Github if your PR doesn’t pass all of them. If your PR fails a test, try to figure out whether or not you can update your code to make the test pass again, or ask for help. As a policy we will not accept a PR that fails any of our tests, and will likely ask you to add tests if your PR adds new functionality. Writing tests can be scary, but they make open-source contributions easier for everyone to assess. Take a moment and look through how we’ve written our tests, and try to make your tests match. If you are having trouble, we can help you get started on our test-writing journey. 

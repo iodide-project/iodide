@@ -107,6 +107,8 @@ div.cell-container {
 }
 
 div#cells.presentation {
+  padding-top:0px;
+  padding-bottom:0px;
 }
 
 div#cells.presentation div.cell-container {
@@ -483,8 +485,11 @@ div.last-saved {
 .pane-title {
   margin:5px;
   margin-right:0px;
-  display:flex;
-  align-items: center;
+  display:-webkit-box;
+}
+
+.pane-title h1 {
+  margin-top: 6px;
 }
 
 .pane-title .menu-button {
@@ -676,11 +681,10 @@ table tr:nth-child(2n) {
   position: fixed;
   right: 20px;
   top: 10px;
+  z-index:100;
 }
 
 .presentation-header {
-  margin-bottom: 20px;
-  margin-top: 40px;
 }
 
 .presentation-title {

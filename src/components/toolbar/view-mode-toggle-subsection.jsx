@@ -6,7 +6,7 @@ import tasks from '../../task-definitions'
 export default class ViewModeToggleSubsection extends React.Component {
   render() {
     return (
-      <NotebookMenuSubsection onClick={this.props.onClick} title="view ...">
+      <NotebookMenuSubsection title="view ..." {...this.props}>
         <NotebookMenuItem task={tasks.toggleHistoryPane} />
         <NotebookMenuItem task={tasks.toggleDeclaredVariablesPane} />
       </NotebookMenuSubsection>
