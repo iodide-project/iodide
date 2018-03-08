@@ -4,6 +4,7 @@ import React from 'react'
 import IconButton from 'material-ui/IconButton'
 import Menu from 'material-ui/Menu'
 import MenuIcon from 'material-ui-icons/Menu'
+import Tooltip from 'material-ui/Tooltip'
 
 export default class NotebookIconMenu extends React.Component {
   constructor(props) {
@@ -27,26 +28,28 @@ export default class NotebookIconMenu extends React.Component {
     const children = React.Children.map(this.props.children, c =>
       React.cloneElement(c, { onClick: this.handleIconButtonClose }))
     return (
-      <IconButton
-        aria-label="more"
-        aria-owns={anchorElement ? 'main-menu' : null}
-        aria-haspopup="true"
-        onClick={this.handleClick}
-        style={{ color: 'white' }}
-      >
-        <MenuIcon />
-        <Menu
-          id="main-menu"
-          anchorEl={this.state.anchorElement}
-          open={Boolean(anchorElement)}
-          onClose={this.handleIconButtonClose}
-          anchorReference="anchorPosition"
-          anchorPosition={{ top: 62, left: 30 }}
-        >
-          {children}
-        </Menu>
-      </IconButton>
+      <Tooltip id="tooltip-icon" title="Menu">
 
+        <IconButton
+          aria-label="more"
+          aria-owns={anchorElement ? 'main-menu' : null}
+          aria-haspopup="true"
+          onClick={this.handleClick}
+          style={{ color: 'white' }}
+        >
+          <MenuIcon />
+          <Menu
+            id="main-menu"
+            anchorEl={this.state.anchorElement}
+            open={Boolean(anchorElement)}
+            onClose={this.handleIconButtonClose}
+            anchorReference="anchorPosition"
+            anchorPosition={{ top: 50, left: 0 }}
+          >
+            {children}
+          </Menu>
+        </IconButton>
+      </Tooltip>
     )
   }
 }

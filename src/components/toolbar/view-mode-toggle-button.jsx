@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Button from 'material-ui/Button'
-
+import Tooltip from 'material-ui/Tooltip'
 import tasks from '../../task-definitions'
 
 export class ViewModeToggleButtonUnconnected extends React.Component {
@@ -26,14 +26,17 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
 
   render() {
     return (
-      <Button
-        style={{ color: this.props.textColor || '#fafafa' }}
-        onClick={this.toggleViewMode}
-        variant="flat"
-        mini
-      >
-        {this.props.viewMode === 'presentation' ? 'Edit' : 'View'}
-      </Button>
+      <Tooltip id="tooltip-icon" title={this.props.viewMode === 'presentation' ? 'Edit this page' : 'Presentation'}>
+
+        <Button
+          style={{ color: this.props.textColor || '#fafafa' }}
+          onClick={this.toggleViewMode}
+          variant="flat"
+          mini
+        >
+          {this.props.viewMode === 'presentation' ? 'Edit' : 'View'}
+        </Button>
+      </Tooltip>
     )
   }
 }

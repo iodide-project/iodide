@@ -15,10 +15,10 @@ export class EditorModeToolbarUnconnected extends React.Component {
   render() {
     return (
       <div
-        className="notebook-menu"
-        style={{ backgroundColor: 'black', height: '64px', display: this.props.viewMode === 'editor' ? 'block' : 'none' }}
+        className="notebook-toolbar-container"
+        style={{ display: this.props.viewMode === 'editor' ? 'block' : 'none' }}
       >
-        <Toolbar>
+        <Toolbar classes={{ root: 'notebook-toolbar' }}>
           <EditorModeControls isFirstChild />
           <EditorModeTitle />
           <ViewControls />
