@@ -326,23 +326,60 @@ div.dom-cell-error {
 /************************************************/
 /* header bar styles */
 
+.notebook-toolbar-container {
+  background-color: black; 
+  height: 50px
+}
+
+.notebook-toolbar {
+  height:50px;
+  display: flex;
+  position: relative;
+  min-height: 56px;
+  align-items: center;
+  min-height:50px !important;
+}
+
 div.editor-mode-controls {
-  width: 400px; 
+  width: 260px; 
 }
 
 div.view-controls {
-  width: 400px;
+  width: 300px;
   display:flex;
   align-items:center;
 }
 
 div.title-field {
-  width: calc( 100% - 400px - 400px );
+  width: calc( 100% - 260px - 300px );
 }
 
 div.title-field-contents {
   display: flex;
-  width: 100%
+  width: 100%;
+}
+
+.last-saved-text {
+  font-size: 11px;
+  color: lightgray;
+  font-style: italic;
+  width: 125px;
+  text-align: right;
+}
+
+@media (max-width:1100px) {
+  
+  .last-saved-text {
+    display:none !important;
+  }
+
+  div.view-controls {
+    width:200px;
+  }
+
+  div.title-field {
+    width: calc( 100% - 260px - 200px)
+  }
 }
 
 div.display-title {
@@ -367,15 +404,15 @@ input.page-title {
   font-size: 14px;
   border: none;
   outline: none;
-  width: calc(100% - 20px);
+  width:100%;
   margin: auto;
   text-align: center;
   color: white;
-  background-color: black
+  background-color: black;
 }
 
 input.page-title:focus {
-  font-size: 25px
+  font-size: 20px
 }
 
 /* div.unselected-title-field:before {
@@ -408,6 +445,7 @@ ul.load-notebook-menu li {
 
 .load-notebook-menu span.menu-notebook-name {
   width: 300px;
+
   text-overflow: ellipsis;
   overflow-x: hidden;
   vertical-align: top;
@@ -464,7 +502,7 @@ div.last-saved {
 
 .side-pane {
   width:575px !important;
-  top: 64px !important;
+  top: 50px !important;
   border: none !important;
   border-left: 2px solid lightgray !important;
 }
@@ -480,8 +518,8 @@ div.last-saved {
 }
 
 .pane-title .menu-button {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   padding-bottom:0px
 }
 
@@ -657,7 +695,9 @@ table tr:nth-child(2n) {
 }
 
 .menu-button {
-  color: #fafafa
+  color: #fafafa;
+  width: 40px !important;
+  height:40px !important;
 }
 
 .menu-button:hover {

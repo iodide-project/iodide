@@ -18,6 +18,7 @@ export default class NotebookTaskFunction extends React.Component {
   render() {
     return (
       <IconButton
+        classes={{ root: 'menu-button' }}
         className="menu-button"
         style={this.props.style || { color: '#fafafa' }}
         onClick={this.props.task.callback}

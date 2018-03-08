@@ -11,15 +11,9 @@ export class LastSavedTextUnconnected extends React.Component {
   render() {
     return (
       <Typography
-        style={{
-          fontSize: '13px',
-          color: 'lightgray',
-          fontStyle: 'italic',
-          width: '200px',
-          textAlign: 'right',
-}}
+        classes={{ root: 'last-saved-text' }}
       >
-        {this.props.lastSaved === undefined ? ' ' : `last saved: ${prettyDate(this.props.lastSaved)}`}
+        {this.props.lastSaved === undefined ? ' ' : `saved ${prettyDate(this.props.lastSaved)}`}
       </Typography>)
   }
 }
