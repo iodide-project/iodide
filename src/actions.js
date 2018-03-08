@@ -63,10 +63,11 @@ const actions = {
       content: text,
     }
   },
-  changeCellType(cellType) {
+  changeCellType(cellType, language = undefined) {
     return {
       type: 'CHANGE_CELL_TYPE',
       cellType,
+      language,
     }
   },
   evaluateCell(cellId) {
@@ -111,10 +112,11 @@ const actions = {
       direction,
     }
   },
-  addCell(cellType) {
+  addCell(cellType, language = undefined) {
     return {
       type: 'ADD_CELL',
       cellType,
+      language,
     }
   },
   selectCell(cellID, scrollToCell = false) {

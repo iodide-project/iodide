@@ -14,7 +14,7 @@ const EXAMPLE_NOTEBOOK_1 = 'example notebook with content'
 
 function exampleNotebookWithContent(title = EXAMPLE_NOTEBOOK_1) {
   let state = newNotebook()
-  state = addNewCellToState(state, 'javascript')
+  state = addNewCellToState(state, 'code', 'js')
   state = addNewCellToState(state, 'markdown')
   state.cells[0].selected = true
   state.title = title
