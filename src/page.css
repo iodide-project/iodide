@@ -106,15 +106,11 @@ div.cell-container {
   width: calc(100%);
 }
 
-div#cells.presentation {
-  padding-top:0px;
-  padding-bottom:0px;
-}
 
 div#cells.presentation div.cell-container {
+  width: 800px;
+  margin: 0 auto; /* centers the divs and sets top/bottom margins to 0*/
   outline: none;
-  margin-top: 0px;
-  margin-bottom: 0px;
   padding-top: 0px;
   padding-bottom: 0px;
 }
