@@ -150,7 +150,6 @@ function newCellRowSettings(cellType) {
 }
 
 function newCell(cellId, cellType, language) {
-  console.log('newCell ' + language) // eslint-disable-line
   return {
     content: '',
     id: cellId,

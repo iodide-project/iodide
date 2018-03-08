@@ -66,7 +66,6 @@ const cellReducer = (state = newNotebook(), action) => {
     }
     case 'ADD_CELL': {
       const language = getDefaultLanguage(action.language)
-      console.log(language) // eslint-disable-line
       nextState = Object.assign({}, state)
       const cells = nextState.cells.slice()
       const nextCell = newCell(newCellID(nextState.cells), action.cellType, language)
