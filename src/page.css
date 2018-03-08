@@ -32,17 +32,30 @@ div#headerbar {
   padding-right: 10px;
 }
 
-div#cells {
-  height: 100%;
-  overflow-y: auto;
-  padding-top: 20px;
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-bottom: 60px;
+div.notebook-menu {
+    position: fixed;
+    width: 100%;
+    height: 64px
+}
 
-  /* display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end; */
+div#cells {
+    position: fixed;
+    top: 65px; /*move down by the header bar height*/
+    left: 0px;
+    box-sizing: border-box;
+    height: calc(100% - 65px); /*subtract off the header bar height*/
+    width: 100%;
+    overflow-y: auto;
+    padding-top: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 60px;
+    /*outline: 4px #d41eea dashed;*/
+}
+
+div#cells.presentation {
+    top: 0px;
+    height: calc(100%);
 }
 
 h1.overlay-title {
