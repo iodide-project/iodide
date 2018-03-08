@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 
 import { connect } from 'react-redux'
+import Tooltip from 'material-ui/Tooltip'
 
 import tasks from '../../task-definitions'
 
@@ -39,9 +40,11 @@ export class TitleUnconnected extends React.Component {
 
   render() {
     const elem = (
+
       <div className="title-field">
         <div className={`title-field-contents ${this.props.pageMode !== 'title-edit' ? 'unselected-title-field' : ''}`}>
           <Helmet title={this.getTitle()} />
+
           <input
             onBlur={this.onBlur}
             onClick={this.onFocus}
@@ -55,6 +58,7 @@ export class TitleUnconnected extends React.Component {
           />
         </div>
       </div>
+
     )
     return elem
   }
