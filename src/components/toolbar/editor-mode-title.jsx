@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 
 import { connect } from 'react-redux'
-import Tooltip from 'material-ui/Tooltip'
 
 import tasks from '../../task-definitions'
 
