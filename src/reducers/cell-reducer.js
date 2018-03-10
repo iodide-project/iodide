@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
+import MarkdownItAnchor from 'markdown-it-anchor'
 
 import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
@@ -12,9 +13,8 @@ import { moveCell, scrollToCellIfNeeded,
   newStateWithRowOverflowSet,
 } from './cell-reducer-utils'
 
-
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
-MD.use(MarkdownItKatex)
+MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
@@ -148,21 +148,12 @@ const cellReducer = (state = newNotebook(), action) => {
 
         let output
         const code = thisCell.content
-        // commenting out the transpilation code for now, but don't delete -bcolloran
-        // if (code.slice(0, 12) === '\'use matrix\'' || code.slice(0, 12) === '"use matrix"') {
-        //   try {
-        //     code = tjsm.transpile(thisCell.content)
-        //   } catch (e) {
-        //     e.constructor(`transpilation failed: ${e.message}`)
-        //   }
-        // }
+
         try {
           output = window.eval(code)  // eslint-disable-line
           thisCell.evalStatus = evalStatuses.SUCCESS
         } catch (e) {
-          const err = e.constructor(`Error in Evaled Script: ${e.message}`)
-          err.lineNumber = (e.lineNumber - err.lineNumber) + 3
-          output = `${e.name}: ${e.message} (line ${e.lineNumber} column ${e.columnNumber})`
+          output = e
           thisCell.evalStatus = evalStatuses.ERROR
         }
         thisCell.rendered = true

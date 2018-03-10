@@ -332,6 +332,12 @@ div.dom-cell-error {
   padding-bottom: 4px;
 }
 
+div.error-output {
+background: #fff1f4;
+padding: 5px;
+color: #a41c1c;
+overflow-x: auto;
+}
 /************************************************/
 /* header bar styles */
 
@@ -504,6 +510,10 @@ div.last-saved {
   color: #999;
   font-style: italic;
   font-size: 12px
+}
+
+#tooltip-icon {
+  font-size: 0.800rem;
 }
 
 /************************************************/

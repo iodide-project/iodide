@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/iodide-project/iodide.svg?branch=master)](https://travis-ci.org/iodide-project/iodide)
+[![Join the chat at https://gitter.im/iodide-project/iodide](https://badges.gitter.im/iodide-project/iodide.svg)](https://gitter.im/iodide-project/iodide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # The Iodide notebook
 ### _"View source" for science_
@@ -33,6 +34,8 @@ _PS: We're working on a few other ways of making this in-browser workflow as erg
 # Get in touch
 
 Please feel free to join our [Google group](https://groups.google.com/forum/#!forum/iodide-dev) to contact us and keep up with what we're working on.
+
+You can also [chat with us on Gitter](https://gitter.im/iodide-project/iodide).
 
 # Setup
 
