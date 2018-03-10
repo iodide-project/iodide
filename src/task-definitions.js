@@ -8,6 +8,7 @@ import { isCommandMode,
   getCellBelowSelectedId,
   getCellAboveSelectedId, prettyDate, formatDateString } from './notebook-utils'
 import { stateFromJsmd } from './jsmd-tools'
+import evaluateAllCells from './evaluate-all-cells'
 
 const dispatcher = {}
 for (const action in actions) {
@@ -46,26 +47,7 @@ tasks.evaluateCell = new UserTask({
 tasks.evaluateAllCells = new UserTask({
   title: 'Evaluate All Cells',
   menuTitle: 'evaluate all cells',
-  callback() {
-    const cells = getCells()
-    cells.forEach((cell) => {
-      if (cell.cellType === 'markdown' ||
-          cell.cellType === 'dom') {
-        dispatcher.evaluateCell(cell.id)
-      }
-    })
-    window.setTimeout(
-      () => {
-        cells.forEach((cell) => {
-          if (cell.cellType !== 'markdown' &&
-              cell.cellType !== 'dom') {
-            dispatcher.evaluateCell(cell.id)
-          }
-        })
-      },
-      42, // wait a few milliseconds to let React DOM updates flush
-    )
-  },
+  callback() { evaluateAllCells(getCells(), store) },
 })
 
 tasks.evaluateCellAndSelectBelow = new UserTask({
@@ -265,6 +247,14 @@ tasks.exportNotebook = new UserTask({
   displayKeybinding: commandKey('E'),
   callback() { dispatcher.exportNotebook() },
 })
+
+tasks.exportNotebookAsReport = new UserTask({
+  title: 'Export Notebook as report',
+  keybindings: ['shift+e'],
+  displayKeybinding: 'Shift E',
+  callback() { dispatcher.exportNotebook(true) },
+})
+
 
 tasks.clearVariables = new UserTask({
   title: 'Clear Variables',

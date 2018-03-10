@@ -5,9 +5,10 @@ const actions = {
       newState,
     }
   },
-  exportNotebook() {
+  exportNotebook(exportAsReport = false) {
     return {
       type: 'EXPORT_NOTEBOOK',
+      exportAsReport,
     }
   },
   saveNotebook(title = undefined, autosave = false) {
