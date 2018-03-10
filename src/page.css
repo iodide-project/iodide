@@ -506,6 +506,10 @@ div.last-saved {
   font-size: 12px
 }
 
+#tooltip-icon {
+  font-size: 0.800rem;
+}
+
 /************************************************/
 /* side pane styles */
 
