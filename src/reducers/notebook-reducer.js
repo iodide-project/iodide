@@ -41,7 +41,6 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'EXPORT_NOTEBOOK': {
       nextState = Object.assign({}, state)
-      clearHistory(nextState)
       const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(nextState))}`
       const dlAnchorElem = document.getElementById('export-anchor')
       dlAnchorElem.setAttribute('href', dataStr)
