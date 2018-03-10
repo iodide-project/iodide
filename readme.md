@@ -4,6 +4,8 @@
 # The Iodide notebook
 ### _"View source" for science_
 
+[![Join the chat at https://gitter.im/iodide-project/iodide](https://badges.gitter.im/iodide-project/iodide.svg)](https://gitter.im/iodide-project/iodide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 _Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)!_
 
 ([More examples](https://github.com/iodide-project/iodide-examples))
