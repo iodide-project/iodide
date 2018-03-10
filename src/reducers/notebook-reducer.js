@@ -133,6 +133,7 @@ This will update them to jsmd.
       clearUserDefinedVars(state.userDefinedVariables)
       nextState = Object.assign({}, state)
       nextState.userDefinedVariables = {}
+      nextState.externalDependencies = []
       return nextState
     }
 
