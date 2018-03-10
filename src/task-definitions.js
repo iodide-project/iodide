@@ -25,12 +25,6 @@ if (oscpu.indexOf('X11') !== -1) OSName = 'UNIX'
 if (oscpu.indexOf('Linux') !== -1) OSName = 'Linux'
 
 const commandKey = () => (OSName === 'MacOS' ? '⌘' : 'Ctrl')
-//   let ctr = 'Ctrl '
-//   if () {
-//     ctr = '⌘ '
-//   }
-//   return ctr + key
-// }
 
 const tasks = {}
 
@@ -140,7 +134,7 @@ tasks.addCellBelow = new UserTask({
 tasks.deleteCell = new UserTask({
   title: 'Delete Cell',
   keybindings: ['shift+backspace'],
-  displayKeybinding: 'Shift+Backspace', //'\u21E7 \u232b',
+  displayKeybinding: 'Shift+Backspace', // '\u21E7 \u232b',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.deleteCell() },
 })
