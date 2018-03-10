@@ -2,6 +2,11 @@ import actions from './actions'
 
 export default function evaluateAllCells(cells, store) {
   cells.forEach((cell) => {
+    if (cell.cellType === 'css') {
+      store.dispatch(actions.evaluateCell(cell.id))
+    }
+  })
+  cells.forEach((cell) => {
     if (cell.cellType === 'markdown') {
       store.dispatch(actions.evaluateCell(cell.id))
     }
@@ -9,7 +14,7 @@ export default function evaluateAllCells(cells, store) {
   window.setTimeout(
     () => {
       cells.forEach((cell) => {
-        if (cell.cellType !== 'markdown') {
+        if (cell.cellType !== 'markdown' && cell.cellType !== 'markdown') {
           store.dispatch(actions.evaluateCell(cell.id))
         }
       })
