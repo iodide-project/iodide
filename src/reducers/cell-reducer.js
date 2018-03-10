@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
+import MarkdownItAnchor from 'markdown-it-anchor'
 
 import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
@@ -12,9 +13,8 @@ import { moveCell, scrollToCellIfNeeded,
   newStateWithRowOverflowSet,
 } from './cell-reducer-utils'
 
-
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
-MD.use(MarkdownItKatex)
+MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
