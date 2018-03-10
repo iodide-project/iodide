@@ -17,7 +17,7 @@ const StringEnum = class {
 const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
 // const rowTypeEnum = new StringEnum('input', 'output')
 const cellTypeEnum = new StringEnum(
-  'javascript',
+  'code',
   'markdown',
   'raw',
   'css',
@@ -42,6 +42,7 @@ const cellSchema = {
     executionStatus: { type: 'string' },
     evalStatus: {}, // FIXME change to string ONLY
     rowSettings: { type: 'object' },
+    language: { type: 'string' },
   },
   additionalProperties: false,
 }
@@ -90,7 +91,7 @@ function nextOverflow(currentOverflow) {
 
 function newCellRowSettings(cellType) {
   switch (cellType) {
-    case 'javascript':
+    case 'code':
       return {
         EXPLORE: {
           input: rowOverflowEnum.VISIBLE,
@@ -148,7 +149,7 @@ function newCellRowSettings(cellType) {
   }
 }
 
-function newCell(cellId, cellType) {
+function newCell(cellId, cellType, language) {
   return {
     content: '',
     id: cellId,
@@ -159,6 +160,7 @@ function newCell(cellId, cellType) {
     executionStatus: ' ',
     evalStatus: undefined,
     rowSettings: newCellRowSettings(cellType),
+    language,
   }
 }
 
@@ -182,15 +184,15 @@ function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-function addNewCellToState(state, cellType) {
+function addNewCellToState(state, cellType, language) {
   const nextCellId = newCellID(state.cells)
-  state.cells.push(newCell(nextCellId, cellType))
+  state.cells.push(newCell(nextCellId, cellType, language))
   return state
 }
 
 function newNotebook() {
   // initialize a blank notebook and push a blank new cell into it
-  const initialState = addNewCellToState(blankState(), 'javascript')
+  const initialState = addNewCellToState(blankState(), 'code', 'js')
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
   return initialState

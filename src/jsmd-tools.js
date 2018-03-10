@@ -4,12 +4,10 @@ import _ from 'lodash'
 import { newNotebook, blankState, newCell } from './state-prototypes'
 import htmlTemplate from './html-template'
 
-const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource', 'css']
+const jsmdValidCellTypes = ['meta', 'md', 'raw', 'resource', 'css']
 
 
 const jsmdCellTypeMap = new Map([
-  ['js', 'javascript'],
-  ['javascript', 'javascript'],
   ['md', 'markdown'],
   ['markdown', 'markdown'],
   ['external', 'external dependencies'],
@@ -20,7 +18,6 @@ const jsmdCellTypeMap = new Map([
 ])
 
 const cellTypeToJsmdMap = new Map([
-  ['javascript', 'js'],
   ['markdown', 'md'],
   ['external dependencies', 'resource'],
   ['dom', 'dom'],
@@ -33,6 +30,7 @@ const jsmdValidNotebookSettings = [
   'viewMode',
   'lastSaved',
 ]
+
 const jsmdValidCellSettingPaths = [
   'rowSettings.REPORT.input',
   'rowSettings.REPORT.output',
@@ -65,16 +63,14 @@ function parseMetaChunk(content, parseWarnings) {
 
 function parseCellChunk(chunkType, content, settings, str, chunkNum, parseWarnings) {
   let cellType = jsmdCellTypeMap.get(chunkType)
+  let language
   // if the cell type is not valid, set it to js
   if (jsmdValidCellTypes.indexOf(chunkType) === -1) {
-    parseWarnings.push({
-      parseError: 'invalid cell type, converted to js cell',
-      details: `chunkType: ${chunkType} chunkNum:${chunkNum} raw string: ${str}`,
-    })
-    cellType = 'javascript'
+    cellType = 'code'
+    language = chunkType
   }
 
-  const cell = newCell(chunkNum, cellType)
+  const cell = newCell(chunkNum, cellType, language)
   cell.content = content
   // make sure that only valid cell settings are kept
   Object.keys(settings).forEach((path) => {
@@ -179,7 +175,7 @@ function stateFromJsmd(jsmdString) {
     })
   // if only a meta cell exists, return a default JS cell
   if (initialState.cells.length === 0) {
-    initialState.cells.push(newCell(0, 'javascript'))
+    initialState.cells.push(newCell(0, 'code', 'js'))
   }
   // set cell 0  to be the selected cell
   initialState.cells[0].selected = true
@@ -196,8 +192,13 @@ function stringifyStateToJsmd(state, exportDatetimeString) {
   // are in the jsmd valid list, and seeing if they are not default
   // values for this cell type
   const cellsStr = state.cells.map((cell) => {
-    const jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
-    const defaultCell = newCell(0, cell.cellType)
+    let jsmdCellType
+    if (cell.cellType === 'code') {
+      jsmdCellType = cell.language
+    } else {
+      jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
+    }
+    const defaultCell = newCell(0, cell.cellType, cell.language)
     const cellSettings = getNonDefaultValuesForPaths(
       jsmdValidCellSettingPaths,
       cell,

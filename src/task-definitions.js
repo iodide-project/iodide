@@ -6,10 +6,13 @@ import { isCommandMode,
   viewModeIsEditor,
   getCells,
   getCellBelowSelectedId,
-  getCellAboveSelectedId, prettyDate, formatDateString } from './notebook-utils'
+  getCellAboveSelectedId,
+  prettyDate,
+  formatDateString } from './notebook-utils'
 import { stateFromJsmd } from './jsmd-tools'
+import { registerKeyBinding } from './keybindings'
 
-const dispatcher = {}
+export const dispatcher = {}
 for (const action in actions) {
   if (Object.prototype.hasOwnProperty.call(actions, action)) {
     dispatcher[action] = (...params) => (store.dispatch(actions[action](...params)))
@@ -80,7 +83,7 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
       dispatcher.selectCell(cellBelowId, true)
     } else {
     // if cellBelowId *is* null, need to add a new cell.
-      dispatcher.addCell('javascript')
+      dispatcher.addCell('code')
       dispatcher.selectCell(getCellBelowSelectedId(), true)
     }
   },
@@ -138,7 +141,7 @@ tasks.addCellAbove = new UserTask({
   displayKeybinding: 'a',
   keybindingPrecondition: isCommandMode,
   callback() {
-    dispatcher.insertCell('javascript', 'above')
+    dispatcher.insertCell('code', 'above')
     dispatcher.selectCell(getCellAboveSelectedId(), true)
   },
 })
@@ -150,7 +153,7 @@ tasks.addCellBelow = new UserTask({
   keybindingPrecondition: isCommandMode,
 
   callback() {
-    dispatcher.insertCell('javascript', 'below')
+    dispatcher.insertCell('code', 'below')
     dispatcher.selectCell(getCellBelowSelectedId(), true)
   },
 })
@@ -161,17 +164,6 @@ tasks.deleteCell = new UserTask({
   displayKeybinding: '\u21E7 \u232b',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.deleteCell() },
-})
-
-tasks.changeToJavascriptCell = new UserTask({
-  title: 'Change to Javascript',
-  menuTitle: 'Javascript',
-  keybindings: ['j'],
-  displayKeybinding: 'J',
-  keybindingPrecondition: isCommandMode,
-  callback() {
-    dispatcher.changeCellType('javascript')
-  },
 })
 
 tasks.changeToMarkdownCell = new UserTask({
@@ -357,6 +349,13 @@ export function getLocalStorageNotebook(name) {
       dispatcher.loadNotebook(name)
     },
   })
+}
+
+export function addTask(name, obj) {
+  const task = new UserTask(obj)
+  tasks[name] = task
+  registerKeyBinding(task)
+  return task
 }
 
 export default tasks

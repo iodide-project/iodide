@@ -6,9 +6,13 @@ import NotebookMenuHeader from './notebook-menu-header'
 import NotebookMenuSubsection from './notebook-menu-subsection'
 
 import tasks from '../../task-definitions'
+import { getLanguages } from '../../language'
 
 export default class CellMenuSubsection extends React.Component {
   render() {
+    const languages = getLanguages().map(language =>
+      <NotebookMenuItem key={language.name} task={language.task} />)
+
     return (
       <NotebookMenuSubsection className="medium-menu" title="cell ..." {...this.props} >
         <NotebookMenuItem key={tasks.moveCellUp.title} task={tasks.moveCellUp} />
@@ -17,10 +21,7 @@ export default class CellMenuSubsection extends React.Component {
         <NotebookMenuItem key={tasks.deleteCell.title} task={tasks.deleteCell} />
         <NotebookMenuDivider />
         <NotebookMenuHeader title="change cell to ..." />
-        <NotebookMenuItem
-          key={tasks.changeToJavascriptCell.title}
-          task={tasks.changeToJavascriptCell}
-        />
+        {languages}
         <NotebookMenuItem
           key={tasks.changeToMarkdownCell.title}
           task={tasks.changeToMarkdownCell}

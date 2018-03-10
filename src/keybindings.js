@@ -4,13 +4,16 @@ import tasks from './task-definitions'
 
 Mousetrap.prototype.stopCallback = () => false
 
+export function registerKeyBinding(task) {
+  if (task.hasKeybinding()) {
+    Mousetrap.bind(task.keybindings, task.keybindingCallback)
+  }
+}
 
 function keyBinding() {
   Object.keys(tasks).forEach((t) => {
     const task = tasks[t]
-    if (task.hasKeybinding()) {
-      Mousetrap.bind(task.keybindings, task.keybindingCallback)
-    }
+    registerKeyBinding(task)
   })
 }
 

@@ -24,6 +24,17 @@ const evalStatuses = {}
 evalStatuses.SUCCESS = 'success'
 evalStatuses.ERROR = 'error'
 
+let defaultLanguage = 'js'
+
+function getDefaultLanguage(language) {
+  // Remember the last language cell created and create that by default if one
+  // isn't specified
+  if (language === undefined) {
+    return defaultLanguage
+  }
+  defaultLanguage = language
+  return language
+}
 
 const cellReducer = (state = newNotebook(), action) => {
   let nextState
@@ -44,18 +55,20 @@ const cellReducer = (state = newNotebook(), action) => {
       return nextState
     }
     case 'INSERT_CELL': {
+      const language = getDefaultLanguage()
       const cells = state.cells.slice()
       const index = cells.findIndex(c => c.id === getSelectedCellId(state))
       const direction = (action.direction === 'above') ? 0 : 1
-      const nextCell = newCell(newCellID(state.cells), 'javascript')
+      const nextCell = newCell(newCellID(state.cells), 'code', language)
       cells.splice(index + direction, 0, nextCell)
       nextState = Object.assign({}, state, { cells })
       return nextState
     }
     case 'ADD_CELL': {
+      const language = getDefaultLanguage(action.language)
       nextState = Object.assign({}, state)
       const cells = nextState.cells.slice()
-      const nextCell = newCell(newCellID(nextState.cells), action.cellType)
+      const nextCell = newCell(newCellID(nextState.cells), action.cellType, language)
       nextState = Object.assign({}, nextState, { cells: [...cells, nextCell] })
       return nextState
     }
@@ -97,11 +110,13 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'CHANGE_CELL_TYPE': {
       // create a newCell of the given type to get the defaults that
       // will need to be updated for the new cell type
-      const { rowSettings } = newCell(-1, action.cellType)
+      const language = getDefaultLanguage(action.language)
+      const { rowSettings } = newCell(-1, action.cellType, language)
       return newStateWithSelectedCellPropsAssigned(
         state,
         {
           cellType: action.cellType,
+          language: action.language,
           value: undefined,
           rendered: false,
           rowSettings,
@@ -136,7 +151,7 @@ const cellReducer = (state = newNotebook(), action) => {
       const index = cells.findIndex(c => c.id === cellId)
       const thisCell = cells[index]
 
-      if (thisCell.cellType === 'javascript') {
+      if (thisCell.cellType === 'code') {
       // add to newState.history
         newState.history.push({
           cellID: thisCell.id,
@@ -145,6 +160,15 @@ const cellReducer = (state = newNotebook(), action) => {
         })
 
         thisCell.value = undefined
+
+        // Loaded dynamically to avoid circular dependency
+        const { getLanguageByName } = require('../language') // eslint-disable-line global-require
+
+        const language = getLanguageByName(thisCell.language)
+        if (language === undefined) {
+          // TODO: Display this properly
+          alert("Unknown language '" + thisCell.language + "'") // eslint-disable-line
+        }
 
         let output
         const code = thisCell.content
@@ -157,7 +181,7 @@ const cellReducer = (state = newNotebook(), action) => {
         //   }
         // }
         try {
-          output = window.eval(code)  // eslint-disable-line
+          output = language.evaluate(code)
           thisCell.evalStatus = evalStatuses.SUCCESS
         } catch (e) {
           const err = e.constructor(`Error in Evaled Script: ${e.message}`)

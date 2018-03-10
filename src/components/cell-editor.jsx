@@ -20,6 +20,7 @@ import 'codemirror/addon/hint/javascript-hint'
 /* eslint-enable */
 import { getCellById } from '../notebook-utils'
 import actions from '../actions'
+import { getLanguageByName } from '../language'
 
 class CellEditor extends React.Component {
   static propTypes = {
@@ -39,6 +40,7 @@ class CellEditor extends React.Component {
     onContainerClick: PropTypes.func,
     containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
+    language: PropTypes.string,
   }
 
   constructor(props) {
@@ -68,6 +70,17 @@ class CellEditor extends React.Component {
     if (this.props.pageMode !== 'edit' || this.props.viewMode !== 'editor') {
       this.editor.getCodeMirror().display.input.textarea.blur()
     }
+  }
+
+  getMode() {
+    let mode = this.props.cellType
+    if (mode === 'code') {
+      const language = getLanguageByName(this.props.language)
+      if (language !== undefined) {
+        mode = language.codeMirrorName
+      }
+    }
+    return mode
   }
 
   handleFocusChange(focused) {
@@ -111,8 +124,10 @@ class CellEditor extends React.Component {
   }
 
   render() {
+    const mode = this.getMode()
+
     const editorOptions = Object.assign({
-      mode: this.props.cellType,
+      mode,
       lineWrapping: false,
       matchBrackets: true,
       autoCloseBrackets: true,
@@ -121,9 +136,9 @@ class CellEditor extends React.Component {
       lineNumbers: true,
       keyMap: 'sublime',
       extraKeys: {
-        'Ctrl-Space': this.props.cellType === 'javascript' ? this.autoComplete : undefined,
+        'Ctrl-Space': this.props.language === 'js' ? this.autoComplete : undefined,
       },
-      comment: this.props.cellType === 'javascript',
+      comment: this.props.language === 'js',
       readOnly: this.props.viewMode === 'presentation',
     }, this.props.editorOptions)
 

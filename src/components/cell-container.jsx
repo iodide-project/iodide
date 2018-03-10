@@ -30,7 +30,7 @@ class CellContainer extends React.Component {
 
   render() {
     const cellClass = `cell-container ${
-      this.props.cellType
+      this.props.cellType === 'code' ? this.props.language : this.props.cellType
     } ${
       this.props.selected ? 'selected-cell' : ''
     } ${

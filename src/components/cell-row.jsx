@@ -93,7 +93,7 @@ function mapStateToPropsCellRows(state, ownProps) {
   }
   const rowOverflow = cell.rowSettings[view][ownProps.rowType]
   const executionString = (ownProps.rowType === 'input'
-    && cell.cellType === 'javascript') ? `[${cell.executionStatus}]` : ''
+    && cell.cellType === 'code') ? `[${cell.executionStatus}]` : ''
   return {
     pageMode: state.mode,
     viewMode: state.viewMode,

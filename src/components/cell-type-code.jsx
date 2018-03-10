@@ -8,20 +8,25 @@ import CellOutput from './output'
 import CellEditor from './cell-editor'
 
 import { getCellById } from '../notebook-utils'
+import { getLanguageByName } from '../language'
 
-
-export class JsCellUnconnected extends React.Component {
+export class CodeCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
     value: PropTypes.any,
     rendered: PropTypes.bool.isRequired,
+    language: PropTypes.string.isRequired,
   }
 
   render() {
     return (
       <CellContainer cellId={this.props.cellId}>
-        <CellRow cellId={this.props.cellId} rowType="input">
-          <CellEditor cellId={this.props.cellId} />
+        <CellRow
+          cellId={this.props.cellId}
+          rowType="input"
+          class={getLanguageByName(this.props.language).name}
+        >
+          <CellEditor cellId={this.props.cellId} language={this.props.language} />
         </CellRow>
         <CellRow cellId={this.props.cellId} rowType="sideeffect">
           <div className="side-effect-target" />
@@ -43,8 +48,9 @@ export function mapStateToProps(state, ownProps) {
   return {
     value: cell.value,
     rendered: cell.rendered,
+    language: cell.language,
   }
 }
 
 
-export default connect(mapStateToProps)(JsCellUnconnected)
+export default connect(mapStateToProps)(CodeCellUnconnected)
