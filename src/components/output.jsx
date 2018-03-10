@@ -192,7 +192,32 @@ const defaultHandler = {
   ),
 }
 
+const errorHandler = {
+  shouldHandle: value => value instanceof Error,
+  render: (e) => {
+    let { stack } = e
+    if (e.lineNumber) {
+      // this is firefox
+      // prepend the name and message
+      stack = `${e.name}: ${e.message}\n${stack}`
+      // lines after the line beginning with "cellReducer@" can
+      // be discarded, because they refer to app state not notebook state
+      // stack = stack.slice(0, stack.indexOf('cellReducer@'))
+    } else {
+      // not FF;
+      // for now, treat as chrome. it appears that anything after:
+      // '    at cellReducer' is not useful.
+    }
+    return (
+      <div className="error-output">
+        <pre>{stack}</pre>
+      </div>
+    )
+  },
+}
+
 const handlers = [
+  errorHandler,
   nullHandler,
   undefinedHandler,
   renderMethodHandler,
