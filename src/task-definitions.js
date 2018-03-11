@@ -127,7 +127,7 @@ tasks.addCellBelow = new UserTask({
 
   callback() {
     dispatcher.insertCell('javascript', 'below')
-    dispatcher.selectCell(getCellBelowSelectedId(), true)
+    setTimeout(() => { dispatcher.selectCell(getCellBelowSelectedId(), true) }, 1);
   },
 })
 
