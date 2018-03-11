@@ -8,6 +8,7 @@ import { isCommandMode,
   getCellBelowSelectedId,
   getCellAboveSelectedId, prettyDate, formatDateString } from './notebook-utils'
 import { stateFromJsmd } from './jsmd-tools'
+import evaluateAllCells from './evaluate-all-cells'
 
 const dispatcher = {}
 for (const action in actions) {
@@ -23,13 +24,7 @@ if (oscpu.indexOf('Mac') !== -1) OSName = 'MacOS'
 if (oscpu.indexOf('X11') !== -1) OSName = 'UNIX'
 if (oscpu.indexOf('Linux') !== -1) OSName = 'Linux'
 
-function commandKey(key) {
-  let ctr = 'Ctrl '
-  if (OSName === 'MacOS') {
-    ctr = '⌘ '
-  }
-  return ctr + key
-}
+const commandKey = () => (OSName === 'MacOS' ? '⌘' : 'Ctrl')
 
 const tasks = {}
 
@@ -46,26 +41,7 @@ tasks.evaluateCell = new UserTask({
 tasks.evaluateAllCells = new UserTask({
   title: 'Evaluate All Cells',
   menuTitle: 'evaluate all cells',
-  callback() {
-    const cells = getCells()
-    cells.forEach((cell) => {
-      if (cell.cellType === 'markdown' ||
-          cell.cellType === 'dom') {
-        dispatcher.evaluateCell(cell.id)
-      }
-    })
-    window.setTimeout(
-      () => {
-        cells.forEach((cell) => {
-          if (cell.cellType !== 'markdown' &&
-              cell.cellType !== 'dom') {
-            dispatcher.evaluateCell(cell.id)
-          }
-        })
-      },
-      42, // wait a few milliseconds to let React DOM updates flush
-    )
-  },
+  callback() { evaluateAllCells(getCells(), store) },
 })
 
 tasks.evaluateCellAndSelectBelow = new UserTask({
@@ -88,7 +64,7 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
 
 tasks.moveCellUp = new UserTask({
   title: 'Move Cell Up',
-  displayKeybinding: '\u21E7 \u2191',
+  displayKeybinding: 'Shift+Up', // '\u21E7 \u2191',
   keybindings: ['shift+up'],
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
@@ -100,7 +76,7 @@ tasks.moveCellUp = new UserTask({
 
 tasks.moveCellDown = new UserTask({
   title: 'Move Cell Down',
-  displayKeybinding: '\u21E7 \u2193',
+  displayKeybinding: 'Shift+Down', // '\u21E7 \u2193',
   keybindings: ['shift+down'],
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
@@ -110,7 +86,7 @@ tasks.moveCellDown = new UserTask({
 
 tasks.selectUp = new UserTask({
   title: 'Select Cell Above',
-  displayKeybinding: '\u2191',
+  displayKeybinding: 'Up', // \u2191',
   keybindings: ['up'],
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
@@ -122,7 +98,7 @@ tasks.selectUp = new UserTask({
 
 tasks.selectDown = new UserTask({
   title: 'Select Cell Down',
-  displayKeybinding: '\u2193',
+  displayKeybinding: 'Down', // '\u2193',
   keybindings: ['down'],
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
@@ -135,7 +111,7 @@ tasks.selectDown = new UserTask({
 tasks.addCellAbove = new UserTask({
   title: 'Add Cell Above',
   keybindings: ['a'],
-  displayKeybinding: 'a',
+  displayKeybinding: 'A',
   keybindingPrecondition: isCommandMode,
   callback() {
     dispatcher.insertCell('javascript', 'above')
@@ -146,7 +122,7 @@ tasks.addCellAbove = new UserTask({
 tasks.addCellBelow = new UserTask({
   title: 'Add Cell Below',
   keybindings: ['b'],
-  displayKeybinding: 'b',
+  displayKeybinding: 'B',
   keybindingPrecondition: isCommandMode,
 
   callback() {
@@ -157,8 +133,8 @@ tasks.addCellBelow = new UserTask({
 
 tasks.deleteCell = new UserTask({
   title: 'Delete Cell',
-  keybindings: ['shift+del', 'shift+backspace'],
-  displayKeybinding: '\u21E7 \u232b',
+  keybindings: ['shift+backspace'],
+  displayKeybinding: 'Shift+Backspace', // '\u21E7 \u232b',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.deleteCell() },
 })
@@ -227,7 +203,7 @@ tasks.changeToMenuMode = new UserTask({
 tasks.changeToEditMode = new UserTask({
   title: 'Change to Edit Mode',
   keybindings: ['enter', 'return'],
-  displayKeybinding: 'enter',
+  displayKeybinding: 'Enter',
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
   callback() { dispatcher.changeMode('edit') },
@@ -254,7 +230,7 @@ tasks.createNewNotebook = new UserTask({
 tasks.saveNotebook = new UserTask({
   title: 'Save Notebook',
   keybindings: ['ctrl+s', 'meta+s'],
-  displayKeybinding: commandKey('S'),
+  displayKeybinding: `${commandKey()}+S`,
   preventDefaultKeybinding: true,
   callback() { dispatcher.saveNotebook(store.getState().title) },
 })
@@ -262,9 +238,17 @@ tasks.saveNotebook = new UserTask({
 tasks.exportNotebook = new UserTask({
   title: 'Export Notebook',
   keybindings: ['ctrl+e', 'meta+e'],
-  displayKeybinding: commandKey('E'),
+  displayKeybinding: `${commandKey()}+E`,
   callback() { dispatcher.exportNotebook() },
 })
+
+tasks.exportNotebookAsReport = new UserTask({
+  title: 'Export Notebook as Report',
+  keybindings: ['ctrl+shift+e', 'meta+shift+e'],
+  displayKeybinding: `Shift+${commandKey()}+E`,
+  callback() { dispatcher.exportNotebook(true) },
+})
+
 
 tasks.clearVariables = new UserTask({
   title: 'Clear Variables',
@@ -276,7 +260,7 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
   menuTitle: 'Declared Variables',
   keybindings: ['ctrl+d', 'meta+d'],
-  displayKeybinding: commandKey('D'),
+  displayKeybinding: `${commandKey()}+D`,
   preventDefaultKeybinding: true,
   callback() {
     if (store.getState().sidePaneMode !== 'declared variables') {
@@ -291,7 +275,7 @@ tasks.toggleHistoryPane = new UserTask({
   title: 'Toggle the History Pane',
   menuTitle: 'History',
   keybindings: ['ctrl+h', 'meta+h'],
-  displayKeybinding: commandKey('H'),
+  displayKeybinding: `${commandKey()}+H`,
   preventDefaultKeybinding: true,
 
   callback() {

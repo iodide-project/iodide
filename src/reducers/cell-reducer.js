@@ -135,10 +135,12 @@ const cellReducer = (state = newNotebook(), action) => {
       if (cellId === undefined) { cellId = getSelectedCellId(state) }
       const index = cells.findIndex(c => c.id === cellId)
       const thisCell = cells[index]
+      const history = [...newState.history]
+      const externalDependencies = [...newState.externalDependencies]
 
       if (thisCell.cellType === 'javascript') {
       // add to newState.history
-        newState.history.push({
+        history.push({
           cellID: thisCell.id,
           lastRan: new Date(),
           content: thisCell.content,
@@ -169,12 +171,12 @@ const cellReducer = (state = newNotebook(), action) => {
       } else if (thisCell.cellType === 'external dependencies') {
         const dependencies = thisCell.content.split('\n').filter(d => d.trim().slice(0, 2) !== '//')
         const newValues = dependencies
-          .filter(d => !newState.externalDependencies.includes(d))
+          .filter(d => !externalDependencies.includes(d))
           .map(addExternalDependency)
 
         newValues.forEach((d) => {
-          if (!newState.externalDependencies.includes(d.src)) {
-            newState.externalDependencies.push(d.src)
+          if (!externalDependencies.includes(d.src)) {
+            externalDependencies.push(d.src)
           }
         })
         thisCell.evalStatus = newValues.map(d => d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
@@ -182,7 +184,7 @@ const cellReducer = (state = newNotebook(), action) => {
         thisCell.rendered = true
         // add to newState.history
         if (newValues.length) {
-          newState.history.push({
+          history.push({
             cellID: thisCell.id,
             lastRan: new Date(),
             content: `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
@@ -202,7 +204,13 @@ const cellReducer = (state = newNotebook(), action) => {
       Object.keys(window)
         .filter(g => !initialVariables.has(g))
         .forEach((g) => { userDefinedVariables[g] = window[g] })
-      nextState = Object.assign({}, newState, { cells }, { userDefinedVariables })
+      nextState = Object.assign(
+        {}, newState,
+        { cells },
+        { userDefinedVariables },
+        { history },
+        { externalDependencies },
+      )
       return nextState
     }
     case 'DELETE_CELL': {
