@@ -243,6 +243,7 @@ export default class CellOutput extends React.Component {
   }
 
   render() {
+    console.log('CellOutput rendered')
     if (!this.props.render ||
         this.props.valueToRender === undefined) {
       return <div className="empty-resultset" />

@@ -19,6 +19,14 @@ class CellContainer extends React.Component {
     }).isRequired,
   }
 
+  // shouldComponentUpdate(nextProps) {
+  //   return (
+  //     this.props.selected !== nextProps.selected ||
+  //     this.props.pageMode !== nextProps.pageMode ||
+  //     this.props.cellType !== nextProps.cellType
+  //   )
+  // }
+
   handleCellClick = () => {
     if (this.props.viewMode === 'editor') {
       const scrollToCell = false
@@ -29,6 +37,7 @@ class CellContainer extends React.Component {
   }
 
   render() {
+    console.log(`CellContainer rendered: ${this.props.cellId}`)
     const cellClass = `cell-container ${
       this.props.cellType
     } ${
