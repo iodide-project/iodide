@@ -512,7 +512,7 @@ div.last-saved {
   font-size: 12px
 }
 
-#tooltip-icon {
+div.toolbar-tooltip {
   font-size: 0.800rem;
 }
 
