@@ -40,16 +40,21 @@ const notebookReducer = (state = newNotebook(), action) => {
       return newNotebook()
 
     case 'EXPORT_NOTEBOOK': {
-      nextState = Object.assign({}, state)
-      const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(nextState))}`
+      const exportState = Object.assign(
+        {},
+        state,
+        { viewMode: action.exportAsReport ? 'presentation' : 'editor' },
+      )
+      console.log(exportState)
+      const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
       const dlAnchorElem = document.getElementById('export-anchor')
       dlAnchorElem.setAttribute('href', dataStr)
-      title = nextState.title === undefined ? 'new-notebook' : nextState.title
+      title = exportState.title === undefined ? 'new-notebook' : exportState.title
       const filename = `${title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.html`
       dlAnchorElem.setAttribute('download', filename)
       dlAnchorElem.click()
 
-      return Object.assign({}, state)
+      return state
     }
 
     case 'IMPORT_NOTEBOOK': {
