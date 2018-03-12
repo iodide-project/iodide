@@ -10,7 +10,6 @@ import { rowOverflowEnum, nextOverflow } from '../state-prototypes'
 class CellRow extends React.Component {
   static propTypes = {
     executionString: PropTypes.string,
-    pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     rowOverflow: PropTypes.oneOf(rowOverflowEnum.values()),
     rowType: PropTypes.string,
@@ -32,10 +31,7 @@ class CellRow extends React.Component {
     // the editor upon entering edit mode.
     // note: entering editMode is only allowed from editor View
     // thus, we only need to check the editorView collapsed state
-    if (this.props.viewMode === 'editor' &&
-      this.props.pageMode === 'edit' &&
-      this.props.rowType === 'input' &&
-      this.props.rowOverflow === rowOverflowEnum.HIDDEN) {
+    if (this.props.uncollapseOnUpdate) {
       this.props.actions.setCellRowCollapsedState(
         'editor',
         'input',
@@ -56,6 +52,7 @@ class CellRow extends React.Component {
   }
 
   render() {
+    console.log(`render cell-row: cellId:${this.props.cellId} ${this.props.rowType} ${this.props.rowOverflow}`)
     return (
       <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
         <div className="status">
@@ -77,8 +74,6 @@ class CellRow extends React.Component {
 
 function mapStateToPropsCellRows(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
-  // const row = cell.rows.filter(r => r.rowType === ownProps.rowType)[0]
-
   let view
   // this block can be deprecated if we move to enums for VIEWs
   switch (state.viewMode) {
@@ -94,9 +89,21 @@ function mapStateToPropsCellRows(state, ownProps) {
   const rowOverflow = cell.rowSettings[view][ownProps.rowType]
   const executionString = (ownProps.rowType === 'input'
     && cell.cellType === 'javascript') ? `[${cell.executionStatus}]` : ''
+  // if this is an input row, uncollapse
+  // the editor upon entering edit mode.
+  // note: entering editMode is only allowed from editor View
+  // thus, we only need to check the editorView collapsed state
+  const uncollapseOnUpdate = (
+    cell.selected &&
+    state.viewMode === 'editor' &&
+    state.mode === 'edit' &&
+    ownProps.rowType === 'input' &&
+    rowOverflow === rowOverflowEnum.HIDDEN
+  )
   return {
-    pageMode: state.mode,
+    cellId: ownProps.cellId,
     viewMode: state.viewMode,
+    uncollapseOnUpdate,
     executionString,
     rowOverflow,
   }
