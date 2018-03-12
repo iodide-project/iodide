@@ -24,11 +24,9 @@ import actions from '../actions'
 class CellEditor extends React.Component {
   static propTypes = {
     // readOnly: PropTypes.bool.isRequired,
-    cellSelected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
     cellType: PropTypes.string,
     content: PropTypes.string,
-    pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
@@ -36,7 +34,6 @@ class CellEditor extends React.Component {
       updateInputContent: PropTypes.func.isRequired,
     }).isRequired,
     inputRef: PropTypes.func,
-    onContainerClick: PropTypes.func,
     containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
   }
@@ -51,31 +48,25 @@ class CellEditor extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.cellSelected
+    if (this.props.thisCellBeingEdited
       && this.refs.hasOwnProperty('editor') // eslint-disable-line
-      && this.props.pageMode === 'edit') {
+    ) {
       this.editor.focus()
     }
   }
 
   componentDidUpdate() {
-    if (this.props.cellSelected && this.props.pageMode === 'edit') {
+    if (this.props.thisCellBeingEdited) {
       this.editor.focus()
-    }
-    if (!this.props.cellSelected && this.props.pageMode === 'edit') {
-      this.editor.getCodeMirror().display.input.textarea.blur()
-    }
-    if (this.props.pageMode !== 'edit' || this.props.viewMode !== 'editor') {
+    } else {
       this.editor.getCodeMirror().display.input.textarea.blur()
     }
   }
 
   handleFocusChange(focused) {
     if (focused && this.props.viewMode === 'editor') {
-      if (!this.props.cellSelected) {
+      if (!this.props.thisCellBeingEdited) {
         this.props.actions.selectCell(this.props.cellId)
-      }
-      if (!this.props.pageMode !== 'edit' && this.props.viewMode === 'editor') {
         this.props.actions.changeMode('edit')
       }
     } else if (!focused && this.props.viewMode === 'editor') {
@@ -130,7 +121,6 @@ class CellEditor extends React.Component {
     return (
       <div
         className="editor"
-        // onClick={this.props.onContainerClick}
         style={this.props.containerStyle}
       >
         <CodeMirror
@@ -150,10 +140,8 @@ function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
   return {
-    // readOnly: ownProps.readOnly,
-    pageMode: state.mode,
+    thisCellBeingEdited: cell.selected && state.mode === 'edit',
     viewMode: state.viewMode,
-    cellSelected: cell.selected,
     cellType: cell.cellType,
     content: cell.content,
     cellId,
