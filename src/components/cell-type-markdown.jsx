@@ -17,15 +17,12 @@ export class MarkdownCellUnconnected extends React.Component {
     cellId: PropTypes.number.isRequired,
     value: PropTypes.string,
     showMarkdown: PropTypes.bool.isRequired,
-    pageMode: PropTypes.oneOf(['command', 'edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
   }
 
   enterEditMode = () => {
     if (this.props.viewMode === 'editor') {
-      if (this.props.pageMode !== 'edit') {
-        this.props.actions.changeMode('edit')
-      }
+      this.props.actions.changeMode('edit')
       this.props.actions.markCellNotRendered()
     }
   }
@@ -47,7 +44,6 @@ export class MarkdownCellUnconnected extends React.Component {
           <CellEditor
             cellId={this.props.cellId}
             containerStyle={{ display: editorDisplayStyle }}
-            onContainerClick={this.enterEditMode}
             editorOptions={{
               lineWrapping: true,
               matchBrackets: false,
@@ -76,7 +72,6 @@ export function mapStateToProps(state, ownProps) {
   return {
     value: cell.value,
     showMarkdown: cell.rendered && !beingEdited,
-    pageMode: state.mode,
     viewMode: state.viewMode,
   }
 }
