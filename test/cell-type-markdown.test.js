@@ -25,7 +25,6 @@ describe('MarkdownCell_unconnected react component', () => {
       cellId: 1,
       value: 'a _markdown_ string',
       showMarkdown: true,
-      pageMode: 'command',
       viewMode: 'editor',
       actions: { markCellNotRendered, changeMode },
     }
@@ -101,14 +100,12 @@ describe('MarkdownCell_unconnected react component', () => {
       .toEqual({ __html: props.value })
   })
 
-  it('both the editor and output recieve enterEditMode() as props', () => {
-    expect(cell().wrap(cell().find(CellEditor)).props().onContainerClick)
-      .toEqual(cell().instance().enterEditMode)
+  it('both the output recieves enterEditMode() as props', () => {
     expect(cell().wrap(cell().find('div')).props().onDoubleClick)
       .toEqual(cell().instance().enterEditMode)
   })
 
-  it('if MD shown & view==editor, dblclick on MD div fires markCellNotRendered AND changeMode', () => {
+  it('dblclick on MD div fires markCellNotRendered AND changeMode', () => {
     props.showMarkdown = true
     props.viewMode = 'editor'
     cell().find('div').simulate('dblclick')
@@ -118,39 +115,13 @@ describe('MarkdownCell_unconnected react component', () => {
     expect(markCellNotRendered.mock.calls.length).toBe(1)
   })
 
-  it('if MD shown & view==editor & mode==edit dblclick on MD div fires markCellNotRendered only', () => {
-    props.showMarkdown = true
-    // props for test
-    props.pageMode = 'edit'
-    props.viewMode = 'editor'
-    cell().find('div').simulate('dblclick')
-    expect(cell().wrap(cell().find('div')).props().style)
-      .toEqual({ display: 'block' })
-    expect(changeMode.mock.calls.length).toBe(0)
-    expect(markCellNotRendered.mock.calls.length).toBe(1)
-  })
-
-  it('if editor shown & view==editor & mode!==edit, click on editor fires markCellNotRendered AND changeMode', () => {
+  it('click on editor fires no actions', () => {
     props.showMarkdown = false
-    props.pageMode = 'command'
     props.viewMode = 'editor'
     cell().find(CellEditor).simulate('containerClick')
     expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
       .toEqual({ display: 'block' })
-    expect(markCellNotRendered.mock.calls.length).toBe(1)
-    expect(changeMode.mock.calls.length).toBe(1)
-  })
-
-  it('if editor shown & view==editor & mode==edit, click on editor fires markCellNotRendered only', () => {
-    props.showMarkdown = false
-    props.pageMode = 'edit'
-    props.viewMode = 'editor'
-
-    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-      .toEqual({ display: 'block' })
-
-    cell().find(CellEditor).simulate('containerClick')
-    expect(markCellNotRendered.mock.calls.length).toBe(1)
+    expect(markCellNotRendered.mock.calls.length).toBe(0)
     expect(changeMode.mock.calls.length).toBe(0)
   })
 })
@@ -194,7 +165,6 @@ describe('MarkdownCell mapStateToProps', () => {
       .toEqual({
         value: '#MD string',
         showMarkdown: false,
-        pageMode: 'edit',
         viewMode: 'presentation',
       })
   })
@@ -209,7 +179,6 @@ describe('MarkdownCell mapStateToProps', () => {
         .toEqual({
           value: '#MD string',
           showMarkdown: true,
-          pageMode: stateMods.mode,
           viewMode: 'presentation',
         })
     })
@@ -224,7 +193,6 @@ describe('MarkdownCell mapStateToProps', () => {
         .toEqual({
           value: '#MD string',
           showMarkdown: false,
-          pageMode: stateMods.mode,
           viewMode: 'presentation',
         })
     })
