@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import actions from '../actions'
 import { getCellById } from '../notebook-utils'
+import { cellTypeEnum } from '../state-prototypes'
 
 
 class CellContainer extends React.Component {
@@ -12,8 +13,10 @@ class CellContainer extends React.Component {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
     children: PropTypes.node,
-    pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
+    editingCell: PropTypes.bool.isRequired,
+    // pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    cellType: PropTypes.oneOf(cellTypeEnum.values()),
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
     }).isRequired,
@@ -43,8 +46,7 @@ class CellContainer extends React.Component {
     } ${
       this.props.selected ? 'selected-cell' : ''
     } ${
-      (this.props.selected && this.props.pageMode === 'edit') ?
-        'edit-mode ' : 'command-mode '
+      this.props.editingCell ? 'editing-cell ' : ''
     }`
 
     return (
@@ -65,7 +67,7 @@ function mapStateToProps(state, ownProps) {
   return {
     cellId: cell.id,
     selected: cell.selected,
-    pageMode: state.mode,
+    editingCell: cell.selected && state.mode === 'edit',
     viewMode: state.viewMode,
     cellType: cell.cellType,
   }
