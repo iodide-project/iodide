@@ -21,8 +21,6 @@ describe('JsCell_unconnected react component', () => {
   beforeEach(() => {
     props = {
       cellId: 5,
-      value: 3.1415,
-      rendered: true,
     }
     mountedCell = undefined
   })
@@ -95,36 +93,5 @@ describe('JsCell_unconnected react component', () => {
   it("sets the CellEditor cellId prop to be the JsCell's cellId prop", () => {
     expect(cell().find(CellEditor).props().cellId)
       .toBe(props.cellId)
-  })
-
-  it("sets the CellOutput valueToRender prop to be the JsCell's value prop", () => {
-    expect(cell().find(CellOutput).props().valueToRender)
-      .toBe(props.value)
-  })
-
-  it("sets the CellOutput renderValue prop to be the JsCell's value prop", () => {
-    expect(cell().find(CellOutput).props().render)
-      .toBe(props.rendered)
-  })
-})
-
-
-describe('JsCell mapStateToProps', () => {
-  const state = {
-    cells: [
-      { id: 5, rendered: false },
-      { id: 3, value: 3.14, rendered: true }],
-  }
-
-  it("should return the 'rendered' of the correct cell if value is undefined", () => {
-    const ownProps = { cellId: 5 }
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({ rendered: false })
-  })
-
-  it("should return 'rendered' and 'value' of the correct cells", () => {
-    const ownProps = { cellId: 3 }
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({ value: 3.14, rendered: true })
   })
 })

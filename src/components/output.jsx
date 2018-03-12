@@ -2,14 +2,17 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import _ from 'lodash'
 import JSONTree from 'react-json-tree'
 import ReactTable from 'react-table'
 
 import { SimpleTable, makeMatrixText } from './pretty-matrix'
+import { getCellById } from '../notebook-utils'
 
 import nb from '../tools/nb'
+
 
 function renderValue(value, inContainer = false) {
   for (const handler of handlers) {
@@ -236,14 +239,15 @@ export function addOutputHandler(handler) {
   handlers.unshift(handler)
 }
 
-export default class CellOutput extends React.Component {
+
+export class CellOutputUnconnected extends React.Component {
   static propTypes = {
     render: PropTypes.bool.isRequired,
     valueToRender: PropTypes.any,
   }
 
   render() {
-    console.log('CellOutput rendered')
+    console.log(`CellOutput rendered: ${this.props.cellId}`)
     if (!this.props.render ||
         this.props.valueToRender === undefined) {
       return <div className="empty-resultset" />
@@ -257,3 +261,13 @@ export default class CellOutput extends React.Component {
     return <div className="empty-resultset" />
   }
 }
+
+export function mapStateToProps(state, ownProps) {
+  const cell = getCellById(state.cells, ownProps.cellId)
+  return {
+    valueToRender: cell.value,
+    render: cell.rendered,
+  }
+}
+
+export default connect(mapStateToProps)(CellOutputUnconnected)
