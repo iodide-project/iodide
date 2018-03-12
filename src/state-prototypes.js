@@ -16,7 +16,7 @@ const StringEnum = class {
 
 const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
 // const rowTypeEnum = new StringEnum('input', 'output')
-const cellTypeEnum = new StringEnum(
+export const cellTypeEnum = new StringEnum(
   'javascript',
   'markdown',
   'raw',
