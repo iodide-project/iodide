@@ -21,7 +21,6 @@ const { AUTOSAVE } = settings.labels
 
 class Page extends React.Component {
   static propTypes = {
-    mode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     actions: PropTypes.shape({
       deleteNotebook: PropTypes.func.isRequired,
@@ -34,8 +33,6 @@ class Page extends React.Component {
   }
   constructor(props) {
     super(props)
-    // this.props.actions.newNotebook()
-    this.enterCommandModeOnClickOutOfCell = this.enterCommandModeOnClickOutOfCell.bind(this)
 
     keyBinding()
     setInterval(() => {
@@ -58,16 +55,8 @@ class Page extends React.Component {
     return !deepEqual(this.props, nextProps)
   }
 
-  enterCommandModeOnClickOutOfCell(e) {
-    // check whther the click is (1) directly in div#cells (2) in any element
-    // contained in the notebook header
-    if (e.target.id.includes('cells') ||
-        document.querySelector('.notebook-header').contains(e.target)) {
-      if (this.props.mode !== 'command') this.props.actions.changeMode('command')
-    }
-  }
-
   render() {
+    console.log('Page rendered')
     const bodyContent = this.props.cellIds.map((id, i) => {
       // let id = cell.id
       switch (this.props.cellTypes[i]) {
@@ -92,7 +81,6 @@ class Page extends React.Component {
       <div
         id="notebook-container"
         className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
-        onMouseDown={this.enterCommandModeOnClickOutOfCell}
       >
         <NotebookHeader />
         <div id="cells" className={this.props.viewMode}>
@@ -105,7 +93,6 @@ class Page extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    mode: state.mode,
     cellIds: state.cells.map(c => c.id),
     cellTypes: state.cells.map(c => c.cellType),
     viewMode: state.viewMode,
