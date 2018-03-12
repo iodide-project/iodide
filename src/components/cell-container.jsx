@@ -40,7 +40,7 @@ class CellContainer extends React.Component {
   }
 
   render() {
-    console.log(`CellContainer rendered: ${this.props.cellId}`)
+    // console.log(`CellContainer rendered: ${this.props.cellId}`)
     const cellClass = `cell-container ${
       this.props.cellType
     } ${

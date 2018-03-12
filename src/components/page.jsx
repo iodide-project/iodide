@@ -56,7 +56,7 @@ class Page extends React.Component {
   }
 
   render() {
-    console.log('Page rendered')
+    // console.log('Page rendered')
     const bodyContent = this.props.cellIds.map((id, i) => {
       // let id = cell.id
       switch (this.props.cellTypes[i]) {

@@ -13,7 +13,7 @@ export class JsCellUnconnected extends React.Component {
   }
 
   render() {
-    console.log(`JsCellUnconnected rendered: ${this.props.cellId}`)
+    // console.log(`JsCellUnconnected rendered: ${this.props.cellId}`)
     return (
       <CellContainer cellId={this.props.cellId}>
         <CellRow cellId={this.props.cellId} rowType="input">

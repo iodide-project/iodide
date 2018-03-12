@@ -247,7 +247,7 @@ export class CellOutputUnconnected extends React.Component {
   }
 
   render() {
-    console.log(`CellOutput rendered: ${this.props.cellId}`)
+    // console.log(`CellOutput rendered: ${this.props.cellId}`)
     if (!this.props.render ||
         this.props.valueToRender === undefined) {
       return <div className="empty-resultset" />
