@@ -7,7 +7,7 @@ import deepEqual from 'deep-equal'
 import RawCell from './cell-type-raw'
 import ExternalDependencyCell from './cell-type-external-resource'
 import CSSCell from './cell-type-css'
-import JsCell from './cell-type-javascript'
+import CodeCell from './cell-type-javascript'
 import MarkdownCell from './cell-type-markdown'
 
 import NotebookHeader from './notebook-header'
@@ -62,7 +62,7 @@ class Page extends React.Component {
       switch (this.props.cellTypes[i]) {
         case 'javascript':
         // return <JavascriptCell cellId={id} key={id}/>
-          return <JsCell cellId={id} key={id} />
+          return <CodeCell cellId={id} key={id} />
         case 'markdown':
           return <MarkdownCell cellId={id} key={id} />
         case 'raw':

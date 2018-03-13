@@ -7,13 +7,13 @@ import { CellContainer } from './cell-container'
 import CellOutput from './output'
 import CellEditor from './cell-editor'
 
-export class JsCellUnconnected extends React.Component {
+export class CodeCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
   }
 
   render() {
-    // console.log(`JsCellUnconnected rendered: ${this.props.cellId}`)
+    // console.log(`CodeCellUnconnected rendered: ${this.props.cellId}`)
     return (
       <CellContainer cellId={this.props.cellId}>
         <CellRow cellId={this.props.cellId} rowType="input">
@@ -30,4 +30,4 @@ export class JsCellUnconnected extends React.Component {
   }
 }
 
-export default connect()(JsCellUnconnected)
+export default connect()(CodeCellUnconnected)

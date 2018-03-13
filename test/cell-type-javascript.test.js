@@ -1,18 +1,18 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { JsCellUnconnected as JsCell } from '../src/components/cell-type-javascript'
+import { CodeCellUnconnected as CodeCell } from '../src/components/cell-type-javascript'
 import { CellContainer } from '../src/components/cell-container'
 import CellRow from '../src/components/cell-row'
 import CellEditor from '../src/components/cell-editor'
 import CellOutput from '../src/components/output'
 
-describe('JsCell_unconnected react component', () => {
+describe('CodeCell_unconnected react component', () => {
   let props
   let mountedCell
   const cell = () => {
     if (!mountedCell) {
-      mountedCell = shallow(<JsCell {...props} />)
+      mountedCell = shallow(<CodeCell {...props} />)
     }
     return mountedCell
   }
@@ -48,12 +48,12 @@ describe('JsCell_unconnected react component', () => {
       .find(CellOutput)).toHaveLength(1)
   })
 
-  it("sets the CellContainer cellId prop to be the JsCell's cellId prop", () => {
+  it("sets the CellContainer cellId prop to be the CodeCell's cellId prop", () => {
     expect(cell().find(CellContainer).props().cellId)
       .toBe(props.cellId)
   })
 
-  it("sets the first CellRow cellId prop to be the JsCell's cellId prop", () => {
+  it("sets the first CellRow cellId prop to be the CodeCell's cellId prop", () => {
     expect(cell().find(CellRow).at(0).props().cellId)
       .toBe(props.cellId)
   })
@@ -63,7 +63,7 @@ describe('JsCell_unconnected react component', () => {
       .toBe('input')
   })
 
-  it("sets the 2nd CellRow cellId prop to be the JsCell's cellId prop", () => {
+  it("sets the 2nd CellRow cellId prop to be the CodeCell's cellId prop", () => {
     expect(cell().find(CellRow).at(1).props().cellId)
       .toBe(props.cellId)
   })
@@ -78,7 +78,7 @@ describe('JsCell_unconnected react component', () => {
       .toBe('side-effect-target')
   })
 
-  it("sets the third CellRow cellId prop to be the JsCell's cellId prop", () => {
+  it("sets the third CellRow cellId prop to be the CodeCell's cellId prop", () => {
     expect(cell().find(CellRow).at(2).props().cellId)
       .toBe(props.cellId)
   })
@@ -89,7 +89,7 @@ describe('JsCell_unconnected react component', () => {
   })
 
 
-  it("sets the CellEditor cellId prop to be the JsCell's cellId prop", () => {
+  it("sets the CellEditor cellId prop to be the CodeCell's cellId prop", () => {
     expect(cell().find(CellEditor).props().cellId)
       .toBe(props.cellId)
   })
