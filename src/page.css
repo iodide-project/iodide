@@ -161,7 +161,7 @@ div.collapse-button {
 
 div.raw div.collapse-button:hover,
 div.external div.collapse-button:hover,
-div.javascript div.collapse-button:hover {
+div.code div.collapse-button:hover {
   background: #fbfbfb;
   outline: 1px solid #ddd;
   cursor: pointer;
