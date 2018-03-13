@@ -42,11 +42,25 @@ const cellSchema = {
     executionStatus: { type: 'string' },
     evalStatus: {}, // FIXME change to string ONLY
     rowSettings: { type: 'object' },
+    language: { type: 'string' }, // '' in case not a code cell
   },
   additionalProperties: false,
 }
 // cellSchema.required = Object.keys(cellSchema.properties)
 // cellSchema.minProperties = Object.keys(cellSchema.properties).length
+
+const languageSchema = {
+  type: 'object',
+  properties: {
+    languageId: { type: 'string' },
+    displayName: { type: 'string' },
+    codemirrorName: { type: 'string' },
+    keybinding: { type: 'string' },
+    evaluate: {},
+  },
+  additionalProperties: false,
+}
+
 
 const stateSchema = {
   type: 'object',
@@ -55,6 +69,10 @@ const stateSchema = {
     cells: {
       type: 'array',
       items: cellSchema,
+    },
+    languages: {
+      type: 'array',
+      items: languageSchema,
     },
     mode: {
       type: 'string',
