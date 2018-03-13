@@ -56,7 +56,7 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
       dispatcher.selectCell(cellBelowId, true)
     } else {
     // if cellBelowId *is* null, need to add a new cell.
-      dispatcher.addCell('javascript')
+      dispatcher.addCell('code')
       dispatcher.selectCell(getCellBelowSelectedId(), true)
     }
   },
@@ -114,7 +114,7 @@ tasks.addCellAbove = new UserTask({
   displayKeybinding: 'A',
   keybindingPrecondition: isCommandMode,
   callback() {
-    dispatcher.insertCell('javascript', 'above')
+    dispatcher.insertCell('code', 'above')
     dispatcher.selectCell(getCellAboveSelectedId(), true)
   },
 })
@@ -126,7 +126,7 @@ tasks.addCellBelow = new UserTask({
   keybindingPrecondition: isCommandMode,
 
   callback() {
-    dispatcher.insertCell('javascript', 'below')
+    dispatcher.insertCell('code', 'below')
     dispatcher.selectCell(getCellBelowSelectedId(), true)
   },
 })
@@ -146,7 +146,7 @@ tasks.changeToJavascriptCell = new UserTask({
   displayKeybinding: 'J',
   keybindingPrecondition: isCommandMode,
   callback() {
-    dispatcher.changeCellType('javascript')
+    dispatcher.changeCellType('code')
   },
 })
 

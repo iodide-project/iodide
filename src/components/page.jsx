@@ -60,7 +60,7 @@ class Page extends React.Component {
     const bodyContent = this.props.cellIds.map((id, i) => {
       // let id = cell.id
       switch (this.props.cellTypes[i]) {
-        case 'javascript':
+        case 'code':
         // return <JavascriptCell cellId={id} key={id}/>
           return <CodeCell cellId={id} key={id} />
         case 'markdown':

@@ -13,7 +13,7 @@ function clearHistory(loadedState) {
   loadedState.cells = [...loadedState.cells.slice()]
   loadedState.cells.forEach((cell) => {
     cell.evalStatus = undefined
-    if (cell.cellType === 'javascript' || cell.cellType === 'external dependencies') cell.value = undefined
+    if (cell.cellType === 'code' || cell.cellType === 'external dependencies') cell.value = undefined
   })
   /* eslint-enable */
 }
@@ -79,7 +79,7 @@ const notebookReducer = (state = newNotebook(), action) => {
         cells: state.cells.slice().map((c) => {
           const newC = Object.assign({}, c)
           newC.evalStatus = undefined
-          if (newC.cellType === 'javascript' || newC.cellType === 'external dependencies') {
+          if (newC.cellType === 'code' || newC.cellType === 'external dependencies') {
             newC.value = undefined
           }
           return newC

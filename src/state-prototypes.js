@@ -17,7 +17,7 @@ const StringEnum = class {
 const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
 // const rowTypeEnum = new StringEnum('input', 'output')
 export const cellTypeEnum = new StringEnum(
-  'javascript',
+  'code',
   'markdown',
   'raw',
   'css',
@@ -108,7 +108,7 @@ function nextOverflow(currentOverflow) {
 
 function newCellRowSettings(cellType) {
   switch (cellType) {
-    case 'javascript':
+    case 'code':
       return {
         EXPLORE: {
           input: rowOverflowEnum.VISIBLE,
@@ -208,7 +208,7 @@ function addNewCellToState(state, cellType) {
 
 function newNotebook() {
   // initialize a blank notebook and push a blank new cell into it
-  const initialState = addNewCellToState(blankState(), 'javascript')
+  const initialState = addNewCellToState(blankState(), 'code')
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
   return initialState

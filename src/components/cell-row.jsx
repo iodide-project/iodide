@@ -88,7 +88,7 @@ function mapStateToPropsCellRows(state, ownProps) {
   }
   const rowOverflow = cell.rowSettings[view][ownProps.rowType]
   const executionString = (ownProps.rowType === 'input'
-    && cell.cellType === 'javascript') ? `[${cell.executionStatus}]` : ''
+    && cell.cellType === 'code') ? `[${cell.executionStatus}]` : ''
   // if this is an input row, uncollapse
   // the editor upon entering edit mode.
   // note: entering editMode is only allowed from editor View

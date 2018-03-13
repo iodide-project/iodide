@@ -112,9 +112,9 @@ class CellEditor extends React.Component {
       lineNumbers: true,
       keyMap: 'sublime',
       extraKeys: {
-        'Ctrl-Space': this.props.cellType === 'javascript' ? this.autoComplete : undefined,
+        'Ctrl-Space': this.props.cellType === 'code' ? this.autoComplete : undefined,
       },
-      comment: this.props.cellType === 'javascript',
+      comment: this.props.cellType === 'code',
       readOnly: this.props.viewMode === 'presentation',
     }, this.props.editorOptions)
 

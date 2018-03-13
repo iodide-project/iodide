@@ -47,7 +47,7 @@ const cellReducer = (state = newNotebook(), action) => {
       const cells = state.cells.slice()
       const index = cells.findIndex(c => c.id === getSelectedCellId(state))
       const direction = (action.direction === 'above') ? 0 : 1
-      const nextCell = newCell(newCellID(state.cells), 'javascript')
+      const nextCell = newCell(newCellID(state.cells), 'code')
       cells.splice(index + direction, 0, nextCell)
       nextState = Object.assign({}, state, { cells })
       return nextState
@@ -138,7 +138,7 @@ const cellReducer = (state = newNotebook(), action) => {
       const history = [...newState.history]
       const externalDependencies = [...newState.externalDependencies]
 
-      if (thisCell.cellType === 'javascript') {
+      if (thisCell.cellType === 'code') {
       // add to newState.history
         history.push({
           cellID: thisCell.id,

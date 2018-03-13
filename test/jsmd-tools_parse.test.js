@@ -58,7 +58,7 @@ describe('jsmd parser Ex 1', () => {
   })
   it('should have correct cell types', () => {
     expect(cells.map(c => c.cellType)).toEqual([
-      'markdown', 'javascript', 'raw', 'markdown', 'external dependencies', 'css', 'javascript',
+      'markdown', 'code', 'raw', 'markdown', 'external dependencies', 'css', 'code',
     ])
   })
   it('should have zero parse warnings', () => {
@@ -110,7 +110,7 @@ describe('jsmd parser test case 3', () => {
     expect(parseWarnings).toEqual([])
   })
   it('all cells should have cellType==js', () => {
-    expect(cells.map(c => c.cellType)).toEqual(expect.arrayContaining(['javascript']))
+    expect(cells.map(c => c.cellType)).toEqual(expect.arrayContaining(['code']))
   })
   it('all cells should have content=="foo"', () => {
     expect(cells.map(c => c.content)).toEqual(expect.arrayContaining(['foo']))
@@ -161,7 +161,7 @@ describe('jsmd parser test case 5', () => {
     expect(parseWarnings.length).toEqual(3)
   })
   it('all cells should have cellType==js (bad cellTypes should convert to js)', () => {
-    expect(cells.map(c => c.cellType)).toEqual(['javascript', 'javascript', 'javascript'])
+    expect(cells.map(c => c.cellType)).toEqual(['code', 'code', 'code'])
   })
   it('cell 1 should have "rowSettings.REPORT.output":"VISIBLE"', () => {
     expect(cells[1].rowSettings.REPORT.output).toEqual('VISIBLE')
@@ -192,7 +192,7 @@ describe('jsmd parser test case 6', () => {
     expect(parseWarnings.length).toEqual(1)
   })
   it('the cells should have cellType==js (bad cellTypes should convert to js)', () => {
-    expect(cells.map(c => c.cellType)).toEqual(['javascript'])
+    expect(cells.map(c => c.cellType)).toEqual(['code'])
   })
   it('state should be a default notebook with no additions', () => {
     expect(state).toEqual(newNotebook())

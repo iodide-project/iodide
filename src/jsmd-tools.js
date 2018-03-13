@@ -8,8 +8,8 @@ const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource', 'css']
 
 
 const jsmdCellTypeMap = new Map([
-  ['js', 'javascript'],
-  ['javascript', 'javascript'],
+  ['js', 'code'],
+  ['code', 'code'],
   ['md', 'markdown'],
   ['markdown', 'markdown'],
   ['external', 'external dependencies'],
@@ -20,7 +20,7 @@ const jsmdCellTypeMap = new Map([
 ])
 
 const cellTypeToJsmdMap = new Map([
-  ['javascript', 'js'],
+  ['code', 'js'],
   ['markdown', 'md'],
   ['external dependencies', 'resource'],
   ['dom', 'dom'],
@@ -71,7 +71,7 @@ function parseCellChunk(chunkType, content, settings, str, chunkNum, parseWarnin
       parseError: 'invalid cell type, converted to js cell',
       details: `chunkType: ${chunkType} chunkNum:${chunkNum} raw string: ${str}`,
     })
-    cellType = 'javascript'
+    cellType = 'code'
   }
 
   const cell = newCell(chunkNum, cellType)
@@ -179,7 +179,7 @@ function stateFromJsmd(jsmdString) {
     })
   // if only a meta cell exists, return a default JS cell
   if (initialState.cells.length === 0) {
-    initialState.cells.push(newCell(0, 'javascript'))
+    initialState.cells.push(newCell(0, 'code'))
   }
   // set cell 0  to be the selected cell
   initialState.cells[0].selected = true
