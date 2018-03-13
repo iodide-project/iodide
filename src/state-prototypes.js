@@ -74,6 +74,7 @@ const stateSchema = {
       type: 'object',
       additionalProperties: languageSchema,
     },
+    languageLastUsed: { type: 'string' },
     mode: {
       type: 'string',
       enum: ['command', 'edit', 'title-edit'],
@@ -194,6 +195,7 @@ function blankState() {
     title: undefined,
     cells: [],
     languages: { js: jsLanguageDefinition },
+    languageLastUsed: 'js',
     // languages: [jsLanguageDefinition],
     userDefinedVariables: {},
     lastSaved: undefined,
