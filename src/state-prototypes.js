@@ -56,7 +56,7 @@ const languageSchema = {
     displayName: { type: 'string' },
     codeMirrorName: { type: 'string' },
     keybinding: { type: 'string' },
-    evaluate: {},
+    evaluate: {}, // the 'any'/'empty schema' represents a function here
   },
   additionalProperties: false,
 }
@@ -71,8 +71,8 @@ const stateSchema = {
       items: cellSchema,
     },
     languages: {
-      type: 'array',
-      items: languageSchema,
+      type: 'object',
+      additionalProperties: languageSchema,
     },
     mode: {
       type: 'string',
@@ -193,7 +193,8 @@ function blankState() {
   const initialState = {
     title: undefined,
     cells: [],
-    languages: [jsLanguageDefinition],
+    languages: { js: jsLanguageDefinition },
+    // languages: [jsLanguageDefinition],
     userDefinedVariables: {},
     lastSaved: undefined,
     mode: 'command', // command, edit
