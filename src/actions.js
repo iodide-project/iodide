@@ -149,6 +149,19 @@ const actions = {
       mode,
     }
   },
+  addLanguage(languageId, evaluate, displayName, codeMirrorName, keybinding) {
+    return {
+      type: 'ADD_LANGUAGE',
+      languageId,
+      languageDefinition: {
+        languageId,
+        evaluate,
+        displayName,
+        codeMirrorName,
+        keybinding,
+      },
+    }
+  },
 }
 
 export default actions

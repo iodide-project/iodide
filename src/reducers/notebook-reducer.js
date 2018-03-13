@@ -158,6 +158,16 @@ This will update them to jsmd.
       return Object.assign({}, state, { sidePaneMode: action.mode })
     }
 
+    case 'ADD_LANGUAGE': {
+      // let { languages } = state
+      const languages = Object.assign(
+        {},
+        state.languages,
+        { [action.languageId]: action.languageDefinition },
+      )
+      return Object.assign({}, state, { languages })
+    }
+
     default: {
       return state
     }
