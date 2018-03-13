@@ -109,6 +109,7 @@ module.exports = (env) => {
         IODIDE_VERSION: JSON.stringify(APP_VERSION_STRING),
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
+        IODIDE_BUILD_MODE: JSON.stringify(env),
       }),
       new ExtractTextPlugin(`iodide.${APP_VERSION_STRING}.css`),
     ],

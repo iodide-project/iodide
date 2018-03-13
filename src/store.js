@@ -1,3 +1,4 @@
+/* global IODIDE_BUILD_MODE */
 import { applyMiddleware, compose, createStore } from 'redux'
 import { createLogger } from 'redux-logger'
 
@@ -7,16 +8,23 @@ import { initializeNotebook } from './initialize-notebook'
 import { stateSchema } from './state-prototypes'
 import evaluateAllCells from './evaluate-all-cells'
 
+let enhancer
+let finalReducer
+
+if (IODIDE_BUILD_MODE === 'dev' || IODIDE_BUILD_MODE === 'devperf') {
+  finalReducer = createValidatedReducer(reducer, stateSchema)
+  enhancer = compose(applyMiddleware(createLogger({
+    predicate: (getState, action) => action.type !== 'UPDATE_INPUT_CONTENT',
+  })))
+} else if (IODIDE_BUILD_MODE === 'test') {
+  finalReducer = createValidatedReducer(reducer, stateSchema)
+} else {
+  finalReducer = reducer
+}
+
 const initialState = initializeNotebook()
 
-const store = createStore(
-  createValidatedReducer(reducer, stateSchema),
-  // reducer,
-  initialState,
-  compose(applyMiddleware(createLogger({
-    predicate: (getState, action) => action.type !== 'UPDATE_INPUT_CONTENT',
-  }))),
-)
+const store = createStore(finalReducer, initialState, enhancer)
 
 if (initialState.viewMode === 'presentation') { evaluateAllCells(store.getState().cells, store) }
 
