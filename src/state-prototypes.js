@@ -54,7 +54,7 @@ const languageSchema = {
   properties: {
     languageId: { type: 'string' },
     displayName: { type: 'string' },
-    codemirrorName: { type: 'string' },
+    codeMirrorName: { type: 'string' },
     keybinding: { type: 'string' },
     evaluate: {},
   },
@@ -166,7 +166,7 @@ function newCellRowSettings(cellType) {
   }
 }
 
-function newCell(cellId, cellType) {
+function newCell(cellId, cellType, language = 'js') {
   return {
     content: '',
     id: cellId,
@@ -177,13 +177,23 @@ function newCell(cellId, cellType) {
     executionStatus: ' ',
     evalStatus: undefined,
     rowSettings: newCellRowSettings(cellType),
+    language, // default langauge is, but it only matters the cell is a code cell
   }
+}
+
+const jsLanguageDefinition = {
+  languageId: 'js',
+  displayName: 'Javascript',
+  codeMirrorName: 'javascript',
+  evaluate: code => window.eval(code),  // eslint-disable-line
+  keybinding: 'j',
 }
 
 function blankState() {
   const initialState = {
     title: undefined,
     cells: [],
+    languages: [jsLanguageDefinition],
     userDefinedVariables: {},
     lastSaved: undefined,
     mode: 'command', // command, edit
