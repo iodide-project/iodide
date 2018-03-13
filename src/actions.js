@@ -64,10 +64,11 @@ const actions = {
       content: text,
     }
   },
-  changeCellType(cellType) {
+  changeCellType(cellType, language = undefined) {
     return {
       type: 'CHANGE_CELL_TYPE',
       cellType,
+      language,
     }
   },
   evaluateCell(cellId) {
