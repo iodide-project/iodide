@@ -58,6 +58,29 @@ retaining the narrower colum view for readability and flow.
   margin: auto;
 }
 
+div#cells.editor .user-markdown p,
+div#cells.editor .user-markdown h1, 
+div#cells.editor .user-markdown h2, 
+div#cells.editor .user-markdown h3, 
+div#cells.editor .user-markdown h4, 
+div#cells.editor .user-markdown h5, 
+div#cells.editor .user-markdown h6,
+div#cells.editor .user-markdown ol, 
+div#cells.editor .user-markdown ul,
+div#cells.editor .user-markdown pre,
+div#cells.editor .user-markdown address,
+div#cells.editor .user-markdown blockquote,
+div#cells.editor .user-markdown dl,
+div#cells.editor .user-markdown div,
+div#cells.editor .user-markdown fieldset,
+div#cells.editor .user-markdown form,
+div#cells.editor .user-markdown hr,
+div#cells.editor .user-markdown noscript,
+div#cells.editor .user-markdown table {
+  margin-left: 0px; /* aligned with the */
+}
+
+
 /* establish block-level elements to be a certain width */
 
 @media (max-width:800px) {
@@ -81,7 +104,6 @@ retaining the narrower colum view for readability and flow.
   .user-markdown noscript,
   .user-markdown table {
     max-width: calc(100% - 50px);
-    margin:auto;
   }
 }
 
