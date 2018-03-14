@@ -22,6 +22,7 @@ export const cellTypeEnum = new StringEnum(
   'raw',
   'css',
   'external dependencies',
+  'plugin',
 )
 // const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'presentation'
 // const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
@@ -167,9 +168,18 @@ function newCellRowSettings(cellType) {
   }
 }
 
+const pluginCellDefaultContent = `{
+  "languageId": "",
+  "displayName": "",
+  "codeMirrorName": "",
+  "keybinding": "",
+  "url": "", 
+  "evaluate": ""
+}`
+
 function newCell(cellId, cellType, language = 'js') {
   return {
-    content: '',
+    content: cellType === 'plugin' ? pluginCellDefaultContent : '',
     id: cellId,
     cellType,
     value: undefined,
