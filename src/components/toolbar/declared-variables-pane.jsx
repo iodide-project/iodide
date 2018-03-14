@@ -9,7 +9,6 @@ import tasks from '../../task-definitions'
 
 export class DeclaredVariablesPaneUnconnected extends React.Component {
   static propTypes = {
-    history: PropTypes.array,
     declaredVariables: PropTypes.object,
   }
   render() {
