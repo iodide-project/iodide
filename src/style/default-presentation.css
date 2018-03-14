@@ -21,12 +21,16 @@ when a user has a full-screen graphic they want to display).
   word-wrap: break-word;
 }
 
-.user-markdown:first-child {
-  padding-top:30px;
+#cells.presentation .cell-container:first-child {
+  margin-top:30px;
 }
 
-.user-markdown:last-child {
-  padding-bottom:60px;
+#cells.presentation .cell-container:last-child {
+  margin-bottom:60px;
+}
+
+#cells.presentation .user-markdown {
+  padding-bottom: 10px;
 }
 
 /* establish block-level elements to be a certain width. This
