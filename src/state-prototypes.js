@@ -73,6 +73,10 @@ const stateSchema = {
     sidePaneMode: {}, // FIXME change to string ONLY
     externalDependencies: { type: 'array' },
     executionNumber: { type: 'integer', minimum: 0 },
+    appMessages: {
+      type: 'array',
+      items: { type: 'string' },
+    },
   },
   additionalProperties: false,
 }
@@ -174,6 +178,7 @@ function blankState() {
     history: [],
     externalDependencies: [],
     executionNumber: 0,
+    appMessages: [''],
   }
   return initialState
 }
