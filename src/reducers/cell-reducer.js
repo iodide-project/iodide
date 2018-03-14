@@ -4,7 +4,8 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 
 import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
-import { moveCell, scrollToCellIfNeeded,
+import {
+  moveCell, scrollToCellIfNeeded,
   addExternalDependency,
   getSelectedCellId,
   getCellBelowSelectedId,
@@ -28,21 +29,6 @@ evalStatuses.ERROR = 'error'
 const cellReducer = (state = newNotebook(), action) => {
   let nextState
   switch (action.type) {
-    case 'RUN_ALL_CELLS': {
-      nextState = Object.assign({}, state, { cells: [...state.cells] })
-      let breakThis = false
-      state.cells.forEach((c) => {
-        if (!breakThis) {
-          nextState = cellReducer(nextState, { type: 'SELECT_CELL', id: c.id })
-          nextState = Object.assign({}, cellReducer(nextState, { type: 'EVALUATE_CELL', id: c.id, evaluateCell: true }))
-          const ind = nextState.cells.findIndex(ci => ci.id === c.id)
-          if (nextState.cells[ind].evalStatus === evalStatuses.ERROR) {
-            breakThis = true
-          }
-        }
-      })
-      return nextState
-    }
     case 'INSERT_CELL': {
       const cells = state.cells.slice()
       const index = cells.findIndex(c => c.id === getSelectedCellId(state))
@@ -173,7 +159,7 @@ const cellReducer = (state = newNotebook(), action) => {
         newState.executionNumber += 1
         thisCell.executionStatus = `${newState.executionNumber}`
       } else if (thisCell.cellType === 'markdown') {
-      // one line, huh.
+        // one line, huh.
         thisCell.value = MD.render(thisCell.content)
         thisCell.rendered = true
         thisCell.evalStatus = evalStatuses.SUCCESS

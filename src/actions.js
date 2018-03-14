@@ -77,11 +77,6 @@ const actions = {
       cellId,
     }
   },
-  runAllCells() {
-    return {
-      type: 'RUN_ALL_CELLS',
-    }
-  },
   setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId) {
     return {
       type: 'SET_CELL_ROW_COLLAPSE_STATE',
