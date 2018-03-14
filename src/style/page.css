@@ -24,6 +24,7 @@ div#notebook-container {
 
 div#notebook-container.presentation-mode {
   display: block;
+  overflow-y: auto;
 }
 
 div#headerbar {
@@ -38,7 +39,7 @@ div.notebook-menu {
     height: 50px;
 }
 
-div#cells {
+div#cells.editor {
     position: fixed;
     top: 50px; /*move down by the header bar height*/
     left: 0px;
@@ -54,8 +55,8 @@ div#cells {
 }
 
 div#cells.presentation {
-    top: 0px;
-    height: calc(100%);
+  position: inherit;
+  height: inherit;
 }
 
 h1.overlay-title {
@@ -63,7 +64,19 @@ h1.overlay-title {
   font-size: 20px
 }
 
-body p {
+.dependency-row a {
+  color: #337ab7;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dependency-row a:hover,
+.dependency-row a:focus {
+  color: #23527c;
+  text-decoration: underline;
+}
+
+/* body p {
   margin: 20px 0;
   font-size: 1.0625rem;
   line-height: 1.625rem;
@@ -72,22 +85,14 @@ body p {
   color: #222;
 }
 
-a {
-  color: #337ab7;
-  text-decoration: none;
-  cursor: pointer;
-}
 
-a:hover,
-a:focus {
-  color: #23527c;
-  text-decoration: underline;
-}
+
+
 
 a:focus {
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
-}
+} */
 
 /************************************************/
 /*  cell and cell container styles*/
@@ -106,20 +111,20 @@ div.cell-container {
   width: calc(100%);
 }
 
+/* These may need to be integrated into the presentation mode style sheets
+but I don't see why we would have to do this immediately.
+*/
 
 div#cells.presentation div.cell-container {
-  width: 800px;
-  margin: 0 auto; /* centers the divs and sets top/bottom margins to 0*/
+  margin: 0 auto; 
   outline: none;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding:0px;
 }
 
 div#cells.presentation .collapse-button {
-  visibility: hidden;
+  display: none;
   height: 0px
 }
-
 
 div#cells.presentation div.cell-row.HIDDEN {
   display: none;
@@ -134,6 +139,10 @@ div#cells.presentation div.status {
 div.cell-row {
   display: flex;
   padding: 1px;
+}
+
+div#cells.editor div.cell-container.markdown div.cell-row.output {
+  overflow-x:hidden;
 }
 
 div.status {
@@ -611,24 +620,6 @@ div.declared-variables {
 /* et cetera styles */
 .katex-html {
   display: none;
-}
-
-/************************************************/
-/* for Github-flavored Markdown */
-table {
-  display: block;
-  border-spacing: 0;
-  overflow: auto;
-  width: 100%;
-}
-
-table th, table td {
-  padding: 6px 13px;
-  border: 1px solid #ddd;
-}
-
-table tr:nth-child(2n) {
-  background-color: #f8f8f8;
 }
 
 /* span.cell-menu {
