@@ -19,11 +19,8 @@ export default class NotebookMenuSubsection extends React.Component {
     }
   }
 
-  handleClose(tf) {
-    if (this.state.anchorElement !== null) {
-      this.setState({ anchorElement: null })
-    }
-    if (this.props.onClick && (tf !== undefined && tf)) this.props.onClick()
+  handleClose() {
+    this.setState({ anchorElement: null })
   }
   render() {
     const { anchorElement } = this.state
