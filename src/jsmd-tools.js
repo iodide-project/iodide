@@ -4,10 +4,10 @@ import _ from 'lodash'
 import { newNotebook, blankState, newCell } from './state-prototypes'
 import htmlTemplate from './html-template'
 
-const jsmdValidCellTypes = ['meta', 'md', 'js', 'raw', 'resource', 'css']
+const jsmdValidCellTypes = ['meta', 'md', 'js', 'code', 'raw', 'resource', 'css']
 
 
-const jsmdCellTypeMap = new Map([
+const jsmdToCellTypeMap = new Map([
   ['js', 'code'],
   ['code', 'code'],
   ['md', 'markdown'],
@@ -20,7 +20,7 @@ const jsmdCellTypeMap = new Map([
 ])
 
 const cellTypeToJsmdMap = new Map([
-  ['code', 'js'],
+  ['code', 'code'],
   ['markdown', 'md'],
   ['external dependencies', 'resource'],
   ['dom', 'dom'],
@@ -32,8 +32,10 @@ const jsmdValidNotebookSettings = [
   'title',
   'viewMode',
   'lastSaved',
+  // 'languages',
 ]
 const jsmdValidCellSettingPaths = [
+  'language',
   'rowSettings.REPORT.input',
   'rowSettings.REPORT.output',
 ]
@@ -64,7 +66,7 @@ function parseMetaChunk(content, parseWarnings) {
 }
 
 function parseCellChunk(chunkType, content, settings, str, chunkNum, parseWarnings) {
-  let cellType = jsmdCellTypeMap.get(chunkType)
+  let cellType = jsmdToCellTypeMap.get(chunkType)
   // if the cell type is not valid, set it to js
   if (jsmdValidCellTypes.indexOf(chunkType) === -1) {
     parseWarnings.push({
@@ -196,7 +198,6 @@ function stringifyStateToJsmd(state, exportDatetimeString) {
   // are in the jsmd valid list, and seeing if they are not default
   // values for this cell type
   const cellsStr = state.cells.map((cell) => {
-    const jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
     const defaultCell = newCell(0, cell.cellType)
     const cellSettings = getNonDefaultValuesForPaths(
       jsmdValidCellSettingPaths,
@@ -204,6 +205,8 @@ function stringifyStateToJsmd(state, exportDatetimeString) {
       defaultCell,
     )
     let cellSettingsStr = JSON.stringify(cellSettings)
+    let jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
+    jsmdCellType = jsmdCellType === 'code' && cellSettings.language === undefined ? 'js' : jsmdCellType
     cellSettingsStr = cellSettingsStr === '{}' ? '' : ` ${cellSettingsStr}`
     return `\n%% ${jsmdCellType}${cellSettingsStr}
 ${cell.content}`
