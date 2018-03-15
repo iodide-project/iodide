@@ -3,12 +3,14 @@ import React from 'react'
 
 import HistoryIcon from 'material-ui-icons/History'
 import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
+import InfoIcon from 'material-ui-icons/InfoOutline'
 
 import NotebookTaskButton from './notebook-task-button'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
 import DeclaredVariablesPane from './declared-variables-pane'
 import HistoryPane from './history-pane'
+import AppInfoPane from './app-info-pane'
 
 import tasks from '../../task-definitions'
 
@@ -27,8 +29,15 @@ export default class ViewControls extends React.Component {
           <HistoryIcon />
         </NotebookTaskButton>
 
+        <NotebookTaskButton task={tasks.toggleAppInfoPane}>
+          <InfoIcon />
+        </NotebookTaskButton>
+
+
         <DeclaredVariablesPane />
         <HistoryPane />
+        <AppInfoPane />
+
         <ViewModeToggleButton />
 
       </div>
