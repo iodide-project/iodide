@@ -57,7 +57,7 @@ const languageSchema = {
     codeMirrorName: { type: 'string' },
     keybinding: { type: 'string' },
     module: { type: 'string' },
-    evaluator: { type: 'string' }, // the 'any'/'empty schema' represents a function here
+    evaluator: { type: 'string' },
   },
   additionalProperties: false,
 }
