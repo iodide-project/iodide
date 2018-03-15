@@ -56,7 +56,8 @@ const languageSchema = {
     displayName: { type: 'string' },
     codeMirrorName: { type: 'string' },
     keybinding: { type: 'string' },
-    evaluate: {}, // the 'any'/'empty schema' represents a function here
+    module: { type: 'string' },
+    evaluator: { type: 'string' }, // the 'any'/'empty schema' represents a function here
   },
   additionalProperties: false,
 }
@@ -186,7 +187,9 @@ const jsLanguageDefinition = {
   languageId: 'js',
   displayName: 'Javascript',
   codeMirrorName: 'javascript',
-  evaluate: code => window.eval(code),  // eslint-disable-line
+  module: 'window',
+  evaluator: 'eval',
+  // evaluate: code => window.eval(code),  // eslint-disable-line
   keybinding: 'j',
 }
 

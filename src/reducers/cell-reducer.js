@@ -145,9 +145,11 @@ const cellReducer = (state = newNotebook(), action) => {
 
         let output
         const code = thisCell.content
+        const languageModule = state.languages[thisCell.language].module
+        const { evaluator } = state.languages[thisCell.language]
 
         try {
-          output = state.languages[thisCell.language].evaluate(code)
+          output = window[languageModule][evaluator](code)
           thisCell.evalStatus = evalStatuses.SUCCESS
         } catch (e) {
           output = e
