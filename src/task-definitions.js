@@ -146,7 +146,7 @@ tasks.changeToJavascriptCell = new UserTask({
   displayKeybinding: 'J',
   keybindingPrecondition: isCommandMode,
   callback() {
-    dispatcher.changeCellType('code')
+    dispatcher.changeCellType('code', 'js')
   },
 })
 
