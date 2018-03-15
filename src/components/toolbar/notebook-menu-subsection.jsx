@@ -14,12 +14,16 @@ export default class NotebookMenuSubsection extends React.Component {
     this.handleClose = this.handleClose.bind(this)
   }
   handleClick(event) {
-    this.setState({ anchorElement: event.currentTarget })
+    if (this.state.anchorElement === null) {
+      this.setState({ anchorElement: event.currentTarget })
+    }
   }
 
-  handleClose() {
-    this.setState({ anchorElement: null })
-    if (this.props.onClick) this.props.onClick()
+  handleClose(tf) {
+    if (this.state.anchorElement !== null) {
+      this.setState({ anchorElement: null })
+    }
+    if (this.props.onClick && (tf !== undefined && tf)) this.props.onClick()
   }
   render() {
     const { anchorElement } = this.state
@@ -57,6 +61,7 @@ export default class NotebookMenuSubsection extends React.Component {
           anchorEl={this.state.anchorElement}
           open={Boolean(anchorElement)}
           onClose={this.handleClose}
+          transitionDuration={50}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         >
