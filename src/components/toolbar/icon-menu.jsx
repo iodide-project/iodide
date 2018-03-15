@@ -28,7 +28,7 @@ export default class NotebookIconMenu extends React.Component {
     const children = React.Children.map(this.props.children, c =>
       React.cloneElement(c, { onClick: this.handleIconButtonClose }))
     return (
-      <Tooltip id="tooltip-icon" title="Menu">
+      <Tooltip classes={{ tooltip: 'toolbar-tooltip' }} title="Menu">
 
         <IconButton
           aria-label="more"
