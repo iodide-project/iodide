@@ -287,6 +287,22 @@ tasks.toggleHistoryPane = new UserTask({
   },
 })
 
+tasks.toggleAppInfoPane = new UserTask({
+  title: 'Toggle the Iodide Info Pane',
+  menuTitle: 'App Messages',
+  keybindings: ['ctrl+i', 'meta+i'],
+  displayKeybinding: `${commandKey()}+I`,
+  preventDefaultKeybinding: true,
+
+  callback() {
+    if (store.getState().sidePaneMode !== '_APP_INFO') {
+      dispatcher.changeSidePaneMode('_APP_INFO')
+    } else {
+      dispatcher.changeSidePaneMode()
+    }
+  },
+})
+
 tasks.setViewModeToEditor = new UserTask({
   title: 'Set View Mode to Editor',
   callback() {
