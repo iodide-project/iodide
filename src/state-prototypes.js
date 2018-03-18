@@ -106,67 +106,35 @@ const stateSchema = {
 
 
 function nextOverflow(currentOverflow) {
-  return {
-    HIDDEN: 'VISIBLE',
-    VISIBLE: 'SCROLL',
-    SCROLL: 'HIDDEN',
-  }[currentOverflow]
+  return { HIDDEN: 'VISIBLE', VISIBLE: 'SCROLL', SCROLL: 'HIDDEN' }[currentOverflow]
 }
 
 function newCellRowSettings(cellType) {
   switch (cellType) {
     case 'code':
       return {
-        EXPLORE: {
-          input: rowOverflowEnum.VISIBLE,
-          sideeffect: rowOverflowEnum.VISIBLE,
-          output: rowOverflowEnum.VISIBLE,
-        },
-        REPORT: {
-          input: rowOverflowEnum.HIDDEN,
-          sideeffect: rowOverflowEnum.HIDDEN,
-          output: rowOverflowEnum.HIDDEN,
-        },
+        EXPLORE: { input: 'VISIBLE', sideeffect: 'VISIBLE', output: 'VISIBLE' },
+        REPORT: { input: 'HIDDEN', sideeffect: 'HIDDEN', output: 'HIDDEN' },
       }
     case 'markdown':
       return {
-        EXPLORE: {
-          input: rowOverflowEnum.VISIBLE,
-          output: rowOverflowEnum.VISIBLE,
-        },
-        REPORT: {
-          input: rowOverflowEnum.VISIBLE,
-          output: rowOverflowEnum.VISIBLE,
-        },
+        EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
+        REPORT: { input: 'VISIBLE', output: 'VISIBLE' },
       }
     case 'external dependencies':
       return {
-        EXPLORE: {
-          input: rowOverflowEnum.VISIBLE,
-          output: rowOverflowEnum.VISIBLE,
-        },
-        REPORT: {
-          input: rowOverflowEnum.HIDDEN,
-          output: rowOverflowEnum.HIDDEN,
-        },
+        EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
+        REPORT: { input: 'HIDDEN', output: 'HIDDEN' },
       }
     case 'css':
       return {
-        EXPLORE: {
-          input: rowOverflowEnum.VISIBLE,
-        },
-        REPORT: {
-          input: rowOverflowEnum.HIDDEN,
-        },
+        EXPLORE: { input: 'VISIBLE' },
+        REPORT: { input: 'HIDDEN' },
       }
     case 'raw':
       return {
-        EXPLORE: {
-          input: rowOverflowEnum.VISIBLE,
-        },
-        REPORT: {
-          input: rowOverflowEnum.HIDDEN,
-        },
+        EXPLORE: { input: 'VISIBLE' },
+        REPORT: { input: 'HIDDEN' },
       }
     default:
       throw Error(`Unsupported cellType: ${cellType}`)
