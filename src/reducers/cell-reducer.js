@@ -22,7 +22,7 @@ const MD = MarkdownIt({
     if (lang && hljs.getLanguage(lang)) {
       try {
         return hljs.highlight(lang, str).value;
-      } catch (__) { console.warn('syntax highlighting not active') } // eslint-disable-line
+      } catch (__) { console.warn('syntax highlighting not active') }
     }
 
     return ''; // use external default escaping
