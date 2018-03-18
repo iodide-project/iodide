@@ -64,10 +64,11 @@ const actions = {
       content: text,
     }
   },
-  changeCellType(cellType) {
+  changeCellType(cellType, language = 'js') {
     return {
       type: 'CHANGE_CELL_TYPE',
       cellType,
+      language,
     }
   },
   evaluateCell(cellId) {
@@ -141,6 +142,18 @@ const actions = {
     return {
       type: 'CHANGE_SIDE_PANE_MODE',
       mode,
+    }
+  },
+  addLanguage(languageId, evaluate, displayName, codeMirrorMode, keybinding) {
+    return {
+      type: 'ADD_LANGUAGE',
+      languageDefinition: {
+        languageId,
+        evaluate,
+        displayName,
+        codeMirrorMode,
+        keybinding,
+      },
     }
   },
 }

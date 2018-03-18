@@ -17,7 +17,7 @@ const StringEnum = class {
 const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
 // const rowTypeEnum = new StringEnum('input', 'output')
 export const cellTypeEnum = new StringEnum(
-  'javascript',
+  'code',
   'markdown',
   'raw',
   'css',
@@ -42,11 +42,26 @@ const cellSchema = {
     executionStatus: { type: 'string' },
     evalStatus: {}, // FIXME change to string ONLY
     rowSettings: { type: 'object' },
+    language: { type: 'string' }, // '' in case not a code cell
   },
   additionalProperties: false,
 }
 // cellSchema.required = Object.keys(cellSchema.properties)
 // cellSchema.minProperties = Object.keys(cellSchema.properties).length
+
+const languageSchema = {
+  type: 'object',
+  properties: {
+    languageId: { type: 'string' },
+    displayName: { type: 'string' },
+    codeMirrorMode: { type: 'string' },
+    keybinding: { type: 'string' },
+    module: { type: 'string' },
+    evaluator: { type: 'string' },
+  },
+  additionalProperties: false,
+}
+
 
 const stateSchema = {
   type: 'object',
@@ -56,6 +71,11 @@ const stateSchema = {
       type: 'array',
       items: cellSchema,
     },
+    languages: {
+      type: 'object',
+      additionalProperties: languageSchema,
+    },
+    languageLastUsed: { type: 'string' },
     mode: {
       type: 'string',
       enum: ['command', 'edit', 'title-edit'],
@@ -94,7 +114,7 @@ function nextOverflow(currentOverflow) {
 
 function newCellRowSettings(cellType) {
   switch (cellType) {
-    case 'javascript':
+    case 'code':
       return {
         EXPLORE: {
           input: rowOverflowEnum.VISIBLE,
@@ -152,7 +172,7 @@ function newCellRowSettings(cellType) {
   }
 }
 
-function newCell(cellId, cellType) {
+function newCell(cellId, cellType, language = 'js') {
   return {
     content: '',
     id: cellId,
@@ -163,13 +183,25 @@ function newCell(cellId, cellType) {
     executionStatus: ' ',
     evalStatus: undefined,
     rowSettings: newCellRowSettings(cellType),
+    language, // default language is js, but it only matters the cell is a code cell
   }
+}
+
+const jsLanguageDefinition = {
+  languageId: 'js',
+  displayName: 'Javascript',
+  codeMirrorMode: 'javascript',
+  module: 'window',
+  evaluator: 'eval',
+  keybinding: 'j',
 }
 
 function blankState() {
   const initialState = {
     title: undefined,
     cells: [],
+    languages: { js: jsLanguageDefinition },
+    languageLastUsed: 'js',
     userDefinedVariables: {},
     lastSaved: undefined,
     mode: 'command', // command, edit
@@ -187,15 +219,15 @@ function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-function addNewCellToState(state, cellType) {
+function addNewCellToState(state, cellType = 'code', language = 'js') {
   const nextCellId = newCellID(state.cells)
-  state.cells.push(newCell(nextCellId, cellType))
+  state.cells.push(newCell(nextCellId, cellType, language))
   return state
 }
 
 function newNotebook() {
   // initialize a blank notebook and push a blank new cell into it
-  const initialState = addNewCellToState(blankState(), 'javascript')
+  const initialState = addNewCellToState(blankState())
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
   return initialState

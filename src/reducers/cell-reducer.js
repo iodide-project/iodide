@@ -33,16 +33,22 @@ const cellReducer = (state = newNotebook(), action) => {
       const cells = state.cells.slice()
       const index = cells.findIndex(c => c.id === getSelectedCellId(state))
       const direction = (action.direction === 'above') ? 0 : 1
-      const nextCell = newCell(newCellID(state.cells), 'javascript')
+      const nextCell = newCell(newCellID(state.cells), 'code', state.languageLastUsed)
       cells.splice(index + direction, 0, nextCell)
       nextState = Object.assign({}, state, { cells })
       return nextState
     }
     case 'ADD_CELL': {
       nextState = Object.assign({}, state)
+      const language = state.languageLastUsed
       const cells = nextState.cells.slice()
-      const nextCell = newCell(newCellID(nextState.cells), action.cellType)
-      nextState = Object.assign({}, nextState, { cells: [...cells, nextCell] })
+      const nextCell = newCell(newCellID(nextState.cells), action.cellType, language)
+      nextState = Object.assign(
+        {},
+        nextState,
+        { cells: [...cells, nextCell] },
+        { languageLastUsed: language },
+      )
       return nextState
     }
 
@@ -83,16 +89,19 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'CHANGE_CELL_TYPE': {
       // create a newCell of the given type to get the defaults that
       // will need to be updated for the new cell type
+      const { language } = action
       const { rowSettings } = newCell(-1, action.cellType)
-      return newStateWithSelectedCellPropsAssigned(
+      const newState = newStateWithSelectedCellPropsAssigned(
         state,
         {
           cellType: action.cellType,
           value: undefined,
           rendered: false,
           rowSettings,
+          language,
         },
       )
+      return Object.assign(newState, { languageLastUsed: language })
     }
 
     case 'SET_CELL_ROW_COLLAPSE_STATE': {
@@ -124,8 +133,8 @@ const cellReducer = (state = newNotebook(), action) => {
       const history = [...newState.history]
       const externalDependencies = [...newState.externalDependencies]
 
-      if (thisCell.cellType === 'javascript') {
-        // add to newState.history
+      if (thisCell.cellType === 'code') {
+      // add to newState.history
         history.push({
           cellID: thisCell.id,
           lastRan: new Date(),
@@ -136,9 +145,11 @@ const cellReducer = (state = newNotebook(), action) => {
 
         let output
         const code = thisCell.content
+        const languageModule = state.languages[thisCell.language].module
+        const { evaluator } = state.languages[thisCell.language]
 
         try {
-          output = window.eval(code)  // eslint-disable-line
+          output = window[languageModule][evaluator](code)
           thisCell.evalStatus = evalStatuses.SUCCESS
         } catch (e) {
           output = e

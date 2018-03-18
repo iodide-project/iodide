@@ -109,3 +109,43 @@ foo`
     expect(jsmd).toEqual(jsmdExpected)
   })
 })
+
+
+describe('jsmd stringifier test case 5, non-default languages', () => {
+  let state = newNotebook()
+  beforeEach(() => {
+    state = newNotebook()
+    state.title = 'foo notebook'
+  })
+
+  it('non-js code cells should serialize to jsmd correctly', () => {
+    _.set(state, 'cells[0].language', 'python')
+    _.set(state, 'cells[0].content', 'foo')
+
+    const jsmd = stringifyStateToJsmd(state, lastExport)
+    const jsmdExpected = `%% meta
+{
+  "title": "foo notebook",
+  "lastExport": "${lastExport}"
+}
+
+%% code {"language":"python"}
+foo`
+    expect(jsmd).toEqual(jsmdExpected)
+  })
+
+//   it('non-js code cells should serialize to jsmd correctly', () => {
+//     _.set(state, 'cells[0].content', 'foo')
+
+//     const jsmd = stringifyStateToJsmd(state, lastExport)
+//     const jsmdExpected = `%% meta
+// {
+//   "title": "foo notebook",
+//   "lastExport": "${lastExport}"
+// }
+
+// %% js
+// foo`
+//     expect(jsmd).toEqual(jsmdExpected)
+//   })
+})

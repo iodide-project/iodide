@@ -17,7 +17,8 @@
       "/node_modules/(?!test-component).+\\.js$"
     ],
     "globals": {
-      "window": true
+      "window": true,
+      "IODIDE_BUILD_MODE": "test"
     }
   },
   "dependencies": {
