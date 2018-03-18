@@ -158,6 +158,12 @@ This will update them to jsmd.
       return Object.assign({}, state, { sidePaneMode: action.mode })
     }
 
+    case 'UPDATE_APP_MESSAGES': {
+      const appMessages = state.appMessages.slice()
+      appMessages.push(action.message)
+      return Object.assign({}, state, appMessages)
+    }
+
     case 'ADD_LANGUAGE': {
       const languages = Object.assign(
         {},

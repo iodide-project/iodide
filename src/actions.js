@@ -180,22 +180,23 @@ export function addLanguage(languageId, evaluate, displayName, codeMirrorMode, k
   }
 }
 
-  // updateAppAlerts(alertContent) {
-  //   return {
-  //     type: 'UPDATE_APP_ALERTS',
-  //     alertContent,
-  //   }
-  // },
-  // exportGist() {
-  //   return function (dispatch) {
-  //     const gistData = 'foo'
-  //     fetch('https://api.github.com/gists', {
-  //       body: JSON.stringify(gistData),
-  //       method: 'POST',
-  //     })
-  //       .then(response => response.json())
-  //       .then(json => console.log(json))
-  //     dispatch(updateAppAlerts('posted gist'))
-  //   }
-  // }
-// }
+export function updateAppMessages(message) {
+  return {
+    type: 'UPDATE_APP_MESSAGES',
+    message,
+  }
+}
+
+export function exportGist() {
+  return (dispatch) => {
+    // const gistData = 'foo'
+    // fetch('https://api.github.com/gists', {
+    //   body: JSON.stringify(gistData),
+    //   method: 'POST',
+    // })
+    //   .then(response => response.json())
+    //   .then(json => console.log(json))
+    dispatch(updateAppMessages('posted gist'))
+  }
+}
+
