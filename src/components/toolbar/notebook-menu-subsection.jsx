@@ -14,7 +14,9 @@ export default class NotebookMenuSubsection extends React.Component {
     this.handleClose = this.handleClose.bind(this)
   }
   handleClick(event) {
-    this.setState({ anchorElement: event.currentTarget })
+    if (this.state.anchorElement === null) {
+      this.setState({ anchorElement: event.currentTarget })
+    }
   }
 
   handleClose() {
@@ -56,6 +58,7 @@ export default class NotebookMenuSubsection extends React.Component {
           anchorEl={this.state.anchorElement}
           open={Boolean(anchorElement)}
           onClose={this.handleClose}
+          transitionDuration={50}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         >

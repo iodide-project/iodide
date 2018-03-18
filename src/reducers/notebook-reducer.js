@@ -159,11 +159,10 @@ This will update them to jsmd.
     }
 
     case 'ADD_LANGUAGE': {
-      // let { languages } = state
       const languages = Object.assign(
         {},
         state.languages,
-        { [action.languageId]: action.languageDefinition },
+        { [action.languageDefinition.languageId]: action.languageDefinition },
       )
       return Object.assign({}, state, { languages })
     }

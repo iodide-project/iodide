@@ -146,7 +146,7 @@ tasks.changeToJavascriptCell = new UserTask({
   displayKeybinding: 'J',
   keybindingPrecondition: isCommandMode,
   callback() {
-    dispatcher.changeCellType('code')
+    dispatcher.changeCellType('code', 'js')
   },
 })
 
@@ -281,6 +281,22 @@ tasks.toggleHistoryPane = new UserTask({
   callback() {
     if (store.getState().sidePaneMode !== 'history') {
       dispatcher.changeSidePaneMode('history')
+    } else {
+      dispatcher.changeSidePaneMode()
+    }
+  },
+})
+
+tasks.toggleAppInfoPane = new UserTask({
+  title: 'Toggle the Iodide Info Pane',
+  menuTitle: 'App Messages',
+  keybindings: ['ctrl+i', 'meta+i'],
+  displayKeybinding: `${commandKey()}+I`,
+  preventDefaultKeybinding: true,
+
+  callback() {
+    if (store.getState().sidePaneMode !== '_APP_INFO') {
+      dispatcher.changeSidePaneMode('_APP_INFO')
     } else {
       dispatcher.changeSidePaneMode()
     }

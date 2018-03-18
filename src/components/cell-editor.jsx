@@ -103,7 +103,7 @@ class CellEditor extends React.Component {
 
   render() {
     const editorOptions = Object.assign({
-      mode: this.props.codeMirrorName,
+      mode: this.props.codeMirrorMode,
       lineWrapping: false,
       matchBrackets: true,
       autoCloseBrackets: true,
@@ -112,9 +112,9 @@ class CellEditor extends React.Component {
       lineNumbers: true,
       keyMap: 'sublime',
       extraKeys: {
-        'Ctrl-Space': this.props.codeMirrorName === 'javascript' ? this.autoComplete : undefined,
+        'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
       },
-      comment: this.props.codeMirrorName === 'javascript',
+      comment: this.props.codeMirrorMode === 'javascript',
       readOnly: this.props.viewMode === 'presentation',
     }, this.props.editorOptions)
 
@@ -139,8 +139,8 @@ class CellEditor extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
-  const codeMirrorName = (
-    cell.cellType === 'code' ? state.languages[cell.language].codeMirrorName : cell.cellType
+  const codeMirrorMode = (
+    cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
   )
   return {
     thisCellBeingEdited: cell.selected && state.mode === 'edit',
@@ -148,7 +148,7 @@ function mapStateToProps(state, ownProps) {
     cellType: cell.cellType,
     content: cell.content,
     cellId,
-    codeMirrorName,
+    codeMirrorMode,
   }
 }
 

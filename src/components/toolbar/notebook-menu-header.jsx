@@ -4,5 +4,11 @@ import Subheader from 'material-ui/List/ListSubheader'
 
 export default class NotebookMenuHeader extends React.Component {
   static propTypes = { title: PropTypes.string, onClick: PropTypes.func }
-  render() { return <Subheader key={this.props.title}> {this.props.title} </Subheader> }
+  render() {
+    return (
+      <Subheader disableSticky={Boolean(true)} key={this.props.title}>
+        {this.props.title}
+      </Subheader>
+    )
+  }
 }

@@ -64,7 +64,7 @@ const actions = {
       content: text,
     }
   },
-  changeCellType(cellType, language = undefined) {
+  changeCellType(cellType, language = 'js') {
     return {
       type: 'CHANGE_CELL_TYPE',
       cellType,
@@ -75,11 +75,6 @@ const actions = {
     return {
       type: 'EVALUATE_CELL',
       cellId,
-    }
-  },
-  runAllCells() {
-    return {
-      type: 'RUN_ALL_CELLS',
     }
   },
   setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId) {
@@ -149,15 +144,14 @@ const actions = {
       mode,
     }
   },
-  addLanguage(languageId, evaluate, displayName, codeMirrorName, keybinding) {
+  addLanguage(languageId, evaluate, displayName, codeMirrorMode, keybinding) {
     return {
       type: 'ADD_LANGUAGE',
-      languageId,
       languageDefinition: {
         languageId,
         evaluate,
         displayName,
-        codeMirrorName,
+        codeMirrorMode,
         keybinding,
       },
     }

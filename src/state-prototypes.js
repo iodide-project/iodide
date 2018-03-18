@@ -55,9 +55,10 @@ const languageSchema = {
   properties: {
     languageId: { type: 'string' },
     displayName: { type: 'string' },
-    codeMirrorName: { type: 'string' },
+    codeMirrorMode: { type: 'string' },
     keybinding: { type: 'string' },
-    evaluate: {}, // the 'any'/'empty schema' represents a function here
+    module: { type: 'string' },
+    evaluator: { type: 'string' },
   },
   additionalProperties: false,
 }
@@ -93,6 +94,10 @@ const stateSchema = {
     sidePaneMode: {}, // FIXME change to string ONLY
     externalDependencies: { type: 'array' },
     executionNumber: { type: 'integer', minimum: 0 },
+    appMessages: {
+      type: 'array',
+      items: { type: 'string' },
+    },
   },
   additionalProperties: false,
 }
@@ -188,15 +193,16 @@ function newCell(cellId, cellType, language = 'js') {
     executionStatus: ' ',
     evalStatus: undefined,
     rowSettings: newCellRowSettings(cellType),
-    language, // default langauge is, but it only matters the cell is a code cell
+    language, // default language is js, but it only matters the cell is a code cell
   }
 }
 
 const jsLanguageDefinition = {
   languageId: 'js',
   displayName: 'Javascript',
-  codeMirrorName: 'javascript',
-  evaluate: code => window.eval(code),  // eslint-disable-line
+  codeMirrorMode: 'javascript',
+  module: 'window',
+  evaluator: 'eval',
   keybinding: 'j',
 }
 
@@ -206,7 +212,6 @@ function blankState() {
     cells: [],
     languages: { js: jsLanguageDefinition },
     languageLastUsed: 'js',
-    // languages: [jsLanguageDefinition],
     userDefinedVariables: {},
     lastSaved: undefined,
     mode: 'command', // command, edit
@@ -215,6 +220,7 @@ function blankState() {
     history: [],
     externalDependencies: [],
     executionNumber: 0,
+    appMessages: [''],
   }
   return initialState
 }
@@ -223,15 +229,15 @@ function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-function addNewCellToState(state, cellType) {
+function addNewCellToState(state, cellType = 'code', language = 'js') {
   const nextCellId = newCellID(state.cells)
-  state.cells.push(newCell(nextCellId, cellType))
+  state.cells.push(newCell(nextCellId, cellType, language))
   return state
 }
 
 function newNotebook() {
   // initialize a blank notebook and push a blank new cell into it
-  const initialState = addNewCellToState(blankState(), 'code')
+  const initialState = addNewCellToState(blankState())
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
   return initialState

@@ -272,3 +272,29 @@ foo
 foo`)
   })
 })
+
+
+describe('jsmd parser test case 7, non-js code cells should parse ok', () => {
+  jsmdTestCase = `
+%% code {"language":"python"}
+foo`
+  const jsmdParsed = parseJsmd(jsmdTestCase)
+  const state = stateFromJsmd(jsmdTestCase)
+  const { cells } = state
+  const { parseWarnings } = jsmdParsed
+  it('should have 1 cells', () => {
+    expect(cells.length).toEqual(1)
+  })
+  it('should have 0 parse warnings', () => {
+    expect(parseWarnings.length).toEqual(0)
+  })
+  it('cell content should parse ok', () => {
+    expect(cells[0].content).toEqual('foo')
+  })
+  it('cell type parse ok', () => {
+    expect(cells[0].cellType).toEqual('code')
+  })
+  it('cell language parse ok', () => {
+    expect(cells[0].language).toEqual('python')
+  })
+})
