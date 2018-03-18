@@ -206,6 +206,8 @@ function stringifyStateToJsmd(state, exportDatetimeString) {
     )
     let cellSettingsStr = JSON.stringify(cellSettings)
     let jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
+    // note: js is the DEFAULT language, so if the lang of this cell is JS,
+    // cellSettings.language will be undefined since it matches that default
     jsmdCellType = jsmdCellType === 'code' && cellSettings.language === undefined ? 'js' : jsmdCellType
     cellSettingsStr = cellSettingsStr === '{}' ? '' : ` ${cellSettingsStr}`
     return `\n%% ${jsmdCellType}${cellSettingsStr}
