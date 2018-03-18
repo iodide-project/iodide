@@ -190,6 +190,15 @@ tasks.changeToCSSCell = new UserTask({
   callback() { dispatcher.changeCellType('css') },
 })
 
+tasks.changeToPluginCell = new UserTask({
+  title: 'Change to Plugin Loader',
+  menuTitle: 'Plugin Loader',
+  keybindings: ['l'],
+  displayKeybinding: 'l',
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.changeCellType('plugin') },
+})
+
 tasks.changeMode = new UserTask({
   title: 'Change Mode',
   callback(mode) { dispatcher.changeMode(mode) },

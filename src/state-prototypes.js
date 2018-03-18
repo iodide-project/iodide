@@ -126,6 +126,11 @@ function newCellRowSettings(cellType) {
         EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
         REPORT: { input: 'HIDDEN', output: 'HIDDEN' },
       }
+    case 'plugin':
+      return {
+        EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
+        REPORT: { input: 'HIDDEN', output: 'HIDDEN' },
+      }
     case 'css':
       return {
         EXPLORE: { input: 'VISIBLE' },
@@ -144,7 +149,7 @@ function newCellRowSettings(cellType) {
 const pluginCellDefaultContent = `{
   "languageId": "",
   "displayName": "",
-  "codeMirrorName": "",
+  "codeMirrorMode": "",
   "keybinding": "",
   "url": "", 
   "evaluate": ""
