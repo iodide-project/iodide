@@ -1,6 +1,8 @@
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/default.css'
 
 import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
@@ -14,7 +16,18 @@ import {
   newStateWithRowOverflowSet,
 } from './cell-reducer-utils'
 
-const MD = MarkdownIt({ html: true }) // eslint-disable-line
+const MD = MarkdownIt({
+  html: true,
+  highlight(str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(lang, str).value;
+      } catch (__) { console.warn('syntax highlighting not active') } // eslint-disable-line
+    }
+
+    return ''; // use external default escaping
+  },
+})
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
