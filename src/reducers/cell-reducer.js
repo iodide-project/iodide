@@ -2,7 +2,6 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 import hljs from 'highlight.js'
-import 'highlight.js/styles/default.css'
 
 import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
