@@ -260,9 +260,6 @@ tasks.exportNotebookAsReport = new UserTask({
 
 tasks.exportToGist = new UserTask({
   title: 'Export Notebook to Github Gist',
-  keybindings: ['ctrl+g', 'meta+g'],
-  displayKeybinding: `${commandKey()}+G`,
-  preventDefaultKeybinding: true,
   callback() { dispatcher.exportGist() },
 })
 

@@ -208,8 +208,8 @@ export function exportGist() {
       .then((json) => {
         console.log(json)
         dispatch(updateAppMessages(`Exported to Github gist: 
-<a href="${json.html_url}">gist</a> - 
-<a href="https://iodide-project.github.io/master/?url=${json.files[filename].raw_url}"> runnable notebook</a>`))
+<a href="${json.html_url}" target="_blank">gist</a> - 
+<a href="https://iodide-project.github.io/master/?url=${json.files[filename].raw_url}" target="_blank"> runnable notebook</a>`))
       })
   }
 }
