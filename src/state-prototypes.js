@@ -181,7 +181,7 @@ const jsLanguageDefinition = {
 
 function blankState() {
   const initialState = {
-    title: undefined,
+    title: 'untitled',
     cells: [],
     languages: { js: jsLanguageDefinition },
     languageLastUsed: 'js',
@@ -193,7 +193,7 @@ function blankState() {
     history: [],
     externalDependencies: [],
     executionNumber: 0,
-    appMessages: [''],
+    appMessages: [],
   }
   return initialState
 }

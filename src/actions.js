@@ -1,3 +1,5 @@
+import { exportJsmdBundle, titleToHtmlFilename } from './jsmd-tools'
+
 export function importNotebook(newState) {
   return {
     type: 'IMPORT_NOTEBOOK',
@@ -188,15 +190,27 @@ export function updateAppMessages(message) {
 }
 
 export function exportGist() {
-  return (dispatch) => {
-    // const gistData = 'foo'
-    // fetch('https://api.github.com/gists', {
-    //   body: JSON.stringify(gistData),
-    //   method: 'POST',
-    // })
-    //   .then(response => response.json())
-    //   .then(json => console.log(json))
-    dispatch(updateAppMessages('posted gist'))
+  return (dispatch, getState) => {
+    const state = getState()
+    const filename = titleToHtmlFilename(state.title)
+    const gistData = {
+      description: state.title,
+      public: true,
+      files: {
+        [filename]: { content: exportJsmdBundle(state) },
+      },
+    };
+    fetch('https://api.github.com/gists', {
+      body: JSON.stringify(gistData),
+      method: 'POST',
+    })
+      .then(response => response.json())
+      .then((json) => {
+        console.log(json)
+        dispatch(updateAppMessages(`Exported to Github gist: 
+<a href="${json.html_url}">gist</a> - 
+<a href="https://iodide-project.github.io/master/?url=${json.files[filename].raw_url}"> runnable notebook</a>`))
+      })
   }
 }
 
