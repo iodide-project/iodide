@@ -8,7 +8,7 @@ import { CellContainer } from './cell-container'
 
 import CellEditor from './cell-editor'
 
-import actions from '../actions'
+import * as actions from '../actions'
 import { getCellById } from '../notebook-utils'
 
 

@@ -1,7 +1,7 @@
 import UserTask from './user-task'
 import ExternalLinkTask from './external-link-task'
 import { store } from './store'
-import actions from './actions'
+import * as actions from './actions'
 import { isCommandMode,
   viewModeIsEditor,
   getCells,
@@ -263,7 +263,7 @@ tasks.exportToGist = new UserTask({
   keybindings: ['ctrl+g', 'meta+g'],
   displayKeybinding: `${commandKey()}+G`,
   preventDefaultKeybinding: true,
-  callback() { dispatcher.updateAppMessages('foo') },
+  callback() { dispatcher.exportGist() },
 })
 
 tasks.clearVariables = new UserTask({

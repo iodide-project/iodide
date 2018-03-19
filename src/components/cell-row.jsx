@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
 import { getCellById } from '../notebook-utils'
-import actions from '../actions'
+import * as actions from '../actions'
 import { rowOverflowEnum, nextOverflow } from '../state-prototypes'
 
 class CellRow extends React.Component {

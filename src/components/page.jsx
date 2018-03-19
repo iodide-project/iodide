@@ -15,7 +15,7 @@ import NotebookHeader from './notebook-header'
 
 import settings from '../settings'
 import keyBinding from '../keybindings'
-import actions from '../actions'
+import * as actions from '../actions'
 
 
 const { AUTOSAVE } = settings.labels
