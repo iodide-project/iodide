@@ -6,10 +6,9 @@ import NotebookMenuSubsection from './notebook-menu-subsection'
 
 import iodideExampleTasks from '../../iodide-examples'
 import tasks, { getLocalStorageNotebook } from '../../task-definitions'
-import settings from '../../settings'
 import { stateFromJsmd } from '../../jsmd-tools'
 
-const { AUTOSAVE } = settings.labels
+const AUTOSAVE = 'AUTOSAVE: '
 const autosave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0] //
 const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
 
