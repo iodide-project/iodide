@@ -52,7 +52,7 @@ class CellRow extends React.Component {
   }
 
   render() {
-    console.log(`render cell-row: cellId:${this.props.cellId} ${this.props.rowType} ${this.props.rowOverflow}`)
+    // console.log(`render cell-row: cellId:${this.props.cellId} ${this.props.rowType}`)
     return (
       <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
         <div className="status">
