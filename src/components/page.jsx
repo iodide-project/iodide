@@ -12,12 +12,11 @@ import MarkdownCell from './cell-type-markdown'
 
 import NotebookHeader from './notebook-header'
 
-import settings from '../settings'
 import keyBinding from '../keybindings'
 import actions from '../actions'
 
 
-const { AUTOSAVE } = settings.labels
+const AUTOSAVE = 'AUTOSAVE: '
 
 class Page extends React.Component {
   static propTypes = {
