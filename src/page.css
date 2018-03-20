@@ -383,6 +383,7 @@ div.title-field-contents {
   font-style: italic;
   width: 125px;
   text-align: right;
+  padding-right: 16px;
 }
 
 @media (max-width:1100px) {
