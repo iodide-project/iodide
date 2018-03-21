@@ -21,7 +21,7 @@ export class TitleUnconnected extends React.Component {
   }
 
   onBlur() {
-    if (this.props.pageMode === 'title-edit') tasks.changeMode('command')
+    if (this.props.pageMode === 'title-edit') tasks.changeMode.callback('command')
   }
 
   onFocus() {
