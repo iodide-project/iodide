@@ -1,6 +1,5 @@
-import notebookReducer from '../src/reducers/notebook-reducer'
+import notebookReducer, { getSavedProjects } from '../src/reducers/notebook-reducer'
 import { newNotebook, blankState, addNewCellToState } from '../src/state-prototypes'
-import { getSavedProjects } from '../src/reducers/notebook-reducer'
 import {
   // exportJsmdBundle, we'll need to test this
   // stringifyStateToJsmd, we'll need to test this
