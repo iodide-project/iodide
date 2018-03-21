@@ -184,4 +184,6 @@ This will update them to jsmd.
   }
 }
 
+export { getSavedProjects }
+
 export default notebookReducer
