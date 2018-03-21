@@ -97,6 +97,11 @@ const stateSchema = {
       type: 'array',
       items: { type: 'string' },
     },
+    autoSave: {},
+    locallySaved: {
+      type: 'array',
+      items: { type: 'string' },
+    },
   },
   additionalProperties: false,
 }
@@ -196,6 +201,8 @@ const jsLanguageDefinition = {
   keybinding: 'j',
 }
 
+const AUTOSAVE = 'AUTOSAVE: '
+
 function blankState() {
   const initialState = {
     title: undefined,
@@ -211,6 +218,8 @@ function blankState() {
     externalDependencies: [],
     executionNumber: 0,
     appMessages: [''],
+    autoSave: Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0],
+    locallySaved: Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE)),
   }
   return initialState
 }

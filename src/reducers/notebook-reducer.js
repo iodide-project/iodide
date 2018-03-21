@@ -1,6 +1,15 @@
 import { newNotebook, newCell, blankState } from '../state-prototypes'
 import { exportJsmdBundle, stringifyStateToJsmd, stateFromJsmd } from '../jsmd-tools'
 
+const AUTOSAVE = 'AUTOSAVE: '
+
+function getSavedProjects() {
+  return {
+    autoSave: Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0],
+    locallySaved: Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE)),
+  }
+}
+
 function clearHistory(loadedState) {
   // TODO: Don't assign to passed parameter
 
@@ -37,7 +46,7 @@ const notebookReducer = (state = newNotebook(), action) => {
   switch (action.type) {
     case 'NEW_NOTEBOOK':
       clearUserDefinedVars(state.userDefinedVariables)
-      return newNotebook()
+      return Object.assign(newNotebook(), getSavedProjects())
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
@@ -65,7 +74,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       clearHistory(nextState)
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, { cells })
+      return Object.assign(blankState(), nextState, { cells }, getSavedProjects())
     }
 
     case 'SAVE_NOTEBOOK': {
@@ -92,7 +101,7 @@ const notebookReducer = (state = newNotebook(), action) => {
         ({ title } = state)
       }
       window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
-      return Object.assign({}, state, { lastSaved })
+      return Object.assign({}, state, { lastSaved }, getSavedProjects())
     }
 
     case 'LOAD_NOTEBOOK': {
@@ -112,7 +121,9 @@ This will update them to jsmd.
       // and per-cell state for backwards compatibility
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      nextState = Object.assign(blankState(), nextState, { cells })
+
+
+      nextState = Object.assign(blankState(), nextState, getSavedProjects())
       return nextState
     }
 
