@@ -12,23 +12,14 @@ import iodideExampleTasks from '../../iodide-examples'
 import tasks, { getLocalStorageNotebook } from '../../task-definitions'
 import { stateFromJsmd } from '../../jsmd-tools'
 
-
 class SavedNotebooksAndExamplesSubsection extends React.Component {
   static propTypes = {
     locallySaved: PropTypes.array,
     autoSave: PropTypes.string,
   }
 
-  render() {
-    let autoSaveMenuItem
-    let autoSave
+  getLocallySavedMenuItems() {
     let locallySavedMenuItems
-
-    if (this.props.autoSave) {
-      autoSave = getLocalStorageNotebook(this.props.autoSave)
-      autoSaveMenuItem = <NotebookMenuItem task={autoSave} key={autoSave.title} />
-    }
-
     if (this.props.locallySaved) {
       this.props.locallySaved.sort((a, b) => {
         const p = (_) => {
@@ -50,6 +41,22 @@ class SavedNotebooksAndExamplesSubsection extends React.Component {
         })
       }
     }
+    return locallySavedMenuItems
+  }
+
+  getAutoSaveMenuItem() {
+    let autoSave
+    let autoSaveMenuItem
+    if (this.props.autoSave) {
+      autoSave = getLocalStorageNotebook(this.props.autoSave)
+      autoSaveMenuItem = <NotebookMenuItem task={autoSave} key={autoSave.title} />
+    }
+    return autoSaveMenuItem
+  }
+
+  render() {
+    const autoSaveMenuItem = this.getAutoSaveMenuItem()
+    const locallySavedMenuItems = this.getLocallySavedMenuItems()
 
     return (
       <NotebookMenuSubsection title="notebooks ... " {...this.props} >
