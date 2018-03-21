@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import deepEqual from 'deep-equal'
 
 import NotebookMenuItem from './notebook-menu-item'
 import NotebookMenuDivider from './notebook-menu-divider'
@@ -14,43 +13,42 @@ import tasks, { getLocalStorageNotebook } from '../../task-definitions'
 import { stateFromJsmd } from '../../jsmd-tools'
 
 
-export class SavedNotebooksAndExamplesSubsection extends React.Component {
+class SavedNotebooksAndExamplesSubsection extends React.Component {
   static propTypes = {
     locallySaved: PropTypes.array,
     autoSave: PropTypes.string,
   }
 
-  shouldComponentUpdate(nextProps) {
-    return !deepEqual(this.props, nextProps)
-  }
-
   render() {
     let autoSaveMenuItem
     let autoSave
-    if (this.props.autoSave !== undefined) {
+    let locallySavedMenuItems
+
+    if (this.props.autoSave) {
       autoSave = getLocalStorageNotebook(this.props.autoSave)
       autoSaveMenuItem = <NotebookMenuItem task={autoSave} key={autoSave.title} />
     }
 
-    this.props.locallySaved.sort((a, b) => {
-      const p = (_) => {
-        let ls = localStorage.getItem(_)
-        if (!ls) return -1
-        ls = stateFromJsmd(ls)
-        return Date.parse(ls.lastSaved)
-      }
-      return p(b) - p(a)
-    })
-
-    let locallySavedMenuItems
-    if (this.props.locallySaved.length) {
-      locallySavedMenuItems = this.props.locallySaved.map((l) => {
-        const task = getLocalStorageNotebook(l)
-        if (task !== undefined) {
-          return <NotebookMenuItem task={task} key={task.title} />
+    if (this.props.locallySaved) {
+      this.props.locallySaved.sort((a, b) => {
+        const p = (_) => {
+          let ls = localStorage.getItem(_)
+          if (!ls) return -1
+          ls = stateFromJsmd(ls)
+          return Date.parse(ls.lastSaved)
         }
-        return undefined
+        return p(b) - p(a)
       })
+
+      if (this.props.locallySaved.length) {
+        locallySavedMenuItems = this.props.locallySaved.map((l) => {
+          const task = getLocalStorageNotebook(l)
+          if (task !== undefined) {
+            return <NotebookMenuItem task={task} key={task.title} />
+          }
+          return undefined
+        })
+      }
     }
 
     return (
@@ -70,7 +68,7 @@ export class SavedNotebooksAndExamplesSubsection extends React.Component {
   }
 }
 
-export function mapStateToProps(state) {
+function mapStateToProps(state) {
   return {
     locallySaved: state.locallySaved,
     autoSave: state.autoSave,
