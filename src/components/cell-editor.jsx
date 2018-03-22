@@ -19,7 +19,7 @@ import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/hint/javascript-hint'
 /* eslint-enable */
 import { getCellById } from '../notebook-utils'
-import actions from '../actions'
+import * as actions from '../actions'
 
 class CellEditor extends React.Component {
   static propTypes = {

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
 import { getCellById } from '../notebook-utils'
-import actions from '../actions'
+import * as actions from '../actions'
 import { rowOverflowEnum, nextOverflow } from '../state-prototypes'
 
 class CellRow extends React.Component {
@@ -52,7 +52,7 @@ class CellRow extends React.Component {
   }
 
   render() {
-    console.log(`render cell-row: cellId:${this.props.cellId} ${this.props.rowType} ${this.props.rowOverflow}`)
+    // console.log(`render cell-row: cellId:${this.props.cellId} ${this.props.rowType}`)
     return (
       <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
         <div className="status">

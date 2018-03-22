@@ -240,6 +240,10 @@ function exportJsmdBundle(state) {
   })
 }
 
+function titleToHtmlFilename(title) {
+  return `${title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.html`
+}
+
 export {
   parseJsmd,
   stateFromJsmd,
@@ -247,4 +251,5 @@ export {
   jsmdValidCellSettingPaths,
   stringifyStateToJsmd,
   exportJsmdBundle,
+  titleToHtmlFilename,
 }

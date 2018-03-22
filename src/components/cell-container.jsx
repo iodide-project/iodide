@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
-import actions from '../actions'
+import * as actions from '../actions'
 import { getCellById } from '../notebook-utils'
 import { cellTypeEnum } from '../state-prototypes'
 

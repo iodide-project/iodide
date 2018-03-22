@@ -616,6 +616,12 @@ div.declared-variables {
   padding-bottom: 10px;
 }
 
+div.app-info-message {
+  padding-left: 20px;
+  padding-right: 10px;
+  padding-top: 20px;
+}
+
 /************************************************/
 /* et cetera styles */
 .katex-html {
