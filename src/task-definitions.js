@@ -258,11 +258,6 @@ tasks.exportNotebookAsReport = new UserTask({
   callback() { dispatcher.exportNotebook(true) },
 })
 
-tasks.exportToGist = new UserTask({
-  title: 'Export Notebook to Github Gist',
-  callback() { dispatcher.exportGist() },
-})
-
 tasks.clearVariables = new UserTask({
   title: 'Clear Variables',
   preventDefaultKeybinding: true,
