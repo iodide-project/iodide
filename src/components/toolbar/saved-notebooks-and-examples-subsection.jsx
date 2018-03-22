@@ -7,10 +7,8 @@ import NotebookMenuDivider from './notebook-menu-divider'
 import NotebookMenuHeader from './notebook-menu-header'
 import NotebookMenuSubsection from './notebook-menu-subsection'
 
-
 import iodideExampleTasks from '../../iodide-examples'
 import tasks, { getLocalStorageNotebook } from '../../task-definitions'
-import { stateFromJsmd } from '../../jsmd-tools'
 
 class SavedNotebooksAndExamplesSubsection extends React.Component {
   static propTypes = {
@@ -33,16 +31,6 @@ class SavedNotebooksAndExamplesSubsection extends React.Component {
 
     let locallySavedMenuItems
     if (this.props.locallySaved.length > 0) {
-      this.props.locallySaved.sort((a, b) => {
-        const p = (_) => {
-          let ls = localStorage.getItem(_)
-          if (!ls) return -1
-          ls = stateFromJsmd(ls)
-          return Date.parse(ls.lastSaved)
-        }
-        return p(b) - p(a)
-      })
-
       locallySavedMenuItems = (
         <div> {/* // FIXME: use React 16 fragments instead of useless container div */}
           <NotebookMenuHeader key="local storage" title="Locally Saved Notebooks" />
