@@ -97,7 +97,7 @@ const stateSchema = {
       type: 'array',
       items: { type: 'string' },
     },
-    autoSave: {},
+    autoSave: { type: 'string' },
     locallySaved: {
       type: 'array',
       items: { type: 'string' },
@@ -217,7 +217,7 @@ function blankState() {
     history: [],
     externalDependencies: [],
     executionNumber: 0,
-    appMessages: [''],
+    appMessages: [],
     autoSave: Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0],
     locallySaved: Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE)),
   }
