@@ -1,14 +1,10 @@
 import notebookReducer from '../src/reducers/notebook-reducer'
-import localStorageMock from './mockLocalStorage'
 import { newNotebook, blankState, addNewCellToState } from '../src/state-prototypes'
 import {
   // exportJsmdBundle, we'll need to test this
   // stringifyStateToJsmd, we'll need to test this
   stateFromJsmd,
 } from '../src/jsmd-tools'
-
-
-window.localStorage = localStorageMock
 
 const EXAMPLE_NOTEBOOK_1 = 'example notebook with content'
 
@@ -21,6 +17,9 @@ function exampleNotebookWithContent(title = EXAMPLE_NOTEBOOK_1) {
   return state
 }
 
+beforeEach(() => {
+  localStorage.clear();
+});
 
 describe('blank-state-reducer', () => {
   it('should return the initial state', () => {
@@ -60,7 +59,7 @@ describe('saving / deleting localStorage-saved notebooks', () => {
   const state = exampleNotebookWithContent(SAVE_DELETE_NOTEBOOK_NAME)
 
   notebookReducer(state, { type: 'SAVE_NOTEBOOK' })
-  const savedNotebook = stateFromJsmd(window.localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME))
+  const savedNotebook = stateFromJsmd(localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME))
 
   it('saved notebook should have correct title', () => {
     expect(savedNotebook.title).toEqual(state.title)
@@ -80,6 +79,6 @@ describe('saving / deleting localStorage-saved notebooks', () => {
 
   it('should delete via DELETE_NOTEBOOK', () => {
     notebookReducer(state, { type: 'DELETE_NOTEBOOK', title: SAVE_DELETE_NOTEBOOK_NAME })
-    expect(window.localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME)).toEqual(undefined)
+    expect(localStorage.getItem(SAVE_DELETE_NOTEBOOK_NAME)).toEqual(null)
   })
 })

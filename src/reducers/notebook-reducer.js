@@ -5,6 +5,26 @@ import { exportJsmdBundle,
   titleToHtmlFilename,
 } from '../jsmd-tools'
 
+const AUTOSAVE = 'AUTOSAVE: '
+
+function getSavedNotebooks() {
+  const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
+  const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
+  locallySaved.sort((a, b) => {
+    const p = (_) => {
+      let ls = localStorage.getItem(_)
+      if (!ls) return -1
+      ls = stateFromJsmd(ls)
+      return Date.parse(ls.lastSaved)
+    }
+    return p(b) - p(a)
+  })
+  return {
+    autoSave,
+    locallySaved,
+  }
+}
+
 function clearHistory(loadedState) {
   // TODO: Don't assign to passed parameter
 
@@ -41,7 +61,7 @@ const notebookReducer = (state = newNotebook(), action) => {
   switch (action.type) {
     case 'NEW_NOTEBOOK':
       clearUserDefinedVars(state.userDefinedVariables)
-      return newNotebook()
+      return Object.assign(newNotebook(), getSavedNotebooks())
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
@@ -68,7 +88,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       clearHistory(nextState)
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, { cells })
+      return Object.assign(blankState(), nextState, { cells }, getSavedNotebooks())
     }
 
     case 'SAVE_NOTEBOOK': {
@@ -95,7 +115,7 @@ const notebookReducer = (state = newNotebook(), action) => {
         ({ title } = state)
       }
       window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
-      return Object.assign({}, state, { lastSaved })
+      return Object.assign({}, state, { lastSaved }, getSavedNotebooks())
     }
 
     case 'LOAD_NOTEBOOK': {
@@ -115,7 +135,9 @@ This will update them to jsmd.
       // and per-cell state for backwards compatibility
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      nextState = Object.assign(blankState(), nextState, { cells })
+
+
+      nextState = Object.assign(blankState(), nextState, getSavedNotebooks())
       return nextState
     }
 
@@ -181,5 +203,7 @@ This will update them to jsmd.
     }
   }
 }
+
+export { getSavedNotebooks }
 
 export default notebookReducer
