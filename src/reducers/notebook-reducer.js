@@ -1,5 +1,9 @@
 import { newNotebook, newCell, blankState } from '../state-prototypes'
-import { exportJsmdBundle, stringifyStateToJsmd, stateFromJsmd } from '../jsmd-tools'
+import { exportJsmdBundle,
+  stringifyStateToJsmd,
+  stateFromJsmd,
+  titleToHtmlFilename,
+} from '../jsmd-tools'
 
 const AUTOSAVE = 'AUTOSAVE: '
 
@@ -59,8 +63,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       const dlAnchorElem = document.getElementById('export-anchor')
       dlAnchorElem.setAttribute('href', dataStr)
       title = exportState.title === undefined ? 'new-notebook' : exportState.title
-      const filename = `${title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.html`
-      dlAnchorElem.setAttribute('download', filename)
+      dlAnchorElem.setAttribute('download', titleToHtmlFilename(title))
       dlAnchorElem.click()
 
       return state
@@ -167,6 +170,12 @@ This will update them to jsmd.
 
     case 'CHANGE_SIDE_PANE_MODE': {
       return Object.assign({}, state, { sidePaneMode: action.mode })
+    }
+
+    case 'UPDATE_APP_MESSAGES': {
+      const appMessages = state.appMessages.slice()
+      appMessages.push(action.message)
+      return Object.assign({}, state, { appMessages })
     }
 
     case 'ADD_LANGUAGE': {

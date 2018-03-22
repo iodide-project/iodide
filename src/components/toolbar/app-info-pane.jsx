@@ -15,7 +15,11 @@ export class AppInfoPaneUnconnected extends React.Component {
     // i think using index as key is ok here, but be careful!! see:
     // https://medium.com/@robinpokorny/index-as-a-key-is-an-anti-pattern-e0349aece318
     const messageDivs = this.props.appMessages
-      .map((msg, i) => <div key={`msg-${i}`}>{msg}</div>) // eslint-disable-line
+      .map((msg, i) => (<div
+        className="app-info-message"
+        key={`msg-${i}`} // eslint-disable-line
+        dangerouslySetInnerHTML={{__html: msg}} // eslint-disable-line
+      />))
     return (
       <SidePane task={tasks.toggleAppInfoPane} title="App info" openOnMode="_APP_INFO">
         {messageDivs}

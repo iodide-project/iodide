@@ -9,11 +9,12 @@ import ExternalDependencyCell from './cell-type-external-resource'
 import CSSCell from './cell-type-css'
 import CodeCell from './cell-type-javascript'
 import MarkdownCell from './cell-type-markdown'
+import PluginDefinitionCell from './cell-plugin-definition'
 
 import NotebookHeader from './notebook-header'
 
 import keyBinding from '../keybindings'
-import actions from '../actions'
+import * as actions from '../actions'
 
 
 const AUTOSAVE = 'AUTOSAVE: '
@@ -70,6 +71,8 @@ class Page extends React.Component {
           return <ExternalDependencyCell cellId={id} key={id} />
         case 'css':
           return <CSSCell cellId={id} key={id} />
+        case 'plugin':
+          return <PluginDefinitionCell cellId={id} key={id} />
         default:
           // TODO: Use better class for inline error
           return <div>Unknown cell type {this.props.cellTypes[i]}</div>

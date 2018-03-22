@@ -1,7 +1,7 @@
 import UserTask from './user-task'
 import ExternalLinkTask from './external-link-task'
 import { store } from './store'
-import actions from './actions'
+import * as actions from './actions'
 import { isCommandMode,
   viewModeIsEditor,
   getCells,
@@ -190,6 +190,15 @@ tasks.changeToCSSCell = new UserTask({
   callback() { dispatcher.changeCellType('css') },
 })
 
+tasks.changeToPluginCell = new UserTask({
+  title: 'Change to Plugin Loader',
+  menuTitle: 'Plugin Loader',
+  keybindings: ['l'],
+  displayKeybinding: 'l',
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.changeCellType('plugin') },
+})
+
 tasks.changeMode = new UserTask({
   title: 'Change Mode',
   callback(mode) { dispatcher.changeMode(mode) },
@@ -248,7 +257,6 @@ tasks.exportNotebookAsReport = new UserTask({
   displayKeybinding: `Shift+${commandKey()}+E`,
   callback() { dispatcher.exportNotebook(true) },
 })
-
 
 tasks.clearVariables = new UserTask({
   title: 'Clear Variables',
