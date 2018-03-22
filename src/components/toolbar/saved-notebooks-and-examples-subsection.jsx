@@ -18,9 +18,21 @@ class SavedNotebooksAndExamplesSubsection extends React.Component {
     autoSave: PropTypes.string,
   }
 
-  getLocallySavedMenuItems() {
+  render() {
+    let autoSaveMenuItems
+    if (this.props.autoSave) {
+      const autoSave = getLocalStorageNotebook(this.props.autoSave)
+      autoSaveMenuItems = (
+        <div> {/* // FIXME: use React 16 fragments instead of useless container div */}
+          <NotebookMenuHeader key="autosave" title="Auto-Saved" />
+          <NotebookMenuItem task={autoSave} key={autoSave.title} />
+          <NotebookMenuDivider key="autosave-divider" />
+        </div>
+      )
+    }
+
     let locallySavedMenuItems
-    if (this.props.locallySaved) {
+    if (this.props.locallySaved.length > 0) {
       this.props.locallySaved.sort((a, b) => {
         const p = (_) => {
           let ls = localStorage.getItem(_)
@@ -31,41 +43,27 @@ class SavedNotebooksAndExamplesSubsection extends React.Component {
         return p(b) - p(a)
       })
 
-      if (this.props.locallySaved.length) {
-        locallySavedMenuItems = this.props.locallySaved.map((l) => {
-          const task = getLocalStorageNotebook(l)
-          if (task !== undefined) {
-            return <NotebookMenuItem task={task} key={task.title} />
+      locallySavedMenuItems = (
+        <div> {/* // FIXME: use React 16 fragments instead of useless container div */}
+          <NotebookMenuHeader key="local storage" title="Locally Saved Notebooks" />
+          {
+            this.props.locallySaved.map((l) => {
+              const task = getLocalStorageNotebook(l)
+              if (task !== undefined) {
+                return (<NotebookMenuItem task={task} key={task.title} />)
+              }
+              return undefined
+            })
           }
-          return undefined
-        })
-      }
+          <NotebookMenuDivider key="locals-divider" />
+        </div>
+      )
     }
-    return locallySavedMenuItems
-  }
-
-  getAutoSaveMenuItem() {
-    let autoSave
-    let autoSaveMenuItem
-    if (this.props.autoSave) {
-      autoSave = getLocalStorageNotebook(this.props.autoSave)
-      autoSaveMenuItem = <NotebookMenuItem task={autoSave} key={autoSave.title} />
-    }
-    return autoSaveMenuItem
-  }
-
-  render() {
-    const autoSaveMenuItem = this.getAutoSaveMenuItem()
-    const locallySavedMenuItems = this.getLocallySavedMenuItems()
 
     return (
       <NotebookMenuSubsection title="notebooks ... " {...this.props} >
-        {autoSaveMenuItem ? <NotebookMenuHeader key="autosave" title="Auto-Saved" /> : undefined}
-        {autoSaveMenuItem || undefined}
-        {autoSaveMenuItem ? <NotebookMenuDivider key="autosave-divider" /> : undefined }
-        {locallySavedMenuItems ? <NotebookMenuHeader key="local storage" title="Locally Saved Notebooks" /> : undefined }
-        {locallySavedMenuItems || undefined}
-        {locallySavedMenuItems ? <NotebookMenuDivider key="locals-divider" /> : undefined }
+        {autoSaveMenuItems}
+        {locallySavedMenuItems}
         <NotebookMenuHeader key="examples" title="Example Notebooks" />
         {iodideExampleTasks.map(e => <NotebookMenuItem key={e.title} task={e} />)}
         <NotebookMenuDivider key="examples-divider" />
