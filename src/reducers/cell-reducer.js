@@ -6,12 +6,12 @@ import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
 import {
   moveCell, scrollToCellIfNeeded,
-  addExternalDependency,
   getSelectedCellId,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
   newStateWithRowOverflowSet,
+  newStateWithPropsAssignedForCell,
 } from './cell-reducer-utils'
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
@@ -77,6 +77,9 @@ const cellReducer = (state = newNotebook(), action) => {
         { cells: moveCell(state.cells, getSelectedCellId(state), 'down') },
       )
 
+    case 'UPDATE_CELL_PROPERTIES':
+      return newStateWithPropsAssignedForCell(state, action.cellId, action.updatedProperties)
+
     case 'UPDATE_INPUT_CONTENT':
       return newStateWithSelectedCellPropertySet(state, 'content', action.content)
 
@@ -122,93 +125,12 @@ const cellReducer = (state = newNotebook(), action) => {
         'rendered', false,
       )
 
-    case 'EVALUATE_CELL': {
-      const newState = Object.assign({}, state)
-      let { userDefinedVariables } = newState
-      const cells = newState.cells.slice()
-      let { cellId } = action
-      if (cellId === undefined) { cellId = getSelectedCellId(state) }
-      const index = cells.findIndex(c => c.id === cellId)
-      const thisCell = cells[index]
-      const history = [...newState.history]
-      const externalDependencies = [...newState.externalDependencies]
-
-      if (thisCell.cellType === 'code') {
-      // add to newState.history
-        history.push({
-          cellID: thisCell.id,
-          lastRan: new Date(),
-          content: thisCell.content,
-        })
-
-        thisCell.value = undefined
-
-        let output
-        const code = thisCell.content
-        const languageModule = state.languages[thisCell.language].module
-        const { evaluator } = state.languages[thisCell.language]
-
-        try {
-          output = window[languageModule][evaluator](code)
-          thisCell.evalStatus = evalStatuses.SUCCESS
-        } catch (e) {
-          output = e
-          thisCell.evalStatus = evalStatuses.ERROR
-        }
-        thisCell.rendered = true
-        if (output !== undefined) { thisCell.value = output }
-
-        newState.executionNumber += 1
-        thisCell.executionStatus = `${newState.executionNumber}`
-      } else if (thisCell.cellType === 'markdown') {
-        // one line, huh.
-        thisCell.value = MD.render(thisCell.content)
-        thisCell.rendered = true
-        thisCell.evalStatus = evalStatuses.SUCCESS
-      } else if (thisCell.cellType === 'external dependencies') {
-        const dependencies = thisCell.content.split('\n').filter(d => d.trim().slice(0, 2) !== '//')
-        const newValues = dependencies
-          .filter(d => !externalDependencies.includes(d))
-          .map(addExternalDependency)
-
-        newValues.forEach((d) => {
-          if (!externalDependencies.includes(d.src)) {
-            externalDependencies.push(d.src)
-          }
-        })
-        thisCell.evalStatus = newValues.map(d => d.status).includes('error') ? evalStatuses.ERROR : evalStatuses.SUCCESS
-        thisCell.value = new Array(...[...thisCell.value || [], ...newValues])
-        thisCell.rendered = true
-        // add to newState.history
-        if (newValues.length) {
-          history.push({
-            cellID: thisCell.id,
-            lastRan: new Date(),
-            content: `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
-          })
-        }
-        newState.executionNumber += 1
-        thisCell.executionStatus = `${newState.executionNumber}`
-      } else if (thisCell.cellType === 'css') {
-        thisCell.rendered = true
-        thisCell.value = thisCell.content
-      } else {
-        thisCell.rendered = false
-      }
-
-      // ok. Now let's see if there are any new declared variables or libs
-      userDefinedVariables = {}
+    case 'UPDATE_USER_VARIABLES': {
+      const userDefinedVariables = {}
       Object.keys(window)
         .filter(g => !initialVariables.has(g))
         .forEach((g) => { userDefinedVariables[g] = window[g] })
-      nextState = Object.assign(
-        {}, newState,
-        { cells },
-        { userDefinedVariables },
-        { history },
-        { externalDependencies },
-      )
-      return nextState
+      return Object.assign({}, state, { userDefinedVariables })
     }
     case 'DELETE_CELL': {
       const selectedId = getSelectedCellId(state)
@@ -229,7 +151,6 @@ const cellReducer = (state = newNotebook(), action) => {
       })
       return nextState
     }
-
 
     default:
       return state

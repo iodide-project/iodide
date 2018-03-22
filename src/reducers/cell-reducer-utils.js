@@ -168,11 +168,15 @@ function newStateWithSelectedCellPropertySet(state, cellPropToSet, newValue) {
   return Object.assign({}, state, { cells })
 }
 
-function newStateWithSelectedCellPropsAssigned(state, cellPropsToSet) {
+function newStateWithPropsAssignedForCell(state, cellId, cellPropsToSet) {
   const cells = state.cells.slice()
-  const index = cells.findIndex(c => c.selected)
+  const index = cells.findIndex(c => c.id === cellId)
   cells[index] = Object.assign({}, cells[index], cellPropsToSet)
   return Object.assign({}, state, { cells })
+}
+
+function newStateWithSelectedCellPropsAssigned(state, cellPropsToSet) {
+  return newStateWithPropsAssignedForCell(state, getSelectedCellId(state), cellPropsToSet)
 }
 
 function newStateWithRowOverflowSet(state, cellId, rowType, viewModeToSet, rowOverflow) {
@@ -204,9 +208,11 @@ export {
   moveCell,
   scrollToCellIfNeeded,
   addExternalDependency,
+  getSelectedCell,
   getSelectedCellId,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
   newStateWithRowOverflowSet,
+  newStateWithPropsAssignedForCell,
 }
