@@ -1,4 +1,15 @@
-import { exportJsmdBundle, titleToHtmlFilename } from './jsmd-tools'
+import MarkdownIt from 'markdown-it'
+import MarkdownItKatex from 'markdown-it-katex'
+import MarkdownItAnchor from 'markdown-it-anchor'
+
+import { getCellById } from './notebook-utils'
+import {
+  addExternalDependency,
+  getSelectedCell,
+} from './reducers/cell-reducer-utils'
+
+const MD = MarkdownIt({ html: true }) // eslint-disable-line
+MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 export function importNotebook(newState) {
   return {
@@ -84,12 +95,150 @@ export function changeCellType(cellType, language = 'js') {
   }
 }
 
-export function evaluateCell(cellId) {
+
+export function appendToEvalHistory(cellId, content) {
   return {
-    type: 'EVALUATE_CELL',
+    type: 'APPEND_TO_EVAL_HISTORY',
     cellId,
+    content,
   }
 }
+
+// note: this function is NOT EXPORTED. It is a private function meant
+// to be wrapped by other actions that will configure and dispatch it.
+function updateCellProperties(cellId, updatedProperties) {
+  return {
+    type: 'UPDATE_CELL_PROPERTIES',
+    cellId,
+    updatedProperties,
+  }
+}
+
+export function incrementExecutionNumber() {
+  return {
+    type: 'INCREMENT_EXECUTION_NUMBER',
+  }
+}
+export function updateUserVariables() {
+  return {
+    type: 'UPDATE_USER_VARIABLES',
+  }
+}
+
+
+function evaluateCodeCell(cell) {
+  return (dispatch, getState) => {
+    const state = getState()
+    let output
+    let evalStatus
+    const code = cell.content
+    const languageModule = state.languages[cell.language].module
+    const { evaluator } = state.languages[cell.language]
+
+    try {
+      output = window[languageModule][evaluator](code)
+      evalStatus = 'success'
+    } catch (e) {
+      output = e
+      evalStatus = 'error'
+    }
+    dispatch(updateCellProperties(
+      cell.id,
+      {
+        value: output,
+        rendered: true,
+        evalStatus,
+      },
+    ))
+    dispatch(incrementExecutionNumber())
+    dispatch(appendToEvalHistory(cell.id, cell.content))
+    dispatch(updateUserVariables())
+  }
+}
+
+function evaluateMarkdownCell(cell) {
+  return (dispatch) => {
+    dispatch(updateCellProperties(
+      cell.id,
+      {
+        value: MD.render(cell.content),
+        rendered: true,
+        evalStatus: 'success',
+      },
+    ))
+  }
+}
+
+function evaluateResourceCell(cell) {
+  return (dispatch, getState) => {
+    const externalDependencies = [...getState().externalDependencies]
+    const dependencies = cell.content.split('\n').filter(d => d.trim().slice(0, 2) !== '//')
+    const newValues = dependencies
+      .filter(d => !externalDependencies.includes(d))
+      .map(addExternalDependency)
+
+    newValues.forEach((d) => {
+      if (!externalDependencies.includes(d.src)) {
+        externalDependencies.push(d.src)
+      }
+    })
+    const evalStatus = newValues.map(d => d.status).includes('error') ? 'error' : 'success'
+    dispatch(updateCellProperties(
+      cell.id,
+      {
+        value: new Array(...[...cell.value || [], ...newValues]),
+        rendered: true,
+        evalStatus,
+      },
+    ))
+    if (newValues.length) {
+      dispatch(appendToEvalHistory(
+        cell.id,
+        `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
+      ))
+    }
+    dispatch(incrementExecutionNumber())
+    dispatch(updateUserVariables())
+  }
+}
+
+function evaluateCSSCell(cell) {
+  return (dispatch) => {
+    dispatch(updateCellProperties(
+      cell.id,
+      {
+        value: cell.content,
+        rendered: true,
+        evalStatus: 'success',
+      },
+    ))
+  }
+}
+
+export function evaluateCell(cellId) {
+  return (dispatch, getState) => {
+    let cell
+    if (cellId === undefined) {
+      cell = getSelectedCell(getState())
+    } else {
+      cell = getCellById(getState().cells, cellId)
+    }
+    console.log(getState())
+    console.log(cell)
+    if (cell.cellType === 'code') {
+      dispatch(evaluateCodeCell(cell))
+    } else if (cell.cellType === 'markdown') {
+      dispatch(evaluateMarkdownCell(cell))
+    } else if (cell.cellType === 'external dependencies') {
+      dispatch(evaluateResourceCell(cell))
+    } else if (cell.cellType === 'css') {
+      dispatch(evaluateCSSCell(cell))
+    } else {
+      cell.rendered = false
+    }
+  }
+}
+
 
 export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId) {
   return {
@@ -188,29 +337,3 @@ export function updateAppMessages(message) {
     message,
   }
 }
-
-export function exportGist() {
-  return (dispatch, getState) => {
-    const state = getState()
-    const filename = titleToHtmlFilename(state.title)
-    const gistData = {
-      description: state.title,
-      public: true,
-      files: {
-        [filename]: { content: exportJsmdBundle(state) },
-      },
-    };
-    fetch('https://api.github.com/gists', {
-      body: JSON.stringify(gistData),
-      method: 'POST',
-    })
-      .then(response => response.json())
-      .then((json) => {
-        console.log(json)
-        dispatch(updateAppMessages(`Exported to Github gist: 
-<a href="${json.html_url}" target="_blank">gist</a> - 
-<a href="https://iodide-project.github.io/master/?url=${json.files[filename].raw_url}" target="_blank"> runnable notebook</a>`))
-      })
-  }
-}
-

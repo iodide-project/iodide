@@ -183,6 +183,22 @@ This will update them to jsmd.
       return Object.assign({}, state, { sidePaneMode: action.mode })
     }
 
+    case 'INCREMENT_EXECUTION_NUMBER': {
+      let { executionNumber } = state
+      executionNumber += 1
+      return Object.assign({}, state, { executionNumber })
+    }
+
+    case 'APPEND_TO_EVAL_HISTORY': {
+      const history = [...state.history]
+      history.push({
+        cellID: action.cellId,
+        lastRan: new Date(),
+        content: action.content,
+      })
+      return Object.assign({}, state, { history })
+    }
+
     case 'UPDATE_APP_MESSAGES': {
       const appMessages = state.appMessages.slice()
       appMessages.push(action.message)
