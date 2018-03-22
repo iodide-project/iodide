@@ -1,4 +1,4 @@
-import notebookReducer, { getSavedProjects } from '../src/reducers/notebook-reducer'
+import notebookReducer from '../src/reducers/notebook-reducer'
 import { newNotebook, blankState, addNewCellToState } from '../src/state-prototypes'
 import {
   // exportJsmdBundle, we'll need to test this
@@ -10,19 +10,14 @@ const EXAMPLE_NOTEBOOK_1 = 'example notebook with content'
 
 function exampleNotebookWithContent(title = EXAMPLE_NOTEBOOK_1) {
   let state = newNotebook()
-  const savedProjects = getSavedProjects()
-  console.log(savedProjects.locallySaved)
   state = addNewCellToState(state, 'code')
   state = addNewCellToState(state, 'markdown')
   state.cells[0].selected = true
   state.title = title
-  state.autoSave = savedProjects.autoSave
-  state.locallySaved = savedProjects.locallySaved
   return state
 }
 
 beforeEach(() => {
-  // values stored in tests will also be available in other tests unless you run
   localStorage.clear();
 });
 
