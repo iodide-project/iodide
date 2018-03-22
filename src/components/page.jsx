@@ -13,12 +13,11 @@ import PluginDefinitionCell from './cell-plugin-definition'
 
 import NotebookHeader from './notebook-header'
 
-import settings from '../settings'
 import keyBinding from '../keybindings'
 import * as actions from '../actions'
 
 
-const { AUTOSAVE } = settings.labels
+const AUTOSAVE = 'AUTOSAVE: '
 
 class Page extends React.Component {
   static propTypes = {
