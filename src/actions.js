@@ -319,8 +319,6 @@ export function evaluateCell(cellId) {
     } else {
       cell = getCellById(getState().cells, cellId)
     }
-    console.log(getState())
-    console.log(cell)
     if (cell.cellType === 'code') {
       dispatch(evaluateCodeCell(cell))
     } else if (cell.cellType === 'markdown') {

@@ -1,3 +1,4 @@
+import { getSavedNotebooks } from './reducers/notebook-reducer'
 // This is a very simple enum-like class that will always return strings.
 // Returning strings is required to keep things simple+serializable in the redux store.
 // The only reason we wrap this in a little class it to expose the convenience
@@ -112,6 +113,11 @@ const stateSchema = {
       type: 'array',
       items: { type: 'string' },
     },
+    autoSave: { type: 'string' },
+    locallySaved: {
+      type: 'array',
+      items: { type: 'string' },
+    },
   },
   additionalProperties: false,
 }
@@ -210,6 +216,8 @@ function blankState() {
     externalDependencies: [],
     executionNumber: 0,
     appMessages: [],
+    autoSave: undefined,
+    locallySaved: [],
   }
   return initialState
 }
@@ -229,9 +237,8 @@ function newNotebook() {
   const initialState = addNewCellToState(blankState())
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
-  return initialState
+  return Object.assign(initialState, getSavedNotebooks())
 }
-
 
 export {
   newCell,
