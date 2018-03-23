@@ -215,6 +215,102 @@ function evaluateCSSCell(cell) {
   }
 }
 
+// function updateExternalResource(url, dataLoaded, dataTotal, downloadStatus) {
+//   return {
+//     type: 'UPDATE_EXTERNAL_RESOURCE',
+//     url,
+//     dataLoaded,
+//     dataTotal,
+//     downloadStatus,
+//   }
+// }
+
+// function downloadResource(url, onLoad, onError) {
+//   return (dispatch) => {
+//     const xhrObj = new XMLHttpRequest()
+//     xhrObj.addEventListener('progress', (evt) => {
+//       dispatch(updateExternalResource(url, evt.loaded, evt.total, 'IN_PROGRESS'))
+//     })
+//     xhrObj.addEventListener('load', (evt) => {
+//       onLoad()
+//     })
+//     xhrObj.addEventListener('error', onError)
+//     xhrObj.addEventListener('abort', transferCanceled)
+//     xhrObj.open('GET', url, false)
+//   }
+// }
+
+function evaluateLanguagePluginCell(cell) {
+  return (dispatch) => {
+    let pluginData
+    let value
+    let evalStatus
+    const rendered = true
+    try {
+      pluginData = JSON.parse(cell.content)
+    } catch (err) {
+      value = `plugin definition failed to parse:\n${err.message}`
+      evalStatus = 'error'
+    }
+
+    if (pluginData.url === undefined) {
+      value = 'plugin definition missing "url"'
+      evalStatus = 'error'
+    } else {
+      const xhrObj = new XMLHttpRequest()
+
+      xhrObj.addEventListener('progress', (evt) => {
+        value = `downloading plugin: ${evt.loaded} bytes loaded`
+        if (evt.total > 0) {
+          value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
+        }
+        evalStatus = 'EVAL_ACTIVE'
+        dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+      })
+
+      xhrObj.addEventListener('load', () => {
+        value = `${pluginData.displayName} plugin downloaded, initializing`
+        dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+        // see the following for asynchronous loading of scripts from strings:
+        // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
+        const blob = new Blob([xhrObj.responseText])
+        const script = document.createElement('script')
+        script.id = `plugin-script-${cell.id}`
+        // elem.type = 'text/javascript'
+        const urlObj = URL.createObjectURL(blob);
+        script.onload = () => {
+          URL.revokeObjectURL(urlObj)
+          value = `${pluginData.displayName} plugin ready`
+          evalStatus = 'success'
+          // NOTE: it is possible to get the blob id used in the browser. for debugging
+          // purposes we should be able to map the blob id back to the original filename
+          // with just a find/replace in the error output string.
+          // console.log(document.getElementById(`plugin-script-${cell.id}`).src)
+          dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+        }
+        script.onerror = () => {
+          URL.revokeObjectURL(urlObj)
+          value = `${pluginData.displayName} plugin error; script could not be parsed`
+          evalStatus = 'error'
+          dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+        }
+        script.src = urlObj
+        document.body.appendChild(script);
+        // document.body.appendChild(elem)
+      })
+
+      xhrObj.addEventListener('error', () => {
+        value = `${pluginData.displayName} plugin failed to load`
+        evalStatus = 'error'
+        dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+      })
+
+      xhrObj.open('GET', pluginData.url, true)
+      xhrObj.send()
+    }
+  }
+}
+
 export function evaluateCell(cellId) {
   return (dispatch, getState) => {
     let cell
@@ -233,6 +329,8 @@ export function evaluateCell(cellId) {
       dispatch(evaluateResourceCell(cell))
     } else if (cell.cellType === 'css') {
       dispatch(evaluateCSSCell(cell))
+    } else if (cell.cellType === 'plugin') {
+      dispatch(evaluateLanguagePluginCell(cell))
     } else {
       cell.rendered = false
     }

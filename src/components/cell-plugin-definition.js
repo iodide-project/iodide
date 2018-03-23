@@ -5,7 +5,9 @@ import { connect } from 'react-redux'
 import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
-import PluginProgressMonitor from './plugin-progress-monitor'
+import CellOutput from './output'
+
+// import PluginProgressMonitor from './plugin-progress-monitor'
 
 
 export class PluginDefCellUnconnected extends React.Component {
@@ -25,7 +27,9 @@ export class PluginDefCellUnconnected extends React.Component {
           />
         </CellRow>
         <CellRow cellId={this.props.cellId} rowType="output">
-          <PluginProgressMonitor cellId={this.props.cellId} />
+          <div className="plugin-download-status">
+            <CellOutput cellId={this.props.cellId} />
+          </div>
         </CellRow>
       </CellContainer>
     )

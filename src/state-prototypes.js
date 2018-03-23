@@ -59,10 +59,20 @@ const languageSchema = {
     keybinding: { type: 'string' },
     module: { type: 'string' },
     evaluator: { type: 'string' },
+    url: { type: 'string' },
   },
   additionalProperties: false,
 }
 
+// const resourceSchema = {
+//   type: 'object',
+//   properties: {
+//     url: { type: 'string' },
+//     dataLoaded: { type: 'integer' },
+//     dataTotal: { type: 'integer' },
+//     downloadStatus: { type: 'string', enum: ['DL_ACTIVE', 'DL_DONE', 'DL_ERROR'] },
+//   },
+// }
 
 const stateSchema = {
   type: 'object',
@@ -93,6 +103,10 @@ const stateSchema = {
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
     externalDependencies: { type: 'array' },
+    // resources: {
+    //   type: 'object',
+    //   additionalProperties: resourceSchema,
+    // },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
@@ -152,7 +166,8 @@ const pluginCellDefaultContent = `{
   "codeMirrorMode": "",
   "keybinding": "",
   "url": "", 
-  "evaluate": ""
+  "module": "", 
+  "evaluator": ""
 }`
 
 function newCell(cellId, cellType, language = 'js') {
@@ -177,6 +192,7 @@ const jsLanguageDefinition = {
   module: 'window',
   evaluator: 'eval',
   keybinding: 'j',
+  url: '',
 }
 
 function blankState() {
