@@ -68,7 +68,7 @@ const languageSchema = {
 const stateSchema = {
   type: 'object',
   properties: {
-    title: {}, // FIXME change to string ONLY with default '' or 'untitled'
+    title: { type: 'string' },
     cells: {
       type: 'array',
       items: cellSchema,

@@ -35,13 +35,17 @@ tasks.evaluateCell = new UserTask({
   callback() {
     dispatcher.changeMode('command')
     dispatcher.evaluateCell()
+    dispatcher.saveNotebook(true)
   },
 })
 
 tasks.evaluateAllCells = new UserTask({
   title: 'Evaluate All Cells',
   menuTitle: 'evaluate all cells',
-  callback() { evaluateAllCells(getCells(), store) },
+  callback() {
+    evaluateAllCells(getCells(), store)
+    dispatcher.saveNotebook(true)
+  },
 })
 
 tasks.evaluateCellAndSelectBelow = new UserTask({
@@ -51,6 +55,7 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
   callback() {
     dispatcher.changeMode('command')
     dispatcher.evaluateCell()
+    dispatcher.saveNotebook(true)
     const cellBelowId = getCellBelowSelectedId()
     if (cellBelowId !== null) {
       dispatcher.selectCell(cellBelowId, true)
@@ -241,7 +246,7 @@ tasks.saveNotebook = new UserTask({
   keybindings: ['ctrl+s', 'meta+s'],
   displayKeybinding: `${commandKey()}+S`,
   preventDefaultKeybinding: true,
-  callback() { dispatcher.saveNotebook(store.getState().title) },
+  callback() { dispatcher.saveNotebook() },
 })
 
 tasks.exportNotebook = new UserTask({
