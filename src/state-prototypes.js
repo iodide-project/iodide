@@ -1,4 +1,3 @@
-import { getSavedNotebooks } from './reducers/notebook-reducer'
 // This is a very simple enum-like class that will always return strings.
 // Returning strings is required to keep things simple+serializable in the redux store.
 // The only reason we wrap this in a little class it to expose the convenience
@@ -221,7 +220,7 @@ function newNotebook() {
   const initialState = addNewCellToState(blankState())
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
-  return Object.assign(initialState, getSavedNotebooks())
+  return Object.assign(initialState)
 }
 
 export {

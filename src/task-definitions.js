@@ -34,8 +34,8 @@ tasks.evaluateCell = new UserTask({
 
   callback() {
     dispatcher.changeMode('command')
-    dispatcher.evaluateCell()
     dispatcher.saveNotebook(true)
+    dispatcher.evaluateCell()
   },
 })
 
@@ -43,8 +43,8 @@ tasks.evaluateAllCells = new UserTask({
   title: 'Evaluate All Cells',
   menuTitle: 'evaluate all cells',
   callback() {
-    evaluateAllCells(getCells(), store)
     dispatcher.saveNotebook(true)
+    evaluateAllCells(getCells(), store)
   },
 })
 
@@ -54,8 +54,8 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
   keybindingPrecondition: viewModeIsEditor,
   callback() {
     dispatcher.changeMode('command')
-    dispatcher.evaluateCell()
     dispatcher.saveNotebook(true)
+    dispatcher.evaluateCell()
     const cellBelowId = getCellBelowSelectedId()
     if (cellBelowId !== null) {
       dispatcher.selectCell(cellBelowId, true)
