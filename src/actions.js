@@ -214,31 +214,6 @@ function evaluateCSSCell(cell) {
   }
 }
 
-// function updateExternalResource(url, dataLoaded, dataTotal, downloadStatus) {
-//   return {
-//     type: 'UPDATE_EXTERNAL_RESOURCE',
-//     url,
-//     dataLoaded,
-//     dataTotal,
-//     downloadStatus,
-//   }
-// }
-
-// function downloadResource(url, onLoad, onError) {
-//   return (dispatch) => {
-//     const xhrObj = new XMLHttpRequest()
-//     xhrObj.addEventListener('progress', (evt) => {
-//       dispatch(updateExternalResource(url, evt.loaded, evt.total, 'IN_PROGRESS'))
-//     })
-//     xhrObj.addEventListener('load', (evt) => {
-//       onLoad()
-//     })
-//     xhrObj.addEventListener('error', onError)
-//     xhrObj.addEventListener('abort', transferCanceled)
-//     xhrObj.open('GET', url, false)
-//   }
-// }
-
 export function addLanguage(languageDefinition) {
   return {
     type: 'ADD_LANGUAGE',
