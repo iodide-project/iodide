@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
-import { getCellById } from './notebook-utils'
+import { getCellById, isCommandMode } from './notebook-utils'
 import {
   addExternalDependency,
   getSelectedCell,
@@ -88,10 +88,14 @@ export function updateInputContent(text) {
 }
 
 export function changeCellType(cellType, language = 'js') {
-  return {
-    type: 'CHANGE_CELL_TYPE',
-    cellType,
-    language,
+  return (dispatch, getState) => {
+    if (isCommandMode(getState())) {
+      dispatch({
+        type: 'CHANGE_CELL_TYPE',
+        cellType,
+        language,
+      })
+    }
   }
 }
 
