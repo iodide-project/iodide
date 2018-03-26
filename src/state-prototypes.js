@@ -64,16 +64,6 @@ const languageSchema = {
   additionalProperties: false,
 }
 
-// const resourceSchema = {
-//   type: 'object',
-//   properties: {
-//     url: { type: 'string' },
-//     dataLoaded: { type: 'integer' },
-//     dataTotal: { type: 'integer' },
-//     downloadStatus: { type: 'string', enum: ['DL_ACTIVE', 'DL_DONE', 'DL_ERROR'] },
-//   },
-// }
-
 const stateSchema = {
   type: 'object',
   properties: {
@@ -103,10 +93,6 @@ const stateSchema = {
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
     externalDependencies: { type: 'array' },
-    // resources: {
-    //   type: 'object',
-    //   additionalProperties: resourceSchema,
-    // },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
