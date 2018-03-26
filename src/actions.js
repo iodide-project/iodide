@@ -7,6 +7,7 @@ import {
   addExternalDependency,
   getSelectedCell,
 } from './reducers/cell-reducer-utils'
+import { addLanguageKeybinding } from './keybindings'
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
@@ -93,7 +94,6 @@ export function changeCellType(cellType, language = 'js') {
     language,
   }
 }
-
 
 export function appendToEvalHistory(cellId, content) {
   return {
@@ -239,6 +239,13 @@ function evaluateCSSCell(cell) {
 //   }
 // }
 
+export function addLanguage(languageDefinition) {
+  return {
+    type: 'ADD_LANGUAGE',
+    languageDefinition,
+  }
+}
+
 function evaluateLanguagePluginCell(cell) {
   return (dispatch) => {
     let pluginData
@@ -255,7 +262,11 @@ function evaluateLanguagePluginCell(cell) {
     if (pluginData.url === undefined) {
       value = 'plugin definition missing "url"'
       evalStatus = 'error'
+      dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
     } else {
+      const {
+        url, languageId, displayName, keybinding,
+      } = pluginData
       const xhrObj = new XMLHttpRequest()
 
       xhrObj.addEventListener('progress', (evt) => {
@@ -268,7 +279,7 @@ function evaluateLanguagePluginCell(cell) {
       })
 
       xhrObj.addEventListener('load', () => {
-        value = `${pluginData.displayName} plugin downloaded, initializing`
+        value = `${displayName} plugin downloaded, initializing`
         dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
         // see the following for asynchronous loading of scripts from strings:
         // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
@@ -279,17 +290,27 @@ function evaluateLanguagePluginCell(cell) {
         const urlObj = URL.createObjectURL(blob);
         script.onload = () => {
           URL.revokeObjectURL(urlObj)
-          value = `${pluginData.displayName} plugin ready`
-          evalStatus = 'success'
           // NOTE: it is possible to get the blob id used in the browser. for debugging
           // purposes we should be able to map the blob id back to the original filename
-          // with just a find/replace in the error output string.
+          // with just a find/replace in the error output string. this gets the blob id:
           // console.log(document.getElementById(`plugin-script-${cell.id}`).src)
+          value = `${displayName} plugin ready`
+          evalStatus = 'success'
+          dispatch(addLanguage(pluginData))
+          // FIXME: adding the keybinding move to a reducer ideally, but since it mutates
+          // a part of global state in a snowflake sideffect-ish way, and since it
+          // needs `dispatch` we'll do it here.
+          if (keybinding.length === 1 && (typeof keybinding === 'string')) {
+            addLanguageKeybinding(
+              [keybinding],
+              () => dispatch(changeCellType('code', languageId)),
+            )
+          }
           dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
         }
         script.onerror = () => {
           URL.revokeObjectURL(urlObj)
-          value = `${pluginData.displayName} plugin error; script could not be parsed`
+          value = `${displayName} plugin error; script could not be parsed`
           evalStatus = 'error'
           dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
         }
@@ -299,12 +320,12 @@ function evaluateLanguagePluginCell(cell) {
       })
 
       xhrObj.addEventListener('error', () => {
-        value = `${pluginData.displayName} plugin failed to load`
+        value = `${displayName} plugin failed to load`
         evalStatus = 'error'
         dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
       })
 
-      xhrObj.open('GET', pluginData.url, true)
+      xhrObj.open('GET', url, true)
       xhrObj.send()
     }
   }
@@ -413,18 +434,6 @@ export function changeSidePaneMode(mode) {
   }
 }
 
-export function addLanguage(languageId, evaluate, displayName, codeMirrorMode, keybinding) {
-  return {
-    type: 'ADD_LANGUAGE',
-    languageDefinition: {
-      languageId,
-      evaluate,
-      displayName,
-      codeMirrorMode,
-      keybinding,
-    },
-  }
-}
 
 export function updateAppMessages(message) {
   return {
