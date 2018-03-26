@@ -25,10 +25,9 @@ export function exportNotebook(exportAsReport = false) {
   }
 }
 
-export function saveNotebook(title = undefined, autosave = false) {
+export function saveNotebook(autosave = false) {
   return {
     type: 'SAVE_NOTEBOOK',
-    title,
     autosave,
   }
 }

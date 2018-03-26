@@ -92,11 +92,13 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'SAVE_NOTEBOOK': {
+      ({ title } = state)
       let lastSaved
       if (!action.autosave) {
         lastSaved = (new Date()).toISOString()
       } else {
         ({ lastSaved } = state)
+        title = AUTOSAVE + title
       }
       nextState = Object.assign({}, state, { lastSaved }, {
         cells: state.cells.slice().map((c) => {
@@ -107,13 +109,8 @@ const notebookReducer = (state = newNotebook(), action) => {
           }
           return newC
         }),
-      }, { title: state.title === undefined ? 'new notebook' : state.title })
+      }, { title: state.title })
       clearHistory(nextState)
-      if (action.title !== undefined) {
-        ({ title } = action)
-      } else {
-        ({ title } = state)
-      }
       window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
       return Object.assign({}, state, { lastSaved }, getSavedNotebooks())
     }

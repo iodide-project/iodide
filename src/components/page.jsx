@@ -44,10 +44,7 @@ class Page extends React.Component {
           this.props.actions.deleteNotebook(n)
         })
       }
-      this.props.actions.saveNotebook(
-        AUTOSAVE + (this.props.title === undefined ? 'new notebook' : this.props.title),
-        true,
-      )
+      this.props.actions.saveNotebook(true)
     }, 1000 * 60)
   }
 

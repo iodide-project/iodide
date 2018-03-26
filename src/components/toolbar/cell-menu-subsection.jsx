@@ -14,6 +14,7 @@ export default class CellMenuSubsection extends React.Component {
         <NotebookMenuItem key={tasks.moveCellUp.title} task={tasks.moveCellUp} />
         <NotebookMenuItem key={tasks.moveCellDown.title} task={tasks.moveCellDown} />
         <NotebookMenuItem key={tasks.addCellBelow.title} task={tasks.addCellBelow} />
+        <NotebookMenuItem key={tasks.addCellAbove.title} task={tasks.addCellAbove} />
         <NotebookMenuItem key={tasks.deleteCell.title} task={tasks.deleteCell} />
         <NotebookMenuDivider />
         <NotebookMenuHeader title="change cell to ..." />
