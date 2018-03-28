@@ -56,7 +56,7 @@ class CellRow extends React.Component {
     return (
       <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
         <div className="status">
-          {this.props.executionString}
+          {/* this.props.executionString */}
         </div>
         <div
           className="collapse-button"

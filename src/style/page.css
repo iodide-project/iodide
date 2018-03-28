@@ -138,13 +138,14 @@ div#cells.presentation div.status {
 }
 
 .cell-type-label {
-    /*outline: 1px gray dashed;*/
+    outline: 1px hsla(0, 0%, 87%, 0);
     width: 50px;
     position: absolute;
     top: 6px;
     color: hsl(275, 12%, 73%);
     text-align: right;
     padding: 0px 6px 0px 0px;
+    /*transition: outline .5s;*/
 }
 
 .cell-type-label:hover {
@@ -193,9 +194,10 @@ div.collapse-button {
   line-height: 1.6;
 }
 
-div.raw div.collapse-button:hover,
+/*div.raw div.collapse-button:hover,
 div.external div.collapse-button:hover,
-div.code div.collapse-button:hover {
+div.code*/
+div.collapse-button:hover {
   background: #fbfbfb;
   outline: 1px solid #ddd;
   cursor: pointer;
