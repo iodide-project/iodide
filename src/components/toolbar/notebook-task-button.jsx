@@ -18,7 +18,7 @@ export default class NotebookTaskFunction extends React.Component {
   static muiName='IconButton'
   render() {
     return (
-      <Tooltip classes={{ tooltip: 'toolbar-tooltip' }} title={this.props.task.menuTitle}>
+      <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title={this.props.task.menuTitle}>
 
         <IconButton
           classes={{ root: 'menu-button' }}

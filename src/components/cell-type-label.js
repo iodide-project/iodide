@@ -21,9 +21,10 @@ export class CellTypeLabelUnconnected extends React.Component {
   render() {
     return (
       <Tooltip
-        classes={{ tooltip: 'toolbar-tooltip' }}
+        classes={{ tooltip: 'iodide-tooltip' }}
         placement="bottom"
         title="Cell Settings"
+        enterDelay={600}
       >
         <div className="cell-type-label">{this.props.label}</div>
       </Tooltip>
