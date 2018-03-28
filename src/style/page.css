@@ -59,6 +59,10 @@ div#cells.presentation {
   height: inherit;
 }
 
+div#cells.pane-open {
+  width: calc(100% - 575px);
+}
+
 h1.overlay-title {
   padding-left: 20px;
   font-size: 20px
@@ -116,7 +120,7 @@ but I don't see why we would have to do this immediately.
 */
 
 div#cells.presentation div.cell-container {
-  margin: 0 auto; 
+  margin: 0 auto;
   outline: none;
   padding:0px;
 }
