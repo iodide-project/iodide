@@ -55,6 +55,7 @@ class CellContainer extends React.Component {
         className={cellClass}
         onMouseDown={this.handleCellClick}
       >
+      <CellTypeLabel cellId={this.props.cellId} />
         {this.props.children}
       </div>
     )
