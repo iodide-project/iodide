@@ -15,7 +15,6 @@ const jsmdToCellTypeMap = new Map([
   ['markdown', 'markdown'],
   ['external', 'external dependencies'],
   ['resource', 'external dependencies'],
-  ['dom', 'dom'],
   ['raw', 'raw'],
   ['css', 'css'],
 ])
@@ -25,7 +24,6 @@ const cellTypeToJsmdMap = new Map([
   ['code', 'code'],
   ['markdown', 'md'],
   ['external dependencies', 'resource'],
-  ['dom', 'dom'],
   ['raw', 'raw'],
   ['css', 'css'],
 ])
