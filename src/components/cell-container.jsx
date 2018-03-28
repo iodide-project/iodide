@@ -7,6 +7,8 @@ import * as actions from '../actions'
 import { getCellById } from '../notebook-utils'
 import { cellTypeEnum } from '../state-prototypes'
 
+import CellTypeLabel from './cell-type-label'
+
 
 class CellContainer extends React.Component {
   static propTypes = {
@@ -55,7 +57,7 @@ class CellContainer extends React.Component {
         className={cellClass}
         onMouseDown={this.handleCellClick}
       >
-      <CellTypeLabel cellId={this.props.cellId} />
+        <CellTypeLabel cellId={this.props.cellId} />
         {this.props.children}
       </div>
     )

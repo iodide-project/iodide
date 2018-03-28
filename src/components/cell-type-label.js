@@ -12,19 +12,9 @@ import * as actions from '../actions'
 import { getCellById } from '../notebook-utils'
 
 
-export class CellTypeLabel extends React.Component {
+export class CellTypeLabelUnconnected extends React.Component {
   static propTypes = {
-    cellId: PropTypes.number.isRequired,
-    value: PropTypes.string,
-    showMarkdown: PropTypes.bool.isRequired,
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
-  }
-
-  enterEditMode = () => {
-    if (this.props.viewMode === 'editor') {
-      this.props.actions.changeMode('edit')
-      this.props.actions.markCellNotRendered()
-    }
+    label: PropTypes.string.isRequired,
   }
 
   render() {
@@ -47,6 +37,10 @@ function mapStateToProps(state, ownProps) {
     label = 'css'
   } else if (cell.cellType === 'plugin') {
     label = 'plugin'
+  } else if (cell.cellType === 'external resource') {
+    label = 'resource'
+  } else if (cell.cellType === 'raw') {
+    label = 'raw'
   }
   return {
     label,
@@ -59,4 +53,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CellTypeLabel)
+export default connect(mapStateToProps, mapDispatchToProps)(CellTypeLabelUnconnected)
