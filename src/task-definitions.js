@@ -41,7 +41,7 @@ tasks.evaluateCell = new UserTask({
 
 tasks.evaluateAllCells = new UserTask({
   title: 'Evaluate All Cells',
-  menuTitle: 'evaluate all cells',
+  menuTitle: 'Evaluate All Cells',
   callback() {
     dispatcher.saveNotebook(true)
     evaluateAllCells(getCells(), store)
