@@ -189,9 +189,29 @@ div.collapse-button {
   flex-basis: 18px;
   flex-shrink: 0;
   flex-grow: 0;
+  min-width: 18px;
+  height: 100%;
   vertical-align: middle;
   font-size: 12px;
   line-height: 1.6;
+}
+
+div.collapse-button-tooltip-root {
+    flex-grow: 1
+}
+
+div.HIDDEN div.collapse-button {
+  padding-top: 1px;
+  padding-bottom: 2px;
+  padding-left: 6px;
+  padding-right: 6px;
+  flex-basis: 18px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-grow: 1;
+  outline: #ddd 1px solid;
+  margin-right: 0px;
+  margin-left: 24px;
 }
 
 /*div.raw div.collapse-button:hover,
@@ -216,16 +236,7 @@ div.markdown div.input div.main-component {
   outline: none;
 }
 
-div.HIDDEN div.collapse-button {
-  padding-top: 1px;
-  padding-bottom: 2px;
-  padding-left: 6px;
-  padding-right: 6px;
-  flex-grow: 1;
-  outline: #ddd 1px solid;
-  margin-right: 0px;
-  margin-left: 24px;
-}
+
 
 div.HIDDEN div.main-component {
   height: 18px;

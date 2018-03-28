@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
+import Tooltip from 'material-ui/Tooltip'
 
 // import CellRow from './cell-row'
 // import { CellContainer } from './cell-container'
@@ -19,7 +20,13 @@ export class CellTypeLabelUnconnected extends React.Component {
 
   render() {
     return (
-      <div className="cell-type-label">{this.props.label}</div>
+      <Tooltip
+        classes={{ tooltip: 'toolbar-tooltip' }}
+        placement="bottom"
+        title="Cell Settings"
+      >
+        <div className="cell-type-label">{this.props.label}</div>
+      </Tooltip>
     )
   }
 }

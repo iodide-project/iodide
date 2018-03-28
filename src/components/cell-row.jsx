@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import Tooltip from 'material-ui/Tooltip'
 
 import { getCellById } from '../notebook-utils'
 import * as actions from '../actions'
@@ -13,10 +14,10 @@ class CellRow extends React.Component {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     rowOverflow: PropTypes.oneOf(rowOverflowEnum.values()),
     rowType: PropTypes.string,
+    collapseTooltipPlacement: PropTypes.string.isRequired,
     actions: PropTypes.shape({
       setCellRowCollapsedState: PropTypes.func.isRequired,
     }).isRequired,
-    // collapseButtonLabel: PropTypes.string.isRequired,
     children: PropTypes.node,
   }
 
@@ -58,12 +59,16 @@ class CellRow extends React.Component {
         <div className="status">
           {/* this.props.executionString */}
         </div>
-        <div
-          className="collapse-button"
-          onClick={this.handleCollapseButtonClick}
+        <Tooltip
+          classes={{ tooltip: 'collapse-button-tooltip', root: 'collapse-button-tooltip-root' }}
+          placement={this.props.collapseTooltipPlacement}
+          title="click to toggle row collapse state"
         >
-          {/* this.props.collapseButtonLabel */}
-        </div>
+          <div
+            className="collapse-button"
+            onClick={this.handleCollapseButtonClick}
+          />
+        </Tooltip>
         <div className="main-component">
           {this.props.children}
         </div>
@@ -100,12 +105,16 @@ function mapStateToPropsCellRows(state, ownProps) {
     ownProps.rowType === 'input' &&
     rowOverflow === rowOverflowEnum.HIDDEN
   )
+  const collapseTooltipPlacement = (
+    rowOverflow === rowOverflowEnum.HIDDEN ? 'bottom' : 'right-start'
+  )
   return {
     cellId: ownProps.cellId,
     viewMode: state.viewMode,
     uncollapseOnUpdate,
     executionString,
     rowOverflow,
+    collapseTooltipPlacement,
   }
 }
 
