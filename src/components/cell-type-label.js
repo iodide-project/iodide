@@ -37,7 +37,7 @@ function mapStateToProps(state, ownProps) {
     label = 'css'
   } else if (cell.cellType === 'plugin') {
     label = 'plugin'
-  } else if (cell.cellType === 'external resource') {
+  } else if (cell.cellType === 'external dependencies') {
     label = 'resource'
   } else if (cell.cellType === 'raw') {
     label = 'raw'

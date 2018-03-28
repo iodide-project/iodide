@@ -109,6 +109,7 @@ div.cell-container {
   flex-direction: column;
   outline: #f4f4f4 1px solid;
   width: calc(100%);
+  position: relative;/*allows .cell-type-label absolute positioning*/
 }
 
 /* These may need to be integrated into the presentation mode style sheets
@@ -118,7 +119,7 @@ but I don't see why we would have to do this immediately.
 div#cells.presentation div.cell-container {
   margin: 0 auto; 
   outline: none;
-  padding:0px;
+  padding: 0px;
 }
 
 div#cells.presentation .collapse-button {
@@ -131,6 +132,29 @@ div#cells.presentation div.cell-row.HIDDEN {
 }
 
 div#cells.presentation div.status {
+  display: none;
+  height: 0px;
+  width: 0px !important;
+}
+
+.cell-type-label {
+    /*outline: 1px gray dashed;*/
+    width: 50px;
+    position: absolute;
+    top: 6px;
+    color: hsl(275, 12%, 73%);
+    text-align: right;
+    padding: 0px 6px 0px 0px;
+}
+
+.cell-type-label:hover {
+  background: #fbfbfb;
+  outline: 1px solid #ddd;
+  cursor: pointer;
+  color: hsl(275, 4%, 40%);
+}
+
+div#cells.presentation div.cell-type-label {
   display: none;
   height: 0px;
   width: 0px !important;
@@ -152,7 +176,8 @@ div.status {
   flex-shrink: 0;
   flex-grow: 0;
   text-align: right;
-  color: #aaa
+  /*color: #aaa;*/
+  color: #fff;
 }
 
 
