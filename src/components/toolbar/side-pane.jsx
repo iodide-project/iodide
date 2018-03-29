@@ -35,17 +35,19 @@ export class SidePaneUnconnected extends React.Component {
             anchor="right"
             open={this.props.sidePaneMode === this.props.openOnMode}
           >
-            <div className="pane-title">
-              <NotebookTaskButton
-                tooltip="Close"
-                task={this.props.task}// tasks.toggleHistoryPane}
-                style={{ color: 'black', margin: '5px' }}
-              >
-                <Close />
-              </NotebookTaskButton>
-              <Typography variant="headline">{this.props.title}</Typography>
+            <div className="pane-header">
+              <div className="pane-title">
+                <Typography variant="headline">{this.props.title}</Typography>
+                <NotebookTaskButton
+                  tooltip="Close"
+                  task={this.props.task}// tasks.toggleHistoryPane}
+                  style={{ color: 'black', margin: '5px' }}
+                >
+                  <Close />
+                </NotebookTaskButton>
+              </div>
+              <NotebookMenuDivider />
             </div>
-            <NotebookMenuDivider />
 
             {this.props.children}
           </Drawer>

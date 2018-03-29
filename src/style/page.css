@@ -542,14 +542,23 @@ div.toolbar-tooltip {
   border-left: 2px solid lightgray !important;
 }
 
+.pane-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	background: #fff;
+}
+
 .pane-title {
-  margin:5px;
-  margin-right:0px;
-  display:-webkit-box;
+	margin: 5px;
+	margin-right: 0px;
+	display: flex;
+	justify-content: space-between;
 }
 
 .pane-title h1 {
-  margin-top: 6px;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .pane-title .menu-button {
