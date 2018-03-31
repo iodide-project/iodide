@@ -21,11 +21,6 @@ const initialVariables = new Set(Object.keys(window)) // gives all global variab
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 
-const evalStatuses = {}
-evalStatuses.SUCCESS = 'success'
-evalStatuses.ERROR = 'error'
-
-
 const cellReducer = (state = newNotebook(), action) => {
   let nextState
   switch (action.type) {

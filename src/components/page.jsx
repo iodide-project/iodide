@@ -13,7 +13,7 @@ import PluginDefinitionCell from './cell-plugin-definition'
 
 import NotebookHeader from './notebook-header'
 
-import keyBinding from '../keybindings'
+import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions'
 
 
@@ -34,7 +34,7 @@ class Page extends React.Component {
   constructor(props) {
     super(props)
 
-    keyBinding()
+    initializeDefaultKeybindings()
     setInterval(() => {
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
       const notebooks = Object.keys(localStorage)
