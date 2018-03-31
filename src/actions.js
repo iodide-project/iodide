@@ -12,6 +12,13 @@ import { addLanguageKeybinding } from './keybindings'
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
+export function updateAppMessages(message) {
+  return {
+    type: 'UPDATE_APP_MESSAGES',
+    message,
+  }
+}
+
 export function importNotebook(newState) {
   return {
     type: 'IMPORT_NOTEBOOK',
@@ -327,7 +334,11 @@ export function evaluateCell(cellId) {
     } else if (cell.cellType === 'css') {
       dispatch(evaluateCSSCell(cell))
     } else if (cell.cellType === 'plugin') {
-      dispatch(evaluateLanguagePluginCell(cell))
+      if (JSON.parse(cell.content).pluginType === 'language') {
+        dispatch(evaluateLanguagePluginCell(cell))
+      } else {
+        dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
+      }
     } else {
       cell.rendered = false
     }
@@ -410,13 +421,5 @@ export function changeSidePaneMode(mode) {
   return {
     type: 'CHANGE_SIDE_PANE_MODE',
     mode,
-  }
-}
-
-
-export function updateAppMessages(message) {
-  return {
-    type: 'UPDATE_APP_MESSAGES',
-    message,
   }
 }
