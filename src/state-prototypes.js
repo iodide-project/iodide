@@ -53,6 +53,7 @@ const cellSchema = {
 const languageSchema = {
   type: 'object',
   properties: {
+    pluginType: { type: 'string', enum: ['language'] },
     languageId: { type: 'string' },
     displayName: { type: 'string' },
     codeMirrorMode: { type: 'string' },
@@ -152,6 +153,7 @@ function newCellRowSettings(cellType) {
 }
 
 const pluginCellDefaultContent = `{
+  "pluginType": ""
   "languageId": "",
   "displayName": "",
   "codeMirrorMode": "",
@@ -177,6 +179,7 @@ function newCell(cellId, cellType, language = 'js') {
 }
 
 const jsLanguageDefinition = {
+  pluginType: 'language',
   languageId: 'js',
   displayName: 'Javascript',
   codeMirrorMode: 'javascript',
