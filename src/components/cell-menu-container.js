@@ -13,21 +13,23 @@ import * as actions from '../actions'
 import { getCellById } from '../notebook-utils'
 
 
-export class CellTypeLabelUnconnected extends React.Component {
+export class CellMenuContainerUnconnected extends React.Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
   }
 
   render() {
     return (
-      <Tooltip
-        classes={{ tooltip: 'iodide-tooltip' }}
-        placement="bottom"
-        title="Cell Settings"
-        enterDelay={600}
-      >
-        <div className="cell-type-label">{this.props.label}</div>
-      </Tooltip>
+      <div className="cell-menu-container">
+        <Tooltip
+          classes={{ tooltip: 'iodide-tooltip' }}
+          placement="bottom"
+          title="Cell Settings"
+          enterDelay={600}
+        >
+          <div className="cell-type-label">{this.props.label}</div>
+        </Tooltip>
+      </div>
     )
   }
 }
@@ -61,4 +63,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CellTypeLabelUnconnected)
+export default connect(mapStateToProps, mapDispatchToProps)(CellMenuContainerUnconnected)

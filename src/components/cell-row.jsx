@@ -56,11 +56,8 @@ class CellRow extends React.Component {
     // console.log(`render cell-row: cellId:${this.props.cellId} ${this.props.rowType}`)
     return (
       <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
-        <div className="status">
-          {/* this.props.executionString */}
-        </div>
         <Tooltip
-          classes={{ root: 'collapse-button-tooltip-root', tooltip: 'iodide-tooltip' }}
+          classes={{ root: 'collapse-button-tooltip-wrapper', tooltip: 'iodide-tooltip' }}
           placement={this.props.collapseTooltipPlacement}
           title="click to toggle row collapse state"
           enterDelay={600}
