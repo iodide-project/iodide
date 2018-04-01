@@ -59,7 +59,7 @@ class CellRow extends React.Component {
         <Tooltip
           classes={{ root: 'collapse-button-tooltip-wrapper', tooltip: 'iodide-tooltip' }}
           placement={this.props.collapseTooltipPlacement}
-          title="click to toggle row collapse state"
+          title={this.props.tooltipText}
           enterDelay={600}
         >
           <div
@@ -106,6 +106,9 @@ function mapStateToPropsCellRows(state, ownProps) {
   const collapseTooltipPlacement = (
     rowOverflow === rowOverflowEnum.HIDDEN ? 'bottom' : 'right'
   )
+
+  const nextOverflowString = { HIDDEN: 'expand', VISIBLE: 'scroll', SCROLL: 'collapse' }[rowOverflow]
+  const tooltipText = `click to ${nextOverflowString} this ${ownProps.rowType}`
   return {
     cellId: ownProps.cellId,
     viewMode: state.viewMode,
@@ -113,6 +116,7 @@ function mapStateToPropsCellRows(state, ownProps) {
     executionString,
     rowOverflow,
     collapseTooltipPlacement,
+    tooltipText,
   }
 }
 
