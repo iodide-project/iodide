@@ -51,6 +51,7 @@ div#cells.editor {
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 60px;
+    transition-duration: 100ms;
     /*outline: 4px #d41eea dashed;*/
 }
 

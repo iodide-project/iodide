@@ -25,6 +25,20 @@ export class SidePaneUnconnected extends React.Component {
       task: PropTypes.instanceOf(UserTask),
     }
     static muiName = 'Drawer'
+
+    constructor(props) {
+      super(props);
+
+      this.paneOpen = true;
+    }
+
+    componentWillReceiveProps(nextProps) {
+      if (!this.props.sidePaneMode && nextProps.sidePaneMode) {
+        this.paneOpen = true;
+      } else {
+        this.paneOpen = false;
+      }
+    }
     render() {
       return (
         <MuiThemeProvider theme={theme}>
@@ -33,6 +47,7 @@ export class SidePaneUnconnected extends React.Component {
             classes={{ paperAnchorRight: 'side-pane' }}
             variant="persistent"
             anchor="right"
+            transitionDuration={this.paneOpen ? 225 : 0}
             open={this.props.sidePaneMode === this.props.openOnMode}
           >
             <div className="pane-header">
