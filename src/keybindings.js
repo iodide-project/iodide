@@ -5,7 +5,7 @@ import tasks from './task-definitions'
 Mousetrap.prototype.stopCallback = () => false
 
 
-function keyBinding() {
+export function initializeDefaultKeybindings() {
   Object.keys(tasks).forEach((t) => {
     const task = tasks[t]
     if (task.hasKeybinding()) {
@@ -14,4 +14,6 @@ function keyBinding() {
   })
 }
 
-export default keyBinding
+export function addLanguageKeybinding(keys, callback) {
+  Mousetrap.bind(keys, callback)
+}

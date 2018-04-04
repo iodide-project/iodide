@@ -1,29 +1,29 @@
 /* global IODIDE_JS_PATH IODIDE_CSS_PATH IODIDE_VERSION */
-
+import deepEqual from 'deep-equal'
 import _ from 'lodash'
 import { newNotebook, blankState, newCell } from './state-prototypes'
 import htmlTemplate from './html-template'
 
-const jsmdValidCellTypes = ['meta', 'md', 'js', 'code', 'raw', 'resource', 'css']
+const jsmdValidCellTypes = ['meta', 'md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']
 
 
 const jsmdToCellTypeMap = new Map([
   ['js', 'code'],
   ['code', 'code'],
   ['md', 'markdown'],
+  ['plugin', 'plugin'],
   ['markdown', 'markdown'],
   ['external', 'external dependencies'],
   ['resource', 'external dependencies'],
-  ['dom', 'dom'],
   ['raw', 'raw'],
   ['css', 'css'],
 ])
 
 const cellTypeToJsmdMap = new Map([
+  ['plugin', 'plugin'],
   ['code', 'code'],
   ['markdown', 'md'],
   ['external dependencies', 'resource'],
-  ['dom', 'dom'],
   ['raw', 'raw'],
   ['css', 'css'],
 ])
@@ -32,7 +32,7 @@ const jsmdValidNotebookSettings = [
   'title',
   'viewMode',
   'lastSaved',
-  // 'languages',
+  'languages',
 ]
 const jsmdValidCellSettingPaths = [
   'language',
@@ -219,7 +219,7 @@ ${cell.content}`
   const metaSettings = {}
   for (const setting of jsmdValidNotebookSettings) {
     if (Object.prototype.hasOwnProperty.call(state, setting)
-      && state[setting] !== defaultState[setting]) {
+      && !deepEqual(state[setting], defaultState[setting])) {
       metaSettings[setting] = state[setting]
     }
   }

@@ -53,16 +53,17 @@ const cellSchema = {
 const languageSchema = {
   type: 'object',
   properties: {
+    pluginType: { type: 'string', enum: ['language'] },
     languageId: { type: 'string' },
     displayName: { type: 'string' },
     codeMirrorMode: { type: 'string' },
     keybinding: { type: 'string' },
     module: { type: 'string' },
     evaluator: { type: 'string' },
+    url: { type: 'string' },
   },
   additionalProperties: false,
 }
-
 
 const stateSchema = {
   type: 'object',
@@ -152,12 +153,14 @@ function newCellRowSettings(cellType) {
 }
 
 const pluginCellDefaultContent = `{
+  "pluginType": ""
   "languageId": "",
   "displayName": "",
   "codeMirrorMode": "",
   "keybinding": "",
-  "url": "",
-  "evaluate": ""
+  "url": "", 
+  "module": "", 
+  "evaluator": ""
 }`
 
 function newCell(cellId, cellType, language = 'js') {
@@ -176,12 +179,14 @@ function newCell(cellId, cellType, language = 'js') {
 }
 
 const jsLanguageDefinition = {
+  pluginType: 'language',
   languageId: 'js',
   displayName: 'Javascript',
   codeMirrorMode: 'javascript',
   module: 'window',
   evaluator: 'eval',
   keybinding: 'j',
+  url: '',
 }
 
 function blankState() {

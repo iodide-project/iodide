@@ -222,8 +222,7 @@ div.cell-row.SCROLL {
 }
 
 div.cell-container.markdown div.status,
-div.cell-container.raw div.status,
-div.cell-container.dom div.status {
+div.cell-container.raw div.status {
   visibility: hidden;
   height: 0px
 }
@@ -313,24 +312,12 @@ span.notebook-label {
   text-align: center;
 }
 
-div.dom-cell {
-}
-
 .cm-s-eclipse .CodeMirror-matchingbracket {
   outline: 1px dotted #000;
 }
 
-div.dom-cell-error {
-  color: gray;
-  margin-top: 5px;
-}
-
 .right-spacer {
   margin-right: 10px;
-}
-
-.dom-inputs {
-  padding: 3px;
 }
 
 /************************************************/
