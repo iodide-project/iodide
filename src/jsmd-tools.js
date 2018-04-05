@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { newNotebook, blankState, newCell } from './state-prototypes'
 import htmlTemplate from './html-template'
 
-const jsmdValidCellTypes = ['meta', 'md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']
+const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']
 
 
 const jsmdToCellTypeMap = new Map([
@@ -248,6 +248,7 @@ export {
   parseJsmd,
   stateFromJsmd,
   jsmdValidCellTypes,
+  jsmdToCellTypeMap,
   jsmdValidCellSettingPaths,
   stringifyStateToJsmd,
   exportJsmdBundle,

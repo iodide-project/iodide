@@ -1,8 +1,13 @@
 /* global it describe expect */
 import { parseJsmd,
   stateFromJsmd,
+  jsmdValidCellTypes,
+  jsmdToCellTypeMap,
 } from './../src/jsmd-tools'
-import { newNotebook } from '../src/state-prototypes'
+import {
+  newNotebook,
+  cellTypeEnum,
+} from '../src/state-prototypes'
 
 let jsmdTestCase = `%% meta
 {"title": "What a web notebook looks like",
@@ -191,7 +196,7 @@ describe('jsmd parser test case 6', () => {
   it('should have 1 parse warning1', () => {
     expect(parseWarnings.length).toEqual(1)
   })
-  it('the cells should have cellType==js (bad cellTypes should convert to js)', () => {
+  it('the cells should have cellType==js (bad cellTypes should convert to code)', () => {
     expect(cells.map(c => c.cellType)).toEqual(['code'])
   })
   it('state should be a default notebook with no additions', () => {
@@ -296,5 +301,32 @@ foo`
   })
   it('cell language parse ok', () => {
     expect(cells[0].language).toEqual('python')
+  })
+})
+
+describe('all jsmdValidCellTypes (including legacy cell types) should convert to a state-prototypes cell type', () => {
+  jsmdValidCellTypes.forEach((cellTypeStr) => {
+    jsmdTestCase = `
+%% ${cellTypeStr}
+foo`
+    const jsmdParsed = parseJsmd(jsmdTestCase)
+    const state = stateFromJsmd(jsmdTestCase)
+    const { cells } = state
+    const { parseWarnings } = jsmdParsed
+    it(`should have 1 cell (cell type: ${cellTypeStr})`, () => {
+      expect(cells.length).toEqual(1)
+    })
+    it(`should have 0 parse warnings (cell type: ${cellTypeStr})`, () => {
+      expect(parseWarnings.length).toEqual(0)
+    })
+    it(`cell content should parse ok (cell type: ${cellTypeStr})`, () => {
+      expect(cells[0].content).toEqual('foo')
+    })
+    it(`jsmd cell type parse to expected cell type (cell type: ${cellTypeStr})`, () => {
+      expect(cells[0].cellType).toEqual(jsmdToCellTypeMap.get(cellTypeStr))
+    })
+    it(`jsmd cell type parse to a state-prototypes cell type (cell type: ${cellTypeStr})`, () => {
+      expect(cellTypeEnum.values()).toContain(cells[0].cellType)
+    })
   })
 })
