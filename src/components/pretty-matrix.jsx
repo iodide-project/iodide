@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
+import JSONTree from 'react-json-tree'
 import nb from '../tools/nb'
+
 
 function cellText(matrixLike, i, j) {
   const [numRows, numCols] = nb.shape(matrixLike)
@@ -92,7 +94,7 @@ class PrettyMatrix extends React.Component {
             (<tr key={iTr}>
               {colInds.map((j, jTd) =>
                 <td key={jTd}>{this.cellText(i, j)}</td>)}
-             </tr>))}
+            </tr>))}
         </tbody>
       </table>
     )
@@ -102,8 +104,16 @@ class PrettyMatrix extends React.Component {
 
 
 class SimpleTable extends React.Component {
+  /* eslint-disable */
+  columntext(colText) {
+    if (_.isObject(colText)) {
+      return JSON.stringify(colText)
+    } else {
+      return colText
+    }
+  }
+
   render() {
-    /* eslint-disable */
     return (
       <table className="matrixTable">
         <tbody>
@@ -111,8 +121,8 @@ class SimpleTable extends React.Component {
             // TODO: Do not use array indices in keys
             (<tr key={iTr}>
               {row.map((colText, jTd) =>
-                <td key={jTd}>{colText}</td>)}
-             </tr>))}
+                <td key={jTd}>{this.columntext(colText)}</td>)}
+            </tr>))}
         </tbody>
       </table>
     )
