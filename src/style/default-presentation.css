@@ -21,6 +21,18 @@ when a user has a full-screen graphic they want to display).
   word-wrap: break-word;
 }
 
+/* this resets the div.cell-row-container to not have a margin for collapse + cell label buttons,
+which is an additiona 50px.
+*/
+div#cells.presentation div.cell-row-container {
+  width: 100%;
+}
+
+/* in the editor view, there is 24px less room for the collapse-button. Let's get it back. */
+div#cells.presentation div.main-component {
+  width: 100%;
+}
+
 #cells.presentation .cell-container:first-child {
   margin-top:30px;
 }
