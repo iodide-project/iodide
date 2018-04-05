@@ -33,11 +33,11 @@ div#cells.presentation div.main-component {
   width: 100%;
 }
 
-#cells.presentation .cell-container:first-child {
+#cells.presentation .user-markdown:first-child {
   margin-top:30px;
 }
 
-#cells.presentation .cell-container:last-child {
+#cells.presentation .user-markdown:last-child {
   margin-bottom:60px;
 }
 

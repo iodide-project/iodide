@@ -39,24 +39,34 @@ div#cells.presentation div.cell-menu-container {
   width: 0px !important;
 }
 
+div#cells.presentation div.cell-row.input {
+  padding:0px;
+}
+
 .cell-menu-container {
-    width: 50px;
+    width: 64px;
 }
 
 .cell-type-label {
   text-align: right;
-  color: hsl(275, 12%, 82%);
+  color: hsl(275, 12%, 75%);
   cursor: pointer;
   padding: 0px 6px 0px 0px;
+  font-size:12px;
+  height:28px;
+  border: 1px solid rgba(0,0,0,0);
+  display:flex;
+  align-items:center;
+  justify-content: right;
 }
 .cell-type-label:hover {
   background: #fbfbfb;
-  outline: 1px solid #ddd;
+  border: 1px solid #ddd;
   color: hsl(275, 4%, 40%);
 }
 
 div.cell-row-container {
-  width: calc(100% - 50px); /* 100% minus cell-menu-contatiner width*/
+  width: calc(100% - 64px); /* 100% minus cell-menu-contatiner width*/
 }
 
 div.cell-row {
@@ -69,7 +79,7 @@ div#cells.editor div.cell-container.markdown div.cell-row.output {
 }
 
 div.collapse-button {
-  margin-right: 3px;
+  margin-right: 5px;
   margin-left: 3px;
   width: 18px;
   height: 100%;
