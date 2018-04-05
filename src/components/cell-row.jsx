@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import Tooltip from 'material-ui/Tooltip'
 
 import { getCellById } from '../notebook-utils'
 import * as actions from '../actions'
@@ -13,10 +14,10 @@ class CellRow extends React.Component {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     rowOverflow: PropTypes.oneOf(rowOverflowEnum.values()),
     rowType: PropTypes.string,
+    collapseTooltipPlacement: PropTypes.string.isRequired,
     actions: PropTypes.shape({
       setCellRowCollapsedState: PropTypes.func.isRequired,
     }).isRequired,
-    // collapseButtonLabel: PropTypes.string.isRequired,
     children: PropTypes.node,
   }
 
@@ -55,15 +56,17 @@ class CellRow extends React.Component {
     // console.log(`render cell-row: cellId:${this.props.cellId} ${this.props.rowType}`)
     return (
       <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
-        <div className="status">
-          {this.props.executionString}
-        </div>
-        <div
-          className="collapse-button"
-          onClick={this.handleCollapseButtonClick}
+        <Tooltip
+          classes={{ root: 'collapse-button-tooltip-wrapper', tooltip: 'iodide-tooltip' }}
+          placement={this.props.collapseTooltipPlacement}
+          title={this.props.tooltipText}
+          enterDelay={600}
         >
-          {/* this.props.collapseButtonLabel */}
-        </div>
+          <div
+            className="collapse-button"
+            onClick={this.handleCollapseButtonClick}
+          />
+        </Tooltip>
         <div className="main-component">
           {this.props.children}
         </div>
@@ -100,12 +103,20 @@ function mapStateToPropsCellRows(state, ownProps) {
     ownProps.rowType === 'input' &&
     rowOverflow === rowOverflowEnum.HIDDEN
   )
+  const collapseTooltipPlacement = (
+    rowOverflow === rowOverflowEnum.HIDDEN ? 'bottom' : 'right'
+  )
+
+  const nextOverflowString = { HIDDEN: 'expand', VISIBLE: 'scroll', SCROLL: 'collapse' }[rowOverflow]
+  const tooltipText = `click to ${nextOverflowString} this ${ownProps.rowType}`
   return {
     cellId: ownProps.cellId,
     viewMode: state.viewMode,
     uncollapseOnUpdate,
     executionString,
     rowOverflow,
+    collapseTooltipPlacement,
+    tooltipText,
   }
 }
 

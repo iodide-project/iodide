@@ -10,6 +10,7 @@ import 'codemirror/addon/hint/show-hint.css'
 import 'react-table/react-table.css'
 import '../node_modules/katex/dist/katex.min.css'
 import './style/page.css'
+import './style/cell-styles.css'
 import './style/default-presentation.css'
 
 import Page from './components/page'
