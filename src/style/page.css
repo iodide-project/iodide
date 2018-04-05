@@ -59,6 +59,10 @@ div#cells.presentation {
   height: inherit;
 }
 
+div#cells.pane-open {
+  width: calc(100% - 575px);
+}
+
 h1.overlay-title {
   padding-left: 20px;
   font-size: 20px
@@ -116,7 +120,7 @@ but I don't see why we would have to do this immediately.
 */
 
 div#cells.presentation div.cell-container {
-  margin: 0 auto; 
+  margin: 0 auto;
   outline: none;
   padding:0px;
 }
@@ -525,14 +529,23 @@ div.toolbar-tooltip {
   border-left: 2px solid lightgray !important;
 }
 
+.pane-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	background: #fff;
+}
+
 .pane-title {
-  margin:5px;
-  margin-right:0px;
-  display:-webkit-box;
+	margin: 5px;
+	margin-right: 0px;
+	display: flex;
+	justify-content: space-between;
 }
 
 .pane-title h1 {
-  margin-top: 6px;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .pane-title .menu-button {

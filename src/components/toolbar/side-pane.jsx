@@ -25,6 +25,7 @@ export class SidePaneUnconnected extends React.Component {
       task: PropTypes.instanceOf(UserTask),
     }
     static muiName = 'Drawer'
+
     render() {
       return (
         <MuiThemeProvider theme={theme}>
@@ -33,19 +34,22 @@ export class SidePaneUnconnected extends React.Component {
             classes={{ paperAnchorRight: 'side-pane' }}
             variant="persistent"
             anchor="right"
+            transitionDuration={0}
             open={this.props.sidePaneMode === this.props.openOnMode}
           >
-            <div className="pane-title">
-              <NotebookTaskButton
-                tooltip="Close"
-                task={this.props.task}// tasks.toggleHistoryPane}
-                style={{ color: 'black', margin: '5px' }}
-              >
-                <Close />
-              </NotebookTaskButton>
-              <Typography variant="headline">{this.props.title}</Typography>
+            <div className="pane-header">
+              <div className="pane-title">
+                <Typography variant="headline">{this.props.title}</Typography>
+                <NotebookTaskButton
+                  tooltip="Close"
+                  task={this.props.task}// tasks.toggleHistoryPane}
+                  style={{ color: 'black', margin: '5px' }}
+                >
+                  <Close />
+                </NotebookTaskButton>
+              </div>
+              <NotebookMenuDivider />
             </div>
-            <NotebookMenuDivider />
 
             {this.props.children}
           </Drawer>
