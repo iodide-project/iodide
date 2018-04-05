@@ -82,7 +82,7 @@ class Page extends React.Component {
         className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
       >
         <NotebookHeader />
-        <div id="cells" className={this.props.viewMode}>
+        <div id="cells" className={this.props.viewMode + (this.props.sidePane ? ' pane-open' : '')}>
           {bodyContent}
         </div>
       </div>
@@ -96,6 +96,7 @@ function mapStateToProps(state) {
     cellTypes: state.cells.map(c => c.cellType),
     viewMode: state.viewMode,
     title: state.title,
+    sidePane: state.sidePaneMode,
   }
 }
 
