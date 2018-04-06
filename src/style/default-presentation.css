@@ -32,18 +32,24 @@ div#cells.presentation div.cell-row-container {
 div#cells.presentation div.main-component {
   width: 100%;
 }
+ 
+ /* div#cells.presentation {
+  padding-top:30px;
+}  */
 
-#cells.presentation .user-markdown:first-child {
-  margin-top:30px;
-}
+#cells.presentation .cell-container:first-child {
+  padding-top:30px;
+} 
 
-#cells.presentation .user-markdown:last-child {
+ #cells.presentation .cell-container:last-child {
   margin-bottom:60px;
-}
+} 
 
 #cells.presentation .user-markdown {
   padding-bottom: 10px;
 }
+
+
 
 /* establish block-level elements to be a certain width. This
 lets us create full width divs using css if necessary, while still
@@ -239,6 +245,7 @@ div#cells.editor .user-markdown table {
 .user-markdown h1 {
   font-size: 36px;
   font-weight: 300;
+  margin-top:20px;
 }
 
 .user-markdown h2 {
