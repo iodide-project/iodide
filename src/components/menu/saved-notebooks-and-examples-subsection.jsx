@@ -23,7 +23,7 @@ class SavedNotebooksAndExamplesSubsection extends React.Component {
       autoSaveMenuItems = (
         <div> {/* // FIXME: use React 16 fragments instead of useless container div */}
           <NotebookMenuHeader key="autosave" title="Auto-Saved" />
-          <NotebookMenuItem task={autoSave} key={autoSave.title} />
+          <NotebookMenuItem task={autoSave} />
           <NotebookMenuDivider key="autosave-divider" />
         </div>
       )
@@ -38,7 +38,7 @@ class SavedNotebooksAndExamplesSubsection extends React.Component {
             this.props.locallySaved.map((l) => {
               const task = getLocalStorageNotebook(l)
               if (task !== undefined) {
-                return (<NotebookMenuItem task={task} key={task.title} />)
+                return (<NotebookMenuItem task={task} key={l} />)
               }
               return undefined
             })
