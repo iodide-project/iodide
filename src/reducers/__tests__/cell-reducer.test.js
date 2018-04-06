@@ -1,5 +1,5 @@
-import cellReducer from '../src/reducers/cell-reducer'
-import { newNotebook } from './../src/state-prototypes'
+import cellReducer from '../cell-reducer'
+import { newNotebook } from '../../state-prototypes'
 
 describe('add cells', () => {
   const state = newNotebook()

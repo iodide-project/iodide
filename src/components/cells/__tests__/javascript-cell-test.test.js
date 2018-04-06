@@ -1,11 +1,11 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { CodeCellUnconnected as CodeCell } from '../src/components/cell-type-javascript'
-import { CellContainer } from '../src/components/cell-container'
-import CellRow from '../src/components/cell-row'
-import CellEditor from '../src/components/cell-editor'
-import CellOutput from '../src/components/output'
+import { CodeCellUnconnected as CodeCell } from '../code-cell'
+import { CellContainer } from '../cell-container'
+import CellRow from '../cell-row'
+import CellEditor from '../cell-editor'
+import CellOutput from '../cell-output'
 
 describe('CodeCell_unconnected react component', () => {
   let props

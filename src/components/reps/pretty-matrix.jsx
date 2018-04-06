@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import nb from '../tools/nb'
+import nb from '../../tools/nb'
 
 function cellText(matrixLike, i, j) {
   const [numRows, numCols] = nb.shape(matrixLike)

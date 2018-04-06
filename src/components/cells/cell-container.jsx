@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
-import * as actions from '../actions'
-import { getCellById } from '../notebook-utils'
-import { cellTypeEnum } from '../state-prototypes'
+import * as actions from '../../actions/actions'
+import { getCellById } from '../../tools/notebook-utils'
+import { cellTypeEnum } from '../../state-prototypes'
 
 import CellMenuContainer from './cell-menu-container'
 

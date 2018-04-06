@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
-import CellOutput from './output'
+import CellOutput from './cell-output'
 import CellEditor from './cell-editor'
 
 export class CodeCellUnconnected extends React.Component {

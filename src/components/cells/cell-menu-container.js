@@ -4,13 +4,8 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import Tooltip from 'material-ui/Tooltip'
 
-// import CellRow from './cell-row'
-// import { CellContainer } from './cell-container'
-
-// import CellEditor from './cell-editor'
-
-import * as actions from '../actions'
-import { getCellById } from '../notebook-utils'
+import * as actions from '../../actions/actions'
+import { getCellById } from '../../tools/notebook-utils'
 
 
 export class CellMenuContainerUnconnected extends React.Component {

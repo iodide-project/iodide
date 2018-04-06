@@ -1,8 +1,9 @@
 /* global IODIDE_JS_PATH IODIDE_CSS_PATH IODIDE_VERSION */
 import deepEqual from 'deep-equal'
 import _ from 'lodash'
-import { newNotebook, blankState, newCell } from './state-prototypes'
-import htmlTemplate from './html-template'
+
+import { newNotebook, blankState, newCell } from '../state-prototypes'
+import htmlTemplate from '../html-template'
 
 const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']
 

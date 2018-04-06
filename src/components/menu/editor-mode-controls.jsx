@@ -9,7 +9,7 @@ import FastForward from 'material-ui-icons/FastForward'
 import EditorToolbarMenu from './editor-toolbar-menu'
 import NotebookTaskButton from './notebook-task-button'
 
-import tasks from '../../task-definitions'
+import tasks from '../../actions/task-definitions'
 
 export default class EditorModeControls extends React.Component {
   render() {

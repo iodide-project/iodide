@@ -1,10 +1,10 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { RawCellUnconnected as RawCell } from '../src/components/cell-type-raw'
-import { CellContainer } from '../src/components/cell-container'
-import CellRow from '../src/components/cell-row'
-import CellEditor from '../src/components/cell-editor'
+import { RawCellUnconnected as RawCell } from '../raw-cell'
+import { CellContainer } from '../cell-container'
+import CellRow from '../cell-row'
+import CellEditor from '../cell-editor'
 
 
 describe('RawCellUnconnected react component', () => {

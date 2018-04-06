@@ -1,8 +1,8 @@
 /* global it describe expect */
 import _ from 'lodash'
-import { stringifyStateToJsmd } from './../src/jsmd-tools'
 
-import { newNotebook, addNewCellToState } from '../src/state-prototypes'
+import { stringifyStateToJsmd } from '../jsmd-tools'
+import { newNotebook, addNewCellToState } from '../../state-prototypes'
 
 
 // this can be defined once for all test cases

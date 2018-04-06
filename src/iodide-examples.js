@@ -1,4 +1,4 @@
-import ExternalLinkTask from './external-link-task'
+import ExternalLinkTask from './actions/external-link-task'
 
 const BASE_URL = 'https://iodide-project.github.io/iodide-examples'
 

@@ -1,9 +1,10 @@
 import { shallow } from 'enzyme'
 import React from 'react'
-import { MarkdownCellUnconnected, mapStateToProps } from '../src/components/cell-type-markdown'
-import CellEditor from '../src/components/cell-editor'
-import CellRow from '../src/components/cell-row'
-import { CellContainer } from '../src/components/cell-container'
+
+import { MarkdownCellUnconnected, mapStateToProps } from '../markdown-cell'
+import CellEditor from '../cell-editor'
+import CellRow from '../cell-row'
+import { CellContainer } from '../cell-container'
 
 describe('MarkdownCell_unconnected react component', () => {
   let props

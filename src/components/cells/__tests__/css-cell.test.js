@@ -2,10 +2,10 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 import { CSSCellUnconnected as CSSCell,
-  mapStateToProps } from '../src/components/cell-type-css'
-import CellEditor from '../src/components/cell-editor'
-import { CellContainer } from '../src/components/cell-container'
-import CellRow from '../src/components/cell-row'
+  mapStateToProps } from '../css-cell'
+import CellEditor from '../cell-editor'
+import { CellContainer } from '../cell-container'
+import CellRow from '../cell-row'
 
 
 describe('CSSCell_unconnected react component', () => {

@@ -3,7 +3,7 @@ import { exportJsmdBundle,
   stringifyStateToJsmd,
   stateFromJsmd,
   titleToHtmlFilename,
-} from '../jsmd-tools'
+} from '../tools/jsmd-tools'
 
 const AUTOSAVE = 'AUTOSAVE: '
 

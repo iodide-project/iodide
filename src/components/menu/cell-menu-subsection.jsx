@@ -5,7 +5,7 @@ import NotebookMenuDivider from './notebook-menu-divider'
 import NotebookMenuHeader from './notebook-menu-header'
 import NotebookMenuSubsection from './notebook-menu-subsection'
 
-import tasks from '../../task-definitions'
+import tasks from '../../actions/task-definitions'
 
 export default class CellMenuSubsection extends React.Component {
   render() {

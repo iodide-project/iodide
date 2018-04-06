@@ -4,7 +4,7 @@ import Helmet from 'react-helmet'
 
 import { connect } from 'react-redux'
 
-import tasks from '../../task-definitions'
+import tasks from '../../actions/task-definitions'
 
 export class TitleUnconnected extends React.Component {
   static propTypes = {

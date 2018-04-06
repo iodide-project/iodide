@@ -1,4 +1,4 @@
-import { stateFromJsmd } from './jsmd-tools'
+import { stateFromJsmd } from './tools/jsmd-tools'
 import { newNotebook } from './state-prototypes'
 import { getSavedNotebooks } from './reducers/notebook-reducer'
 

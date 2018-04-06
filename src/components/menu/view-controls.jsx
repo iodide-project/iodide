@@ -8,11 +8,11 @@ import InfoIcon from 'material-ui-icons/InfoOutline'
 import NotebookTaskButton from './notebook-task-button'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
-import DeclaredVariablesPane from './declared-variables-pane'
-import HistoryPane from './history-pane'
-import AppInfoPane from './app-info-pane'
+import DeclaredVariablesPane from '../panes/declared-variables-pane'
+import HistoryPane from '../panes/history-pane'
+import AppInfoPane from '../panes/app-info-pane'
 
-import tasks from '../../task-definitions'
+import tasks from '../../actions/task-definitions'
 
 
 export default class ViewControls extends React.Component {

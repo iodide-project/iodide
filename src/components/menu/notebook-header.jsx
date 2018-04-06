@@ -1,8 +1,8 @@
 import React from 'react'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
-import PresentationModeToolbar from './toolbar/presentation-mode-toolbar'
-import EditorModeToolbar from './toolbar/editor-mode-toolbar'
+import PresentationModeToolbar from './presentation-mode-toolbar'
+import EditorModeToolbar from './editor-mode-toolbar'
 
 const theme = createMuiTheme({
   palette: {

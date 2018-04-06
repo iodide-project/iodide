@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import IconButton from 'material-ui/IconButton'
 import Tooltip from 'material-ui/Tooltip'
-import UserTask from '../../user-task'
-import ExternalLinkTask from '../../external-link-task'
+import UserTask from '../../actions/user-task'
+import ExternalLinkTask from '../../actions/external-link-task'
 
 
 // TODO - implement tooltip again

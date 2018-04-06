@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 
 import SidePane from './side-pane'
 
-import DeclaredVariables from '../declared-variables'
-import tasks from '../../task-definitions'
+import DeclaredVariables from './declared-variables'
+import tasks from '../../actions/task-definitions'
 
 export class DeclaredVariablesPaneUnconnected extends React.Component {
   static propTypes = {

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Typography from 'material-ui/Typography'
 import { connect } from 'react-redux'
-import { prettyDate } from '../../notebook-utils'
+import { prettyDate } from '../../tools/notebook-utils'
 
 export class LastSavedTextUnconnected extends React.Component {
   static propTypes = {

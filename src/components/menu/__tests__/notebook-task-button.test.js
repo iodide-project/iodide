@@ -3,8 +3,8 @@ import { shallow } from 'enzyme'
 
 import IconButton from 'material-ui/IconButton'
 
-import NotebookTaskButton from '../../src/components/toolbar/notebook-task-button'
-import UserTask from '../../src/user-task'
+import NotebookTaskButton from '../notebook-task-button'
+import UserTask from '../../../actions/user-task'
 
 describe('NotebookTaskButton has one IconButton', () => {
   const nbTask = shallow(<NotebookTaskButton task={new UserTask({ title: 'ok', callback: () => {}, secondaryText: 'neat' })}>ok</NotebookTaskButton>)

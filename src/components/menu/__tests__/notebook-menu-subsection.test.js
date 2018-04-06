@@ -4,9 +4,9 @@ import { shallow } from 'enzyme'
 import MenuItem from 'material-ui/Menu/MenuItem'
 import Menu from 'material-ui/Menu/Menu'
 
-import NotebookMenuSubsection from '../../src/components/toolbar/notebook-menu-subsection'
-import NotebookMenuItem from '../../src/components/toolbar/notebook-menu-item'
-import UserTask from '../../src/user-task'
+import NotebookMenuSubsection from '../notebook-menu-subsection'
+import NotebookMenuItem from '..//notebook-menu-item'
+import UserTask from '../../../actions/user-task'
 
 describe('barebones NotebookMenuSubsection', () => {
   const nbSubsection = shallow(<NotebookMenuSubsection />)

@@ -1,8 +1,8 @@
 import queryString from 'query-string'
 
 import { stateFromJsmd } from './jsmd-tools'
-import { store } from './store'
-import { importNotebook } from './actions'
+import { store } from '../store'
+import { importNotebook } from '../actions/actions'
 
 async function loadJsmdFromNotebookUrl(url) {
   try {

@@ -8,7 +8,7 @@ import NotebookMenuHeader from './notebook-menu-header'
 import NotebookMenuSubsection from './notebook-menu-subsection'
 
 import iodideExampleTasks from '../../iodide-examples'
-import tasks, { getLocalStorageNotebook } from '../../task-definitions'
+import tasks, { getLocalStorageNotebook } from '../../actions/task-definitions'
 
 class SavedNotebooksAndExamplesSubsection extends React.Component {
   static propTypes = {

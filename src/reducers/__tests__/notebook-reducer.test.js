@@ -1,10 +1,10 @@
-import notebookReducer from '../src/reducers/notebook-reducer'
-import { newNotebook, blankState, addNewCellToState } from '../src/state-prototypes'
+import notebookReducer from '../notebook-reducer'
+import { newNotebook, blankState, addNewCellToState } from '../../state-prototypes'
 import {
   // exportJsmdBundle, we'll need to test this
   // stringifyStateToJsmd, we'll need to test this
   stateFromJsmd,
-} from '../src/jsmd-tools'
+} from '../../tools/jsmd-tools'
 
 const EXAMPLE_NOTEBOOK_1 = 'example notebook with content'
 

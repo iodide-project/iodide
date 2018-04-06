@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import MenuItem from 'material-ui/Menu/MenuItem'
 import { ListItemText } from 'material-ui/List';
-import UserTask from '../../user-task'
-import ExternalLinkTask from '../../external-link-task'
+import UserTask from '../../actions/user-task'
+import ExternalLinkTask from '../../actions/external-link-task'
 
 export default class NotebookMenuItem extends React.Component {
   static propTypes = {

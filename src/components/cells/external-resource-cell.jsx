@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
-import ExternalResourceOutputHandler from './output-handler-external-resource'
+import ExternalResourceOutputHandler from '../reps/output-handler-external-resource'
 
-import { getCellById } from '../notebook-utils'
+import { getCellById } from '../../tools/notebook-utils'
 
 export class ExternalResourceCellUnconnected extends React.Component {
   static propTypes = {

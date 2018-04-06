@@ -4,8 +4,8 @@ import { shallow } from 'enzyme'
 import MenuItem from 'material-ui/Menu/MenuItem'
 import { ListItemText } from 'material-ui/List'
 
-import NotebookMenuItem from '../../src/components/toolbar/notebook-menu-item'
-import UserTask from '../../src/user-task'
+import NotebookMenuItem from '../notebook-menu-item'
+import UserTask from '../../../actions/user-task'
 
 describe('NotebookMenuItem children', () => {
   let props

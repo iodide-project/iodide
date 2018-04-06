@@ -1,7 +1,7 @@
 import React from 'react'
 
 import NotebookIconMenu from './icon-menu'
-import tasks from '../../task-definitions'
+import tasks from '../../actions/task-definitions'
 import NotebookMenuItem from './notebook-menu-item'
 import NotebookMenuDivider from './notebook-menu-divider'
 

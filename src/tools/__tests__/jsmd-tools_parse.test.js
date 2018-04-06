@@ -3,11 +3,11 @@ import { parseJsmd,
   stateFromJsmd,
   jsmdValidCellTypes,
   jsmdToCellTypeMap,
-} from './../src/jsmd-tools'
+} from '../jsmd-tools'
 import {
   newNotebook,
   cellTypeEnum,
-} from '../src/state-prototypes'
+} from '../../state-prototypes'
 
 let jsmdTestCase = `%% meta
 {"title": "What a web notebook looks like",

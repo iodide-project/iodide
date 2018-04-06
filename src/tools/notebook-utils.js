@@ -1,4 +1,4 @@
-import { store } from './store'
+import { store } from '../store'
 
 function viewModeIsEditor() {
   return store.getState().viewMode === 'editor'

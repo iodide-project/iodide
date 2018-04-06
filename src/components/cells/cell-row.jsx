@@ -4,9 +4,9 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import Tooltip from 'material-ui/Tooltip'
 
-import { getCellById } from '../notebook-utils'
-import * as actions from '../actions'
-import { rowOverflowEnum, nextOverflow } from '../state-prototypes'
+import { getCellById } from '../../tools/notebook-utils'
+import * as actions from '../../actions/actions'
+import { rowOverflowEnum, nextOverflow } from '../../state-prototypes'
 
 class CellRow extends React.Component {
   static propTypes = {

@@ -2,12 +2,12 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
-import { getCellById, isCommandMode } from './notebook-utils'
+import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import {
   addExternalDependency,
   getSelectedCell,
-} from './reducers/cell-reducer-utils'
-import { addLanguageKeybinding } from './keybindings'
+} from '../reducers/cell-reducer-utils'
+import { addLanguageKeybinding } from '../keybindings'
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)

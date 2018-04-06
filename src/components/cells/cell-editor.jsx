@@ -3,23 +3,21 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
-/* eslint-disable */
+
 import CodeMirror from '@skidding/react-codemirror'
-import js from 'codemirror/mode/javascript/javascript'
-import markdown from 'codemirror/mode/markdown/markdown'
-import css from 'codemirror/mode/css/css'
-
-import matchbrackets from 'codemirror/addon/edit/matchbrackets'
-
-import closebrackets from 'codemirror/addon/edit/closebrackets'
-import autorefresh from 'codemirror/addon/display/autorefresh'
-import comment from 'codemirror/addon/comment/comment'
-import sublime from '../codemirror-keymap-sublime'
+import js from 'codemirror/mode/javascript/javascript' // eslint-disable-line no-unused-vars
+import markdown from 'codemirror/mode/markdown/markdown' // eslint-disable-line no-unused-vars
+import css from 'codemirror/mode/css/css' // eslint-disable-line no-unused-vars
+import matchbrackets from 'codemirror/addon/edit/matchbrackets' // eslint-disable-line no-unused-vars
+import closebrackets from 'codemirror/addon/edit/closebrackets' // eslint-disable-line no-unused-vars
+import autorefresh from 'codemirror/addon/display/autorefresh' // eslint-disable-line no-unused-vars
+import comment from 'codemirror/addon/comment/comment' // eslint-disable-line no-unused-vars
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/hint/javascript-hint'
-/* eslint-enable */
-import { getCellById } from '../notebook-utils'
-import * as actions from '../actions'
+
+import sublime from '../../codemirror-keymap-sublime' // eslint-disable-line no-unused-vars
+import { getCellById } from '../../tools/notebook-utils'
+import * as actions from '../../actions/actions'
 
 class CellEditor extends React.Component {
   static propTypes = {

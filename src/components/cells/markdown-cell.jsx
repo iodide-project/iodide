@@ -8,8 +8,8 @@ import { CellContainer } from './cell-container'
 
 import CellEditor from './cell-editor'
 
-import * as actions from '../actions'
-import { getCellById } from '../notebook-utils'
+import * as actions from '../../actions/actions'
+import { getCellById } from '../../tools/notebook-utils'
 
 
 export class MarkdownCellUnconnected extends React.Component {

@@ -1,4 +1,4 @@
-import UserTask, { TASK_ERRORS } from '../src/user-task'
+import UserTask, { TASK_ERRORS } from '../user-task'
 
 describe('Improperly instantiating a class should throw an Error', () => {
   it('should throw an error if you have not provided any arguments', () => {

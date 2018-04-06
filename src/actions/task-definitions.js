@@ -1,13 +1,13 @@
 import UserTask from './user-task'
 import ExternalLinkTask from './external-link-task'
-import { store } from './store'
+import { store } from '../store'
 import * as actions from './actions'
 import { isCommandMode,
   viewModeIsEditor,
   getCells,
   getCellBelowSelectedId,
-  getCellAboveSelectedId, prettyDate, formatDateString } from './notebook-utils'
-import { stateFromJsmd } from './jsmd-tools'
+  getCellAboveSelectedId, prettyDate, formatDateString } from '../tools/notebook-utils'
+import { stateFromJsmd } from '../tools/jsmd-tools'
 import evaluateAllCells from './evaluate-all-cells'
 
 const dispatcher = {}

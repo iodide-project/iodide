@@ -6,7 +6,7 @@ import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
 
-import { getCellById } from '../notebook-utils'
+import { getCellById } from '../../tools/notebook-utils'
 
 export class CSSCellUnconnected extends React.Component {
   static propTypes = {

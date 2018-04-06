@@ -6,10 +6,10 @@ import Drawer from 'material-ui/Drawer'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Close from 'material-ui-icons/Close'
-import NotebookTaskButton from './notebook-task-button'
-import NotebookMenuDivider from './notebook-menu-divider'
+import NotebookTaskButton from '../menu/notebook-task-button'
+import NotebookMenuDivider from '../menu/notebook-menu-divider'
 
-import UserTask from '../../user-task'
+import UserTask from '../../actions/user-task'
 
 const theme = createMuiTheme({
   palette: {

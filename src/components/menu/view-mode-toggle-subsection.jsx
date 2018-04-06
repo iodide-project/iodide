@@ -1,7 +1,7 @@
 import React from 'react'
 import NotebookMenuSubsection from './notebook-menu-subsection'
 import NotebookMenuItem from './notebook-menu-item'
-import tasks from '../../task-definitions'
+import tasks from '../../actions/task-definitions'
 
 export default class ViewModeToggleSubsection extends React.Component {
   render() {

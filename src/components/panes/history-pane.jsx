@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import SidePane from './side-pane'
-import tasks from '../../task-definitions'
-import HistoryItem from '../history-item'
+import tasks from '../../actions/task-definitions'
+import HistoryItem from './history-item'
 
 export class HistoryPaneUnconnected extends React.Component {
   static propTypes = {

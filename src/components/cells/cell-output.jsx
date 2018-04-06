@@ -8,10 +8,10 @@ import _ from 'lodash'
 import JSONTree from 'react-json-tree'
 import ReactTable from 'react-table'
 
-import { SimpleTable, makeMatrixText } from './pretty-matrix'
-import { getCellById } from '../notebook-utils'
+import { SimpleTable, makeMatrixText } from '../reps/pretty-matrix'
+import { getCellById } from '../../tools/notebook-utils'
 
-import nb from '../tools/nb'
+import nb from '../../tools/nb'
 
 
 function renderValue(value, inContainer = false) {

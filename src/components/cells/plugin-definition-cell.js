@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
-import CellOutput from './output'
+import CellOutput from './cell-output'
 
 // import PluginProgressMonitor from './plugin-progress-monitor'
 
