@@ -3,8 +3,16 @@
 
 import { addOutputHandler } from './components/output'
 
+function getDataSync(url) {
+  const re = new XMLHttpRequest()
+  re.open('GET', url, false)
+  re.send(null)
+  return re.response
+}
+
 export const iodide = {
   addOutputHandler,
+  getDataSync,
 }
 
 export default iodide
