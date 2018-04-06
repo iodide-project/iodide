@@ -117,25 +117,13 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'LOAD_NOTEBOOK': {
       clearUserDefinedVars(state.userDefinedVariables)
-      try {
-        nextState = JSON.parse(window.localStorage.getItem(action.title))
-        console.warn(`"${nextState.title}" is currently saved in localStorage as JSON.
-  --- Saving as JSON is deprecated!!! ---
-Please take a minute open any saved notebooks you care about and resave them with ctrl+s.
-This will update them to jsmd.
-`)
-      } catch (e) {
-        nextState = stateFromJsmd(window.localStorage.getItem(action.title))
-      }
+      nextState = stateFromJsmd(window.localStorage.getItem(action.title))
       clearHistory(nextState)
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-
-
-      nextState = Object.assign(blankState(), nextState, getSavedNotebooks())
-      return nextState
+      return Object.assign(blankState(), nextState, getSavedNotebooks())
     }
 
     case 'DELETE_NOTEBOOK': {
