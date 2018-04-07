@@ -15,7 +15,7 @@ import './style/default-presentation.css'
 
 import Page from './components/page'
 import { store } from './store'
-import handleUrlQuery from './handle-url-query'
+import handleUrlQuery from './tools/handle-url-query'
 
 import { iodide } from './api'
 

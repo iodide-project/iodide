@@ -4,17 +4,17 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
-import RawCell from './cell-type-raw'
-import ExternalDependencyCell from './cell-type-external-resource'
-import CSSCell from './cell-type-css'
-import CodeCell from './cell-type-javascript'
-import MarkdownCell from './cell-type-markdown'
-import PluginDefinitionCell from './cell-plugin-definition'
+import RawCell from './cells/raw-cell'
+import ExternalDependencyCell from './cells/external-resource-cell'
+import CSSCell from './cells/css-cell'
+import CodeCell from './cells/code-cell'
+import MarkdownCell from './cells/markdown-cell'
+import PluginDefinitionCell from './cells/plugin-definition-cell'
 
-import NotebookHeader from './notebook-header'
+import NotebookHeader from './menu/notebook-header'
 
 import { initializeDefaultKeybindings } from '../keybindings'
-import * as actions from '../actions'
+import * as actions from '../actions/actions'
 
 
 const AUTOSAVE = 'AUTOSAVE: '

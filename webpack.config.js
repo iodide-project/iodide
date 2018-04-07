@@ -3,27 +3,29 @@ const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const _ = require('lodash')
-const git_rev = require('git-rev-sync')
+const gitRev = require('git-rev-sync')
 
 const htmlTemplate = require('./src/html-template.js')
 
-if (git_rev.isTagDirty()) {
+let BUILD_DIR
+let APP_PATH_STRING
+let CSS_PATH_STRING
+let APP_VERSION_STRING
+
+if (gitRev.isTagDirty()) {
   if (process.env.TRAVIS_BRANCH !== undefined) {
     // On Travis-CI, the git branches are detached so use env variable instead
     APP_VERSION_STRING = process.env.TRAVIS_BRANCH
   } else {
-    APP_VERSION_STRING = git_rev.branch()
+    APP_VERSION_STRING = gitRev.branch()
   }
 } else {
-  APP_VERSION_STRING = git_rev.tag()
+  APP_VERSION_STRING = gitRev.tag()
 }
 
 const APP_DIR = path.resolve(__dirname, 'src/')
 const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
-let BUILD_DIR
-let APP_PATH_STRING
-let CSS_PATH_STRING
 
 const htmlTemplateCompiler = _.template(htmlTemplate)
 
@@ -31,7 +33,7 @@ const htmlTemplateCompiler = _.template(htmlTemplate)
 module.exports = (env) => {
   if (env === 'prod') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
-    if (git_rev.isTagDirty()) {
+    if (gitRev.isTagDirty()) {
       APP_PATH_STRING = 'https://iodide-project.github.io/master/'
     } else {
       APP_PATH_STRING = 'https://iodide-project.github.io/iodide/dist/'
@@ -65,7 +67,7 @@ module.exports = (env) => {
             // eslint options (if necessary)
             emitWarning: true,
             emitError: true,
-            extensions: ['.jsx', '.js']
+            extensions: ['.jsx', '.js'],
           },
         },
         {
