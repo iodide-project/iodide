@@ -37,6 +37,7 @@ const cellSchema = {
       type: 'string',
       enum: cellTypeEnum.values(),
     },
+    pinned: { type: 'boolean' },
     value: {}, // empty schema, `value` can be anything
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
