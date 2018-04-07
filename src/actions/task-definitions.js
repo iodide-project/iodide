@@ -342,26 +342,10 @@ tasks.seeAllExamples = new ExternalLinkTask({
   url: 'http://github.com/iodide-project/iodide-examples/',
 })
 
-
-function jsonOrJsmdParse(string) {
-  let nextState
-  try {
-    nextState = JSON.parse(string)
-    console.log(`"${nextState.title}"" is currently saved in localStorage as JSON.
-  --- Saving as JSON is deprecated!!! ---
-Please take a minute open any saved notebooks you care about and resave them with ctrl+s.
-This will update them to jsmd.
-`)
-  } catch (e) {
-    nextState = stateFromJsmd(string)
-  }
-  return nextState
-}
-
 export function getLocalStorageNotebook(name) {
   const localStorageEntry = localStorage.getItem(name)
   if (localStorageEntry == null) return undefined
-  let { lastSaved } = jsonOrJsmdParse(localStorageEntry)
+  let { lastSaved } = stateFromJsmd(localStorageEntry)
   lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
   return new UserTask({
     title: name,
