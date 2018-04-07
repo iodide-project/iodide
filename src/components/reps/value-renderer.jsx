@@ -48,10 +48,10 @@ const undefinedHandler = {
 }
 
 const renderMethodHandler = {
-  shouldHandle: value => (value !== undefined && typeof value.iodideRender === 'function'),
+  shouldHandle: value => (value !== undefined && typeof value.render === 'function'),
 
   render: (value, inContainer) => {
-    const output = value.iodideRender(inContainer)
+    const output = value.render(inContainer)
     if (typeof output === 'string') {
       return <div dangerouslySetInnerHTML={{ __html: output }} /> // eslint-disable-line
     }
@@ -220,6 +220,9 @@ const errorHandler = {
 }
 
 const handlers = [
+  errorHandler,
+  nullHandler,
+  undefinedHandler,
   renderMethodHandler,
   dataFrameHandler,
   matrixHandler,
@@ -227,9 +230,6 @@ const handlers = [
   dateHandler,
   scalarHandler,
   defaultHandler,
-  errorHandler,
-  nullHandler,
-  undefinedHandler,
 ]
 
 export function addOutputHandler(handler) {
@@ -240,7 +240,7 @@ export function addOutputHandler(handler) {
 }
 
 
-export class CellOutputUnconnected extends React.Component {
+export class valueRendered extends React.Component {
   static propTypes = {
     render: PropTypes.bool.isRequired,
     valueToRender: PropTypes.any,
@@ -270,4 +270,4 @@ export function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps)(CellOutputUnconnected)
+export default connect(mapStateToProps)(valueRendered)
