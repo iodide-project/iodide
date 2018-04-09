@@ -30,7 +30,7 @@ function clearHistory(loadedState) {
 
   /* eslint-disable */
   // remove history and declared properties before exporting the state.
-  loadedState.userDefinedVarNames = {}
+  loadedState.userDefinedVarNames = []
   loadedState.history = []
   loadedState.externalDependencies = []
   loadedState.executionNumber = 0
