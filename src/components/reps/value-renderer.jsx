@@ -2,14 +2,14 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
 
 import _ from 'lodash'
 import JSONTree from 'react-json-tree'
 import ReactTable from 'react-table'
 
 import { SimpleTable, makeMatrixText } from '../reps/pretty-matrix'
-import { getCellById } from '../../tools/notebook-utils'
+// import { getCellById } from '../../tools/notebook-utils'
 
 import nb from '../../tools/nb'
 
@@ -48,10 +48,10 @@ const undefinedHandler = {
 }
 
 const renderMethodHandler = {
-  shouldHandle: value => (value !== undefined && typeof value.render === 'function'),
+  shouldHandle: value => (value !== undefined && typeof value.iodideRender === 'function'),
 
   render: (value, inContainer) => {
-    const output = value.render(inContainer)
+    const output = value.iodideRender(inContainer)
     if (typeof output === 'string') {
       return <div dangerouslySetInnerHTML={{ __html: output }} /> // eslint-disable-line
     }
@@ -240,7 +240,7 @@ export function addOutputHandler(handler) {
 }
 
 
-export class valueRendered extends React.Component {
+export class ValueRenderer extends React.Component {
   static propTypes = {
     render: PropTypes.bool.isRequired,
     valueToRender: PropTypes.any,
@@ -261,13 +261,3 @@ export class valueRendered extends React.Component {
     return <div className="empty-resultset" />
   }
 }
-
-export function mapStateToProps(state, ownProps) {
-  const cell = getCellById(state.cells, ownProps.cellId)
-  return {
-    valueToRender: cell.value,
-    render: cell.rendered,
-  }
-}
-
-export default connect(mapStateToProps)(valueRendered)

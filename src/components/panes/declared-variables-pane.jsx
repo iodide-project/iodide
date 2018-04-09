@@ -1,20 +1,33 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import deepEqual from 'deep-equal'
 
 import SidePane from './side-pane'
 
-import DeclaredVariables from './declared-variables'
+import { DeclaredVariable } from './declared-variable'
 import tasks from '../../actions/task-definitions'
 
 export class DeclaredVariablesPaneUnconnected extends React.Component {
   static propTypes = {
-    declaredVariables: PropTypes.object,
+    userDefinedVarNames: PropTypes.arrayOf(PropTypes.string),
   }
+
+  shouldComponentUpdate(nextProps) {
+    return !deepEqual(this.props, nextProps)
+  }
+
   render() {
+    console.log(this.props.userDefinedVarNames)
     return (
       <SidePane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
-        <DeclaredVariables variables={this.props.declaredVariables} />
+        <div className="declared-variables-list">
+          {this.props.userDefinedVarNames.map((varName) => {
+              console.log('pane', varName)
+              return <DeclaredVariable varName={varName} key={varName} />
+            })
+          }
+        </div>
       </SidePane>
     )
   }
@@ -22,7 +35,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    declaredVariables: state.userDefinedVariables,
+    userDefinedVarNames: state.userDefinedVarNames,
     sidePaneMode: state.sidePaneMode,
   }
 }

@@ -17,10 +17,6 @@ import {
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
-const initialVariables = new Set(Object.keys(window)) // gives all global variables
-initialVariables.add('__core-js_shared__')
-initialVariables.add('Mousetrap')
-
 const cellReducer = (state = newNotebook(), action) => {
   let nextState
   switch (action.type) {
@@ -120,13 +116,6 @@ const cellReducer = (state = newNotebook(), action) => {
         'rendered', false,
       )
 
-    case 'UPDATE_USER_VARIABLES': {
-      const userDefinedVariables = {}
-      Object.keys(window)
-        .filter(g => !initialVariables.has(g))
-        .forEach((g) => { userDefinedVariables[g] = window[g] })
-      return Object.assign({}, state, { userDefinedVariables })
-    }
     case 'DELETE_CELL': {
       const selectedId = getSelectedCellId(state)
       const cells = state.cells.slice()
