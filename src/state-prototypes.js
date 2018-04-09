@@ -89,7 +89,10 @@ const stateSchema = {
     history: {
       type: 'array',
     },
-    userDefinedVariables: { type: 'object' },
+    userDefinedVarNames: {
+      type: 'array',
+      items: { type: 'string' },
+    },
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
@@ -195,7 +198,7 @@ function blankState() {
     cells: [],
     languages: { js: jsLanguageDefinition },
     languageLastUsed: 'js',
-    userDefinedVariables: {},
+    userDefinedVarNames: [],
     lastSaved: undefined,
     mode: 'command', // command, edit
     viewMode: 'editor', // editor, presentation
