@@ -36,7 +36,7 @@ module.exports = (env) => {
     if (gitRev.isTagDirty()) {
       APP_PATH_STRING = 'https://iodide-project.github.io/master/'
     } else {
-      APP_PATH_STRING = 'https://iodide-project.github.io/iodide/dist/'
+      APP_PATH_STRING = 'https://iodide-project.github.io/dist/'
     }
     CSS_PATH_STRING = APP_PATH_STRING
   } else if (env === 'dev') {

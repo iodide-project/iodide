@@ -16,16 +16,27 @@ before_deploy:
   - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
 
 deploy:
-  provider: pages
-  github-token: "$GITHUB_TOKEN"
-  skip-cleanup: true
-  keep-history: false
-  repo: iodide-project/master
-  verbose: false
-  local-dir: prod
-  target-branch: master
-  on:
-    branch: master
+  - provider: pages
+    github-token: "$GITHUB_TOKEN"
+    skip-cleanup: true
+    keep-history: false
+    repo: iodide-project/master
+    verbose: false
+    local-dir: prod
+    target-branch: master
+    on:
+      branch: master
+
+  - provider: pages
+    github-token: "$GITHUB_TOKEN"
+    skip-cleanup: true
+    keep-history: true
+    repo: iodide-project/dist
+    verbose: true
+    local-dir: prod
+    target-branch: master
+    on:
+      tags: true
 
 env:
   global:
