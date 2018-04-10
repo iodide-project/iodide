@@ -1,0 +1,105 @@
+
+#main-menu h3 {font-size:13px}
+
+.medium-menu {
+  display: flex !important;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  max-height:32px !important; 
+}
+
+.main-menu-item {
+  max-height:32px !important;
+  line-height:32px !important;
+}
+
+.primary-menu-item {
+}
+
+.secondary-menu-item {
+
+  text-align:right;
+  padding:0px !important;
+  padding-left:16px !important;
+
+}
+
+.medium-menu div div {
+  display: flex !important;
+  float: none !important;
+  justify-content: space-between;
+  flex-flow: row wrap;
+}
+
+.medium-menu div div div:first-child {
+  order: 1;
+  width: 20px;
+  justify-content: flex-end;
+  font-size: 12px;
+
+  display: block;
+}
+
+/* .medium-menu div div div:nth-child(2) {
+  float: initial !important;
+  width: 225px;
+  overflow: hidden;
+  order: 0;
+} */
+
+.large-menu {
+  display: flex !important;
+  justify-content: space-between;
+  flex-flow: row wrap;
+
+}
+
+.large-menu div div {
+  display: flex !important;
+  float: none !important;
+  justify-content: space-between;
+  flex-flow: row wrap;
+}
+
+/* .large-menu div div div:first-child {
+  order: 1;
+  width: 250px;
+  justify-content: flex-end;
+  font-size: 12px;
+  display: block;
+} */
+
+/* .large-menu div div div:nth-child(2) {
+  float: initial !important;
+  width: 280px;
+  text-overflow: ellipsis;
+  order: 0;
+} */
+
+.main-bar {
+  background-color: black
+}
+
+.menu-button {
+  color: #fafafa;
+  width: 40px !important;
+  height:40px !important;
+}
+
+.menu-button:hover {
+  outline: 1px solid #fafafa
+}
+
+.view-mode-toggle-from-presentation {
+  position: fixed;
+  right: 20px;
+  top: 10px;
+  z-index:100;
+}
+
+.presentation-header {
+}
+
+.presentation-title {
+  text-align: center
+}
