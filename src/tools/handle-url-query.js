@@ -13,7 +13,7 @@ async function loadJsmdFromNotebookUrl(url) {
     const jsmd = doc.querySelector('#jsmd').innerHTML
     store.dispatch(importNotebook(stateFromJsmd(jsmd)))
   } catch (err) {
-    console.log('failed to load notebook url', err);
+    console.error('failed to load notebook url', err);
   }
 }
 

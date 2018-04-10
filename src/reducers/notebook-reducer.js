@@ -75,7 +75,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         state,
         { viewMode: action.exportAsReport ? 'presentation' : 'editor' },
       )
-      console.log(exportState)
       const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
       const dlAnchorElem = document.getElementById('export-anchor')
       dlAnchorElem.setAttribute('href', dataStr)

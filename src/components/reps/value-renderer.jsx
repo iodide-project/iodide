@@ -26,7 +26,7 @@ function renderValue(value, inContainer = false) {
       } else if (resultElem.type !== undefined) {
         return resultElem
       } else {
-        console.log('Unknown output handler result type from ' + handler)
+        console.warn('Unknown output handler result type from ' + handler)
         // Fallback to other handlers if it's something invalid
       }
       /* eslint-enable */
