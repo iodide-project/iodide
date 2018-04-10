@@ -146,7 +146,6 @@ tasks.deleteCell = new UserTask({
 
 tasks.changeToJavascriptCell = new UserTask({
   title: 'Change to Javascript',
-  menuTitle: 'Javascript',
   keybindings: ['j'],
   displayKeybinding: 'J',
   keybindingPrecondition: isCommandMode,
@@ -157,7 +156,6 @@ tasks.changeToJavascriptCell = new UserTask({
 
 tasks.changeToMarkdownCell = new UserTask({
   title: 'Change to Markdown',
-  menuTitle: 'Markdown',
   keybindings: ['m'],
   displayKeybinding: 'M',
   keybindingPrecondition: isCommandMode,
@@ -168,7 +166,6 @@ tasks.changeToMarkdownCell = new UserTask({
 
 tasks.changeToExternalResourceCell = new UserTask({
   title: 'Change to External Resource',
-  menuTitle: 'External Resource',
   keybindings: ['e'],
   displayKeybinding: 'E',
   keybindingPrecondition: isCommandMode,
@@ -179,7 +176,6 @@ tasks.changeToExternalResourceCell = new UserTask({
 
 tasks.changeToRawCell = new UserTask({
   title: 'Change to Raw',
-  menuTitle: 'Raw',
   keybindings: ['r'],
   displayKeybinding: 'R',
   keybindingPrecondition: isCommandMode,
@@ -188,7 +184,6 @@ tasks.changeToRawCell = new UserTask({
 
 tasks.changeToCSSCell = new UserTask({
   title: 'Change to CSS',
-  menuTitle: 'CSS',
   keybindings: ['c'],
   displayKeybinding: 'C',
   keybindingPrecondition: isCommandMode,
@@ -197,9 +192,8 @@ tasks.changeToCSSCell = new UserTask({
 
 tasks.changeToPluginCell = new UserTask({
   title: 'Change to Plugin Loader',
-  menuTitle: 'Plugin Loader',
   keybindings: ['l'],
-  displayKeybinding: 'l',
+  displayKeybinding: 'L',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.changeCellType('plugin') },
 })
