@@ -1,24 +1,20 @@
 import { evaluateCell } from './actions'
 
-export default function evaluateAllCells(cells, store) {
+export default async function evaluateAllCells(cells, store) {
+  let p = Promise.resolve()
   cells.forEach((cell) => {
     if (cell.cellType === 'css') {
-      store.dispatch(evaluateCell(cell.id))
+      p = p.then(() => store.dispatch(evaluateCell(cell.id)))
     }
   })
   cells.forEach((cell) => {
     if (cell.cellType === 'markdown') {
-      store.dispatch(evaluateCell(cell.id))
+      p = p.then(() => store.dispatch(evaluateCell(cell.id)))
     }
   })
-  window.setTimeout(
-    () => {
-      cells.forEach((cell) => {
-        if (cell.cellType !== 'markdown' && cell.cellType !== 'markdown') {
-          store.dispatch(evaluateCell(cell.id))
-        }
-      })
-    },
-    42, // wait a few milliseconds to let React DOM updates flush
-  )
+  cells.forEach((cell) => {
+    if (cell.cellType !== 'markdown' && cell.cellType !== 'css') {
+      p = p.then(() => store.dispatch(evaluateCell(cell.id)))
+    }
+  })
 }

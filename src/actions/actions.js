@@ -146,12 +146,14 @@ function evaluateCodeCell(cell) {
     const { evaluator } = state.languages[cell.language]
 
     try {
+      // this should legitimately be wrapped in a promise.
       output = window[languageModule][evaluator](code)
       evalStatus = 'success'
     } catch (e) {
-      output = e
+      output = encodeURI
       evalStatus = 'error'
     }
+
     dispatch(updateCellProperties(
       cell.id,
       {
@@ -167,16 +169,14 @@ function evaluateCodeCell(cell) {
 }
 
 function evaluateMarkdownCell(cell) {
-  return (dispatch) => {
-    dispatch(updateCellProperties(
-      cell.id,
-      {
-        value: MD.render(cell.content),
-        rendered: true,
-        evalStatus: 'success',
-      },
-    ))
-  }
+  return dispatch => dispatch(updateCellProperties(
+    cell.id,
+    {
+      value: MD.render(cell.content),
+      rendered: true,
+      evalStatus: 'success',
+    },
+  ))
 }
 
 function evaluateResourceCell(cell) {
@@ -237,6 +237,7 @@ function evaluateLanguagePluginCell(cell) {
     let pluginData
     let value
     let evalStatus
+    let languagePluginPromise
     const rendered = true
     try {
       pluginData = JSON.parse(cell.content)
@@ -253,72 +254,81 @@ function evaluateLanguagePluginCell(cell) {
       const {
         url, languageId, displayName, keybinding,
       } = pluginData
-      const xhrObj = new XMLHttpRequest()
 
-      xhrObj.addEventListener('progress', (evt) => {
-        value = `downloading plugin: ${evt.loaded} bytes loaded`
-        if (evt.total > 0) {
-          value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
-        }
-        evalStatus = 'EVAL_ACTIVE'
-        dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
-      })
+      languagePluginPromise = new Promise((resolve, reject) => {
+        const xhrObj = new XMLHttpRequest()
 
-      xhrObj.addEventListener('load', () => {
-        value = `${displayName} plugin downloaded, initializing`
-        dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
-        // see the following for asynchronous loading of scripts from strings:
-        // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
-        const blob = new Blob([xhrObj.responseText])
-        const script = document.createElement('script')
-        script.id = `plugin-script-${cell.id}`
-        // elem.type = 'text/javascript'
-        const urlObj = URL.createObjectURL(blob);
-        script.onload = () => {
-          URL.revokeObjectURL(urlObj)
-          // NOTE: it is possible to get the blob id used in the browser. for debugging
-          // purposes we should be able to map the blob id back to the original filename
-          // with just a find/replace in the error output string. this gets the blob id:
-          // console.log(document.getElementById(`plugin-script-${cell.id}`).src)
-          value = `${displayName} plugin ready`
-          evalStatus = 'success'
-          dispatch(addLanguage(pluginData))
-          // FIXME: adding the keybinding move to a reducer ideally, but since it mutates
-          // a part of global state in a snowflake sideffect-ish way, and since it
-          // needs `dispatch` we'll do it here.
-          if (keybinding.length === 1 && (typeof keybinding === 'string')) {
-            addLanguageKeybinding(
-              [keybinding],
-              () => dispatch(changeCellType('code', languageId)),
-            )
+        xhrObj.addEventListener('progress', (evt) => {
+          value = `downloading plugin: ${evt.loaded} bytes loaded`
+          if (evt.total > 0) {
+            value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
           }
+          evalStatus = 'EVAL_ACTIVE'
           dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
-        }
-        script.onerror = () => {
-          URL.revokeObjectURL(urlObj)
-          value = `${displayName} plugin error; script could not be parsed`
+        })
+
+        xhrObj.addEventListener('load', () => {
+          value = `${displayName} plugin downloaded, initializing`
+          dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+          // see the following for asynchronous loading of scripts from strings:
+          // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
+          const blob = new Blob([xhrObj.responseText])
+          const script = document.createElement('script')
+          script.id = `plugin-script-${cell.id}`
+          // elem.type = 'text/javascript'
+          const urlObj = URL.createObjectURL(blob);
+          script.onload = () => {
+            URL.revokeObjectURL(urlObj)
+            // NOTE: it is possible to get the blob id used in the browser. for debugging
+            // purposes we should be able to map the blob id back to the original filename
+            // with just a find/replace in the error output string. this gets the blob id:
+            // console.log(document.getElementById(`plugin-script-${cell.id}`).src)
+            value = `${displayName} plugin ready`
+            evalStatus = 'success'
+            dispatch(addLanguage(pluginData))
+            // FIXME: adding the keybinding move to a reducer ideally, but since it mutates
+            // a part of global state in a snowflake sideffect-ish way, and since it
+            // needs `dispatch` we'll do it here.
+            if (keybinding.length === 1 && (typeof keybinding === 'string')) {
+              addLanguageKeybinding(
+                [keybinding],
+                () => dispatch(changeCellType('code', languageId)),
+              )
+            }
+            dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+            resolve()
+            // RESOLUTION POINT
+          }
+          script.onerror = () => {
+            URL.revokeObjectURL(urlObj)
+            value = `${displayName} plugin error; script could not be parsed`
+            evalStatus = 'error'
+            dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+            reject()
+          }
+          script.src = urlObj
+          document.body.appendChild(script);
+          // document.body.appendChild(elem)
+        })
+
+        xhrObj.addEventListener('error', () => {
+          value = `${displayName} plugin failed to load`
           evalStatus = 'error'
           dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
-        }
-        script.src = urlObj
-        document.body.appendChild(script);
-        // document.body.appendChild(elem)
-      })
+          reject()
+        })
 
-      xhrObj.addEventListener('error', () => {
-        value = `${displayName} plugin failed to load`
-        evalStatus = 'error'
-        dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+        xhrObj.open('GET', url, true)
+        xhrObj.send()
       })
-
-      xhrObj.open('GET', url, true)
-      xhrObj.send()
     }
+    return languagePluginPromise
   }
 }
 
 export function evaluateCell(cellId) {
   return (dispatch, getState) => {
+    let evaluation// = Promise.resolve()
     let cell
     if (cellId === undefined) {
       cell = getSelectedCell(getState())
@@ -326,22 +336,23 @@ export function evaluateCell(cellId) {
       cell = getCellById(getState().cells, cellId)
     }
     if (cell.cellType === 'code') {
-      dispatch(evaluateCodeCell(cell))
+      evaluation = Promise.resolve(dispatch(evaluateCodeCell(cell)))
     } else if (cell.cellType === 'markdown') {
-      dispatch(evaluateMarkdownCell(cell))
+      evaluation = dispatch(evaluateMarkdownCell(cell))
     } else if (cell.cellType === 'external dependencies') {
-      dispatch(evaluateResourceCell(cell))
+      evaluation = dispatch(evaluateResourceCell(cell))
     } else if (cell.cellType === 'css') {
-      dispatch(evaluateCSSCell(cell))
+      evaluation = dispatch(evaluateCSSCell(cell))
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
-        dispatch(evaluateLanguagePluginCell(cell))
+        evaluation = Promise.resolve(dispatch(evaluateLanguagePluginCell(cell)))
       } else {
-        dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
+        evaluation = dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
       }
     } else {
       cell.rendered = false
     }
+    return evaluation // now it returns a promise. let's see if this works.
   }
 }
 
