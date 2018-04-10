@@ -19,8 +19,7 @@ export default class NotebookMenuItem extends React.Component {
   render() {
     return (
       <MenuItem
-        dense
-        classes={{ root: 'main-menu-item' }}
+        classes={{ root: 'iodide-menu-item' }}
         key={this.props.task.title}
         onClick={() => {
           this.props.task.callback()

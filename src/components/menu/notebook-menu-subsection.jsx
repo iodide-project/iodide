@@ -38,7 +38,7 @@ export default class NotebookMenuSubsection extends React.Component {
     )
     return (
       <MenuItem
-        dense
+        classes={{ root: 'iodide-menu-item' }}
         aria-label="more"
         aria-owns={anchorElement ? 'sub-menu' : null}
         aria-haspopup="true"
