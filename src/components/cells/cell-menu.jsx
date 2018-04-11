@@ -9,17 +9,12 @@ import tasks from '../../actions/task-definitions'
 
 export class CellMenuUnconnected extends React.Component {
   static propTypes = {
-    label: PropTypes.string.isRequired,
+    menuLabel: PropTypes.string.isRequired,
     cellId: PropTypes.number.isRequired,
-    includeInRunAll: PropTypes.bool.isRequired,
+    skipInRunAll: PropTypes.bool.isRequired,
   }
 
   render() {
-    const toggleRunAllTask = (
-      this.props.includeInRunAll ?
-        tasks.skipCellInRunAll :
-        tasks.includeCellInRunAll
-    )
     return (
       <div className="cell-menu-items-container">
         <NotebookMenuItem
@@ -55,8 +50,8 @@ export class CellMenuUnconnected extends React.Component {
 
         <NotebookMenuDivider />
         <NotebookMenuItem
-          key={toggleRunAllTask.title}
-          task={toggleRunAllTask}
+          key={tasks.toggleSkipCellInRunAll.title}
+          task={tasks.toggleSkipCellInRunAll}
         />
       </div>
     )
@@ -66,8 +61,8 @@ export class CellMenuUnconnected extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
-  const { includeInRunAll } = getCellById(state.cells, cellId)
-  return { includeInRunAll }
+  const { skipInRunAll } = getCellById(state.cells, cellId)
+  return { skipInRunAll }
 }
 
 export default connect(mapStateToProps)(CellMenuUnconnected)

@@ -198,20 +198,12 @@ tasks.changeToPluginCell = new UserTask({
   callback() { dispatcher.changeCellType('plugin') },
 })
 
-tasks.includeCellInRunAll = new UserTask({
-  title: 'Include Cell During Run All',
-  // keybindings: ['l'],
-  // displayKeybinding: 'L',
-  // keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.setCellIncludeInRunAll(true) },
-})
-
-tasks.skipCellInRunAll = new UserTask({
-  title: 'Skip Cell During Run All',
-  // keybindings: ['l'],
-  // displayKeybinding: 'L',
-  // keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.setCellIncludeInRunAll(false) },
+tasks.toggleSkipCellInRunAll = new UserTask({
+  title: 'Toggle Skipping Cell in Run All',
+  keybindings: ['s'],
+  displayKeybinding: 'S',
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.setCellSkipInRunAll() },
 })
 
 tasks.changeMode = new UserTask({

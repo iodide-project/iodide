@@ -424,11 +424,15 @@ export function changeSidePaneMode(mode) {
   }
 }
 
-export function setCellIncludeInRunAll(value) {
+export function setCellSkipInRunAll(value) {
   return (dispatch, getState) => {
+    let setValue = value
+    if (setValue === undefined) {
+      setValue = !getSelectedCell(getState()).skipInRunAll
+    }
     dispatch(updateCellProperties(
       getSelectedCell(getState()).id,
-      { includeInRunAll: value },
+      { skipInRunAll: setValue },
     ))
   }
 }

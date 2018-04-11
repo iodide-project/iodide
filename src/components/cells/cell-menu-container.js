@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import Tooltip from 'material-ui/Tooltip'
 import Menu from 'material-ui/Menu'
-// import LowPriority from 'material-ui-icons/LowPriority'
 
 import CellMenu from './cell-menu'
 
@@ -16,7 +15,7 @@ export class CellMenuContainerUnconnected extends React.Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
     cellId: PropTypes.number.isRequired,
-    includeInRunAll: PropTypes.bool.isRequired,
+    skipInRunAll: PropTypes.bool.isRequired,
   }
 
   constructor(props) {
@@ -38,9 +37,9 @@ export class CellMenuContainerUnconnected extends React.Component {
 
   render() {
     const { anchorElement } = this.state
-    const includeInRunAllIndicator = (
-      this.props.includeInRunAll ?
-        '' : (
+    const skipInRunAllIndicator = (
+      this.props.skipInRunAll ?
+        (
           <Tooltip
             classes={{ tooltip: 'iodide-tooltip' }}
             placement="bottom"
@@ -48,12 +47,12 @@ export class CellMenuContainerUnconnected extends React.Component {
             enterDelay={600}
           >
             {
-            // <LowPriority />
-            // <span>skipped</span>
               <div className="warning-pill">skip</div>
             }
           </Tooltip>
-        ))
+        ) :
+        ''
+    )
 
     return (
       <div className="cell-menu-container">
@@ -75,8 +74,6 @@ export class CellMenuContainerUnconnected extends React.Component {
               anchorEl={this.state.anchorElement}
               open={Boolean(anchorElement)}
               onClose={this.handleIconButtonClose}
-              // anchorReference="anchorPosition"
-              // anchorReference="anchorOrigin"
               anchorReference="anchorEl"
               transitionDuration={70}
               getContentAnchorEl={null}
@@ -87,7 +84,7 @@ export class CellMenuContainerUnconnected extends React.Component {
             </Menu>
           </div>
         </Tooltip>
-        <div className="cell-status-indicators">{includeInRunAllIndicator}</div>
+        <div className="cell-status-indicators">{skipInRunAllIndicator}</div>
       </div>
     )
   }
@@ -113,7 +110,7 @@ function mapStateToProps(state, ownProps) {
   }
   return {
     label,
-    includeInRunAll: cell.includeInRunAll,
+    skipInRunAll: cell.skipInRunAll,
   }
 }
 
