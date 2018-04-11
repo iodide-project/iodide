@@ -16,10 +16,21 @@ export default class NotebookMenuItem extends React.Component {
     ]),
   }
   static muiName = 'MenuItem'
+
+  constructor(props) {
+    super(props)
+    this.extraMenuProps = {}
+    Object.keys(this.props).forEach((k) => {
+      if (!['task', 'submenuOnClick', 'onClick'].includes(k)) {
+        this.extraMenuProps[k] = this.props[k]
+      }
+    })
+  }
+
   render() {
     return (
       <MenuItem
-        {...this.props}
+        {...this.extraMenuProps}
         classes={{ root: 'iodide-menu-item' }}
         key={this.props.task.title}
         onClick={() => {
