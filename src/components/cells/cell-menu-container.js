@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import Tooltip from 'material-ui/Tooltip'
 import Menu from 'material-ui/Menu'
+// import LowPriority from 'material-ui-icons/LowPriority'
 
 import CellMenu from './cell-menu'
 
@@ -35,6 +36,23 @@ export class CellMenuContainerUnconnected extends React.Component {
 
   render() {
     const { anchorElement } = this.state
+    const includeInRunAllIndicator = (
+      this.props.includeInRunAll ?
+        '' : (
+          <Tooltip
+            classes={{ tooltip: 'iodide-tooltip' }}
+            placement="bottom"
+            title="Cell skipped during run all"
+            enterDelay={600}
+          >
+            {
+            // <LowPriority />
+            // <span>skipped</span>
+              <div className="warning-pill">skip</div>
+            }
+          </Tooltip>
+        ))
+
     return (
       <div className="cell-menu-container">
         <Tooltip
@@ -45,28 +63,29 @@ export class CellMenuContainerUnconnected extends React.Component {
         >
           <div
             className="cell-type-label"
-            aria-label="more"
             aria-owns={anchorElement ? 'cell-menu' : null}
             aria-haspopup="true"
             onClick={this.handleClick}
           >
             {this.props.label}
             <Menu
-              dense={false}
               id="cell-menu"
               anchorEl={this.state.anchorElement}
               open={Boolean(anchorElement)}
               onClose={this.handleIconButtonClose}
               // anchorReference="anchorPosition"
-              anchorReference="anchorOrigin"
+              // anchorReference="anchorOrigin"
+              anchorReference="anchorEl"
               transitionDuration={70}
-              anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-              // anchorPosition={{ top: 50, left: 0 }}
+              getContentAnchorEl={null}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             >
-              <CellMenu />
+              <CellMenu cellId={this.props.cellId} />
             </Menu>
           </div>
         </Tooltip>
+        <div className="cell-status-indicators">{includeInRunAllIndicator}</div>
       </div>
     )
   }
@@ -92,6 +111,7 @@ function mapStateToProps(state, ownProps) {
   }
   return {
     label,
+    includeInRunAll: cell.includeInRunAll,
   }
 }
 

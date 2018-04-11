@@ -13,6 +13,11 @@
     padding-bottom: 5px !important;
 }
 
+.iodide-menu-divider {
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+}
+
 .secondary-menu-item {
   text-align:right;
   padding:0px !important;

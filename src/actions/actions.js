@@ -423,3 +423,12 @@ export function changeSidePaneMode(mode) {
     mode,
   }
 }
+
+export function setCellIncludeInRunAll(value) {
+  return (dispatch, getState) => {
+    dispatch(updateCellProperties(
+      getSelectedCell(getState()).id,
+      { includeInRunAll: value },
+    ))
+  }
+}

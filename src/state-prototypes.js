@@ -44,6 +44,7 @@ const cellSchema = {
     evalStatus: {}, // FIXME change to string ONLY
     rowSettings: { type: 'object' },
     language: { type: 'string' }, // '' in case not a code cell
+    includeInRunAll: { type: 'boolean' },
   },
   additionalProperties: false,
 }
@@ -177,6 +178,7 @@ function newCell(cellId, cellType, language = 'js') {
     executionStatus: ' ',
     evalStatus: undefined,
     rowSettings: newCellRowSettings(cellType),
+    includeInRunAll: true,
     language, // default language is js, but it only matters the cell is a code cell
   }
 }
