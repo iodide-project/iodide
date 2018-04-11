@@ -29,7 +29,7 @@ const commandKey = () => (OSName === 'MacOS' ? '⌘' : 'Ctrl')
 const tasks = {}
 
 tasks.evaluateCell = new UserTask({
-  title: 'Evaluate Cell',
+  title: 'Run Cell',
   keybindings: ['mod+enter'],
 
   callback() {
@@ -40,8 +40,8 @@ tasks.evaluateCell = new UserTask({
 })
 
 tasks.evaluateAllCells = new UserTask({
-  title: 'Evaluate All Cells',
-  menuTitle: 'Evaluate All Cells',
+  title: 'Run All Cells',
+  menuTitle: 'Run All Cells',
   callback() {
     dispatcher.saveNotebook(true)
     evaluateAllCells(getCells(), store)
@@ -196,6 +196,14 @@ tasks.changeToPluginCell = new UserTask({
   displayKeybinding: 'L',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.changeCellType('plugin') },
+})
+
+tasks.toggleSkipCellInRunAll = new UserTask({
+  title: 'Toggle Skipping Cell in Run All',
+  keybindings: ['s'],
+  displayKeybinding: 'S',
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.setCellSkipInRunAll() },
 })
 
 tasks.changeMode = new UserTask({

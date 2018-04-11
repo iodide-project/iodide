@@ -14,6 +14,8 @@ import { getCellById } from '../../tools/notebook-utils'
 export class CellMenuContainerUnconnected extends React.Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
+    cellId: PropTypes.number.isRequired,
+    skipInRunAll: PropTypes.bool.isRequired,
   }
 
   constructor(props) {
@@ -35,6 +37,23 @@ export class CellMenuContainerUnconnected extends React.Component {
 
   render() {
     const { anchorElement } = this.state
+    const skipInRunAllIndicator = (
+      this.props.skipInRunAll ?
+        (
+          <Tooltip
+            classes={{ tooltip: 'iodide-tooltip' }}
+            placement="bottom"
+            title="Cell skipped during run all"
+            enterDelay={600}
+          >
+            {
+              <div className="warning-pill">skip</div>
+            }
+          </Tooltip>
+        ) :
+        ''
+    )
+
     return (
       <div className="cell-menu-container">
         <Tooltip
@@ -45,28 +64,27 @@ export class CellMenuContainerUnconnected extends React.Component {
         >
           <div
             className="cell-type-label"
-            aria-label="more"
             aria-owns={anchorElement ? 'cell-menu' : null}
             aria-haspopup="true"
             onClick={this.handleClick}
           >
             {this.props.label}
             <Menu
-              dense={false}
               id="cell-menu"
               anchorEl={this.state.anchorElement}
               open={Boolean(anchorElement)}
               onClose={this.handleIconButtonClose}
-              // anchorReference="anchorPosition"
-              anchorReference="anchorOrigin"
+              anchorReference="anchorEl"
               transitionDuration={70}
-              anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-              // anchorPosition={{ top: 50, left: 0 }}
+              getContentAnchorEl={null}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             >
-              <CellMenu menuLabel={this.props.label} />
+              <CellMenu cellId={this.props.cellId} menuLabel={this.props.label} />
             </Menu>
           </div>
         </Tooltip>
+        <div className="cell-status-indicators">{skipInRunAllIndicator}</div>
       </div>
     )
   }
@@ -92,6 +110,7 @@ function mapStateToProps(state, ownProps) {
   }
   return {
     label,
+    skipInRunAll: cell.skipInRunAll,
   }
 }
 

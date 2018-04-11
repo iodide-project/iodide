@@ -45,6 +45,7 @@ div#cells.presentation div.cell-row.input {
 
 .cell-menu-container {
     width: 64px;
+    font-size:12px;
 }
 
 .cell-type-label {
@@ -52,11 +53,10 @@ div#cells.presentation div.cell-row.input {
   color: hsl(275, 12%, 75%);
   cursor: pointer;
   padding: 0px 6px 0px 0px;
-  font-size:12px;
-  height:28px;
+  height: 18px;
   border: 1px solid rgba(0,0,0,0);
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
   justify-content: flex-end;
 }
 .cell-type-label:hover {
@@ -64,6 +64,32 @@ div#cells.presentation div.cell-row.input {
   border: 1px solid #ddd;
   color: hsl(275, 4%, 40%);
 }
+
+.cell-status-indicators {
+    text-align: right;
+    padding-right: 6px;
+    color: hsla(275, 4%, 51%, 1);
+}
+
+.warning-pill {
+    background-color: hsla(53, 80%, 86%, 1);
+    color: hsl(53, 35%, 48%);
+    height: 18px;
+    padding: 0 6px;
+    border: 1px solid hsla(53, 94%, 83%, 1);
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.cell-status-icons {
+    text-align: right;
+    padding: 0px 6px 0px 0px;
+}
+
+.cell-status-icons svg {
+    fill: hsl(275, 12%, 75%);
+}
+
 
 div.cell-row-container {
   width: calc(100% - 64px); /* 100% minus cell-menu-contatiner width*/

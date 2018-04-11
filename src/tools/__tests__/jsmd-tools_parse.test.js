@@ -154,14 +154,11 @@ foo
 %% badcelltype {"rowSettings.REPORT.input":"SCROLL_carrots"}
 foo
 `
-describe('jsmd parser test case 5', () => {
+describe('jsmd parser test case 5, error parsing and bad cell type conversion', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
   const state = stateFromJsmd(jsmdTestCase)
   const { cells } = state
   const { parseWarnings } = jsmdParsed
-  it('should have 3 cells (%% meta is not converted to a cell)', () => {
-    expect(cells.length).toEqual(3)
-  })
   it('should have 3 parse warnings', () => {
     expect(parseWarnings.length).toEqual(3)
   })
@@ -180,12 +177,11 @@ describe('jsmd parser test case 5', () => {
 })
 
 
-// test bad meta parsing and creation of default JS cell
 jsmdTestCase = `
 %% meta
 invalid_json_content for meta setings
 `
-describe('jsmd parser test case 6', () => {
+describe('jsmd parser test case 6, bad meta parsing and creation of default JS cell', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
   const state = stateFromJsmd(jsmdTestCase)
   const { cells } = state
@@ -208,14 +204,16 @@ describe('jsmd parser test case 6', () => {
 jsmdTestCase = `
 %% js {"rowSettings.REPORT.input": "VALUE_1", "rowSettings.REPORT.output":"VALUE_2"}
 test cell
+%% js {"rowSettings.REPORT.input": "VALUE_1","skipInRunAll":true}
+test cell
 `
-describe('jsmd parser test case 7, multiple cell settings', () => {
+describe('jsmd parser test case 7, cell settings', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
   const state = stateFromJsmd(jsmdTestCase)
   const { cells } = state
   const { parseWarnings } = jsmdParsed
-  it('should have 1 cells', () => {
-    expect(cells.length).toEqual(1)
+  it('should have 2 cells', () => {
+    expect(cells.length).toEqual(2)
   })
   it('should have 0 parse warnings', () => {
     expect(parseWarnings.length).toEqual(0)
@@ -225,6 +223,9 @@ describe('jsmd parser test case 7, multiple cell settings', () => {
   })
   it('cell 0 should have "rowSettings.REPORT.output"=="VALUE_2"', () => {
     expect(cells[0].rowSettings.REPORT.output).toEqual('VALUE_2')
+  })
+  it('cell 1 should have "skipInRunAll"===true', () => {
+    expect(cells[1].skipInRunAll).toEqual(true)
   })
   it('all cells should have content=="test cell"', () => {
     expect(cells.map(c => c.content)).toEqual(expect.arrayContaining(['test cell']))

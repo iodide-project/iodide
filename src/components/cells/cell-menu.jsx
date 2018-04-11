@@ -1,11 +1,19 @@
 import React from 'react'
-// import Paper from 'material-ui/Paper'
-import NotebookMenuItem from '../menu/notebook-menu-item'
-// import NotebookMenuDivider from '../menu/notebook-menu-divider'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
+import NotebookMenuItem from '../menu/notebook-menu-item'
+import NotebookMenuDivider from '../menu/notebook-menu-divider'
+import { getCellById } from '../../tools/notebook-utils'
 import tasks from '../../actions/task-definitions'
 
-export default class CellMenu extends React.Component {
+export class CellMenuUnconnected extends React.Component {
+  static propTypes = {
+    menuLabel: PropTypes.string.isRequired,
+    cellId: PropTypes.number.isRequired,
+    skipInRunAll: PropTypes.bool.isRequired,
+  }
+
   render() {
     return (
       <div className="cell-menu-items-container">
@@ -39,7 +47,22 @@ export default class CellMenu extends React.Component {
           task={tasks.changeToPluginCell}
           disabled={this.props.menuLabel === 'plugin'}
         />
+
+        <NotebookMenuDivider />
+        <NotebookMenuItem
+          key={tasks.toggleSkipCellInRunAll.title}
+          task={tasks.toggleSkipCellInRunAll}
+        />
       </div>
     )
   }
 }
+
+
+function mapStateToProps(state, ownProps) {
+  const { cellId } = ownProps
+  const { skipInRunAll } = getCellById(state.cells, cellId)
+  return { skipInRunAll }
+}
+
+export default connect(mapStateToProps)(CellMenuUnconnected)
