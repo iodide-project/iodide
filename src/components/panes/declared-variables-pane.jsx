@@ -18,14 +18,11 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 
   render() {
-    console.log(this.props.userDefinedVarNames)
     return (
       <SidePane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
         <div className="declared-variables-list">
-          {this.props.userDefinedVarNames.map((varName) => {
-              console.log('pane', varName)
-              return <DeclaredVariable varName={varName} key={varName} />
-            })
+          {this.props.userDefinedVarNames.map(varName =>
+            <DeclaredVariable varName={varName} key={varName} />)
           }
         </div>
       </SidePane>
