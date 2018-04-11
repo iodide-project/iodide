@@ -63,7 +63,7 @@ export class CellMenuContainerUnconnected extends React.Component {
               anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
               // anchorPosition={{ top: 50, left: 0 }}
             >
-              <CellMenu />
+              <CellMenu menuLabel={this.props.label} />
             </Menu>
           </div>
         </Tooltip>

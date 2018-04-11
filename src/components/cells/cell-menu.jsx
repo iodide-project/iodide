@@ -12,26 +12,32 @@ export default class CellMenu extends React.Component {
         <NotebookMenuItem
           key={tasks.changeToJavascriptCell.title}
           task={tasks.changeToJavascriptCell}
+          disabled={this.props.menuLabel === 'js'}
         />
         <NotebookMenuItem
           key={tasks.changeToMarkdownCell.title}
           task={tasks.changeToMarkdownCell}
+          disabled={this.props.menuLabel === 'md'}
         />
         <NotebookMenuItem
           key={tasks.changeToCSSCell.title}
           task={tasks.changeToCSSCell}
+          disabled={this.props.menuLabel === 'css'}
         />
         <NotebookMenuItem
           key={tasks.changeToExternalResourceCell.title}
           task={tasks.changeToExternalResourceCell}
+          disabled={this.props.menuLabel === 'resource'}
         />
         <NotebookMenuItem
           key={tasks.changeToRawCell.title}
           task={tasks.changeToRawCell}
+          disabled={this.props.menuLabel === 'raw'}
         />
         <NotebookMenuItem
           key={tasks.changeToPluginCell.title}
           task={tasks.changeToPluginCell}
+          disabled={this.props.menuLabel === 'plugin'}
         />
       </div>
     )
