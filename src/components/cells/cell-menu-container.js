@@ -15,6 +15,8 @@ import { getCellById } from '../../tools/notebook-utils'
 export class CellMenuContainerUnconnected extends React.Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
+    cellId: PropTypes.number.isRequired,
+    includeInRunAll: PropTypes.bool.isRequired,
   }
 
   constructor(props) {

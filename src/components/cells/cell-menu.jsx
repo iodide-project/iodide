@@ -1,12 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+
 import NotebookMenuItem from '../menu/notebook-menu-item'
 import NotebookMenuDivider from '../menu/notebook-menu-divider'
-
 import { getCellById } from '../../tools/notebook-utils'
 import tasks from '../../actions/task-definitions'
 
 export class CellMenuUnconnected extends React.Component {
+  static propTypes = {
+    label: PropTypes.string.isRequired,
+    cellId: PropTypes.number.isRequired,
+    includeInRunAll: PropTypes.bool.isRequired,
+  }
+
   render() {
     const toggleRunAllTask = (
       this.props.includeInRunAll ?
