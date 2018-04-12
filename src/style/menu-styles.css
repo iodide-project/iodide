@@ -1,0 +1,58 @@
+
+.medium-menu {
+  display: flex !important;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  max-height:32px !important; 
+}
+
+.iodide-menu-item {
+  max-height:32px !important;
+  line-height:32px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.iodide-menu-divider {
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+}
+
+.secondary-menu-item {
+  text-align:right;
+  padding:0px !important;
+  padding-left:16px !important;
+}
+
+.medium-menu div div {
+  display: flex !important;
+  float: none !important;
+  justify-content: space-between;
+  flex-flow: row wrap;
+}
+
+.medium-menu div div div:first-child {
+  order: 1;
+  width: 20px;
+  justify-content: flex-end;
+  font-size: 12px;
+
+  display: block;
+}
+
+.menu-button {
+  color: #fafafa;
+  width: 40px !important;
+  height:40px !important;
+}
+
+.menu-button:hover {
+  outline: 1px solid #fafafa
+}
+
+.view-mode-toggle-from-presentation {
+  position: fixed;
+  right: 20px;
+  top: 10px;
+  z-index:100;
+}
