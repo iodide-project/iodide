@@ -89,6 +89,13 @@ tasks.moveCellDown = new UserTask({
 })
 
 
+tasks.pinCell = new UserTask({
+  title: 'Pin this cell',
+  callback() {
+    dispatcher.pinCell()
+  },
+})
+
 tasks.selectUp = new UserTask({
   title: 'Select Cell Above',
   displayKeybinding: 'Up', // \u2191',
