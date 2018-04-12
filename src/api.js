@@ -15,15 +15,27 @@ function getDataSync(url) {
   return re.response
 }
 
-function saveEnvironment(obj) {
+
+function saveToEnvironment(obj, options) {
   if (!_.isObject(obj)) {
     throw new TypeError('variables to be saved must be wrapped in object')
   }
+  let encode
+  if (options.stringify && options.compress) {
+    encode = x => LZString.compressToBase64(JSON.stringify(x))
+  } else if (options.stringify && !options.compress) {
+    encode = x => JSON.stringify(x)
+  } else if (!options.stringify && options.compress) {
+    encode = x => LZString.compressToBase64(x)
+  } else {
+    encode = x => x
+  }
+
   const envObj = {}
   Object.keys(obj).forEach((k) => {
-    const v = obj[k]
+    const v = encode(obj[k])
     if (typeof v === 'string') {
-      envObj[k] = LZString.compressToBase64(v)
+      envObj[k] = v
     } else {
       throw new TypeError('variables to be saved must be serialized as strings')
     }
@@ -33,18 +45,60 @@ function saveEnvironment(obj) {
   }
 }
 
-function loadEnvironment() {
-  return _.mapValues(
-    store.getState().savedEnvironment,
-    v => LZString.decompressFromBase64(v),
-  )
+function loadFromEnvironment(varList, options) {
+  const env = store.getState().savedEnvironment
+  let decode
+  if (options.stringified && options.compressed) {
+    decode = x => JSON.parse(LZString.decompressFromBase64(x))
+  } else if (options.stringified && !options.compressed) {
+    decode = x => JSON.parse(x)
+  } else if (!options.stringified && options.compressed) {
+    decode = x => LZString.decompressFromBase64(x)
+  } else {
+    decode = x => x
+  }
+  return _.zipObject(varList, varList.map(v => decode(env[v])))
+}
+
+const environment = {
+  save: objects => saveToEnvironment(
+    objects,
+    { stringify: true, compress: true },
+  ),
+  saveStringCompressed: (...objects) => saveToEnvironment(
+    objects,
+    { stringify: false, compress: true },
+  ),
+  saveJson: objects => saveToEnvironment(
+    objects,
+    { stringify: true, compress: false },
+  ),
+  saveStringRaw: objects => saveToEnvironment(
+    objects,
+    { stringify: false, compress: false },
+  ),
+  load: (...vars) => loadFromEnvironment(
+    vars,
+    { stringified: true, compressed: true },
+  ),
+  loadJson: (...vars) => loadFromEnvironment(
+    vars,
+    { stringified: true, compressed: false },
+  ),
+  loadCompressedString: (...vars) => loadFromEnvironment(
+    vars,
+    { stringified: true, compressed: true },
+  ),
+  loadRawString: (...vars) => loadFromEnvironment(
+    vars,
+    { stringified: true, compressed: true },
+  ),
 }
 
 export const iodide = {
   addOutputHandler,
   getDataSync,
-  saveEnvironment,
-  loadEnvironment,
+  environment,
 }
 
 export default iodide
