@@ -72,6 +72,12 @@ const cellReducer = (state = newNotebook(), action) => {
         { cells: moveCell(state.cells, getSelectedCellId(state), 'down') },
       )
 
+    case 'PIN_CELL':
+      return newStateWithSelectedCellPropertySet(
+        state,
+        'pinned', true,
+      )
+
     case 'UPDATE_CELL_PROPERTIES':
       return newStateWithPropsAssignedForCell(state, action.cellId, action.updatedProperties)
 

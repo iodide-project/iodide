@@ -225,6 +225,12 @@ function evaluateCSSCell(cell) {
   }
 }
 
+export function pinCell() {
+  return {
+    type: 'PIN_CELL',
+  }
+}
+
 export function addLanguage(languageDefinition) {
   return {
     type: 'ADD_LANGUAGE',
