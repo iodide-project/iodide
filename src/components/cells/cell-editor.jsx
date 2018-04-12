@@ -22,7 +22,8 @@ import * as actions from '../../actions/actions'
 // This block is from CodeMirror's loadmode.js, modified to work in this environment
 {
   const CodeMirrorBase = require('codemirror') // eslint-disable-line
-  CodeMirrorBase.modeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.34.0/mode/%N/%N.js'
+  CodeMirrorBase.modeUrl =
+    `https://cdnjs.cloudflare.com/ajax/libs/codemirror/${CodeMirrorBase.version}/mode/%N/%N.js`
   window.CodeMirror = CodeMirrorBase
 
   const modeLoading = {}
