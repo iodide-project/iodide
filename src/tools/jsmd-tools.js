@@ -34,6 +34,7 @@ const jsmdValidNotebookSettings = [
   'viewMode',
   'lastSaved',
   'languages',
+  'savedEnvironment',
 ]
 const jsmdValidCellSettingPaths = [
   'language',

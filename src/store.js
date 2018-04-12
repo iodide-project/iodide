@@ -34,4 +34,6 @@ const store = createStore(finalReducer, initialState, enhancer)
 
 if (initialState.viewMode === 'presentation') { evaluateAllCells(store.getState().cells, store) }
 
-export { store }
+const { dispatch } = store
+
+export { store, dispatch }

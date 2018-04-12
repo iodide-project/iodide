@@ -436,3 +436,10 @@ export function setCellSkipInRunAll(value) {
     ))
   }
 }
+
+export function saveEnvironment(updateObj) {
+  return {
+    type: 'SAVE_ENVIRONMENT',
+    updateObj,
+  }
+}

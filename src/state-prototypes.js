@@ -108,6 +108,10 @@ const stateSchema = {
       type: 'array',
       items: { type: 'string' },
     },
+    savedEnvironment: {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+    },
   },
   additionalProperties: false,
 }
@@ -211,6 +215,7 @@ function blankState() {
     appMessages: [],
     autoSave: undefined,
     locallySaved: [],
+    savedEnvironment: {},
   }
   return initialState
 }

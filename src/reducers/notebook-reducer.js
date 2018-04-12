@@ -203,6 +203,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { appMessages })
     }
 
+    case 'SAVE_ENVIRONMENT': {
+      const savedEnvironment = action.updateObj
+      return Object.assign({}, state, { savedEnvironment })
+    }
+
     case 'ADD_LANGUAGE': {
       const languages = Object.assign(
         {},
