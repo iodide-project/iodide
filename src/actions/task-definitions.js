@@ -8,7 +8,6 @@ import { isCommandMode,
   getCellBelowSelectedId,
   getCellAboveSelectedId, prettyDate, formatDateString } from '../tools/notebook-utils'
 import { stateFromJsmd } from '../tools/jsmd-tools'
-import evaluateAllCells from './evaluate-all-cells'
 
 const dispatcher = {}
 for (const action in actions) {
@@ -44,7 +43,7 @@ tasks.evaluateAllCells = new UserTask({
   menuTitle: 'Run All Cells',
   callback() {
     dispatcher.saveNotebook(true)
-    evaluateAllCells(getCells(), store)
+    dispatcher.evaluateAllCells(getCells(), store)
   },
 })
 
