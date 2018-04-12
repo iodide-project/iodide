@@ -1,3 +1,5 @@
+import CodeMirror from 'codemirror/lib/codemirror'
+
 import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
@@ -11,6 +13,9 @@ import { addLanguageKeybinding } from '../keybindings'
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
+
+CodeMirror.modeURL = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.34.0/mode/%N/%N.js'
+window.CodeMirror = CodeMirror
 
 export function updateAppMessages(message) {
   return {
@@ -313,6 +318,8 @@ function evaluateLanguagePluginCell(cell) {
 
       xhrObj.open('GET', url, true)
       xhrObj.send()
+
+      CodeMirror.requireMode(pluginData.codeMirrorMode, () => { })
     }
   }
 }

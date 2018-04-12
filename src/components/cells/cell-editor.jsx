@@ -14,6 +14,7 @@ import autorefresh from 'codemirror/addon/display/autorefresh' // eslint-disable
 import comment from 'codemirror/addon/comment/comment' // eslint-disable-line no-unused-vars
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/hint/javascript-hint'
+import 'codemirror/addon/mode/loadmode'
 
 import sublime from '../../codemirror-keymap-sublime' // eslint-disable-line no-unused-vars
 import { getCellById } from '../../tools/notebook-utils'
