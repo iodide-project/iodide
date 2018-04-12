@@ -146,7 +146,6 @@ function evaluateCodeCell(cell) {
     const { evaluator } = state.languages[cell.language]
 
     try {
-      // this should legitimately be wrapped in a promise.
       output = window[languageModule][evaluator](code)
       evalStatus = 'success'
     } catch (e) {
@@ -165,7 +164,6 @@ function evaluateCodeCell(cell) {
     dispatch(incrementExecutionNumber())
     dispatch(appendToEvalHistory(cell.id, cell.content))
     dispatch(updateUserVariables())
-    // console.log('evaluating code cell', new Date())
   }
 }
 
