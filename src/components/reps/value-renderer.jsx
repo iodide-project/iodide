@@ -4,17 +4,20 @@ import React from 'react'
 import PropTypes from 'prop-types'
 // import { connect } from 'react-redux'
 
-import _ from 'lodash'
 import JSONTree from 'react-json-tree'
-import ReactTable from 'react-table'
 
-import { SimpleTable, makeMatrixText } from '../reps/pretty-matrix'
+
 // import { getCellById } from '../../tools/notebook-utils'
 
-import nb from '../../tools/nb'
+import nullHandler from './null-handler'
+import undefinedHandler from './undefined-handler'
+import dataFrameHandler from './dataframe-handler'
+import matrixHandler from './matrix-handler'
+import arrayHandler from './array-handler'
+import dateHandler from './date-handler'
+import scalarHandler from './scalar-handler'
 
-
-function renderValue(value, inContainer = false) {
+export function renderValue(value, inContainer = false) {
   for (const handler of handlers) {
     if (handler.shouldHandle(value, inContainer)) {
       const resultElem = handler.render(value, inContainer)
@@ -35,17 +38,6 @@ function renderValue(value, inContainer = false) {
   return undefined
 }
 
-const nullHandler = {
-  shouldHandle: value => (value === null),
-
-  render: () => <pre>null</pre>,
-}
-
-const undefinedHandler = {
-  shouldHandle: value => (value === undefined),
-
-  render: () => <pre>undefined</pre>,
-}
 
 const renderMethodHandler = {
   shouldHandle: value => (value !== undefined && typeof value.iodideRender === 'function'),
@@ -59,122 +51,9 @@ const renderMethodHandler = {
   },
 }
 
-const dataFrameHandler = {
-  shouldHandle: (value, inContainer) => !inContainer && nb.isRowDf(value),
-
-  render: (value) => {
-    const columns = Object.keys(value[0])
-      .map(k => ({
-        Header: k,
-        accessor: k,
-        Cell: cell => renderValue(cell.value, true),
-      }))
-    const dataSetInfo = `array of objects: ${value.length} rows, ${columns.length} columns`
-    const pageSize = value.length > 10 ? 10 : value.length
-    return (
-      <div>
-        <div className="data-set-info">{dataSetInfo}</div>
-        <ReactTable
-          data={value}
-          columns={columns}
-          showPaginationTop
-          showPaginationBottom={false}
-          pageSizeOptions={[5, 10, 25, 50, 100]}
-          minRows={0}
-          defaultPageSize={pageSize}
-        />
-      </div>
-    )
-  },
-}
-
-const matrixHandler = {
-  shouldHandle: (value, inContainer) => !inContainer && nb.isMatrix(value),
-
-  render: (value) => {
-    const shape = nb.shape(value)
-    const dataSetInfo = `${shape[0]} × ${shape[1]} matrix (array of arrays)`
-    const tabledata = makeMatrixText(value, [10, 10])
-    return (
-      <div>
-        <div className="data-set-info">{dataSetInfo}</div>
-        <SimpleTable tabledata={tabledata} />
-      </div>
-    )
-  },
-}
-
-const arrayHandler = {
-  shouldHandle: (value, inContainer) => !inContainer && _.isArray(value),
-
-  render: (value) => {
-    const dataSetInfo = `${value.length} element array`
-    const len = value.length
-    let arrayElements
-    if (len > 0) {
-      arrayElements = _.range(len > 200 ? 100 : len - 1).map(i => (
-        <span key={`array_elt_${i}`} title={`array index: ${i}`}>
-          {renderValue(value[i], true)}{', '}
-        </span>
-      ))
-      if (len > 200) {
-        arrayElements.push(<span key="array_elts omitted">…, </span>)
-        arrayElements = arrayElements
-          .concat(_.range(len - 100, len - 1)
-            .map(i => (
-              <span key={`array_elt_${i}`} title={`array index: ${i}`}>
-                {renderValue(value[i], true)}{', '}
-              </span>
-            )))
-      }
-      // final element has no trailing comma
-      arrayElements.push((
-        <span key={`array_elt_${len - 1}`} title={`array index: ${len - 1}`}>
-          {renderValue(value[len - 1], true)}
-        </span>
-      ))
-    } else {
-      arrayElements = (
-        <span key="array_elt_empty" title="array index: none">
-          {renderValue('', true)}
-        </span>
-      )
-    }
-    return (
-      <div>
-        <div className="data-set-info">{dataSetInfo}</div>
-        <div>
-          [{arrayElements}]
-        </div>
-      </div>
-    )
-  },
-}
-
-
-const dateHandler = {
-  shouldHandle: value => Object.prototype.toString.call(value) === '[object Date]',
-
-  render: value => value.toString(),
-}
-
-const scalarHandler = {
-  scalarTypes: {
-    string: true,
-    number: true,
-  },
-
-  shouldHandle: value => (typeof (value) in scalarHandler.scalarTypes),
-
-  render: value =>
-  // TODO: This probably needs a new CSS class
-    <span className="array-output">{value}</span>,
-
-}
 
 const defaultHandler = {
   shouldHandle: () => true,
-
   render: value => (
     <JSONTree
       data={value}
