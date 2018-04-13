@@ -2,8 +2,7 @@ import queryString from 'query-string'
 
 import { stateFromJsmd } from './jsmd-tools'
 import { store } from '../store'
-import { importFromURL } from '../actions/actions'
-import evaluateAllCells from '../actions/evaluate-all-cells'
+import { importFromURL, evaluateAllCells } from '../actions/actions'
 
 async function loadJsmdFromNotebookUrl(url) {
   try {
@@ -13,7 +12,7 @@ async function loadJsmdFromNotebookUrl(url) {
     const doc = parser.parseFromString(notebookString, 'text/html');
     const jsmd = doc.querySelector('#jsmd').innerHTML
     store.dispatch(importFromURL(stateFromJsmd(jsmd))).then(() => {
-      if (store.getState().viewMode === 'presentation') { evaluateAllCells(store.getState().cells, store) }
+      if (store.getState().viewMode === 'presentation') { store.dispatch(evaluateAllCells(store.getState().cells, store)) }
     })
   } catch (err) {
     console.error('failed to load notebook url', err);
