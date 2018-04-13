@@ -26,6 +26,13 @@ export function importNotebook(newState) {
   }
 }
 
+export function importFromURL(importedState) {
+  return (dispatch) => {
+    dispatch(importNotebook(importedState))
+    return Promise.resolve()
+  }
+}
+
 export function exportNotebook(exportAsReport = false) {
   return {
     type: 'EXPORT_NOTEBOOK',
