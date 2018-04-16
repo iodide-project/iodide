@@ -12,6 +12,9 @@ import { addLanguageKeybinding } from '../keybindings'
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
+const CodeMirror = require('codemirror') // eslint-disable-line
+
+
 export function updateAppMessages(message) {
   return {
     type: 'UPDATE_APP_MESSAGES',
@@ -313,6 +316,7 @@ function evaluateLanguagePluginCell(cell) {
 
         xhrObj.open('GET', url, true)
         xhrObj.send()
+        CodeMirror.requireMode(pluginData.codeMirrorMode, () => { })
       })
     }
     return languagePluginPromise
