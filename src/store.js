@@ -7,7 +7,7 @@ import createValidatedReducer from './reducers/create-validated-reducer'
 import reducer from './reducers/reducer'
 import { initializeNotebook } from './initialize-notebook'
 import { stateSchema } from './state-prototypes'
-import evaluateAllCells from './actions/evaluate-all-cells'
+import { evaluateAllCells } from './actions/actions'
 
 let enhancer
 let finalReducer
@@ -32,6 +32,6 @@ const initialState = initializeNotebook()
 
 const store = createStore(finalReducer, initialState, enhancer)
 
-if (initialState.viewMode === 'presentation') { evaluateAllCells(store.getState().cells, store) }
+if (initialState.viewMode === 'presentation') { store.dispatch(evaluateAllCells(store.getState().cells, store)) }
 
 export { store }
