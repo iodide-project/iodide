@@ -19,6 +19,65 @@ import sublime from '../../codemirror-keymap-sublime' // eslint-disable-line no-
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
 
+// This block is from CodeMirror's loadmode.js, modified to work in this environment
+{
+  const CodeMirrorBase = require('codemirror') // eslint-disable-line
+  CodeMirrorBase.modeUrl =
+    `https://cdnjs.cloudflare.com/ajax/libs/codemirror/${CodeMirrorBase.version}/mode/%N/%N.js`
+  window.CodeMirror = CodeMirrorBase
+
+  const modeLoading = {}
+  function splitCallback(cont, n) {
+    let countDown = n
+    return () => {
+      countDown -= 1
+      if (countDown === 0) {
+        cont()
+      }
+    }
+  }
+
+  function ensureDeps(mode, cont) {
+    const deps = CodeMirrorBase.modes[mode].dependencies
+    if (!deps) return cont()
+    const missing = []
+    for (let i = 0; i < deps.length; ++i) {
+      if (!Object.prototype.hasOwnProperty.call(CodeMirrorBase.modes, deps[i])) {
+        missing.push(deps[i])
+      }
+    }
+    if (!missing.length) return cont()
+    const split = splitCallback(cont, missing.length)
+    for (let i = 0; i < missing.length; ++i) {
+      CodeMirrorBase.requireMode(missing[i], split)
+    }
+    return undefined
+  }
+
+  CodeMirrorBase.requireMode = (mode, cont) => {
+    if (Object.prototype.hasOwnProperty.call(CodeMirrorBase.modes, mode)) {
+      return ensureDeps(mode, cont)
+    }
+    if (Object.prototype.hasOwnProperty.call(modeLoading, mode)) {
+      return modeLoading[mode].push(cont)
+    }
+
+    const file = CodeMirrorBase.modeUrl.replace(/%N/g, mode)
+    const script = document.createElement('script')
+    script.src = file
+    const others = document.getElementsByTagName('script')[0]
+    modeLoading[mode] = [cont]
+    const list = modeLoading[mode]
+    CodeMirrorBase.on(script, 'load', () => {
+      ensureDeps(mode, () => {
+        for (let i = 0; i < list.length; ++i) list[i]()
+      })
+    })
+    others.parentNode.insertBefore(script, others)
+    return undefined
+  }
+}
+
 class CellEditor extends React.Component {
   static propTypes = {
     // readOnly: PropTypes.bool.isRequired,
