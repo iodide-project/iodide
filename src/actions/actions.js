@@ -283,7 +283,8 @@ function evaluateLanguagePluginCell(cell) {
           // If it is simply evaling a code block, then it returns undefined.
           // But if it returns a Promise, then we can wait for that promise to resolve
           // before we continue execution.
-          var pr = Promise.resolve(window.eval(xhrObj.responseText)) // eslint-disable-line
+          const pr = Promise.resolve(window
+            .eval(xhrObj.responseText)) // eslint-disable-line no-eval
 
           pr.then(() => {
             value = `${displayName} plugin ready`
