@@ -39,6 +39,7 @@ const jsmdValidCellSettingPaths = [
   'language',
   'rowSettings.REPORT.input',
   'rowSettings.REPORT.output',
+  'skipInRunAll',
 ]
 
 function getNonDefaultValuesForPaths(paths, target, template) {

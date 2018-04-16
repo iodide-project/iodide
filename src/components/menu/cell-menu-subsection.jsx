@@ -34,7 +34,14 @@ export default class CellMenuSubsection extends React.Component {
           key={tasks.changeToExternalResourceCell.title}
           task={tasks.changeToExternalResourceCell}
         />
-        <NotebookMenuItem key={tasks.changeToRawCell.title} task={tasks.changeToRawCell} />
+        <NotebookMenuItem
+          key={tasks.changeToRawCell.title}
+          task={tasks.changeToRawCell}
+        />
+        <NotebookMenuItem
+          key={tasks.changeToPluginCell.title}
+          task={tasks.changeToPluginCell}
+        />
       </NotebookMenuSubsection>)
   }
 }

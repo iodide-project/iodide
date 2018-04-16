@@ -1,0 +1,114 @@
+.side-pane {
+  width:575px !important;
+  top: 50px !important;
+  border: none !important;
+  border-left: 2px solid lightgray !important;
+}
+
+.pane-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #fff;
+}
+
+.pane-title {
+    margin: 5px;
+    margin-right: 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pane-title h1 {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.pane-title .menu-button {
+  width: 24px;
+  height: 24px;
+  padding-bottom:0px
+}
+
+.pane-title .menu-button:hover {
+  outline: none;
+}
+
+div.history-cells {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+div.history-cells .CodeMirror {
+  height: auto;
+}
+
+pre.history-item-code {
+  overflow:scroll;
+  padding:3px;
+}
+
+div.history-content {
+  outline: 1px solid lightgray;
+
+}
+
+div.history-date {
+  padding-left: 33px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: gray;
+}
+
+div.no-history {
+  font-size: 20px;
+  font-weight: bold;
+  color: lightgray;
+  margin-top: 60px;
+  margin-left: 30px;
+}
+
+div.side-pane {
+  z-index: 200;
+  position: fixed;
+  right: 0;
+  top: 40px;
+  border: 2px solid gray;
+  border-right: none;
+  width: 75%;
+  overflow: scroll;
+  height: 100%;
+  background-color: rgba(255, 255, 255);
+}
+
+i.close-side-pane:hover {
+  outline: 1px solid lightgray;
+}
+
+div.declared-variables-list {
+padding: 15px
+}
+
+div.declared-variable {
+  padding-bottom: 15px;
+}
+
+div.declared-variable-name {
+    font-size: 14px;
+    font-family: "monospace";
+    background: #f9f9f9;
+    border: 1px solid #f1f1f1;
+    padding: 1px 10px;
+    color: #000;
+}
+
+div.declared-variable-value {
+  padding-left: 20px;
+}
+
+div.app-info-message {
+  padding-left: 20px;
+  padding-right: 10px;
+  padding-top: 20px;
+}

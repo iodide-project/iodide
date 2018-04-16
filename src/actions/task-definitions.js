@@ -8,7 +8,6 @@ import { isCommandMode,
   getCellBelowSelectedId,
   getCellAboveSelectedId, prettyDate, formatDateString } from '../tools/notebook-utils'
 import { stateFromJsmd } from '../tools/jsmd-tools'
-import evaluateAllCells from './evaluate-all-cells'
 
 const dispatcher = {}
 for (const action in actions) {
@@ -29,7 +28,7 @@ const commandKey = () => (OSName === 'MacOS' ? '⌘' : 'Ctrl')
 const tasks = {}
 
 tasks.evaluateCell = new UserTask({
-  title: 'Evaluate Cell',
+  title: 'Run Cell',
   keybindings: ['mod+enter'],
 
   callback() {
@@ -40,11 +39,11 @@ tasks.evaluateCell = new UserTask({
 })
 
 tasks.evaluateAllCells = new UserTask({
-  title: 'Evaluate All Cells',
-  menuTitle: 'Evaluate All Cells',
+  title: 'Run All Cells',
+  menuTitle: 'Run All Cells',
   callback() {
     dispatcher.saveNotebook(true)
-    evaluateAllCells(getCells(), store)
+    dispatcher.evaluateAllCells(getCells(), store)
   },
 })
 
@@ -146,7 +145,6 @@ tasks.deleteCell = new UserTask({
 
 tasks.changeToJavascriptCell = new UserTask({
   title: 'Change to Javascript',
-  menuTitle: 'Javascript',
   keybindings: ['j'],
   displayKeybinding: 'J',
   keybindingPrecondition: isCommandMode,
@@ -157,7 +155,6 @@ tasks.changeToJavascriptCell = new UserTask({
 
 tasks.changeToMarkdownCell = new UserTask({
   title: 'Change to Markdown',
-  menuTitle: 'Markdown',
   keybindings: ['m'],
   displayKeybinding: 'M',
   keybindingPrecondition: isCommandMode,
@@ -168,7 +165,6 @@ tasks.changeToMarkdownCell = new UserTask({
 
 tasks.changeToExternalResourceCell = new UserTask({
   title: 'Change to External Resource',
-  menuTitle: 'External Resource',
   keybindings: ['e'],
   displayKeybinding: 'E',
   keybindingPrecondition: isCommandMode,
@@ -179,7 +175,6 @@ tasks.changeToExternalResourceCell = new UserTask({
 
 tasks.changeToRawCell = new UserTask({
   title: 'Change to Raw',
-  menuTitle: 'Raw',
   keybindings: ['r'],
   displayKeybinding: 'R',
   keybindingPrecondition: isCommandMode,
@@ -188,7 +183,6 @@ tasks.changeToRawCell = new UserTask({
 
 tasks.changeToCSSCell = new UserTask({
   title: 'Change to CSS',
-  menuTitle: 'CSS',
   keybindings: ['c'],
   displayKeybinding: 'C',
   keybindingPrecondition: isCommandMode,
@@ -197,11 +191,18 @@ tasks.changeToCSSCell = new UserTask({
 
 tasks.changeToPluginCell = new UserTask({
   title: 'Change to Plugin Loader',
-  menuTitle: 'Plugin Loader',
   keybindings: ['l'],
-  displayKeybinding: 'l',
+  displayKeybinding: 'L',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.changeCellType('plugin') },
+})
+
+tasks.toggleSkipCellInRunAll = new UserTask({
+  title: 'Toggle Skipping Cell in Run All',
+  keybindings: ['s'],
+  displayKeybinding: 'S',
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.setCellSkipInRunAll() },
 })
 
 tasks.changeMode = new UserTask({

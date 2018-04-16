@@ -44,6 +44,7 @@ const cellSchema = {
     evalStatus: {}, // FIXME change to string ONLY
     rowSettings: { type: 'object' },
     language: { type: 'string' }, // '' in case not a code cell
+    skipInRunAll: { type: 'boolean' },
   },
   additionalProperties: false,
 }
@@ -89,7 +90,10 @@ const stateSchema = {
     history: {
       type: 'array',
     },
-    userDefinedVariables: { type: 'object' },
+    userDefinedVarNames: {
+      type: 'array',
+      items: { type: 'string' },
+    },
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
@@ -174,6 +178,7 @@ function newCell(cellId, cellType, language = 'js') {
     executionStatus: ' ',
     evalStatus: undefined,
     rowSettings: newCellRowSettings(cellType),
+    skipInRunAll: false,
     language, // default language is js, but it only matters the cell is a code cell
   }
 }
@@ -195,7 +200,7 @@ function blankState() {
     cells: [],
     languages: { js: jsLanguageDefinition },
     languageLastUsed: 'js',
-    userDefinedVariables: {},
+    userDefinedVarNames: [],
     lastSaved: undefined,
     mode: 'command', // command, edit
     viewMode: 'editor', // editor, presentation

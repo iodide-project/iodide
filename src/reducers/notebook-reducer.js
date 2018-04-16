@@ -30,7 +30,7 @@ function clearHistory(loadedState) {
 
   /* eslint-disable */
   // remove history and declared properties before exporting the state.
-  loadedState.userDefinedVariables = {}
+  loadedState.userDefinedVarNames = []
   loadedState.history = []
   loadedState.externalDependencies = []
   loadedState.executionNumber = 0
@@ -42,9 +42,9 @@ function clearHistory(loadedState) {
   /* eslint-enable */
 }
 
-function clearUserDefinedVars(userDefinedVariables) {
+function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
-  Object.keys(userDefinedVariables).forEach((varName) => {
+  userDefinedVarNames.forEach((varName) => {
     try {
       delete window[varName]
     } catch (e) {
@@ -53,6 +53,12 @@ function clearUserDefinedVars(userDefinedVariables) {
   })
 }
 
+
+const initialVariables = new Set(Object.keys(window)) // gives all global variables
+initialVariables.add('__core-js_shared__')
+initialVariables.add('Mousetrap')
+
+
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState
   let title
@@ -60,7 +66,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      clearUserDefinedVars(state.userDefinedVariables)
+      clearUserDefinedVars(state.userDefinedVarNames)
       return Object.assign(newNotebook(), getSavedNotebooks())
 
     case 'EXPORT_NOTEBOOK': {
@@ -69,7 +75,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         state,
         { viewMode: action.exportAsReport ? 'presentation' : 'editor' },
       )
-      console.log(exportState)
       const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
       const dlAnchorElem = document.getElementById('export-anchor')
       dlAnchorElem.setAttribute('href', dataStr)
@@ -84,7 +89,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     // note: loading a NB should always assign to a copy of the latest global
     // and per-cell state for backwards compatibility
       nextState = action.newState
-      clearUserDefinedVars(state.userDefinedVariables)
+      clearUserDefinedVars(state.userDefinedVarNames)
       clearHistory(nextState)
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
@@ -116,7 +121,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'LOAD_NOTEBOOK': {
-      clearUserDefinedVars(state.userDefinedVariables)
+      clearUserDefinedVars(state.userDefinedVarNames)
       nextState = stateFromJsmd(window.localStorage.getItem(action.title))
       clearHistory(nextState)
       // note: loading a NB should always assign to a copy of the latest global
@@ -144,9 +149,9 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'CLEAR_VARIABLES': {
-      clearUserDefinedVars(state.userDefinedVariables)
+      clearUserDefinedVars(state.userDefinedVarNames)
       nextState = Object.assign({}, state)
-      nextState.userDefinedVariables = {}
+      nextState.userDefinedVarNames = {}
       nextState.externalDependencies = []
       return nextState
     }
@@ -182,6 +187,14 @@ const notebookReducer = (state = newNotebook(), action) => {
         content: action.content,
       })
       return Object.assign({}, state, { history })
+    }
+
+    case 'UPDATE_USER_VARIABLES': {
+      const userDefinedVarNames = []
+      Object.keys(window)
+        .filter(g => !initialVariables.has(g))
+        .forEach((g) => { userDefinedVarNames.push(g) })
+      return Object.assign({}, state, { userDefinedVarNames })
     }
 
     case 'UPDATE_APP_MESSAGES': {

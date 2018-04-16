@@ -27,31 +27,18 @@ div#notebook-container.presentation-mode {
   overflow-y: auto;
 }
 
-div#headerbar {
-  /* 	flex: 0 0 150px; */
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-div.notebook-menu {
-    position: fixed;
-    width: 100%;
-    height: 50px;
-}
-
 div#cells.editor {
     position: fixed;
-    top: 50px; /*move down by the header bar height*/
+    top: 50px; /*move down by .notebook-toolbar-container height*/
     left: 0px;
     box-sizing: border-box;
-    height: calc(100% - 50px); /*subtract off the header bar height*/
+    height: calc(100% - 50px); /*subtract off .notebook-toolbar-container height*/
     width: 100%;
     overflow-y: auto;
     padding-top: 20px;
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 60px;
-    /*outline: 4px #d41eea dashed;*/
 }
 
 div#cells.presentation {
@@ -62,12 +49,6 @@ div#cells.presentation {
 div#cells.pane-open {
   width: calc(100% - 575px);
 }
-
-h1.overlay-title {
-  padding-left: 20px;
-  font-size: 20px
-}
-
 
 /************************************************/
 /* cell output styles */
@@ -187,35 +168,6 @@ h1.page-title span {
   font-size: 16px;
 }
 
-ul.load-notebook-menu {
-  min-width: 525px;
-  background-color: white;
-}
-
-ul.load-notebook-menu li {
-  height: 30px;
-}
-
-.load-notebook-menu span.menu-notebook-name {
-  width: 300px;
-
-  text-overflow: ellipsis;
-  overflow-x: hidden;
-  vertical-align: top;
-  padding-right: 15px;
-  max-height: 30px;
-  font-size: 14px;
-}
-
-.load-notebook-menu span.menu-last-saved {
-  width: 200px;
-  font-size: 14px;
-  color: gray;
-  font-weight: 300;
-  overflow-x: hidden;
-  vertical-align: top;
-}
-
 div.notebook-actions {
   display: flex;
   justify-content: space-between;
@@ -229,10 +181,6 @@ div.cell-controls {
   justify-content: space-between
 }
 
-div.left-cell-menu {
-  display: flex
-}
-
 div.page-mode {
   margin-left: 10px;
   color: #999;
@@ -242,234 +190,17 @@ div.page-mode {
   display: flex
 }
 
-div.last-saved {
-  padding: 2px;
-  display: flex;
-  color: #999;
-  font-style: italic;
-  font-size: 12px
-}
+
+
+/************************************************/
+/* et cetera styles */
 
 div.iodide-tooltip {
   font-size: 0.900rem;
 }
 
-/************************************************/
-/* side pane styles */
-
-.side-pane {
-  width:575px !important;
-  top: 50px !important;
-  border: none !important;
-  border-left: 2px solid lightgray !important;
-}
-
-.pane-header {
-	position: sticky;
-	top: 0;
-	z-index: 10;
-	background: #fff;
-}
-
-.pane-title {
-	margin: 5px;
-	margin-right: 0px;
-	display: flex;
-	justify-content: space-between;
-}
-
-.pane-title h1 {
-  margin-top: 10px;
-  margin-left: 10px;
-}
-
-.pane-title .menu-button {
-  width: 24px;
-  height: 24px;
-  padding-bottom:0px
-}
-
-.pane-title .menu-button:hover {
-  outline: none;
-}
-
-div.history-cells {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-div.history-cells .CodeMirror {
-  height: auto;
-}
-
-pre.history-item-code {
-  overflow:scroll;
-  padding:3px;
-}
-
-div.history-content {
-  outline: 1px solid lightgray;
-
-}
-
-div.history-date {
-  padding-left: 33px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  font-size: 12px;
-  color: gray;
-}
-
-div.no-history {
-  font-size: 20px;
-  font-weight: bold;
-  color: lightgray;
-  margin-top: 60px;
-  margin-left: 30px;
-}
-
-div.side-pane {
-  z-index: 200;
-  position: fixed;
-  right: 0;
-  top: 40px;
-  border: 2px solid gray;
-  border-right: none;
-  width: 75%;
-  overflow: scroll;
-  height: 100%;
-  background-color: rgba(255, 255, 255);
-}
-
-i.close-side-pane:hover {
-  outline: 1px solid lightgray;
-}
-
-div.declared-variables {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 10px;
-}
-
-div.app-info-message {
-  padding-left: 20px;
-  padding-right: 10px;
-  padding-top: 20px;
-}
-
-/************************************************/
-/* et cetera styles */
 .katex-html {
   display: none;
-}
-
-/* span.cell-menu {
-	width:292px !important
-} */
-
-#main-menu h3 {font-size:13px}
-
-.medium-menu {
-  display: flex !important;
-  justify-content: space-between;
-  flex-flow: row wrap;
-  max-height:32px !important; 
-}
-
-.main-menu-item {
-  max-height:32px !important;
-  line-height:32px !important;
-}
-
-.primary-menu-item {
-}
-
-.secondary-menu-item {
-
-  text-align:right;
-  padding:0px !important;
-  padding-left:16px !important;
-
-}
-
-.medium-menu div div {
-  display: flex !important;
-  float: none !important;
-  justify-content: space-between;
-  flex-flow: row wrap;
-}
-
-.medium-menu div div div:first-child {
-  order: 1;
-  width: 20px;
-  justify-content: flex-end;
-  font-size: 12px;
-
-  display: block;
-}
-
-/* .medium-menu div div div:nth-child(2) {
-  float: initial !important;
-  width: 225px;
-  overflow: hidden;
-  order: 0;
-} */
-
-.large-menu {
-  display: flex !important;
-  justify-content: space-between;
-  flex-flow: row wrap;
-
-}
-
-.large-menu div div {
-  display: flex !important;
-  float: none !important;
-  justify-content: space-between;
-  flex-flow: row wrap;
-}
-
-/* .large-menu div div div:first-child {
-  order: 1;
-  width: 250px;
-  justify-content: flex-end;
-  font-size: 12px;
-  display: block;
-} */
-
-/* .large-menu div div div:nth-child(2) {
-  float: initial !important;
-  width: 280px;
-  text-overflow: ellipsis;
-  order: 0;
-} */
-
-.main-bar {
-  background-color: black
-}
-
-.menu-button {
-  color: #fafafa;
-  width: 40px !important;
-  height:40px !important;
-}
-
-.menu-button:hover {
-  outline: 1px solid #fafafa
-}
-
-.view-mode-toggle-from-presentation {
-  position: fixed;
-  right: 20px;
-  top: 10px;
-  z-index:100;
-}
-
-.presentation-header {
-}
-
-.presentation-title {
-  text-align: center
 }
 
 .dependency-output {
