@@ -34,6 +34,7 @@ const jsmdValidNotebookSettings = [
   'viewMode',
   'lastSaved',
   'languages',
+  'savedEnvironment',
 ]
 const jsmdValidCellSettingPaths = [
   'language',
@@ -251,6 +252,7 @@ export {
   stateFromJsmd,
   jsmdValidCellTypes,
   jsmdToCellTypeMap,
+  jsmdValidNotebookSettings,
   jsmdValidCellSettingPaths,
   stringifyStateToJsmd,
   exportJsmdBundle,

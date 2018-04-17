@@ -33,6 +33,7 @@
     "font-awesome": "^4.7.0",
     "fuse.js": "^3.2.0",
     "lodash": "^4.17.4",
+    "lz-string": "^1.4.4",
     "markdown-it": "^8.4.0",
     "markdown-it-anchor": "^4.0.0",
     "markdown-it-katex": "^2.0.3",

@@ -203,6 +203,18 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { appMessages })
     }
 
+    case 'SAVE_ENVIRONMENT': {
+      let newSavedEnvironment
+      if (action.update) {
+        newSavedEnvironment = Object
+          .assign({}, state.savedEnvironment, action.updateObj)
+      } else {
+        newSavedEnvironment = action.updateObj
+      }
+      // console.log('update?', action.update, 'obj:', newSavedEnvironment)
+      return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
+    }
+
     case 'ADD_LANGUAGE': {
       const languages = Object.assign(
         {},

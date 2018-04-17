@@ -465,3 +465,11 @@ export function setCellSkipInRunAll(value) {
     ))
   }
 }
+
+export function saveEnvironment(updateObj, update) {
+  return {
+    type: 'SAVE_ENVIRONMENT',
+    updateObj,
+    update,
+  }
+}

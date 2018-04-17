@@ -66,6 +66,14 @@ const languageSchema = {
   additionalProperties: false,
 }
 
+const environmentVariableSchema = {
+  type: 'array',
+  items: [
+    { type: 'string', enum: ['object', 'string', 'rawString'] },
+    { type: 'string' },
+  ],
+}
+
 const stateSchema = {
   type: 'object',
   properties: {
@@ -107,6 +115,10 @@ const stateSchema = {
     locallySaved: {
       type: 'array',
       items: { type: 'string' },
+    },
+    savedEnvironment: {
+      type: 'object',
+      additionalProperties: environmentVariableSchema,
     },
   },
   additionalProperties: false,
@@ -211,6 +223,7 @@ function blankState() {
     appMessages: [],
     autoSave: undefined,
     locallySaved: [],
+    savedEnvironment: {},
   }
   return initialState
 }
