@@ -252,6 +252,7 @@ export {
   stateFromJsmd,
   jsmdValidCellTypes,
   jsmdToCellTypeMap,
+  jsmdValidNotebookSettings,
   jsmdValidCellSettingPaths,
   stringifyStateToJsmd,
   exportJsmdBundle,

@@ -66,6 +66,14 @@ const languageSchema = {
   additionalProperties: false,
 }
 
+const environmentVariableSchema = {
+  type: 'array',
+  items: [
+    { type: 'string', enum: ['object', 'string', 'rawString'] },
+    { type: 'string' },
+  ],
+}
+
 const stateSchema = {
   type: 'object',
   properties: {
@@ -110,7 +118,7 @@ const stateSchema = {
     },
     savedEnvironment: {
       type: 'object',
-      additionalProperties: { type: 'string' },
+      additionalProperties: environmentVariableSchema,
     },
   },
   additionalProperties: false,
