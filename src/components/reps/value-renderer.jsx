@@ -20,12 +20,9 @@ export function renderValue(value, inContainer = false) {
       const resultElem = handler.render(value, inContainer)
 
       if (typeof resultElem === 'string') {
-        // string?
-        return (<div>{resultElem }</div>)
+        return (<div>{ resultElem }</div>)
       } else if (resultElem.tagName !== undefined) {
-        // is this actually what we want to do?
-        // this should be classed.
-        return <div>{resultElem.outerHTML}</div>
+        return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} /> // eslint-disable-line
       } else if (resultElem.type !== undefined) {
         return resultElem
       }
