@@ -5,6 +5,8 @@ import { saveEnvironment } from '../actions/actions'
 import { store } from '../store'
 
 
+//  FIXME replace all "throws" with iodide.print (when `print` is ready)
+
 function saveToEnvironment(obj, options) {
   if (!_.isObject(obj)) {
     throw new TypeError('variables to be saved must be wrapped in object with var name for bundle')
@@ -41,8 +43,12 @@ function decodeEnvObj(encoding, str) {
   }
 }
 
-function loadFromEnvironment(varsIn) {
-  const varList = (typeof varsIn === 'string') ? [varsIn] : varsIn
+function loadFromEnvironment(varList) {
+  varList.forEach((v) => {
+    if (typeof v !== 'string') {
+      throw new TypeError('environment.get only accepts one or more strings as parameters')
+    }
+  })
   const env = store.getState().savedEnvironment
   const valsOut = varList.map(v => decodeEnvObj(...env[v]))
   if (valsOut.length === 1) { return valsOut[0] }
@@ -57,7 +63,7 @@ export const environment = {
 
   clear: () => saveToEnvironment({}, { raw: false, update: false }),
 
-  get: vars => loadFromEnvironment(vars),
+  get: (...vars) => loadFromEnvironment(vars),
 
   list: () => Object.keys(store.getState().savedEnvironment),
 }

@@ -7,7 +7,7 @@ import { store } from '../../store'
 import { newNotebook } from '../../actions/actions'
 
 
-describe('environment methods work correctly (integration test)', () => {
+describe('environment methods (integration test)', () => {
   beforeEach(() => {
     store.dispatch(newNotebook())
   })
@@ -28,6 +28,10 @@ describe('environment methods work correctly (integration test)', () => {
     environment.freezeRawString({ foo: 'a test string' })
     expect(store.getState().savedEnvironment.foo)
       .toEqual(['rawString', 'a test string'])
+  })
+
+  it('freeze a non-string as rawString should throw', () => {
+    expect(() => { environment.freezeRawString({ foo: 123 }) }).toThrow()
   })
 
   it('appending a string object', () => {
@@ -67,9 +71,16 @@ describe('environment methods work correctly (integration test)', () => {
   it('env.getting multiple keys returns original values in array', () => {
     environment.freeze({ foo: { a: 1 } })
     environment.freezeRawString({ bar: 'a test string' })
-    environment.freeze({ bat: 123 })
-    expect(environment.get(['foo', 'bat', 'bar']))
-      .toEqual([{ a: 1 }, 123, 'a test string'])
+    environment.freeze({ bat: 123, boop: { b: 'string 2' } })
+    expect(environment.get('foo', 'bat', 'boop', 'bar'))
+      .toEqual([{ a: 1 }, 123, { b: 'string 2' }, 'a test string'])
+  })
+
+  it('env.get params must be strings (not an array)', () => {
+    environment.freeze({ foo: { a: 1 } })
+    environment.freezeRawString({ bar: 'a test string' })
+    environment.freeze({ bat: 123, boop: { b: 'string 2' } })
+    expect(() => { environment.get(['foo', 'bat']) }).toThrow()
   })
 
   it('env.list returns array of keys in environment', () => {
