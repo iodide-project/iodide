@@ -13,9 +13,11 @@ export class PromiseRep extends React.Component {
     this.state.promise = this.props.promise.then(
       (val) => {
         this.setState({ status: 'resolved', value: val })
+        return val
       },
       (val) => {
         this.setState({ status: 'rejected', value: val })
+        return val
       },
     )
     const runTimer = setInterval(() => {
