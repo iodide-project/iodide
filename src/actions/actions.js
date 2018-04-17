@@ -148,13 +148,14 @@ export function updateUserVariables() {
 
 function evaluateCodeCell(cell) {
   return (dispatch, getState) => {
+    // this variable may get changed in eval.
+    window.iodideRequireExplicitResolution = false
     const state = getState()
     let output
     let evalStatus
     const code = cell.content
     const languageModule = state.languages[cell.language].module
     const { evaluator } = state.languages[cell.language]
-
     try {
       output = window[languageModule][evaluator](code)
       evalStatus = 'success'
@@ -162,18 +163,23 @@ function evaluateCodeCell(cell) {
       output = e
       evalStatus = 'error'
     }
-
-    dispatch(updateCellProperties(
-      cell.id,
-      {
-        value: output,
-        rendered: true,
-        evalStatus,
-      },
-    ))
-    dispatch(incrementExecutionNumber())
-    dispatch(appendToEvalHistory(cell.id, cell.content))
-    dispatch(updateUserVariables())
+    const afterEvaluation = () => {
+      dispatch(updateCellProperties(
+        cell.id,
+        {
+          value: output,
+          rendered: true,
+          evalStatus,
+        },
+      ))
+      dispatch(incrementExecutionNumber())
+      dispatch(appendToEvalHistory(cell.id, cell.content))
+      dispatch(updateUserVariables())
+    }
+    const resolver = window.iodideRequireExplicitResolution ?
+      window.iodideExplicitResolver :
+      Promise.resolve()
+    return resolver.then(() => afterEvaluation())
   }
 }
 
@@ -334,6 +340,7 @@ export function evaluateCell(cellId) {
     }
     if (cell.cellType === 'code') {
       evaluation = dispatch(evaluateCodeCell(cell))
+      window.evaluationQueue = window.evaluationQueue.then(evaluation)
     } else if (cell.cellType === 'markdown') {
       evaluation = dispatch(evaluateMarkdownCell(cell))
     } else if (cell.cellType === 'external dependencies') {
@@ -343,6 +350,7 @@ export function evaluateCell(cellId) {
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
         evaluation = dispatch(evaluateLanguagePluginCell(cell))
+        window.evaluationQueue = window.evaluationQueue.then(evaluation)
       } else {
         evaluation = dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
       }
