@@ -339,8 +339,9 @@ export function evaluateCell(cellId) {
       cell = getCellById(getState().cells, cellId)
     }
     if (cell.cellType === 'code') {
-      evaluation = dispatch(evaluateCodeCell(cell))
-      window.evaluationQueue = window.evaluationQueue.then(evaluation)
+      window.evaluationQueue = window.evaluationQueue
+        .then(() => dispatch(evaluateCodeCell(cell)))
+      evaluation = window.evaluationQueue
     } else if (cell.cellType === 'markdown') {
       evaluation = dispatch(evaluateMarkdownCell(cell))
     } else if (cell.cellType === 'external dependencies') {
@@ -349,8 +350,9 @@ export function evaluateCell(cellId) {
       evaluation = dispatch(evaluateCSSCell(cell))
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
-        evaluation = dispatch(evaluateLanguagePluginCell(cell))
-        window.evaluationQueue = window.evaluationQueue.then(evaluation)
+        window.evaluationQueue = window.evaluationQueue
+          .then(() => dispatch(evaluateLanguagePluginCell(cell)))
+        evaluation = window.evaluationQueue
       } else {
         evaluation = dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
       }
