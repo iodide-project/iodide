@@ -2,11 +2,20 @@ import React from 'react'
 import _ from 'lodash'
 import { renderValue } from './value-renderer'
 
+export const isTypedArray = arr => (arr.BYTES_PER_ELEMENT !== undefined &&
+  Object.prototype.toString.call(arr.buffer) === '[object ArrayBuffer]')
+
+export const typedArrayType = arr => Object.prototype.toString.call(arr).split(' ')[1].slice(0, -1)
+
 export default {
-  shouldHandle: (value, inContainer) => !inContainer && _.isArray(value),
+  shouldHandle: (value, inContainer) => !inContainer && (
+    Array.isArray(value) ||
+    isTypedArray(value)
+  ),
 
   render: (value) => {
-    const dataSetInfo = `${value.length} element array`
+    const arrayType = isTypedArray(value) ? typedArrayType(value) : 'array'
+    const dataSetInfo = `${value.length} element ${arrayType}`
     const len = value.length
     let arrayElements
     if (len > 0) {
