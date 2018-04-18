@@ -9,7 +9,6 @@ import undefinedHandler from './undefined-handler'
 import dataFrameHandler from './dataframe-handler'
 import matrixHandler from './matrix-handler'
 import arrayHandler from './array-handler'
-import typedArrayHandler from './typed-array-handler'
 import dateHandler from './date-handler'
 import scalarHandler from './scalar-handler'
 import promiseHandler from './promise-handler'
@@ -80,7 +79,6 @@ const handlers = [
   dataFrameHandler,
   matrixHandler,
   arrayHandler,
-  typedArrayHandler,
   dateHandler,
   scalarHandler,
   promiseHandler,

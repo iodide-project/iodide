@@ -2,7 +2,9 @@ import React from 'react'
 import _ from 'lodash'
 import { renderValue } from './value-renderer'
 
-export const isTypedArray = arr => (arr.BYTES_PER_ELEMENT !== undefined &&
+export const isTypedArray = arr => (
+  typeof arr === 'object' &&
+  arr.BYTES_PER_ELEMENT !== undefined &&
   Object.prototype.toString.call(arr.buffer) === '[object ArrayBuffer]')
 
 export const typedArrayType = arr => Object.prototype.toString.call(arr).split(' ')[1].slice(0, -1)
