@@ -19,8 +19,7 @@ describe('dateHandler shouldHandle', () => {
     expect(arrayHandler.shouldHandle(new Uint16Array([0, 65535]))).toBe(true)
     expect(arrayHandler.shouldHandle(new Int32Array([-2147483648, 2147483647]))).toBe(true)
     expect(arrayHandler.shouldHandle(new Float32Array([-230430430.2343, 20]))).toBe(true)
-    expect(arrayHandler.shouldHandle(new Float64Array([-230430430.2343, 20, 1230230230.2343]))).toBe(true)
-    // TODO - make this pass.
-    // expect(arrayHandler.shouldHandle(new Float64Array(100000))).toBe(true)
+    expect(arrayHandler.shouldHandle(new Float64Array([-230430430.2343, 20, 1230230230.2343])))
+      .toBe(true)
   })
 })
