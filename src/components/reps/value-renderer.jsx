@@ -12,16 +12,17 @@ import arrayHandler from './array-handler'
 import dateHandler from './date-handler'
 import scalarHandler from './scalar-handler'
 import promiseHandler from './promise-handler'
+import domElementHandler from './dom-element-handler'
 import defaultHandler from './default-handler'
 
 export function renderValue(value, inContainer = false) {
   for (const handler of handlers) {
     if (handler.shouldHandle(value, inContainer)) {
       const resultElem = handler.render(value, inContainer)
-
       if (typeof resultElem === 'string') {
         return (<div>{ resultElem }</div>)
       } else if (resultElem.tagName !== undefined) {
+        // what is this even for?
         return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} /> // eslint-disable-line
       } else if (resultElem.type !== undefined) {
         return resultElem
@@ -81,6 +82,7 @@ const handlers = [
   arrayHandler,
   dateHandler,
   scalarHandler,
+  domElementHandler,
   promiseHandler,
   defaultHandler,
 ]
