@@ -59,7 +59,11 @@ export default {
   // It is unfortunate that this seems to be the main perspective for how to determine if
   // something is Promise-ful. Ideally we would check only for native Promises,
   // but at this point I don't know if others use Promise-based libraries.
-  shouldHandle: val => typeof val === 'object' && typeof val.then === 'function',
+
+  // EDIT: for now, let's check ONLY for native promises.
+  // shouldHandle: val => typeof val === 'object' && typeof val.then === 'function',
+  shouldHandle: value => value !== undefined
+     && Object.prototype.toString.call(value) === '[object Promise]',
 
   // render is going to need to be more involved.
   render: value => (
