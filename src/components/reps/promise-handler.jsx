@@ -62,8 +62,7 @@ export default {
 
   // EDIT: for now, let's check ONLY for native promises.
   // shouldHandle: val => typeof val === 'object' && typeof val.then === 'function',
-  shouldHandle: value => value !== undefined
-     && Object.prototype.toString.call(value) === '[object Promise]',
+  shouldHandle: value => Object.prototype.toString.call(value) === '[object Promise]',
 
   // render is going to need to be more involved.
   render: value => (
