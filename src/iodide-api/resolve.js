@@ -1,8 +1,6 @@
 
 window.iodideRequireExplicitResolution = false
 window.iodideRequireExplicitResolutionStatus = undefined
-window.iodideExplicitResolver = undefined // eslint-disable-line
-window.evaluationQueue = Promise.resolve()
 
 const expectResolution = () => {
   window.iodideRequireExplicitResolution = true

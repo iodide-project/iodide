@@ -13,7 +13,7 @@ const MD = MarkdownIt({ html: true }) // eslint-disable-line
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const CodeMirror = require('codemirror') // eslint-disable-line
-
+let evaluationQueue = Promise.resolve()
 
 export function updateAppMessages(message) {
   return {
@@ -176,10 +176,10 @@ function evaluateCodeCell(cell) {
       dispatch(appendToEvalHistory(cell.id, cell.content))
       dispatch(updateUserVariables())
     }
-    const resolver = window.iodideRequireExplicitResolution ?
-      window.iodideExplicitResolver :
-      Promise.resolve()
-    return resolver.then(() => afterEvaluation())
+    const resolver = Promise.resolve().then(() => afterEvaluation())
+    return window.iodideRequireExplicitResolution ?
+      resolver.then(() => window.iodideExplicitResolver) :
+      resolver
   }
 }
 
@@ -339,9 +339,9 @@ export function evaluateCell(cellId) {
       cell = getCellById(getState().cells, cellId)
     }
     if (cell.cellType === 'code') {
-      window.evaluationQueue = window.evaluationQueue
+      evaluationQueue = evaluationQueue
         .then(() => dispatch(evaluateCodeCell(cell)))
-      evaluation = window.evaluationQueue
+      evaluation = evaluationQueue
     } else if (cell.cellType === 'markdown') {
       evaluation = dispatch(evaluateMarkdownCell(cell))
     } else if (cell.cellType === 'external dependencies') {
@@ -350,9 +350,9 @@ export function evaluateCell(cellId) {
       evaluation = dispatch(evaluateCSSCell(cell))
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
-        window.evaluationQueue = window.evaluationQueue
+        evaluationQueue = evaluationQueue
           .then(() => dispatch(evaluateLanguagePluginCell(cell)))
-        evaluation = window.evaluationQueue
+        evaluation = evaluationQueue
       } else {
         evaluation = dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
       }
