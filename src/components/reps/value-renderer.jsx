@@ -2,12 +2,8 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-// import { connect } from 'react-redux'
 
 import JSONTree from 'react-json-tree'
-
-
-// import { getCellById } from '../../tools/notebook-utils'
 
 import nullHandler from './null-handler'
 import undefinedHandler from './undefined-handler'
@@ -16,23 +12,22 @@ import matrixHandler from './matrix-handler'
 import arrayHandler from './array-handler'
 import dateHandler from './date-handler'
 import scalarHandler from './scalar-handler'
+import promiseHandler from './promise-handler'
 
 export function renderValue(value, inContainer = false) {
   for (const handler of handlers) {
     if (handler.shouldHandle(value, inContainer)) {
       const resultElem = handler.render(value, inContainer)
-      /* eslint-disable */
+
       if (typeof resultElem === 'string') {
-        return <div dangerouslySetInnerHTML={{ __html: resultElem }} />
+        return (<div>{ resultElem }</div>)
       } else if (resultElem.tagName !== undefined) {
-        return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} />
+        return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} /> // eslint-disable-line
       } else if (resultElem.type !== undefined) {
         return resultElem
-      } else {
-        console.warn('Unknown output handler result type from ' + handler)
-        // Fallback to other handlers if it's something invalid
       }
-      /* eslint-enable */
+      console.warn(`Unknown output handler result type from ${handler}`)
+      // Fallback to other handlers if it's something invalid
     }
   }
   return undefined
@@ -117,6 +112,7 @@ const handlers = [
   arrayHandler,
   dateHandler,
   scalarHandler,
+  promiseHandler,
   defaultHandler,
 ]
 
