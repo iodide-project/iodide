@@ -1,5 +1,4 @@
 import React from 'react'
-import DOMInspector from 'react-inspector'
 // taken from https://stackoverflow.com/questions/384286/javascript-isdom-how-do-you-check-if-a-javascript-object-is-a-dom-object
 function isNode(o) {
   return (
@@ -17,5 +16,5 @@ function isElement(o) {
 
 export default {
   shouldHandle: value => isNode(value) || isElement(value),
-  render: value => <DOMInspector data={value} />,
+  render: value => <div className='raw-dom-element' dangerouslySetInnerHTML={{ __html: value.outerHTML }} />, // eslint-disable-line
 }

@@ -18,6 +18,10 @@ div.cell-container {
 but I don't see why we would have to do this immediately.
 */
 
+div#cells.editor div.raw-dom-element {
+  overflow-x: scroll
+}
+
 div#cells.presentation div.cell-container {
   margin: 0 auto; 
   outline: none;
