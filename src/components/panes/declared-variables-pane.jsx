@@ -8,7 +8,6 @@ import SidePane from './side-pane'
 import { DeclaredVariable } from './declared-variable'
 import tasks from '../../actions/task-definitions'
 
-const doNotShow = new Set(['CodeMirror'])
 
 export class DeclaredVariablesPaneUnconnected extends React.Component {
   static propTypes = {
@@ -24,7 +23,6 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
       <SidePane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
         <div className="declared-variables-list">
           {this.props.userDefinedVarNames
-            .filter(varName => !doNotShow.has(varName))
           .map(varName =>
             <DeclaredVariable varName={varName} key={varName} />)
           }
