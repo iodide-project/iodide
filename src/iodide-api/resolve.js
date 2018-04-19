@@ -15,7 +15,6 @@ export const waitForExplicitResolution = () => new Promise((resolve) => {
   // poll for resolution, given there is no way to do this strictly w/ Promises
   const interval = setInterval(() => {
     if (explicitResolutionStatus() === 'resolved') {
-      console.log('Now it is time to move on.')
       setExplicitResolutionStatus(undefined)
       resolve()
       clearInterval(interval)
