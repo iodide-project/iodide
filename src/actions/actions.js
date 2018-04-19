@@ -344,7 +344,6 @@ export function evaluateCell(cellId) {
     }
     if (cell.cellType === 'code') {
       evaluationQueue = evaluationQueue
-        .then(() => { console.log('evaluating a new cell') })
         .then(() => dispatch(evaluateCodeCell(cell)))
       evaluation = evaluationQueue
     } else if (cell.cellType === 'markdown') {
