@@ -1,34 +1,34 @@
-import { getExplicitResolutionStatus,
-  setExplicitResolutionStatus,
-  waitForExplicitResolutionOrContinue,
+import { getExplicitContinuationStatus,
+  setExplicitContinuationStatus,
+  waitForExplicitContinuationStatusResolution,
   flow,
 } from '../flow'
 
 
 describe('setExplicitResolutionStatus accepts the right arguments', () => {
   it('accepts PENDING, RESOLVED, and null', () => {
-    expect(() => setExplicitResolutionStatus('PENDING')).not.toThrow()
-    expect(() => setExplicitResolutionStatus('RESOLVED')).not.toThrow()
-    expect(() => setExplicitResolutionStatus(null)).not.toThrow()
-    expect(() => setExplicitResolutionStatus()).toThrow()
-    expect(() => setExplicitResolutionStatus('some other string')).toThrow()
+    expect(() => setExplicitContinuationStatus('PENDING')).not.toThrow()
+    expect(() => setExplicitContinuationStatus('RESOLVED')).not.toThrow()
+    expect(() => setExplicitContinuationStatus(null)).not.toThrow()
+    expect(() => setExplicitContinuationStatus()).toThrow()
+    expect(() => setExplicitContinuationStatus('some other string')).toThrow()
   })
   it('correctly sets the flag', () => {
-    setExplicitResolutionStatus('PENDING')
-    expect(getExplicitResolutionStatus()).toBe('PENDING')
-    setExplicitResolutionStatus('RESOLVED')
-    expect(getExplicitResolutionStatus()).toBe('RESOLVED')
-    setExplicitResolutionStatus(null)
-    expect(getExplicitResolutionStatus()).toBe(null)
+    setExplicitContinuationStatus('PENDING')
+    expect(getExplicitContinuationStatus()).toBe('PENDING')
+    setExplicitContinuationStatus('RESOLVED')
+    expect(getExplicitContinuationStatus()).toBe('RESOLVED')
+    setExplicitContinuationStatus(null)
+    expect(getExplicitContinuationStatus()).toBe(null)
   })
 })
 
 describe('user-facing api', () => {
   it('has api properly setting internal value', () => {
     flow.requireExplicitContinuation()
-    expect(getExplicitResolutionStatus()).toBe('PENDING')
+    expect(getExplicitContinuationStatus()).toBe('PENDING')
     flow.continue()
-    expect(getExplicitResolutionStatus()).toBe('RESOLVED')
+    expect(getExplicitContinuationStatus()).toBe('RESOLVED')
   })
 })
 
@@ -37,10 +37,10 @@ describe('waitForExplicitResolutionOrContinue', () => {
     jest.useFakeTimers()
     jest.runAllTimers();
     Promise.resolve()
-      .then(() => { flow.requireExplicitContinuation(); console.log(getExplicitResolutionStatus()) })
-      .then(waitForExplicitResolutionOrContinue)
+      .then(() => { flow.requireExplicitContinuation() })
+      .then(waitForExplicitContinuationStatusResolution)
       .then(() => {
-        expect(getExplicitResolutionStatus()).toBe(null)
+        expect(getExplicitContinuationStatus()).toBe(null)
       })
     flow.continue()
   })

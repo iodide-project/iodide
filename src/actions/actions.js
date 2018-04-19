@@ -9,8 +9,8 @@ import {
 } from '../reducers/cell-reducer-utils'
 
 import {
-  waitForExplicitResolutionOrContinue,
-  getExplicitResolutionStatus,
+  waitForExplicitContinuationStatusResolution,
+  getExplicitContinuationStatus,
 } from '../iodide-api/flow'
 
 import { addLanguageKeybinding } from '../keybindings'
@@ -165,7 +165,7 @@ function evaluateCodeCell(cell) {
     const { evaluator } = state.languages[cell.language]
     try {
       output = window[languageModule][evaluator](code)
-      evalStatus = getExplicitResolutionStatus() === 'PENDING' ? 'ASYNC_PENDING' : 'SUCCESS'
+      evalStatus = getExplicitContinuationStatus() === 'PENDING' ? 'ASYNC_PENDING' : 'SUCCESS'
     } catch (e) {
       output = e
       evalStatus = 'ERROR'
@@ -199,7 +199,7 @@ function evaluateCodeCell(cell) {
 
     const evaluation = Promise.resolve()
       .then(updateCellAfterEvaluation)
-      .then(waitForExplicitResolutionOrContinue)
+      .then(waitForExplicitContinuationStatusResolution)
       .then(() => updateAsyncCellToNewEvalStatus('SUCCESS'))
     return evaluation
   }
