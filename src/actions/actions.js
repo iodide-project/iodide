@@ -8,7 +8,7 @@ import {
   getSelectedCell,
 } from '../reducers/cell-reducer-utils'
 
-import { waitForExplicitResolution, explicitResolutionStatus } from '../iodide-api/resolve'
+import { waitForExplicitResolutionOrContinue } from '../iodide-api/resolve'
 import { addLanguageKeybinding } from '../keybindings'
 
 let evaluationQueue = Promise.resolve()
@@ -166,7 +166,7 @@ function evaluateCodeCell(cell) {
       output = e
       evalStatus = 'error'
     }
-    const afterEvaluation = () => {
+    const updateCellAfterEvaluation = () => {
       dispatch(updateCellProperties(
         cell.id,
         {
@@ -180,9 +180,8 @@ function evaluateCodeCell(cell) {
       dispatch(updateUserVariables())
     }
     const evaluation = Promise.resolve()
-      .then(() => afterEvaluation())
-      .then(() => (explicitResolutionStatus() === 'pending' ?
-        waitForExplicitResolution() : Promise.resolve()))
+      .then(updateCellAfterEvaluation)
+      .then(waitForExplicitResolutionOrContinue)
     return evaluation
   }
 }
@@ -342,6 +341,7 @@ export function evaluateCell(cellId) {
     } else {
       cell = getCellById(getState().cells, cellId)
     }
+    // here is where we should mark a cell as PENDING.
     if (cell.cellType === 'code') {
       evaluationQueue = evaluationQueue
         .then(() => dispatch(evaluateCodeCell(cell)))
