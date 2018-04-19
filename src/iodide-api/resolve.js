@@ -1,23 +1,40 @@
 
-window.iodideRequireExplicitResolution = false
-window.iodideRequireExplicitResolutionStatus = undefined
+let explicitResolutionStatusFlag
 
-const expectResolution = () => {
-  window.iodideRequireExplicitResolution = true
-  window.iodideRequireExplicitResolutionStatus = 'pending'
-  window.iodideExplicitResolver = new Promise((resolve) => {
-    // poll for resolution, given there is no way to do this strictly w/ Promises
-    const interval = setInterval(() => {
-      if (window.iodideRequireExplicitResolutionStatus === 'resolved') {
-        resolve()
-        clearInterval(interval)
-      }
-    }, 100)
-  })
+export const explicitResolutionStatus = () => explicitResolutionStatusFlag
+
+export const setExplicitResolutionStatus = (val) => {
+  const admissibleValues = new Set(['pending', 'resolved', undefined])
+  if (admissibleValues.has(val)) explicitResolutionStatusFlag = val
+  else {
+    throw Error(`setExplicitResolutionStatus requires one of three flags: ${admissibleValues.join(', ')}`)
+  }
 }
 
-const resolve = () => { console.log('RESOLUTION TIME'); window.iodideRequireExplicitResolutionStatus = 'resolved' }
+export const waitForExplicitResolution = () => new Promise((resolve) => {
+  // poll for resolution, given there is no way to do this strictly w/ Promises
+  const interval = setInterval(() => {
+    if (explicitResolutionStatus() === 'resolved') {
+      console.log('Now it is time to move on.')
+      setExplicitResolutionStatus(undefined)
+      resolve()
+      clearInterval(interval)
+    }
+  }, 50)
+})
 
-export {
-  expectResolution, resolve,
+export const expectResolution = () => {
+  explicitResolutionStatusFlag = 'pending'
+  // explicitResolver = new Promise((resolve) => {
+  //   // poll for resolution, given there is no way to do this strictly w/ Promises
+  //   const interval = setInterval(() => {
+  //     if (explicitResolutionStatusFlag === 'resolved') {
+  //       resolve()
+  //       clearInterval(interval)
+  //     }
+  //   }, 50)
+  // })
 }
+
+export const resolve = () => { explicitResolutionStatusFlag = 'resolved' }
+

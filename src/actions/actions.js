@@ -7,13 +7,16 @@ import {
   addExternalDependency,
   getSelectedCell,
 } from '../reducers/cell-reducer-utils'
+
+import { waitForExplicitResolution, explicitResolutionStatus } from '../iodide-api/resolve'
 import { addLanguageKeybinding } from '../keybindings'
 
-const MD = MarkdownIt({ html: true }) // eslint-disable-line
+let evaluationQueue = Promise.resolve()
+
+const MD = MarkdownIt({ html: true })
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const CodeMirror = require('codemirror') // eslint-disable-line
-let evaluationQueue = Promise.resolve()
 
 export function updateAppMessages(message) {
   return {
@@ -176,10 +179,11 @@ function evaluateCodeCell(cell) {
       dispatch(appendToEvalHistory(cell.id, cell.content))
       dispatch(updateUserVariables())
     }
-    const resolver = Promise.resolve().then(() => afterEvaluation())
-    return window.iodideRequireExplicitResolution ?
-      resolver.then(() => window.iodideExplicitResolver) :
-      resolver
+    const evaluation = Promise.resolve()
+      .then(() => afterEvaluation())
+      .then(() => (explicitResolutionStatus() === 'pending' ?
+        waitForExplicitResolution() : () => { console.log('we are doing it anyway'); return Promise.resolve() }))
+    return evaluation
   }
 }
 
@@ -340,6 +344,7 @@ export function evaluateCell(cellId) {
     }
     if (cell.cellType === 'code') {
       evaluationQueue = evaluationQueue
+        .then(() => { console.log('evaluating a new cell') })
         .then(() => dispatch(evaluateCodeCell(cell)))
       evaluation = evaluationQueue
     } else if (cell.cellType === 'markdown') {
@@ -350,8 +355,7 @@ export function evaluateCell(cellId) {
       evaluation = dispatch(evaluateCSSCell(cell))
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
-        evaluationQueue = evaluationQueue
-          .then(() => dispatch(evaluateLanguagePluginCell(cell)))
+        evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
         evaluation = evaluationQueue
       } else {
         evaluation = dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
