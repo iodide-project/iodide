@@ -8,7 +8,11 @@ import {
   getSelectedCell,
 } from '../reducers/cell-reducer-utils'
 
-import { waitForExplicitResolutionOrContinue } from '../iodide-api/resolve'
+import {
+  waitForExplicitResolutionOrContinue,
+  getExplicitResolutionStatus,
+} from '../iodide-api/flow'
+
 import { addLanguageKeybinding } from '../keybindings'
 
 let evaluationQueue = Promise.resolve()
@@ -161,10 +165,10 @@ function evaluateCodeCell(cell) {
     const { evaluator } = state.languages[cell.language]
     try {
       output = window[languageModule][evaluator](code)
-      evalStatus = 'success'
+      evalStatus = getExplicitResolutionStatus() === 'PENDING' ? 'ASYNC_PENDING' : 'SUCCESS'
     } catch (e) {
       output = e
-      evalStatus = 'error'
+      evalStatus = 'ERROR'
     }
     const updateCellAfterEvaluation = () => {
       dispatch(updateCellProperties(
@@ -179,9 +183,24 @@ function evaluateCodeCell(cell) {
       dispatch(appendToEvalHistory(cell.id, cell.content))
       dispatch(updateUserVariables())
     }
+
+    const updateAsyncCellToNewEvalStatus = (status) => {
+      if (evalStatus === 'ASYNC_PENDING') {
+        dispatch(updateCellProperties(
+          cell.id,
+          {
+            value: output,
+            rendered: true,
+            evalStatus: status,
+          },
+        ))
+      }
+    }
+
     const evaluation = Promise.resolve()
       .then(updateCellAfterEvaluation)
       .then(waitForExplicitResolutionOrContinue)
+      .then(() => updateAsyncCellToNewEvalStatus('SUCCESS'))
     return evaluation
   }
 }
@@ -192,7 +211,7 @@ function evaluateMarkdownCell(cell) {
     {
       value: MD.render(cell.content),
       rendered: true,
-      evalStatus: 'success',
+      evalStatus: 'SUCCESS',
     },
   ))
 }
@@ -210,7 +229,7 @@ function evaluateResourceCell(cell) {
         externalDependencies.push(d.src)
       }
     })
-    const evalStatus = newValues.map(d => d.status).includes('error') ? 'error' : 'success'
+    const evalStatus = newValues.map(d => d.status).includes('error') ? 'ERROR' : 'SUCCESS'
     dispatch(updateCellProperties(
       cell.id,
       {
@@ -237,7 +256,7 @@ function evaluateCSSCell(cell) {
       {
         value: cell.content,
         rendered: true,
-        evalStatus: 'success',
+        evalStatus: 'SUCCESS',
       },
     ))
   }
@@ -261,12 +280,12 @@ function evaluateLanguagePluginCell(cell) {
       pluginData = JSON.parse(cell.content)
     } catch (err) {
       value = `plugin definition failed to parse:\n${err.message}`
-      evalStatus = 'error'
+      evalStatus = 'ERROR'
     }
 
     if (pluginData.url === undefined) {
       value = 'plugin definition missing "url"'
-      evalStatus = 'error'
+      evalStatus = 'ERROR'
       dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
     } else {
       const {
@@ -281,7 +300,7 @@ function evaluateLanguagePluginCell(cell) {
           if (evt.total > 0) {
             value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
           }
-          evalStatus = 'EVAL_ACTIVE'
+          evalStatus = 'ASYNC_PENDING'
           dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
         })
 
@@ -300,7 +319,7 @@ function evaluateLanguagePluginCell(cell) {
 
           pr.then(() => {
             value = `${displayName} plugin ready`
-            evalStatus = 'success'
+            evalStatus = 'SUCCESS'
             dispatch(addLanguage(pluginData))
             // FIXME: adding the keybinding move to a reducer ideally, but since it mutates
             // a part of global state in a snowflake sideffect-ish way, and since it
@@ -318,7 +337,7 @@ function evaluateLanguagePluginCell(cell) {
 
         xhrObj.addEventListener('error', () => {
           value = `${displayName} plugin failed to load`
-          evalStatus = 'error'
+          evalStatus = 'ERROR'
           dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
           reject()
         })

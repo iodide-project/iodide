@@ -1,10 +1,10 @@
 
 let explicitResolutionStatusFlag
 
-export const explicitResolutionStatus = () => explicitResolutionStatusFlag
+export const getExplicitResolutionStatus = () => explicitResolutionStatusFlag
 
 export const setExplicitResolutionStatus = (val) => {
-  const admissibleValues = new Set(['pending', 'resolved', null])
+  const admissibleValues = new Set(['PENDING', 'RESOLVED', null])
   if (admissibleValues.has(val)) {
     explicitResolutionStatusFlag = val
   } else {
@@ -14,9 +14,9 @@ export const setExplicitResolutionStatus = (val) => {
 
 export const waitForExplicitResolutionOrContinue = () => new Promise((resolve) => {
   // poll for resolution, given there is no way to do this strictly w/ Promises
-  if (explicitResolutionStatus() === 'pending') {
+  if (getExplicitResolutionStatus() === 'PENDING') {
     const interval = setInterval(() => {
-      if (explicitResolutionStatus() === 'resolved') {
+      if (getExplicitResolutionStatus() === 'RESOLVED') {
         setExplicitResolutionStatus(null)
         resolve()
         clearInterval(interval)
@@ -30,6 +30,6 @@ export const waitForExplicitResolutionOrContinue = () => new Promise((resolve) =
 })
 
 export const flow = {
-  requireExplicitContinuation: () => { setExplicitResolutionStatus('pending') },
-  continue: () => { setExplicitResolutionStatus('resolved') },
+  requireExplicitContinuation: () => { setExplicitResolutionStatus('PENDING') },
+  continue: () => { setExplicitResolutionStatus('RESOLVED') },
 }

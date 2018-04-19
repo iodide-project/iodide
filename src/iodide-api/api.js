@@ -3,7 +3,7 @@
 
 import { addOutputHandler } from '../components/reps/value-renderer'
 import { environment } from './environment'
-import { flow } from './resolve'
+import { flow } from './flow'
 
 function getDataSync(url) {
   const re = new XMLHttpRequest()

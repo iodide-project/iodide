@@ -27,6 +27,7 @@ export const cellTypeEnum = new StringEnum(
 // const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'presentation'
 // const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
 
+export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
 
 const cellSchema = {
   type: 'object',
@@ -41,7 +42,10 @@ const cellSchema = {
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
     executionStatus: { type: 'string' },
-    evalStatus: {}, // FIXME change to string ONLY
+    evalStatus: {
+      type: 'string',
+      enum: cellEvalStatusEnum.values(),
+    }, // FIXME change to string ONLY
     rowSettings: { type: 'object' },
     language: { type: 'string' }, // '' in case not a code cell
     skipInRunAll: { type: 'boolean' },
