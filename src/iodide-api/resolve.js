@@ -22,18 +22,7 @@ export const waitForExplicitResolution = () => new Promise((resolve) => {
   }, 50)
 })
 
-export const expectResolution = () => {
-  explicitResolutionStatusFlag = 'pending'
-  // explicitResolver = new Promise((resolve) => {
-  //   // poll for resolution, given there is no way to do this strictly w/ Promises
-  //   const interval = setInterval(() => {
-  //     if (explicitResolutionStatusFlag === 'resolved') {
-  //       resolve()
-  //       clearInterval(interval)
-  //     }
-  //   }, 50)
-  // })
-}
+export const expectResolution = () => { setExplicitResolutionStatus('pending') }
 
-export const resolve = () => { explicitResolutionStatusFlag = 'resolved' }
+export const resolve = () => { setExplicitResolutionStatus('resolved') }
 
