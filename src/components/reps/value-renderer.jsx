@@ -22,7 +22,9 @@ export function renderValue(value, inContainer = false) {
       if (typeof resultElem === 'string') {
         return (<div>{ resultElem }</div>)
       } else if (resultElem.tagName !== undefined) {
-        // what is this even for?
+        // custom output handlers may return HTMLElements,
+        // so this checks for that, and if present dangerouslySetInnerHTML's it in
+        // a container.
         return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} /> // eslint-disable-line
       } else if (resultElem.type !== undefined) {
         return resultElem
