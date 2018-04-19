@@ -182,7 +182,7 @@ function evaluateCodeCell(cell) {
     const evaluation = Promise.resolve()
       .then(() => afterEvaluation())
       .then(() => (explicitResolutionStatus() === 'pending' ?
-        waitForExplicitResolution() : () => { console.log('we are doing it anyway'); return Promise.resolve() }))
+        waitForExplicitResolution() : Promise.resolve()))
     return evaluation
   }
 }
