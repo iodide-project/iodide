@@ -57,6 +57,7 @@ function clearUserDefinedVars(userDefinedVarNames) {
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
+initialVariables.add('CodeMirror')
 
 
 const notebookReducer = (state = newNotebook(), action) => {

@@ -3,7 +3,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import JSONTree from 'react-json-tree'
 
 import nullHandler from './null-handler'
 import undefinedHandler from './undefined-handler'
@@ -13,15 +12,19 @@ import arrayHandler from './array-handler'
 import dateHandler from './date-handler'
 import scalarHandler from './scalar-handler'
 import promiseHandler from './promise-handler'
+import domElementHandler from './dom-element-handler'
+import defaultHandler from './default-handler'
 
 export function renderValue(value, inContainer = false) {
   for (const handler of handlers) {
     if (handler.shouldHandle(value, inContainer)) {
       const resultElem = handler.render(value, inContainer)
-
       if (typeof resultElem === 'string') {
         return (<div>{ resultElem }</div>)
       } else if (resultElem.tagName !== undefined) {
+        // custom output handlers may return HTMLElements,
+        // so this checks for that, and if present dangerouslySetInnerHTML's it in
+        // a container.
         return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} /> // eslint-disable-line
       } else if (resultElem.type !== undefined) {
         return resultElem
@@ -46,37 +49,6 @@ const renderMethodHandler = {
   },
 }
 
-
-const defaultHandler = {
-  shouldHandle: () => true,
-  render: value => (
-    <JSONTree
-      data={value}
-      shouldExpandNode={() => false}
-      hideRoot={false}
-      theme={{
-        scheme: 'bright',
-        author: 'chris kempson (http://chriskempson.com)',
-        base00: '#000000',
-        base01: '#303030',
-        base02: '#505050',
-        base03: '#b0b0b0',
-        base04: '#d0d0d0',
-        base05: '#e0e0e0',
-        base06: '#f5f5f5',
-        base07: '#ffffff',
-        base08: '#fb0120',
-        base09: '#fc6d24',
-        base0A: '#fda331',
-        base0B: '#a1c659',
-        base0C: '#76c7b7',
-        base0D: '#6fb3d2',
-        base0E: '#d381c3',
-        base0F: '#be643c',
-      }}
-    />
-  ),
-}
 
 const errorHandler = {
   shouldHandle: value => value instanceof Error,
@@ -112,6 +84,7 @@ const handlers = [
   arrayHandler,
   dateHandler,
   scalarHandler,
+  domElementHandler,
   promiseHandler,
   defaultHandler,
 ]
