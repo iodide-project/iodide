@@ -84,7 +84,9 @@ tasks.moveCellDown = new UserTask({
   keybindings: ['shift+down'],
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
-  callback() { dispatcher.cellDown() },
+  callback() {
+    dispatcher.cellDown()
+  },
 })
 
 
