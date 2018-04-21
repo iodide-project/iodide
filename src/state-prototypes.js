@@ -97,6 +97,7 @@ const stateSchema = {
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
+    sidePaneWidth: { type: 'integer' },
     externalDependencies: { type: 'array' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
@@ -162,8 +163,8 @@ const pluginCellDefaultContent = `{
   "displayName": "",
   "codeMirrorMode": "",
   "keybinding": "",
-  "url": "", 
-  "module": "", 
+  "url": "",
+  "module": "",
   "evaluator": ""
 }`
 
@@ -205,6 +206,7 @@ function blankState() {
     mode: 'command', // command, edit
     viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
+    sidePaneWidth: 562,
     history: [],
     externalDependencies: [],
     executionNumber: 0,

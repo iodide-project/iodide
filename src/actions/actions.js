@@ -453,6 +453,13 @@ export function changeSidePaneMode(mode) {
   }
 }
 
+export function changeSidePaneWidth(widthShift) {
+  return {
+    type: 'CHANGE_SIDE_PANE_WIDTH',
+    widthShift,
+  }
+}
+
 export function setCellSkipInRunAll(value) {
   return (dispatch, getState) => {
     let setValue = value

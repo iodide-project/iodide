@@ -1,8 +1,8 @@
 .side-pane {
-  width:575px !important;
+  width:auto !important;
   top: 50px !important;
   border: none !important;
-  border-left: 2px solid lightgray !important;
+  border-left: none !important;
 }
 
 .pane-header {
@@ -10,6 +10,7 @@
     top: 0;
     z-index: 10;
     background: #fff;
+    padding-top: 1px;
 }
 
 .pane-title {
@@ -32,6 +33,12 @@
 
 .pane-title .menu-button:hover {
   outline: none;
+}
+
+.resizer {
+  background: #000;
+  z-index: 12;
+  width: 12px !important;
 }
 
 div.history-cells {
