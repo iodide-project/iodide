@@ -1,4 +1,5 @@
 import {
+  getRunningCellID,
   getRunningCellEvalStatus,
   setRunningCellEvalStatus,
   waitForExplicitContinuationStatusResolution,
@@ -8,6 +9,17 @@ import { store } from '../../store'
 import { temporarilySaveRunningCellID, newNotebook } from '../../actions/actions'
 
 jest.useFakeTimers()
+
+describe('getRunningCellID', () => {
+  beforeEach(() => {
+    store.dispatch(newNotebook())
+    store.dispatch(temporarilySaveRunningCellID(0))
+  })
+  it('properly retrieves the running cell ID', () => {
+    const id = getRunningCellID()
+    expect(id).toBe(0)
+  })
+})
 
 describe('flow API', () => {
   beforeEach(() => {
