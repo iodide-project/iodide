@@ -10,7 +10,6 @@ import {
 
 import {
   waitForExplicitContinuationStatusResolution,
-  getExplicitContinuationStatus,
 } from '../iodide-api/flow'
 
 import { addLanguageKeybinding } from '../keybindings'
@@ -21,6 +20,13 @@ const MD = MarkdownIt({ html: true })
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const CodeMirror = require('codemirror') // eslint-disable-line
+
+export function temporarilySaveRunningCellID(cellID) {
+  return {
+    type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',
+    cellID,
+  }
+}
 
 export function updateAppMessages(message) {
   return {
@@ -133,7 +139,7 @@ export function appendToEvalHistory(cellId, content) {
 
 // note: this function is NOT EXPORTED. It is a private function meant
 // to be wrapped by other actions that will configure and dispatch it.
-function updateCellProperties(cellId, updatedProperties) {
+export function updateCellProperties(cellId, updatedProperties) {
   return {
     type: 'UPDATE_CELL_PROPERTIES',
     cellId,
@@ -162,44 +168,39 @@ function evaluateCodeCell(cell) {
     const code = cell.content
     const languageModule = state.languages[cell.language].module
     const { evaluator } = state.languages[cell.language]
+    dispatch(temporarilySaveRunningCellID(cell.id))
     try {
       output = window[languageModule][evaluator](code)
-      evalStatus = getExplicitContinuationStatus() === 'PENDING' ? 'ASYNC_PENDING' : 'SUCCESS'
     } catch (e) {
       output = e
       evalStatus = 'ERROR'
     }
     const updateCellAfterEvaluation = () => {
-      dispatch(updateCellProperties(
-        cell.id,
-        {
-          value: output,
-          rendered: true,
-          evalStatus,
-        },
-      ))
+      const cellProperties = { value: output, rendered: true }
+      if (evalStatus === 'ERROR') cellProperties.evalStatus = evalStatus
+      dispatch(updateCellProperties(cell.id, cellProperties))
       dispatch(incrementExecutionNumber())
       dispatch(appendToEvalHistory(cell.id, cell.content))
       dispatch(updateUserVariables())
     }
 
-    const updateAsyncCellToNewEvalStatus = (status) => {
-      if (evalStatus === 'ASYNC_PENDING') {
-        dispatch(updateCellProperties(
-          cell.id,
-          {
-            value: output,
-            rendered: true,
-            evalStatus: status,
-          },
-        ))
-      }
-    }
+    // const updateAsyncCellToNewEvalStatus = (status) => {
+    //   if (evalStatus === 'ASYNC_PENDING') {
+    //     dispatch(updateCellProperties(
+    //       cell.id,
+    //       {
+    //         value: output,
+    //         rendered: true,
+    //         evalStatus: status,
+    //       },
+    //     ))
+    //   }
+    // }
 
     const evaluation = Promise.resolve()
       .then(updateCellAfterEvaluation)
       .then(waitForExplicitContinuationStatusResolution)
-      .then(() => updateAsyncCellToNewEvalStatus('SUCCESS'))
+      .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
     return evaluation
   }
 }

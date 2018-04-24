@@ -124,6 +124,7 @@ const stateSchema = {
       type: 'object',
       additionalProperties: environmentVariableSchema,
     },
+    runningCellID: { type: 'integer' },
   },
   additionalProperties: false,
 }
@@ -192,7 +193,7 @@ function newCell(cellId, cellType, language = 'js') {
     rendered: false,
     selected: false,
     executionStatus: ' ',
-    evalStatus: undefined,
+    evalStatus: 'UNEVALUATED',
     rowSettings: newCellRowSettings(cellType),
     skipInRunAll: false,
     language, // default language is js, but it only matters the cell is a code cell
@@ -228,6 +229,7 @@ function blankState() {
     autoSave: undefined,
     locallySaved: [],
     savedEnvironment: {},
+    runningCellID: undefined,
   }
   return initialState
 }

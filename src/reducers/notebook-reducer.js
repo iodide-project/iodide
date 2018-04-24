@@ -204,6 +204,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { appMessages })
     }
 
+    case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
+      const { cellID } = action
+      return Object.assign({}, state, { runningCellID: cellID })
+    }
+
     case 'SAVE_ENVIRONMENT': {
       let newSavedEnvironment
       if (action.update) {

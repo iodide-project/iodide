@@ -1,47 +1,58 @@
-import { getExplicitContinuationStatus,
-  setExplicitContinuationStatus,
-  waitForExplicitContinuationStatusResolution,
+import {
+  // getEvalStatus,
+  setRunningCellEvalStatus,
+  // waitForExplicitContinuationStatusResolution,
   flow,
 } from '../flow'
+import { store } from '../../store'
+import { temporarilySaveRunningCellID, newNotebook } from '../../actions/actions'
 
-
-describe('setExplicitResolutionStatus accepts the right arguments', () => {
-  it('accepts PENDING, RESOLVED, and null', () => {
-    expect(() => setExplicitContinuationStatus('PENDING')).not.toThrow()
-    expect(() => setExplicitContinuationStatus('RESOLVED')).not.toThrow()
-    expect(() => setExplicitContinuationStatus(null)).not.toThrow()
-    expect(() => setExplicitContinuationStatus()).toThrow()
-    expect(() => setExplicitContinuationStatus('some other string')).toThrow()
+describe('flow API', () => {
+  beforeEach(() => {
+    store.dispatch(newNotebook())
+    store.dispatch(temporarilySaveRunningCellID(0))
   })
-  it('correctly sets the flag', () => {
-    setExplicitContinuationStatus('PENDING')
-    expect(getExplicitContinuationStatus()).toBe('PENDING')
-    setExplicitContinuationStatus('RESOLVED')
-    expect(getExplicitContinuationStatus()).toBe('RESOLVED')
-    setExplicitContinuationStatus(null)
-    expect(getExplicitContinuationStatus()).toBe(null)
-  })
-})
 
-describe('user-facing api', () => {
-  it('has api properly setting internal value', () => {
+  const runningEvalStatus = () => store.getState().cells[0].evalStatus
+  it('allows for explicit setting of cell continuation', () => {
     flow.requireExplicitContinuation()
-    expect(getExplicitContinuationStatus()).toBe('PENDING')
+    expect(runningEvalStatus()).toBe('ASYNC_PENDING')
     flow.continue()
-    expect(getExplicitContinuationStatus()).toBe('RESOLVED')
+    expect(runningEvalStatus()).toBe('SUCCESS')
+  })
+  it('accepts only valid setExplicitContinuationStatus arguments', () => {
+    expect(() => setRunningCellEvalStatus('whatever')).toThrow()
+    expect(() => setRunningCellEvalStatus()).toThrow()
+    expect(() => setRunningCellEvalStatus(1000)).toThrow()
+    expect(() => setRunningCellEvalStatus(new Date())).toThrow()
+    setRunningCellEvalStatus('ASYNC_PENDING')
+    expect(runningEvalStatus()).toBe('ASYNC_PENDING')
+    setRunningCellEvalStatus('SUCCESS')
+    expect(runningEvalStatus()).toBe('SUCCESS')
+    setRunningCellEvalStatus('ERROR')
+    expect(runningEvalStatus()).toBe('ERROR')
   })
 })
 
-describe('waitForExplicitResolutionOrContinue', () => {
-  it('correctly waits until resolution', () => {
-    jest.useFakeTimers()
-    jest.runAllTimers();
-    Promise.resolve()
-      .then(() => { flow.requireExplicitContinuation() })
-      .then(waitForExplicitContinuationStatusResolution)
-      .then(() => {
-        expect(getExplicitContinuationStatus()).toBe(null)
-      })
-    flow.continue()
-  })
-})
+// describe('user-facing api', () => {
+//   it('has api properly setting internal value', () => {
+//     flow.requireExplicitContinuation()
+//     expect(getExplicitContinuationStatus()).toBe('PENDING')
+//     flow.continue()
+//     expect(getExplicitContinuationStatus()).toBe('RESOLVED')
+//   })
+// })
+
+// describe('waitForExplicitResolutionOrContinue', () => {
+//   it('correctly waits until resolution', () => {
+//     jest.useFakeTimers()
+//     jest.runAllTimers();
+//     Promise.resolve()
+//       .then(() => { flow.requireExplicitContinuation() })
+//       .then(waitForExplicitContinuationStatusResolution)
+//       .then(() => {
+//         expect(getExplicitContinuationStatus()).toBe(null)
+//       })
+//     flow.continue()
+//   })
+// })

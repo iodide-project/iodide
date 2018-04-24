@@ -1,35 +1,40 @@
+import { store } from '../store'
+import { updateCellProperties } from '../actions/actions'
+import { getCellById } from '../tools/notebook-utils'
 
-let explicitResolutionStatusFlag
+export const getRunningCellID = () => store.getState().runningCellID
 
-export const getExplicitContinuationStatus = () => explicitResolutionStatusFlag
-
-export const setExplicitContinuationStatus = (val) => {
-  const admissibleValues = new Set(['PENDING', 'RESOLVED', null])
-  if (admissibleValues.has(val)) {
-    explicitResolutionStatusFlag = val
-  } else {
-    throw new Error(`setExplicitResolutionStatus requires one of three flags: ${admissibleValues.join(', ')}`)
+export const getRunningCellEvalStatus = () => {
+  const cellId = getRunningCellID()
+  const cell = getCellById(store.getState().cells, cellId)
+  if (cell !== undefined) {
+    return cell.evalStatus
   }
+  return undefined
+}
+
+export const setRunningCellEvalStatus = (evalStatus) => {
+  if (evalStatus === undefined) throw new Error('status must be defined')
+  const cellId = getRunningCellID()
+  store.dispatch(updateCellProperties(cellId, {
+    evalStatus,
+  }))
 }
 
 export const waitForExplicitContinuationStatusResolution = () => new Promise((resolve) => {
-  // poll for resolution, given there is no way to do this strictly w/ Promises
-  if (getExplicitContinuationStatus() === 'PENDING') {
+  if (getRunningCellEvalStatus() === 'ASYNC_PENDING') {
     const interval = setInterval(() => {
-      if (getExplicitContinuationStatus() === 'RESOLVED') {
-        setExplicitContinuationStatus(null)
+      if (getRunningCellEvalStatus() === 'SUCCESS') {
         resolve()
         clearInterval(interval)
       }
     }, 50)
   } else {
-    // continue
-    setExplicitContinuationStatus(null)
     resolve()
   }
 })
 
 export const flow = {
-  requireExplicitContinuation: () => { setExplicitContinuationStatus('PENDING') },
-  continue: () => { setExplicitContinuationStatus('RESOLVED') },
+  requireExplicitContinuation: () => { setRunningCellEvalStatus('ASYNC_PENDING') },
+  continue: () => { setRunningCellEvalStatus('SUCCESS') },
 }
