@@ -2,15 +2,12 @@
 [![Join the chat at https://gitter.im/iodide-project/iodide](https://badges.gitter.im/iodide-project/iodide.svg)](https://gitter.im/iodide-project/iodide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # The Iodide notebook
-### _"View source" for science_
 
-_Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)!_
-
-([More examples](https://github.com/iodide-project/iodide-examples))
+_Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)! ([More examples](https://github.com/iodide-project/iodide-examples))_
 
 ### Please note: Iodide is in early alpha, and still subject to breakage, changes, and overhauls
 
-
+### _View source_ for science
 Today, sharing scientific results is easier than ever. You can email a PDF, write up a Google doc, or post to your blog. You can embed plots, data tables, and even interactive visualizations. But what if you want people to be able to replicate and extend your results -- to take your results and “view source” to see how you arrived at your conclusions? Or even hack and remix them to ask their own questions?
 
 To do that now, you typically have a couple options. You could send your code along side your nice, clean PDF or HTML export, allowing you fine-grained control over your presentation, but requiring you to separate your presentable results from your code and to manage multiple files. Alternatively, you could share you results and code bundled together in a notebook format that mixes code with write-up; this has the advantage of keeping your code and results closely tied together, but the presentation can get a bit unwieldy, especially if you want to share your results with a less technical audience. And in either case, sharing your code will only allow your collaborators to replicate and extend your results if they are first able to replicate your whole setup -- if they can run your code with the same libraries, the same data, and the server access.
