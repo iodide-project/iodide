@@ -3,12 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Button from 'material-ui/Button'
 import SnackBar from 'material-ui/Snackbar'
-
-const action = (
-  <Button color="secondary" size="small">
-    More
-  </Button>
-);
+import tasks from '../../actions/task-definitions'
 
 export class appMessagesUnconnected extends React.Component {
   static propTypes = {
@@ -34,6 +29,12 @@ export class appMessagesUnconnected extends React.Component {
     this.setState({ open: false });
   }
 
+  handleMore = () => {
+    console.log('all right!')
+    this.setState({ open: false })
+    tasks.toggleAppInfoPane.callback()
+  }
+
   render() {
     return (
       <SnackBar
@@ -44,7 +45,11 @@ export class appMessagesUnconnected extends React.Component {
           }}
         autoHideDuration={5000}
         message={<span id="message-id">{this.state.latestMessage}</span>}
-        action={action}
+        action={
+          <Button onClick={this.handleMore} color="secondary" size="small">
+              More
+          </Button>
+      }
       />
     )
   }

@@ -374,6 +374,7 @@ export function evaluateAllCells(cells) {
         p = p.then(() => dispatch(evaluateCell(cell.id)))
       }
     })
+    p = p.then(() => dispatch(updateAppMessages(`gonna run all cells. ${(new Date()).toString()}`)))
   }
 }
 
