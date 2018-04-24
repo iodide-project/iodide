@@ -20,7 +20,6 @@ const createValidatedReducer =
       const futureState = reducer(state, action)
 
       if (!validate(futureState)) {
-        console.warn(validate.errors)
         throw new SchemaValidationError(ajv.errorsText(validate.errors, { verbose: true }))
       }
 

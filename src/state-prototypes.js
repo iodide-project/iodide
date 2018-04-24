@@ -27,6 +27,7 @@ export const cellTypeEnum = new StringEnum(
 // const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'presentation'
 // const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
 
+export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
 
 const cellSchema = {
   type: 'object',
@@ -41,7 +42,10 @@ const cellSchema = {
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
     executionStatus: { type: 'string' },
-    evalStatus: {}, // FIXME change to string ONLY
+    evalStatus: {
+      type: 'string',
+      enum: cellEvalStatusEnum.values(),
+    },
     rowSettings: { type: 'object' },
     language: { type: 'string' }, // '' in case not a code cell
     skipInRunAll: { type: 'boolean' },
@@ -120,6 +124,7 @@ const stateSchema = {
       type: 'object',
       additionalProperties: environmentVariableSchema,
     },
+    runningCellID: { type: 'integer' },
   },
   additionalProperties: false,
 }
@@ -188,7 +193,7 @@ function newCell(cellId, cellType, language = 'js') {
     rendered: false,
     selected: false,
     executionStatus: ' ',
-    evalStatus: undefined,
+    evalStatus: 'UNEVALUATED',
     rowSettings: newCellRowSettings(cellType),
     skipInRunAll: false,
     language, // default language is js, but it only matters the cell is a code cell
@@ -224,6 +229,7 @@ function blankState() {
     autoSave: undefined,
     locallySaved: [],
     savedEnvironment: {},
+    runningCellID: undefined,
   }
   return initialState
 }

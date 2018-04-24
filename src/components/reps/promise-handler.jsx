@@ -12,14 +12,16 @@ export class PromiseRep extends React.Component {
     }
     this.state.promise = this.props.promise.then(
       (val) => {
-        this.setState({ status: 'resolved', value: val })
+        this.setState({ status: 'fulfilled', value: val })
         return val
       },
       (val) => {
         this.setState({ status: 'rejected', value: val })
         return val
       },
-    )
+    ).catch((e) => {
+      this.setState({ status: 'rejected', value: e })
+    })
     const runTimer = setInterval(() => {
       if (this.state.status === 'pending') {
         this.setState({ runTime: this.state.runTime + 1 })
@@ -33,7 +35,7 @@ export class PromiseRep extends React.Component {
     const { value, status, runTime } = this.state
     let outputValue
     let statusDisplay = status
-    if (status === 'resolved' || status === 'rejected') {
+    if (status === 'fulfilled' || status === 'rejected') {
       outputValue = <div className="promise-handler-value">{renderValue(value)}</div>
     } else if (status === 'pending') {
       statusDisplay = `pending (${runTime} sec)`
