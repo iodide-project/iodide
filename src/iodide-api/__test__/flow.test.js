@@ -1,11 +1,13 @@
 import {
-  // getEvalStatus,
+  getRunningCellEvalStatus,
   setRunningCellEvalStatus,
-  // waitForExplicitContinuationStatusResolution,
+  waitForExplicitContinuationStatusResolution,
   flow,
 } from '../flow'
 import { store } from '../../store'
 import { temporarilySaveRunningCellID, newNotebook } from '../../actions/actions'
+
+jest.useFakeTimers()
 
 describe('flow API', () => {
   beforeEach(() => {
@@ -32,27 +34,28 @@ describe('flow API', () => {
     setRunningCellEvalStatus('ERROR')
     expect(runningEvalStatus()).toBe('ERROR')
   })
+
+  it('correctly waits until waitForExplicitContinuationStatusResolution has resolved (async)', () => {
+    flow.requireExplicitContinuation()
+    waitForExplicitContinuationStatusResolution()
+      .then(() => {
+        expect(getRunningCellEvalStatus()).toBe('SUCCESS')
+      })
+      .catch((err) => { throw new Error(err) })
+    expect(setInterval).toHaveBeenCalledTimes(1)
+    flow.continue()
+
+    jest.runAllTimers()
+  })
+
+  it('correctly waits until waitForExplicitContinuationStatusResolution has resolved (sync)', () => {
+    waitForExplicitContinuationStatusResolution()
+      .then(() => {
+        expect(getRunningCellEvalStatus()).toBe('UNEVALUATED')
+      })
+      .catch((err) => { throw new Error(err) })
+    expect(setInterval).toHaveBeenCalledTimes(1)
+
+    jest.runAllTimers()
+  })
 })
-
-// describe('user-facing api', () => {
-//   it('has api properly setting internal value', () => {
-//     flow.requireExplicitContinuation()
-//     expect(getExplicitContinuationStatus()).toBe('PENDING')
-//     flow.continue()
-//     expect(getExplicitContinuationStatus()).toBe('RESOLVED')
-//   })
-// })
-
-// describe('waitForExplicitResolutionOrContinue', () => {
-//   it('correctly waits until resolution', () => {
-//     jest.useFakeTimers()
-//     jest.runAllTimers();
-//     Promise.resolve()
-//       .then(() => { flow.requireExplicitContinuation() })
-//       .then(waitForExplicitContinuationStatusResolution)
-//       .then(() => {
-//         expect(getExplicitContinuationStatus()).toBe(null)
-//       })
-//     flow.continue()
-//   })
-// })

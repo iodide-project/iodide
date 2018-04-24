@@ -184,19 +184,6 @@ function evaluateCodeCell(cell) {
       dispatch(updateUserVariables())
     }
 
-    // const updateAsyncCellToNewEvalStatus = (status) => {
-    //   if (evalStatus === 'ASYNC_PENDING') {
-    //     dispatch(updateCellProperties(
-    //       cell.id,
-    //       {
-    //         value: output,
-    //         rendered: true,
-    //         evalStatus: status,
-    //       },
-    //     ))
-    //   }
-    // }
-
     const evaluation = Promise.resolve()
       .then(updateCellAfterEvaluation)
       .then(waitForExplicitContinuationStatusResolution)
