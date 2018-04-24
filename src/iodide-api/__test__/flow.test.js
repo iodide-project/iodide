@@ -48,6 +48,7 @@ describe('flow API', () => {
   })
 
   it('correctly waits until waitForExplicitContinuationStatusResolution has resolved (async)', () => {
+    jest.clearAllTimers()
     flow.requireExplicitContinuation()
     waitForExplicitContinuationStatusResolution()
       .then(() => {
@@ -61,13 +62,14 @@ describe('flow API', () => {
   })
 
   it('correctly waits until waitForExplicitContinuationStatusResolution has resolved (sync)', () => {
+    jest.clearAllTimers()
     waitForExplicitContinuationStatusResolution()
       .then(() => {
         expect(getRunningCellEvalStatus()).toBe('UNEVALUATED')
       })
       .catch((err) => { throw new Error(err) })
+    // setInterval was called once before - the test above this one.
     expect(setInterval).toHaveBeenCalledTimes(1)
-
     jest.runAllTimers()
   })
 })
