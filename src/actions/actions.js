@@ -156,7 +156,6 @@ export function updateUserVariables() {
 function evaluateCodeCell(cell) {
   return (dispatch, getState) => {
     // this variable may get changed in eval.
-    window.iodideRequireExplicitResolution = false
     const state = getState()
     let output
     let evalStatus
