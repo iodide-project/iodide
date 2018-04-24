@@ -45,7 +45,7 @@ const cellSchema = {
     evalStatus: {
       type: 'string',
       enum: cellEvalStatusEnum.values(),
-    }, // FIXME change to string ONLY
+    },
     rowSettings: { type: 'object' },
     language: { type: 'string' }, // '' in case not a code cell
     skipInRunAll: { type: 'boolean' },
