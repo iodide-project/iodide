@@ -34,7 +34,7 @@ export const waitForExplicitContinuationStatusResolution = () => new Promise((re
   }
 })
 
-export const flow = {
+export const evalQueue = {
   requireExplicitContinuation: () => { setRunningCellEvalStatus('ASYNC_PENDING') },
   continue: () => { setRunningCellEvalStatus('SUCCESS') },
 }

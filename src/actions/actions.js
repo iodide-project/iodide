@@ -10,7 +10,7 @@ import {
 
 import {
   waitForExplicitContinuationStatusResolution,
-} from '../iodide-api/flow'
+} from '../iodide-api/evalQueue'
 
 import { addLanguageKeybinding } from '../keybindings'
 

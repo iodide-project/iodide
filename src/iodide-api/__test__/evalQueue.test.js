@@ -3,8 +3,8 @@ import {
   getRunningCellEvalStatus,
   setRunningCellEvalStatus,
   waitForExplicitContinuationStatusResolution,
-  flow,
-} from '../flow'
+  evalQueue,
+} from '../evalQueue'
 import { store } from '../../store'
 import { temporarilySaveRunningCellID, newNotebook } from '../../actions/actions'
 
@@ -29,9 +29,9 @@ describe('flow API', () => {
 
   const runningEvalStatus = () => store.getState().cells[0].evalStatus
   it('allows for explicit setting of cell continuation', () => {
-    flow.requireExplicitContinuation()
+    evalQueue.requireExplicitContinuation()
     expect(runningEvalStatus()).toBe('ASYNC_PENDING')
-    flow.continue()
+    evalQueue.continue()
     expect(runningEvalStatus()).toBe('SUCCESS')
   })
   it('accepts only valid setExplicitContinuationStatus arguments', () => {
@@ -49,14 +49,14 @@ describe('flow API', () => {
 
   it('correctly waits until waitForExplicitContinuationStatusResolution has resolved (async)', () => {
     jest.clearAllTimers()
-    flow.requireExplicitContinuation()
+    evalQueue.requireExplicitContinuation()
     waitForExplicitContinuationStatusResolution()
       .then(() => {
         expect(getRunningCellEvalStatus()).toBe('SUCCESS')
       })
       .catch((err) => { throw new Error(err) })
     expect(setInterval).toHaveBeenCalledTimes(1)
-    flow.continue()
+    evalQueue.continue()
 
     jest.runAllTimers()
   })
