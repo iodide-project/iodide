@@ -10,7 +10,7 @@ export class PromiseRep extends React.Component {
       value: undefined,
       runTime: 0,
     }
-    this.state.promise = this.props.promise.then(
+    this.state.promise = props.promise.then(
       (val) => {
         this.setState({ status: 'fulfilled', value: val })
         return val
@@ -57,19 +57,18 @@ export class PromiseRep extends React.Component {
 }
 
 export default {
-  // based off of https://stackoverflow.com/questions/27746304/how-do-i-tell-if-an-object-is-a-promise
-  // It is unfortunate that this seems to be the main perspective for how to determine if
-  // something is Promise-ful. Ideally we would check only for native Promises,
-  // but at this point I don't know if others use Promise-based libraries.
-
-  // EDIT: for now, let's check ONLY for native promises.
-  // shouldHandle: val => typeof val === 'object' && typeof val.then === 'function',
   shouldHandle: value => Object.prototype.toString.call(value) === '[object Promise]',
 
-  // render is going to need to be more involved.
-  render: value => (
-    <div>
-      <PromiseRep promise={value} />
-    </div>
-  ),
+  render: (value) => {
+    /* because there is nothing within the Promise that we can use to check to
+     see if we should update, I propose that every time we have render called here,
+     we simply put in a key that forces an update. This should only happen when
+     we have  return value, at any rate. */
+    const promiseRep = <PromiseRep promise={value} key={new Date().toString()} />
+    return (
+      <div>
+        {promiseRep}
+      </div>
+    )
+  },
 }
