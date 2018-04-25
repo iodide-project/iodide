@@ -60,8 +60,10 @@ export default {
   shouldHandle: value => Object.prototype.toString.call(value) === '[object Promise]',
 
   render: (value) => {
-    // because there is nothing within the Promise that suggests ownership, I propose that
-    // every time we have render called here, we simply put in a key that forces an update.
+    /* because there is nothing within the Promise that we can use to check to
+     see if we should update, I propose that every time we have render called here,
+     we simply put in a key that forces an update. This should only happen when
+     we have  return value, at any rate. */
     const promiseRep = <PromiseRep promise={value} key={new Date().toString()} />
     return (
       <div>
