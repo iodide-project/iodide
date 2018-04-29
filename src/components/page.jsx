@@ -46,10 +46,19 @@ class Page extends React.Component {
       }
       this.props.actions.saveNotebook(true)
     }, 1000 * 60)
+
+    this.getPageWidth = this.getPageWidth.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
+  }
+
+  getPageWidth() {
+    let width = '100%'
+    if (this.props.viewMode === 'presentation') width = 'unset'
+    else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`
+    return { width }
   }
 
   render() {
@@ -85,9 +94,7 @@ class Page extends React.Component {
         <div
           id="cells"
           className={this.props.viewMode}
-          style={{
-            width: this.props.sidePane ? `calc(100% - ${this.props.sidePaneWidth + 17}px)` : '100%',
-          }}
+          style={this.getPageWidth()}
         >
           {bodyContent}
         </div>

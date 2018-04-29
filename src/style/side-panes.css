@@ -2,7 +2,7 @@
   width:auto !important;
   top: 50px !important;
   border: none !important;
-  border-left: none !important;
+  border-left: 2px solid lightgray !important;
 }
 
 .pane-header {
@@ -33,12 +33,6 @@
 
 .pane-title .menu-button:hover {
   outline: none;
-}
-
-.resizer {
-  background: #000;
-  z-index: 12;
-  width: 12px !important;
 }
 
 div.history-cells {
@@ -84,7 +78,7 @@ div.side-pane {
   border: 2px solid gray;
   border-right: none;
   width: 75%;
-  overflow: scroll;
+  overflow: auto;
   height: 100%;
   background-color: rgba(255, 255, 255);
 }

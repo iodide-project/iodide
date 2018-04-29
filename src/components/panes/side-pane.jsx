@@ -62,6 +62,7 @@ export class SidePaneUnconnected extends React.Component {
               onResizeStop={(e, direction, ref, d) => {
                 tasks.changeSidePaneWidth.callback(d.width)
               }}
+              style={{ overflow: 'scroll' }}
             >
               <div className="pane-header">
                 <div className="pane-title">
