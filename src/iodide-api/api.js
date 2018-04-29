@@ -1,7 +1,8 @@
 // The "Public API" for notebooks. This lets notebooks and third-party plugins
 // extend and manipulate the notebook
 
-import { addOutputHandler } from './components/reps/value-renderer'
+import { addOutputHandler } from '../components/reps/value-renderer'
+import { environment } from './environment'
 
 function getDataSync(url) {
   const re = new XMLHttpRequest()
@@ -13,6 +14,7 @@ function getDataSync(url) {
 export const iodide = {
   addOutputHandler,
   getDataSync,
+  environment,
 }
 
 export default iodide

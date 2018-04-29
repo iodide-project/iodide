@@ -1,7 +1,7 @@
 /* global it describe expect */
 import _ from 'lodash'
 
-import { stringifyStateToJsmd } from '../jsmd-tools'
+import { stringifyStateToJsmd, jsmdValidNotebookSettings } from '../jsmd-tools'
 import { newNotebook, addNewCellToState } from '../../state-prototypes'
 
 
@@ -134,7 +134,6 @@ describe('jsmd stringifier test case 5, non-default languages', () => {
 foo`
     expect(jsmd).toEqual(jsmdExpected)
   })
-
 //   it('non-js code cells should serialize to jsmd correctly', () => {
 //     _.set(state, 'cells[0].content', 'foo')
 
@@ -149,4 +148,29 @@ foo`
 // foo`
 //     expect(jsmd).toEqual(jsmdExpected)
 //   })
+})
+
+
+describe('jsmd stringifier: non-default meta setting jsmdValidNotebookSettings must serialize correctly', () => {
+  const state = newNotebook()
+  let metaToJsonify = {}
+  const nonDefaultVal = '___this weird string is not default___'
+  metaToJsonify = {}
+  jsmdValidNotebookSettings.forEach((k) => {
+    state[k] = nonDefaultVal
+    metaToJsonify[k] = nonDefaultVal
+  })
+  state.lastExport = lastExport
+  metaToJsonify.lastExport = lastExport
+
+  it('all non-default meta setting must serialize correctly', () => {
+    const expectedJson = JSON.stringify(metaToJsonify, undefined, 2)
+
+    const jsmd = stringifyStateToJsmd(state, lastExport)
+    const jsmdExpected = `%% meta
+${expectedJson}
+
+%% js`
+    expect(jsmd).toEqual(jsmdExpected)
+  })
 })

@@ -9,8 +9,6 @@ export class DeclaredVariable extends React.Component {
   }
   render() {
     const r = true
-    // console.log()
-    // console.log()
     return (
       <div className="declared-variable">
         <div className="declared-variable-name">{this.props.varName} = </div>

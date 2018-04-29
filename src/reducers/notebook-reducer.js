@@ -57,6 +57,7 @@ function clearUserDefinedVars(userDefinedVarNames) {
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
+initialVariables.add('CodeMirror')
 
 
 const notebookReducer = (state = newNotebook(), action) => {
@@ -206,6 +207,18 @@ const notebookReducer = (state = newNotebook(), action) => {
       const appMessages = state.appMessages.slice()
       appMessages.push(action.message)
       return Object.assign({}, state, { appMessages })
+    }
+
+    case 'SAVE_ENVIRONMENT': {
+      let newSavedEnvironment
+      if (action.update) {
+        newSavedEnvironment = Object
+          .assign({}, state.savedEnvironment, action.updateObj)
+      } else {
+        newSavedEnvironment = action.updateObj
+      }
+      // console.log('update?', action.update, 'obj:', newSavedEnvironment)
+      return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
     }
 
     case 'ADD_LANGUAGE': {

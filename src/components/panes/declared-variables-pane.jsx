@@ -8,6 +8,7 @@ import SidePane from './side-pane'
 import { DeclaredVariable } from './declared-variable'
 import tasks from '../../actions/task-definitions'
 
+
 export class DeclaredVariablesPaneUnconnected extends React.Component {
   static propTypes = {
     userDefinedVarNames: PropTypes.arrayOf(PropTypes.string),
@@ -21,7 +22,8 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
     return (
       <SidePane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
         <div className="declared-variables-list">
-          {this.props.userDefinedVarNames.map(varName =>
+          {this.props.userDefinedVarNames
+          .map(varName =>
             <DeclaredVariable varName={varName} key={varName} />)
           }
         </div>
