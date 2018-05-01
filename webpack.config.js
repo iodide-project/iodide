@@ -4,6 +4,7 @@ const CreateFileWebpack = require('create-file-webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const _ = require('lodash')
 const gitRev = require('git-rev-sync')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const htmlTemplate = require('./src/html-template.js')
 
@@ -28,7 +29,7 @@ const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
 
 const htmlTemplateCompiler = _.template(htmlTemplate)
-
+const plugins = []
 // const config
 module.exports = (env) => {
   if (env === 'prod') {
@@ -39,6 +40,7 @@ module.exports = (env) => {
       APP_PATH_STRING = 'https://iodide-project.github.io/dist/'
     }
     CSS_PATH_STRING = APP_PATH_STRING
+    plugins.push(new UglifyJSPlugin())
   } else if (env === 'dev') {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
     APP_VERSION_STRING = 'dev'
@@ -96,6 +98,7 @@ module.exports = (env) => {
     },
     watchOptions: { poll: true },
     plugins: [
+      ...plugins,
       new CreateFileWebpack({
         path: BUILD_DIR,
         fileName: `iodide.${APP_VERSION_STRING}.html`,
