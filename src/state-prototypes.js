@@ -39,6 +39,7 @@ const cellSchema = {
       enum: cellTypeEnum.values(),
     },
     value: {}, // empty schema, `value` can be anything
+    pinned: { type: 'boolean' },
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
     executionStatus: { type: 'string' },
@@ -190,6 +191,7 @@ function newCell(cellId, cellType, language = 'js') {
     id: cellId,
     cellType,
     value: undefined,
+    pinned: false,
     rendered: false,
     selected: false,
     executionStatus: ' ',
