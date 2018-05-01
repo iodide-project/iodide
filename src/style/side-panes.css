@@ -39,18 +39,28 @@ div.history-cells {
   padding-right: 20px;
 }
 
+div.history-cell {
+  width: inherit
+}
+
 div.history-cells .CodeMirror {
   height: auto;
 }
 
+div.history-cells div.cell-container {
+  padding-right:0px;
+}
+
 pre.history-item-code {
-  overflow:scroll;
+  overflow: scroll;
   padding:3px;
 }
 
-div.history-content {
-  outline: 1px solid lightgray;
 
+
+div.history-content {
+  outline: 1px solid #f1f1f1;
+  width: calc(100% - 1px)
 }
 
 div.history-date {

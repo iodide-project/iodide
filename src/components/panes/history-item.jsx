@@ -32,7 +32,7 @@ export default class HistoryItem extends React.Component {
         className={`cell-container ${this.props.display ? '' : 'hidden-cell'}`}
       >
         <div className="cell history-cell">
-          <div className="history-content">{mainElem}</div>
+          <div className="history-content editor">{mainElem}</div>
           <div className="history-date">{this.props.cell.lastRan.toUTCString()}</div>
         </div>
         <div className="cell-controls" />
