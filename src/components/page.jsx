@@ -56,7 +56,7 @@ class Page extends React.Component {
 
   getPageWidth() {
     let width = '100%'
-    if (this.props.viewMode === 'presentation') width = 'unset'
+    if (this.props.viewMode === 'presentation') width = 'undefined'
     else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`
     return { width }
   }
