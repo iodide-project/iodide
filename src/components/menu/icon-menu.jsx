@@ -15,6 +15,7 @@ export default class NotebookIconMenu extends React.Component {
     this.handleClick = this.handleClick.bind(this)
     this.handleIconButtonClose = this.handleIconButtonClose.bind(this)
   }
+
   handleClick(event) {
     this.setState({ anchorElement: event.currentTarget })
   }
