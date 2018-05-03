@@ -8,6 +8,7 @@ html, body {
   color: #333;
   background-color: #fff;
   overflow: hidden;
+  position: relative;
 }
 
 div#page {
@@ -44,10 +45,6 @@ div#cells.editor {
 div#cells.presentation {
   position: inherit;
   height: inherit;
-}
-
-div#cells.pane-open {
-  width: calc(100% - 575px);
 }
 
 /************************************************/

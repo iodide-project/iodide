@@ -46,10 +46,19 @@ class Page extends React.Component {
       }
       this.props.actions.saveNotebook(true)
     }, 1000 * 60)
+
+    this.getPageWidth = this.getPageWidth.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
+  }
+
+  getPageWidth() {
+    let width = '100%'
+    if (this.props.viewMode === 'presentation') width = 'undefined'
+    else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`
+    return { width }
   }
 
   render() {
@@ -82,7 +91,11 @@ class Page extends React.Component {
         className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
       >
         <NotebookHeader />
-        <div id="cells" className={this.props.viewMode + (this.props.sidePane ? ' pane-open' : '')}>
+        <div
+          id="cells"
+          className={this.props.viewMode}
+          style={this.getPageWidth()}
+        >
           {bodyContent}
         </div>
       </div>
@@ -97,6 +110,7 @@ function mapStateToProps(state) {
     viewMode: state.viewMode,
     title: state.title,
     sidePane: state.sidePaneMode,
+    sidePaneWidth: state.sidePaneWidth,
   }
 }
 

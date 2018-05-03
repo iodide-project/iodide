@@ -174,6 +174,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { sidePaneMode: action.mode })
     }
 
+    case 'CHANGE_SIDE_PANE_WIDTH': {
+      const width = state.sidePaneWidth + action.widthShift
+      return Object.assign({}, state, { sidePaneWidth: width })
+    }
+
     case 'INCREMENT_EXECUTION_NUMBER': {
       let { executionNumber } = state
       executionNumber += 1
