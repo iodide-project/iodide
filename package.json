@@ -8,7 +8,7 @@
   "scripts": {
     "test": "jest --no-cache",
     "start": "webpack --watch --env dev",
-    "build": "webpack  --env prod",
+    "build": "webpack  --env production",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix"
   },
   "jest": {

@@ -32,7 +32,7 @@ const htmlTemplateCompiler = _.template(htmlTemplate)
 const plugins = []
 // const config
 module.exports = (env) => {
-  if (env === 'prod') {
+  if (env === 'production') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
     if (gitRev.isTagDirty()) {
       APP_PATH_STRING = 'https://iodide-project.github.io/master/'
@@ -115,10 +115,9 @@ module.exports = (env) => {
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify(env),
+        'process.env.NODE_ENV': JSON.stringify(env),
       }),
       new ExtractTextPlugin(`iodide.${APP_VERSION_STRING}.css`),
     ],
   }
 }
-
-// module.exports = config
