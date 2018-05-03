@@ -30,18 +30,10 @@ export default class NotebookIconMenu extends React.Component {
       React.cloneElement(c, { onClick: this.handleIconButtonClose }))
     return (
       <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title="Menu">
-
-        <IconButton
-          aria-label="more"
-          aria-owns={anchorElement ? 'main-menu' : null}
-          aria-haspopup="true"
-          onClick={this.handleClick}
-          style={{ color: 'white' }}
-        >
-          <MenuIcon />
+        <React.Fragment>
           <Menu
             id="main-menu"
-            anchorEl={this.state.anchorElement}
+            anchorEl={document.getElementById('editor-mode-controls')}
             open={Boolean(anchorElement)}
             onClose={this.handleIconButtonClose}
             anchorReference="anchorPosition"
@@ -50,7 +42,16 @@ export default class NotebookIconMenu extends React.Component {
           >
             {children}
           </Menu>
-        </IconButton>
+          <IconButton
+            aria-label="more"
+            aria-owns={anchorElement ? 'main-menu' : null}
+            aria-haspopup="true"
+            onClick={this.handleClick}
+            style={{ color: 'white' }}
+          >
+            <MenuIcon />
+          </IconButton>
+        </React.Fragment>
       </Tooltip>
     )
   }

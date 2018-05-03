@@ -62,13 +62,7 @@ export class CellMenuContainerUnconnected extends React.Component {
           title="Cell Settings"
           enterDelay={600}
         >
-          <div
-            className="cell-type-label"
-            aria-owns={anchorElement ? 'cell-menu' : null}
-            aria-haspopup="true"
-            onClick={this.handleClick}
-          >
-            {this.props.label}
+          <React.Fragment>
             <Menu
               id="cell-menu"
               anchorEl={this.state.anchorElement}
@@ -82,7 +76,16 @@ export class CellMenuContainerUnconnected extends React.Component {
             >
               <CellMenu cellId={this.props.cellId} menuLabel={this.props.label} />
             </Menu>
-          </div>
+            <div
+              className="cell-type-label"
+              aria-owns={anchorElement ? 'cell-menu' : null}
+              aria-haspopup="true"
+              onClick={this.handleClick}
+            >
+              {this.props.label}
+
+            </div>
+          </React.Fragment>
         </Tooltip>
         <div className="cell-status-indicators">{skipInRunAllIndicator}</div>
       </div>
