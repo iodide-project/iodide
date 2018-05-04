@@ -22,6 +22,9 @@ export default class NotebookIconMenu extends React.Component {
 
   handleIconButtonClose() {
     this.setState({ anchorElement: null })
+    document.querySelectorAll('div[class^="MuiBackdrop-"]').forEach((backdrop) => {
+      backdrop.click();
+    })
   }
 
   render() {

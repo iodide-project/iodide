@@ -37,6 +37,9 @@ export default class NotebookMenuItem extends React.Component {
           this.props.task.callback()
           if (this.props.onClick) this.props.onClick()
           if (this.props.submenuOnClick) this.props.submenuOnClick()
+          document.querySelectorAll('div[class^="MuiBackdrop-"]').forEach((backdrop) => {
+            backdrop.click()
+          })
           }}
       >
         <ListItemText
