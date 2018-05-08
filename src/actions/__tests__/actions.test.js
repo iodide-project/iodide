@@ -115,7 +115,11 @@ describe('updateCellProperties', () => {
   it('creates an object with a type: UPDATE_CELL_PROPERTIES and cellId and updatedProperties payload', () => {
     const cellId = 'string';
     const updatedProperties = 'text';
-    const expected = { type: 'UPDATE_CELL_PROPERTIES', cellId, updatedProperties };
+    const expected = {
+      type: 'UPDATE_CELL_PROPERTIES',
+      cellId,
+      updatedProperties,
+    };
     expect(actions.updateCellProperties(cellId, updatedProperties)).toEqual(expected);
   });
 });
@@ -148,8 +152,15 @@ describe('setCellRowCollapsedState', () => {
     const rowType = '';
     const rowOverflow = true;
     const cellId = 2;
-    const expected = { type: 'SET_CELL_ROW_COLLAPSE_STATE', viewMode, rowType, rowOverflow, cellId };
-    expect(actions.setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId)).toEqual(expected);
+    const expected = {
+      type: 'SET_CELL_ROW_COLLAPSE_STATE',
+      viewMode,
+      rowType,
+      rowOverflow,
+      cellId,
+    };
+    expect(actions.setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId))
+      .toEqual(expected);
   });
 });
 
@@ -247,4 +258,4 @@ describe('saveEnvironment', () => {
     const expected = { type: 'SAVE_ENVIRONMENT', updateObj, update };
     expect(actions.saveEnvironment(updateObj, update)).toEqual(expected);
   });
-})
+});
