@@ -22,17 +22,17 @@ function sideEffectDiv(sideEffectClass, reportSideEffect) {
   return div
 }
 
-export function print(s, reportSideEffect = false) {
-  // dumbly puts a string in a side effect div
-  const div = sideEffectDiv('side-effect-print', reportSideEffect)
-  div.innerHTML = s.toString()
-}
-
-export const DOM = {
-  element: (nodeType) => {
-    const cellId = store.getState().runningCellID
+export const output = {
+  text: (s, reportSideEffect = false) => {
+    // dumbly puts a string in a side effect div
+    const div = sideEffectDiv('side-effect-print', reportSideEffect)
+    div.innerHTML = s.toString()
+  },
+  element: (nodeType, reportSideEffect = true) => {
+    // const cellId = store.getState().runningCellID
+    const div = sideEffectDiv('side-effect-element', reportSideEffect)
     const node = document.createElement(nodeType)
-    document.getElementById(`cell-${cellId}-side-effect-target`).append(node)
+    div.append(node)
     return node
   },
 }
