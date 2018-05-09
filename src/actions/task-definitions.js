@@ -270,6 +270,11 @@ tasks.clearVariables = new UserTask({
   callback() { dispatcher.clearVariables() },
 })
 
+tasks.changeSidePaneWidth = new UserTask({
+  title: 'Change Width of Side Pane',
+  callback(widthShift) { dispatcher.changeSidePaneWidth(widthShift) },
+})
+
 tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
   menuTitle: 'Declared Variables',

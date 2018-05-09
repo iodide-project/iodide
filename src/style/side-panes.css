@@ -1,5 +1,5 @@
 .side-pane {
-  width:575px !important;
+  width:auto !important;
   top: 50px !important;
   border: none !important;
   border-left: 2px solid lightgray !important;
@@ -10,6 +10,7 @@
     top: 0;
     z-index: 10;
     background: #fff;
+    padding-top: 1px;
 }
 
 .pane-title {
@@ -39,18 +40,28 @@ div.history-cells {
   padding-right: 20px;
 }
 
+div.history-cell {
+  width: inherit
+}
+
 div.history-cells .CodeMirror {
   height: auto;
 }
 
+div.history-cells div.cell-container {
+  padding-right:0px;
+}
+
 pre.history-item-code {
-  overflow:scroll;
+  overflow: scroll;
   padding:3px;
 }
 
-div.history-content {
-  outline: 1px solid lightgray;
 
+
+div.history-content {
+  outline: 1px solid #f1f1f1;
+  width: calc(100% - 1px)
 }
 
 div.history-date {
@@ -77,7 +88,7 @@ div.side-pane {
   border: 2px solid gray;
   border-right: none;
   width: 75%;
-  overflow: scroll;
+  overflow: auto;
   height: 100%;
   background-color: rgba(255, 255, 255);
 }
