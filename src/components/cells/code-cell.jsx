@@ -20,7 +20,7 @@ export class CodeCellUnconnected extends React.Component {
           <CellEditor cellId={this.props.cellId} />
         </CellRow>
         <CellRow cellId={this.props.cellId} rowType="sideeffect">
-          <div className="side-effect-target" />
+          <div id={`cell-${this.props.cellId}-side-effect-target`} className="side-effect-target" />
         </CellRow>
         <CellRow cellId={this.props.cellId} rowType="output">
           <CellOutput cellId={this.props.cellId} />
