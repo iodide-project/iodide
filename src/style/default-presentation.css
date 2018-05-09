@@ -32,7 +32,18 @@ div#cells.presentation div.cell-row-container {
 div#cells.presentation div.main-component {
   width: 100%;
 }
- 
+
+
+/* which side-effects are shown in the report view*/
+div#cells.presentation .side-effect-target {
+  max-width:800px;
+  margin: auto;
+}
+
+div#cells.presentation div.side-effect-target div.hide-side-effect {
+  display: none;
+}
+
  /* div#cells.presentation {
   padding-top:30px;
 }  */
@@ -53,8 +64,7 @@ div#cells.presentation div.main-component {
 
 /* establish block-level elements to be a certain width. This
 lets us create full width divs using css if necessary, while still
-retaining the narrower colum view for readability and flow.
-
+retaining the narrower column view for readability and flow.
 */
 
 .user-markdown p,
