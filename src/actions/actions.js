@@ -8,9 +8,7 @@ import {
   getSelectedCell,
 } from '../reducers/cell-reducer-utils'
 
-import {
-  waitForExplicitContinuationStatusResolution,
-} from '../iodide-api/evalQueue'
+import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
 
 import { addLanguageKeybinding } from '../keybindings'
 
