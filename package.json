@@ -9,7 +9,8 @@
     "test": "jest --no-cache",
     "start": "webpack --watch --env dev",
     "build": "webpack  --env production",
-    "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix"
+    "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
+    "heroku-postbuild": "webpack --env heroku"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/test/setupTests.js",
@@ -30,6 +31,10 @@
     "codemirror": "^5.37.0",
     "codemirror-no-newlines": "^1.0.2",
     "deep-equal": "^1.0.1",
+    "ejs": "^2.5.6",
+    "express": "^4.15.2",
+    "express-partials": "^0.3.0",
+    "express-session": "^1.15.6",
     "font-awesome": "^4.7.0",
     "fuse.js": "^3.2.0",
     "lodash": "^4.17.10",
@@ -39,8 +44,11 @@
     "markdown-it-katex": "^2.0.3",
     "material-ui": "^1.0.0-beta.47",
     "material-ui-icons": "^1.0.0-beta.36",
+    "method-override": "^2.3.10",
     "mousetrap": "^1.6.1",
     "opensans-npm-webfont": "^1.0.0",
+    "passport": "^0.4.0",
+    "passport-github2": "^0.1.11",
     "prop-types": "^15.6.1",
     "query-string": "^5.1.1",
     "re-resizable": "^4.4.8",
@@ -88,7 +96,9 @@
     "react-addons-test-utils": "^15.6.1",
     "react-test-renderer": "^15.6.1",
     "redux-mock-store": "^1.5.1",
+    "request": "^2.81.0",
     "style-loader": "^0.20.3",
+    "tape": "^4.7.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack-dev-server": "^2.11.2",
     "webpack-merge": "^4.1.2"

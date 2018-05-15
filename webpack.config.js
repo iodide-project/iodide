@@ -2,9 +2,8 @@ const webpack = require('webpack')
 const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const _ = require('lodash')
-const gitRev = require('git-rev-sync')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const _ = require('lodash')
 
 const htmlTemplate = require('./src/html-template.js')
 
@@ -13,32 +12,35 @@ let APP_PATH_STRING
 let CSS_PATH_STRING
 let APP_VERSION_STRING
 
-if (gitRev.isTagDirty()) {
-  if (process.env.TRAVIS_BRANCH !== undefined) {
-    // On Travis-CI, the git branches are detached so use env variable instead
-    APP_VERSION_STRING = process.env.TRAVIS_BRANCH
-  } else {
-    APP_VERSION_STRING = gitRev.branch()
-  }
-} else {
-  APP_VERSION_STRING = gitRev.tag()
-}
-
 const APP_DIR = path.resolve(__dirname, 'src/')
 const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
-
 const htmlTemplateCompiler = _.template(htmlTemplate)
 const plugins = []
+
 // const config
 module.exports = (env) => {
   if (env === 'production') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
+    const gitRev = require('git-rev-sync')
     if (gitRev.isTagDirty()) {
+      if (process.env.TRAVIS_BRANCH !== undefined) {
+        // On Travis-CI, the git branches are detached so use env variable instead
+        APP_VERSION_STRING = process.env.TRAVIS_BRANCH
+      } else {
+        APP_VERSION_STRING = gitRev.branch()
+      }
       APP_PATH_STRING = 'https://iodide-project.github.io/master/'
     } else {
+      APP_VERSION_STRING = gitRev.tag()
       APP_PATH_STRING = 'https://iodide-project.github.io/dist/'
     }
+    CSS_PATH_STRING = APP_PATH_STRING
+    plugins.push(new UglifyJSPlugin())
+  } else if (env == 'heroku') {
+    BUILD_DIR = path.resolve(__dirname, 'prod/')
+    APP_VERSION_STRING = 'iodide-server'
+    APP_PATH_STRING = ''
     CSS_PATH_STRING = APP_PATH_STRING
     plugins.push(new UglifyJSPlugin())
   } else if (env === 'dev') {
@@ -115,9 +117,10 @@ module.exports = (env) => {
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify(env),
-        'process.env.NODE_ENV': JSON.stringify(env),
       }),
       new ExtractTextPlugin(`iodide.${APP_VERSION_STRING}.css`),
     ],
   }
 }
+
+// module.exports = config
