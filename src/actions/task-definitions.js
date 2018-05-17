@@ -265,6 +265,7 @@ tasks.exportNotebookAsReport = new UserTask({
   title: 'Export Notebook as Report',
   keybindings: ['ctrl+shift+e', 'meta+shift+e'],
   displayKeybinding: `Shift+${commandKey()}+E`,
+  keybindingPrecondition: isCommandMode,
   callback() { dispatcher.exportNotebook(true) },
 })
 
@@ -285,6 +286,7 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
   keybindings: ['ctrl+d', 'meta+d'],
   displayKeybinding: `${commandKey()}+D`,
   preventDefaultKeybinding: true,
+  keybindingPrecondition: isCommandMode,
   callback() {
     if (store.getState().sidePaneMode !== 'declared variables') {
       dispatcher.changeSidePaneMode('declared variables')
@@ -300,7 +302,7 @@ tasks.toggleHistoryPane = new UserTask({
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: `${commandKey()}+H`,
   preventDefaultKeybinding: true,
-
+  keybindingPrecondition: isCommandMode,
   callback() {
     if (store.getState().sidePaneMode !== 'history') {
       dispatcher.changeSidePaneMode('history')
@@ -316,7 +318,7 @@ tasks.toggleAppInfoPane = new UserTask({
   keybindings: ['ctrl+i', 'meta+i'],
   displayKeybinding: `${commandKey()}+I`,
   preventDefaultKeybinding: true,
-
+  keybindingPrecondition: isCommandMode,
   callback() {
     if (store.getState().sidePaneMode !== '_APP_INFO') {
       dispatcher.changeSidePaneMode('_APP_INFO')
