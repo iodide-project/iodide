@@ -12,6 +12,7 @@ import tasks from '../../actions/task-definitions'
 export class DeclaredVariablesPaneUnconnected extends React.Component {
   static propTypes = {
     userDefinedVarNames: PropTypes.arrayOf(PropTypes.string),
+    environmentVariables: PropTypes.arrayOf(PropTypes.string),
   }
 
   shouldComponentUpdate(nextProps) {
@@ -19,14 +20,34 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 
   render() {
+    const environmentalDVs = this.props.environmentVariables !== undefined ?
+      Object.keys(this.props.environmentVariables).map(varName =>
+        (<DeclaredVariable
+          value={this.props.environmentVariables[varName][0]}
+          varName={varName}
+          key={varName}
+        />)) :
+      undefined
+    const edvElem = environmentalDVs !== undefined ? (
+      <div className="declared-variables-list">
+        <h3>Saved Environment</h3>
+        {environmentalDVs}
+      </div>
+    ) : undefined
+
+    const declaredVariables = this.props.userDefinedVarNames.length ? (
+      <div className="declared-variables-list">
+        <h3>User Defined Variables</h3>
+        {this.props.userDefinedVarNames
+        .map(varName =>
+          <DeclaredVariable value={window[varName]} varName={varName} key={varName} />)
+        }
+      </div>
+    ) : undefined
     return (
       <SidePane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
-        <div className="declared-variables-list">
-          {this.props.userDefinedVarNames
-          .map(varName =>
-            <DeclaredVariable varName={varName} key={varName} />)
-          }
-        </div>
+        {edvElem}
+        {declaredVariables}
       </SidePane>
     )
   }
@@ -34,6 +55,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    environmentVariables: state.savedEnvironment,
     userDefinedVarNames: state.userDefinedVarNames,
     sidePaneMode: state.sidePaneMode,
   }

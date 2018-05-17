@@ -5,7 +5,7 @@ import { ValueRenderer } from '../reps/value-renderer'
 
 export class DeclaredVariable extends React.Component {
   static propTypes = {
-    varName: PropTypes.string,
+    value: PropTypes.string,
   }
   render() {
     const r = true
@@ -13,7 +13,7 @@ export class DeclaredVariable extends React.Component {
       <div className="declared-variable">
         <div className="declared-variable-name">{this.props.varName} = </div>
         <div className="declared-variable-value">
-          <ValueRenderer render={r} valueToRender={window[this.props.varName]} />
+          <ValueRenderer render={r} valueToRender={this.props.value} />
         </div>
       </div>)
   }
