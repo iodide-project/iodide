@@ -142,7 +142,7 @@ function newCellRowSettings(cellType) {
     case 'code':
       return {
         EXPLORE: { input: 'VISIBLE', sideeffect: 'VISIBLE', output: 'VISIBLE' },
-        REPORT: { input: 'HIDDEN', sideeffect: 'HIDDEN', output: 'HIDDEN' },
+        REPORT: { input: 'HIDDEN', sideeffect: 'VISIBLE', output: 'HIDDEN' },
       }
     case 'markdown':
       return {

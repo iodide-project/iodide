@@ -2,11 +2,15 @@ import UserTask from './user-task'
 import ExternalLinkTask from './external-link-task'
 import { store } from '../store'
 import * as actions from './actions'
-import { isCommandMode,
+import {
+  isCommandMode,
   viewModeIsEditor,
   getCells,
   getCellBelowSelectedId,
-  getCellAboveSelectedId, prettyDate, formatDateString } from '../tools/notebook-utils'
+  getCellAboveSelectedId,
+  prettyDate,
+  formatDateString,
+} from '../tools/notebook-utils'
 import { stateFromJsmd } from '../tools/jsmd-tools'
 
 const dispatcher = {}

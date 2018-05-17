@@ -8,9 +8,7 @@ import {
   getSelectedCell,
 } from '../reducers/cell-reducer-utils'
 
-import {
-  waitForExplicitContinuationStatusResolution,
-} from '../iodide-api/evalQueue'
+import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
 
 import { addLanguageKeybinding } from '../keybindings'
 
@@ -168,6 +166,9 @@ function evaluateCodeCell(cell) {
     const code = cell.content
     const languageModule = state.languages[cell.language].module
     const { evaluator } = state.languages[cell.language]
+    // this is one place where we have to directly mutate the DOM b/c we need
+    // this to happen outside of React's update schedule. see also iodide-api/print.js
+    document.getElementById(`cell-${cell.id}-side-effect-target`).innerHTML = ''
     dispatch(temporarilySaveRunningCellID(cell.id))
     try {
       output = window[languageModule][evaluator](code)
