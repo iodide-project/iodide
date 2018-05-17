@@ -20,7 +20,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 
   render() {
-    const environmentalDVs = this.props.environmentVariables !== undefined ?
+    const environmentalDVs = Object.keys(this.props.environmentVariables).length ?
       Object.keys(this.props.environmentVariables).map(varName =>
         (<DeclaredVariable
           value={this.props.environmentVariables[varName][0]}
