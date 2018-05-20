@@ -1,0 +1,9 @@
+Login Failed!
+<script type="text/javascript">
+function switchWindow() {
+    window.opener.loginFailure();
+    window.opener.focus();
+    window.close()
+}
+window.onload = switchWindow;
+</script>
