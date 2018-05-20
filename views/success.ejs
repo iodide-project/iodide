@@ -1,0 +1,9 @@
+Login Successful!
+<script type="text/javascript">
+function switchWindow() {
+    window.opener.loginSuccess(<%- JSON.stringify(user) %>);
+    window.opener.focus();
+    window.close()
+}
+window.onload = switchWindow;
+</script>

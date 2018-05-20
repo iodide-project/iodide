@@ -43,7 +43,7 @@ passport.use(new GitHubStrategy({
       // represent the logged-in user.  In a typical application, you would want
       // to associate the GitHub account with a user record in your database,
       // and return that user instead.
-      return done(null, profile);
+      return done(null, accessToken);
     });
   }
 ));
@@ -59,7 +59,7 @@ const ensureAuthenticated = (req, res, next) => {
 };
 
 express()
-  .use(express.static(path.join(__dirname, 'prod'), {'index': 'iodide.iodide-server.html'}))
+  .use(express.static(path.join(process.cwd(), 'public'), {'index': 'iodide.dev.html'}))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .use(partials())
@@ -78,22 +78,31 @@ express()
   .get('/login', (req, res) => {
     res.render('login', { user: req.user });
   })
+  .get('/success', (req, res) => {
+    res.render('success', { user: req.user });
+  })
+  .get('/failure', (req, res) => {
+    res.render('failure', { user: req.user });
+  })
   .get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
+    try {
+      req.logout();
+      res.json({status: 'success'})
+    }
+    catch (err) {
+      console.log(err)
+      res.json({status: 'failed'})
+    }
   })
   .get('/auth/github',
-       passport.authenticate('github', { scope: [ 'user:email' ] }),
+       passport.authenticate('github', { scope: [ 'user:email', 'gist' ], }),
        (req, res) => {
          // The request will be redirected to GitHub for authentication, so this
          // function will not be called.
        })
   .get('/auth/github/callback',
-       passport.authenticate('github', { failureRedirect: '/login' }),
+       passport.authenticate('github', { failureRedirect: '/failure' }),
        function(req, res) {
-         // Successful authentication, redirect home.
-         res.redirect('/');
+         res.redirect('/success');
        })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
-
-console.log(process.env);

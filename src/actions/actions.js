@@ -2,6 +2,7 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
+import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import {
   addExternalDependency,
@@ -408,6 +409,74 @@ export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId)
 export function markCellNotRendered() {
   return {
     type: 'MARK_CELL_NOT_RENDERED',
+  }
+}
+
+function loginSuccess(authToken) {
+  return (dispatch) => {
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      authToken,
+    })
+    dispatch(updateAppMessages('You are logged in'))
+  }
+}
+
+function loginFailure() {
+  return (dispatch) => {
+    dispatch(updateAppMessages('Login Failed'))
+  }
+}
+
+export function login() {
+  const url = '/auth/github'
+  const name = 'github_login'
+  const specs = 'width=500,height=600'
+  const authWindow = window.open(url, name, specs)
+  authWindow.focus()
+
+  return (dispatch) => {
+    // Functions to be called by child window
+    window.loginSuccess = authToken => dispatch(loginSuccess(authToken))
+    window.loginFailure = () => dispatch(loginFailure())
+  }
+}
+
+export function logout() {
+  return (dispatch) => {
+    fetch('/logout')
+      .then(response => response.json())
+      .then((json) => {
+        if (json.status === 'success') {
+          dispatch({ type: 'LOGOUT' })
+          dispatch(updateAppMessages('Logged Out'))
+        } else dispatch(updateAppMessages('Logout Failed'))
+      })
+  }
+}
+
+export function exportGist() {
+  return (dispatch, getState) => {
+    const state = getState()
+    const filename = titleToHtmlFilename(state.title)
+    const gistData = {
+      description: state.title,
+      public: true,
+      files: {
+        [filename]: { content: exportJsmdBundle(state) },
+      },
+    };
+    fetch(`https://api.github.com/gists?access_token=${state.authToken}`, {
+      body: JSON.stringify(gistData),
+      method: 'POST',
+    })
+      .then(response => response.json())
+      .then((json) => {
+        console.log(json)
+        dispatch(updateAppMessages(`Exported to Github gist:
+<a href="${json.html_url}" target="_blank">gist</a> -
+<a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> runnable notebook</a>`))
+      })
   }
 }
 
