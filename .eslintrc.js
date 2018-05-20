@@ -1,4 +1,9 @@
 module.exports = {
+  "settings": {
+    "react": {
+      "version": "16.3.1",
+    }
+  },
   "parser": "babel-eslint",
   "env": {
     "browser": true,
