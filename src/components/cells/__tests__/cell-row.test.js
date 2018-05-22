@@ -2,23 +2,19 @@ import { shallow } from 'enzyme'
 import React from 'react'
 import ReactDOM from 'react-dom';
 
-import { CellRowUnconnected, mapStateToPropsCellRows } from '../cell-row'
-
 import Tooltip from 'material-ui/Tooltip'
+
+import { CellRowUnconnected, mapStateToPropsCellRows } from '../cell-row'
 
 describe('CellRowUnconnected React component', () => {
   let setCellRowCollapsedState
   let props
   let mountedRow
-  let node = <span>Hello</span>
+  const node = <span>Hello</span>
 
   const cellRow = () => {
     if (!mountedRow) {
-      mountedRow = shallow(
-        <CellRowUnconnected {...props}>
-          {node}
-        </CellRowUnconnected>
-      )
+      mountedRow = shallow(<CellRowUnconnected {...props}>{node}</CellRowUnconnected>)
     }
     return mountedRow
   }
@@ -101,13 +97,13 @@ describe('CellRowUnconnected React component', () => {
       .find('div.main-component')).toHaveLength(1)
   })
 
-  it("always has a children inside the div with class main-component", () => {
+  it('always has a children inside the div with class main-component', () => {
     expect(cellRow().find('div.main-component')
       .props().children).toEqual(node)
   })
 
   it('fires setCellRowCollapsedState when component updates with correct props', () => {
-    let nodes = document.createElement('div');
+    const nodes = document.createElement('div');
     ReactDOM.render(<CellRowUnconnected {...props} />, nodes);
     props.uncollapseOnUpdate = true;
     ReactDOM.render(<CellRowUnconnected {...props} />, nodes);
@@ -115,7 +111,7 @@ describe('CellRowUnconnected React component', () => {
   })
 
   it('does not fire setCellRowCollapsedState when component updates with wrong props', () => {
-    let nodes = document.createElement('div');
+    const nodes = document.createElement('div');
     ReactDOM.render(<CellRowUnconnected {...props} />, nodes);
     props.uncollapseOnUpdate = false;
     ReactDOM.render(<CellRowUnconnected {...props} />, nodes);
@@ -126,17 +122,17 @@ describe('CellRowUnconnected React component', () => {
 
 describe('CellRow mapStateToPropsCellRows', () => {
   let state
-  let rowSettingsObject = {
-    "EXPLORE": {
-      "input": "VISIBLE",
-      "sideeffect": "VISIBLE",
-      "output": "VISIBLE"
+  const rowSettingsObject = {
+    EXPLORE: {
+      input: 'VISIBLE',
+      sideeffect: 'VISIBLE',
+      output: 'VISIBLE',
     },
-    "REPORT": {
-      "input": "HIDDEN",
-      "sideeffect": "VISIBLE",
-      "output": "HIDDEN"
-    }
+    REPORT: {
+      input: 'HIDDEN',
+      sideeffect: 'VISIBLE',
+      output: 'HIDDEN',
+    },
   }
   beforeEach(() => {
     state = {
@@ -144,8 +140,8 @@ describe('CellRow mapStateToPropsCellRows', () => {
         id: 5,
         selected: true,
         cellType: 'code',
-        executionStatus: " ",
-        rowSettings: rowSettingsObject
+        executionStatus: ' ',
+        rowSettings: rowSettingsObject,
       },
       ],
       mode: 'edit',
@@ -219,7 +215,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
       // Fail test if above expression doesn't throw anything.
       expect(true).toBe(false);
     } catch (e) {
-        expect(e.message).toBe('Unsupported viewMode: display')
+      expect(e.message).toBe('Unsupported viewMode: display')
     }
   })
 })

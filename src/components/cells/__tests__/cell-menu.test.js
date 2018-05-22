@@ -50,7 +50,6 @@ describe('CellMenuUnconnected React component', () => {
         .toBe(props.menuLabel === cellType)
     })
   })
-
 })
 
 describe('cellMenu mapStateToProps', () => {
@@ -59,7 +58,7 @@ describe('cellMenu mapStateToProps', () => {
     state = {
       cells: [{
         id: 5,
-        skipInRunAll: false
+        skipInRunAll: false,
       }],
     }
   })
@@ -68,7 +67,7 @@ describe('cellMenu mapStateToProps', () => {
     const ownProps = { cellId: 5 }
     expect(mapStateToProps(state, ownProps))
       .toEqual({
-        skipInRunAll: false
+        skipInRunAll: false,
       })
   })
 })

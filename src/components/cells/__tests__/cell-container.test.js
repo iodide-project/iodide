@@ -8,15 +8,11 @@ describe('CellContainerUnconnected React component', () => {
   let selectCell
   let props
   let mountedCont
-  let node = <span>Hello</span>
+  const node = <span>Hello</span>
 
   const cellContainer = () => {
     if (!mountedCont) {
-      mountedCont = shallow(
-        <CellContainerUnconnected {...props}>
-          {node}
-        </CellContainerUnconnected>
-      )
+      mountedCont = shallow(<CellContainerUnconnected {...props}>{node}</CellContainerUnconnected>)
     }
     return mountedCont
   }
@@ -119,7 +115,7 @@ describe('CellContainerUnconnected React component', () => {
       .props().children).find('div.cell-row-container')).toHaveLength(1)
   })
 
-  it("always has a children inside the second div", () => {
+  it('always has a children inside the second div', () => {
     expect(cellContainer().find('div.cell-row-container')
       .props().children).toEqual(node)
   })
