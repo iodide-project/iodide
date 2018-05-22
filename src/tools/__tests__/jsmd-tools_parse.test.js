@@ -1,5 +1,6 @@
 /* global it describe expect */
-import { parseJsmd,
+import {
+  parseJsmd,
   stateFromJsmd,
   jsmdValidCellTypes,
   jsmdToCellTypeMap,

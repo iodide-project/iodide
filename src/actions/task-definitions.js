@@ -265,6 +265,7 @@ tasks.exportNotebookAsReport = new UserTask({
   title: 'Export Notebook as Report',
   keybindings: ['ctrl+shift+e', 'meta+shift+e'],
   displayKeybinding: `Shift+${commandKey()}+E`,
+  keybindingPrecondition: isCommandMode,
   callback() { dispatcher.exportNotebook(true) },
 })
 
@@ -274,12 +275,18 @@ tasks.clearVariables = new UserTask({
   callback() { dispatcher.clearVariables() },
 })
 
+tasks.changeSidePaneWidth = new UserTask({
+  title: 'Change Width of Side Pane',
+  callback(widthShift) { dispatcher.changeSidePaneWidth(widthShift) },
+})
+
 tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
   menuTitle: 'Declared Variables',
   keybindings: ['ctrl+d', 'meta+d'],
   displayKeybinding: `${commandKey()}+D`,
   preventDefaultKeybinding: true,
+  keybindingPrecondition: isCommandMode,
   callback() {
     if (store.getState().sidePaneMode !== 'declared variables') {
       dispatcher.changeSidePaneMode('declared variables')
@@ -295,7 +302,7 @@ tasks.toggleHistoryPane = new UserTask({
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: `${commandKey()}+H`,
   preventDefaultKeybinding: true,
-
+  keybindingPrecondition: isCommandMode,
   callback() {
     if (store.getState().sidePaneMode !== 'history') {
       dispatcher.changeSidePaneMode('history')
@@ -311,7 +318,7 @@ tasks.toggleAppInfoPane = new UserTask({
   keybindings: ['ctrl+i', 'meta+i'],
   displayKeybinding: `${commandKey()}+I`,
   preventDefaultKeybinding: true,
-
+  keybindingPrecondition: isCommandMode,
   callback() {
     if (store.getState().sidePaneMode !== '_APP_INFO') {
       dispatcher.changeSidePaneMode('_APP_INFO')

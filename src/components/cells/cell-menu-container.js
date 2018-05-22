@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import Tooltip from 'material-ui/Tooltip'
 import Menu from 'material-ui/Menu'
-
+import ExpandMore from 'material-ui-icons/ExpandMore'
 import CellMenu from './cell-menu'
 
 import * as actions from '../../actions/actions'
@@ -62,13 +62,7 @@ export class CellMenuContainerUnconnected extends React.Component {
           title="Cell Settings"
           enterDelay={600}
         >
-          <div
-            className="cell-type-label"
-            aria-owns={anchorElement ? 'cell-menu' : null}
-            aria-haspopup="true"
-            onClick={this.handleClick}
-          >
-            {this.props.label}
+          <React.Fragment>
             <Menu
               id="cell-menu"
               anchorEl={this.state.anchorElement}
@@ -82,7 +76,17 @@ export class CellMenuContainerUnconnected extends React.Component {
             >
               <CellMenu cellId={this.props.cellId} menuLabel={this.props.label} />
             </Menu>
-          </div>
+            <div
+              className="cell-type-label"
+              aria-owns={anchorElement ? 'cell-menu' : null}
+              aria-haspopup="true"
+              onClick={this.handleClick}
+            >
+              {this.props.label}
+              <ExpandMore />
+
+            </div>
+          </React.Fragment>
         </Tooltip>
         <div className="cell-status-indicators">{skipInRunAllIndicator}</div>
       </div>

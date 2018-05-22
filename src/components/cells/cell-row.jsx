@@ -8,7 +8,7 @@ import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
 import { rowOverflowEnum, nextOverflow } from '../../state-prototypes'
 
-class CellRow extends React.Component {
+export class CellRowUnconnected extends React.Component {
   static propTypes = {
     executionString: PropTypes.string,
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
@@ -75,7 +75,7 @@ class CellRow extends React.Component {
   }
 }
 
-function mapStateToPropsCellRows(state, ownProps) {
+export function mapStateToPropsCellRows(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
   let view
   // this block can be deprecated if we move to enums for VIEWs
@@ -126,4 +126,4 @@ function mapDispatchToPropsCellRows(dispatch) {
   }
 }
 
-export default connect(mapStateToPropsCellRows, mapDispatchToPropsCellRows)(CellRow)
+export default connect(mapStateToPropsCellRows, mapDispatchToPropsCellRows)(CellRowUnconnected)

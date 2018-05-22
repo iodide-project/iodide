@@ -175,6 +175,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { sidePaneMode: action.mode })
     }
 
+    case 'CHANGE_SIDE_PANE_WIDTH': {
+      const width = state.sidePaneWidth + action.widthShift
+      return Object.assign({}, state, { sidePaneWidth: width })
+    }
+
     case 'INCREMENT_EXECUTION_NUMBER': {
       let { executionNumber } = state
       executionNumber += 1
@@ -203,6 +208,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       const appMessages = state.appMessages.slice()
       appMessages.push(action.message)
       return Object.assign({}, state, { appMessages })
+    }
+
+    case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
+      const { cellID } = action
+      return Object.assign({}, state, { runningCellID: cellID })
     }
 
     case 'SAVE_ENVIRONMENT': {

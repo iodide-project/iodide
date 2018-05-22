@@ -2,15 +2,12 @@
 [![Join the chat at https://gitter.im/iodide-project/iodide](https://badges.gitter.im/iodide-project/iodide.svg)](https://gitter.im/iodide-project/iodide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # The Iodide notebook
-### _"View source" for science_
 
-_Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)!_
-
-([More examples](https://github.com/iodide-project/iodide-examples))
+_Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)! ([More examples](https://github.com/iodide-project/iodide-examples))_
 
 ### Please note: Iodide is in early alpha, and still subject to breakage, changes, and overhauls
 
-
+### _View source_ for science
 Today, sharing scientific results is easier than ever. You can email a PDF, write up a Google doc, or post to your blog. You can embed plots, data tables, and even interactive visualizations. But what if you want people to be able to replicate and extend your results -- to take your results and “view source” to see how you arrived at your conclusions? Or even hack and remix them to ask their own questions?
 
 To do that now, you typically have a couple options. You could send your code along side your nice, clean PDF or HTML export, allowing you fine-grained control over your presentation, but requiring you to separate your presentable results from your code and to manage multiple files. Alternatively, you could share you results and code bundled together in a notebook format that mixes code with write-up; this has the advantage of keeping your code and results closely tied together, but the presentation can get a bit unwieldy, especially if you want to share your results with a less technical audience. And in either case, sharing your code will only allow your collaborators to replicate and extend your results if they are first able to replicate your whole setup -- if they can run your code with the same libraries, the same data, and the server access.
@@ -29,7 +26,7 @@ And thanks to WebAssembly, working in the browser _does not_ mean that you have 
 
 Our focus is on delivering frictionless, human-centered tools to scientists. You can read more about our core principles below; if our vision resonates with you, please consider contributing to the project!
 
-_PS: We're working on a few other ways of making this in-browser workflow as ergomonic for scientific tasks as possible. Two of those key efforts will be (1) using modern JS transpilation tools to extend JS syntax just enough for matrix notation, broadcasting, and other basic scientific computing needs; and (2) compiling best-in-class C/C++ science libraries (and runtimes!) to Webassembly and wrapping them in ergonomic JS APIs. If either of those projects appeals to you, please reach out!_
+_PS: We're working on a few other ways of making this in-browser workflow as ergonomic for scientific tasks as possible. Two of those key efforts will be (1) using modern JS transpilation tools to extend JS syntax just enough for matrix notation, broadcasting, and other basic scientific computing needs; and (2) compiling best-in-class C/C++ science libraries (and runtimes!) to Webassembly and wrapping them in ergonomic JS APIs. If either of those projects appeals to you, please reach out!_
 
 # Get in touch
 

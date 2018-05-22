@@ -2,8 +2,10 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 
-import { ExternalResourceCellUnconnected as ExternalResourceCell,
-  mapStateToProps } from '../external-resource-cell'
+import {
+  ExternalResourceCellUnconnected as ExternalResourceCell,
+  mapStateToProps,
+} from '../external-resource-cell'
 import { CellContainer } from '../cell-container'
 import CellRow from '../cell-row'
 import CellEditor from '../cell-editor'

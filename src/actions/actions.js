@@ -7,13 +7,24 @@ import {
   addExternalDependency,
   getSelectedCell,
 } from '../reducers/cell-reducer-utils'
+
+import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
+
 import { addLanguageKeybinding } from '../keybindings'
 
-const MD = MarkdownIt({ html: true }) // eslint-disable-line
+let evaluationQueue = Promise.resolve()
+
+const MD = MarkdownIt({ html: true })
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const CodeMirror = require('codemirror') // eslint-disable-line
 
+export function temporarilySaveRunningCellID(cellID) {
+  return {
+    type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',
+    cellID,
+  }
+}
 
 export function updateAppMessages(message) {
   return {
@@ -129,7 +140,7 @@ export function appendToEvalHistory(cellId, content) {
 
 // note: this function is NOT EXPORTED. It is a private function meant
 // to be wrapped by other actions that will configure and dispatch it.
-function updateCellProperties(cellId, updatedProperties) {
+export function updateCellProperties(cellId, updatedProperties) {
   return {
     type: 'UPDATE_CELL_PROPERTIES',
     cellId,
@@ -151,32 +162,37 @@ export function updateUserVariables() {
 
 function evaluateCodeCell(cell) {
   return (dispatch, getState) => {
+    // this variable may get changed in eval.
     const state = getState()
     let output
     let evalStatus
     const code = cell.content
     const languageModule = state.languages[cell.language].module
     const { evaluator } = state.languages[cell.language]
-
+    // this is one place where we have to directly mutate the DOM b/c we need
+    // this to happen outside of React's update schedule. see also iodide-api/print.js
+    document.getElementById(`cell-${cell.id}-side-effect-target`).innerHTML = ''
+    dispatch(temporarilySaveRunningCellID(cell.id))
     try {
       output = window[languageModule][evaluator](code)
-      evalStatus = 'success'
     } catch (e) {
       output = e
-      evalStatus = 'error'
+      evalStatus = 'ERROR'
+    }
+    const updateCellAfterEvaluation = () => {
+      const cellProperties = { value: output, rendered: true }
+      if (evalStatus === 'ERROR') cellProperties.evalStatus = evalStatus
+      dispatch(updateCellProperties(cell.id, cellProperties))
+      dispatch(incrementExecutionNumber())
+      dispatch(appendToEvalHistory(cell.id, cell.content))
+      dispatch(updateUserVariables())
     }
 
-    dispatch(updateCellProperties(
-      cell.id,
-      {
-        value: output,
-        rendered: true,
-        evalStatus,
-      },
-    ))
-    dispatch(incrementExecutionNumber())
-    dispatch(appendToEvalHistory(cell.id, cell.content))
-    dispatch(updateUserVariables())
+    const evaluation = Promise.resolve()
+      .then(updateCellAfterEvaluation)
+      .then(waitForExplicitContinuationStatusResolution)
+      .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
+    return evaluation
   }
 }
 
@@ -186,7 +202,7 @@ function evaluateMarkdownCell(cell) {
     {
       value: MD.render(cell.content),
       rendered: true,
-      evalStatus: 'success',
+      evalStatus: 'SUCCESS',
     },
   ))
 }
@@ -204,7 +220,7 @@ function evaluateResourceCell(cell) {
         externalDependencies.push(d.src)
       }
     })
-    const evalStatus = newValues.map(d => d.status).includes('error') ? 'error' : 'success'
+    const evalStatus = newValues.map(d => d.status).includes('error') ? 'ERROR' : 'SUCCESS'
     dispatch(updateCellProperties(
       cell.id,
       {
@@ -231,7 +247,7 @@ function evaluateCSSCell(cell) {
       {
         value: cell.content,
         rendered: true,
-        evalStatus: 'success',
+        evalStatus: 'SUCCESS',
       },
     ))
   }
@@ -255,12 +271,12 @@ function evaluateLanguagePluginCell(cell) {
       pluginData = JSON.parse(cell.content)
     } catch (err) {
       value = `plugin definition failed to parse:\n${err.message}`
-      evalStatus = 'error'
+      evalStatus = 'ERROR'
     }
 
     if (pluginData.url === undefined) {
       value = 'plugin definition missing "url"'
-      evalStatus = 'error'
+      evalStatus = 'ERROR'
       dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
     } else {
       const {
@@ -275,7 +291,7 @@ function evaluateLanguagePluginCell(cell) {
           if (evt.total > 0) {
             value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
           }
-          evalStatus = 'EVAL_ACTIVE'
+          evalStatus = 'ASYNC_PENDING'
           dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
         })
 
@@ -294,7 +310,7 @@ function evaluateLanguagePluginCell(cell) {
 
           pr.then(() => {
             value = `${displayName} plugin ready`
-            evalStatus = 'success'
+            evalStatus = 'SUCCESS'
             dispatch(addLanguage(pluginData))
             // FIXME: adding the keybinding move to a reducer ideally, but since it mutates
             // a part of global state in a snowflake sideffect-ish way, and since it
@@ -312,7 +328,7 @@ function evaluateLanguagePluginCell(cell) {
 
         xhrObj.addEventListener('error', () => {
           value = `${displayName} plugin failed to load`
-          evalStatus = 'error'
+          evalStatus = 'ERROR'
           dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
           reject()
         })
@@ -335,8 +351,11 @@ export function evaluateCell(cellId) {
     } else {
       cell = getCellById(getState().cells, cellId)
     }
+    // here is where we should mark a cell as PENDING.
     if (cell.cellType === 'code') {
-      evaluation = dispatch(evaluateCodeCell(cell))
+      evaluationQueue = evaluationQueue
+        .then(() => dispatch(evaluateCodeCell(cell)))
+      evaluation = evaluationQueue
     } else if (cell.cellType === 'markdown') {
       evaluation = dispatch(evaluateMarkdownCell(cell))
     } else if (cell.cellType === 'external dependencies') {
@@ -345,7 +364,8 @@ export function evaluateCell(cellId) {
       evaluation = dispatch(evaluateCSSCell(cell))
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
-        evaluation = dispatch(evaluateLanguagePluginCell(cell))
+        evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
+        evaluation = evaluationQueue
       } else {
         evaluation = dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
       }
@@ -453,6 +473,13 @@ export function changeSidePaneMode(mode) {
   return {
     type: 'CHANGE_SIDE_PANE_MODE',
     mode,
+  }
+}
+
+export function changeSidePaneWidth(widthShift) {
+  return {
+    type: 'CHANGE_SIDE_PANE_WIDTH',
+    widthShift,
   }
 }
 

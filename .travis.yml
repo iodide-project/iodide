@@ -14,6 +14,12 @@ script:
 before_deploy:
   - npm run build
   - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
+  - # Get existing releases from iodide-project/dist so we don't overwrite them
+  - >
+    if [ -n "$TRAVIS_TAG" ]; then
+      git clone https://github.com/iodide-project/dist.git --depth 1 dist;
+      cp -r dist/* prod;
+    fi
 
 deploy:
   - provider: pages

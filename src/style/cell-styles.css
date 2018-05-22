@@ -48,7 +48,7 @@ div#cells.presentation div.cell-row.input {
 }
 
 .cell-menu-container {
-    width: 64px;
+    width: 86px;
     font-size:12px;
 }
 
@@ -56,7 +56,6 @@ div#cells.presentation div.cell-row.input {
   text-align: right;
   color: hsl(275, 12%, 75%);
   cursor: pointer;
-  padding: 0px 6px 0px 0px;
   height: 18px;
   border: 1px solid rgba(0,0,0,0);
   display: flex;
