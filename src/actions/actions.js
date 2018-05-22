@@ -32,12 +32,12 @@ export function importNotebook(newState) {
 export function importFromURL(importedState) {
   return (dispatch) => {
     dispatch(importNotebook(importedState))
+    dispatch(updateAppMessages('Notebook successfully imported from URL.'))
     return Promise.resolve()
   }
 }
 
 //  dispatch(updateAppMessages(`gonna run all cells. ${(new Date()).toString()}`))
-
 
 export function exportNotebook(exportAsReport = false) {
   return {
@@ -374,7 +374,6 @@ export function evaluateAllCells(cells) {
         p = p.then(() => dispatch(evaluateCell(cell.id)))
       }
     })
-    p = p.then(() => dispatch(updateAppMessages(`gonna run all cells. ${(new Date()).toString()}`)))
   }
 }
 

@@ -1,5 +1,6 @@
 import { newNotebook, newCell, blankState } from '../state-prototypes'
-import { exportJsmdBundle,
+import {
+  exportJsmdBundle,
   stringifyStateToJsmd,
   stateFromJsmd,
   titleToHtmlFilename,
