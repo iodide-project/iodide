@@ -10,7 +10,7 @@ import { cellTypeEnum } from '../../state-prototypes'
 import CellMenuContainer from './cell-menu-container'
 
 
-class CellContainer extends React.Component {
+export class CellContainerUnconnected extends React.Component {
   static propTypes = {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
@@ -45,10 +45,10 @@ class CellContainer extends React.Component {
     // console.log(`CellContainer rendered: ${this.props.cellId}`)
     const cellClass = `cell-container ${
       this.props.cellType
-    } ${
-      this.props.selected ? 'selected-cell' : ''
-    } ${
-      this.props.editingCell ? 'editing-cell ' : ''
+    }${
+      this.props.selected ? ' selected-cell' : ''
+    }${
+      this.props.editingCell ? ' editing-cell' : ''
     }`
 
     return (
@@ -67,7 +67,7 @@ class CellContainer extends React.Component {
 }
 
 
-function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
   return {
     cellId: cell.id,
@@ -78,12 +78,12 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(actions, dispatch),
   }
 }
 
 // export default connect(mapStateToProps, mapDispatchToProps)(Page)
-const CellContainerConnected = connect(mapStateToProps, mapDispatchToProps)(CellContainer)
+const CellContainerConnected = connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected) // eslint-disable-line
 export { CellContainerConnected as CellContainer }
