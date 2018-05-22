@@ -59,7 +59,7 @@ export class CellMenuUnconnected extends React.Component {
 }
 
 
-function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const { skipInRunAll } = getCellById(state.cells, cellId)
   return { skipInRunAll }
