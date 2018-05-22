@@ -43,6 +43,12 @@ function clearHistory(loadedState) {
   /* eslint-enable */
 }
 
+function updateAppMessages(state, action) {
+  const appMessages = state.appMessages.slice()
+  appMessages.push(action.message)
+  return Object.assign({}, state, { appMessages })
+}
+
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
   userDefinedVarNames.forEach((varName) => {
@@ -119,7 +125,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       }, { title: state.title })
       clearHistory(nextState)
       window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
-      return Object.assign({}, state, { lastSaved }, getSavedNotebooks())
+      nextState = updateAppMessages(state, {
+        message: 'Saved notebook to localStorage.',
+      })
+      return Object.assign({}, nextState, { lastSaved }, getSavedNotebooks())
     }
 
     case 'LOAD_NOTEBOOK': {
@@ -205,9 +214,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_APP_MESSAGES': {
-      const appMessages = state.appMessages.slice()
-      appMessages.push(action.message)
-      return Object.assign({}, state, { appMessages })
+      return updateAppMessages(state, action)
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
@@ -223,7 +230,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       } else {
         newSavedEnvironment = action.updateObj
       }
-      // console.log('update?', action.update, 'obj:', newSavedEnvironment)
       return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
     }
 
