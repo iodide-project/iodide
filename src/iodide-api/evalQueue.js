@@ -34,7 +34,18 @@ export const waitForExplicitContinuationStatusResolution = () => new Promise((re
   }
 })
 
+const awaitPromises = promises =>
+  // is functionally identical to Promise.all.
+  Promise.resolve()
+    .then(() => setRunningCellEvalStatus('ASYNC_PENDING'))
+    .then(() => Promise.all(promises))
+    .then((resolutions) => {
+      setRunningCellEvalStatus('SUCCESS')
+      return resolutions
+    })
+
 export const evalQueue = {
   requireExplicitContinuation: () => { setRunningCellEvalStatus('ASYNC_PENDING') },
   continue: () => { setRunningCellEvalStatus('SUCCESS') },
+  await: awaitPromises,
 }

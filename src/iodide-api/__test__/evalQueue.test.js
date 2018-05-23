@@ -72,4 +72,18 @@ describe('flow API', () => {
     expect(setInterval).toHaveBeenCalledTimes(1)
     jest.runAllTimers()
   })
+
+  it('correctly awaits for Promises to resolve', () => {
+    jest.clearAllTimers()
+
+    evalQueue.await([
+      Promise.resolve(10),
+      Promise.resolve(20),
+    ]).then((d) => {
+      expect(d).toBe([10, 20])
+      expect(getRunningCellEvalStatus()).toBe('UNEVALUATED')
+    })
+
+    jest.runAllTimers()
+  })
 })
