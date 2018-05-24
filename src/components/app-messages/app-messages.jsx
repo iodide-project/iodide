@@ -30,7 +30,6 @@ export class appMessagesUnconnected extends React.Component {
   }
 
   handleMore = () => {
-    console.log('all right!')
     this.setState({ open: false })
     tasks.toggleAppInfoPane.callback()
   }
