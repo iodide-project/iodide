@@ -6,6 +6,7 @@ import deepEqual from 'deep-equal'
 import SidePane from './side-pane'
 
 import { DeclaredVariable } from './declared-variable'
+import { FrozenVariable } from './frozen-variable'
 import tasks from '../../actions/task-definitions'
 
 
@@ -20,18 +21,18 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 
   render() {
-    const environmentalDVs = Object.keys(this.props.environmentVariables).length ?
-      Object.keys(this.props.environmentVariables).map(varName =>
-        (<DeclaredVariable
-          value={this.props.environmentVariables[varName][0]}
-          varName={varName}
-          key={varName}
-        />)) :
-      undefined
-    const edvElem = environmentalDVs !== undefined ? (
+    console.log(this.props.environmentVariables)
+    const edvElem = Object.keys(this.props.environmentVariables).length !== undefined ? (
       <div className="declared-variables-list">
         <h3>Saved Environment</h3>
-        {environmentalDVs}
+        <div className="frozen-variables">
+          {Object.keys(this.props.environmentVariables).map(varName =>
+        (<FrozenVariable
+          varName={varName}
+          byteLength={this.props.environmentVariables[varName][1].length}
+          key={varName}
+        />))}
+        </div>
       </div>
     ) : undefined
 

@@ -5,7 +5,8 @@ import { ValueRenderer } from '../reps/value-renderer'
 
 export class DeclaredVariable extends React.Component {
   static propTypes = {
-    value: PropTypes.string,
+    value: PropTypes.any,
+    varName: PropTypes.string,
   }
   render() {
     const r = true
