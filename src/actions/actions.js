@@ -513,6 +513,32 @@ export function exportGist() {
         <a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`,
         }))
       })
+  //   if (!matchDescription.length) {
+  //     // Create new gist if previous version is not found
+  //     console.log('No match found')
+  //     fetch(`${API_ROUTE}/gists?access_token=${state.userData.accessToken}`, {
+  //       body: JSON.stringify(gistData),
+  //       method: 'POST',
+  //     })
+  //       .then(response => response.json())
+  //       .then((json) => {
+  //         dispatch(updateAppMessages(`Exported to Github gist:
+  // <a href="${json.html_url}" target="_blank">gist</a> -
+  // <a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> runnable notebook</a>`))
+  //       })
+  //   } else {
+  //     console.log('match found')
+  //     // Update the existing gist
+  //     const gistID = matchDescription[0].id
+  //     fetch(`${API_ROUTE}/gists/${gistID}?access_token=${state.userData.accessToken}`, {
+  //       body: JSON.stringify(gistData),
+  //       method: 'PATCH',
+  //     })
+  //       .then(response => response.json())
+  //       .then((json) => {
+  //         console.log(json)
+  //       })
+  //   }
   }
 }
 

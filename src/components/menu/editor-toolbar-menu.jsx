@@ -17,6 +17,10 @@ export class EditorToolbarMenuUnconnected extends React.Component {
   }
 
   render() {
+    let elem = <NotebookMenuItem task={tasks.loginGithub} />
+    if (this.props.isAuthenticated) {
+      elem = <NotebookMenuItem task={tasks.exportGist} />
+    }
     return (
       <NotebookIconMenu>
         <NotebookMenuItem task={tasks.createNewNotebook} />
