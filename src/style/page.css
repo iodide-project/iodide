@@ -112,11 +112,11 @@ div.promise-handler-value {
 }
 
 div.editor-mode-controls {
-  width: 360px; 
+  width: 300px;
 }
 
 div.view-controls {
-  width: 300px;
+  width: 375px;
   display:flex;
   align-items:center;
 }

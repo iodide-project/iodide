@@ -412,11 +412,11 @@ export function markCellNotRendered() {
   }
 }
 
-function loginSuccess(authToken) {
+function loginSuccess(userData) {
   return (dispatch) => {
     dispatch({
       type: 'LOGIN_SUCCESS',
-      authToken,
+      userData,
     })
     dispatch(updateAppMessages('You are logged in'))
   }
@@ -437,7 +437,9 @@ export function login() {
 
   return (dispatch) => {
     // Functions to be called by child window
-    window.loginSuccess = authToken => dispatch(loginSuccess(authToken))
+    window.loginSuccess = (userData) => {
+      dispatch(loginSuccess(userData))
+    }
     window.loginFailure = () => dispatch(loginFailure())
   }
 }
@@ -456,9 +458,16 @@ export function logout() {
 }
 
 export function exportGist() {
+  // Go through all gist of the user
+  // Match the discription and fileName for each gist
+  // If mactch found, update it
+  // If none found then create a new Gist
+  const API_ROUTE = 'https://api.github.com'
   return (dispatch, getState) => {
     const state = getState()
     const filename = titleToHtmlFilename(state.title)
+    let matchDescription
+    let gistExist = false
     const gistData = {
       description: state.title,
       public: true,
@@ -466,17 +475,60 @@ export function exportGist() {
         [filename]: { content: exportJsmdBundle(state) },
       },
     };
-    fetch(`https://api.github.com/gists?access_token=${state.authToken}`, {
-      body: JSON.stringify(gistData),
-      method: 'POST',
-    })
+    fetch(`${API_ROUTE}/gists?access_token=${state.userData.accessToken}`)
       .then(response => response.json())
       .then((json) => {
-        console.log(json)
-        dispatch(updateAppMessages(`Exported to Github gist:
-<a href="${json.html_url}" target="_blank">gist</a> -
-<a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> runnable notebook</a>`))
+        matchDescription = json.filter(gist =>
+          gist.description === gistData.description &&
+          Object.keys(gist.files).length === 1 &&
+          Object.keys(gist.files)[0] === filename)
+
+        if (!matchDescription.length) {
+          return fetch(`${API_ROUTE}/gists?access_token=${state.userData.accessToken}`, {
+            body: JSON.stringify(gistData),
+            method: 'POST',
+          })
+        }
+        gistExist = true
+        const gistID = matchDescription[0].id
+        return fetch(`${API_ROUTE}/gists/${gistID}?access_token=${state.userData.accessToken}`, {
+          body: JSON.stringify(gistData),
+          method: 'PATCH',
+        })
       })
+      .then(response => response.json())
+      .then((json) => {
+        const message = gistExist ? 'Updated Gist' : 'Exported to GitHub Gist'
+        dispatch(updateAppMessages(`${message}:
+<a href="${json.html_url}" target="_blank">Gist</a> -
+<a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`))
+      })
+  //   if (!matchDescription.length) {
+  //     // Create new gist if previous version is not found
+  //     console.log('No match found')
+  //     fetch(`${API_ROUTE}/gists?access_token=${state.userData.accessToken}`, {
+  //       body: JSON.stringify(gistData),
+  //       method: 'POST',
+  //     })
+  //       .then(response => response.json())
+  //       .then((json) => {
+  //         dispatch(updateAppMessages(`Exported to Github gist:
+  // <a href="${json.html_url}" target="_blank">gist</a> -
+  // <a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> runnable notebook</a>`))
+  //       })
+  //   } else {
+  //     console.log('match found')
+  //     // Update the existing gist
+  //     const gistID = matchDescription[0].id
+  //     fetch(`${API_ROUTE}/gists/${gistID}?access_token=${state.userData.accessToken}`, {
+  //       body: JSON.stringify(gistData),
+  //       method: 'PATCH',
+  //     })
+  //       .then(response => response.json())
+  //       .then((json) => {
+  //         console.log(json)
+  //       })
+  //   }
   }
 }
 

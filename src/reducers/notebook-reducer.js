@@ -187,13 +187,13 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'LOGIN_SUCCESS': {
-      const { authToken } = action
-      return Object.assign({}, state, { authToken })
+      const { userData } = action
+      return Object.assign({}, state, { userData })
     }
 
     case 'LOGOUT': {
-      const authToken = undefined
-      return Object.assign({}, state, { authToken })
+      const userData = undefined
+      return Object.assign({}, state, { userData })
     }
 
     case 'APPEND_TO_EVAL_HISTORY': {

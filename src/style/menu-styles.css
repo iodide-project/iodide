@@ -3,7 +3,7 @@
   display: flex !important;
   justify-content: space-between;
   flex-flow: row wrap;
-  max-height:32px !important; 
+  max-height:32px !important;
 }
 
 .iodide-menu-item {
@@ -55,4 +55,9 @@
   right: 20px;
   top: 10px;
   z-index:100;
+}
+
+.user-avatar {
+  height: 24px;
+  border-radius: 50%;
 }
