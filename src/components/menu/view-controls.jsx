@@ -1,9 +1,12 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
 // import { ToolbarGroup } from 'material-ui/Toolbar'
 
 import HistoryIcon from 'material-ui-icons/History'
 import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
 import InfoIcon from 'material-ui-icons/InfoOutline'
+import AccountCircle from 'material-ui-icons/AccountCircle'
 
 import NotebookTaskButton from './notebook-task-button'
 import ViewModeToggleButton from './view-mode-toggle-button'
@@ -15,8 +18,25 @@ import AppInfoPane from '../panes/app-info-pane'
 import tasks from '../../actions/task-definitions'
 
 
-export default class ViewControls extends React.Component {
+export class ViewControlsUnconnected extends React.Component {
+  static propTypes = {
+    isAuthenticated: PropTypes.bool.isRequired,
+  }
+
   render() {
+    const loginItem = this.props.isAuthenticated ?
+      (
+        <NotebookTaskButton task={tasks.logoutGithub}>
+          <img src={this.props.avatar} alt="" className="user-avatar" />
+        </NotebookTaskButton>
+      )
+      :
+      (
+        <NotebookTaskButton task={tasks.loginGithub}>
+          <AccountCircle />
+        </NotebookTaskButton>
+      )
+
     return (
       <div className="view-controls">
         <LastSavedText />
@@ -38,6 +58,8 @@ export default class ViewControls extends React.Component {
         <HistoryPane />
         <AppInfoPane />
 
+        {loginItem}
+
         <ViewModeToggleButton />
 
       </div>
@@ -45,3 +67,13 @@ export default class ViewControls extends React.Component {
   }
 }
 
+export function mapStateToProps(state) {
+  const isAuthenticated = Boolean(state.userData.accessToken)
+  return {
+    isAuthenticated,
+    name: state.userData.name,
+    avatar: state.userData.avatar,
+  }
+}
+
+export default connect(mapStateToProps)(ViewControlsUnconnected)
