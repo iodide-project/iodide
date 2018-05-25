@@ -37,13 +37,17 @@ passport.use(new GitHubStrategy({
     callbackURL: `${SERVER_URI}/auth/github/callback`
   },
   function(accessToken, refreshToken, profile, done) {
+    const userData = {}
+    userData.firstName = profile.displayName.split(' ')[0]
+    userData.avatar = profile.photos[0].value
+    userData.accessToken = accessToken
     // asynchronous verification, for effect...
     process.nextTick(function () {
       // To keep the example simple, the user's GitHub profile is returned to
       // represent the logged-in user.  In a typical application, you would want
       // to associate the GitHub account with a user record in your database,
       // and return that user instead.
-      return done(null, accessToken);
+      return done(null, userData);
     });
   }
 ));
@@ -59,7 +63,7 @@ const ensureAuthenticated = (req, res, next) => {
 };
 
 express()
-  .use(express.static(path.join(process.cwd(), 'public'), {'index': 'iodide.dev.html'}))
+  .use(express.static(path.join(__dirname, 'dev'), {'index': 'iodide.dev.html'}))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .use(partials())
