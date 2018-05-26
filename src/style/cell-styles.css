@@ -48,8 +48,10 @@ div#cells.presentation div.cell-row.input {
 }
 
 .cell-menu-container {
-    width: 86px;
+    width: 76px;
     font-size:12px;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 .cell-type-label {
@@ -95,7 +97,9 @@ div#cells.presentation div.cell-row.input {
 
 
 div.cell-row-container {
-  width: calc(100% - 64px); /* 100% minus cell-menu-contatiner width*/
+  width: calc(100% - 76px); /* 100% minus cell-menu-contatiner width*/
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 div.cell-row {
@@ -111,6 +115,8 @@ div.collapse-button {
   margin-right: 5px;
   margin-left: 3px;
   width: 18px;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 div.collapse-button:hover {
@@ -125,15 +131,18 @@ div.HIDDEN div.collapse-button-tooltip-wrapper {
 }
 
 div.HIDDEN div.collapse-button {
-    width: calc(100%);
+    width: calc(100% - 3px);
     /* when collapsed, make the button visible*/
   background: #fdfdfd;
   outline: 1px solid #ddd;
   cursor: pointer;
+  height: 20px;
 }
 
 div.main-component {
-    width: calc(100% - 24px); /* 100% minus .collapse-button width (including margins) */
+    width: calc(100% - 25px); /* 100% minus .collapse-button width (including margins) */
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 div.input div.main-component {
