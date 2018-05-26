@@ -13,14 +13,15 @@ export class AppInfoPaneUnconnected extends React.Component {
   }
   render() {
     /* eslint-disable */
-    const messageDivs = this.props.appMessages
+    const appMessages = this.props.appMessages.reverse()
+    const messageDivs = appMessages
       .map((msg, i) => (
         <div
           className="app-info-message"
           key={`msg-${msg.when.toString()}`}
         >
-          <div dangerouslySetInnerHTML={{ __html: msg.details }} />
-          <div className='msg-when'>{msg.when}</div>
+          <div className='app-message-details' dangerouslySetInnerHTML={{ __html: msg.details }} />
+          <div className='app-message-when'>{msg.when}</div>
         </div>
       ))
     /* eslint-enable */

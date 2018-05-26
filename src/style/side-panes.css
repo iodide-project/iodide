@@ -123,3 +123,9 @@ div.app-info-message {
   padding-right: 10px;
   padding-top: 20px;
 }
+
+div.app-message-when {
+  font-style:italic;
+  color:gray;
+  font-size:12px;
+}

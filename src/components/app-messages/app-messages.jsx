@@ -8,6 +8,7 @@ import tasks from '../../actions/task-definitions'
 export class appMessagesUnconnected extends React.Component {
   static propTypes = {
     appMessages: PropTypes.array,
+    sidePaneMode: PropTypes.string,
   }
 
   constructor(props) {
@@ -36,7 +37,7 @@ export class appMessagesUnconnected extends React.Component {
 
   handleMore = () => {
     this.setState({ open: false })
-    tasks.toggleAppInfoPane.callback()
+    if (this.props.sidePaneMode !== '_APP_INFO') { tasks.toggleAppInfoPane.callback() }
   }
 
   render() {
@@ -59,6 +60,7 @@ export class appMessagesUnconnected extends React.Component {
 function mapStateToProps(state) {
   return {
     appMessages: state.appMessages,
+    sidePaneMode: state.sidePaneMode,
   }
 }
 
