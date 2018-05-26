@@ -14,14 +14,19 @@ export class appMessagesUnconnected extends React.Component {
     super(props)
     this.state = {
       open: false,
-      latestMessage: undefined,
+      latestMessage: {},
     }
   }
 
   shouldComponentUpdate(props, state) {
     const { latestMessage } = state
     const newMessage = props.appMessages.slice(-1)[0]
-    if (latestMessage !== newMessage) this.setState({ latestMessage: newMessage, open: true })
+    const newTimestamp = newMessage.when.toString()
+    const latestTimestamp = latestMessage.when === undefined ?
+      undefined : latestMessage.when.toString()
+    if (latestTimestamp === undefined || newTimestamp !== latestTimestamp) {
+      this.setState({ latestMessage: newMessage, open: true })
+    }
     return true
   }
 
@@ -39,11 +44,8 @@ export class appMessagesUnconnected extends React.Component {
       <SnackBar
         open={this.state.open}
         onClose={this.handleClose}
-        SnackbarContentProps={{
-            'aria-describedby': 'message-id',
-          }}
         autoHideDuration={5000}
-        message={<span id="message-id">{this.state.latestMessage}</span>}
+        message={<span id="message-id">{this.state.latestMessage.message}</span>}
         action={
           <Button onClick={this.handleMore} color="secondary" size="small">
               More

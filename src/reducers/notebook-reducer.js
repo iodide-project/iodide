@@ -43,9 +43,14 @@ function clearHistory(loadedState) {
   /* eslint-enable */
 }
 
-function updateAppMessages(state, action) {
+function updateAppMessages(state, messageObj) {
+  const message = Object.assign({}, messageObj)
   const appMessages = state.appMessages.slice()
-  appMessages.push(action.message)
+  if (message.when === undefined) {
+    message.when = (new Date()).toString()
+  }
+  if (message.details === undefined) message.details = message.message
+  appMessages.push(message)
   return Object.assign({}, state, { appMessages })
 }
 
@@ -214,7 +219,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_APP_MESSAGES': {
-      return updateAppMessages(state, action)
+      return updateAppMessages(state, action.message)
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {

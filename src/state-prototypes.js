@@ -29,6 +29,16 @@ export const cellTypeEnum = new StringEnum(
 
 export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
 
+const appMessageSchema = {
+  type: 'object',
+  properties: {
+    message: { type: 'string' },
+    details: { type: 'string' },
+    when: { type: 'string' },
+  },
+  additionalProperties: false,
+}
+
 const cellSchema = {
   type: 'object',
   properties: {
@@ -114,7 +124,7 @@ const stateSchema = {
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
-      items: { type: 'string' },
+      items: appMessageSchema,
     },
     autoSave: { type: 'string' },
     locallySaved: {
