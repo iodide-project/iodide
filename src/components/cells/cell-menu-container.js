@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import Tooltip from 'material-ui/Tooltip'
 import Menu from 'material-ui/Menu'
-import ExpandMore from 'material-ui-icons/ExpandMore'
+import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
 import CellMenu from './cell-menu'
 
 import * as actions from '../../actions/actions'
@@ -83,7 +83,7 @@ export class CellMenuContainerUnconnected extends React.Component {
               onClick={this.handleClick}
             >
               {this.props.label}
-              <ExpandMore />
+              <ArrowDropDown style={{ fontSize: 20 }} />
 
             </div>
           </React.Fragment>
