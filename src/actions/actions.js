@@ -45,8 +45,6 @@ export function importFromURL(importedState) {
   }
 }
 
-//  dispatch(updateAppMessages(`gonna run all cells. ${(new Date()).toString()}`))
-
 export function exportNotebook(exportAsReport = false) {
   return {
     type: 'EXPORT_NOTEBOOK',

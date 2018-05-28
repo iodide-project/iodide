@@ -22,6 +22,7 @@ export class appMessagesUnconnected extends React.Component {
   shouldComponentUpdate(props, state) {
     const { latestMessage } = state
     const newMessage = props.appMessages.slice(-1)[0]
+    if (newMessage === undefined) return false
     const newTimestamp = newMessage.when.toString()
     const latestTimestamp = latestMessage.when === undefined ?
       undefined : latestMessage.when.toString()
