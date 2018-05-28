@@ -13,7 +13,11 @@ export class AppInfoPaneUnconnected extends React.Component {
   }
   render() {
     /* eslint-disable */
-    const appMessages = this.props.appMessages.reverse()
+    const appMessages = this.props.appMessages.slice().reverse()
+    appMessages.sort((a,b)=> {
+      if( Date.parse(a.when) > Date.parse(b.when)) return -1
+      return 1
+    })
     const messageDivs = appMessages
       .map((msg, i) => (
         <div
