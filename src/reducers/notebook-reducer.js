@@ -131,9 +131,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       }, { title: state.title })
       clearHistory(nextState)
       window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
-      nextState = updateAppMessages(state, {
-        message: 'Saved notebook to localStorage.',
-      })
       return Object.assign({}, nextState, { lastSaved }, getSavedNotebooks())
     }
 
