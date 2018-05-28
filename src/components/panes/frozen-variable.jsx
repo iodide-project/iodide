@@ -14,7 +14,7 @@ function toSize(bytes) {
 
 export class FrozenVariable extends React.Component {
     static propTypes = {
-      byteLength: PropTypes.integer,
+      byteLength: PropTypes.number,
       varName: PropTypes.string,
     }
     render() {

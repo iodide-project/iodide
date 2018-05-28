@@ -13,7 +13,7 @@ import tasks from '../../actions/task-definitions'
 export class DeclaredVariablesPaneUnconnected extends React.Component {
   static propTypes = {
     userDefinedVarNames: PropTypes.arrayOf(PropTypes.string),
-    environmentVariables: PropTypes.arrayOf(PropTypes.string),
+    environmentVariables: PropTypes.object,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -21,7 +21,6 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 
   render() {
-    console.log(this.props.environmentVariables)
     const edvElem = Object.keys(this.props.environmentVariables).length !== undefined ? (
       <div className="declared-variables-list">
         <h3>Saved Environment</h3>
