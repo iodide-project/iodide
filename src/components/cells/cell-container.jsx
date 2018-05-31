@@ -21,6 +21,7 @@ export class CellContainerUnconnected extends React.Component {
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
+      highlightCell: PropTypes.func.isRequired,
     }).isRequired,
   }
 
@@ -32,10 +33,12 @@ export class CellContainerUnconnected extends React.Component {
   //   )
   // }
 
-  handleCellClick = () => {
+  handleCellClick = (event) => {
     if (this.props.viewMode === 'editor') {
       const scrollToCell = false
-      if (!this.props.selected) {
+      if (event.ctrlKey) {
+        this.props.actions.highlightCell(this.props.cellId)
+      } else if (!this.props.selected || this.props.highlighted) {
         this.props.actions.selectCell(this.props.cellId, scrollToCell)
       }
     }
@@ -47,6 +50,8 @@ export class CellContainerUnconnected extends React.Component {
       this.props.cellType
     }${
       this.props.selected ? ' selected-cell' : ''
+    }${
+      this.props.highlighted ? ' highlighted-cell' : ''
     }${
       this.props.editingCell ? ' editing-cell' : ''
     }`
@@ -72,9 +77,11 @@ export function mapStateToProps(state, ownProps) {
   return {
     cellId: cell.id,
     selected: cell.selected,
+    highlighted: cell.highlighted,
     editingCell: cell.selected && state.mode === 'edit',
     viewMode: state.viewMode,
     cellType: cell.cellType,
+    mode: state.mode,
   }
 }
 

@@ -53,6 +53,7 @@ const cellSchema = {
     value: {}, // empty schema, `value` can be anything
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
+    highlighted: { type: 'boolean' },
     executionStatus: { type: 'string' },
     evalStatus: {
       type: 'string',
@@ -207,6 +208,7 @@ function newCell(cellId, cellType, language = 'js') {
     rendered: false,
     selected: false,
     asyncProcessCount: 0,
+    highlighted: false,
     executionStatus: ' ',
     evalStatus: 'UNEVALUATED',
     rowSettings: newCellRowSettings(cellType),

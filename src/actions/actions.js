@@ -551,6 +551,13 @@ export function selectCell(cellID, scrollToCell = false) {
   }
 }
 
+export function highlightCell(cellID) {
+  return {
+    type: 'HIGHLIGHT_CELL',
+    id: cellID,
+  }
+}
+
 export function deleteCell() {
   return {
     type: 'DELETE_CELL',

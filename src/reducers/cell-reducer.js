@@ -45,11 +45,20 @@ const cellReducer = (state = newNotebook(), action) => {
 
     case 'SELECT_CELL': {
       const cells = state.cells.slice()
-      cells.forEach((c) => { c.selected = false })  // eslint-disable-line
+      cells.forEach((c) => { c.selected = false; c.highlighted = false; })  // eslint-disable-line
       const index = cells.findIndex(c => c.id === action.id)
       const thisCell = cells[index]
       thisCell.selected = true
       if (action.scrollToCell) { scrollToCellIfNeeded(thisCell.id) }
+      nextState = Object.assign({}, state, { cells })
+      return nextState
+    }
+
+    case 'HIGHLIGHT_CELL': {
+      const cells = state.cells.slice()
+      const index = cells.findIndex(c => c.id === action.id)
+      const thisCell = cells[index]
+      thisCell.highlighted = !thisCell.highlighted
       nextState = Object.assign({}, state, { cells })
       return nextState
     }
