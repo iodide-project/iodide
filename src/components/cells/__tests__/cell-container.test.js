@@ -90,14 +90,14 @@ describe('CellContainerUnconnected React component', () => {
   it('mouse down on cell container div fires selectCell with correct props', () => {
     props.viewMode = 'editor'
     props.selected = false
-    cellContainer().simulate('mousedown', { ctrlKey: false })
+    cellContainer().simulate('mousedown', { ctrlKey: false, metaKey: false })
     expect(selectCell.mock.calls.length).toBe(1)
     expect(selectCell.mock.calls[0].length).toBe(2)
   })
 
   it('mouse down on cell container fires highlightCell with correct props and Ctrl press', () => {
     props.viewMode = 'editor'
-    cellContainer().simulate('mousedown', { ctrlKey: true })
+    cellContainer().simulate('mousedown', { ctrlKey: true, metaKey: false })
     expect(highlightCell.mock.calls.length).toBe(1)
     expect(highlightCell.mock.calls[0].length).toBe(1)
   })
@@ -113,7 +113,7 @@ describe('CellContainerUnconnected React component', () => {
     it('click on cell container div does not fires selectCell with incorrect props', () => {
       props.viewMode = state.viewMode
       props.selected = state.selected
-      cellContainer().simulate('mousedown', { ctrlKey: false })
+      cellContainer().simulate('mousedown', { ctrlKey: false, metaKey: false })
       expect(selectCell.mock.calls.length).toBe(0)
     })
   })
