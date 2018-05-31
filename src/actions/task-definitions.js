@@ -153,6 +153,24 @@ tasks.addCellBelow = new UserTask({
   },
 })
 
+tasks.copyCell = new UserTask({
+  title: 'Copy Cell',
+  keybindings: ['ctrl+c', 'meta+c'],
+  displayKeybinding: `${commandKey()}+C`,
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.cellCopy() },
+})
+
+tasks.pasteCell = new UserTask({
+  title: 'Paste Cell',
+  keybindings: ['ctrl+v', 'meta+v'],
+  displayKeybinding: `${commandKey()}+V`,
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.cellPaste() },
+})
+
 tasks.deleteCell = new UserTask({
   title: 'Delete Cell',
   keybindings: ['shift+backspace'],

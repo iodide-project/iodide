@@ -5,6 +5,8 @@ import UpArrow from 'material-ui-icons/ArrowUpward'
 import DownArrow from 'material-ui-icons/ArrowDownward'
 import PlayButton from 'material-ui-icons/PlayArrow'
 import FastForward from 'material-ui-icons/FastForward'
+import ContentCopy from 'material-ui-icons/ContentCopy'
+import ContentPaste from 'material-ui-icons/ContentPaste'
 
 import EditorToolbarMenu from './editor-toolbar-menu'
 import NotebookTaskButton from './notebook-task-button'
@@ -24,6 +26,12 @@ export default class EditorModeControls extends React.Component {
         </NotebookTaskButton>
         <NotebookTaskButton task={tasks.moveCellDown}>
           <DownArrow />
+        </NotebookTaskButton>
+        <NotebookTaskButton task={tasks.copyCell}>
+          <ContentCopy />
+        </NotebookTaskButton>
+        <NotebookTaskButton task={tasks.pasteCell}>
+          <ContentPaste />
         </NotebookTaskButton>
         <NotebookTaskButton task={tasks.evaluateCell}>
           <PlayButton />

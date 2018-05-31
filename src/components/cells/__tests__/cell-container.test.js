@@ -6,6 +6,7 @@ import CellMenuContainer from '../cell-menu-container'
 
 describe('CellContainerUnconnected React component', () => {
   let selectCell
+  let highlightCell
   let props
   let mountedCont
   const node = <span>Hello</span>
@@ -19,13 +20,14 @@ describe('CellContainerUnconnected React component', () => {
 
   beforeEach(() => {
     selectCell = jest.fn()
+    highlightCell = jest.fn()
     props = {
       selected: true,
       cellId: 1,
       editingCell: true,
       viewMode: 'editor',
       cellType: 'code',
-      actions: { selectCell },
+      actions: { selectCell, highlightCell },
     }
     mountedCont = undefined
   })
@@ -72,6 +74,14 @@ describe('CellContainerUnconnected React component', () => {
       .toBe('cell-container code selected-cell editing-cell')
   })
 
+  it('sets the top div with correct class if highlighted===true', () => {
+    props.selected = false
+    props.editingCell = false
+    props.highlighted = true
+    expect(cellContainer().find('div').at(0).props().className)
+      .toBe('cell-container code highlighted-cell')
+  })
+
   it('sets the onMouseDown prop to handleCellClick', () => {
     expect(cellContainer().props().onMouseDown)
       .toEqual(cellContainer().instance().handleCellClick)
@@ -80,10 +90,18 @@ describe('CellContainerUnconnected React component', () => {
   it('mouse down on cell container div fires selectCell with correct props', () => {
     props.viewMode = 'editor'
     props.selected = false
-    cellContainer().simulate('mousedown')
+    cellContainer().simulate('mousedown', { ctrlKey: false })
     expect(selectCell.mock.calls.length).toBe(1)
     expect(selectCell.mock.calls[0].length).toBe(2)
   })
+
+  it('mouse down on cell container fires highlightCell with correct props and Ctrl press', () => {
+    props.viewMode = 'editor'
+    cellContainer().simulate('mousedown', { ctrlKey: true })
+    expect(highlightCell.mock.calls.length).toBe(1)
+    expect(highlightCell.mock.calls[0].length).toBe(1)
+  })
+
 
   const selectCellNotFiredVariants = [
     { selected: true, viewMode: 'editor' },
@@ -95,7 +113,7 @@ describe('CellContainerUnconnected React component', () => {
     it('click on cell container div does not fires selectCell with incorrect props', () => {
       props.viewMode = state.viewMode
       props.selected = state.selected
-      cellContainer().simulate('mousedown')
+      cellContainer().simulate('mousedown', { ctrlKey: false })
       expect(selectCell.mock.calls.length).toBe(0)
     })
   })
@@ -129,6 +147,7 @@ describe('CellContainer mapStateToProps', () => {
       cells: [{
         id: 5,
         selected: true,
+        highlighted: false,
         cellType: 'code',
       },
       ],
@@ -143,6 +162,7 @@ describe('CellContainer mapStateToProps', () => {
       .toEqual({
         cellId: 5,
         selected: true,
+        highlighted: false,
         editingCell: true,
         viewMode: 'editor',
         cellType: 'code',
@@ -157,6 +177,7 @@ describe('CellContainer mapStateToProps', () => {
       .toEqual({
         cellId: 5,
         selected: false,
+        highlighted: false,
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',
@@ -171,6 +192,7 @@ describe('CellContainer mapStateToProps', () => {
       .toEqual({
         cellId: 5,
         selected: true,
+        highlighted: false,
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',
@@ -185,6 +207,7 @@ describe('CellContainer mapStateToProps', () => {
       .toEqual({
         cellId: 5,
         selected: false,
+        highlighted: false,
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',

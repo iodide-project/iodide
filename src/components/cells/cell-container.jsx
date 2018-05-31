@@ -81,7 +81,6 @@ export function mapStateToProps(state, ownProps) {
     editingCell: cell.selected && state.mode === 'edit',
     viewMode: state.viewMode,
     cellType: cell.cellType,
-    mode: state.mode,
   }
 }
 

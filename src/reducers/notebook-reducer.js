@@ -57,6 +57,7 @@ function clearHistory(loadedState) {
   loadedState.userDefinedVarNames = []
   loadedState.history = []
   loadedState.externalDependencies = []
+  loadedState.copied = []
   loadedState.executionNumber = 0
   loadedState.cells = [...loadedState.cells.slice()]
   loadedState.cells.forEach((cell) => {

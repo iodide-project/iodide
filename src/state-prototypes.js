@@ -135,6 +135,7 @@ const stateSchema = {
       type: 'array',
       items: { type: 'string' },
     },
+    copied: { type: 'array' },
     savedEnvironment: {
       type: 'object',
       additionalProperties: environmentVariableSchema,
@@ -248,6 +249,7 @@ function blankState() {
     appMessages: [],
     autoSave: undefined,
     locallySaved: [],
+    copied: [],
     savedEnvironment: {},
     runningCellID: undefined,
   }

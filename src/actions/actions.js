@@ -558,6 +558,18 @@ export function highlightCell(cellID) {
   }
 }
 
+export function cellCopy() {
+  return {
+    type: 'CELL_COPY',
+  }
+}
+
+export function cellPaste() {
+  return {
+    type: 'CELL_PASTE',
+  }
+}
+
 export function deleteCell() {
   return {
     type: 'DELETE_CELL',

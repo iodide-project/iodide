@@ -63,6 +63,41 @@ const cellReducer = (state = newNotebook(), action) => {
       return nextState
     }
 
+    case 'CELL_COPY': {
+      // Work on not copy at edit mode, clicking copy activated command mode
+      let copied
+      const cells = state.cells.slice()
+      copied = cells.filter(c => c.highlighted).map(c => c.id)
+      if (!copied.length) {
+        copied = [getSelectedCellId(state)]
+      }
+      return Object.assign({}, state, { copied })
+    }
+
+    case 'CELL_PASTE': {
+      if (state.copied.length === 0) {
+        return state
+      }
+      nextState = Object.assign({}, state)
+      const cellID = getSelectedCellId(state)
+      const cells = nextState.cells.slice()
+      const pasteIndex = cells.findIndex(c => c.id === cellID)
+      const newId = newCellID(cells)
+      const copiedCells = nextState.copied.map((id, i) => {
+        const copyIndex = cells.findIndex(c => c.id === id)
+        cells[copyIndex].highlighted = false
+        return Object.assign(
+          {},
+          cells[copyIndex],
+          { id: newId + i, selected: false },
+        )
+      })
+      cells.splice(pasteIndex + 1, 0, ...copiedCells)
+      // scrollToCellIfNeeded(newId + (copiedCells.length - 1))
+      nextState = Object.assign({}, nextState, { cells: [...cells], copied: [] })
+      return nextState
+    }
+
     case 'CELL_UP':
       scrollToCellIfNeeded(getSelectedCellId(state))
       return Object.assign(

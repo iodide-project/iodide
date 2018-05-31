@@ -122,7 +122,6 @@ class CellEditor extends React.Component {
   }
 
   handleFocusChange(focused) {
-    console.log('HEY', focused)
     if (focused && this.props.viewMode === 'editor') {
       if (!this.props.thisCellBeingEdited) {
         this.props.actions.selectCell(this.props.cellId)
