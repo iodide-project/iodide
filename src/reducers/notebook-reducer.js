@@ -1,4 +1,4 @@
-import { newNotebook, newCell, blankState } from '../state-prototypes'
+import { newNotebook, newCell, blankState, addAppMessageToState } from '../state-prototypes'
 import {
   exportJsmdBundle,
   stringifyStateToJsmd,
@@ -46,13 +46,13 @@ function clearHistory(loadedState) {
 function updateAppMessages(state, messageObj) {
   const message = Object.assign({}, messageObj)
   delete message.type
-  const appMessages = state.appMessages.slice()
   if (message.when === undefined) {
     message.when = (new Date()).toString()
   }
   if (message.details === undefined) message.details = message.message
-  appMessages.push(message)
-  return Object.assign({}, state, { appMessages })
+  const nextState = Object.assign({}, state)
+  nextState.appMessages = nextState.appMessages.slice()
+  return addAppMessageToState(nextState, message)
 }
 
 function clearUserDefinedVars(userDefinedVarNames) {
@@ -66,12 +66,10 @@ function clearUserDefinedVars(userDefinedVarNames) {
   })
 }
 
-
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 initialVariables.add('CodeMirror')
-
 
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState

@@ -22,7 +22,7 @@ export class AppInfoPaneUnconnected extends React.Component {
       .map((msg, i) => (
         <div
           className="app-info-message"
-          key={`msg-${msg.when.toString()}`}
+          key={`msg-${msg.id}`}
         >
           <div className='app-message-details' dangerouslySetInnerHTML={{ __html: msg.details }} />
           <div className='app-message-when'>{msg.when}</div>
