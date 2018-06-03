@@ -6,11 +6,9 @@ import {
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
 
-import { downloadResource } from '../tools/notebook-utils'
-
 const AUTOSAVE = 'AUTOSAVE: '
 
-function getSavedNotebooks() {
+export function getSavedNotebooks() {
   const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
   const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
   locallySaved.sort((a, b) => {
@@ -26,6 +24,13 @@ function getSavedNotebooks() {
     autoSave,
     locallySaved,
   }
+}
+
+export function downloadResource(dataStr, filename) {
+  const dlAnchorElem = document.getElementById('export-anchor')
+  dlAnchorElem.setAttribute('href', dataStr)
+  dlAnchorElem.setAttribute('download', filename)
+  dlAnchorElem.click()
 }
 
 function clearHistory(loadedState) {
@@ -239,7 +244,5 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
   }
 }
-
-export { getSavedNotebooks }
 
 export default notebookReducer

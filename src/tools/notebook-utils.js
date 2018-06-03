@@ -47,13 +47,6 @@ function getCellById(cells, cellID) {
   return thisCell
 }
 
-function downloadResource(dataStr, filename) {
-  const dlAnchorElem = document.getElementById('export-anchor')
-  dlAnchorElem.setAttribute('href', dataStr)
-  dlAnchorElem.setAttribute('download', filename)
-  dlAnchorElem.click()
-}
-
 function prettyDate(time) {
   const date = new Date(time)
   const diff = (((new Date()).getTime() - date.getTime()) / 1000)
@@ -89,6 +82,5 @@ export {
   getCellById,
   getCellBelowSelectedId, getCellAboveSelectedId,
   isCommandMode,
-  downloadResource,
   viewModeIsEditor, viewModeIsPresentation,
 }

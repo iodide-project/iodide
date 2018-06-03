@@ -1,7 +1,7 @@
 import matrix from '../components/reps/matrix-handler'
 import dataframe from '../components/reps/dataframe-handler'
 import array from '../components/reps/array-handler'
-import { downloadResource } from '../tools/notebook-utils'
+import { downloadResource } from '../reducers/notebook-reducer'
 
 export function toCSVString(data, delimiter = ',', header = true) {
   let headerRow = ''
