@@ -10,18 +10,19 @@ export class PromiseRep extends React.Component {
       value: undefined,
       runTime: 0,
     }
-    this.state.promise = props.promise.then(
-      (val) => {
-        this.setState({ status: 'fulfilled', value: val })
-        return val
-      },
-      (val) => {
-        this.setState({ status: 'rejected', value: val })
-        return val
-      },
-    ).catch((e) => {
-      this.setState({ status: 'rejected', value: e })
-    })
+    this.state.promise = props.promise
+      .then(
+        (val) => {
+          this.setState({ status: 'fulfilled', value: val })
+          return val
+        },
+        (val) => {
+          this.setState({ status: 'rejected', value: val })
+          return val
+        },
+      ).catch((e) => {
+        this.setState({ status: 'rejected', value: e })
+      })
     const runTimer = setInterval(() => {
       if (this.state.status === 'pending') {
         this.setState({ runTime: this.state.runTime + 1 })
