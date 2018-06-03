@@ -19,12 +19,15 @@ const d9 = [
 const d10 = [
   { a: 10, b: { n: 1 } }, { a: 1, b: { n: 1000 } },
 ]
-
 const d11 = () => { console.log('this should break!') }
-
-// embedded fcns in array of objects?
 const d12 = [
   { a: 10, b: () => 100 }, { a: 20, b: () => 200 },
+]
+
+const d13 = undefined
+const d14 = null
+const d15 = [
+  { a: undefined, b: null }, { a: undefined, b: null },
 ]
 
 describe('toCSVString transformations', () => {
@@ -42,6 +45,9 @@ describe('toCSVString transformations', () => {
     expect(() => toCSVString(d11)).toThrow()
     // should functions be expressed w/ toString like this, or as [function Function] or whatver?
     expect(toCSVString(d12)).toBe(`a,b\r\n10,${d12[0].b.toString()}\r\n20,${d12[1].b.toString()}`)
+    expect(() => { toCSVString(d13) }).toThrow()
+    expect(() => { toCSVString(d14) }).toThrow()
+    expect(toCSVString(d15)).toBe('a,b\r\n,\r\n,') // is this right? should undefined / null be these empty things?
   })
 })
 
