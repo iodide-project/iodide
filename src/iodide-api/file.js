@@ -2,6 +2,11 @@ import matrix from '../components/reps/matrix-handler'
 import dataframe from '../components/reps/dataframe-handler'
 import array from '../components/reps/array-handler'
 import { downloadResource } from '../reducers/notebook-reducer'
+// THIS CAUSES SOME TESTS TO FAIL FOR SOME REASON.
+// TODO: investigate why having downloadResource in notebook-utils causes a test failure
+// in reducers/__tests__/notebook-reducer.test.js. No other test breaks because of
+// downloadResource being elsewhere.
+// import { downloadResource } from '../tools/notebook-utils'
 
 export function toCSVString(data, delimiter = ',', header = true) {
   let headerRow = ''
