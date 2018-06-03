@@ -94,7 +94,7 @@ div.promise-handler-value {
   margin-top:6px;
 }
 
-.undefined-rep {
+.undefined-rep, .null-rep {
   display: inline-block;
 }
 
