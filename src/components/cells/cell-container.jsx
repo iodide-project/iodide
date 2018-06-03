@@ -22,6 +22,7 @@ export class CellContainerUnconnected extends React.Component {
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
       highlightCell: PropTypes.func.isRequired,
+      unHighlightCells: PropTypes.func.isRequired,
     }).isRequired,
   }
 
@@ -39,6 +40,7 @@ export class CellContainerUnconnected extends React.Component {
       if (event.ctrlKey || event.metaKey) {
         this.props.actions.highlightCell(this.props.cellId)
       } else if (!this.props.selected || this.props.highlighted) {
+        this.props.actions.unHighlightCells()
         this.props.actions.selectCell(this.props.cellId, scrollToCell)
       }
     }

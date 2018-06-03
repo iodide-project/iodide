@@ -558,9 +558,22 @@ export function highlightCell(cellID) {
   }
 }
 
+export function unHighlightCells() {
+  return {
+    type: 'UNHIGHLIGHT_CELLS',
+  }
+}
+
+
 export function cellCopy() {
   return {
     type: 'CELL_COPY',
+  }
+}
+
+export function cellCut() {
+  return {
+    type: 'CELL_CUT',
   }
 }
 

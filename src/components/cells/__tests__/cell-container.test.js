@@ -7,6 +7,7 @@ import CellMenuContainer from '../cell-menu-container'
 describe('CellContainerUnconnected React component', () => {
   let selectCell
   let highlightCell
+  let unHighlightCells
   let props
   let mountedCont
   const node = <span>Hello</span>
@@ -21,13 +22,14 @@ describe('CellContainerUnconnected React component', () => {
   beforeEach(() => {
     selectCell = jest.fn()
     highlightCell = jest.fn()
+    unHighlightCells = jest.fn()
     props = {
       selected: true,
       cellId: 1,
       editingCell: true,
       viewMode: 'editor',
       cellType: 'code',
-      actions: { selectCell, highlightCell },
+      actions: { selectCell, highlightCell, unHighlightCells },
     }
     mountedCont = undefined
   })
@@ -94,6 +96,15 @@ describe('CellContainerUnconnected React component', () => {
     expect(selectCell.mock.calls.length).toBe(1)
     expect(selectCell.mock.calls[0].length).toBe(2)
   })
+
+  it('mouse down on cell container div fires unHighlightCells with correct props', () => {
+    props.viewMode = 'editor'
+    props.selected = false
+    cellContainer().simulate('mousedown', { ctrlKey: false, metaKey: false })
+    expect(unHighlightCells.mock.calls.length).toBe(1)
+    expect(unHighlightCells.mock.calls[0].length).toBe(0)
+  })
+
 
   it('mouse down on cell container fires highlightCell with correct props and Ctrl press', () => {
     props.viewMode = 'editor'

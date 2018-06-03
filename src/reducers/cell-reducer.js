@@ -45,7 +45,7 @@ const cellReducer = (state = newNotebook(), action) => {
 
     case 'SELECT_CELL': {
       const cells = state.cells.slice()
-      cells.forEach((c) => { c.selected = false; c.highlighted = false; })  // eslint-disable-line
+      cells.forEach((c) => { c.selected = false })  // eslint-disable-line
       const index = cells.findIndex(c => c.id === action.id)
       const thisCell = cells[index]
       thisCell.selected = true
@@ -63,38 +63,60 @@ const cellReducer = (state = newNotebook(), action) => {
       return nextState
     }
 
-    case 'CELL_COPY': {
-      // Work on not copy at edit mode, clicking copy activated command mode
-      let copied
+    case 'UNHIGHLIGHT_CELLS': {
       const cells = state.cells.slice()
-      copied = cells.filter(c => c.highlighted).map(c => c.id)
-      if (!copied.length) {
-        copied = [getSelectedCellId(state)]
+      cells.forEach((c) => { c.highlighted = false }) // eslint-disable-line
+      return Object.assign({}, state, { cells })
+    }
+
+    case 'CELL_COPY': {
+      const cutCells = []
+      const selectedId = getSelectedCellId(state)
+      const cells = state.cells.slice()
+      let copiedCells = cells.filter(c => c.highlighted)
+      if (!copiedCells.length) {
+        const index = cells.findIndex(c => c.id === selectedId)
+        copiedCells = [cells[index]]
       }
-      return Object.assign({}, state, { copied })
+      return Object.assign({}, state, { copiedCells, cutCells })
+    }
+
+    case 'CELL_CUT': {
+      const copiedCells = []
+      const selectedId = getSelectedCellId(state)
+      let cutCells
+      let cells = state.cells.slice()
+      cutCells = cells.filter(c => c.highlighted)
+      if (!cutCells.length) {
+        const index = cells.findIndex(c => c.id === selectedId)
+        cutCells = [cells[index]]
+        cells.splice(index, 1)
+      } else {
+        cells = cells.filter(c => !c.highlighted)
+      }
+      return Object.assign({}, state, { cells, cutCells, copiedCells })
     }
 
     case 'CELL_PASTE': {
-      if (state.copied.length === 0) {
+      if (state.copiedCells.length && state.cutCells.length) {
         return state
       }
-      nextState = Object.assign({}, state)
+      const newState = Object.assign({}, state)
       const cellID = getSelectedCellId(state)
-      const cells = nextState.cells.slice()
+      const cells = newState.cells.slice()
+      let cellsToPaste = newState.copiedCells.length ?
+        newState.copiedCells.slice()
+        :
+        newState.cutCells.slice()
       const pasteIndex = cells.findIndex(c => c.id === cellID)
       const newId = newCellID(cells)
-      const copiedCells = nextState.copied.map((id, i) => {
-        const copyIndex = cells.findIndex(c => c.id === id)
-        cells[copyIndex].highlighted = false
-        return Object.assign(
-          {},
-          cells[copyIndex],
-          { id: newId + i, selected: false },
-        )
-      })
-      cells.splice(pasteIndex + 1, 0, ...copiedCells)
-      // scrollToCellIfNeeded(newId + (copiedCells.length - 1))
-      nextState = Object.assign({}, nextState, { cells: [...cells], copied: [] })
+      cellsToPaste = cellsToPaste.map((cell, i) => Object.assign(
+        {},
+        cell,
+        { highlighted: false, selected: false, id: newId + i },
+      ))
+      cells.splice(pasteIndex + 1, 0, ...cellsToPaste)
+      nextState = Object.assign({}, newState, { cells: [...cells], copiedCells: [], cutCells: [] })
       return nextState
     }
 
