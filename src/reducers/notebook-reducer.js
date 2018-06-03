@@ -6,6 +6,8 @@ import {
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
 
+import { downloadResource } from '../tools/notebook-utils'
+
 const AUTOSAVE = 'AUTOSAVE: '
 
 function getSavedNotebooks() {
@@ -78,12 +80,8 @@ const notebookReducer = (state = newNotebook(), action) => {
         { viewMode: action.exportAsReport ? 'presentation' : 'editor' },
       )
       const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
-      const dlAnchorElem = document.getElementById('export-anchor')
-      dlAnchorElem.setAttribute('href', dataStr)
       title = exportState.title === undefined ? 'new-notebook' : exportState.title
-      dlAnchorElem.setAttribute('download', titleToHtmlFilename(title))
-      dlAnchorElem.click()
-
+      downloadResource(dataStr, titleToHtmlFilename(title))
       return state
     }
 
