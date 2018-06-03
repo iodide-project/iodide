@@ -50,8 +50,12 @@ div#cells.presentation {
 /************************************************/
 /* cell output styles */
 
+.rep-container {
+  overflow-x: auto;
+}
+
 .array-rep {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .data-set-info {
