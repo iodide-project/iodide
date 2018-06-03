@@ -50,7 +50,7 @@ export default {
       )
     }
     return (
-      <div>
+      <div className="array-rep">
         <div className="data-set-info">{dataSetInfo}</div>
         <div>
             [{arrayElements}]

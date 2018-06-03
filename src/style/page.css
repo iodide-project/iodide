@@ -50,6 +50,10 @@ div#cells.presentation {
 /************************************************/
 /* cell output styles */
 
+.array-rep {
+  overflow-x: scroll;
+}
+
 .data-set-info {
   color: #888;
   font-style: italic;
