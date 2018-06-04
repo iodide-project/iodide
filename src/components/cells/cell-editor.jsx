@@ -197,7 +197,9 @@ class CellEditor extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
-  const languageModule = state.languages[cell.language].module
+  const languageModule = cell.language in state.languages ?
+    state.languages[cell.language].module : null
+
   const codeMirrorMode = (
     cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
   )
