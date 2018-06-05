@@ -113,7 +113,7 @@ export class ValueRenderer extends React.Component {
     const value = this.props.valueToRender
     const resultElem = renderValue(value)
     if (resultElem !== undefined) {
-      return resultElem
+      return <div className="rep-container">{resultElem}</div>
     }
     return <div className="empty-resultset" />
   }
