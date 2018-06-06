@@ -85,6 +85,7 @@ class CellEditor extends React.Component {
     cellType: PropTypes.string,
     content: PropTypes.string,
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    languageIsAvailable: PropTypes.bool,
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
       changeMode: PropTypes.func.isRequired,
@@ -159,8 +160,8 @@ class CellEditor extends React.Component {
   }
 
   render() {
-    const editorOptions = Object.assign({
-      mode: this.props.codeMirrorMode,
+    const editorOptions = Object.assign({}, {
+      mode: this.props.languageIsAvailable ? this.props.codeMirrorMode : '',
       lineWrapping: false,
       matchBrackets: true,
       autoCloseBrackets: true,
@@ -196,9 +197,13 @@ class CellEditor extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
+  const languageModule = cell.language in state.languages ?
+    state.languages[cell.language].module : null
+
   const codeMirrorMode = (
     cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
   )
+
   return {
     thisCellBeingEdited: cell.selected && state.mode === 'edit',
     viewMode: state.viewMode,
@@ -206,6 +211,7 @@ function mapStateToProps(state, ownProps) {
     content: cell.content,
     cellId,
     codeMirrorMode,
+    languageIsAvailable: cell.cellType !== 'code' ? true : window[languageModule] !== undefined,
   }
 }
 
