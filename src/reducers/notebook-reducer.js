@@ -45,11 +45,6 @@ function clearHistory(loadedState) {
 
 function updateAppMessages(state, messageObj) {
   const message = Object.assign({}, messageObj)
-  delete message.type
-  if (message.when === undefined) {
-    message.when = (new Date()).toString()
-  }
-  if (message.details === undefined) message.details = message.message
   const nextState = Object.assign({}, state)
   nextState.appMessages = nextState.appMessages.slice()
   return addAppMessageToState(nextState, message)
@@ -215,7 +210,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_APP_MESSAGES': {
-      return updateAppMessages(state, action)
+      return updateAppMessages(state, action.message)
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {

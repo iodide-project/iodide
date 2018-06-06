@@ -27,7 +27,16 @@ export function temporarilySaveRunningCellID(cellID) {
 }
 
 export function updateAppMessages(messageObj) {
-  return Object.assign({}, messageObj, { type: 'UPDATE_APP_MESSAGES' })
+  //     message.when = (new Date()).toString()
+  //     message.details, when, message.
+  const { message } = messageObj
+  let { details, when } = messageObj
+  if (when === undefined) when = new Date().toString()
+  if (details === undefined) details = message
+  return {
+    type: 'UPDATE_APP_MESSAGES',
+    message: { message, details, when },
+  }
 }
 
 export function importNotebook(newState) {
