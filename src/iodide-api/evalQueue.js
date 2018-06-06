@@ -66,7 +66,7 @@ const awaitPromises = promises =>
       setRunningCellEvalStatus('ASYNC_PENDING')
       incrementAsyncProcessCount()
     })
-    .then(() => Promise.all(promises))
+    .then(() => Promise.all(promises).catch((err) => { throw Error(err) }))
     .then((resolutions) => {
       incrementAsyncProcessCount(-1)
       if (getRunningCellAsyncProcessStatus() === 0) {

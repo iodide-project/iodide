@@ -93,4 +93,23 @@ describe('flow API', () => {
 
     jest.runAllTimers()
   })
+
+  it('tests error with async/await', async () => {
+    // evalQueue.await([
+    //   Promise.resolve(10).then(d => d.json()),
+    // ])
+    await expect(evalQueue.await([
+      Promise.resolve(10).then(d => d.json()),
+    ])).rejects.toThrowError()
+    // try {
+    //   evalQueue.await([
+    //     Promise.resolve(10).then(d => d.json()),
+    //   ]).then(() => {
+    //     // this should fail if we get to it.
+    //     expect(true).toBe(false)
+    //   })
+    // } catch (e) {
+    //   expect(e.message).toEqual('TypeError: d.json is not a function');
+    // }
+  })
 })
