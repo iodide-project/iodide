@@ -30,10 +30,10 @@ module.exports = (env) => {
       } else {
         APP_VERSION_STRING = gitRev.branch()
       }
-      APP_PATH_STRING = 'https://iodide-project.github.io/master/'
+      APP_PATH_STRING = 'https://iodide.io/master/'
     } else {
       APP_VERSION_STRING = gitRev.tag()
-      APP_PATH_STRING = 'https://iodide-project.github.io/dist/'
+      APP_PATH_STRING = 'https://iodide.io/dist/'
     }
     CSS_PATH_STRING = APP_PATH_STRING
     plugins.push(new UglifyJSPlugin())
