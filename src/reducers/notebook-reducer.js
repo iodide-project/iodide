@@ -140,7 +140,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       }, { title: state.title })
       clearHistory(nextState)
       window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
-      return Object.assign({}, nextState, { lastSaved }, getSavedNotebooks())
+      return Object.assign({}, state, { lastSaved }, getSavedNotebooks())
     }
 
     case 'LOAD_NOTEBOOK': {
