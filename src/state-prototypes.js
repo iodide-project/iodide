@@ -258,21 +258,6 @@ function addNewCellToState(state, cellType = 'code', language = 'js') {
   return state
 }
 
-function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
-  return {
-    id: appMessageId,
-    message: appMessageText,
-    details: appMessageDetails,
-    when: appMessageWhen,
-  }
-}
-
-function addAppMessageToState(state, appMessage) {
-  const nextAppMessageId = newCellID(state.appMessages)
-  state.appMessages
-    .push(newAppMessage(nextAppMessageId, appMessage.message, appMessage.details, appMessage.when))
-  return state
-}
 
 function newNotebook() {
   // initialize a blank notebook and push a blank new cell into it
@@ -289,7 +274,6 @@ export {
   blankState,
   nextOverflow,
   addNewCellToState,
-  addAppMessageToState,
   // enums and schemas
   rowOverflowEnum,
   stateSchema,

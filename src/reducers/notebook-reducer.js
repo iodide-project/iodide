@@ -1,4 +1,4 @@
-import { newNotebook, newCell, blankState, addAppMessageToState } from '../state-prototypes'
+import { newNotebook, newCell, blankState, newCellID } from '../state-prototypes'
 import {
   exportJsmdBundle,
   stringifyStateToJsmd,
@@ -7,6 +7,22 @@ import {
 } from '../tools/jsmd-tools'
 
 const AUTOSAVE = 'AUTOSAVE: '
+
+function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
+  return {
+    id: appMessageId,
+    message: appMessageText,
+    details: appMessageDetails,
+    when: appMessageWhen,
+  }
+}
+
+function addAppMessageToState(state, appMessage) {
+  const nextAppMessageId = newCellID(state.appMessages)
+  state.appMessages
+    .push(newAppMessage(nextAppMessageId, appMessage.message, appMessage.details, appMessage.when))
+  return state
+}
 
 function getSavedNotebooks() {
   const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
