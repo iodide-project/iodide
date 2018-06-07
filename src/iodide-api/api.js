@@ -5,6 +5,7 @@ import { addOutputHandler } from '../components/reps/value-renderer'
 import { environment } from './environment'
 import { evalQueue } from './evalQueue'
 import { output } from './output'
+import { file } from './file'
 
 function getDataSync(url) {
   const re = new XMLHttpRequest()
@@ -19,6 +20,7 @@ export const iodide = {
   environment,
   evalQueue,
   output,
+  file,
 }
 
 export default iodide

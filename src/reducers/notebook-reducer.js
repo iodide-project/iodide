@@ -8,7 +8,7 @@ import {
 
 const AUTOSAVE = 'AUTOSAVE: '
 
-function getSavedNotebooks() {
+export function getSavedNotebooks() {
   const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
   const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
   locallySaved.sort((a, b) => {
@@ -24,6 +24,13 @@ function getSavedNotebooks() {
     autoSave,
     locallySaved,
   }
+}
+
+export function downloadResource(dataStr, filename) {
+  const dlAnchorElem = document.getElementById('export-anchor')
+  dlAnchorElem.setAttribute('href', dataStr)
+  dlAnchorElem.setAttribute('download', filename)
+  dlAnchorElem.click()
 }
 
 function clearHistory(loadedState) {
@@ -78,12 +85,8 @@ const notebookReducer = (state = newNotebook(), action) => {
         { viewMode: action.exportAsReport ? 'presentation' : 'editor' },
       )
       const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
-      const dlAnchorElem = document.getElementById('export-anchor')
-      dlAnchorElem.setAttribute('href', dataStr)
       title = exportState.title === undefined ? 'new-notebook' : exportState.title
-      dlAnchorElem.setAttribute('download', titleToHtmlFilename(title))
-      dlAnchorElem.click()
-
+      downloadResource(dataStr, titleToHtmlFilename(title))
       return state
     }
 
@@ -241,7 +244,5 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
   }
 }
-
-export { getSavedNotebooks }
 
 export default notebookReducer
