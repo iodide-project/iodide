@@ -87,4 +87,4 @@ All contributions to IODIDE will be licensed under the [Mozilla Public License 2
 
 ## Get in Touch
 
-- __IRC:__ [#iodide](https://client00.chat.mibbit.com/?server=irc.mozilla.org&channel=%23iodide) channel over at irc.mozilla.org
+- __Gitter:__ [#iodide](https://gitter.im/iodide-project/iodide) channel over at gitter.im
