@@ -10,9 +10,13 @@ describe('temporarilySaveRunningCellID', () => {
 
 describe('updateAppMessages', () => {
   it('creates an object with a type: UPDATE_APP_MESSAGES and message payload', () => {
-    const message = 'hello';
-    const expected = { type: 'UPDATE_APP_MESSAGES', message };
-    expect(actions.updateAppMessages(message)).toEqual(expected);
+    const message1 = { message: 'hello' }
+    expect(actions.updateAppMessages(message1).message.message).toEqual('hello');
+    expect(actions.updateAppMessages(message1).message.details).toEqual('hello');
+    const message2 = { message: 'ok', details: '---', when: new Date().toString() }
+    expect(actions.updateAppMessages(message2).message.message).toEqual('ok');
+    expect(actions.updateAppMessages(message2).message.details).toEqual('---');
+    expect(actions.updateAppMessages(message2).message.when).toEqual(message2.when);
   });
 });
 

@@ -12,6 +12,7 @@ import MarkdownCell from './cells/markdown-cell'
 import PluginDefinitionCell from './cells/plugin-definition-cell'
 
 import NotebookHeader from './menu/notebook-header'
+import AppMessages from './app-messages/app-messages'
 
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
@@ -98,6 +99,7 @@ class Page extends React.Component {
         >
           {bodyContent}
         </div>
+        <AppMessages />
       </div>
     )
   }

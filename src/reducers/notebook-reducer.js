@@ -1,4 +1,4 @@
-import { newNotebook, newCell, blankState } from '../state-prototypes'
+import { newNotebook, newCell, blankState, newCellID } from '../state-prototypes'
 import {
   exportJsmdBundle,
   stringifyStateToJsmd,
@@ -7,6 +7,22 @@ import {
 } from '../tools/jsmd-tools'
 
 const AUTOSAVE = 'AUTOSAVE: '
+
+function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
+  return {
+    id: appMessageId,
+    message: appMessageText,
+    details: appMessageDetails,
+    when: appMessageWhen,
+  }
+}
+
+function addAppMessageToState(state, appMessage) {
+  const nextAppMessageId = newCellID(state.appMessages)
+  state.appMessages
+    .push(newAppMessage(nextAppMessageId, appMessage.message, appMessage.details, appMessage.when))
+  return state
+}
 
 function getSavedNotebooks() {
   const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
@@ -43,6 +59,13 @@ function clearHistory(loadedState) {
   /* eslint-enable */
 }
 
+function updateAppMessages(state, messageObj) {
+  const message = Object.assign({}, messageObj)
+  const nextState = Object.assign({}, state)
+  nextState.appMessages = nextState.appMessages.slice()
+  return addAppMessageToState(nextState, message)
+}
+
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
   userDefinedVarNames.forEach((varName) => {
@@ -54,12 +77,10 @@ function clearUserDefinedVars(userDefinedVarNames) {
   })
 }
 
-
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 initialVariables.add('CodeMirror')
-
 
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState
@@ -119,7 +140,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       }, { title: state.title })
       clearHistory(nextState)
       window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
-      return Object.assign({}, state, { lastSaved }, getSavedNotebooks())
+      return Object.assign({}, nextState, { lastSaved }, getSavedNotebooks())
     }
 
     case 'LOAD_NOTEBOOK': {
@@ -205,9 +226,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_APP_MESSAGES': {
-      const appMessages = state.appMessages.slice()
-      appMessages.push(action.message)
-      return Object.assign({}, state, { appMessages })
+      return updateAppMessages(state, action.message)
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
@@ -223,7 +242,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       } else {
         newSavedEnvironment = action.updateObj
       }
-      // console.log('update?', action.update, 'obj:', newSavedEnvironment)
       return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
     }
 

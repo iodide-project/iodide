@@ -29,6 +29,17 @@ export const cellTypeEnum = new StringEnum(
 
 export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
 
+const appMessageSchema = {
+  type: 'object',
+  properties: {
+    message: { type: 'string' },
+    details: { type: 'string' },
+    when: { type: 'string' },
+    id: { type: 'integer', minimum: 0 },
+  },
+  additionalProperties: false,
+}
+
 const cellSchema = {
   type: 'object',
   properties: {
@@ -114,7 +125,7 @@ const stateSchema = {
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
-      items: { type: 'string' },
+      items: appMessageSchema,
     },
     autoSave: { type: 'string' },
     locallySaved: {
@@ -201,6 +212,7 @@ function newCell(cellId, cellType, language = 'js') {
   }
 }
 
+
 const jsLanguageDefinition = {
   pluginType: 'language',
   languageId: 'js',
@@ -245,6 +257,7 @@ function addNewCellToState(state, cellType = 'code', language = 'js') {
   state.cells.push(newCell(nextCellId, cellType, language))
   return state
 }
+
 
 function newNotebook() {
   // initialize a blank notebook and push a blank new cell into it

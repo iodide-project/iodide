@@ -15,7 +15,6 @@ const createValidatedReducer =
   (reducer, schema, options) => {
     const ajv = new Ajv(options)
     const validate = ajv.compile(schema)
-
     const validatedReducer = (state, action) => {
       const futureState = reducer(state, action)
 
