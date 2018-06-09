@@ -37,10 +37,11 @@ passport.use(new GitHubStrategy({
     callbackURL: `${SERVER_URI}/auth/github/callback`
   },
   function(accessToken, refreshToken, profile, done) {
-    const userData = {}
-    userData.firstName = profile.displayName.split(' ')[0]
-    userData.avatar = profile.photos[0].value
-    userData.accessToken = accessToken
+    const userData = {
+      firstName: profile.displayName.split(' ')[0],
+      avatar: profile.photos[0].value,
+      accessToken,
+    }
     // asynchronous verification, for effect...
     process.nextTick(function () {
       // To keep the example simple, the user's GitHub profile is returned to
