@@ -426,17 +426,26 @@ function loginSuccess(userData) {
       type: 'LOGIN_SUCCESS',
       userData,
     })
-    dispatch(updateAppMessages('You are logged in'))
+    dispatch(updateAppMessages({ message: 'You are logged in' }))
   }
 }
 
 function loginFailure() {
   return (dispatch) => {
-    dispatch(updateAppMessages('Login Failed'))
+    dispatch(updateAppMessages({ message: 'Login Failed' }))
   }
 }
 
 export function login() {
+  if (window.location.hostname !== 'iodide.io') {
+    return (dispatch) => {
+      // ToDo : Open a new tab with iodide.io having JSMD of current notebook
+      dispatch(updateAppMessages({
+        message: 'Unauthorized Domain',
+        details: 'Login is only authorized on the domain iodide.io',
+      }))
+    }
+  }
   const url = '/auth/github'
   const name = 'github_login'
   const specs = 'width=500,height=600'
@@ -459,8 +468,8 @@ export function logout() {
       .then((json) => {
         if (json.status === 'success') {
           dispatch({ type: 'LOGOUT' })
-          dispatch(updateAppMessages('Logged Out'))
-        } else dispatch(updateAppMessages('Logout Failed'))
+          dispatch(updateAppMessages({ message: 'Logged Out' }))
+        } else dispatch(updateAppMessages({ message: 'Logout Failed' }))
       })
   }
 }
@@ -475,7 +484,7 @@ export function exportGist() {
     const state = getState()
     const filename = titleToHtmlFilename(state.title)
     let matchDescription
-    let gistExist = false
+    let gistCreated = false
     const gistData = {
       description: state.title,
       public: true,
@@ -497,7 +506,7 @@ export function exportGist() {
             method: 'POST',
           })
         }
-        gistExist = true
+        gistCreated = true
         const gistID = matchDescription[0].id
         return fetch(`${API_ROUTE}/gists/${gistID}?access_token=${state.userData.accessToken}`, {
           body: JSON.stringify(gistData),
@@ -506,37 +515,13 @@ export function exportGist() {
       })
       .then(response => response.json())
       .then((json) => {
-        const message = gistExist ? 'Updated Gist' : 'Exported to GitHub Gist'
-        dispatch(updateAppMessages(`${message}:
-<a href="${json.html_url}" target="_blank">Gist</a> -
-<a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`))
+        const message = gistCreated ? 'Updated Gist' : 'Exported to GitHub Gist'
+        dispatch(updateAppMessages({
+          message,
+          details: `${message}<br /><a href="${json.html_url}" target="_blank">Gist</a> -
+        <a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`,
+        }))
       })
-  //   if (!matchDescription.length) {
-  //     // Create new gist if previous version is not found
-  //     console.log('No match found')
-  //     fetch(`${API_ROUTE}/gists?access_token=${state.userData.accessToken}`, {
-  //       body: JSON.stringify(gistData),
-  //       method: 'POST',
-  //     })
-  //       .then(response => response.json())
-  //       .then((json) => {
-  //         dispatch(updateAppMessages(`Exported to Github gist:
-  // <a href="${json.html_url}" target="_blank">gist</a> -
-  // <a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> runnable notebook</a>`))
-  //       })
-  //   } else {
-  //     console.log('match found')
-  //     // Update the existing gist
-  //     const gistID = matchDescription[0].id
-  //     fetch(`${API_ROUTE}/gists/${gistID}?access_token=${state.userData.accessToken}`, {
-  //       body: JSON.stringify(gistData),
-  //       method: 'PATCH',
-  //     })
-  //       .then(response => response.json())
-  //       .then((json) => {
-  //         console.log(json)
-  //       })
-  //   }
   }
 }
 

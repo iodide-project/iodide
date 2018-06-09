@@ -17,10 +17,6 @@ export class EditorToolbarMenuUnconnected extends React.Component {
   }
 
   render() {
-    let elem = <NotebookMenuItem task={tasks.loginGithub} />
-    if (this.props.isAuthenticated) {
-      elem = <NotebookMenuItem task={tasks.exportGist} />
-    }
     return (
       <NotebookIconMenu>
         <NotebookMenuItem task={tasks.createNewNotebook} />
@@ -29,7 +25,12 @@ export class EditorToolbarMenuUnconnected extends React.Component {
         <NotebookMenuItem task={tasks.exportNotebookAsReport} />
         <NotebookMenuItem task={tasks.exportNotebookToClipboard} />
         <NotebookMenuItem task={tasks.clearVariables} />
-        {elem}
+        {
+          this.props.isAuthenticated ?
+            (<NotebookMenuItem task={tasks.exportGist} />)
+            :
+            (<NotebookMenuItem task={tasks.loginGithub} />)
+        }
 
         <SavedNotebooksAndExamplesSubsection />
 
