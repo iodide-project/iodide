@@ -551,10 +551,11 @@ export function selectCell(cellID, scrollToCell = false) {
   }
 }
 
-export function highlightCell(cellID) {
+export function highlightCell(cellID, revert = true) {
   return {
     type: 'HIGHLIGHT_CELL',
     id: cellID,
+    revert,
   }
 }
 

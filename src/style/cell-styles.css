@@ -177,7 +177,7 @@ div.selected-cell {
 }
 
 div.highlighted-cell {
-  background: rgba(116, 185, 255,0.3);
+  background: rgba(116, 185, 255, 0.15);
 }
 
 div.highlighted-cell div.cell-row-container {

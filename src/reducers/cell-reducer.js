@@ -58,7 +58,8 @@ const cellReducer = (state = newNotebook(), action) => {
       const cells = state.cells.slice()
       const index = cells.findIndex(c => c.id === action.id)
       const thisCell = cells[index]
-      thisCell.highlighted = !thisCell.highlighted
+      if (action.revert) thisCell.highlighted = !thisCell.highlighted
+      else thisCell.highlighted = true
       nextState = Object.assign({}, state, { cells })
       return nextState
     }

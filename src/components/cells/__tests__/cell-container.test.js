@@ -99,7 +99,7 @@ describe('CellContainerUnconnected React component', () => {
 
   it('mouse down on cell container div fires unHighlightCells with correct props', () => {
     props.viewMode = 'editor'
-    props.selected = false
+    props.highlighted = true
     cellContainer().simulate('mousedown', { ctrlKey: false, metaKey: false })
     expect(unHighlightCells.mock.calls.length).toBe(1)
     expect(unHighlightCells.mock.calls[0].length).toBe(0)

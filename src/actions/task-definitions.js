@@ -9,6 +9,7 @@ import {
   getCellBelowSelectedId,
   getCellAboveSelectedId, prettyDate, formatDateString,
 } from '../tools/notebook-utils'
+import { getSelectedCellId } from '../reducers/cell-reducer-utils'
 import { stateFromJsmd } from '../tools/jsmd-tools'
 
 const dispatcher = {}
@@ -70,8 +71,8 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
 
 tasks.moveCellUp = new UserTask({
   title: 'Move Cell Up',
-  displayKeybinding: 'Shift+Up', // '\u21E7 \u2191',
-  keybindings: ['shift+up'],
+  displayKeybinding: `${commandKey()}+Up`,
+  keybindings: ['ctrl+up', 'meta+up'],
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
   callback() {
@@ -82,8 +83,8 @@ tasks.moveCellUp = new UserTask({
 
 tasks.moveCellDown = new UserTask({
   title: 'Move Cell Down',
-  displayKeybinding: 'Shift+Down', // '\u21E7 \u2193',
-  keybindings: ['shift+down'],
+  displayKeybinding: `${commandKey()}+Down`,
+  keybindings: ['ctrl+down', 'meta+down'],
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
   callback() {
@@ -104,6 +105,38 @@ tasks.logoutGithub = new UserTask({
 tasks.exportGist = new UserTask({
   title: 'Export Gist',
   callback() { dispatcher.exportGist() },
+})
+
+tasks.highlightUp = new UserTask({
+  title: 'Select Cell Above',
+  displayKeybinding: 'Shift+Up', // '\u21E7 \u2191',
+  keybindings: ['shift+up'],
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() {
+    const cellAboveId = getCellAboveSelectedId()
+    dispatcher.highlightCell(getSelectedCellId(store.getState()), false)
+    if (cellAboveId !== null) {
+      dispatcher.highlightCell(cellAboveId, false)
+      dispatcher.selectCell(cellAboveId, true)
+    }
+  },
+})
+
+tasks.highlightDown = new UserTask({
+  title: 'Select Cell Down',
+  displayKeybinding: 'Shift+Up', // '\u21E7 \u2193',
+  keybindings: ['shift+down'],
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() {
+    const cellBelowId = getCellBelowSelectedId()
+    dispatcher.highlightCell(getSelectedCellId(store.getState()), false)
+    if (cellBelowId !== null) {
+      dispatcher.highlightCell(cellBelowId, false)
+      dispatcher.selectCell(cellBelowId, true)
+    }
+  },
 })
 
 tasks.selectUp = new UserTask({

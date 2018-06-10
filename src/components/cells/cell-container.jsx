@@ -37,11 +37,13 @@ export class CellContainerUnconnected extends React.Component {
   handleCellClick = (event) => {
     if (this.props.viewMode === 'editor') {
       const scrollToCell = false
+      if (!this.props.selected) {
+        this.props.actions.selectCell(this.props.cellId, scrollToCell)
+      }
       if (event.ctrlKey || event.metaKey) {
         this.props.actions.highlightCell(this.props.cellId)
-      } else if (!this.props.selected || this.props.highlighted) {
+      } else if (this.props.highlighted) {
         this.props.actions.unHighlightCells()
-        this.props.actions.selectCell(this.props.cellId, scrollToCell)
       }
     }
   }
