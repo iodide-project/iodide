@@ -565,6 +565,12 @@ export function unHighlightCells() {
   }
 }
 
+export function multipleCellHighlight(cellID) {
+  return {
+    type: 'MULTIPLE_CELL_HIGHLIGHT',
+    id: cellID,
+  }
+}
 
 export function cellCopy() {
   return {

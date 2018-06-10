@@ -23,6 +23,7 @@ export class CellContainerUnconnected extends React.Component {
       selectCell: PropTypes.func.isRequired,
       highlightCell: PropTypes.func.isRequired,
       unHighlightCells: PropTypes.func.isRequired,
+      multipleCellHighlight: PropTypes.func.isRequired,
     }).isRequired,
   }
 
@@ -37,12 +38,15 @@ export class CellContainerUnconnected extends React.Component {
   handleCellClick = (event) => {
     if (this.props.viewMode === 'editor') {
       const scrollToCell = false
-      if (!this.props.selected) {
+      if (!this.props.selected && !event.shiftKey) {
         this.props.actions.selectCell(this.props.cellId, scrollToCell)
       }
-      if (event.ctrlKey || event.metaKey) {
+      if (event.shiftKey) {
+        event.preventDefault();
+        this.props.actions.multipleCellHighlight(this.props.cellId)
+      } else if (event.ctrlKey || event.metaKey) {
         this.props.actions.highlightCell(this.props.cellId)
-      } else if (this.props.highlighted) {
+      } else {
         this.props.actions.unHighlightCells()
       }
     }

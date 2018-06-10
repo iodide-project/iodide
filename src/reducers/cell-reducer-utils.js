@@ -140,6 +140,15 @@ function getSelectedCellId(state) {
   return undefined // for now
 }
 
+function getSelectedCellIndex(state) {
+  const { cells } = state
+  const index = cells.findIndex(c => c.selected)
+  if (index > -1) {
+    return index
+  }
+  return undefined // for now
+}
+
 function getCellBelowSelectedId(state) {
   const { cells } = state
   const index = cells.findIndex(c => c.selected)
@@ -210,6 +219,7 @@ export {
   addExternalDependency,
   getSelectedCell,
   getSelectedCellId,
+  getSelectedCellIndex,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,

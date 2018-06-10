@@ -91,6 +91,7 @@ class CellEditor extends React.Component {
       changeMode: PropTypes.func.isRequired,
       updateInputContent: PropTypes.func.isRequired,
       unHighlightCells: PropTypes.func.isRequired,
+      multipleCellHighlight: PropTypes.func.isRequired,
     }).isRequired,
     inputRef: PropTypes.func,
     containerStyle: PropTypes.object,
@@ -135,7 +136,7 @@ class CellEditor extends React.Component {
   }
 
   handleChange(event) {
-    if (!event.ctrlKey) {
+    if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
       this.props.actions.unHighlightCells()
     }
   }

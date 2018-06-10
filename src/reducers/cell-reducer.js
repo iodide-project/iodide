@@ -6,7 +6,9 @@ import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
 import {
   moveCell, scrollToCellIfNeeded,
+  getSelectedCell,
   getSelectedCellId,
+  getSelectedCellIndex,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
@@ -70,26 +72,42 @@ const cellReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { cells })
     }
 
+    case 'MULTIPLE_CELL_HIGHLIGHT': {
+      const cells = state.cells.slice()
+      const index1 = getSelectedCellIndex(state)
+      const index2 = cells.findIndex(c => c.id === action.id)
+      const low = Math.min(index1, index2)
+      const high = Math.max(index1, index2)
+
+      cells.forEach((c, index) => {
+        if (low <= index && index <= high) {
+          c.highlighted = true // eslint-disable-line
+        } else {
+          c.highlighted = false // eslint-disable-line
+        }
+      })
+      cells[index1].selected = false
+      cells[index2].selected = true
+      return Object.assign({}, state, { cells })
+    }
+
     case 'CELL_COPY': {
       const cutCells = []
-      const selectedId = getSelectedCellId(state)
       const cells = state.cells.slice()
       let copiedCells = cells.filter(c => c.highlighted)
       if (!copiedCells.length) {
-        const index = cells.findIndex(c => c.id === selectedId)
-        copiedCells = [cells[index]]
+        copiedCells = [getSelectedCell(state)]
       }
       return Object.assign({}, state, { copiedCells, cutCells })
     }
 
     case 'CELL_CUT': {
       const copiedCells = []
-      const selectedId = getSelectedCellId(state)
       let cutCells
       let cells = state.cells.slice()
       cutCells = cells.filter(c => c.highlighted)
       if (!cutCells.length) {
-        const index = cells.findIndex(c => c.id === selectedId)
+        const index = getSelectedCellIndex(state)
         cutCells = [cells[index]]
         cells.splice(index, 1)
       } else {
@@ -103,13 +121,12 @@ const cellReducer = (state = newNotebook(), action) => {
         return state
       }
       const newState = Object.assign({}, state)
-      const cellID = getSelectedCellId(state)
       const cells = newState.cells.slice()
       let cellsToPaste = newState.copiedCells.length ?
         newState.copiedCells.slice()
         :
         newState.cutCells.slice()
-      const pasteIndex = cells.findIndex(c => c.id === cellID)
+      const pasteIndex = getSelectedCellIndex(state)
       const newId = newCellID(cells)
       cellsToPaste = cellsToPaste.map((cell, i) => Object.assign(
         {},

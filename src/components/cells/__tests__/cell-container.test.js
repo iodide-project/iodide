@@ -8,6 +8,7 @@ describe('CellContainerUnconnected React component', () => {
   let selectCell
   let highlightCell
   let unHighlightCells
+  let multipleCellHighlight
   let props
   let mountedCont
   const node = <span>Hello</span>
@@ -23,13 +24,19 @@ describe('CellContainerUnconnected React component', () => {
     selectCell = jest.fn()
     highlightCell = jest.fn()
     unHighlightCells = jest.fn()
+    multipleCellHighlight = jest.fn()
     props = {
       selected: true,
       cellId: 1,
       editingCell: true,
       viewMode: 'editor',
       cellType: 'code',
-      actions: { selectCell, highlightCell, unHighlightCells },
+      actions: {
+        selectCell,
+        highlightCell,
+        unHighlightCells,
+        multipleCellHighlight,
+      },
     }
     mountedCont = undefined
   })
@@ -105,6 +112,18 @@ describe('CellContainerUnconnected React component', () => {
     expect(unHighlightCells.mock.calls[0].length).toBe(0)
   })
 
+  it('mouse down on cell container fires multipleCellHighlight with Shift press', () => {
+    props.viewMode = 'editor'
+    cellContainer().simulate('mousedown', {
+      shiftKey: true,
+      ctrlKey: true,
+      metaKey: false,
+      preventDefault: () => {
+      },
+    })
+    expect(multipleCellHighlight.mock.calls.length).toBe(1)
+    expect(multipleCellHighlight.mock.calls[0].length).toBe(1)
+  })
 
   it('mouse down on cell container fires highlightCell with correct props and Ctrl press', () => {
     props.viewMode = 'editor'
