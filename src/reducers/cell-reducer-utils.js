@@ -184,6 +184,21 @@ function newStateWithPropsAssignedForCell(state, cellId, cellPropsToSet) {
   return Object.assign({}, state, { cells })
 }
 
+function checkForHighlightedCells(state) {
+  const cells = state.cells.slice()
+  return cells.find(c => c.highlighted)
+}
+
+function newStateWithPropsAssignedForHighlightedCells(state, cellPropsToSet) {
+  const cells = state.cells.slice()
+  cells.forEach((cell, i) => {
+    if (cell.highlighted) {
+      cells[i] = Object.assign({}, cell, cellPropsToSet)
+    }
+  })
+  return Object.assign({}, state, { cells })
+}
+
 function newStateWithSelectedCellPropsAssigned(state, cellPropsToSet) {
   return newStateWithPropsAssignedForCell(state, getSelectedCellId(state), cellPropsToSet)
 }
@@ -225,4 +240,6 @@ export {
   newStateWithSelectedCellPropsAssigned,
   newStateWithRowOverflowSet,
   newStateWithPropsAssignedForCell,
+  checkForHighlightedCells,
+  newStateWithPropsAssignedForHighlightedCells,
 }

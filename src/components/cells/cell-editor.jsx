@@ -84,6 +84,7 @@ class CellEditor extends React.Component {
     cellId: PropTypes.number.isRequired,
     cellType: PropTypes.string,
     content: PropTypes.string,
+    highlighted: PropTypes.bool.isRequired,
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     languageIsAvailable: PropTypes.bool,
     actions: PropTypes.shape({
@@ -105,7 +106,8 @@ class CellEditor extends React.Component {
     this.handleFocusChange = this.handleFocusChange.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
-    this.handleChange = this.handleChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+    this.getReadOnly = this.getReadOnly.bind(this)
   }
 
   componentDidMount() {
@@ -124,6 +126,12 @@ class CellEditor extends React.Component {
     }
   }
 
+  getReadOnly() {
+    if (this.props.viewMode === 'presentation') return true
+    if (this.props.highlighted) return 'nocursor'
+    return false
+  }
+
   handleFocusChange(focused) {
     if (focused && this.props.viewMode === 'editor') {
       if (!this.props.thisCellBeingEdited) {
@@ -135,7 +143,7 @@ class CellEditor extends React.Component {
     }
   }
 
-  handleChange(event) {
+  handleClick(event) {
     if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
       this.props.actions.unHighlightCells()
     }
@@ -182,14 +190,14 @@ class CellEditor extends React.Component {
         'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
       },
       comment: this.props.codeMirrorMode === 'javascript',
-      readOnly: this.props.viewMode === 'presentation',
+      readOnly: this.getReadOnly(),
     }, this.props.editorOptions)
 
     return (
       <div
         className="editor"
         style={this.props.containerStyle}
-        onClick={this.handleChange}
+        onClick={this.handleClick}
       >
         <CodeMirror
           ref={this.storeEditorElementRef}
@@ -219,6 +227,7 @@ function mapStateToProps(state, ownProps) {
     viewMode: state.viewMode,
     cellType: cell.cellType,
     content: cell.content,
+    highlighted: cell.highlighted,
     cellId,
     codeMirrorMode,
     languageIsAvailable: cell.cellType !== 'code' ? true : window[languageModule] !== undefined,

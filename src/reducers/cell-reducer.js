@@ -14,6 +14,8 @@ import {
   newStateWithSelectedCellPropsAssigned,
   newStateWithRowOverflowSet,
   newStateWithPropsAssignedForCell,
+  checkForHighlightedCells,
+  newStateWithPropsAssignedForHighlightedCells,
 } from './cell-reducer-utils'
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
@@ -153,6 +155,9 @@ const cellReducer = (state = newNotebook(), action) => {
       )
 
     case 'UPDATE_CELL_PROPERTIES':
+      if (checkForHighlightedCells(state)) {
+        return newStateWithPropsAssignedForHighlightedCells(state, action.updatedProperties)
+      }
       return newStateWithPropsAssignedForCell(state, action.cellId, action.updatedProperties)
 
     case 'UPDATE_INPUT_CONTENT':
