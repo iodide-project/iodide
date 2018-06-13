@@ -7,9 +7,7 @@ import {
   viewModeIsEditor,
   getCells,
   getCellBelowSelectedId,
-  getCellAboveSelectedId,
-  prettyDate,
-  formatDateString,
+  getCellAboveSelectedId, prettyDate, formatDateString,
 } from '../tools/notebook-utils'
 import { stateFromJsmd } from '../tools/jsmd-tools'
 
@@ -88,7 +86,9 @@ tasks.moveCellDown = new UserTask({
   keybindings: ['shift+down'],
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
-  callback() { dispatcher.cellDown() },
+  callback() {
+    dispatcher.cellDown()
+  },
 })
 
 

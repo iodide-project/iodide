@@ -26,10 +26,16 @@ export function temporarilySaveRunningCellID(cellID) {
   }
 }
 
-export function updateAppMessages(message) {
+export function updateAppMessages(messageObj) {
+  //     message.when = (new Date()).toString()
+  //     message.details, when, message.
+  const { message } = messageObj
+  let { details, when } = messageObj
+  if (when === undefined) when = new Date().toString()
+  if (details === undefined) details = message
   return {
     type: 'UPDATE_APP_MESSAGES',
-    message,
+    message: { message, details, when },
   }
 }
 
@@ -43,6 +49,7 @@ export function importNotebook(newState) {
 export function importFromURL(importedState) {
   return (dispatch) => {
     dispatch(importNotebook(importedState))
+    dispatch(updateAppMessages({ message: 'Notebook successfully imported from URL.' }))
     return Promise.resolve()
   }
 }
@@ -364,7 +371,7 @@ export function evaluateCell(cellId) {
         evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
         evaluation = evaluationQueue
       } else {
-        evaluation = dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
+        evaluation = dispatch(updateAppMessages({ message: 'No loader for plugin type or missing "pluginType" entry' }))
       }
     } else {
       cell.rendered = false

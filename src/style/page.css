@@ -50,6 +50,14 @@ div#cells.presentation {
 /************************************************/
 /* cell output styles */
 
+.rep-container {
+  overflow-x: auto;
+}
+
+.array-rep {
+  overflow-x: auto;
+}
+
 .data-set-info {
   color: #888;
   font-style: italic;
@@ -92,6 +100,10 @@ div.promise-handler-status {
 
 div.promise-handler-value {
   margin-top:6px;
+}
+
+.undefined-rep, .null-rep {
+  display: inline-block;
 }
 
 /************************************************/

@@ -12,14 +12,23 @@ export class AppInfoPaneUnconnected extends React.Component {
     appMessages: PropTypes.array,
   }
   render() {
-    // i think using index as key is ok here, but be careful!! see:
-    // https://medium.com/@robinpokorny/index-as-a-key-is-an-anti-pattern-e0349aece318
-    const messageDivs = this.props.appMessages
-      .map((msg, i) => (<div
-        className="app-info-message"
-        key={`msg-${i}`} // eslint-disable-line
-        dangerouslySetInnerHTML={{__html: msg}} // eslint-disable-line
-      />))
+    /* eslint-disable */
+    const appMessages = this.props.appMessages.slice().reverse()
+    appMessages.sort((a,b)=> {
+      if( Date.parse(a.when) > Date.parse(b.when)) return -1
+      return 1
+    })
+    const messageDivs = appMessages
+      .map((msg, i) => (
+        <div
+          className="app-info-message"
+          key={`msg-${msg.id}`}
+        >
+          <div className='app-message-details' dangerouslySetInnerHTML={{ __html: msg.details }} />
+          <div className='app-message-when'>{msg.when}</div>
+        </div>
+      ))
+    /* eslint-enable */
     return (
       <SidePane task={tasks.toggleAppInfoPane} title="App info" openOnMode="_APP_INFO">
         {messageDivs}

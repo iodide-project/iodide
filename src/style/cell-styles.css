@@ -199,8 +199,9 @@ div.SCROLL div.main-component div.CodeMirror div.CodeMirror-scroll {
 div.SCROLL.output .main-component {
   max-height: 300px;
   outline: 1px solid #ddd;
-    overflow-y: scroll;
+  overflow-y: scroll;
 }
+
 
 
 /* FIX ME i think this style is never used, double check it*/
