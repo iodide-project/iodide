@@ -59,13 +59,6 @@ function clearHistory(loadedState) {
   /* eslint-enable */
 }
 
-function updateAppMessages(state, messageObj) {
-  const message = Object.assign({}, messageObj)
-  const nextState = Object.assign({}, state)
-  nextState.appMessages = nextState.appMessages.slice()
-  return addAppMessageToState(nextState, message)
-}
-
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
   userDefinedVarNames.forEach((varName) => {
@@ -226,7 +219,9 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_APP_MESSAGES': {
-      return updateAppMessages(state, action.message)
+      nextState = Object.assign({}, state)
+      nextState.appMessages = nextState.appMessages.slice()
+      return addAppMessageToState(nextState, Object.assign({}, action.message))
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
