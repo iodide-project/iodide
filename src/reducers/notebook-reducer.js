@@ -1,6 +1,8 @@
+import copy from 'copy-to-clipboard';
 import { newNotebook, newCell, blankState, newCellID } from '../state-prototypes'
 import {
   exportJsmdBundle,
+  exportJsmdToString,
   stringifyStateToJsmd,
   stateFromJsmd,
   titleToHtmlFilename,
@@ -91,12 +93,17 @@ const notebookReducer = (state = newNotebook(), action) => {
         state,
         { viewMode: action.exportAsReport ? 'presentation' : 'editor' },
       )
-      const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
-      const dlAnchorElem = document.getElementById('export-anchor')
-      dlAnchorElem.setAttribute('href', dataStr)
-      title = exportState.title === undefined ? 'new-notebook' : exportState.title
-      dlAnchorElem.setAttribute('download', titleToHtmlFilename(title))
-      dlAnchorElem.click()
+      if (action.exportToClipboard) {
+        const jsmdStr = encodeURIComponent(exportJsmdToString(exportState))
+        copy(`${window.location.href.split('?')[0]}?jsmd=${jsmdStr}`)
+      } else {
+        const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
+        const dlAnchorElem = document.getElementById('export-anchor')
+        dlAnchorElem.setAttribute('href', dataStr)
+        title = exportState.title === undefined ? 'new-notebook' : exportState.title
+        dlAnchorElem.setAttribute('download', titleToHtmlFilename(title))
+        dlAnchorElem.click()
+      }
 
       return state
     }

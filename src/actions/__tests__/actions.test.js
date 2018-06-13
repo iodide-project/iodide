@@ -31,8 +31,9 @@ describe('importNotebook', () => {
 describe('exportNotebook', () => {
   it('creates an object with a type: EXPORT_NOTEBOOK and exportAsReport payload', () => {
     const exportAsReport = true;
-    const expected = { type: 'EXPORT_NOTEBOOK', exportAsReport };
-    expect(actions.exportNotebook(exportAsReport)).toEqual(expected);
+    const exportToClipboard = true;
+    const expected = { type: 'EXPORT_NOTEBOOK', exportAsReport, exportToClipboard };
+    expect(actions.exportNotebook(exportAsReport, exportToClipboard)).toEqual(expected);
   });
 });
 

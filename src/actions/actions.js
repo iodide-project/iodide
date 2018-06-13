@@ -54,10 +54,11 @@ export function importFromURL(importedState) {
   }
 }
 
-export function exportNotebook(exportAsReport = false) {
+export function exportNotebook(exportAsReport = false, exportToClipboard = false) {
   return {
     type: 'EXPORT_NOTEBOOK',
     exportAsReport,
+    exportToClipboard,
   }
 }
 

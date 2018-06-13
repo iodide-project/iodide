@@ -30,6 +30,7 @@
     "ajv": "^6.5.0",
     "codemirror": "^5.37.0",
     "codemirror-no-newlines": "^1.0.2",
+    "copy-to-clipboard": "^3.0.8",
     "deep-equal": "^1.0.1",
     "ejs": "^2.5.6",
     "express": "^4.15.2",

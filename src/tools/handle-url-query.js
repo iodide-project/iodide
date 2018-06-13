@@ -35,6 +35,14 @@ async function loadIpynbFromUrl(url) {
   }
 }
 
+function loadFromUrlString(urlString) {
+  try {
+    loadJsmd(urlString)
+  } catch (err) {
+    console.error('failed to load notebook from urlString', err)
+  }
+}
+
 function handleUrlQuery() {
   const queryParams = queryString.parse(window.location.search);
   if ({}.hasOwnProperty.call(queryParams, 'url')) {
@@ -43,6 +51,8 @@ function handleUrlQuery() {
     loadJsmdFromNotebookUrl(`https://gist.githubusercontent.com/${queryParams.gist}/raw/`)
   } else if ({}.hasOwnProperty.call(queryParams, 'ipynb')) {
     loadIpynbFromUrl(queryParams.ipynb);
+  } else if ({}.hasOwnProperty.call(queryParams, 'jsmd')) {
+    loadFromUrlString(queryParams.jsmd)
   }
 }
 

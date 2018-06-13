@@ -17,6 +17,7 @@ export default class EditorToolbarMenu extends React.Component {
         <NotebookMenuItem task={tasks.saveNotebook} />
         <NotebookMenuItem task={tasks.exportNotebook} />
         <NotebookMenuItem task={tasks.exportNotebookAsReport} />
+        <NotebookMenuItem task={tasks.exportNotebookToClipboard} />
         <NotebookMenuItem task={tasks.clearVariables} />
 
         <SavedNotebooksAndExamplesSubsection />
