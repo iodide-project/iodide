@@ -77,7 +77,6 @@ describe('flow API', () => {
 
   it('correctly awaits for Promises to resolve', () => {
     jest.clearAllTimers()
-
     evalQueue.await([
       Promise.resolve(10),
       Promise.resolve(20),
@@ -89,8 +88,6 @@ describe('flow API', () => {
       .catch((err) => {
         throw new Error(err)
       })
-
-
     jest.runAllTimers()
   })
 
