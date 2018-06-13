@@ -4,6 +4,7 @@ import {
   setRunningCellEvalStatus,
   waitForExplicitContinuationStatusResolution,
   evalQueue,
+  getRunningCellAsyncProcessStatus,
 } from '../evalQueue'
 import { store } from '../../store'
 import { temporarilySaveRunningCellID, newNotebook } from '../../actions/actions'
@@ -31,8 +32,9 @@ describe('flow API', () => {
   it('allows for explicit setting of cell continuation', () => {
     evalQueue.requireExplicitContinuation()
     expect(runningEvalStatus()).toBe('ASYNC_PENDING')
+    expect(getRunningCellAsyncProcessStatus()).toBe(1)
     evalQueue.continue()
-    expect(runningEvalStatus()).toBe('SUCCESS')
+    expect(getRunningCellAsyncProcessStatus()).toBe(0)
   })
   it('accepts only valid setExplicitContinuationStatus arguments', () => {
     expect(() => setRunningCellEvalStatus('whatever')).toThrow()
@@ -71,5 +73,27 @@ describe('flow API', () => {
     // setInterval was called once before - the test above this one.
     expect(setInterval).toHaveBeenCalledTimes(1)
     jest.runAllTimers()
+  })
+
+  it('correctly awaits for Promises to resolve', () => {
+    jest.clearAllTimers()
+    evalQueue.await([
+      Promise.resolve(10),
+      Promise.resolve(20),
+    ]).then((d) => {
+      expect(d).toEqual([10, 20])
+      expect(getRunningCellAsyncProcessStatus()).toBe(0)
+      expect(getRunningCellEvalStatus()).toBe('SUCCESS')
+    })
+      .catch((err) => {
+        throw new Error(err)
+      })
+    jest.runAllTimers()
+  })
+
+  it('tests error with async/await', async () => {
+    await expect(evalQueue.await([
+      Promise.resolve(10).then(d => d.json()),
+    ])).rejects.toThrowError()
   })
 })

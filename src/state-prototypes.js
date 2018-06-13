@@ -49,6 +49,7 @@ const cellSchema = {
       type: 'string',
       enum: cellTypeEnum.values(),
     },
+    asyncProcessCount: { type: 'integer', minimum: 0 },
     value: {}, // empty schema, `value` can be anything
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
@@ -204,6 +205,7 @@ function newCell(cellId, cellType, language = 'js') {
     value: undefined,
     rendered: false,
     selected: false,
+    asyncProcessCount: 0,
     executionStatus: ' ',
     evalStatus: 'UNEVALUATED',
     rowSettings: newCellRowSettings(cellType),
