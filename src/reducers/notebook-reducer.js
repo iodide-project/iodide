@@ -33,7 +33,7 @@ function getLoginData() {
 
 function getSavedNotebooks() {
   const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
-  const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
+  const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE) && n !== 'TOKEN')
   locallySaved.sort((a, b) => {
     const p = (_) => {
       let ls = localStorage.getItem(_)

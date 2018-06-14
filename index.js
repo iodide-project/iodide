@@ -9,6 +9,9 @@ const GitHubStrategy = require('passport-github2').Strategy
 
 const PORT = process.env.PORT || 5000
 const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, SERVER_URI } = process.env
+const db = require('./server/models')
+const apiRouter = require('./server/routes')
+const User = db.User
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -18,11 +21,20 @@ const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, SERVER_URI } = process.env
 //   have a database of user records, the complete GitHub profile is serialized
 //   and deserialized.
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, user.id);
 });
 
-passport.deserializeUser((obj, done) => {
-  done(null, obj);
+passport.deserializeUser((id, done) => {
+  User.findOne({
+    where: {
+      'id': id
+    }
+  }).then(function (user) {
+    if (user == null) {
+      done(new Error('Wrong user id.'))
+    }
+    done(null, user)
+  })
 });
 
 // Use the GitHubStrategy within Passport.
@@ -36,19 +48,33 @@ passport.use(new GitHubStrategy(
     callbackURL: `${SERVER_URI}/auth/github/callback`,
   },
   (accessToken, refreshToken, profile, done) => {
-    const userData = {
-      firstName: profile.displayName.split(' ')[0],
-      avatar: profile.photos[0].value,
-      accessToken,
-    }
     // asynchronous verification, for effect...
-    process.nextTick(() => done(null, userData))
-    // To keep the example simple, the user's GitHub profile is returned to
-    // represent the logged-in user.  In a typical application, you would want
-    // to associate the GitHub account with a user record in your database,
-    // and return that user instead.
-  },
-))
+    process.nextTick(function () {
+      User.findOne({
+        where: {'githubUserId' : profile.id}
+      }).then(user => {
+        if (user) {
+          user.accessToken = accessToken
+          user.save()
+          return done(null, user);
+        }
+        else {
+          var newUser = new User();
+          newUser.githubUserId = profile.id,
+          newUser.accessToken  = accessToken,
+          newUser.avatar       = profile.photos[0].value;
+          // save
+          newUser.save(function(err){
+            if (err) throw err;
+            return done(null, newUser);
+          });
+        }
+      }).catch(err => {
+        return done(err)
+      })
+    });
+  }
+));
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
@@ -61,9 +87,17 @@ const ensureAuthenticated = (req, res, next) => {
   return ''
 };
 
+// // Sync Database
+// db.sequelize.sync().then(function(){
+//   console.log('Nice! Database looks fine')
+// }).catch(function(err){
+//   console.log(err,"Something went wrong with the Database Update!")
+// });
+
+
 express()
-  .use(express.static(path.join(__dirname, 'prod'), { index: 'iodide.iodide-server.html' }))
-  .set('views', path.join(__dirname, 'views'))
+  .use(express.static(path.join(__dirname, 'dev'), {'index': 'iodide.dev.html'}))
+  .set('views', path.join(__dirname, 'server/views'))
   .set('view engine', 'ejs')
   .use(partials())
   .use(bodyParser.urlencoded({ extended: true }))
@@ -72,6 +106,7 @@ express()
   .use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }))
   .use(passport.initialize())
   .use(passport.session())
+  .use('/api', apiRouter)
   .get('/', (req, res) => {
     res.render('index', { user: req.user });
   })
