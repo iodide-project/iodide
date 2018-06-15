@@ -41,6 +41,7 @@ nb.sameKeys = function(x,y){
 
 nb.isRowDf = function(obj,rowsToCheck = 100){
   if (!_.isArray(obj) || obj.length==0) {return false}
+  if (obj.length === 1 && !_.isPlainObject(obj[0])) {return false}
   rowsToCheck = Math.min(rowsToCheck,_.size(obj))
   for (let i=1; i<rowsToCheck; i++){
     if (! _.isPlainObject(obj[i])) {return false}
