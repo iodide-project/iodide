@@ -266,7 +266,15 @@ tasks.exportNotebookAsReport = new UserTask({
   keybindings: ['ctrl+shift+e', 'meta+shift+e'],
   displayKeybinding: `Shift+${commandKey()}+E`,
   keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.exportNotebook(true) },
+  callback() { dispatcher.exportNotebook(true, false) },
+})
+
+tasks.exportNotebookToClipboard = new UserTask({
+  title: 'Export Notebook to clipboard',
+  callback() {
+    dispatcher.exportNotebook(false, true)
+    dispatcher.updateAppMessages({ message: 'Notebook copied to clipboard' })
+  },
 })
 
 tasks.clearVariables = new UserTask({

@@ -1,6 +1,8 @@
+import copy from 'copy-to-clipboard';
 import { newNotebook, newCell, blankState, newCellID } from '../state-prototypes'
 import {
   exportJsmdBundle,
+  exportJsmdToString,
   stringifyStateToJsmd,
   stateFromJsmd,
   titleToHtmlFilename,
@@ -59,13 +61,6 @@ function clearHistory(loadedState) {
   /* eslint-enable */
 }
 
-function updateAppMessages(state, messageObj) {
-  const message = Object.assign({}, messageObj)
-  const nextState = Object.assign({}, state)
-  nextState.appMessages = nextState.appMessages.slice()
-  return addAppMessageToState(nextState, message)
-}
-
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
   userDefinedVarNames.forEach((varName) => {
@@ -98,12 +93,17 @@ const notebookReducer = (state = newNotebook(), action) => {
         state,
         { viewMode: action.exportAsReport ? 'presentation' : 'editor' },
       )
-      const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
-      const dlAnchorElem = document.getElementById('export-anchor')
-      dlAnchorElem.setAttribute('href', dataStr)
-      title = exportState.title === undefined ? 'new-notebook' : exportState.title
-      dlAnchorElem.setAttribute('download', titleToHtmlFilename(title))
-      dlAnchorElem.click()
+      if (action.exportToClipboard) {
+        const jsmdStr = encodeURIComponent(exportJsmdToString(exportState))
+        copy(`${window.location.href.split('?')[0]}?jsmd=${jsmdStr}`)
+      } else {
+        const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
+        const dlAnchorElem = document.getElementById('export-anchor')
+        dlAnchorElem.setAttribute('href', dataStr)
+        title = exportState.title === undefined ? 'new-notebook' : exportState.title
+        dlAnchorElem.setAttribute('download', titleToHtmlFilename(title))
+        dlAnchorElem.click()
+      }
 
       return state
     }
@@ -226,7 +226,9 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_APP_MESSAGES': {
-      return updateAppMessages(state, action.message)
+      nextState = Object.assign({}, state)
+      nextState.appMessages = nextState.appMessages.slice()
+      return addAppMessageToState(nextState, Object.assign({}, action.message))
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
