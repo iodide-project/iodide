@@ -59,7 +59,6 @@ nb.isMatrix = function(obj,rowsToCheck = 100){
   return true
 }
 
-
 nb.isColumnDf = function(obj,colsToCheck = 100){
   if (!_.isPlainObject(obj)) {return false}
   colsToCheck = Math.min(colsToCheck,_.size(obj))
