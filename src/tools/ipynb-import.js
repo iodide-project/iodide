@@ -8,7 +8,7 @@ function importIpynb(url, json) {
   const { metadata, cells } = json;
   const languageInfo = metadata.language_info;
   if (languageInfo.name !== 'python') {
-    throw new Error(`Ioside can only import Python .ipynb notebooks at this time.  Found ${languageInfo.name}.`)
+    throw new Error(`Iodide can only import Python .ipynb notebooks at this time.  Found ${languageInfo.name}.`)
   }
 
   let jsmd = `
@@ -31,7 +31,7 @@ function importIpynb(url, json) {
       "displayName": "python",
       "codeMirrorMode": "python",
       "keybinding": "p",
-      "url": "https://iodide-project.github.io/pyodide-demo/pyodide.js",
+      "url": "https://iodide.io/pyodide-demo/pyodide.js",
       "module": "pyodide",
       "evaluator": "runPython",
       "pluginType": "language"
@@ -54,7 +54,7 @@ Support for importing Jupyter notebooks into Iodide is experimental.  In particu
   "displayName": "python",
   "codeMirrorMode": "python",
   "keybinding": "p",
-  "url": "https://iodide-project.github.io/pyodide-demo/pyodide.js",
+  "url": "https://iodide.github.io/pyodide-demo/pyodide.js",
   "module": "pyodide",
   "evaluator": "runPython",
   "pluginType": "language"
