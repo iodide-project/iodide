@@ -51,10 +51,13 @@ module.exports = (env) => {
   }
 
   return {
-    entry: `${APP_DIR}/index.jsx`,
+    entry: {
+      editor: `${APP_DIR}/index.jsx`,
+      "eval-frame": `${APP_DIR}/eval-frame/index.jsx`,
+    },
     output: {
       path: BUILD_DIR,
-      filename: `iodide.${APP_VERSION_STRING}.js`,
+      filename: `iodide.[name].${APP_VERSION_STRING}.js`,
     },
     devtool: 'source-map',
     resolve: {
@@ -103,9 +106,20 @@ module.exports = (env) => {
       ...plugins,
       new CreateFileWebpack({
         path: BUILD_DIR,
-        fileName: `iodide.${APP_VERSION_STRING}.html`,
+        fileName: `iodide.editor.${APP_VERSION_STRING}.html`,
         content: htmlTemplateCompiler({
-          APP_VERSION_STRING,
+          APP_VERSION_STRING: `editor.${APP_VERSION_STRING}`,
+          APP_PATH_STRING,
+          CSS_PATH_STRING,
+          NOTEBOOK_TITLE: 'new notebook',
+          JSMD: '',
+        }),
+      }),
+      new CreateFileWebpack({
+        path: BUILD_DIR,
+        fileName: `iodide.eval-frame.${APP_VERSION_STRING}.html`,
+        content: htmlTemplateCompiler({
+          APP_VERSION_STRING: `eval-frame.${APP_VERSION_STRING}`,
           APP_PATH_STRING,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: 'new notebook',
@@ -118,7 +132,7 @@ module.exports = (env) => {
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify(env),
       }),
-      new ExtractTextPlugin(`iodide.${APP_VERSION_STRING}.css`),
+      new ExtractTextPlugin(`iodide.[name].${APP_VERSION_STRING}.css`),
     ],
   }
 }
