@@ -1,0 +1,270 @@
+html, body {
+  font-family: 'Open Sans', sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  background-color: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+div#page {
+  height: 100%;
+  overflow: hidden;
+}
+
+div#notebook-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+div#notebook-container.presentation-mode {
+  display: block;
+  overflow-y: auto;
+}
+
+div#cells.editor {
+    position: fixed;
+    top: 50px; /*move down by .notebook-toolbar-container height*/
+    left: 0px;
+    box-sizing: border-box;
+    height: calc(100% - 50px); /*subtract off .notebook-toolbar-container height*/
+    width: 100%;
+    overflow-y: auto;
+    padding-top: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 60px;
+}
+
+div#cells.presentation {
+  position: inherit;
+  height: inherit;
+}
+
+/************************************************/
+/* cell output styles */
+
+.data-set-info {
+  color: #888;
+  font-style: italic;
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+div.error-output {
+background: #fff1f4;
+padding: 5px;
+color: #a41c1c;
+overflow-x: auto;
+}
+
+div.promise-handler-state {
+  display:flex;
+  font-size:12px;
+  padding: 5px;
+  width: 180px;
+  background-color:#f9f9f9;
+  border: 1px solid #f1f1f1;
+  margin-top:2px;
+}
+
+div.promise-handler-label {
+  width: 80px;
+  padding-left:5px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+div.promise-handler-status {
+  width:100px;
+  padding-left:5px;
+  text-align:center;
+  font-style:italic;
+  color: rgb(40,40,40)
+}
+
+div.promise-handler-value {
+  margin-top:6px;
+}
+
+/************************************************/
+/* header bar styles */
+
+.notebook-toolbar-container {
+  background-color: black; 
+  height: 50px
+}
+
+.notebook-toolbar {
+  height:50px;
+  display: flex;
+  position: relative;
+  min-height: 56px;
+  align-items: center;
+  min-height:50px !important;
+}
+
+div.editor-mode-controls {
+  width: 260px; 
+}
+
+div.view-controls {
+  width: 300px;
+  display:flex;
+  align-items:center;
+}
+
+div.title-field {
+  width: calc( 100% - 260px - 300px );
+}
+
+div.title-field-contents {
+  display: flex;
+  width: 100%;
+}
+
+.last-saved-text {
+  font-size: 11px;
+  color: lightgray;
+  font-style: italic;
+  width: 125px;
+  text-align: right;
+}
+
+@media (max-width:1100px) {
+  
+  .last-saved-text {
+    display:none !important;
+  }
+
+  div.view-controls {
+    width:200px;
+  }
+
+  div.title-field {
+    width: calc( 100% - 260px - 200px)
+  }
+}
+
+div.display-title {
+  color: white;
+  width: 100%;
+  text-align: center;
+}
+
+div.display-title span {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+div.display-title span:after {
+  content: '▼';
+  color: red;
+  padding-left: 5px
+}
+
+input.page-title {
+  font-family: 'Open Sans';
+  font-size: 14px;
+  border: none;
+  outline: none;
+  width:100%;
+  margin: auto;
+  text-align: center;
+  color: white;
+  background-color: black;
+}
+
+input.page-title:focus {
+  font-size: 20px
+}
+
+input.page-title.unrendered-title {
+  color: lightgray;
+}
+
+h1.page-title span {
+  font-weight: 300;
+  font-size: 16px;
+}
+
+div.notebook-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px
+}
+
+div.cell-controls {
+  display: flex;
+  padding: 3px;
+  background-color: #fff;
+  justify-content: space-between
+}
+
+div.page-mode {
+  margin-left: 10px;
+  color: #999;
+  font-size: 12px;
+  padding: 2px;
+  width: 150px;
+  display: flex
+}
+
+
+
+/************************************************/
+/* et cetera styles */
+
+div.iodide-tooltip {
+  font-size: 0.900rem;
+}
+
+.katex-html {
+  display: none;
+}
+
+.dependency-output {
+  padding-top: 10px;
+}
+
+.dependency-container {
+  margin-bottom: 6px;
+}
+
+.dependency-src {
+	font-size:13px;
+	margin: 3px 10px 3px 8px;
+
+}
+
+.dependency-src a {
+	color: black;	
+	font-weight:normal
+}
+
+.dependency-src a:hover {
+	text-decoration: underline
+}
+.dependency-status-explanation {
+  margin-left: 35px;
+  font-size: 11px;
+  color: red;
+  margin-top: -5px;
+}
+
+.dependency-status-explanation:before {
+}
+
+code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+}

@@ -1,0 +1,638 @@
+/*
+  DEFAULT PRESENTATION
+
+loosely based on https://github.com/sindresorhus/github-markdown-css
+
+The default presentation stylesheet is about as vanilla as you can get for a report.
+
+We define the maximum width for all block-level elements to be 800px by default,
+and allow some methods of breaking that convention when necessary (for instance,
+when a user has a full-screen graphic they want to display).
+
+*/
+
+.user-markdown {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #24292e;
+  font-family: -apple-system, BlinkMacSystemFont, "Open Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";  
+  font-size: 16px;
+  line-height: 1.62;
+  word-wrap: break-word;
+}
+
+/* this resets the div.cell-row-container to not have a margin for collapse + cell label buttons,
+which is an additiona 50px.
+*/
+div#cells.presentation div.cell-row-container {
+  width: 100%;
+}
+
+/* in the editor view, there is 24px less room for the collapse-button. Let's get it back. */
+div#cells.presentation div.main-component {
+  width: 100%;
+}
+
+
+/* which side-effects are shown in the report view*/
+div#cells.presentation .side-effect-target {
+  max-width:800px;
+  margin: auto;
+}
+
+div#cells.presentation div.side-effect-target div.hide-side-effect {
+  display: none;
+}
+
+ /* div#cells.presentation {
+  padding-top:30px;
+}  */
+
+#cells.presentation .cell-container:first-child {
+  padding-top:30px;
+} 
+
+ #cells.presentation .cell-container:last-child {
+  margin-bottom:60px;
+} 
+
+#cells.presentation .user-markdown {
+  padding-bottom: 10px;
+}
+
+
+
+/* establish block-level elements to be a certain width. This
+lets us create full width divs using css if necessary, while still
+retaining the narrower column view for readability and flow.
+*/
+
+.user-markdown p,
+.user-markdown h1, 
+.user-markdown h2, 
+.user-markdown h3, 
+.user-markdown h4, 
+.user-markdown h5, 
+.user-markdown h6,
+.user-markdown ol, 
+.user-markdown ul,
+.user-markdown pre,
+.user-markdown address,
+.user-markdown blockquote,
+.user-markdown dl,
+.user-markdown div,
+.user-markdown fieldset,
+.user-markdown form,
+.user-markdown hr,
+.user-markdown noscript,
+.user-markdown table {
+  max-width:800px;
+  margin: auto;
+}
+
+div#cells.editor .user-markdown p,
+div#cells.editor .user-markdown h1, 
+div#cells.editor .user-markdown h2, 
+div#cells.editor .user-markdown h3, 
+div#cells.editor .user-markdown h4, 
+div#cells.editor .user-markdown h5, 
+div#cells.editor .user-markdown h6,
+div#cells.editor .user-markdown ol, 
+div#cells.editor .user-markdown ul,
+div#cells.editor .user-markdown pre,
+div#cells.editor .user-markdown address,
+div#cells.editor .user-markdown blockquote,
+div#cells.editor .user-markdown dl,
+div#cells.editor .user-markdown div,
+div#cells.editor .user-markdown fieldset,
+div#cells.editor .user-markdown form,
+div#cells.editor .user-markdown hr,
+div#cells.editor .user-markdown noscript,
+div#cells.editor .user-markdown table {
+  margin-left: 0px; /* aligned with the */
+}
+
+
+/* establish block-level elements to be a certain width */
+
+@media (max-width:800px) {
+  .user-markdown p,
+  .user-markdown h1, 
+  .user-markdown h2, 
+  .user-markdown h3, 
+  .user-markdown h4, 
+  .user-markdown h5, 
+  .user-markdown h6,
+  .user-markdown ol, 
+  .user-markdown ul,
+  .user-markdown pre,
+  .user-markdown address,
+  .user-markdown blockquote,
+  .user-markdown dl,
+  .user-markdown div,
+  .user-markdown fieldset,
+  .user-markdown form,
+  .user-markdown hr,
+  .user-markdown noscript,
+  .user-markdown table {
+    max-width: calc(100% - 50px);
+  }
+}
+
+
+.user-markdown a {
+  background-color: transparent;
+}
+
+.user-markdown a:active,
+.user-markdown a:hover {
+  outline-width: 0;
+}
+
+.user-markdown strong {
+  font-weight: inherit;
+}
+
+.user-markdown strong {
+  font-weight: bolder;
+}
+
+.user-markdown img {
+  border-style: none;
+}
+
+.user-markdown code,
+.user-markdown kbd,
+.user-markdown pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.user-markdown hr {
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible;
+}
+
+.user-markdown input {
+  font: inherit;
+  margin: 0;
+}
+
+.user-markdown input {
+  overflow: visible;
+}
+
+.user-markdown [type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.user-markdown * {
+  box-sizing: border-box;
+}
+
+.user-markdown input {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.user-markdown a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+.user-markdown a:hover {
+  text-decoration: underline;
+}
+
+.user-markdown strong {
+  font-weight: 600;
+}
+
+.user-markdown hr {
+  height: 0;
+  margin-top:15px;
+  margin-bottom:15px;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #dfe2e5;
+}
+
+.user-markdown hr::before {
+  display: table;
+  content: "";
+}
+
+.user-markdown hr::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.user-markdown table {
+  border-spacing: 0;
+  border-collapse: collapse;  
+}
+
+.user-markdown td,
+.user-markdown th {
+  padding: 0;
+}
+
+.user-markdown h1,
+.user-markdown h2,
+.user-markdown h3,
+.user-markdown h4,
+.user-markdown h5,
+.user-markdown h6 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.user-markdown h1 {
+  font-size: 36px;
+  font-weight: 300;
+  margin-top:20px;
+}
+
+.user-markdown h2 {
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.user-markdown h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.user-markdown h4 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.user-markdown h5 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.user-markdown h6 {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.user-markdown p {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.user-markdown div+p {
+  margin-top:10px; /* add a bit of padding if there is a div in this markdown. */
+}
+
+.user-markdown
+
+.user-markdown ul,
+.user-markdown ol {
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.user-markdown ol ol,
+.user-markdown ul ol {
+  list-style-type: lower-roman;
+}
+
+.user-markdown ul ul ol,
+.user-markdown ul ol ol,
+.user-markdown ol ul ol,
+.user-markdown ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.user-markdown dd {
+  margin-left: 0;
+}
+
+.user-markdown code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.user-markdown pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.user-markdown::before {
+  display: table;
+  content: "";
+}
+
+.user-markdown::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.user-markdown>*:first-child {
+  margin-top: 0 !important;
+}
+
+.user-markdown>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.user-markdown a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.user-markdown .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.user-markdown .anchor:focus {
+  outline: none;
+}
+
+.user-markdown p,
+.user-markdown blockquote,
+.user-markdown ul,
+.user-markdown ol,
+.user-markdown dl,
+.user-markdown table,
+.user-markdown pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.user-markdown hr {
+  height: 0.1em;
+  padding: 0;
+  background-color: #e1e4e8;
+  border: 0;
+}
+
+.user-markdown blockquote {
+  padding: 0 1em;
+  color: #6a737d;
+  border-left: 0.15em solid #dfe2e5;
+}
+
+.user-markdown blockquote>:first-child {
+  margin-top: 0;
+}
+
+.user-markdown blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.user-markdown kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #444d56;
+  vertical-align: middle;
+  background-color: #fafbfc;
+  border: solid 1px #c6cbd1;
+  border-bottom-color: #959da5;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #959da5;
+}
+
+.user-markdown h1,
+.user-markdown h2,
+.user-markdown h3,
+.user-markdown h4,
+.user-markdown h5,
+.user-markdown h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.user-markdown h1:hover .anchor,
+.user-markdown h2:hover .anchor,
+.user-markdown h3:hover .anchor,
+.user-markdown h4:hover .anchor,
+.user-markdown h5:hover .anchor,
+.user-markdown h6:hover .anchor {
+  text-decoration: none;
+}
+
+.user-markdown h1 {
+  padding-bottom: 0.4em;
+  font-size: 2.3em;
+  font-weight: 300;
+}
+
+.user-markdown h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.5em;
+  font-weight: 300;
+  
+}
+
+.user-markdown h3 {
+  font-size: 1.25em;
+}
+
+.user-markdown h4 {
+  font-size: 1em;
+}
+
+.user-markdown h5 {
+  font-size: 0.875em;
+}
+
+.user-markdown h6 {
+  font-size: 0.85em;
+  color: #6a737d;
+}
+
+.user-markdown ul,
+.user-markdown ol {
+  padding-left: 2em;
+}
+
+.user-markdown ul ul,
+.user-markdown ul ol,
+.user-markdown ol ol,
+.user-markdown ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.user-markdown li {
+  word-wrap: break-all;
+}
+
+.user-markdown li>p {
+  margin-top: 16px;
+}
+
+.user-markdown li+li {
+  margin-top: 0.25em;
+}
+
+.user-markdown dl {
+  padding: 0;
+}
+
+.user-markdown dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.user-markdown dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.user-markdown table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.user-markdown table th {
+  font-weight: 600;
+}
+
+.user-markdown table th,
+.user-markdown table td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+.user-markdown table tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+.user-markdown table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+.user-markdown img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: #fff;
+}
+
+.user-markdown img[align=right] {
+  padding-left: 20px;
+}
+
+.user-markdown img[align=left] {
+  padding-right: 20px;
+}
+
+.user-markdown code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(27,31,35,0.05);
+  border-radius: 3px;
+}
+
+.user-markdown pre {
+  word-wrap: normal;
+}
+
+.user-markdown pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.user-markdown .highlight {
+  margin-bottom: 16px;
+}
+
+.user-markdown .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.user-markdown .highlight pre,
+.user-markdown pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+}
+
+.user-markdown pre code {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.user-markdown .full-commit .btn-outline:not(:disabled):hover {
+  color: #005cc5;
+  border-color: #005cc5;
+}
+
+.user-markdown kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  line-height: 10px;
+  color: #444d56;
+  vertical-align: middle;
+  background-color: #fafbfc;
+  border: solid 1px #d1d5da;
+  border-bottom-color: #c6cbd1;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #c6cbd1;
+}
+
+.user-markdown :checked+.radio-label {
+  position: relative;
+  z-index: 1;
+  border-color: #0366d6;
+}
+
+.user-markdown .task-list-item {
+  list-style-type: none;
+}
+
+.user-markdown .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.user-markdown .task-list-item input {
+  margin: 0 0.2em 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+.user-markdown hr {
+  border-bottom-color: #eee;
+}
