@@ -95,7 +95,7 @@ class Page extends React.Component {
         className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
       >
         <NotebookHeader />
-        <div id="panes-container" style={{ display: 'flex', flexDirection: 'row' }}>
+        <div id="panes-container" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
           <Resizable
             enable={{
               bottom: false,
@@ -110,7 +110,7 @@ class Page extends React.Component {
             handleClasses={{ right: 'resizer' }}
             maxWidth={800}
             minWidth={300}
-            defaultSize={{ width: '60%', height: '9999px' }}
+            defaultSize={{ width: '60%', height: '100%' }}
           >
             <div
               id="cells"

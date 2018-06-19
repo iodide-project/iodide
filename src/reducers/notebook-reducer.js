@@ -7,6 +7,8 @@ import {
   stateFromJsmd,
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
+import { postDispatchToEvalContext } from '../tools/message-passing'
+
 
 const AUTOSAVE = 'AUTOSAVE: '
 
@@ -106,6 +108,21 @@ const notebookReducer = (state = newNotebook(), action) => {
       }
 
       return state
+    }
+
+    case 'EVAL_FRAME_READY': {
+      state.evalFrameMessageQueue.forEach((actionToPost) => {
+        postDispatchToEvalContext(actionToPost)
+        console.log('posted EVAL_FRAME_READY', actionToPost)
+      })
+      return Object.assign({}, state, { evalFrameReady: true, evalFrameMessageQueue: [] })
+    }
+
+    case 'ADD_TO_EVAL_FRAME_MESSAGE_QUEUE': {
+      console.log('ADD_TO_EVAL_FRAME_MESSAGE_QUEUE', action.actionToPost)
+      const evalFrameMessageQueue = state.evalFrameMessageQueue.slice()
+      evalFrameMessageQueue.push(action.actionToPost)
+      return Object.assign({}, state, { evalFrameMessageQueue })
     }
 
     case 'IMPORT_NOTEBOOK': {

@@ -47,6 +47,8 @@ function receiveMessage(event) {
 }
 
 window.addEventListener('message', receiveMessage, false)
+console.log('eval-frame ready for messages')
+window.parent.postMessage('EVAL_FRAME_READY', '*')
 
 render(
   <Provider store={store}>

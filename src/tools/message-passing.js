@@ -5,6 +5,6 @@ export function postTypedMessageToEvalContext(messageType, message) {
   }
 }
 
-export function postDispatchToEvalContext(actionObj) {
-  postTypedMessageToEvalContext('PARENT_DISPATCH', JSON.stringify(actionObj))
+export function postDispatchToEvalContext(actionObjJsonStr) {
+  postTypedMessageToEvalContext('PARENT_DISPATCH', actionObjJsonStr)
 }

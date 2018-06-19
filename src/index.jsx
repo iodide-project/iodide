@@ -26,6 +26,25 @@ import { iodide } from './iodide-api/api'
 
 window.iodide = iodide
 
+export function receiveMessage(event) {
+  console.log(event)
+  const trustedMessage = true
+  if (trustedMessage) {
+    // const { messageType, message } = JSON.parse()
+    console.log('parent got message', event)
+    switch (event.data) {
+      case 'EVAL_FRAME_READY':
+        console.log('parent ack EVAL_FRAME_READY')
+        store.dispatch({ type: 'EVAL_FRAME_READY' })
+        break
+      default:
+        console.log('unknown messageType', event.data)
+    }
+  }
+}
+
+window.addEventListener('message', receiveMessage, false)
+
 render(
   <Provider store={store}>
     <Page />

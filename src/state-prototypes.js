@@ -122,6 +122,11 @@ const stateSchema = {
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
     sidePaneWidth: { type: 'integer' },
+    evalFrameMessageQueue: {
+      type: 'array',
+      items: { type: 'string' },
+    },
+    evalFrameReady: { type: 'boolean' },
     externalDependencies: { type: 'array' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
@@ -239,6 +244,8 @@ function blankState() {
     sidePaneMode: undefined,
     sidePaneWidth: 562,
     history: [],
+    evalFrameMessageQueue: [],
+    evalFrameReady: false,
     externalDependencies: [],
     executionNumber: 0,
     appMessages: [],
