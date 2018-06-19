@@ -256,16 +256,13 @@ tasks.saveNotebook = new UserTask({
 
 tasks.exportNotebook = new UserTask({
   title: 'Export Notebook',
-  keybindings: ['meta+e'],
-  displayKeybinding: `${commandKey()}+E`,
+  keybindings: ['ctrl+shift+e', 'meta+shift+e'],
+  displayKeybinding: `Shift+${commandKey()}+E`,
   callback() { dispatcher.exportNotebook() },
 })
 
 tasks.exportNotebookAsReport = new UserTask({
   title: 'Export Notebook as Report',
-  keybindings: ['meta+shift+e'],
-  displayKeybinding: `Shift+${commandKey()}+E`,
-  keybindingPrecondition: isCommandMode,
   callback() { dispatcher.exportNotebook(true, false) },
 })
 
