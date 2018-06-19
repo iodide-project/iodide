@@ -19,6 +19,14 @@ MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const CodeMirror = require('codemirror') // eslint-disable-line
 
+function postTypedMessageToEvalContext(messageType, message) {
+  window.IODIDE_EVAL_FRAME.contentWindow.postMessage(JSON.stringify({ messageType, message }), '*')
+}
+
+export function dispatchToEvalContext(actionObj) {
+  postTypedMessageToEvalContext('PARENT_DISPATCH', JSON.stringify(actionObj))
+}
+
 export function temporarilySaveRunningCellID(cellID) {
   return {
     type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',
@@ -143,6 +151,18 @@ export function appendToEvalHistory(cellId, content) {
   }
 }
 
+export function incrementExecutionNumber() {
+  return {
+    type: 'INCREMENT_EXECUTION_NUMBER',
+  }
+}
+
+export function updateUserVariables() {
+  return {
+    type: 'UPDATE_USER_VARIABLES',
+  }
+}
+
 // note: this function is NOT EXPORTED. It is a private function meant
 // to be wrapped by other actions that will configure and dispatch it.
 export function updateCellProperties(cellId, updatedProperties) {
@@ -150,17 +170,6 @@ export function updateCellProperties(cellId, updatedProperties) {
     type: 'UPDATE_CELL_PROPERTIES',
     cellId,
     updatedProperties,
-  }
-}
-
-export function incrementExecutionNumber() {
-  return {
-    type: 'INCREMENT_EXECUTION_NUMBER',
-  }
-}
-export function updateUserVariables() {
-  return {
-    type: 'UPDATE_USER_VARIABLES',
   }
 }
 
@@ -357,6 +366,15 @@ export function evaluateCell(cellId) {
       cell = getCellById(getState().cells, cellId)
     }
     // here is where we should mark a cell as PENDING.
+    console.log(cell)
+
+    postTypedMessageToEvalContext('UPDATE_CELL_AND_EVAL', JSON.stringify(cell))
+    // dispatchToEvalContext({
+    //   type: 'UPDATE_CELL_PROPERTIES',
+    //   cellId,
+    //   updatedProperties: JSON.stringify(cell),
+    // })
+    // window.IODIDE_EVAL_FRAME.contentWindow.postMessage(JSON.stringify(cell), '*')
     if (cell.cellType === 'code') {
       evaluationQueue = evaluationQueue
         .then(() => dispatch(evaluateCodeCell(cell)))
@@ -414,65 +432,66 @@ export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId)
 }
 
 export function markCellNotRendered() {
-  return {
+  const actionObj = {
     type: 'MARK_CELL_NOT_RENDERED',
   }
+  dispatchToEvalContext(actionObj)
+  return actionObj
 }
 
 export function cellUp() {
-  return {
+  const actionObj = {
     type: 'CELL_UP',
   }
+  dispatchToEvalContext(actionObj)
+  return actionObj
 }
 
 export function cellDown() {
-  return {
+  const actionObj = {
     type: 'CELL_DOWN',
   }
+  dispatchToEvalContext(actionObj)
+  return actionObj
 }
 
 export function insertCell(cellType, direction) {
-  return {
+  const actionObj = {
     type: 'INSERT_CELL',
     cellType,
     direction,
   }
+  dispatchToEvalContext(actionObj)
+  return actionObj
 }
 
 export function addCell(cellType) {
-  return {
+  const actionObj = {
     type: 'ADD_CELL',
     cellType,
   }
+  dispatchToEvalContext(actionObj)
+  return actionObj
 }
 
 export function selectCell(cellID, scrollToCell = false) {
-  return {
+  const actionObj = {
     type: 'SELECT_CELL',
     id: cellID,
     scrollToCell,
   }
+  dispatchToEvalContext(actionObj)
+  return actionObj
 }
 
 export function deleteCell() {
-  return {
+  const actionObj = {
     type: 'DELETE_CELL',
   }
+  dispatchToEvalContext(actionObj)
+  return actionObj
 }
 
-export function changeElementType(elementType) {
-  return {
-    type: 'CHANGE_ELEMENT_TYPE',
-    elementType,
-  }
-}
-
-export function changeDOMElementID(elemID) {
-  return {
-    type: 'CHANGE_DOM_ELEMENT_ID',
-    elemID,
-  }
-}
 
 export function changeSidePaneMode(mode) {
   return {
