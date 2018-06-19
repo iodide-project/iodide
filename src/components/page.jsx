@@ -96,7 +96,7 @@ class Page extends React.Component {
         className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
       >
         <NotebookHeader />
-        <div id="panes-container" style={{ display: 'flex', 'flex-direction': 'row' }}>
+        <div id="panes-container" style={{ display: 'flex', flexDirection: 'row' }}>
           <Resizable
             enable={{
               bottom: false,
@@ -120,7 +120,7 @@ class Page extends React.Component {
               {bodyContent}
             </div>
           </Resizable>
-          <div style={{ 'flex-grow': '1' }}><EvalFrame /></div>
+          <div style={{ flexGrow: '1' }}><EvalFrame /></div>
           {/* <SplitPane split="vertical" minSize={250} defaultSize="60%">
             <div
               id="cells"
