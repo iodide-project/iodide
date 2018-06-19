@@ -1,3 +1,4 @@
+/* global IODIDE_BUILD_MODE */
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
@@ -58,7 +59,7 @@ export class ViewControlsUnconnected extends React.Component {
         <HistoryPane />
         <AppInfoPane />
 
-        {loginItem}
+        {IODIDE_BUILD_MODE === 'heroku' && (loginItem)}
 
         <ViewModeToggleButton />
 

@@ -437,15 +437,6 @@ function loginFailure() {
 }
 
 export function login() {
-  if (window.location.hostname !== 'iodide.io') {
-    return (dispatch) => {
-      // ToDo : Open a new tab with iodide.io having JSMD of current notebook
-      dispatch(updateAppMessages({
-        message: 'Unauthorized Domain',
-        details: 'Login is only authorized on the domain iodide.io',
-      }))
-    }
-  }
   const url = '/auth/github'
   const name = 'github_login'
   const specs = 'width=500,height=600'
