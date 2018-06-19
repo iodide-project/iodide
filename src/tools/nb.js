@@ -59,7 +59,6 @@ nb.isMatrix = function(obj,rowsToCheck = 100){
   return true
 }
 
-
 nb.isColumnDf = function(obj,colsToCheck = 100){
   if (!_.isPlainObject(obj)) {return false}
   colsToCheck = Math.min(colsToCheck,_.size(obj))
@@ -138,9 +137,8 @@ nb.prettyFormatNumber = function(x,numChars=8){
     return x.toFixed(numChars-2)
   } else if (intStr=='-0' && decStr.length >= numChars-3){
     return x.toFixed(numChars-2)
-    
   } else {
-    return x.toFixed(numChars-intStr.length-2)
+    return x.toFixed(Math.max(0, numChars-intStr.length-2))
   }
 }
 
