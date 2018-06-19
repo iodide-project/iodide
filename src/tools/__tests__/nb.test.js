@@ -25,7 +25,6 @@ describe('nb.isRowDf', () => {
 })
 
 describe('nb.isColumnDf', () => {
-  // I actually don't know what a columnDf is (vs a matrix?)
   expect(nb.isColumnDf(undefined)).toBe(false)
   expect(nb.isColumnDf({})).toBe(false)
   expect(nb.isColumnDf([])).toBe(false)

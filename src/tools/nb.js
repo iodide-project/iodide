@@ -2,29 +2,6 @@ import _ from 'lodash'
 
 let nb = {}
 
-// UNUSED OUTSIDE OF NB.JS fcns that are not used.
-nb.all = function(arr){
-  for (let i=0; i<arr.length; i++) {
-    if (!arr[i]){return false}
-  }
-  return true
-}
-
-// UNUSED
-nb.any = function(arr){
-  for (let i=0; i<arr.length; i++) {
-    if (arr[i]){return true}
-  }
-  return false
-}
-
-// only place where nb.all is claled, isn't used. REMOVE
-nb.isMatrixLike = function(obj){
-  if (nb.isArray(obj)){
-    return nb.all(obj.map(nb.isArray))
-  } else {return false}
-}
-
 nb.arrayEqual = function(a1,a2){
   if (a1.length != a2.length){return false}
   for (let i=0, l=a1.length; i<l; i++){
@@ -36,8 +13,6 @@ nb.arrayEqual = function(a1,a2){
 nb.sameKeys = function(x,y){
   return nb.arrayEqual(_.sortBy(_.keys(x)), _.sortBy(_.keys(y)))
 }
-
-// isRowDF, isColumnDF, shape
 
 nb.isRowDf = function(obj,rowsToCheck = 100){
   if (!_.isArray(obj) || obj.length==0 || (obj.length === 1 && !_.isPlainObject(obj[0]))) {return false}
