@@ -24,5 +24,11 @@ describe('nb.isMatrix', () => {
     expect(nb.isMatrix([[1, 2, 3], [4, 6]])).toBe(true)
     expect(nb.isMatrix([[1, 2, 3], []])).toBe(true)
     expect(nb.isMatrix([[], []])).toBe(true)
+    expect(nb.isMatrix([[[[]]]])).toBe(true)
+  })
+  it('rejects the following values', () => {
+    expect(nb.isMatrix({})).toBe(false)
+    expect(nb.isMatrix(undefined)).toBe(false)
+    expect(nb.isMatrix([{ a: 10 }, { b: 20 }])).toBe(false)
   })
 })
