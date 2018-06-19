@@ -7,7 +7,9 @@ import { importIpynb } from './ipynb-import'
 
 function loadJsmd(jsmd) {
   store.dispatch(importFromURL(stateFromJsmd(jsmd))).then(() => {
-    if (store.getState().viewMode === 'presentation') { store.dispatch(evaluateAllCells(store.getState().cells, store)) }
+    if (store.getState().viewMode === 'presentation') {
+      store.dispatch(evaluateAllCells(store.getState().cells, store))
+    }
   })
 }
 
