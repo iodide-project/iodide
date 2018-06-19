@@ -62,7 +62,7 @@ const ensureAuthenticated = (req, res, next) => {
 };
 
 express()
-  .use(express.static(path.join(__dirname, 'dev'), { index: 'iodide.dev.html' }))
+  .use(express.static(path.join(__dirname, 'prod'), { index: 'iodide.iodide-server.html' }))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .use(partials())
