@@ -28,6 +28,7 @@
   "dependencies": {
     "@skidding/react-codemirror": "^1.0.0",
     "ajv": "^6.5.0",
+    "body-parser": "^1.18.3",
     "codemirror": "^5.37.0",
     "codemirror-no-newlines": "^1.0.2",
     "copy-to-clipboard": "^3.0.8",
