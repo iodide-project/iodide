@@ -29,11 +29,11 @@ div#notebook-container.presentation-mode {
 }
 
 div#cells.editor {
-    position: fixed;
-    top: 50px; /*move down by .notebook-toolbar-container height*/
-    left: 0px;
+    /*position: fixed;*/
+    /*top: 50px; move down by .notebook-toolbar-container height*/
+    /*left: 0px;*/
     box-sizing: border-box;
-    height: calc(100% - 50px); /*subtract off .notebook-toolbar-container height*/
+    /*height: calc(100% - 50px); subtract off .notebook-toolbar-container height*/
     width: 100%;
     overflow-y: auto;
     padding-top: 20px;

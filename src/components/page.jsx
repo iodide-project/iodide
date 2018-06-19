@@ -4,6 +4,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
+// import SplitPane from 'react-split-pane'
+import Resizable from 're-resizable'
+
 import RawCell from './cells/raw-cell'
 import ExternalDependencyCell from './cells/external-resource-cell'
 import CSSCell from './cells/css-cell'
@@ -11,6 +14,7 @@ import CodeCell from './cells/code-cell'
 import MarkdownCell from './cells/markdown-cell'
 import PluginDefinitionCell from './cells/plugin-definition-cell'
 
+import EvalFrame from './eval-frame'
 import NotebookHeader from './menu/notebook-header'
 import AppMessages from './app-messages/app-messages'
 
@@ -48,19 +52,19 @@ class Page extends React.Component {
       this.props.actions.saveNotebook(true)
     }, 1000 * 60)
 
-    this.getPageWidth = this.getPageWidth.bind(this)
+    // this.getPageWidth = this.getPageWidth.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
   }
 
-  getPageWidth() {
-    let width = '100%'
-    if (this.props.viewMode === 'presentation') width = 'undefined'
-    else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`
-    return { width }
-  }
+  // getPageWidth() {
+  //   let width = '100%'
+  //   if (this.props.viewMode === 'presentation') width = 'undefined'
+  //   else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`
+  //   return { width }
+  // }
 
   render() {
     // console.log('Page rendered')
@@ -92,12 +96,41 @@ class Page extends React.Component {
         className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
       >
         <NotebookHeader />
-        <div
-          id="cells"
-          className={this.props.viewMode}
-          style={this.getPageWidth()}
-        >
-          {bodyContent}
+        <div id="panes-container" style={{ display: 'flex', 'flex-direction': 'row' }}>
+          <Resizable
+            enable={{
+              bottom: false,
+              top: false,
+              right: true,
+              topRight: false,
+              bottomRight: false,
+              bottomLeft: false,
+              topLeft: false,
+              left: false,
+            }}
+            handleClasses={{ right: 'resizer' }}
+            maxWidth={800}
+            minWidth={300}
+            defaultSize={{ width: '60%', height: '9999px' }}
+          >
+            <div
+              id="cells"
+              className={this.props.viewMode}
+            >
+              {bodyContent}
+            </div>
+          </Resizable>
+          <div style={{ 'flex-grow': '1' }}><EvalFrame /></div>
+          {/* <SplitPane split="vertical" minSize={250} defaultSize="60%">
+            <div
+              id="cells"
+              className={this.props.viewMode}
+              style={this.getPageWidth()}
+            >
+              {bodyContent}
+            </div>
+            <EvalFrame />
+          </SplitPane> */}
         </div>
         <AppMessages />
       </div>
