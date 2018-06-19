@@ -54,7 +54,7 @@ Support for importing Jupyter notebooks into Iodide is experimental.  In particu
   "displayName": "python",
   "codeMirrorMode": "python",
   "keybinding": "p",
-  "url": "https://iodide.github.io/pyodide-demo/pyodide.js",
+  "url": "https://iodide.io/pyodide-demo/pyodide.js",
   "module": "pyodide",
   "evaluator": "runPython",
   "pluginType": "language"
