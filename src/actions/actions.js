@@ -4,9 +4,7 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import { postDispatchToEvalContext, postTypedMessageToEvalContext } from '../tools/message-passing'
-import {
-  getSelectedCell,
-} from '../reducers/cell-reducer-utils'
+import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
 
 const MD = MarkdownIt({ html: true })
