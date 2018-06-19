@@ -26,12 +26,8 @@ export class EditorToolbarMenuUnconnected extends React.Component {
         <NotebookMenuItem task={tasks.exportNotebookToClipboard} />
         <NotebookMenuItem task={tasks.clearVariables} />
         {
-          this.props.isAuthenticated ?
-            (<NotebookMenuItem task={tasks.exportGist} />)
-            :
-            (<NotebookMenuItem task={tasks.loginGithub} />)
+          this.props.isAuthenticated && <NotebookMenuItem task={tasks.exportGist} />
         }
-
         <SavedNotebooksAndExamplesSubsection />
 
         <CellMenuSubsection />
