@@ -516,6 +516,32 @@ export function exportGist() {
   }
 }
 
+export function saveNotebookServer() {
+  return (dispatch, getState) => {
+    const state = getState()
+    const notebook = {
+      title: state.title,
+      content: exportJsmdBundle(state),
+    }
+
+    if (state.userData.currentNotebook) {
+      fetch('/api/notebook', {
+        body: JSON.stringify(notebook),
+        method: 'POST',
+      })
+        .then(response => response.json())
+        .then((json) => {
+          if (json.success) {
+            dispatch(updateAppMessages(`Notebook created with id ${json.id}`))
+          } else {
+            dispatch(updateAppMessages('Failed to save notebook')) // Change msg texts
+          }
+        })
+        .catch(err => dispatch(updateAppMessages(`Failed to save notebook ${err}`)))
+    }
+  }
+}
+
 export function cellUp() {
   return {
     type: 'CELL_UP',
