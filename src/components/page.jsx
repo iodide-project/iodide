@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
-// import SplitPane from 'react-split-pane'
 import Resizable from 're-resizable'
 
 import RawCell from './cells/raw-cell'
@@ -121,16 +120,6 @@ class Page extends React.Component {
             </div>
           </Resizable>
           <div style={{ flexGrow: '1' }}><EvalFrame /></div>
-          {/* <SplitPane split="vertical" minSize={250} defaultSize="60%">
-            <div
-              id="cells"
-              className={this.props.viewMode}
-              style={this.getPageWidth()}
-            >
-              {bodyContent}
-            </div>
-            <EvalFrame />
-          </SplitPane> */}
         </div>
         <AppMessages />
       </div>
