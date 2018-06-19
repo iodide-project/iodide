@@ -51,6 +51,7 @@
     "opensans-npm-webfont": "^1.0.0",
     "passport": "^0.4.0",
     "passport-github2": "^0.1.11",
+    "pg": "^7.4.3",
     "prop-types": "^15.6.1",
     "query-string": "^5.1.1",
     "re-resizable": "^4.4.8",

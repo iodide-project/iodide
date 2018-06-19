@@ -10,10 +10,10 @@ const isAuthenticated = function (req, res, next) {
 router.get('/notebook', (req, res) => {
 	models.Notebook.findAll().then(notebooks => {
     if (notebooks && Object.keys(notebooks).length > 0)
-			res.json(notebooks)
+			res.json({ success: true, notebooks })
 		else
 			res.status(400).json({ success: false, error: "No notebooks found" })
-	}).catch((err) => res.status(400).json({ success: false, errors: err }))
+	}).catch((err) => res.status(400).json({ success: false, error: err }))
 })
 
 // Create a new notebook (requires user to be authenticated)
@@ -23,18 +23,18 @@ router.post('/notebook', isAuthenticated, (req, res) => {
 	models.Notebook
  		.build({ title, content, owner })
 		.save()
-		.then((notebook) => res.json({ id: notebook.id }))
-		.catch((err) => res.status(400).json({ success: false, errors: { globals: err } }))
+		.then((notebook) => res.json({ id: notebook.id, success: true }))
+		.catch((err) => res.status(400).json({ success: false, error: err }))
 })
 
 // Retrieves the notebook's content
 router.get('/notebook/:id', (req, res) => {
 	models.Notebook.findOne({where: {id: req.params.id}}).then(notebook => {
     if (notebook && Object.keys(notebook).length > 0)
-			res.json(notebook)
+			res.json({ success: true, notebook })
 		else
 			res.status(400).json({ success: false, error: "Notebook doesn't exist" })
-	}).catch((err) => res.status(400).json({ success: false, errors: err }))
+	}).catch((err) => res.status(400).json({ success: false, error: err }))
 })
 
 // Updates the notebook's content
@@ -50,7 +50,7 @@ router.put('/notebook/:id', isAuthenticated, (req, res) => {
 	      })
 	    }
 		}).then(() => res.json({success: true}))
-		.catch(err => res.status(400).json({success: false, error: err}))
+		.catch(err => res.status(400).json({ success: false, error: err }))
 })
 
 // Retrieves metadata associated with a user
@@ -58,7 +58,7 @@ router.get('/user/:id', (req, res) => {
 	let ownNotebooks = []
 	let userDetails
 	models.User
-		.findOne({where: {id: req.params.id}})
+		.findOne({ where: { id: req.params.id } })
 		.then(user => {
 			if (user) {
 				userDetails = user.dataValues
@@ -72,9 +72,9 @@ router.get('/user/:id', (req, res) => {
 					res.json({...userDetails, ownNotebooks})
 					})
 			} else {
-				res.status(400).json({success: false, error: err})
+				res.status(400).json({success: false, error: "Requested user doesn't exist"})
 			}
-		}).catch(err => res.status(400).json({success: false, error: err}))
+		}).catch(err => res.status(400).json({ success: false, error: err }))
 })
 
 module.exports = router

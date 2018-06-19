@@ -10,16 +10,14 @@ const GitHubStrategy = require('passport-github2').Strategy
 const PORT = process.env.PORT || 5000
 const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, SERVER_URI } = process.env
 const db = require('./server/models')
-const apiRouter = require('./server/routes')
+const apiRouter = require('./server/routes/api')
 const User = db.User
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
 //   serialize users into and deserialize users out of the session.  Typically,
 //   this will be as simple as storing the user ID when serializing, and finding
-//   the user by ID when deserializing.  However, since this example does not
-//   have a database of user records, the complete GitHub profile is serialized
-//   and deserialized.
+//   the user by ID when deserializing.
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -87,12 +85,12 @@ const ensureAuthenticated = (req, res, next) => {
   return ''
 };
 
-// // Sync Database
-// db.sequelize.sync().then(function(){
-//   console.log('Nice! Database looks fine')
-// }).catch(function(err){
-//   console.log(err,"Something went wrong with the Database Update!")
-// });
+// Sync Database
+db.sequelize.sync().then(function(){
+  console.log('Nice! Database looks fine')
+}).catch(function(err){
+  console.log(err,"Something went wrong with the Database Update!")
+});
 
 
 express()
