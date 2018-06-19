@@ -21,7 +21,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 
   render() {
-    const edvElem = Object.keys(this.props.environmentVariables).length !== undefined ? (
+    const edvElem = Object.keys(this.props.environmentVariables).length !== 0 ? (
       <div className="declared-variables-list">
         <h3>Saved Environment</h3>
         <div className="frozen-variables">
@@ -53,7 +53,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   return {
     environmentVariables: state.savedEnvironment,
     userDefinedVarNames: state.userDefinedVarNames,
