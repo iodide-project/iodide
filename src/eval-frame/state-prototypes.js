@@ -32,6 +32,7 @@ export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYN
 const cellSchema = {
   type: 'object',
   properties: {
+    asyncProcessCount: { type: 'integer', minimum: 0 },
     content: { type: 'string' }, // change to string with default '' or 'untitled'
     id: { type: 'integer', minimum: 0 },
     cellType: {
