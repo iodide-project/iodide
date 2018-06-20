@@ -13,6 +13,7 @@ let APP_PATH_STRING
 let CSS_PATH_STRING
 let APP_VERSION_STRING
 
+
 const APP_DIR = path.resolve(__dirname, 'src/')
 const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
@@ -134,12 +135,12 @@ module.exports = (env) => {
         IODIDE_BUILD_MODE: JSON.stringify(env),
       }),
       new ExtractTextPlugin(`iodide.[name].${APP_VERSION_STRING}.css`),
-      // copying these files allows js, css, etc resources to be loaded
-      // into existing notebooks
+      // copying these files allows notebooks predating the iframe paradigm
+      // to load the iframe paradigm js+css, resources
       new CopyWebpackPlugin(['js', 'js.map', 'css', 'css.map', 'html']
         .map(ext => ({
-          from: path.resolve(__dirname, `./dev/iodide.editor.${APP_VERSION_STRING}.${ext}`),
-          to: path.resolve(__dirname, `./dev/iodide.${APP_VERSION_STRING}.${ext}`),
+          from: path.resolve(BUILD_DIR, `./iodide.editor.${APP_VERSION_STRING}.${ext}`),
+          to: path.resolve(BUILD_DIR, `./iodide.${APP_VERSION_STRING}.${ext}`),
         }))),
     ],
   }
