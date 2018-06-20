@@ -1,8 +1,7 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import { MarkdownCellUnconnected, mapStateToProps } from '../markdown-cell'
-import CellEditor from '../cell-editor'
+import { MarkdownCellUnconnected } from '../markdown-cell'
 import CellRow from '../cell-row'
 import { CellContainer } from '../cell-container'
 

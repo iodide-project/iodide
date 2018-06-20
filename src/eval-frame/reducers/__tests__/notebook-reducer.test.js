@@ -1,16 +1,5 @@
 import notebookReducer from '../notebook-reducer'
-import { newNotebook, blankState, addNewCellToState } from '../../state-prototypes'
-
-const EXAMPLE_NOTEBOOK_1 = 'example notebook with content'
-
-function exampleNotebookWithContent(title = EXAMPLE_NOTEBOOK_1) {
-  let state = newNotebook()
-  state = addNewCellToState(state, 'code')
-  state = addNewCellToState(state, 'markdown')
-  state.cells[0].selected = true
-  state.title = title
-  return state
-}
+import { newNotebook, blankState } from '../../state-prototypes'
 
 beforeEach(() => {
   localStorage.clear();
@@ -30,8 +19,3 @@ describe('new notebooks', () => {
   })
 })
 
-describe('misc. notebook operations that don\'t belong elsewhere', () => {
-  const state = exampleNotebookWithContent()
-  const NEW_NAME = 'changed notebook name'
-
-})

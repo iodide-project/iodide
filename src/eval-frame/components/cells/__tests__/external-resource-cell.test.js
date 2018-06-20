@@ -2,13 +2,9 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 
-import {
-  ExternalResourceCellUnconnected as ExternalResourceCell,
-  mapStateToProps,
-} from '../external-resource-cell'
+import { ExternalResourceCellUnconnected as ExternalResourceCell } from '../external-resource-cell'
 import { CellContainer } from '../cell-container'
 import CellRow from '../cell-row'
-import CellEditor from '../cell-editor'
 import ExternalResourceOutput from '../../reps/output-handler-external-resource'
 
 const STANDARD_NETWORK_ERROR = 'A network error occurred.'

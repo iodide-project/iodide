@@ -45,5 +45,4 @@ describe('RawCellUnconnected react component', () => {
     expect(cell().find(CellRow).props().rowType)
       .toBe('output')
   })
-
 })
