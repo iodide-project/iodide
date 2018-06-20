@@ -12,7 +12,6 @@ export class CodeCellUnconnected extends React.Component {
   }
 
   render() {
-    // console.log(`CodeCellUnconnected rendered: ${this.props.cellId}`)
     return (
       <CellContainer cellId={this.props.cellId}>
         <CellRow cellId={this.props.cellId} rowType="input">
