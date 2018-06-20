@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
-import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
+import { exportJsmdBundle, titleToHtmlFilename, exportJsmdToString } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import {
   addExternalDependency,
@@ -521,23 +521,29 @@ export function saveNotebookServer() {
     const state = getState()
     const notebook = {
       title: state.title,
-      content: exportJsmdBundle(state),
+      content: exportJsmdToString(state),
     }
 
-    if (state.userData.currentNotebook) {
+    if (state.userData.accessToken) {
       fetch('/api/notebook', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(notebook),
         method: 'POST',
       })
         .then(response => response.json())
         .then((json) => {
           if (json.success) {
-            dispatch(updateAppMessages(`Notebook created with id ${json.id}`))
+            dispatch(updateAppMessages({
+              message: 'Notebook saved',
+              details: `Notebook created with id ${json.id}`,
+            }))
           } else {
-            dispatch(updateAppMessages('Failed to save notebook')) // Change msg texts
+            dispatch(updateAppMessages({ message: 'Failed to save notebook' })) // Change msg texts
           }
         })
-        .catch(err => dispatch(updateAppMessages(`Failed to save notebook ${err}`)))
+        .catch(err => dispatch(updateAppMessages({ details: `Failed to save notebook ${err}` })))
     }
   }
 }

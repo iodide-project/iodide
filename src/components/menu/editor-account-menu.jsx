@@ -12,10 +12,7 @@ export default class EditorAccountMenu extends React.Component {
         position={{ vertical: 'bottom', horizontal: 220 }}
         icon={<img src={this.props.avatar} alt="" className="user-avatar" />}
       >
-        <NotebookMenuItem task={tasks.logoutGithub} />
-        <NotebookMenuItem task={tasks.logoutGithub} />
-        <NotebookMenuItem task={tasks.logoutGithub} />
-        <NotebookMenuItem task={tasks.logoutGithub} />
+        <NotebookMenuItem task={tasks.saveNotebookServer} />
         <NotebookMenuItem task={tasks.logoutGithub} />
       </NotebookIconMenu>
     )

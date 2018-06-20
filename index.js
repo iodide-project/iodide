@@ -94,7 +94,7 @@ db.sequelize.sync().then(function(){
 
 
 express()
-  .use(express.static(path.join(__dirname, 'dev'), {'index': 'iodide.dev.html'}))
+  .use(express.static(path.join(__dirname, 'prod'), {'index': 'iodide.IodideServer.html'}))
   .set('views', path.join(__dirname, 'server/views'))
   .set('view engine', 'ejs')
   .use(partials())

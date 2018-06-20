@@ -27,9 +27,7 @@ export class ViewControlsUnconnected extends React.Component {
 
   render() {
     const loginItem = this.props.isAuthenticated ?
-      (
-        <EditorAccountMenu avatar={this.props.avatar} />
-      )
+      <EditorAccountMenu avatar={this.props.avatar} />
       :
       (
         <NotebookTaskButton task={tasks.loginGithub}>
