@@ -34,6 +34,7 @@ export class EvalFrameUnconnected extends React.Component {
         src="iodide.eval-frame.dev.html"
         width="100%"
         height="100%"
+        className="eval-frame"
         title="eval-frame"
         sandbox="allow-scripts"
         ref={this.storeFrameElementRef}
