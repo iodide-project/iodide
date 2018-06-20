@@ -116,6 +116,10 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'EVAL_FRAME_READY': {
+      postDispatchToEvalContext(JSON.stringify({
+        type: 'UPDATE_CELL_LIST',
+        cells: state.cells,
+      }))
       state.evalFrameMessageQueue.forEach((actionToPost) => {
         postDispatchToEvalContext(actionToPost)
         console.log('posted EVAL_FRAME_READY', actionToPost)
