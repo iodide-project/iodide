@@ -331,7 +331,9 @@ function evaluateLanguagePluginCell(cell) {
 
         xhrObj.open('GET', url, true)
         xhrObj.send()
-        CodeMirror.requireMode(pluginData.codeMirrorMode, () => { })
+        // FIXME this will need to send a message back to the editor scope somehow
+        // in order to have the codemirror mode fetched/loaded whatevs in that scope
+        // CodeMirror.requireMode(pluginData.codeMirrorMode, () => { })
       })
     }
     return languagePluginPromise
