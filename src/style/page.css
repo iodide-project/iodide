@@ -111,7 +111,7 @@ div.promise-handler-value {
 /* header bar styles */
 
 .notebook-toolbar-container {
-  background-color: black; 
+  background-color: black;
   height: 50px
 }
 
@@ -125,11 +125,11 @@ div.promise-handler-value {
 }
 
 div.editor-mode-controls {
-  width: 260px; 
+  width: 300px;
 }
 
 div.view-controls {
-  width: 300px;
+  width: 375px;
   display:flex;
   align-items:center;
 }
@@ -152,7 +152,7 @@ div.title-field-contents {
 }
 
 @media (max-width:1100px) {
-  
+
   .last-saved-text {
     display:none !important;
   }
@@ -258,7 +258,7 @@ div.iodide-tooltip {
 }
 
 .dependency-src a {
-	color: black;	
+	color: black;
 	font-weight:normal
 }
 

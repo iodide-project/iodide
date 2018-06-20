@@ -28,6 +28,11 @@ function addAppMessageToState(state, appMessage) {
   return state
 }
 
+function getLoginData() {
+  const userData = JSON.parse(sessionStorage.getItem('TOKEN')) || {}
+  return { userData }
+}
+
 function getSavedNotebooks() {
   const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
   const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
@@ -87,7 +92,7 @@ const notebookReducer = (state = newNotebook(), action) => {
   switch (action.type) {
     case 'NEW_NOTEBOOK':
       clearUserDefinedVars(state.userDefinedVarNames)
-      return Object.assign(newNotebook(), getSavedNotebooks())
+      return Object.assign(newNotebook(), getSavedNotebooks(), getLoginData())
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
@@ -133,7 +138,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       clearHistory(nextState)
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, { cells }, getSavedNotebooks())
+      return Object.assign(blankState(), nextState, { cells }, getSavedNotebooks(), getLoginData())
     }
 
     case 'SAVE_NOTEBOOK': {
@@ -168,7 +173,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       // and per-cell state for backwards compatibility
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, getSavedNotebooks())
+      return Object.assign(blankState(), nextState, getSavedNotebooks(), getLoginData())
     }
 
     case 'DELETE_NOTEBOOK': {
@@ -222,6 +227,18 @@ const notebookReducer = (state = newNotebook(), action) => {
       let { executionNumber } = state
       executionNumber += 1
       return Object.assign({}, state, { executionNumber })
+    }
+
+    case 'LOGIN_SUCCESS': {
+      const { userData } = action
+      sessionStorage.setItem('TOKEN', JSON.stringify(userData))
+      return Object.assign({}, state, { userData })
+    }
+
+    case 'LOGOUT': {
+      const userData = {}
+      sessionStorage.removeItem('TOKEN')
+      return Object.assign({}, state, { userData })
     }
 
     case 'APPEND_TO_EVAL_HISTORY': {

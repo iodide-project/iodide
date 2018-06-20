@@ -2,6 +2,7 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
+import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import { postDispatchToEvalContext, postTypedMessageToEvalContext } from '../tools/message-passing'
 import { getSelectedCell } from '../reducers/cell-reducer-utils'
@@ -237,6 +238,102 @@ export function markCellNotRendered() {
     }
     dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
     dispatch(actionObj)
+  }
+}
+
+function loginSuccess(userData) {
+  return (dispatch) => {
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      userData,
+    })
+    dispatch(updateAppMessages({ message: 'You are logged in' }))
+  }
+}
+
+function loginFailure() {
+  return (dispatch) => {
+    dispatch(updateAppMessages({ message: 'Login Failed' }))
+  }
+}
+
+export function login() {
+  const url = '/auth/github'
+  const name = 'github_login'
+  const specs = 'width=500,height=600'
+  const authWindow = window.open(url, name, specs)
+  authWindow.focus()
+
+  return (dispatch) => {
+    // Functions to be called by child window
+    window.loginSuccess = (userData) => {
+      dispatch(loginSuccess(userData))
+    }
+    window.loginFailure = () => dispatch(loginFailure())
+  }
+}
+
+export function logout() {
+  return (dispatch) => {
+    fetch('/logout')
+      .then(response => response.json())
+      .then((json) => {
+        if (json.status === 'success') {
+          dispatch({ type: 'LOGOUT' })
+          dispatch(updateAppMessages({ message: 'Logged Out' }))
+        } else dispatch(updateAppMessages({ message: 'Logout Failed' }))
+      })
+  }
+}
+
+export function exportGist() {
+  // Go through all gist of the user
+  // Match the discription and fileName for each gist
+  // If mactch found, update it
+  // If none found then create a new Gist
+  const API_ROUTE = 'https://api.github.com'
+  return (dispatch, getState) => {
+    const state = getState()
+    const filename = titleToHtmlFilename(state.title)
+    let matchDescription
+    let gistCreated = false
+    const gistData = {
+      description: state.title,
+      public: true,
+      files: {
+        [filename]: { content: exportJsmdBundle(state) },
+      },
+    };
+    fetch(`${API_ROUTE}/gists?access_token=${state.userData.accessToken}`)
+      .then(response => response.json())
+      .then((json) => {
+        matchDescription = json.filter(gist =>
+          gist.description === gistData.description &&
+          Object.keys(gist.files).length === 1 &&
+          Object.keys(gist.files)[0] === filename)
+
+        if (!matchDescription.length) {
+          return fetch(`${API_ROUTE}/gists?access_token=${state.userData.accessToken}`, {
+            body: JSON.stringify(gistData),
+            method: 'POST',
+          })
+        }
+        gistCreated = true
+        const gistID = matchDescription[0].id
+        return fetch(`${API_ROUTE}/gists/${gistID}?access_token=${state.userData.accessToken}`, {
+          body: JSON.stringify(gistData),
+          method: 'PATCH',
+        })
+      })
+      .then(response => response.json())
+      .then((json) => {
+        const message = gistCreated ? 'Updated Gist' : 'Exported to GitHub Gist'
+        dispatch(updateAppMessages({
+          message,
+          details: `${message}<br /><a href="${json.html_url}" target="_blank">Gist</a> -
+        <a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`,
+        }))
+      })
   }
 }
 
