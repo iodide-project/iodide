@@ -7,9 +7,6 @@ import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
 import { cellTypeEnum } from '../../state-prototypes'
 
-import CellMenuContainer from './cell-menu-container'
-
-
 export class CellContainerUnconnected extends React.Component {
   static propTypes = {
     selected: PropTypes.bool.isRequired,
@@ -57,7 +54,6 @@ export class CellContainerUnconnected extends React.Component {
         className={cellClass}
         onMouseDown={this.handleCellClick}
       >
-        {/*<CellMenuContainer cellId={this.props.cellId} />*/}
         <div className="cell-row-container">
           {this.props.children}
         </div>
