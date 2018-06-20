@@ -11,8 +11,6 @@ import CodeCell from './cells/code-cell'
 import MarkdownCell from './cells/markdown-cell'
 import PluginDefinitionCell from './cells/plugin-definition-cell'
 
-import NotebookHeader from './menu/notebook-header'
-
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
 
@@ -90,7 +88,6 @@ class Page extends React.Component {
         id="notebook-container"
         className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
       >
-        <NotebookHeader />
         <div
           id="cells"
           className={this.props.viewMode}
