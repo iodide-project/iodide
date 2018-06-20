@@ -28,15 +28,7 @@ export class MarkdownCellUnconnected extends React.Component {
   }
 
   render() {
-    let resultDisplayStyle
     let editorDisplayStyle
-    if (this.props.showMarkdown) {
-      resultDisplayStyle = 'block'
-      editorDisplayStyle = 'none'
-    } else {
-      resultDisplayStyle = 'none'
-      editorDisplayStyle = 'block'
-    }
 
     return (
       <CellContainer cellId={this.props.cellId}>
@@ -50,14 +42,6 @@ export class MarkdownCellUnconnected extends React.Component {
               autoCloseBrackets: false,
               lineNumbers: false,
             }}
-          />
-        </CellRow>
-        <CellRow cellId={this.props.cellId} rowType="output">
-          <div
-            className="user-markdown"
-            onDoubleClick={this.enterEditMode}
-            style={{ display: resultDisplayStyle }}
-            dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
           />
         </CellRow>
       </CellContainer>

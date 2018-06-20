@@ -43,7 +43,7 @@ describe('MarkdownCell_unconnected react component', () => {
 
   it('the CellContainer should have two CellRow', () => {
     expect(cell().wrap(cell().find(CellContainer))
-      .find(CellRow)).toHaveLength(2)
+      .find(CellRow)).toHaveLength(1)
   })
 
   it("sets the first CellRow cellId prop to be the MarkdownCell's cellId prop", () => {
@@ -56,78 +56,13 @@ describe('MarkdownCell_unconnected react component', () => {
       .toBe('input')
   })
 
-  it('sets the second CellRow rowType prop to be output', () => {
-    expect(cell().find(CellRow).at(1).props().rowType)
-      .toBe('output')
-  })
-
-  it("sets the second CellRow cellId prop to be the MarkdownCell's cellId prop", () => {
-    expect(cell().find(CellRow).at(1).props().cellId)
-      .toBe(props.cellId)
-  })
-
   it('the first CellRow always has a child that is a CellEditor', () => {
     expect(cell().wrap(cell().find(CellRow).at(0)
       .props().children).find(CellEditor)).toHaveLength(1)
   })
-
-
-  it('the second CellRow always has a child that is is a div', () => {
-    expect(cell().wrap(cell().find(CellRow).at(1)
-      .props().children).find('div')).toHaveLength(1)
-  })
-
-  it('correct display styles set if showMarkdown===true', () => {
-    props.showMarkdown = true
-    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-      .toEqual({ display: 'none' })
-
-    expect(cell().wrap(cell().find('div')).props().style)
-      .toEqual({ display: 'block' })
-  })
-
-  it('correct display styles set if showMarkdown===false', () => {
-    props.showMarkdown = false
-    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-      .toEqual({ display: 'block' })
-
-    expect(cell().wrap(cell().find('div')).props().style)
-      .toEqual({ display: 'none' })
-  })
-
-  it('div should have dangerouslySetInnerHTML', () => {
-    props.value = 'html string'
-    expect(cell().wrap(cell().find('div')).props().dangerouslySetInnerHTML)
-      .toEqual({ __html: props.value })
-  })
-
-  it('both the output recieves enterEditMode() as props', () => {
-    expect(cell().wrap(cell().find('div')).props().onDoubleClick)
-      .toEqual(cell().instance().enterEditMode)
-  })
-
-  it('dblclick on MD div fires markCellNotRendered AND changeMode', () => {
-    props.showMarkdown = true
-    props.viewMode = 'editor'
-    cell().find('div').simulate('dblclick')
-    expect(cell().wrap(cell().find('div')).props().style)
-      .toEqual({ display: 'block' })
-    expect(changeMode.mock.calls.length).toBe(1)
-    expect(markCellNotRendered.mock.calls.length).toBe(1)
-  })
-
-  it('click on editor fires no actions', () => {
-    props.showMarkdown = false
-    props.viewMode = 'editor'
-    cell().find(CellEditor).simulate('containerClick')
-    expect(cell().wrap(cell().find(CellEditor)).props().containerStyle)
-      .toEqual({ display: 'block' })
-    expect(markCellNotRendered.mock.calls.length).toBe(0)
-    expect(changeMode.mock.calls.length).toBe(0)
-  })
 })
 
-
+// THIS SHOULD BE SIMPLIFIED.
 describe('MarkdownCell mapStateToProps', () => {
   let state
 

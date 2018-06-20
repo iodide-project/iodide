@@ -11,7 +11,6 @@ import { getCellById } from '../../tools/notebook-utils'
 export class CSSCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
-    value: PropTypes.any,
     rendered: PropTypes.bool.isRequired,
   }
 
@@ -20,9 +19,6 @@ export class CSSCellUnconnected extends React.Component {
       <CellContainer cellId={this.props.cellId}>
         <CellRow cellId={this.props.cellId} rowType="input">
           <CellEditor cellId={this.props.cellId} />
-          <style>
-            {this.props.rendered && this.props.value}
-          </style>
         </CellRow>
       </CellContainer>
     )
@@ -34,7 +30,6 @@ export function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
   return {
     cellId: cell.id,
-    value: cell.value,
     rendered: cell.rendered,
   }
 }
