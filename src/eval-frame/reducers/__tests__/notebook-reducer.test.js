@@ -1,10 +1,6 @@
 import notebookReducer from '../notebook-reducer'
 import { newNotebook, blankState } from '../../state-prototypes'
 
-beforeEach(() => {
-  localStorage.clear();
-});
-
 describe('blank-state-reducer', () => {
   it('should return the initial state', () => {
     expect(notebookReducer(blankState(), {})).toEqual(blankState())

@@ -14,9 +14,6 @@ import PluginDefinitionCell from './cells/plugin-definition-cell'
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
 
-
-const AUTOSAVE = 'AUTOSAVE: '
-
 class Page extends React.Component {
   static propTypes = {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
@@ -33,18 +30,6 @@ class Page extends React.Component {
     super(props)
 
     initializeDefaultKeybindings()
-    setInterval(() => {
-      // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
-      const notebooks = Object.keys(localStorage)
-      const autos = notebooks.filter(n => n.includes(AUTOSAVE))
-      if (autos.length) {
-        autos.forEach((n) => {
-          this.props.actions.deleteNotebook(n)
-        })
-      }
-      this.props.actions.saveNotebook(true)
-    }, 1000 * 60)
-
     this.getPageWidth = this.getPageWidth.bind(this)
   }
 
