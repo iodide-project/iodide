@@ -1,10 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import {
-  CSSCellUnconnected as CSSCell,
-  mapStateToProps,
-} from '../css-cell'
+import { CSSCellUnconnected as CSSCell } from '../css-cell'
 import CellEditor from '../cell-editor'
 import { CellContainer } from '../cell-container'
 import CellRow from '../cell-row'
@@ -23,7 +20,6 @@ describe('CSSCell_unconnected react component', () => {
   beforeEach(() => {
     props = {
       cellId: 5,
-      rendered: false,
     }
     mountedCell = undefined
   })
@@ -63,26 +59,5 @@ describe('CSSCell_unconnected react component', () => {
   it('sets the CellEditor cellId prop to be the CSSCell cellId input prop', () => {
     expect(cell().find(CellEditor).props().cellId)
       .toBe(props.cellId)
-  })
-})
-
-
-describe('CSSCell mapStateToProps', () => {
-  const state = {
-    cells: [
-      { id: 5, rendered: true },
-      { id: 3, rendered: false }],
-  }
-
-  it('should return the content of the correct cells', () => {
-    const ownProps = { cellId: 5 }
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({ rendered: true, cellId: 5 })
-  })
-
-  it('should return the content of the correct cells', () => {
-    const ownProps = { cellId: 3 }
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({ rendered: false, cellId: 3 })
   })
 })

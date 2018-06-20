@@ -6,12 +6,9 @@ import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
 
-import { getCellById } from '../../tools/notebook-utils'
-
 export class CSSCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
-    rendered: PropTypes.bool.isRequired,
   }
 
   render() {
@@ -26,12 +23,4 @@ export class CSSCellUnconnected extends React.Component {
 }
 
 
-export function mapStateToProps(state, ownProps) {
-  const cell = getCellById(state.cells, ownProps.cellId)
-  return {
-    cellId: cell.id,
-    rendered: cell.rendered,
-  }
-}
-
-export default connect(mapStateToProps)(CSSCellUnconnected)
+export default connect()(CSSCellUnconnected)

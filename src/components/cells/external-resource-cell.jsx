@@ -6,8 +6,6 @@ import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
 
-import { getCellById } from '../../tools/notebook-utils'
-
 export class ExternalResourceCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
@@ -24,10 +22,4 @@ export class ExternalResourceCellUnconnected extends React.Component {
   }
 }
 
-
-export function mapStateToProps(state, ownProps) {
-  const cell = getCellById(state.cells, ownProps.cellId)
-  return { cellId: cell.id }
-}
-
-export default connect(mapStateToProps)(ExternalResourceCellUnconnected)
+export default connect()(ExternalResourceCellUnconnected)
