@@ -5,7 +5,6 @@ import {
   CSSCellUnconnected as CSSCell,
   mapStateToProps,
 } from '../css-cell'
-import CellEditor from '../cell-editor'
 import { CellContainer } from '../cell-container'
 import CellRow from '../cell-row'
 
@@ -38,12 +37,8 @@ describe('CSSCell_unconnected react component', () => {
       .find(CellRow)).toHaveLength(1)
   })
 
-  it('is a CellRow with two children', () => {
-    expect(cell().find(CellRow).children().length).toBe(2)
-  })
-
-  it('always renders one CellEditor inside CellRow', () => {
-    expect(cell().find(CellEditor).parent().is(CellRow)).toEqual(true)
+  it('is a CellRow with 1 children', () => {
+    expect(cell().find(CellRow).children().length).toBe(1)
   })
 
   it('always renders one style elt inside CellRow', () => {
@@ -74,11 +69,6 @@ describe('CSSCell_unconnected react component', () => {
   it('sets the CellRow rowType prop to be input', () => {
     expect(cell().find(CellRow).props().rowType)
       .toBe('input')
-  })
-
-  it('sets the CellEditor cellId prop to be the CSSCell cellId input prop', () => {
-    expect(cell().find(CellEditor).props().cellId)
-      .toBe(props.cellId)
   })
 })
 

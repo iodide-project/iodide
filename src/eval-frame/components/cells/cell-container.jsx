@@ -57,7 +57,7 @@ export class CellContainerUnconnected extends React.Component {
         className={cellClass}
         onMouseDown={this.handleCellClick}
       >
-        <CellMenuContainer cellId={this.props.cellId} />
+        {/*<CellMenuContainer cellId={this.props.cellId} />*/}
         <div className="cell-row-container">
           {this.props.children}
         </div>

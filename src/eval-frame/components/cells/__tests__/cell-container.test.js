@@ -2,7 +2,6 @@ import { shallow } from 'enzyme'
 import React from 'react'
 
 import { CellContainerUnconnected, mapStateToProps } from '../cell-container'
-import CellMenuContainer from '../cell-menu-container'
 
 describe('CellContainerUnconnected React component', () => {
   let selectCell
@@ -34,9 +33,9 @@ describe('CellContainerUnconnected React component', () => {
     expect(cellContainer().find('div').length).toBe(2)
   })
 
-  it('always renders two children inside top div', () => {
+  it('always renders 1 children inside top div', () => {
     expect(cellContainer().find('div').at(0).children()
-      .length).toBe(2)
+      .length).toBe(1)
   })
 
   it('sets the top div to have id cell-1', () => {
@@ -98,16 +97,6 @@ describe('CellContainerUnconnected React component', () => {
       cellContainer().simulate('mousedown')
       expect(selectCell.mock.calls.length).toBe(0)
     })
-  })
-
-  it('always renders one CellMenuContainer inside top div', () => {
-    expect(cellContainer().find('div').at(0)
-      .find(CellMenuContainer)).toHaveLength(1)
-  })
-
-  it("sets the CellMenuContainer cellId prop to be the CellContainer's cellId prop", () => {
-    expect(cellContainer().find(CellMenuContainer).props().cellId)
-      .toBe(props.cellId)
   })
 
   it('always renders one div with class cell-row-container inside top div', () => {

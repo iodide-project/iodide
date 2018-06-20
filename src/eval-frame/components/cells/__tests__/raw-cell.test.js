@@ -4,8 +4,6 @@ import { shallow } from 'enzyme'
 import { RawCellUnconnected as RawCell } from '../raw-cell'
 import { CellContainer } from '../cell-container'
 import CellRow from '../cell-row'
-import CellEditor from '../cell-editor'
-
 
 describe('RawCellUnconnected react component', () => {
   let props
@@ -33,11 +31,6 @@ describe('RawCellUnconnected react component', () => {
       .find(CellRow)).toHaveLength(1)
   })
 
-  it('always renders one CellEditor inside CellRow', () => {
-    expect(cell().wrap(cell().find(CellRow))
-      .find(CellEditor)).toHaveLength(1)
-  })
-
   it("sets the CellContainer cellId prop to be the RawCell's cellId prop", () => {
     expect(cell().find(CellContainer).props().cellId)
       .toBe(props.cellId)
@@ -48,13 +41,9 @@ describe('RawCellUnconnected react component', () => {
       .toBe(props.cellId)
   })
 
-  it('sets the CellRow rowType prop to be input', () => {
+  it('sets the CellRow rowType prop to be output', () => {
     expect(cell().find(CellRow).props().rowType)
-      .toBe('input')
+      .toBe('output')
   })
 
-  it("sets the CellEditor cellId prop to be the RawCell's cellId prop", () => {
-    expect(cell().find(CellEditor).props().cellId)
-      .toBe(props.cellId)
-  })
 })
