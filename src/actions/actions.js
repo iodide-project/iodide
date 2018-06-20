@@ -36,12 +36,9 @@ export function updateAppMessages(messageObj) {
 
 export function enqueueOrPostDispatchToEvalContext(actionToPost) {
   return (dispatch, getState) => {
-    console.log('inside enqueueOrPostDispatchToEvalContext')
     if (getState().evalFrameReady) {
-      console.log('posting to eval frame:', actionToPost)
       postDispatchToEvalContext(JSON.stringify(actionToPost))
     } else {
-      console.log('ADD_TO_EVAL_FRAME_MESSAGE_QUEUE dispatch')
       dispatch({
         type: 'ADD_TO_EVAL_FRAME_MESSAGE_QUEUE',
         actionToPost: JSON.stringify(actionToPost),
