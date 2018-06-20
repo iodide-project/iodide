@@ -1,3 +1,5 @@
+/* global IODIDE_VERSION */
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -31,7 +33,7 @@ export class EvalFrameUnconnected extends React.Component {
   render() {
     return (
       <iframe
-        src="iodide.eval-frame.dev.html"
+        src={`iodide.eval-frame.${IODIDE_VERSION}.html`}
         width="100%"
         height="100%"
         className="eval-frame"

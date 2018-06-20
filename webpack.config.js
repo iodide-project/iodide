@@ -3,7 +3,6 @@ const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const _ = require('lodash')
 
 const htmlTemplate = require('./src/html-template.js')
@@ -54,12 +53,12 @@ module.exports = (env) => {
 
   return {
     entry: {
-      editor: `${APP_DIR}/index.jsx`,
-      'eval-frame': `${APP_DIR}/eval-frame/index.jsx`,
+      iodide: `${APP_DIR}/index.jsx`,
+      'iodide.eval-frame': `${APP_DIR}/eval-frame/index.jsx`,
     },
     output: {
       path: BUILD_DIR,
-      filename: `iodide.[name].${APP_VERSION_STRING}.js`,
+      filename: `[name].${APP_VERSION_STRING}.js`,
     },
     devtool: 'source-map',
     resolve: {
@@ -108,9 +107,9 @@ module.exports = (env) => {
       ...plugins,
       new CreateFileWebpack({
         path: BUILD_DIR,
-        fileName: `iodide.editor.${APP_VERSION_STRING}.html`,
+        fileName: `iodide.${APP_VERSION_STRING}.html`,
         content: htmlTemplateCompiler({
-          APP_VERSION_STRING: `editor.${APP_VERSION_STRING}`,
+          APP_VERSION_STRING,
           APP_PATH_STRING,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: 'new notebook',
@@ -134,14 +133,7 @@ module.exports = (env) => {
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify(env),
       }),
-      new ExtractTextPlugin(`iodide.[name].${APP_VERSION_STRING}.css`),
-      // copying these files allows notebooks predating the iframe paradigm
-      // to load the iframe paradigm js+css, resources
-      new CopyWebpackPlugin(['js', 'js.map', 'css', 'css.map', 'html']
-        .map(ext => ({
-          from: path.resolve(BUILD_DIR, `./iodide.editor.${APP_VERSION_STRING}.${ext}`),
-          to: path.resolve(BUILD_DIR, `./iodide.${APP_VERSION_STRING}.${ext}`),
-        }))),
+      new ExtractTextPlugin(`[name].${APP_VERSION_STRING}.css`),
     ],
   }
 }
