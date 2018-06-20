@@ -8,10 +8,7 @@ import {
   getCells,
   getCellBelowSelectedId,
   getCellAboveSelectedId,
-  prettyDate,
-  formatDateString,
 } from '../tools/notebook-utils'
-import { stateFromJsmd } from '../tools/jsmd-tools'
 
 const dispatcher = {}
 for (const action in actions) {
@@ -353,19 +350,5 @@ tasks.seeAllExamples = new ExternalLinkTask({
   menuTitle: 'See All Examples ...',
   url: 'http://github.com/iodide-project/iodide-examples/',
 })
-
-export function getLocalStorageNotebook(name) {
-  const localStorageEntry = localStorage.getItem(name)
-  if (localStorageEntry == null) return undefined
-  let { lastSaved } = stateFromJsmd(localStorageEntry)
-  lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
-  return new UserTask({
-    title: name,
-    secondaryText: lastSaved,
-    callback() {
-      dispatcher.loadNotebook(name)
-    },
-  })
-}
 
 export default tasks
