@@ -148,8 +148,8 @@ const notebookReducer = (state = newNotebook(), action) => {
       return nextState
     }
 
-    case 'CHANGE_PAGE_TITLE':
-      return Object.assign({}, state, { title: action.title })
+    // case 'CHANGE_PAGE_TITLE':
+    //   return Object.assign({}, state, { title: action.title })
 
     case 'SET_VIEW_MODE': {
       const { viewMode } = action
@@ -194,11 +194,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { userDefinedVarNames })
     }
 
-    case 'UPDATE_APP_MESSAGES': {
-      const appMessages = state.appMessages.slice()
-      appMessages.push(action.message)
-      return Object.assign({}, state, { appMessages })
-    }
+    // case 'UPDATE_APP_MESSAGES': {
+    //   const appMessages = state.appMessages.slice()
+    //   appMessages.push(action.message)
+    //   return Object.assign({}, state, { appMessages })
+    // }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
       const { cellID } = action
