@@ -74,6 +74,7 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "copy-webpack-plugin": "^4.5.1",
     "create-file-webpack": "^1.0.0",
     "css-loader": "^0.28.11",
     "enzyme": "^3.3.0",

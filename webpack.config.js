@@ -3,6 +3,7 @@ const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const _ = require('lodash')
 
 const htmlTemplate = require('./src/html-template.js')
@@ -37,7 +38,7 @@ module.exports = (env) => {
     }
     CSS_PATH_STRING = APP_PATH_STRING
     plugins.push(new UglifyJSPlugin())
-  } else if (env == 'heroku') {
+  } else if (env === 'heroku') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
     APP_VERSION_STRING = 'iodide-server'
     APP_PATH_STRING = ''
@@ -53,7 +54,7 @@ module.exports = (env) => {
   return {
     entry: {
       editor: `${APP_DIR}/index.jsx`,
-      "eval-frame": `${APP_DIR}/eval-frame/index.jsx`,
+      'eval-frame': `${APP_DIR}/eval-frame/index.jsx`,
     },
     output: {
       path: BUILD_DIR,
@@ -133,6 +134,13 @@ module.exports = (env) => {
         IODIDE_BUILD_MODE: JSON.stringify(env),
       }),
       new ExtractTextPlugin(`iodide.[name].${APP_VERSION_STRING}.css`),
+      // copying these files allows js, css, etc resources to be loaded
+      // into existing notebooks
+      new CopyWebpackPlugin(['js', 'js.map', 'css', 'css.map', 'html']
+        .map(ext => ({
+          from: path.resolve(__dirname, `./dev/iodide.editor.${APP_VERSION_STRING}.${ext}`),
+          to: path.resolve(__dirname, `./dev/iodide.${APP_VERSION_STRING}.${ext}`),
+        }))),
     ],
   }
 }
