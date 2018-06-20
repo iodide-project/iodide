@@ -5,10 +5,7 @@ import { connect } from 'react-redux'
 import Drawer from 'material-ui/Drawer'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
-import Close from 'material-ui-icons/Close'
 import Resizable from 're-resizable'
-import NotebookTaskButton from '../menu/notebook-task-button'
-import NotebookMenuDivider from '../menu/notebook-menu-divider'
 
 import UserTask from '../../actions/user-task'
 import tasks from '../../actions/task-definitions'
@@ -67,15 +64,8 @@ export class SidePaneUnconnected extends React.Component {
               <div className="pane-header">
                 <div className="pane-title">
                   <Typography variant="headline">{this.props.title}</Typography>
-                  <NotebookTaskButton
-                    tooltip="Close"
-                    task={this.props.task}// tasks.toggleHistoryPane}
-                    style={{ color: 'black', margin: '5px' }}
-                  >
-                    <Close />
-                  </NotebookTaskButton>
+
                 </div>
-                <NotebookMenuDivider />
               </div>
 
               {this.props.children}

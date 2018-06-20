@@ -8,10 +8,7 @@ import {
   getCells,
   getCellBelowSelectedId,
   getCellAboveSelectedId,
-  prettyDate,
-  formatDateString,
 } from '../tools/notebook-utils'
-import { stateFromJsmd } from '../tools/jsmd-tools'
 
 const dispatcher = {}
 for (const action in actions) {

@@ -14,9 +14,6 @@ import PluginDefinitionCell from './cells/plugin-definition-cell'
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
 
-
-const AUTOSAVE = 'AUTOSAVE: '
-
 class Page extends React.Component {
   static propTypes = {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
