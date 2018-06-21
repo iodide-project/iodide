@@ -22,10 +22,6 @@ import Page from './components/page'
 import { store } from './store'
 import handleUrlQuery from './tools/handle-url-query'
 
-import { iodide } from './iodide-api/api'
-
-window.iodide = iodide
-
 export function receiveMessage(event) {
   console.log(event)
   const trustedMessage = true
