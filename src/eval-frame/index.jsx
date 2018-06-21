@@ -18,7 +18,7 @@ import './style/menu-styles.css'
 import './style/cell-styles.css'
 import './style/default-presentation.css'
 
-import Page from './components/page'
+import EvalContainer from './components/eval-container'
 import { store } from './store'
 import handleUrlQuery from './tools/handle-url-query'
 
@@ -52,7 +52,7 @@ window.parent.postMessage('EVAL_FRAME_READY', '*')
 
 render(
   <Provider store={store}>
-    <Page />
+    <EvalContainer />
   </Provider>,
   document.getElementById('page'),
 )
