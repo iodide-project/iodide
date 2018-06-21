@@ -106,6 +106,11 @@ tasks.exportGist = new UserTask({
   callback() { dispatcher.exportGist() },
 })
 
+tasks.saveNotebookServer = new UserTask({
+  title: 'Save Notebook',
+  callback() { dispatcher.saveNotebookServer() },
+})
+
 tasks.selectUp = new UserTask({
   title: 'Select Cell Above',
   displayKeybinding: 'Up', // \u2191',

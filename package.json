@@ -51,6 +51,7 @@
     "opensans-npm-webfont": "^1.0.0",
     "passport": "^0.4.0",
     "passport-github2": "^0.1.11",
+    "pg": "^7.4.3",
     "prop-types": "^15.6.1",
     "query-string": "^5.1.1",
     "re-resizable": "^4.4.8",
@@ -63,7 +64,8 @@
     "react-table": "^6.8.2",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "sequelize": "^4.37.10"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

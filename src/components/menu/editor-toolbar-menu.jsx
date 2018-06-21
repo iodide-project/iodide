@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 
+import MenuIcon from 'material-ui-icons/Menu'
 import NotebookIconMenu from './icon-menu'
 import tasks from '../../actions/task-definitions'
 import NotebookMenuItem from './notebook-menu-item'
@@ -18,7 +19,11 @@ export class EditorToolbarMenuUnconnected extends React.Component {
 
   render() {
     return (
-      <NotebookIconMenu>
+      <NotebookIconMenu
+        anchorClass="editor-mode-controls"
+        position={{ vertical: 'bottom', horizontal: 'left' }}
+        icon={<MenuIcon />}
+      >
         <NotebookMenuItem task={tasks.createNewNotebook} />
         <NotebookMenuItem task={tasks.saveNotebook} />
         <NotebookMenuItem task={tasks.exportNotebook} />

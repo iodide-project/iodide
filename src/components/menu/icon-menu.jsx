@@ -3,7 +3,6 @@ import React from 'react'
 
 import IconButton from 'material-ui/IconButton'
 import Menu from 'material-ui/Menu'
-import MenuIcon from 'material-ui-icons/Menu'
 import Tooltip from 'material-ui/Tooltip'
 
 export default class NotebookIconMenu extends React.Component {
@@ -36,12 +35,12 @@ export default class NotebookIconMenu extends React.Component {
         <React.Fragment>
           <Menu
             id="main-menu"
-            anchorEl={document.getElementById('editor-mode-controls')}
+            anchorEl={document.querySelector(`.${this.props.anchorClass}`)}
             open={Boolean(anchorElement)}
             onClose={this.handleIconButtonClose}
-            anchorReference="anchorPosition"
             transitionDuration={10}
-            anchorPosition={{ top: 50, left: 0 }}
+            anchorOrigin={this.props.position}
+            getContentAnchorEl={null}
           >
             {children}
           </Menu>
@@ -52,7 +51,7 @@ export default class NotebookIconMenu extends React.Component {
             onClick={this.handleClick}
             style={{ color: 'white' }}
           >
-            <MenuIcon />
+            {this.props.icon}
           </IconButton>
         </React.Fragment>
       </Tooltip>

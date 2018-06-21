@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
-import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
+import { exportJsmdBundle, titleToHtmlFilename, exportJsmdToString } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import {
   addExternalDependency,
@@ -513,6 +513,38 @@ export function exportGist() {
         <a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`,
         }))
       })
+  }
+}
+
+export function saveNotebookServer() {
+  return (dispatch, getState) => {
+    const state = getState()
+    const notebook = {
+      title: state.title,
+      content: exportJsmdToString(state),
+    }
+
+    if (state.userData.accessToken) {
+      fetch('/api/notebook', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(notebook),
+        method: 'POST',
+      })
+        .then(response => response.json())
+        .then((json) => {
+          if (json.success) {
+            dispatch(updateAppMessages({
+              message: 'Notebook saved',
+              details: `Notebook created with id ${json.id}`,
+            }))
+          } else {
+            dispatch(updateAppMessages({ message: 'Failed to save notebook' })) // Change msg texts
+          }
+        })
+        .catch(err => dispatch(updateAppMessages({ details: `Failed to save notebook ${err}` })))
+    }
   }
 }
 

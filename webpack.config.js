@@ -39,7 +39,7 @@ module.exports = (env) => {
     plugins.push(new UglifyJSPlugin())
   } else if (env == 'heroku') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
-    APP_VERSION_STRING = 'iodide-server'
+    APP_VERSION_STRING = 'IodideServer'
     APP_PATH_STRING = ''
     CSS_PATH_STRING = APP_PATH_STRING
     plugins.push(new UglifyJSPlugin())
