@@ -233,11 +233,11 @@ export function markCellNotRendered() {
     const actionObj = {
       type: 'MARK_CELL_NOT_RENDERED',
     }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
+    // dispatc(enqueueOrPostDispatchToEvalContext(actionObj))
     dispatch(actionObj)
   }
 }
-
+enqueueOrPostDispatchToEvalContext
 function loginSuccess(userData) {
   return (dispatch) => {
     dispatch({
@@ -339,7 +339,7 @@ export function cellUp() {
     const actionObj = {
       type: 'CELL_UP',
     }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
+    // dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
     dispatch(actionObj)
   }
 }
@@ -349,7 +349,7 @@ export function cellDown() {
     const actionObj = {
       type: 'CELL_DOWN',
     }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
+    // dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
     dispatch(actionObj)
   }
 }
@@ -361,7 +361,7 @@ export function insertCell(cellType, direction) {
       cellType,
       direction,
     }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
+    // dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
     dispatch(actionObj)
   }
 }
@@ -372,7 +372,7 @@ export function addCell(cellType) {
       type: 'ADD_CELL',
       cellType,
     }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
+    // dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
     dispatch(actionObj)
   }
 }
@@ -384,18 +384,14 @@ export function selectCell(cellID, scrollToCell = false) {
       id: cellID,
       scrollToCell,
     }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
+    // dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
     dispatch(actionObj)
   }
 }
 
 export function deleteCell() {
-  return (dispatch) => {
-    const actionObj = {
-      type: 'DELETE_CELL',
-    }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
-    dispatch(actionObj)
+  return {
+    type: 'DELETE_CELL',
   }
 }
 

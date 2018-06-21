@@ -25,6 +25,8 @@ import handleUrlQuery from './tools/handle-url-query'
 import { iodide } from './iodide-api/api'
 
 import { updateCellAndEval } from './actions/actions'
+// import { portToEditor } from './connect-to-editor-frame'
+import './port-to-editor'
 
 window.iodide = iodide
 
