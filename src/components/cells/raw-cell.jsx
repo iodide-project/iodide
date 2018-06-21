@@ -6,7 +6,6 @@ import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
 import CellEditor from './cell-editor'
 
-
 export class RawCellUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,

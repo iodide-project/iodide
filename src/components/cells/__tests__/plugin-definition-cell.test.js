@@ -1,18 +1,18 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { CSSCellUnconnected as CSSCell } from '../css-cell'
-import CellEditor from '../cell-editor'
+import { PluginDefCellUnconnected as PluginDefCell } from '../plugin-definition-cell'
 import { CellContainer } from '../cell-container'
 import CellRow from '../cell-row'
+import CellEditor from '../cell-editor'
 
 
-describe('CSSCell_unconnected react component', () => {
+describe('PluginCellUnconnected react component', () => {
   let props
   let mountedCell
   const cell = () => {
     if (!mountedCell) {
-      mountedCell = shallow(<CSSCell {...props} />)
+      mountedCell = shallow(<PluginDefCell {...props} />)
     }
     return mountedCell
   }
@@ -33,20 +33,17 @@ describe('CSSCell_unconnected react component', () => {
       .find(CellRow)).toHaveLength(1)
   })
 
-  it('is a CellRow with one child', () => {
-    expect(cell().find(CellRow).children().length).toBe(1)
-  })
-
   it('always renders one CellEditor inside CellRow', () => {
-    expect(cell().find(CellEditor).parent().is(CellRow)).toEqual(true)
+    expect(cell().wrap(cell().find(CellRow))
+      .find(CellEditor)).toHaveLength(1)
   })
 
-  it("sets the CellContainer cellId prop to be the CSSCell's cellId prop", () => {
+  it("sets the CellContainer cellId prop to be the PluginDefCell's cellId prop", () => {
     expect(cell().find(CellContainer).props().cellId)
       .toBe(props.cellId)
   })
 
-  it("sets the CellRow cellId prop to be the CSSCell's cellId prop", () => {
+  it("sets the CellRow cellId prop to be the PluginDefCell's cellId prop", () => {
     expect(cell().find(CellRow).props().cellId)
       .toBe(props.cellId)
   })
@@ -56,7 +53,7 @@ describe('CSSCell_unconnected react component', () => {
       .toBe('input')
   })
 
-  it('sets the CellEditor cellId prop to be the CSSCell cellId input prop', () => {
+  it("sets the CellEditor cellId prop to be the PluginDefCell's cellId prop", () => {
     expect(cell().find(CellEditor).props().cellId)
       .toBe(props.cellId)
   })
