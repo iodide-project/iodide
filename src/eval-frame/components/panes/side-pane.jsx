@@ -7,7 +7,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Resizable from 're-resizable'
 
-import UserTask from '../../actions/user-task'
+import UserTask from '../../../actions/user-task'
 import tasks from '../../actions/task-definitions'
 
 const theme = createMuiTheme({
