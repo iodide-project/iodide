@@ -1,14 +1,14 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types'
-import Tooltip from 'material-ui/Tooltip'
-import Menu from 'material-ui/Menu'
-import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
-import CellMenu from './cell-menu'
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+import Tooltip from 'material-ui/Tooltip';
+import Menu from 'material-ui/Menu';
+import ArrowDropDown from 'material-ui-icons/ArrowDropDown';
+import CellMenu from './cell-menu';
 
-import * as actions from '../../actions/actions'
-import { getCellById } from '../../tools/notebook-utils'
+import * as actions from '../../actions/actions';
+import { getCellById } from '../../tools/notebook-utils';
 
 
 export class CellMenuContainerUnconnected extends React.Component {
@@ -19,24 +19,24 @@ export class CellMenuContainerUnconnected extends React.Component {
   }
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       anchorElement: null,
-    }
-    this.handleClick = this.handleClick.bind(this)
-    this.handleIconButtonClose = this.handleIconButtonClose.bind(this)
+    };
+    this.handleClick = this.handleClick.bind(this);
+    this.handleIconButtonClose = this.handleIconButtonClose.bind(this);
   }
 
   handleClick(event) {
-    this.setState({ anchorElement: event.currentTarget })
+    this.setState({ anchorElement: event.currentTarget });
   }
 
   handleIconButtonClose() {
-    this.setState({ anchorElement: null })
+    this.setState({ anchorElement: null });
   }
 
   render() {
-    const { anchorElement } = this.state
+    const { anchorElement } = this.state;
     const skipInRunAllIndicator = (
       this.props.skipInRunAll ?
         (
@@ -52,7 +52,7 @@ export class CellMenuContainerUnconnected extends React.Component {
           </Tooltip>
         ) :
         ''
-    )
+    );
 
     return (
       <div className="cell-menu-container">
@@ -90,38 +90,38 @@ export class CellMenuContainerUnconnected extends React.Component {
         </Tooltip>
         <div className="cell-status-indicators">{skipInRunAllIndicator}</div>
       </div>
-    )
+    );
   }
 }
 
 
 function mapStateToProps(state, ownProps) {
-  const { cellId } = ownProps
-  const cell = getCellById(state.cells, cellId)
-  let label
+  const { cellId } = ownProps;
+  const cell = getCellById(state.cells, cellId);
+  let label;
   if (cell.cellType === 'code') {
-    label = cell.language
+    label = cell.language;
   } else if (cell.cellType === 'markdown') {
-    label = 'md'
+    label = 'md';
   } else if (cell.cellType === 'css') {
-    label = 'css'
+    label = 'css';
   } else if (cell.cellType === 'plugin') {
-    label = 'plugin'
+    label = 'plugin';
   } else if (cell.cellType === 'external dependencies') {
-    label = 'resource'
+    label = 'resource';
   } else if (cell.cellType === 'raw') {
-    label = 'raw'
+    label = 'raw';
   }
   return {
     label,
     skipInRunAll: cell.skipInRunAll,
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(actions, dispatch),
-  }
+  };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CellMenuContainerUnconnected)
+export default connect(mapStateToProps, mapDispatchToProps)(CellMenuContainerUnconnected);

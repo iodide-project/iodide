@@ -1,22 +1,22 @@
 /* global IODIDE_BUILD_MODE */
-import React from 'react'
-import { connect } from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import { ToolbarGroup } from 'material-ui/Toolbar'
 
-import HistoryIcon from 'material-ui-icons/History'
-import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
-import InfoIcon from 'material-ui-icons/InfoOutline'
-import AccountCircle from 'material-ui-icons/AccountCircle'
+import HistoryIcon from 'material-ui-icons/History';
+import ArrowDropDown from 'material-ui-icons/ArrowDropDown';
+import InfoIcon from 'material-ui-icons/InfoOutline';
+import AccountCircle from 'material-ui-icons/AccountCircle';
 
-import NotebookTaskButton from './notebook-task-button'
-import ViewModeToggleButton from './view-mode-toggle-button'
-import LastSavedText from './last-saved-text'
-import DeclaredVariablesPane from '../panes/declared-variables-pane'
-import HistoryPane from '../panes/history-pane'
-import AppInfoPane from '../panes/app-info-pane'
+import NotebookTaskButton from './notebook-task-button';
+import ViewModeToggleButton from './view-mode-toggle-button';
+import LastSavedText from './last-saved-text';
+import DeclaredVariablesPane from '../panes/declared-variables-pane';
+import HistoryPane from '../panes/history-pane';
+import AppInfoPane from '../panes/app-info-pane';
 
-import tasks from '../../actions/task-definitions'
+import tasks from '../../actions/task-definitions';
 
 
 export class ViewControlsUnconnected extends React.Component {
@@ -36,7 +36,7 @@ export class ViewControlsUnconnected extends React.Component {
         <NotebookTaskButton task={tasks.loginGithub}>
           <AccountCircle />
         </NotebookTaskButton>
-      )
+      );
 
     return (
       <div className="view-controls">
@@ -64,17 +64,17 @@ export class ViewControlsUnconnected extends React.Component {
         <ViewModeToggleButton />
 
       </div>
-    )
+    );
   }
 }
 
 export function mapStateToProps(state) {
-  const isAuthenticated = Boolean(state.userData.accessToken)
+  const isAuthenticated = Boolean(state.userData.accessToken);
   return {
     isAuthenticated,
     name: state.userData.name,
     avatar: state.userData.avatar,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(ViewControlsUnconnected)
+export default connect(mapStateToProps)(ViewControlsUnconnected);

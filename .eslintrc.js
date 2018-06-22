@@ -15,7 +15,6 @@ module.exports = {
   ],
   "extends": "airbnb",
   "rules": {
-    "semi": ["off"],
     // Restricting for..of seems pretty controversial, let's disable that.
     // See https://github.com/airbnb/javascript/issues/1271
     "no-restricted-syntax": ["off"],

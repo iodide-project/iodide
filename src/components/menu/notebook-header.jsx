@@ -1,14 +1,14 @@
-import React from 'react'
+import React from 'react';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
-import PresentationModeToolbar from './presentation-mode-toolbar'
-import EditorModeToolbar from './editor-mode-toolbar'
+import PresentationModeToolbar from './presentation-mode-toolbar';
+import EditorModeToolbar from './editor-mode-toolbar';
 
 const theme = createMuiTheme({
   palette: {
     type: 'dark',
   },
-})
+});
 
 export default class NotebookHeader extends React.Component {
   render() {
@@ -21,6 +21,6 @@ export default class NotebookHeader extends React.Component {
         <PresentationModeToolbar />
 
       </div>
-    )
+    );
   }
 }

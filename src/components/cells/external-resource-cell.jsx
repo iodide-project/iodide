@@ -1,13 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import CellRow from './cell-row'
-import { CellContainer } from './cell-container'
-import CellEditor from './cell-editor'
-import ExternalResourceOutputHandler from '../reps/output-handler-external-resource'
+import CellRow from './cell-row';
+import { CellContainer } from './cell-container';
+import CellEditor from './cell-editor';
+import ExternalResourceOutputHandler from '../reps/output-handler-external-resource';
 
-import { getCellById } from '../../tools/notebook-utils'
+import { getCellById } from '../../tools/notebook-utils';
 
 export class ExternalResourceCellUnconnected extends React.Component {
   static propTypes = {
@@ -25,17 +25,17 @@ export class ExternalResourceCellUnconnected extends React.Component {
           <ExternalResourceOutputHandler value={this.props.value} />
         </CellRow>
       </CellContainer>
-    )
+    );
   }
 }
 
 
 export function mapStateToProps(state, ownProps) {
-  const cell = getCellById(state.cells, ownProps.cellId)
+  const cell = getCellById(state.cells, ownProps.cellId);
   return {
     value: cell.value,
     cellId: cell.id,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(ExternalResourceCellUnconnected)
+export default connect(mapStateToProps)(ExternalResourceCellUnconnected);

@@ -1,5 +1,5 @@
-import React from 'react'
-import JSONTree from 'react-json-tree'
+import React from 'react';
+import JSONTree from 'react-json-tree';
 
 export default {
   shouldHandle: () => true,
@@ -30,5 +30,5 @@ export default {
         }}
     />
   ),
-}
+};
 

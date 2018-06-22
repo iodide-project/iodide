@@ -1,9 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import Button from 'material-ui/Button'
-import Tooltip from 'material-ui/Tooltip'
-import tasks from '../../actions/task-definitions'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Button from 'material-ui/Button';
+import Tooltip from 'material-ui/Tooltip';
+import tasks from '../../actions/task-definitions';
 
 export class ViewModeToggleButtonUnconnected extends React.Component {
   static propTypes = {
@@ -12,15 +12,15 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
     hoverColor: PropTypes.string,
   }
   constructor(props) {
-    super(props)
-    this.toggleViewMode = this.toggleViewMode.bind(this)
+    super(props);
+    this.toggleViewMode = this.toggleViewMode.bind(this);
   }
 
   toggleViewMode() {
     if (this.props.viewMode === 'presentation') {
-      tasks.setViewModeToEditor.callback()
+      tasks.setViewModeToEditor.callback();
     } else if (this.props.viewMode === 'editor') {
-      tasks.setViewModeToPresentation.callback()
+      tasks.setViewModeToPresentation.callback();
     }
   }
 
@@ -37,14 +37,14 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
           {this.props.viewMode === 'presentation' ? 'Edit' : 'View'}
         </Button>
       </Tooltip>
-    )
+    );
   }
 }
 export function mapStateToProps(state) {
   // get the viewMode from state
   return {
     viewMode: state.viewMode,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(ViewModeToggleButtonUnconnected)
+export default connect(mapStateToProps)(ViewModeToggleButtonUnconnected);

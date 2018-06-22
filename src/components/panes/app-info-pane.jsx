@@ -1,11 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import SidePane from './side-pane'
+import SidePane from './side-pane';
 
 // import DeclaredVariables from '../declared-variables'
-import tasks from '../../actions/task-definitions'
+import tasks from '../../actions/task-definitions';
 
 export class AppInfoPaneUnconnected extends React.Component {
   static propTypes = {
@@ -33,7 +33,7 @@ export class AppInfoPaneUnconnected extends React.Component {
       <SidePane task={tasks.toggleAppInfoPane} title="App info" openOnMode="_APP_INFO">
         {messageDivs}
       </SidePane>
-    )
+    );
   }
 }
 
@@ -41,7 +41,7 @@ function mapStateToProps(state) {
   return {
     appMessages: state.appMessages,
     sidePaneMode: state.sidePaneMode,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(AppInfoPaneUnconnected)
+export default connect(mapStateToProps)(AppInfoPaneUnconnected);

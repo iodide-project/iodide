@@ -12,6 +12,6 @@ const template = `<!DOCTYPE html>
 <div id='page'></div>
 <script src='<%= APP_PATH_STRING %>iodide.<%= APP_VERSION_STRING %>.js'></script>
 </body>
-</html>`
+</html>`;
 
-module.exports = template
+module.exports = template;

@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-import CodeMirror from '@skidding/react-codemirror'
+import CodeMirror from '@skidding/react-codemirror';
 import PropTypes from 'prop-types';
 
 export default class HistoryItem extends React.Component {
@@ -19,12 +19,12 @@ export default class HistoryItem extends React.Component {
       readOnly: true,
       mode: this.props.cell.cellType,
       theme: 'eclipse',
-    }
+    };
     const mainElem = (<CodeMirror
       ref="editor" // eslint-disable-line
       value={this.props.cell.content}
       options={options}
-    />)
+    />);
 
     return (
       <div
@@ -37,6 +37,6 @@ export default class HistoryItem extends React.Component {
         </div>
         <div className="cell-controls" />
       </div>
-    )
+    );
   }
 }

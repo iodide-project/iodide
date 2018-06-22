@@ -1,6 +1,6 @@
-import ExternalLinkTask from './actions/external-link-task'
+import ExternalLinkTask from './actions/external-link-task';
 
-const BASE_URL = 'https://iodide-project.github.io/iodide-examples'
+const BASE_URL = 'https://iodide-project.github.io/iodide-examples';
 
 export const iodideExamples = [
   {
@@ -15,6 +15,6 @@ export const iodideExamples = [
     title: 'Output Handling',
     url: `${BASE_URL}/output-handling.html`,
   },
-]
+];
 
-export default iodideExamples.map(e => new ExternalLinkTask({ title: e.title, url: e.url }))
+export default iodideExamples.map(e => new ExternalLinkTask({ title: e.title, url: e.url }));

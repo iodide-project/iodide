@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 // import Paper from 'material-ui/Paper'
-import NotebookMenuItem from './notebook-menu-item'
-import NotebookMenuDivider from './notebook-menu-divider'
-import NotebookMenuHeader from './notebook-menu-header'
-import NotebookMenuSubsection from './notebook-menu-subsection'
+import NotebookMenuItem from './notebook-menu-item';
+import NotebookMenuDivider from './notebook-menu-divider';
+import NotebookMenuHeader from './notebook-menu-header';
+import NotebookMenuSubsection from './notebook-menu-subsection';
 
-import tasks from '../../actions/task-definitions'
+import tasks from '../../actions/task-definitions';
 
 export default class CellMenuSubsection extends React.Component {
   render() {
@@ -42,6 +42,6 @@ export default class CellMenuSubsection extends React.Component {
           key={tasks.changeToPluginCell.title}
           task={tasks.changeToPluginCell}
         />
-      </NotebookMenuSubsection>)
+      </NotebookMenuSubsection>);
   }
 }

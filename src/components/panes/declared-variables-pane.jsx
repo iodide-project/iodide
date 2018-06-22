@@ -1,13 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import deepEqual from 'deep-equal'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import deepEqual from 'deep-equal';
 
-import SidePane from './side-pane'
+import SidePane from './side-pane';
 
-import { DeclaredVariable } from './declared-variable'
-import { FrozenVariable } from './frozen-variable'
-import tasks from '../../actions/task-definitions'
+import { DeclaredVariable } from './declared-variable';
+import { FrozenVariable } from './frozen-variable';
+import tasks from '../../actions/task-definitions';
 
 
 export class DeclaredVariablesPaneUnconnected extends React.Component {
@@ -17,7 +17,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return !deepEqual(this.props, nextProps)
+    return !deepEqual(this.props, nextProps);
   }
 
   render() {
@@ -33,7 +33,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
         />))}
         </div>
       </div>
-    ) : undefined
+    ) : undefined;
 
     const declaredVariables = this.props.userDefinedVarNames.length ? (
       <div className="declared-variables-list">
@@ -43,13 +43,13 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
           <DeclaredVariable value={window[varName]} varName={varName} key={varName} />)
         }
       </div>
-    ) : undefined
+    ) : undefined;
     return (
       <SidePane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
         {edvElem}
         {declaredVariables}
       </SidePane>
-    )
+    );
   }
 }
 
@@ -58,7 +58,7 @@ export function mapStateToProps(state) {
     environmentVariables: state.savedEnvironment,
     userDefinedVarNames: state.userDefinedVarNames,
     sidePaneMode: state.sidePaneMode,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(DeclaredVariablesPaneUnconnected)
+export default connect(mapStateToProps)(DeclaredVariablesPaneUnconnected);

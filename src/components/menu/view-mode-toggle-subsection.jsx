@@ -1,7 +1,7 @@
-import React from 'react'
-import NotebookMenuSubsection from './notebook-menu-subsection'
-import NotebookMenuItem from './notebook-menu-item'
-import tasks from '../../actions/task-definitions'
+import React from 'react';
+import NotebookMenuSubsection from './notebook-menu-subsection';
+import NotebookMenuItem from './notebook-menu-item';
+import tasks from '../../actions/task-definitions';
 
 export default class ViewModeToggleSubsection extends React.Component {
   render() {
@@ -10,6 +10,6 @@ export default class ViewModeToggleSubsection extends React.Component {
         <NotebookMenuItem task={tasks.toggleHistoryPane} />
         <NotebookMenuItem task={tasks.toggleDeclaredVariablesPane} />
       </NotebookMenuSubsection>
-    )
+    );
   }
 }

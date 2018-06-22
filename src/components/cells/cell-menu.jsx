@@ -1,11 +1,11 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import NotebookMenuItem from '../menu/notebook-menu-item'
-import NotebookMenuDivider from '../menu/notebook-menu-divider'
-import { getCellById } from '../../tools/notebook-utils'
-import tasks from '../../actions/task-definitions'
+import NotebookMenuItem from '../menu/notebook-menu-item';
+import NotebookMenuDivider from '../menu/notebook-menu-divider';
+import { getCellById } from '../../tools/notebook-utils';
+import tasks from '../../actions/task-definitions';
 
 export class CellMenuUnconnected extends React.Component {
   static propTypes = {
@@ -54,15 +54,15 @@ export class CellMenuUnconnected extends React.Component {
           task={tasks.toggleSkipCellInRunAll}
         />
       </div>
-    )
+    );
   }
 }
 
 
 export function mapStateToProps(state, ownProps) {
-  const { cellId } = ownProps
-  const { skipInRunAll } = getCellById(state.cells, cellId)
-  return { skipInRunAll }
+  const { cellId } = ownProps;
+  const { skipInRunAll } = getCellById(state.cells, cellId);
+  return { skipInRunAll };
 }
 
-export default connect(mapStateToProps)(CellMenuUnconnected)
+export default connect(mapStateToProps)(CellMenuUnconnected);

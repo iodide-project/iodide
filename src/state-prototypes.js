@@ -5,16 +5,16 @@
 const StringEnum = class {
   constructor(...vals) {
     vals.forEach((v) => {
-      if (v === 'values' || v === 'contains') { throw Error(`disallowed enum name: ${v}`) }
-      this[v] = v
-    })
-    Object.freeze(this)
+      if (v === 'values' || v === 'contains') { throw Error(`disallowed enum name: ${v}`); }
+      this[v] = v;
+    });
+    Object.freeze(this);
   }
-  values() { return Object.keys(this) }
-  contains(key) { return Object.keys(this).indexOf(key) >= 0 }
-}
+  values() { return Object.keys(this); }
+  contains(key) { return Object.keys(this).indexOf(key) >= 0; }
+};
 
-const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
+const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN');
 // const rowTypeEnum = new StringEnum('input', 'output')
 export const cellTypeEnum = new StringEnum(
   'code',
@@ -23,11 +23,11 @@ export const cellTypeEnum = new StringEnum(
   'css',
   'external dependencies',
   'plugin',
-)
+);
 // const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'presentation'
 // const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
 
-export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
+export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR');
 
 const appMessageSchema = {
   type: 'object',
@@ -38,7 +38,7 @@ const appMessageSchema = {
     id: { type: 'integer', minimum: 0 },
   },
   additionalProperties: false,
-}
+};
 
 const cellSchema = {
   type: 'object',
@@ -63,7 +63,7 @@ const cellSchema = {
     skipInRunAll: { type: 'boolean' },
   },
   additionalProperties: false,
-}
+};
 // cellSchema.required = Object.keys(cellSchema.properties)
 // cellSchema.minProperties = Object.keys(cellSchema.properties).length
 
@@ -80,7 +80,7 @@ const languageSchema = {
     url: { type: 'string' },
   },
   additionalProperties: false,
-}
+};
 
 const environmentVariableSchema = {
   type: 'array',
@@ -88,7 +88,7 @@ const environmentVariableSchema = {
     { type: 'string', enum: ['object', 'string', 'rawString'] },
     { type: 'string' },
   ],
-}
+};
 
 const stateSchema = {
   type: 'object',
@@ -141,13 +141,13 @@ const stateSchema = {
     runningCellID: { type: 'integer' },
   },
   additionalProperties: false,
-}
+};
 // stateSchema.required = Object.keys(stateSchema.properties)
 // stateSchema.minProperties = Object.keys(stateSchema.properties).length
 
 
 function nextOverflow(currentOverflow) {
-  return { HIDDEN: 'VISIBLE', VISIBLE: 'SCROLL', SCROLL: 'HIDDEN' }[currentOverflow]
+  return { HIDDEN: 'VISIBLE', VISIBLE: 'SCROLL', SCROLL: 'HIDDEN' }[currentOverflow];
 }
 
 function newCellRowSettings(cellType) {
@@ -156,34 +156,34 @@ function newCellRowSettings(cellType) {
       return {
         EXPLORE: { input: 'VISIBLE', sideeffect: 'VISIBLE', output: 'VISIBLE' },
         REPORT: { input: 'HIDDEN', sideeffect: 'VISIBLE', output: 'HIDDEN' },
-      }
+      };
     case 'markdown':
       return {
         EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
         REPORT: { input: 'VISIBLE', output: 'VISIBLE' },
-      }
+      };
     case 'external dependencies':
       return {
         EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
         REPORT: { input: 'HIDDEN', output: 'HIDDEN' },
-      }
+      };
     case 'plugin':
       return {
         EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
         REPORT: { input: 'HIDDEN', output: 'HIDDEN' },
-      }
+      };
     case 'css':
       return {
         EXPLORE: { input: 'VISIBLE' },
         REPORT: { input: 'HIDDEN' },
-      }
+      };
     case 'raw':
       return {
         EXPLORE: { input: 'VISIBLE' },
         REPORT: { input: 'HIDDEN' },
-      }
+      };
     default:
-      throw Error(`Unsupported cellType: ${cellType}`)
+      throw Error(`Unsupported cellType: ${cellType}`);
   }
 }
 
@@ -196,7 +196,7 @@ const pluginCellDefaultContent = `{
   "url": "",
   "module": "",
   "evaluator": ""
-}`
+}`;
 
 function newCell(cellId, cellType, language = 'js') {
   return {
@@ -212,7 +212,7 @@ function newCell(cellId, cellType, language = 'js') {
     rowSettings: newCellRowSettings(cellType),
     skipInRunAll: false,
     language, // default language is js, but it only matters the cell is a code cell
-  }
+  };
 }
 
 
@@ -225,7 +225,7 @@ const jsLanguageDefinition = {
   evaluator: 'eval',
   keybinding: 'j',
   url: '',
-}
+};
 
 function blankState() {
   const initialState = {
@@ -248,27 +248,27 @@ function blankState() {
     locallySaved: [],
     savedEnvironment: {},
     runningCellID: undefined,
-  }
-  return initialState
+  };
+  return initialState;
 }
 
 function newCellID(cells) {
-  return Math.max(-1, ...cells.map(c => c.id)) + 1
+  return Math.max(-1, ...cells.map(c => c.id)) + 1;
 }
 
 function addNewCellToState(state, cellType = 'code', language = 'js') {
-  const nextCellId = newCellID(state.cells)
-  state.cells.push(newCell(nextCellId, cellType, language))
-  return state
+  const nextCellId = newCellID(state.cells);
+  state.cells.push(newCell(nextCellId, cellType, language));
+  return state;
 }
 
 
 function newNotebook() {
   // initialize a blank notebook and push a blank new cell into it
-  const initialState = addNewCellToState(blankState())
+  const initialState = addNewCellToState(blankState());
   // set the cell that was just pushed to be the selected cell
-  initialState.cells[0].selected = true
-  return Object.assign(initialState)
+  initialState.cells[0].selected = true;
+  return Object.assign(initialState);
 }
 
 export {
@@ -281,4 +281,4 @@ export {
   // enums and schemas
   rowOverflowEnum,
   stateSchema,
-}
+};

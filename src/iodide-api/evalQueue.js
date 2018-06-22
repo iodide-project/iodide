@@ -1,88 +1,88 @@
-import { store } from '../store'
-import { updateCellProperties } from '../actions/actions'
-import { getCellById } from '../tools/notebook-utils'
+import { store } from '../store';
+import { updateCellProperties } from '../actions/actions';
+import { getCellById } from '../tools/notebook-utils';
 
-export const getRunningCellID = () => store.getState().runningCellID
+export const getRunningCellID = () => store.getState().runningCellID;
 
 export const resetAsyncProcessCount = () => {
-  const cellId = getRunningCellID()
+  const cellId = getRunningCellID();
   store.dispatch(updateCellProperties(cellId, {
     asyncProcessCount: 0,
-  }))
-}
+  }));
+};
 
 export const incrementAsyncProcessCount = (n = 1) => {
-  const cellId = getRunningCellID()
-  const cell = getCellById(store.getState().cells, cellId)
+  const cellId = getRunningCellID();
+  const cell = getCellById(store.getState().cells, cellId);
   store.dispatch(updateCellProperties(cellId, {
     asyncProcessCount: cell.asyncProcessCount + n,
-  }))
-}
+  }));
+};
 
 export const getRunningCellAsyncProcessStatus = () => {
-  const cellId = getRunningCellID()
-  const cell = getCellById(store.getState().cells, cellId)
+  const cellId = getRunningCellID();
+  const cell = getCellById(store.getState().cells, cellId);
   if (cell !== undefined) {
-    return cell.asyncProcessCount
+    return cell.asyncProcessCount;
   }
-  return undefined
-}
+  return undefined;
+};
 
 export const getRunningCellEvalStatus = () => {
-  const cellId = getRunningCellID()
-  const cell = getCellById(store.getState().cells, cellId)
+  const cellId = getRunningCellID();
+  const cell = getCellById(store.getState().cells, cellId);
   if (cell !== undefined) {
-    return cell.evalStatus
+    return cell.evalStatus;
   }
-  return undefined
-}
+  return undefined;
+};
 
 export const setRunningCellEvalStatus = (evalStatus) => {
-  if (evalStatus === undefined) throw new Error('status must be defined')
-  const cellId = getRunningCellID()
+  if (evalStatus === undefined) throw new Error('status must be defined');
+  const cellId = getRunningCellID();
   store.dispatch(updateCellProperties(cellId, {
     evalStatus,
-  }))
-}
+  }));
+};
 
 export const waitForExplicitContinuationStatusResolution = () => new Promise((resolve) => {
   if (getRunningCellAsyncProcessStatus() > 0) {
     const interval = setInterval(() => {
       if (getRunningCellAsyncProcessStatus() === 0) {
-        setRunningCellEvalStatus('SUCCESS')
-        resolve()
-        clearInterval(interval)
+        setRunningCellEvalStatus('SUCCESS');
+        resolve();
+        clearInterval(interval);
       }
-    }, 50)
+    }, 50);
   } else {
-    resolve()
+    resolve();
   }
-})
+});
 
 const awaitPromises = (promises) => {
-  setRunningCellEvalStatus('ASYNC_PENDING')
-  incrementAsyncProcessCount()
+  setRunningCellEvalStatus('ASYNC_PENDING');
+  incrementAsyncProcessCount();
   return Promise.resolve().then(() => Promise.all(promises).catch((err) => {
-    resetAsyncProcessCount()
-    setRunningCellEvalStatus('ERROR')
-    throw Error(err)
+    resetAsyncProcessCount();
+    setRunningCellEvalStatus('ERROR');
+    throw Error(err);
   }))
     .then((resolutions) => {
-      incrementAsyncProcessCount(-1)
+      incrementAsyncProcessCount(-1);
       if (getRunningCellAsyncProcessStatus() === 0) {
-        setRunningCellEvalStatus('SUCCESS')
+        setRunningCellEvalStatus('SUCCESS');
       }
-      return resolutions
-    })
-}
+      return resolutions;
+    });
+};
 
 export const evalQueue = {
   requireExplicitContinuation: () => {
-    setRunningCellEvalStatus('ASYNC_PENDING')
-    incrementAsyncProcessCount(1)
+    setRunningCellEvalStatus('ASYNC_PENDING');
+    incrementAsyncProcessCount(1);
   },
   continue: () => {
-    if (getRunningCellAsyncProcessStatus() > 0) incrementAsyncProcessCount(-1)
+    if (getRunningCellAsyncProcessStatus() > 0) incrementAsyncProcessCount(-1);
   },
   await: awaitPromises,
-}
+};
