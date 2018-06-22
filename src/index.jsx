@@ -8,8 +8,6 @@ import 'opensans-npm-webfont/style.css'
 import 'codemirror/theme/eclipse.css'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/hint/show-hint.css'
-import 'react-table/react-table.css'
-import '../node_modules/katex/dist/katex.min.css'
 
 // iodide styles
 import './style/page.css'
