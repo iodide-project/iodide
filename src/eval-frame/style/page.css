@@ -29,16 +29,16 @@ div#eval-container.presentation-mode {
 }
 
 div#cells.editor {
-    position: fixed;
-    left: 0px;
-    box-sizing: border-box;
-    height: 100%; /*subtract off .notebook-toolbar-container height*/
-    width: 100%;
-    overflow-y: auto;
-    padding-top: 20px;
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-bottom: 60px;
+  position: fixed;
+  left: 0px;
+  box-sizing: border-box;
+  height: 100%; /*subtract off .notebook-toolbar-container height*/
+  width: 100%;
+  overflow-y: auto;
+  padding-top: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 60px;
 }
 
 div#cells.presentation {

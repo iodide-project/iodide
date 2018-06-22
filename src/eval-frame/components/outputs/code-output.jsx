@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import OutputRow from './output-row'
 import { OutputContainer } from './output-container'
-import CellOutput from './cell-output'
+import OutputRenderer from './output-renderer'
 
 export class CodeOutputUnconnected extends React.Component {
   static propTypes = {
@@ -18,7 +18,7 @@ export class CodeOutputUnconnected extends React.Component {
           <div id={`cell-${this.props.cellId}-side-effect-target`} className="side-effect-target" />
         </OutputRow>
         <OutputRow cellId={this.props.cellId} rowType="output">
-          <CellOutput cellId={this.props.cellId} />
+          <OutputRenderer cellId={this.props.cellId} />
         </OutputRow>
       </OutputContainer>
     )

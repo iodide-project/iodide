@@ -4,7 +4,7 @@ import { shallow } from 'enzyme'
 import { CodeOutputUnconnected as CodeOutput } from '../code-output'
 import { OutputContainer } from '../output-container'
 import OutputRow from '../output-row'
-import CellOutput from '../cell-output'
+import OutputRenderer from '../output-renderer'
 
 describe('CodeOutput_unconnected react component', () => {
   let props
@@ -39,7 +39,7 @@ describe('CodeOutput_unconnected react component', () => {
 
   it('always renders one CellOutput inside OutputRow 1', () => {
     expect(output().wrap(output().find(OutputRow).at(1))
-      .find(CellOutput)).toHaveLength(1)
+      .find(OutputRenderer)).toHaveLength(1)
   })
 
   it("sets the OutputContainer cellId prop to be the CodeOutput's cellId prop", () => {

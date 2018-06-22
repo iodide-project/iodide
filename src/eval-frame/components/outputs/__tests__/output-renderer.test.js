@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import { CellOutputUnconnected, mapStateToProps } from '../cell-output'
+import { OutputRendererUnconnected, mapStateToProps } from '../output-renderer'
 import { ValueRenderer } from '../../../../components/reps/value-renderer'
 
 describe('CellOutputUnconnected React component', () => {
@@ -10,7 +10,7 @@ describe('CellOutputUnconnected React component', () => {
 
   const cellOutput = () => {
     if (!mountedOutput) {
-      mountedOutput = shallow(<CellOutputUnconnected {...props} />)
+      mountedOutput = shallow(<OutputRendererUnconnected {...props} />)
     }
     return mountedOutput
   }

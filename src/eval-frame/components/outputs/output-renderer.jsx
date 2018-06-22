@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { getCellById } from '../../tools/notebook-utils'
 import { ValueRenderer } from '../../../components/reps/value-renderer'
 
-export class CellOutputUnconnected extends React.Component {
+export class OutputRendererUnconnected extends React.Component {
   static propTypes = {
     render: PropTypes.bool.isRequired,
     valueToRender: PropTypes.any,
@@ -29,4 +29,4 @@ export function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps)(CellOutputUnconnected)
+export default connect(mapStateToProps)(OutputRendererUnconnected)

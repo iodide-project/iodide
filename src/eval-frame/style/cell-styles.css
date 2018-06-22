@@ -23,7 +23,7 @@ div#cells.editor div.raw-dom-element {
 }
 
 div#cells.presentation div.cell-container {
-  margin: 0 auto; 
+  margin: 0 auto;
   outline: none;
   padding: 0px;
 }
