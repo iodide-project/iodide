@@ -1,6 +1,6 @@
 import queryString from 'query-string'
 import { store } from './store'
-import { updateCellAndEval } from './actions/actions'
+import { updateCellAndEval, evaluateCell } from './actions/actions'
 
 
 const IODIDE_SESSION_ID = queryString.parse(window.location.search).sessionId
@@ -9,7 +9,7 @@ const { editorOrigin } = queryString.parse(window.location.search)
 
 
 function receiveMessage(event) {
-  console.log('eval frame port got message', event)
+  // console.log('eval frame port got message', event)
   const trustedMessage = true
   if (trustedMessage) {
     const { messageType, message } = event.data
@@ -19,6 +19,9 @@ function receiveMessage(event) {
         break
       case 'UPDATE_CELL_AND_EVAL':
         store.dispatch(updateCellAndEval(JSON.parse(message)))
+        break
+      case 'TRIGGER_CELL_EVAL':
+        store.dispatch(evaluateCell(message))
         break
       default:
         console.log('unknown messageType', message)

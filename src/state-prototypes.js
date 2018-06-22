@@ -125,7 +125,7 @@ const stateSchema = {
     userData: { type: 'object' },
     evalFrameMessageQueue: {
       type: 'array',
-      items: { type: 'string' },
+      items: { type: 'object' },
     },
     evalFrameReady: { type: 'boolean' },
     externalDependencies: { type: 'array' },

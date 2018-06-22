@@ -7,8 +7,7 @@ import {
   stateFromJsmd,
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
-import { postDispatchToEvalContext } from '../tools/message-passing'
-
+import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 const AUTOSAVE = 'AUTOSAVE: '
 
@@ -116,13 +115,14 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'EVAL_FRAME_READY': {
-      postDispatchToEvalContext(JSON.stringify({
+      postActionToEvalFrame({
         type: 'UPDATE_CELL_LIST',
         cells: state.cells,
-      }))
+      })
       state.evalFrameMessageQueue.forEach((actionToPost) => {
-        postDispatchToEvalContext(actionToPost)
-        console.log('posted EVAL_FRAME_READY', actionToPost)
+        postActionToEvalFrame(actionToPost)
+        // postDispatchToEvalContext(actionToPost)
+        // console.log('posted EVAL_FRAME_READY', actionToPost)
       })
       return Object.assign({}, state, { evalFrameReady: true, evalFrameMessageQueue: [] })
     }
