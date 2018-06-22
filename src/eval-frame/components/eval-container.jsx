@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
-import RawCell from './cells/raw-cell'
-import ExternalDependencyCell from './cells/external-resource-cell'
-import CSSCell from './cells/css-cell'
-import CodeCell from './cells/code-cell'
-import MarkdownCell from './cells/markdown-cell'
-import PluginDefinitionCell from './cells/plugin-definition-cell'
+import RawOutput from './outputs/raw-output'
+import ExternalDependencyOutput from './outputs/external-resource-output'
+import CSSOutput from './outputs/css-output'
+import CodeOutput from './outputs/code-output'
+import MarkdownOutput from './outputs/markdown-output'
+import PluginDefinitionOutput from './outputs/plugin-definition-output'
 
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
@@ -51,17 +51,17 @@ class EvalContainer extends React.Component {
       switch (this.props.cellTypes[i]) {
         case 'code':
         // return <JavascriptCell cellId={id} key={id}/>
-          return <CodeCell cellId={id} key={id} />
+          return <CodeOutput cellId={id} key={id} />
         case 'markdown':
-          return <MarkdownCell cellId={id} key={id} />
+          return <MarkdownOutput cellId={id} key={id} />
         case 'raw':
-          return <RawCell cellId={id} key={id} />
+          return <RawOutput cellId={id} key={id} />
         case 'external dependencies':
-          return <ExternalDependencyCell cellId={id} key={id} />
+          return <ExternalDependencyOutput cellId={id} key={id} />
         case 'css':
-          return <CSSCell cellId={id} key={id} />
+          return <CSSOutput cellId={id} key={id} />
         case 'plugin':
-          return <PluginDefinitionCell cellId={id} key={id} />
+          return <PluginDefinitionOutput cellId={id} key={id} />
         default:
           // TODO: Use better class for inline error
           return <div>Unknown cell type {this.props.cellTypes[i]}</div>

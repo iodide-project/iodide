@@ -8,7 +8,7 @@ import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
 import { rowOverflowEnum, nextOverflow } from '../../state-prototypes'
 
-export class CellRowUnconnected extends React.Component {
+export class OutputRowUnconnected extends React.Component {
   static propTypes = {
     executionString: PropTypes.string,
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
@@ -126,4 +126,4 @@ function mapDispatchToPropsCellRows(dispatch) {
   }
 }
 
-export default connect(mapStateToPropsCellRows, mapDispatchToPropsCellRows)(CellRowUnconnected)
+export default connect(mapStateToPropsCellRows, mapDispatchToPropsCellRows)(OutputRowUnconnected)

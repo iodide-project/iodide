@@ -4,17 +4,17 @@ import ReactDOM from 'react-dom';
 
 import Tooltip from 'material-ui/Tooltip'
 
-import { CellRowUnconnected, mapStateToPropsCellRows } from '../cell-row'
+import { OutputRowUnconnected, mapStateToPropsCellRows } from '../output-row'
 
-describe('CellRowUnconnected React component', () => {
+describe('OutputRowUnconnected React component', () => {
   let setCellRowCollapsedState
   let props
   let mountedRow
   const node = <span>Hello</span>
 
-  const cellRow = () => {
+  const outputRow = () => {
     if (!mountedRow) {
-      mountedRow = shallow(<CellRowUnconnected {...props}>{node}</CellRowUnconnected>)
+      mountedRow = shallow(<OutputRowUnconnected {...props}>{node}</OutputRowUnconnected>)
     }
     return mountedRow
   }
@@ -36,91 +36,91 @@ describe('CellRowUnconnected React component', () => {
   })
 
   it('always renders three div', () => {
-    expect(cellRow().find('div').length).toBe(3)
+    expect(outputRow().find('div').length).toBe(3)
   })
 
   it('sets the top div to have correct class', () => {
-    expect(cellRow().find('div').at(0).props().className)
+    expect(outputRow().find('div').at(0).props().className)
       .toBe('cell-row input VISIBLE')
   })
 
   it('always renders two children inside top div', () => {
-    expect(cellRow().find('div').at(0).children()
+    expect(outputRow().find('div').at(0).children()
       .length).toBe(2)
   })
 
   it('always renders one Tooltip component inside top div', () => {
-    expect(cellRow().wrap(cellRow().find('div').at(0))
+    expect(outputRow().wrap(outputRow().find('div').at(0))
       .find(Tooltip)).toHaveLength(1)
   })
 
   it('always renders one div component with class collapse-button inside Tooltip', () => {
-    expect(cellRow().wrap(cellRow().find(Tooltip))
+    expect(outputRow().wrap(outputRow().find(Tooltip))
       .find('div.collapse-button')).toHaveLength(1)
   })
 
   it('sets the onClick prop to handleCollapseButtonClick', () => {
-    expect(cellRow().find('div.collapse-button').props().onClick)
-      .toEqual(cellRow().instance().handleCollapseButtonClick)
+    expect(outputRow().find('div.collapse-button').props().onClick)
+      .toEqual(outputRow().instance().handleCollapseButtonClick)
   })
 
   it('click on cell collapse-button div with correct props fires setCellRowCollapsedState', () => {
     props.viewMode = 'editor'
-    cellRow().find('div.collapse-button').simulate('click')
+    outputRow().find('div.collapse-button').simulate('click')
     expect(setCellRowCollapsedState.mock.calls.length).toBe(1)
     expect(setCellRowCollapsedState.mock.calls[0].length).toBe(3)
   })
 
   it('click on cell collapse-button div with incorrect props does not fire setCellRowCollapsedState', () => {
     props.viewMode = 'presentation'
-    cellRow().find('div.collapse-button').simulate('click')
+    outputRow().find('div.collapse-button').simulate('click')
     expect(setCellRowCollapsedState.mock.calls.length).toBe(0)
   })
 
   it('always renders one children inside Tooltip', () => {
-    expect(cellRow().find(Tooltip).children()
+    expect(outputRow().find(Tooltip).children()
       .length).toBe(1)
   })
 
   it("sets the Tooltip placement prop to be Cell Row's collapseTooltipPlacement prop", () => {
-    expect(cellRow().find(Tooltip).props().placement)
+    expect(outputRow().find(Tooltip).props().placement)
       .toBe(props.collapseTooltipPlacement)
   })
 
   it("sets the Tooltip title prop to be Cell Row's tooltipText prop", () => {
-    expect(cellRow().find(Tooltip).props().title)
+    expect(outputRow().find(Tooltip).props().title)
       .toBe(props.tooltipText)
   })
 
   it('always renders one div component with class main-component inside top div', () => {
-    expect(cellRow().wrap(cellRow().find('div').at(0))
+    expect(outputRow().wrap(outputRow().find('div').at(0))
       .find('div.main-component')).toHaveLength(1)
   })
 
   it('always has a children inside the div with class main-component', () => {
-    expect(cellRow().find('div.main-component')
+    expect(outputRow().find('div.main-component')
       .props().children).toEqual(node)
   })
 
   it('fires setCellRowCollapsedState when component updates with correct props', () => {
     const nodes = document.createElement('div');
-    ReactDOM.render(<CellRowUnconnected {...props} />, nodes);
+    ReactDOM.render(<OutputRowUnconnected {...props} />, nodes);
     props.uncollapseOnUpdate = true;
-    ReactDOM.render(<CellRowUnconnected {...props} />, nodes);
+    ReactDOM.render(<OutputRowUnconnected {...props} />, nodes);
     expect(setCellRowCollapsedState.mock.calls.length).toBe(1)
   })
 
   it('does not fire setCellRowCollapsedState when component updates with wrong props', () => {
     const nodes = document.createElement('div');
-    ReactDOM.render(<CellRowUnconnected {...props} />, nodes);
+    ReactDOM.render(<OutputRowUnconnected {...props} />, nodes);
     props.uncollapseOnUpdate = false;
-    ReactDOM.render(<CellRowUnconnected {...props} />, nodes);
+    ReactDOM.render(<OutputRowUnconnected {...props} />, nodes);
     expect(setCellRowCollapsedState.mock.calls.length).toBe(0)
   })
 })
 
 
-describe('CellRow mapStateToPropsCellRows', () => {
+describe('OutputRow mapStateToPropsCellRows', () => {
   let state
   const rowSettingsObject = {
     EXPLORE: {
@@ -149,7 +149,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
     }
   })
 
-  it('should return the basic info for the correct cell', () => {
+  it('should return the basic info for the correct output', () => {
     const ownProps = { cellId: 5, rowType: 'input' }
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({

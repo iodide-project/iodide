@@ -7,7 +7,7 @@ import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
 import { cellTypeEnum } from '../../state-prototypes'
 
-export class CellContainerUnconnected extends React.Component {
+export class OutputContainerUnconnected extends React.Component {
   static propTypes = {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
@@ -81,5 +81,5 @@ export function mapDispatchToProps(dispatch) {
 }
 
 // export default connect(mapStateToProps, mapDispatchToProps)(Page)
-const CellContainerConnected = connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected) // eslint-disable-line
-export { CellContainerConnected as CellContainer }
+const OutputContainerConnected = connect(mapStateToProps, mapDispatchToProps)(OutputContainerUnconnected) // eslint-disable-line
+export { OutputContainerConnected as OutputContainer }

@@ -2,13 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import CellRow from './cell-row'
-import { CellContainer } from './cell-container'
+import OutputRow from './output-row'
+import { OutputContainer } from './output-container'
 import ExternalResourceOutputHandler from '../../../components/reps/output-handler-external-resource'
 
 import { getCellById } from '../../tools/notebook-utils'
 
-export class ExternalResourceCellUnconnected extends React.Component {
+export class ExternalResourceOutputUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
     value: PropTypes.array,
@@ -16,11 +16,11 @@ export class ExternalResourceCellUnconnected extends React.Component {
 
   render() {
     return (
-      <CellContainer cellId={this.props.cellId}>
-        <CellRow cellId={this.props.cellId} rowType="output">
+      <OutputContainer cellId={this.props.cellId}>
+        <OutputRow cellId={this.props.cellId} rowType="output">
           <ExternalResourceOutputHandler value={this.props.value} />
-        </CellRow>
-      </CellContainer>
+        </OutputRow>
+      </OutputContainer>
     )
   }
 }
@@ -34,4 +34,4 @@ export function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps)(ExternalResourceCellUnconnected)
+export default connect(mapStateToProps)(ExternalResourceOutputUnconnected)

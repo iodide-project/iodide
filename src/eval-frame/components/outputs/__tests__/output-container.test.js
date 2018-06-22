@@ -1,19 +1,19 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import { CellContainerUnconnected, mapStateToProps } from '../cell-container'
+import { OutputContainerUnconnected, mapStateToProps } from '../output-container'
 
-describe('CellContainerUnconnected React component', () => {
+describe('OutputContainerUnconnected React component', () => {
   let selectCell
   let props
-  let mountedCont
+  let mc
   const node = <span>Hello</span>
 
-  const cellContainer = () => {
-    if (!mountedCont) {
-      mountedCont = shallow(<CellContainerUnconnected {...props}>{node}</CellContainerUnconnected>)
+  const outputContainer = () => {
+    if (!mc) {
+      mc = shallow(<OutputContainerUnconnected {...props}>{node}</OutputContainerUnconnected>)
     }
-    return mountedCont
+    return mc
   }
 
   beforeEach(() => {
@@ -26,60 +26,60 @@ describe('CellContainerUnconnected React component', () => {
       cellType: 'code',
       actions: { selectCell },
     }
-    mountedCont = undefined
+    mc = undefined
   })
 
   it('always renders two div', () => {
-    expect(cellContainer().find('div').length).toBe(2)
+    expect(outputContainer().find('div').length).toBe(2)
   })
 
   it('always renders 1 children inside top div', () => {
-    expect(cellContainer().find('div').at(0).children()
+    expect(outputContainer().find('div').at(0).children()
       .length).toBe(1)
   })
 
   it('sets the top div to have id cell-1', () => {
-    expect(cellContainer().find('div').at(0).props().id)
+    expect(outputContainer().find('div').at(0).props().id)
       .toBe('cell-1')
   })
 
   it('sets the top div with correct class if selected===false and editingCell===false', () => {
     props.selected = false
     props.editingCell = false
-    expect(cellContainer().find('div').at(0).props().className)
+    expect(outputContainer().find('div').at(0).props().className)
       .toBe('cell-container code')
   })
 
   it('sets the top div with correct class if selected===true and editingCell===false', () => {
     props.selected = true
     props.editingCell = false
-    expect(cellContainer().find('div').at(0).props().className)
+    expect(outputContainer().find('div').at(0).props().className)
       .toBe('cell-container code selected-cell')
   })
 
   it('sets the top div with correct class if selected===false and editingCell===true', () => {
     props.selected = false
     props.editingCell = true
-    expect(cellContainer().find('div').at(0).props().className)
+    expect(outputContainer().find('div').at(0).props().className)
       .toBe('cell-container code editing-cell')
   })
 
   it('sets the top div with correct class if selected===true and editingCell===true', () => {
     props.selected = true
     props.editingCell = true
-    expect(cellContainer().find('div').at(0).props().className)
+    expect(outputContainer().find('div').at(0).props().className)
       .toBe('cell-container code selected-cell editing-cell')
   })
 
   it('sets the onMouseDown prop to handleCellClick', () => {
-    expect(cellContainer().props().onMouseDown)
-      .toEqual(cellContainer().instance().handleCellClick)
+    expect(outputContainer().props().onMouseDown)
+      .toEqual(outputContainer().instance().handleCellClick)
   })
 
   it('mouse down on cell container div fires selectCell with correct props', () => {
     props.viewMode = 'editor'
     props.selected = false
-    cellContainer().simulate('mousedown')
+    outputContainer().simulate('mousedown')
     expect(selectCell.mock.calls.length).toBe(1)
     expect(selectCell.mock.calls[0].length).toBe(2)
   })
@@ -94,23 +94,23 @@ describe('CellContainerUnconnected React component', () => {
     it('click on cell container div does not fires selectCell with incorrect props', () => {
       props.viewMode = state.viewMode
       props.selected = state.selected
-      cellContainer().simulate('mousedown')
+      outputContainer().simulate('mousedown')
       expect(selectCell.mock.calls.length).toBe(0)
     })
   })
 
   it('always renders one div with class cell-row-container inside top div', () => {
-    expect(cellContainer().wrap(cellContainer().find('div').at(0)
+    expect(outputContainer().wrap(outputContainer().find('div').at(0)
       .props().children).find('div.cell-row-container')).toHaveLength(1)
   })
 
   it('always has a children inside the second div', () => {
-    expect(cellContainer().find('div.cell-row-container')
+    expect(outputContainer().find('div.cell-row-container')
       .props().children).toEqual(node)
   })
 })
 
-describe('CellContainer mapStateToProps', () => {
+describe('OutputContainer mapStateToProps', () => {
   let state
 
   beforeEach(() => {
