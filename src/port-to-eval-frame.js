@@ -12,8 +12,7 @@ export function postActionToEvalFrame(actionObj) {
 
 export const listenForEvalFramePortReady = (messageEvent) => {
   console.log('listenForEvalFramePortReady', messageEvent.data)
-  if (typeof messageEvent.data === 'string'
-    && messageEvent.data.split('|')[1] === window.IODIDE_SESSION_ID) {
+  if (messageEvent.data === window.IODIDE_SESSION_ID) {
     portToEvalFrame = messageEvent.ports[0] /* eslint-disable-line prefer-destructuring */
     store.dispatch({ type: 'EVAL_FRAME_READY' })
     // stop listening for messages once a connection to the eval-frame is made
