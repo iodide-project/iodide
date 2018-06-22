@@ -16,7 +16,6 @@ import './style/page.css'
 import './style/side-panes.css'
 import './style/menu-styles.css'
 import './style/cell-styles.css'
-import './style/default-presentation.css'
 
 import Page from './components/page'
 import { store } from './store'
