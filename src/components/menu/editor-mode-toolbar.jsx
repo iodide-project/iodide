@@ -1,12 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import Toolbar from 'material-ui/Toolbar'
-import EditorModeControls from './editor-mode-controls'
-import ViewControls from './view-controls'
+import Toolbar from 'material-ui/Toolbar';
+import EditorModeControls from './editor-mode-controls';
+import ViewControls from './view-controls';
 
-import EditorModeTitle from './editor-mode-title'
+import EditorModeTitle from './editor-mode-title';
 
 export class EditorModeToolbarUnconnected extends React.Component {
   static propTypes = {
@@ -25,13 +25,13 @@ export class EditorModeToolbarUnconnected extends React.Component {
         </Toolbar>
       </div>
 
-    )
+    );
   }
 }
 
 export function mapStateToProps(state) {
-  return { viewMode: state.viewMode }
+  return { viewMode: state.viewMode };
 }
 
-const EditorModeToolbar = connect(mapStateToProps)(EditorModeToolbarUnconnected)
-export default EditorModeToolbar
+const EditorModeToolbar = connect(mapStateToProps)(EditorModeToolbarUnconnected);
+export default EditorModeToolbar;

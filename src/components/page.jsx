@@ -1,24 +1,24 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import deepEqual from 'deep-equal'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import deepEqual from 'deep-equal';
 
-import RawCell from './cells/raw-cell'
-import ExternalDependencyCell from './cells/external-resource-cell'
-import CSSCell from './cells/css-cell'
-import CodeCell from './cells/code-cell'
-import MarkdownCell from './cells/markdown-cell'
-import PluginDefinitionCell from './cells/plugin-definition-cell'
+import RawCell from './cells/raw-cell';
+import ExternalDependencyCell from './cells/external-resource-cell';
+import CSSCell from './cells/css-cell';
+import CodeCell from './cells/code-cell';
+import MarkdownCell from './cells/markdown-cell';
+import PluginDefinitionCell from './cells/plugin-definition-cell';
 
-import NotebookHeader from './menu/notebook-header'
-import AppMessages from './app-messages/app-messages'
+import NotebookHeader from './menu/notebook-header';
+import AppMessages from './app-messages/app-messages';
 
-import { initializeDefaultKeybindings } from '../keybindings'
-import * as actions from '../actions/actions'
+import { initializeDefaultKeybindings } from '../keybindings';
+import * as actions from '../actions/actions';
 
 
-const AUTOSAVE = 'AUTOSAVE: '
+const AUTOSAVE = 'AUTOSAVE: ';
 
 class Page extends React.Component {
   static propTypes = {
@@ -33,33 +33,33 @@ class Page extends React.Component {
     cellTypes: PropTypes.array,
   }
   constructor(props) {
-    super(props)
+    super(props);
 
-    initializeDefaultKeybindings()
+    initializeDefaultKeybindings();
     setInterval(() => {
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
-      const notebooks = Object.keys(localStorage)
-      const autos = notebooks.filter(n => n.includes(AUTOSAVE))
+      const notebooks = Object.keys(localStorage);
+      const autos = notebooks.filter(n => n.includes(AUTOSAVE));
       if (autos.length) {
         autos.forEach((n) => {
-          this.props.actions.deleteNotebook(n)
-        })
+          this.props.actions.deleteNotebook(n);
+        });
       }
-      this.props.actions.saveNotebook(true)
-    }, 1000 * 60)
+      this.props.actions.saveNotebook(true);
+    }, 1000 * 60);
 
-    this.getPageWidth = this.getPageWidth.bind(this)
+    this.getPageWidth = this.getPageWidth.bind(this);
   }
 
   shouldComponentUpdate(nextProps) {
-    return !deepEqual(this.props, nextProps)
+    return !deepEqual(this.props, nextProps);
   }
 
   getPageWidth() {
-    let width = '100%'
-    if (this.props.viewMode === 'presentation') width = 'undefined'
-    else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`
-    return { width }
+    let width = '100%';
+    if (this.props.viewMode === 'presentation') width = 'undefined';
+    else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`;
+    return { width };
   }
 
   render() {
@@ -69,22 +69,22 @@ class Page extends React.Component {
       switch (this.props.cellTypes[i]) {
         case 'code':
         // return <JavascriptCell cellId={id} key={id}/>
-          return <CodeCell cellId={id} key={id} />
+          return <CodeCell cellId={id} key={id} />;
         case 'markdown':
-          return <MarkdownCell cellId={id} key={id} />
+          return <MarkdownCell cellId={id} key={id} />;
         case 'raw':
-          return <RawCell cellId={id} key={id} />
+          return <RawCell cellId={id} key={id} />;
         case 'external dependencies':
-          return <ExternalDependencyCell cellId={id} key={id} />
+          return <ExternalDependencyCell cellId={id} key={id} />;
         case 'css':
-          return <CSSCell cellId={id} key={id} />
+          return <CSSCell cellId={id} key={id} />;
         case 'plugin':
-          return <PluginDefinitionCell cellId={id} key={id} />
+          return <PluginDefinitionCell cellId={id} key={id} />;
         default:
           // TODO: Use better class for inline error
-          return <div>Unknown cell type {this.props.cellTypes[i]}</div>
+          return <div>Unknown cell type {this.props.cellTypes[i]}</div>;
       }
-    })
+    });
 
     return (
       <div
@@ -101,7 +101,7 @@ class Page extends React.Component {
         </div>
         <AppMessages />
       </div>
-    )
+    );
   }
 }
 
@@ -113,14 +113,14 @@ function mapStateToProps(state) {
     title: state.title,
     sidePane: state.sidePaneMode,
     sidePaneWidth: state.sidePaneWidth,
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(actions, dispatch),
-  }
+  };
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Page)
+export default connect(mapStateToProps, mapDispatchToProps)(Page);

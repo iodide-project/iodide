@@ -1,23 +1,23 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import Drawer from 'material-ui/Drawer'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
-import Typography from 'material-ui/Typography'
-import Close from 'material-ui-icons/Close'
-import Resizable from 're-resizable'
-import NotebookTaskButton from '../menu/notebook-task-button'
-import NotebookMenuDivider from '../menu/notebook-menu-divider'
+import Drawer from 'material-ui/Drawer';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
+import Close from 'material-ui-icons/Close';
+import Resizable from 're-resizable';
+import NotebookTaskButton from '../menu/notebook-task-button';
+import NotebookMenuDivider from '../menu/notebook-menu-divider';
 
-import UserTask from '../../actions/user-task'
-import tasks from '../../actions/task-definitions'
+import UserTask from '../../actions/user-task';
+import tasks from '../../actions/task-definitions';
 
 const theme = createMuiTheme({
   palette: {
     type: 'light',
   },
-})
+});
 
 export class SidePaneUnconnected extends React.Component {
     static propTypes = {
@@ -60,7 +60,7 @@ export class SidePaneUnconnected extends React.Component {
                 height: '999999px',
               }}
               onResizeStop={(e, direction, ref, d) => {
-                tasks.changeSidePaneWidth.callback(d.width)
+                tasks.changeSidePaneWidth.callback(d.width);
               }}
               style={{ overflow: 'scroll' }}
             >
@@ -83,7 +83,7 @@ export class SidePaneUnconnected extends React.Component {
           </Drawer>
         </MuiThemeProvider>
 
-      )
+      );
     }
 }
 
@@ -91,7 +91,7 @@ export function mapStateToProps(state) {
   return {
     sidePaneMode: state.sidePaneMode,
     sidePaneWidth: state.sidePaneWidth,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(SidePaneUnconnected)
+export default connect(mapStateToProps)(SidePaneUnconnected);

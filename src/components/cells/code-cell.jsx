@@ -1,11 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import CellRow from './cell-row'
-import { CellContainer } from './cell-container'
-import CellOutput from './cell-output'
-import CellEditor from './cell-editor'
+import CellRow from './cell-row';
+import { CellContainer } from './cell-container';
+import CellOutput from './cell-output';
+import CellEditor from './cell-editor';
 
 export class CodeCellUnconnected extends React.Component {
   static propTypes = {
@@ -26,8 +26,8 @@ export class CodeCellUnconnected extends React.Component {
           <CellOutput cellId={this.props.cellId} />
         </CellRow>
       </CellContainer>
-    )
+    );
   }
 }
 
-export default connect()(CodeCellUnconnected)
+export default connect()(CodeCellUnconnected);

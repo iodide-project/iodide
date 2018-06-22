@@ -1,12 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
+import PropTypes from 'prop-types';
 
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 // import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 // import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import CheckCircle from 'material-ui-icons/CheckCircle'
-import ErrorCircle from 'material-ui-icons/Error'
-import UnloadedCircle from 'material-ui-icons/Remove'
+import CheckCircle from 'material-ui-icons/CheckCircle';
+import ErrorCircle from 'material-ui-icons/Error';
+import UnloadedCircle from 'material-ui-icons/Remove';
 
 // this is merely a presentational component, and as such can be passed
 // all the data it needs.
@@ -16,13 +16,13 @@ export default class ExternalResourceOutput extends React.Component {
   }
 
   render() {
-    if (this.props.value === undefined) return <div />
+    if (this.props.value === undefined) return <div />;
 
     const outs = this.props.value.filter(d => d.src !== '').map((d) => {
-      let statusExplanation
-      let statusIcon
-      let source = d.src.split('/')
-      source = source[source.length - 1]
+      let statusExplanation;
+      let statusIcon;
+      let source = d.src.split('/');
+      source = source[source.length - 1];
 
       const introducedVariables = (d.variables || []).map(v =>
         (
@@ -37,13 +37,13 @@ export default class ExternalResourceOutput extends React.Component {
                 }}
           >{v}
           </div>
-        ))
+        ));
 
-      if (d.status === undefined) statusIcon = <UnloadedCircle />
-      else statusIcon = (d.status === 'loaded' ? <CheckCircle color="primary" /> : <ErrorCircle color="error" />)
+      if (d.status === undefined) statusIcon = <UnloadedCircle />;
+      else statusIcon = (d.status === 'loaded' ? <CheckCircle color="primary" /> : <ErrorCircle color="error" />);
 
       if (Object.prototype.hasOwnProperty.call(d, 'statusExplanation')) {
-        statusExplanation = <div key={d.src} className="dependency-status-explanation">{d.statusExplanation}</div>
+        statusExplanation = <div key={d.src} className="dependency-status-explanation">{d.statusExplanation}</div>;
       }
       return (
         <div className="dependency-container" key={d.src}>
@@ -59,12 +59,12 @@ export default class ExternalResourceOutput extends React.Component {
 
 
         </div>
-      )
-    })
+      );
+    });
     return (
       <div className="dependency-output">
         {outs}
       </div>
-    )
+    );
   }
 }

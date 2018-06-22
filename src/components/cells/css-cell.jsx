@@ -1,12 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import CellRow from './cell-row'
-import { CellContainer } from './cell-container'
-import CellEditor from './cell-editor'
+import CellRow from './cell-row';
+import { CellContainer } from './cell-container';
+import CellEditor from './cell-editor';
 
-import { getCellById } from '../../tools/notebook-utils'
+import { getCellById } from '../../tools/notebook-utils';
 
 export class CSSCellUnconnected extends React.Component {
   static propTypes = {
@@ -25,18 +25,18 @@ export class CSSCellUnconnected extends React.Component {
           </style>
         </CellRow>
       </CellContainer>
-    )
+    );
   }
 }
 
 
 export function mapStateToProps(state, ownProps) {
-  const cell = getCellById(state.cells, ownProps.cellId)
+  const cell = getCellById(state.cells, ownProps.cellId);
   return {
     cellId: cell.id,
     value: cell.value,
     rendered: cell.rendered,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(CSSCellUnconnected)
+export default connect(mapStateToProps)(CSSCellUnconnected);

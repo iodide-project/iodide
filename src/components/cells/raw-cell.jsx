@@ -1,10 +1,10 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import CellRow from './cell-row'
-import { CellContainer } from './cell-container'
-import CellEditor from './cell-editor'
+import CellRow from './cell-row';
+import { CellContainer } from './cell-container';
+import CellEditor from './cell-editor';
 
 
 export class RawCellUnconnected extends React.Component {
@@ -24,8 +24,8 @@ export class RawCellUnconnected extends React.Component {
           />
         </CellRow>
       </CellContainer>
-    )
+    );
   }
 }
 
-export default connect()(RawCellUnconnected)
+export default connect()(RawCellUnconnected);

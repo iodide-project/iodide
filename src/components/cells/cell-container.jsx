@@ -1,13 +1,13 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import * as actions from '../../actions/actions'
-import { getCellById } from '../../tools/notebook-utils'
-import { cellTypeEnum } from '../../state-prototypes'
+import * as actions from '../../actions/actions';
+import { getCellById } from '../../tools/notebook-utils';
+import { cellTypeEnum } from '../../state-prototypes';
 
-import CellMenuContainer from './cell-menu-container'
+import CellMenuContainer from './cell-menu-container';
 
 
 export class CellContainerUnconnected extends React.Component {
@@ -34,9 +34,9 @@ export class CellContainerUnconnected extends React.Component {
 
   handleCellClick = () => {
     if (this.props.viewMode === 'editor') {
-      const scrollToCell = false
+      const scrollToCell = false;
       if (!this.props.selected) {
-        this.props.actions.selectCell(this.props.cellId, scrollToCell)
+        this.props.actions.selectCell(this.props.cellId, scrollToCell);
       }
     }
   }
@@ -49,7 +49,7 @@ export class CellContainerUnconnected extends React.Component {
       this.props.selected ? ' selected-cell' : ''
     }${
       this.props.editingCell ? ' editing-cell' : ''
-    }`
+    }`;
 
     return (
       <div
@@ -62,28 +62,28 @@ export class CellContainerUnconnected extends React.Component {
           {this.props.children}
         </div>
       </div>
-    )
+    );
   }
 }
 
 
 export function mapStateToProps(state, ownProps) {
-  const cell = getCellById(state.cells, ownProps.cellId)
+  const cell = getCellById(state.cells, ownProps.cellId);
   return {
     cellId: cell.id,
     selected: cell.selected,
     editingCell: cell.selected && state.mode === 'edit',
     viewMode: state.viewMode,
     cellType: cell.cellType,
-  }
+  };
 }
 
 export function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(actions, dispatch),
-  }
+  };
 }
 
 // export default connect(mapStateToProps, mapDispatchToProps)(Page)
 const CellContainerConnected = connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected) // eslint-disable-line
-export { CellContainerConnected as CellContainer }
+export { CellContainerConnected as CellContainer };

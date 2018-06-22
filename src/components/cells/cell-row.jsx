@@ -1,12 +1,12 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types'
-import Tooltip from 'material-ui/Tooltip'
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+import Tooltip from 'material-ui/Tooltip';
 
-import { getCellById } from '../../tools/notebook-utils'
-import * as actions from '../../actions/actions'
-import { rowOverflowEnum, nextOverflow } from '../../state-prototypes'
+import { getCellById } from '../../tools/notebook-utils';
+import * as actions from '../../actions/actions';
+import { rowOverflowEnum, nextOverflow } from '../../state-prototypes';
 
 export class CellRowUnconnected extends React.Component {
   static propTypes = {
@@ -22,9 +22,9 @@ export class CellRowUnconnected extends React.Component {
   }
 
   constructor(props) {
-    super(props)
+    super(props);
     // explicitly bind "this" for all methods in constructors
-    this.handleCollapseButtonClick = this.handleCollapseButtonClick.bind(this)
+    this.handleCollapseButtonClick = this.handleCollapseButtonClick.bind(this);
   }
 
   componentDidUpdate() {
@@ -37,7 +37,7 @@ export class CellRowUnconnected extends React.Component {
         'editor',
         'input',
         rowOverflowEnum.SCROLL,
-      )
+      );
     }
   }
 
@@ -48,7 +48,7 @@ export class CellRowUnconnected extends React.Component {
         'editor',
         this.props.rowType,
         nextOverflow(this.props.rowOverflow),
-      )
+      );
     }
   }
 
@@ -71,27 +71,27 @@ export class CellRowUnconnected extends React.Component {
           {this.props.children}
         </div>
       </div>
-    )
+    );
   }
 }
 
 export function mapStateToPropsCellRows(state, ownProps) {
-  const cell = getCellById(state.cells, ownProps.cellId)
-  let view
+  const cell = getCellById(state.cells, ownProps.cellId);
+  let view;
   // this block can be deprecated if we move to enums for VIEWs
   switch (state.viewMode) {
     case 'editor':
-      view = 'EXPLORE'
-      break
+      view = 'EXPLORE';
+      break;
     case 'presentation':
-      view = 'REPORT'
-      break
+      view = 'REPORT';
+      break;
     default:
-      throw Error(`Unsupported viewMode: ${state.viewMode}`)
+      throw Error(`Unsupported viewMode: ${state.viewMode}`);
   }
-  const rowOverflow = cell.rowSettings[view][ownProps.rowType]
+  const rowOverflow = cell.rowSettings[view][ownProps.rowType];
   const executionString = (ownProps.rowType === 'input'
-    && cell.cellType === 'code') ? `[${cell.executionStatus}]` : ''
+    && cell.cellType === 'code') ? `[${cell.executionStatus}]` : '';
   // if this is an input row, uncollapse
   // the editor upon entering edit mode.
   // note: entering editMode is only allowed from editor View
@@ -102,13 +102,13 @@ export function mapStateToPropsCellRows(state, ownProps) {
     state.mode === 'edit' &&
     ownProps.rowType === 'input' &&
     rowOverflow === rowOverflowEnum.HIDDEN
-  )
+  );
   const collapseTooltipPlacement = (
     rowOverflow === rowOverflowEnum.HIDDEN ? 'bottom' : 'right'
-  )
+  );
 
-  const nextOverflowString = { HIDDEN: 'expand', VISIBLE: 'scroll', SCROLL: 'collapse' }[rowOverflow]
-  const tooltipText = `click to ${nextOverflowString} this ${ownProps.rowType}`
+  const nextOverflowString = { HIDDEN: 'expand', VISIBLE: 'scroll', SCROLL: 'collapse' }[rowOverflow];
+  const tooltipText = `click to ${nextOverflowString} this ${ownProps.rowType}`;
   return {
     cellId: ownProps.cellId,
     viewMode: state.viewMode,
@@ -117,13 +117,13 @@ export function mapStateToPropsCellRows(state, ownProps) {
     rowOverflow,
     collapseTooltipPlacement,
     tooltipText,
-  }
+  };
 }
 
 function mapDispatchToPropsCellRows(dispatch) {
   return {
     actions: bindActionCreators(actions, dispatch),
-  }
+  };
 }
 
-export default connect(mapStateToPropsCellRows, mapDispatchToPropsCellRows)(CellRowUnconnected)
+export default connect(mapStateToPropsCellRows, mapDispatchToPropsCellRows)(CellRowUnconnected);

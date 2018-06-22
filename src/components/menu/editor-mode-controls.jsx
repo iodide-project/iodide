@@ -1,15 +1,15 @@
-import React from 'react'
+import React from 'react';
 
-import AddButton from 'material-ui-icons/Add'
-import UpArrow from 'material-ui-icons/ArrowUpward'
-import DownArrow from 'material-ui-icons/ArrowDownward'
-import PlayButton from 'material-ui-icons/PlayArrow'
-import FastForward from 'material-ui-icons/FastForward'
+import AddButton from 'material-ui-icons/Add';
+import UpArrow from 'material-ui-icons/ArrowUpward';
+import DownArrow from 'material-ui-icons/ArrowDownward';
+import PlayButton from 'material-ui-icons/PlayArrow';
+import FastForward from 'material-ui-icons/FastForward';
 
-import EditorToolbarMenu from './editor-toolbar-menu'
-import NotebookTaskButton from './notebook-task-button'
+import EditorToolbarMenu from './editor-toolbar-menu';
+import NotebookTaskButton from './notebook-task-button';
 
-import tasks from '../../actions/task-definitions'
+import tasks from '../../actions/task-definitions';
 
 export default class EditorModeControls extends React.Component {
   render() {
@@ -32,6 +32,6 @@ export default class EditorModeControls extends React.Component {
           <FastForward />
         </NotebookTaskButton>
       </div>
-    )
+    );
   }
 }

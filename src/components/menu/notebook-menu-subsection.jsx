@@ -1,48 +1,48 @@
-import React from 'react'
-import MenuItem from 'material-ui/Menu/MenuItem'
+import React from 'react';
+import MenuItem from 'material-ui/Menu/MenuItem';
 import { ListItemText } from 'material-ui/List';
-import Menu from 'material-ui/Menu'
+import Menu from 'material-ui/Menu';
 
-import ChevronRight from 'material-ui-icons/ChevronRight'
+import ChevronRight from 'material-ui-icons/ChevronRight';
 
 export default class NotebookMenuSubsection extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = { anchorElement: null }
-    this.muiName = 'MenuItem'
-    this.handleClick = this.handleClick.bind(this)
-    this.handleClose = this.handleClose.bind(this)
+    super(props);
+    this.state = { anchorElement: null };
+    this.muiName = 'MenuItem';
+    this.handleClick = this.handleClick.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
   handleClick(event) {
-    event.stopPropagation()
+    event.stopPropagation();
     if (this.state.anchorElement === null) {
-      this.setState({ anchorElement: event.currentTarget })
+      this.setState({ anchorElement: event.currentTarget });
     }
   }
 
   handleClose() {
-    this.setState({ anchorElement: null })
+    this.setState({ anchorElement: null });
     document.querySelectorAll('div[class^="MuiBackdrop-"]').forEach((backdrop) => {
       backdrop.click();
-    })
+    });
   }
   render() {
-    const { anchorElement } = this.state
+    const { anchorElement } = this.state;
     const children = React.Children.map(
       this.props.children,
       (c) => {
-        if (c === null || c === undefined) return undefined
+        if (c === null || c === undefined) return undefined;
         return React.cloneElement(c, {
           onClick: () => {
             // this.handleClose()
-            if (this.props.onClick) this.props.onClick()
+            if (this.props.onClick) this.props.onClick();
             // document.querySelectorAll('div[class^="MuiBackdrop-"]').forEach((backdrop) => {
             //   backdrop.click();
             // })
           },
-        })
+        });
       },
-    )
+    );
     return (
       <React.Fragment>
         <MenuItem
@@ -75,6 +75,6 @@ export default class NotebookMenuSubsection extends React.Component {
           {children}
         </Menu>
       </React.Fragment>
-    )
+    );
   }
 }

@@ -1,7 +1,7 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import ViewModeToggleButton from './view-mode-toggle-button'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import ViewModeToggleButton from './view-mode-toggle-button';
 
 export class PresentationModeToolbarUnconnected extends React.Component {
   static propTypes = {
@@ -18,14 +18,14 @@ export class PresentationModeToolbarUnconnected extends React.Component {
         </div>
       </div>
 
-    )
+    );
   }
 }
 
 export function mapStateToProps(state) {
   return {
     viewMode: state.viewMode,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(PresentationModeToolbarUnconnected)
+export default connect(mapStateToProps)(PresentationModeToolbarUnconnected);

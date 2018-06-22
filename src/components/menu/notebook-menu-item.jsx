@@ -1,9 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import MenuItem from 'material-ui/Menu/MenuItem'
+import React from 'react';
+import PropTypes from 'prop-types';
+import MenuItem from 'material-ui/Menu/MenuItem';
 import { ListItemText } from 'material-ui/List';
-import UserTask from '../../actions/user-task'
-import ExternalLinkTask from '../../actions/external-link-task'
+import UserTask from '../../actions/user-task';
+import ExternalLinkTask from '../../actions/external-link-task';
 
 export default class NotebookMenuItem extends React.Component {
   static propTypes = {
@@ -18,13 +18,13 @@ export default class NotebookMenuItem extends React.Component {
   static muiName = 'MenuItem'
 
   constructor(props) {
-    super(props)
-    this.extraMenuProps = {}
+    super(props);
+    this.extraMenuProps = {};
     Object.keys(this.props).forEach((k) => {
       if (!['task', 'submenuOnClick', 'onClick'].includes(k)) {
-        this.extraMenuProps[k] = this.props[k]
+        this.extraMenuProps[k] = this.props[k];
       }
-    })
+    });
   }
 
   render() {
@@ -34,12 +34,12 @@ export default class NotebookMenuItem extends React.Component {
         classes={{ root: 'iodide-menu-item' }}
         key={this.props.task.title}
         onClick={() => {
-          this.props.task.callback()
-          if (this.props.onClick) this.props.onClick()
-          if (this.props.submenuOnClick) this.props.submenuOnClick()
+          this.props.task.callback();
+          if (this.props.onClick) this.props.onClick();
+          if (this.props.submenuOnClick) this.props.submenuOnClick();
           document.querySelectorAll('div[class^="MuiBackdrop-"]').forEach((backdrop) => {
-            backdrop.click()
-          })
+            backdrop.click();
+          });
           }}
       >
         <ListItemText
@@ -53,6 +53,6 @@ export default class NotebookMenuItem extends React.Component {
         />
 
       </MenuItem>
-    )
+    );
   }
 }

@@ -1,42 +1,42 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import _ from 'lodash'
-import nb from '../../tools/nb'
+import React from 'react';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+import nb from '../../tools/nb';
 
 function cellText(matrixLike, i, j) {
-  const [numRows, numCols] = nb.shape(matrixLike)
-  let text = ''
+  const [numRows, numCols] = nb.shape(matrixLike);
+  let text = '';
   if (_.isNumber(i) && _.isNumber(j)) {
-    text = nb.prettyFormatNumber(matrixLike[i][j], 6)
+    text = nb.prettyFormatNumber(matrixLike[i][j], 6);
   } else if (_.isString(i) && _.isString(j)) {
-    text = '⋱'
+    text = '⋱';
   } else if (_.isString(i) && (j === 0 || j === numCols - 1)) {
-    text = i
+    text = i;
   } else if (_.isString(j) && (i === 0 || i === numRows - 1)) {
-    text = j
+    text = j;
   }
-  return text
+  return text;
 }
 
 function makeMatrixText(matrixLike, maxDims) {
-  const [numRows, numCols] = nb.shape(matrixLike)
-  let rowInds
-  let colInds
+  const [numRows, numCols] = nb.shape(matrixLike);
+  let rowInds;
+  let colInds;
 
   if (numRows > maxDims[0]) {
-    const halfDim = Math.round(maxDims[0] / 2)
-    rowInds = _.range(0, halfDim).concat('⋮', _.range(numRows - halfDim, numRows))
+    const halfDim = Math.round(maxDims[0] / 2);
+    rowInds = _.range(0, halfDim).concat('⋮', _.range(numRows - halfDim, numRows));
   } else {
-    rowInds = _.range(numRows)
+    rowInds = _.range(numRows);
   }
   if (numCols > maxDims[1]) {
-    const halfDim = Math.round(maxDims[1] / 2)
-    colInds = _.range(0, halfDim).concat('⋯', _.range(numCols - halfDim, numCols))
+    const halfDim = Math.round(maxDims[1] / 2);
+    colInds = _.range(0, halfDim).concat('⋯', _.range(numCols - halfDim, numCols));
   } else {
-    colInds = _.range(numCols)
+    colInds = _.range(numCols);
   }
 
-  return rowInds.map(i => colInds.map(j => cellText(matrixLike, i, j)))
+  return rowInds.map(i => colInds.map(j => cellText(matrixLike, i, j)));
 }
 
 class PrettyMatrix extends React.Component {
@@ -45,42 +45,42 @@ class PrettyMatrix extends React.Component {
     maxDims: PropTypes.array,
   }
   constructor(props) {
-    super(props)
-    this.matrix = this.props.matrix
+    super(props);
+    this.matrix = this.props.matrix;
     this.maxDims = this.props.maxDims === undefined ? [10, 10] : this.props.maxDims;
-    [this.numRows, this.numCols] = nb.shape(this.matrix)
+    [this.numRows, this.numCols] = nb.shape(this.matrix);
   }
 
   cellText(i, j) {
-    let text = ''
+    let text = '';
     if (_.isNumber(i) && _.isNumber(j)) {
-      text = nb.prettyFormatNumber(this.matrix[i][j], 6)
+      text = nb.prettyFormatNumber(this.matrix[i][j], 6);
     } else if (_.isString(i) && _.isString(j)) {
-      text = '⋱'
+      text = '⋱';
     } else if (_.isString(i) && (j === 0 || j === this.numCols - 1)) {
-      text = i
+      text = i;
     } else if (_.isString(j) && (i === 0 || i === this.numRows - 1)) {
-      text = j
+      text = j;
     }
-    return text
+    return text;
   }
 
   render() {
-    const { maxDims, numRows, numCols } = this
-    let rowInds
-    let colInds
+    const { maxDims, numRows, numCols } = this;
+    let rowInds;
+    let colInds;
 
     if (numRows > maxDims[0]) {
-      const halfDim = Math.round(maxDims[0] / 2)
-      rowInds = _.range(0, halfDim).concat('⋮', _.range(numRows - halfDim, numRows))
+      const halfDim = Math.round(maxDims[0] / 2);
+      rowInds = _.range(0, halfDim).concat('⋮', _.range(numRows - halfDim, numRows));
     } else {
-      rowInds = _.range(numRows)
+      rowInds = _.range(numRows);
     }
     if (numCols > maxDims[1]) {
-      const halfDim = Math.round(maxDims[1] / 2)
-      colInds = _.range(0, halfDim).concat('⋯', _.range(numCols - halfDim, numCols))
+      const halfDim = Math.round(maxDims[1] / 2);
+      colInds = _.range(0, halfDim).concat('⋯', _.range(numCols - halfDim, numCols));
     } else {
-      colInds = _.range(numCols)
+      colInds = _.range(numCols);
     }
 
     /* eslint-disable */
@@ -121,4 +121,4 @@ class SimpleTable extends React.Component {
 }
 
 
-export { PrettyMatrix, SimpleTable, makeMatrixText }
+export { PrettyMatrix, SimpleTable, makeMatrixText };

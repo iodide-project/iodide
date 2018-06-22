@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const scalarHandler = {
   scalarTypes: {
@@ -12,6 +12,6 @@ const scalarHandler = {
   // TODO: This probably needs a new CSS class
     <span className="array-output">{value}</span>,
 
-}
+};
 
-export default scalarHandler
+export default scalarHandler;

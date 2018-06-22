@@ -1,15 +1,15 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import NotebookIconMenu from './icon-menu'
-import tasks from '../../actions/task-definitions'
-import NotebookMenuItem from './notebook-menu-item'
-import NotebookMenuDivider from './notebook-menu-divider'
+import NotebookIconMenu from './icon-menu';
+import tasks from '../../actions/task-definitions';
+import NotebookMenuItem from './notebook-menu-item';
+import NotebookMenuDivider from './notebook-menu-divider';
 
-import CellMenuSubsection from './cell-menu-subsection'
-import SavedNotebooksAndExamplesSubsection from './saved-notebooks-and-examples-subsection'
-import ViewModeToggleSubsection from './view-mode-toggle-subsection'
+import CellMenuSubsection from './cell-menu-subsection';
+import SavedNotebooksAndExamplesSubsection from './saved-notebooks-and-examples-subsection';
+import ViewModeToggleSubsection from './view-mode-toggle-subsection';
 
 export class EditorToolbarMenuUnconnected extends React.Component {
   static propTypes = {
@@ -41,15 +41,15 @@ export class EditorToolbarMenuUnconnected extends React.Component {
         <NotebookMenuItem task={tasks.fileAnIssue} />
       </NotebookIconMenu>
 
-    )
+    );
   }
 }
 
 export function mapStateToProps(state) {
-  const isAuthenticated = Boolean(state.userData.accessToken)
+  const isAuthenticated = Boolean(state.userData.accessToken);
   return {
     isAuthenticated,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(EditorToolbarMenuUnconnected)
+export default connect(mapStateToProps)(EditorToolbarMenuUnconnected);

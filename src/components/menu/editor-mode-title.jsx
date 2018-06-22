@@ -1,10 +1,10 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Helmet from 'react-helmet'
+import React from 'react';
+import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
-import tasks from '../../actions/task-definitions'
+import tasks from '../../actions/task-definitions';
 
 export class TitleUnconnected extends React.Component {
   static propTypes = {
@@ -14,27 +14,27 @@ export class TitleUnconnected extends React.Component {
     hoverColor: PropTypes.string,
   }
   constructor(props) {
-    super(props)
-    this.onBlur = this.onBlur.bind(this)
-    this.onFocus = this.onFocus.bind(this)
-    this.getTitle = this.getTitle.bind(this)
+    super(props);
+    this.onBlur = this.onBlur.bind(this);
+    this.onFocus = this.onFocus.bind(this);
+    this.getTitle = this.getTitle.bind(this);
   }
 
   onBlur() {
-    if (this.props.pageMode === 'title-edit') tasks.changeMode.callback('command')
+    if (this.props.pageMode === 'title-edit') tasks.changeMode.callback('command');
   }
 
   onFocus() {
     if (!this.props.pageMode !== 'title-edit') {
-      tasks.changeMode.callback('title-edit')
+      tasks.changeMode.callback('title-edit');
     }
   }
 
   getTitle() {
     if (this.props.pageMode !== 'title-edit') {
-      return `${this.props.title || 'New Notebook'} - Iodide`
+      return `${this.props.title || 'New Notebook'} - Iodide`;
     }
-    return undefined
+    return undefined;
   }
 
   render() {
@@ -52,14 +52,14 @@ export class TitleUnconnected extends React.Component {
             placeholder="new notebook"
             onChange={(evt) => {
               tasks.changeMode.callback('title-edit');
-              tasks.changeTitle.callback(evt.target.value)
+              tasks.changeTitle.callback(evt.target.value);
             }}
           />
         </div>
       </div>
 
-    )
-    return elem
+    );
+    return elem;
   }
 }
 
@@ -67,7 +67,7 @@ function mapStateToProps(state) {
   return {
     title: state.title,
     pageMode: state.mode,
-  }
+  };
 }
 
-export default connect(mapStateToProps)(TitleUnconnected)
+export default connect(mapStateToProps)(TitleUnconnected);
