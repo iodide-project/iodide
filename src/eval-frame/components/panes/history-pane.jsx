@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import SidePane from './side-pane'
-import tasks from '../../actions/task-definitions'
+import tasks from '../../actions/eval-frame-tasks'
 import HistoryItem from './history-item'
 
 export class HistoryPaneUnconnected extends React.Component {
