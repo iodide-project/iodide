@@ -7,7 +7,7 @@ import SidePane from './side-pane'
 
 import { DeclaredVariable } from './declared-variable'
 import { FrozenVariable } from './frozen-variable'
-import tasks from '../../actions/task-definitions'
+import tasks from '../../actions/eval-frame-tasks'
 
 
 export class DeclaredVariablesPaneUnconnected extends React.Component {

@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 
-import CellRow from './cell-row'
-import { CellContainer } from './cell-container'
+import OutputRow from './output-row'
+import { OutputContainer } from './output-container'
 
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
 
 
-export class MarkdownCellUnconnected extends React.Component {
+export class MarkdownOutputUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
     value: PropTypes.string,
@@ -18,14 +18,14 @@ export class MarkdownCellUnconnected extends React.Component {
 
   render() {
     return (
-      <CellContainer cellId={this.props.cellId}>
-        <CellRow cellId={this.props.cellId} rowType="output">
+      <OutputContainer cellId={this.props.cellId}>
+        <OutputRow cellId={this.props.cellId} rowType="output">
           <div
             className="user-markdown"
             dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
           />
-        </CellRow>
-      </CellContainer>
+        </OutputRow>
+      </OutputContainer>
     )
   }
 }
@@ -44,4 +44,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MarkdownCellUnconnected)
+export default connect(mapStateToProps, mapDispatchToProps)(MarkdownOutputUnconnected)
