@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography'
 import Resizable from 're-resizable'
 
 import UserTask from '../../../actions/user-task'
-import tasks from '../../actions/task-definitions'
+import tasks from '../../actions/eval-frame-tasks'
 
 const theme = createMuiTheme({
   palette: {

@@ -1,0 +1,141 @@
+html, body {
+  font-family: 'Open Sans', sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  background-color: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+div#page {
+  height: 100%;
+  overflow: hidden;
+}
+
+div#eval-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+div#eval-container.presentation-mode {
+  display: block;
+  overflow-y: auto;
+}
+
+div#cells.editor {
+  position: fixed;
+  left: 0px;
+  box-sizing: border-box;
+  height: 100%; /*subtract off .notebook-toolbar-container height*/
+  width: 100%;
+  overflow-y: auto;
+  padding-top: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 60px;
+}
+
+div#cells.presentation {
+  position: inherit;
+  height: inherit;
+}
+
+/************************************************/
+/* cell output styles */
+
+.data-set-info {
+  color: #888;
+  font-style: italic;
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+div.error-output {
+background: #fff1f4;
+padding: 5px;
+color: #a41c1c;
+overflow-x: auto;
+}
+
+div.promise-handler-state {
+  display:flex;
+  font-size:12px;
+  padding: 5px;
+  width: 180px;
+  background-color:#f9f9f9;
+  border: 1px solid #f1f1f1;
+  margin-top:2px;
+}
+
+div.promise-handler-label {
+  width: 80px;
+  padding-left:5px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+div.promise-handler-status {
+  width:100px;
+  padding-left:5px;
+  text-align:center;
+  font-style:italic;
+  color: rgb(40,40,40)
+}
+
+div.promise-handler-value {
+  margin-top:6px;
+}
+
+/************************************************/
+/* et cetera styles */
+
+div.iodide-tooltip {
+  font-size: 0.900rem;
+}
+
+.katex-html {
+  display: none;
+}
+
+.dependency-output {
+  padding-top: 10px;
+}
+
+.dependency-container {
+  margin-bottom: 6px;
+}
+
+.dependency-src {
+	font-size:13px;
+	margin: 3px 10px 3px 8px;
+
+}
+
+.dependency-src a {
+	color: black;	
+	font-weight:normal
+}
+
+.dependency-src a:hover {
+	text-decoration: underline
+}
+.dependency-status-explanation {
+  margin-left: 35px;
+  font-size: 11px;
+  color: red;
+  margin-top: -5px;
+}
+
+code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+}

@@ -2,12 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import CellRow from './cell-row'
-import { CellContainer } from './cell-container'
+import OutputRow from './output-row'
+import { OutputContainer } from './output-container'
 
 import { getCellById } from '../../tools/notebook-utils'
 
-export class CSSCellUnconnected extends React.Component {
+export class CSSOutputUnconnected extends React.Component {
   static propTypes = {
     cellId: PropTypes.number.isRequired,
     value: PropTypes.any,
@@ -16,13 +16,13 @@ export class CSSCellUnconnected extends React.Component {
 
   render() {
     return (
-      <CellContainer cellId={this.props.cellId}>
-        <CellRow cellId={this.props.cellId} rowType="input">
+      <OutputContainer cellId={this.props.cellId}>
+        <OutputRow cellId={this.props.cellId} rowType="input">
           <style>
             {this.props.rendered && this.props.value}
           </style>
-        </CellRow>
-      </CellContainer>
+        </OutputRow>
+      </OutputContainer>
     )
   }
 }
@@ -37,4 +37,4 @@ export function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps)(CSSCellUnconnected)
+export default connect(mapStateToProps)(CSSOutputUnconnected)

@@ -5,8 +5,7 @@ import { createLogger } from 'redux-logger'
 
 import createValidatedReducer from './reducers/create-validated-reducer'
 import reducer from './reducers/reducer'
-import { initializeNotebook } from './initialize-notebook'
-import { stateSchema } from './state-prototypes'
+import { stateSchema, newNotebook } from './state-prototypes'
 import { evaluateAllCells } from './actions/actions'
 
 let enhancer
@@ -28,7 +27,7 @@ if (IODIDE_BUILD_MODE === 'dev' || IODIDE_BUILD_MODE === 'devperf') {
   enhancer = applyMiddleware(thunk)
 }
 
-const initialState = initializeNotebook()
+const initialState = newNotebook()
 
 const store = createStore(finalReducer, initialState, enhancer)
 

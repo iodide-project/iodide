@@ -1,5 +1,5 @@
 import Mousetrap from 'mousetrap'
-import tasks from './actions/task-definitions'
+import tasks from './actions/eval-frame-tasks'
 // for now, let's just keep the keybindings here.
 
 Mousetrap.prototype.stopCallback = () => false
