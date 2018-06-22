@@ -19,7 +19,6 @@ import './style/default-presentation.css'
 
 import EvalContainer from './components/eval-container'
 import { store } from './store'
-import handleUrlQuery from './tools/handle-url-query'
 
 import { iodide } from './iodide-api/api'
 
@@ -55,5 +54,3 @@ render(
   </Provider>,
   document.getElementById('page'),
 )
-
-handleUrlQuery()
