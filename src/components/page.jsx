@@ -108,7 +108,7 @@ class Page extends React.Component {
               left: false,
             }}
             handleClasses={{ right: 'resizer' }}
-            maxWidth={800}
+            maxWidth="100%"
             minWidth={300}
             defaultSize={{ width: '60%', height: '100%' }}
           >
@@ -119,7 +119,7 @@ class Page extends React.Component {
               {bodyContent}
             </div>
           </Resizable>
-          <div style={{ flexGrow: '1' }}><EvalFrame /></div>
+          <div style={{ flexGrow: '1', minWidth: '300px' }}><EvalFrame /></div>
         </div>
         <AppMessages />
       </div>
