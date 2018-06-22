@@ -33,7 +33,7 @@ export class EvalFrameUnconnected extends React.Component {
   render() {
     return (
       <iframe
-        src={`iodide.eval-frame.${IODIDE_VERSION}.html`}
+        src={`iodide.eval-frame.${IODIDE_VERSION}.html?sessionId=${window.IODIDE_SESSION_ID}&editorOrigin=${window.location.origin}`}
         width="100%"
         height="100%"
         className="eval-frame"

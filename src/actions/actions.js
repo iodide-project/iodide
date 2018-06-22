@@ -4,7 +4,8 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 
 import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
-import { postDispatchToEvalContext, postTypedMessageToEvalContext } from '../tools/message-passing'
+import { postMessageToEvalFrame } from '../port-to-eval-frame'
+
 import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
 
@@ -12,14 +13,6 @@ const MD = MarkdownIt({ html: true })
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const CodeMirror = require('codemirror') // eslint-disable-line
-
-
-export function temporarilySaveRunningCellID(cellID) {
-  return {
-    type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',
-    cellID,
-  }
-}
 
 export function updateAppMessages(messageObj) {
   //     message.when = (new Date()).toString()
@@ -34,30 +27,11 @@ export function updateAppMessages(messageObj) {
   }
 }
 
-export function enqueueOrPostDispatchToEvalContext(actionToPost) {
-  return (dispatch, getState) => {
-    if (getState().evalFrameReady) {
-      postDispatchToEvalContext(JSON.stringify(actionToPost))
-    } else {
-      dispatch({
-        type: 'ADD_TO_EVAL_FRAME_MESSAGE_QUEUE',
-        actionToPost: JSON.stringify(actionToPost),
-      })
-    }
-  }
-}
 
 export function importNotebook(newState) {
-  return (dispatch, getState) => {
-    console.log('importNotebook')
-    dispatch({
-      type: 'IMPORT_NOTEBOOK',
-      newState,
-    })
-    dispatch(enqueueOrPostDispatchToEvalContext({
-      type: 'UPDATE_CELL_LIST',
-      cells: getState().cells,
-    }))
+  return {
+    type: 'IMPORT_NOTEBOOK',
+    newState,
   }
 }
 
@@ -150,26 +124,6 @@ export function changeCellType(cellType, language = 'js') {
   }
 }
 
-export function appendToEvalHistory(cellId, content) {
-  return {
-    type: 'APPEND_TO_EVAL_HISTORY',
-    cellId,
-    content,
-  }
-}
-
-export function incrementExecutionNumber() {
-  return {
-    type: 'INCREMENT_EXECUTION_NUMBER',
-  }
-}
-
-export function updateUserVariables() {
-  return {
-    type: 'UPDATE_USER_VARIABLES',
-  }
-}
-
 // note: this function is NOT EXPORTED. It is a private function meant
 // to be wrapped by other actions that will configure and dispatch it.
 export function updateCellProperties(cellId, updatedProperties) {
@@ -182,17 +136,14 @@ export function updateCellProperties(cellId, updatedProperties) {
 
 export function evaluateCell(cellId) {
   return (dispatch, getState) => {
-    // let evaluation
     let cell
     if (cellId === undefined) {
       cell = getSelectedCell(getState())
     } else {
       cell = getCellById(getState().cells, cellId)
     }
-    // here is where we should mark a cell as PENDING.
-    // console.log(cell)
-
-    postTypedMessageToEvalContext('UPDATE_CELL_AND_EVAL', JSON.stringify(cell))
+    dispatch(updateCellProperties(cell.id, cell))
+    postMessageToEvalFrame('TRIGGER_CELL_EVAL', cell.id)
   }
 }
 
@@ -229,12 +180,8 @@ export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId)
 }
 
 export function markCellNotRendered() {
-  return (dispatch) => {
-    const actionObj = {
-      type: 'MARK_CELL_NOT_RENDERED',
-    }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
-    dispatch(actionObj)
+  return {
+    type: 'MARK_CELL_NOT_RENDERED',
   }
 }
 
@@ -335,67 +282,43 @@ export function exportGist() {
 }
 
 export function cellUp() {
-  return (dispatch) => {
-    const actionObj = {
-      type: 'CELL_UP',
-    }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
-    dispatch(actionObj)
+  return {
+    type: 'CELL_UP',
   }
 }
 
 export function cellDown() {
-  return (dispatch) => {
-    const actionObj = {
-      type: 'CELL_DOWN',
-    }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
-    dispatch(actionObj)
+  return {
+    type: 'CELL_DOWN',
   }
 }
 
 export function insertCell(cellType, direction) {
-  return (dispatch) => {
-    const actionObj = {
-      type: 'INSERT_CELL',
-      cellType,
-      direction,
-    }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
-    dispatch(actionObj)
+  return {
+    type: 'INSERT_CELL',
+    cellType,
+    direction,
   }
 }
 
 export function addCell(cellType) {
-  return (dispatch) => {
-    const actionObj = {
-      type: 'ADD_CELL',
-      cellType,
-    }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
-    dispatch(actionObj)
+  return {
+    type: 'ADD_CELL',
+    cellType,
   }
 }
 
 export function selectCell(cellID, scrollToCell = false) {
-  return (dispatch) => {
-    const actionObj = {
-      type: 'SELECT_CELL',
-      id: cellID,
-      scrollToCell,
-    }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
-    dispatch(actionObj)
+  return {
+    type: 'SELECT_CELL',
+    id: cellID,
+    scrollToCell,
   }
 }
 
 export function deleteCell() {
-  return (dispatch) => {
-    const actionObj = {
-      type: 'DELETE_CELL',
-    }
-    dispatch(enqueueOrPostDispatchToEvalContext(actionObj))
-    dispatch(actionObj)
+  return {
+    type: 'DELETE_CELL',
   }
 }
 

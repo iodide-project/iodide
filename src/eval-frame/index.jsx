@@ -24,31 +24,9 @@ import handleUrlQuery from './tools/handle-url-query'
 
 import { iodide } from './iodide-api/api'
 
-import { updateCellAndEval } from './actions/actions'
+import './port-to-editor'
 
 window.iodide = iodide
-
-function receiveMessage(event) {
-  console.log(event)
-  const trustedMessage = true
-  if (trustedMessage) {
-    const { messageType, message } = JSON.parse(event.data)
-    switch (messageType) {
-      case 'PARENT_DISPATCH':
-        store.dispatch(JSON.parse(message))
-        break
-      case 'UPDATE_CELL_AND_EVAL':
-        store.dispatch(updateCellAndEval(JSON.parse(message)))
-        break
-      default:
-        console.log('unknown messageType', message)
-    }
-  }
-}
-
-window.addEventListener('message', receiveMessage, false)
-console.log('eval-frame ready for messages')
-window.parent.postMessage('EVAL_FRAME_READY', '*')
 
 render(
   <Provider store={store}>

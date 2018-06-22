@@ -1,3 +1,4 @@
+import '../../store'
 import notebookReducer from '../notebook-reducer'
 import { newNotebook, blankState, addNewCellToState } from '../../state-prototypes'
 import {

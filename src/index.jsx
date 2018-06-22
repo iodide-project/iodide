@@ -21,25 +21,13 @@ import './style/default-presentation.css'
 import Page from './components/page'
 import { store } from './store'
 import handleUrlQuery from './tools/handle-url-query'
+import { createSessionId } from './tools/create-session-id'
 
-export function receiveMessage(event) {
-  console.log(event)
-  const trustedMessage = true
-  if (trustedMessage) {
-    // const { messageType, message } = JSON.parse()
-    console.log('parent got message', event)
-    switch (event.data) {
-      case 'EVAL_FRAME_READY':
-        console.log('parent ack EVAL_FRAME_READY')
-        store.dispatch({ type: 'EVAL_FRAME_READY' })
-        break
-      default:
-        console.log('unknown messageType', event.data)
-    }
-  }
-}
+import { listenForEvalFramePortReady } from './port-to-eval-frame'
 
-window.addEventListener('message', receiveMessage, false)
+window.IODIDE_SESSION_ID = createSessionId()
+
+window.addEventListener('message', listenForEvalFramePortReady, false)
 
 render(
   <Provider store={store}>
