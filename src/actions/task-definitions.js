@@ -281,7 +281,7 @@ tasks.exportNotebookAsReport = new UserTask({
 })
 
 tasks.exportNotebookToClipboard = new UserTask({
-  title: 'Export Notebook to clipboard',
+  title: 'Export Notebook to Clipboard',
   callback() {
     dispatcher.exportNotebook(false, true)
     dispatcher.updateAppMessages({ message: 'Notebook copied to clipboard' })
