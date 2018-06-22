@@ -18,8 +18,6 @@ class EvalContainer extends React.Component {
   static propTypes = {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     actions: PropTypes.shape({
-      deleteNotebook: PropTypes.func.isRequired,
-      saveNotebook: PropTypes.func.isRequired,
       changeMode: PropTypes.func.isRequired,
     }).isRequired,
     title: PropTypes.string,
@@ -45,12 +43,9 @@ class EvalContainer extends React.Component {
   }
 
   render() {
-    // console.log('Page rendered')
     const bodyContent = this.props.cellIds.map((id, i) => {
-      // let id = cell.id
       switch (this.props.cellTypes[i]) {
         case 'code':
-        // return <JavascriptCell cellId={id} key={id}/>
           return <CodeOutput cellId={id} key={id} />
         case 'markdown':
           return <MarkdownOutput cellId={id} key={id} />
