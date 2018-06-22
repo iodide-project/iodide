@@ -124,26 +124,6 @@ export function changeCellType(cellType, language = 'js') {
   }
 }
 
-export function appendToEvalHistory(cellId, content) {
-  return {
-    type: 'APPEND_TO_EVAL_HISTORY',
-    cellId,
-    content,
-  }
-}
-
-export function incrementExecutionNumber() {
-  return {
-    type: 'INCREMENT_EXECUTION_NUMBER',
-  }
-}
-
-export function updateUserVariables() {
-  return {
-    type: 'UPDATE_USER_VARIABLES',
-  }
-}
-
 // note: this function is NOT EXPORTED. It is a private function meant
 // to be wrapped by other actions that will configure and dispatch it.
 export function updateCellProperties(cellId, updatedProperties) {
