@@ -12,7 +12,6 @@ export default class UserButton extends React.Component {
   }
 
   render() {
-    console.log('hi');
     if (!this.props.isAuthenticated) {
       return (
         <NotebookTaskButton task={tasks.logoutGithub}>
