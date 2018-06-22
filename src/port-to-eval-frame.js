@@ -10,18 +10,13 @@ export function postActionToEvalFrame(actionObj) {
   postMessageToEvalFrame('REDUX_ACTION', actionObj)
 }
 
-
-export function listenForEvalFramePortReady(messageEvent) {
+export const listenForEvalFramePortReady = (messageEvent) => {
   console.log('listenForEvalFramePortReady', messageEvent.data)
-  if (typeof messageEvent.data === 'string') {
-    if (messageEvent.data.split('|')[1] === window.IODIDE_SESSION_ID) {
-      portToEvalFrame = messageEvent.ports[0] /* eslint-disable-line prefer-destructuring */
-    }
+  if (typeof messageEvent.data === 'string'
+    && messageEvent.data.split('|')[1] === window.IODIDE_SESSION_ID) {
+    portToEvalFrame = messageEvent.ports[0] /* eslint-disable-line prefer-destructuring */
     store.dispatch({ type: 'EVAL_FRAME_READY' })
-    postMessageToEvalFrame('TEST_MESSAGE', 'asdfasfrejnlrnl')
+    // stop listening for messages once a connection to the eval-frame is made
+    window.removeEventListener('message', listenForEvalFramePortReady, false)
   }
-
-
-  // this works:
-  // postMessageToEvalFrame('REDUX_ACTION', { type: 'SET_VIEW_MODE', viewMode: 'presentation' })
 }
