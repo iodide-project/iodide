@@ -47,29 +47,6 @@ div#cells.presentation div.cell-row.input {
   padding:0px;
 }
 
-.cell-menu-container {
-    width: 76px;
-    font-size:12px;
-    flex-shrink: 0;
-    flex-grow: 0;
-}
-
-.cell-type-label {
-  text-align: right;
-  color: hsl(275, 12%, 75%);
-  cursor: pointer;
-  height: 18px;
-  border: 1px solid rgba(0,0,0,0);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-.cell-type-label:hover {
-  background: #fbfbfb;
-  border: 1px solid #ddd;
-  color: hsl(275, 4%, 40%);
-}
-
 .cell-status-indicators {
     text-align: right;
     padding-right: 6px;
@@ -85,16 +62,6 @@ div#cells.presentation div.cell-row.input {
     border-radius: 3px;
     display: inline-block;
 }
-
-.cell-status-icons {
-    text-align: right;
-    padding: 0px 6px 0px 0px;
-}
-
-.cell-status-icons svg {
-    fill: hsl(275, 12%, 75%);
-}
-
 
 div.cell-row-container {
   width: calc(100% - 76px); /* 100% minus cell-menu-contatiner width*/
@@ -176,26 +143,6 @@ div.selected-cell {
   outline: 2px solid #ccc;
 }
 
-div.CodeMirror {
-  background: #f9f9f9;
-}
-
-div.CodeMirror-gutters {
-  background: #fff;
-}
-
-div.VISIBLE div.main-component div.CodeMirror {
-  height: auto
-}
-
-div.SCROLL div.main-component div.CodeMirror {
-  height: auto;
-}
-
-div.SCROLL div.main-component div.CodeMirror div.CodeMirror-scroll {
-  max-height: 300px;
-}
-
 div.SCROLL.output .main-component {
   max-height: 300px;
   outline: 1px solid #ddd;
@@ -207,11 +154,6 @@ div.SCROLL.output .main-component {
 div.hidden-cell {
   display: none;
 }
-
-.cm-s-eclipse .CodeMirror-matchingbracket {
-  outline: 1px dotted #000;
-}
-
 
 .dependency-row {
   display: flex;

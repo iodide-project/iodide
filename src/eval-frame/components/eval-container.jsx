@@ -70,7 +70,7 @@ class EvalContainer extends React.Component {
 
     return (
       <div
-        id="notebook-container"
+        id="eval-container"
         className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
       >
         <div
