@@ -7,9 +7,9 @@ import PropTypes from 'prop-types';
 import HistoryIcon from 'material-ui-icons/History'
 import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
 import InfoIcon from 'material-ui-icons/InfoOutline'
-import AccountCircle from 'material-ui-icons/AccountCircle'
 
 import NotebookTaskButton from './notebook-task-button'
+import UserButton from './user-button'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
 import DeclaredVariablesPane from '../panes/declared-variables-pane'
@@ -25,19 +25,6 @@ export class ViewControlsUnconnected extends React.Component {
   }
 
   render() {
-    const loginItem = this.props.isAuthenticated ?
-      (
-        <NotebookTaskButton task={tasks.logoutGithub}>
-          <img src={this.props.avatar} alt="" className="user-avatar" />
-        </NotebookTaskButton>
-      )
-      :
-      (
-        <NotebookTaskButton task={tasks.loginGithub}>
-          <AccountCircle />
-        </NotebookTaskButton>
-      )
-
     return (
       <div className="view-controls">
         <LastSavedText />
@@ -59,7 +46,7 @@ export class ViewControlsUnconnected extends React.Component {
         <HistoryPane />
         <AppInfoPane />
 
-        {IODIDE_BUILD_MODE === 'heroku' && (loginItem)}
+        {IODIDE_BUILD_MODE === 'heroku' && (<UserButton isAuthenticated={this.props.isAuthenticated} />)}
 
         <ViewModeToggleButton />
 

@@ -31,7 +31,7 @@ function receiveMessage(event) {
 
 const mc = new MessageChannel();
 
-window.parent.postMessage(`EVAL_FRAME_PORT_READY|${IODIDE_SESSION_ID}`, editorOrigin, [mc.port2]);
+window.parent.postMessage(IODIDE_SESSION_ID, editorOrigin, [mc.port2]);
 
 const portToEditor = mc.port1
 
