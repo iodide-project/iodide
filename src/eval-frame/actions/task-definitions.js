@@ -1,5 +1,5 @@
-import UserTask from './user-task'
-import ExternalLinkTask from './external-link-task'
+import UserTask from '../../actions/user-task'
+import ExternalLinkTask from '../../actions/external-link-task'
 import { store } from '../store'
 import * as actions from './actions'
 import {

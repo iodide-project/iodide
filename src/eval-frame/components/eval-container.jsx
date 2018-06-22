@@ -14,7 +14,7 @@ import PluginDefinitionCell from './cells/plugin-definition-cell'
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
 
-class Page extends React.Component {
+class EvalContainer extends React.Component {
   static propTypes = {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     actions: PropTypes.shape({
@@ -103,4 +103,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Page)
+export default connect(mapStateToProps, mapDispatchToProps)(EvalContainer)

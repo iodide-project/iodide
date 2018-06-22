@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import { getCellById } from '../../tools/notebook-utils'
-import { ValueRenderer } from '../reps/value-renderer'
+import { ValueRenderer } from '../../../components/reps/value-renderer'
 
 export class CellOutputUnconnected extends React.Component {
   static propTypes = {

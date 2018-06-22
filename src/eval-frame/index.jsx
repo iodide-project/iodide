@@ -14,13 +14,11 @@ import '../../node_modules/katex/dist/katex.min.css'
 // iodide styles
 import './style/page.css'
 import './style/side-panes.css'
-import './style/menu-styles.css'
 import './style/cell-styles.css'
 import './style/default-presentation.css'
 
-import Page from './components/page'
+import EvalContainer from './components/eval-container'
 import { store } from './store'
-import handleUrlQuery from './tools/handle-url-query'
 
 import { iodide } from './iodide-api/api'
 
@@ -30,9 +28,7 @@ window.iodide = iodide
 
 render(
   <Provider store={store}>
-    <Page />
+    <EvalContainer />
   </Provider>,
   document.getElementById('page'),
 )
-
-handleUrlQuery()

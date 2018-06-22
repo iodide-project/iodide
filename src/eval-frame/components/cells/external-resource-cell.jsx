@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import CellRow from './cell-row'
 import { CellContainer } from './cell-container'
-import ExternalResourceOutputHandler from '../reps/output-handler-external-resource'
+import ExternalResourceOutputHandler from '../../../components/reps/output-handler-external-resource'
 
 import { getCellById } from '../../tools/notebook-utils'
 

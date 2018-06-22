@@ -5,7 +5,7 @@ import { shallow } from 'enzyme'
 import { ExternalResourceCellUnconnected as ExternalResourceCell } from '../external-resource-cell'
 import { CellContainer } from '../cell-container'
 import CellRow from '../cell-row'
-import ExternalResourceOutput from '../../reps/output-handler-external-resource'
+import ExternalResourceOutput from '../../../../components/reps/output-handler-external-resource'
 
 const STANDARD_NETWORK_ERROR = 'A network error occurred.'
 

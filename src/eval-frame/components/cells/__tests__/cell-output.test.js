@@ -2,7 +2,7 @@ import { shallow } from 'enzyme'
 import React from 'react'
 
 import { CellOutputUnconnected, mapStateToProps } from '../cell-output'
-import { ValueRenderer } from '../../reps/value-renderer'
+import { ValueRenderer } from '../../../../components/reps/value-renderer'
 
 describe('CellOutputUnconnected React component', () => {
   let props
