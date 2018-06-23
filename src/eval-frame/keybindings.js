@@ -13,7 +13,3 @@ export function initializeDefaultKeybindings() {
     }
   })
 }
-
-export function addLanguageKeybinding(keys, callback) {
-  Mousetrap.bind(keys, callback)
-}

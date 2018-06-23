@@ -2,15 +2,19 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
-import { getCellById, isCommandMode } from '../tools/notebook-utils'
+import {
+  getCellById,
+  // isCommandMode
+} from '../tools/notebook-utils'
 import {
   addExternalDependency,
   getSelectedCell,
 } from '../reducers/cell-reducer-utils'
 
 import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
+import { postActionToEditor } from '../port-to-editor'
 
-import { addLanguageKeybinding } from '../keybindings'
+// import { addLanguageKeybinding } from '../keybindings'
 
 let evaluationQueue = Promise.resolve()
 
@@ -26,106 +30,6 @@ export function temporarilySaveRunningCellID(cellID) {
   }
 }
 
-export function updateAppMessages(message) {
-  return {
-    type: 'UPDATE_APP_MESSAGES',
-    message,
-  }
-}
-
-export function importNotebook(newState) {
-  return {
-    type: 'IMPORT_NOTEBOOK',
-    newState,
-  }
-}
-
-export function importFromURL(importedState) {
-  return (dispatch) => {
-    dispatch(importNotebook(importedState))
-    return Promise.resolve()
-  }
-}
-
-export function exportNotebook(exportAsReport = false) {
-  return {
-    type: 'EXPORT_NOTEBOOK',
-    exportAsReport,
-  }
-}
-
-export function saveNotebook(autosave = false) {
-  return {
-    type: 'SAVE_NOTEBOOK',
-    autosave,
-  }
-}
-
-export function loadNotebook(title) {
-  return {
-    type: 'LOAD_NOTEBOOK',
-    title,
-  }
-}
-
-export function deleteNotebook(title) {
-  return {
-    type: 'DELETE_NOTEBOOK',
-    title,
-  }
-}
-
-export function newNotebook() {
-  return {
-    type: 'NEW_NOTEBOOK',
-  }
-}
-
-export function clearVariables() {
-  return {
-    type: 'CLEAR_VARIABLES',
-  }
-}
-
-export function changePageTitle(title) {
-  return {
-    type: 'CHANGE_PAGE_TITLE',
-    title,
-  }
-}
-
-export function changeMode(mode) {
-  return {
-    type: 'CHANGE_MODE',
-    mode,
-  }
-}
-
-export function setViewMode(viewMode) {
-  return {
-    type: 'SET_VIEW_MODE',
-    viewMode,
-  }
-}
-
-export function updateInputContent(text) {
-  return {
-    type: 'UPDATE_INPUT_CONTENT',
-    content: text,
-  }
-}
-
-export function changeCellType(cellType, language = 'js') {
-  return (dispatch, getState) => {
-    if (isCommandMode(getState())) {
-      dispatch({
-        type: 'CHANGE_CELL_TYPE',
-        cellType,
-        language,
-      })
-    }
-  }
-}
 
 export function appendToEvalHistory(cellId, content) {
   return {
@@ -249,12 +153,12 @@ function evaluateCSSCell(cell) {
   }
 }
 
-export function addLanguage(languageDefinition) {
-  return {
-    type: 'ADD_LANGUAGE',
-    languageDefinition,
-  }
-}
+// export function addLanguage(languageDefinition) {
+//   return {
+//     type: 'ADD_LANGUAGE',
+//     languageDefinition,
+//   }
+// }
 
 function evaluateLanguagePluginCell(cell) {
   return (dispatch) => {
@@ -276,7 +180,11 @@ function evaluateLanguagePluginCell(cell) {
       dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
     } else {
       const {
-        url, keybinding, languageId, displayName,
+        url,
+        // keybinding,
+        // languageId,
+        // codeMirrorMode,
+        displayName,
       } = pluginData
 
       languagePluginPromise = new Promise((resolve, reject) => {
@@ -307,16 +215,17 @@ function evaluateLanguagePluginCell(cell) {
           pr.then(() => {
             value = `${displayName} plugin ready`
             evalStatus = 'SUCCESS'
-            dispatch(addLanguage(pluginData))
-            // FIXME: adding the keybinding move to a reducer ideally, but since it mutates
-            // a part of global state in a snowflake sideffect-ish way, and since it
-            // needs `dispatch` we'll do it here.
-            if (keybinding.length === 1 && (typeof keybinding === 'string')) {
-              addLanguageKeybinding(
-                [keybinding],
-                () => dispatch(changeCellType('code', languageId)),
-              )
-            }
+            postActionToEditor({
+              type: 'ADD_LANGUAGE',
+              languageDefinition: pluginData,
+            })
+            // FIXME: need to pass keybinding info up to editor
+            // if (keybinding.length === 1 && (typeof keybinding === 'string')) {
+            // addLanguageKeybinding(
+            //   [keybinding],
+            //   () => dispatch(changeCellType('code', languageId)),
+            // )
+            // }
             dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
             resolve()
           })
@@ -365,33 +274,13 @@ export function evaluateCell(cellId) {
         evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
         evaluation = evaluationQueue
       } else {
-        evaluation = dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
+        // evaluation =
+        // dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
       }
     } else {
       cell.rendered = false
     }
     return evaluation
-  }
-}
-
-export function evaluateAllCells(cells) {
-  return (dispatch) => {
-    let p = Promise.resolve()
-    cells.forEach((cell) => {
-      if (cell.cellType === 'css' && !cell.skipInRunAll) {
-        p = p.then(() => dispatch(evaluateCell(cell.id)))
-      }
-    })
-    cells.forEach((cell) => {
-      if (cell.cellType === 'markdown' && !cell.skipInRunAll) {
-        p = p.then(() => dispatch(evaluateCell(cell.id)))
-      }
-    })
-    cells.forEach((cell) => {
-      if (cell.cellType !== 'markdown' && cell.cellType !== 'css' && !cell.skipInRunAll) {
-        p = p.then(() => dispatch(evaluateCell(cell.id)))
-      }
-    })
   }
 }
 
@@ -402,7 +291,16 @@ export function updateCellAndEval(cellState) {
   }
 }
 
+export function saveEnvironment(updateObj, update) {
+  return {
+    type: 'SAVE_ENVIRONMENT',
+    updateObj,
+    update,
+  }
+}
 
+// eval-frame retains a copy of this to manage its own row collapse state, which
+// the editor doesn't really need to care about
 export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId) {
   return {
     type: 'SET_CELL_ROW_COLLAPSE_STATE',
@@ -413,98 +311,3 @@ export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId)
   }
 }
 
-export function markCellNotRendered() {
-  return {
-    type: 'MARK_CELL_NOT_RENDERED',
-  }
-}
-
-export function cellUp() {
-  return {
-    type: 'CELL_UP',
-  }
-}
-
-export function cellDown() {
-  return {
-    type: 'CELL_DOWN',
-  }
-}
-
-export function insertCell(cellType, direction) {
-  return {
-    type: 'INSERT_CELL',
-    cellType,
-    direction,
-  }
-}
-
-export function addCell(cellType) {
-  return {
-    type: 'ADD_CELL',
-    cellType,
-  }
-}
-
-export function selectCell(cellID, scrollToCell = false) {
-  return {
-    type: 'SELECT_CELL',
-    id: cellID,
-    scrollToCell,
-  }
-}
-
-export function deleteCell() {
-  return {
-    type: 'DELETE_CELL',
-  }
-}
-
-export function changeElementType(elementType) {
-  return {
-    type: 'CHANGE_ELEMENT_TYPE',
-    elementType,
-  }
-}
-
-export function changeDOMElementID(elemID) {
-  return {
-    type: 'CHANGE_DOM_ELEMENT_ID',
-    elemID,
-  }
-}
-
-export function changeSidePaneMode(mode) {
-  return {
-    type: 'CHANGE_SIDE_PANE_MODE',
-    mode,
-  }
-}
-
-export function changeSidePaneWidth(widthShift) {
-  return {
-    type: 'CHANGE_SIDE_PANE_WIDTH',
-    widthShift,
-  }
-}
-
-export function setCellSkipInRunAll(value) {
-  return (dispatch, getState) => {
-    let setValue = value
-    if (setValue === undefined) {
-      setValue = !getSelectedCell(getState()).skipInRunAll
-    }
-    dispatch(updateCellProperties(
-      getSelectedCell(getState()).id,
-      { skipInRunAll: setValue },
-    ))
-  }
-}
-
-export function saveEnvironment(updateObj, update) {
-  return {
-    type: 'SAVE_ENVIRONMENT',
-    updateObj,
-    update,
-  }
-}

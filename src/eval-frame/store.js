@@ -6,7 +6,6 @@ import { createLogger } from 'redux-logger'
 import createValidatedReducer from './reducers/create-validated-reducer'
 import reducer from './reducers/reducer'
 import { stateSchema, newNotebook } from './state-prototypes'
-import { evaluateAllCells } from './actions/actions'
 
 let enhancer
 let finalReducer
@@ -30,8 +29,6 @@ if (IODIDE_BUILD_MODE === 'dev' || IODIDE_BUILD_MODE === 'devperf') {
 const initialState = newNotebook()
 
 const store = createStore(finalReducer, initialState, enhancer)
-
-if (initialState.viewMode === 'presentation') { store.dispatch(evaluateAllCells(store.getState().cells, store)) }
 
 const { dispatch } = store
 
