@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
 import { cellTypeEnum } from '../../state-prototypes'
+import { postActionToEditor } from '../../port-to-editor'
+
 
 export class OutputContainerUnconnected extends React.Component {
   static propTypes = {
@@ -13,33 +15,24 @@ export class OutputContainerUnconnected extends React.Component {
     cellId: PropTypes.number.isRequired,
     children: PropTypes.node,
     editingCell: PropTypes.bool.isRequired,
-    // pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
-    actions: PropTypes.shape({
-      selectCell: PropTypes.func.isRequired,
-    }).isRequired,
   }
-
-  // shouldComponentUpdate(nextProps) {
-  //   return (
-  //     this.props.selected !== nextProps.selected ||
-  //     this.props.pageMode !== nextProps.pageMode ||
-  //     this.props.cellType !== nextProps.cellType
-  //   )
-  // }
 
   handleCellClick = () => {
     if (this.props.viewMode === 'editor') {
       const scrollToCell = false
       if (!this.props.selected) {
-        this.props.actions.selectCell(this.props.cellId, scrollToCell)
+        postActionToEditor({
+          type: 'SELECT_CELL',
+          id: this.props.cellId,
+          scrollToCell,
+        })
       }
     }
   }
 
   render() {
-    // console.log(`CellContainer rendered: ${this.props.cellId}`)
     const cellClass = `cell-container ${
       this.props.cellType
     }${
@@ -80,6 +73,5 @@ export function mapDispatchToProps(dispatch) {
   }
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Page)
 const OutputContainerConnected = connect(mapStateToProps, mapDispatchToProps)(OutputContainerUnconnected) // eslint-disable-line
 export { OutputContainerConnected as OutputContainer }
