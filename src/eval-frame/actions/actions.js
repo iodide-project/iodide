@@ -23,6 +23,13 @@ MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const CodeMirror = require('codemirror') // eslint-disable-line
 
+export function newNotebook() {
+  // we still need this for some tests to work, even though it's not really used
+  return {
+    type: 'NEW_NOTEBOOK',
+  }
+}
+
 export function temporarilySaveRunningCellID(cellID) {
   return {
     type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',

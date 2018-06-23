@@ -2,9 +2,10 @@ import { shallow } from 'enzyme'
 import React from 'react'
 
 import { OutputContainerUnconnected, mapStateToProps } from '../output-container'
+import { postActionToEditor } from '../../../port-to-editor'
 
 describe('OutputContainerUnconnected React component', () => {
-  let selectCell
+  let postActionToEditorMock
   let props
   let mc
   const node = <span>Hello</span>
@@ -17,14 +18,14 @@ describe('OutputContainerUnconnected React component', () => {
   }
 
   beforeEach(() => {
-    selectCell = jest.fn()
+    postActionToEditorMock = jest.fn()
     props = {
       selected: true,
       cellId: 1,
       editingCell: true,
       viewMode: 'editor',
       cellType: 'code',
-      actions: { selectCell },
+      postActionToEditor: postActionToEditorMock,
     }
     mc = undefined
   })
@@ -77,25 +78,31 @@ describe('OutputContainerUnconnected React component', () => {
   })
 
   it('mouse down on cell container div fires selectCell with correct props', () => {
+    // const spy = jest.spyOn(global.MessageChannel.prototype.port1, 'postMessage')
     props.viewMode = 'editor'
     props.selected = false
     outputContainer().simulate('mousedown')
-    expect(selectCell.mock.calls.length).toBe(1)
-    expect(selectCell.mock.calls[0].length).toBe(2)
+    // expect(spy).toHaveBeenCalled()
+    expect(postActionToEditorMock.mock.calls.length).toBe(1)
+    expect(postActionToEditorMock.mock.calls[0][0]).toEqual({
+      type: 'SELECT_CELL',
+      id: 1,
+      scrollToCell: false,
+    })
   })
 
-  const selectCellNotFiredVariants = [
+  const postActionToEditorNotFiredVariants = [
     { selected: true, viewMode: 'editor' },
     { selected: false, viewMode: 'presentation' },
     { selected: true, viewMode: 'presentation' },
   ]
 
-  selectCellNotFiredVariants.forEach((state) => {
-    it('click on cell container div does not fires selectCell with incorrect props', () => {
+  postActionToEditorNotFiredVariants.forEach((state) => {
+    it('click on cell container div does not fire postActionToEditor with incorrect props', () => {
       props.viewMode = state.viewMode
       props.selected = state.selected
       outputContainer().simulate('mousedown')
-      expect(selectCell.mock.calls.length).toBe(0)
+      expect(postActionToEditorMock.mock.calls.length).toBe(0)
     })
   })
 
@@ -109,6 +116,8 @@ describe('OutputContainerUnconnected React component', () => {
       .props().children).toEqual(node)
   })
 })
+
+// *********************** map state to props
 
 describe('OutputContainer mapStateToProps', () => {
   let state
@@ -135,6 +144,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: true,
         viewMode: 'editor',
         cellType: 'code',
+        postActionToEditor,
       })
   })
 
@@ -149,6 +159,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',
+        postActionToEditor,
       })
   })
 
@@ -163,6 +174,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',
+        postActionToEditor,
       })
   })
 
@@ -177,6 +189,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',
+        postActionToEditor,
       })
   })
 })

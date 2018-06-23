@@ -3,7 +3,7 @@ import { shallow } from 'enzyme'
 
 
 import { ExternalResourceOutputUnconnected as ExternalResourceOutput } from '../external-resource-output'
-import { OutputContainer } from '../output-container'
+import OutputContainer from '../output-container'
 import OutputRow from '../output-row'
 import ExternalResourceOutputHandler from '../../../../components/reps/output-handler-external-resource'
 

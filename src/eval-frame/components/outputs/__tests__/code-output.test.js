@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 import { CodeOutputUnconnected as CodeOutput } from '../code-output'
-import { OutputContainer } from '../output-container'
+import OutputContainer from '../output-container'
 import OutputRow from '../output-row'
 import OutputRenderer from '../output-renderer'
 

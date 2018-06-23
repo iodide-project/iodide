@@ -1,9 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-// import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
-// import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
 import { cellTypeEnum } from '../../state-prototypes'
 import { postActionToEditor } from '../../port-to-editor'
@@ -17,18 +15,16 @@ export class OutputContainerUnconnected extends React.Component {
     editingCell: PropTypes.bool.isRequired,
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
+    postActionToEditor: PropTypes.func.isRequired,
   }
 
   handleCellClick = () => {
-    if (this.props.viewMode === 'editor') {
-      const scrollToCell = false
-      if (!this.props.selected) {
-        postActionToEditor({
-          type: 'SELECT_CELL',
-          id: this.props.cellId,
-          scrollToCell,
-        })
-      }
+    if (this.props.viewMode === 'editor' && !this.props.selected) {
+      this.props.postActionToEditor({
+        type: 'SELECT_CELL',
+        id: this.props.cellId,
+        scrollToCell: false,
+      })
     }
   }
 
@@ -64,15 +60,8 @@ export function mapStateToProps(state, ownProps) {
     editingCell: cell.selected && state.mode === 'edit',
     viewMode: state.viewMode,
     cellType: cell.cellType,
+    postActionToEditor,
   }
 }
 
-// export function mapDispatchToProps(dispatch) {
-//   return {
-//     actions: bindActionCreators(actions, dispatch),
-//   }
-// }
-
-// const OutputContainerConnected =
-export default connect(mapStateToProps)(OutputContainerUnconnected) // eslint-disable-line
-// export { OutputContainerConnected as OutputContainer }
+export default connect(mapStateToProps)(OutputContainerUnconnected)

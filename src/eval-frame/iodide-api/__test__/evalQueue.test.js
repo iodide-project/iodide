@@ -1,3 +1,4 @@
+import '../../../../test/message-channel-stub'
 import {
   getRunningCellID,
   getRunningCellEvalStatus,

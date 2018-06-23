@@ -5,7 +5,7 @@ import {
   CSSOutputUnconnected as CSSOutput,
   mapStateToProps,
 } from '../css-output'
-import { OutputContainer } from '../output-container'
+import OutputContainer from '../output-container'
 import OutputRow from '../output-row'
 
 
