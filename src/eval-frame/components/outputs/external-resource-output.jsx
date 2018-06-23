@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import OutputRow from './output-row'
-import { OutputContainer } from './output-container'
+import OutputContainer from './output-container'
 import ExternalResourceOutputHandler from '../../../components/reps/output-handler-external-resource'
 
 import { getCellById } from '../../tools/notebook-utils'

@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+// import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
-import * as actions from '../../actions/actions'
+// import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
 import { cellTypeEnum } from '../../state-prototypes'
 import { postActionToEditor } from '../../port-to-editor'
@@ -67,11 +67,12 @@ export function mapStateToProps(state, ownProps) {
   }
 }
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch),
-  }
-}
+// export function mapDispatchToProps(dispatch) {
+//   return {
+//     actions: bindActionCreators(actions, dispatch),
+//   }
+// }
 
-const OutputContainerConnected = connect(mapStateToProps, mapDispatchToProps)(OutputContainerUnconnected) // eslint-disable-line
-export { OutputContainerConnected as OutputContainer }
+// const OutputContainerConnected =
+export default connect(mapStateToProps)(OutputContainerUnconnected) // eslint-disable-line
+// export { OutputContainerConnected as OutputContainer }
