@@ -1,15 +1,18 @@
+/* global IODIDE_BUILD_MODE */
 import queryString from 'query-string'
 import { store } from './store'
 import { updateCellAndEval, evaluateCell } from './actions/actions'
 
 
-const IODIDE_SESSION_ID = queryString.parse(window.location.search).sessionId
-const { editorOrigin } = queryString.parse(window.location.search)
-// console.log(`sessionId:${IODIDE_SESSION_ID}, editorOrigin:${editorOrigin}`)
+let IODIDE_SESSION_ID = queryString.parse(window.location.search).sessionId
+let { editorOrigin } = queryString.parse(window.location.search)
 
+if (IODIDE_BUILD_MODE === 'test') {
+  IODIDE_SESSION_ID = 'testing-session'
+  editorOrigin = 'http://testing.origin'
+}
 
 function receiveMessage(event) {
-  // console.log('eval frame port got message', event)
   const trustedMessage = true
   if (trustedMessage) {
     const { messageType, message } = event.data
@@ -45,3 +48,6 @@ export function postActionToEditor(actionObj) {
   postMessageToEditor('REDUX_ACTION', actionObj)
 }
 
+export function postKeypressToEditor(keypressStr) {
+  postMessageToEditor('KEYPRESS', keypressStr)
+}

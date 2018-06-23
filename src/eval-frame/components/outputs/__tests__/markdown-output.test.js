@@ -3,7 +3,7 @@ import React from 'react'
 
 import { MarkdownOutputUnconnected } from '../markdown-output'
 import OutputRow from '../output-row'
-import { OutputContainer } from '../output-container'
+import OutputContainer from '../output-container'
 
 describe('MarkdownOutput_unconnected react component', () => {
   let props

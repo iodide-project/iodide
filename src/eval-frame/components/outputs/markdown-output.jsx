@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 
 import OutputRow from './output-row'
-import { OutputContainer } from './output-container'
+import OutputContainer from './output-container'
 
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'

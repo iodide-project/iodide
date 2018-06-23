@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 import { RawOutputUnconnected as RawOutput } from '../raw-output'
-import { OutputContainer } from '../output-container'
+import OutputContainer from '../output-container'
 import OutputRow from '../output-row'
 
 describe('RawOutputUnconnected react component', () => {

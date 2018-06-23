@@ -17,9 +17,6 @@ import * as actions from '../actions/actions'
 class EvalContainer extends React.Component {
   static propTypes = {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    actions: PropTypes.shape({
-      changeMode: PropTypes.func.isRequired,
-    }).isRequired,
     title: PropTypes.string,
     cellIds: PropTypes.array,
     cellTypes: PropTypes.array,
