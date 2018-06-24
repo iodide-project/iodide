@@ -92,7 +92,6 @@ class CellEditor extends React.Component {
       changeMode: PropTypes.func.isRequired,
       updateInputContent: PropTypes.func.isRequired,
       unHighlightCells: PropTypes.func.isRequired,
-      multipleCellHighlight: PropTypes.func.isRequired,
     }).isRequired,
     inputRef: PropTypes.func,
     containerStyle: PropTypes.object,
@@ -106,7 +105,6 @@ class CellEditor extends React.Component {
     this.handleFocusChange = this.handleFocusChange.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
-    this.handleClick = this.handleClick.bind(this)
     this.getReadOnly = this.getReadOnly.bind(this)
   }
 
@@ -135,17 +133,12 @@ class CellEditor extends React.Component {
   handleFocusChange(focused) {
     if (focused && this.props.viewMode === 'editor') {
       if (!this.props.thisCellBeingEdited) {
+        this.props.actions.unHighlightCells()
         this.props.actions.selectCell(this.props.cellId)
         this.props.actions.changeMode('edit')
       }
     } else if (!focused && this.props.viewMode === 'editor') {
       this.props.actions.changeMode('command')
-    }
-  }
-
-  handleClick(event) {
-    if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
-      this.props.actions.unHighlightCells()
     }
   }
 
@@ -197,7 +190,6 @@ class CellEditor extends React.Component {
       <div
         className="editor"
         style={this.props.containerStyle}
-        onClick={this.handleClick}
       >
         <CodeMirror
           ref={this.storeEditorElementRef}

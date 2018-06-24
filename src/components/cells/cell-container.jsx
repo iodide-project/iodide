@@ -36,7 +36,7 @@ export class CellContainerUnconnected extends React.Component {
   // }
 
   handleCellClick = (event) => {
-    if (this.props.viewMode === 'editor') {
+    if (this.props.viewMode === 'editor' && !event.target.classList.contains('CodeMirror-line')) {
       const scrollToCell = false
       if (!this.props.selected && !event.shiftKey) {
         this.props.actions.selectCell(this.props.cellId, scrollToCell)

@@ -105,15 +105,50 @@ const cellReducer = (state = newNotebook(), action) => {
 
     case 'CELL_CUT': {
       const copiedCells = []
+      let isNotebookEmpty = false
       let cutCells
       let cells = state.cells.slice()
       cutCells = cells.filter(c => c.highlighted)
       if (!cutCells.length) {
         const index = getSelectedCellIndex(state)
         cutCells = [cells[index]]
+        if (cells[index + 1]) {
+          cells[index + 1].selected = true
+        } else if (cells[index - 1]) {
+          cells[index - 1].selected = true
+        } else {
+          isNotebookEmpty = true
+        }
         cells.splice(index, 1)
       } else {
+        const cutIndices = cells.map((c, i) => (c.highlighted ? i : '')).filter(String)
+        const lastHiglighted = cutIndices[cutIndices.length - 1]
+        if (cells[lastHiglighted + 1]) {
+          cells[lastHiglighted + 1].selected = true
+        } else {
+          let lastUnHighlightedCell
+          let cellIndex = lastHiglighted
+          let highlightIndex = cutIndices.length - 1
+          while (highlightIndex >= 0 || cellIndex >= 0) {
+            if (cutIndices[highlightIndex] !== cellIndex) {
+              lastUnHighlightedCell = cellIndex
+              break
+            }
+            cellIndex -= 1
+            highlightIndex -= 1
+          }
+          if (lastUnHighlightedCell) {
+            cells[lastUnHighlightedCell].selected = true
+          } else {
+            isNotebookEmpty = true
+          }
+        }
         cells = cells.filter(c => !c.highlighted)
+      }
+      if (isNotebookEmpty) {
+        const nextCell = newCell(newCellID(state.cells), 'code')
+        nextCell.selected = true
+        cells = [nextCell]
       }
       return Object.assign({}, state, { cells, cutCells, copiedCells })
     }
@@ -135,6 +170,8 @@ const cellReducer = (state = newNotebook(), action) => {
         cell,
         { highlighted: false, selected: false, id: newId + i },
       ))
+      cells[pasteIndex].selected = false
+      cellsToPaste[cellsToPaste.length - 1].selected = true
       cells.splice(pasteIndex + 1, 0, ...cellsToPaste)
       nextState = Object.assign({}, newState, { cells: [...cells], copiedCells: [], cutCells: [] })
       return nextState

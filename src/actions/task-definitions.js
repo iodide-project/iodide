@@ -147,7 +147,10 @@ tasks.selectUp = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     const cellAboveId = getCellAboveSelectedId()
-    if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true) }
+    if (cellAboveId !== null) {
+      dispatcher.selectCell(cellAboveId, true)
+      dispatcher.unHighlightCells()
+    }
   },
 })
 
@@ -159,7 +162,10 @@ tasks.selectDown = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     const cellBelowId = getCellBelowSelectedId()
-    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
+    if (cellBelowId !== null) {
+      dispatcher.selectCell(cellBelowId, true)
+      dispatcher.unHighlightCells()
+    }
   },
 })
 
