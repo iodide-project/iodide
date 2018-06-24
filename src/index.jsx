@@ -22,6 +22,8 @@ import { createSessionId } from './tools/create-session-id'
 
 import { listenForEvalFramePortReady } from './port-to-eval-frame'
 
+import './tools/initialize-codemirror-loadmode'
+
 window.IODIDE_SESSION_ID = createSessionId()
 
 window.addEventListener('message', listenForEvalFramePortReady, false)

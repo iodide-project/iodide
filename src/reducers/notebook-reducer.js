@@ -285,12 +285,26 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
     }
 
-    case 'ADD_LANGUAGE': {
+    case 'ADD_LANGUAGE_TO_EDITOR': {
+      const { languageDefinition } = action
+      languageDefinition.codeMirrorModeLoaded = false
       const languages = Object.assign(
         {},
         state.languages,
-        { [action.languageDefinition.languageId]: action.languageDefinition },
+        { [languageDefinition.languageId]: languageDefinition },
       )
+      return Object.assign({}, state, { languages })
+    }
+
+    case 'CODEMIRROR_MODE_READY': {
+      const { codeMirrorMode } = action
+      const languages = Object.assign({}, state.languages)
+      // set all languages with correct codeMirrorMode to have codeMirrorModeLoaded===true
+      Object.keys(languages).forEach((langKey) => {
+        if (languages[langKey].codeMirrorMode === codeMirrorMode) {
+          languages[langKey].codeMirrorModeLoaded = true
+        }
+      })
       return Object.assign({}, state, { languages })
     }
 

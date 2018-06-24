@@ -102,7 +102,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
     }
 
-    case 'ADD_LANGUAGE': {
+    case 'ADD_LANGUAGE_TO_EVAL_FRAME': {
       const languages = Object.assign(
         {},
         state.languages,

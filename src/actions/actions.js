@@ -8,6 +8,7 @@ import { postMessageToEvalFrame } from '../port-to-eval-frame'
 
 import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
+import { addLanguageKeybinding } from '../keybindings'
 
 const MD = MarkdownIt({ html: true })
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
@@ -112,6 +113,7 @@ export function updateInputContent(text) {
   }
 }
 
+
 export function changeCellType(cellType, language = 'js') {
   return (dispatch, getState) => {
     if (isCommandMode(getState())) {
@@ -121,6 +123,29 @@ export function changeCellType(cellType, language = 'js') {
         language,
       })
     }
+  }
+}
+
+export function addLanguage(languageDefinition) {
+  return (dispatch) => {
+    const {
+      // url,
+      keybinding,
+      languageId,
+      codeMirrorMode,
+      // displayName,
+    } = languageDefinition
+    if (keybinding.length === 1 && (typeof keybinding === 'string')) {
+      addLanguageKeybinding(
+        [keybinding],
+        () => dispatch(changeCellType('code', languageId)),
+      )
+    }
+    CodeMirror.requireMode(codeMirrorMode, () => { })
+    dispatch({
+      type: 'ADD_LANGUAGE_TO_EDITOR',
+      languageDefinition,
+    })
   }
 }
 
