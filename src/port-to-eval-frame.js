@@ -1,5 +1,6 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
+import { addLanguage } from './actions/actions'
 
 let portToEvalFrame
 
@@ -44,6 +45,10 @@ function receiveMessage(event) {
         } else {
           console.log('got unapproved key press action from eval frame!!!')
         }
+        break
+      case 'POST_LANGUAGE_DEF_TO_EDITOR':
+        // in this case, message is a languageDefinition
+        store.dispatch(addLanguage(message))
         break
       default:
         console.log('unknown messageType', message)

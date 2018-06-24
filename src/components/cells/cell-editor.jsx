@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
-
-import CodeMirror from '@skidding/react-codemirror'
+import ReactCodeMirror from '@skidding/react-codemirror'
 import js from 'codemirror/mode/javascript/javascript' // eslint-disable-line no-unused-vars
 import markdown from 'codemirror/mode/markdown/markdown' // eslint-disable-line no-unused-vars
 import css from 'codemirror/mode/css/css' // eslint-disable-line no-unused-vars
@@ -19,65 +18,6 @@ import sublime from '../../codemirror-keymap-sublime' // eslint-disable-line no-
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
 
-// This block is from CodeMirror's loadmode.js, modified to work in this environment
-{
-  const CodeMirrorBase = require('codemirror') // eslint-disable-line
-  CodeMirrorBase.modeUrl =
-    `https://cdnjs.cloudflare.com/ajax/libs/codemirror/${CodeMirrorBase.version}/mode/%N/%N.js`
-  window.CodeMirror = CodeMirrorBase
-
-  const modeLoading = {}
-  function splitCallback(cont, n) {
-    let countDown = n
-    return () => {
-      countDown -= 1
-      if (countDown === 0) {
-        cont()
-      }
-    }
-  }
-
-  function ensureDeps(mode, cont) {
-    const deps = CodeMirrorBase.modes[mode].dependencies
-    if (!deps) return cont()
-    const missing = []
-    for (let i = 0; i < deps.length; ++i) {
-      if (!Object.prototype.hasOwnProperty.call(CodeMirrorBase.modes, deps[i])) {
-        missing.push(deps[i])
-      }
-    }
-    if (!missing.length) return cont()
-    const split = splitCallback(cont, missing.length)
-    for (let i = 0; i < missing.length; ++i) {
-      CodeMirrorBase.requireMode(missing[i], split)
-    }
-    return undefined
-  }
-
-  CodeMirrorBase.requireMode = (mode, cont) => {
-    if (Object.prototype.hasOwnProperty.call(CodeMirrorBase.modes, mode)) {
-      return ensureDeps(mode, cont)
-    }
-    if (Object.prototype.hasOwnProperty.call(modeLoading, mode)) {
-      return modeLoading[mode].push(cont)
-    }
-
-    const file = CodeMirrorBase.modeUrl.replace(/%N/g, mode)
-    const script = document.createElement('script')
-    script.src = file
-    const others = document.getElementsByTagName('script')[0]
-    modeLoading[mode] = [cont]
-    const list = modeLoading[mode]
-    CodeMirrorBase.on(script, 'load', () => {
-      ensureDeps(mode, () => {
-        for (let i = 0; i < list.length; ++i) list[i]()
-      })
-    })
-    others.parentNode.insertBefore(script, others)
-    return undefined
-  }
-}
-
 class CellEditor extends React.Component {
   static propTypes = {
     // readOnly: PropTypes.bool.isRequired,
@@ -85,7 +25,7 @@ class CellEditor extends React.Component {
     cellType: PropTypes.string,
     content: PropTypes.string,
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    languageIsAvailable: PropTypes.bool,
+    codeMirrorModeLoaded: PropTypes.bool,
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
       changeMode: PropTypes.func.isRequired,
@@ -161,7 +101,7 @@ class CellEditor extends React.Component {
 
   render() {
     const editorOptions = Object.assign({}, {
-      mode: this.props.languageIsAvailable ? this.props.codeMirrorMode : '',
+      mode: this.props.codeMirrorModeLoaded ? this.props.codeMirrorMode : '',
       lineWrapping: false,
       matchBrackets: true,
       autoCloseBrackets: true,
@@ -181,7 +121,7 @@ class CellEditor extends React.Component {
         className="editor"
         style={this.props.containerStyle}
       >
-        <CodeMirror
+        <ReactCodeMirror
           ref={this.storeEditorElementRef}
           value={this.props.content}
           options={editorOptions}
@@ -197,8 +137,10 @@ class CellEditor extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
-  const languageModule = cell.language in state.languages ?
-    state.languages[cell.language].module : null
+  // const languageModule = cell.language in state.languages ?
+  //   state.languages[cell.language].module : null
+  const { codeMirrorModeLoaded } = state.languages[cell.language]
+  // cell.cellType !== 'code' ? true : window[languageModule] !== undefined
 
   const codeMirrorMode = (
     cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
@@ -211,7 +153,7 @@ function mapStateToProps(state, ownProps) {
     content: cell.content,
     cellId,
     codeMirrorMode,
-    languageIsAvailable: cell.cellType !== 'code' ? true : window[languageModule] !== undefined,
+    codeMirrorModeLoaded,
   }
 }
 

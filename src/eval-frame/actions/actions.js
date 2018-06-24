@@ -12,9 +12,7 @@ import {
 } from '../reducers/cell-reducer-utils'
 
 import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
-import { postActionToEditor } from '../port-to-editor'
-
-// import { addLanguageKeybinding } from '../keybindings'
+import { postMessageToEditor } from '../port-to-editor'
 
 let evaluationQueue = Promise.resolve()
 
@@ -160,12 +158,12 @@ function evaluateCSSCell(cell) {
   }
 }
 
-// export function addLanguage(languageDefinition) {
-//   return {
-//     type: 'ADD_LANGUAGE',
-//     languageDefinition,
-//   }
-// }
+export function addLanguage(languageDefinition) {
+  return {
+    type: 'ADD_LANGUAGE_TO_EVAL_FRAME',
+    languageDefinition,
+  }
+}
 
 function evaluateLanguagePluginCell(cell) {
   return (dispatch) => {
@@ -222,17 +220,8 @@ function evaluateLanguagePluginCell(cell) {
           pr.then(() => {
             value = `${displayName} plugin ready`
             evalStatus = 'SUCCESS'
-            postActionToEditor({
-              type: 'ADD_LANGUAGE',
-              languageDefinition: pluginData,
-            })
-            // FIXME: need to pass keybinding info up to editor
-            // if (keybinding.length === 1 && (typeof keybinding === 'string')) {
-            // addLanguageKeybinding(
-            //   [keybinding],
-            //   () => dispatch(changeCellType('code', languageId)),
-            // )
-            // }
+            dispatch(addLanguage(pluginData))
+            postMessageToEditor('POST_LANGUAGE_DEF_TO_EDITOR', pluginData)
             dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
             resolve()
           })
