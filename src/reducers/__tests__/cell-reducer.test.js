@@ -1,3 +1,4 @@
+import { store } from '../../store'
 import cellReducer from '../cell-reducer'
 import { newNotebook } from '../../state-prototypes'
 

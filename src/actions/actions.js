@@ -333,11 +333,12 @@ export function addCell(cellType) {
   }
 }
 
-export function selectCell(cellID, scrollToCell = false) {
+export function selectCell(cellID, scrollToCell = false, alignOutput = true) {
   return {
     type: 'SELECT_CELL',
     id: cellID,
     scrollToCell,
+    alignOutput,
   }
 }
 

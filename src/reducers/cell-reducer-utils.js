@@ -1,3 +1,5 @@
+import { postActionToEvalFrame } from '../port-to-eval-frame'
+
 function moveCell(cells, cellID, dir) {
   const cellsSlice = cells.slice()
   const index = cellsSlice.findIndex(c => c.id === cellID)
@@ -19,12 +21,16 @@ function moveCell(cells, cellID, dir) {
   return cellsSlice
 }
 
-function scrollToCellIfNeeded(cellID) {
-  const elem = document.getElementById(`cell-${cellID}`)
+const SCROLL_PADDING = 30 // extra px for scrolling
+
+export function handleCellAndOutputScrolling(cellId, doScroll = true, alignOutput = true) {
+  const elem = document.getElementById(`cell-${cellId}`)
   const rect = elem.getBoundingClientRect()
-  const viewportRect = document.getElementById('cells').getBoundingClientRect()
-  const windowHeight = (window.innerHeight || document.documentElement.clientHeight)
-  const tallerThanWindow = (rect.bottom - rect.top) > windowHeight
+  const scrollContainer = document.getElementById('cells')
+  const viewportRect = scrollContainer.getBoundingClientRect()
+  const viewportHeight = viewportRect.height
+  // (window.innerHeight || document.documentElement.clientHeight)
+  const tallerThanWindow = (rect.bottom - rect.top) > viewportHeight
   let cellPosition
   // verbose but readable
   if (rect.bottom <= viewportRect.top) {
@@ -39,25 +45,60 @@ function scrollToCellIfNeeded(cellID) {
     cellPosition = 'IN_VIEWPORT'
   }
 
+  let scrollByDist
+  let evalFrameScrollDistanceFromTop
   if ((cellPosition === 'ABOVE_VIEWPORT')
     || (cellPosition === 'BOTTOM_IN_VIEWPORT')
     || ((cellPosition === 'BELOW_VIEWPORT') && (tallerThanWindow))
     || ((cellPosition === 'TOP_IN_VIEWPORT') && (tallerThanWindow))
   ) { // in these cases, scroll the window such that the cell top is at the window top
-    elem.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    })
+    const distanceAboveViewportTop = rect.top - viewportRect.top
+    scrollByDist = distanceAboveViewportTop - SCROLL_PADDING
+    evalFrameScrollDistanceFromTop = SCROLL_PADDING
   } else if (((cellPosition === 'BELOW_VIEWPORT') && !(tallerThanWindow))
     || ((cellPosition === 'TOP_IN_VIEWPORT') && !(tallerThanWindow))
   ) { // in these cases, scroll the window such that the cell bottom is at the window bottom
-    elem.scrollIntoView({
+    const distanceBelowViewportBottom = rect.bottom - viewportRect.bottom
+    scrollByDist = distanceBelowViewportBottom + SCROLL_PADDING
+    evalFrameScrollDistanceFromTop = viewportHeight - rect.height - SCROLL_PADDING
+  } else { // in this case, cellPosition === 'IN_VIEWPORT'; don't scroll
+    scrollByDist = 0
+    evalFrameScrollDistanceFromTop = rect.top - viewportRect.top
+  }
+
+  if (doScroll && scrollByDist !== 0) {
+    scrollContainer.scrollBy({
+      top: scrollByDist,
+      left: 0,
       behavior: 'smooth',
-      block: 'end',
+    })
+  }
+  if (doScroll === false) {
+    evalFrameScrollDistanceFromTop = rect.top - viewportRect.top
+  }
+  if (alignOutput === true) {
+    postActionToEvalFrame({
+      type: 'ALIGN_OUTPUT_TO_EDITOR',
+      cellId,
+      pxFromViewportTop: evalFrameScrollDistanceFromTop,
     })
   }
 }
 
+export function alignCellTopTo(cellId, targetPxFromViewportTop) {
+  // clamp to viewport top
+  const pxFromViewportTop = targetPxFromViewportTop < 0 ? SCROLL_PADDING : targetPxFromViewportTop
+  const elem = document.getElementById(`cell-${cellId}`)
+  const rect = elem.getBoundingClientRect()
+  const scrollContainer = document.getElementById('cells')
+  const viewportRect = scrollContainer.getBoundingClientRect()
+  const distanceAboveViewportTop = rect.top - viewportRect.top
+  scrollContainer.scrollBy({
+    top: distanceAboveViewportTop - pxFromViewportTop,
+    left: 0,
+    behavior: 'smooth',
+  })
+}
 
 function addExternalDependency(dep) {
   // FIXME there must be a better way to do this with promises etc...
@@ -206,7 +247,6 @@ function newStateWithRowOverflowSet(state, cellId, rowType, viewModeToSet, rowOv
 
 export {
   moveCell,
-  scrollToCellIfNeeded,
   addExternalDependency,
   getSelectedCell,
   getSelectedCellId,

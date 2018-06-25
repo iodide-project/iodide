@@ -1,6 +1,6 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
-import { addLanguage } from './actions/actions'
+import { addLanguage, selectCell } from './actions/actions'
 
 let portToEvalFrame
 
@@ -13,7 +13,8 @@ export function postActionToEvalFrame(actionObj) {
 }
 
 const approvedReduxActions = [
-  'SELECT_CELL',
+  // 'SELECT_CELL',
+  // 'ALIGN_EDITOR_CELL_TO_OUTPUT',
 ]
 
 const approvedKeys = [
@@ -49,6 +50,14 @@ function receiveMessage(event) {
       case 'POST_LANGUAGE_DEF_TO_EDITOR':
         // in this case, message is a languageDefinition
         store.dispatch(addLanguage(message))
+        break
+      case 'CLICK_ON_OUTPUT':
+        store.dispatch(selectCell(message.id, false, false))
+        store.dispatch({
+          type: 'ALIGN_EDITOR_CELL_TO_OUTPUT',
+          cellId: message.id,
+          pxFromViewportTop: message.pxFromViewportTop,
+        })
         break
       default:
         console.log('unknown messageType', message)
