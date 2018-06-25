@@ -1,3 +1,5 @@
+/* global IODIDE_BUILD_MODE */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
@@ -26,9 +28,14 @@ export class OutputContainerUnconnected extends React.Component {
 
   handleCellClick = () => {
     if (this.props.viewMode === 'editor' && !this.props.selected) {
-      const targetPxFromViewportTop = (
-        this.containerRef.current.getBoundingClientRect().top
-        - document.getElementById('cells').getBoundingClientRect().top)
+      let targetPxFromViewportTop
+      if (IODIDE_BUILD_MODE !== 'test') {
+        targetPxFromViewportTop = (
+          this.containerRef.current.getBoundingClientRect().top
+          - document.getElementById('cells').getBoundingClientRect().top)
+      } else {
+        targetPxFromViewportTop = 100
+      }
       this.props.postMessageToEditor(
         'CLICK_ON_OUTPUT',
         {

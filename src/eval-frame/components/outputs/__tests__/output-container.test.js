@@ -2,10 +2,10 @@ import { shallow } from 'enzyme'
 import React from 'react'
 
 import { OutputContainerUnconnected, mapStateToProps } from '../output-container'
-import { postActionToEditor } from '../../../port-to-editor'
+import { postMessageToEditor } from '../../../port-to-editor'
 
 describe('OutputContainerUnconnected React component', () => {
-  let postActionToEditorMock
+  let postMessageToEditorMock
   let props
   let mc
   const node = <span>Hello</span>
@@ -18,14 +18,14 @@ describe('OutputContainerUnconnected React component', () => {
   }
 
   beforeEach(() => {
-    postActionToEditorMock = jest.fn()
+    postMessageToEditorMock = jest.fn()
     props = {
       selected: true,
       cellId: 1,
       editingCell: true,
       viewMode: 'editor',
       cellType: 'code',
-      postActionToEditor: postActionToEditorMock,
+      postMessageToEditor: postMessageToEditorMock,
     }
     mc = undefined
   })
@@ -77,32 +77,34 @@ describe('OutputContainerUnconnected React component', () => {
       .toEqual(outputContainer().instance().handleCellClick)
   })
 
-  it('mouse down on cell container div fires selectCell with correct props', () => {
+  it('mouse down on cell container div fires postMessageToEditor with correct props', () => {
     // const spy = jest.spyOn(global.MessageChannel.prototype.port1, 'postMessage')
     props.viewMode = 'editor'
     props.selected = false
     outputContainer().simulate('mousedown')
     // expect(spy).toHaveBeenCalled()
-    expect(postActionToEditorMock.mock.calls.length).toBe(1)
-    expect(postActionToEditorMock.mock.calls[0][0]).toEqual({
-      type: 'SELECT_CELL',
-      id: 1,
-      scrollToCell: false,
-    })
+    expect(postMessageToEditorMock.mock.calls.length).toBe(1)
+    expect(postMessageToEditorMock.mock.calls[0][0]).toEqual(
+      'CLICK_ON_OUTPUT',
+      {
+        id: 1,
+        pxFromViewportTop: 100,
+      },
+    )
   })
 
-  const postActionToEditorNotFiredVariants = [
+  const postMessageToEditorNotFiredVariants = [
     { selected: true, viewMode: 'editor' },
     { selected: false, viewMode: 'presentation' },
     { selected: true, viewMode: 'presentation' },
   ]
 
-  postActionToEditorNotFiredVariants.forEach((state) => {
-    it('click on cell container div does not fire postActionToEditor with incorrect props', () => {
+  postMessageToEditorNotFiredVariants.forEach((state) => {
+    it('click on cell container div does not fire postMessageToEditor with incorrect props', () => {
       props.viewMode = state.viewMode
       props.selected = state.selected
       outputContainer().simulate('mousedown')
-      expect(postActionToEditorMock.mock.calls.length).toBe(0)
+      expect(postMessageToEditorMock.mock.calls.length).toBe(0)
     })
   })
 
@@ -144,7 +146,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: true,
         viewMode: 'editor',
         cellType: 'code',
-        postActionToEditor,
+        postMessageToEditor,
       })
   })
 
@@ -159,7 +161,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',
-        postActionToEditor,
+        postMessageToEditor,
       })
   })
 
@@ -174,7 +176,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',
-        postActionToEditor,
+        postMessageToEditor,
       })
   })
 
@@ -189,7 +191,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',
-        postActionToEditor,
+        postMessageToEditor,
       })
   })
 })
