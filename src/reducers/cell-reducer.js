@@ -5,7 +5,9 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
 import {
-  moveCell, scrollToCellIfNeeded,
+  moveCell,
+  handleCellAndOutputScrolling,
+  alignCellTopTo,
   getSelectedCellId,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
@@ -49,20 +51,29 @@ const cellReducer = (state = newNotebook(), action) => {
       const index = cells.findIndex(c => c.id === action.id)
       const thisCell = cells[index]
       thisCell.selected = true
-      if (action.scrollToCell) { scrollToCellIfNeeded(thisCell.id) }
+      // if (action.scrollToCell) {
+      handleCellAndOutputScrolling(thisCell.id, action.scrollToCell, action.alignOutput)
+      //  }
+      // if (action.alignOutput) {
+      // }
       nextState = Object.assign({}, state, { cells })
       return nextState
     }
 
+    case 'ALIGN_EDITOR_CELL_TO_OUTPUT': {
+      alignCellTopTo(action.cellId, action.pxFromViewportTop)
+      return state
+    }
+
     case 'CELL_UP':
-      scrollToCellIfNeeded(getSelectedCellId(state))
+      handleCellAndOutputScrolling(getSelectedCellId(state))
       return Object.assign(
         {}, state,
         { cells: moveCell(state.cells, getSelectedCellId(state), 'up') },
       )
 
     case 'CELL_DOWN':
-      scrollToCellIfNeeded(getCellBelowSelectedId(state))
+      handleCellAndOutputScrolling(getCellBelowSelectedId(state))
       return Object.assign(
         {}, state,
         { cells: moveCell(state.cells, getSelectedCellId(state), 'down') },

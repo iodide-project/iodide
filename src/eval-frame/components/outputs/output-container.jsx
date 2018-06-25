@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { getCellById } from '../../tools/notebook-utils'
 import { cellTypeEnum } from '../../state-prototypes'
-import { postActionToEditor } from '../../port-to-editor'
+import { postMessageToEditor } from '../../port-to-editor'
 
 
 export class OutputContainerUnconnected extends React.Component {
@@ -15,16 +15,27 @@ export class OutputContainerUnconnected extends React.Component {
     editingCell: PropTypes.bool.isRequired,
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
-    postActionToEditor: PropTypes.func.isRequired,
+    postMessageToEditor: PropTypes.func.isRequired,
+  }
+
+  constructor(props) {
+    super(props)
+    this.containerRef = React.createRef()
+    // this.viewportTop = document.getElementById('cells').getBoundingClientRect().top
   }
 
   handleCellClick = () => {
     if (this.props.viewMode === 'editor' && !this.props.selected) {
-      this.props.postActionToEditor({
-        type: 'SELECT_CELL',
-        id: this.props.cellId,
-        scrollToCell: false,
-      })
+      const targetPxFromViewportTop = (
+        this.containerRef.current.getBoundingClientRect().top
+        - document.getElementById('cells').getBoundingClientRect().top)
+      this.props.postMessageToEditor(
+        'CLICK_ON_OUTPUT',
+        {
+          id: this.props.cellId,
+          pxFromViewportTop: targetPxFromViewportTop,
+        },
+      )
     }
   }
 
@@ -42,6 +53,7 @@ export class OutputContainerUnconnected extends React.Component {
         id={`cell-${this.props.cellId}`}
         className={cellClass}
         onMouseDown={this.handleCellClick}
+        ref={this.containerRef}
       >
         <div className="cell-row-container">
           {this.props.children}
@@ -60,7 +72,7 @@ export function mapStateToProps(state, ownProps) {
     editingCell: cell.selected && state.mode === 'edit',
     viewMode: state.viewMode,
     cellType: cell.cellType,
-    postActionToEditor,
+    postMessageToEditor,
   }
 }
 

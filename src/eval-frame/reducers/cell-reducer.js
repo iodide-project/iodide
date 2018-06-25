@@ -5,7 +5,9 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
 import {
-  moveCell, scrollToCellIfNeeded,
+  moveCell,
+  scrollToCellIfNeeded,
+  alignCellTopTo,
   getSelectedCellId,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
@@ -52,6 +54,11 @@ const cellReducer = (state = newNotebook(), action) => {
       if (action.scrollToCell) { scrollToCellIfNeeded(thisCell.id) }
       nextState = Object.assign({}, state, { cells })
       return nextState
+    }
+
+    case 'ALIGN_OUTPUT_TO_EDITOR': {
+      alignCellTopTo(action.cellId, action.pxFromViewportTop)
+      return state
     }
 
     case 'UPDATE_CELL_LIST':
