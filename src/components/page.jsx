@@ -95,7 +95,14 @@ class Page extends React.Component {
         className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
       >
         <NotebookHeader />
-        <div id="panes-container" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+        <div
+          id="panes-container"
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            height: 'calc(100% - 50px)',
+          }}
+        >
           <Resizable
             enable={{
               bottom: false,
