@@ -69,21 +69,17 @@ class EvalContainer extends React.Component {
           id="eval-container"
           className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
         >
+
           <div
             id="cells"
             className={this.props.viewMode}
-            style={{
-              height: this.getPageHeight(),
-              flexGrow: '1',
-              minHeight: '300px',
-              }}
+            style={{ height: this.getPageHeight() }}
           >
             {bodyContent}
           </div>
           <Resizable
-
             enable={{
-            bottom: false,
+            bottom: true,
             top: true,
             right: false,
             topRight: false,
@@ -92,7 +88,13 @@ class EvalContainer extends React.Component {
             topLeft: false,
             left: false,
           }}
-            handleClasses={{ bottom: 'resizer' }}
+            handleClasses={{ top: 'resizer' }}
+            size={{
+              height: this.props.sidePane !== undefined ?
+                     this.props.sidePaneWidth :
+                     500,
+              width: '100%',
+            }}
           >
             <DeclaredVariablesPane />
             <HistoryPane />
