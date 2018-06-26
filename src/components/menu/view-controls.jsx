@@ -48,7 +48,13 @@ export class ViewControlsUnconnected extends React.Component {
         <HistoryPane />
         */}
         <AppInfoPane />
-        {IODIDE_BUILD_MODE === 'heroku' && (<UserButton isAuthenticated={this.props.isAuthenticated} />)}
+
+        {IODIDE_BUILD_MODE === 'heroku' && (
+          <UserButton
+            isAuthenticated={this.props.isAuthenticated}
+            avatar={this.props.avatar}
+          />
+        )}
 
         <ViewModeToggleButton />
 
