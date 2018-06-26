@@ -11,6 +11,9 @@ import CodeOutput from './outputs/code-output'
 import MarkdownOutput from './outputs/markdown-output'
 import PluginDefinitionOutput from './outputs/plugin-definition-output'
 
+import DeclaredVariablesPane from './panes/declared-variables-pane'
+// import HistoryPane from './panes/history-pane'
+
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
 
@@ -61,18 +64,21 @@ class EvalContainer extends React.Component {
     })
 
     return (
-      <div
-        id="eval-container"
-        className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
-      >
+      <React.Fragment>
         <div
-          id="cells"
-          className={this.props.viewMode}
-          style={this.getPageWidth()}
+          id="eval-container"
+          className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
         >
-          {bodyContent}
+          <div
+            id="cells"
+            className={this.props.viewMode}
+            style={this.getPageWidth()}
+          >
+            {bodyContent}
+          </div>
         </div>
-      </div>
+        <DeclaredVariablesPane />
+      </React.Fragment>
     )
   }
 }

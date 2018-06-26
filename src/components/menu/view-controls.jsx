@@ -12,8 +12,8 @@ import NotebookTaskButton from './notebook-task-button'
 import UserButton from './user-button'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
-import DeclaredVariablesPane from '../panes/declared-variables-pane'
-import HistoryPane from '../panes/history-pane'
+// import DeclaredVariablesPane from '../panes/declared-variables-pane'
+// import HistoryPane from '../panes/history-pane'
 import AppInfoPane from '../panes/app-info-pane'
 
 import tasks from '../../actions/task-definitions'
@@ -41,9 +41,6 @@ export class ViewControlsUnconnected extends React.Component {
           <InfoIcon />
         </NotebookTaskButton>
 
-
-        <DeclaredVariablesPane />
-        <HistoryPane />
         <AppInfoPane />
 
         {IODIDE_BUILD_MODE === 'heroku' && (<UserButton isAuthenticated={this.props.isAuthenticated} />)}
