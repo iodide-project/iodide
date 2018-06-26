@@ -144,6 +144,7 @@ div.declared-variable-name {
 
 div.declared-variable-value {
   padding-left: 20px;
+  overflow-x: auto;
 }
 
 div.app-info-message {
