@@ -79,12 +79,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { userDefinedVarNames })
     }
 
-    // case 'UPDATE_APP_MESSAGES': {
-    //   const appMessages = state.appMessages.slice()
-    //   appMessages.push(action.message)
-    //   return Object.assign({}, state, { appMessages })
-    // }
-
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
       const { cellID } = action
       return Object.assign({}, state, { runningCellID: cellID })
@@ -100,6 +94,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       }
       // console.log('update?', action.update, 'obj:', newSavedEnvironment)
       return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
+    }
+
+    case 'ENVIRONMENT_UPDATE_FROM_EDITOR': {
+      return Object.assign({}, state, { savedEnvironment: action.savedEnvironment })
     }
 
     case 'ADD_LANGUAGE_TO_EVAL_FRAME': {

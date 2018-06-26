@@ -3,6 +3,7 @@ import _ from 'lodash'
 
 import { saveEnvironment } from '../actions/actions'
 import { store } from '../store'
+import { postActionToEditor } from '../port-to-editor'
 
 
 //  FIXME replace all "throws" with iodide.print (when `print` is ready)
@@ -28,6 +29,11 @@ function saveToEnvironment(obj, options) {
     }
   })
   store.dispatch(saveEnvironment(envObj, options.update))
+  postActionToEditor({
+    type: 'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME',
+    updateObj: envObj,
+    update: options.update,
+  })
 }
 
 function decodeEnvObj(encoding, str) {

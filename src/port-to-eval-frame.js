@@ -13,8 +13,7 @@ export function postActionToEvalFrame(actionObj) {
 }
 
 const approvedReduxActions = [
-  // 'SELECT_CELL',
-  // 'ALIGN_EDITOR_CELL_TO_OUTPUT',
+  'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME',
 ]
 
 const approvedKeys = [
