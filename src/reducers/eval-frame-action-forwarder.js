@@ -9,7 +9,7 @@ const evalFrameActionForwarder = (state, action) => {
     // notebook level actions
     case 'SET_VIEW_MODE':
     case 'UPDATE_CELL_LIST':
-    case 'b':
+    case 'CHANGE_SIDE_PANE_MODE':
     // cell actions
     case 'UPDATE_CELL_PROPERTIES':
     case 'CHANGE_CELL_TYPE':
