@@ -6,12 +6,15 @@ import deepEqual from 'deep-equal'
 
 import Resizable from 're-resizable'
 
-import RawCell from './cells/raw-cell'
-import ExternalDependencyCell from './cells/external-resource-cell'
-import CSSCell from './cells/css-cell'
-import CodeCell from './cells/code-cell'
-import MarkdownCell from './cells/markdown-cell'
-import PluginDefinitionCell from './cells/plugin-definition-cell'
+// import RawCell from './cells/raw-cell'
+// import ExternalDependencyCell from './cells/external-resource-cell'
+// import CSSCell from './cells/css-cell'
+// import CodeCell from './cells/code-cell'
+// import MarkdownCell from './cells/markdown-cell'
+// import PluginDefinitionCell from './cells/plugin-definition-cell'
+
+import CellContainer from './cells/cell-container'
+
 
 import EvalFrame from './eval-frame'
 import NotebookHeader from './menu/notebook-header'
@@ -50,43 +53,44 @@ class Page extends React.Component {
       }
       this.props.actions.saveNotebook(true)
     }, 1000 * 60)
-
-    // this.getPageWidth = this.getPageWidth.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
   }
 
-  // getPageWidth() {
-  //   let width = '100%'
-  //   if (this.props.viewMode === 'presentation') width = 'undefined'
-  //   else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`
-  //   return { width }
-  // }
-
   render() {
-    // console.log('Page rendered')
-    const bodyContent = this.props.cellIds.map((id, i) => {
-      // let id = cell.id
+    const cellInputComponents = this.props.cellIds.map((id, i) => {
+      let editorOptions
       switch (this.props.cellTypes[i]) {
         case 'code':
-        // return <JavascriptCell cellId={id} key={id}/>
-          return <CodeCell cellId={id} key={id} />
-        case 'markdown':
-          return <MarkdownCell cellId={id} key={id} />
-        case 'raw':
-          return <RawCell cellId={id} key={id} />
         case 'external dependencies':
-          return <ExternalDependencyCell cellId={id} key={id} />
         case 'css':
-          return <CSSCell cellId={id} key={id} />
+          editorOptions = {}
+          break
+
+        case 'markdown':
+          editorOptions = {
+            lineWrapping: true,
+            matchBrackets: false,
+            autoCloseBrackets: false,
+            lineNumbers: false,
+          }
+          break
+
+        case 'raw':
         case 'plugin':
-          return <PluginDefinitionCell cellId={id} key={id} />
+          editorOptions = {
+            matchBrackets: false,
+            autoCloseBrackets: false,
+          }
+          break
+
         default:
-          // TODO: Use better class for inline error
-          return <div>Unknown cell type {this.props.cellTypes[i]}</div>
+          editorOptions = {}
       }
+
+      return <CellContainer cellId={id} key={id} editorOptions={editorOptions} />
     })
 
     return (
@@ -123,7 +127,7 @@ class Page extends React.Component {
               id="cells"
               className={this.props.viewMode}
             >
-              {bodyContent}
+              {cellInputComponents}
             </div>
           </Resizable>
           <div style={{ flexGrow: '1', minWidth: '300px' }}><EvalFrame /></div>

@@ -10,7 +10,6 @@ const evalFrameActionForwarder = (state, action) => {
     case 'SET_VIEW_MODE':
     case 'UPDATE_CELL_LIST':
     case 'CHANGE_SIDE_PANE_MODE':
-    case 'b':
     // cell actions
     case 'UPDATE_CELL_PROPERTIES':
     case 'CHANGE_CELL_TYPE':
