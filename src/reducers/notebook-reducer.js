@@ -116,6 +116,10 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'EVAL_FRAME_READY': {
       postActionToEvalFrame({
+        type: 'ENVIRONMENT_UPDATE_FROM_EDITOR',
+        savedEnvironment: state.savedEnvironment,
+      })
+      postActionToEvalFrame({
         type: 'UPDATE_CELL_LIST',
         cells: state.cells,
       })
@@ -274,7 +278,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { runningCellID: cellID })
     }
 
-    case 'SAVE_ENVIRONMENT': {
+    case 'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME': {
       let newSavedEnvironment
       if (action.update) {
         newSavedEnvironment = Object
