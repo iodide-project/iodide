@@ -14,10 +14,10 @@
 }
 
 .pane-title {
-    margin: 5px;
     margin-right: 0px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .pane-title h1 {

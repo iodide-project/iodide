@@ -11,13 +11,12 @@ html, body {
   position: relative;
 }
 
-div#page {
+/* div#page {
   height: 100%;
   overflow: hidden;
-}
+} */
 
 div#eval-container {
-  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -29,10 +28,10 @@ div#eval-container.presentation-mode {
 }
 
 div#cells.editor {
-  position: fixed;
+  position: absolute;
   left: 0px;
   box-sizing: border-box;
-  height: 100%; /*subtract off .notebook-toolbar-container height*/
+  height: 100%; 
   width: 100%;
   overflow-y: auto;
   padding-top: 20px;

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
+import Resizable from 're-resizable'
 
 import RawOutput from './outputs/raw-output'
 import ExternalDependencyOutput from './outputs/external-resource-output'
@@ -12,7 +13,7 @@ import MarkdownOutput from './outputs/markdown-output'
 import PluginDefinitionOutput from './outputs/plugin-definition-output'
 
 import DeclaredVariablesPane from './panes/declared-variables-pane'
-// import HistoryPane from './panes/history-pane'
+import HistoryPane from './panes/history-pane'
 
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
@@ -28,18 +29,18 @@ class EvalContainer extends React.Component {
     super(props)
 
     initializeDefaultKeybindings()
-    this.getPageWidth = this.getPageWidth.bind(this)
+    this.getPageHeight = this.getPageHeight.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
   }
 
-  getPageWidth() {
-    let width = '100%'
-    if (this.props.viewMode === 'presentation') width = 'undefined'
-    else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`
-    return { width }
+  getPageHeight() {
+    let height = '100%'
+    if (this.props.viewMode === 'presentation') height = 'undefined'
+    else if (this.props.sidePane) height = `calc(100% - ${this.props.sidePaneWidth}px)`
+    return height
   }
 
   render() {
@@ -62,7 +63,6 @@ class EvalContainer extends React.Component {
           return <div>Unknown cell type {this.props.cellTypes[i]}</div>
       }
     })
-
     return (
       <React.Fragment>
         <div
@@ -72,12 +72,32 @@ class EvalContainer extends React.Component {
           <div
             id="cells"
             className={this.props.viewMode}
-            style={this.getPageWidth()}
+            style={{
+              height: this.getPageHeight(),
+              flexGrow: '1',
+              minHeight: '300px',
+              }}
           >
             {bodyContent}
           </div>
+          <Resizable
+
+            enable={{
+            bottom: false,
+            top: true,
+            right: false,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false,
+            left: false,
+          }}
+            handleClasses={{ bottom: 'resizer' }}
+          >
+            <DeclaredVariablesPane />
+            <HistoryPane />
+          </Resizable>
         </div>
-        <DeclaredVariablesPane />
       </React.Fragment>
     )
   }
