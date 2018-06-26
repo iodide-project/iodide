@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
-import Resizable from 're-resizable'
+// import Resizable from 're-resizable'
 
 import RawOutput from './outputs/raw-output'
 import ExternalDependencyOutput from './outputs/external-resource-output'
@@ -64,7 +64,7 @@ class EvalContainer extends React.Component {
       }
     })
     return (
-      <React.Fragment>
+      <div className="eval-panes">
         <div
           id="eval-container"
           className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
@@ -77,30 +77,10 @@ class EvalContainer extends React.Component {
           >
             {bodyContent}
           </div>
-          <Resizable
-            enable={{
-            bottom: true,
-            top: true,
-            right: false,
-            topRight: false,
-            bottomRight: false,
-            bottomLeft: false,
-            topLeft: false,
-            left: false,
-          }}
-            handleClasses={{ top: 'resizer' }}
-            size={{
-              height: this.props.sidePane !== undefined ?
-                     this.props.sidePaneWidth :
-                     500,
-              width: '100%',
-            }}
-          >
-            <DeclaredVariablesPane />
-            <HistoryPane />
-          </Resizable>
         </div>
-      </React.Fragment>
+        <DeclaredVariablesPane />
+        <HistoryPane />
+      </div>
     )
   }
 }

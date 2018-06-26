@@ -171,3 +171,7 @@ div.hidden-cell {
   color: #23527c;
   text-decoration: underline;
 }
+
+.rep-container {
+  overflow-x: scroll;
+}
