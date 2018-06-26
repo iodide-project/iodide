@@ -5,18 +5,20 @@ import PropTypes from 'prop-types';
 // import { ToolbarGroup } from 'material-ui/Toolbar'
 
 import HistoryIcon from 'material-ui-icons/History'
-import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
+// import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
 import InfoIcon from 'material-ui-icons/InfoOutline'
+// import SvgIcon from 'material-ui/SvgIcon'
 
 import NotebookTaskButton from './notebook-task-button'
 import UserButton from './user-button'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
-import DeclaredVariablesPane from '../panes/declared-variables-pane'
-import HistoryPane from '../panes/history-pane'
+// import DeclaredVariablesPane from '../panes/declared-variables-pane'
+// import HistoryPane from '../panes/history-pane'
 import AppInfoPane from '../panes/app-info-pane'
 
 import tasks from '../../actions/task-definitions'
+import DeclaredVariableIcon from './declared-variable-icon'
 
 
 export class ViewControlsUnconnected extends React.Component {
@@ -29,23 +31,23 @@ export class ViewControlsUnconnected extends React.Component {
       <div className="view-controls">
         <LastSavedText />
 
+        <NotebookTaskButton task={tasks.toggleAppInfoPane}>
+          <InfoIcon />
+        </NotebookTaskButton>
+
         <NotebookTaskButton task={tasks.toggleDeclaredVariablesPane}>
-          <ArrowDropDown />
+          <DeclaredVariableIcon />
         </NotebookTaskButton>
 
         <NotebookTaskButton task={tasks.toggleHistoryPane}>
           <HistoryIcon />
         </NotebookTaskButton>
 
-        <NotebookTaskButton task={tasks.toggleAppInfoPane}>
-          <InfoIcon />
-        </NotebookTaskButton>
-
-
+        {/*
         <DeclaredVariablesPane />
         <HistoryPane />
+        */}
         <AppInfoPane />
-
         {IODIDE_BUILD_MODE === 'heroku' && (<UserButton isAuthenticated={this.props.isAuthenticated} />)}
 
         <ViewModeToggleButton />
