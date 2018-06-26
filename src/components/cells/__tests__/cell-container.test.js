@@ -3,6 +3,8 @@ import React from 'react'
 
 import { CellContainerUnconnected, mapStateToProps } from '../cell-container'
 import CellMenuContainer from '../cell-menu-container'
+import CellRow from '../cell-row'
+import CellEditor from '../cell-editor'
 
 describe('CellContainerUnconnected React component', () => {
   let selectCell
@@ -26,6 +28,7 @@ describe('CellContainerUnconnected React component', () => {
       viewMode: 'editor',
       cellType: 'code',
       actions: { selectCell },
+      editorOptions: { option1: 1, option2: 2 },
     }
     mountedCont = undefined
   })
@@ -115,9 +118,19 @@ describe('CellContainerUnconnected React component', () => {
       .props().children).find('div.cell-row-container')).toHaveLength(1)
   })
 
-  it('always has a children inside the second div', () => {
+  it('div.cell-row-container contains one CellRow', () => {
     expect(cellContainer().find('div.cell-row-container')
-      .props().children).toEqual(node)
+      .find(CellRow)).toHaveLength(1)
+  })
+
+  it('CellRow contains one CellEditor', () => {
+    expect(cellContainer().find(CellRow)
+      .find(CellEditor)).toHaveLength(1)
+  })
+
+  it('CellEditor gets correct props', () => {
+    expect(cellContainer().find(CellEditor).props().cellId).toEqual(props.cellId)
+    expect(cellContainer().find(CellEditor).props().editorOptions).toEqual(props.editorOptions)
   })
 })
 

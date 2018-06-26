@@ -8,13 +8,15 @@ import { getCellById } from '../../tools/notebook-utils'
 import { cellTypeEnum } from '../../state-prototypes'
 
 import CellMenuContainer from './cell-menu-container'
+import CellRow from './cell-row'
+import CellEditor from './cell-editor'
 
 
 export class CellContainerUnconnected extends React.Component {
   static propTypes = {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
-    children: PropTypes.node,
+    // children: PropTypes.node,
     editingCell: PropTypes.bool.isRequired,
     // pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
@@ -22,6 +24,7 @@ export class CellContainerUnconnected extends React.Component {
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
     }).isRequired,
+    editorOptions: PropTypes.object,
   }
 
   // shouldComponentUpdate(nextProps) {
@@ -59,7 +62,12 @@ export class CellContainerUnconnected extends React.Component {
       >
         <CellMenuContainer cellId={this.props.cellId} />
         <div className="cell-row-container">
-          {this.props.children}
+          <CellRow cellId={this.props.cellId} rowType="input">
+            <CellEditor
+              cellId={this.props.cellId}
+              editorOptions={this.props.editorOptions}
+            />
+          </CellRow>
         </div>
       </div>
     )
@@ -85,5 +93,5 @@ export function mapDispatchToProps(dispatch) {
 }
 
 // export default connect(mapStateToProps, mapDispatchToProps)(Page)
-const CellContainerConnected = connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected) // eslint-disable-line
-export { CellContainerConnected as CellContainer }
+export default connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected) // eslint-disable-line
+// CellContainerConnected as CellContainer }
