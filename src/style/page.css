@@ -239,10 +239,6 @@ div.iodide-tooltip {
   font-size: 0.900rem;
 }
 
-.katex-html {
-  display: none;
-}
-
 .dependency-output {
   padding-top: 10px;
 }
