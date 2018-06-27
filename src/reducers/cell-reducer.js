@@ -1,7 +1,3 @@
-import MarkdownIt from 'markdown-it'
-import MarkdownItKatex from 'markdown-it-katex'
-import MarkdownItAnchor from 'markdown-it-anchor'
-
 import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
 import {
@@ -15,9 +11,6 @@ import {
   newStateWithRowOverflowSet,
   newStateWithPropsAssignedForCell,
 } from './cell-reducer-utils'
-
-const MD = MarkdownIt({ html: true }) // eslint-disable-line
-MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const cellReducer = (state = newNotebook(), action) => {
   let nextState

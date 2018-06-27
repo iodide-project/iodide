@@ -1,6 +1,4 @@
-import MarkdownIt from 'markdown-it'
-import MarkdownItKatex from 'markdown-it-katex'
-import MarkdownItAnchor from 'markdown-it-anchor'
+import CodeMirror from 'codemirror'
 
 import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
@@ -9,11 +7,7 @@ import { postMessageToEvalFrame } from '../port-to-eval-frame'
 import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
 import { addLanguageKeybinding } from '../keybindings'
-
-const MD = MarkdownIt({ html: true })
-MD.use(MarkdownItKatex).use(MarkdownItAnchor)
-
-const CodeMirror = require('codemirror') // eslint-disable-line
+// const CodeMirror = require('codemirror') // eslint-disable-line
 
 export function updateAppMessages(messageObj) {
   //     message.when = (new Date()).toString()

@@ -3,19 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
-
 import Resizable from 're-resizable'
 
-// import RawCell from './cells/raw-cell'
-// import ExternalDependencyCell from './cells/external-resource-cell'
-// import CSSCell from './cells/css-cell'
-// import CodeCell from './cells/code-cell'
-// import MarkdownCell from './cells/markdown-cell'
-// import PluginDefinitionCell from './cells/plugin-definition-cell'
-
 import CellContainer from './cells/cell-container'
-
-
 import EvalFrame from './eval-frame'
 import NotebookHeader from './menu/notebook-header'
 import AppMessages from './app-messages/app-messages'
