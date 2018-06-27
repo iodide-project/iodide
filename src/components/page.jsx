@@ -83,11 +83,10 @@ class Page extends React.Component {
       return <CellContainer cellId={id} key={id} editorOptions={editorOptions} />
     })
 
+    const resizerStyle = this.props.viewMode === 'presentation' ? { display: 'none' } : {}
+
     return (
-      <div
-        id="notebook-container"
-        className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
-      >
+      <React.Fragment>
         <NotebookHeader />
         <div
           id="panes-container"
@@ -112,6 +111,7 @@ class Page extends React.Component {
             maxWidth="100%"
             minWidth={300}
             defaultSize={{ width: '60%', height: '100%' }}
+            style={resizerStyle}
           >
             <div
               id="cells"
@@ -123,7 +123,7 @@ class Page extends React.Component {
           <div style={{ flexGrow: '1', minWidth: '300px' }}><EvalFrame /></div>
         </div>
         <AppMessages />
-      </div>
+      </React.Fragment>
     )
   }
 }

@@ -16,7 +16,7 @@ div#page {
   overflow: hidden;
 }
 
-div#notebook-container {
+/*div#notebook-container {
   height: 100%;
   width: 100%;
   display: flex;
@@ -26,7 +26,7 @@ div#notebook-container {
 div#notebook-container.presentation-mode {
   display: block;
   overflow-y: auto;
-}
+}*/
 
 div#cells.editor {
     /*position: fixed;*/
