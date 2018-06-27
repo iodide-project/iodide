@@ -113,10 +113,7 @@ class Page extends React.Component {
             defaultSize={{ width: '60%', height: '100%' }}
             style={resizerStyle}
           >
-            <div
-              id="cells"
-              className={this.props.viewMode}
-            >
+            <div id="cells">
               {cellInputComponents}
             </div>
           </Resizable>

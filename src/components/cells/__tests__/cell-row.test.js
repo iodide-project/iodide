@@ -64,17 +64,11 @@ describe('CellRowUnconnected React component', () => {
       .toEqual(cellRow().instance().handleCollapseButtonClick)
   })
 
-  it('click on cell collapse-button div with correct props fires setCellRowCollapsedState', () => {
+  it('click on cell collapse-button div fires setCellRowCollapsedState', () => {
     props.viewMode = 'editor'
     cellRow().find('div.collapse-button').simulate('click')
     expect(setCellRowCollapsedState.mock.calls.length).toBe(1)
     expect(setCellRowCollapsedState.mock.calls[0].length).toBe(3)
-  })
-
-  it('click on cell collapse-button div with incorrect props does not fire setCellRowCollapsedState', () => {
-    props.viewMode = 'presentation'
-    cellRow().find('div.collapse-button').simulate('click')
-    expect(setCellRowCollapsedState.mock.calls.length).toBe(0)
   })
 
   it('always renders one children inside Tooltip', () => {
@@ -154,7 +148,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        viewMode: 'editor',
+        // viewMode: 'editor',
         uncollapseOnUpdate: false,
         executionString: '[ ]',
         rowOverflow: 'VISIBLE',
@@ -163,27 +157,12 @@ describe('CellRow mapStateToPropsCellRows', () => {
       })
   })
 
-  it('should return the correct info with viewMode===presentation', () => {
-    const ownProps = { cellId: 5, rowType: 'input' }
-    state.viewMode = 'presentation'
-    expect(mapStateToPropsCellRows(state, ownProps))
-      .toEqual({
-        cellId: 5,
-        viewMode: 'presentation',
-        uncollapseOnUpdate: false,
-        executionString: '[ ]',
-        rowOverflow: 'HIDDEN',
-        collapseTooltipPlacement: 'bottom',
-        tooltipText: 'click to expand this input',
-      })
-  })
-
   it('should return the correct info with rowType!==input', () => {
     const ownProps = { cellId: 5, rowType: 'output' }
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        viewMode: 'editor',
+        // viewMode: 'editor',
         uncollapseOnUpdate: false,
         executionString: '',
         rowOverflow: 'VISIBLE',
@@ -198,7 +177,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        viewMode: 'editor',
+        // viewMode: 'editor',
         uncollapseOnUpdate: false,
         executionString: '',
         rowOverflow: 'VISIBLE',
@@ -207,7 +186,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
       })
   })
 
-  it('should throw error with message Unsupported viewMode for wrong vieMode', () => {
+  it('should throw error with message Unsupported viewMode for wrong vievMode', () => {
     const ownProps = { cellId: 5, rowType: 'input' }
     state.viewMode = 'display'
     try {

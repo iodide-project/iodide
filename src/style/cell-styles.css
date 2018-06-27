@@ -17,7 +17,7 @@ div.cell-container {
 /* These may need to be integrated into the presentation mode style sheets
 but I don't see why we would have to do this immediately.
 */
-
+/*
 div#cells.editor div.raw-dom-element {
   overflow-x: scroll
 }
@@ -45,7 +45,7 @@ div#cells.presentation div.cell-menu-container {
 
 div#cells.presentation div.cell-row.input {
   padding:0px;
-}
+}*/
 
 .cell-menu-container {
     width: 76px;

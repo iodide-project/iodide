@@ -16,19 +16,7 @@ div#page {
   overflow: hidden;
 }
 
-/*div#notebook-container {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-div#notebook-container.presentation-mode {
-  display: block;
-  overflow-y: auto;
-}*/
-
-div#cells.editor {
+div#cells {
     /*position: fixed;*/
     /*top: 50px; move down by .notebook-toolbar-container height*/
     /*left: 0px;*/
@@ -41,11 +29,6 @@ div#cells.editor {
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 60px;
-}
-
-div#cells.presentation {
-  position: inherit;
-  height: inherit;
 }
 
 /************************************************/

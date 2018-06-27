@@ -25,7 +25,6 @@ describe('CellContainerUnconnected React component', () => {
       selected: true,
       cellId: 1,
       editingCell: true,
-      viewMode: 'editor',
       cellType: 'code',
       actions: { selectCell },
       editorOptions: { option1: 1, option2: 2 },
@@ -80,27 +79,17 @@ describe('CellContainerUnconnected React component', () => {
       .toEqual(cellContainer().instance().handleCellClick)
   })
 
-  it('mouse down on cell container div fires selectCell with correct props', () => {
-    props.viewMode = 'editor'
+  it('mousedown on cell container div fires selectCell with cell not selected', () => {
     props.selected = false
     cellContainer().simulate('mousedown')
     expect(selectCell.mock.calls.length).toBe(1)
     expect(selectCell.mock.calls[0].length).toBe(2)
   })
 
-  const selectCellNotFiredVariants = [
-    { selected: true, viewMode: 'editor' },
-    { selected: false, viewMode: 'presentation' },
-    { selected: true, viewMode: 'presentation' },
-  ]
-
-  selectCellNotFiredVariants.forEach((state) => {
-    it('click on cell container div does not fires selectCell with incorrect props', () => {
-      props.viewMode = state.viewMode
-      props.selected = state.selected
-      cellContainer().simulate('mousedown')
-      expect(selectCell.mock.calls.length).toBe(0)
-    })
+  it('mousedown on cell container div DOES NOT fires selectCell if cell is selected', () => {
+    props.selected = true
+    cellContainer().simulate('mousedown')
+    expect(selectCell.mock.calls.length).toBe(0)
   })
 
   it('always renders one CellMenuContainer inside top div', () => {
@@ -146,7 +135,6 @@ describe('CellContainer mapStateToProps', () => {
       },
       ],
       mode: 'edit',
-      viewMode: 'editor',
     }
   })
 
@@ -157,7 +145,6 @@ describe('CellContainer mapStateToProps', () => {
         cellId: 5,
         selected: true,
         editingCell: true,
-        viewMode: 'editor',
         cellType: 'code',
       })
   })
@@ -171,7 +158,6 @@ describe('CellContainer mapStateToProps', () => {
         cellId: 5,
         selected: false,
         editingCell: false,
-        viewMode: 'editor',
         cellType: 'code',
       })
   })
@@ -185,7 +171,6 @@ describe('CellContainer mapStateToProps', () => {
         cellId: 5,
         selected: true,
         editingCell: false,
-        viewMode: 'editor',
         cellType: 'code',
       })
   })
@@ -199,7 +184,6 @@ describe('CellContainer mapStateToProps', () => {
         cellId: 5,
         selected: false,
         editingCell: false,
-        viewMode: 'editor',
         cellType: 'code',
       })
   })
