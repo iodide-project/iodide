@@ -361,6 +361,11 @@ tasks.setViewModeToPresentation = new UserTask({
   },
 })
 
+tasks.toggleEvalFrameVisibility = new UserTask({
+  title: 'Toggle Eval Frame Visibility',
+  callback() { dispatcher.toggleEvalFrameVisibility() },
+})
+
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',
   menuTitle: 'File an Issue ...',

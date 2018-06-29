@@ -217,6 +217,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { viewMode })
     }
 
+    case 'TOGGLE_EVAL_FRAME_VISIBILITY': {
+      const showFrame = !state.showFrame
+      return Object.assign({}, state, { showFrame })
+    }
+
     case 'CHANGE_MODE': {
       const { mode } = action
       return Object.assign({}, state, { mode })

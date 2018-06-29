@@ -9,6 +9,7 @@ import CellContainer from './cells/cell-container'
 import EvalFrame from './eval-frame'
 import NotebookHeader from './menu/notebook-header'
 import AppMessages from './app-messages/app-messages'
+import FullScreenEditorButton from './full-screen-editor-button'
 
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
@@ -27,6 +28,7 @@ class Page extends React.Component {
     title: PropTypes.string,
     cellIds: PropTypes.array,
     cellTypes: PropTypes.array,
+    showFrame: PropTypes.bool,
   }
   constructor(props) {
     super(props)
@@ -115,9 +117,10 @@ class Page extends React.Component {
           >
             <div id="cells">
               {cellInputComponents}
+              <FullScreenEditorButton />
             </div>
           </Resizable>
-          <div style={{ flexGrow: '1', minWidth: '300px' }}><EvalFrame /></div>
+          <div style={{ flexGrow: '1', minWidth: '300px', display: this.props.showFrame ? 'block' : 'none' }}><EvalFrame /></div>
         </div>
         <AppMessages />
       </React.Fragment>
@@ -133,6 +136,7 @@ function mapStateToProps(state) {
     title: state.title,
     sidePane: state.sidePaneMode,
     sidePaneWidth: state.sidePaneWidth,
+    showFrame: state.showFrame,
   }
 }
 

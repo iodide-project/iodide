@@ -342,6 +342,12 @@ export function deleteCell() {
   }
 }
 
+export function toggleEvalFrameVisibility() {
+  return {
+    type: 'TOGGLE_EVAL_FRAME_VISIBILITY',
+  }
+}
+
 
 export function changeSidePaneMode(mode) {
   return {

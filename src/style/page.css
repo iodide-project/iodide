@@ -265,3 +265,12 @@ iframe.eval-frame {
   border:none;
   border-left: 1px solid lightgray;
 }
+
+button.full-screen-editor-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border:none;
+  border-left: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+}
