@@ -7,6 +7,7 @@ import Pane from './pane-container'
 
 import { DeclaredVariable } from './declared-variable'
 import { FrozenVariable } from './frozen-variable'
+import EmptyPaneContents from './empty-pane-contents'
 import tasks from '../../actions/eval-frame-tasks'
 
 
@@ -21,7 +22,12 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 
   render() {
-    const edvElem = Object.keys(this.props.environmentVariables).length !== undefined ? (
+    const noEnvironmentVariables = !Object.keys(this.props.environmentVariables).length
+    const noDeclaredVariables = !this.props.userDefinedVarNames.length
+    const noVariables = (noEnvironmentVariables && noDeclaredVariables) ?
+      <EmptyPaneContents>No Declared Variables</EmptyPaneContents> :
+      undefined
+    const edvElem = !noEnvironmentVariables ? (
       <div className="declared-variables-list">
         <h3>Saved Environment</h3>
         <div className="frozen-variables">
@@ -35,7 +41,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
       </div>
     ) : undefined
 
-    const declaredVariables = this.props.userDefinedVarNames.length ? (
+    const declaredVariables = !noDeclaredVariables ? (
       <div className="declared-variables-list">
         <h3>User Defined Variables</h3>
         {this.props.userDefinedVarNames
@@ -46,6 +52,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
     ) : undefined
     return (
       <Pane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
+        {noVariables}
         {edvElem}
         {declaredVariables}
       </Pane>

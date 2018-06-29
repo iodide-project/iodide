@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import Pane from './pane-container'
 import tasks from '../../actions/eval-frame-tasks'
 import HistoryItem from './history-item'
+import EmptyPaneContents from './empty-pane-contents'
 
 export class HistoryPaneUnconnected extends React.Component {
   static propTypes = {
@@ -19,7 +20,7 @@ export class HistoryPaneUnconnected extends React.Component {
         return cellComponent
       })
     } else {
-      histContents.push(<div className="no-history" key="history_empty">No History</div>)
+      histContents.push(<EmptyPaneContents>No History</EmptyPaneContents>)
     }
     return (
       <Pane task={tasks.toggleHistoryPane} title="History" openOnMode="history">
