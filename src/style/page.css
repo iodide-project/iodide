@@ -267,9 +267,9 @@ iframe.eval-frame {
 }
 
 button.full-screen-editor-button {
-  position: absolute;
+  position: fixed;
   right: 0;
-  top: 0;
+  top: 50px;
   border:none;
   border-left: 1px solid lightgray;
   border-bottom: 1px solid lightgray;
