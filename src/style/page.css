@@ -16,6 +16,12 @@ div#page {
   overflow: hidden;
 }
 
+div#panes-container {
+  display: flex;
+  flex-direction: row;
+  height: calc(100% - 50px);
+}
+
 div#cells {
     /*position: fixed;*/
     /*top: 50px; move down by .notebook-toolbar-container height*/

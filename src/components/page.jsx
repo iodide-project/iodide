@@ -34,6 +34,7 @@ class Page extends React.Component {
     super(props)
 
     initializeDefaultKeybindings()
+    this.changeEditorWidth = this.changeEditorWidth.bind(this)
     setInterval(() => {
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
       const notebooks = Object.keys(localStorage)
@@ -49,6 +50,10 @@ class Page extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
+  }
+
+  changeEditorWidth(width) {
+    this.props.actions.changeEditorWidth(width)
   }
 
   render() {
@@ -92,17 +97,12 @@ class Page extends React.Component {
         <NotebookHeader />
         <div
           id="panes-container"
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            height: 'calc(100% - 50px)',
-          }}
         >
           <Resizable
             enable={{
               bottom: false,
               top: false,
-              right: true,
+              right: this.props.showFrame,
               topRight: false,
               bottomRight: false,
               bottomLeft: false,
@@ -112,7 +112,11 @@ class Page extends React.Component {
             handleClasses={{ right: 'resizer' }}
             maxWidth="100%"
             minWidth={300}
-            defaultSize={{ width: '60%', height: '100%' }}
+            onResizeStop={(e, direction, ref, d) => {
+              this.changeEditorWidth(d.width)
+            }}
+            size={{ width: this.props.showFrame ? this.props.editorWidth : '100%' }}
+            defaultSize={{ height: '100%' }}
             style={resizerStyle}
           >
             <div id="cells">
@@ -137,6 +141,7 @@ function mapStateToProps(state) {
     sidePane: state.sidePaneMode,
     sidePaneWidth: state.sidePaneWidth,
     showFrame: state.showFrame,
+    editorWidth: state.editorWidth,
   }
 }
 

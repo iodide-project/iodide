@@ -363,6 +363,13 @@ export function changeSidePaneWidth(widthShift) {
   }
 }
 
+export function changeEditorWidth(widthShift) {
+  return {
+    type: 'CHANGE_EDITOR_WIDTH',
+    widthShift,
+  }
+}
+
 export function setCellSkipInRunAll(value) {
   return (dispatch, getState) => {
     let setValue = value
