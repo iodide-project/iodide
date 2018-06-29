@@ -1,5 +1,7 @@
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
+const SCROLLBY_BEHAVIOR = 'instant'
+
 function moveCell(cells, cellID, dir) {
   const cellsSlice = cells.slice()
   const index = cellsSlice.findIndex(c => c.id === cellID)
@@ -70,7 +72,7 @@ export function handleCellAndOutputScrolling(cellId, doScroll = true, alignOutpu
     scrollContainer.scrollBy({
       top: scrollByDist,
       left: 0,
-      behavior: 'smooth',
+      behavior: SCROLLBY_BEHAVIOR,
     })
   }
   if (doScroll === false) {
@@ -96,7 +98,7 @@ export function alignCellTopTo(cellId, targetPxFromViewportTop) {
   scrollContainer.scrollBy({
     top: distanceAboveViewportTop - pxFromViewportTop,
     left: 0,
-    behavior: 'smooth',
+    behavior: SCROLLBY_BEHAVIOR,
   })
 }
 
