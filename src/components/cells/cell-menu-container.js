@@ -62,7 +62,7 @@ export class CellMenuContainerUnconnected extends React.Component {
           title="Cell Settings"
           enterDelay={600}
         >
-          <React.Fragment>
+          <div>
             <Menu
               id="cell-menu"
               anchorEl={this.state.anchorElement}
@@ -86,7 +86,7 @@ export class CellMenuContainerUnconnected extends React.Component {
               <ArrowDropDown style={{ fontSize: 20 }} />
 
             </div>
-          </React.Fragment>
+          </div>
         </Tooltip>
         <div className="cell-status-indicators">{skipInRunAllIndicator}</div>
       </div>

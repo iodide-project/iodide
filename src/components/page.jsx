@@ -3,19 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
-
 import Resizable from 're-resizable'
 
-// import RawCell from './cells/raw-cell'
-// import ExternalDependencyCell from './cells/external-resource-cell'
-// import CSSCell from './cells/css-cell'
-// import CodeCell from './cells/code-cell'
-// import MarkdownCell from './cells/markdown-cell'
-// import PluginDefinitionCell from './cells/plugin-definition-cell'
-
 import CellContainer from './cells/cell-container'
-
-
 import EvalFrame from './eval-frame'
 import NotebookHeader from './menu/notebook-header'
 import AppMessages from './app-messages/app-messages'
@@ -93,11 +83,10 @@ class Page extends React.Component {
       return <CellContainer cellId={id} key={id} editorOptions={editorOptions} />
     })
 
+    const resizerStyle = this.props.viewMode === 'presentation' ? { display: 'none' } : {}
+
     return (
-      <div
-        id="notebook-container"
-        className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
-      >
+      <React.Fragment>
         <NotebookHeader />
         <div
           id="panes-container"
@@ -122,18 +111,16 @@ class Page extends React.Component {
             maxWidth="100%"
             minWidth={300}
             defaultSize={{ width: '60%', height: '100%' }}
+            style={resizerStyle}
           >
-            <div
-              id="cells"
-              className={this.props.viewMode}
-            >
+            <div id="cells">
               {cellInputComponents}
             </div>
           </Resizable>
           <div style={{ flexGrow: '1', minWidth: '300px' }}><EvalFrame /></div>
         </div>
         <AppMessages />
-      </div>
+      </React.Fragment>
     )
   }
 }

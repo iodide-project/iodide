@@ -44,7 +44,13 @@ export class ViewControlsUnconnected extends React.Component {
         </NotebookTaskButton>
 
         <AppInfoPane />
-        {IODIDE_BUILD_MODE === 'heroku' && (<UserButton isAuthenticated={this.props.isAuthenticated} />)}
+
+        {IODIDE_BUILD_MODE === 'heroku' && (
+          <UserButton
+            isAuthenticated={this.props.isAuthenticated}
+            avatar={this.props.avatar}
+          />
+        )}
 
         <ViewModeToggleButton />
 

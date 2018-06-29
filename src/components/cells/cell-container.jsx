@@ -19,7 +19,6 @@ export class CellContainerUnconnected extends React.Component {
     // children: PropTypes.node,
     editingCell: PropTypes.bool.isRequired,
     // pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
@@ -36,11 +35,9 @@ export class CellContainerUnconnected extends React.Component {
   // }
 
   handleCellClick = () => {
-    if (this.props.viewMode === 'editor') {
-      const scrollToCell = false
-      if (!this.props.selected) {
-        this.props.actions.selectCell(this.props.cellId, scrollToCell)
-      }
+    const scrollToCell = false
+    if (!this.props.selected) {
+      this.props.actions.selectCell(this.props.cellId, scrollToCell)
     }
   }
 
@@ -81,7 +78,6 @@ export function mapStateToProps(state, ownProps) {
     cellId: cell.id,
     selected: cell.selected,
     editingCell: cell.selected && state.mode === 'edit',
-    viewMode: state.viewMode,
     cellType: cell.cellType,
   }
 }

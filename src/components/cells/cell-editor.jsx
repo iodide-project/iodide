@@ -24,7 +24,6 @@ class CellEditor extends React.Component {
     cellId: PropTypes.number.isRequired,
     cellType: PropTypes.string,
     content: PropTypes.string,
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
     codeMirrorModeLoaded: PropTypes.bool,
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
@@ -62,12 +61,12 @@ class CellEditor extends React.Component {
   }
 
   handleFocusChange(focused) {
-    if (focused && this.props.viewMode === 'editor') {
+    if (focused) {
       if (!this.props.thisCellBeingEdited) {
         this.props.actions.selectCell(this.props.cellId)
         this.props.actions.changeMode('edit')
       }
-    } else if (!focused && this.props.viewMode === 'editor') {
+    } else if (!focused) {
       this.props.actions.changeMode('command')
     }
   }
@@ -113,7 +112,6 @@ class CellEditor extends React.Component {
         'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
       },
       comment: this.props.codeMirrorMode === 'javascript',
-      readOnly: this.props.viewMode === 'presentation',
     }, this.props.editorOptions)
 
     return (
@@ -137,10 +135,7 @@ class CellEditor extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
-  // const languageModule = cell.language in state.languages ?
-  //   state.languages[cell.language].module : null
   const { codeMirrorModeLoaded } = state.languages[cell.language]
-  // cell.cellType !== 'code' ? true : window[languageModule] !== undefined
 
   const codeMirrorMode = (
     cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
@@ -148,7 +143,6 @@ function mapStateToProps(state, ownProps) {
 
   return {
     thisCellBeingEdited: cell.selected && state.mode === 'edit',
-    viewMode: state.viewMode,
     cellType: cell.cellType,
     content: cell.content,
     cellId,
