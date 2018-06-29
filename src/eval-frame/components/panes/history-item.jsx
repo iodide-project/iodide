@@ -13,7 +13,6 @@ export default class HistoryItem extends React.Component {
   }
 
   render() {
-    console.log(this.props.content)
     const mainElem = <pre className="history-item-code">{this.props.content}</pre>
     return (
       <div
