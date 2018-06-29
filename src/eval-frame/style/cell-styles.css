@@ -23,6 +23,11 @@ div.cell-container.no-output {
   outline: none;
 }
 
+div.cell-container.no-output {
+  background-color: none;
+  outline: none;
+}
+
 /* These may need to be integrated into the presentation mode style sheets
 but I don't see why we would have to do this immediately.
 */
@@ -149,6 +154,10 @@ div.selected-cell.editing-cell {
 }
 
 div.selected-cell {
+  outline: 2px solid #ccc;
+}
+
+div.selected-cell.no-output {
   outline: 2px solid #ccc;
 }
 
