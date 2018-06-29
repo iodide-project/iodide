@@ -1,6 +1,6 @@
 html, body {
   font-family: 'Open Sans', sans-serif;
-  height: 100%;
+  height: 100vh;
   margin: 0;
   padding: 0;
   font-size: 14px;
@@ -10,11 +10,6 @@ html, body {
   overflow: hidden;
   position: relative;
 }
-
-/* div#page {
-  height: 100%;
-  overflow: hidden;
-} */
 
 div#eval-container {
   width: 100%;
@@ -27,11 +22,14 @@ div#eval-container.presentation-mode {
   overflow-y: auto;
 }
 
+div.eval-panes {
+  height: 100vh;
+  overflow: scroll;
+}
+
 div#cells.editor {
-  position: absolute;
-  left: 0px;
+  background-color: rgb(250, 250, 250);
   box-sizing: border-box;
-  height: 100%; 
   width: 100%;
   overflow-y: auto;
   padding-top: 20px;

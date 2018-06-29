@@ -307,3 +307,9 @@ export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId)
   }
 }
 
+export function changeSidePaneWidth(widthShift) {
+  return {
+    type: 'CHANGE_SIDE_PANE_WIDTH',
+    widthShift,
+  }
+}

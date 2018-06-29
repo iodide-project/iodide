@@ -6,13 +6,13 @@ import { connect } from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 // import Typography from 'material-ui/Typography'
 import Close from 'material-ui-icons/Close'
+import Resizable from 're-resizable'
 
 import NotebookTaskButton from '../../../components/menu/notebook-task-button'
 import NotebookMenuDivider from '../../../components/menu/notebook-menu-divider'
-// import Resizable from 're-resizable'
 
 // import UserTask from '../../../actions/user-task'
-// import tasks from '../../actions/eval-frame-tasks'
+import tasks from '../../actions/eval-frame-tasks'
 
 const theme = createMuiTheme({
   palette: {
@@ -32,36 +32,50 @@ export class SidePaneUnconnected extends React.Component {
 
     render() {
       return (
-        <div style={{
+        <Resizable
+          enable={{
+            top: true,
+          }}
+          size={{
+            height: this.props.sidePaneMode === this.props.openOnMode ?
+            this.props.sidePaneWidth :
+            0,
+            width: '100%',
+          }}
+          handleClasses={{ top: 'resizer' }}
+          onResizeStop={(e, direction, ref, d) => {
+            tasks.changeSidePaneWidth.callback(d.height)
+        }}
+        >
+          <div style={{
           display: this.props.sidePaneMode === this.props.openOnMode
             && this.props.viewMode !== 'presentation' ? 'block' : 'none',
-          position: 'fixed',
-          bottom: '0px',
           borderTop: '1px solid lightgray',
           backgroundColor: 'white',
-          height: this.props.sidePaneWidth,
+          height: '100%',
           width: '100%',
           overflow: 'auto',
         }}
-        >
-          <MuiThemeProvider theme={theme}>
-            <div className="pane-header">
-              <div className="pane-title">
-                <NotebookTaskButton
-                  tooltip="Close"
-                  task={this.props.task}// tasks.toggleHistoryPane}
-                  style={{ color: 'black', margin: '5px' }}
-                >
-                  <Close />
-                </NotebookTaskButton>
-                {this.props.title}
+          >
+            <MuiThemeProvider theme={theme}>
+              <div className="pane-header">
+                <div className="pane-title">
+                  <NotebookTaskButton
+                    tooltip="Close"
+                    task={this.props.task}// tasks.toggleHistoryPane}
+                    style={{ color: 'black', margin: '5px' }}
+                  >
+                    <Close />
+                  </NotebookTaskButton>
+                  {this.props.title}
 
+                </div>
+                <NotebookMenuDivider />
               </div>
-              <NotebookMenuDivider />
-            </div>
-            {this.props.children}
-          </MuiThemeProvider>
-        </div>
+              {this.props.children}
+            </MuiThemeProvider>
+          </div>
+        </Resizable>
       )
     }
 }

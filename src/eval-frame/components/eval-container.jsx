@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
-// import Resizable from 're-resizable'
+import Resizable from 're-resizable'
 
 import RawOutput from './outputs/raw-output'
 import ExternalDependencyOutput from './outputs/external-resource-output'
@@ -37,9 +37,9 @@ class EvalContainer extends React.Component {
   }
 
   getPageHeight() {
-    let height = '100%'
+    let height = '100vh'
     if (this.props.viewMode === 'presentation') height = 'undefined'
-    else if (this.props.sidePane) height = `calc(100% - ${this.props.sidePaneWidth}px)`
+    else if (this.props.sidePane) height = `calc(100vh - ${this.props.sidePaneWidth}px)`
     return height
   }
 
@@ -64,12 +64,20 @@ class EvalContainer extends React.Component {
       }
     })
     return (
-      <div className="eval-panes">
-        <div
-          id="eval-container"
-          className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
+      <div
+        className="eval-panes"
+        style={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+      >
+        <Resizable
+          enable={{
+            bottom: true,
+          }}
+          maxHeight="100%"
+          handleClasses={{ bottom: 'resizer' }}
         >
-
           <div
             id="cells"
             className={this.props.viewMode}
@@ -77,9 +85,15 @@ class EvalContainer extends React.Component {
           >
             {bodyContent}
           </div>
+        </Resizable>
+        <div style={{
+          flexGrow: '1',
+          minHeight: '0px',
+        }}
+        >
+          <DeclaredVariablesPane />
+          <HistoryPane />
         </div>
-        <DeclaredVariablesPane />
-        <HistoryPane />
       </div>
     )
   }

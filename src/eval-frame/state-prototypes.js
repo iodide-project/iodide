@@ -224,7 +224,7 @@ function blankState() {
     mode: 'command', // command, edit
     viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
-    sidePaneWidth: 562,
+    sidePaneWidth: 400,
     history: [],
     externalDependencies: [],
     executionNumber: 0,

@@ -12,6 +12,7 @@ div.cell-container {
   /* put the .cell-menu-container and .cell-row-container in a row */
   display: flex;
   flex-direction: row; 
+  background-color: white;
 }
 
 /* These may need to be integrated into the presentation mode style sheets
@@ -19,7 +20,7 @@ but I don't see why we would have to do this immediately.
 */
 
 div#cells.editor div.raw-dom-element {
-  overflow-x: scroll
+  overflow-x: scroll;
 }
 
 div#cells.presentation div.cell-container {
