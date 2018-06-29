@@ -18,7 +18,6 @@ export class OutputContainerUnconnected extends React.Component {
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
     postMessageToEditor: PropTypes.func.isRequired,
-    outputHasValue: PropTypes.bool,
   }
 
   constructor(props) {
@@ -62,9 +61,6 @@ export class OutputContainerUnconnected extends React.Component {
         className={cellClass}
         onMouseDown={this.handleCellClick}
         ref={this.containerRef}
-        style={{
-          display: this.props.outputHasValue ? 'block' : 'none',
-        }}
       >
         <div className="cell-row-container">
           {this.props.children}
@@ -84,7 +80,6 @@ export function mapStateToProps(state, ownProps) {
     viewMode: state.viewMode,
     cellType: cell.cellType,
     postMessageToEditor,
-    outputHasValue: cell.value !== undefined,
   }
 }
 
