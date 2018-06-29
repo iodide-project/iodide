@@ -12,7 +12,15 @@ div.cell-container {
   /* put the .cell-menu-container and .cell-row-container in a row */
   display: flex;
   flex-direction: row; 
+}
+
+div.cell-container.has-output {
   background-color: white;
+}
+
+div.cell-container.no-output {
+  background-color: none;
+  outline: none;
 }
 
 /* These may need to be integrated into the presentation mode style sheets
