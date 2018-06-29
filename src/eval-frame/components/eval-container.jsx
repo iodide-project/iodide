@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
-import Resizable from 're-resizable'
+// import Resizable from 're-resizable'
 
 import RawOutput from './outputs/raw-output'
 import ExternalDependencyOutput from './outputs/external-resource-output'
@@ -71,25 +71,18 @@ class EvalContainer extends React.Component {
         flexDirection: 'column',
       }}
       >
-        <Resizable
-          enable={{
-            bottom: true,
-          }}
-          maxHeight="100%"
-          handleClasses={{ bottom: 'resizer' }}
+        <div
+          id="cells"
+          className={this.props.viewMode}
+          style={{
+              flexGrow: '1',
+              minHeight: '0px',
+            }}
         >
-          <div
-            id="cells"
-            className={this.props.viewMode}
-            style={{ height: this.getPageHeight() }}
-          >
-            {bodyContent}
-          </div>
-        </Resizable>
-        <div style={{
-          flexGrow: '1',
-          minHeight: '0px',
-        }}
+          {bodyContent}
+        </div>
+        <div
+          style={{ display: this.props.sidePane === undefined ? 'none' : undefined }}
         >
           <DeclaredVariablesPane />
           <HistoryPane />
