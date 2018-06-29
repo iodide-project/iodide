@@ -82,7 +82,9 @@ class EvalContainer extends React.Component {
           {bodyContent}
         </div>
         <div
-          style={{ display: this.props.sidePane === undefined ? 'none' : undefined }}
+          style={{
+            display: this.props.sidePane === undefined ? 'none' : undefined,
+           }}
         >
           <DeclaredVariablesPane />
           <HistoryPane />

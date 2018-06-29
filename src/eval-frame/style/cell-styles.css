@@ -65,7 +65,7 @@ div#cells.presentation div.cell-row.input {
 }
 
 div.cell-row-container {
-  width: calc(100% - 76px); /* 100% minus cell-menu-contatiner width*/
+  width: calc(100% - 20px); /* 100% minus cell-menu-contatiner width*/
     flex-shrink: 0;
     flex-grow: 0;
 }

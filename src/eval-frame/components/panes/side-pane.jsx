@@ -47,14 +47,11 @@ export class SidePaneUnconnected extends React.Component {
             tasks.changeSidePaneWidth.callback(d.height)
         }}
         >
-          <div style={{
+          <div
+            className="view-pane"
+            style={{
           display: this.props.sidePaneMode === this.props.openOnMode
             && this.props.viewMode !== 'presentation' ? 'block' : 'none',
-          borderTop: '1px solid lightgray',
-          backgroundColor: 'white',
-          height: '100%',
-          width: '100%',
-          overflow: 'auto',
         }}
           >
             <MuiThemeProvider theme={theme}>
