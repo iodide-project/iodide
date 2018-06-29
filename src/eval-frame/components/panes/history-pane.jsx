@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import SidePane from './side-pane'
+import Pane from './pane-container'
 import tasks from '../../actions/eval-frame-tasks'
 import HistoryItem from './history-item'
 
@@ -22,9 +22,9 @@ export class HistoryPaneUnconnected extends React.Component {
       histContents.push(<div className="no-history" key="history_empty">No History</div>)
     }
     return (
-      <SidePane task={tasks.toggleHistoryPane} title="History" openOnMode="history">
+      <Pane task={tasks.toggleHistoryPane} title="History" openOnMode="history">
         <div className="history-cells"> {histContents} </div>
-      </SidePane>
+      </Pane>
     )
   }
 }

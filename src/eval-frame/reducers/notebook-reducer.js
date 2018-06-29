@@ -50,9 +50,9 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { sidePaneMode: action.mode })
     }
 
-    case 'CHANGE_SIDE_PANE_WIDTH': {
-      const width = state.sidePaneWidth + action.widthShift
-      return Object.assign({}, state, { sidePaneWidth: width })
+    case 'CHANGE_PANE_HEIGHT': {
+      const paneHeight = state.paneHeight + action.heightShift
+      return Object.assign({}, state, { paneHeight })
     }
 
     case 'INCREMENT_EXECUTION_NUMBER': {

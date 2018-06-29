@@ -39,7 +39,7 @@ class EvalContainer extends React.Component {
   getPageHeight() {
     let height = '100vh'
     if (this.props.viewMode === 'presentation') height = 'undefined'
-    else if (this.props.sidePane) height = `calc(100vh - ${this.props.sidePaneWidth}px)`
+    else if (this.props.sidePane) height = `calc(100vh - ${this.props.paneHeight}px)`
     return height
   }
 
@@ -101,7 +101,7 @@ function mapStateToProps(state) {
     viewMode: state.viewMode,
     title: state.title,
     sidePane: state.sidePaneMode,
-    sidePaneWidth: state.sidePaneWidth,
+    paneHeight: state.paneHeight,
   }
 }
 

@@ -11,7 +11,7 @@ import Resizable from 're-resizable'
 import NotebookTaskButton from '../../../components/menu/notebook-task-button'
 import NotebookMenuDivider from '../../../components/menu/notebook-menu-divider'
 
-// import UserTask from '../../../actions/user-task'
+import UserTask from '../../../actions/user-task'
 import tasks from '../../actions/eval-frame-tasks'
 
 const theme = createMuiTheme({
@@ -20,14 +20,14 @@ const theme = createMuiTheme({
   },
 })
 
-export class SidePaneUnconnected extends React.Component {
+export class PaneContainerUnconnected extends React.Component {
     static propTypes = {
       sidePaneMode: PropTypes.string,
       title: PropTypes.string,
-      sidePaneWidth: PropTypes.number,
+      paneHeight: PropTypes.number,
       openOnMode: PropTypes.string,
       viewMode: PropTypes.string,
-      // task: PropTypes.instanceOf(UserTask),
+      task: PropTypes.instanceOf(UserTask),
     }
 
     render() {
@@ -38,13 +38,13 @@ export class SidePaneUnconnected extends React.Component {
           }}
           size={{
             height: this.props.sidePaneMode === this.props.openOnMode ?
-            this.props.sidePaneWidth :
+            this.props.paneHeight :
             0,
             width: '100%',
           }}
           handleClasses={{ top: 'resizer' }}
           onResizeStop={(e, direction, ref, d) => {
-            tasks.changeSidePaneWidth.callback(d.height)
+            tasks.changePaneHeight.callback(d.height)
         }}
         >
           <div
@@ -81,8 +81,8 @@ export function mapStateToProps(state) {
   return {
     viewMode: state.viewMode,
     sidePaneMode: state.sidePaneMode,
-    sidePaneWidth: state.sidePaneWidth,
+    paneHeight: state.paneHeight,
   }
 }
 
-export default connect(mapStateToProps)(SidePaneUnconnected)
+export default connect(mapStateToProps)(PaneContainerUnconnected)

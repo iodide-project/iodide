@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
 
-import SidePane from './side-pane'
+import Pane from './pane-container'
 
 import { DeclaredVariable } from './declared-variable'
 import { FrozenVariable } from './frozen-variable'
@@ -45,10 +45,10 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
       </div>
     ) : undefined
     return (
-      <SidePane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
+      <Pane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
         {edvElem}
         {declaredVariables}
-      </SidePane>
+      </Pane>
     )
   }
 }

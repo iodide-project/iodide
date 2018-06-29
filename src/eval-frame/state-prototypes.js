@@ -110,7 +110,7 @@ const stateSchema = {
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
-    sidePaneWidth: { type: 'integer' },
+    paneHeight: { type: 'integer' },
     externalDependencies: { type: 'array' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
@@ -224,7 +224,7 @@ function blankState() {
     mode: 'command', // command, edit
     viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
-    sidePaneWidth: 400,
+    paneHeight: 400,
     history: [],
     externalDependencies: [],
     executionNumber: 0,

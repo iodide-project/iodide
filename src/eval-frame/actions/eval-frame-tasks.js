@@ -1,7 +1,7 @@
 import UserTask from '../../actions/user-task'
 import { postKeypressToEditor } from '../port-to-editor'
 import { store } from '../store'
-import { changeSidePaneWidth } from './actions'
+import { changePaneHeight } from './actions'
 
 const tasks = {}
 
@@ -25,10 +25,10 @@ tasks.exportNotebook = new UserTask({
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
 
-tasks.changeSidePaneWidth = new UserTask({
+tasks.changePaneHeight = new UserTask({
   title: 'Change Width of Side Pane',
-  callback(widthShift) {
-    store.dispatch(changeSidePaneWidth(widthShift))
+  callback(heightShift) {
+    store.dispatch(changePaneHeight(heightShift))
   },
 })
 
