@@ -275,7 +275,7 @@ iframe.eval-frame {
 div.display-buttons {
   position: fixed;
   left: 0;
-  top: 50px;
+  top: 0px;
   margin:0;
   padding:0;
   z-index: 3;
@@ -283,17 +283,17 @@ div.display-buttons {
 
 button.display-button {
   margin:0;
-  padding:3px;
+  padding:2px;
   border:none;
-  border-right: 1px solid lightgray;
-  border-bottom: 1px solid lightgray;
   display: block;
   width: 25px;
+  height:25px;
   text-align:center;
-  color:gray;
-
+  color:white;
+  background-color: black;
 }
 
 button.display-button.is-active {
-  color:black;
+  background-color: rgb(30,30,30);
+
 }
