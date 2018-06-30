@@ -33,16 +33,14 @@ export default class HistoryItem extends React.Component {
     const mainElem = <pre className="history-item-code">{this.props.content}</pre>
     return (
       <div
+        onMouseEnter={() => { this.showFullDate(true) }}
+        onMouseLeave={() => { this.showFullDate(false) }}
         id={`cell-${this.props.cell.id}`}
         className={`${this.props.display ? '' : 'hidden-cell'}`}
       >
         <div className="cell history-cell">
           <div className="history-content editor">{mainElem}</div>
-          <span
-            onMouseEnter={() => { this.showFullDate(true) }}
-            onMouseLeave={() => { this.showFullDate(false) }}
-            className="history-time-since"
-          >{this.state.timeSince}
+          <span className="history-time-since">{this.state.timeSince}
           </span>
           <span
             style={{
