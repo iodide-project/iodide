@@ -90,11 +90,11 @@ class Page extends React.Component {
       return <CellContainer cellId={id} key={id} editorOptions={editorOptions} />
     })
 
-    const resizerStyle = this.props.viewMode === 'presentation' ? { display: 'none' } : {}
-
     return (
       <React.Fragment>
         <NotebookHeader />
+        <FullScreenEditorButton />
+
         <div
           id="panes-container"
         >
@@ -117,11 +117,13 @@ class Page extends React.Component {
             }}
             size={{ width: this.props.showFrame ? this.props.editorWidth : '100%' }}
             defaultSize={{ height: '100%' }}
-            style={resizerStyle}
+            style={{
+              display: this.props.viewMode === 'presentation' ||
+                !this.props.showEditor ? 'none' : undefined,
+            }}
           >
             <div id="cells">
               {cellInputComponents}
-              <FullScreenEditorButton />
             </div>
           </Resizable>
           <div style={{ flexGrow: '1', minWidth: '300px', display: this.props.showFrame ? 'block' : 'none' }}><EvalFrame /></div>
@@ -141,6 +143,7 @@ function mapStateToProps(state) {
     sidePane: state.sidePaneMode,
     sidePaneWidth: state.sidePaneWidth,
     showFrame: state.showFrame,
+    showEditor: state.showEditor,
     editorWidth: state.editorWidth,
   }
 }

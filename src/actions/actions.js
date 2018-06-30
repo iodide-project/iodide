@@ -348,6 +348,11 @@ export function toggleEvalFrameVisibility() {
   }
 }
 
+export function toggleEditorVisibility() {
+  return {
+    type: 'TOGGLE_EDITOR_VISIBILITY',
+  }
+}
 
 export function changeSidePaneMode(mode) {
   return {

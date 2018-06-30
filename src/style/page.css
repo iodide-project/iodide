@@ -272,11 +272,28 @@ iframe.eval-frame {
   border-left: 1px solid lightgray;
 }
 
-button.full-screen-editor-button {
+div.display-buttons {
   position: fixed;
   left: 0;
   top: 50px;
+  margin:0;
+  padding:0;
+  z-index: 3;
+}
+
+button.display-button {
+  margin:0;
+  padding:3px;
   border:none;
   border-right: 1px solid lightgray;
   border-bottom: 1px solid lightgray;
+  display: block;
+  width: 25px;
+  text-align:center;
+  color:gray;
+
+}
+
+button.display-button.is-active {
+  color:black;
 }

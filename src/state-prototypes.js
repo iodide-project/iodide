@@ -140,6 +140,7 @@ const stateSchema = {
     evalFrameReady: { type: 'boolean' },
     externalDependencies: { type: 'array' },
     showFrame: { type: 'boolean' },
+    showEditor: { type: 'boolean' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
@@ -259,6 +260,7 @@ function blankState() {
     sidePaneWidth: 562,
     history: [],
     showFrame: true,
+    showEditor: true,
     evalFrameMessageQueue: [],
     evalFrameReady: false,
     externalDependencies: [],

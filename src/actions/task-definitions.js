@@ -366,6 +366,11 @@ tasks.toggleEvalFrameVisibility = new UserTask({
   callback() { dispatcher.toggleEvalFrameVisibility() },
 })
 
+tasks.toggleEditorVisibility = new UserTask({
+  title: 'Toggle Editor Visibility',
+  callback() { dispatcher.toggleEditorVisibility() },
+})
+
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',
   menuTitle: 'File an Issue ...',

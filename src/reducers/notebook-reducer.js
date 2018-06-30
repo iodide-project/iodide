@@ -222,6 +222,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { showFrame })
     }
 
+    case 'TOGGLE_EDITOR_VISIBILITY': {
+      const showEditor = !state.showEditor
+      return Object.assign({}, state, { showEditor })
+    }
+
     case 'CHANGE_MODE': {
       const { mode } = action
       return Object.assign({}, state, { mode })
