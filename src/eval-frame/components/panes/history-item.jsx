@@ -40,14 +40,13 @@ export default class HistoryItem extends React.Component {
       >
         <div className="cell history-cell">
           <div className="history-content editor">{mainElem}</div>
-          <span className="history-time-since">{this.state.timeSince}
-          </span>
+          <span className="history-time-since"> {this.state.timeSince} </span>
           <span
             style={{
               opacity: this.state.fullDate ? 1 : 0,
             }}
             className="history-date"
-          >{this.props.cell.lastRan.toUTCString()}
+          > / {this.props.cell.lastRan.toUTCString()}
           </span>
         </div>
         <div className="cell-controls" />
