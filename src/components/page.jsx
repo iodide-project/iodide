@@ -14,7 +14,6 @@ import FullScreenEditorButton from './full-screen-editor-button'
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
 
-
 const AUTOSAVE = 'AUTOSAVE: '
 
 class Page extends React.Component {

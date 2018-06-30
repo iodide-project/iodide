@@ -68,7 +68,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         lastRan: new Date(),
         content: action.content,
       })
-      console.warn(history)
       return Object.assign({}, state, { history })
     }
 

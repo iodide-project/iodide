@@ -75,12 +75,28 @@ div.history-content {
   width: calc(100% - 1px)
 }
 
-div.history-date {
-  padding-left: 33px;
-  margin-top:4px;
+span.history-date {
+  display: inline-block;
+  margin-top:6px;
   margin-bottom: 15px;
-  font-size: 12px;
+  padding-left:8px;
+  font-size: 11px;
   color: gray;
+  transition: 50ms;
+}
+
+span.history-time-since {
+  display: inline-block;
+  margin-top:6px;
+  margin-bottom: 15px;
+  padding-left:4px;
+  padding-right:4px;
+  padding-top:2px;
+  padding-bottom:2px;
+  border-radius:2px;
+  font-size: 11px;
+  background-color: rgb(241, 241, 241);
+  font-weight:300;
 }
 
 div.no-history {
