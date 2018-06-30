@@ -90,6 +90,10 @@ div.promise-handler-value {
   margin-top:6px;
 }
 
+.undefined-rep, .null-rep {
+  display: inline-block;
+}
+
 /************************************************/
 /* et cetera styles */
 
