@@ -295,5 +295,8 @@ button.display-button {
 
 button.display-button.is-active {
   background-color: rgb(30,30,30);
+}
 
+button.display-button:hover {
+  background-color: #686868;
 }
