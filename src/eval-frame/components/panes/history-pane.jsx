@@ -14,15 +14,19 @@ export class HistoryPaneUnconnected extends React.Component {
   render() {
     let histContents = []
     if (this.props.history.length) {
-      this.props.history.reverse()
-      histContents = this.props.history.filter(cell => cell.content.length).map((cell, i) => {
-      // TODO: Don't use array indices in keys (See react/no-array-index-key linter)
-      const cellComponent = <HistoryItem display content={cell.content} ref={`cell${cell.id}`} cell={cell} id={`${i}-${cell.id}`} key={`history${i}`} />  // eslint-disable-line
+      histContents = this.props.history.filter(cell => cell.content.length).map((cell) => {
+        const cellComponent = (<HistoryItem
+          display
+          content={cell.content}
+          cell={cell}
+          key={`history-${+cell.lastRan}-${cell.id}`}
+        />)
         return cellComponent
       })
     } else {
       histContents.push(<EmptyPaneContents>No History</EmptyPaneContents>)
     }
+    histContents.reverse()
     return (
       <Pane task={tasks.toggleHistoryPane} title="History" openOnMode="history">
         <div className="history-cells"> {histContents} </div>

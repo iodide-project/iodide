@@ -14,7 +14,6 @@ export default class HistoryItem extends React.Component {
   }
   constructor(props) {
     super(props)
-    // set up a timer here
     this.state = { timeSince: 'just now', fullDate: false }
     this.showFullDate = this.showFullDate.bind(this)
   }
