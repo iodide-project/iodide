@@ -15,7 +15,6 @@ export class HistoryPaneUnconnected extends React.Component {
     let histContents = []
     if (this.props.history.length) {
       histContents = this.props.history.filter(cell => cell.content.length).map((cell) => {
-        console.warn(`history-${+cell.lastRan.toString()}-${cell.cellID}`)
         const cellComponent = (<HistoryItem
           display
           content={cell.content}
