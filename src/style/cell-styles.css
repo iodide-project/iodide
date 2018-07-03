@@ -69,7 +69,6 @@ button.delete-cell-button:hover {
   color: black;
   background-color:#f1f1f1;
   border:1px solid #dbdbdb;
-  box-shadow: inset 0px 0px 2px rgba(0,0,0,.05);
 }
 
 .cell-menu-container {
@@ -169,7 +168,8 @@ div.HIDDEN div.collapse-button {
 }
 
 div.main-component {
-    width: calc(100% - 25px); /* 100% minus .collapse-button width (including margins) */
+    /* width: calc(100% - 25px); // 100% minus .collapse-button width (including margins) */ 
+    width: 100%;
     flex-shrink: 0;
     flex-grow: 0;
 }

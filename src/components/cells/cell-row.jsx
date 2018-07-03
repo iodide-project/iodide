@@ -58,6 +58,7 @@ export class CellRowUnconnected extends React.Component {
           <div
             className="collapse-button"
             onClick={this.handleCollapseButtonClick}
+            style={{ display: 'none' /* for now */ }}
           />
         </Tooltip>
         <div className="main-component">
