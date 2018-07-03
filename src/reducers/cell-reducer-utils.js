@@ -91,6 +91,7 @@ export function alignCellTopTo(cellId, targetPxFromViewportTop) {
   // clamp to viewport top
   const pxFromViewportTop = targetPxFromViewportTop < 0 ? SCROLL_PADDING : targetPxFromViewportTop
   const elem = document.getElementById(`cell-${cellId}`)
+  if (elem === null) return
   const rect = elem.getBoundingClientRect()
   const scrollContainer = document.getElementById('cells')
   const viewportRect = scrollContainer.getBoundingClientRect()

@@ -77,10 +77,11 @@ div.history-content {
 
 div.history-metadata {
   width:100%;
+  display: flex;
+  align-items: baseline;
 }
 
-span.history-date {
-  display: inline-block;
+div.history-date {
   margin-top:6px;
   margin-bottom: 15px;
   font-size: 11px;
@@ -88,13 +89,13 @@ span.history-date {
   transition: 50ms;
 }
 
-span.history-time-since {
-  display: inline-block;
+div.history-time-since {
   margin-top:6px;
   margin-bottom: 15px;
   padding-top:2px;
   font-size: 11px;
   padding-right:3px;
+  padding-left:6px;
 }
 
 div.no-history {
@@ -176,4 +177,18 @@ div.app-info-message {
   padding-left: 20px;
   padding-right: 10px;
   padding-top: 20px;
+}
+
+button.pane-button {
+  width: 20px;
+  height: 20px;
+  margin:0;
+  padding:0;
+  border: 1px solid lightgray;
+  border-radius: 2px;
+  transition: 50ms;
+}
+
+button.pane-button-hover {
+  box-shadow: 0px 0px 5px rgba(0,0,0,.2)
 }
