@@ -48,7 +48,32 @@ div#cells.presentation div.cell-row.input {
   padding:0px;
 }*/
 
+.cell-header {
+  display: flex;
+}
+
+button.delete-cell-button {
+  margin:0;
+  padding:0;
+  color: gray;
+  border: 1px solid rgba(0,0,0,0);
+  background-color: rgba(0,0,0,0);
+  width: 20px;
+  height: 20px;
+  border-radius:4px;
+  padding-top:2px;
+  transition:50ms;
+}
+
+button.delete-cell-button:hover {
+  color: black;
+  background-color:#f1f1f1;
+  border:1px solid #dbdbdb;
+  box-shadow: inset 0px 0px 2px rgba(0,0,0,.05);
+}
+
 .cell-menu-container {
+    width: calc(100% - 30px);
     font-size:12px;
     margin-bottom:4px;
     display:flex;
@@ -234,3 +259,4 @@ div.hidden-cell {
   color: #23527c;
   text-decoration: underline;
 }
+

@@ -1,7 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+
+import Close from 'material-ui-icons/Close'
 
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
@@ -46,7 +48,12 @@ export class CellContainerUnconnected extends React.Component {
         className={cellClass}
         onMouseDown={this.handleCellClick}
       >
-        <CellMenuContainer cellId={this.props.cellId} />
+        <div className="cell-header">
+          <button className="delete-cell-button" onClick={this.props.actions.deleteCell}>
+            <Close style={{ fontSize: '12px' }} />
+          </button>
+          <CellMenuContainer cellId={this.props.cellId} />
+        </div>
         <div className="cell-row-container">
           <CellRow cellId={this.props.cellId} rowType="input">
             <CellEditor
