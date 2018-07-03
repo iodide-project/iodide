@@ -29,6 +29,9 @@ export class FullScreenEditorButtonUnconnected extends React.Component {
         <EditorButton name="eval frame" isActive={this.props.showFrame} onClick={() => { tasks.toggleEvalFrameVisibility.callback(); }}>
           <EvalFrameIcon style={{ fontSize: '13px' }} />
         </EditorButton>
+        <EditorButton name="link editor" isActive={this.props.linkEditor} onClick={() => { tasks.toggleEditorLink.callback(); }}>
+          <EvalFrameIcon style={{ fontSize: '13px' }} />
+        </EditorButton>
       </div>
     )
   }
@@ -39,6 +42,7 @@ function mapStateToProps(state) {
     showFrame: state.showFrame,
     showEditor: state.showEditor,
     viewMode: state.viewMode,
+    linkEditor: state.linkEditor,
   }
 }
 

@@ -141,6 +141,7 @@ const stateSchema = {
     externalDependencies: { type: 'array' },
     showFrame: { type: 'boolean' },
     showEditor: { type: 'boolean' },
+    linkEditor: { type: 'boolean' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
@@ -261,6 +262,7 @@ function blankState() {
     history: [],
     showFrame: true,
     showEditor: true,
+    linkEditor: true,
     evalFrameMessageQueue: [],
     evalFrameReady: false,
     externalDependencies: [],

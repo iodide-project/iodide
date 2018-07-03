@@ -227,6 +227,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { showEditor })
     }
 
+    case 'TOGGLE_EDITOR_LINK': {
+      const linkEditor = !state.linkEditor
+      return Object.assign({}, state, { linkEditor })
+    }
+
     case 'CHANGE_MODE': {
       const { mode } = action
       return Object.assign({}, state, { mode })

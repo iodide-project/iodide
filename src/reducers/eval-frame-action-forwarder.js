@@ -4,6 +4,8 @@ import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 // this function forwards certain white-listed actions to the eval-frame.
 // If the eval frame is not ready, it automatically enqueues them for later sending.
+
+
 const evalFrameActionForwarder = (state, action) => {
   switch (action.type) {
     // notebook level actions

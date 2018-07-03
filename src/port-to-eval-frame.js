@@ -8,8 +8,18 @@ export function postMessageToEvalFrame(messageType, message) {
   portToEvalFrame.postMessage({ messageType, message })
 }
 
+const LINKED_ACTIONS = new Set([
+  'SELECT_CELL', 'ALIGN_OUTPUT_TO_EDITOR',
+])
+
 export function postActionToEvalFrame(actionObj) {
-  postMessageToEvalFrame('REDUX_ACTION', actionObj)
+  if (!store.getState().linkEditor) {
+    if (!LINKED_ACTIONS.has(actionObj.type)) {
+      postMessageToEvalFrame('REDUX_ACTION', actionObj)
+    }
+  } else {
+    postMessageToEvalFrame('REDUX_ACTION', actionObj)
+  }
 }
 
 const approvedReduxActions = [

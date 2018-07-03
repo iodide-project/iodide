@@ -354,6 +354,12 @@ export function toggleEditorVisibility() {
   }
 }
 
+export function toggleEditorLink() {
+  return {
+    type: 'TOGGLE_EDITOR_LINK',
+  }
+}
+
 export function changeSidePaneMode(mode) {
   return {
     type: 'CHANGE_SIDE_PANE_MODE',
