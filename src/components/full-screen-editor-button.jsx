@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Tooltip from 'material-ui/Tooltip'
 import EditorIcon from 'material-ui-icons/Code'
 import EvalFrameIcon from 'material-ui-icons/InsertChart'
+import LinkIcon from 'material-ui-icons/Link'
 import tasks from '../actions/task-definitions'
 
 const EditorButton = props => (
@@ -30,7 +31,7 @@ export class FullScreenEditorButtonUnconnected extends React.Component {
           <EvalFrameIcon style={{ fontSize: '13px' }} />
         </EditorButton>
         <EditorButton name="link editor" isActive={this.props.linkEditor} onClick={() => { tasks.toggleEditorLink.callback(); }}>
-          <EvalFrameIcon style={{ fontSize: '13px' }} />
+          <LinkIcon style={{ fontSize: '13px' }} />
         </EditorButton>
       </div>
     )
