@@ -23,15 +23,17 @@ describe('CellMenuContainerUnconnected', () => {
     expect(mountedMenuContainer.state('anchorElement')).toEqual(null);
   })
 
-  it('matches the snapshot if props.skipInRunAll is true', () => {
-    props.skipInRunAll = true;
+  it('matches the snapshot if props.skipInRunAll is false', () => {
     const mountedMenuContainer = shallow(<CellMenuContainerUnconnected { ...props } />);
 
     expect(mountedMenuContainer).toMatchSnapshot();
   })
 
-  it('matches the snapshot if props.skipInRunAll is false', () => {
+  it('matches the snapshot if props.skipInRunAll is true', () => {
+    props.skipInRunAll = true;
+    const mountedMenuContainer = shallow(<CellMenuContainerUnconnected { ...props } />);
 
+    expect(mountedMenuContainer).toMatchSnapshot();
   })
 
   it('matches the snapshot if state.anchorElement is not null', () => {
