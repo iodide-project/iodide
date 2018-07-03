@@ -16,23 +16,13 @@ export class CellContainerUnconnected extends React.Component {
   static propTypes = {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
-    // children: PropTypes.node,
     editingCell: PropTypes.bool.isRequired,
-    // pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
     }).isRequired,
     editorOptions: PropTypes.object,
   }
-
-  // shouldComponentUpdate(nextProps) {
-  //   return (
-  //     this.props.selected !== nextProps.selected ||
-  //     this.props.pageMode !== nextProps.pageMode ||
-  //     this.props.cellType !== nextProps.cellType
-  //   )
-  // }
 
   handleCellClick = () => {
     const scrollToCell = false
@@ -42,7 +32,6 @@ export class CellContainerUnconnected extends React.Component {
   }
 
   render() {
-    // console.log(`CellContainer rendered: ${this.props.cellId}`)
     const cellClass = `cell-container ${
       this.props.cellType
     }${
@@ -88,6 +77,4 @@ export function mapDispatchToProps(dispatch) {
   }
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Page)
-export default connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected) // eslint-disable-line
-// CellContainerConnected as CellContainer }
+export default connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected)

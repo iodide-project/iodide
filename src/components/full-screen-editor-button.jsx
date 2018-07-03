@@ -7,7 +7,7 @@ import LinkIcon from 'material-ui-icons/Link'
 import tasks from '../actions/task-definitions'
 
 const EditorButton = props => (
-  <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title={`${props.isActive ? 'hide' : 'show'} ${props.name}`}>
+  <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title={props.text}>
     <button
       className={`display-button ${props.isActive ? 'is-active' : ''}`}
       onClick={props.onClick}
@@ -24,13 +24,26 @@ export class FullScreenEditorButtonUnconnected extends React.Component {
         display: this.props.viewMode === 'presentation' ? 'none' : undefined,
       }}
       >
-        <EditorButton name="editor" isActive={this.props.showEditor} onClick={() => { tasks.toggleEditorVisibility.callback(); }}>
+        <EditorButton
+          name="editor"
+          text={this.props.showEditor ? 'hide editor' : 'show editor'}
+          isActive={this.props.showEditor}
+          onClick={() => { tasks.toggleEditorVisibility.callback(); }}
+        >
           <EditorIcon style={{ fontSize: '13px' }} />
         </EditorButton>
-        <EditorButton name="eval frame" isActive={this.props.showFrame} onClick={() => { tasks.toggleEvalFrameVisibility.callback(); }}>
+        <EditorButton
+          text={this.props.showFrame ? 'hide eval frame' : 'show eval frame'}
+          isActive={this.props.showFrame}
+          onClick={() => { tasks.toggleEvalFrameVisibility.callback(); }}
+        >
           <EvalFrameIcon style={{ fontSize: '13px' }} />
         </EditorButton>
-        <EditorButton name="link editor" isActive={this.props.linkEditor} onClick={() => { tasks.toggleEditorLink.callback(); }}>
+        <EditorButton
+          text={this.props.linkEditor ? 'unscroll w/ editor' : 'scroll w/ editor'}
+          isActive={this.props.linkEditor}
+          onClick={() => { tasks.toggleEditorLink.callback(); }}
+        >
           <LinkIcon style={{ fontSize: '13px' }} />
         </EditorButton>
       </div>
