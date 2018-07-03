@@ -7,8 +7,20 @@ import {
 } from '../cell-menu-container';
 
 describe('CellMenuContainerUnconnected', () => {
-  it('has default state of anchorElement as null', () => {
+  let props;
 
+  beforeEach(() => {
+    props = {
+      label: 'md',
+      cellId: 0,
+      skipInRunAll: false 
+    } 
+  })
+
+  it('has default state of anchorElement as null', () => {
+    const mountedMenuContainer = shallow(<CellMenuContainerUnconnected { ...props } />);
+
+    expect(mountedMenuContainer.state('anchorElement')).toEqual(null);
   })
 
   it('matches the snapshot if props.skipInRunAll is true', () => {
@@ -50,6 +62,4 @@ describe('CellMenuContainerUnconnected mapStateToProps', () => {
   })
 })
 
-describe('CellMenuContainerUnconnected mapDispatchToProps', () => {
-  
-})
+
