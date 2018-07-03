@@ -4,6 +4,30 @@ import { getCellById } from '../tools/notebook-utils'
 
 export const getRunningCellID = () => store.getState().runningCellID
 
+export const resetAsyncProcessCount = () => {
+  const cellId = getRunningCellID()
+  store.dispatch(updateCellProperties(cellId, {
+    asyncProcessCount: 0,
+  }))
+}
+
+export const incrementAsyncProcessCount = (n = 1) => {
+  const cellId = getRunningCellID()
+  const cell = getCellById(store.getState().cells, cellId)
+  store.dispatch(updateCellProperties(cellId, {
+    asyncProcessCount: cell.asyncProcessCount + n,
+  }))
+}
+
+export const getRunningCellAsyncProcessStatus = () => {
+  const cellId = getRunningCellID()
+  const cell = getCellById(store.getState().cells, cellId)
+  if (cell !== undefined) {
+    return cell.asyncProcessCount
+  }
+  return undefined
+}
+
 export const getRunningCellEvalStatus = () => {
   const cellId = getRunningCellID()
   const cell = getCellById(store.getState().cells, cellId)
@@ -22,9 +46,10 @@ export const setRunningCellEvalStatus = (evalStatus) => {
 }
 
 export const waitForExplicitContinuationStatusResolution = () => new Promise((resolve) => {
-  if (getRunningCellEvalStatus() === 'ASYNC_PENDING') {
+  if (getRunningCellAsyncProcessStatus() > 0) {
     const interval = setInterval(() => {
-      if (getRunningCellEvalStatus() === 'SUCCESS') {
+      if (getRunningCellAsyncProcessStatus() === 0) {
+        setRunningCellEvalStatus('SUCCESS')
         resolve()
         clearInterval(interval)
       }
@@ -34,7 +59,30 @@ export const waitForExplicitContinuationStatusResolution = () => new Promise((re
   }
 })
 
+const awaitPromises = (promises) => {
+  setRunningCellEvalStatus('ASYNC_PENDING')
+  incrementAsyncProcessCount()
+  return Promise.resolve().then(() => Promise.all(promises).catch((err) => {
+    resetAsyncProcessCount()
+    setRunningCellEvalStatus('ERROR')
+    throw Error(err)
+  }))
+    .then((resolutions) => {
+      incrementAsyncProcessCount(-1)
+      if (getRunningCellAsyncProcessStatus() === 0) {
+        setRunningCellEvalStatus('SUCCESS')
+      }
+      return resolutions
+    })
+}
+
 export const evalQueue = {
-  requireExplicitContinuation: () => { setRunningCellEvalStatus('ASYNC_PENDING') },
-  continue: () => { setRunningCellEvalStatus('SUCCESS') },
+  requireExplicitContinuation: () => {
+    setRunningCellEvalStatus('ASYNC_PENDING')
+    incrementAsyncProcessCount(1)
+  },
+  continue: () => {
+    if (getRunningCellAsyncProcessStatus() > 0) incrementAsyncProcessCount(-1)
+  },
+  await: awaitPromises,
 }

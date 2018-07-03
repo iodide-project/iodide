@@ -195,6 +195,7 @@ function newCell(cellId, cellType, language = 'js') {
     rendered: false,
     selected: false,
     executionStatus: ' ',
+    asyncProcessCount: 0,
     evalStatus: 'UNEVALUATED',
     rowSettings: newCellRowSettings(cellType),
     skipInRunAll: false,
