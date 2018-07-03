@@ -257,9 +257,6 @@ div.iodide-tooltip {
   margin-top: -5px;
 }
 
-.dependency-status-explanation:before {
-}
-
 code {
   padding: 0.2em 0.4em;
   margin: 0;
@@ -274,20 +271,25 @@ iframe.eval-frame {
 
 div.display-buttons {
   position: fixed;
-  left: 0;
+  left: 280px;
   top: 0px;
   margin:0;
   padding:0;
   z-index: 3;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 button.display-button {
   margin:0;
   padding:2px;
-  border:none;
+  border: none;
   display: block;
   width: 25px;
-  height:25px;
+  height: 25px;
   text-align:center;
   color:white;
   background-color: black;
