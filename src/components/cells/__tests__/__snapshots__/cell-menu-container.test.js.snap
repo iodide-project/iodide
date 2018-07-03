@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CellMenuContainerUnconnected matches the snapshot if props.skipInRunAll is false 1`] = `
+exports[`CellMenuContainerUnconnected matches the snapshot if props.skipInRunAll is false and anchorElement is null 1`] = `
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
@@ -1266,6 +1266,586 @@ ShallowWrapper {
             },
             "type": [Function],
           },
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`CellMenuContainerUnconnected matches the snapshot if state.anchorElement is not null 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <CellMenuContainerUnconnected
+    cellId={0}
+    label="md"
+    skipInRunAll={false}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <WithStyles(Tooltip)
+          classes={
+            Object {
+              "tooltip": "iodide-tooltip",
+            }
+          }
+          enterDelay={600}
+          placement="bottom"
+          title="Cell Settings"
+        >
+          <UNDEFINED>
+            <WithStyles(Menu)
+              anchorEl="not null"
+              anchorOrigin={
+                Object {
+                  "horizontal": "right",
+                  "vertical": "top",
+                }
+              }
+              anchorReference="anchorEl"
+              getContentAnchorEl={null}
+              id="cell-menu"
+              onClose={[Function]}
+              open={true}
+              transformOrigin={
+                Object {
+                  "horizontal": "left",
+                  "vertical": "top",
+                }
+              }
+              transitionDuration={70}
+            >
+              <Connect(CellMenuUnconnected)
+                cellId={0}
+                menuLabel="md"
+              />
+            </WithStyles(Menu)>
+            <div
+              aria-haspopup="true"
+              aria-owns="cell-menu"
+              className="cell-type-label"
+              onClick={[Function]}
+            >
+              md
+              <pure(ArrowDropDown)
+                style={
+                  Object {
+                    "fontSize": 20,
+                  }
+                }
+              />
+            </div>
+          </UNDEFINED>
+        </WithStyles(Tooltip)>,
+        <div
+          className="cell-status-indicators"
+        >
+          
+        </div>,
+      ],
+      "className": "cell-menu-container",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "children": <UNDEFINED>
+            <WithStyles(Menu)
+              anchorEl="not null"
+              anchorOrigin={
+                Object {
+                  "horizontal": "right",
+                  "vertical": "top",
+                }
+              }
+              anchorReference="anchorEl"
+              getContentAnchorEl={null}
+              id="cell-menu"
+              onClose={[Function]}
+              open={true}
+              transformOrigin={
+                Object {
+                  "horizontal": "left",
+                  "vertical": "top",
+                }
+              }
+              transitionDuration={70}
+            >
+              <Connect(CellMenuUnconnected)
+                cellId={0}
+                menuLabel="md"
+              />
+            </WithStyles(Menu)>
+            <div
+              aria-haspopup="true"
+              aria-owns="cell-menu"
+              className="cell-type-label"
+              onClick={[Function]}
+            >
+              md
+              <pure(ArrowDropDown)
+                style={
+                  Object {
+                    "fontSize": 20,
+                  }
+                }
+              />
+            </div>
+          </UNDEFINED>,
+          "classes": Object {
+            "tooltip": "iodide-tooltip",
+          },
+          "enterDelay": 600,
+          "placement": "bottom",
+          "title": "Cell Settings",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <WithStyles(Menu)
+                anchorEl="not null"
+                anchorOrigin={
+                  Object {
+                    "horizontal": "right",
+                    "vertical": "top",
+                  }
+                }
+                anchorReference="anchorEl"
+                getContentAnchorEl={null}
+                id="cell-menu"
+                onClose={[Function]}
+                open={true}
+                transformOrigin={
+                  Object {
+                    "horizontal": "left",
+                    "vertical": "top",
+                  }
+                }
+                transitionDuration={70}
+              >
+                <Connect(CellMenuUnconnected)
+                  cellId={0}
+                  menuLabel="md"
+                />
+              </WithStyles(Menu)>,
+              <div
+                aria-haspopup="true"
+                aria-owns="cell-menu"
+                className="cell-type-label"
+                onClick={[Function]}
+              >
+                md
+                <pure(ArrowDropDown)
+                  style={
+                    Object {
+                      "fontSize": 20,
+                    }
+                  }
+                />
+              </div>,
+            ],
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "anchorEl": "not null",
+                "anchorOrigin": Object {
+                  "horizontal": "right",
+                  "vertical": "top",
+                },
+                "anchorReference": "anchorEl",
+                "children": <Connect(CellMenuUnconnected)
+                  cellId={0}
+                  menuLabel="md"
+                />,
+                "getContentAnchorEl": null,
+                "id": "cell-menu",
+                "onClose": [Function],
+                "open": true,
+                "transformOrigin": Object {
+                  "horizontal": "left",
+                  "vertical": "top",
+                },
+                "transitionDuration": 70,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "cellId": 0,
+                  "menuLabel": "md",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "aria-haspopup": "true",
+                "aria-owns": "cell-menu",
+                "children": Array [
+                  "md",
+                  <pure(ArrowDropDown)
+                    style={
+                      Object {
+                        "fontSize": 20,
+                      }
+                    }
+                  />,
+                ],
+                "className": "cell-type-label",
+                "onClick": [Function],
+              },
+              "ref": null,
+              "rendered": Array [
+                "md",
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "class",
+                  "props": Object {
+                    "style": Object {
+                      "fontSize": 20,
+                    },
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": Symbol(react.fragment),
+        },
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "",
+          "className": "cell-status-indicators",
+        },
+        "ref": null,
+        "rendered": "",
+        "type": "div",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <WithStyles(Tooltip)
+            classes={
+              Object {
+                "tooltip": "iodide-tooltip",
+              }
+            }
+            enterDelay={600}
+            placement="bottom"
+            title="Cell Settings"
+          >
+            <UNDEFINED>
+              <WithStyles(Menu)
+                anchorEl="not null"
+                anchorOrigin={
+                  Object {
+                    "horizontal": "right",
+                    "vertical": "top",
+                  }
+                }
+                anchorReference="anchorEl"
+                getContentAnchorEl={null}
+                id="cell-menu"
+                onClose={[Function]}
+                open={true}
+                transformOrigin={
+                  Object {
+                    "horizontal": "left",
+                    "vertical": "top",
+                  }
+                }
+                transitionDuration={70}
+              >
+                <Connect(CellMenuUnconnected)
+                  cellId={0}
+                  menuLabel="md"
+                />
+              </WithStyles(Menu)>
+              <div
+                aria-haspopup="true"
+                aria-owns="cell-menu"
+                className="cell-type-label"
+                onClick={[Function]}
+              >
+                md
+                <pure(ArrowDropDown)
+                  style={
+                    Object {
+                      "fontSize": 20,
+                    }
+                  }
+                />
+              </div>
+            </UNDEFINED>
+          </WithStyles(Tooltip)>,
+          <div
+            className="cell-status-indicators"
+          >
+            
+          </div>,
+        ],
+        "className": "cell-menu-container",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "children": <UNDEFINED>
+              <WithStyles(Menu)
+                anchorEl="not null"
+                anchorOrigin={
+                  Object {
+                    "horizontal": "right",
+                    "vertical": "top",
+                  }
+                }
+                anchorReference="anchorEl"
+                getContentAnchorEl={null}
+                id="cell-menu"
+                onClose={[Function]}
+                open={true}
+                transformOrigin={
+                  Object {
+                    "horizontal": "left",
+                    "vertical": "top",
+                  }
+                }
+                transitionDuration={70}
+              >
+                <Connect(CellMenuUnconnected)
+                  cellId={0}
+                  menuLabel="md"
+                />
+              </WithStyles(Menu)>
+              <div
+                aria-haspopup="true"
+                aria-owns="cell-menu"
+                className="cell-type-label"
+                onClick={[Function]}
+              >
+                md
+                <pure(ArrowDropDown)
+                  style={
+                    Object {
+                      "fontSize": 20,
+                    }
+                  }
+                />
+              </div>
+            </UNDEFINED>,
+            "classes": Object {
+              "tooltip": "iodide-tooltip",
+            },
+            "enterDelay": 600,
+            "placement": "bottom",
+            "title": "Cell Settings",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": Array [
+                <WithStyles(Menu)
+                  anchorEl="not null"
+                  anchorOrigin={
+                    Object {
+                      "horizontal": "right",
+                      "vertical": "top",
+                    }
+                  }
+                  anchorReference="anchorEl"
+                  getContentAnchorEl={null}
+                  id="cell-menu"
+                  onClose={[Function]}
+                  open={true}
+                  transformOrigin={
+                    Object {
+                      "horizontal": "left",
+                      "vertical": "top",
+                    }
+                  }
+                  transitionDuration={70}
+                >
+                  <Connect(CellMenuUnconnected)
+                    cellId={0}
+                    menuLabel="md"
+                  />
+                </WithStyles(Menu)>,
+                <div
+                  aria-haspopup="true"
+                  aria-owns="cell-menu"
+                  className="cell-type-label"
+                  onClick={[Function]}
+                >
+                  md
+                  <pure(ArrowDropDown)
+                    style={
+                      Object {
+                        "fontSize": 20,
+                      }
+                    }
+                  />
+                </div>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "anchorEl": "not null",
+                  "anchorOrigin": Object {
+                    "horizontal": "right",
+                    "vertical": "top",
+                  },
+                  "anchorReference": "anchorEl",
+                  "children": <Connect(CellMenuUnconnected)
+                    cellId={0}
+                    menuLabel="md"
+                  />,
+                  "getContentAnchorEl": null,
+                  "id": "cell-menu",
+                  "onClose": [Function],
+                  "open": true,
+                  "transformOrigin": Object {
+                    "horizontal": "left",
+                    "vertical": "top",
+                  },
+                  "transitionDuration": 70,
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "class",
+                  "props": Object {
+                    "cellId": 0,
+                    "menuLabel": "md",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "aria-haspopup": "true",
+                  "aria-owns": "cell-menu",
+                  "children": Array [
+                    "md",
+                    <pure(ArrowDropDown)
+                      style={
+                        Object {
+                          "fontSize": 20,
+                        }
+                      }
+                    />,
+                  ],
+                  "className": "cell-type-label",
+                  "onClick": [Function],
+                },
+                "ref": null,
+                "rendered": Array [
+                  "md",
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "class",
+                    "props": Object {
+                      "style": Object {
+                        "fontSize": 20,
+                      },
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                ],
+                "type": "div",
+              },
+            ],
+            "type": Symbol(react.fragment),
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "",
+            "className": "cell-status-indicators",
+          },
+          "ref": null,
+          "rendered": "",
           "type": "div",
         },
       ],

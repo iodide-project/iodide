@@ -23,7 +23,7 @@ describe('CellMenuContainerUnconnected', () => {
     expect(mountedMenuContainer.state('anchorElement')).toEqual(null);
   })
 
-  it('matches the snapshot if props.skipInRunAll is false', () => {
+  it('matches the snapshot if props.skipInRunAll is false and anchorElement is null', () => {
     const mountedMenuContainer = shallow(<CellMenuContainerUnconnected { ...props } />);
 
     expect(mountedMenuContainer).toMatchSnapshot();
@@ -37,16 +37,20 @@ describe('CellMenuContainerUnconnected', () => {
   })
 
   it('matches the snapshot if state.anchorElement is not null', () => {
+    const mountedMenuContainer = shallow(<CellMenuContainerUnconnected { ...props } />);
+    mountedMenuContainer.setState({ anchorElement: 'not null' })
+    mountedMenuContainer.update();
 
-  })
-
-  it('matches the snapshot if state.anchorElement is null', () => {
-
+    expect(mountedMenuContainer).toMatchSnapshot(); 
   })
 
   describe('handleClick', () => {
     it('updates anchorElement in state with the button clicked', () => {
+      const mountedMenuContainer = shallow(<CellMenuContainerUnconnected { ...props } />);
 
+      mountedMenuContainer.find('.cell-type-label').simulate('click', { currentTarget: 'a target' });
+
+      expect(mountedMenuContainer.state('anchorElement')).toEqual('a target');
     })
   })
 
