@@ -95,7 +95,7 @@ export class CellMenuContainerUnconnected extends React.Component {
 }
 
 
-function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
   let label
@@ -118,7 +118,7 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(actions, dispatch),
   }
