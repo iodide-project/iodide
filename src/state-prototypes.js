@@ -142,6 +142,7 @@ const stateSchema = {
     showFrame: { type: 'boolean' },
     showEditor: { type: 'boolean' },
     linkEditor: { type: 'boolean' },
+    alwaysSelectInView: { type: 'boolean' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
@@ -263,6 +264,7 @@ function blankState() {
     showFrame: true,
     showEditor: true,
     linkEditor: true,
+    alwaysSelectInView: false,
     evalFrameMessageQueue: [],
     evalFrameReady: false,
     externalDependencies: [],

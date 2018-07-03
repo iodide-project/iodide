@@ -367,18 +367,24 @@ tasks.setViewModeToPresentation = new UserTask({
   },
 })
 
-tasks.toggleEvalFrameVisibility = new UserTask({
-  title: 'Toggle Eval Frame Visibility',
-  callback() { dispatcher.toggleEvalFrameVisibility() },
-})
-
 tasks.toggleEditorVisibility = new UserTask({
   title: 'Toggle Editor Visibility',
+  keybindings: ['1'],
+  keybindingPrecondition: isCommandMode,
   callback() { dispatcher.toggleEditorVisibility() },
+})
+
+tasks.toggleEvalFrameVisibility = new UserTask({
+  title: 'Toggle Eval Frame Visibility',
+  keybindings: ['2'],
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.toggleEvalFrameVisibility() },
 })
 
 tasks.toggleEditorLink = new UserTask({
   title: 'Link Editor',
+  keybindings: ['3'],
+  keybindingPrecondition: isCommandMode,
   callback() { dispatcher.toggleEditorLink() },
 })
 
