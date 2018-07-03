@@ -41,9 +41,15 @@ describe('CellMenuContainerUnconnected', () => {
 })
 
 describe('CellMenuContainerUnconnected mapStateToProps', () => {
+  it('calls getCellById with the correct arguments', () => {
 
+  })
+
+  it('returns an object with label and skipInRunAll key value pairs', () => {
+
+  })
 })
 
 describe('CellMenuContainerUnconnected mapDispatchToProps', () => {
-
+  
 })
