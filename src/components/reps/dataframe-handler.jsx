@@ -17,7 +17,7 @@ export default {
     const dataSetInfo = `array of objects: ${value.length} rows, ${columns.length} columns`
     const pageSize = value.length > 10 ? 10 : value.length
     return (
-      <div>
+      <div className="dataframe-rep">
         <div className="data-set-info">{dataSetInfo}</div>
         <ReactTable
           data={value}

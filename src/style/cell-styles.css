@@ -7,11 +7,12 @@ div.cell-container {
   padding-left: 5px;
   margin-top: 15px;
   margin-bottom: 15px;
-  outline: #f4f4f4 1px solid;
+  border: #f4f4f4 1px solid;
   width: calc(100%);
+  border-radius: 3px;
   /* put the .cell-menu-container and .cell-row-container in a row */
-  display: flex;
-  flex-direction: row; 
+  /* display: flex;
+  flex-direction: row;  */
 }
 
 /* These may need to be integrated into the presentation mode style sheets
@@ -48,13 +49,16 @@ div#cells.presentation div.cell-row.input {
 }*/
 
 .cell-menu-container {
-    width: 76px;
     font-size:12px;
-    flex-shrink: 0;
-    flex-grow: 0;
+    margin-bottom:4px;
+    display:flex;
+    flex-direction: row-reverse;
+    /* flex-shrink: 0;
+    flex-grow: 0; */
 }
 
 .cell-type-label {
+  width: 76px;
   text-align: right;
   color: hsl(275, 12%, 75%);
   cursor: pointer;
@@ -97,7 +101,7 @@ div#cells.presentation div.cell-row.input {
 
 
 div.cell-row-container {
-  width: calc(100% - 76px); /* 100% minus cell-menu-contatiner width*/
+  width: calc(100% - 3px); /* 100% minus cell-menu-contatiner width*/
     flex-shrink: 0;
     flex-grow: 0;
 }
@@ -173,7 +177,7 @@ div.selected-cell.editing-cell {
 }
 
 div.selected-cell {
-  outline: 2px solid #ccc;
+  outline: 1.5px solid #ccc;
 }
 
 div.CodeMirror {

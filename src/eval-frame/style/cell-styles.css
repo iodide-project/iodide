@@ -193,3 +193,7 @@ div.hidden-cell {
 .rep-container {
   overflow-x: scroll;
 }
+
+div.dataframe-rep {
+  font-size:12px;
+}
