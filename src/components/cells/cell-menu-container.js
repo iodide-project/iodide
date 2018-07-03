@@ -82,8 +82,8 @@ export class CellMenuContainerUnconnected extends React.Component {
               aria-haspopup="true"
               onClick={this.handleClick}
             >
-              {this.props.label}
               <ArrowDropDown style={{ fontSize: 20 }} />
+              {this.props.label}
 
             </div>
           </div>

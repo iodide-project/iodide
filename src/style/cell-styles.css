@@ -60,15 +60,14 @@ button.delete-cell-button {
   background-color: rgba(0,0,0,0);
   width: 20px;
   height: 20px;
-  border-radius:4px;
   padding-top:2px;
   transition:50ms;
 }
 
 button.delete-cell-button:hover {
   color: black;
-  background-color:#f1f1f1;
-  border:1px solid #dbdbdb;
+  background: #fbfbfb;
+  border: 1px solid #ddd;
 }
 
 .cell-menu-container {
@@ -76,21 +75,21 @@ button.delete-cell-button:hover {
     font-size:12px;
     margin-bottom:4px;
     display:flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     /* flex-shrink: 0;
     flex-grow: 0; */
 }
 
 .cell-type-label {
   width: 76px;
-  text-align: right;
+  text-align: left;
   color: hsl(275, 12%, 75%);
   cursor: pointer;
   height: 18px;
   border: 1px solid rgba(0,0,0,0);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 .cell-type-label:hover {
   background: #fbfbfb;

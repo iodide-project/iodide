@@ -49,10 +49,10 @@ export class CellContainerUnconnected extends React.Component {
         onMouseDown={this.handleCellClick}
       >
         <div className="cell-header">
+          <CellMenuContainer cellId={this.props.cellId} />
           <button className="delete-cell-button" onClick={this.props.actions.deleteCell}>
             <Close style={{ fontSize: '12px' }} />
           </button>
-          <CellMenuContainer cellId={this.props.cellId} />
         </div>
         <div className="cell-row-container">
           <CellRow cellId={this.props.cellId} rowType="input">
