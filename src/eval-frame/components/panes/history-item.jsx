@@ -14,8 +14,8 @@ export default class HistoryItem extends React.Component {
   }
   constructor(props) {
     super(props)
-    this.state = { timeSince: 'just now', fullDate: false }
-    this.showFullDate = this.showFullDate.bind(this)
+    this.state = { timeSince: 'just now', hovered: false }
+    this.hoverOver = this.hoverOver.bind(this)
   }
 
   componentDidMount() {
@@ -24,29 +24,31 @@ export default class HistoryItem extends React.Component {
     }, 5000)
   }
 
-  showFullDate(tf) {
-    this.setState({ fullDate: tf })
+  hoverOver(tf) {
+    this.setState({ hovered: tf })
   }
 
   render() {
     const mainElem = <pre className="history-item-code">{this.props.content}</pre>
     return (
       <div
-        onMouseEnter={() => { this.showFullDate(true) }}
-        onMouseLeave={() => { this.showFullDate(false) }}
+        onMouseEnter={() => { this.hoverOver(true) }}
+        onMouseLeave={() => { this.hoverOver(false) }}
         id={`cell-${this.props.cell.id}`}
-        className={`${this.props.display ? '' : 'hidden-cell'}`}
+        className={`${this.props.display ? '' : 'hidden-cell'} `}
       >
-        <div className="cell history-cell">
+        <div className={`cell history-cell ${this.state.hovered ? 'history-hovered' : undefined}`}>
           <div className="history-content editor">{mainElem}</div>
-          <span className="history-time-since"> {this.state.timeSince} </span>
-          <span
-            style={{
-              opacity: this.state.fullDate ? 1 : 0,
+          <div className="history-metadata">
+            <span className="history-time-since"> {this.state.timeSince} </span>
+            <span
+              style={{
+              opacity: this.state.hovered ? 1 : 0,
             }}
-            className="history-date"
-          > / {this.props.cell.lastRan.toUTCString()}
-          </span>
+              className="history-date"
+            > / {this.props.cell.lastRan.toUTCString()}
+            </span>
+          </div>
         </div>
         <div className="cell-controls" />
       </div>

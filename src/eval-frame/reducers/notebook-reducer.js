@@ -17,7 +17,6 @@ initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 initialVariables.add('CodeMirror')
 
-
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState
   // let title
@@ -72,10 +71,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_USER_VARIABLES': {
-      const userDefinedVarNames = []
-      Object.keys(window)
+      const userDefinedVarNames = Object.keys(window)
         .filter(g => !initialVariables.has(g))
-        .forEach((g) => { userDefinedVarNames.push(g) })
       return Object.assign({}, state, { userDefinedVarNames })
     }
 

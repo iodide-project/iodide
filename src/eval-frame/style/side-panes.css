@@ -53,7 +53,7 @@ div.history-cell {
   width: inherit;
   margin-top:30px;
   margin-bottom:20px;
-
+  border: 1px solid rgba(0,0,0,0)
 }
 
 div.history-cells div.cell-container {
@@ -73,6 +73,10 @@ pre.history-item-code {
 div.history-content {
   outline: 1px solid #f1f1f1;
   width: calc(100% - 1px)
+}
+
+div.history-metadata {
+  width:100%;
 }
 
 span.history-date {

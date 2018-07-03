@@ -34,7 +34,7 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
           variant="flat"
           mini
         >
-          {this.props.viewMode === 'presentation' ? 'Explore' : 'Report'}
+          {this.props.viewMode === 'presentation' ? 'Explore' : 'Present'}
         </Button>
       </Tooltip>
     )
