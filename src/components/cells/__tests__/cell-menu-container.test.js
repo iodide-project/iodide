@@ -45,7 +45,7 @@ describe('CellMenuContainerUnconnected', () => {
   })
 
   describe('handleClick', () => {
-    it('updates anchorElement in state with the button clicked', () => {
+    it('updates anchorElement in state with the currentTarget of the clicked element', () => {
       const mountedMenuContainer = shallow(<CellMenuContainerUnconnected { ...props } />);
 
       mountedMenuContainer.find('.cell-type-label').simulate('click', { currentTarget: 'a target' });
@@ -56,7 +56,11 @@ describe('CellMenuContainerUnconnected', () => {
 
   describe('handleIconButtonClose', () => {
     it('updates anchorElement in state to null', () => {
+      const mountedMenuContainer = shallow(<CellMenuContainerUnconnected { ...props } />);
+      
+      mountedMenuContainer.find('#cell-menu').simulate('close');
 
+      expect(mountedMenuContainer.state('anchorElement')).toBeNull();
     })
   })
 })
