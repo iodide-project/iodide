@@ -22,9 +22,6 @@ export default class NotebookMenuSubsection extends React.Component {
 
   handleClose() {
     this.setState({ anchorElement: null })
-    document.querySelectorAll('div[class^="MuiBackdrop-"]').forEach((backdrop) => {
-      backdrop.click();
-    })
   }
   render() {
     const { anchorElement } = this.state
