@@ -217,6 +217,21 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { viewMode })
     }
 
+    case 'TOGGLE_EVAL_FRAME_VISIBILITY': {
+      const showFrame = !state.showFrame
+      return Object.assign({}, state, { showFrame })
+    }
+
+    case 'TOGGLE_EDITOR_VISIBILITY': {
+      const showEditor = !state.showEditor
+      return Object.assign({}, state, { showEditor })
+    }
+
+    case 'TOGGLE_EDITOR_LINK': {
+      const linkEditor = !state.linkEditor
+      return Object.assign({}, state, { linkEditor })
+    }
+
     case 'CHANGE_MODE': {
       const { mode } = action
       return Object.assign({}, state, { mode })
@@ -229,6 +244,11 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'CHANGE_SIDE_PANE_WIDTH': {
       const width = state.sidePaneWidth + action.widthShift
       return Object.assign({}, state, { sidePaneWidth: width })
+    }
+
+    case 'CHANGE_EDITOR_WIDTH': {
+      const width = state.editorWidth + action.widthShift
+      return Object.assign({}, state, { editorWidth: width })
     }
 
     case 'INCREMENT_EXECUTION_NUMBER': {

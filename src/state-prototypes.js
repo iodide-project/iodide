@@ -2,6 +2,14 @@
 // Returning strings is required to keep things simple+serializable in the redux store.
 // The only reason we wrap this in a little class it to expose the convenience
 // `contains` and `values`
+
+// for editorWidth calc. We're using this
+// because re-resizable doesn't intelligently deal w/ calc(100% - 20px) or whatever.
+const DEFAULT_EDITOR_WIDTH = Math.max(
+  document.documentElement.clientWidth - 600,
+  (window.innerWidth - 600) || 0,
+)
+
 const StringEnum = class {
   constructor(...vals) {
     vals.forEach((v) => {
@@ -123,6 +131,7 @@ const stateSchema = {
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
     sidePaneWidth: { type: 'integer' },
+    editorWidth: { type: 'integer' },
     userData: { type: 'object' },
     evalFrameMessageQueue: {
       type: 'array',
@@ -130,6 +139,10 @@ const stateSchema = {
     },
     evalFrameReady: { type: 'boolean' },
     externalDependencies: { type: 'array' },
+    showFrame: { type: 'boolean' },
+    showEditor: { type: 'boolean' },
+    linkEditor: { type: 'boolean' },
+    alwaysSelectInView: { type: 'boolean' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
@@ -248,6 +261,10 @@ function blankState() {
     sidePaneMode: undefined,
     sidePaneWidth: 562,
     history: [],
+    showFrame: true,
+    showEditor: true,
+    linkEditor: true,
+    alwaysSelectInView: false,
     evalFrameMessageQueue: [],
     evalFrameReady: false,
     externalDependencies: [],
@@ -257,6 +274,7 @@ function blankState() {
     locallySaved: [],
     savedEnvironment: {},
     runningCellID: undefined,
+    editorWidth: DEFAULT_EDITOR_WIDTH,
   }
   return initialState
 }

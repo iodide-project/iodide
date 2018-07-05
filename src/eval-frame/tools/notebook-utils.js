@@ -58,11 +58,13 @@ function prettyDate(time) {
 
   return (
     (dayDiff === 0 && (
-      (diff < 60 && 'just now') ||
-      (diff < 120 && '1 minute ago') ||
-      (diff < 3600 && `${Math.floor(diff / 60)} minutes ago`) ||
-      (diff < 7200 && '1 hour ago') ||
-      (diff < 86400 && `${Math.floor(diff / 3600)} hours ago`))
+      (diff < 10 && 'just now') ||
+      (diff < 30 && `${Math.floor(diff)} secs ago`) ||
+      (diff < 60 && '30 secs ago') ||
+      (diff < 120 && '1 min ago') ||
+      (diff < 3600 && `${Math.floor(diff / 60)} mins ago`) ||
+      (diff < 7200 && '1 hr ago') ||
+      (diff < 86400 && `${Math.floor(diff / 3600)} hr ago`))
     ) ||
     (dayDiff === 1 && 'Yesterday') ||
     (dayDiff < 7 && `${dayDiff} days ago`) ||

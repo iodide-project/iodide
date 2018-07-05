@@ -27,14 +27,13 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
   render() {
     return (
       <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title={this.props.viewMode === 'presentation' ? 'Edit this page' : 'Presentation'}>
-
         <Button
           style={{ color: this.props.textColor || '#fafafa' }}
           onClick={this.toggleViewMode}
           variant="flat"
           mini
         >
-          {this.props.viewMode === 'presentation' ? 'Explore' : 'Report'}
+          {this.props.viewMode === 'presentation' ? 'Explore' : 'Present'}
         </Button>
       </Tooltip>
     )

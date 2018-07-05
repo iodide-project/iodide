@@ -9,10 +9,10 @@ import CellContainer from './cells/cell-container'
 import EvalFrame from './eval-frame'
 import NotebookHeader from './menu/notebook-header'
 import AppMessages from './app-messages/app-messages'
+import FullScreenEditorButton from './full-screen-editor-button'
 
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
-
 
 const AUTOSAVE = 'AUTOSAVE: '
 
@@ -27,11 +27,13 @@ class Page extends React.Component {
     title: PropTypes.string,
     cellIds: PropTypes.array,
     cellTypes: PropTypes.array,
+    showFrame: PropTypes.bool,
   }
   constructor(props) {
     super(props)
 
     initializeDefaultKeybindings()
+    this.changeEditorWidth = this.changeEditorWidth.bind(this)
     setInterval(() => {
       // clear whatever notebook is defined w/ "AUTOSAVE " as front tag
       const notebooks = Object.keys(localStorage)
@@ -47,6 +49,10 @@ class Page extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
+  }
+
+  changeEditorWidth(width) {
+    this.props.actions.changeEditorWidth(width)
   }
 
   render() {
@@ -83,24 +89,19 @@ class Page extends React.Component {
       return <CellContainer cellId={id} key={id} editorOptions={editorOptions} />
     })
 
-    const resizerStyle = this.props.viewMode === 'presentation' ? { display: 'none' } : {}
-
     return (
       <React.Fragment>
         <NotebookHeader />
+        <FullScreenEditorButton />
+
         <div
           id="panes-container"
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            height: 'calc(100% - 50px)',
-          }}
         >
           <Resizable
             enable={{
               bottom: false,
               top: false,
-              right: true,
+              right: this.props.showFrame,
               topRight: false,
               bottomRight: false,
               bottomLeft: false,
@@ -110,14 +111,21 @@ class Page extends React.Component {
             handleClasses={{ right: 'resizer' }}
             maxWidth="100%"
             minWidth={300}
-            defaultSize={{ width: '60%', height: '100%' }}
-            style={resizerStyle}
+            onResizeStop={(e, direction, ref, d) => {
+              this.changeEditorWidth(d.width)
+            }}
+            size={{ width: this.props.showFrame ? this.props.editorWidth : '100%' }}
+            defaultSize={{ height: '100%' }}
+            style={{
+              display: this.props.viewMode === 'presentation' ||
+                !this.props.showEditor ? 'none' : undefined,
+            }}
           >
             <div id="cells">
               {cellInputComponents}
             </div>
           </Resizable>
-          <div style={{ flexGrow: '1', minWidth: '300px' }}><EvalFrame /></div>
+          <div style={{ flexGrow: '1', minWidth: '300px', display: this.props.showFrame ? 'block' : 'none' }}><EvalFrame /></div>
         </div>
         <AppMessages />
       </React.Fragment>
@@ -133,6 +141,9 @@ function mapStateToProps(state) {
     title: state.title,
     sidePane: state.sidePaneMode,
     sidePaneWidth: state.sidePaneWidth,
+    showFrame: state.showFrame,
+    showEditor: state.showEditor,
+    editorWidth: state.editorWidth,
   }
 }
 

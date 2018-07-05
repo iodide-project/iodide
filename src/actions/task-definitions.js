@@ -8,6 +8,7 @@ import {
   getCells,
   getCellBelowSelectedId,
   getCellAboveSelectedId, prettyDate, formatDateString,
+  isEditorLinked,
 } from '../tools/notebook-utils'
 import { stateFromJsmd } from '../tools/jsmd-tools'
 
@@ -57,13 +58,14 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
     dispatcher.changeMode('command')
     dispatcher.saveNotebook(true)
     dispatcher.evaluateCell()
+    const linked = isEditorLinked()
     const cellBelowId = getCellBelowSelectedId()
     if (cellBelowId !== null) {
-      dispatcher.selectCell(cellBelowId, true)
+      dispatcher.selectCell(cellBelowId, true, linked)
     } else {
     // if cellBelowId *is* null, need to add a new cell.
       dispatcher.addCell('code')
-      dispatcher.selectCell(getCellBelowSelectedId(), true)
+      dispatcher.selectCell(getCellBelowSelectedId(), true, linked)
     }
   },
 })
@@ -114,7 +116,8 @@ tasks.selectUp = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     const cellAboveId = getCellAboveSelectedId()
-    if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true) }
+    const linked = isEditorLinked()
+    if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true, linked) }
   },
 })
 
@@ -126,7 +129,8 @@ tasks.selectDown = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     const cellBelowId = getCellBelowSelectedId()
-    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
+    const linked = isEditorLinked()
+    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true, linked) }
   },
 })
 
@@ -136,8 +140,9 @@ tasks.addCellAbove = new UserTask({
   displayKeybinding: 'A',
   keybindingPrecondition: isCommandMode,
   callback() {
+    const linked = isEditorLinked()
     dispatcher.insertCell('code', 'above')
-    dispatcher.selectCell(getCellAboveSelectedId(), true)
+    dispatcher.selectCell(getCellAboveSelectedId(), true, linked)
   },
 })
 
@@ -148,8 +153,9 @@ tasks.addCellBelow = new UserTask({
   keybindingPrecondition: isCommandMode,
 
   callback() {
+    const linked = isEditorLinked()
     dispatcher.insertCell('code', 'below')
-    dispatcher.selectCell(getCellBelowSelectedId(), true)
+    dispatcher.selectCell(getCellBelowSelectedId(), true, linked)
   },
 })
 
@@ -359,6 +365,27 @@ tasks.setViewModeToPresentation = new UserTask({
   callback() {
     dispatcher.setViewMode('presentation')
   },
+})
+
+tasks.toggleEditorVisibility = new UserTask({
+  title: 'Toggle Editor Visibility',
+  keybindings: ['1'],
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.toggleEditorVisibility() },
+})
+
+tasks.toggleEvalFrameVisibility = new UserTask({
+  title: 'Toggle Eval Frame Visibility',
+  keybindings: ['2'],
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.toggleEvalFrameVisibility() },
+})
+
+tasks.toggleEditorLink = new UserTask({
+  title: 'Link Editor',
+  keybindings: ['3'],
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.toggleEditorLink() },
 })
 
 tasks.fileAnIssue = new ExternalLinkTask({

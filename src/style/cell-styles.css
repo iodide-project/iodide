@@ -7,11 +7,12 @@ div.cell-container {
   padding-left: 5px;
   margin-top: 15px;
   margin-bottom: 15px;
-  outline: #f4f4f4 1px solid;
+  border: #f4f4f4 1px solid;
   width: calc(100%);
+  border-radius: 3px;
   /* put the .cell-menu-container and .cell-row-container in a row */
-  display: flex;
-  flex-direction: row; 
+  /* display: flex;
+  flex-direction: row;  */
 }
 
 /* These may need to be integrated into the presentation mode style sheets
@@ -47,22 +48,48 @@ div#cells.presentation div.cell-row.input {
   padding:0px;
 }*/
 
+.cell-header {
+  display: flex;
+}
+
+button.delete-cell-button {
+  margin:0;
+  padding:0;
+  color: gray;
+  border: 1px solid rgba(0,0,0,0);
+  background-color: rgba(0,0,0,0);
+  width: 20px;
+  height: 20px;
+  padding-top:2px;
+  transition:50ms;
+}
+
+button.delete-cell-button:hover {
+  color: black;
+  background: #fbfbfb;
+  border: 1px solid #ddd;
+}
+
 .cell-menu-container {
-    width: 76px;
+    width: calc(100% - 30px);
     font-size:12px;
-    flex-shrink: 0;
-    flex-grow: 0;
+    margin-bottom:4px;
+    display:flex;
+    flex-direction: row;
+    /* flex-shrink: 0;
+    flex-grow: 0; */
 }
 
 .cell-type-label {
-  text-align: right;
+  width: 76px;
+  text-align: left;
   color: hsl(275, 12%, 75%);
   cursor: pointer;
   height: 18px;
   border: 1px solid rgba(0,0,0,0);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 .cell-type-label:hover {
   background: #fbfbfb;
@@ -97,7 +124,7 @@ div#cells.presentation div.cell-row.input {
 
 
 div.cell-row-container {
-  width: calc(100% - 76px); /* 100% minus cell-menu-contatiner width*/
+  width: calc(100% - 3px); /* 100% minus cell-menu-contatiner width*/
     flex-shrink: 0;
     flex-grow: 0;
 }
@@ -140,7 +167,8 @@ div.HIDDEN div.collapse-button {
 }
 
 div.main-component {
-    width: calc(100% - 25px); /* 100% minus .collapse-button width (including margins) */
+    /* width: calc(100% - 25px); // 100% minus .collapse-button width (including margins) */ 
+    width: 100%;
     flex-shrink: 0;
     flex-grow: 0;
 }
@@ -173,7 +201,7 @@ div.selected-cell.editing-cell {
 }
 
 div.selected-cell {
-  outline: 2px solid #ccc;
+  outline: 1.5px solid #ccc;
 }
 
 div.CodeMirror {
@@ -230,3 +258,4 @@ div.hidden-cell {
   color: #23527c;
   text-decoration: underline;
 }
+

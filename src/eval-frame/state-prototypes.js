@@ -110,7 +110,7 @@ const stateSchema = {
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
-    sidePaneWidth: { type: 'integer' },
+    paneHeight: { type: 'integer' },
     externalDependencies: { type: 'array' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
@@ -195,6 +195,7 @@ function newCell(cellId, cellType, language = 'js') {
     rendered: false,
     selected: false,
     executionStatus: ' ',
+    asyncProcessCount: 0,
     evalStatus: 'UNEVALUATED',
     rowSettings: newCellRowSettings(cellType),
     skipInRunAll: false,
@@ -224,7 +225,7 @@ function blankState() {
     mode: 'command', // command, edit
     viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
-    sidePaneWidth: 562,
+    paneHeight: 400,
     history: [],
     externalDependencies: [],
     executionNumber: 0,

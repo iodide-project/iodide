@@ -11,7 +11,6 @@ if (IODIDE_BUILD_MODE === 'test') {
   IODIDE_SESSION_ID = 'testing-session'
   editorOrigin = 'http://testing.origin'
 }
-
 function receiveMessage(event) {
   const trustedMessage = true
   if (trustedMessage) {

@@ -307,3 +307,9 @@ export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId)
   }
 }
 
+export function changePaneHeight(heightShift) {
+  return {
+    type: 'CHANGE_PANE_HEIGHT',
+    heightShift,
+  }
+}
