@@ -49,6 +49,9 @@ const cellReducer = (state = newNotebook(), action) => {
       const cells = state.cells.slice()
       cells.forEach((c) => { c.selected = false })  // eslint-disable-line
       const index = cells.findIndex(c => c.id === action.id)
+      if (index === -1) {
+        return state
+      }
       const thisCell = cells[index]
       thisCell.selected = true
       if (action.scrollToCell) { scrollToCellIfNeeded(thisCell.id) }

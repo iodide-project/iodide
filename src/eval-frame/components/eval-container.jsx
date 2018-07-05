@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
+// import Resizable from 're-resizable'
 
 import RawOutput from './outputs/raw-output'
 import ExternalDependencyOutput from './outputs/external-resource-output'
@@ -10,6 +11,9 @@ import CSSOutput from './outputs/css-output'
 import CodeOutput from './outputs/code-output'
 import MarkdownOutput from './outputs/markdown-output'
 import PluginDefinitionOutput from './outputs/plugin-definition-output'
+
+import DeclaredVariablesPane from './panes/declared-variables-pane'
+import HistoryPane from './panes/history-pane'
 
 import { initializeDefaultKeybindings } from '../keybindings'
 import * as actions from '../actions/actions'
@@ -25,18 +29,18 @@ class EvalContainer extends React.Component {
     super(props)
 
     initializeDefaultKeybindings()
-    this.getPageWidth = this.getPageWidth.bind(this)
+    this.getPageHeight = this.getPageHeight.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
   }
 
-  getPageWidth() {
-    let width = '100%'
-    if (this.props.viewMode === 'presentation') width = 'undefined'
-    else if (this.props.sidePane) width = `calc(100% - ${this.props.sidePaneWidth}px)`
-    return { width }
+  getPageHeight() {
+    let height = '100vh'
+    if (this.props.viewMode === 'presentation') height = 'undefined'
+    else if (this.props.sidePane) height = `calc(100vh - ${this.props.paneHeight}px)`
+    return height
   }
 
   render() {
@@ -59,18 +63,31 @@ class EvalContainer extends React.Component {
           return <div>Unknown cell type {this.props.cellTypes[i]}</div>
       }
     })
-
     return (
       <div
-        id="eval-container"
-        className={this.props.viewMode === 'presentation' ? 'presentation-mode' : ''}
+        className="eval-panes"
+        style={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
       >
         <div
           id="cells"
           className={this.props.viewMode}
-          style={this.getPageWidth()}
+          style={{
+              flexGrow: '1',
+              minHeight: '0px',
+            }}
         >
           {bodyContent}
+        </div>
+        <div
+          style={{
+            display: this.props.sidePane === undefined ? 'none' : undefined,
+           }}
+        >
+          <DeclaredVariablesPane />
+          <HistoryPane />
         </div>
       </div>
     )
@@ -84,7 +101,7 @@ function mapStateToProps(state) {
     viewMode: state.viewMode,
     title: state.title,
     sidePane: state.sidePaneMode,
-    sidePaneWidth: state.sidePaneWidth,
+    paneHeight: state.paneHeight,
   }
 }
 

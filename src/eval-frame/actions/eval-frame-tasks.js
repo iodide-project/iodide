@@ -1,5 +1,7 @@
 import UserTask from '../../actions/user-task'
 import { postKeypressToEditor } from '../port-to-editor'
+import { store } from '../store'
+import { changePaneHeight } from './actions'
 
 const tasks = {}
 
@@ -23,6 +25,12 @@ tasks.exportNotebook = new UserTask({
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
 
+tasks.changePaneHeight = new UserTask({
+  title: 'Change Width of Side Pane',
+  callback(heightShift) {
+    store.dispatch(changePaneHeight(heightShift))
+  },
+})
 
 tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',

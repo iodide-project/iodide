@@ -33,7 +33,7 @@ describe('CellContainerUnconnected React component', () => {
   })
 
   it('always renders two div', () => {
-    expect(cellContainer().find('div').length).toBe(2)
+    expect(cellContainer().find('div').length).toBe(3)
   })
 
   it('always renders two children inside top div', () => {

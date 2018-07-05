@@ -342,6 +342,23 @@ export function deleteCell() {
   }
 }
 
+export function toggleEvalFrameVisibility() {
+  return {
+    type: 'TOGGLE_EVAL_FRAME_VISIBILITY',
+  }
+}
+
+export function toggleEditorVisibility() {
+  return {
+    type: 'TOGGLE_EDITOR_VISIBILITY',
+  }
+}
+
+export function toggleEditorLink() {
+  return {
+    type: 'TOGGLE_EDITOR_LINK',
+  }
+}
 
 export function changeSidePaneMode(mode) {
   return {
@@ -353,6 +370,13 @@ export function changeSidePaneMode(mode) {
 export function changeSidePaneWidth(widthShift) {
   return {
     type: 'CHANGE_SIDE_PANE_WIDTH',
+    widthShift,
+  }
+}
+
+export function changeEditorWidth(widthShift) {
+  return {
+    type: 'CHANGE_EDITOR_WIDTH',
     widthShift,
   }
 }

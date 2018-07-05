@@ -1,7 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+
+import Close from 'material-ui-icons/Close'
 
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
@@ -16,23 +18,13 @@ export class CellContainerUnconnected extends React.Component {
   static propTypes = {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
-    // children: PropTypes.node,
     editingCell: PropTypes.bool.isRequired,
-    // pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
     }).isRequired,
     editorOptions: PropTypes.object,
   }
-
-  // shouldComponentUpdate(nextProps) {
-  //   return (
-  //     this.props.selected !== nextProps.selected ||
-  //     this.props.pageMode !== nextProps.pageMode ||
-  //     this.props.cellType !== nextProps.cellType
-  //   )
-  // }
 
   handleCellClick = () => {
     const scrollToCell = false
@@ -42,7 +34,6 @@ export class CellContainerUnconnected extends React.Component {
   }
 
   render() {
-    // console.log(`CellContainer rendered: ${this.props.cellId}`)
     const cellClass = `cell-container ${
       this.props.cellType
     }${
@@ -57,7 +48,12 @@ export class CellContainerUnconnected extends React.Component {
         className={cellClass}
         onMouseDown={this.handleCellClick}
       >
-        <CellMenuContainer cellId={this.props.cellId} />
+        <div className="cell-header">
+          <CellMenuContainer cellId={this.props.cellId} />
+          <button className="delete-cell-button" onClick={this.props.actions.deleteCell}>
+            <Close style={{ fontSize: '12px' }} />
+          </button>
+        </div>
         <div className="cell-row-container">
           <CellRow cellId={this.props.cellId} rowType="input">
             <CellEditor
@@ -88,6 +84,4 @@ export function mapDispatchToProps(dispatch) {
   }
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Page)
-export default connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected) // eslint-disable-line
-// CellContainerConnected as CellContainer }
+export default connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected)

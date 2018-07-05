@@ -17,7 +17,6 @@ initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 initialVariables.add('CodeMirror')
 
-
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState
   // let title
@@ -50,9 +49,9 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { sidePaneMode: action.mode })
     }
 
-    case 'CHANGE_SIDE_PANE_WIDTH': {
-      const width = state.sidePaneWidth + action.widthShift
-      return Object.assign({}, state, { sidePaneWidth: width })
+    case 'CHANGE_PANE_HEIGHT': {
+      const paneHeight = state.paneHeight + action.heightShift
+      return Object.assign({}, state, { paneHeight })
     }
 
     case 'INCREMENT_EXECUTION_NUMBER': {
@@ -72,10 +71,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_USER_VARIABLES': {
-      const userDefinedVarNames = []
-      Object.keys(window)
+      const userDefinedVarNames = Object.keys(window)
         .filter(g => !initialVariables.has(g))
-        .forEach((g) => { userDefinedVarNames.push(g) })
       return Object.assign({}, state, { userDefinedVarNames })
     }
 

@@ -43,10 +43,6 @@ export class ViewControlsUnconnected extends React.Component {
           <HistoryIcon />
         </NotebookTaskButton>
 
-        {/*
-        <DeclaredVariablesPane />
-        <HistoryPane />
-        */}
         <AppInfoPane />
 
         {IODIDE_BUILD_MODE === 'heroku' && (

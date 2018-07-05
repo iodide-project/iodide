@@ -14,12 +14,26 @@ div.cell-container {
   flex-direction: row; 
 }
 
+div.cell-container.has-output {
+  background-color: white;
+}
+
+div.cell-container.no-output {
+  background-color: none;
+  outline: none;
+}
+
+div.cell-container.no-output {
+  background-color: none;
+  outline: none;
+}
+
 /* These may need to be integrated into the presentation mode style sheets
 but I don't see why we would have to do this immediately.
 */
 
 div#cells.editor div.raw-dom-element {
-  overflow-x: scroll
+  overflow-x: scroll;
 }
 
 div#cells.presentation div.cell-container {
@@ -64,7 +78,7 @@ div#cells.presentation div.cell-row.input {
 }
 
 div.cell-row-container {
-  width: calc(100% - 76px); /* 100% minus cell-menu-contatiner width*/
+  width: calc(100% - 20px); /* 100% minus cell-menu-contatiner width*/
     flex-shrink: 0;
     flex-grow: 0;
 }
@@ -143,6 +157,10 @@ div.selected-cell {
   outline: 2px solid #ccc;
 }
 
+div.selected-cell.no-output {
+  outline: 2px solid #ccc;
+}
+
 div.SCROLL.output .main-component {
   max-height: 300px;
   outline: 1px solid #ddd;
@@ -170,4 +188,12 @@ div.hidden-cell {
 .dependency-row a:focus {
   color: #23527c;
   text-decoration: underline;
+}
+
+.rep-container {
+  overflow-x: scroll;
+}
+
+div.dataframe-rep {
+  font-size:12px;
 }

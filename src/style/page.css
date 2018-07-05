@@ -16,6 +16,12 @@ div#page {
   overflow: hidden;
 }
 
+div#panes-container {
+  display: flex;
+  flex-direction: row;
+  height: calc(100% - 50px);
+}
+
 div#cells {
     /*position: fixed;*/
     /*top: 50px; move down by .notebook-toolbar-container height*/
@@ -251,9 +257,6 @@ div.iodide-tooltip {
   margin-top: -5px;
 }
 
-.dependency-status-explanation:before {
-}
-
 code {
   padding: 0.2em 0.4em;
   margin: 0;
@@ -263,5 +266,39 @@ code {
 
 iframe.eval-frame {
   border:none;
-  border-left: 1px solid black;
+  border-left: 1px solid lightgray;
+}
+
+div.display-buttons {
+  position: fixed;
+  left: 280px;
+  top: 0px;
+  margin:0;
+  padding:0;
+  z-index: 3;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+button.display-button {
+  margin:0;
+  padding:2px;
+  border: none;
+  display: block;
+  width: 25px;
+  height: 25px;
+  text-align:center;
+  color:white;
+  background-color: black;
+}
+
+button.display-button.is-active {
+  background-color: rgb(30,30,30);
+}
+
+button.display-button:hover {
+  background-color: #686868;
 }

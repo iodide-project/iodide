@@ -25,6 +25,7 @@ describe('OutputContainerUnconnected React component', () => {
       editingCell: true,
       viewMode: 'editor',
       cellType: 'code',
+      value: 10,
       postMessageToEditor: postMessageToEditorMock,
     }
     mc = undefined
@@ -48,28 +49,28 @@ describe('OutputContainerUnconnected React component', () => {
     props.selected = false
     props.editingCell = false
     expect(outputContainer().find('div').at(0).props().className)
-      .toBe('cell-container code')
+      .toBe('no-output cell-container code')
   })
 
   it('sets the top div with correct class if selected===true and editingCell===false', () => {
     props.selected = true
     props.editingCell = false
     expect(outputContainer().find('div').at(0).props().className)
-      .toBe('cell-container code selected-cell')
+      .toBe('no-output cell-container code selected-cell')
   })
 
   it('sets the top div with correct class if selected===false and editingCell===true', () => {
     props.selected = false
     props.editingCell = true
     expect(outputContainer().find('div').at(0).props().className)
-      .toBe('cell-container code editing-cell')
+      .toBe('no-output cell-container code editing-cell')
   })
 
   it('sets the top div with correct class if selected===true and editingCell===true', () => {
     props.selected = true
     props.editingCell = true
     expect(outputContainer().find('div').at(0).props().className)
-      .toBe('cell-container code selected-cell editing-cell')
+      .toBe('no-output cell-container code selected-cell editing-cell')
   })
 
   it('sets the onMouseDown prop to handleCellClick', () => {
@@ -146,6 +147,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: true,
         viewMode: 'editor',
         cellType: 'code',
+        outputHasValue: false,
         postMessageToEditor,
       })
   })
@@ -161,6 +163,7 @@ describe('OutputContainer mapStateToProps', () => {
         editingCell: false,
         viewMode: 'editor',
         cellType: 'code',
+        outputHasValue: false,
         postMessageToEditor,
       })
   })
@@ -175,6 +178,7 @@ describe('OutputContainer mapStateToProps', () => {
         selected: true,
         editingCell: false,
         viewMode: 'editor',
+        outputHasValue: false,
         cellType: 'code',
         postMessageToEditor,
       })
@@ -184,12 +188,14 @@ describe('OutputContainer mapStateToProps', () => {
     const ownProps = { cellId: 5 }
     state.mode = 'not_edit'
     state.cells[0].selected = false
+    state.cells[0].value = 100000
     expect(mapStateToProps(state, ownProps))
       .toEqual({
         cellId: 5,
         selected: false,
         editingCell: false,
         viewMode: 'editor',
+        outputHasValue: true,
         cellType: 'code',
         postMessageToEditor,
       })

@@ -1,3 +1,5 @@
+const SCROLL_BY_BEHAVIOR = 'instant'
+
 function moveCell(cells, cellID, dir) {
   const cellsSlice = cells.slice()
   const index = cellsSlice.findIndex(c => c.id === cellID)
@@ -53,7 +55,7 @@ function scrollToCellIfNeeded(cellId) {
     scrollContainer.scrollBy({
       top: distanceAboveViewportTop - SCROLL_PADDING,
       left: 0,
-      behavior: 'smooth',
+      behavior: SCROLL_BY_BEHAVIOR,
     })
   } else if (((cellPosition === 'BELOW_VIEWPORT') && !(tallerThanWindow))
     || ((cellPosition === 'TOP_IN_VIEWPORT') && !(tallerThanWindow))
@@ -62,7 +64,7 @@ function scrollToCellIfNeeded(cellId) {
     scrollContainer.scrollBy({
       top: distanceBelowViewportBottom + SCROLL_PADDING,
       left: 0,
-      behavior: 'smooth',
+      behavior: SCROLL_BY_BEHAVIOR,
     })
   }
 }
@@ -86,7 +88,7 @@ export function alignCellTopTo(cellId, targetPxFromViewportTop) {
   scrollContainer.scrollBy({
     top: distanceAboveViewportTop - pxFromViewportTop,
     left: 0,
-    behavior: 'smooth',
+    behavior: SCROLL_BY_BEHAVIOR,
   })
 }
 
