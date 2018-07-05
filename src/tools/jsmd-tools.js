@@ -43,6 +43,29 @@ const jsmdValidCellSettingPaths = [
   'skipInRunAll',
 ]
 
+// format is eg: 'jsmd.path'.'old-value'.'NEW_VALUE'
+const jsmdLegacyValueMappings = {
+  viewMode: {
+    presentation: 'REPORT_VIEW',
+    // editor: 'EDITOR_',
+  },
+}
+
+export function translateLegacyJsmd(state) {
+  Object.keys(jsmdLegacyValueMappings).forEach((mappingPath) => {
+    const valueAtPath = _.get(state, mappingPath)
+    const mappingOfValuesToUpdate = _.get(jsmdLegacyValueMappings, mappingPath)
+    if (valueAtPath in mappingOfValuesToUpdate) {
+      _.set(
+        state,
+        mappingPath,
+        mappingOfValuesToUpdate[valueAtPath],
+      )
+    }
+  })
+  return state
+}
+
 function getNonDefaultValuesForPaths(paths, target, template) {
   const out = {}
   paths.forEach((p) => {
@@ -188,7 +211,7 @@ function stateFromJsmd(jsmdString) {
   }
   // set cell 0  to be the selected cell
   initialState.cells[0].selected = true
-  return initialState
+  return translateLegacyJsmd(initialState)
 }
 
 
