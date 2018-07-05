@@ -25,8 +25,13 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
   }
 
   render() {
+    const tooltipText = this.props.viewMode === 'presentation' ?
+      'Explore this Iodide notebook' : 'Go to Report view'
     return (
-      <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title={this.props.viewMode === 'presentation' ? 'Edit this page' : 'Presentation'}>
+      <Tooltip
+        classes={{ tooltip: 'iodide-tooltip' }}
+        title={tooltipText}
+      >
         <Button
           style={{ color: this.props.textColor || '#fafafa' }}
           onClick={this.toggleViewMode}
