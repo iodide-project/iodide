@@ -363,7 +363,7 @@ tasks.setViewModeToEditor = new UserTask({
 tasks.setViewModeToPresentation = new UserTask({
   title: 'Set View Mode to Presentation',
   callback() {
-    dispatcher.setViewMode('presentation')
+    dispatcher.setViewMode('REPORT_VIEW')
   },
 })
 

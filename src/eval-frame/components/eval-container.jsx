@@ -20,7 +20,7 @@ import * as actions from '../actions/actions'
 
 class EvalContainer extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    viewMode: PropTypes.oneOf(['editor', 'REPORT_VIEW']),
     title: PropTypes.string,
     cellIds: PropTypes.array,
     cellTypes: PropTypes.array,
@@ -38,7 +38,7 @@ class EvalContainer extends React.Component {
 
   getPageHeight() {
     let height = '100vh'
-    if (this.props.viewMode === 'presentation') height = 'undefined'
+    if (this.props.viewMode === 'REPORT_VIEW') height = 'undefined'
     else if (this.props.sidePane) height = `calc(100vh - ${this.props.paneHeight}px)`
     return height
   }

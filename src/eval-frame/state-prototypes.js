@@ -24,7 +24,7 @@ export const cellTypeEnum = new StringEnum(
   'external dependencies',
   'plugin',
 )
-// const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'presentation'
+// const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'editor', 'REPORT_VIEW'
 // const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
 
 export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
@@ -98,7 +98,7 @@ const stateSchema = {
     },
     viewMode: {
       type: 'string',
-      enum: ['editor', 'presentation'],
+      enum: ['editor', 'REPORT_VIEW'],
     },
     history: {
       type: 'array',

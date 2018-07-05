@@ -11,7 +11,7 @@ import { rowOverflowEnum, nextOverflow } from '../../state-prototypes'
 export class OutputRowUnconnected extends React.Component {
   static propTypes = {
     executionString: PropTypes.string,
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    viewMode: PropTypes.oneOf(['editor', 'REPORT_VIEW']),
     rowOverflow: PropTypes.oneOf(rowOverflowEnum.values()),
     rowType: PropTypes.string,
     collapseTooltipPlacement: PropTypes.string.isRequired,
@@ -83,7 +83,7 @@ export function mapStateToPropsCellRows(state, ownProps) {
     case 'editor':
       view = 'EXPLORE'
       break
-    case 'presentation':
+    case 'REPORT_VIEW':
       view = 'REPORT'
       break
     default:

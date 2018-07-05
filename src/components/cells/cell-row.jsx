@@ -77,7 +77,7 @@ export function mapStateToPropsCellRows(state, ownProps) {
     case 'editor':
       view = 'EXPLORE'
       break
-    case 'presentation':
+    case 'REPORT_VIEW':
       view = 'REPORT'
       break
     default:

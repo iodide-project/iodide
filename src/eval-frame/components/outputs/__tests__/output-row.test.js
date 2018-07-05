@@ -72,7 +72,7 @@ describe('OutputRowUnconnected React component', () => {
   })
 
   it('click on cell collapse-button div with incorrect props does not fire setCellRowCollapsedState', () => {
-    props.viewMode = 'presentation'
+    props.viewMode = 'REPORT_VIEW'
     outputRow().find('div.collapse-button').simulate('click')
     expect(setCellRowCollapsedState.mock.calls.length).toBe(0)
   })
@@ -165,11 +165,11 @@ describe('OutputRow mapStateToPropsCellRows', () => {
 
   it('should return the correct info with viewMode===presentation', () => {
     const ownProps = { cellId: 5, rowType: 'input' }
-    state.viewMode = 'presentation'
+    state.viewMode = 'REPORT_VIEW'
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        viewMode: 'presentation',
+        viewMode: 'REPORT_VIEW',
         uncollapseOnUpdate: false,
         executionString: '[ ]',
         rowOverflow: 'HIDDEN',

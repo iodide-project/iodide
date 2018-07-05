@@ -18,7 +18,7 @@ const AUTOSAVE = 'AUTOSAVE: '
 
 class Page extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    viewMode: PropTypes.oneOf(['editor', 'REPORT_VIEW']),
     actions: PropTypes.shape({
       deleteNotebook: PropTypes.func.isRequired,
       saveNotebook: PropTypes.func.isRequired,
@@ -117,7 +117,7 @@ class Page extends React.Component {
             size={{ width: this.props.showFrame ? this.props.editorWidth : '100%' }}
             defaultSize={{ height: '100%' }}
             style={{
-              display: this.props.viewMode === 'presentation' ||
+              display: this.props.viewMode === 'REPORT_VIEW' ||
                 !this.props.showEditor ? 'none' : undefined,
             }}
           >

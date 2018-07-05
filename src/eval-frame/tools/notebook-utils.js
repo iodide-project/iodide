@@ -9,7 +9,7 @@ function isCommandMode() {
 }
 
 function viewModeIsPresentation() {
-  return store.getState().viewMode === 'presentation'
+  return store.getState().viewMode === 'REPORT_VIEW'
 }
 
 function getCells() {

@@ -233,7 +233,7 @@ function newStateWithRowOverflowSet(state, cellId, rowType, viewModeToSet, rowOv
     case 'editor':
       view = 'EXPLORE'
       break
-    case 'presentation':
+    case 'REPORT_VIEW':
       view = 'REPORT'
       break
     default:

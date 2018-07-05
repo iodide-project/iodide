@@ -32,7 +32,7 @@ const initialState = initializeNotebook()
 
 const store = createStore(finalReducer, initialState, enhancer)
 
-if (initialState.viewMode === 'presentation') { store.dispatch(evaluateAllCells(store.getState().cells, store)) }
+if (initialState.viewMode === 'REPORT_VIEW') { store.dispatch(evaluateAllCells(store.getState().cells, store)) }
 
 const { dispatch } = store
 

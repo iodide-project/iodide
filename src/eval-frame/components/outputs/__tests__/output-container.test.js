@@ -96,8 +96,8 @@ describe('OutputContainerUnconnected React component', () => {
 
   const postMessageToEditorNotFiredVariants = [
     { selected: true, viewMode: 'editor' },
-    { selected: false, viewMode: 'presentation' },
-    { selected: true, viewMode: 'presentation' },
+    { selected: false, viewMode: 'REPORT_VIEW' },
+    { selected: true, viewMode: 'REPORT_VIEW' },
   ]
 
   postMessageToEditorNotFiredVariants.forEach((state) => {

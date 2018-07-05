@@ -24,7 +24,7 @@ div#eval-container.presentation-mode {
 
 div.eval-panes {
   height: 100vh;
-  overflow: scroll;
+  /*overflow: scroll;*/
 }
 
 div#cells.editor {
@@ -38,7 +38,7 @@ div#cells.editor {
   padding-bottom: 60px;
 }
 
-div#cells.presentation {
+div#cells.REPORT_VIEW {
   position: inherit;
   height: inherit;
 }

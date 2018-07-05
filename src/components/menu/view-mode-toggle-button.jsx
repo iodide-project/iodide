@@ -7,7 +7,7 @@ import tasks from '../../actions/task-definitions'
 
 export class ViewModeToggleButtonUnconnected extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    viewMode: PropTypes.oneOf(['editor', 'REPORT_VIEW']),
     textColor: PropTypes.string,
     hoverColor: PropTypes.string,
   }
@@ -17,7 +17,7 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
   }
 
   toggleViewMode() {
-    if (this.props.viewMode === 'presentation') {
+    if (this.props.viewMode === 'REPORT_VIEW') {
       tasks.setViewModeToEditor.callback()
     } else if (this.props.viewMode === 'editor') {
       tasks.setViewModeToPresentation.callback()
@@ -25,8 +25,8 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
   }
 
   render() {
-    const tooltipText = this.props.viewMode === 'presentation' ?
-      'Explore this Iodide notebook' : 'Go to Report view'
+    const tooltipText = this.props.viewMode === 'REPORT_VIEW' ?
+      'Explore this notebook' : 'Go to Report view'
     return (
       <Tooltip
         classes={{ tooltip: 'iodide-tooltip' }}
@@ -38,7 +38,7 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
           variant="flat"
           mini
         >
-          {this.props.viewMode === 'presentation' ? 'Explore' : 'Report'}
+          {this.props.viewMode === 'REPORT_VIEW' ? 'Explore' : 'Report'}
         </Button>
       </Tooltip>
     )
