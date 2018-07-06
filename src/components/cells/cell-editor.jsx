@@ -46,7 +46,7 @@ class CellEditor extends React.Component {
 
   componentDidMount() {
     if (this.props.thisCellBeingEdited
-      && this.refs.hasOwnProperty('editor') // eslint-disable-line
+      && this.refs.hasOwnProperty('EXPLORE_VIEW') // eslint-disable-line
     ) {
       this.editor.focus()
     }
@@ -135,6 +135,35 @@ class CellEditor extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
+  let editorOptions
+  switch (cell.cellType) {
+    case 'code':
+    case 'external dependencies':
+    case 'css':
+      editorOptions = {}
+      break
+
+    case 'markdown':
+      editorOptions = {
+        lineWrapping: true,
+        matchBrackets: false,
+        autoCloseBrackets: false,
+        lineNumbers: false,
+      }
+      break
+
+    case 'raw':
+    case 'plugin':
+      editorOptions = {
+        matchBrackets: false,
+        autoCloseBrackets: false,
+      }
+      break
+
+    default:
+      editorOptions = {}
+  }
+
   const { codeMirrorModeLoaded } = state.languages[cell.language]
 
   const codeMirrorMode = (
@@ -148,6 +177,7 @@ function mapStateToProps(state, ownProps) {
     cellId,
     codeMirrorMode,
     codeMirrorModeLoaded,
+    editorOptions,
   }
 }
 

@@ -22,7 +22,7 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
   beforeEach(() => {
     props = {
       userDefinedVarNames: ['iodide', 'a', 'b'],
-      sidePaneMode: 'declared variables',
+      sidePaneMode: 'DECLARED_VARIABLES',
       environmentVariables: {
         x: [
           'object',
@@ -43,7 +43,7 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
 
   it("sets the HistoryPane's openOnMode prop to be history", () => {
     expect(declaredVariablesPane().find(SidePane).props().openOnMode)
-      .toBe('declared variables')
+      .toBe('DECLARED_VARIABLES')
   })
 
   it("sets the HistoryPane's task prop to be toggleHistoryPane", () => {
@@ -81,7 +81,7 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
   it('always updates the component when props change', () => {
     const nextProps = {
       userDefinedVarNames: ['iodide', 'a', 'b'],
-      sidePaneMode: 'declared variables',
+      sidePaneMode: 'DECLARED_VARIABLES',
       environmentVariables: {
         x: [
           'string',
@@ -100,7 +100,7 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
   it('never updates the component when props are same', () => {
     const nextProps = {
       userDefinedVarNames: ['iodide', 'a', 'b'],
-      sidePaneMode: 'declared variables',
+      sidePaneMode: 'DECLARED_VARIABLES',
       environmentVariables: {
         x: [
           'object',
@@ -124,7 +124,7 @@ describe('DeclaredVariablesPane mapStateToProps', () => {
     state = {
       savedEnvironment: {},
       userDefinedVarNames: ['iodide', 'a'],
-      sidePaneMode: 'declared variables',
+      sidePaneMode: 'DECLARED_VARIABLES',
     }
   })
 
@@ -133,7 +133,7 @@ describe('DeclaredVariablesPane mapStateToProps', () => {
       .toEqual({
         environmentVariables: {},
         userDefinedVarNames: ['iodide', 'a'],
-        sidePaneMode: 'declared variables',
+        sidePaneMode: 'DECLARED_VARIABLES',
       })
   })
 })

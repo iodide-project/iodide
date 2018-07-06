@@ -11,7 +11,7 @@ import { rowOverflowEnum, nextOverflow } from '../../state-prototypes'
 export class OutputRowUnconnected extends React.Component {
   static propTypes = {
     executionString: PropTypes.string,
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     rowOverflow: PropTypes.oneOf(rowOverflowEnum.values()),
     rowType: PropTypes.string,
     collapseTooltipPlacement: PropTypes.string.isRequired,
@@ -34,7 +34,7 @@ export class OutputRowUnconnected extends React.Component {
     // thus, we only need to check the editorView collapsed state
     if (this.props.uncollapseOnUpdate) {
       this.props.actions.setCellRowCollapsedState(
-        'editor',
+        'EXPLORE_VIEW',
         'input',
         rowOverflowEnum.SCROLL,
       )
@@ -43,9 +43,9 @@ export class OutputRowUnconnected extends React.Component {
 
   handleCollapseButtonClick() {
     // the collapse button should only work in EXPLORE view
-    if (this.props.viewMode === 'editor') {
+    if (this.props.viewMode === 'EXPLORE_VIEW') {
       this.props.actions.setCellRowCollapsedState(
-        'editor',
+        'EXPLORE_VIEW',
         this.props.rowType,
         nextOverflow(this.props.rowOverflow),
       )
@@ -80,10 +80,10 @@ export function mapStateToPropsCellRows(state, ownProps) {
   let view
   // this block can be deprecated if we move to enums for VIEWs
   switch (state.viewMode) {
-    case 'editor':
+    case 'EXPLORE_VIEW':
       view = 'EXPLORE'
       break
-    case 'presentation':
+    case 'REPORT_VIEW':
       view = 'REPORT'
       break
     default:
@@ -98,7 +98,7 @@ export function mapStateToPropsCellRows(state, ownProps) {
   // thus, we only need to check the editorView collapsed state
   const uncollapseOnUpdate = (
     cell.selected &&
-    state.viewMode === 'editor' &&
+    state.viewMode === 'EXPLORE_VIEW' &&
     state.mode === 'edit' &&
     ownProps.rowType === 'input' &&
     rowOverflow === rowOverflowEnum.HIDDEN

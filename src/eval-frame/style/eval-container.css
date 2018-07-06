@@ -12,6 +12,7 @@ html, body {
 }
 
 div#eval-container {
+  height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -22,12 +23,7 @@ div#eval-container.presentation-mode {
   overflow-y: auto;
 }
 
-div.eval-panes {
-  height: 100vh;
-  overflow: scroll;
-}
-
-div#cells.editor {
+div#cells.EXPLORE_VIEW {
   background-color: rgb(250, 250, 250);
   box-sizing: border-box;
   width: 100%;
@@ -38,7 +34,7 @@ div#cells.editor {
   padding-bottom: 60px;
 }
 
-div#cells.presentation {
+div#cells.REPORT_VIEW {
   position: inherit;
   height: inherit;
 }

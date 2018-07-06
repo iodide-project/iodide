@@ -25,7 +25,7 @@ describe('OutputRowUnconnected React component', () => {
       selected: true,
       rowOverflow: 'VISIBLE',
       editingCell: true,
-      viewMode: 'editor',
+      viewMode: 'EXPLORE_VIEW',
       rowType: 'input',
       uncollapseOnUpdate: false,
       collapseTooltipPlacement: 'top',
@@ -65,14 +65,14 @@ describe('OutputRowUnconnected React component', () => {
   })
 
   it('click on cell collapse-button div with correct props fires setCellRowCollapsedState', () => {
-    props.viewMode = 'editor'
+    props.viewMode = 'EXPLORE_VIEW'
     outputRow().find('div.collapse-button').simulate('click')
     expect(setCellRowCollapsedState.mock.calls.length).toBe(1)
     expect(setCellRowCollapsedState.mock.calls[0].length).toBe(3)
   })
 
   it('click on cell collapse-button div with incorrect props does not fire setCellRowCollapsedState', () => {
-    props.viewMode = 'presentation'
+    props.viewMode = 'REPORT_VIEW'
     outputRow().find('div.collapse-button').simulate('click')
     expect(setCellRowCollapsedState.mock.calls.length).toBe(0)
   })
@@ -145,7 +145,7 @@ describe('OutputRow mapStateToPropsCellRows', () => {
       },
       ],
       mode: 'edit',
-      viewMode: 'editor',
+      viewMode: 'EXPLORE_VIEW',
     }
   })
 
@@ -154,7 +154,7 @@ describe('OutputRow mapStateToPropsCellRows', () => {
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        viewMode: 'editor',
+        viewMode: 'EXPLORE_VIEW',
         uncollapseOnUpdate: false,
         executionString: '[ ]',
         rowOverflow: 'VISIBLE',
@@ -165,11 +165,11 @@ describe('OutputRow mapStateToPropsCellRows', () => {
 
   it('should return the correct info with viewMode===presentation', () => {
     const ownProps = { cellId: 5, rowType: 'input' }
-    state.viewMode = 'presentation'
+    state.viewMode = 'REPORT_VIEW'
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        viewMode: 'presentation',
+        viewMode: 'REPORT_VIEW',
         uncollapseOnUpdate: false,
         executionString: '[ ]',
         rowOverflow: 'HIDDEN',
@@ -183,7 +183,7 @@ describe('OutputRow mapStateToPropsCellRows', () => {
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        viewMode: 'editor',
+        viewMode: 'EXPLORE_VIEW',
         uncollapseOnUpdate: false,
         executionString: '',
         rowOverflow: 'VISIBLE',
@@ -198,7 +198,7 @@ describe('OutputRow mapStateToPropsCellRows', () => {
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        viewMode: 'editor',
+        viewMode: 'EXPLORE_VIEW',
         uncollapseOnUpdate: false,
         executionString: '',
         rowOverflow: 'VISIBLE',

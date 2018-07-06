@@ -51,7 +51,7 @@ export class PaneContainerUnconnected extends React.Component {
             className="view-pane"
             style={{
           display: this.props.sidePaneMode === this.props.openOnMode
-            && this.props.viewMode !== 'presentation' ? 'block' : 'none',
+            && this.props.viewMode !== 'REPORT_VIEW' ? 'block' : 'none',
         }}
           >
             <MuiThemeProvider theme={theme}>

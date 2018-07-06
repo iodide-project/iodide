@@ -47,7 +47,7 @@ foo`
 describe('jsmd stringifier test case 3, non-default cell settings 1', () => {
   let state = newNotebook()
   state.title = 'foo notebook'
-  state.viewMode = 'presentation'
+  state.viewMode = 'REPORT_VIEW'
 
   state.cells[0].content = 'foo'
   _.set(state, 'cells[0].rowSettings.REPORT.input', 'SCROLL')
@@ -59,7 +59,7 @@ describe('jsmd stringifier test case 3, non-default cell settings 1', () => {
   const jsmdExpected = `%% meta
 {
   "title": "foo notebook",
-  "viewMode": "presentation",
+  "viewMode": "REPORT_VIEW",
   "lastExport": "${lastExport}"
 }
 

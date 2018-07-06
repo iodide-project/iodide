@@ -32,7 +32,7 @@ export class FullScreenEditorButtonUnconnected extends React.Component {
       <div
         className="display-buttons"
         style={{
-        display: this.props.viewMode === 'presentation' ? 'none' : undefined,
+        display: this.props.viewMode === 'REPORT_VIEW' ? 'none' : undefined,
       }}
       >
         <EditorButton

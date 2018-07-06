@@ -48,7 +48,7 @@ describe('SidePaneUnconnected React component', () => {
 
   it("sets the Drawer's open prop to be false for incorrect props", () => {
     props.sidePaneMode = '_APP_INFO'
-    props.openOnMode = 'history'
+    props.openOnMode = '_HISTORY'
     expect(sidePane().find(Drawer).props().open)
       .toBe(false)
   })
@@ -85,7 +85,7 @@ describe('SidePane mapStateToProps', () => {
 
   beforeEach(() => {
     state = {
-      sidePaneMode: 'history',
+      sidePaneMode: '_HISTORY',
       sidePaneWidth: '562',
     }
   })
@@ -93,7 +93,7 @@ describe('SidePane mapStateToProps', () => {
   it('should return the correct basic info', () => {
     expect(mapStateToProps(state))
       .toEqual({
-        sidePaneMode: 'history',
+        sidePaneMode: '_HISTORY',
         sidePaneWidth: '562',
       })
   })

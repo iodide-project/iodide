@@ -30,7 +30,7 @@ export class CellRowUnconnected extends React.Component {
     // uncollapse the row upon entering edit mode.
     if (this.props.uncollapseOnUpdate) {
       this.props.actions.setCellRowCollapsedState(
-        'editor',
+        'EXPLORE_VIEW',
         'input',
         rowOverflowEnum.SCROLL,
       )
@@ -39,7 +39,7 @@ export class CellRowUnconnected extends React.Component {
 
   handleCollapseButtonClick() {
     this.props.actions.setCellRowCollapsedState(
-      'editor',
+      'EXPLORE_VIEW',
       this.props.rowType,
       nextOverflow(this.props.rowOverflow),
     )
@@ -74,10 +74,10 @@ export function mapStateToPropsCellRows(state, ownProps) {
   let view
   // this block can be deprecated if we move to enums for VIEWs
   switch (state.viewMode) {
-    case 'editor':
+    case 'EXPLORE_VIEW':
       view = 'EXPLORE'
       break
-    case 'presentation':
+    case 'REPORT_VIEW':
       view = 'REPORT'
       break
     default:

@@ -97,7 +97,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       const exportState = Object.assign(
         {},
         state,
-        { viewMode: action.exportAsReport ? 'presentation' : 'editor' },
+        { viewMode: action.exportAsReport ? 'REPORT_VIEW' : 'EXPLORE_VIEW' },
       )
       if (action.exportToClipboard) {
         const jsmdStr = encodeURIComponent(exportJsmdToString(exportState))

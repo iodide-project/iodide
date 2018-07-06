@@ -28,7 +28,7 @@ div#cells.presentation div.cell-row-container {
   width: 100%;
 }
 
-/* in the editor view, there is 24px less room for the collapse-button. Let's get it back. */
+/* in the EXPLORE_VIEW view, there is 24px less room for the collapse-button. Let's get it back. */
 div#cells.presentation div.main-component {
   width: 100%;
 }
@@ -90,25 +90,25 @@ retaining the narrower column view for readability and flow.
   margin: auto;
 }
 
-div#cells.editor .user-markdown p,
-div#cells.editor .user-markdown h1, 
-div#cells.editor .user-markdown h2, 
-div#cells.editor .user-markdown h3, 
-div#cells.editor .user-markdown h4, 
-div#cells.editor .user-markdown h5, 
-div#cells.editor .user-markdown h6,
-div#cells.editor .user-markdown ol, 
-div#cells.editor .user-markdown ul,
-div#cells.editor .user-markdown pre,
-div#cells.editor .user-markdown address,
-div#cells.editor .user-markdown blockquote,
-div#cells.editor .user-markdown dl,
-div#cells.editor .user-markdown div,
-div#cells.editor .user-markdown fieldset,
-div#cells.editor .user-markdown form,
-div#cells.editor .user-markdown hr,
-div#cells.editor .user-markdown noscript,
-div#cells.editor .user-markdown table {
+div#cells.EXPLORE_VIEW .user-markdown p,
+div#cells.EXPLORE_VIEW .user-markdown h1, 
+div#cells.EXPLORE_VIEW .user-markdown h2, 
+div#cells.EXPLORE_VIEW .user-markdown h3, 
+div#cells.EXPLORE_VIEW .user-markdown h4, 
+div#cells.EXPLORE_VIEW .user-markdown h5, 
+div#cells.EXPLORE_VIEW .user-markdown h6,
+div#cells.EXPLORE_VIEW .user-markdown ol, 
+div#cells.EXPLORE_VIEW .user-markdown ul,
+div#cells.EXPLORE_VIEW .user-markdown pre,
+div#cells.EXPLORE_VIEW .user-markdown address,
+div#cells.EXPLORE_VIEW .user-markdown blockquote,
+div#cells.EXPLORE_VIEW .user-markdown dl,
+div#cells.EXPLORE_VIEW .user-markdown div,
+div#cells.EXPLORE_VIEW .user-markdown fieldset,
+div#cells.EXPLORE_VIEW .user-markdown form,
+div#cells.EXPLORE_VIEW .user-markdown hr,
+div#cells.EXPLORE_VIEW .user-markdown noscript,
+div#cells.EXPLORE_VIEW .user-markdown table {
   margin-left: 0px; /* aligned with the */
 }
 

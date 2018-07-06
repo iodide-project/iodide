@@ -1,7 +1,7 @@
 import { store } from '../store'
 
 function viewModeIsEditor() {
-  return store.getState().viewMode === 'editor'
+  return store.getState().viewMode === 'EXPLORE_VIEW'
 }
 
 function isCommandMode() {
@@ -9,7 +9,7 @@ function isCommandMode() {
 }
 
 function viewModeIsPresentation() {
-  return store.getState().viewMode === 'presentation'
+  return store.getState().viewMode === 'REPORT_VIEW'
 }
 
 function isEditorLinked() {

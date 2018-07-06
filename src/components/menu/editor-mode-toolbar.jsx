@@ -16,7 +16,7 @@ export class EditorModeToolbarUnconnected extends React.Component {
     return (
       <div
         className="notebook-toolbar-container"
-        style={{ display: this.props.viewMode === 'editor' ? 'block' : 'none' }}
+        style={{ display: this.props.viewMode === 'EXPLORE_VIEW' ? 'block' : 'none' }}
       >
         <Toolbar classes={{ root: 'notebook-toolbar' }}>
           <EditorModeControls isFirstChild />

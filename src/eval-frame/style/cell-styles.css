@@ -32,32 +32,32 @@ div.cell-container.no-output {
 but I don't see why we would have to do this immediately.
 */
 
-div#cells.editor div.raw-dom-element {
+div#cells.EXPLORE_VIEW div.raw-dom-element {
   overflow-x: scroll;
 }
 
-div#cells.presentation div.cell-container {
+div#cells.REPORT_VIEW div.cell-container {
   margin: 0 auto;
   outline: none;
   padding: 0px;
 }
 
-div#cells.presentation .collapse-button {
+div#cells.REPORT_VIEW .collapse-button {
   display: none;
   height: 0px
 }
 
-div#cells.presentation div.cell-row.HIDDEN {
+div#cells.REPORT_VIEW div.cell-row.HIDDEN {
   display: none;
 }
 
-div#cells.presentation div.cell-menu-container {
+div#cells.REPORT_VIEW div.cell-menu-container {
   display: none;
   height: 0px;
   width: 0px !important;
 }
 
-div#cells.presentation div.cell-row.input {
+div#cells.REPORT_VIEW div.cell-row.input {
   padding:0px;
 }
 
@@ -88,7 +88,7 @@ div.cell-row {
   padding: 1px;
 }
 
-div#cells.editor div.cell-container.markdown div.cell-row.output {
+div#cells.EXPLORE_VIEW div.cell-container.markdown div.cell-row.output {
   overflow-x:hidden;
 }
 
@@ -191,7 +191,7 @@ div.hidden-cell {
 }
 
 .rep-container {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 div.dataframe-rep {

@@ -51,7 +51,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
       </div>
     ) : undefined
     return (
-      <Pane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="declared variables">
+      <Pane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="DECLARED_VARIABLES">
         {noVariables}
         {edvElem}
         {declaredVariables}

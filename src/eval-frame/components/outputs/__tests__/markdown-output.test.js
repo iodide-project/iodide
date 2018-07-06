@@ -24,7 +24,7 @@ describe('MarkdownOutput_unconnected react component', () => {
     props = {
       cellId: 1,
       value: 'a _markdown_ string',
-      viewMode: 'editor',
+      viewMode: 'EXPLORE_VIEW',
       actions: { markCellNotRendered, changeMode },
     }
     mountedCell = undefined

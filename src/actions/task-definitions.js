@@ -313,8 +313,8 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
   callback() {
-    if (store.getState().sidePaneMode !== 'declared variables') {
-      dispatcher.changeSidePaneMode('declared variables')
+    if (store.getState().sidePaneMode !== 'DECLARED_VARIABLES') {
+      dispatcher.changeSidePaneMode('DECLARED_VARIABLES')
     } else {
       dispatcher.changeSidePaneMode()
     }
@@ -329,8 +329,8 @@ tasks.toggleHistoryPane = new UserTask({
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
   callback() {
-    if (store.getState().sidePaneMode !== 'history') {
-      dispatcher.changeSidePaneMode('history')
+    if (store.getState().sidePaneMode !== '_HISTORY') {
+      dispatcher.changeSidePaneMode('_HISTORY')
     } else {
       dispatcher.changeSidePaneMode()
     }
@@ -356,14 +356,14 @@ tasks.toggleAppInfoPane = new UserTask({
 tasks.setViewModeToEditor = new UserTask({
   title: 'Set View Mode to Editor',
   callback() {
-    dispatcher.setViewMode('editor')
+    dispatcher.setViewMode('EXPLORE_VIEW')
   },
 })
 
 tasks.setViewModeToPresentation = new UserTask({
   title: 'Set View Mode to Presentation',
   callback() {
-    dispatcher.setViewMode('presentation')
+    dispatcher.setViewMode('REPORT_VIEW')
   },
 })
 

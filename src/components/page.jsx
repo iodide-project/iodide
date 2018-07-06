@@ -18,7 +18,7 @@ const AUTOSAVE = 'AUTOSAVE: '
 
 class Page extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
+    viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     actions: PropTypes.shape({
       deleteNotebook: PropTypes.func.isRequired,
       saveNotebook: PropTypes.func.isRequired,
@@ -56,38 +56,8 @@ class Page extends React.Component {
   }
 
   render() {
-    const cellInputComponents = this.props.cellIds.map((id, i) => {
-      let editorOptions
-      switch (this.props.cellTypes[i]) {
-        case 'code':
-        case 'external dependencies':
-        case 'css':
-          editorOptions = {}
-          break
-
-        case 'markdown':
-          editorOptions = {
-            lineWrapping: true,
-            matchBrackets: false,
-            autoCloseBrackets: false,
-            lineNumbers: false,
-          }
-          break
-
-        case 'raw':
-        case 'plugin':
-          editorOptions = {
-            matchBrackets: false,
-            autoCloseBrackets: false,
-          }
-          break
-
-        default:
-          editorOptions = {}
-      }
-
-      return <CellContainer cellId={id} key={id} editorOptions={editorOptions} />
-    })
+    const cellInputComponents = this.props.cellIds.map(id =>
+      <CellContainer cellId={id} key={id} />)
 
     return (
       <React.Fragment>
@@ -117,7 +87,7 @@ class Page extends React.Component {
             size={{ width: this.props.showFrame ? this.props.editorWidth : '100%' }}
             defaultSize={{ height: '100%' }}
             style={{
-              display: this.props.viewMode === 'presentation' ||
+              display: this.props.viewMode === 'REPORT_VIEW' ||
                 !this.props.showEditor ? 'none' : undefined,
             }}
           >
