@@ -61,7 +61,7 @@ div.history-cells div.cell-container {
 }
 
 pre.history-item-code {
-  overflow: scroll;
+  overflow: auto;
   padding:3px;
   padding-left:8px;
   width:100%;
