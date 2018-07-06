@@ -32,7 +32,7 @@ div.cell-container.no-output {
 but I don't see why we would have to do this immediately.
 */
 
-div#cells.editor div.raw-dom-element {
+div#cells.EXPLORE_VIEW div.raw-dom-element {
   overflow-x: scroll;
 }
 
@@ -88,7 +88,7 @@ div.cell-row {
   padding: 1px;
 }
 
-div#cells.editor div.cell-container.markdown div.cell-row.output {
+div#cells.EXPLORE_VIEW div.cell-container.markdown div.cell-row.output {
   overflow-x:hidden;
 }
 

@@ -230,7 +230,7 @@ function newStateWithRowOverflowSet(state, cellId, rowType, viewModeToSet, rowOv
   // this block can be deprecated if we move to enums for VIEWs
   let view
   switch (viewModeToSet) {
-    case 'editor':
+    case 'EXPLORE_VIEW':
       view = 'EXPLORE'
       break
     case 'REPORT_VIEW':

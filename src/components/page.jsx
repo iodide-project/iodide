@@ -18,7 +18,7 @@ const AUTOSAVE = 'AUTOSAVE: '
 
 class Page extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'REPORT_VIEW']),
+    viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     actions: PropTypes.shape({
       deleteNotebook: PropTypes.func.isRequired,
       saveNotebook: PropTypes.func.isRequired,

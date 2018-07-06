@@ -47,7 +47,7 @@ const jsmdValidCellSettingPaths = [
 const jsmdLegacyValueMappings = {
   viewMode: {
     presentation: 'REPORT_VIEW',
-    // editor: 'EDITOR_',
+    editor: 'EXPLORE_VIEW',
   },
 }
 

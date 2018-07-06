@@ -80,7 +80,7 @@ describe('jsmd parser Ex 1', () => {
     expect(state.title).toEqual('What a web notebook looks like')
   })
   it('should have correct meta settings: viewMode', () => {
-    expect(state.viewMode).toEqual('editor')
+    expect(state.viewMode).toEqual('EXPLORE_VIEW')
   })
 })
 

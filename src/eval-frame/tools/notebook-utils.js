@@ -1,7 +1,7 @@
 import { store } from '../store'
 
 function viewModeIsEditor() {
-  return store.getState().viewMode === 'editor'
+  return store.getState().viewMode === 'EXPLORE_VIEW'
 }
 
 function isCommandMode() {

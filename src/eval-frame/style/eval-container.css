@@ -27,7 +27,7 @@ div.eval-panes {
   /*overflow: scroll;*/
 }
 
-div#cells.editor {
+div#cells.EXPLORE_VIEW {
   background-color: rgb(250, 250, 250);
   box-sizing: border-box;
   width: 100%;

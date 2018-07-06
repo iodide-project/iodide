@@ -25,7 +25,7 @@ describe('CellRowUnconnected React component', () => {
       selected: true,
       rowOverflow: 'VISIBLE',
       editingCell: true,
-      viewMode: 'editor',
+      viewMode: 'EXPLORE_VIEW',
       rowType: 'input',
       uncollapseOnUpdate: false,
       collapseTooltipPlacement: 'top',
@@ -65,7 +65,7 @@ describe('CellRowUnconnected React component', () => {
   })
 
   it('click on cell collapse-button div fires setCellRowCollapsedState', () => {
-    props.viewMode = 'editor'
+    props.viewMode = 'EXPLORE_VIEW'
     cellRow().find('div.collapse-button').simulate('click')
     expect(setCellRowCollapsedState.mock.calls.length).toBe(1)
     expect(setCellRowCollapsedState.mock.calls[0].length).toBe(3)
@@ -139,7 +139,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
       },
       ],
       mode: 'edit',
-      viewMode: 'editor',
+      viewMode: 'EXPLORE_VIEW',
     }
   })
 
@@ -148,7 +148,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        // viewMode: 'editor',
+        // viewMode: 'EXPLORE_VIEW',
         uncollapseOnUpdate: false,
         executionString: '[ ]',
         rowOverflow: 'VISIBLE',
@@ -162,7 +162,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        // viewMode: 'editor',
+        // viewMode: 'EXPLORE_VIEW',
         uncollapseOnUpdate: false,
         executionString: '',
         rowOverflow: 'VISIBLE',
@@ -177,7 +177,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
     expect(mapStateToPropsCellRows(state, ownProps))
       .toEqual({
         cellId: 5,
-        // viewMode: 'editor',
+        // viewMode: 'EXPLORE_VIEW',
         uncollapseOnUpdate: false,
         executionString: '',
         rowOverflow: 'VISIBLE',

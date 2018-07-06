@@ -20,7 +20,7 @@ import * as actions from '../actions/actions'
 
 class EvalContainer extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'REPORT_VIEW']),
+    viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     title: PropTypes.string,
     cellIds: PropTypes.array,
     cellTypes: PropTypes.array,

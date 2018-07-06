@@ -23,7 +23,7 @@ describe('OutputContainerUnconnected React component', () => {
       selected: true,
       cellId: 1,
       editingCell: true,
-      viewMode: 'editor',
+      viewMode: 'EXPLORE_VIEW',
       cellType: 'code',
       value: 10,
       postMessageToEditor: postMessageToEditorMock,
@@ -80,7 +80,7 @@ describe('OutputContainerUnconnected React component', () => {
 
   it('mouse down on cell container div fires postMessageToEditor with correct props', () => {
     // const spy = jest.spyOn(global.MessageChannel.prototype.port1, 'postMessage')
-    props.viewMode = 'editor'
+    props.viewMode = 'EXPLORE_VIEW'
     props.selected = false
     outputContainer().simulate('mousedown')
     // expect(spy).toHaveBeenCalled()
@@ -95,7 +95,7 @@ describe('OutputContainerUnconnected React component', () => {
   })
 
   const postMessageToEditorNotFiredVariants = [
-    { selected: true, viewMode: 'editor' },
+    { selected: true, viewMode: 'EXPLORE_VIEW' },
     { selected: false, viewMode: 'REPORT_VIEW' },
     { selected: true, viewMode: 'REPORT_VIEW' },
   ]
@@ -134,7 +134,7 @@ describe('OutputContainer mapStateToProps', () => {
       },
       ],
       mode: 'edit',
-      viewMode: 'editor',
+      viewMode: 'EXPLORE_VIEW',
     }
   })
 
@@ -145,7 +145,7 @@ describe('OutputContainer mapStateToProps', () => {
         cellId: 5,
         selected: true,
         editingCell: true,
-        viewMode: 'editor',
+        viewMode: 'EXPLORE_VIEW',
         cellType: 'code',
         outputHasValue: false,
         postMessageToEditor,
@@ -161,7 +161,7 @@ describe('OutputContainer mapStateToProps', () => {
         cellId: 5,
         selected: false,
         editingCell: false,
-        viewMode: 'editor',
+        viewMode: 'EXPLORE_VIEW',
         cellType: 'code',
         outputHasValue: false,
         postMessageToEditor,
@@ -177,7 +177,7 @@ describe('OutputContainer mapStateToProps', () => {
         cellId: 5,
         selected: true,
         editingCell: false,
-        viewMode: 'editor',
+        viewMode: 'EXPLORE_VIEW',
         outputHasValue: false,
         cellType: 'code',
         postMessageToEditor,
@@ -194,7 +194,7 @@ describe('OutputContainer mapStateToProps', () => {
         cellId: 5,
         selected: false,
         editingCell: false,
-        viewMode: 'editor',
+        viewMode: 'EXPLORE_VIEW',
         outputHasValue: true,
         cellType: 'code',
         postMessageToEditor,

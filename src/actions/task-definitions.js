@@ -356,7 +356,7 @@ tasks.toggleAppInfoPane = new UserTask({
 tasks.setViewModeToEditor = new UserTask({
   title: 'Set View Mode to Editor',
   callback() {
-    dispatcher.setViewMode('editor')
+    dispatcher.setViewMode('EXPLORE_VIEW')
   },
 })
 

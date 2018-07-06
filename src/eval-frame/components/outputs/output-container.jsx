@@ -15,7 +15,7 @@ export class OutputContainerUnconnected extends React.Component {
     cellId: PropTypes.number.isRequired,
     children: PropTypes.node,
     editingCell: PropTypes.bool.isRequired,
-    viewMode: PropTypes.oneOf(['editor', 'REPORT_VIEW']),
+    viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
     postMessageToEditor: PropTypes.func.isRequired,
   }
@@ -27,7 +27,7 @@ export class OutputContainerUnconnected extends React.Component {
   }
 
   handleCellClick = () => {
-    if (this.props.viewMode === 'editor' && !this.props.selected) {
+    if (this.props.viewMode === 'EXPLORE_VIEW' && !this.props.selected) {
       let targetPxFromViewportTop
       if (IODIDE_BUILD_MODE !== 'test') {
         targetPxFromViewportTop = (

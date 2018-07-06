@@ -17,9 +17,9 @@ describe('legacy jsmd updates to viewMode', () => {
     updatedState = translateLegacyJsmd(state)
     expect(updatedState.viewMode).toEqual('REPORT_VIEW')
   })
-  // it('should update "editor" to "EDITOR_"', () => {
-  //   state.viewMode = 'editor'
-  //   updatedState = translateLegacyJsmd(state)
-  //   expect(updatedState.viewMode).toEqual('EDITOR_')
-  // })
+  it('should update "editor" to "EDITOR_"', () => {
+    state.viewMode = 'editor'
+    updatedState = translateLegacyJsmd(state)
+    expect(updatedState.viewMode).toEqual('EXPLORE_VIEW')
+  })
 })

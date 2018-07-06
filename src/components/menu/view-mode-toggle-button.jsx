@@ -7,7 +7,7 @@ import tasks from '../../actions/task-definitions'
 
 export class ViewModeToggleButtonUnconnected extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.oneOf(['editor', 'REPORT_VIEW']),
+    viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     textColor: PropTypes.string,
     hoverColor: PropTypes.string,
   }
@@ -19,7 +19,7 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
   toggleViewMode() {
     if (this.props.viewMode === 'REPORT_VIEW') {
       tasks.setViewModeToEditor.callback()
-    } else if (this.props.viewMode === 'editor') {
+    } else if (this.props.viewMode === 'EXPLORE_VIEW') {
       tasks.setViewModeToPresentation.callback()
     }
   }

@@ -46,7 +46,7 @@ class CellEditor extends React.Component {
 
   componentDidMount() {
     if (this.props.thisCellBeingEdited
-      && this.refs.hasOwnProperty('editor') // eslint-disable-line
+      && this.refs.hasOwnProperty('EXPLORE_VIEW') // eslint-disable-line
     ) {
       this.editor.focus()
     }
