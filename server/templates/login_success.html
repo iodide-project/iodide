@@ -1,0 +1,10 @@
+Login Successful!
+<script type="text/javascript">
+  function switchWindow() {
+    console.log({{user_info|safe}});
+    window.opener.loginSuccess({{ user_info|safe }});
+    window.opener.focus();
+    window.close()
+}
+window.onload = switchWindow;
+</script>
