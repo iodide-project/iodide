@@ -313,8 +313,8 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
   callback() {
-    if (store.getState().sidePaneMode !== 'declared variables') {
-      dispatcher.changeSidePaneMode('declared variables')
+    if (store.getState().sidePaneMode !== 'DECLARED_VARIABLES') {
+      dispatcher.changeSidePaneMode('DECLARED_VARIABLES')
     } else {
       dispatcher.changeSidePaneMode()
     }
@@ -329,8 +329,8 @@ tasks.toggleHistoryPane = new UserTask({
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
   callback() {
-    if (store.getState().sidePaneMode !== 'history') {
-      dispatcher.changeSidePaneMode('history')
+    if (store.getState().sidePaneMode !== '_HISTORY') {
+      dispatcher.changeSidePaneMode('_HISTORY')
     } else {
       dispatcher.changeSidePaneMode()
     }

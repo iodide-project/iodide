@@ -35,7 +35,7 @@ describe('HistoryPaneUnconnected React component', () => {
 
   it("sets the HistoryPane's openOnMode prop to be history", () => {
     expect(historyPane().find(SidePane).props().openOnMode)
-      .toBe('history')
+      .toBe('_HISTORY')
   })
 
   it("sets the HistoryPane's task prop to be toggleHistoryPane", () => {
@@ -83,7 +83,7 @@ describe('HistoryPane mapStateToProps', () => {
 
   beforeEach(() => {
     state = {
-      sidePaneMode: 'history',
+      sidePaneMode: '_HISTORY',
       history: [{
         cellID: 0,
         lastRan: '2018-06-16T10:32:46.422Z',
@@ -95,7 +95,7 @@ describe('HistoryPane mapStateToProps', () => {
   it('should return the correct basic info', () => {
     expect(mapStateToProps(state))
       .toEqual({
-        sidePaneMode: 'history',
+        sidePaneMode: '_HISTORY',
         history: [{
           cellID: 0,
           lastRan: '2018-06-16T10:32:46.422Z',

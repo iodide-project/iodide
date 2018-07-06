@@ -28,7 +28,7 @@ export class HistoryPaneUnconnected extends React.Component {
     }
     histContents.reverse()
     return (
-      <Pane task={tasks.toggleHistoryPane} title="History" openOnMode="history">
+      <Pane task={tasks.toggleHistoryPane} title="History" openOnMode="_HISTORY">
         <div className="history-cells"> {histContents} </div>
       </Pane>
     )
