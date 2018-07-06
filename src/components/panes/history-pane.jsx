@@ -22,7 +22,7 @@ export class HistoryPaneUnconnected extends React.Component {
       histContents.push(<div className="no-history" key="history_empty">No History</div>)
     }
     return (
-      <SidePane task={tasks.toggleHistoryPane} title="History" openOnMode="history">
+      <SidePane task={tasks.toggleHistoryPane} title="History" openOnMode="_HISTORY">
         <div className="history-cells"> {histContents} </div>
       </SidePane>
     )
