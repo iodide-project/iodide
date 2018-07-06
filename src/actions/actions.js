@@ -437,7 +437,7 @@ function loginFailure() {
 }
 
 export function login() {
-  const url = '/auth/github'
+  const url = '/oauth/login/github'
   const name = 'github_login'
   const specs = 'width=500,height=600'
   const authWindow = window.open(url, name, specs)
@@ -454,10 +454,9 @@ export function login() {
 
 export function logout() {
   return (dispatch) => {
-    fetch('/logout')
-      .then(response => response.json())
-      .then((json) => {
-        if (json.status === 'success') {
+    fetch('/logout/')
+      .then((response) => {
+        if (response.ok) {
           dispatch({ type: 'LOGOUT' })
           dispatch(updateAppMessages({ message: 'Logged Out' }))
         } else dispatch(updateAppMessages({ message: 'Logout Failed' }))

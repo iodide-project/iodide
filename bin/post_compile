@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Tasks run by the Heroku Python buildpack after the compile step.
+
+# Make non-zero exit codes & other errors fatal.
+set -euo pipefail
+
+# Create a `prod/` directory containing built/minified versions of the frontend assets.
+# Uses the node binaries/packages installed by the nodejs buildpack previously.
+npm install && npm run build-server
+
+# Generate gzipped versions of files that would benefit from compression, that
+# WhiteNoise can then serve in preference to the originals. This is required
+# since WhiteNoise's Django storage backend only gzips assets handled by
+# collectstatic, and so does not affect files in the `dist/` directory.
+python -m whitenoise.compress prod
+
+# Remove nodejs files to reduce slug size (and avoid environment variable
+# pollution from the nodejs profile script), since they are no longer
+# required once `npm run build` has run. The buildpack cache will still
+# contain them, so this doesn't slow down the next slug compile.
+rm -r node_modules/
