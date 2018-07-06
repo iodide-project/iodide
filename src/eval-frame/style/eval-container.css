@@ -12,6 +12,7 @@ html, body {
 }
 
 div#eval-container {
+  height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -20,11 +21,6 @@ div#eval-container {
 div#eval-container.presentation-mode {
   display: block;
   overflow-y: auto;
-}
-
-div.eval-panes {
-  height: 100vh;
-  /*overflow: scroll;*/
 }
 
 div#cells.EXPLORE_VIEW {

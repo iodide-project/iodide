@@ -5,7 +5,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const _ = require('lodash')
 
-const htmlTemplate = require('./src/html-template.js')
+const editorHtmlTemplate = require('./src/html-template.js')
+const evalFrameHtmlTemplate = require('./src/eval-frame/html-template.js')
+
+const editorHtmlTemplateCompiler = _.template(editorHtmlTemplate)
+const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate)
+
 
 let BUILD_DIR
 let APP_PATH_STRING
@@ -16,7 +21,6 @@ let APP_VERSION_STRING
 const APP_DIR = path.resolve(__dirname, 'src/')
 const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
-const htmlTemplateCompiler = _.template(htmlTemplate)
 const plugins = []
 
 // const config
@@ -108,7 +112,7 @@ module.exports = (env) => {
       new CreateFileWebpack({
         path: BUILD_DIR,
         fileName: `iodide.${APP_VERSION_STRING}.html`,
-        content: htmlTemplateCompiler({
+        content: editorHtmlTemplateCompiler({
           APP_VERSION_STRING,
           APP_PATH_STRING,
           CSS_PATH_STRING,
@@ -119,7 +123,7 @@ module.exports = (env) => {
       new CreateFileWebpack({
         path: BUILD_DIR,
         fileName: `iodide.eval-frame.${APP_VERSION_STRING}.html`,
-        content: htmlTemplateCompiler({
+        content: evalFrameHtmlTemplateCompiler({
           APP_VERSION_STRING: `eval-frame.${APP_VERSION_STRING}`,
           APP_PATH_STRING,
           CSS_PATH_STRING,

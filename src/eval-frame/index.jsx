@@ -28,5 +28,5 @@ render(
   <Provider store={store}>
     <EvalContainer />
   </Provider>,
-  document.getElementById('page'),
+  document.getElementById('eval-container'),
 )

@@ -64,13 +64,7 @@ class EvalContainer extends React.Component {
       }
     })
     return (
-      <div
-        className="eval-panes"
-        style={{
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-      >
+      <React.Fragment>
         <div
           id="cells"
           className={this.props.viewMode}
@@ -89,7 +83,7 @@ class EvalContainer extends React.Component {
           <DeclaredVariablesPane />
           <HistoryPane />
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }
