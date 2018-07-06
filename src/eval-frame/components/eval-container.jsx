@@ -78,6 +78,7 @@ class EvalContainer extends React.Component {
         <div
           style={{
             display: this.props.sidePane === undefined ? 'none' : undefined,
+            borderTop: '1px solid rgb(211, 211, 211)',
            }}
         >
           <DeclaredVariablesPane />

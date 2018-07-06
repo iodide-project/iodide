@@ -266,7 +266,7 @@ code {
 
 iframe.eval-frame {
   border:none;
-  border-left: 1px solid lightgray;
+  border-left: 2px solid lightgray;
 }
 
 div.display-buttons {
