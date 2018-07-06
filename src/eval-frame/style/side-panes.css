@@ -64,7 +64,6 @@ pre.history-item-code {
   overflow: auto;
   padding:3px;
   padding-left:8px;
-  width:100%;
   margin:0;
   background-color:rgb(250,250,250);
 }
@@ -72,7 +71,6 @@ pre.history-item-code {
 
 div.history-content {
   outline: 1px solid #f1f1f1;
-  width: calc(100% - 1px)
 }
 
 div.history-metadata {
