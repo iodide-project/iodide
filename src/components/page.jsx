@@ -56,38 +56,8 @@ class Page extends React.Component {
   }
 
   render() {
-    const cellInputComponents = this.props.cellIds.map((id, i) => {
-      let editorOptions
-      switch (this.props.cellTypes[i]) {
-        case 'code':
-        case 'external dependencies':
-        case 'css':
-          editorOptions = {}
-          break
-
-        case 'markdown':
-          editorOptions = {
-            lineWrapping: true,
-            matchBrackets: false,
-            autoCloseBrackets: false,
-            lineNumbers: false,
-          }
-          break
-
-        case 'raw':
-        case 'plugin':
-          editorOptions = {
-            matchBrackets: false,
-            autoCloseBrackets: false,
-          }
-          break
-
-        default:
-          editorOptions = {}
-      }
-
-      return <CellContainer cellId={id} key={id} editorOptions={editorOptions} />
-    })
+    const cellInputComponents = this.props.cellIds.map(id =>
+      <CellContainer cellId={id} key={id} />)
 
     return (
       <React.Fragment>
