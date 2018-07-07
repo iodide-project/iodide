@@ -1,12 +1,12 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import SidePane from '../side-pane'
+import PaneContainer from '../pane-container'
 import { DeclaredVariable } from '../declared-variable'
 import { FrozenVariable } from '../frozen-variable'
 
 import { DeclaredVariablesPaneUnconnected, mapStateToProps } from '../declared-variables-pane'
-import tasks from '../../../actions/task-definitions'
+import tasks from '../../../actions/eval-frame-tasks'
 
 describe('DeclaredVariablesPaneUnconnected React component', () => {
   let props
@@ -38,31 +38,31 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
   })
 
   it('always renders one SidePane', () => {
-    expect(declaredVariablesPane().find(SidePane).length).toBe(1)
+    expect(declaredVariablesPane().find(PaneContainer).length).toBe(1)
   })
 
   it("sets the HistoryPane's openOnMode prop to be history", () => {
-    expect(declaredVariablesPane().find(SidePane).props().openOnMode)
+    expect(declaredVariablesPane().find(PaneContainer).props().openOnMode)
       .toBe('DECLARED_VARIABLES')
   })
 
   it("sets the HistoryPane's task prop to be toggleHistoryPane", () => {
-    expect(declaredVariablesPane().find(SidePane).props().task)
+    expect(declaredVariablesPane().find(PaneContainer).props().task)
       .toBe(tasks.toggleDeclaredVariablesPane)
   })
 
   it('always renders two declared-variables-list when both variable types are non empty', () => {
-    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(SidePane))
+    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(PaneContainer))
       .find('div.declared-variables-list')).toHaveLength(2)
   })
 
   it('always renders correct number of DeclaredVariable', () => {
-    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(SidePane))
+    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(PaneContainer))
       .find(DeclaredVariable)).toHaveLength(3)
   })
 
   it('always renders correct number of FrozenVariable', () => {
-    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(SidePane))
+    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(PaneContainer))
       .find(FrozenVariable)).toHaveLength(2)
   })
 

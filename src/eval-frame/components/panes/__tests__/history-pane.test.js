@@ -1,11 +1,12 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import SidePane from '../side-pane'
+import PaneContainer from '../pane-container'
 import HistoryItem from '../history-item'
+import EmptyPaneContents from '../empty-pane-contents'
 
 import { HistoryPaneUnconnected, mapStateToProps } from '../history-pane'
-import tasks from '../../../actions/task-definitions'
+import tasks from '../../../actions/eval-frame-tasks'
 
 describe('HistoryPaneUnconnected React component', () => {
   let props
@@ -29,29 +30,29 @@ describe('HistoryPaneUnconnected React component', () => {
     mountedPane = undefined
   })
 
-  it('always renders one SidePane', () => {
-    expect(historyPane().find(SidePane).length).toBe(1)
+  it('always renders one PaneContainer', () => {
+    expect(historyPane().find(PaneContainer).length).toBe(1)
   })
 
   it("sets the HistoryPane's openOnMode prop to be history", () => {
-    expect(historyPane().find(SidePane).props().openOnMode)
+    expect(historyPane().find(PaneContainer).props().openOnMode)
       .toBe('_HISTORY')
   })
 
   it("sets the HistoryPane's task prop to be toggleHistoryPane", () => {
-    expect(historyPane().find(SidePane).props().task)
+    expect(historyPane().find(PaneContainer).props().task)
       .toBe(tasks.toggleHistoryPane)
   })
 
   it('always renders one div with class history-cells inside HistoryPane', () => {
-    expect(historyPane().wrap(historyPane().find(SidePane))
+    expect(historyPane().wrap(historyPane().find(PaneContainer))
       .find('div.history-cells')).toHaveLength(1)
   })
+  // rewrite this test.
 
   it('always renders one div.no-history inside history-cells when history is empty', () => {
     props.history = []
-    expect(historyPane().wrap(historyPane().find('div.history-cells'))
-      .find('div.no-history')).toHaveLength(1)
+    expect(historyPane().find(EmptyPaneContents)).toHaveLength(1)
   })
 
   it('always renders HistoryItem inside history-cells when history is non empty', () => {

@@ -13,12 +13,7 @@ export class AppInfoPaneUnconnected extends React.Component {
   }
   render() {
     /* eslint-disable */
-    const appMessages = this.props.appMessages.slice().reverse()
-    appMessages.sort((a,b)=> {
-      if( Date.parse(a.when) > Date.parse(b.when)) return -1
-      return 1
-    })
-    const messageDivs = appMessages
+    const messageDivs = this.props.appMessages
       .map((msg, i) => (
         <div
           className="app-info-message"
@@ -37,9 +32,15 @@ export class AppInfoPaneUnconnected extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
+  const appMessages = state.appMessages.slice()
+  appMessages.reverse()
+  appMessages.sort((a, b) => {
+    if (Date.parse(a.when) > Date.parse(b.when)) return -1
+    return 1
+  })
   return {
-    appMessages: state.appMessages,
+    appMessages,
     sidePaneMode: state.sidePaneMode,
   }
 }

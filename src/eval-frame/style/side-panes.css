@@ -76,21 +76,18 @@ div.history-content {
 div.history-metadata {
   width:100%;
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  margin-bottom:15px;
+  margin-top:6px;
 }
 
 div.history-date {
-  margin-top:6px;
-  margin-bottom: 15px;
   font-size: 11px;
   color: gray;
   transition: 50ms;
 }
 
 div.history-time-since {
-  margin-top:6px;
-  margin-bottom: 15px;
-  padding-top:2px;
   font-size: 11px;
   padding-right:3px;
   padding-left:6px;
@@ -182,11 +179,13 @@ button.pane-button {
   height: 20px;
   margin:0;
   padding:0;
+  padding-top:3px;
   border: 1px solid lightgray;
   border-radius: 2px;
-  transition: 50ms;
+  background-color: rgb(250,250,250);
 }
 
-button.pane-button-hover {
-  box-shadow: 0px 0px 5px rgba(0,0,0,.2)
+button.pane-button:hover {
+  box-shadow: 0px 0px 3px rgba(0,0,0,.2);
+  background-color: rgb(240,240,240);
 }

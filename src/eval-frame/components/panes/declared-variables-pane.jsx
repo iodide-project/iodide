@@ -60,7 +60,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   return {
     environmentVariables: state.savedEnvironment,
     userDefinedVarNames: state.userDefinedVarNames,
