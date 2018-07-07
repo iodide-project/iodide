@@ -127,7 +127,6 @@ const stateSchema = {
       additionalProperties: environmentVariableSchema,
     },
     runningCellID: { type: 'integer' },
-    // scrollingLinked: { type: 'boolean' },
   },
   additionalProperties: false,
 }
@@ -232,7 +231,6 @@ function blankState() {
     executionNumber: 0,
     appMessages: [],
     autoSave: undefined,
-    // scrollingLinked: true,
     locallySaved: [],
     savedEnvironment: {},
     runningCellID: undefined,
