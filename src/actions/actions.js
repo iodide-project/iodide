@@ -2,16 +2,18 @@ import CodeMirror from 'codemirror'
 
 import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
-import { postMessageToEvalFrame } from '../port-to-eval-frame'
+import { postMessageToEvalFrame, postActionToEvalFrame } from '../port-to-eval-frame'
 
 import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
 import { addLanguageKeybinding } from '../keybindings'
-// const CodeMirror = require('codemirror') // eslint-disable-line
+
+import {
+  alignCellTopTo,
+  handleCellAndOutputScrolling,
+} from './scroll-helpers'
 
 export function updateAppMessages(messageObj) {
-  //     message.when = (new Date()).toString()
-  //     message.details, when, message.
   const { message } = messageObj
   let { details, when } = messageObj
   if (when === undefined) when = new Date().toString()
@@ -123,11 +125,9 @@ export function changeCellType(cellType, language = 'js') {
 export function addLanguage(languageDefinition) {
   return (dispatch) => {
     const {
-      // url,
       keybinding,
       languageId,
       codeMirrorMode,
-      // displayName,
     } = languageDefinition
     if (keybinding.length === 1 && (typeof keybinding === 'string')) {
       addLanguageKeybinding(
@@ -301,14 +301,30 @@ export function exportGist() {
 }
 
 export function cellUp() {
-  return {
-    type: 'CELL_UP',
+  return (dispatch, getState) => {
+    dispatch({ type: 'CELL_UP' })
+    const targetPxToTopOfFrame = handleCellAndOutputScrolling(getSelectedCell(getState()).id)
+    if (getState().scrollingLinked) {
+      postActionToEvalFrame({
+        type: 'ALIGN_OUTPUT_TO_EDITOR',
+        cellId: getSelectedCell(getState()).id,
+        pxFromViewportTop: targetPxToTopOfFrame,
+      })
+    }
   }
 }
 
 export function cellDown() {
-  return {
-    type: 'CELL_DOWN',
+  return (dispatch, getState) => {
+    dispatch({ type: 'CELL_DOWN' })
+    const targetPxToTopOfFrame = handleCellAndOutputScrolling(getSelectedCell(getState()).id)
+    if (getState().scrollingLinked) {
+      postActionToEvalFrame({
+        type: 'ALIGN_OUTPUT_TO_EDITOR',
+        cellId: getSelectedCell(getState()).id,
+        pxFromViewportTop: targetPxToTopOfFrame,
+      })
+    }
   }
 }
 
@@ -327,12 +343,44 @@ export function addCell(cellType) {
   }
 }
 
-export function selectCell(cellID, scrollToCell = false, alignOutput = true) {
-  return {
-    type: 'SELECT_CELL',
-    id: cellID,
-    scrollToCell,
-    alignOutput,
+export function selectCell(
+  cellId,
+  scrollToCell = false,
+  pxFromTopOfEvalFrame = undefined,
+) {
+  return (dispatch, getState) => {
+    // first dispatch the change to the store...
+    dispatch({
+      type: 'SELECT_CELL',
+      id: cellId,
+    })
+
+    // ...then we'll deal with scrolling
+
+    // NOTE: pxFromTopOfEvalFrame should always be undefined unless this
+    // action was fired as a result of a message recieved from the eval frame
+    const clickInEvalFrame = pxFromTopOfEvalFrame !== undefined
+    const { scrollingLinked } = getState()
+    if (clickInEvalFrame && scrollingLinked) {
+      // if selectCell triggered by a click in the eval frame,
+      // just align editor cell top to value from eval frame
+      alignCellTopTo(cellId, pxFromTopOfEvalFrame)
+    } else if (!clickInEvalFrame && scrollingLinked) {
+      // select cell triggered from within editor; scroll if needed and send msg
+      // to eval frame to align
+      const targetPxToTopOfFrame = handleCellAndOutputScrolling(cellId, scrollToCell)
+      postActionToEvalFrame({
+        type: 'ALIGN_OUTPUT_TO_EDITOR',
+        cellId,
+        pxFromViewportTop: targetPxToTopOfFrame,
+      })
+    } else if (!clickInEvalFrame && !scrollingLinked) {
+      // if selectCell initiated in editor, scroll as needed but don't align output
+      handleCellAndOutputScrolling(cellId, scrollToCell)
+    }
+    // note that in the 4th case: (clickInEvalFrame && !scrollingLinked)
+    // if click came from the eval frame and scrolling not linked,
+    // then *no* scrolling is needed.
   }
 }
 

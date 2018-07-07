@@ -51,11 +51,11 @@ export class FullScreenEditorButtonUnconnected extends React.Component {
           <EvalFrameIcon style={{ fontSize: '13px' }} />
         </EditorButton>
         <EditorButton
-          text={this.props.linkEditor ? 'unscroll w/ editor' : 'scroll w/ editor'}
-          isActive={this.props.linkEditor}
+          text={this.props.scrollingLinked ? 'unscroll w/ editor' : 'scroll w/ editor'}
+          isActive={this.props.scrollingLinked}
           onClick={() => { tasks.toggleEditorLink.callback(); }}
         >
-          {this.props.linkEditor ? <UnlinkIcon style={{ fontSize: '13px' }} /> : <LinkIcon style={{ fontSize: '13px' }} />}
+          {this.props.scrollingLinked ? <LinkIcon style={{ fontSize: '13px' }} /> : <UnlinkIcon style={{ fontSize: '13px' }} />}
         </EditorButton>
       </div>
     )
@@ -67,7 +67,7 @@ function mapStateToProps(state) {
     showFrame: state.showFrame,
     showEditor: state.showEditor,
     viewMode: state.viewMode,
-    linkEditor: state.linkEditor,
+    scrollingLinked: state.scrollingLinked,
   }
 }
 

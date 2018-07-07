@@ -1,6 +1,6 @@
 // import { combineReducers } from 'redux'
-import notebookReducer from './notebook-reducer'
-import cellReducer from './cell-reducer'
+import notebookReducer from './eval-frame-reducer'
+import cellReducer from './output-reducer'
 
 /*
 It is suggested that using combineReducers, and following the standard

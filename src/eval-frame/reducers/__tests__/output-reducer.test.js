@@ -1,4 +1,4 @@
-import cellReducer from '../cell-reducer'
+import cellReducer from '../output-reducer'
 import { newNotebook } from '../../state-prototypes'
 
 describe('add cells', () => {
