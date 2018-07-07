@@ -58,10 +58,9 @@ describe('HistoryItem React component', () => {
       .find('div.history-date')).toHaveLength(1)
   })
   // TODO: rewrite this to be looking for pre tags.
-  // it('always renders one pre inside history-content', () => {
-  //   expect(historyItem().wrap(historyItem().find('div.history-content'))
-  //     .find(CodeMirror)).toHaveLength(1)
-  // })
+  it('always renders one pre inside history-content', () => {
+    expect(historyItem().wrap(historyItem().find('pre.history-item-code'))).toHaveLength(1)
+  })
 
   // it("sets the CodeMirror's value prop to be history item's cell's content", () => {
   //   expect(historyItem().find(CodeMirror).props().value)
