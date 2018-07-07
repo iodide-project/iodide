@@ -228,8 +228,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'TOGGLE_EDITOR_LINK': {
-      const linkEditor = !state.linkEditor
-      return Object.assign({}, state, { linkEditor })
+      const linkScrolling = !state.linkScrolling
+      return Object.assign({}, state, { linkScrolling })
     }
 
     case 'CHANGE_MODE': {

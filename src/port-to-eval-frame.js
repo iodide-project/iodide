@@ -13,7 +13,7 @@ const LINKED_ACTIONS = new Set([
 ])
 
 export function postActionToEvalFrame(actionObj) {
-  if (!store.getState().linkEditor) {
+  if (!store.getState().linkScrolling) {
     if (!LINKED_ACTIONS.has(actionObj.type)) {
       postMessageToEvalFrame('REDUX_ACTION', actionObj)
     }

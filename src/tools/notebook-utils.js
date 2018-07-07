@@ -13,7 +13,7 @@ function viewModeIsPresentation() {
 }
 
 function isEditorLinked() {
-  return store.getState().linkEditor
+  return store.getState().linkScrolling
 }
 
 function getCells() {
