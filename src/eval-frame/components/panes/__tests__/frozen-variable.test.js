@@ -6,6 +6,13 @@ import { FrozenVariable, humanReadableSize } from '../frozen-variable'
 describe('humanReadableSize maps to various sizes', () => {
   expect(humanReadableSize(1)).toBe('1 byte')
   expect(humanReadableSize(10)).toBe('10 bytes')
+  expect(humanReadableSize(100)).toBe('100 bytes')
+  expect(humanReadableSize(1000)).toBe('1kb')
+  expect(humanReadableSize(5000)).toBe('5kb')
+  expect(humanReadableSize(1000000)).toBe('1mb')
+  expect(humanReadableSize(5000000)).toBe('5mb')
+  expect(humanReadableSize(1000000000)).toBe('1gb')
+  expect(humanReadableSize(5000000000)).toBe('5gb')
 })
 
 describe('FrozenVariable React component', () => {
