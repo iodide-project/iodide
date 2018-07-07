@@ -17,8 +17,7 @@ export default class HistoryItem extends React.Component {
   }
   constructor(props) {
     super(props)
-    this.state = { timeSince: 'just now', hovered: false }
-    this.hoverOver = this.hoverOver.bind(this)
+    this.state = { timeSince: 'just now' }
     this.showEditorCell = this.showEditorCell.bind(this)
   }
 
@@ -26,10 +25,6 @@ export default class HistoryItem extends React.Component {
     setInterval(() => {
       this.setState({ timeSince: prettyDate(this.props.cell.lastRan) })
     }, 5000)
-  }
-
-  hoverOver(tf) {
-    this.setState({ hovered: tf })
   }
 
   showEditorCell() {
@@ -43,16 +38,15 @@ export default class HistoryItem extends React.Component {
   }
 
   render() {
-    const mainElem = <pre className="history-item-code">{this.props.content}</pre>
     return (
       <div
-        onMouseEnter={() => { this.hoverOver(true) }}
-        onMouseLeave={() => { this.hoverOver(false) }}
         id={`cell-${this.props.cell.cellID}`}
-        className={`${this.props.display ? '' : 'hidden-cell'} `}
+        className={`cell-history-container ${this.props.display ? '' : 'hidden-cell'} `}
       >
-        <div className={`cell history-cell ${this.state.hovered ? 'history-hovered' : undefined}`}>
-          <div className="history-content editor">{mainElem}</div>
+        <div className="cell history-cell">
+          <div className="history-content editor">
+            <pre className="history-item-code">{this.props.content}</pre>
+          </div>
           <div className="history-metadata">
             <div className="history-show-actual-cell">
               <PaneContentButton
@@ -63,16 +57,10 @@ export default class HistoryItem extends React.Component {
               </PaneContentButton>
             </div>
             <div className="history-time-since"> {this.state.timeSince} </div>
-            <div
-              style={{
-              opacity: this.state.hovered ? 1 : 0,
-            }}
-              className="history-date"
-            > / {this.props.cell.lastRan.toUTCString()}
+            <div className="history-date"> / {this.props.cell.lastRan.toUTCString()}
             </div>
           </div>
         </div>
-        <div className="cell-controls" />
       </div>
     )
   }
