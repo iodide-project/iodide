@@ -1,7 +1,7 @@
 /* global IODIDE_BUILD_MODE */
 import queryString from 'query-string'
 import { store } from './store'
-import { updateCellAndEval, evaluateCell } from './actions/actions'
+import { evaluateCell } from './actions/actions'
 
 
 let IODIDE_SESSION_ID = queryString.parse(window.location.search).sessionId
@@ -18,9 +18,6 @@ function receiveMessage(event) {
     switch (messageType) {
       case 'REDUX_ACTION':
         store.dispatch(message)
-        break
-      case 'UPDATE_CELL_AND_EVAL':
-        store.dispatch(updateCellAndEval(JSON.parse(message)))
         break
       case 'TRIGGER_CELL_EVAL':
         store.dispatch(evaluateCell(message))

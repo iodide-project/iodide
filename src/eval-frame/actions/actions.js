@@ -280,13 +280,6 @@ export function evaluateCell(cellId) {
   }
 }
 
-export function updateCellAndEval(cellState) {
-  return (dispatch) => {
-    dispatch(updateCellProperties(cellState.id, cellState))
-    dispatch(evaluateCell(cellState.id))
-  }
-}
-
 export function saveEnvironment(updateObj, update) {
   return {
     type: 'SAVE_ENVIRONMENT',
