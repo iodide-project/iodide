@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function toSize(bytes) {
+export function humanReadableSize(bytes) {
   const KB = 1000
   const MB = KB * 1000
   const GB = MB * 1000
@@ -9,7 +9,7 @@ function toSize(bytes) {
   if (Math.floor(bytes / GB) > 0) return `${roundToTwo(bytes, GB)}gb`
   if (Math.floor(bytes / MB) > 0) return `${roundToTwo(bytes, MB)}mb`
   if (Math.floor(bytes / KB) > 0) return `${roundToTwo(bytes, KB)}kb`
-  return `${bytes} bytes`
+  return `${bytes} byte${bytes === 1 ? '' : 's'}`
 }
 
 export class FrozenVariable extends React.Component {
@@ -21,16 +21,11 @@ export class FrozenVariable extends React.Component {
       return (
         <React.Fragment>
           <div className="frozen-variable-name">
-            {
-                this.props.varName
-            }
+            {this.props.varName}
           </div>
           <div className="frozen-variable-value">
-            {
-                toSize(this.props.byteLength)
-          }
+            {humanReadableSize(this.props.byteLength)}
           </div>
         </React.Fragment>)
     }
 }
-
