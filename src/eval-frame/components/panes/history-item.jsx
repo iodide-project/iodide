@@ -38,14 +38,15 @@ export default class HistoryItem extends React.Component {
   }
 
   render() {
-    const mainElem = <pre className="history-item-code">{this.props.content}</pre>
     return (
       <div
         id={`cell-${this.props.cell.cellID}`}
-        className={`${this.props.display ? '' : 'hidden-cell'} `}
+        className={`cell-history-container ${this.props.display ? '' : 'hidden-cell'} `}
       >
         <div className="cell history-cell">
-          <div className="history-content editor">{mainElem}</div>
+          <div className="history-content editor">
+            <pre className="history-item-code">{this.props.content}</pre>
+          </div>
           <div className="history-metadata">
             <div className="history-show-actual-cell">
               <PaneContentButton

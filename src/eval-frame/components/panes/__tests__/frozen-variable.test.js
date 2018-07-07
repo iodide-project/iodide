@@ -1,7 +1,12 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import { FrozenVariable } from '../frozen-variable'
+import { FrozenVariable, humanReadableSize } from '../frozen-variable'
+
+describe('humanReadableSize maps to various sizes', () => {
+  expect(humanReadableSize(1)).toBe('1 byte')
+  expect(humanReadableSize(10)).toBe('10 bytes')
+})
 
 describe('FrozenVariable React component', () => {
   let props

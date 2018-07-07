@@ -59,7 +59,7 @@ export class PaneContainerUnconnected extends React.Component {
                 <div className="pane-title">
                   <NotebookTaskButton
                     tooltip="Close"
-                    task={this.props.task}// tasks.toggleHistoryPane}
+                    task={this.props.task}
                     style={{ color: 'black', margin: '5px' }}
                   >
                     <Close />
