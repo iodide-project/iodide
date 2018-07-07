@@ -57,7 +57,7 @@ export default class HistoryItem extends React.Component {
               </PaneContentButton>
             </div>
             <div className="history-time-since"> {this.state.timeSince} </div>
-            <div className="history-date"> / {this.props.cell.lastRan.toUTCString()}
+            <div className="history-date"> / {this.props.cell.lastRan.toString()}
             </div>
           </div>
         </div>
