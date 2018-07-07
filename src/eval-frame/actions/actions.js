@@ -9,7 +9,7 @@ import {
 import {
   addExternalDependency,
   getSelectedCell,
-} from '../reducers/cell-reducer-utils'
+} from '../reducers/output-reducer-utils'
 
 import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
 import { postMessageToEditor } from '../port-to-editor'

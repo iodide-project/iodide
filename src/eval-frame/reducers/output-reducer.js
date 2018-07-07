@@ -14,7 +14,7 @@ import {
   newStateWithSelectedCellPropsAssigned,
   newStateWithRowOverflowSet,
   newStateWithPropsAssignedForCell,
-} from './cell-reducer-utils'
+} from './output-reducer-utils'
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
