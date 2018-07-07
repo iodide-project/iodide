@@ -8,21 +8,12 @@ export function postMessageToEvalFrame(messageType, message) {
   portToEvalFrame.postMessage({ messageType, message })
 }
 
-const LINKED_ACTIONS = new Set([
-  'SELECT_CELL', 'ALIGN_OUTPUT_TO_EDITOR',
-])
 
 export function postActionToEvalFrame(actionObj) {
-  if (!store.getState().linkScrolling) {
-    if (!LINKED_ACTIONS.has(actionObj.type)) {
-      postMessageToEvalFrame('REDUX_ACTION', actionObj)
-    }
-  } else {
-    postMessageToEvalFrame('REDUX_ACTION', actionObj)
-  }
+  postMessageToEvalFrame('REDUX_ACTION', actionObj)
 }
 
-const approvedReduxActions = [
+const approvedReduxActionsFromEvalFrame = [
   'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME',
 ]
 
@@ -42,7 +33,7 @@ function receiveMessage(event) {
     switch (messageType) {
       case 'REDUX_ACTION':
         // in this case, `message` is a redux action
-        if (approvedReduxActions.includes(message.type)) {
+        if (approvedReduxActionsFromEvalFrame.includes(message.type)) {
           store.dispatch(message)
         } else {
           console.log('got unapproved redux action from eval frame!!!')
@@ -61,12 +52,7 @@ function receiveMessage(event) {
         store.dispatch(addLanguage(message))
         break
       case 'CLICK_ON_OUTPUT':
-        store.dispatch(selectCell(message.id, false, false))
-        store.dispatch({
-          type: 'ALIGN_EDITOR_CELL_TO_OUTPUT',
-          cellId: message.id,
-          pxFromViewportTop: message.pxFromViewportTop,
-        })
+        store.dispatch(selectCell(message.id, false, message.pxFromViewportTop))
         break
       default:
         console.log('unknown messageType', message)

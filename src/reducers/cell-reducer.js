@@ -2,10 +2,7 @@ import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
 import {
   moveCell,
-  handleCellAndOutputScrolling,
-  alignCellTopTo,
   getSelectedCellId,
-  getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
   newStateWithRowOverflowSet,
@@ -47,29 +44,17 @@ const cellReducer = (state = newNotebook(), action) => {
       }
       const thisCell = cells[index]
       thisCell.selected = true
-      // if (action.scrollToCell) {
-      handleCellAndOutputScrolling(thisCell.id, action.scrollToCell, action.alignOutput)
-      //  }
-      // if (action.alignOutput) {
-      // }
       nextState = Object.assign({}, state, { cells })
       return nextState
     }
 
-    case 'ALIGN_EDITOR_CELL_TO_OUTPUT': {
-      alignCellTopTo(action.cellId, action.pxFromViewportTop)
-      return state
-    }
-
     case 'CELL_UP':
-      handleCellAndOutputScrolling(getSelectedCellId(state))
       return Object.assign(
         {}, state,
         { cells: moveCell(state.cells, getSelectedCellId(state), 'up') },
       )
 
     case 'CELL_DOWN':
-      handleCellAndOutputScrolling(getCellBelowSelectedId(state))
       return Object.assign(
         {}, state,
         { cells: moveCell(state.cells, getSelectedCellId(state), 'down') },

@@ -141,7 +141,7 @@ const stateSchema = {
     externalDependencies: { type: 'array' },
     showFrame: { type: 'boolean' },
     showEditor: { type: 'boolean' },
-    linkScrolling: { type: 'boolean' },
+    scrollingLinked: { type: 'boolean' },
     alwaysSelectInView: { type: 'boolean' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
@@ -263,7 +263,7 @@ function blankState() {
     history: [],
     showFrame: true,
     showEditor: true,
-    linkScrolling: true,
+    scrollingLinked: true,
     alwaysSelectInView: false,
     evalFrameMessageQueue: [],
     evalFrameReady: false,

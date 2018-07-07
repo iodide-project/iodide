@@ -6,10 +6,8 @@ import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
 import {
   moveCell,
-  scrollToCellIfNeeded,
   alignCellTopTo,
   getSelectedCellId,
-  getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
   newStateWithRowOverflowSet,
@@ -54,7 +52,6 @@ const cellReducer = (state = newNotebook(), action) => {
       }
       const thisCell = cells[index]
       thisCell.selected = true
-      if (action.scrollToCell) { scrollToCellIfNeeded(thisCell.id) }
       nextState = Object.assign({}, state, { cells })
       return nextState
     }
@@ -71,14 +68,12 @@ const cellReducer = (state = newNotebook(), action) => {
       )
 
     case 'CELL_UP':
-      scrollToCellIfNeeded(getSelectedCellId(state))
       return Object.assign(
         {}, state,
         { cells: moveCell(state.cells, getSelectedCellId(state), 'up') },
       )
 
     case 'CELL_DOWN':
-      scrollToCellIfNeeded(getCellBelowSelectedId(state))
       return Object.assign(
         {}, state,
         { cells: moveCell(state.cells, getSelectedCellId(state), 'down') },

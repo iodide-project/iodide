@@ -8,7 +8,6 @@ import {
   getCells,
   getCellBelowSelectedId,
   getCellAboveSelectedId, prettyDate, formatDateString,
-  isEditorLinked,
 } from '../tools/notebook-utils'
 import { stateFromJsmd } from '../tools/jsmd-tools'
 
@@ -58,14 +57,13 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
     dispatcher.changeMode('command')
     dispatcher.saveNotebook(true)
     dispatcher.evaluateCell()
-    const linked = isEditorLinked()
     const cellBelowId = getCellBelowSelectedId()
     if (cellBelowId !== null) {
-      dispatcher.selectCell(cellBelowId, true, linked)
+      dispatcher.selectCell(cellBelowId, true)
     } else {
     // if cellBelowId *is* null, need to add a new cell.
       dispatcher.addCell('code')
-      dispatcher.selectCell(getCellBelowSelectedId(), true, linked)
+      dispatcher.selectCell(getCellBelowSelectedId(), true)
     }
   },
 })
@@ -116,8 +114,7 @@ tasks.selectUp = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     const cellAboveId = getCellAboveSelectedId()
-    const linked = isEditorLinked()
-    if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true, linked) }
+    if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true) }
   },
 })
 
@@ -129,8 +126,7 @@ tasks.selectDown = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     const cellBelowId = getCellBelowSelectedId()
-    const linked = isEditorLinked()
-    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true, linked) }
+    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
   },
 })
 
@@ -140,9 +136,8 @@ tasks.addCellAbove = new UserTask({
   displayKeybinding: 'A',
   keybindingPrecondition: isCommandMode,
   callback() {
-    const linked = isEditorLinked()
     dispatcher.insertCell('code', 'above')
-    dispatcher.selectCell(getCellAboveSelectedId(), true, linked)
+    dispatcher.selectCell(getCellAboveSelectedId(), true)
   },
 })
 
@@ -153,9 +148,8 @@ tasks.addCellBelow = new UserTask({
   keybindingPrecondition: isCommandMode,
 
   callback() {
-    const linked = isEditorLinked()
     dispatcher.insertCell('code', 'below')
-    dispatcher.selectCell(getCellBelowSelectedId(), true, linked)
+    dispatcher.selectCell(getCellBelowSelectedId(), true)
   },
 })
 
