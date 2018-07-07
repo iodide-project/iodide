@@ -2,6 +2,7 @@ import { shallow } from 'enzyme'
 import React from 'react'
 
 import HistoryItem from '../history-item'
+import PaneContentButton from '../pane-content-button'
 
 describe('HistoryItem React component', () => {
   let props
@@ -17,7 +18,7 @@ describe('HistoryItem React component', () => {
   beforeEach(() => {
     props = {
       cell: {
-        id: 0,
+        cellID: 0,
         display: true,
         lastRan: new Date('2018-06-16T10:32:46.422Z'),
         content: 'var a = 3',
@@ -57,18 +58,11 @@ describe('HistoryItem React component', () => {
     expect(historyItem().wrap(historyItem().find('div.history-cell'))
       .find('div.history-date')).toHaveLength(1)
   })
-  // TODO: rewrite this to be looking for pre tags.
   it('always renders one pre inside history-content', () => {
-    expect(historyItem().wrap(historyItem().find('pre.history-item-code'))).toHaveLength(1)
+    expect(historyItem().find('pre.history-item-code')).toHaveLength(1)
   })
 
-  // it("sets the CodeMirror's value prop to be history item's cell's content", () => {
-  //   expect(historyItem().find(CodeMirror).props().value)
-  //     .toBe(props.cell.content)
-  // })
-
-  it('always renders one div with class cell-controls', () => {
-    expect(historyItem().find('div.cell-controls').length)
-      .toBe(1)
+  it('always contains a pane content button', () => {
+    expect(historyItem().find(PaneContentButton)).toHaveLength(1)
   })
 })

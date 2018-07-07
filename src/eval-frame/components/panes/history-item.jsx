@@ -61,7 +61,6 @@ export default class HistoryItem extends React.Component {
             </div>
           </div>
         </div>
-        <div className="cell-controls" />
       </div>
     )
   }
