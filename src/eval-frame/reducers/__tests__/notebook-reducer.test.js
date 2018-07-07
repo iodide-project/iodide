@@ -1,4 +1,4 @@
-import notebookReducer from '../notebook-reducer'
+import notebookReducer from '../eval-frame-reducer'
 import { newNotebook, blankState } from '../../state-prototypes'
 
 describe('blank-state-reducer', () => {

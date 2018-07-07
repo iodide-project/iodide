@@ -1,5 +1,5 @@
 // import { combineReducers } from 'redux'
-import notebookReducer from './notebook-reducer'
+import notebookReducer from './eval-frame-reducer'
 import cellReducer from './cell-reducer'
 
 /*
