@@ -30,7 +30,7 @@ describe('HistoryPaneUnconnected React component', () => {
     mountedPane = undefined
   })
 
-  it('always renders one SidePane', () => {
+  it('always renders one PaneContainer', () => {
     expect(historyPane().find(PaneContainer).length).toBe(1)
   })
 
@@ -52,7 +52,7 @@ describe('HistoryPaneUnconnected React component', () => {
 
   it('always renders one div.no-history inside history-cells when history is empty', () => {
     props.history = []
-    expect(historyPane().wrap(historyPane().find(EmptyPaneContents))).toHaveLength(1)
+    expect(historyPane().find(EmptyPaneContents)).toHaveLength(1)
   })
 
   it('always renders HistoryItem inside history-cells when history is non empty', () => {
