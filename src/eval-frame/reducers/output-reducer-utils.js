@@ -1,4 +1,5 @@
 const SCROLL_BY_BEHAVIOR = 'instant'
+const SCROLL_PADDING = 30 // extra px for scrolling
 
 function moveCell(cells, cellID, dir) {
   const cellsSlice = cells.slice()
@@ -19,54 +20,6 @@ function moveCell(cells, cellID, dir) {
     cellsSlice[index] = elem
   }
   return cellsSlice
-}
-
-const SCROLL_PADDING = 30 // extra px for scrolling
-
-function scrollToCellIfNeeded(cellId) {
-  const elem = document.getElementById(`cell-${cellId}`)
-  const rect = elem.getBoundingClientRect()
-  const scrollContainer = document.getElementById('cells')
-  const viewportRect = scrollContainer.getBoundingClientRect()
-  const viewportHeight = viewportRect.height
-  // (window.innerHeight || document.documentElement.clientHeight)
-  const tallerThanWindow = (rect.bottom - rect.top) > viewportHeight
-  let cellPosition
-  // verbose but readable
-  if (rect.bottom <= viewportRect.top) {
-    cellPosition = 'ABOVE_VIEWPORT'
-  } else if (rect.top >= viewportRect.bottom) {
-    cellPosition = 'BELOW_VIEWPORT'
-  } else if ((rect.top <= viewportRect.top) && (viewportRect.top <= rect.bottom)) {
-    cellPosition = 'BOTTOM_IN_VIEWPORT'
-  } else if ((rect.top <= viewportRect.bottom) && (viewportRect.bottom <= rect.bottom)) {
-    cellPosition = 'TOP_IN_VIEWPORT'
-  } else {
-    cellPosition = 'IN_VIEWPORT'
-  }
-
-  if ((cellPosition === 'ABOVE_VIEWPORT')
-    || (cellPosition === 'BOTTOM_IN_VIEWPORT')
-    || ((cellPosition === 'BELOW_VIEWPORT') && (tallerThanWindow))
-    || ((cellPosition === 'TOP_IN_VIEWPORT') && (tallerThanWindow))
-  ) { // in these cases, scroll the window such that the cell top is at the window top
-    const distanceAboveViewportTop = rect.top - viewportRect.top
-    console.log('cell top', rect.top - SCROLL_PADDING)
-    scrollContainer.scrollBy({
-      top: distanceAboveViewportTop - SCROLL_PADDING,
-      left: 0,
-      behavior: SCROLL_BY_BEHAVIOR,
-    })
-  } else if (((cellPosition === 'BELOW_VIEWPORT') && !(tallerThanWindow))
-    || ((cellPosition === 'TOP_IN_VIEWPORT') && !(tallerThanWindow))
-  ) { // in these cases, scroll the window such that the cell bottom is at the window bottom
-    const distanceBelowViewportBottom = rect.bottom - viewportRect.bottom
-    scrollContainer.scrollBy({
-      top: distanceBelowViewportBottom + SCROLL_PADDING,
-      left: 0,
-      behavior: SCROLL_BY_BEHAVIOR,
-    })
-  }
 }
 
 export function alignCellTopTo(cellId, targetPxFromViewportTop) {
@@ -240,7 +193,6 @@ function newStateWithRowOverflowSet(state, cellId, rowType, viewModeToSet, rowOv
 
 export {
   moveCell,
-  scrollToCellIfNeeded,
   addExternalDependency,
   getSelectedCell,
   getSelectedCellId,

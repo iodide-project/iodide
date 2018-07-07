@@ -12,10 +12,6 @@ function viewModeIsPresentation() {
   return store.getState().viewMode === 'REPORT_VIEW'
 }
 
-function isEditorLinked() {
-  return store.getState().linkEditor
-}
-
 function getCells() {
   return store.getState().cells
 }
@@ -87,5 +83,4 @@ export {
   getCellBelowSelectedId, getCellAboveSelectedId,
   isCommandMode,
   viewModeIsEditor, viewModeIsPresentation,
-  isEditorLinked,
 }
