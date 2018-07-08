@@ -51,7 +51,7 @@ export class FullScreenEditorButtonUnconnected extends React.Component {
           <EvalFrameIcon style={{ fontSize: '13px' }} />
         </EditorButton>
         <EditorButton
-          text={this.props.scrollingLinked ? 'unscroll w/ editor' : 'scroll w/ editor'}
+          text={this.props.scrollingLinked ? 'scroll w/ editor' : 'unscroll w/ editor'}
           isActive={this.props.scrollingLinked}
           onClick={() => { tasks.toggleEditorLink.callback(); }}
         >
