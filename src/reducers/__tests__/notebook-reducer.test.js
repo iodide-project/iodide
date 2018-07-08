@@ -1,6 +1,6 @@
 import '../../store'
 import notebookReducer from '../notebook-reducer'
-import { newNotebook, blankState, addNewCellToState } from '../../state-prototypes'
+import { newNotebook, addNewCellToState } from '../../state-prototypes'
 import {
   // exportJsmdBundle, we'll need to test this
   // stringifyStateToJsmd, we'll need to test this
@@ -24,7 +24,7 @@ beforeEach(() => {
 
 describe('blank-state-reducer', () => {
   it('should return the initial state', () => {
-    expect(notebookReducer(blankState(), {})).toEqual(blankState())
+    expect(notebookReducer(newNotebook(), {})).toEqual(newNotebook())
   })
 })
 

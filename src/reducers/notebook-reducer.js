@@ -1,5 +1,5 @@
 import copy from 'copy-to-clipboard';
-import { newNotebook, newCell, blankState, newCellID } from '../state-prototypes'
+import { newNotebook, newCell, newCellID } from '../state-prototypes'
 import {
   exportJsmdBundle,
   exportJsmdToString,
@@ -146,7 +146,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       clearHistory(nextState)
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, { cells }, getSavedNotebooks(), getLoginData())
+      return Object.assign(newNotebook(), nextState, { cells }, getSavedNotebooks(), getLoginData())
     }
 
     case 'SAVE_NOTEBOOK': {
@@ -181,7 +181,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       // and per-cell state for backwards compatibility
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, getSavedNotebooks(), getLoginData())
+      return Object.assign(newNotebook(), nextState, getSavedNotebooks(), getLoginData())
     }
 
     case 'DELETE_NOTEBOOK': {
