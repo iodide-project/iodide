@@ -52,7 +52,7 @@ div#cells.presentation div.cell-row.input {
   display: flex;
 }
 
-button.delete-cell-button {
+button.fold-cell-button {
   margin:0;
   padding:0;
   color: gray;
@@ -64,7 +64,7 @@ button.delete-cell-button {
   transition:50ms;
 }
 
-button.delete-cell-button:hover {
+button.fold-cell-button:hover {
   color: black;
   background: #fbfbfb;
   border: 1px solid #ddd;
