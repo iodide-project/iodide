@@ -35,11 +35,11 @@ describe('CellMenuUnconnected React component', () => {
   })
 
   it('always renders seven NotebookMenuItem', () => {
-    expect(cellMenu().find(NotebookMenuItem).length).toBe(7)
+    expect(cellMenu().find(NotebookMenuItem).length).toBe(12)
   })
 
   it('always renders one NotebookMenuDivider', () => {
-    expect(cellMenu().find(NotebookMenuDivider).length).toBe(1)
+    expect(cellMenu().find(NotebookMenuDivider).length).toBe(3)
   })
 
   const cellTypes = ['js', 'md', 'css', 'resource', 'raw', 'plugin']

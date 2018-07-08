@@ -50,8 +50,30 @@ export class CellMenuUnconnected extends React.Component {
 
         <NotebookMenuDivider />
         <NotebookMenuItem
+          key={tasks.moveCellUp.title}
+          task={tasks.moveCellUp}
+        />
+        <NotebookMenuItem
+          key={tasks.moveCellDown.title}
+          task={tasks.moveCellDown}
+        />
+        <NotebookMenuItem
+          key={tasks.addCellAbove.title}
+          task={tasks.addCellAbove}
+        />
+        <NotebookMenuItem
+          key={tasks.addCellBelow.title}
+          task={tasks.addCellBelow}
+        />
+        <NotebookMenuDivider />
+        <NotebookMenuItem
           key={tasks.toggleSkipCellInRunAll.title}
           task={tasks.toggleSkipCellInRunAll}
+        />
+        <NotebookMenuDivider />
+        <NotebookMenuItem
+          key={tasks.deleteCell.title}
+          task={tasks.deleteCell}
         />
       </div>
     )
