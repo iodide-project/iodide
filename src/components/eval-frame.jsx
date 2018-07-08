@@ -1,4 +1,4 @@
-/* global IODIDE_VERSION */
+/* global IODIDE_EVAL_FRAME_PATH IODIDE_VERSION */
 
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -33,12 +33,12 @@ export class EvalFrameUnconnected extends React.Component {
   render() {
     return (
       <iframe
-        src={`iodide.eval-frame.${IODIDE_VERSION}.html?sessionId=${window.IODIDE_SESSION_ID}&editorOrigin=${window.location.origin}`}
+        src={`${IODIDE_EVAL_FRAME_PATH}iodide.eval-frame.${IODIDE_VERSION}.html?sessionId=${window.IODIDE_SESSION_ID}&editorOrigin=${window.location.origin}`}
         width="100%"
         height="100%"
         className="eval-frame"
         title="eval-frame"
-        sandbox="allow-scripts"
+        sandbox="allow-scripts allow-same-origin"
         ref={this.storeFrameElementRef}
       />
     )

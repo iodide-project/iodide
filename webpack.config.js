@@ -14,6 +14,7 @@ const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate)
 
 let BUILD_DIR
 let APP_PATH_STRING
+let EVAL_FRAME_PATH_STRING
 let CSS_PATH_STRING
 let APP_VERSION_STRING
 
@@ -51,8 +52,9 @@ module.exports = (env) => {
   } else if (env === 'dev') {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
     APP_VERSION_STRING = 'dev'
-    APP_PATH_STRING = ''
-    CSS_PATH_STRING = ''
+    APP_PATH_STRING = 'http://localhost:5000/dev/'
+    EVAL_FRAME_PATH_STRING = 'http://localhost:5555/dev/'
+    CSS_PATH_STRING = 'http://localhost:5000/dev/'
   }
 
   return {
@@ -125,7 +127,7 @@ module.exports = (env) => {
         fileName: `iodide.eval-frame.${APP_VERSION_STRING}.html`,
         content: evalFrameHtmlTemplateCompiler({
           APP_VERSION_STRING: `eval-frame.${APP_VERSION_STRING}`,
-          APP_PATH_STRING,
+          EVAL_FRAME_PATH_STRING,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: 'new notebook',
           JSMD: '',
@@ -133,6 +135,7 @@ module.exports = (env) => {
       }),
       new webpack.DefinePlugin({
         IODIDE_VERSION: JSON.stringify(APP_VERSION_STRING),
+        IODIDE_EVAL_FRAME_PATH: JSON.stringify(EVAL_FRAME_PATH_STRING),
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify(env),
