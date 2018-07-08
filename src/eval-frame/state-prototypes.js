@@ -218,11 +218,6 @@ function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-function addNewCellToState(state, cellType = 'code', language = 'js') {
-  const nextCellId = newCellID(state.cells)
-  state.cells.push(newCell(nextCellId, cellType, language))
-  return state
-}
 
 function newNotebook() {
   const initialState = {
@@ -255,7 +250,6 @@ export {
   newCellID,
   newNotebook,
   nextOverflow,
-  addNewCellToState,
   // enums and schemas
   rowOverflowEnum,
   stateSchema,
