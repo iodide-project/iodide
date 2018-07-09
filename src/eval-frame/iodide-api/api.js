@@ -1,3 +1,5 @@
+/* global IODIDE_VERSION */
+
 // The "Public API" for notebooks. This lets notebooks and third-party plugins
 // extend and manipulate the notebook
 
@@ -19,6 +21,7 @@ export const iodide = {
   environment,
   evalQueue,
   output,
+  VERSION: IODIDE_VERSION,
 }
 
 export default iodide

@@ -1,9 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
-// import Resizable from 're-resizable'
 
 import RawOutput from './outputs/raw-output'
 import ExternalDependencyOutput from './outputs/external-resource-output'
@@ -16,7 +14,6 @@ import DeclaredVariablesPane from './panes/declared-variables-pane'
 import HistoryPane from './panes/history-pane'
 
 import { initializeDefaultKeybindings } from '../keybindings'
-import * as actions from '../actions/actions'
 
 class EvalContainer extends React.Component {
   static propTypes = {
@@ -100,11 +97,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch),
-  }
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(EvalContainer)
+export default connect(mapStateToProps)(EvalContainer)

@@ -2,7 +2,7 @@
 import _ from 'lodash'
 
 import { stringifyStateToJsmd, jsmdValidNotebookSettings } from '../jsmd-tools'
-import { newNotebook, addNewCellToState } from '../../state-prototypes'
+import { newNotebook, newCell } from '../../state-prototypes'
 
 
 // this can be defined once for all test cases
@@ -45,14 +45,14 @@ foo`
 
 
 describe('jsmd stringifier test case 3, non-default cell settings 1', () => {
-  let state = newNotebook()
+  const state = newNotebook()
   state.title = 'foo notebook'
   state.viewMode = 'REPORT_VIEW'
 
   state.cells[0].content = 'foo'
   _.set(state, 'cells[0].rowSettings.REPORT.input', 'SCROLL')
 
-  state = addNewCellToState(state, 'markdown')
+  state.cells.push(newCell(1, 'markdown'))
   state.cells[1].content = 'foo'
 
   const jsmd = stringifyStateToJsmd(state, lastExport)
@@ -75,7 +75,7 @@ foo`
 
 
 describe('jsmd stringifier test case 4, non-default cell settings 2', () => {
-  let state = newNotebook()
+  const state = newNotebook()
   state.title = 'foo notebook'
 
   state.cells[0].content = 'foo'
@@ -84,7 +84,7 @@ describe('jsmd stringifier test case 4, non-default cell settings 2', () => {
 
   const cellTypes = ['markdown', 'external dependencies', 'raw']
   cellTypes.forEach((cellType, i) => {
-    state = addNewCellToState(state, cellType)
+    state.cells.push(newCell(i + 1, cellType))
     state.cells[i + 1].content = 'foo'
   })
 
