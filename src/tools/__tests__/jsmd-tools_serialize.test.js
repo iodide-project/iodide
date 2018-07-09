@@ -45,7 +45,7 @@ foo`
 
 
 describe('jsmd stringifier test case 3, non-default cell settings 1', () => {
-  let state = newNotebook()
+  const state = newNotebook()
   state.title = 'foo notebook'
   state.viewMode = 'REPORT_VIEW'
 
@@ -75,7 +75,7 @@ foo`
 
 
 describe('jsmd stringifier test case 4, non-default cell settings 2', () => {
-  let state = newNotebook()
+  const state = newNotebook()
   state.title = 'foo notebook'
 
   state.cells[0].content = 'foo'
