@@ -63,7 +63,7 @@ function receiveMessage(event) {
 export const listenForEvalFramePortReady = (messageEvent) => {
   console.log('listenForEvalFramePortReady', messageEvent.data)
   if (messageEvent.data === window.IODIDE_SESSION_ID) {
-    portToEvalFrame = messageEvent.ports[0] /* eslint-disable-line prefer-destructuring */
+    [portToEvalFrame] = messageEvent.ports
     portToEvalFrame.onmessage = receiveMessage
     store.dispatch({ type: 'EVAL_FRAME_READY' })
     // stop listening for messages once a connection to the eval-frame is made
