@@ -17,10 +17,14 @@ function receiveMessage(event) {
     const { messageType, message } = event.data
     switch (messageType) {
       case 'REDUX_ACTION':
-        store.dispatch(message)
-        break
-      case 'TRIGGER_CELL_EVAL':
-        store.dispatch(evaluateCell(message))
+        if (message.type === 'TRIGGER_CELL_EVAL_IN_FRAME') {
+          // in this one special case, we need to intecept the
+          // action to fire a thunk action rather than dispatching
+          // directly to the eval frame store
+          store.dispatch(evaluateCell(message.cellId))
+        } else {
+          store.dispatch(message)
+        }
         break
       default:
         console.log('unknown messageType', message)

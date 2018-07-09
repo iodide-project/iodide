@@ -186,7 +186,18 @@ const pluginCellDefaultContent = `{
   "evaluator": ""
 }`
 
-function newCell(cellId, cellType, language = 'js') {
+const jsLanguageDefinition = {
+  pluginType: 'language',
+  languageId: 'js',
+  displayName: 'Javascript',
+  codeMirrorMode: 'javascript',
+  module: 'window',
+  evaluator: 'eval',
+  keybinding: 'j',
+  url: '',
+}
+
+function newCell(cellId, cellType = 'code', language = 'js') {
   return {
     content: cellType === 'plugin' ? pluginCellDefaultContent : '',
     id: cellId,
@@ -203,21 +214,15 @@ function newCell(cellId, cellType, language = 'js') {
   }
 }
 
-const jsLanguageDefinition = {
-  pluginType: 'language',
-  languageId: 'js',
-  displayName: 'Javascript',
-  codeMirrorMode: 'javascript',
-  module: 'window',
-  evaluator: 'eval',
-  keybinding: 'j',
-  url: '',
+function newCellID(cells) {
+  return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-function blankState() {
+
+function newNotebook() {
   const initialState = {
     title: 'untitled',
-    cells: [],
+    cells: [newCell(0)],
     languages: { js: jsLanguageDefinition },
     languageLastUsed: 'js',
     userDefinedVarNames: [],
@@ -235,34 +240,16 @@ function blankState() {
     savedEnvironment: {},
     runningCellID: undefined,
   }
-  return initialState
-}
-
-function newCellID(cells) {
-  return Math.max(-1, ...cells.map(c => c.id)) + 1
-}
-
-function addNewCellToState(state, cellType = 'code', language = 'js') {
-  const nextCellId = newCellID(state.cells)
-  state.cells.push(newCell(nextCellId, cellType, language))
-  return state
-}
-
-function newNotebook() {
-  // initialize a blank notebook and push a blank new cell into it
-  const initialState = addNewCellToState(blankState())
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
-  return Object.assign(initialState)
+  return initialState
 }
 
 export {
   newCell,
   newCellID,
   newNotebook,
-  blankState,
   nextOverflow,
-  addNewCellToState,
   // enums and schemas
   rowOverflowEnum,
   stateSchema,

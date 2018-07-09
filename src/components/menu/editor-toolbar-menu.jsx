@@ -7,7 +7,6 @@ import tasks from '../../actions/task-definitions'
 import NotebookMenuItem from './notebook-menu-item'
 import NotebookMenuDivider from './notebook-menu-divider'
 
-import CellMenuSubsection from './cell-menu-subsection'
 import SavedNotebooksAndExamplesSubsection from './saved-notebooks-and-examples-subsection'
 import ViewModeToggleSubsection from './view-mode-toggle-subsection'
 
@@ -29,8 +28,6 @@ export class EditorToolbarMenuUnconnected extends React.Component {
           this.props.isAuthenticated && <NotebookMenuItem task={tasks.exportGist} />
         }
         <SavedNotebooksAndExamplesSubsection />
-
-        <CellMenuSubsection />
 
         <NotebookMenuDivider />
 

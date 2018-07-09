@@ -2,7 +2,7 @@
 import deepEqual from 'deep-equal'
 import _ from 'lodash'
 
-import { newNotebook, blankState, newCell } from '../state-prototypes'
+import { newNotebook, newCell } from '../state-prototypes'
 import htmlTemplate from '../html-template'
 
 const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']
@@ -193,7 +193,9 @@ function stateFromJsmd(jsmdString) {
     console.warn('JSMD parse errors', parseWarnings)
   }
   // initialize a blank notebook
-  const initialState = blankState()
+  const initialState = newNotebook()
+  // delete the default empty cell
+  initialState.cells = []
   // add top-level meta settings if any exist
   const meta = chunkObjects.filter(c => c.chunkType === 'meta')[0]
   if (meta) {
