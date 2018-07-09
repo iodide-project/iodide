@@ -1,14 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 
 import OutputRow from './output-row'
 import OutputContainer from './output-container'
 
-import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
-
 
 export class MarkdownOutputUnconnected extends React.Component {
   static propTypes = {
@@ -30,7 +27,6 @@ export class MarkdownOutputUnconnected extends React.Component {
   }
 }
 
-
 export function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
   return {
@@ -38,10 +34,4 @@ export function mapStateToProps(state, ownProps) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch),
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MarkdownOutputUnconnected)
+export default connect(mapStateToProps)(MarkdownOutputUnconnected)
