@@ -2,7 +2,7 @@ import CodeMirror from 'codemirror'
 
 import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
-import { postMessageToEvalFrame, postActionToEvalFrame } from '../port-to-eval-frame'
+import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
@@ -162,7 +162,7 @@ export function evaluateCell(cellId) {
       cell = getCellById(getState().cells, cellId)
     }
     dispatch(updateCellProperties(cell.id, cell))
-    postMessageToEvalFrame('TRIGGER_CELL_EVAL', cell.id)
+    dispatch({ type: 'TRIGGER_CELL_EVAL_IN_FRAME', cellId: cell.id })
   }
 }
 
