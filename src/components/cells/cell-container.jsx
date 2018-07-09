@@ -2,8 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
+import Tooltip from 'material-ui/Tooltip'
 
-import Close from 'material-ui-icons/Close'
+import UnfoldLess from 'material-ui-icons/UnfoldLess'
 
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
@@ -50,9 +51,15 @@ export class CellContainerUnconnected extends React.Component {
       >
         <div className="cell-header">
           <CellMenuContainer cellId={this.props.cellId} />
-          <button className="delete-cell-button" onClick={this.props.actions.deleteCell}>
-            <Close style={{ fontSize: '12px' }} />
-          </button>
+          <Tooltip
+            classes={{ tooltip: 'iodide-tooltip' }}
+            placement="bottom"
+            title="fold cell"
+          >
+            <button className="fold-cell-button" onClick={() => { /* FILL THIS OUT */ }}>
+              <UnfoldLess style={{ fontSize: '12px' }} />
+            </button>
+          </Tooltip>
         </div>
         <div className="cell-row-container">
           <CellRow cellId={this.props.cellId} rowType="input">
