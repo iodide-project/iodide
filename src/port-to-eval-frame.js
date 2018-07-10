@@ -61,8 +61,8 @@ function receiveMessage(event) {
 }
 
 export const listenForEvalFramePortReady = (messageEvent) => {
-  console.log('listenForEvalFramePortReady', messageEvent.data)
-  if (messageEvent.data === window.IODIDE_SESSION_ID) {
+  console.log('listenForEvalFramePortReady', messageEvent.data, messageEvent.origin)
+  if (messageEvent.data === 'EVAL_FRAME_READY_MESSAGE') {
     portToEvalFrame = messageEvent.ports[0] /* eslint-disable-line prefer-destructuring */
     portToEvalFrame.onmessage = receiveMessage
     store.dispatch({ type: 'EVAL_FRAME_READY' })

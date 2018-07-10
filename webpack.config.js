@@ -14,8 +14,11 @@ const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate)
 
 let BUILD_DIR
 let APP_PATH_STRING
+let EVAL_FRAME_PATH_STRING
 let CSS_PATH_STRING
 let APP_VERSION_STRING
+let EVAL_FRAME_ORIGIN
+let EDITOR_ORIGIN
 
 
 const APP_DIR = path.resolve(__dirname, 'src/')
@@ -50,9 +53,12 @@ module.exports = (env) => {
     plugins.push(new UglifyJSPlugin())
   } else if (env === 'dev') {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
+    EDITOR_ORIGIN = 'http://localhost:5000'
+    EVAL_FRAME_ORIGIN = 'http://localhost:5555'
     APP_VERSION_STRING = 'dev'
-    APP_PATH_STRING = ''
-    CSS_PATH_STRING = ''
+    APP_PATH_STRING = `${EDITOR_ORIGIN}/dev/`
+    EVAL_FRAME_PATH_STRING = `${EVAL_FRAME_ORIGIN}/dev/`
+    CSS_PATH_STRING = `${EDITOR_ORIGIN}/dev/`
   }
 
   return {
@@ -115,6 +121,7 @@ module.exports = (env) => {
         content: editorHtmlTemplateCompiler({
           APP_VERSION_STRING,
           APP_PATH_STRING,
+          EVAL_FRAME_PATH_STRING,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: 'new notebook',
           JSMD: '',
@@ -125,7 +132,7 @@ module.exports = (env) => {
         fileName: `iodide.eval-frame.${APP_VERSION_STRING}.html`,
         content: evalFrameHtmlTemplateCompiler({
           APP_VERSION_STRING: `eval-frame.${APP_VERSION_STRING}`,
-          APP_PATH_STRING,
+          EVAL_FRAME_PATH_STRING,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: 'new notebook',
           JSMD: '',
@@ -133,6 +140,9 @@ module.exports = (env) => {
       }),
       new webpack.DefinePlugin({
         IODIDE_VERSION: JSON.stringify(APP_VERSION_STRING),
+        IODIDE_EVAL_FRAME_PATH: JSON.stringify(EVAL_FRAME_PATH_STRING),
+        IODIDE_EVAL_FRAME_ORIGIN: JSON.stringify(EVAL_FRAME_ORIGIN),
+        IODIDE_EDITOR_ORIGIN: JSON.stringify(EDITOR_ORIGIN),
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify(env),

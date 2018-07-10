@@ -1,16 +1,7 @@
-/* global IODIDE_BUILD_MODE */
-import queryString from 'query-string'
+/* global IODIDE_EDITOR_ORIGIN */
 import { store } from './store'
 import { evaluateCell } from './actions/actions'
 
-
-let IODIDE_SESSION_ID = queryString.parse(window.location.search).sessionId
-let { editorOrigin } = queryString.parse(window.location.search)
-
-if (IODIDE_BUILD_MODE === 'test') {
-  IODIDE_SESSION_ID = 'testing-session'
-  editorOrigin = 'http://testing.origin'
-}
 function receiveMessage(event) {
   const trustedMessage = true
   if (trustedMessage) {
@@ -34,7 +25,7 @@ function receiveMessage(event) {
 
 const mc = new MessageChannel();
 
-window.parent.postMessage(IODIDE_SESSION_ID, editorOrigin, [mc.port2]);
+window.parent.postMessage('EVAL_FRAME_READY_MESSAGE', IODIDE_EDITOR_ORIGIN, [mc.port2]);
 
 const portToEditor = mc.port1
 
