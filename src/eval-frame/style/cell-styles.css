@@ -191,9 +191,14 @@ div.dataframe-rep {
 
 pre.unevaluated-content {
   font-style: italic;
-  color:darkgray;
+  color:rgb(190, 190, 190);
+  /* opacity:0; */
   font-size:12px;
 }
+
+/* div.selected-cell pre.unevaluated-content {
+  opacity:1
+} */
 
 div#cells.REPORT_VIEW pre.unevaluated-content {
   display: none;
