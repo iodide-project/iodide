@@ -26,11 +26,6 @@ function addAppMessageToState(state, appMessage) {
   return state
 }
 
-function getLoginData() {
-  const userData = JSON.parse(sessionStorage.getItem('TOKEN')) || {}
-  return { userData }
-}
-
 function getSavedNotebooks() {
   const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
   const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
@@ -47,6 +42,10 @@ function getSavedNotebooks() {
     autoSave,
     locallySaved,
   }
+}
+
+function getUserData() {
+  return { userData: window.userData || {} }
 }
 
 function clearHistory(loadedState) {
@@ -90,7 +89,7 @@ const notebookReducer = (state = newNotebook(), action) => {
   switch (action.type) {
     case 'NEW_NOTEBOOK':
       clearUserDefinedVars(state.userDefinedVarNames)
-      return Object.assign(newNotebook(), getSavedNotebooks(), getLoginData())
+      return Object.assign(newNotebook(), getSavedNotebooks(), getUserData())
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
@@ -121,7 +120,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       clearHistory(nextState)
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, { cells }, getSavedNotebooks(), getLoginData())
+      return Object.assign(
+        blankState(), nextState, { cells }, getSavedNotebooks(),
+        getUserData(),
+      )
     }
 
     case 'SAVE_NOTEBOOK': {
@@ -156,7 +158,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       // and per-cell state for backwards compatibility
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, getSavedNotebooks(), getLoginData())
+      return Object.assign(blankState(), nextState, getSavedNotebooks(), getUserData())
     }
 
     case 'DELETE_NOTEBOOK': {
@@ -214,13 +216,11 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'LOGIN_SUCCESS': {
       const { userData } = action
-      sessionStorage.setItem('TOKEN', JSON.stringify(userData))
       return Object.assign({}, state, { userData })
     }
 
     case 'LOGOUT': {
       const userData = {}
-      sessionStorage.removeItem('TOKEN')
       return Object.assign({}, state, { userData })
     }
 
@@ -279,6 +279,6 @@ const notebookReducer = (state = newNotebook(), action) => {
   }
 }
 
-export { getSavedNotebooks }
+export { getSavedNotebooks, getUserData }
 
 export default notebookReducer
