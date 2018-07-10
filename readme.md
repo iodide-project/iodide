@@ -45,17 +45,12 @@ Run `npm install` after cloning this repository.
 
 ### Development mode
 
-Use `npm run start` to write development versions of the Iodide app resources to `dev/`. To run your dev notebook, just open the file `dev/iodide.dev.html` in your browser.
+Use `npm run start` to write development versions of the Iodide app resources to `dev/`; `npm run start` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually.
 
-`npm run start` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually.
+To open a notebook, you need to serve the files in your `iodide` folder with two localhost servers (this required because, for security reasons, we Iodide needs to load resources from two separate origins). By default, these should use ports 5000 and 5555. If you have Python installed, the simplest way to do this is two open two terminals, and run `cd {path to your iodide folder}/iodide; python -m SimpleHTTPServer 5000` in the first terminal, and `cd {path to your iodide folder}/iodide; python -m SimpleHTTPServer 5555` in the second.
 
-In dev mode, resource paths are set to be relative to the `dev/` directory. Thus, you export a notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js/css/font files.
+In dev mode, resource paths are set to be relative to the `dev/` directory. Thus, you export a bundled notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js/css/font files (and if you want to share a notebook that you created in a dev environment, you'll need to update the paths to point to the web-accessible resources at iodide.io).
 
-### Production mode 
-
-Use `npm run build` to write deployable versions of the Iodide app resources to `prod/`. This builds just once, and does not watch your files for changes.
-
-The files built in prod mode have resource paths set to fixed web addresses, not relative paths (this is a required for exported notebooks to be portable). This means that if you open the file `prod/iodide.${VERSION}.html` in your browser, it will _not_ load the js/css/font resources located in `prod/`, it will load them from the hard-coded web address (if they exist at that location). Once the js/css/fonts are uploaded to the matching URI, the file `prod/iodide.${VERSION}.html` (as well as any notebook exported from it) should run correctly from any local filesystem location or web address.
 
 ## Testing
 
