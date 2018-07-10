@@ -47,7 +47,7 @@ export class OutputContainerUnconnected extends React.Component {
   }
 
   render() {
-    const cellClass = `${!this.props.outputHasValue ? 'no-output' : 'has-output'} cell-container ${
+    const cellClass = `${!this.props.hasBeenEvaluated ? 'not-evaluated' : 'evaluated'} cell-container ${
       this.props.cellType
     }${
       this.props.selected ? ' selected-cell' : ''
@@ -80,7 +80,7 @@ export function mapStateToProps(state, ownProps) {
     viewMode: state.viewMode,
     cellType: cell.cellType,
     postMessageToEditor,
-    outputHasValue: cell.value !== undefined,
+    hasBeenEvaluated: cell.rendered,
   }
 }
 

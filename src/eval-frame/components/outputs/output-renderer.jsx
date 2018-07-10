@@ -12,12 +12,10 @@ export class OutputRendererUnconnected extends React.Component {
   }
 
   render() {
-    return (
-      <ValueRenderer
-        render={this.props.render}
-        valueToRender={this.props.valueToRender}
-      />
-    )
+    return (<ValueRenderer
+      render={this.props.render}
+      valueToRender={this.props.valueToRender}
+    />)
   }
 }
 
