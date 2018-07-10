@@ -18,6 +18,7 @@ export class OutputContainerUnconnected extends React.Component {
     viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
     postMessageToEditor: PropTypes.func.isRequired,
+    hasBeenEvaluated: PropTypes.bool,
   }
 
   constructor(props) {
