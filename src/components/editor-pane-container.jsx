@@ -9,7 +9,7 @@ import CellContainer from './cells/cell-container'
 
 import * as actions from '../actions/actions'
 
-class Page extends React.Component {
+class EditorPaneContainer extends React.Component {
   static propTypes = {
     actions: PropTypes.shape({
       changeEditorWidth: PropTypes.func.isRequired,
@@ -85,4 +85,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Page)
+export default connect(mapStateToProps, mapDispatchToProps)(EditorPaneContainer)

@@ -16,7 +16,7 @@ import './style/menu-styles.css'
 import './style/cell-styles.css'
 
 import NotebookHeader from './components/menu/notebook-header'
-import Page from './components/page'
+import EditorPaneContainer from './components/editor-pane-container'
 import { store } from './store'
 import handleUrlQuery from './tools/handle-url-query'
 import { createSessionId } from './tools/create-session-id'
@@ -43,7 +43,7 @@ render(
 
 render(
   <Provider store={store}>
-    <Page />
+    <EditorPaneContainer />
   </Provider>,
   document.getElementById('editor-react-root'),
 )
