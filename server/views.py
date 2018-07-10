@@ -10,6 +10,18 @@ from django.template import loader
 from .api.github import get_github_identity_data
 
 
+def index(request):
+    template = loader.get_template('index.html')
+    if request.user.is_authenticated:
+        user_info = json.dumps(get_github_identity_data(request.user))
+    else:
+        user_info = json.dumps({})
+    return HttpResponse(
+        template.render({
+            'user_info': user_info
+        }, request))
+
+
 def login_success(request):
     if not request.user.is_authenticated:
         raise PermissionDenied

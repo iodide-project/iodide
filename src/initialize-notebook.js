@@ -1,6 +1,6 @@
 import { stateFromJsmd } from './tools/jsmd-tools'
 import { newNotebook } from './state-prototypes'
-import { getSavedNotebooks } from './reducers/notebook-reducer'
+import { getSavedNotebooks, getUserData } from './reducers/notebook-reducer'
 
 function initializeNotebook() {
   const jsmdElt = document.getElementById('jsmd')
@@ -12,7 +12,7 @@ function initializeNotebook() {
   } else {
     state = newNotebook()
   }
-  return Object.assign(state, getSavedNotebooks())
+  return Object.assign(state, getSavedNotebooks(), getUserData())
 }
 
 export { initializeNotebook }
