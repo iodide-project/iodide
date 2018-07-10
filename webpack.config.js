@@ -117,6 +117,7 @@ module.exports = (env) => {
         content: editorHtmlTemplateCompiler({
           APP_VERSION_STRING,
           APP_PATH_STRING,
+          EVAL_FRAME_PATH_STRING,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: 'new notebook',
           JSMD: '',
