@@ -1,35 +1,16 @@
-/* global IODIDE_BUILD_MODE */
-import queryString from 'query-string'
+/* global IODIDE_EDITOR_ORIGIN */
 import { store } from './store'
 import { evaluateCell } from './actions/actions'
 import { getCompletions } from './tools/notebook-utils'
 
-
-let IODIDE_SESSION_ID = queryString.parse(window.location.search).sessionId
-let { editorOrigin } = queryString.parse(window.location.search)
-
-if (IODIDE_BUILD_MODE === 'test') {
-  IODIDE_SESSION_ID = 'testing-session'
-  editorOrigin = 'http://testing.origin'
-}
-
 const mc = new MessageChannel();
 
-window.parent.postMessage(IODIDE_SESSION_ID, editorOrigin, [mc.port2]);
+window.parent.postMessage('EVAL_FRAME_READY_MESSAGE', IODIDE_EDITOR_ORIGIN, [mc.port2]);
 
 const portToEditor = mc.port1
 
-
 export function postMessageToEditor(messageType, message) {
   portToEditor.postMessage({ messageType, message })
-}
-
-export function postActionToEditor(actionObj) {
-  postMessageToEditor('REDUX_ACTION', actionObj)
-}
-
-export function postKeypressToEditor(keypressStr) {
-  postMessageToEditor('KEYPRESS', keypressStr)
 }
 
 function receiveMessage(event) {
@@ -68,3 +49,11 @@ function receiveMessage(event) {
 }
 
 portToEditor.onmessage = receiveMessage
+
+export function postActionToEditor(actionObj) {
+  postMessageToEditor('REDUX_ACTION', actionObj)
+}
+
+export function postKeypressToEditor(keypressStr) {
+  postMessageToEditor('KEYPRESS', keypressStr)
+}

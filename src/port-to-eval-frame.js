@@ -8,7 +8,6 @@ export function postMessageToEvalFrame(messageType, message) {
   portToEvalFrame.postMessage({ messageType, message })
 }
 
-
 export function postActionToEvalFrame(actionObj) {
   postMessageToEvalFrame('REDUX_ACTION', actionObj)
 }
@@ -72,9 +71,9 @@ function receiveMessage(event) {
 }
 
 export const listenForEvalFramePortReady = (messageEvent) => {
-  console.log('listenForEvalFramePortReady', messageEvent.data)
-  if (messageEvent.data === window.IODIDE_SESSION_ID) {
-    [portToEvalFrame] = messageEvent.ports
+  console.log('listenForEvalFramePortReady', messageEvent.data, messageEvent.origin)
+  if (messageEvent.data === 'EVAL_FRAME_READY_MESSAGE') {
+    portToEvalFrame = messageEvent.ports[0] // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage
     store.dispatch({ type: 'EVAL_FRAME_READY' })
     // stop listening for messages once a connection to the eval-frame is made
