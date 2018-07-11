@@ -20,8 +20,9 @@ import './style/cell-styles.css'
 import NotebookHeader from './components/menu/notebook-header'
 import EditorPaneContainer from './components/editor-pane-container'
 import { store } from './store'
-import handleUrlQuery from './tools/handle-url-query'
+// import handleUrlQuery from './tools/handle-url-query'
 import autosaveStart from './tools/autosave'
+import handleInitialJsmd from './handle-initial-jsmd'
 import { initializeDefaultKeybindings } from './keybindings'
 
 
@@ -57,6 +58,9 @@ editorElt.id = 'editor-react-root'
 document.body.insertBefore(headerElt, panesContainerElt)
 panesContainerElt.insertBefore(editorElt, iframeElt)
 
+
+handleInitialJsmd(store)
+
 render(
   <Provider store={store}>
     <NotebookHeader />
@@ -73,4 +77,4 @@ render(
 
 autosaveStart(store)
 
-handleUrlQuery()
+// handleUrlQuery()

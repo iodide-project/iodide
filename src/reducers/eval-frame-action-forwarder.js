@@ -12,8 +12,11 @@ const evalFrameActionForwarder = (state, action) => {
     case 'SET_VIEW_MODE':
     case 'UPDATE_CELL_LIST':
     case 'CHANGE_SIDE_PANE_MODE':
-    // special case that passes through toeval frame
+    // special case: passes to eval frame without changing editor pane state,
+    // but by sending them as redux actions, they are automatically queued
+    // until the ports are open
     case 'TRIGGER_CELL_EVAL_IN_FRAME':
+    case 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD':
     // cell actions
     case 'UPDATE_CELL_PROPERTIES':
     case 'CHANGE_CELL_TYPE':
