@@ -17,6 +17,7 @@ import 'codemirror/addon/hint/javascript-hint'
 import sublime from '../../codemirror-keymap-sublime' // eslint-disable-line no-unused-vars
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
+import { postMessageToEvalFrame } from '../../port-to-eval-frame'
 
 class CellEditor extends React.Component {
   static propTypes = {
@@ -84,18 +85,65 @@ class CellEditor extends React.Component {
   }
 
   autoComplete = (cm) => {
+    // this is ported directly from CodeMirror's javascript-hint.
+    // we are splitting the functionality of that module so we can run half
+    // in the editor (the CodeMirror tokenization) and the other half in the eval-frame
+    // (the completion list generation).
+    window.ACTIVE_EDITOR_REF = cm
+    let context = []
     const codeMirror = this.editor.getCodeMirrorInstance()
-    // hint options for specific plugin & general show-hint
-    // Other general hint config, like 'completeSingle' and 'completeOnSingleClick'
-    // should be specified here and will be honored
-    const hintOptions = {
-      disableKeywords: true,
-      completeSingle: false,
-      completeOnSingleClick: false,
+    const { Pos } = codeMirror
+    const cur = cm.getCursor()
+    const getToken = (editor, cursor) => editor.getTokenAt(cursor)
+    let token = getToken(cm, cur)
+    const innerMode = codeMirror.innerMode(cm.getMode(), token.state);
+    if (innerMode.mode.helperType === 'json') return;
+    token.state = innerMode.state;
+
+    // If it's not a 'word-style' token, ignore the token.
+    if (!/^[\w$_]*$/.test(token.string)) {
+      token = {
+        start: cur.ch,
+        end: cur.ch,
+        string: '',
+        state: token.state,
+        type: token.string === '.' ? 'property' : null,
+      };
+    } else if (token.end > cur.ch) {
+      token.end = cur.ch;
+      token.string = token.string.slice(0, cur.ch - token.start);
     }
-    // Reference the hint function imported here when including other hint addons
-    // or supply your own
-    codeMirror.showHint(cm, codeMirror.hint.javascript, hintOptions);
+
+    let tprop = token;
+    // If it is a property, find out what it is a property of.
+    while (tprop.type === 'property') {
+      tprop = getToken(cm, Pos(cur.line, tprop.start));
+      if (tprop.string !== '.') return // don't do anything.
+      tprop = getToken(cm, Pos(cur.line, tprop.start));
+      if (!context) context = [];
+      context.push(tprop);
+    }
+
+    // remove all functions to allow message passing to eval-frame.
+    token.state.tokenize = undefined
+    delete token.state.cc
+    context.forEach((c) => {
+      const cc = c
+      cc.state.tokenize = undefined
+      delete cc.state.cc
+    })
+
+    const from = Pos(cur.line, token.start)
+    const to = Pos(cur.line, token.end)
+
+    // the eval-frame, after receiving this message,
+    // generates the completion suggestions and sends back
+    // to be rendered by the CodeMirror instsance saved in
+    // window.ACTIVE_EDITOR_REF.
+    // After the .showHint function is called, we set window.ACTIVE_EDITOR_REF = undefined.
+    postMessageToEvalFrame('REQUEST_AUTOCOMPLETE_SUGGESTIONS', {
+      token, context, from, to,
+    })
   }
 
   render() {

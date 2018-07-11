@@ -8,9 +8,10 @@ import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
 import { rowOverflowEnum, nextOverflow } from '../../state-prototypes'
 
+import UnevaluatedContent from '../../../components/reps/unevaluated-content'
+
 export class OutputRowUnconnected extends React.Component {
   static propTypes = {
-    executionString: PropTypes.string,
     viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     rowOverflow: PropTypes.oneOf(rowOverflowEnum.values()),
     rowType: PropTypes.string,
@@ -19,6 +20,7 @@ export class OutputRowUnconnected extends React.Component {
       setCellRowCollapsedState: PropTypes.func.isRequired,
     }).isRequired,
     children: PropTypes.node,
+    hasBeenEvaluated: PropTypes.bool,
   }
 
   constructor(props) {
@@ -68,7 +70,9 @@ export class OutputRowUnconnected extends React.Component {
           />
         </Tooltip>
         <div className="main-component">
-          {this.props.children}
+          {(!this.props.hasBeenEvaluated && this.props.rowType === 'output') ?
+            <UnevaluatedContent /> :
+            this.props.children}
         </div>
       </div>
     )
@@ -90,8 +94,6 @@ export function mapStateToPropsCellRows(state, ownProps) {
       throw Error(`Unsupported viewMode: ${state.viewMode}`)
   }
   const rowOverflow = cell.rowSettings[view][ownProps.rowType]
-  const executionString = (ownProps.rowType === 'input'
-    && cell.cellType === 'code') ? `[${cell.executionStatus}]` : ''
   // if this is an input row, uncollapse
   // the editor upon entering edit mode.
   // note: entering editMode is only allowed from editor View
@@ -113,10 +115,10 @@ export function mapStateToPropsCellRows(state, ownProps) {
     cellId: ownProps.cellId,
     viewMode: state.viewMode,
     uncollapseOnUpdate,
-    executionString,
     rowOverflow,
     collapseTooltipPlacement,
     tooltipText,
+    hasBeenEvaluated: cell.rendered,
   }
 }
 

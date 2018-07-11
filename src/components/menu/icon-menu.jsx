@@ -40,7 +40,6 @@ export default class NotebookIconMenu extends React.Component {
             open={Boolean(anchorElement)}
             onClose={this.handleIconButtonClose}
             anchorReference="anchorPosition"
-            transitionDuration={10}
             anchorPosition={{ top: 50, left: 0 }}
           >
             {children}

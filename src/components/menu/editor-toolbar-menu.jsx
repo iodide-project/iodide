@@ -8,7 +8,6 @@ import NotebookMenuItem from './notebook-menu-item'
 import NotebookMenuDivider from './notebook-menu-divider'
 
 import SavedNotebooksAndExamplesSubsection from './saved-notebooks-and-examples-subsection'
-import ViewModeToggleSubsection from './view-mode-toggle-subsection'
 
 export class EditorToolbarMenuUnconnected extends React.Component {
   static propTypes = {
@@ -28,10 +27,6 @@ export class EditorToolbarMenuUnconnected extends React.Component {
           this.props.isAuthenticated && <NotebookMenuItem task={tasks.exportGist} />
         }
         <SavedNotebooksAndExamplesSubsection />
-
-        <NotebookMenuDivider />
-
-        <ViewModeToggleSubsection />
 
         <NotebookMenuDivider />
 

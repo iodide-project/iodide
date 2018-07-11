@@ -49,28 +49,28 @@ describe('OutputContainerUnconnected React component', () => {
     props.selected = false
     props.editingCell = false
     expect(outputContainer().find('div').at(0).props().className)
-      .toBe('no-output cell-container code')
+      .toBe('not-evaluated cell-container code')
   })
 
   it('sets the top div with correct class if selected===true and editingCell===false', () => {
     props.selected = true
     props.editingCell = false
     expect(outputContainer().find('div').at(0).props().className)
-      .toBe('no-output cell-container code selected-cell')
+      .toBe('not-evaluated cell-container code selected-cell')
   })
 
   it('sets the top div with correct class if selected===false and editingCell===true', () => {
     props.selected = false
     props.editingCell = true
     expect(outputContainer().find('div').at(0).props().className)
-      .toBe('no-output cell-container code editing-cell')
+      .toBe('not-evaluated cell-container code editing-cell')
   })
 
   it('sets the top div with correct class if selected===true and editingCell===true', () => {
     props.selected = true
     props.editingCell = true
     expect(outputContainer().find('div').at(0).props().className)
-      .toBe('no-output cell-container code selected-cell editing-cell')
+      .toBe('not-evaluated cell-container code selected-cell editing-cell')
   })
 
   it('sets the onMouseDown prop to handleCellClick', () => {
@@ -131,6 +131,7 @@ describe('OutputContainer mapStateToProps', () => {
         id: 5,
         selected: true,
         cellType: 'code',
+        rendered: true,
       },
       ],
       mode: 'edit',
@@ -145,9 +146,9 @@ describe('OutputContainer mapStateToProps', () => {
         cellId: 5,
         selected: true,
         editingCell: true,
+        hasBeenEvaluated: true,
         viewMode: 'EXPLORE_VIEW',
         cellType: 'code',
-        outputHasValue: false,
         postMessageToEditor,
       })
   })
@@ -161,9 +162,9 @@ describe('OutputContainer mapStateToProps', () => {
         cellId: 5,
         selected: false,
         editingCell: false,
+        hasBeenEvaluated: true,
         viewMode: 'EXPLORE_VIEW',
         cellType: 'code',
-        outputHasValue: false,
         postMessageToEditor,
       })
   })
@@ -177,8 +178,8 @@ describe('OutputContainer mapStateToProps', () => {
         cellId: 5,
         selected: true,
         editingCell: false,
+        hasBeenEvaluated: true,
         viewMode: 'EXPLORE_VIEW',
-        outputHasValue: false,
         cellType: 'code',
         postMessageToEditor,
       })
@@ -194,8 +195,8 @@ describe('OutputContainer mapStateToProps', () => {
         cellId: 5,
         selected: false,
         editingCell: false,
+        hasBeenEvaluated: true,
         viewMode: 'EXPLORE_VIEW',
-        outputHasValue: true,
         cellType: 'code',
         postMessageToEditor,
       })
