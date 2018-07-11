@@ -1,19 +1,27 @@
 import json
-from django.contrib.staticfiles.views import serve
 from django.contrib.auth import logout as django_logout
-from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.template import loader
+from social_django.models import UserSocialAuth
 
-from .api.github import get_github_identity_data
+
+def _get_user_info_dict(user):
+    user_social_auth = UserSocialAuth.objects.get(user=user)
+    social_auth_extra_data = user_social_auth.extra_data
+
+    return {
+        'name': social_auth_extra_data['login'],
+        'avatar': user.avatar,
+        'accessToken': social_auth_extra_data['access_token']
+    }
 
 
 def index(request):
     template = loader.get_template('index.html')
     if request.user.is_authenticated:
-        user_info = json.dumps(get_github_identity_data(request.user))
+        user_info = json.dumps(_get_user_info_dict(request.user))
     else:
         user_info = json.dumps({})
     return HttpResponse(
@@ -28,7 +36,7 @@ def login_success(request):
     template = loader.get_template('login_success.html')
     return HttpResponse(
         template.render({
-            'user_info': json.dumps(get_github_identity_data(request.user))
+            'user_info': json.dumps(_get_user_info_dict(request.user))
         }, request))
 
 
