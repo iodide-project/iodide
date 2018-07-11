@@ -14,20 +14,6 @@ div.cell-container {
   flex-direction: row; 
 }
 
-div.cell-container.has-output {
-  background-color: white;
-}
-
-div.cell-container.no-output {
-  background-color: none;
-  outline: none;
-}
-
-div.cell-container.no-output {
-  background-color: none;
-  outline: none;
-}
-
 /* These may need to be integrated into the presentation mode style sheets
 but I don't see why we would have to do this immediately.
 */
@@ -130,12 +116,6 @@ div.input div.main-component {
   outline: 1px solid #f1f1f1;
 }
 
-div.markdown div.input div.main-component {
-  outline: none;
-}
-
-
-
 div.HIDDEN div.main-component {
   height: 18px;
   flex-shrink: 1;
@@ -157,7 +137,18 @@ div.selected-cell {
   outline: 2px solid #ccc;
 }
 
-div.selected-cell.no-output {
+
+div.cell-container.evaluated {
+  background-color: white;
+}
+
+div.cell-container.not-evaluated {
+  background-color: none;
+  outline: none;
+}
+
+div.cell-container.not-evaluated.selected-cell {
+  background-color: none;
   outline: 2px solid #ccc;
 }
 
@@ -196,4 +187,19 @@ div.hidden-cell {
 
 div.dataframe-rep {
   font-size:12px;
+}
+
+pre.unevaluated-content {
+  font-style: italic;
+  color:rgb(190, 190, 190);
+  /* opacity:0; */
+  font-size:12px;
+}
+
+/* div.selected-cell pre.unevaluated-content {
+  opacity:1
+} */
+
+div#cells.REPORT_VIEW pre.unevaluated-content {
+  display: none;
 }

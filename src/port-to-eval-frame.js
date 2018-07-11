@@ -8,7 +8,6 @@ export function postMessageToEvalFrame(messageType, message) {
   portToEvalFrame.postMessage({ messageType, message })
 }
 
-
 export function postActionToEvalFrame(actionObj) {
   postMessageToEvalFrame('REDUX_ACTION', actionObj)
 }
@@ -31,6 +30,17 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data
     switch (messageType) {
+      case 'AUTOCOMPLETION_SUGGESTIONS': {
+        const hintOptions = {
+          disableKeywords: true,
+          completeSingle: false,
+          completeOnSingleClick: false,
+        }
+        // CodeMirror is actually already in the global namespace.
+        CodeMirror.showHint(window.ACTIVE_EDITOR_REF, () => message, hintOptions) // eslint-disable-line
+        window.ACTIVE_EDITOR_REF = undefined
+        break
+      }
       case 'REDUX_ACTION':
         // in this case, `message` is a redux action
         if (approvedReduxActionsFromEvalFrame.includes(message.type)) {
@@ -63,7 +73,7 @@ function receiveMessage(event) {
 export const listenForEvalFramePortReady = (messageEvent) => {
   console.log('listenForEvalFramePortReady', messageEvent.data, messageEvent.origin)
   if (messageEvent.data === 'EVAL_FRAME_READY_MESSAGE') {
-    portToEvalFrame = messageEvent.ports[0] /* eslint-disable-line prefer-destructuring */
+    portToEvalFrame = messageEvent.ports[0] // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage
     store.dispatch({ type: 'EVAL_FRAME_READY' })
     // stop listening for messages once a connection to the eval-frame is made
