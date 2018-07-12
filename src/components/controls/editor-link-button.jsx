@@ -4,7 +4,7 @@ import LinkIcon from 'material-ui-icons/Link'
 import SvgIcon from 'material-ui/SvgIcon'
 import { EditorButton } from './editor-button'
 
-import tasks from '../actions/task-definitions'
+import tasks from '../../actions/task-definitions'
 
 const UnlinkIcon = props => (
   <SvgIcon {...props}>
@@ -25,7 +25,7 @@ export class EditorLinkButtonUnconnected extends React.Component {
         style={{
             borderBottomRightRadius: 3,
         }}
-        onClick={() => { tasks.toggleEditorLink.callback(); }}
+        onClick={tasks.toggleEditorLink.callback}
       >
         {this.props.scrollingLinked ? <LinkIcon style={{ fontSize: '13px' }} /> : <UnlinkIcon style={{ fontSize: '13px' }} />}
       </EditorButton>

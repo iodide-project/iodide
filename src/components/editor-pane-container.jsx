@@ -4,8 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 import Resizable from 're-resizable'
-// import FullScreenEditorButton from './full-screen-editor-button'
-import EditorLinkButton from './editor-link-button'
+import EditorLinkButton from './controls/editor-link-button'
 
 import CellContainer from './cells/cell-container'
 
