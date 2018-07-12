@@ -16,6 +16,9 @@ const UnlinkIcon = props => (
   </SvgIcon>
 )
 
+export const ACTIVE_SCROLLING_TEXT = 'unscroll w/ editor'
+export const INACTIVE_SCROLLING_TEXT = 'scroll w/ editor'
+
 export class EditorLinkButtonUnconnected extends React.Component {
   render() {
     return (
@@ -36,7 +39,7 @@ export class EditorLinkButtonUnconnected extends React.Component {
 export function mapStateToProps(state) {
   return {
     scrollingLinked: state.scrollingLinked,
-    tooltipText: state.scrollingLinked ? 'unscroll w/ editor' : 'scroll w/ editor',
+    tooltipText: state.scrollingLinked ? ACTIVE_SCROLLING_TEXT : INACTIVE_SCROLLING_TEXT,
   }
 }
 

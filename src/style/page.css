@@ -292,14 +292,6 @@ div.full-screen-editor-buttons {
   top: 0;
 }
 
-div.full-screen-editor-buttons button.display-button {
-  background-color: black;
-}
-
-div.full-screen-editor-buttons button.display-button.is-active {
-    background-color: rgb(30,30,30);
-}
-
 button.display-button {
   margin:0;
   padding:2px;
@@ -322,4 +314,17 @@ button.display-button:focus {
 
 button.display-button:hover {
   background-color: #686868;
+}
+
+div.full-screen-editor-buttons button.display-button {
+  background-color: black;
+}
+
+div.full-screen-editor-buttons button.display-button.is-active {
+    background-color: rgb(30,30,30);
+}
+
+div.full-screen-editor-buttons button.display-button:hover {
+  outline: 1px solid white;
+  outline-offset: -1px;
 }
