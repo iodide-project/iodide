@@ -88,6 +88,7 @@ div.promise-handler-value {
 
 .undefined-rep, .null-rep {
   display: inline-block;
+  margin: 0px
 }
 
 /************************************************/

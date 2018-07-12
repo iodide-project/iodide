@@ -61,3 +61,44 @@
   height: 24px;
   border-radius: 50%;
 }
+
+div.display-buttons {
+  position: fixed;
+  left: 280px;
+  top: 0px;
+  margin:0;
+  padding:0;
+  z-index: 3;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+button.display-button {
+  margin:0;
+  padding:2px;
+  border: none;
+  display: block;
+  width: 25px;
+  height: 25px;
+  text-align:center;
+  color:white;
+  background-color: black;
+}
+
+button.display-button.is-active {
+  background-color: rgb(30,30,30);
+}
+
+button.display-button:hover {
+  background-color: #686868;
+}
+
+/************************************************/
+/* et cetera styles */
+
+div.iodide-tooltip {
+  font-size: 0.900rem;
+}

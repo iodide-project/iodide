@@ -1,52 +1,16 @@
 /*  cell and cell container styles*/
 
 div.cell-container {
-  padding-top: 5px;
+  /*padding-top: 5px;
   padding-bottom: 5px;
   padding-right: 5px;
-  padding-left: 5px;
+  padding-left: 5px;*/
+  padding: 3px;
   margin-top: 15px;
   margin-bottom: 15px;
-  border: #f4f4f4 1px solid;
-  width: calc(100%);
-  border-radius: 3px;
-  /* put the .cell-menu-container and .cell-row-container in a row */
-  /* display: flex;
-  flex-direction: row;  */
+  outline: #f4f4f4 1px solid;
+  /*width: calc(100%);*/
 }
-
-/* These may need to be integrated into the presentation mode style sheets
-but I don't see why we would have to do this immediately.
-*/
-/*
-div#cells.editor div.raw-dom-element {
-  overflow-x: scroll
-}
-
-div#cells.presentation div.cell-container {
-  margin: 0 auto; 
-  outline: none;
-  padding: 0px;
-}
-
-div#cells.presentation .collapse-button {
-  display: none;
-  height: 0px
-}
-
-div#cells.presentation div.cell-row.HIDDEN {
-  display: none;
-}
-
-div#cells.presentation div.cell-menu-container {
-  display: none;
-  height: 0px;
-  width: 0px !important;
-}
-
-div#cells.presentation div.cell-row.input {
-  padding:0px;
-}*/
 
 .cell-header {
   display: flex;
@@ -113,26 +77,18 @@ button.fold-cell-button:hover {
     display: inline-block;
 }
 
-.cell-status-icons {
-    text-align: right;
-    padding: 0px 6px 0px 0px;
-}
-
-.cell-status-icons svg {
-    fill: hsl(275, 12%, 75%);
-}
-
-
-div.cell-row-container {
-  width: calc(100% - 3px); /* 100% minus cell-menu-contatiner width*/
+/*div.cell-row-container {
+  width: calc(100% - 3px);  100% minus cell-menu-contatiner width
     flex-shrink: 0;
     flex-grow: 0;
-}
+}*/
 
+/*
 div.cell-row {
   display: flex;
   padding: 1px;
 }
+*/
 
 div#cells.editor div.cell-container.markdown div.cell-row.output {
   overflow-x:hidden;
@@ -152,19 +108,6 @@ div.collapse-button:hover {
   cursor: pointer;
 }
 
-div.HIDDEN div.collapse-button-tooltip-wrapper {
-    width: calc(100% - 3px); /* 100% minus a .collapse-button width margin-right*/
-
-}
-
-div.HIDDEN div.collapse-button {
-    width: calc(100% - 3px);
-    /* when collapsed, make the button visible*/
-  background: #fdfdfd;
-  outline: 1px solid #ddd;
-  cursor: pointer;
-  height: 20px;
-}
 
 div.main-component {
     /* width: calc(100% - 25px); // 100% minus .collapse-button width (including margins) */ 
@@ -177,23 +120,8 @@ div.input div.main-component {
   outline: 1px solid #f1f1f1;
 }
 
-div.markdown div.input div.main-component {
-  outline: none;
-}
 
-
-
-div.HIDDEN div.main-component {
-  height: 18px;
-  flex-shrink: 1;
-  flex-basis: 0px;
-  flex-grow: 0;
-  overflow: hidden;
-  outline: none;
-}
-
-
-div.selected-cell.editing-cell div.input div.main-component {
+div.selected-cell.editing-cell div.main-component {
   outline: 1px solid #bbb;
 }
 div.selected-cell.editing-cell {
@@ -201,7 +129,7 @@ div.selected-cell.editing-cell {
 }
 
 div.selected-cell {
-  outline: 1.5px solid #ccc;
+  outline: 2px solid #ccc;
 }
 
 div.CodeMirror {
@@ -210,6 +138,15 @@ div.CodeMirror {
 
 div.CodeMirror-gutters {
   background: #fff;
+}
+
+div.HIDDEN div.main-component {
+  height: 18px;
+  flex-shrink: 1;
+  flex-basis: 0px;
+  flex-grow: 0;
+  overflow: hidden;
+  outline: none;
 }
 
 div.VISIBLE div.main-component div.CodeMirror {
@@ -224,38 +161,6 @@ div.SCROLL div.main-component div.CodeMirror div.CodeMirror-scroll {
   max-height: 300px;
 }
 
-div.SCROLL.output .main-component {
-  max-height: 300px;
-  outline: 1px solid #ddd;
-  overflow-y: scroll;
-}
-
-
-
-/* FIX ME i think this style is never used, double check it*/
-div.hidden-cell {
-  display: none;
-}
-
 .cm-s-eclipse .CodeMirror-matchingbracket {
   outline: 1px dotted #000;
 }
-
-
-.dependency-row {
-  display: flex;
-  align-items: center;
-}
-
-.dependency-row a {
-  color: #337ab7;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.dependency-row a:hover,
-.dependency-row a:focus {
-  color: #23527c;
-  text-decoration: underline;
-}
-
