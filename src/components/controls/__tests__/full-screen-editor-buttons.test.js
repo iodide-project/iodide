@@ -1,4 +1,5 @@
 import { mapStateToProps, VIEWMODE_IS_REPORT, VIEWMODE_IS_NOT_REPORT } from '../full-screen-editor-buttons'
+import tasks from '../../../actions/task-definitions'
 
 describe('mapStateToProps', () => {
   let state
@@ -15,6 +16,8 @@ describe('mapStateToProps', () => {
       showEditor: true,
       viewMode: 'REPORT_VIEW',
       display: VIEWMODE_IS_REPORT,
+      toggleEditorVisibility: tasks.toggleEditorVisibility.callback,
+      toggleEvalFrameVisibility: tasks.toggleEvalFrameVisibility.callback,
     })
   })
   it('sets the display as VIEWMODE_IS_NOT_REPORT if we are not in report view', () => {
@@ -24,6 +27,8 @@ describe('mapStateToProps', () => {
       showEditor: true,
       viewMode: 'EDITOR_VIEW',
       display: VIEWMODE_IS_NOT_REPORT,
+      toggleEditorVisibility: tasks.toggleEditorVisibility.callback,
+      toggleEvalFrameVisibility: tasks.toggleEvalFrameVisibility.callback,
     })
   })
 })
