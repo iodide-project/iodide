@@ -56,8 +56,11 @@ class EditorPaneContainer extends React.Component {
           bounds="window"
           minWidth={300}
           onResizeStop={this.onResizeStopHandler}
-          size={{ width: this.props.cellResizerWidth, height: '100%' }}
-          style={{ display: this.props.cellResizerDisplayStyle }}
+          size={{ width: this.props.cellResizerWidth }}
+          style={{
+            display: this.props.cellResizerDisplayStyle,
+            flexDirection: 'column',
+          }}
         >
           <div id="cells">
             {cellInputComponents}
@@ -73,7 +76,7 @@ function mapStateToProps(state) {
     cellIds: state.cells.map(c => c.id),
     cellResizerWidth: state.showFrame ? state.editorWidth : '100%',
     cellResizerDisplayStyle: state.viewMode === 'REPORT_VIEW' ||
-      !state.showEditor ? 'none' : 'block',
+      !state.showEditor ? 'none' : 'flex',
     showFrame: state.showFrame,
   }
 }
