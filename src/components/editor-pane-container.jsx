@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 import Resizable from 're-resizable'
+// import FullScreenEditorButton from './full-screen-editor-button'
+import EditorLinkButton from './editor-link-button'
 
 import CellContainer from './cells/cell-container'
 
@@ -59,7 +61,17 @@ class EditorPaneContainer extends React.Component {
           size={{ width: this.props.cellResizerWidth, height: '100%' }}
           style={{ display: this.props.cellResizerDisplayStyle }}
         >
+          <div
+            style={{
+              position: 'absolute',
+              right: -25,
+              top: 0,
+            }}
+          >
+            <EditorLinkButton />
+          </div>
           <div id="cells">
+
             {cellInputComponents}
           </div>
         </Resizable>
