@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Button from 'material-ui/Button'
-import Tooltip from 'material-ui/Tooltip'
+import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip'
 import tasks from '../../actions/task-definitions'
 
 export class ViewModeToggleButtonUnconnected extends React.Component {

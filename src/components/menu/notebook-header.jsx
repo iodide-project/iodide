@@ -1,5 +1,5 @@
 import React from 'react'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import PresentationModeToolbar from './presentation-mode-toolbar'
 import EditorModeToolbar from './editor-mode-toolbar'

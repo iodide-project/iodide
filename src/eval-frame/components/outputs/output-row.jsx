@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import Tooltip from 'material-ui/Tooltip'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
@@ -59,7 +59,7 @@ export class OutputRowUnconnected extends React.Component {
     return (
       <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
         <Tooltip
-          classes={{ root: 'collapse-button-tooltip-wrapper', tooltip: 'iodide-tooltip' }}
+          classes={{ tooltip: 'iodide-tooltip' }}
           placement={this.props.collapseTooltipPlacement}
           title={this.props.tooltipText}
           enterDelay={600}

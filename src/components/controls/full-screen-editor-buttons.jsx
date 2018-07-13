@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import EditorIcon from 'material-ui-icons/Code'
-import EvalFrameIcon from 'material-ui-icons/InsertChart'
+import EditorIcon from '@material-ui/icons/Code'
+import EvalFrameIcon from '@material-ui/icons/InsertChart'
 import { EditorButton } from './editor-button'
 import tasks from '../../actions/task-definitions'
 
