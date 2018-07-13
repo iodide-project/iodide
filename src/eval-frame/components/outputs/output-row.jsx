@@ -59,7 +59,7 @@ export class OutputRowUnconnected extends React.Component {
     return (
       <div className={`cell-row ${this.props.rowType} ${this.props.rowOverflow}`}>
         <Tooltip
-          classes={{ root: 'collapse-button-tooltip-wrapper', tooltip: 'iodide-tooltip' }}
+          classes={{ tooltip: 'iodide-tooltip' }}
           placement={this.props.collapseTooltipPlacement}
           title={this.props.tooltipText}
           enterDelay={600}
