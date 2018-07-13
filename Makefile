@@ -10,3 +10,6 @@ shell:
 
 up:
 	docker-compose up
+
+flake8:
+	docker-compose run server flake8 server/

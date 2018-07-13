@@ -24,7 +24,7 @@ WORKDIR /app
 
 # install python deps globally so we can take advantage of docker caching
 COPY Pipfile Pipfile.lock /app/
-RUN pipenv install --system --deploy
+RUN pipenv install --dev --system --deploy
 
 COPY . /app
 RUN chown app:app -R .
