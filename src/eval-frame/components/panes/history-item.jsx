@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ArrowBack from 'material-ui-icons/ArrowBack'
+import ArrowBack from '@material-ui/icons/ArrowBack'
 
 import PaneContentButton from './pane-content-button'
 import { prettyDate } from '../../tools/notebook-utils'

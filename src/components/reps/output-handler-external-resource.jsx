@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-// import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
-// import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import CheckCircle from 'material-ui-icons/CheckCircle'
-import ErrorCircle from 'material-ui-icons/Error'
-import UnloadedCircle from 'material-ui-icons/Remove'
+// import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
+// import lightBaseTheme from '@material-ui/core/styles/baseThemes/lightBaseTheme'
+// import getMuiTheme from '@material-ui/core/styles/getMuiTheme'
+import CheckCircle from '@material-ui/icons/CheckCircle'
+import ErrorCircle from '@material-ui/icons/Error'
+import UnloadedCircle from '@material-ui/icons/Remove'
 
 // this is merely a presentational component, and as such can be passed
 // all the data it needs.

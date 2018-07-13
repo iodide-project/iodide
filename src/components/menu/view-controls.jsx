@@ -2,12 +2,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
-// import { ToolbarGroup } from 'material-ui/Toolbar'
+// import { ToolbarGroup } from '@material-ui/core/Toolbar'
 
-import HistoryIcon from 'material-ui-icons/History'
-// import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
-import InfoIcon from 'material-ui-icons/InfoOutline'
-// import SvgIcon from 'material-ui/SvgIcon'
+import HistoryIcon from '@material-ui/icons/History'
+// import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
+import InfoIcon from '@material-ui/icons/InfoOutline'
+// import SvgIcon from '@material-ui/core/SvgIcon'
 
 import NotebookTaskButton from './notebook-task-button'
 import UserButton from './user-button'

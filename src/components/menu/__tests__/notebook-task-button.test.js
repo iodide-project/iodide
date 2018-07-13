@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import IconButton from 'material-ui/IconButton'
+import IconButton from '@material-ui/core/IconButton'
 
 import NotebookTaskButton from '../notebook-task-button'
 import UserTask from '../../../actions/user-task'

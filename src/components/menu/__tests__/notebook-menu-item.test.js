@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import MenuItem from 'material-ui/Menu/MenuItem'
-import { ListItemText } from 'material-ui/List'
+import MenuItem from '@material-ui/core/MenuItem/MenuItem'
+import { ListItemText } from '@material-ui/core/List'
 
 import NotebookMenuItem from '../notebook-menu-item'
 import UserTask from '../../../actions/user-task'

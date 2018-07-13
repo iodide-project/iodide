@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import LinkIcon from 'material-ui-icons/Link'
-import SvgIcon from 'material-ui/SvgIcon'
+import LinkIcon from '@material-ui/icons/Link'
+import SvgIcon from '@material-ui/core/SvgIcon'
 import { EditorButton } from './editor-button'
 
 import tasks from '../../actions/task-definitions'

@@ -1,5 +1,5 @@
-import Button from 'material-ui/Button'
-import Tooltip from 'material-ui/Tooltip'
+import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip'
 import React from 'react'
 import PropTypes from 'prop-types';
 
