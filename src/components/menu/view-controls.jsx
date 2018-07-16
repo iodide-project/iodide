@@ -45,7 +45,7 @@ export class ViewControlsUnconnected extends React.Component {
 
         <AppInfoPane />
 
-        {IODIDE_BUILD_MODE === 'heroku' && (
+        {IODIDE_BUILD_MODE === 'server' && (
           <UserButton
             isAuthenticated={this.props.isAuthenticated}
             avatar={this.props.avatar}

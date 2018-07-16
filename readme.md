@@ -52,6 +52,17 @@ To open a notebook, you need to serve the files in your `iodide` folder with two
 In dev mode, resource paths are set to be relative to the `dev/` directory. Thus, you export a bundled notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js/css/font files (and if you want to share a notebook that you created in a dev environment, you'll need to update the paths to point to the web-accessible resources at iodide.io).
 
 
+### Server mode
+
+We have been building an experimental iodide server based on Python and Django. Currently the main features
+it supports are login/identity (via the github API). To test/run it locally, follow this set of steps:
+
+* Register a [github oauth token](https://github.com/settings/applications/new). Set the homepage URL to be
+"http://localhost:8000" and the authentication callback URL to be "http://localhost:8000/oauth/complete/github/".
+* Copy `.env-dist` to `.env` and set the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to the values provided above.
+* Run `make build && make up`
+* You should now be able to navigate to a test server instance at `http://localhost:8000`
+
 ## Testing
 
 Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.

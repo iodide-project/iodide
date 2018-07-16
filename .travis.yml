@@ -1,48 +1,69 @@
-language: node_js
+matrix:
+  include:
 
-node_js:
-  - "lts/*"
-  - "8"
+    # static notebook environment
+    - env: static-notebook
+      language: node_js
+      node_js:
+        - "lts/*"
+        - "8"
 
-install:
-  - npm install
+      install:
+        - npm install
 
-script:
-  - npm run lint
-  - npm test
+      script:
+        - npm run lint
+        - npm test
 
-before_deploy:
-  - npm run build
-  - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
-  - # Get existing releases from iodide-project/dist so we don't overwrite them
-  - >
-    if [ -n "$TRAVIS_TAG" ]; then
-      git clone https://github.com/iodide-project/dist.git --depth 1 dist;
-      cp -r dist/* prod;
-    fi
+      before_deploy:
+        - npm run build
+        - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
+        - # Get existing releases from iodide-project/dist so we don't overwrite them
+        - >
+          if [ -n "$TRAVIS_TAG" ]; then
+            git clone https://github.com/iodide-project/dist.git --depth 1 dist;
+            cp -r dist/* prod;
+          fi
 
-deploy:
-  - provider: pages
-    github-token: "$GITHUB_TOKEN"
-    skip-cleanup: true
-    keep-history: false
-    repo: iodide-project/master
-    verbose: false
-    local-dir: prod
-    target-branch: master
-    on:
-      branch: master
+      deploy:
+        - provider: pages
+          github-token: "$GITHUB_TOKEN"
+          skip-cleanup: true
+          keep-history: false
+          repo: iodide-project/master
+          verbose: false
+          local-dir: prod
+          target-branch: master
+          on:
+            branch: master
 
-  - provider: pages
-    github-token: "$GITHUB_TOKEN"
-    skip-cleanup: true
-    keep-history: true
-    repo: iodide-project/dist
-    verbose: true
-    local-dir: prod
-    target-branch: master
-    on:
-      tags: true
+        - provider: pages
+          github-token: "$GITHUB_TOKEN"
+          skip-cleanup: true
+          keep-history: true
+          repo: iodide-project/dist
+          verbose: true
+          local-dir: prod
+          target-branch: master
+          on:
+            tags: true
+
+    # experimental iodide server
+    - env: server
+      language: node_js
+      node_js:
+        - "lts/*"
+      sudo: required
+      services:
+        - docker
+
+      install:
+        - npm install
+
+      script:
+        - cp .env-dist .env
+        - make build
+        - make flake8
 
 env:
   global:

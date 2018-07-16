@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+# default variables
+: "${PORT:=8000}"
+
+usage() {
+  echo "usage: bin/run dev"
+  exit 1
+}
+
+[ $# -lt 1 ] && usage
+
+case $1 in
+  dev)
+    python manage.py migrate --noinput
+    exec python manage.py runserver 0.0.0.0:${PORT}
+    ;;
+  *)
+    exec "$@"
+    ;;
+esac
