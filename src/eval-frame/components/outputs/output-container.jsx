@@ -15,7 +15,7 @@ export class OutputContainerUnconnected extends React.Component {
     cellId: PropTypes.number.isRequired,
     children: PropTypes.node,
     editingCell: PropTypes.bool.isRequired,
-    viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
+    // viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
     postMessageToEditor: PropTypes.func.isRequired,
     hasBeenEvaluated: PropTypes.bool,
@@ -28,7 +28,7 @@ export class OutputContainerUnconnected extends React.Component {
   }
 
   handleCellClick = () => {
-    if (this.props.viewMode === 'EXPLORE_VIEW' && !this.props.selected) {
+    if (!this.props.selected) {
       let targetPxFromViewportTop
       if (IODIDE_BUILD_MODE !== 'test') {
         targetPxFromViewportTop = (
@@ -48,6 +48,7 @@ export class OutputContainerUnconnected extends React.Component {
   }
 
   render() {
+    console.log('render output container', this.props.cellId)
     const cellClass = `${!this.props.hasBeenEvaluated ? 'not-evaluated' : 'evaluated'} cell-container ${
       this.props.cellType
     }${
@@ -78,7 +79,7 @@ export function mapStateToProps(state, ownProps) {
     cellId: cell.id,
     selected: cell.selected,
     editingCell: cell.selected && state.mode === 'edit',
-    viewMode: state.viewMode,
+    // viewMode: state.viewMode,
     cellType: cell.cellType,
     postMessageToEditor,
     hasBeenEvaluated: cell.rendered,

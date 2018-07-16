@@ -21,47 +21,6 @@ when a user has a full-screen graphic they want to display).
   word-wrap: break-word;
 }
 
-/* this resets the div.cell-row-container to not have a margin for collapse + cell label buttons,
-which is an additiona 50px.
-*/
-div#cells.presentation div.cell-row-container {
-  width: 100%;
-}
-
-/* in the EXPLORE_VIEW view, there is 24px less room for the collapse-button. Let's get it back. */
-div#cells.presentation div.main-component {
-  width: 100%;
-}
-
-
-/* which side-effects are shown in the report view*/
-div#cells.presentation .side-effect-target {
-  max-width:800px;
-  margin: auto;
-}
-
-div#cells.presentation div.side-effect-target div.hide-side-effect {
-  display: none;
-}
-
- /* div#cells.presentation {
-  padding-top:30px;
-}  */
-
-#cells.presentation .cell-container:first-child {
-  padding-top:30px;
-} 
-
- #cells.presentation .cell-container:last-child {
-  margin-bottom:60px;
-} 
-
-#cells.presentation .user-markdown {
-  padding-bottom: 10px;
-}
-
-
-
 /* establish block-level elements to be a certain width. This
 lets us create full width divs using css if necessary, while still
 retaining the narrower column view for readability and flow.

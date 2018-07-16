@@ -18,4 +18,4 @@ function reduceReducers(...reducers) {
     )
 }
 
-export default reduceReducers(notebookReducer, cellReducer, evalFrameActionForwarder)
+export default reduceReducers(evalFrameActionForwarder, notebookReducer, cellReducer)

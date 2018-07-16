@@ -65,10 +65,6 @@ class EvalContainer extends React.Component {
         <div
           id="cells"
           className={this.props.viewMode}
-          style={{
-              flexGrow: '1',
-              minHeight: '0px',
-            }}
         >
           {bodyContent}
         </div>

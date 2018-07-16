@@ -16,6 +16,7 @@ import './style/default-presentation.css'
 // import './style/markdown-styles.css'
 
 import EvalContainer from './components/eval-container'
+import ViewModeStylesHandler from './components/view-mode-styles-handler'
 import { store } from './store'
 
 import { iodide } from './iodide-api/api'
@@ -30,3 +31,11 @@ render(
   </Provider>,
   document.getElementById('eval-container'),
 )
+
+render(
+  <Provider store={store}>
+    <ViewModeStylesHandler />
+  </Provider>,
+  document.getElementById('view-mode-styles'),
+)
+
