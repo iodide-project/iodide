@@ -46,8 +46,6 @@ div#cells {
   } else if (state.viewMode === 'REPORT_VIEW') {
     viewModeStyleSheet = `
 html, body {
-  background-color: blue;
-
   overflow-y: auto;
   /* height: 100vh; don't set height*/
 }
@@ -57,7 +55,6 @@ div#eval-container {
 }
 
 div#cells {
-  padding-top: 20px;
   padding-left: 25px;
   padding-right: 25px;
 }
