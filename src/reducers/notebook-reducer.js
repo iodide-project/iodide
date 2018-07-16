@@ -114,14 +114,14 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'EVAL_FRAME_READY': {
-      postActionToEvalFrame({
-        type: 'ENVIRONMENT_UPDATE_FROM_EDITOR',
-        savedEnvironment: state.savedEnvironment,
-      })
-      postActionToEvalFrame({
-        type: 'UPDATE_CELL_LIST',
-        cells: state.cells,
-      })
+      // postActionToEvalFrame({
+      //   type: 'ENVIRONMENT_UPDATE_FROM_EDITOR',
+      //   savedEnvironment: state.savedEnvironment,
+      // })
+      // postActionToEvalFrame({
+      //   type: 'UPDATE_CELL_LIST',
+      //   cells: state.cells,
+      // })
       state.evalFrameMessageQueue.forEach((actionToPost) => {
         postActionToEvalFrame(actionToPost)
         // postDispatchToEvalContext(actionToPost)

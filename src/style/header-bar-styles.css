@@ -1,0 +1,150 @@
+
+.notebook-toolbar-container {
+  background-color: black;
+  height: 50px
+}
+
+.notebook-toolbar {
+  height:50px;
+  display: flex;
+  position: relative;
+  min-height: 56px;
+  align-items: center;
+  min-height:50px !important;
+}
+
+div.editor-mode-controls {
+  width: 300px;
+}
+
+div.view-controls {
+  width: 375px;
+  display:flex;
+  align-items:center;
+}
+
+div.title-field {
+  width: calc( 100% - 260px - 300px );
+}
+
+div.title-field-contents {
+  display: flex;
+  width: 100%;
+}
+
+.last-saved-text {
+  font-size: 11px;
+  color: lightgray;
+  font-style: italic;
+  width: 125px;
+  text-align: right;
+}
+
+@media (max-width:1100px) {
+
+.last-saved-text {
+  display:none !important;
+  }
+
+div.view-controls {
+  width:200px;
+  }
+
+div.title-field {
+  width: calc( 100% - 260px - 200px)
+  }
+}
+
+div.display-title {
+  color: white;
+  width: 100%;
+  text-align: center;
+}
+
+div.display-title span {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+div.display-title span:after {
+  content: '▼';
+  color: red;
+  padding-left: 5px
+}
+
+input.page-title {
+  font-family: 'Open Sans';
+  font-size: 14px;
+  border: none;
+  outline: none;
+  width:100%;
+  margin: auto;
+  text-align: center;
+  color: white;
+  background-color: black;
+}
+
+input.page-title:focus {
+  font-size: 20px
+}
+
+input.page-title.unrendered-title {
+  color: lightgray;
+}
+
+h1.page-title span {
+  font-weight: 300;
+  font-size: 16px;
+}
+
+div.notebook-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px
+}
+
+div.cell-controls {
+  display: flex;
+  padding: 3px;
+  background-color: #fff;
+  justify-content: space-between
+}
+
+div.page-mode {
+  margin-left: 10px;
+  color: #999;
+  font-size: 12px;
+  padding: 2px;
+  width: 150px;
+  display: flex
+}
+
+
+ 
+div.full-screen-editor-buttons {
+  /* left: 280px; */
+  margin:0;
+  padding:0;
+  z-index: 3;
+  height: 50px;
+  width: 25px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+div.full-screen-editor-buttons button.display-button { 
+  background-color: black; 
+} 
+ 
+div.full-screen-editor-buttons button.display-button.is-active { 
+    background-color: rgb(30,30,30); 
+} 
+ 
+div.full-screen-editor-buttons button.display-button:hover { 
+  outline: 1px solid white; 
+  outline-offset: -1px; 
+} 

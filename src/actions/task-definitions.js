@@ -5,7 +5,6 @@ import * as actions from './actions'
 import {
   isCommandMode,
   viewModeIsEditor,
-  getCells,
   getCellBelowSelectedId,
   getCellAboveSelectedId, prettyDate, formatDateString,
 } from '../tools/notebook-utils'
@@ -45,7 +44,7 @@ tasks.evaluateAllCells = new UserTask({
   menuTitle: 'Run All Cells',
   callback() {
     dispatcher.saveNotebook(true)
-    dispatcher.evaluateAllCells(getCells(), store)
+    dispatcher.evaluateAllCells()
   },
 })
 

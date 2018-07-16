@@ -27,6 +27,13 @@ const notebookReducer = (state = newNotebook(), action) => {
       clearUserDefinedVars(state.userDefinedVarNames)
       return Object.assign(newNotebook())
 
+    case 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD': {
+      // nextState = newNotebook()
+      // Object.keys(nextState).forEach((k) => { nextState[k] = action.newState[k] })
+      // return nextState
+      return Object.assign(newNotebook(), action.stateUpdatesFromEditor)
+    }
+
     case 'CLEAR_VARIABLES': {
       clearUserDefinedVars(state.userDefinedVarNames)
       nextState = Object.assign({}, state)

@@ -25,18 +25,34 @@ export function updateAppMessages(messageObj) {
 }
 
 
-export function importNotebook(newState) {
+export function importNotebook(importedState) {
+  // note that we need to not trample on evalFrameMessageQueue or
+  // evalFrameReady, so we'll delete those from the new state
+  const newState = importedState
+  delete newState.evalFrameMessageQueue
+  delete newState.evalFrameReady
   return {
     type: 'IMPORT_NOTEBOOK',
     newState,
   }
 }
 
-export function importFromURL(importedState) {
+export function importInitialJsmd(importedState) {
   return (dispatch) => {
     dispatch(importNotebook(importedState))
-    dispatch(updateAppMessages({ message: 'Notebook successfully imported from URL.' }))
-    return Promise.resolve()
+    // whitelist the part of the state in the JSMD that should be
+    // pushed to the eval-frame at initialization, and post it over
+    const statePathsToUpdate = [
+      'savedEnvironment',
+      'cells',
+      'viewMode',
+    ]
+    const stateUpdatesFromEditor = {}
+    statePathsToUpdate.forEach((k) => { stateUpdatesFromEditor[k] = importedState[k] })
+    dispatch({
+      type: 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD',
+      stateUpdatesFromEditor,
+    })
   }
 }
 
@@ -166,8 +182,9 @@ export function evaluateCell(cellId) {
   }
 }
 
-export function evaluateAllCells(cells) {
-  return (dispatch) => {
+export function evaluateAllCells() {
+  return (dispatch, getState) => {
+    const { cells } = getState()
     let p = Promise.resolve()
     cells.forEach((cell) => {
       if (cell.cellType === 'css' && !cell.skipInRunAll) {
