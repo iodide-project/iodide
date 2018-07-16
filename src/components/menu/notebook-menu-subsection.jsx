@@ -1,9 +1,9 @@
 import React from 'react'
-import MenuItem from 'material-ui/Menu/MenuItem'
-import { ListItemText } from 'material-ui/List';
-import Menu from 'material-ui/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import ListItemText from '@material-ui/core/ListItemText';
+import Menu from '@material-ui/core/Menu'
 
-import ChevronRight from 'material-ui-icons/ChevronRight'
+import ChevronRight from '@material-ui/icons/ChevronRight'
 
 export default class NotebookMenuSubsection extends React.Component {
   constructor(props) {

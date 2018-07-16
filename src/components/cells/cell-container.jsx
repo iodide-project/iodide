@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import Tooltip from 'material-ui/Tooltip'
+import Tooltip from '@material-ui/core/Tooltip'
 
-import UnfoldLess from 'material-ui-icons/UnfoldLess'
+import UnfoldLess from '@material-ui/icons/UnfoldLess'
 
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'

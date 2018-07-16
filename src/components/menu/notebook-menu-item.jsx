@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import MenuItem from 'material-ui/Menu/MenuItem'
-import { ListItemText } from 'material-ui/List';
+import MenuItem from '@material-ui/core/MenuItem'
+import ListItemText from '@material-ui/core/ListItemText'
 import UserTask from '../../actions/user-task'
 import ExternalLinkTask from '../../actions/external-link-task'
 

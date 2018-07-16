@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Subheader from 'material-ui/List/ListSubheader'
+import Subheader from '@material-ui/core/ListSubheader/ListSubheader'
 
 export default class NotebookMenuHeader extends React.Component {
   static propTypes = { title: PropTypes.string, onClick: PropTypes.func }
