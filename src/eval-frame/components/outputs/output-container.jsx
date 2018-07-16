@@ -43,8 +43,6 @@ export class OutputContainerUnconnected extends React.Component {
   }
 
   render() {
-    console.log('render output container', this.props.cellId)
-
     return (
       <div
         id={`cell-${this.props.cellId}`}
