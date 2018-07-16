@@ -146,7 +146,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
       return Object.assign(
-        blankState(), nextState, { cells }, getSavedNotebooks(),
+        newNotebook(), nextState, { cells }, getSavedNotebooks(),
         getUserData(),
       )
     }
@@ -183,7 +183,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       // and per-cell state for backwards compatibility
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, getSavedNotebooks(), getUserData())
+      return Object.assign(newNotebook(), nextState, getSavedNotebooks(), getUserData())
     }
 
     case 'DELETE_NOTEBOOK': {
