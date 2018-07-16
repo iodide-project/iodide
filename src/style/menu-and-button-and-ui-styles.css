@@ -77,19 +77,17 @@
 }
 
 div.display-buttons {
-  position: fixed;
-  left: 280px;
-  top: 0px;
+  /* left: 280px; */
   margin:0;
   padding:0;
   z-index: 3;
   height: 50px;
-  width: 50px;
+  width: 25px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
-
+ 
 button.display-button {
   margin:0;
   padding:2px;
@@ -99,13 +97,18 @@ button.display-button {
   height: 25px;
   text-align:center;
   color:white;
-  background-color: black;
+  background-color: darkgray;
 }
-
+ 
 button.display-button.is-active {
-  background-color: rgb(30,30,30);
+  background-color: #D3D3D3 ;
+  /* background-color: rgb(30,30,30); */
 }
-
+ 
+button.display-button:focus {
+  outline: none;
+}
+ 
 button.display-button:hover {
   background-color: #686868;
 }
