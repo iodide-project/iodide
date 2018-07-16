@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="content">
+  Login Successful!
+</div>
+<script type="text/javascript">
+  function switchWindow() {
+    window.opener.loginSuccess({{ user_info|safe }});
+    window.opener.focus();
+    window.close()
+  }
+  window.onload = switchWindow;
+</script>
+{% endblock %}

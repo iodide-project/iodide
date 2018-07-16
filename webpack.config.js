@@ -45,7 +45,7 @@ module.exports = (env) => {
     }
     CSS_PATH_STRING = APP_PATH_STRING
     plugins.push(new UglifyJSPlugin())
-  } else if (env === 'heroku') {
+  } else if (env === 'server') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
     APP_VERSION_STRING = 'iodide-server'
     APP_PATH_STRING = ''
@@ -117,7 +117,7 @@ module.exports = (env) => {
       ...plugins,
       new CreateFileWebpack({
         path: BUILD_DIR,
-        fileName: `iodide.${APP_VERSION_STRING}.html`,
+        fileName: (env === 'server') ? 'index.html' : `iodide.${APP_VERSION_STRING}.html`,
         content: editorHtmlTemplateCompiler({
           APP_VERSION_STRING,
           APP_PATH_STRING,

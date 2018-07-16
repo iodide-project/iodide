@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+
+[packages]
+django = "*"
+gunicorn = "*"
+django-heroku = "*"
+social-auth-app-django = "*"
+django-environ = "*"
+"psycopg2-binary" = "*"
+furl = "*"
+
+[requires]
+python_version = "3.6"
+
+[dev-packages]
+"flake8" = "*"

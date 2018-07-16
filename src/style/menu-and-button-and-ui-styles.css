@@ -5,6 +5,20 @@
   flex-flow: row wrap;
   max-height:32px !important;
 }
+.editor-icon-menu {
+  transition: 50ms;
+}
+.editor-icon-menu:hover:after {
+  content: '▼';
+  font-size:10px;
+  font-weight:300;
+  transform: scale(1, .5);
+  position: absolute;
+  bottom: 5px;
+  width: 32px;
+  text-align:center;
+  display: block;
+}
 
 .iodide-menu-item {
   max-height:32px !important;

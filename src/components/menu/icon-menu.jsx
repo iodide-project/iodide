@@ -50,6 +50,7 @@ export default class NotebookIconMenu extends React.Component {
             aria-haspopup="true"
             onClick={this.handleClick}
             style={{ color: 'white' }}
+            classes={{ root: 'editor-icon-menu' }}
           >
             <MenuIcon />
           </IconButton>
