@@ -119,3 +119,32 @@ div.page-mode {
   display: flex
 }
 
+
+ 
+div.full-screen-editor-buttons {
+  /* left: 280px; */
+  margin:0;
+  padding:0;
+  z-index: 3;
+  height: 50px;
+  width: 25px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+div.full-screen-editor-buttons button.display-button { 
+  background-color: black; 
+} 
+ 
+div.full-screen-editor-buttons button.display-button.is-active { 
+    background-color: rgb(30,30,30); 
+} 
+ 
+div.full-screen-editor-buttons button.display-button:hover { 
+  outline: 1px solid white; 
+  outline-offset: -1px; 
+} 

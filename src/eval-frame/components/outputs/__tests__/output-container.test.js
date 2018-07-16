@@ -20,13 +20,10 @@ describe('OutputContainerUnconnected React component', () => {
   beforeEach(() => {
     postMessageToEditorMock = jest.fn()
     props = {
-      selected: true,
       cellId: 1,
-      editingCell: true,
-      viewMode: 'EXPLORE_VIEW',
-      cellType: 'code',
-      value: 10,
+      selected: true,
       postMessageToEditor: postMessageToEditorMock,
+      cellContainerClass: 'testing class string',
     }
     mc = undefined
   })
@@ -45,32 +42,11 @@ describe('OutputContainerUnconnected React component', () => {
       .toBe('cell-1')
   })
 
-  it('sets the top div with correct class if selected===false and editingCell===false', () => {
+  it('sets the top div with correct class', () => {
     props.selected = false
     props.editingCell = false
     expect(outputContainer().find('div').at(0).props().className)
-      .toBe('not-evaluated cell-container code')
-  })
-
-  it('sets the top div with correct class if selected===true and editingCell===false', () => {
-    props.selected = true
-    props.editingCell = false
-    expect(outputContainer().find('div').at(0).props().className)
-      .toBe('not-evaluated cell-container code selected-cell')
-  })
-
-  it('sets the top div with correct class if selected===false and editingCell===true', () => {
-    props.selected = false
-    props.editingCell = true
-    expect(outputContainer().find('div').at(0).props().className)
-      .toBe('not-evaluated cell-container code editing-cell')
-  })
-
-  it('sets the top div with correct class if selected===true and editingCell===true', () => {
-    props.selected = true
-    props.editingCell = true
-    expect(outputContainer().find('div').at(0).props().className)
-      .toBe('not-evaluated cell-container code selected-cell editing-cell')
+      .toBe('testing class string')
   })
 
   it('sets the onMouseDown prop to handleCellClick', () => {
@@ -80,7 +56,6 @@ describe('OutputContainerUnconnected React component', () => {
 
   it('mouse down on cell container div fires postMessageToEditor with correct props', () => {
     // const spy = jest.spyOn(global.MessageChannel.prototype.port1, 'postMessage')
-    props.viewMode = 'EXPLORE_VIEW'
     props.selected = false
     outputContainer().simulate('mousedown')
     // expect(spy).toHaveBeenCalled()
@@ -94,19 +69,10 @@ describe('OutputContainerUnconnected React component', () => {
     )
   })
 
-  const postMessageToEditorNotFiredVariants = [
-    { selected: true, viewMode: 'EXPLORE_VIEW' },
-    { selected: false, viewMode: 'REPORT_VIEW' },
-    { selected: true, viewMode: 'REPORT_VIEW' },
-  ]
-
-  postMessageToEditorNotFiredVariants.forEach((state) => {
-    it('click on cell container div does not fire postMessageToEditor with incorrect props', () => {
-      props.viewMode = state.viewMode
-      props.selected = state.selected
-      outputContainer().simulate('mousedown')
-      expect(postMessageToEditorMock.mock.calls.length).toBe(0)
-    })
+  it('click on cell container does NOT fire postMessageToEditor if cell already selected', () => {
+    props.selected = true
+    outputContainer().simulate('mousedown')
+    expect(postMessageToEditorMock.mock.calls.length).toBe(0)
   })
 
   it('always renders one div with class cell-row-container inside top div', () => {
@@ -120,10 +86,30 @@ describe('OutputContainerUnconnected React component', () => {
   })
 })
 
+
 // *********************** map state to props
+
 
 describe('OutputContainer mapStateToProps', () => {
   let state
+  const cellPropsToClassNameTestCases = [
+    {
+      cellProps: { cellType: 'code', selected: true, rendered: true },
+      className: 'cell-container code selected-cell evaluated',
+    },
+    {
+      cellProps: { cellType: 'code', selected: true, rendered: false },
+      className: 'cell-container code selected-cell not-evaluated',
+    },
+    {
+      cellProps: { cellType: 'code', selected: false, rendered: true },
+      className: 'cell-container code evaluated',
+    },
+    {
+      cellProps: { cellType: 'code', selected: false, rendered: false },
+      className: 'cell-container code not-evaluated',
+    },
+  ]
 
   beforeEach(() => {
     state = {
@@ -139,66 +125,17 @@ describe('OutputContainer mapStateToProps', () => {
     }
   })
 
-  it('should return the basic info for the correct cell', () => {
-    const ownProps = { cellId: 5 }
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({
-        cellId: 5,
-        selected: true,
-        editingCell: true,
-        hasBeenEvaluated: true,
-        viewMode: 'EXPLORE_VIEW',
-        cellType: 'code',
-        postMessageToEditor,
-      })
-  })
-
-  it('should return editingCell as false if selected===false and mode===edit', () => {
-    const ownProps = { cellId: 5 }
-    state.mode = 'edit'
-    state.cells[0].selected = false
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({
-        cellId: 5,
-        selected: false,
-        editingCell: false,
-        hasBeenEvaluated: true,
-        viewMode: 'EXPLORE_VIEW',
-        cellType: 'code',
-        postMessageToEditor,
-      })
-  })
-
-  it('should return editingCell as false if selected===true and mode===not_edit', () => {
-    const ownProps = { cellId: 5 }
-    state.mode = 'not_edit'
-    state.cells[0].selected = true
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({
-        cellId: 5,
-        selected: true,
-        editingCell: false,
-        hasBeenEvaluated: true,
-        viewMode: 'EXPLORE_VIEW',
-        cellType: 'code',
-        postMessageToEditor,
-      })
-  })
-
-  it('should return editingCell as false if selected===false and mode===not_edit', () => {
-    const ownProps = { cellId: 5 }
-    state.mode = 'not_edit'
-    state.cells[0].selected = false
-    state.cells[0].value = 100000
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({
-        cellId: 5,
-        selected: false,
-        editingCell: false,
-        hasBeenEvaluated: true,
-        viewMode: 'EXPLORE_VIEW',
-        cellType: 'code',
-        postMessageToEditor,
-      })
+  cellPropsToClassNameTestCases.forEach((testCase, i) => {
+    it(`should return the correct container class (case index ${i})`, () => {
+      state.cells[0] = Object.assign(state.cells[0], testCase.cellProps)
+      const ownProps = { cellId: 5 }
+      expect(mapStateToProps(state, ownProps))
+        .toEqual({
+          cellId: 5,
+          selected: testCase.cellProps.selected,
+          postMessageToEditor,
+          cellContainerClass: testCase.className,
+        })
+    })
   })
 })

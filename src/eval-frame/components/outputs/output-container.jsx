@@ -5,26 +5,21 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 
 import { getCellById } from '../../tools/notebook-utils'
-import { cellTypeEnum } from '../../state-prototypes'
 import { postMessageToEditor } from '../../port-to-editor'
 
 
 export class OutputContainerUnconnected extends React.Component {
   static propTypes = {
-    selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
-    children: PropTypes.node,
-    editingCell: PropTypes.bool.isRequired,
-    // viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
-    cellType: PropTypes.oneOf(cellTypeEnum.values()),
+    selected: PropTypes.bool.isRequired,
     postMessageToEditor: PropTypes.func.isRequired,
-    hasBeenEvaluated: PropTypes.bool,
+    cellContainerClass: PropTypes.string.isRequired,
+    children: PropTypes.node,
   }
 
   constructor(props) {
     super(props)
     this.containerRef = React.createRef()
-    // this.viewportTop = document.getElementById('cells').getBoundingClientRect().top
   }
 
   handleCellClick = () => {
@@ -49,18 +44,11 @@ export class OutputContainerUnconnected extends React.Component {
 
   render() {
     console.log('render output container', this.props.cellId)
-    const cellClass = `${!this.props.hasBeenEvaluated ? 'not-evaluated' : 'evaluated'} cell-container ${
-      this.props.cellType
-    }${
-      this.props.selected ? ' selected-cell' : ''
-    }${
-      this.props.editingCell ? ' editing-cell' : ''
-    }`
 
     return (
       <div
         id={`cell-${this.props.cellId}`}
-        className={cellClass}
+        className={this.props.cellContainerClass}
         onMouseDown={this.handleCellClick}
         ref={this.containerRef}
       >
@@ -75,14 +63,17 @@ export class OutputContainerUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
+
+  // note that spaces should be included in the returned strings
+  const cellContainerClass = `cell-container ${cell.cellType
+  }${cell.selected ? ' selected-cell' : ''
+  }${cell.rendered ? ' evaluated' : ' not-evaluated'}`
+
   return {
     cellId: cell.id,
     selected: cell.selected,
-    editingCell: cell.selected && state.mode === 'edit',
-    // viewMode: state.viewMode,
-    cellType: cell.cellType,
     postMessageToEditor,
-    hasBeenEvaluated: cell.rendered,
+    cellContainerClass,
   }
 }
 
