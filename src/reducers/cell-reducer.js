@@ -1,4 +1,4 @@
-import { newCell, newCellID, newNotebook } from '../state-prototypes'
+import { newCell, newCellID, newNotebook } from '../editor-state-prototypes'
 
 import {
   moveCell,

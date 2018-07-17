@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
-import { newCell, newCellID, newNotebook } from '../state-prototypes'
+import { newCell, newCellID, newNotebook } from '../eval-frame-state-prototypes'
 
 import {
   moveCell,

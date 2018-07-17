@@ -8,7 +8,7 @@ import {
 import {
   newNotebook,
   cellTypeEnum,
-} from '../../state-prototypes'
+} from '../../editor-state-prototypes'
 
 let jsmdTestCase = `%% meta
 {"title": "What a web notebook looks like",

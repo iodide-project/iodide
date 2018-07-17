@@ -6,7 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
-import { rowOverflowEnum, nextOverflow } from '../../state-prototypes'
+import { rowOverflowEnum, nextOverflow } from '../../eval-frame-state-prototypes'
 
 import UnevaluatedContent from '../../../components/reps/unevaluated-content'
 
