@@ -1,38 +1,45 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import UnfoldLess from '@material-ui/icons/UnfoldLess'
 
-import * as actions from '../../actions/actions'
+import { selectCell, updateCellProperties } from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
-import { cellTypeEnum, nextOverflow } from '../../state-prototypes'
+import { nextOverflow } from '../../state-prototypes'
 
 import CellMenuContainer from './cell-menu-container'
 import CellEditor from './cell-editor'
 
 export class CellContainerUnconnected extends React.Component {
   static propTypes = {
-    selected: PropTypes.bool.isRequired,
+    // computed props
     cellId: PropTypes.number.isRequired,
-    cellType: PropTypes.oneOf(cellTypeEnum.values()),
-    actions: PropTypes.shape({
-      selectCell: PropTypes.func.isRequired,
+    cellContainerStyle: PropTypes.shape({
+      outline: PropTypes.string.isRequired,
     }).isRequired,
-    editorOptions: PropTypes.object,
+    mainComponentStyle: PropTypes.shape({
+      outline: PropTypes.string.isRequired,
+      display: PropTypes.string.isRequired,
+    }).isRequired,
+    mainComponentClass: PropTypes.string.isRequired,
+    selected: PropTypes.bool.isRequired,
+    nextInputFolding: PropTypes.string.isRequired,
+    // action props
+    selectCell: PropTypes.func.isRequired,
+    updateCellProperties: PropTypes.func.isRequired,
   }
 
   handleCellClick = () => {
     const scrollToCell = false
     if (!this.props.selected) {
-      this.props.actions.selectCell(this.props.cellId, scrollToCell)
+      this.props.selectCell(this.props.cellId, scrollToCell)
     }
   }
 
   handleFoldButtonClick = () => {
-    this.props.actions.updateCellProperties(
+    this.props.updateCellProperties(
       this.props.cellId,
       { inputFolding: this.props.nextInputFolding },
     )
@@ -59,10 +66,7 @@ export class CellContainerUnconnected extends React.Component {
           </Tooltip>
         </div>
         <div className={this.props.mainComponentClass} style={this.props.mainComponentStyle}>
-          <CellEditor
-            cellId={this.props.cellId}
-            editorOptions={this.props.editorOptions}
-          />
+          <CellEditor cellId={this.props.cellId} />
         </div>
       </div>
     )
@@ -97,10 +101,16 @@ export function mapStateToProps(state, ownProps) {
   }
 }
 
-export function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch),
+    selectCell: (cellId, scrollToCell) => {
+      dispatch(selectCell(cellId, scrollToCell))
+    },
+    updateCellProperties: (cellId, newProps) => {
+      dispatch(updateCellProperties(cellId, newProps))
+    },
   }
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected)
