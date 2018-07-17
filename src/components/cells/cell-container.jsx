@@ -1,53 +1,57 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import UnfoldLess from '@material-ui/icons/UnfoldLess'
 
-import * as actions from '../../actions/actions'
+import { selectCell, updateCellProperties } from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
-import { cellTypeEnum } from '../../state-prototypes'
+import { nextOverflow } from '../../state-prototypes'
 
 import CellMenuContainer from './cell-menu-container'
-import CellRow from './cell-row'
 import CellEditor from './cell-editor'
-
 
 export class CellContainerUnconnected extends React.Component {
   static propTypes = {
-    selected: PropTypes.bool.isRequired,
+    // computed props
     cellId: PropTypes.number.isRequired,
-    editingCell: PropTypes.bool.isRequired,
-    cellType: PropTypes.oneOf(cellTypeEnum.values()),
-    actions: PropTypes.shape({
-      selectCell: PropTypes.func.isRequired,
+    cellContainerStyle: PropTypes.shape({
+      outline: PropTypes.string.isRequired,
     }).isRequired,
-    editorOptions: PropTypes.object,
+    mainComponentStyle: PropTypes.shape({
+      outline: PropTypes.string.isRequired,
+      display: PropTypes.string.isRequired,
+    }).isRequired,
+    mainComponentClass: PropTypes.string.isRequired,
+    selected: PropTypes.bool.isRequired,
+    nextInputFolding: PropTypes.string.isRequired,
+    // action props
+    selectCell: PropTypes.func.isRequired,
+    updateCellProperties: PropTypes.func.isRequired,
   }
 
   handleCellClick = () => {
     const scrollToCell = false
     if (!this.props.selected) {
-      this.props.actions.selectCell(this.props.cellId, scrollToCell)
+      this.props.selectCell(this.props.cellId, scrollToCell)
     }
   }
 
-  render() {
-    const cellClass = `cell-container ${
-      this.props.cellType
-    }${
-      this.props.selected ? ' selected-cell' : ''
-    }${
-      this.props.editingCell ? ' editing-cell' : ''
-    }`
+  handleFoldButtonClick = () => {
+    this.props.updateCellProperties(
+      this.props.cellId,
+      { inputFolding: this.props.nextInputFolding },
+    )
+  }
 
+  render() {
     return (
       <div
         id={`cell-${this.props.cellId}`}
-        className={cellClass}
+        className="cell-container"
         onMouseDown={this.handleCellClick}
+        style={this.props.cellContainerStyle}
       >
         <div className="cell-header">
           <CellMenuContainer cellId={this.props.cellId} />
@@ -56,18 +60,13 @@ export class CellContainerUnconnected extends React.Component {
             placement="bottom"
             title="fold cell"
           >
-            <button className="fold-cell-button" onClick={() => { /* FILL THIS OUT */ }}>
+            <button className="fold-cell-button" onClick={this.handleFoldButtonClick}>
               <UnfoldLess style={{ fontSize: '12px' }} />
             </button>
           </Tooltip>
         </div>
-        <div className="cell-row-container">
-          <CellRow cellId={this.props.cellId} rowType="input">
-            <CellEditor
-              cellId={this.props.cellId}
-              editorOptions={this.props.editorOptions}
-            />
-          </CellRow>
+        <div className={this.props.mainComponentClass} style={this.props.mainComponentStyle}>
+          <CellEditor cellId={this.props.cellId} />
         </div>
       </div>
     )
@@ -77,18 +76,41 @@ export class CellContainerUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
+  const editingCell = (cell.selected && state.mode === 'edit')
+
+  const cellContainerBorderWidth = (cell.selected && !editingCell) ? '2px' : '1px'
+  const cellContainerBorderColor = cell.selected ? '#bbb' : '#f1f1f1'
+  const cellContainerStyle = {
+    outline: `solid ${cellContainerBorderColor} ${cellContainerBorderWidth}`,
+  }
+
+  const mainComponentStyle = {
+    outline: `1px solid ${editingCell ? '#bbb' : '#f1f1f1'}`,
+    display: cell.inputFolding === 'HIDDEN' ? 'none' : 'block',
+  }
+  const mainComponentClass = `main-component ${cell.inputFolding}`
+
+
   return {
     cellId: cell.id,
+    cellContainerStyle,
+    mainComponentStyle,
+    mainComponentClass,
     selected: cell.selected,
-    editingCell: cell.selected && state.mode === 'edit',
-    cellType: cell.cellType,
+    nextInputFolding: nextOverflow(cell.inputFolding),
   }
 }
 
-export function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch),
+    selectCell: (cellId, scrollToCell) => {
+      dispatch(selectCell(cellId, scrollToCell))
+    },
+    updateCellProperties: (cellId, newProps) => {
+      dispatch(updateCellProperties(cellId, newProps))
+    },
   }
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected)

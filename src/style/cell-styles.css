@@ -1,15 +1,10 @@
 /*  cell and cell container styles*/
 
 div.cell-container {
-  /*padding-top: 5px;
-  padding-bottom: 5px;
-  padding-right: 5px;
-  padding-left: 5px;*/
   padding: 3px;
   margin-top: 15px;
   margin-bottom: 15px;
-  outline: #f4f4f4 1px solid;
-  /*width: calc(100%);*/
+  /*outline: #f4f4f4 1px solid;*/
 }
 
 .cell-header {
@@ -35,13 +30,11 @@ button.fold-cell-button:hover {
 }
 
 .cell-menu-container {
-    width: calc(100% - 30px);
     font-size:12px;
     margin-bottom:4px;
     display:flex;
     flex-direction: row;
-    /* flex-shrink: 0;
-    flex-grow: 0; */
+    flex-grow: 1;
 }
 
 .cell-type-label {
@@ -77,62 +70,14 @@ button.fold-cell-button:hover {
     display: inline-block;
 }
 
-/*div.cell-row-container {
-  width: calc(100% - 3px);  100% minus cell-menu-contatiner width
-    flex-shrink: 0;
-    flex-grow: 0;
-}*/
-
-/*
-div.cell-row {
-  display: flex;
-  padding: 1px;
-}
-*/
-
-div#cells.editor div.cell-container.markdown div.cell-row.output {
-  overflow-x:hidden;
-}
-
-div.collapse-button {
-  margin-right: 5px;
-  margin-left: 3px;
-  width: 18px;
-    flex-shrink: 0;
-    flex-grow: 0;
-}
-
-div.collapse-button:hover {
-  background: #fbfbfb;
-  outline: 1px solid #ddd;
-  cursor: pointer;
-}
-
-
 div.main-component {
-    /* width: calc(100% - 25px); // 100% minus .collapse-button width (including margins) */ 
     width: 100%;
     flex-shrink: 0;
     flex-grow: 0;
 }
 
-div.input div.main-component {
-  outline: 1px solid #f1f1f1;
-}
-
-
-div.selected-cell.editing-cell div.main-component {
-  outline: 1px solid #bbb;
-}
-div.selected-cell.editing-cell {
-  outline: 1px solid #bbb;
-}
-
-div.selected-cell {
-  outline: 2px solid #ccc;
-}
-
 div.CodeMirror {
+  height: auto;
   background: #f9f9f9;
 }
 
@@ -140,7 +85,7 @@ div.CodeMirror-gutters {
   background: #fff;
 }
 
-div.HIDDEN div.main-component {
+/*div.HIDDEN div.main-component {
   height: 18px;
   flex-shrink: 1;
   flex-basis: 0px;
@@ -148,16 +93,13 @@ div.HIDDEN div.main-component {
   overflow: hidden;
   outline: none;
 }
-
-div.VISIBLE div.main-component div.CodeMirror {
-  height: auto
-}
-
-div.SCROLL div.main-component div.CodeMirror {
+*/
+div.main-component.VISIBLE div.CodeMirror,
+div.main-component.SCROLL div.CodeMirror {
   height: auto;
 }
 
-div.SCROLL div.main-component div.CodeMirror div.CodeMirror-scroll {
+div.main-component.SCROLL div.CodeMirror div.CodeMirror-scroll {
   max-height: 300px;
 }
 
