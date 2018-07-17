@@ -112,28 +112,28 @@ describe('CellContainer mapStateToProps', () => {
     {
       state: {
         cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
-        mode: 'edit',
+        mode: 'EDIT_MODE',
       },
       style: { outline: 'solid #bbb 1px' },
     },
     {
       state: {
         cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
-        mode: 'edit',
+        mode: 'EDI_MODE',
       },
       style: { outline: 'solid #f1f1f1 1px' },
     },
     {
       state: {
         cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
-        mode: 'command',
+        mode: 'COMMAND_MODE',
       },
       style: { outline: 'solid #bbb 2px' },
     },
     {
       state: {
         cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
-        mode: 'command',
+        mode: 'COMMAND_MODE',
       },
       style: { outline: 'solid #f1f1f1 1px' },
     },
@@ -149,28 +149,28 @@ describe('CellContainer mapStateToProps', () => {
     {
       state: {
         cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
-        mode: 'edit',
+        mode: 'EDIT_MODE',
       },
       style: { outline: '1px solid #bbb' },
     },
     {
       state: {
         cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
-        mode: 'edit',
+        mode: 'EDIT_MODE',
       },
       style: { outline: '1px solid #f1f1f1' },
     },
     {
       state: {
         cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
-        mode: 'command',
+        mode: 'COMMAND_MODE',
       },
       style: { outline: '1px solid #f1f1f1' },
     },
     {
       state: {
         cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
-        mode: 'command',
+        mode: 'COMMAND_MODE',
       },
       style: { outline: '1px solid #f1f1f1' },
     },
@@ -186,14 +186,14 @@ describe('CellContainer mapStateToProps', () => {
     {
       state: {
         cells: [{ id: 5, selected: true, inputFolding: 'HIDDEN' }],
-        mode: 'edit',
+        mode: 'EDIT_MODE',
       },
       style: { display: 'none' },
     },
     {
       state: {
         cells: [{ id: 5, selected: false, inputFolding: 'ANYTHING_NOT_HIDDED' }],
-        mode: 'edit',
+        mode: 'EDIT_MODE',
       },
       style: { display: 'block' },
     },
