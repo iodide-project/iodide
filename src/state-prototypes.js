@@ -115,7 +115,7 @@ const stateSchema = {
     languageLastUsed: { type: 'string' },
     mode: {
       type: 'string',
-      enum: ['command', 'edit', 'title-edit'],
+      enum: ['command', 'edit', 'APP_MODE'],
     },
     viewMode: {
       type: 'string',

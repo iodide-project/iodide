@@ -101,7 +101,7 @@ export function mapStateToPropsCellRows(state, ownProps) {
   const uncollapseOnUpdate = (
     cell.selected &&
     state.viewMode === 'EXPLORE_VIEW' &&
-    state.mode === 'edit' &&
+    state.mode === 'EDIT_MODE' &&
     ownProps.rowType === 'input' &&
     rowOverflow === rowOverflowEnum.HIDDEN
   )

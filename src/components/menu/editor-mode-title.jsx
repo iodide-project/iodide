@@ -8,7 +8,7 @@ import tasks from '../../actions/task-definitions'
 
 export class TitleUnconnected extends React.Component {
   static propTypes = {
-    pageMode: PropTypes.oneOf(['command', 'edit', 'title-edit']),
+    pageMode: PropTypes.oneOf(['command', 'edit', 'APP_MODE']),
     title: PropTypes.string,
     textColor: PropTypes.string,
     hoverColor: PropTypes.string,
@@ -21,17 +21,17 @@ export class TitleUnconnected extends React.Component {
   }
 
   onBlur() {
-    if (this.props.pageMode === 'title-edit') tasks.changeMode.callback('command')
+    if (this.props.pageMode === 'APP_MODE') tasks.changeMode.callback('command')
   }
 
   onFocus() {
-    if (!this.props.pageMode !== 'title-edit') {
-      tasks.changeMode.callback('title-edit')
+    if (!this.props.pageMode !== 'APP_MODE') {
+      tasks.changeMode.callback('APP_MODE')
     }
   }
 
   getTitle() {
-    if (this.props.pageMode !== 'title-edit') {
+    if (this.props.pageMode !== 'APP_MODE') {
       return `${this.props.title || 'New Notebook'} - Iodide`
     }
     return undefined
@@ -41,17 +41,17 @@ export class TitleUnconnected extends React.Component {
     const elem = (
 
       <div className="title-field">
-        <div className={`title-field-contents ${this.props.pageMode !== 'title-edit' ? 'unselected-title-field' : ''}`}>
+        <div className={`title-field-contents ${this.props.additionalContainerClasses}`}>
           <Helmet title={this.getTitle()} />
 
           <input
             onBlur={this.onBlur}
             onClick={this.onFocus}
-            className={`page-title ${this.props.title === undefined ? 'unrendered-title' : ''}`}
+            className={`page-title ${this.props.titleInputClasses}`}
             value={this.props.title || ''}
             placeholder="new notebook"
             onChange={(evt) => {
-              tasks.changeMode.callback('title-edit');
+              tasks.changeMode.callback('APP_MODE');
               tasks.changeTitle.callback(evt.target.value)
             }}
           />
@@ -67,6 +67,8 @@ function mapStateToProps(state) {
   return {
     title: state.title,
     pageMode: state.mode,
+    additionalContainerClasses: state.mode !== 'APP_MODE' ? 'unselected-title-field' : '',
+    titleInputClasses: state.title === undefined ? 'unrendered-title' : '',
   }
 }
 
