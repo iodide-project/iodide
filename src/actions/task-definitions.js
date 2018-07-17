@@ -229,7 +229,7 @@ tasks.changeMode = new UserTask({
 
 tasks.changeToMenuMode = new UserTask({
   title: 'Change to Menu Mode',
-  callback() { dispatcher.changeMode('title-edit') },
+  callback() { dispatcher.changeMode('APP_MODE') },
 })
 
 tasks.changeToEditMode = new UserTask({
