@@ -6,7 +6,6 @@ import { DeclaredVariable } from '../declared-variable'
 import { FrozenVariable } from '../frozen-variable'
 
 import { DeclaredVariablesPaneUnconnected, mapStateToProps } from '../declared-variables-pane'
-import tasks from '../../../actions/eval-frame-tasks'
 
 describe('DeclaredVariablesPaneUnconnected React component', () => {
   let props
@@ -44,11 +43,6 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
   it("sets the HistoryPane's openOnMode prop to be history", () => {
     expect(declaredVariablesPane().find(PaneContainer).props().openOnMode)
       .toBe('DECLARED_VARIABLES')
-  })
-
-  it("sets the HistoryPane's task prop to be toggleHistoryPane", () => {
-    expect(declaredVariablesPane().find(PaneContainer).props().task)
-      .toBe(tasks.toggleDeclaredVariablesPane)
   })
 
   it('always renders two declared-variables-list when both variable types are non empty', () => {

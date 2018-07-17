@@ -16,7 +16,8 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return !deepEqual(this.props, nextProps)
+    return (!deepEqual(this.props, nextProps)
+      && nextProps.sidePaneMode === 'DECLARED_VARIABLES')
   }
 
   render() {

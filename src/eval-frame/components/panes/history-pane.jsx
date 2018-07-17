@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import deepEqual from 'deep-equal'
 
 import Pane from './pane-container'
 // import tasks from '../../actions/eval-frame-tasks'
@@ -11,6 +12,12 @@ export class HistoryPaneUnconnected extends React.Component {
   static propTypes = {
     history: PropTypes.array,
   }
+
+  shouldComponentUpdate(nextProps) {
+    return (!deepEqual(this.props, nextProps)
+      && nextProps.sidePaneMode === '_HISTORY')
+  }
+
   render() {
     let histContents = []
     if (this.props.history.length) {
