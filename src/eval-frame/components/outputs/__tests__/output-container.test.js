@@ -120,7 +120,7 @@ describe('OutputContainer mapStateToProps', () => {
         rendered: true,
       },
       ],
-      mode: 'edit',
+      mode: 'EDIT_MODE',
       viewMode: 'EXPLORE_VIEW',
     }
   })

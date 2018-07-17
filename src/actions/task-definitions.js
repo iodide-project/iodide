@@ -33,7 +33,7 @@ tasks.evaluateCell = new UserTask({
   keybindings: ['mod+enter'],
 
   callback() {
-    dispatcher.changeMode('command')
+    dispatcher.changeMode('COMMAND_MODE')
     dispatcher.saveNotebook(true)
     dispatcher.evaluateCell()
   },
@@ -53,7 +53,7 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
   keybindings: ['shift+enter'],
   keybindingPrecondition: viewModeIsEditor,
   callback() {
-    dispatcher.changeMode('command')
+    dispatcher.changeMode('COMMAND_MODE')
     dispatcher.saveNotebook(true)
     dispatcher.evaluateCell()
     const cellBelowId = getCellBelowSelectedId()
@@ -238,14 +238,14 @@ tasks.changeToEditMode = new UserTask({
   displayKeybinding: 'Enter',
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
-  callback() { dispatcher.changeMode('edit') },
+  callback() { dispatcher.changeMode('EDIT_MODE') },
 })
 
 tasks.changeToCommandMode = new UserTask({
   title: 'Change to Command Mode',
   keybindings: ['esc'],
   preventDefaultKeybinding: true,
-  callback() { dispatcher.changeMode('command') },
+  callback() { dispatcher.changeMode('COMMAND_MODE') },
 })
 
 tasks.changeTitle = new UserTask({

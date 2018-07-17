@@ -21,7 +21,7 @@ export class TitleUnconnected extends React.Component {
   }
 
   onBlur() {
-    if (this.props.pageMode === 'APP_MODE') tasks.changeMode.callback('command')
+    if (this.props.pageMode === 'APP_MODE') tasks.changeMode.callback('COMMAND_MODE')
   }
 
   onFocus() {

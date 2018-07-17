@@ -134,7 +134,7 @@ describe('CellContainer mapStateToProps', () => {
         cellType: 'code',
       },
       ],
-      mode: 'edit',
+      mode: 'EDIT_MODE',
     }
   })
 
@@ -151,7 +151,7 @@ describe('CellContainer mapStateToProps', () => {
 
   it('should return editingCell as false if selected===false and mode===edit', () => {
     const ownProps = { cellId: 5 }
-    state.mode = 'edit'
+    state.mode = 'EDIT_MODE'
     state.cells[0].selected = false
     expect(mapStateToProps(state, ownProps))
       .toEqual({

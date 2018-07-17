@@ -80,7 +80,7 @@ export function mapStateToProps(state, ownProps) {
   return {
     cellId: cell.id,
     selected: cell.selected,
-    editingCell: cell.selected && state.mode === 'edit',
+    editingCell: cell.selected && state.mode === 'EDIT_MODE',
     cellType: cell.cellType,
   }
 }

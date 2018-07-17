@@ -25,7 +25,6 @@ export const cellTypeEnum = new StringEnum(
   'plugin',
 )
 // const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'EXPLORE_VIEW', 'REPORT_VIEW'
-// const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
 
 export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
 
@@ -94,7 +93,7 @@ const stateSchema = {
     languageLastUsed: { type: 'string' },
     mode: {
       type: 'string',
-      enum: ['command', 'edit', 'APP_MODE'],
+      enum: ['COMMAND_MODE', 'EDIT_MODE', 'APP_MODE'],
     },
     viewMode: {
       type: 'string',
@@ -227,7 +226,7 @@ function newNotebook() {
     languageLastUsed: 'js',
     userDefinedVarNames: [],
     lastSaved: undefined,
-    mode: 'command', // command, edit
+    mode: 'COMMAND_MODE', // command, edit
     viewMode: 'EXPLORE_VIEW', // editor, presentation
     sidePaneMode: undefined,
     paneHeight: 400,

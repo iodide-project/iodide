@@ -5,7 +5,7 @@ function viewModeIsEditor() {
 }
 
 function isCommandMode() {
-  return store.getState().mode === 'command' && viewModeIsEditor()
+  return store.getState().mode === 'COMMAND_MODE' && viewModeIsEditor()
 }
 
 function viewModeIsPresentation() {
