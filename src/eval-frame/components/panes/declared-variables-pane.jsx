@@ -8,8 +8,6 @@ import Pane from './pane-container'
 import { DeclaredVariable } from './declared-variable'
 import { FrozenVariable } from './frozen-variable'
 import EmptyPaneContents from './empty-pane-contents'
-import tasks from '../../actions/eval-frame-tasks'
-
 
 export class DeclaredVariablesPaneUnconnected extends React.Component {
   static propTypes = {
@@ -51,7 +49,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
       </div>
     ) : undefined
     return (
-      <Pane task={tasks.toggleDeclaredVariablesPane} title="Declared Variables" openOnMode="DECLARED_VARIABLES">
+      <Pane paneTitle="Declared Variables" openOnMode="DECLARED_VARIABLES">
         {noVariables}
         {edvElem}
         {declaredVariables}

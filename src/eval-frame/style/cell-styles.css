@@ -18,34 +18,6 @@ div.cell-container {
 but I don't see why we would have to do this immediately.
 */
 
-div#cells.EXPLORE_VIEW div.raw-dom-element {
-  overflow-x: scroll;
-}
-
-div#cells.REPORT_VIEW div.cell-container {
-  margin: 0 auto;
-  outline: none;
-  padding: 0px;
-}
-
-div#cells.REPORT_VIEW .collapse-button {
-  display: none;
-  height: 0px
-}
-
-div#cells.REPORT_VIEW div.cell-row.HIDDEN {
-  display: none;
-}
-
-div#cells.REPORT_VIEW div.cell-menu-container {
-  display: none;
-  height: 0px;
-  width: 0px !important;
-}
-
-div#cells.REPORT_VIEW div.cell-row.input {
-  padding:0px;
-}
 
 .cell-status-indicators {
     text-align: right;
@@ -72,10 +44,6 @@ div.cell-row-container {
 div.cell-row {
   display: flex;
   padding: 1px;
-}
-
-div#cells.EXPLORE_VIEW div.cell-container.markdown div.cell-row.output {
-  overflow-x:hidden;
 }
 
 div.collapse-button {
@@ -158,12 +126,6 @@ div.SCROLL.output .main-component {
     overflow-y: scroll;
 }
 
-
-/* FIX ME i think this style is never used, double check it*/
-div.hidden-cell {
-  display: none;
-}
-
 .dependency-row {
   display: flex;
   align-items: center;
@@ -192,14 +154,5 @@ div.dataframe-rep {
 pre.unevaluated-content {
   font-style: italic;
   color:rgb(190, 190, 190);
-  /* opacity:0; */
   font-size:12px;
-}
-
-/* div.selected-cell pre.unevaluated-content {
-  opacity:1
-} */
-
-div#cells.REPORT_VIEW pre.unevaluated-content {
-  display: none;
 }

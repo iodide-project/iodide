@@ -1,10 +1,10 @@
 import React from 'react'
-// import IconMenu from 'material-ui/IconMenu'
+// import IconMenu from '@material-ui/core/IconMenu'
 
-import IconButton from 'material-ui/IconButton'
-import Menu from 'material-ui/Menu'
-import MenuIcon from 'material-ui-icons/Menu'
-import Tooltip from 'material-ui/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu'
+import MenuIcon from '@material-ui/icons/Menu'
+import Tooltip from '@material-ui/core/Tooltip'
 
 export default class NotebookIconMenu extends React.Component {
   constructor(props) {

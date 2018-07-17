@@ -1,7 +1,7 @@
 import UserTask from '../../actions/user-task'
-import { postKeypressToEditor } from '../port-to-editor'
-import { store } from '../store'
-import { changePaneHeight } from './actions'
+import { postKeypressToEditor, postActionToEditor } from '../port-to-editor'
+// import { store } from '../store'
+
 
 const tasks = {}
 
@@ -25,10 +25,23 @@ tasks.exportNotebook = new UserTask({
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
 
-tasks.changePaneHeight = new UserTask({
-  title: 'Change Width of Side Pane',
-  callback(heightShift) {
-    store.dispatch(changePaneHeight(heightShift))
+// tasks.changePaneHeight = new UserTask({
+//   title: 'Change Width of Side Pane',
+//   callback(heightShift) {
+//     store.dispatch(changePaneHeight(heightShift))
+//   },
+// })
+
+tasks.closePanes = new UserTask({
+  title: 'Close the eval context info panes',
+  menuTitle: 'close pane',
+  keybindings: ['ctrl+d', 'meta+d'],
+  preventDefaultKeybinding: true,
+  callback() {
+    postActionToEditor({
+      type: 'CHANGE_SIDE_PANE_MODE',
+      sidePaneMode: '_CLOSED',
+    })
   },
 })
 

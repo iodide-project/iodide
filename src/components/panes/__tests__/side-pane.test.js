@@ -1,8 +1,8 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import Drawer from 'material-ui/Drawer'
-import { MuiThemeProvider } from 'material-ui/styles'
+import Drawer from '@material-ui/core/Drawer'
+import { MuiThemeProvider } from '@material-ui/core/styles'
 import Resizable from 're-resizable'
 
 import { SidePaneUnconnected, mapStateToProps } from '../side-pane'

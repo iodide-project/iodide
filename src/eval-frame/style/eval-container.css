@@ -31,22 +31,6 @@ div#cells {
   padding-bottom: 60px;
 }
 
-div#cells.EXPLORE_VIEW {
-  /*background-color: rgb(250, 250, 250);*/
-  /*box-sizing: border-box;*/
-  /*width: 100%;*/
-  /*overflow-y: auto;*/
-  /*padding-top: 20px;*/
-  /*padding-left: 25px;*/
-  /*padding-right: 25px;*/
-  /*padding-bottom: 60px;*/
-}
-
-div#cells.REPORT_VIEW {
-  position: inherit;
-  height: inherit;
-}
-
 /************************************************/
 /* cell output styles */
 
