@@ -21,10 +21,8 @@ const theme = createMuiTheme({
 
 export class PaneContainerUnconnected extends React.Component {
   static propTypes = {
-    sidePaneMode: PropTypes.string,
-    title: PropTypes.string,
-    paneHeight: PropTypes.number,
-    openOnMode: PropTypes.string,
+    paneHeight: PropTypes.number.isRequired,
+    viewPaneDisplayStyle: PropTypes.string.isRequired,
     changePaneHeight: PropTypes.func.isRequired,
   }
 
@@ -54,7 +52,7 @@ export class PaneContainerUnconnected extends React.Component {
               <div className="pane-title">
                 <NotebookTaskButton
                   tooltip="Close"
-                  task={this.props.closePanes}
+                  task={tasks.closePanes}
                   style={{ color: 'black', margin: '5px' }}
                 >
                   <Close />
@@ -72,12 +70,8 @@ export class PaneContainerUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   return {
-    // viewMode: state.viewMode,
-    sidePaneMode: state.sidePaneMode,
-    // paneHeight: state.paneHeight,
     viewPaneDisplayStyle: state.sidePaneMode === ownProps.openOnMode ? 'block' : 'none',
     paneHeight: state.sidePaneMode === ownProps.openOnMode ? state.paneHeight : 0,
-    closePanes: tasks.closePanes,
   }
 }
 

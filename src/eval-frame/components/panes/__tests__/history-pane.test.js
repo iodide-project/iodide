@@ -6,7 +6,6 @@ import HistoryItem from '../history-item'
 import EmptyPaneContents from '../empty-pane-contents'
 
 import { HistoryPaneUnconnected, mapStateToProps } from '../history-pane'
-import tasks from '../../../actions/eval-frame-tasks'
 
 describe('HistoryPaneUnconnected React component', () => {
   let props
@@ -37,11 +36,6 @@ describe('HistoryPaneUnconnected React component', () => {
   it("sets the HistoryPane's openOnMode prop to be history", () => {
     expect(historyPane().find(PaneContainer).props().openOnMode)
       .toBe('_HISTORY')
-  })
-
-  it("sets the HistoryPane's task prop to be toggleHistoryPane", () => {
-    expect(historyPane().find(PaneContainer).props().task)
-      .toBe(tasks.toggleHistoryPane)
   })
 
   it('always renders one div with class history-cells inside HistoryPane', () => {
