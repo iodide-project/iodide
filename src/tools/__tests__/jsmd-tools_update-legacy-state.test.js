@@ -2,7 +2,7 @@
 // import _ from 'lodash'
 
 import { translateLegacyJsmd } from '../jsmd-tools'
-import { newNotebook } from '../../state-prototypes'
+import { newNotebook } from '../../editor-state-prototypes'
 
 describe('legacy jsmd updates to viewMode', () => {
   let state

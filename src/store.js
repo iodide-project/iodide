@@ -5,7 +5,7 @@ import { createLogger } from 'redux-logger'
 
 import createValidatedReducer from './reducers/create-validated-reducer'
 import reducer from './reducers/reducer'
-import { newNotebook, stateSchema } from './state-prototypes'
+import { newNotebook, stateSchema } from './editor-state-prototypes'
 
 let enhancer
 let finalReducer

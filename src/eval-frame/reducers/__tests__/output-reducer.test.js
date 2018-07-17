@@ -1,5 +1,5 @@
 import cellReducer from '../output-reducer'
-import { newNotebook } from '../../state-prototypes'
+import { newNotebook } from '../../eval-frame-state-prototypes'
 
 describe('add cells', () => {
   const state = newNotebook()

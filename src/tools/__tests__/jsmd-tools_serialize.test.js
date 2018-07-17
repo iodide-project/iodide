@@ -2,7 +2,7 @@
 import _ from 'lodash'
 
 import { stringifyStateToJsmd, jsmdValidNotebookSettings } from '../jsmd-tools'
-import { newNotebook, newCell } from '../../state-prototypes'
+import { newNotebook, newCell } from '../../editor-state-prototypes'
 
 
 // this can be defined once for all test cases
