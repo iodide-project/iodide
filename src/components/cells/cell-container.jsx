@@ -8,18 +8,15 @@ import UnfoldLess from '@material-ui/icons/UnfoldLess'
 
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
-import { cellTypeEnum } from '../../state-prototypes'
+import { cellTypeEnum, nextOverflow } from '../../state-prototypes'
 
 import CellMenuContainer from './cell-menu-container'
-import CellRow from './cell-row'
 import CellEditor from './cell-editor'
-
 
 export class CellContainerUnconnected extends React.Component {
   static propTypes = {
     selected: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
-    editingCell: PropTypes.bool.isRequired,
     cellType: PropTypes.oneOf(cellTypeEnum.values()),
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
@@ -34,20 +31,20 @@ export class CellContainerUnconnected extends React.Component {
     }
   }
 
-  render() {
-    const cellClass = `cell-container ${
-      this.props.cellType
-    }${
-      this.props.selected ? ' selected-cell' : ''
-    }${
-      this.props.editingCell ? ' editing-cell' : ''
-    }`
+  handleFoldButtonClick = () => {
+    this.props.actions.updateCellProperties(
+      this.props.cellId,
+      { inputFolding: this.props.nextInputFolding },
+    )
+  }
 
+  render() {
     return (
       <div
         id={`cell-${this.props.cellId}`}
-        className={cellClass}
+        className="cell-container"
         onMouseDown={this.handleCellClick}
+        style={this.props.cellContainerStyle}
       >
         <div className="cell-header">
           <CellMenuContainer cellId={this.props.cellId} />
@@ -56,18 +53,16 @@ export class CellContainerUnconnected extends React.Component {
             placement="bottom"
             title="fold cell"
           >
-            <button className="fold-cell-button" onClick={() => { /* FILL THIS OUT */ }}>
+            <button className="fold-cell-button" onClick={this.handleFoldButtonClick}>
               <UnfoldLess style={{ fontSize: '12px' }} />
             </button>
           </Tooltip>
         </div>
-        <div className="cell-row-container">
-          <CellRow cellId={this.props.cellId} rowType="input">
-            <CellEditor
-              cellId={this.props.cellId}
-              editorOptions={this.props.editorOptions}
-            />
-          </CellRow>
+        <div className={this.props.mainComponentClass} style={this.props.mainComponentStyle}>
+          <CellEditor
+            cellId={this.props.cellId}
+            editorOptions={this.props.editorOptions}
+          />
         </div>
       </div>
     )
@@ -77,11 +72,28 @@ export class CellContainerUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
+  const editingCell = (cell.selected && state.mode === 'edit')
+
+  const cellContainerBorderWidth = (cell.selected && !editingCell) ? '2px' : '1px'
+  const cellContainerBorderColor = cell.selected ? '#bbb' : '#f1f1f1'
+  const cellContainerStyle = {
+    outline: `solid ${cellContainerBorderColor} ${cellContainerBorderWidth}`,
+  }
+
+  const mainComponentStyle = {
+    outline: `1px solid ${editingCell ? '#bbb' : '#f1f1f1'}`,
+    display: cell.inputFolding === 'HIDDEN' ? 'none' : 'block',
+  }
+  const mainComponentClass = `main-component ${cell.inputFolding}`
+
+
   return {
     cellId: cell.id,
+    cellContainerStyle,
+    mainComponentStyle,
+    mainComponentClass,
     selected: cell.selected,
-    editingCell: cell.selected && state.mode === 'edit',
-    cellType: cell.cellType,
+    nextInputFolding: nextOverflow(cell.inputFolding),
   }
 }
 
