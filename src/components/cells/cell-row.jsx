@@ -92,7 +92,7 @@ export function mapStateToPropsCellRows(state, ownProps) {
   // thus, we only need to check the editorView collapsed state
   const uncollapseOnUpdate = (
     cell.selected &&
-    state.mode === 'edit' &&
+    state.mode === 'EDIT_MODE' &&
     ownProps.rowType === 'input' &&
     rowOverflow === rowOverflowEnum.HIDDEN
   )

@@ -8,7 +8,7 @@ import tasks from '../../actions/task-definitions'
 
 export class TitleUnconnected extends React.Component {
   static propTypes = {
-    pageMode: PropTypes.oneOf(['command', 'edit', 'APP_MODE']),
+    pageMode: PropTypes.oneOf(['COMMAND_MODE', 'EDIT_MODE', 'APP_MODE']),
     title: PropTypes.string,
     textColor: PropTypes.string,
     hoverColor: PropTypes.string,
@@ -21,7 +21,7 @@ export class TitleUnconnected extends React.Component {
   }
 
   onBlur() {
-    if (this.props.pageMode === 'APP_MODE') tasks.changeMode.callback('command')
+    if (this.props.pageMode === 'APP_MODE') tasks.changeMode.callback('COMMAND_MODE')
   }
 
   onFocus() {

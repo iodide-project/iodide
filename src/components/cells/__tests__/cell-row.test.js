@@ -138,7 +138,7 @@ describe('CellRow mapStateToPropsCellRows', () => {
         rowSettings: rowSettingsObject,
       },
       ],
-      mode: 'edit',
+      mode: 'EDIT_MODE',
       viewMode: 'EXPLORE_VIEW',
     }
   })
