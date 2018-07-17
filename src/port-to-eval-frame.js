@@ -14,6 +14,7 @@ export function postActionToEvalFrame(actionObj) {
 
 const approvedReduxActionsFromEvalFrame = [
   'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME',
+  'CHANGE_SIDE_PANE_MODE',
 ]
 
 const approvedKeys = [

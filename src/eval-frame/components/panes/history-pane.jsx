@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import Pane from './pane-container'
-import tasks from '../../actions/eval-frame-tasks'
+// import tasks from '../../actions/eval-frame-tasks'
 import HistoryItem from './history-item'
 import EmptyPaneContents from './empty-pane-contents'
 
@@ -28,7 +28,7 @@ export class HistoryPaneUnconnected extends React.Component {
     }
     histContents.reverse()
     return (
-      <Pane task={tasks.toggleHistoryPane} title="History" openOnMode="_HISTORY">
+      <Pane paneTitle="History" openOnMode="_HISTORY">
         <div className="history-cells"> {histContents} </div>
       </Pane>
     )

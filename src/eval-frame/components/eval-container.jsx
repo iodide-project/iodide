@@ -13,31 +13,16 @@ import PluginDefinitionOutput from './outputs/plugin-definition-output'
 import DeclaredVariablesPane from './panes/declared-variables-pane'
 import HistoryPane from './panes/history-pane'
 
-import { initializeDefaultKeybindings } from '../keybindings'
-
 class EvalContainer extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
-    title: PropTypes.string,
+    // viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
+    // title: PropTypes.string,
     cellIds: PropTypes.array,
     cellTypes: PropTypes.array,
-  }
-  constructor(props) {
-    super(props)
-
-    initializeDefaultKeybindings()
-    this.getPageHeight = this.getPageHeight.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
-  }
-
-  getPageHeight() {
-    let height = '100vh'
-    if (this.props.viewMode === 'REPORT_VIEW') height = 'undefined'
-    else if (this.props.sidePane) height = `calc(100vh - ${this.props.paneHeight}px)`
-    return height
   }
 
   render() {
@@ -62,17 +47,11 @@ class EvalContainer extends React.Component {
     })
     return (
       <React.Fragment>
-        <div
-          id="cells"
-          className={this.props.viewMode}
-        >
+        <div id="cells">
           {bodyContent}
         </div>
         <div
-          style={{
-            display: this.props.sidePane === undefined ? 'none' : undefined,
-            borderTop: '1px solid rgb(211, 211, 211)',
-           }}
+          className="eval-frame-panes-container"
         >
           <DeclaredVariablesPane />
           <HistoryPane />
@@ -86,10 +65,6 @@ function mapStateToProps(state) {
   return {
     cellIds: state.cells.map(c => c.id),
     cellTypes: state.cells.map(c => c.cellType),
-    viewMode: state.viewMode,
-    title: state.title,
-    sidePane: state.sidePaneMode,
-    paneHeight: state.paneHeight,
   }
 }
 

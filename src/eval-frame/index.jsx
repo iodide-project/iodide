@@ -15,6 +15,8 @@ import './style/cell-styles.css'
 import './style/default-presentation.css'
 // import './style/markdown-styles.css'
 
+import { initializeDefaultKeybindings } from './keybindings'
+
 import EvalContainer from './components/eval-container'
 import ViewModeStylesHandler from './components/view-mode-styles-handler'
 import { store } from './store'
@@ -24,6 +26,8 @@ import { iodide } from './iodide-api/api'
 import './port-to-editor'
 
 window.iodide = iodide
+
+initializeDefaultKeybindings()
 
 render(
   <Provider store={store}>
