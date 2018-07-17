@@ -3,11 +3,11 @@ import React from 'react'
 
 import { CellContainerUnconnected, mapStateToProps } from '../cell-container'
 import CellMenuContainer from '../cell-menu-container'
-import CellRow from '../cell-row'
 import CellEditor from '../cell-editor'
 
 describe('CellContainerUnconnected React component', () => {
   let selectCell
+  let updateCellProperties
   let props
   let mountedCont
   const node = <span>Hello</span>
@@ -21,13 +21,20 @@ describe('CellContainerUnconnected React component', () => {
 
   beforeEach(() => {
     selectCell = jest.fn()
+    updateCellProperties = jest.fn()
     props = {
-      selected: true,
       cellId: 1,
-      editingCell: true,
-      cellType: 'code',
-      actions: { selectCell },
-      editorOptions: { option1: 1, option2: 2 },
+      cellContainerStyle: { outline: 'CONTAINER_OUTLINE_TEST_STRING' },
+      mainComponentStyle: {
+        outline: 'MAIN_COMPONENT_OUTLINE_TEST_STRING',
+        display: 'MAIN_COMPONENT_DISPLAY_TEST_STRING',
+      },
+      mainComponentClass: 'MAIN_COMPONENT_CLASS_TEST_STRING',
+      selected: true,
+      nextInputFolding: 'VISIBLE',
+      // action props
+      selectCell,
+      updateCellProperties,
     }
     mountedCont = undefined
   })
@@ -46,32 +53,9 @@ describe('CellContainerUnconnected React component', () => {
       .toBe('cell-1')
   })
 
-  it('sets the top div with correct class if selected===false and editingCell===false', () => {
-    props.selected = false
-    props.editingCell = false
+  it('sets the top div with correct class', () => {
     expect(cellContainer().find('div').at(0).props().className)
-      .toBe('cell-container code')
-  })
-
-  it('sets the top div with correct class if selected===true and editingCell===false', () => {
-    props.selected = true
-    props.editingCell = false
-    expect(cellContainer().find('div').at(0).props().className)
-      .toBe('cell-container code selected-cell')
-  })
-
-  it('sets the top div with correct class if selected===false and editingCell===true', () => {
-    props.selected = false
-    props.editingCell = true
-    expect(cellContainer().find('div').at(0).props().className)
-      .toBe('cell-container code editing-cell')
-  })
-
-  it('sets the top div with correct class if selected===true and editingCell===true', () => {
-    props.selected = true
-    props.editingCell = true
-    expect(cellContainer().find('div').at(0).props().className)
-      .toBe('cell-container code selected-cell editing-cell')
+      .toBe('cell-container')
   })
 
   it('sets the onMouseDown prop to handleCellClick', () => {
@@ -102,89 +86,145 @@ describe('CellContainerUnconnected React component', () => {
       .toBe(props.cellId)
   })
 
-  it('always renders one div with class cell-row-container inside top div', () => {
-    expect(cellContainer().wrap(cellContainer().find('div').at(0)
-      .props().children).find('div.cell-row-container')).toHaveLength(1)
-  })
-
-  it('div.cell-row-container contains one CellRow', () => {
-    expect(cellContainer().find('div.cell-row-container')
-      .find(CellRow)).toHaveLength(1)
-  })
-
-  it('CellRow contains one CellEditor', () => {
-    expect(cellContainer().find(CellRow)
-      .find(CellEditor)).toHaveLength(1)
+  it('contains one CellEditor', () => {
+    expect(cellContainer().find(CellEditor)).toHaveLength(1)
   })
 
   it('CellEditor gets correct props', () => {
     expect(cellContainer().find(CellEditor).props().cellId).toEqual(props.cellId)
-    expect(cellContainer().find(CellEditor).props().editorOptions).toEqual(props.editorOptions)
   })
 })
 
+
 describe('CellContainer mapStateToProps', () => {
   let state
+  let ownProps
 
   beforeEach(() => {
     state = {
-      cells: [{
-        id: 5,
-        selected: true,
-        cellType: 'code',
-      },
-      ],
       mode: 'EDIT_MODE',
+      cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
     }
+    ownProps = { cellId: 5 }
   })
 
-  it('should return the basic info for the correct cell', () => {
-    const ownProps = { cellId: 5 }
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({
-        cellId: 5,
-        selected: true,
-        editingCell: true,
-        cellType: 'code',
-      })
+  const stateToContainerStylesMappings = [
+    {
+      state: {
+        cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
+        mode: 'edit',
+      },
+      style: { outline: 'solid #bbb 1px' },
+    },
+    {
+      state: {
+        cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
+        mode: 'edit',
+      },
+      style: { outline: 'solid #f1f1f1 1px' },
+    },
+    {
+      state: {
+        cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
+        mode: 'command',
+      },
+      style: { outline: 'solid #bbb 2px' },
+    },
+    {
+      state: {
+        cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
+        mode: 'command',
+      },
+      style: { outline: 'solid #f1f1f1 1px' },
+    },
+  ]
+  stateToContainerStylesMappings.forEach((testCase, i) => {
+    it(`cell container should get correct styles, case index ${i}`, () => {
+      expect(mapStateToProps(testCase.state, ownProps).cellContainerStyle)
+        .toEqual(testCase.style)
+    })
   })
 
-  it('should return editingCell as false if selected===false and mode===edit', () => {
-    const ownProps = { cellId: 5 }
-    state.mode = 'EDIT_MODE'
-    state.cells[0].selected = false
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({
-        cellId: 5,
-        selected: false,
-        editingCell: false,
-        cellType: 'code',
-      })
+  const stateToMainComponentOutlineMappings = [
+    {
+      state: {
+        cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
+        mode: 'edit',
+      },
+      style: { outline: '1px solid #bbb' },
+    },
+    {
+      state: {
+        cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
+        mode: 'edit',
+      },
+      style: { outline: '1px solid #f1f1f1' },
+    },
+    {
+      state: {
+        cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
+        mode: 'command',
+      },
+      style: { outline: '1px solid #f1f1f1' },
+    },
+    {
+      state: {
+        cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
+        mode: 'command',
+      },
+      style: { outline: '1px solid #f1f1f1' },
+    },
+  ]
+  stateToMainComponentOutlineMappings.forEach((testCase, i) => {
+    it(`cell container should get correct styles, case index ${i}`, () => {
+      expect(mapStateToProps(testCase.state, ownProps).mainComponentStyle.outline)
+        .toEqual(testCase.style.outline)
+    })
   })
 
-  it('should return editingCell as false if selected===true and mode===not_edit', () => {
-    const ownProps = { cellId: 5 }
-    state.mode = 'not_edit'
-    state.cells[0].selected = true
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({
-        cellId: 5,
-        selected: true,
-        editingCell: false,
-        cellType: 'code',
-      })
+  const stateToMainComponentDisplayMappings = [
+    {
+      state: {
+        cells: [{ id: 5, selected: true, inputFolding: 'HIDDEN' }],
+        mode: 'edit',
+      },
+      style: { display: 'none' },
+    },
+    {
+      state: {
+        cells: [{ id: 5, selected: false, inputFolding: 'ANYTHING_NOT_HIDDED' }],
+        mode: 'edit',
+      },
+      style: { display: 'block' },
+    },
+  ]
+  stateToMainComponentDisplayMappings.forEach((testCase, i) => {
+    it(`cell container should get correct styles, case index ${i}`, () => {
+      expect(mapStateToProps(testCase.state, ownProps).mainComponentStyle.display)
+        .toEqual(testCase.style.display)
+    })
   })
 
-  it('should return editingCell as false if selected===false and mode===not_edit', () => {
-    const ownProps = { cellId: 5 }
-    state.mode = 'not_edit'
-    state.cells[0].selected = false
-    expect(mapStateToProps(state, ownProps))
-      .toEqual({
-        cellId: 5,
-        selected: false,
-        editingCell: false,
-        cellType: 'code',
-      })
+  it('mainComponentClass correctly passes through inputFolding', () => {
+    state.cells[0].inputFolding = 'TEST_STRING'
+    expect(mapStateToProps(state, ownProps).mainComponentClass)
+      .toEqual('main-component TEST_STRING')
+  })
+
+  it('mainComponentClass correctly passes through inputFolding', () => {
+    expect(mapStateToProps(state, ownProps).mainComponentClass)
+      .toEqual('main-component VISIBLE')
+  })
+
+  it('correctly passes through nextInputFolding', () => {
+    state.cells[0].inputFolding = 'HIDDEN'
+    expect(mapStateToProps(state, ownProps).nextInputFolding)
+      .toEqual('VISIBLE')
+    state.cells[0].inputFolding = 'VISIBLE'
+    expect(mapStateToProps(state, ownProps).nextInputFolding)
+      .toEqual('SCROLL')
+    state.cells[0].inputFolding = 'SCROLL'
+    expect(mapStateToProps(state, ownProps).nextInputFolding)
+      .toEqual('HIDDEN')
   })
 })

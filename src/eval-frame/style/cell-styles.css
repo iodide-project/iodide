@@ -95,13 +95,6 @@ div.HIDDEN div.main-component {
 }
 
 
-div.selected-cell.editing-cell div.input div.main-component {
-  outline: 1px solid #bbb;
-}
-div.selected-cell.editing-cell {
-  outline: 1px solid #bbb;
-}
-
 div.selected-cell {
   outline: 2px solid #ccc;
 }

@@ -47,6 +47,7 @@ const cellSchema = {
       enum: cellEvalStatusEnum.values(),
     },
     rowSettings: { type: 'object' },
+    inputFolding: { type: 'string', enum: ['VISIBLE', 'SCROLL', 'HIDDEN'] },
     language: { type: 'string' }, // '' in case not a code cell
     skipInRunAll: { type: 'boolean' },
   },
@@ -208,6 +209,7 @@ function newCell(cellId, cellType = 'code', language = 'js') {
     asyncProcessCount: 0,
     evalStatus: 'UNEVALUATED',
     rowSettings: newCellRowSettings(cellType),
+    inputFolding: 'VISIBLE',
     skipInRunAll: false,
     language, // default language is js, but it only matters the cell is a code cell
   }

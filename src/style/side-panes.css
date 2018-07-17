@@ -35,51 +35,6 @@
   outline: none;
 }
 
-div.history-cells {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-div.history-cell {
-  width: inherit
-}
-
-div.history-cells .CodeMirror {
-  height: auto;
-}
-
-div.history-cells div.cell-container {
-  padding-right:0px;
-}
-
-pre.history-item-code {
-  overflow: scroll;
-  padding:3px;
-}
-
-
-
-div.history-content {
-  outline: 1px solid #f1f1f1;
-  width: calc(100% - 1px)
-}
-
-div.history-date {
-  padding-left: 33px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  font-size: 12px;
-  color: gray;
-}
-
-div.no-history {
-  font-size: 20px;
-  font-weight: bold;
-  color: lightgray;
-  margin-top: 60px;
-  margin-left: 30px;
-}
-
 div.side-pane {
   z-index: 200;
   position: fixed;
@@ -95,55 +50,6 @@ div.side-pane {
 
 i.close-side-pane:hover {
   outline: 1px solid lightgray;
-}
-
-div.frozen-variables {
-  display: grid;
-  grid-template-columns: minmax(100px, min-content) 100px;
-  grid-column-gap: 0px;
-}
-
-div.frozen-variable-name {
-  border: 1px solid #f1f1f1;
-  background: #f9f9f9;
-  font-family: monospace;
-  padding-left:5px;
-  padding-right:20px;
-  overflow-wrap: break-word;
-  max-width: calc(100% - 25px);
-}
-
-div.frozen-variable-value {
-  border: 1px solid #f1f1f1;
-  background: #f9f9f9;
-  font-family: monospace;
-  color:gray;
-  justify-self: end;
-  white-space: pre;
-  padding-left:5px;
-  padding-right:5px;
-  width: 100%;
-}
-
-div.declared-variables-list {
-padding: 15px;
-}
-
-div.declared-variable {
-  padding-bottom: 15px;
-}
-
-div.declared-variable-name {
-    font-size: 14px;
-    font-family: monospace;
-    background: #f9f9f9;
-    border: 1px solid #f1f1f1;
-    padding: 1px 10px;
-    color: #000;
-}
-
-div.declared-variable-value {
-  padding-left: 20px;
 }
 
 div.app-info-message {
