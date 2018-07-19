@@ -13,6 +13,9 @@ import CellsList from './cells-list'
 
 import DeclaredVariablesPane from './panes/declared-variables-pane'
 import HistoryPane from './panes/history-pane'
+import ConsolePane from './panes/console-pane'
+
+import EditorLinkButton from './controls/editor-link-button'
 
 export default class EvalContainer extends React.Component {
   // static propTypes = {
@@ -29,6 +32,14 @@ export default class EvalContainer extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <div style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+        }}
+        >
+          <EditorLinkButton />
+        </div>
         <div id="cells">
           <CellsList pane="REPORT_PREVIEW" />
         </div>
@@ -37,6 +48,7 @@ export default class EvalContainer extends React.Component {
         >
           <DeclaredVariablesPane />
           <HistoryPane />
+          <ConsolePane />
         </div>
       </React.Fragment>
     )
