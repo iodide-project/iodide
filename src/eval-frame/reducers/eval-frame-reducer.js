@@ -119,6 +119,16 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { consolePaneSort })
     }
 
+    case 'CHANGE_REPORT_PANE_FILTER': {
+      const { reportPaneOutputFilter } = action
+      return Object.assign({}, state, { reportPaneOutputFilter })
+    }
+
+    case 'CHANGE_CONSOLE_PANE_FILTER': {
+      const { consolePaneOutputFilter } = action
+      return Object.assign({}, state, { consolePaneOutputFilter })
+    }
+
     case 'ADD_LANGUAGE_TO_EVAL_FRAME': {
       const languages = Object.assign(
         {},

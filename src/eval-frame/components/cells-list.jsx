@@ -33,7 +33,7 @@ class CellsList extends React.Component {
     return (
       <React.Fragment>
         <div style={{ position: 'absolute', left: 0, marginTop: '-20px' }}>
-          <FilterButton />
+          <FilterButton task={this.props.filterTask} />
           <SortButton task={this.props.sortTask} />
         </div>
         { this.props.cellIds.map((id, i) => {
@@ -69,15 +69,18 @@ function mapStateToProps(state, ownProps) {
   let sortOrder
   let outputFilter
   let sortTask
+  let filterTask
   // let cellsList
   if (ownProps.containingPane === 'REPORT_PANE') {
     sortOrder = state.reportPaneSort
-    sortTask = tasks.changeReportPaneSort
     outputFilter = state.reportPaneOutputFilter
+    sortTask = tasks.changeReportPaneSort
+    filterTask = tasks.changeReportPaneFilter
   } else if (ownProps.containingPane === 'CONSOLE_PANE') {
     sortOrder = state.consolePaneSort
     outputFilter = state.consolePaneOutputFilter
     sortTask = tasks.changeConsolePaneSort
+    filterTask = tasks.changeConsolePaneFilter
   }
 
   const cellsList = state.cells.slice().filter((cell) => {
@@ -101,6 +104,7 @@ function mapStateToProps(state, ownProps) {
 
   return {
     sortTask,
+    filterTask,
     cellIds: cellsList.map(c => c.id),
     cellTypes: cellsList.map(c => c.cellType),
     showSideEffectRow: ['SHOW_ALL_ROWS', 'REPORT_ROWS_ONLY'].includes(outputFilter),

@@ -18,6 +18,8 @@ const approvedReduxActionsFromEvalFrame = [
   'TOGGLE_EDITOR_LINK',
   'CHANGE_REPORT_PANE_SORT',
   'CHANGE_CONSOLE_PANE_SORT',
+  'CHANGE_REPORT_PANE_FILTER',
+  'CHANGE_CONSOLE_PANE_FILTER',
 ]
 
 const approvedKeys = [

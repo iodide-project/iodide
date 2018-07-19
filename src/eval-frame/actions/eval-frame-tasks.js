@@ -81,6 +81,32 @@ tasks.changeConsolePaneSort = new UserTask({
   },
 })
 
+const nextFilter = {
+  OUTPUT_ROWS_ONLY: 'REPORT_ROWS_ONLY',
+  REPORT_ROWS_ONLY: 'SHOW_ALL_ROWS',
+  SHOW_ALL_ROWS: 'OUTPUT_ROWS_ONLY',
+}
+
+tasks.changeReportPaneFilter = new UserTask({
+  title: 'Change Report Pane Filter',
+  callback() {
+    postActionToEditor({
+      type: 'CHANGE_REPORT_PANE_FILTER',
+      reportPaneOutputFilter: nextFilter[store.getState().reportPaneOutputFilter],
+    })
+  },
+})
+
+tasks.changeConsolePaneFilter = new UserTask({
+  title: 'Change Console Pane Filter',
+  callback() {
+    postActionToEditor({
+      type: 'CHANGE_CONSOLE_PANE_FILTER',
+      consolePaneOutputFilter: nextFilter[store.getState().consolePaneOutputFilter],
+    })
+  },
+})
+
 tasks.toggleEditorLink = new UserTask({
   title: 'Link Editor',
   callback() {
