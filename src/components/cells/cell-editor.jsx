@@ -65,10 +65,10 @@ class CellEditor extends React.Component {
     if (focused) {
       if (!this.props.thisCellBeingEdited) {
         this.props.actions.selectCell(this.props.cellId)
-        this.props.actions.changeMode('edit')
+        this.props.actions.changeMode('EDIT_MODE')
       }
     } else if (!focused) {
-      this.props.actions.changeMode('command')
+      this.props.actions.changeMode('COMMAND_MODE')
     }
   }
 
@@ -219,7 +219,7 @@ function mapStateToProps(state, ownProps) {
   )
 
   return {
-    thisCellBeingEdited: cell.selected && state.mode === 'edit',
+    thisCellBeingEdited: cell.selected && state.mode === 'EDIT_MODE',
     cellType: cell.cellType,
     content: cell.content,
     cellId,

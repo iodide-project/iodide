@@ -1,6 +1,6 @@
 import '../../store'
 import notebookReducer from '../notebook-reducer'
-import { newNotebook, newCell } from '../../state-prototypes'
+import { newNotebook, newCell } from '../../editor-state-prototypes'
 import {
   // exportJsmdBundle, we'll need to test this
   // stringifyStateToJsmd, we'll need to test this

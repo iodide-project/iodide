@@ -2,7 +2,7 @@
 import deepEqual from 'deep-equal'
 import _ from 'lodash'
 
-import { newNotebook, newCell } from '../state-prototypes'
+import { newNotebook, newCell } from '../editor-state-prototypes'
 import htmlTemplate from '../html-template'
 
 const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']

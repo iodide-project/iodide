@@ -1,5 +1,5 @@
 import notebookReducer from '../eval-frame-reducer'
-import { newNotebook } from '../../state-prototypes'
+import { newNotebook } from '../../eval-frame-state-prototypes'
 
 describe('blank-state-reducer', () => {
   it('should return the initial state', () => {

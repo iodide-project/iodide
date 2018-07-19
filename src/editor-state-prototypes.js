@@ -2,6 +2,14 @@
 // Returning strings is required to keep things simple+serializable in the redux store.
 // The only reason we wrap this in a little class it to expose the convenience
 // `contains` and `values`
+
+// for editorWidth calc. We're using this
+// because re-resizable doesn't intelligently deal w/ calc(100% - 20px) or whatever.
+const DEFAULT_EDITOR_WIDTH = Math.max(
+  document.documentElement.clientWidth - 600,
+  (window.innerWidth - 600) || 0,
+)
+
 const StringEnum = class {
   constructor(...vals) {
     vals.forEach((v) => {
@@ -25,20 +33,30 @@ export const cellTypeEnum = new StringEnum(
   'plugin',
 )
 // const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'EXPLORE_VIEW', 'REPORT_VIEW'
-// const appModeEnum = new StringEnum('COMMAND', 'EDIT', 'TITLE', 'MENU')
 
 export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
+
+const appMessageSchema = {
+  type: 'object',
+  properties: {
+    message: { type: 'string' },
+    details: { type: 'string' },
+    when: { type: 'string' },
+    id: { type: 'integer', minimum: 0 },
+  },
+  additionalProperties: false,
+}
 
 const cellSchema = {
   type: 'object',
   properties: {
-    asyncProcessCount: { type: 'integer', minimum: 0 },
     content: { type: 'string' }, // change to string with default '' or 'untitled'
     id: { type: 'integer', minimum: 0 },
     cellType: {
       type: 'string',
       enum: cellTypeEnum.values(),
     },
+    asyncProcessCount: { type: 'integer', minimum: 0 },
     value: {}, // empty schema, `value` can be anything
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
@@ -64,6 +82,7 @@ const languageSchema = {
     languageId: { type: 'string' },
     displayName: { type: 'string' },
     codeMirrorMode: { type: 'string' },
+    codeMirrorModeLoaded: { type: 'boolean' },
     keybinding: { type: 'string' },
     module: { type: 'string' },
     evaluator: { type: 'string' },
@@ -95,7 +114,7 @@ const stateSchema = {
     languageLastUsed: { type: 'string' },
     mode: {
       type: 'string',
-      enum: ['command', 'edit', 'title-edit'],
+      enum: ['COMMAND_MODE', 'EDIT_MODE', 'APP_MODE'],
     },
     viewMode: {
       type: 'string',
@@ -111,12 +130,23 @@ const stateSchema = {
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
-    paneHeight: { type: 'integer' },
+    sidePaneWidth: { type: 'integer' },
+    editorWidth: { type: 'integer' },
+    userData: { type: 'object' },
+    evalFrameMessageQueue: {
+      type: 'array',
+      items: { type: 'object' },
+    },
+    evalFrameReady: { type: 'boolean' },
     externalDependencies: { type: 'array' },
+    showFrame: { type: 'boolean' },
+    showEditor: { type: 'boolean' },
+    scrollingLinked: { type: 'boolean' },
+    alwaysSelectInView: { type: 'boolean' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
-      items: { type: 'string' },
+      items: appMessageSchema,
     },
     autoSave: { type: 'string' },
     locallySaved: {
@@ -176,6 +206,18 @@ function newCellRowSettings(cellType) {
   }
 }
 
+const jsLanguageDefinition = {
+  pluginType: 'language',
+  languageId: 'js',
+  displayName: 'Javascript',
+  codeMirrorMode: 'javascript',
+  codeMirrorModeLoaded: true,
+  module: 'window',
+  evaluator: 'eval',
+  keybinding: 'j',
+  url: '',
+}
+
 const pluginCellDefaultContent = `{
   "pluginType": ""
   "languageId": "",
@@ -187,16 +229,6 @@ const pluginCellDefaultContent = `{
   "evaluator": ""
 }`
 
-const jsLanguageDefinition = {
-  pluginType: 'language',
-  languageId: 'js',
-  displayName: 'Javascript',
-  codeMirrorMode: 'javascript',
-  module: 'window',
-  evaluator: 'eval',
-  keybinding: 'j',
-  url: '',
-}
 
 function newCell(cellId, cellType = 'code', language = 'js') {
   return {
@@ -206,8 +238,8 @@ function newCell(cellId, cellType = 'code', language = 'js') {
     value: undefined,
     rendered: false,
     selected: false,
-    executionStatus: ' ',
     asyncProcessCount: 0,
+    executionStatus: ' ',
     evalStatus: 'UNEVALUATED',
     rowSettings: newCellRowSettings(cellType),
     inputFolding: 'VISIBLE',
@@ -220,7 +252,6 @@ function newCellID(cells) {
   return Math.max(-1, ...cells.map(c => c.id)) + 1
 }
 
-
 function newNotebook() {
   const initialState = {
     title: 'untitled',
@@ -229,11 +260,18 @@ function newNotebook() {
     languageLastUsed: 'js',
     userDefinedVarNames: [],
     lastSaved: undefined,
-    mode: 'command', // command, edit
+    userData: {},
+    mode: 'COMMAND_MODE', // command, edit
     viewMode: 'EXPLORE_VIEW', // editor, presentation
     sidePaneMode: undefined,
-    paneHeight: 400,
+    sidePaneWidth: 562,
     history: [],
+    showFrame: true,
+    showEditor: true,
+    scrollingLinked: true,
+    alwaysSelectInView: false,
+    evalFrameMessageQueue: [],
+    evalFrameReady: false,
     externalDependencies: [],
     executionNumber: 0,
     appMessages: [],
@@ -241,6 +279,7 @@ function newNotebook() {
     locallySaved: [],
     savedEnvironment: {},
     runningCellID: undefined,
+    editorWidth: DEFAULT_EDITOR_WIDTH,
   }
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true

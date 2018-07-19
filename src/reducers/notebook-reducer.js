@@ -1,5 +1,5 @@
 import copy from 'copy-to-clipboard';
-import { newNotebook, newCell, newCellID } from '../state-prototypes'
+import { newNotebook, newCell, newCellID } from '../editor-state-prototypes'
 import {
   exportJsmdBundle,
   exportJsmdToString,

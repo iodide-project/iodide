@@ -11,6 +11,7 @@ div.cell-container {
   width: calc(100%);
   /* put the .cell-menu-container and .cell-row-container in a row */
   display: flex;
+  overflow-x: auto;
   flex-direction: row; 
 }
 

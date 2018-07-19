@@ -7,7 +7,7 @@ import UnfoldLess from '@material-ui/icons/UnfoldLess'
 
 import { selectCell, updateCellProperties } from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
-import { nextOverflow } from '../../state-prototypes'
+import { nextOverflow } from '../../editor-state-prototypes'
 
 import CellMenuContainer from './cell-menu-container'
 import CellEditor from './cell-editor'
@@ -76,7 +76,7 @@ export class CellContainerUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
-  const editingCell = (cell.selected && state.mode === 'edit')
+  const editingCell = (cell.selected && state.mode === 'EDIT_MODE')
 
   const cellContainerBorderWidth = (cell.selected && !editingCell) ? '2px' : '1px'
   const cellContainerBorderColor = cell.selected ? '#bbb' : '#f1f1f1'
@@ -97,6 +97,8 @@ export function mapStateToProps(state, ownProps) {
     mainComponentStyle,
     mainComponentClass,
     selected: cell.selected,
+    editingCell: cell.selected && state.mode === 'EDIT_MODE',
+    cellType: cell.cellType,
     nextInputFolding: nextOverflow(cell.inputFolding),
   }
 }

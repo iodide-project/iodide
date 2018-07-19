@@ -6,7 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
-import { rowOverflowEnum, nextOverflow } from '../../state-prototypes'
+import { rowOverflowEnum, nextOverflow } from '../../editor-state-prototypes'
 
 export class CellRowUnconnected extends React.Component {
   static propTypes = {
@@ -92,7 +92,7 @@ export function mapStateToPropsCellRows(state, ownProps) {
   // thus, we only need to check the editorView collapsed state
   const uncollapseOnUpdate = (
     cell.selected &&
-    state.mode === 'edit' &&
+    state.mode === 'EDIT_MODE' &&
     ownProps.rowType === 'input' &&
     rowOverflow === rowOverflowEnum.HIDDEN
   )

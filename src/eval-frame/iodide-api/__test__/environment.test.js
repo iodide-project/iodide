@@ -1,9 +1,5 @@
-// import LZString from 'lz-string'
-// import _ from 'lodash'
-
 import { environment } from '../environment'
 import { store } from '../../store'
-// import { newNotebook } from '../../state-prototypes'
 import { newNotebook } from '../../actions/actions'
 
 
