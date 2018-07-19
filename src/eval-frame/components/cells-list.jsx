@@ -49,10 +49,16 @@ class CellsList extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  let cellIds
+  let cellTypes
+  if (ownProps.pane === 'REPORT_PREVIEW_PANE') {
+    cellIds = state.cells.map(c => c.id)
+    cellTypes = state.cells.map(c => c.cellType)
+  }
   return {
-    cellIds: state.cells.map(c => c.id),
-    cellTypes: state.cells.map(c => c.cellType),
+    cellIds,
+    cellTypes,
   }
 }
 

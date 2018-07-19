@@ -30,7 +30,7 @@ export default class EvalContainer extends React.Component {
     return (
       <React.Fragment>
         <div id="cells">
-          <CellsList pane="REPORT_PREVIEW" />
+          <CellsList pane="REPORT_PREVIEW_PANE" />
         </div>
         <div
           className="eval-frame-panes-container"
