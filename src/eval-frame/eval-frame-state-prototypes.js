@@ -83,6 +83,7 @@ const stateSchema = {
   type: 'object',
   properties: {
     title: { type: 'string' },
+    scrollingLinked: { type: 'boolean' },
     cells: {
       type: 'array',
       items: cellSchema,
@@ -244,6 +245,7 @@ function newNotebook() {
     reportPaneSort: 'CELL_ORDER',
     consolePaneSort: 'EVAL_ORDER',
     history: [],
+    scrollingLinked: true,
     externalDependencies: [],
     executionNumber: 0,
     appMessages: [],

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
 import Pane from './pane-container'
+import CellsList from '../cells-list'
 
 export class ConsolePaneUnconnected extends React.Component {
   static propTypes = {
@@ -17,7 +18,7 @@ export class ConsolePaneUnconnected extends React.Component {
   render() {
     return (
       <Pane paneTitle="Console" openOnMode="_CONSOLE">
-        <div style={{ textAlign: 'center' }}>Placeholder</div>
+        <CellsList />
       </Pane>
     )
   }
