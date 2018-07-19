@@ -34,7 +34,8 @@ export default class EvalContainer extends React.Component {
       <React.Fragment>
         <div style={{
           position: 'absolute',
-          right: 0,
+          left: 0,
+          top: 50,
         }}
         >
           <EditorLinkButton />

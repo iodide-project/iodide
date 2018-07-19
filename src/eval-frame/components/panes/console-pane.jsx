@@ -18,7 +18,9 @@ export class ConsolePaneUnconnected extends React.Component {
   render() {
     return (
       <Pane paneTitle="Console" openOnMode="_CONSOLE">
-        <CellsList />
+        <div id="cells">
+          <CellsList />
+        </div>
       </Pane>
     )
   }

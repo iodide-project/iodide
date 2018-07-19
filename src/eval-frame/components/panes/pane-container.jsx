@@ -60,7 +60,9 @@ export class PaneContainerUnconnected extends React.Component {
                 {this.props.paneTitle}
               </div>
             </div>
-            {this.props.children}
+            <div className="pane-content">
+              {this.props.children}
+            </div>
           </MuiThemeProvider>
         </div>
       </Resizable>

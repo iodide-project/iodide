@@ -28,7 +28,7 @@ class CellsList extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div style={{ position: 'absolute', left: 0, top: 25 }}>
+        <div style={{ position: 'absolute', left: 0, marginTop: '-20px' }}>
           <FilterButton />
           <SortButton />
         </div>
