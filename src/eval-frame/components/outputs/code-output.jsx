@@ -14,12 +14,18 @@ export class CodeOutputUnconnected extends React.Component {
   render() {
     return (
       <OutputContainer cellId={this.props.cellId}>
-        <OutputRow cellId={this.props.cellId} rowType="sideeffect">
-          <div id={`cell-${this.props.cellId}-side-effect-target`} className="side-effect-target" />
-        </OutputRow>
-        <OutputRow cellId={this.props.cellId} rowType="output">
-          <OutputRenderer cellId={this.props.cellId} />
-        </OutputRow>
+        {this.props.showSideEffectRow ?
+          <OutputRow cellId={this.props.cellId} rowType="sideeffect">
+            <div id={`cell-${this.props.cellId}-side-effect-target`} className="side-effect-target" />
+          </OutputRow>
+          : undefined
+        }
+        {this.props.showOutputRow ?
+          <OutputRow cellId={this.props.cellId} rowType="output">
+            <OutputRenderer cellId={this.props.cellId} />
+          </OutputRow>
+          : undefined
+        }
       </OutputContainer>
     )
   }
