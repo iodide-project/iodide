@@ -79,7 +79,7 @@ function mapStateToProps(state, ownProps) {
 
   return {
     cellIds: cellsList.map(c => c.id),
-    cellTypes: cellsList.map(c => c.id),
+    cellTypes: cellsList.map(c => c.cellType),
   }
 }
 
