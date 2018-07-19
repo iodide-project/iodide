@@ -15,6 +15,7 @@ export function postActionToEvalFrame(actionObj) {
 const approvedReduxActionsFromEvalFrame = [
   'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME',
   'CHANGE_SIDE_PANE_MODE',
+  'TOGGLE_EDITOR_LINK',
 ]
 
 const approvedKeys = [
@@ -47,7 +48,7 @@ function receiveMessage(event) {
         if (approvedReduxActionsFromEvalFrame.includes(message.type)) {
           store.dispatch(message)
         } else {
-          console.log('got unapproved redux action from eval frame!!!')
+          console.error(`got unapproved redux action from eval frame: ${message.type}`)
         }
         break
       case 'KEYPRESS':
@@ -55,7 +56,7 @@ function receiveMessage(event) {
         if (approvedKeys.includes(message)) {
           Mousetrap.trigger(message)
         } else {
-          console.log('got unapproved key press action from eval frame!!!')
+          console.error(`got unapproved key press action from eval frame: ${message}`)
         }
         break
       case 'POST_LANGUAGE_DEF_TO_EDITOR':

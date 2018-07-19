@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 import Resizable from 're-resizable'
-import EditorLinkButton from './controls/editor-link-button'
 
 import CellContainer from './cells/cell-container'
 
@@ -63,15 +62,6 @@ class EditorPaneContainer extends React.Component {
             flexDirection: 'column',
           }}
         >
-          <div
-            style={{
-              position: 'absolute',
-              right: -25,
-              top: 0,
-            }}
-          >
-            <EditorLinkButton />
-          </div>
           <div id="cells">
 
             {cellInputComponents}

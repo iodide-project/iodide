@@ -129,3 +129,28 @@ code {
   background-color: rgba(27, 31, 35, 0.05);
   border-radius: 3px;
 }
+
+button.display-button {
+  margin:0;
+  padding:2px;
+  border: none;
+  display: block;
+  width: 25px;
+  height: 25px;
+  text-align:center;
+  color:white;
+  background-color: darkgray;
+}
+ 
+button.display-button.is-active {
+  background-color: #D3D3D3 ;
+  /* background-color: rgb(30,30,30); */
+}
+ 
+button.display-button:focus {
+  outline: none;
+}
+ 
+button.display-button:hover {
+  background-color: #686868;
+}
