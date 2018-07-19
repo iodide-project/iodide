@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import LinkIcon from '@material-ui/icons/Link'
 import SvgIcon from '@material-ui/core/SvgIcon'
-import { EditorButton } from './editor-button'
+import { EditorButton } from '../../../components/controls/editor-button'
 
-import tasks from '../../actions/task-definitions'
+import tasks from '../../actions/eval-frame-tasks'
 
 const UnlinkIcon = props => (
   <SvgIcon {...props}>

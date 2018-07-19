@@ -61,4 +61,13 @@ tasks.toggleHistoryPane = new UserTask({
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
 
+tasks.toggleEditorLink = new UserTask({
+  title: 'Link Editor',
+  callback() {
+    postActionToEditor({
+      type: 'TOGGLE_EDITOR_LINK',
+    })
+  },
+})
+
 export default tasks

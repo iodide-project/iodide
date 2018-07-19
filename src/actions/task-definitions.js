@@ -386,13 +386,6 @@ tasks.toggleEvalFrameVisibility = new UserTask({
   callback() { dispatcher.toggleEvalFrameVisibility() },
 })
 
-tasks.toggleEditorLink = new UserTask({
-  title: 'Link Editor',
-  keybindings: ['3'],
-  keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.toggleEditorLink() },
-})
-
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',
   menuTitle: 'File an Issue ...',

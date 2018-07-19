@@ -14,6 +14,8 @@ import DeclaredVariablesPane from './panes/declared-variables-pane'
 import HistoryPane from './panes/history-pane'
 import ConsolePane from './panes/console-pane'
 
+import EditorLinkButton from './controls/editor-link-button'
+
 class EvalContainer extends React.Component {
   static propTypes = {
     // viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
@@ -48,6 +50,14 @@ class EvalContainer extends React.Component {
     })
     return (
       <React.Fragment>
+        <div style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+        }}
+        >
+          <EditorLinkButton />
+        </div>
         <div id="cells">
           {bodyContent}
         </div>
