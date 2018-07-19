@@ -4,7 +4,7 @@ import Sort from '@material-ui/icons/Sort'
 // import SvgIcon from '@material-ui/core/SvgIcon'
 import { EditorButton } from '../../../components/controls/editor-button'
 
-import tasks from '../../actions/eval-frame-tasks'
+// import tasks from '../../actions/eval-frame-tasks'
 
 export const ACTIVE_SCROLLING_TEXT = 'unscroll w/ editor'
 export const INACTIVE_SCROLLING_TEXT = 'scroll w/ editor'
@@ -15,7 +15,7 @@ export class SortButtonUnconnected extends React.Component {
       <EditorButton
         text={this.props.tooltipText}
         isActive
-        onClick={tasks.toggleEditorLink.callback}
+        onClick={this.props.task.callback}
       >
         <Sort style={{ fontSize: '13px' }} />
       </EditorButton>
@@ -23,8 +23,10 @@ export class SortButtonUnconnected extends React.Component {
   }
 }
 
-export function mapStateToProps() {
+export function mapStateToProps(state, ownProps) {
+  console.log('!!!', ownProps.task)
   return {
+    task: ownProps.task,
     tooltipText: 'sort outputs placeholder',
   }
 }

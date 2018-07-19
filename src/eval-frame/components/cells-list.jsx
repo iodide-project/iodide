@@ -13,12 +13,16 @@ import CodeOutput from './outputs/code-output'
 import MarkdownOutput from './outputs/markdown-output'
 import PluginDefinitionOutput from './outputs/plugin-definition-output'
 
+import tasks from '../actions/eval-frame-tasks'
+import UserTask from '../../actions/user-task'
+
 class CellsList extends React.Component {
   static propTypes = {
     // viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
     // title: PropTypes.string,
     cellIds: PropTypes.array,
     cellTypes: PropTypes.array,
+    sortTask: PropTypes.instanceOf(UserTask),
   }
 
   shouldComponentUpdate(nextProps) {
@@ -30,7 +34,7 @@ class CellsList extends React.Component {
       <React.Fragment>
         <div style={{ position: 'absolute', left: 0, marginTop: '-20px' }}>
           <FilterButton />
-          <SortButton />
+          <SortButton task={this.props.sortTask} />
         </div>
         { this.props.cellIds.map((id, i) => {
           switch (this.props.cellTypes[i]) {
@@ -60,11 +64,14 @@ function mapStateToProps(state, ownProps) {
   // let cellIds
   // let cellTypes
   let sortOrder
+  let sortTask
   // let cellsList
   if (ownProps.containingPane === 'REPORT_PANE') {
     sortOrder = state.reportPaneSort
+    sortTask = tasks.changeReportPaneSort
   } else if (ownProps.containingPane === 'CONSOLE_PANE') {
     sortOrder = state.consolePaneSort
+    sortTask = tasks.changeConsolePaneSort
   }
 
   const cellsList = state.cells.slice()
@@ -78,6 +85,7 @@ function mapStateToProps(state, ownProps) {
   // cellTypes = cellsList.map(c => c.cellType)
 
   return {
+    sortTask,
     cellIds: cellsList.map(c => c.id),
     cellTypes: cellsList.map(c => c.cellType),
   }
