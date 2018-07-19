@@ -12,6 +12,7 @@ import PluginDefinitionOutput from './outputs/plugin-definition-output'
 
 import DeclaredVariablesPane from './panes/declared-variables-pane'
 import HistoryPane from './panes/history-pane'
+import ConsolePane from './panes/console-pane'
 
 class EvalContainer extends React.Component {
   static propTypes = {
@@ -55,6 +56,7 @@ class EvalContainer extends React.Component {
         >
           <DeclaredVariablesPane />
           <HistoryPane />
+          <ConsolePane />
         </div>
       </React.Fragment>
     )
