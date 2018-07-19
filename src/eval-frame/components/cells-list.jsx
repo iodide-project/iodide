@@ -96,7 +96,7 @@ function mapStateToProps(state, ownProps) {
   if (sortOrder === 'CELL_ORDER') {
     // no op
   } else if (sortOrder === 'EVAL_ORDER') {
-    cellsList.sort((c1, c2) => c1.lastEvalTime < c2.lastEvalTime)
+    cellsList.sort((c1, c2) => c1.lastEvalTime > c2.lastEvalTime)
   }
 
   return {
