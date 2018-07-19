@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
 
+import FilterButton from './controls/filter-button'
+import SortButton from './controls/sort-button'
+
 import RawOutput from './outputs/raw-output'
 import ExternalDependencyOutput from './outputs/external-resource-output'
 import CSSOutput from './outputs/css-output'
@@ -25,6 +28,10 @@ class CellsList extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <div style={{ position: 'absolute', left: 0, top: 25 }}>
+          <FilterButton />
+          <SortButton />
+        </div>
         { this.props.cellIds.map((id, i) => {
           switch (this.props.cellTypes[i]) {
             case 'code':
