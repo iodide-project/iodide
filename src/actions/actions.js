@@ -177,7 +177,10 @@ export function evaluateCell(cellId) {
     } else {
       cell = getCellById(getState().cells, cellId)
     }
-    dispatch(updateCellProperties(cell.id, cell))
+    dispatch(updateCellProperties(
+      cell.id,
+      Object.assign(cell, { lastEvalTime: Date.now() }),
+    ))
     dispatch({ type: 'TRIGGER_CELL_EVAL_IN_FRAME', cellId: cell.id })
   }
 }

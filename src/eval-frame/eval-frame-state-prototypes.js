@@ -15,7 +15,7 @@ const StringEnum = class {
 }
 
 const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
-// const rowTypeEnum = new StringEnum('input', 'output')
+
 export const cellTypeEnum = new StringEnum(
   'code',
   'markdown',
@@ -24,7 +24,6 @@ export const cellTypeEnum = new StringEnum(
   'external dependencies',
   'plugin',
 )
-// const appViewEnum = new StringEnum('EXPLORE', 'REPORT') //was: 'EXPLORE_VIEW', 'REPORT_VIEW'
 
 export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
 
@@ -46,6 +45,7 @@ const cellSchema = {
       type: 'string',
       enum: cellEvalStatusEnum.values(),
     },
+    lastEvalTime: { type: 'integer', minimum: 0 },
     rowSettings: { type: 'object' },
     inputFolding: { type: 'string', enum: ['VISIBLE', 'SCROLL', 'HIDDEN'] },
     language: { type: 'string' }, // '' in case not a code cell
@@ -107,6 +107,14 @@ const stateSchema = {
     userDefinedVarNames: {
       type: 'array',
       items: { type: 'string' },
+    },
+    reportPaneSort: {
+      type: 'string',
+      enum: ['CELL_ORDER', 'EVAL_ORDER'],
+    },
+    consolePaneSort: {
+      type: 'string',
+      enum: ['CELL_ORDER', 'EVAL_ORDER'],
     },
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
     lastExport: {}, // FIXME change to string ONLY
@@ -209,6 +217,7 @@ function newCell(cellId, cellType = 'code', language = 'js') {
     executionStatus: ' ',
     asyncProcessCount: 0,
     evalStatus: 'UNEVALUATED',
+    lastEvalTime: 0,
     rowSettings: newCellRowSettings(cellType),
     inputFolding: 'VISIBLE',
     skipInRunAll: false,
@@ -233,6 +242,8 @@ function newNotebook() {
     viewMode: 'EXPLORE_VIEW', // editor, presentation
     sidePaneMode: undefined,
     paneHeight: 400,
+    reportPaneSort: 'CELL_ORDER',
+    consolePaneSort: 'EVAL_ORDER',
     history: [],
     scrollingLinked: true,
     externalDependencies: [],
