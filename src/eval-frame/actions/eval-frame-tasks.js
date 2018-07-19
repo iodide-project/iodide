@@ -1,6 +1,6 @@
 import UserTask from '../../actions/user-task'
 import { postKeypressToEditor, postActionToEditor } from '../port-to-editor'
-// import { store } from '../store'
+import { store } from '../store'
 
 
 const tasks = {}
@@ -59,6 +59,26 @@ tasks.toggleHistoryPane = new UserTask({
   keybindings: ['ctrl+h', 'meta+h'],
   preventDefaultKeybinding: true,
   callback() { postKeypressToEditor(this.keybindings[0]) },
+})
+
+tasks.changeReportPaneSort = new UserTask({
+  title: 'Change Report Pane Sort',
+  callback() {
+    postActionToEditor({
+      type: 'CHANGE_REPORT_PANE_SORT',
+      sortType: store.getState().reportPaneSort === 'EVAL_ORDER' ? 'CELL_ORDER' : 'EVAL_ORDER',
+    })
+  },
+})
+
+tasks.changeConsolePaneSort = new UserTask({
+  title: 'Change Console Pane Sort',
+  callback() {
+    postActionToEditor({
+      type: 'CHANGE_CONSOLE_PANE_SORT',
+      sortType: store.getState().consolePaneSort === 'EVAL_ORDER' ? 'CELL_ORDER' : 'EVAL_ORDER',
+    })
+  },
 })
 
 tasks.toggleEditorLink = new UserTask({

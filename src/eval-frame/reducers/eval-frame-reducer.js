@@ -109,6 +109,16 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { scrollingLinked })
     }
 
+    case 'CHANGE_REPORT_PANE_SORT': {
+      const reportPaneSort = action.sortType
+      return Object.assign({}, state, { reportPaneSort })
+    }
+
+    case 'CHANGE_CONSOLE_PANE_SORT': {
+      const consolePaneSort = action.sortType
+      return Object.assign({}, state, { consolePaneSort })
+    }
+
     case 'ADD_LANGUAGE_TO_EVAL_FRAME': {
       const languages = Object.assign(
         {},
