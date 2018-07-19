@@ -104,6 +104,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { savedEnvironment: action.savedEnvironment })
     }
 
+    case 'TOGGLE_EDITOR_LINK': {
+      const scrollingLinked = !state.scrollingLinked
+      return Object.assign({}, state, { scrollingLinked })
+    }
+
     case 'ADD_LANGUAGE_TO_EVAL_FRAME': {
       const languages = Object.assign(
         {},

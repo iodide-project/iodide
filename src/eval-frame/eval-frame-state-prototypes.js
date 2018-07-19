@@ -83,6 +83,7 @@ const stateSchema = {
   type: 'object',
   properties: {
     title: { type: 'string' },
+    scrollingLinked: { type: 'boolean' },
     cells: {
       type: 'array',
       items: cellSchema,
@@ -233,6 +234,7 @@ function newNotebook() {
     sidePaneMode: undefined,
     paneHeight: 400,
     history: [],
+    scrollingLinked: true,
     externalDependencies: [],
     executionNumber: 0,
     appMessages: [],
