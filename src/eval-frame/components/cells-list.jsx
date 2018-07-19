@@ -50,15 +50,29 @@ class CellsList extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  let cellIds
-  let cellTypes
-  if (ownProps.pane === 'REPORT_PREVIEW_PANE') {
-    cellIds = state.cells.map(c => c.id)
-    cellTypes = state.cells.map(c => c.cellType)
+  // let cellIds
+  // let cellTypes
+  let sortOrder
+  // let cellsList
+  if (ownProps.containingPane === 'REPORT_PANE') {
+    sortOrder = state.reportPaneSort
+  } else if (ownProps.containingPane === 'CONSOLE_PANE') {
+    sortOrder = state.consolePaneSort
   }
+
+  const cellsList = state.cells.slice()
+  if (sortOrder === 'CELL_ORDER') {
+    // no op
+  } else if (sortOrder === 'EVAL_ORDER') {
+    cellsList.sort((c1, c2) => c1.lastEvalTime < c2.lastEvalTime)
+  }
+
+  // cellIds = cellsList.map(c => c.id)
+  // cellTypes = cellsList.map(c => c.cellType)
+
   return {
-    cellIds,
-    cellTypes,
+    cellIds: cellsList.map(c => c.id),
+    cellTypes: cellsList.map(c => c.id),
   }
 }
 

@@ -41,7 +41,7 @@ export default class EvalContainer extends React.Component {
           <EditorLinkButton />
         </div>
         <div id="cells">
-          <CellsList pane="REPORT_PREVIEW_PANE" />
+          <CellsList containingPane="REPORT_PANE" />
         </div>
         <div
           className="eval-frame-panes-container"
