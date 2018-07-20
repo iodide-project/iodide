@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
 
-import Pane from './pane-container'
+// import Pane from './pane-container'
 
 import { DeclaredVariable } from './declared-variable'
 import { FrozenVariable } from './frozen-variable'
@@ -17,7 +17,9 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return (!deepEqual(this.props, nextProps)
-      && nextProps.sidePaneMode === 'DECLARED_VARIABLES')
+      && (this.props.sidePaneMode === 'DECLARED_VARIABLES'
+        || nextProps.sidePaneMode === 'DECLARED_VARIABLES')
+    )
   }
 
   render() {
@@ -50,11 +52,11 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
       </div>
     ) : undefined
     return (
-      <Pane paneTitle="Declared Variables" openOnMode="DECLARED_VARIABLES">
+      <div className="pane-content" style={{ display: this.props.paneDisplay }} >
         {noVariables}
         {edvElem}
         {declaredVariables}
-      </Pane>
+      </div>
     )
   }
 }
@@ -64,6 +66,7 @@ export function mapStateToProps(state) {
     environmentVariables: state.savedEnvironment,
     userDefinedVarNames: state.userDefinedVarNames,
     sidePaneMode: state.sidePaneMode,
+    paneDisplay: state.sidePaneMode === 'DECLARED_VARIABLES' ? 'block' : 'none',
   }
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
-import Pane from './pane-container'
+// import Pane from './pane-container'
 import CellsList from '../cells-list'
 
 export class ConsolePaneUnconnected extends React.Component {
@@ -12,16 +12,19 @@ export class ConsolePaneUnconnected extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return (!deepEqual(this.props, nextProps)
-      && nextProps.sidePaneMode === '_CONSOLE')
+      && (this.props.sidePaneMode === '_CONSOLE'
+        || nextProps.sidePaneMode === '_CONSOLE')
+    )
   }
 
   render() {
     return (
-      <Pane paneTitle="Console" openOnMode="_CONSOLE">
-        <div id="cells">
-          <CellsList containingPane="CONSOLE_PANE" />
-        </div>
-      </Pane>
+      <CellsList
+        id="console-cells"
+        className="pane-content"
+        containingPane="CONSOLE_PANE"
+        style={{ display: this.props.paneDisplay }}
+      />
     )
   }
 }
@@ -29,6 +32,7 @@ export class ConsolePaneUnconnected extends React.Component {
 export function mapStateToProps(state) {
   return {
     sidePaneMode: state.sidePaneMode,
+    paneDisplay: state.sidePaneMode === '_CONSOLE' ? 'block' : 'none',
   }
 }
 

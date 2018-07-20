@@ -13,6 +13,11 @@ import { changePaneHeight } from '../../actions/actions'
 
 import tasks from '../../actions/eval-frame-tasks'
 
+
+import DeclaredVariablesPane from './declared-variables-pane'
+import HistoryPane from './history-pane'
+import ConsolePane from './console-pane'
+
 const theme = createMuiTheme({
   palette: {
     type: 'light',
@@ -37,43 +42,55 @@ export class PaneContainerUnconnected extends React.Component {
 
   render() {
     return (
-      <Resizable
-        enable={{ top: true }}
-        size={{ height: this.props.paneHeight, width: '100%' }}
-        handleClasses={{ top: 'resizer' }}
-        onResizeStop={this.onResizeStopHandler}
-      >
-        <div
-          className="view-pane"
-          style={{ display: this.props.viewPaneDisplayStyle }}
+      <div className="eval-frame-panes-container">
+        <Resizable
+          enable={{ top: true }}
+          size={{ height: this.props.paneHeight, width: '100%' }}
+          handleClasses={{ top: 'resizer' }}
+          onResizeStop={this.onResizeStopHandler}
         >
-          <MuiThemeProvider theme={theme}>
-            <div className="pane-header">
-              <div className="pane-title">
-                <NotebookTaskButton
-                  tooltip="Close"
-                  task={tasks.closePanes}
-                  style={{ color: 'black', margin: '5px' }}
-                >
-                  <Close />
-                </NotebookTaskButton>
-                {this.props.paneTitle}
+          <div
+            className="view-pane"
+            style={{
+              display: this.props.viewPaneDisplayStyle,
+              flexDirection: 'column',
+            }}
+          >
+            <MuiThemeProvider theme={theme}>
+              <div className="pane-header">
+                <div className="pane-title">
+                  <NotebookTaskButton
+                    tooltip="Close"
+                    task={tasks.closePanes}
+                    style={{ color: 'black', margin: '5px' }}
+                  >
+                    <Close />
+                  </NotebookTaskButton>
+                  {this.props.paneTitle}
+                </div>
               </div>
-            </div>
-            <div className="pane-content">
-              {this.props.children}
-            </div>
-          </MuiThemeProvider>
-        </div>
-      </Resizable>
+              <DeclaredVariablesPane />
+              <HistoryPane />
+              <ConsolePane />
+            </MuiThemeProvider>
+          </div>
+        </Resizable>
+      </div>
     )
   }
 }
 
-export function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state) {
+  const paneTitle = {
+    _CONSOLE: 'Console',
+    _HISTORY: 'History',
+    DECLARED_VARIABLES: 'Declared Variables',
+  }[state.sidePaneMode]
+
   return {
-    viewPaneDisplayStyle: state.sidePaneMode === ownProps.openOnMode ? 'block' : 'none',
-    paneHeight: state.sidePaneMode === ownProps.openOnMode ? state.paneHeight : 0,
+    viewPaneDisplayStyle: state.sidePaneMode !== undefined ? 'flex' : 'none',
+    paneHeight: state.sidePaneMode !== undefined ? state.paneHeight : 0,
+    paneTitle,
   }
 }
 

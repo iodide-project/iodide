@@ -25,13 +25,32 @@ class CellsList extends React.Component {
     sortTask: PropTypes.instanceOf(UserTask),
   }
 
+  constructor(props) {
+    super(props);
+    this.cellListRef = React.createRef()
+  }
+
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
   }
 
+  componentDidUpdate() {
+    console.log('this.cellListRef', this.cellListRef)
+    console.log('this.cellListRef.current', this.cellListRef.current)
+    if (this.props.sortOrder === 'EVAL_ORDER') {
+      console.log(this.cellListRef.current.scrollHeight)
+      this.cellListRef.current.scrollTo(0, this.cellListRef.current.scrollHeight)
+    }
+  }
+
   render() {
     return (
-      <React.Fragment>
+      <div
+        id={this.props.id}
+        className="cells-list"
+        style={this.props.style}
+        ref={this.cellListRef}
+      >
         <div style={{ position: 'absolute', left: 0, marginTop: '-20px' }}>
           <FilterButton task={this.props.filterTask} />
           <SortButton task={this.props.sortTask} />
@@ -60,7 +79,7 @@ class CellsList extends React.Component {
               return <div>Unknown cell type {this.props.cellTypes[i]}</div>
           }
         })}
-      </React.Fragment>
+      </div>
     )
   }
 }
@@ -105,6 +124,7 @@ function mapStateToProps(state, ownProps) {
   return {
     sortTask,
     filterTask,
+    sortOrder,
     cellIds: cellsList.map(c => c.id),
     cellTypes: cellsList.map(c => c.cellType),
     showSideEffectRow: ['SHOW_ALL_ROWS', 'REPORT_ROWS_ONLY'].includes(outputFilter),
