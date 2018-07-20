@@ -1,4 +1,4 @@
-.PHONY: build shell up
+.PHONY: build shell up flake8 test
 
 build:
 	npm install
@@ -13,3 +13,6 @@ up:
 
 flake8:
 	docker-compose run server flake8 server/
+
+test:
+	docker-compose run server py.test
