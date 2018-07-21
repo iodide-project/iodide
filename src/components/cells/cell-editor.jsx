@@ -147,20 +147,23 @@ class CellEditor extends React.Component {
   }
 
   render() {
-    const editorOptions = Object.assign({}, {
-      mode: this.props.codeMirrorModeLoaded ? this.props.codeMirrorMode : '',
-      lineWrapping: false,
-      matchBrackets: true,
-      autoCloseBrackets: true,
-      theme: 'eclipse',
-      autoRefresh: true,
-      lineNumbers: true,
-      keyMap: 'sublime',
-      extraKeys: {
-        'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
-      },
-      comment: this.props.codeMirrorMode === 'javascript',
-    }, this.props.editorOptions)
+    // const editorOptions = Object.assign({}, {
+    //   mode: this.props.codeMirrorModeLoaded ? this.props.codeMirrorMode : '',
+    //   lineWrapping: false,
+    //   matchBrackets: true,
+    //   autoCloseBrackets: true,
+    //   theme: 'eclipse',
+    //   autoRefresh: true,
+    //   lineNumbers: true,
+    //   keyMap: 'sublime',
+    //   extraKeys: {
+    //     'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
+    //   },
+    //   comment: this.props.codeMirrorMode === 'javascript',
+    // }, this.props.editorOptions)
+    this.props.editorOptions.extraKeys = {
+      'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
+    }
 
     return (
       <div
@@ -170,7 +173,7 @@ class CellEditor extends React.Component {
         <ReactCodeMirror
           ref={this.storeEditorElementRef}
           value={this.props.content}
-          options={editorOptions}
+          options={this.props.editorOptions}
           onChange={this.updateInputContent}
           onFocusChange={this.handleFocusChange}
         />
@@ -183,40 +186,45 @@ class CellEditor extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
-  let editorOptions
-  switch (cell.cellType) {
-    case 'code':
-    case 'external dependencies':
-    case 'css':
-      editorOptions = {}
-      break
-
-    case 'markdown':
-      editorOptions = {
-        lineWrapping: true,
-        matchBrackets: false,
-        autoCloseBrackets: false,
-        lineNumbers: false,
-      }
-      break
-
-    case 'raw':
-    case 'plugin':
-      editorOptions = {
-        matchBrackets: false,
-        autoCloseBrackets: false,
-      }
-      break
-
-    default:
-      editorOptions = {}
-  }
 
   const { codeMirrorModeLoaded } = state.languages[cell.language]
 
   const codeMirrorMode = (
     cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
   )
+
+  const editorOptions = {
+    mode: codeMirrorModeLoaded ? codeMirrorMode : '',
+    lineWrapping: false,
+    matchBrackets: true,
+    autoCloseBrackets: true,
+    theme: 'eclipse',
+    autoRefresh: true,
+    lineNumbers: true,
+    keyMap: 'sublime',
+    comment: codeMirrorMode === 'javascript',
+  }
+  switch (cell.cellType) {
+    case 'markdown':
+      editorOptions.lineWrapping = true
+      editorOptions.matchBrackets = false
+      editorOptions.autoCloseBrackets = false
+      editorOptions.lineNumbers = false
+      break
+
+    case 'raw':
+    case 'plugin':
+      editorOptions.matchBrackets = false
+      editorOptions.autoCloseBrackets = false
+      break
+    case 'code':
+    case 'external dependencies':
+    case 'css':
+    default:
+      // no op, use default options
+  }
+
+  if (state.wrapEditors === true) { editorOptions.lineWrapping = true }
 
   return {
     thisCellBeingEdited: cell.selected && state.mode === 'EDIT_MODE',

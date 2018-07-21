@@ -129,6 +129,27 @@ tasks.selectDown = new UserTask({
   },
 })
 
+tasks.scrollOutputPaneToCell = new UserTask({
+  title: 'Scroll output pane to this cell',
+  displayKeybinding: 'Right', // '\u2193',
+  keybindings: ['right'],
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() {
+    const cellBelowId = getCellBelowSelectedId()
+    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
+  },
+})
+
+tasks.toggleWrapInEditors = new UserTask({
+  title: 'Toggle wrapping in editors',
+  displayKeybinding: 'W', // '\u2193',
+  keybindings: ['w'],
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.toggleWrapInEditors() },
+})
+
 tasks.addCellAbove = new UserTask({
   title: 'Add Cell Above',
   keybindings: ['a'],

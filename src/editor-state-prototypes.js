@@ -174,6 +174,7 @@ const stateSchema = {
       additionalProperties: environmentVariableSchema,
     },
     runningCellID: { type: 'integer' },
+    wrapEditors: { type: 'boolean' },
   },
   additionalProperties: false,
 }
@@ -280,7 +281,7 @@ function newNotebook() {
     userData: {},
     mode: 'COMMAND_MODE', // command, edit
     viewMode: 'EXPLORE_VIEW', // editor, presentation
-    sidePaneMode: undefined,
+    sidePaneMode: '_CONSOLE',
     sidePaneWidth: 562,
     history: [],
     showFrame: true,
@@ -301,6 +302,7 @@ function newNotebook() {
     savedEnvironment: {},
     runningCellID: undefined,
     editorWidth: DEFAULT_EDITOR_WIDTH,
+    wrapEditors: false,
   }
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
