@@ -29,6 +29,7 @@ export class PaneContainerUnconnected extends React.Component {
     paneHeight: PropTypes.number.isRequired,
     viewPaneDisplayStyle: PropTypes.string.isRequired,
     changePaneHeight: PropTypes.func.isRequired,
+    paneTitle: PropTypes.string.isRequired,
   }
 
   constructor(props) {
@@ -85,6 +86,7 @@ export function mapStateToProps(state) {
     _CONSOLE: 'Console',
     _HISTORY: 'History',
     DECLARED_VARIABLES: 'Declared Variables',
+    undefined: 'PANE MODE UNDEFINED!!',
   }[state.sidePaneMode]
 
   return {

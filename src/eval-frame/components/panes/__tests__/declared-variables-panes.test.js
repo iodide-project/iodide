@@ -1,7 +1,6 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import PaneContainer from '../pane-container'
 import { DeclaredVariable } from '../declared-variable'
 import { FrozenVariable } from '../frozen-variable'
 
@@ -9,6 +8,7 @@ import { DeclaredVariablesPaneUnconnected, mapStateToProps } from '../declared-v
 
 describe('DeclaredVariablesPaneUnconnected React component', () => {
   let props
+  let nextProps
   let mountedPane
 
   const declaredVariablesPane = () => {
@@ -33,66 +33,7 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
         ],
       },
     }
-    mountedPane = undefined
-  })
-
-  it('always renders one SidePane', () => {
-    expect(declaredVariablesPane().find(PaneContainer).length).toBe(1)
-  })
-
-  it("sets the HistoryPane's openOnMode prop to be history", () => {
-    expect(declaredVariablesPane().find(PaneContainer).props().openOnMode)
-      .toBe('DECLARED_VARIABLES')
-  })
-
-  it('always renders two declared-variables-list when both variable types are non empty', () => {
-    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(PaneContainer))
-      .find('div.declared-variables-list')).toHaveLength(2)
-  })
-
-  it('always renders correct number of DeclaredVariable', () => {
-    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(PaneContainer))
-      .find(DeclaredVariable)).toHaveLength(3)
-  })
-
-  it('always renders correct number of FrozenVariable', () => {
-    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(PaneContainer))
-      .find(FrozenVariable)).toHaveLength(2)
-  })
-
-  it('never renders FrozenVariable when environmentVariables is empty', () => {
-    props.environmentVariables = {}
-    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(FrozenVariable)))
-      .toHaveLength(0)
-  })
-
-  it('never renders DeclaredVariable when userDefinedVarNames is empty', () => {
-    props.userDefinedVarNames = []
-    expect(declaredVariablesPane().wrap(declaredVariablesPane().find(DeclaredVariable)))
-      .toHaveLength(0)
-  })
-
-  it('always updates the component when props change', () => {
-    const nextProps = {
-      userDefinedVarNames: ['iodide', 'a', 'b'],
-      sidePaneMode: 'DECLARED_VARIABLES',
-      environmentVariables: {
-        x: [
-          'string',
-          'NobwRAhmBTATjPNwF0g==',
-        ],
-        y: [
-          'string',
-          'JYewJsYKZA==',
-        ],
-      },
-    }
-    expect(declaredVariablesPane().instance().shouldComponentUpdate(nextProps))
-      .toBe(true)
-  })
-
-  it('never updates the component when props are same', () => {
-    const nextProps = {
+    nextProps = {
       userDefinedVarNames: ['iodide', 'a', 'b'],
       sidePaneMode: 'DECLARED_VARIABLES',
       environmentVariables: {
@@ -106,10 +47,62 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
         ],
       },
     }
+    mountedPane = undefined
+  })
+
+  it('always renders one SidePane', () => {
+    expect(declaredVariablesPane().find('div.pane-content').length).toBe(1)
+  })
+
+  it('always renders two declared-variables-list when both variable types are non empty', () => {
+    expect(declaredVariablesPane().find('div.declared-variables-list'))
+      .toHaveLength(2)
+  })
+
+  it('always renders correct number of DeclaredVariable', () => {
+    expect(declaredVariablesPane().find(DeclaredVariable))
+      .toHaveLength(3)
+  })
+
+  it('always renders correct number of FrozenVariable', () => {
+    expect(declaredVariablesPane().find(FrozenVariable))
+      .toHaveLength(2)
+  })
+
+  it('never renders FrozenVariable when environmentVariables is empty', () => {
+    props.environmentVariables = {}
+    expect(declaredVariablesPane().find(FrozenVariable))
+      .toHaveLength(0)
+  })
+
+  it('never renders DeclaredVariable when userDefinedVarNames is empty', () => {
+    props.userDefinedVarNames = []
+    expect(declaredVariablesPane().find(DeclaredVariable))
+      .toHaveLength(0)
+  })
+
+  it('updates the component when props change and nextProps.sidePaneMode==="DECLARED_VARIABLES"', () => {
+    nextProps.userDefinedVarNames = ['iodide', 'a', 'b', 'foo']
+    expect(declaredVariablesPane().instance().shouldComponentUpdate(nextProps))
+      .toBe(true)
+  })
+
+  it('never updates the component when props===nextProps', () => {
+    expect(props)
+      .toEqual(nextProps)
+    expect(declaredVariablesPane().instance().shouldComponentUpdate(nextProps))
+      .toBe(false)
+  })
+
+  it('never updates the component when props & nextProps have sidePaneMode!=="DECLARED_VARIABLES"', () => {
+    nextProps.userDefinedVarNames = ['iodide', 'a', 'b', 'foo']
+    props.sidePaneMode = 'not_DECLARED_VARIABLES'
+    nextProps.sidePaneMode = 'not_DECLARED_VARIABLES'
     expect(declaredVariablesPane().instance().shouldComponentUpdate(nextProps))
       .toBe(false)
   })
 })
+
 
 describe('DeclaredVariablesPane mapStateToProps', () => {
   let state
@@ -128,6 +121,13 @@ describe('DeclaredVariablesPane mapStateToProps', () => {
         environmentVariables: {},
         userDefinedVarNames: ['iodide', 'a'],
         sidePaneMode: 'DECLARED_VARIABLES',
+        paneDisplay: 'block',
       })
+  })
+
+  it('display=="none" if sidePaneMode!=="DECLARED_VARIABLES', () => {
+    state.sidePaneMode = 'not_DECLARED_VARIABLES'
+    expect(mapStateToProps(state).paneDisplay)
+      .toEqual('none')
   })
 })
