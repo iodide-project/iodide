@@ -25,15 +25,34 @@ class CellsList extends React.Component {
     sortTask: PropTypes.instanceOf(UserTask),
   }
 
+  constructor(props) {
+    super(props);
+    this.cellListRef = React.createRef()
+  }
+
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
   }
 
+  componentDidUpdate() {
+    console.log('this.cellListRef', this.cellListRef)
+    console.log('this.cellListRef.current', this.cellListRef.current)
+    if (this.props.sortOrder === 'EVAL_ORDER') {
+      console.log(this.cellListRef.current.scrollHeight)
+      this.cellListRef.current.scrollTo(0, this.cellListRef.current.scrollHeight)
+    }
+  }
+
   render() {
     return (
-      <React.Fragment>
+      <div
+        id={this.props.id}
+        className="cells-list"
+        style={this.props.style}
+        ref={this.cellListRef}
+      >
         <div style={{ position: 'absolute', left: 0, marginTop: '-20px' }}>
-          <FilterButton />
+          <FilterButton task={this.props.filterTask} />
           <SortButton task={this.props.sortTask} />
         </div>
         { this.props.cellIds.map((id, i) => {
@@ -60,7 +79,7 @@ class CellsList extends React.Component {
               return <div>Unknown cell type {this.props.cellTypes[i]}</div>
           }
         })}
-      </React.Fragment>
+      </div>
     )
   }
 }
@@ -69,15 +88,18 @@ function mapStateToProps(state, ownProps) {
   let sortOrder
   let outputFilter
   let sortTask
+  let filterTask
   // let cellsList
   if (ownProps.containingPane === 'REPORT_PANE') {
     sortOrder = state.reportPaneSort
-    sortTask = tasks.changeReportPaneSort
     outputFilter = state.reportPaneOutputFilter
+    sortTask = tasks.changeReportPaneSort
+    filterTask = tasks.changeReportPaneFilter
   } else if (ownProps.containingPane === 'CONSOLE_PANE') {
     sortOrder = state.consolePaneSort
     outputFilter = state.consolePaneOutputFilter
     sortTask = tasks.changeConsolePaneSort
+    filterTask = tasks.changeConsolePaneFilter
   }
 
   const cellsList = state.cells.slice().filter((cell) => {
@@ -101,6 +123,8 @@ function mapStateToProps(state, ownProps) {
 
   return {
     sortTask,
+    filterTask,
+    sortOrder,
     cellIds: cellsList.map(c => c.id),
     cellTypes: cellsList.map(c => c.cellType),
     showSideEffectRow: ['SHOW_ALL_ROWS', 'REPORT_ROWS_ONLY'].includes(outputFilter),

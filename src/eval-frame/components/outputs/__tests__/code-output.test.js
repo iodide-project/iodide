@@ -19,56 +19,37 @@ describe('CodeOutput_unconnected react component', () => {
   beforeEach(() => {
     props = {
       cellId: 5,
+      showSideEffectRow: false,
+      showOutputRow: false,
     }
     mountedCell = undefined
   })
 
   it('always renders one OutputContainer', () => {
-    expect(output().find(OutputContainer).length).toBe(1)
+    expect(output().find(OutputContainer))
+      .toHaveLength(1)
   })
 
-  it('always renders two OutputRow inside OutputContainer', () => {
-    expect(output().wrap(output().find(OutputContainer))
-      .find(OutputRow)).toHaveLength(2)
+  it('if both "show" props are false, output container has no children', () => {
+    expect(output().find(OutputContainer).children())
+      .toHaveLength(0)
   })
 
-  it('always renders one div inside OutputRow 0', () => {
-    expect(output().wrap(output().find(OutputRow).at(0))
-      .find('div')).toHaveLength(1)
+  it("if showOutputRow = true, there's an output row with an output renderer", () => {
+    props.showOutputRow = true
+    expect(output().find(OutputRow))
+      .toHaveLength(1)
+
+    expect(output().find(OutputRow).find(OutputRenderer))
+      .toHaveLength(1)
   })
 
-  it('always renders one CellOutput inside OutputRow 1', () => {
-    expect(output().wrap(output().find(OutputRow).at(1))
-      .find(OutputRenderer)).toHaveLength(1)
-  })
+  it("if showSideEffectRow = true, there's an output row with a side-effect-target div", () => {
+    props.showOutputRow = true
+    expect(output().find(OutputRow))
+      .toHaveLength(1)
 
-  it("sets the OutputContainer cellId prop to be the CodeOutput's cellId prop", () => {
-    expect(output().find(OutputContainer).props().cellId)
-      .toBe(props.cellId)
-  })
-
-  it("sets the 1st OutputRow cellId prop to be the CodeOutput's cellId prop", () => {
-    expect(output().find(OutputRow).at(0).props().cellId)
-      .toBe(props.cellId)
-  })
-
-  it("sets the 2nd OutputRow cellId prop to be the CodeOutput's cellId prop", () => {
-    expect(output().find(OutputRow).at(1).props().cellId)
-      .toBe(props.cellId)
-  })
-
-  it('sets the 1st OutputRow rowType prop to be sideeffect', () => {
-    expect(output().find(OutputRow).at(0).props().rowType)
-      .toBe('sideeffect')
-  })
-
-  it('sets the 2nd OutputRow rowType prop to be output', () => {
-    expect(output().find(OutputRow).at(1).props().rowType)
-      .toBe('output')
-  })
-
-  it('sets the div in the sideeffect row to have class side-effect-target', () => {
-    expect(output().find('div').props().className)
-      .toBe('side-effect-target')
+    expect(output().find(OutputRow).find(OutputRenderer))
+      .toHaveLength(1)
   })
 })

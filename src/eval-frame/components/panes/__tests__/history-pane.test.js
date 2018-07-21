@@ -1,7 +1,6 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import PaneContainer from '../pane-container'
 import HistoryItem from '../history-item'
 import EmptyPaneContents from '../empty-pane-contents'
 
@@ -29,18 +28,9 @@ describe('HistoryPaneUnconnected React component', () => {
     mountedPane = undefined
   })
 
-  it('always renders one PaneContainer', () => {
-    expect(historyPane().find(PaneContainer).length).toBe(1)
-  })
-
-  it("sets the HistoryPane's openOnMode prop to be history", () => {
-    expect(historyPane().find(PaneContainer).props().openOnMode)
-      .toBe('_HISTORY')
-  })
-
-  it('always renders one div with class history-cells inside HistoryPane', () => {
-    expect(historyPane().wrap(historyPane().find(PaneContainer))
-      .find('div.history-cells')).toHaveLength(1)
+  it('always renders one div with class history-cells', () => {
+    expect(historyPane().find('div.history-cells'))
+      .toHaveLength(1)
   })
   // rewrite this test.
 
@@ -50,8 +40,8 @@ describe('HistoryPaneUnconnected React component', () => {
   })
 
   it('always renders HistoryItem inside history-cells when history is non empty', () => {
-    expect(historyPane().wrap(historyPane().find('div.history-cells'))
-      .find(HistoryItem)).toHaveLength(1)
+    expect(historyPane().find('div.history-cells').find(HistoryItem))
+      .toHaveLength(1)
   })
 
   it('always renders correct number of HistoryItem inside history-cells', () => {
@@ -68,8 +58,8 @@ describe('HistoryPaneUnconnected React component', () => {
       },
     ]
 
-    expect(historyPane().wrap(historyPane().find('div.history-cells'))
-      .find(HistoryItem)).toHaveLength(2)
+    expect(historyPane().find('div.history-cells').find(HistoryItem))
+      .toHaveLength(2)
   })
 })
 
@@ -87,7 +77,7 @@ describe('HistoryPane mapStateToProps', () => {
     }
   })
 
-  it('should return the correct basic info', () => {
+  it('display=="block" if sidePaneMode=="_HISTORY', () => {
     expect(mapStateToProps(state))
       .toEqual({
         sidePaneMode: '_HISTORY',
@@ -96,6 +86,13 @@ describe('HistoryPane mapStateToProps', () => {
           lastRan: '2018-06-16T10:32:46.422Z',
           content: 'var a = 3',
         }],
+        paneDisplay: 'block',
       })
+  })
+
+  it('display=="none" if sidePaneMode!=="_HISTORY', () => {
+    state.sidePaneMode = 'not_HISTORY'
+    expect(mapStateToProps(state).paneDisplay)
+      .toEqual('none')
   })
 })

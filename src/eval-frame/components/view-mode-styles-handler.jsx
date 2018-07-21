@@ -33,7 +33,7 @@ div#eval-container {
   flex-direction: column;
 }
 
-div#cells {
+div.cells-list {
   width: 100%;
   overflow-y: auto;
   padding-top: 20px;
@@ -52,7 +52,7 @@ div#eval-container {
   /* no additional styles */
 }
 
-div#cells {
+div.cells-list {
   padding-left: 25px;
   padding-right: 25px;
 }

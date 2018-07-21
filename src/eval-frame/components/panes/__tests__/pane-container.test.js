@@ -18,6 +18,7 @@ describe('PaneContainer', () => {
       viewPaneDisplayStyle: 'block',
       paneHeight: 300,
       changePaneHeight: jest.fn(),
+      paneTitle: 'a pane title',
     }
     mountedVariable = undefined
   })
@@ -38,33 +39,30 @@ describe('PaneContainer', () => {
 
 describe('PaneContainer mapStateToProps', () => {
   let state
-  let ownProps
 
   beforeEach(() => {
     state = {
       sidePaneMode: '_HISTORY',
       paneHeight: 300,
     }
-    ownProps = {
-      openOnMode: '_HISTORY',
-    }
   })
 
-  it('should have correct props none when openOnMode !== sidePaneMode', () => {
-    ownProps.openOnMode = 'not_HISTORY'
-    expect(mapStateToProps(state, ownProps))
+  it('should have "flex" display and correct height when sidePaneMode is defined', () => {
+    expect(mapStateToProps(state))
       .toEqual({
-        viewPaneDisplayStyle: 'none',
-        paneHeight: 0,
+        viewPaneDisplayStyle: 'flex',
+        paneHeight: 300,
+        paneTitle: 'History',
       })
   })
 
-  it('should have correct props none when openOnMode === sidePaneMode', () => {
-    ownProps.openOnMode = '_HISTORY'
-    expect(mapStateToProps(state, ownProps))
+  it('should have "none" display and 0 height when sidePaneMode is NOT defined', () => {
+    state.sidePaneMode = undefined
+    expect(mapStateToProps(state))
       .toEqual({
-        viewPaneDisplayStyle: 'block',
-        paneHeight: 300,
+        viewPaneDisplayStyle: 'none',
+        paneHeight: 0,
+        paneTitle: 'PANE MODE UNDEFINED!!',
       })
   })
 })

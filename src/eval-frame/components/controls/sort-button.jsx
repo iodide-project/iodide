@@ -1,19 +1,16 @@
 import React from 'react'
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
 import Sort from '@material-ui/icons/Sort'
 // import SvgIcon from '@material-ui/core/SvgIcon'
 import { EditorButton } from '../../../components/controls/editor-button'
 
 // import tasks from '../../actions/eval-frame-tasks'
 
-export const ACTIVE_SCROLLING_TEXT = 'unscroll w/ editor'
-export const INACTIVE_SCROLLING_TEXT = 'scroll w/ editor'
-
-export class SortButtonUnconnected extends React.Component {
+export default class SortButtonUnconnected extends React.Component {
   render() {
     return (
       <EditorButton
-        text={this.props.tooltipText}
+        text="Toggle output sorting"
         isActive
         onClick={this.props.task.callback}
       >
@@ -23,12 +20,12 @@ export class SortButtonUnconnected extends React.Component {
   }
 }
 
-export function mapStateToProps(state, ownProps) {
-  console.log('!!!', ownProps.task)
-  return {
-    task: ownProps.task,
-    tooltipText: 'sort outputs placeholder',
-  }
-}
+// export function mapStateToProps(state, ownProps) {
+//   // console.log('!!!', ownProps.task)
+//   return {
+//     // task: ownProps.task,
+//     tooltipText: 'sort outputs placeholder',
+//   }
+// }
 
-export default connect(mapStateToProps)(SortButtonUnconnected)
+// export default connect(mapStateToProps)(SortButtonUnconnected)

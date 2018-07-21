@@ -11,9 +11,11 @@ import React from 'react'
 // import PluginDefinitionOutput from './outputs/plugin-definition-output'
 import CellsList from './cells-list'
 
-import DeclaredVariablesPane from './panes/declared-variables-pane'
-import HistoryPane from './panes/history-pane'
-import ConsolePane from './panes/console-pane'
+import PaneContainer from './panes/pane-container'
+
+// import DeclaredVariablesPane from './panes/declared-variables-pane'
+// import HistoryPane from './panes/history-pane'
+// import ConsolePane from './panes/console-pane'
 
 import EditorLinkButton from './controls/editor-link-button'
 
@@ -40,16 +42,8 @@ export default class EvalContainer extends React.Component {
         >
           <EditorLinkButton />
         </div>
-        <div id="cells">
-          <CellsList containingPane="REPORT_PANE" />
-        </div>
-        <div
-          className="eval-frame-panes-container"
-        >
-          <DeclaredVariablesPane />
-          <HistoryPane />
-          <ConsolePane />
-        </div>
+        <CellsList id="cells" containingPane="REPORT_PANE" />
+        <PaneContainer />
       </React.Fragment>
     )
   }

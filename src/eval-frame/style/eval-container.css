@@ -24,7 +24,7 @@ div#eval-container.presentation-mode {
 }
 
 
-div#cells {
+div.cells-list {
   box-sizing: border-box;
   width: 100%;
   padding-top: 40px;

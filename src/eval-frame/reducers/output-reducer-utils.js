@@ -1,4 +1,4 @@
-const SCROLL_BY_BEHAVIOR = 'instant'
+const SCROLL_BY_BEHAVIOR = 'smooth'
 const SCROLL_PADDING = 30 // extra px for scrolling
 
 function moveCell(cells, cellID, dir) {
@@ -30,14 +30,6 @@ export function alignCellTopTo(cellId, targetPxFromViewportTop) {
   const scrollContainer = document.getElementById('cells')
   const viewportRect = scrollContainer.getBoundingClientRect()
   const distanceAboveViewportTop = rect.top - viewportRect.top
-  console.log(
-    'eval-frame  distanceAboveViewportTop',
-    distanceAboveViewportTop,
-  )
-  console.log(
-    'eval-frame  distanceAboveViewportTop - pxFromViewportTop',
-    distanceAboveViewportTop - pxFromViewportTop,
-  )
   scrollContainer.scrollBy({
     top: distanceAboveViewportTop - pxFromViewportTop,
     left: 0,
