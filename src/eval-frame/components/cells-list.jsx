@@ -107,7 +107,7 @@ function mapStateToProps(state, ownProps) {
       case 'SHOW_ALL_ROWS':
         return true
       case 'OUTPUT_ROWS_ONLY':
-        return ['code', 'external dependencies', 'plugin'].includes(cell.cellType)
+        return ['code', 'external dependencies', 'plugin', 'css'].includes(cell.cellType)
       case 'REPORT_ROWS_ONLY':
         return ['code', 'markdown'].includes(cell.cellType)
       default:
@@ -121,6 +121,7 @@ function mapStateToProps(state, ownProps) {
     cellsList.sort((c1, c2) => c1.lastEvalTime > c2.lastEvalTime)
   }
 
+  console.log('cell values', sortOrder, cellsList.map(c => c.value))
   return {
     sortTask,
     filterTask,
