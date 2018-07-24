@@ -47,7 +47,9 @@ Run `npm install` after cloning this repository.
 
 Use `npm run start` to write development versions of the Iodide app resources to `dev/`; `npm run start` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually.
 
-To open a notebook, you need to serve the files in your `iodide` folder with two localhost servers (this required because, for security reasons, we Iodide needs to load resources from two separate origins). By default, these should use ports 5000 and 5555. If you have Python installed, the simplest way to do this is two open two terminals, and run `cd {path to your iodide folder}/iodide; python -m SimpleHTTPServer 5000` in the first terminal, and `cd {path to your iodide folder}/iodide; python -m SimpleHTTPServer 5555` in the second.
+To open a notebook, you need to serve the files in your `iodide` folder with two localhost servers (this required because, for security reasons, we Iodide needs to load resources from two separate origins). By default, these should use ports 5000 and 5555. If you have Python installed, the simplest way to do this is two open two terminals, and run `cd {path to your iodide checkout}; python -m SimpleHTTPServer 5000` in the first terminal, and `cd {path to your iodide checkout}; python -m SimpleHTTPServer 5555` in the second. Then, open `http://localhost:5000/dev/` in your browser. This should should show all the files in your `dev/` folder. Navigating to `http://localhost:5000/dev/iodide.dev.html` will open a blank notebook.
+
+#### Exporting from dev mode
 
 In dev mode, resource paths are set to be relative to the `dev/` directory. Thus, you export a bundled notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js/css/font files (and if you want to share a notebook that you created in a dev environment, you'll need to update the paths to point to the web-accessible resources at iodide.io).
 
