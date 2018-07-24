@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import HistoryIcon from '@material-ui/icons/History'
 // import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
 import InfoIcon from '@material-ui/icons/InfoOutline'
-import ConsoleIcon from '@material-ui/icons/KeyboardArrowRight'
 // import SvgIcon from '@material-ui/core/SvgIcon'
 
 import NotebookTaskButton from './notebook-task-button'
@@ -40,10 +39,6 @@ export class ViewControlsUnconnected extends React.Component {
 
         <NotebookTaskButton task={tasks.toggleHistoryPane}>
           <HistoryIcon />
-        </NotebookTaskButton>
-
-        <NotebookTaskButton task={tasks.toggleConsolePane}>
-          <ConsoleIcon />
         </NotebookTaskButton>
 
         <AppInfoPane />

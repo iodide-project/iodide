@@ -1,22 +1,7 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
-// import { connect } from 'react-redux'
-// import deepEqual from 'deep-equal'
 
-// import RawOutput from './outputs/raw-output'
-// import ExternalDependencyOutput from './outputs/external-resource-output'
-// import CSSOutput from './outputs/css-output'
-// import CodeOutput from './outputs/code-output'
-// import MarkdownOutput from './outputs/markdown-output'
-// import PluginDefinitionOutput from './outputs/plugin-definition-output'
 import CellsList from './cells-list'
-
 import PaneContainer from './panes/pane-container'
-
-// import DeclaredVariablesPane from './panes/declared-variables-pane'
-// import HistoryPane from './panes/history-pane'
-// import ConsolePane from './panes/console-pane'
-
 import EditorLinkButton from './controls/editor-link-button'
 
 export default class EvalContainer extends React.Component {
@@ -37,7 +22,7 @@ export default class EvalContainer extends React.Component {
         <div style={{
           position: 'absolute',
           left: 0,
-          top: 50,
+          top: 0,
         }}
         >
           <EditorLinkButton />
