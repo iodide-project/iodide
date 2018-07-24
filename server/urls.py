@@ -8,7 +8,9 @@ import server.views
 admin.autodiscover()
 
 urlpatterns = [
+    # notebook stuff
     url(r'^api/v1/', include('server.notebooks.api_urls')),
+    url(r'^notebooks/', include('server.notebooks.urls')),
 
     # various views to help with the authentication pipeline
     url(r'^oauth/', include('social_django.urls', namespace='social')),
