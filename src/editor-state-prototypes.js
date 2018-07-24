@@ -287,7 +287,7 @@ function newNotebook() {
     history: [],
     showFrame: true,
     showEditor: true,
-    scrollingLinked: true,
+    scrollingLinked: false,
     reportPaneSort: 'CELL_ORDER',
     consolePaneSort: 'EVAL_ORDER',
     reportPaneOutputFilter: 'REPORT_ROWS_ONLY',

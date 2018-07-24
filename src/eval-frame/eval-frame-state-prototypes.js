@@ -255,7 +255,7 @@ function newNotebook() {
     reportPaneOutputFilter: 'REPORT_ROWS_ONLY',
     consolePaneOutputFilter: 'OUTPUT_ROWS_ONLY',
     history: [],
-    scrollingLinked: true,
+    scrollingLinked: false,
     externalDependencies: [],
     executionNumber: 0,
     appMessages: [],
