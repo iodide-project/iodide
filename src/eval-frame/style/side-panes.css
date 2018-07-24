@@ -53,15 +53,13 @@
 }
 
 div.history-cells {
-  padding-left: 20px;
+  /*padding-left: 20px;
   padding-right: 20px;
-  padding- top: 20px;
+  padding-top: 20px;
+  padding-top: 20px;*/
 }
 
 div.history-cell {
-  width: inherit;
-  margin-bottom: 4px;
-  border: 1px solid rgba(0,0,0,0)
 }
 
 div.history-cells div.cell-container {
@@ -74,7 +72,7 @@ pre.history-item-code {
   padding-left:8px;
   margin:0;
   background-color:rgb(250,250,250);
-  border: 1px solid #ccc;
+  /*border: 1px solid #ccc;*/
 }
 
 .history-item-output {
@@ -83,15 +81,20 @@ pre.history-item-code {
   /*padding-left:8px;*/
   /*margin:0;*/
   /*background-color:rgb(250,250,250);*/
-    border-bottom: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #666;
+    border-top: 1px solid #ccc;
+    /*border-left: 1px solid #ccc;*/
+    /*border-right: 1px solid #ccc;*/
 }
 
 
 
 div.history-content {
   /*border: 1px solid #f1f1f1;*/
+}
+
+.history-metadata-positioner {
+    height: 0px;
 }
 
 div.history-metadata {
