@@ -368,7 +368,7 @@ export function addCell(cellType) {
 
 export function selectCell(
   cellId,
-  scrollToCell = false,
+  autoScrollToCell = false,
   pxFromTopOfEvalFrame = undefined,
 ) {
   return (dispatch, getState) => {
@@ -391,7 +391,7 @@ export function selectCell(
     } else if (!clickInEvalFrame && scrollingLinked) {
       // select cell triggered from within editor; scroll if needed and send msg
       // to eval frame to align
-      const targetPxToTopOfFrame = handleCellAndOutputScrolling(cellId, scrollToCell)
+      const targetPxToTopOfFrame = handleCellAndOutputScrolling(cellId, autoScrollToCell)
       postActionToEvalFrame({
         type: 'ALIGN_OUTPUT_TO_EDITOR',
         cellId,
@@ -399,7 +399,7 @@ export function selectCell(
       })
     } else if (!clickInEvalFrame && !scrollingLinked) {
       // if selectCell initiated in editor, scroll as needed but don't align output
-      handleCellAndOutputScrolling(cellId, scrollToCell)
+      handleCellAndOutputScrolling(cellId, autoScrollToCell)
     }
     // note that in the 4th case: (clickInEvalFrame && !scrollingLinked)
     // if click came from the eval frame and scrolling not linked,

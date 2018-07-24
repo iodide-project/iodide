@@ -68,7 +68,8 @@ function receiveMessage(event) {
         store.dispatch(addLanguage(message))
         break
       case 'CLICK_ON_OUTPUT':
-        store.dispatch(selectCell(message.id, false, message.pxFromViewportTop))
+        if (message.autoScrollToCell === undefined) { message.autoScrollToCell = false }
+        store.dispatch(selectCell(message.id, message.autoScrollToCell, message.pxFromViewportTop))
         break
       default:
         console.log('unknown messageType', message)

@@ -13,7 +13,7 @@ import { postMessageToEditor } from '../../port-to-editor'
 
 import { prettyDate, getCellById } from '../../tools/notebook-utils'
 
-export class HistoryItem extends React.Component {
+export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
     cell: PropTypes.shape({
       content: PropTypes.string,
@@ -39,7 +39,7 @@ export class HistoryItem extends React.Component {
       'CLICK_ON_OUTPUT',
       {
         id: this.props.cell.cellID,
-        pxFromViewportTop: -1, // aligns to top of editor.
+        autoScrollToCell: true,
       },
     )
   }
@@ -98,4 +98,4 @@ export function mapStateToProps(state, ownProps) {
   return { cellType }
 }
 
-export default connect(mapStateToProps)(HistoryItem)
+export default connect(mapStateToProps)(HistoryItemUnconnected)
