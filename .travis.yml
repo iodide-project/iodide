@@ -57,6 +57,14 @@ matrix:
       services:
         - docker
 
+      before_install:
+        # we need (at least?) docker compose version 1.19.0 to get the right
+        # behaviour for running tests
+        - sudo rm /usr/local/bin/docker-compose
+        - curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+        - chmod +x docker-compose
+        - sudo mv docker-compose /usr/local/bin
+
       install:
         - npm install
 
