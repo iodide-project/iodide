@@ -10,7 +10,10 @@ import dataFrameHandler from './dataframe-handler'
 import matrixHandler from './matrix-handler'
 import arrayHandler from './array-handler'
 import dateHandler from './date-handler'
-import scalarHandler from './scalar-handler'
+import stringHandler from './string-handler'
+import booleanHandler from './boolean-handler'
+import numberHandler from './number-handler'
+import functionHandler from './function-handler'
 import promiseHandler from './promise-handler'
 import domElementHandler from './dom-element-handler'
 import defaultHandler from './default-handler'
@@ -74,6 +77,7 @@ const errorHandler = {
   },
 }
 
+// NOTE: handler order matters! handlers higher in the list take precedence!
 const handlers = [
   errorHandler,
   nullHandler,
@@ -83,7 +87,10 @@ const handlers = [
   matrixHandler,
   arrayHandler,
   dateHandler,
-  scalarHandler,
+  stringHandler,
+  numberHandler,
+  booleanHandler,
+  functionHandler,
   domElementHandler,
   promiseHandler,
   defaultHandler,

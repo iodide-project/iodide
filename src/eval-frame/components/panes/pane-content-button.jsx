@@ -11,7 +11,7 @@ export default class PaneContentButton extends React.Component {
     return (
       <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title={this.props.text}>
         <button
-          className="pane-button light-pane-button"
+          className="pane-button light-pane-button button-content-centered"
           onClick={this.props.onClick}
         >
           {this.props.children}

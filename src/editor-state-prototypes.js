@@ -5,10 +5,11 @@
 
 // for editorWidth calc. We're using this
 // because re-resizable doesn't intelligently deal w/ calc(100% - 20px) or whatever.
-const DEFAULT_EDITOR_WIDTH = Math.max(
-  document.documentElement.clientWidth - 600,
-  (window.innerWidth - 600) || 0,
-)
+const DEFAULT_EDITOR_WIDTH = Math.round(document.documentElement.clientWidth / 2)
+// Math.max(
+//   document.documentElement.clientWidth - 600,
+//   (window.innerWidth - 600) || 0,
+// )
 
 const StringEnum = class {
   constructor(...vals) {
@@ -174,6 +175,7 @@ const stateSchema = {
       additionalProperties: environmentVariableSchema,
     },
     runningCellID: { type: 'integer' },
+    wrapEditors: { type: 'boolean' },
   },
   additionalProperties: false,
 }
@@ -280,12 +282,12 @@ function newNotebook() {
     userData: {},
     mode: 'COMMAND_MODE', // command, edit
     viewMode: 'EXPLORE_VIEW', // editor, presentation
-    sidePaneMode: undefined,
+    sidePaneMode: '_HISTORY',
     sidePaneWidth: 562,
     history: [],
     showFrame: true,
     showEditor: true,
-    scrollingLinked: true,
+    scrollingLinked: false,
     reportPaneSort: 'CELL_ORDER',
     consolePaneSort: 'EVAL_ORDER',
     reportPaneOutputFilter: 'REPORT_ROWS_ONLY',
@@ -301,6 +303,7 @@ function newNotebook() {
     savedEnvironment: {},
     runningCellID: undefined,
     editorWidth: DEFAULT_EDITOR_WIDTH,
+    wrapEditors: false,
   }
   // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true

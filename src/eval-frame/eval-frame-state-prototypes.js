@@ -248,14 +248,14 @@ function newNotebook() {
     lastSaved: undefined,
     mode: 'COMMAND_MODE', // command, edit
     viewMode: 'EXPLORE_VIEW', // editor, presentation
-    sidePaneMode: undefined,
+    sidePaneMode: '_HISTORY',
     paneHeight: 400,
     reportPaneSort: 'CELL_ORDER',
     consolePaneSort: 'EVAL_ORDER',
     reportPaneOutputFilter: 'REPORT_ROWS_ONLY',
     consolePaneOutputFilter: 'OUTPUT_ROWS_ONLY',
     history: [],
-    scrollingLinked: true,
+    scrollingLinked: false,
     externalDependencies: [],
     executionNumber: 0,
     appMessages: [],

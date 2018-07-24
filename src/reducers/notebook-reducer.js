@@ -113,19 +113,12 @@ const notebookReducer = (state = newNotebook(), action) => {
       return state
     }
 
+    case 'TOGGLE_WRAP_IN_EDITORS':
+      return Object.assign({}, state, { wrapEditors: !state.wrapEditors })
+
     case 'EVAL_FRAME_READY': {
-      // postActionToEvalFrame({
-      //   type: 'ENVIRONMENT_UPDATE_FROM_EDITOR',
-      //   savedEnvironment: state.savedEnvironment,
-      // })
-      // postActionToEvalFrame({
-      //   type: 'UPDATE_CELL_LIST',
-      //   cells: state.cells,
-      // })
       state.evalFrameMessageQueue.forEach((actionToPost) => {
         postActionToEvalFrame(actionToPost)
-        // postDispatchToEvalContext(actionToPost)
-        // console.log('posted EVAL_FRAME_READY', actionToPost)
       })
       return Object.assign({}, state, { evalFrameReady: true, evalFrameMessageQueue: [] })
     }

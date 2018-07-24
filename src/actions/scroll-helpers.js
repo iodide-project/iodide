@@ -1,5 +1,5 @@
 const SCROLL_PADDING = 30 // extra px for scrolling
-const SCROLLBY_BEHAVIOR = 'instant'
+const SCROLLBY_BEHAVIOR = 'smooth' // 'instant'
 
 export function getTargetDistanceFromViewportTop(cellId, scrollIfNeeded = true) {
   const elem = document.getElementById(`cell-${cellId}`)

@@ -28,41 +28,41 @@ describe('HistoryItem React component', () => {
     mountedItem = undefined
   })
 
-  it('always renders one div with correct class', () => {
+  it.skip('always renders one div with correct class', () => {
     expect(historyItem().find('div.cell-history-container').length).toBe(1)
   })
 
-  it('always renders div with correct class when display is false', () => {
+  it.skip('always renders div with correct class when display is false', () => {
     props.display = false
     expect(historyItem().find('div.cell-history-container').hasClass('hidden-cell'))
       .toBe(true)
   })
 
-  it('always renders div with correct class when display is true', () => {
+  it.skip('always renders div with correct class when display is true', () => {
     props.display = true
     expect(historyItem().find('div.cell-history-container').hasClass('hidden-cell'))
       .toBe(false)
   })
 
-  it('always renders one div with classes cell and history-cell', () => {
+  it.skip('always renders one div with classes cell and history-cell', () => {
     expect(historyItem().find('div.cell.history-cell').length)
       .toBe(1)
   })
 
-  it('always renders one div with class history-content inside history-cell', () => {
+  it.skip('always renders one div with class history-content inside history-cell', () => {
     expect(historyItem().wrap(historyItem().find('div.history-cell'))
       .find('div.history-content')).toHaveLength(1)
   })
 
-  it('always renders one div with class history-date inside history-cell', () => {
+  it.skip('always renders one div with class history-date inside history-cell', () => {
     expect(historyItem().wrap(historyItem().find('div.history-cell'))
       .find('div.history-date')).toHaveLength(1)
   })
-  it('always renders one pre inside history-content', () => {
+  it.skip('always renders one pre inside history-content', () => {
     expect(historyItem().find('pre.history-item-code')).toHaveLength(1)
   })
 
-  it('always contains a pane content button', () => {
+  it.skip('always contains a pane content button', () => {
     expect(historyItem().find(PaneContentButton)).toHaveLength(1)
   })
 })
