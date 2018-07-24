@@ -108,22 +108,22 @@ const stateSchema = {
       type: 'array',
       items: { type: 'string' },
     },
-    reportPaneSort: {
-      type: 'string',
-      enum: ['CELL_ORDER', 'EVAL_ORDER'],
-    },
-    consolePaneSort: {
-      type: 'string',
-      enum: ['CELL_ORDER', 'EVAL_ORDER'],
-    },
-    reportPaneOutputFilter: {
-      type: 'string',
-      enum: ['OUTPUT_ROWS_ONLY', 'REPORT_ROWS_ONLY', 'SHOW_ALL_ROWS'],
-    },
-    consolePaneOutputFilter: {
-      type: 'string',
-      enum: ['OUTPUT_ROWS_ONLY', 'REPORT_ROWS_ONLY', 'SHOW_ALL_ROWS'],
-    },
+    // reportPaneSort: {
+    //   type: 'string',
+    //   enum: ['CELL_ORDER', 'EVAL_ORDER'],
+    // },
+    // consolePaneSort: {
+    //   type: 'string',
+    //   enum: ['CELL_ORDER', 'EVAL_ORDER'],
+    // },
+    // reportPaneOutputFilter: {
+    //   type: 'string',
+    //   enum: ['OUTPUT_ROWS_ONLY', 'REPORT_ROWS_ONLY', 'SHOW_ALL_ROWS'],
+    // },
+    // consolePaneOutputFilter: {
+    //   type: 'string',
+    //   enum: ['OUTPUT_ROWS_ONLY', 'REPORT_ROWS_ONLY', 'SHOW_ALL_ROWS'],
+    // },
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
     lastExport: {}, // FIXME change to string ONLY
     sidePaneMode: {}, // FIXME change to string ONLY
@@ -250,10 +250,10 @@ function newNotebook() {
     viewMode: 'EXPLORE_VIEW', // editor, presentation
     sidePaneMode: '_HISTORY',
     paneHeight: 400,
-    reportPaneSort: 'CELL_ORDER',
-    consolePaneSort: 'EVAL_ORDER',
-    reportPaneOutputFilter: 'REPORT_ROWS_ONLY',
-    consolePaneOutputFilter: 'OUTPUT_ROWS_ONLY',
+    // reportPaneSort: 'CELL_ORDER',
+    // consolePaneSort: 'EVAL_ORDER',
+    // reportPaneOutputFilter: 'REPORT_ROWS_ONLY',
+    // consolePaneOutputFilter: 'OUTPUT_ROWS_ONLY',
     history: [],
     scrollingLinked: false,
     externalDependencies: [],

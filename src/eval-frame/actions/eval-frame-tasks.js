@@ -1,6 +1,6 @@
 import UserTask from '../../actions/user-task'
 import { postKeypressToEditor, postActionToEditor } from '../port-to-editor'
-import { store } from '../store'
+// import { store } from '../store'
 
 
 const tasks = {}
@@ -61,51 +61,51 @@ tasks.toggleHistoryPane = new UserTask({
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
 
-tasks.changeReportPaneSort = new UserTask({
-  title: 'Change Report Pane Sort',
-  callback() {
-    postActionToEditor({
-      type: 'CHANGE_REPORT_PANE_SORT',
-      sortType: store.getState().reportPaneSort === 'EVAL_ORDER' ? 'CELL_ORDER' : 'EVAL_ORDER',
-    })
-  },
-})
+// tasks.changeReportPaneSort = new UserTask({
+//   title: 'Change Report Pane Sort',
+//   callback() {
+//     postActionToEditor({
+//       type: 'CHANGE_REPORT_PANE_SORT',
+//       sortType: store.getState().reportPaneSort === 'EVAL_ORDER' ? 'CELL_ORDER' : 'EVAL_ORDER',
+//     })
+//   },
+// })
 
-tasks.changeConsolePaneSort = new UserTask({
-  title: 'Change Console Pane Sort',
-  callback() {
-    postActionToEditor({
-      type: 'CHANGE_CONSOLE_PANE_SORT',
-      sortType: store.getState().consolePaneSort === 'EVAL_ORDER' ? 'CELL_ORDER' : 'EVAL_ORDER',
-    })
-  },
-})
+// tasks.changeConsolePaneSort = new UserTask({
+//   title: 'Change Console Pane Sort',
+//   callback() {
+//     postActionToEditor({
+//       type: 'CHANGE_CONSOLE_PANE_SORT',
+//       sortType: store.getState().consolePaneSort === 'EVAL_ORDER' ? 'CELL_ORDER' : 'EVAL_ORDER',
+//     })
+//   },
+// })
 
-const nextFilter = {
-  OUTPUT_ROWS_ONLY: 'REPORT_ROWS_ONLY',
-  REPORT_ROWS_ONLY: 'SHOW_ALL_ROWS',
-  SHOW_ALL_ROWS: 'OUTPUT_ROWS_ONLY',
-}
+// const nextFilter = {
+//   OUTPUT_ROWS_ONLY: 'REPORT_ROWS_ONLY',
+//   REPORT_ROWS_ONLY: 'SHOW_ALL_ROWS',
+//   SHOW_ALL_ROWS: 'OUTPUT_ROWS_ONLY',
+// }
 
-tasks.changeReportPaneFilter = new UserTask({
-  title: 'Change Report Pane Filter',
-  callback() {
-    postActionToEditor({
-      type: 'CHANGE_REPORT_PANE_FILTER',
-      reportPaneOutputFilter: nextFilter[store.getState().reportPaneOutputFilter],
-    })
-  },
-})
+// tasks.changeReportPaneFilter = new UserTask({
+//   title: 'Change Report Pane Filter',
+//   callback() {
+//     postActionToEditor({
+//       type: 'CHANGE_REPORT_PANE_FILTER',
+//       reportPaneOutputFilter: nextFilter[store.getState().reportPaneOutputFilter],
+//     })
+//   },
+// })
 
-tasks.changeConsolePaneFilter = new UserTask({
-  title: 'Change Console Pane Filter',
-  callback() {
-    postActionToEditor({
-      type: 'CHANGE_CONSOLE_PANE_FILTER',
-      consolePaneOutputFilter: nextFilter[store.getState().consolePaneOutputFilter],
-    })
-  },
-})
+// tasks.changeConsolePaneFilter = new UserTask({
+//   title: 'Change Console Pane Filter',
+//   callback() {
+//     postActionToEditor({
+//       type: 'CHANGE_CONSOLE_PANE_FILTER',
+//       consolePaneOutputFilter: nextFilter[store.getState().consolePaneOutputFilter],
+//     })
+//   },
+// })
 
 tasks.toggleEditorLink = new UserTask({
   title: 'Link Editor',
