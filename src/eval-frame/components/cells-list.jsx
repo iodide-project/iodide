@@ -107,9 +107,9 @@ function mapStateToProps(state, ownProps) {
       case 'SHOW_ALL_ROWS':
         return true
       case 'OUTPUT_ROWS_ONLY':
-        return ['code', 'external dependencies', 'plugin', 'css'].includes(cell.cellType)
+        return ['code', 'external dependencies', 'plugin'].includes(cell.cellType)
       case 'REPORT_ROWS_ONLY':
-        return ['code', 'markdown'].includes(cell.cellType)
+        return ['code', 'markdown', 'css'].includes(cell.cellType)
       default:
         return true
     }

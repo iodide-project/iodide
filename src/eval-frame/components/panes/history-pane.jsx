@@ -13,11 +13,24 @@ export class HistoryPaneUnconnected extends React.Component {
     history: PropTypes.array,
   }
 
+  constructor(props) {
+    super(props);
+    this.historyScrollerRef = React.createRef()
+  }
+
   shouldComponentUpdate(nextProps) {
     return (!deepEqual(this.props, nextProps)
       && (this.props.sidePaneMode === '_HISTORY'
         || nextProps.sidePaneMode === '_HISTORY')
     )
+  }
+
+  componentDidUpdate() {
+    // scroll to bottom on update
+    this.historyScrollerRef.current.scrollTo({
+      top: this.historyScrollerRef.current.scrollHeight,
+      behavior: 'smooth',
+    })
   }
 
   render() {
@@ -34,11 +47,12 @@ export class HistoryPaneUnconnected extends React.Component {
     } else {
       histContents.push(<EmptyPaneContents key="no-history">No History</EmptyPaneContents>)
     }
-    histContents.reverse()
+
     return (
       <div
         className="pane-content history-cells"
         style={{ display: this.props.paneDisplay }}
+        ref={this.historyScrollerRef}
       >
         {histContents}
       </div>

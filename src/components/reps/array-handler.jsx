@@ -9,6 +9,9 @@ export const isTypedArray = arr => (
 
 export const typedArrayType = arr => Object.prototype.toString.call(arr).split(' ')[1].slice(0, -1)
 
+const MAX_ELTS = 200
+const HALF_MAX_ELTS = Math.round(MAX_ELTS / 2)
+
 export default {
   shouldHandle: (value, inContainer) => !inContainer && (
     Array.isArray(value) ||
@@ -21,15 +24,18 @@ export default {
     const len = value.length
     let arrayElements
     if (len > 0) {
-      arrayElements = _.range(len > 200 ? 100 : len - 1).map(i => (
+      arrayElements = _.range(len > MAX_ELTS ? HALF_MAX_ELTS : len - 1).map(i => (
         <span key={`array_elt_${i}`} title={`array index: ${i}`}>
           {renderValue(value[i], true)}{', '}
         </span>
       ))
-      if (len > 200) {
-        arrayElements.push(<span key="array_elts omitted">…, </span>)
+      if (len > MAX_ELTS) {
+        arrayElements.push((
+          <span className="elements-omitted-info-rep">
+            {` ... ${len - MAX_ELTS} elements omitted ...`}
+          </span>))
         arrayElements = arrayElements
-          .concat(_.range(len - 100, len - 1)
+          .concat(_.range(len - HALF_MAX_ELTS, len - 1)
             .map(i => (
               <span key={`array_elt_${i}`} title={`array index: ${i}`}>
                 {renderValue(value[i], true)}{', '}
@@ -44,9 +50,7 @@ export default {
       ))
     } else {
       arrayElements = (
-        <span key="array_elt_empty" title="array index: none">
-          {renderValue('', true)}
-        </span>
+        <span key="array_elt_empty" title="empty array" />
       )
     }
     return (

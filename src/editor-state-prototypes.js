@@ -5,10 +5,11 @@
 
 // for editorWidth calc. We're using this
 // because re-resizable doesn't intelligently deal w/ calc(100% - 20px) or whatever.
-const DEFAULT_EDITOR_WIDTH = Math.max(
-  document.documentElement.clientWidth - 600,
-  (window.innerWidth - 600) || 0,
-)
+const DEFAULT_EDITOR_WIDTH = Math.round(document.documentElement.clientWidth / 2)
+// Math.max(
+//   document.documentElement.clientWidth - 600,
+//   (window.innerWidth - 600) || 0,
+// )
 
 const StringEnum = class {
   constructor(...vals) {

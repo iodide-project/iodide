@@ -7,7 +7,7 @@ export default {
 
   render: (value) => {
     const shape = nb.shape(value)
-    const dataSetInfo = `${shape[0]} × ${shape[1]} matrix (array of arrays)`
+    const dataSetInfo = `${shape[0]} × ${shape[1]} matrix-like (array of arrays)`
     const tabledata = makeMatrixText(value, [10, 10])
     return (
       <div>
