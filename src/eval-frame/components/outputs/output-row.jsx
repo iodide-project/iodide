@@ -8,8 +8,6 @@ import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
 import { rowOverflowEnum, nextOverflow } from '../../eval-frame-state-prototypes'
 
-import UnevaluatedContent from '../../../components/reps/unevaluated-content'
-
 export class OutputRowUnconnected extends React.Component {
   static propTypes = {
     viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
@@ -69,9 +67,7 @@ export class OutputRowUnconnected extends React.Component {
           />
         </Tooltip>
         <div className="main-component">
-          {(!this.props.hasBeenEvaluated && this.props.rowType === 'output') ?
-            <UnevaluatedContent /> :
-            this.props.children}
+          {this.props.children}
         </div>
       </div>
     )

@@ -85,6 +85,8 @@ div.cell-menu-container {
 }
 
 div.not-evaluated { display: none; }
+
+.display-none-in-report { display: none; }
 `
   }
 

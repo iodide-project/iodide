@@ -19,11 +19,13 @@ export default class EvalContainer extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-        }}
+        <div
+          className="display-none-in-report"
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+          }}
         >
           <EditorLinkButton />
         </div>
