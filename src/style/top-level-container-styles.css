@@ -44,10 +44,10 @@ div#cells {
   box-sizing: border-box;
   /*height: 100%;*/
   overflow-y: auto;
-  padding-top: 40px;
-  padding-left: 25px;
-  padding-right: 35px; /* left/right asymmetry bc of the scroll bar*/
-  padding-bottom: 70px;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 20px;
   border-right: 2px solid lightgray;
 }
 
