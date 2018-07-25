@@ -18,8 +18,9 @@
     top: 0;
     z-index: 10;
     background: #fff;*/
-    border-bottom: 1px solid #d3d3d3;
-    border-top: 1px solid #d3d3d3;
+    /*border-bottom: 1px solid #d3d3d3;*/
+    /*border-top: 1px solid #d3d3d3;*/
+    background: #5d5d5d;
 }
 
 .pane-content {
@@ -30,10 +31,7 @@
 }
 
 .pane-title {
-    margin-right: 0px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  color: #e8e8e8;
 }
 
 .pane-title h1 {
