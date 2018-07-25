@@ -10,7 +10,13 @@ const template = `<!DOCTYPE html>
 <%= JSMD %>
 </script>
 <div id="panes-container">
-  <iframe id="eval-frame" src="<%= EVAL_FRAME_PATH_STRING %>iodide.eval-frame.<%= APP_VERSION_STRING %>.html" sandbox="allow-scripts allow-same-origin" allowfullscreen="true"></iframe>
+  <iframe
+    id="eval-frame"
+    src="<%= EVAL_FRAME_PATH_STRING %>iodide.eval-frame.<%= APP_VERSION_STRING %>.html"
+    sandbox="allow-scripts allow-same-origin"
+    allowfullscreen="true"
+    allowvr="yes"
+  ></iframe>
 </div>
 <script src="<%= APP_PATH_STRING %>iodide.<%= APP_VERSION_STRING %>.js"></script>
 </body>
