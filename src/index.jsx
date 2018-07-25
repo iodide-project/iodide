@@ -47,6 +47,7 @@ if (iframeElt === null) {
   iframeElt.id = 'eval-frame'
   iframeElt.src = `${IODIDE_EVAL_FRAME_PATH}iodide.eval-frame.${IODIDE_VERSION}.html`
   iframeElt.setAttribute('sandbox', 'allow-scripts allow-same-origin')
+  iframeElt.setAttribute('allowfullscreen', 'true')
   panesContainerElt.appendChild(iframeElt)
 }
 
