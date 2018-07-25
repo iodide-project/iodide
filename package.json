@@ -7,7 +7,7 @@
   "license": "MPL-2.0",
   "scripts": {
     "test": "jest --no-cache",
-    "start": "webpack --watch --env dev",
+    "start": "webpack-dev-server --watch --env dev",
     "build": "webpack --env production",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
     "build-server": "webpack --env server"

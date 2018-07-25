@@ -26,6 +26,7 @@ const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
 const plugins = []
 
+const DEV_SERVER_PORT = 8888
 // const config
 module.exports = (env) => {
   if (env === 'production') {
@@ -53,12 +54,12 @@ module.exports = (env) => {
     plugins.push(new UglifyJSPlugin())
   } else if (env === 'dev') {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
-    EDITOR_ORIGIN = 'http://localhost:5000'
-    EVAL_FRAME_ORIGIN = 'http://localhost:5555'
+    EDITOR_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
+    EVAL_FRAME_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
     APP_VERSION_STRING = 'dev'
-    APP_PATH_STRING = `${EDITOR_ORIGIN}/dev/`
-    EVAL_FRAME_PATH_STRING = `${EVAL_FRAME_ORIGIN}/dev/`
-    CSS_PATH_STRING = `${EDITOR_ORIGIN}/dev/`
+    APP_PATH_STRING = `${EDITOR_ORIGIN}/`
+    EVAL_FRAME_PATH_STRING = `${EVAL_FRAME_ORIGIN}/`
+    CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
   }
 
   return {
@@ -149,6 +150,13 @@ module.exports = (env) => {
       }),
       new ExtractTextPlugin(`[name].${APP_VERSION_STRING}.css`),
     ],
+    devServer: {
+      contentBase: path.join(__dirname, 'dev'),
+      // compress: true,
+      port: DEV_SERVER_PORT,
+      hot: false,
+      inline: false,
+    },
   }
 }
 

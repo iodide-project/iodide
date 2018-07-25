@@ -45,9 +45,10 @@ Run `npm install` after cloning this repository.
 
 ### Development mode
 
-Use `npm run start` to write development versions of the Iodide app resources to `dev/`; `npm run start` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually.
+Use `npm run start` to write development versions of the Iodide app resources to `dev/` and to serve the files in that folder at `http://localhost:8888`. You can open
+`http://localhost:8888/iodide.dev.html` in your browser to get started with a blank notebook, or open `http://localhost:8888` to see the list of files saved in `dev/` (in case you have saved other test notebooks in that folder)
 
-To open a notebook, you need to serve the files in your `iodide` folder with two localhost servers (this required because, for security reasons, we Iodide needs to load resources from two separate origins). By default, these should use ports 5000 and 5555. If you have Python installed, the simplest way to do this is two open two terminals, and run `cd {path to your iodide checkout}; python -m SimpleHTTPServer 5000` in the first terminal, and `cd {path to your iodide checkout}; python -m SimpleHTTPServer 5555` in the second. Then, open `http://localhost:5000/dev/` in your browser. This should should show all the files in your `dev/` folder. Navigating to `http://localhost:5000/dev/iodide.dev.html` will open a blank notebook.
+The command `npm run start` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually to see the changes -- we have disabled "hot reloading" because automatically refreshing the browser would cause any active notebooks to lose their evaluation state.
 
 #### Exporting from dev mode
 
