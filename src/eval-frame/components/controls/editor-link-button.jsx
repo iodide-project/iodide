@@ -16,8 +16,8 @@ const UnlinkIcon = props => (
   </SvgIcon>
 )
 
-export const ACTIVE_SCROLLING_TEXT = 'unscroll w/ editor'
-export const INACTIVE_SCROLLING_TEXT = 'scroll w/ editor'
+export const ACTIVE_SCROLLING_TEXT = 'link to editor cell selection'
+export const INACTIVE_SCROLLING_TEXT = 'unlink from editor cell selection'
 
 export class EditorLinkButtonUnconnected extends React.Component {
   render() {

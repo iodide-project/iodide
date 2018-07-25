@@ -62,7 +62,6 @@ export class OutputRowUnconnected extends React.Component {
           classes={{ tooltip: 'iodide-tooltip' }}
           placement={this.props.collapseTooltipPlacement}
           title={this.props.tooltipText}
-          enterDelay={600}
         >
           <div
             className="collapse-button"

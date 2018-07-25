@@ -44,7 +44,6 @@ export class CellMenuContainerUnconnected extends React.Component {
             classes={{ tooltip: 'iodide-tooltip' }}
             placement="bottom"
             title="Cell skipped during run all"
-            enterDelay={600}
           >
             {
               <div className="warning-pill">skip</div>
@@ -60,7 +59,6 @@ export class CellMenuContainerUnconnected extends React.Component {
           classes={{ tooltip: 'iodide-tooltip' }}
           placement="bottom"
           title="Cell Settings"
-          enterDelay={600}
         >
           <div>
             <Menu

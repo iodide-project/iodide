@@ -18,8 +18,9 @@
     top: 0;
     z-index: 10;
     background: #fff;*/
-    border-bottom: 1px solid #d3d3d3;
-    border-top: 1px solid #d3d3d3;
+    /*border-bottom: 1px solid #d3d3d3;*/
+    /*border-top: 1px solid #d3d3d3;*/
+    background: #5d5d5d;
 }
 
 .pane-content {
@@ -30,10 +31,7 @@
 }
 
 .pane-title {
-    margin-right: 0px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  color: #e8e8e8;
 }
 
 .pane-title h1 {
@@ -53,15 +51,13 @@
 }
 
 div.history-cells {
-  padding-left: 20px;
+  /*padding-left: 20px;
   padding-right: 20px;
-  padding- top: 20px;
+  padding-top: 20px;
+  padding-top: 20px;*/
 }
 
 div.history-cell {
-  width: inherit;
-  margin-bottom: 4px;
-  border: 1px solid rgba(0,0,0,0)
 }
 
 div.history-cells div.cell-container {
@@ -74,7 +70,7 @@ pre.history-item-code {
   padding-left:8px;
   margin:0;
   background-color:rgb(250,250,250);
-  border: 1px solid #ccc;
+  /*border: 1px solid #ccc;*/
 }
 
 .history-item-output {
@@ -83,15 +79,20 @@ pre.history-item-code {
   /*padding-left:8px;*/
   /*margin:0;*/
   /*background-color:rgb(250,250,250);*/
-    border-bottom: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #666;
+    border-top: 1px solid #ccc;
+    /*border-left: 1px solid #ccc;*/
+    /*border-right: 1px solid #ccc;*/
 }
 
 
 
 div.history-content {
   /*border: 1px solid #f1f1f1;*/
+}
+
+.history-metadata-positioner {
+    height: 0px;
 }
 
 div.history-metadata {

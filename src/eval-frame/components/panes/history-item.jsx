@@ -65,22 +65,24 @@ export class HistoryItemUnconnected extends React.Component {
     }
 
     const historyMetadata = (
-      <div className="history-metadata">
-        <div className="history-show-actual-cell">
-          <PaneContentButton
-            text="scroll to cell"
-            onClick={this.showEditorCell}
-          >
-            <ArrowBack style={{ fontSize: '12px' }} />
-          </PaneContentButton>
+      <div className="history-metadata-positioner">
+        <div className="history-metadata">
+          <div className="history-show-actual-cell">
+            <PaneContentButton
+              text="scroll to cell"
+              onClick={this.showEditorCell}
+            >
+              <ArrowBack style={{ fontSize: '12px' }} />
+            </PaneContentButton>
+          </div>
+          <div className="history-time-since"> {this.state.timeSince} </div>
+          {/* <div className="history-date"> / {this.props.cell.lastRan.toString()}
+          </div> */}
         </div>
-        <div className="history-time-since"> {this.state.timeSince} </div>
-        {/* <div className="history-date"> / {this.props.cell.lastRan.toString()}
-        </div> */}
       </div>)
 
     return (
-      <div id={`cell-${this.props.cell.cellID}-history`} className="cell history-cell">
+      <div id={`cell-${this.props.cell.cellID}-history`} className="history-cell">
         <div className="history-content editor">
           {historyMetadata}
           <pre className="history-item-code">{this.props.content}</pre>

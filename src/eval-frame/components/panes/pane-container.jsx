@@ -62,7 +62,7 @@ export class PaneContainerUnconnected extends React.Component {
                   <NotebookTaskButton
                     tooltip="Close"
                     task={tasks.closePanes}
-                    style={{ color: 'black', margin: '5px' }}
+                    style={{ color: '#e8e8e8' }}
                   >
                     <Close />
                   </NotebookTaskButton>
