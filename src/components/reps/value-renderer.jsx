@@ -77,6 +77,33 @@ const errorHandler = {
   },
 }
 
+
+// this wraps all the handlers in a bit of try/catch
+function wrapHandler(handler) {
+  return {
+    shouldHandle: (value) => {
+      try {
+        return handler.shouldHandle(value)
+      } catch (error) {
+        console.error('output handler error', error);
+        return false
+      }
+    },
+    render: (value) => {
+      try {
+        return handler.render(value)
+      } catch (error) {
+        console.error('output handler render error', error);
+        return (
+          <div>output handler failed:
+            {errorHandler.render(error)}
+          </div>
+        )
+      }
+    },
+  }
+}
+
 // NOTE: handler order matters! handlers higher in the list take precedence!
 // SMPLE TYPE HANDLERS MUST COME FIRST -- otherwise, handlers that look for e.g.
 // a property in a null will break
@@ -86,7 +113,7 @@ const simpleTypeHandlers = [
   stringHandler,
   numberHandler,
   booleanHandler,
-]
+].map(h => wrapHandler(h))
 
 const complexHandlers = [
   renderMethodHandler,
@@ -101,40 +128,16 @@ const complexHandlers = [
   domElementHandler,
   promiseHandler,
   defaultHandler,
-]
+].map(h => wrapHandler(h))
 
 let handlers = simpleTypeHandlers.concat(complexHandlers)
 
-function wrapUserHandler(handler) {
-  return {
-    shouldHandle: (value) => {
-      try {
-        return handler.shouldHandle(value)
-      } catch (error) {
-        console.error('user output handler error', error);
-        return false
-      }
-    },
-    render: (value) => {
-      try {
-        return handler.render(value)
-      } catch (error) {
-        console.error('user output handler render error', error);
-        return (
-          <div>user-defined output handler failed:
-            {errorHandler.render(error)}
-          </div>
-        )
-      }
-    },
-  }
-}
 
 const userHandlers = []
 
 export function addOutputHandler(handler) {
   // insert new handlers *after* the scalar handlers
-  userHandlers.unshift(wrapUserHandler(handler))
+  userHandlers.unshift(wrapHandler(handler))
   handlers = simpleTypeHandlers.concat(userHandlers, complexHandlers)
 }
 

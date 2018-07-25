@@ -93,26 +93,20 @@ div.history-content {
 
 .history-metadata-positioner {
     height: 0px;
+    position: sticky;
+    top: 0px;
 }
 
 div.history-metadata {
-  /*width: 100%;
-  display: flex;
-  align-items: center;
-  margin-top: 2px;
-*/
     box-sizing: border-box;
-    /*width: 200px;*/
     padding: 1px 1px 0px 1px;
     position: sticky;
-    top: 2px;
     left: 100%;
-    margin-right: 3px;
     display: inline-block;
-    /*align-items: center;*/
     background: #fff;
-    border: 1px solid #bbb;
-    border-radius: 3px;
+    border-bottom: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    box-shadow: 5px 4px 5px rgba(136, 136, 136, 0.25);
 }
 
 .history-show-actual-cell {
