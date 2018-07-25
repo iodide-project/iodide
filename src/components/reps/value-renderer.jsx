@@ -78,29 +78,64 @@ const errorHandler = {
 }
 
 // NOTE: handler order matters! handlers higher in the list take precedence!
-const handlers = [
-  errorHandler,
+// SMPLE TYPE HANDLERS MUST COME FIRST -- otherwise, handlers that look for e.g.
+// a property in a null will break
+const simpleTypeHandlers = [
   nullHandler,
   undefinedHandler,
-  renderMethodHandler,
-  dataFrameHandler,
-  matrixHandler,
-  arrayHandler,
-  dateHandler,
   stringHandler,
   numberHandler,
   booleanHandler,
+]
+
+const complexHandlers = [
+  renderMethodHandler,
+  // data frame (array of objects must come before array)
+  dataFrameHandler,
+  // matrix must come before array!
+  matrixHandler,
+  arrayHandler,
+  dateHandler,
   functionHandler,
+  errorHandler,
   domElementHandler,
   promiseHandler,
   defaultHandler,
 ]
 
+let handlers = simpleTypeHandlers.concat(complexHandlers)
+
+function wrapUserHandler(handler) {
+  return {
+    shouldHandle: (value) => {
+      try {
+        return handler.shouldHandle(value)
+      } catch (error) {
+        console.error('user output handler error', error);
+        return false
+      }
+    },
+    render: (value) => {
+      try {
+        return handler.render(value)
+      } catch (error) {
+        console.error('user output handler render error', error);
+        return (
+          <div>user-defined output handler failed:
+            {errorHandler.render(error)}
+          </div>
+        )
+      }
+    },
+  }
+}
+
+const userHandlers = []
+
 export function addOutputHandler(handler) {
-  // TODO: We may want to be smarter about inserting handlers at
-  // certain places in the handler array.  Right now, this just
-  // puts the new handler at the front.
-  handlers.unshift(handler)
+  // insert new handlers *after* the scalar handlers
+  userHandlers.unshift(wrapUserHandler(handler))
+  handlers = simpleTypeHandlers.concat(userHandlers, complexHandlers)
 }
 
 
