@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import nb from '../nb'
 
 describe('nb.isRowDf', () => {
@@ -50,18 +51,48 @@ describe('nb.shape', () => {
   expect(nb.shape([{}, { a: 10, b: 20 }])).toEqual([undefined, undefined]) // is this right??
 })
 
-describe('nb.isMatrix', () => {
+describe('nb.isSimpleArray', () => {
+  expect(nb.isSimpleArray([1, 2, 3])).toBe(true)
+  const notSimple = [1, 2, 3]
+  notSimple.foo = 'notSimple'
+  expect(nb.isSimpleArray(notSimple)).toBe(false)
+})
+
+describe('nb.isMatrixLike', () => {
   it('accepts the following values', () => {
-    expect(nb.isMatrix([[1, 2, 3], [4, 5, 6]])).toBe(true)
-    expect(nb.isMatrix([[1, 2, 3], [4, 6]])).toBe(true)
-    expect(nb.isMatrix([[1, 2, 3], []])).toBe(true)
-    expect(nb.isMatrix([[], []])).toBe(true)
-    expect(nb.isMatrix([[[[]]]])).toBe(true)
+    expect(nb.isMatrixLike([[1, 2, 3], [4, 5, 6]])).toBe(true)
+    expect(nb.isMatrixLike([[1, 2, 'asdf'], [4, 5, 6]])).toBe(true)
+    expect(nb.isMatrixLike(_.range(10).map(() => _.range(10)))).toBe(true)
+    expect(nb.isMatrixLike([[1, 2, 3], [4, undefined, 6]])).toBe(true)
+  })
+  it('rejects if arrays have extra props', () => {
+    const testObj1 = _.range(10).map(() => _.range(10))
+    testObj1.foo = 'extra'
+    expect(nb.isMatrixLike(testObj1)).toBe(false)
+
+    const testObj2 = _.range(10).map(() => {
+      const row = _.range(10)
+      row.foo = 'extra'
+      return row
+    })
+    expect(nb.isMatrixLike(testObj2)).toBe(false)
   })
   it('rejects the following values', () => {
-    expect(nb.isMatrix({})).toBe(false)
-    expect(nb.isMatrix(undefined)).toBe(false)
-    expect(nb.isMatrix([{ a: 10 }, { b: 20 }])).toBe(false)
+    expect(nb.isMatrixLike([[], []])).toBe(false)
+    expect(nb.isMatrixLike([[1, 2, 3], [4, 6]])).toBe(false)
+    expect(nb.isMatrixLike([[1, 2, 3], []])).toBe(false)
+    expect(nb.isMatrixLike([[1, 2, 3], [[], 5, 6]])).toBe(false)
+    expect(nb.isMatrixLike([[[1], [2], [3]], [[4], [5], [6]]])).toBe(false)
+    expect(nb.isMatrixLike([[1, 2, 3], [{ a: 'value' }, 5, 6]])).toBe(false)
+    expect(nb.isMatrixLike([[[[]]]])).toBe(false)
+    expect(nb.isMatrixLike({})).toBe(false)
+    expect(nb.isMatrixLike(undefined)).toBe(false)
+    expect(nb.isMatrixLike([{ a: 10 }, { b: 20 }])).toBe(false)
+  })
+  it('rejects the following values', () => {
+    expect(nb.isMatrixLike({})).toBe(false)
+    expect(nb.isMatrixLike(undefined)).toBe(false)
+    expect(nb.isMatrixLike([{ a: 10 }, { b: 20 }])).toBe(false)
   })
 })
 

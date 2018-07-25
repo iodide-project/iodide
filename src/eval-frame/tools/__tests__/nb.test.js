@@ -50,18 +50,18 @@ describe('nb.shape', () => {
   expect(nb.shape([{}, { a: 10, b: 20 }])).toEqual([undefined, undefined]) // is this right??
 })
 
-describe('nb.isMatrix', () => {
+describe('nb.isMatrixLike', () => {
   it('accepts the following values', () => {
-    expect(nb.isMatrix([[1, 2, 3], [4, 5, 6]])).toBe(true)
-    expect(nb.isMatrix([[1, 2, 3], [4, 6]])).toBe(true)
-    expect(nb.isMatrix([[1, 2, 3], []])).toBe(true)
-    expect(nb.isMatrix([[], []])).toBe(true)
-    expect(nb.isMatrix([[[[]]]])).toBe(true)
+    expect(nb.isMatrixLike([[1, 2, 3], [4, 5, 6]])).toBe(true)
+    expect(nb.isMatrixLike([[1, 2, 3], [4, 6]])).toBe(true)
+    expect(nb.isMatrixLike([[1, 2, 3], []])).toBe(true)
+    expect(nb.isMatrixLike([[], []])).toBe(true)
+    expect(nb.isMatrixLike([[[[]]]])).toBe(true)
   })
   it('rejects the following values', () => {
-    expect(nb.isMatrix({})).toBe(false)
-    expect(nb.isMatrix(undefined)).toBe(false)
-    expect(nb.isMatrix([{ a: 10 }, { b: 20 }])).toBe(false)
+    expect(nb.isMatrixLike({})).toBe(false)
+    expect(nb.isMatrixLike(undefined)).toBe(false)
+    expect(nb.isMatrixLike([{ a: 10 }, { b: 20 }])).toBe(false)
   })
 })
 

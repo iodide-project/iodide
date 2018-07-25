@@ -24,7 +24,7 @@ nb.isRowDf = function(obj,rowsToCheck = 100){
   return true
 }
 
-nb.isMatrix = function(obj,rowsToCheck = 100){
+nb.isMatrixLike = function(obj,rowsToCheck = 100){
   if (!_.isArray(obj) || obj.length==0) {return false}
   rowsToCheck = Math.min(rowsToCheck,_.size(obj))
   for (let i=0; i<rowsToCheck; i++){
@@ -68,7 +68,7 @@ nb.shape = function(obj){
     return [obj[cols[0]].length, cols.length]
   } else if (nb.isRowDf(obj)){
     return ([_.size(obj), _.size(obj[0])])
-  } else if (nb.isMatrix(obj)){
+  } else if (nb.isMatrixLike(obj)){
     return [obj.length, obj[0].length]
   } else {
     return [undefined,undefined]

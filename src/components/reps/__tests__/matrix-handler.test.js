@@ -15,9 +15,9 @@ describe('dateHandler shouldHandle', () => {
     // this should be true
     expect(matrixHandler.shouldHandle([[1], [3]])).toBe(true)
   })
-  it('accepts arrays of arrays of differing length', () => {
-    expect(matrixHandler.shouldHandle([[1, 2, 3, 4], [3, 1, 2]])).toBe(true)
+  it('REJECTS arrays of arrays of differing length', () => {
+    expect(matrixHandler.shouldHandle([[1, 2, 3, 4], [3, 1, 2]])).toBe(false)
     // this should be true
-    expect(matrixHandler.shouldHandle([[1], []])).toBe(true)
+    expect(matrixHandler.shouldHandle([[1], []])).toBe(false)
   })
 })

@@ -3,7 +3,7 @@ import { SimpleTable, makeMatrixText } from './pretty-matrix'
 import nb from '../../tools/nb'
 
 export default {
-  shouldHandle: (value, inContainer) => !inContainer && nb.isMatrix(value),
+  shouldHandle: (value, inContainer) => !inContainer && nb.isMatrixLike(value),
 
   render: (value) => {
     const shape = nb.shape(value)
