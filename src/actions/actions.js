@@ -26,14 +26,16 @@ export function updateAppMessages(messageObj) {
 
 
 export function importNotebook(importedState) {
+  return (dispatch, getState) => {
   // note that we need to not trample on evalFrameMessageQueue or
-  // evalFrameReady, so we'll delete those from the new state
-  const newState = importedState
-  delete newState.evalFrameMessageQueue
-  delete newState.evalFrameReady
-  return {
-    type: 'IMPORT_NOTEBOOK',
-    newState,
+  // evalFrameReady, so we'll copy those from the current state
+    const newState = Object.assign({}, importedState)
+    newState.evalFrameMessageQueue = getState().evalFrameMessageQueue
+    newState.evalFrameReady = getState().evalFrameReady
+    dispatch({
+      type: 'IMPORT_NOTEBOOK',
+      newState,
+    })
   }
 }
 
