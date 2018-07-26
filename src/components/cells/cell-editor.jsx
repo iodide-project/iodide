@@ -56,7 +56,10 @@ class CellEditor extends React.Component {
   componentDidUpdate() {
     if (this.props.thisCellBeingEdited) {
       this.editor.focus()
-    } else {
+    } else if (
+      // this check prevents a bug on mobile
+      this.editor.getCodeMirror().display.input.textarea !== undefined
+    ) {
       this.editor.getCodeMirror().display.input.textarea.blur()
     }
   }
