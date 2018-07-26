@@ -31,7 +31,6 @@ class CellEditor extends React.Component {
       changeMode: PropTypes.func.isRequired,
       updateInputContent: PropTypes.func.isRequired,
     }).isRequired,
-    inputRef: PropTypes.func,
     containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
   }
@@ -39,16 +38,14 @@ class CellEditor extends React.Component {
   constructor(props) {
     super(props)
     // explicitly bind "this" for all methods in constructors
-    this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
+    // React.createRef()
   }
 
   componentDidMount() {
-    if (this.props.thisCellBeingEdited
-      && this.refs.hasOwnProperty('EXPLORE_VIEW') // eslint-disable-line
-    ) {
+    if (this.props.thisCellBeingEdited) {
       this.editor.focus()
     }
   }
@@ -78,9 +75,6 @@ class CellEditor extends React.Component {
   storeEditorElementRef(editorElt) {
     this.editor = editorElt
     // pass this cm instance ref up to the parent cell with this callback
-    if (this.props.inputRef) {
-      this.props.inputRef(editorElt)
-    }
   }
 
   updateInputContent(content) {
@@ -230,7 +224,11 @@ function mapStateToProps(state, ownProps) {
   if (state.wrapEditors === true) { editorOptions.lineWrapping = true }
 
   return {
-    thisCellBeingEdited: cell.selected && state.mode === 'EDIT_MODE',
+    thisCellBeingEdited: (
+      cell.selected
+      && state.mode === 'EDIT_MODE'
+      && state.viewMode === 'EXPLORE_VIEW'
+    ),
     cellType: cell.cellType,
     content: cell.content,
     cellId,
