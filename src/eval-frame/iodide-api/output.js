@@ -29,7 +29,6 @@ export const output = {
     div.innerHTML = s.toString()
   },
   element: (nodeType, reportSideEffect = true) => {
-    // const cellId = store.getState().runningCellID
     const div = sideEffectDiv('side-effect-element', reportSideEffect)
     const node = document.createElement(nodeType)
     div.append(node)

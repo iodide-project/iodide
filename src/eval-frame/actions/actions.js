@@ -75,7 +75,7 @@ function evaluateCodeCell(cell) {
     const languageModule = state.languages[cell.language].module
     const { evaluator } = state.languages[cell.language]
     // this is one place where we have to directly mutate the DOM b/c we need
-    // this to happen outside of React's update schedule. see also iodide-api/print.js
+    // this to happen outside of React's update schedule. see also iodide-api/output.js
     const sideEffectTarget = document.getElementById(`cell-${cell.id}-side-effect-target`)
     if (sideEffectTarget) { sideEffectTarget.innerHTML = '' }
     dispatch(temporarilySaveRunningCellID(cell.id))
