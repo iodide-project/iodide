@@ -31,6 +31,12 @@ export class CellContainerUnconnected extends React.Component {
     updateCellProperties: PropTypes.func.isRequired,
   }
 
+  constructor(props) {
+    super(props)
+
+    this.editor = React.createRef()
+  }
+
   handleCellClick = () => {
     const scrollToCell = false
     if (!this.props.selected) {
@@ -39,10 +45,17 @@ export class CellContainerUnconnected extends React.Component {
   }
 
   handleFoldButtonClick = () => {
-    this.props.updateCellProperties(
-      this.props.cellId,
-      { inputFolding: this.props.nextInputFolding },
-    )
+    if (this.editor.current.clientHeight < 300 && this.props.nextInputFolding === 'SCROLL') {
+      this.props.updateCellProperties(
+        this.props.cellId,
+        { inputFolding: 'HIDDEN' },
+      )
+    } else {
+      this.props.updateCellProperties(
+        this.props.cellId,
+        { inputFolding: this.props.nextInputFolding },
+      )
+    }
   }
 
   render() {
@@ -65,7 +78,11 @@ export class CellContainerUnconnected extends React.Component {
             </button>
           </Tooltip>
         </div>
-        <div className={this.props.mainComponentClass} style={this.props.mainComponentStyle}>
+        <div
+          ref={this.editor}
+          className={this.props.mainComponentClass}
+          style={this.props.mainComponentStyle}
+        >
           <CellEditor cellId={this.props.cellId} />
         </div>
       </div>
