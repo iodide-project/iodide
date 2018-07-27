@@ -8,7 +8,7 @@ import server.views
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^$', server.views.index, name='index'),
+    url(r'^api/v1/', include('server.notebooks.api_urls')),
 
     # various views to help with the authentication pipeline
     url(r'^oauth/', include('social_django.urls', namespace='social')),
@@ -18,4 +18,6 @@ urlpatterns = [
 
     # admin stuff
     path('admin/', admin.site.urls),
+
+    url(r'^$', server.views.index, name='index'),
 ]

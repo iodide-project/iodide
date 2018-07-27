@@ -10,6 +10,7 @@ social-auth-app-django = "*"
 django-environ = "*"
 "psycopg2-binary" = "*"
 furl = "*"
+django-rest-framework = "*"
 
 [requires]
 python_version = "3.6"
