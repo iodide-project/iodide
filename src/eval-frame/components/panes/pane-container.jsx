@@ -42,7 +42,7 @@ export class PaneContainerUnconnected extends React.Component {
 
   render() {
     return (
-      <div className="eval-frame-panes-container">
+      <div className="eval-frame-panes-container display-none-in-report">
         <Resizable
           enable={{ top: true }}
           size={{ height: this.props.paneHeight, width: '100%' }}

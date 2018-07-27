@@ -47,12 +47,11 @@ export class OutputContainerUnconnected extends React.Component {
       <div
         id={`cell-${this.props.cellId}`}
         className={this.props.cellContainerClass}
+        style={this.props.style}
         onMouseDown={this.handleCellClick}
         ref={this.containerRef}
       >
-        <div className="cell-row-container">
-          {this.props.children}
-        </div>
+        {this.props.children}
       </div>
     )
   }
@@ -65,13 +64,19 @@ export function mapStateToProps(state, ownProps) {
   // note that spaces should be included in the returned strings
   const cellContainerClass = `cell-container ${cell.cellType
   }${cell.selected ? ' selected-cell' : ''
-  }${cell.rendered ? ' evaluated' : ' not-evaluated'}`
+  }${cell.rendered ? ' evaluated' : ' not-evaluated'
+  }`
+
+  const style = {
+    display: (cell.cellType === 'code' && !cell.hasSideEffect) ? 'none' : undefined,
+  }
 
   return {
     cellId: cell.id,
     selected: cell.selected,
     postMessageToEditor,
     cellContainerClass,
+    style,
   }
 }
 

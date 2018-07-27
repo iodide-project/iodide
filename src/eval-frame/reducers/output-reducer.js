@@ -56,6 +56,14 @@ const cellReducer = (state = newNotebook(), action) => {
       return nextState
     }
 
+    case 'CELL_SIDE_EFFECT_STATUS':
+      return newStateWithPropsAssignedForCell(
+        state,
+        action.cellId,
+        { hasSideEffect: action.hasSideEffect },
+      )
+
+
     case 'ALIGN_OUTPUT_TO_EDITOR': {
       alignCellTopTo(action.cellId, action.pxFromViewportTop)
       return state

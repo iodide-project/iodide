@@ -15,6 +15,7 @@ things out.
 function sideEffectDiv(sideEffectClass, reportSideEffect) {
   // appends a side effect div to the side effect area
   const cellId = store.getState().runningCellID
+  store.dispatch({ type: 'CELL_SIDE_EFFECT_STATUS', cellId, hasSideEffect: true })
   const div = document.createElement('div')
   const printClass = (reportSideEffect === true) ? sideEffectClass : `${sideEffectClass} hide-side-effect`
   div.setAttribute('class', printClass)

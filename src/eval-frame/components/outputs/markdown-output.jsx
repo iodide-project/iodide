@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import OutputRow from './output-row'
+// import OutputRow from './output-row'
 import OutputContainer from './output-container'
 
 import { getCellById } from '../../tools/notebook-utils'
@@ -16,12 +16,10 @@ export class MarkdownOutputUnconnected extends React.Component {
   render() {
     return (
       <OutputContainer cellId={this.props.cellId}>
-        <OutputRow cellId={this.props.cellId} rowType="output">
-          <div
-            className="user-markdown"
-            dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
-          />
-        </OutputRow>
+        <div
+          className="user-markdown"
+          dangerouslySetInnerHTML={{ __html: this.props.value }} // eslint-disable-line
+        />
       </OutputContainer>
     )
   }

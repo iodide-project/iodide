@@ -36,12 +36,6 @@ but I don't see why we would have to do this immediately.
     display: inline-block;
 }
 
-div.cell-row-container {
-  width: calc(100% - 20px); /* 100% minus cell-menu-contatiner width*/
-    flex-shrink: 0;
-    flex-grow: 0;
-}
-
 div.cell-row {
   display: flex;
   padding: 1px;
@@ -99,13 +93,7 @@ div.selected-cell {
   outline: 2px solid #ccc;
 }
 
-
-div.cell-container.evaluated {
-  background-color: white;
-}
-
 div.cell-container.not-evaluated {
-  background-color: none;
   outline: none;
 }
 
