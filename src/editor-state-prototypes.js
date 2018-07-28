@@ -50,13 +50,13 @@ const appMessageSchema = {
 const cellSchema = {
   type: 'object',
   properties: {
+    asyncProcessCount: { type: 'integer', minimum: 0 },
     content: { type: 'string' }, // change to string with default '' or 'untitled'
     id: { type: 'integer', minimum: 0 },
     cellType: {
       type: 'string',
       enum: cellTypeEnum.values(),
     },
-    asyncProcessCount: { type: 'integer', minimum: 0 },
     value: {}, // empty schema, `value` can be anything
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
@@ -191,13 +191,13 @@ const pluginCellDefaultContent = `{
 
 function newCell(cellId, cellType = 'code', language = 'js') {
   return {
+    asyncProcessCount: 0,
     content: cellType === 'plugin' ? pluginCellDefaultContent : '',
     id: cellId,
     cellType,
     value: undefined,
     rendered: false,
     selected: false,
-    asyncProcessCount: 0,
     executionStatus: ' ',
     evalStatus: 'UNEVALUATED',
     lastEvalTime: 0,

@@ -49,34 +49,6 @@ function getUserData() {
   return { userData: window.userData || {} }
 }
 
-function clearHistory(loadedState) {
-  // TODO: Don't assign to passed parameter
-
-  /* eslint-disable */
-  // remove history and declared properties before exporting the state.
-  loadedState.userDefinedVarNames = []
-  loadedState.history = []
-  loadedState.externalDependencies = []
-  loadedState.executionNumber = 0
-  loadedState.cells = [...loadedState.cells.slice()]
-  loadedState.cells.forEach((cell) => {
-    cell.evalStatus = undefined
-    if (cell.cellType === 'code' || cell.cellType === 'external dependencies') cell.value = undefined
-  })
-  /* eslint-enable */
-}
-
-function clearUserDefinedVars(userDefinedVarNames) {
-  // remove user defined variables when loading/importing a new/saved NB
-  userDefinedVarNames.forEach((varName) => {
-    try {
-      delete window[varName]
-    } catch (e) {
-      console.log(e)
-    }
-  })
-}
-
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
@@ -89,7 +61,6 @@ const notebookReducer = (state = newNotebook(), action) => {
 
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      clearUserDefinedVars(state.userDefinedVarNames)
       return Object.assign(newNotebook(), getSavedNotebooks(), getUserData())
 
     case 'EXPORT_NOTEBOOK': {
@@ -134,8 +105,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     // note: loading a NB should always assign to a copy of the latest global
     // and per-cell state for backwards compatibility
       nextState = action.newState
-      clearUserDefinedVars(state.userDefinedVarNames)
-      clearHistory(nextState)
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
       return Object.assign(
@@ -163,15 +132,12 @@ const notebookReducer = (state = newNotebook(), action) => {
           return newC
         }),
       }, { title: state.title })
-      clearHistory(nextState)
       window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
       return Object.assign({}, state, { lastSaved }, getSavedNotebooks())
     }
 
     case 'LOAD_NOTEBOOK': {
-      clearUserDefinedVars(state.userDefinedVarNames)
       nextState = stateFromJsmd(window.localStorage.getItem(action.title))
-      clearHistory(nextState)
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
       cells = nextState.cells.map((cell, i) =>
@@ -197,10 +163,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'CLEAR_VARIABLES': {
-      clearUserDefinedVars(state.userDefinedVarNames)
       nextState = Object.assign({}, state)
       nextState.userDefinedVarNames = {}
-      nextState.externalDependencies = []
       return nextState
     }
 
@@ -301,26 +265,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       }
       return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
     }
-
-    // case 'CHANGE_REPORT_PANE_SORT': {
-    //   const reportPaneSort = action.sortType
-    //   return Object.assign({}, state, { reportPaneSort })
-    // }
-
-    // case 'CHANGE_CONSOLE_PANE_SORT': {
-    //   const consolePaneSort = action.sortType
-    //   return Object.assign({}, state, { consolePaneSort })
-    // }
-
-    // case 'CHANGE_REPORT_PANE_FILTER': {
-    //   const { reportPaneOutputFilter } = action
-    //   return Object.assign({}, state, { reportPaneOutputFilter })
-    // }
-
-    // case 'CHANGE_CONSOLE_PANE_FILTER': {
-    //   const { consolePaneOutputFilter } = action
-    //   return Object.assign({}, state, { consolePaneOutputFilter })
-    // }
 
     case 'ADD_LANGUAGE_TO_EDITOR': {
       const { languageDefinition } = action

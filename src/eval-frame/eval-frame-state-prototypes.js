@@ -134,17 +134,6 @@ const stateSchema = {
 // stateSchema.required = Object.keys(stateSchema.properties)
 // stateSchema.minProperties = Object.keys(stateSchema.properties).length
 
-const pluginCellDefaultContent = `{
-  "pluginType": ""
-  "languageId": "",
-  "displayName": "",
-  "codeMirrorMode": "",
-  "keybinding": "",
-  "url": "",
-  "module": "",
-  "evaluator": ""
-}`
-
 const jsLanguageDefinition = {
   pluginType: 'language',
   languageId: 'js',
@@ -156,8 +145,20 @@ const jsLanguageDefinition = {
   url: '',
 }
 
+const pluginCellDefaultContent = `{
+  "pluginType": ""
+  "languageId": "",
+  "displayName": "",
+  "codeMirrorMode": "",
+  "keybinding": "",
+  "url": "",
+  "module": "",
+  "evaluator": ""
+}`
+
 function newCell(cellId, cellType = 'code', language = 'js') {
   return {
+    asyncProcessCount: 0,
     content: cellType === 'plugin' ? pluginCellDefaultContent : '',
     id: cellId,
     cellType,
@@ -165,7 +166,6 @@ function newCell(cellId, cellType = 'code', language = 'js') {
     rendered: false,
     selected: false,
     executionStatus: ' ',
-    asyncProcessCount: 0,
     evalStatus: 'UNEVALUATED',
     hasSideEffect: false,
     lastEvalTime: 0,
