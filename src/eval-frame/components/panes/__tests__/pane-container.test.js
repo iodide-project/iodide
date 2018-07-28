@@ -42,7 +42,7 @@ describe('PaneContainer mapStateToProps', () => {
 
   beforeEach(() => {
     state = {
-      sidePaneMode: '_HISTORY',
+      sidePaneMode: '_CONSOLE',
       paneHeight: 300,
     }
   })
@@ -52,7 +52,7 @@ describe('PaneContainer mapStateToProps', () => {
       .toEqual({
         viewPaneDisplayStyle: 'flex',
         paneHeight: 300,
-        paneTitle: 'History',
+        paneTitle: 'Console',
       })
   })
 

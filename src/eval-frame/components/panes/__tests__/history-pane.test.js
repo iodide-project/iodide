@@ -68,7 +68,7 @@ describe('HistoryPane mapStateToProps', () => {
 
   beforeEach(() => {
     state = {
-      sidePaneMode: '_HISTORY',
+      sidePaneMode: '_CONSOLE',
       history: [{
         cellID: 0,
         lastRan: '2018-06-16T10:32:46.422Z',
@@ -77,10 +77,10 @@ describe('HistoryPane mapStateToProps', () => {
     }
   })
 
-  it('display=="block" if sidePaneMode=="_HISTORY', () => {
+  it('display=="block" if sidePaneMode=="_CONSOLE', () => {
     expect(mapStateToProps(state))
       .toEqual({
-        sidePaneMode: '_HISTORY',
+        sidePaneMode: '_CONSOLE',
         history: [{
           cellID: 0,
           lastRan: '2018-06-16T10:32:46.422Z',
@@ -90,8 +90,8 @@ describe('HistoryPane mapStateToProps', () => {
       })
   })
 
-  it('display=="none" if sidePaneMode!=="_HISTORY', () => {
-    state.sidePaneMode = 'not_HISTORY'
+  it('display=="none" if sidePaneMode!=="_CONSOLE', () => {
+    state.sidePaneMode = 'not_CONSOLE'
     expect(mapStateToProps(state).paneDisplay)
       .toEqual('none')
   })

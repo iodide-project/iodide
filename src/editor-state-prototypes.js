@@ -266,7 +266,7 @@ function newNotebook() {
     userData: {},
     mode: 'COMMAND_MODE', // command, edit
     viewMode: 'EXPLORE_VIEW', // editor, presentation
-    sidePaneMode: '_HISTORY',
+    sidePaneMode: '_CONSOLE',
     sidePaneWidth: 562,
     history: [],
     showFrame: true,

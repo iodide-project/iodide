@@ -91,7 +91,9 @@ function evaluateCodeCell(cell) {
     }
     const updateCellAfterEvaluation = () => {
       const cellProperties = { value: output, rendered: true }
-      if (evalStatus === 'ERROR') cellProperties.evalStatus = evalStatus
+      if (evalStatus === 'ERROR') {
+        cellProperties.evalStatus = evalStatus
+      }
       dispatch(updateCellProperties(cell.id, cellProperties))
       dispatch(incrementExecutionNumber())
       dispatch(appendToEvalHistory(cell.id, cell.content))

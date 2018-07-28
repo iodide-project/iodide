@@ -20,8 +20,8 @@ export class HistoryPaneUnconnected extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return (!deepEqual(this.props, nextProps)
-      && (this.props.sidePaneMode === '_HISTORY'
-        || nextProps.sidePaneMode === '_HISTORY')
+      && (this.props.sidePaneMode === '_CONSOLE'
+        || nextProps.sidePaneMode === '_CONSOLE')
     )
   }
 
@@ -64,7 +64,7 @@ export function mapStateToProps(state) {
   return {
     sidePaneMode: state.sidePaneMode,
     history: state.history,
-    paneDisplay: state.sidePaneMode === '_HISTORY' ? 'block' : 'none',
+    paneDisplay: state.sidePaneMode === '_CONSOLE' ? 'block' : 'none',
   }
 }
 

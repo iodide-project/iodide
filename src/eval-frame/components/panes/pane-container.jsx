@@ -81,7 +81,7 @@ export class PaneContainerUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   const paneTitle = {
-    _HISTORY: 'History',
+    _CONSOLE: 'Console',
     DECLARED_VARIABLES: 'Declared Variables',
     undefined: 'PANE MODE UNDEFINED!!',
   }[state.sidePaneMode]

@@ -234,7 +234,7 @@ function newNotebook() {
     lastSaved: undefined,
     mode: 'COMMAND_MODE',
     viewMode: 'REPORT_VIEW',
-    sidePaneMode: '_HISTORY',
+    sidePaneMode: '_CONSOLE',
     paneHeight: 400,
     history: [],
     scrollingLinked: false,

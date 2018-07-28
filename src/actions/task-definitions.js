@@ -343,8 +343,8 @@ tasks.toggleHistoryPane = new UserTask({
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
   callback() {
-    if (store.getState().sidePaneMode !== '_HISTORY') {
-      dispatcher.changeSidePaneMode('_HISTORY')
+    if (store.getState().sidePaneMode !== '_CONSOLE') {
+      dispatcher.changeSidePaneMode('_CONSOLE')
     } else {
       dispatcher.changeSidePaneMode()
     }
