@@ -28,6 +28,7 @@ const approvedKeys = [
   'ctrl+shift+e',
   'ctrl+d',
   'ctrl+h',
+  'ctrl+i',
 ]
 
 function receiveMessage(event) {
