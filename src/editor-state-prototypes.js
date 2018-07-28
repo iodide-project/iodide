@@ -66,7 +66,6 @@ const cellSchema = {
       enum: cellEvalStatusEnum.values(),
     },
     lastEvalTime: { type: 'integer', minimum: 0 },
-    rowSettings: { type: 'object' },
     inputFolding: { type: 'string', enum: ['VISIBLE', 'SCROLL', 'HIDDEN'] },
     language: { type: 'string' }, // '' in case not a code cell
     skipInRunAll: { type: 'boolean' },
@@ -166,48 +165,6 @@ const stateSchema = {
 // stateSchema.required = Object.keys(stateSchema.properties)
 // stateSchema.minProperties = Object.keys(stateSchema.properties).length
 
-
-function nextOverflow(currentOverflow) {
-  return { HIDDEN: 'VISIBLE', VISIBLE: 'SCROLL', SCROLL: 'HIDDEN' }[currentOverflow]
-}
-
-function newCellRowSettings(cellType) {
-  switch (cellType) {
-    case 'code':
-      return {
-        EXPLORE: { input: 'VISIBLE', sideeffect: 'VISIBLE', output: 'VISIBLE' },
-        REPORT: { input: 'HIDDEN', sideeffect: 'VISIBLE', output: 'HIDDEN' },
-      }
-    case 'markdown':
-      return {
-        EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
-        REPORT: { input: 'VISIBLE', output: 'VISIBLE' },
-      }
-    case 'external dependencies':
-      return {
-        EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
-        REPORT: { input: 'HIDDEN', output: 'HIDDEN' },
-      }
-    case 'plugin':
-      return {
-        EXPLORE: { input: 'VISIBLE', output: 'VISIBLE' },
-        REPORT: { input: 'HIDDEN', output: 'HIDDEN' },
-      }
-    case 'css':
-      return {
-        EXPLORE: { input: 'VISIBLE' },
-        REPORT: { input: 'HIDDEN' },
-      }
-    case 'raw':
-      return {
-        EXPLORE: { input: 'VISIBLE' },
-        REPORT: { input: 'HIDDEN' },
-      }
-    default:
-      throw Error(`Unsupported cellType: ${cellType}`)
-  }
-}
-
 const jsLanguageDefinition = {
   pluginType: 'language',
   languageId: 'js',
@@ -244,7 +201,6 @@ function newCell(cellId, cellType = 'code', language = 'js') {
     executionStatus: ' ',
     evalStatus: 'UNEVALUATED',
     lastEvalTime: 0,
-    rowSettings: newCellRowSettings(cellType),
     inputFolding: 'VISIBLE',
     skipInRunAll: false,
     language, // default language is js, but it only matters the cell is a code cell
@@ -294,7 +250,6 @@ export {
   newCell,
   newCellID,
   newNotebook,
-  nextOverflow,
   // enums and schemas
   rowOverflowEnum,
   stateSchema,

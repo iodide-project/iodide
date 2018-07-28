@@ -7,7 +7,6 @@ import UnfoldLess from '@material-ui/icons/UnfoldLess'
 
 import { selectCell, updateCellProperties } from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
-import { nextOverflow } from '../../editor-state-prototypes'
 
 import CellMenuContainer from './cell-menu-container'
 import CellEditor from './cell-editor'
@@ -89,7 +88,11 @@ export function mapStateToProps(state, ownProps) {
     display: cell.inputFolding === 'HIDDEN' ? 'none' : 'block',
   }
   const mainComponentClass = `main-component ${cell.inputFolding}`
-
+  const nextInputFolding = {
+    HIDDEN: 'VISIBLE',
+    VISIBLE: 'SCROLL',
+    SCROLL: 'HIDDEN',
+  }[cell.inputFolding]
 
   return {
     cellId: cell.id,
@@ -99,7 +102,7 @@ export function mapStateToProps(state, ownProps) {
     selected: cell.selected,
     editingCell: cell.selected && state.mode === 'EDIT_MODE',
     cellType: cell.cellType,
-    nextInputFolding: nextOverflow(cell.inputFolding),
+    nextInputFolding,
   }
 }
 
@@ -113,6 +116,5 @@ function mapDispatchToProps(dispatch) {
     },
   }
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellContainerUnconnected)

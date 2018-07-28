@@ -185,6 +185,7 @@ function evaluateLanguagePluginCell(cell) {
       value = `plugin definition failed to parse:\n${err.message}`
       evalStatus = 'ERROR'
     }
+    dispatch(appendToEvalHistory(cell.id, cell.content))
 
     if (pluginData.url === undefined) {
       value = 'plugin definition missing "url"'
@@ -292,18 +293,6 @@ export function saveEnvironment(updateObj, update) {
     type: 'SAVE_ENVIRONMENT',
     updateObj,
     update,
-  }
-}
-
-// eval-frame retains a copy of this to manage its own row collapse state, which
-// the editor doesn't really need to care about
-export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId) {
-  return {
-    type: 'SET_CELL_ROW_COLLAPSE_STATE',
-    viewMode,
-    rowType,
-    rowOverflow,
-    cellId,
   }
 }
 

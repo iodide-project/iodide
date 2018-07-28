@@ -213,17 +213,6 @@ export function evaluateAllCells() {
   }
 }
 
-
-export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId) {
-  return {
-    type: 'SET_CELL_ROW_COLLAPSE_STATE',
-    viewMode,
-    rowType,
-    rowOverflow,
-    cellId,
-  }
-}
-
 export function markCellNotRendered() {
   return {
     type: 'MARK_CELL_NOT_RENDERED',

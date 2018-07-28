@@ -3,12 +3,10 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import ArrowBack from '@material-ui/icons/ArrowBack'
-
-import ExternalDependencyOutput from '../outputs/external-resource-output'
-import OutputRenderer from '../outputs/output-renderer'
+import { ValueRenderer } from '../../../components/reps/value-renderer'
+import ExternalResourceOutputHandler from '../../../components/reps/output-handler-external-resource'
 
 import PaneContentButton from './pane-content-button'
-// import { prettyDate } from '../../tools/notebook-utils'
 import { postMessageToEditor } from '../../port-to-editor'
 
 import { prettyDate, getCellById } from '../../tools/notebook-utils'
@@ -45,15 +43,18 @@ export class HistoryItemUnconnected extends React.Component {
   }
 
   render() {
-    const id = this.props.cell.cellID
+    // const id = this.props.cell.cellID
     let cellOutput
     switch (this.props.cellType) {
       case 'code':
       case 'plugin':
-        cellOutput = <OutputRenderer cellId={id} />
+        cellOutput = (<ValueRenderer
+          render={this.props.render}
+          valueToRender={this.props.valueToRender}
+        />)
         break
       case 'external dependencies':
-        cellOutput = <ExternalDependencyOutput cellId={id} key={id} />
+        cellOutput = <ExternalResourceOutputHandler value={this.props.valueToRender} />
         break
       case 'css':
         cellOutput = 'page styles updated'
@@ -96,8 +97,12 @@ export class HistoryItemUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state, ownProps) {
-  const { cellType } = getCellById(state.cells, ownProps.cell.cellID)
-  return { cellType }
+  const cell = getCellById(state.cells, ownProps.cell.cellID)
+  return {
+    cellType: cell.cellType,
+    valueToRender: cell.value,
+    render: cell.rendered,
+  }
 }
 
 export default connect(mapStateToProps)(HistoryItemUnconnected)

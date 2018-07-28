@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-// import OutputRow from './output-row'
 import OutputContainer from './output-container'
 
 import { getCellById } from '../../tools/notebook-utils'

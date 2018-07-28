@@ -5,7 +5,6 @@ import {
   getSelectedCellId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
-  newStateWithRowOverflowSet,
   newStateWithPropsAssignedForCell,
 } from './cell-reducer-utils'
 
@@ -88,18 +87,6 @@ const cellReducer = (state = newNotebook(), action) => {
         },
       )
       return Object.assign(newState, { languageLastUsed: language })
-    }
-
-    case 'SET_CELL_ROW_COLLAPSE_STATE': {
-      let { cellId } = action
-      if (cellId === undefined) { cellId = getSelectedCellId(state) }
-      return newStateWithRowOverflowSet(
-        state,
-        cellId,
-        action.rowType,
-        action.viewMode,
-        action.rowOverflow,
-      )
     }
 
     case 'MARK_CELL_NOT_RENDERED':

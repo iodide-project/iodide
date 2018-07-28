@@ -139,31 +139,6 @@ function newStateWithSelectedCellPropsAssigned(state, cellPropsToSet) {
   return newStateWithPropsAssignedForCell(state, getSelectedCellId(state), cellPropsToSet)
 }
 
-function newStateWithRowOverflowSet(state, cellId, rowType, viewModeToSet, rowOverflow) {
-  const cells = state.cells.slice()
-  const cellIndex = cells.findIndex(c => c.id === cellId)
-  const cell = cells[cellIndex]
-  // this block can be deprecated if we move to enums for VIEWs
-  let view
-  switch (viewModeToSet) {
-    case 'EXPLORE_VIEW':
-      view = 'EXPLORE'
-      break
-    case 'REPORT_VIEW':
-      view = 'REPORT'
-      break
-    default:
-      throw Error(`Unsupported viewMode: ${viewModeToSet}`)
-  }
-  cell.rowSettings[view][rowType] = rowOverflow
-
-  cells[cellIndex] = Object.assign({}, cells[cellIndex])
-
-
-  return Object.assign({}, state, { cells })
-}
-
-
 export {
   moveCell,
   addExternalDependency,
@@ -172,6 +147,5 @@ export {
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
-  newStateWithRowOverflowSet,
   newStateWithPropsAssignedForCell,
 }
