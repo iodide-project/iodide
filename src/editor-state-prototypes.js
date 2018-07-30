@@ -23,8 +23,6 @@ const StringEnum = class {
   contains(key) { return Object.keys(this).indexOf(key) >= 0 }
 }
 
-const rowOverflowEnum = new StringEnum('VISIBLE', 'SCROLL', 'HIDDEN')
-
 export const cellTypeEnum = new StringEnum(
   'code',
   'markdown',
@@ -60,12 +58,10 @@ const cellSchema = {
     value: {}, // empty schema, `value` can be anything
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
-    executionStatus: { type: 'string' },
     evalStatus: {
       type: 'string',
       enum: cellEvalStatusEnum.values(),
     },
-    lastEvalTime: { type: 'integer', minimum: 0 },
     inputFolding: { type: 'string', enum: ['VISIBLE', 'SCROLL', 'HIDDEN'] },
     language: { type: 'string' }, // '' in case not a code cell
     skipInRunAll: { type: 'boolean' },
@@ -129,7 +125,10 @@ const stateSchema = {
     },
     lastSaved: {}, // FIXME change to string ONLY with default 'never'
     lastExport: {}, // FIXME change to string ONLY
-    sidePaneMode: {}, // FIXME change to string ONLY
+    sidePaneMode: {
+      type: 'string',
+      enum: ['_CLOSED', '_CONSOLE', 'DECLARED_VARIABLES', '_APP_INFO'],
+    },
     sidePaneWidth: { type: 'integer' },
     editorWidth: { type: 'integer' },
     userData: { type: 'object' },
@@ -142,7 +141,6 @@ const stateSchema = {
     showFrame: { type: 'boolean' },
     showEditor: { type: 'boolean' },
     scrollingLinked: { type: 'boolean' },
-    alwaysSelectInView: { type: 'boolean' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
       type: 'array',
@@ -198,12 +196,10 @@ function newCell(cellId, cellType = 'code', language = 'js') {
     value: undefined,
     rendered: false,
     selected: false,
-    executionStatus: ' ',
     evalStatus: 'UNEVALUATED',
-    lastEvalTime: 0,
     inputFolding: 'VISIBLE',
     skipInRunAll: false,
-    language, // default language is js, but it only matters the cell is a code cell
+    language, // default language is js, but it only matters if the cell is a code cell
   }
 }
 
@@ -228,10 +224,8 @@ function newNotebook() {
     showFrame: true,
     showEditor: true,
     scrollingLinked: false,
-    alwaysSelectInView: false,
     evalFrameMessageQueue: [],
     evalFrameReady: false,
-    externalDependencies: [],
     executionNumber: 0,
     appMessages: [],
     autoSave: undefined,
@@ -251,6 +245,5 @@ export {
   newCellID,
   newNotebook,
   // enums and schemas
-  rowOverflowEnum,
   stateSchema,
 }
