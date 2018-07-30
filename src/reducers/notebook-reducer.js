@@ -122,18 +122,9 @@ const notebookReducer = (state = newNotebook(), action) => {
         ({ lastSaved } = state)
         title = AUTOSAVE + title
       }
-      nextState = Object.assign({}, state, { lastSaved }, {
-        cells: state.cells.slice().map((c) => {
-          const newC = Object.assign({}, c)
-          newC.evalStatus = undefined
-          if (newC.cellType === 'code' || newC.cellType === 'external dependencies') {
-            newC.value = undefined
-          }
-          return newC
-        }),
-      }, { title: state.title })
-      window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
-      return Object.assign({}, state, { lastSaved }, getSavedNotebooks())
+      const savedState = Object.assign({}, state, { lastSaved })
+      window.localStorage.setItem(title, stringifyStateToJsmd(savedState))
+      return Object.assign({}, savedState, getSavedNotebooks())
     }
 
     case 'LOAD_NOTEBOOK': {
