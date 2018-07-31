@@ -16,6 +16,7 @@ if (IODIDE_BUILD_MODE === 'dev' || IODIDE_BUILD_MODE === 'devperf') {
     applyMiddleware(thunk),
     applyMiddleware(createLogger({
       predicate: (getState, action) => action.type !== 'UPDATE_INPUT_CONTENT',
+      colors: { title: () => '#27ae60' },
     })),
   )
 } else if (IODIDE_BUILD_MODE === 'test') {
