@@ -40,9 +40,9 @@ function getCellAboveSelectedId() {
   throw new Error('no cell currently selected')
 }
 
-function getCellById(cells, cellID) {
+function getCellById(cells, cellId) {
   // returns a reference to the cell.
-  const thisCellIndex = cells.findIndex(c => c.id === cellID)
+  const thisCellIndex = cells.findIndex(c => c.id === cellId)
   const thisCell = cells[thisCellIndex]
   return thisCell
 }

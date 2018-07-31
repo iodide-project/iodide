@@ -28,10 +28,10 @@ export function newNotebook() {
   }
 }
 
-export function temporarilySaveRunningCellID(cellID) {
+export function temporarilySaveRunningCellID(cellId) {
   return {
     type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',
-    cellID,
+    cellId,
   }
 }
 

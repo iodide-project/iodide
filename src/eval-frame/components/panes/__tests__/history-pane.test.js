@@ -20,7 +20,7 @@ describe('HistoryPaneUnconnected React component', () => {
   beforeEach(() => {
     props = {
       history: [{
-        cellID: 0,
+        cellId: 0,
         lastRan: new Date('2018-06-16T10:32:46.422Z'),
         content: 'var a = 3',
       }],
@@ -47,12 +47,12 @@ describe('HistoryPaneUnconnected React component', () => {
   it('always renders correct number of HistoryItem inside history-cells', () => {
     props.history = [
       {
-        cellID: 0,
+        cellId: 0,
         lastRan: new Date('2018-06-16T10:32:46.422Z'),
         content: 'var a = 3',
       },
       {
-        cellID: 1,
+        cellId: 1,
         lastRan: new Date('2018-06-16T10:32:47.422Z'),
         content: 'var b = 3',
       },
@@ -70,7 +70,7 @@ describe('HistoryPane mapStateToProps', () => {
     state = {
       sidePaneMode: '_CONSOLE',
       history: [{
-        cellID: 0,
+        cellId: 0,
         lastRan: '2018-06-16T10:32:46.422Z',
         content: 'var a = 3',
       }],
@@ -82,7 +82,7 @@ describe('HistoryPane mapStateToProps', () => {
       .toEqual({
         sidePaneMode: '_CONSOLE',
         history: [{
-          cellID: 0,
+          cellId: 0,
           lastRan: '2018-06-16T10:32:46.422Z',
           content: 'var a = 3',
         }],

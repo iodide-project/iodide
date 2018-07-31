@@ -42,7 +42,7 @@ export class HistoryPaneUnconnected extends React.Component {
           display
           content={cell.content}
           cell={cell}
-          key={`history-${+cell.lastRan}-${cell.cellID}`}
+          key={`history-${+cell.lastRan}-${cell.cellId}`}
         />))
     } else {
       histContents.push(<EmptyPaneContents key="no-history">No History</EmptyPaneContents>)

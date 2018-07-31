@@ -16,7 +16,7 @@ export class HistoryItemUnconnected extends React.Component {
     cell: PropTypes.shape({
       content: PropTypes.string,
       display: PropTypes.bool,
-      cellID: PropTypes.number,
+      cellId: PropTypes.number,
       lastRan: PropTypes.instanceOf(Date),
     }).isRequired,
   }
@@ -36,14 +36,14 @@ export class HistoryItemUnconnected extends React.Component {
     postMessageToEditor(
       'CLICK_ON_OUTPUT',
       {
-        id: this.props.cell.cellID,
+        id: this.props.cell.cellId,
         autoScrollToCell: true,
       },
     )
   }
 
   render() {
-    // const id = this.props.cell.cellID
+    // const id = this.props.cell.cellId
     let cellOutput
     switch (this.props.cellType) {
       case 'code':
@@ -83,7 +83,7 @@ export class HistoryItemUnconnected extends React.Component {
       </div>)
 
     return (
-      <div id={`cell-${this.props.cell.cellID}-history`} className="history-cell">
+      <div id={`cell-${this.props.cell.cellId}-history`} className="history-cell">
         <div className="history-content editor">
           {historyMetadata}
           <pre className="history-item-code">{this.props.content}</pre>
@@ -97,7 +97,7 @@ export class HistoryItemUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state, ownProps) {
-  const cell = getCellById(state.cells, ownProps.cell.cellID)
+  const cell = getCellById(state.cells, ownProps.cell.cellId)
   return {
     cellType: cell.cellType,
     valueToRender: cell.value,

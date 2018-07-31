@@ -223,7 +223,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'APPEND_TO_EVAL_HISTORY': {
       const history = [...state.history]
       history.push({
-        cellID: action.cellId,
+        cellId: action.cellId,
         lastRan: new Date(),
         content: action.content,
       })
@@ -245,8 +245,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
-      const { cellID } = action
-      return Object.assign({}, state, { runningCellID: cellID })
+      const { cellId } = action
+      return Object.assign({}, state, { runningCellID: cellId })
     }
 
     case 'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME': {
