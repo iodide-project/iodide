@@ -57,13 +57,31 @@ matrix:
       services:
         - docker
 
+      before_install:
+        # need a more recent version of docker-compose than is currently supported by travis
+        - sudo rm /usr/local/bin/docker-compose
+        - curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+        - chmod +x docker-compose
+        - sudo mv docker-compose /usr/local/bin
+        # Shut down postgres because it blocks our db container's port map to :5432
+        - sudo service postgresql stop
+        # Wait for it to stop
+        - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
+
       install:
         - npm install
 
       script:
         - cp .env-dist .env
         - make build
+        # bring up docker containers and wait for db setup to complete
+        - docker-compose up -d
+        # this command waits for the db to be accessible at port 5432 before continuing
+        # (FIXME: need some sort of timeout here)
+        - docker-compose run server bash -c "while ! echo > /dev/tcp/db/5432 > /dev/null 2>&1; do sleep 1 && echo waiting for db; done"
+        # run actual tests
         - make flake8
+        - make test
 
 env:
   global:
