@@ -63,6 +63,10 @@ matrix:
         - curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` > docker-compose
         - chmod +x docker-compose
         - sudo mv docker-compose /usr/local/bin
+        # Shut down postgres because it blocks our db container's port map to :5432
+        - sudo service postgresql stop
+        # Wait for it to stop
+        - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
 
       install:
         - npm install
