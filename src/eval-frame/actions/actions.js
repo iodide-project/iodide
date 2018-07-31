@@ -167,6 +167,7 @@ function evaluateCSSCell(cell) {
         evalStatus: 'SUCCESS',
       },
     ))
+    dispatch(appendToEvalHistory(cell.id, cell.content))
   }
 }
 

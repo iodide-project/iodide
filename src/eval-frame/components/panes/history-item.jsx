@@ -56,7 +56,7 @@ export class HistoryItemUnconnected extends React.Component {
         cellOutput = <ExternalDependencyOutput cellId={id} key={id} />
         break
       case 'css':
-        cellOutput = 'page styles updated'
+        cellOutput = 'Page Styles Updated'
         break
       default:
         // TODO: Use better class for inline error
