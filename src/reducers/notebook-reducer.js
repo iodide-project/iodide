@@ -91,6 +91,8 @@ const notebookReducer = (state = newNotebook(), action) => {
       state.evalFrameMessageQueue.forEach((actionToPost) => {
         postActionToEvalFrame(actionToPost)
       })
+      const { viewMode } = state
+      postActionToEvalFrame({ type: 'SET_VIEW_MODE', viewMode })
       return Object.assign({}, state, { evalFrameReady: true, evalFrameMessageQueue: [] })
     }
 
