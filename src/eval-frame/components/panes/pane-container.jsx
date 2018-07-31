@@ -16,6 +16,7 @@ import tasks from '../../actions/eval-frame-tasks'
 
 import DeclaredVariablesPane from './declared-variables-pane'
 import HistoryPane from './history-pane'
+import AppInfo from './app-info-pane'
 
 const theme = createMuiTheme({
   palette: {
@@ -71,6 +72,7 @@ export class PaneContainerUnconnected extends React.Component {
               </div>
               <DeclaredVariablesPane />
               <HistoryPane />
+              <AppInfo />
             </MuiThemeProvider>
           </div>
         </Resizable>
@@ -82,6 +84,7 @@ export class PaneContainerUnconnected extends React.Component {
 export function mapStateToProps(state) {
   const paneTitle = {
     _CONSOLE: 'Console',
+    _APP_INFO: 'App Info',
     DECLARED_VARIABLES: 'Declared Variables',
     undefined: 'PANE MODE UNDEFINED!!',
   }[state.sidePaneMode]

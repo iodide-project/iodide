@@ -13,6 +13,7 @@ const evalFrameActionForwarder = (state, action) => {
     case 'UPDATE_CELL_LIST':
     case 'CHANGE_SIDE_PANE_MODE':
     case 'TOGGLE_EDITOR_LINK':
+    case 'UPDATE_APP_MESSAGES':
     // case 'CHANGE_REPORT_PANE_SORT':
     // case 'CHANGE_CONSOLE_PANE_SORT':
     // case 'CHANGE_REPORT_PANE_FILTER':

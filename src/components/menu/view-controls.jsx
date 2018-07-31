@@ -13,7 +13,7 @@ import NotebookTaskButton from './notebook-task-button'
 import UserButton from './user-button'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
-import AppInfoPane from '../panes/app-info-pane'
+// import AppInfoPane from '../panes/app-info-pane'
 
 import tasks from '../../actions/task-definitions'
 import DeclaredVariableIcon from './declared-variable-icon'
@@ -41,7 +41,7 @@ export class ViewControlsUnconnected extends React.Component {
           <HistoryIcon />
         </NotebookTaskButton>
 
-        <AppInfoPane />
+        {/* <AppInfoPane /> */}
 
         {IODIDE_BUILD_MODE === 'server' && (
           <UserButton

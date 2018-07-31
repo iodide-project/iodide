@@ -1,4 +1,4 @@
-import { newNotebook } from '../eval-frame-state-prototypes'
+import { newNotebook, newCellID } from '../eval-frame-state-prototypes'
 
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
@@ -11,6 +11,21 @@ function clearUserDefinedVars(userDefinedVarNames) {
   })
 }
 
+function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
+  return {
+    id: appMessageId,
+    message: appMessageText,
+    details: appMessageDetails,
+    when: appMessageWhen,
+  }
+}
+
+function addAppMessageToState(state, appMessage) {
+  const nextAppMessageId = newCellID(state.appMessages)
+  state.appMessages
+    .push(newAppMessage(nextAppMessageId, appMessage.message, appMessage.details, appMessage.when))
+  return state
+}
 
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
@@ -75,6 +90,12 @@ const notebookReducer = (state = newNotebook(), action) => {
         content: action.content,
       })
       return Object.assign({}, state, { history })
+    }
+
+    case 'UPDATE_APP_MESSAGES': {
+      nextState = Object.assign({}, state)
+      nextState.appMessages = nextState.appMessages.slice()
+      return addAppMessageToState(nextState, Object.assign({}, action.message))
     }
 
     case 'UPDATE_USER_VARIABLES': {

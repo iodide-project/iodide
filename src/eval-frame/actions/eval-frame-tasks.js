@@ -61,6 +61,14 @@ tasks.toggleHistoryPane = new UserTask({
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
 
+tasks.toggleAppInfoPane = new UserTask({
+  title: 'Toggle the App Info Pane',
+  menuTitle: 'App Info',
+  keybindings: ['ctrl+i', 'meta+i'],
+  preventDefaultKeybinding: true,
+  callback() { postKeypressToEditor(this.keybindings[0]) },
+})
+
 // tasks.changeReportPaneSort = new UserTask({
 //   title: 'Change Report Pane Sort',
 //   callback() {

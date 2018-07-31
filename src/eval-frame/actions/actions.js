@@ -44,6 +44,17 @@ export function appendToEvalHistory(cellId, content) {
   }
 }
 
+export function updateAppMessages(messageObj) {
+  const { message } = messageObj
+  let { details, when } = messageObj
+  if (when === undefined) when = new Date().toString()
+  if (details === undefined) details = message
+  return {
+    type: 'UPDATE_APP_MESSAGES',
+    message: { message, details, when },
+  }
+}
+
 // note: this function is NOT EXPORTED. It is a private function meant
 // to be wrapped by other actions that will configure and dispatch it.
 export function updateCellProperties(cellId, updatedProperties) {
@@ -162,6 +173,7 @@ function evaluateCSSCell(cell) {
         evalStatus: 'SUCCESS',
       },
     ))
+    dispatch(appendToEvalHistory(cell.id, cell.content))
   }
 }
 
