@@ -91,6 +91,9 @@ const notebookReducer = (state = newNotebook(), action) => {
       state.evalFrameMessageQueue.forEach((actionToPost) => {
         postActionToEvalFrame(actionToPost)
       })
+      const { viewMode } = state
+      // need to send viewMode since iframe defaults to viewMode='REPORT_VIEW'
+      postActionToEvalFrame({ type: 'SET_VIEW_MODE', viewMode })
       return Object.assign({}, state, { evalFrameReady: true, evalFrameMessageQueue: [] })
     }
 
@@ -217,33 +220,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { userData })
     }
 
-    case 'APPEND_TO_EVAL_HISTORY': {
-      const history = [...state.history]
-      history.push({
-        cellID: action.cellId,
-        lastRan: new Date(),
-        content: action.content,
-      })
-      return Object.assign({}, state, { history })
-    }
-
-    case 'UPDATE_USER_VARIABLES': {
-      const userDefinedVarNames = []
-      Object.keys(window)
-        .filter(g => !initialVariables.has(g))
-        .forEach((g) => { userDefinedVarNames.push(g) })
-      return Object.assign({}, state, { userDefinedVarNames })
-    }
-
     case 'UPDATE_APP_MESSAGES': {
       nextState = Object.assign({}, state)
       nextState.appMessages = nextState.appMessages.slice()
       return addAppMessageToState(nextState, Object.assign({}, action.message))
-    }
-
-    case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
-      const { cellID } = action
-      return Object.assign({}, state, { runningCellID: cellID })
     }
 
     case 'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME': {

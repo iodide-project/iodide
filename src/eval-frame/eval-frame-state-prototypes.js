@@ -9,28 +9,32 @@ import {
   evalFrameStateSchema,
 } from '../mirrored-state-prototypes'
 
-const StringEnum = class {
-  constructor(...vals) {
-    vals.forEach((v) => {
-      if (v === 'values' || v === 'contains') { throw Error(`disallowed enum name: ${v}`) }
-      this[v] = v
-    })
-    Object.freeze(this)
-  }
-  values() { return Object.keys(this) }
-  contains(key) { return Object.keys(this).indexOf(key) >= 0 }
-}
+// const StringEnum = class {
+//   constructor(...vals) {
+//     vals.forEach((v) => {
+//       if (v === 'values' || v === 'contains') {
+//         throw Error(`disallowed enum name: ${v}`)
+//       }
+//       this[v] = v
+//     })
+//     Object.freeze(this)
+//   }
+//   values() { return Object.keys(this) }
+//   contains(key) { return Object.keys(this).indexOf(key) >= 0 }
+// }
 
-export const cellTypeEnum = new StringEnum(
-  'code',
-  'markdown',
-  'raw',
-  'css',
-  'external dependencies',
-  'plugin',
-)
+// export const cellTypeEnum = new StringEnum(
+//   'code',
+//   'markdown',
+//   'raw',
+//   'css',
+//   'external dependencies',
+//   'plugin',
+// )
 
-export const cellEvalStatusEnum = new StringEnum('UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR')
+// export const cellEvalStatusEnum = new StringEnum(
+//   'UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR'
+// )
 
 // const cellSchema = {
 //   type: 'object',

@@ -43,6 +43,7 @@ const cellReducer = (state = newNotebook(), action) => {
       }
       const thisCell = cells[index]
       thisCell.selected = true
+      thisCell.inputFolding = 'VISIBLE'
       nextState = Object.assign({}, state, { cells })
       return nextState
     }

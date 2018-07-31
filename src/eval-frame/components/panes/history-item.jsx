@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { ValueRenderer } from '../../../components/reps/value-renderer'
-import ExternalResourceOutputHandler from '../../../components/reps/output-handler-external-resource'
+import ExternalResourceOutput from '../../../components/reps/output-handler-external-resource'
 
 import PaneContentButton from './pane-content-button'
 import { postMessageToEditor } from '../../port-to-editor'
@@ -54,10 +54,10 @@ export class HistoryItemUnconnected extends React.Component {
         />)
         break
       case 'external dependencies':
-        cellOutput = <ExternalResourceOutputHandler value={this.props.valueToRender} />
+        cellOutput = <ExternalResourceOutput value={this.props.valueToRender} />
         break
       case 'css':
-        cellOutput = 'page styles updated'
+        cellOutput = 'Page Styles Updated'
         break
       default:
         // TODO: Use better class for inline error

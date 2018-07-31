@@ -10,6 +10,73 @@ function requireDisjointProperties(obj1, obj2, whitelist) {
 }
 
 
+// ETC SCHEMAS ===========================
+
+
+const appMessageSchema = {
+  type: 'object',
+  properties: {
+    message: { type: 'string' },
+    details: { type: 'string' },
+    when: { type: 'string' },
+    id: { type: 'integer', minimum: 0 },
+  },
+  additionalProperties: false,
+}
+
+const languageSchema = {
+  type: 'object',
+  properties: {
+    pluginType: { type: 'string', enum: ['language'] },
+    languageId: { type: 'string' },
+    displayName: { type: 'string' },
+    codeMirrorMode: { type: 'string' },
+    codeMirrorModeLoaded: { type: 'boolean' },
+    keybinding: { type: 'string' },
+    module: { type: 'string' },
+    evaluator: { type: 'string' },
+    url: { type: 'string' },
+  },
+  additionalProperties: false,
+}
+
+
+const jsLanguageDefinition = {
+  pluginType: 'language',
+  languageId: 'js',
+  displayName: 'Javascript',
+  codeMirrorMode: 'javascript',
+  codeMirrorModeLoaded: true,
+  module: 'window',
+  evaluator: 'eval',
+  keybinding: 'j',
+  url: '',
+}
+
+// const pluginCellDefaultContent = `{
+//   "pluginType": ""
+//   "languageId": "",
+//   "displayName": "",
+//   "codeMirrorMode": "",
+//   "keybinding": "",
+//   "url": "",
+//   "module": "",
+//   "evaluator": ""
+// }`
+
+
+const environmentVariableSchema = {
+  type: 'array',
+  items: [
+    { type: 'string', enum: ['object', 'string', 'rawString'] },
+    { type: 'string' },
+  ],
+}
+
+
+// CELL SCHEMAS ===========================
+
+
 export const mirroredCellProperties = {
   cellType: {
     type: 'string',
@@ -104,55 +171,6 @@ export function newEvalFrameCell(cellId, cellType = 'code', language = 'js') {
   return newCellFromSchema(evalFrameCellSchema, cellId, cellType, language)
 }
 
-const languageSchema = {
-  type: 'object',
-  properties: {
-    pluginType: { type: 'string', enum: ['language'] },
-    languageId: { type: 'string' },
-    displayName: { type: 'string' },
-    codeMirrorMode: { type: 'string' },
-    codeMirrorModeLoaded: { type: 'boolean' },
-    keybinding: { type: 'string' },
-    module: { type: 'string' },
-    evaluator: { type: 'string' },
-    url: { type: 'string' },
-  },
-  additionalProperties: false,
-}
-
-
-const jsLanguageDefinition = {
-  pluginType: 'language',
-  languageId: 'js',
-  displayName: 'Javascript',
-  codeMirrorMode: 'javascript',
-  codeMirrorModeLoaded: true,
-  module: 'window',
-  evaluator: 'eval',
-  keybinding: 'j',
-  url: '',
-}
-
-// const pluginCellDefaultContent = `{
-//   "pluginType": ""
-//   "languageId": "",
-//   "displayName": "",
-//   "codeMirrorMode": "",
-//   "keybinding": "",
-//   "url": "",
-//   "module": "",
-//   "evaluator": ""
-// }`
-
-
-const environmentVariableSchema = {
-  type: 'array',
-  items: [
-    { type: 'string', enum: ['object', 'string', 'rawString'] },
-    { type: 'string' },
-  ],
-}
-
 
 // ////////////////// OVERALL STATE
 
@@ -160,7 +178,7 @@ const environmentVariableSchema = {
 export const mirroredStateProperties = {
   appMessages: {
     type: 'array',
-    items: { type: 'string' },
+    items: appMessageSchema,
     default: [],
   },
   cells: {},

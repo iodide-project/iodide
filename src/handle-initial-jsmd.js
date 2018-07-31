@@ -7,9 +7,6 @@ export default async function handleInitialJsmd(store) {
   if (window.location.search) {
     // if there is a query string, handle it and skip parsing the local jsmd
     state = await handleUrlQuery()
-    if (state !== undefined) {
-      store.dispatch(updateAppMessages({ message: 'Notebook successfully imported from URL.' }))
-    }
   } else {
     // if there is no query string, attempt to parse jsmd from html
     const jsmdElt = document.getElementById('jsmd')
@@ -22,6 +19,7 @@ export default async function handleInitialJsmd(store) {
   console.log('INITIAL JSMD STATE', state)
   if (state !== undefined) {
     store.dispatch(importInitialJsmd(state))
+    store.dispatch(updateAppMessages({ message: 'Notebook successfully imported from URL.' }))
     if (state.viewMode === 'REPORT_VIEW') {
       store.dispatch(evaluateAllCells())
     }
