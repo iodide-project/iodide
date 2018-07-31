@@ -92,6 +92,7 @@ const notebookReducer = (state = newNotebook(), action) => {
         postActionToEvalFrame(actionToPost)
       })
       const { viewMode } = state
+      // need to send viewMode since iframe defaults to viewMode='REPORT_VIEW'
       postActionToEvalFrame({ type: 'SET_VIEW_MODE', viewMode })
       return Object.assign({}, state, { evalFrameReady: true, evalFrameMessageQueue: [] })
     }
