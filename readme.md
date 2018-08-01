@@ -67,7 +67,7 @@ it supports are login/identity (via the github API). To test/run it locally, fol
 * Copy `.env-dist` to `.env` and set the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to the values provided above.
 * Make sure you have [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed and working correctly
 * Run `make build && make up`
-* You should now be able to navigate to a test server instance at [http://localhost:8000]
+* You should now be able to navigate to a test server instance at http://localhost:8000
 
 ## Testing
 
