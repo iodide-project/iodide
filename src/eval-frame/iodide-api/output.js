@@ -17,8 +17,8 @@ function sideEffectDiv(sideEffectClass, reportSideEffect) {
   const cellId = store.getState().runningCellID
   store.dispatch({ type: 'CELL_SIDE_EFFECT_STATUS', cellId, hasSideEffect: true })
   const div = document.createElement('div')
-  const printClass = (reportSideEffect === true) ? sideEffectClass : `${sideEffectClass} hide-side-effect`
-  div.setAttribute('class', printClass)
+  div.setAttribute('class', sideEffectClass)
+  if (reportSideEffect === false) { div.setAttribute('style', 'display:') }
   document.getElementById(`cell-${cellId}-side-effect-target`).append(div)
   return div
 }
