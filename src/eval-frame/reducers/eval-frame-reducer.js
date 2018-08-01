@@ -1,4 +1,5 @@
 import { newNotebook, newCellID } from '../eval-frame-state-prototypes'
+// import { getCellById } from '../../state-selectors'
 
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
@@ -83,12 +84,17 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'APPEND_TO_EVAL_HISTORY': {
+      const actionCopy = Object.assign({}, action)
+      delete actionCopy.type
+      const history = [...state.history, actionCopy]
+      // history.push(Object.assign({}, action))
+      return Object.assign({}, state, { history })
+    }
+
+    case 'UPDATE_VALUE_IN_HISTORY': {
       const history = [...state.history]
-      history.push({
-        cellId: action.cellId,
-        lastRan: new Date(),
-        content: action.content,
-      })
+      const historyEntry = history.find(h => h.historyId === action.historyId)
+      if (historyEntry) { historyEntry.value = action.value }
       return Object.assign({}, state, { history })
     }
 

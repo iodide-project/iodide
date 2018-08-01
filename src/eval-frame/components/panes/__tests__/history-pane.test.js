@@ -21,7 +21,7 @@ describe('HistoryPaneUnconnected React component', () => {
     props = {
       history: [{
         cellId: 0,
-        lastRan: new Date('2018-06-16T10:32:46.422Z'),
+        lastRan: 1533078293981,
         content: 'var a = 3',
       }],
     }
@@ -48,12 +48,12 @@ describe('HistoryPaneUnconnected React component', () => {
     props.history = [
       {
         cellId: 0,
-        lastRan: new Date('2018-06-16T10:32:46.422Z'),
+        lastRan: 1533078293981,
         content: 'var a = 3',
       },
       {
         cellId: 1,
-        lastRan: new Date('2018-06-16T10:32:47.422Z'),
+        lastRan: 1533078293981,
         content: 'var b = 3',
       },
     ]
@@ -71,7 +71,7 @@ describe('HistoryPane mapStateToProps', () => {
       sidePaneMode: '_CONSOLE',
       history: [{
         cellId: 0,
-        lastRan: '2018-06-16T10:32:46.422Z',
+        lastRan: 1533078293981,
         content: 'var a = 3',
       }],
     }
@@ -83,7 +83,7 @@ describe('HistoryPane mapStateToProps', () => {
         sidePaneMode: '_CONSOLE',
         history: [{
           cellId: 0,
-          lastRan: '2018-06-16T10:32:46.422Z',
+          lastRan: 1533078293981,
           content: 'var a = 3',
         }],
         paneDisplay: 'block',

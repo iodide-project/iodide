@@ -38,6 +38,31 @@ const appMessageSchema = {
   additionalProperties: false,
 }
 
+const historySchema = {
+  type: 'object',
+  properties: {
+    cellId: { type: ['integer', 'null'] },
+    // cellType: { type: 'string' },
+    content: { type: 'string' },
+    historyId: { type: 'integer' },
+    historyType: {
+      type: 'string',
+      enum: [
+        'CELL_EVAL_VALUE',
+        'CELL_EVAL_EXTERNAL_RESOURCE',
+        'CELL_EVAL_INFO',
+        'APP_INFO',
+        'SAVED_REP',
+        'CONSOLE_EVAL',
+        'SNIPPET_EVAL',
+      ],
+    },
+    lastRan: { type: 'integer' },
+    value: {},
+  },
+  additionalProperties: false,
+}
+
 const cellSchema = {
   type: 'object',
   properties: {
@@ -114,6 +139,7 @@ const stateSchema = {
     },
     history: {
       type: 'array',
+      items: historySchema,
     },
     userDefinedVarNames: {
       type: 'array',

@@ -37,12 +37,11 @@ export class HistoryPaneUnconnected extends React.Component {
     let histContents = []
     if (this.props.history.length) {
       histContents = this.props.history
-        .filter(cell => cell.content.length)
-        .map(cell => (<HistoryItem
-          display
-          content={cell.content}
-          cell={cell}
-          key={`history-${+cell.lastRan}-${cell.cellId}`}
+        .filter(historyItem => historyItem.content.length)
+        .map(historyItem => (<HistoryItem
+          content={historyItem.content}
+          historyItem={historyItem}
+          key={`history-${historyItem.lastRan}-${historyItem.historyId}`}
         />))
     } else {
       histContents.push(<EmptyPaneContents key="no-history">No History</EmptyPaneContents>)

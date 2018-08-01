@@ -224,7 +224,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       const history = [...state.history]
       history.push({
         cellId: action.cellId,
-        lastRan: new Date(),
+        lastRan: Date.now(),
         content: action.content,
       })
       return Object.assign({}, state, { history })

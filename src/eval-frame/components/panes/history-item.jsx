@@ -9,34 +9,34 @@ import ExternalResourceOutputHandler from '../../../components/reps/output-handl
 import PaneContentButton from './pane-content-button'
 import { postMessageToEditor } from '../../port-to-editor'
 
-import { prettyDate, getCellById } from '../../tools/notebook-utils'
+// import {
+//   // prettyDate,
+//   getCellById,
+// } from '../../tools/notebook-utils'
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
-    cell: PropTypes.shape({
-      content: PropTypes.string,
-      display: PropTypes.bool,
-      cellId: PropTypes.number,
-      lastRan: PropTypes.instanceOf(Date),
-    }).isRequired,
+    content: PropTypes.string.isRequired,
+    cellId: PropTypes.number.isRequired,
+    lastRan: PropTypes.number.isRequired,
   }
   constructor(props) {
     super(props)
-    this.state = { timeSince: 'just now' }
+    // this.state = { timeSince: 'just now' }
     this.showEditorCell = this.showEditorCell.bind(this)
   }
 
-  componentDidMount() {
-    setInterval(() => {
-      this.setState({ timeSince: prettyDate(this.props.cell.lastRan) })
-    }, 5000)
-  }
+  // componentDidMount() {
+  //   setInterval(() => {
+  //     this.setState({ timeSince: prettyDate(new Date(this.props.lastRan)) })
+  //   }, 5000)
+  // }
 
   showEditorCell() {
     postMessageToEditor(
       'CLICK_ON_OUTPUT',
       {
-        id: this.props.cell.cellId,
+        id: this.props.cellId,
         autoScrollToCell: true,
       },
     )
@@ -45,23 +45,22 @@ export class HistoryItemUnconnected extends React.Component {
   render() {
     // const id = this.props.cell.cellId
     let cellOutput
-    switch (this.props.cellType) {
-      case 'code':
-      case 'plugin':
+    switch (this.props.historyType) {
+      case 'CELL_EVAL_VALUE':
         cellOutput = (<ValueRenderer
-          render={this.props.render}
+          render
           valueToRender={this.props.valueToRender}
         />)
         break
-      case 'external dependencies':
+      case 'CELL_EVAL_EXTERNAL_RESOURCE':
         cellOutput = <ExternalResourceOutputHandler value={this.props.valueToRender} />
         break
-      case 'css':
-        cellOutput = 'Page Styles Updated'
+      case 'CELL_EVAL_INFO':
+        cellOutput = this.props.valueToRender
         break
       default:
         // TODO: Use better class for inline error
-        cellOutput = <div>Unknown cell type {this.props.cellType}</div>
+        cellOutput = <div>Unknown history type {this.props.historyType}</div>
         break
     }
 
@@ -76,14 +75,12 @@ export class HistoryItemUnconnected extends React.Component {
               <ArrowBack style={{ fontSize: '12px' }} />
             </PaneContentButton>
           </div>
-          <div className="history-time-since"> {this.state.timeSince} </div>
-          {/* <div className="history-date"> / {this.props.cell.lastRan.toString()}
-          </div> */}
+          {/* <div className="history-time-since"> {this.state.timeSince} </div> */}
         </div>
       </div>)
 
     return (
-      <div id={`cell-${this.props.cell.cellId}-history`} className="history-cell">
+      <div id={`cell-${this.props.cellId}-history`} className="history-cell">
         <div className="history-content editor">
           {historyMetadata}
           <pre className="history-item-code">{this.props.content}</pre>
@@ -97,11 +94,12 @@ export class HistoryItemUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state, ownProps) {
-  const cell = getCellById(state.cells, ownProps.cell.cellId)
   return {
-    cellType: cell.cellType,
-    valueToRender: cell.value,
-    render: cell.rendered,
+    cellId: ownProps.historyItem.cellId,
+    content: ownProps.historyItem.content,
+    historyType: ownProps.historyItem.historyType,
+    lastRan: ownProps.historyItem.lastRan,
+    valueToRender: ownProps.historyItem.value,
   }
 }
 
