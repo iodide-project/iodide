@@ -299,10 +299,6 @@ div#cells.EXPLORE_VIEW .user-markdown table {
   content: "";
 }
 
-.user-markdown>*:first-child {
-  margin-top: 0 !important;
-}
-
 .user-markdown>*:last-child {
   margin-bottom: 0 !important;
 }
