@@ -125,9 +125,10 @@ const notebookReducer = (state = newNotebook(), action) => {
         ({ lastSaved } = state)
         title = AUTOSAVE + title
       }
-      const savedState = Object.assign({}, state, { lastSaved })
-      window.localStorage.setItem(title, stringifyStateToJsmd(savedState))
-      return Object.assign({}, savedState, getSavedNotebooks())
+      const stateToSave = Object.assign({}, state)
+      delete stateToSave.savedEnvironment
+      window.localStorage.setItem(title, stringifyStateToJsmd(stateToSave))
+      return Object.assign({}, state, getSavedNotebooks(), { lastSaved })
     }
 
     case 'LOAD_NOTEBOOK': {
