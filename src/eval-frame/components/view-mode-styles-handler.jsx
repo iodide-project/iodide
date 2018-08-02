@@ -66,7 +66,8 @@ div.eval-frame-panes-container {
 div.cell-container {
   outline: none;
   padding: 0px;
-  margin: 0px;
+  margin: auto;
+  max-width: 800px;
 }
 
 div.collapse-button {
