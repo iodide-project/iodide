@@ -17,7 +17,7 @@ class EditorPaneContainer extends React.Component {
     cellResizerDisplayStyle: PropTypes.string.isRequired,
     cellResizerWidth: PropTypes.number.isRequired,
     cellIds: PropTypes.array.isRequired,
-    showFrame: PropTypes.bool.isRequired,
+    // showFrame: PropTypes.bool.isRequired,
   }
   constructor(props) {
     super(props)
@@ -45,7 +45,7 @@ class EditorPaneContainer extends React.Component {
           enable={{
             bottom: false,
             top: false,
-            right: this.props.showFrame,
+            right: true,
             topRight: false,
             bottomRight: false,
             bottomLeft: false,
@@ -75,10 +75,9 @@ class EditorPaneContainer extends React.Component {
 function mapStateToProps(state) {
   return {
     cellIds: state.cells.map(c => c.id),
-    cellResizerWidth: state.showFrame ? state.editorWidth : '100%',
-    cellResizerDisplayStyle: state.viewMode === 'REPORT_VIEW' ||
-      !state.showEditor ? 'none' : 'flex',
-    showFrame: state.showFrame,
+    cellResizerWidth: state.editorWidth,
+    cellResizerDisplayStyle: state.viewMode === 'REPORT_VIEW' ? 'none' : 'flex',
+    // showFrame: state.showFrame,
   }
 }
 

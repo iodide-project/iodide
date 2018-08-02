@@ -393,19 +393,19 @@ tasks.setViewModeToPresentation = new UserTask({
   },
 })
 
-tasks.toggleEditorVisibility = new UserTask({
-  title: 'Toggle Editor Visibility',
-  keybindings: ['1'],
-  keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.toggleEditorVisibility() },
-})
+// tasks.toggleEditorVisibility = new UserTask({
+//   title: 'Toggle Editor Visibility',
+//   keybindings: ['1'],
+//   keybindingPrecondition: isCommandMode,
+//   callback() { dispatcher.toggleEditorVisibility() },
+// })
 
-tasks.toggleEvalFrameVisibility = new UserTask({
-  title: 'Toggle Eval Frame Visibility',
-  keybindings: ['2'],
-  keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.toggleEvalFrameVisibility() },
-})
+// tasks.toggleEvalFrameVisibility = new UserTask({
+//   title: 'Toggle Eval Frame Visibility',
+//   keybindings: ['2'],
+//   keybindingPrecondition: isCommandMode,
+//   callback() { dispatcher.toggleEvalFrameVisibility() },
+// })
 
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',
