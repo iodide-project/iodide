@@ -53,6 +53,7 @@ const cellSchema = {
     value: {}, // empty schema, `value` can be anything
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
+    highlighted: { type: 'boolean' },
     executionStatus: { type: 'string' },
     evalStatus: {
       type: 'string',
@@ -134,6 +135,14 @@ const stateSchema = {
       type: 'array',
       items: { type: 'string' },
     },
+    copiedCells: {
+      type: 'array',
+      items: cellSchema,
+    },
+    cutCells: {
+      type: 'array',
+      items: cellSchema,
+    },
     savedEnvironment: {
       type: 'object',
       additionalProperties: environmentVariableSchema,
@@ -207,6 +216,7 @@ function newCell(cellId, cellType, language = 'js') {
     rendered: false,
     selected: false,
     asyncProcessCount: 0,
+    highlighted: false,
     executionStatus: ' ',
     evalStatus: 'UNEVALUATED',
     rowSettings: newCellRowSettings(cellType),
@@ -246,6 +256,8 @@ function blankState() {
     appMessages: [],
     autoSave: undefined,
     locallySaved: [],
+    copiedCells: [],
+    cutCells: [],
     savedEnvironment: {},
     runningCellID: undefined,
   }

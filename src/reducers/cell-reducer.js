@@ -6,12 +6,16 @@ import { newCell, newCellID, newNotebook } from '../state-prototypes'
 
 import {
   moveCell, scrollToCellIfNeeded,
+  getSelectedCell,
   getSelectedCellId,
+  getSelectedCellIndex,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
   newStateWithRowOverflowSet,
   newStateWithPropsAssignedForCell,
+  checkForHighlightedCells,
+  newStateWithPropsAssignedForHighlightedCells,
 } from './cell-reducer-utils'
 
 const MD = MarkdownIt({ html: true }) // eslint-disable-line
@@ -54,6 +58,125 @@ const cellReducer = (state = newNotebook(), action) => {
       return nextState
     }
 
+    case 'HIGHLIGHT_CELL': {
+      const cells = state.cells.slice()
+      const index = cells.findIndex(c => c.id === action.id)
+      const thisCell = cells[index]
+      if (action.revert) thisCell.highlighted = !thisCell.highlighted
+      else thisCell.highlighted = true
+      nextState = Object.assign({}, state, { cells })
+      return nextState
+    }
+
+    case 'UNHIGHLIGHT_CELLS': {
+      const cells = state.cells.slice()
+      cells.forEach((c) => { c.highlighted = false }) // eslint-disable-line
+      return Object.assign({}, state, { cells })
+    }
+
+    case 'MULTIPLE_CELL_HIGHLIGHT': {
+      const cells = state.cells.slice()
+      const index1 = getSelectedCellIndex(state)
+      const index2 = cells.findIndex(c => c.id === action.id)
+      const low = Math.min(index1, index2)
+      const high = Math.max(index1, index2)
+
+      cells.forEach((c, index) => {
+        if (low <= index && index <= high) {
+          c.highlighted = true // eslint-disable-line
+        } else {
+          c.highlighted = false // eslint-disable-line
+        }
+      })
+      cells[index1].selected = false
+      cells[index2].selected = true
+      return Object.assign({}, state, { cells })
+    }
+
+    case 'CELL_COPY': {
+      const cutCells = []
+      const cells = state.cells.slice()
+      let copiedCells = cells.filter(c => c.highlighted)
+      if (!copiedCells.length) {
+        copiedCells = [getSelectedCell(state)]
+      }
+      return Object.assign({}, state, { copiedCells, cutCells })
+    }
+
+    case 'CELL_CUT': {
+      const copiedCells = []
+      let isNotebookEmpty = false
+      let cutCells
+      let cells = state.cells.slice()
+      cutCells = cells.filter(c => c.highlighted)
+      if (!cutCells.length) {
+        const index = getSelectedCellIndex(state)
+        cutCells = [cells[index]]
+        if (cells[index + 1]) {
+          cells[index + 1].selected = true
+        } else if (cells[index - 1]) {
+          cells[index - 1].selected = true
+        } else {
+          isNotebookEmpty = true
+        }
+        cells.splice(index, 1)
+      } else {
+        const cutIndices = cells.map((c, i) => (c.highlighted ? i : '')).filter(String)
+        const lastHiglighted = cutIndices[cutIndices.length - 1]
+        if (cells[lastHiglighted + 1]) {
+          cells[lastHiglighted + 1].selected = true
+        } else {
+          let lastUnHighlightedCell
+          let cellIndex = lastHiglighted
+          let highlightIndex = cutIndices.length - 1
+          while (highlightIndex >= 0 || cellIndex >= 0) {
+            if (cutIndices[highlightIndex] !== cellIndex) {
+              lastUnHighlightedCell = cellIndex
+              break
+            }
+            cellIndex -= 1
+            highlightIndex -= 1
+          }
+          if (lastUnHighlightedCell) {
+            cells[lastUnHighlightedCell].selected = true
+          } else {
+            isNotebookEmpty = true
+          }
+        }
+        cells = cells.filter(c => !c.highlighted)
+      }
+      if (isNotebookEmpty) {
+        const nextCell = newCell(newCellID(state.cells), 'code')
+        nextCell.selected = true
+        cells = [nextCell]
+      }
+      return Object.assign({}, state, { cells, cutCells, copiedCells })
+    }
+
+    case 'CELL_PASTE': {
+      if (state.copiedCells.length && state.cutCells.length) {
+        return state
+      }
+      const newState = Object.assign({}, state)
+      const cells = newState.cells.slice()
+      let cellsToPaste = newState.copiedCells.length ?
+        newState.copiedCells.slice()
+        :
+        newState.cutCells.slice()
+      const pasteIndex = getSelectedCellIndex(state)
+      const newId = newCellID(cells)
+      cellsToPaste = cellsToPaste.map((cell, i) => Object.assign(
+        {},
+        cell,
+        { highlighted: false, selected: false, id: newId + i },
+      ))
+      cells[pasteIndex].selected = false
+      cellsToPaste[cellsToPaste.length - 1].selected = true
+      cells.splice(pasteIndex + 1, 0, ...cellsToPaste)
+      nextState = Object.assign({}, newState, { cells: [...cells], copiedCells: [], cutCells: [] })
+      return nextState
+    }
+
     case 'CELL_UP':
       scrollToCellIfNeeded(getSelectedCellId(state))
       return Object.assign(
@@ -69,6 +192,9 @@ const cellReducer = (state = newNotebook(), action) => {
       )
 
     case 'UPDATE_CELL_PROPERTIES':
+      if (checkForHighlightedCells(state)) {
+        return newStateWithPropsAssignedForHighlightedCells(state, action.updatedProperties)
+      }
       return newStateWithPropsAssignedForCell(state, action.cellId, action.updatedProperties)
 
     case 'UPDATE_INPUT_CONTENT':

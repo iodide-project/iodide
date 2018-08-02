@@ -84,12 +84,14 @@ class CellEditor extends React.Component {
     cellId: PropTypes.number.isRequired,
     cellType: PropTypes.string,
     content: PropTypes.string,
+    highlighted: PropTypes.bool.isRequired,
     viewMode: PropTypes.oneOf(['editor', 'presentation']),
     languageIsAvailable: PropTypes.bool,
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
       changeMode: PropTypes.func.isRequired,
       updateInputContent: PropTypes.func.isRequired,
+      unHighlightCells: PropTypes.func.isRequired,
     }).isRequired,
     inputRef: PropTypes.func,
     containerStyle: PropTypes.object,
@@ -103,6 +105,7 @@ class CellEditor extends React.Component {
     this.handleFocusChange = this.handleFocusChange.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
+    this.getReadOnly = this.getReadOnly.bind(this)
   }
 
   componentDidMount() {
@@ -124,9 +127,16 @@ class CellEditor extends React.Component {
     }
   }
 
+  getReadOnly() {
+    if (this.props.viewMode === 'presentation') return true
+    if (this.props.highlighted) return 'nocursor'
+    return false
+  }
+
   handleFocusChange(focused) {
     if (focused && this.props.viewMode === 'editor') {
       if (!this.props.thisCellBeingEdited) {
+        this.props.actions.unHighlightCells()
         this.props.actions.selectCell(this.props.cellId)
         this.props.actions.changeMode('edit')
       }
@@ -176,7 +186,7 @@ class CellEditor extends React.Component {
         'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
       },
       comment: this.props.codeMirrorMode === 'javascript',
-      readOnly: this.props.viewMode === 'presentation',
+      readOnly: this.getReadOnly(),
     }, this.props.editorOptions)
 
     return (
@@ -212,6 +222,7 @@ function mapStateToProps(state, ownProps) {
     viewMode: state.viewMode,
     cellType: cell.cellType,
     content: cell.content,
+    highlighted: cell.highlighted,
     cellId,
     codeMirrorMode,
     languageIsAvailable: cell.cellType !== 'code' ? true : window[languageModule] !== undefined,
