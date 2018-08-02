@@ -336,8 +336,8 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
 })
 
 tasks.toggleHistoryPane = new UserTask({
-  title: 'Toggle the History Pane',
-  menuTitle: 'History',
+  title: 'Toggle the Console Pane',
+  menuTitle: 'Console',
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: `${commandKey()}+H`,
   preventDefaultKeybinding: true,
