@@ -76,14 +76,12 @@ const cellReducer = (state = newNotebook(), action) => {
       // create a newCell of the given type to get the defaults that
       // will need to be updated for the new cell type
       const { language } = action
-      const { rowSettings } = newCell(-1, action.cellType)
       const newState = newStateWithSelectedCellPropsAssigned(
         state,
         {
           cellType: action.cellType,
           value: undefined,
           rendered: false,
-          rowSettings,
           language,
         },
       )

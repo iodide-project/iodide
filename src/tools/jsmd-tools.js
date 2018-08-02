@@ -38,8 +38,6 @@ const jsmdValidNotebookSettings = [
 ]
 const jsmdValidCellSettingPaths = [
   'language',
-  'rowSettings.REPORT.input',
-  'rowSettings.REPORT.output',
   'skipInRunAll',
 ]
 

@@ -50,8 +50,6 @@ describe('jsmd stringifier test case 3, non-default cell settings 1', () => {
   state.viewMode = 'REPORT_VIEW'
 
   state.cells[0].content = 'foo'
-  _.set(state, 'cells[0].rowSettings.REPORT.input', 'SCROLL')
-
   state.cells.push(newCell(1, 'markdown'))
   state.cells[1].content = 'foo'
 
@@ -63,7 +61,7 @@ describe('jsmd stringifier test case 3, non-default cell settings 1', () => {
   "lastExport": "${lastExport}"
 }
 
-%% js {"rowSettings.REPORT.input":"SCROLL"}
+%% js
 foo
 
 %% md
@@ -79,7 +77,6 @@ describe('jsmd stringifier test case 4, non-default cell settings 2', () => {
   state.title = 'foo notebook'
 
   state.cells[0].content = 'foo'
-  _.set(state, 'cells[0].rowSettings.REPORT.output', 'VISIBLE')
   _.set(state, 'cells[0].skipInRunAll', true)
 
   const cellTypes = ['markdown', 'external dependencies', 'raw']
@@ -95,7 +92,7 @@ describe('jsmd stringifier test case 4, non-default cell settings 2', () => {
   "lastExport": "${lastExport}"
 }
 
-%% js {"rowSettings.REPORT.output":"VISIBLE","skipInRunAll":true}
+%% js {"skipInRunAll":true}
 foo
 
 %% md
