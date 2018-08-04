@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'social_django',
     'server.base',
     'server.notebooks',
+    'webpack_loader',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'server.urls'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "server", "react/static"),
+]
 
 TEMPLATES = [
     {

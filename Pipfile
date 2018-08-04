@@ -11,6 +11,7 @@ django-environ = "*"
 "psycopg2-binary" = "*"
 furl = "*"
 django-rest-framework = "*"
+django-webpack-loader = "*"
 
 [requires]
 python_version = "3.6"
