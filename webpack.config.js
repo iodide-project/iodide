@@ -11,7 +11,7 @@ const evalFrameHtmlTemplate = require('./src/eval-frame/html-template.js')
 const editorHtmlTemplateCompiler = _.template(editorHtmlTemplate)
 const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate)
 
-
+let DEV_SERVER_PORT
 let BUILD_DIR
 let APP_PATH_STRING
 let EVAL_FRAME_PATH_STRING
@@ -26,7 +26,6 @@ const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
 const plugins = []
 
-const DEV_SERVER_PORT = 8888
 // const config
 module.exports = (env) => {
   if (env === 'production') {
@@ -48,12 +47,19 @@ module.exports = (env) => {
     plugins.push(new UglifyJSPlugin())
   } else if (env === 'server') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
+    DEV_SERVER_PORT = 8000
     APP_VERSION_STRING = 'iodide-server'
+    // APP_PATH_STRING = ''
+    // CSS_PATH_STRING = APP_PATH_STRING
+    EDITOR_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
+    EVAL_FRAME_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
     APP_PATH_STRING = ''
-    CSS_PATH_STRING = APP_PATH_STRING
+    EVAL_FRAME_PATH_STRING = ''
+    CSS_PATH_STRING = ''
     plugins.push(new UglifyJSPlugin())
   } else if (env === 'dev') {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
+    DEV_SERVER_PORT = 8888
     EDITOR_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
     EVAL_FRAME_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
     APP_VERSION_STRING = 'dev'
