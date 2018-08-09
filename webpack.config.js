@@ -38,17 +38,17 @@ module.exports = (env) => {
       } else {
         APP_VERSION_STRING = gitRev.branch()
       }
-      if (APP_VERSION_STRING == 'master') {
-        EDITOR_ORIGIN = `https://extremely-alpha.iodide.io`
-        EVAL_FRAME_ORIGIN = `https://extremely-alpha.iodide.app`
-      } else if (APP_VERSION_STRING == 'stable') {
-        EDITOR_ORIGIN = `https://iodide.io/stable`
-        EVAL_FRAME_ORIGIN = `https://iodide.app/stable`
+      if (APP_VERSION_STRING === 'master') {
+        EDITOR_ORIGIN = 'https://extremely-alpha.iodide.io'
+        EVAL_FRAME_ORIGIN = 'https://extremely-alpha.iodide.app'
+      } else if (APP_VERSION_STRING === 'stable') {
+        EDITOR_ORIGIN = 'https://iodide.io/stable'
+        EVAL_FRAME_ORIGIN = 'https://iodide.app/stable'
       }
     } else {
       APP_VERSION_STRING = gitRev.tag()
-      EDITOR_ORIGIN = `https://iodide.io/dist`
-      EVAL_FRAME_ORIGIN = `https://iodide.app/dist`
+      EDITOR_ORIGIN = 'https://iodide.io/dist'
+      EVAL_FRAME_ORIGIN = 'https://iodide.app/dist'
     }
     APP_PATH_STRING = `${EDITOR_ORIGIN}/`
     EVAL_FRAME_PATH_STRING = `${EVAL_FRAME_ORIGIN}/`
