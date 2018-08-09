@@ -30,6 +30,17 @@ matrix:
           github-token: "$GITHUB_TOKEN"
           skip-cleanup: true
           keep-history: false
+          repo: iodide-project/stable
+          verbose: false
+          local-dir: prod
+          target-branch: master
+          on:
+            branch: stable
+
+        - provider: pages
+          github-token: "$GITHUB_TOKEN"
+          skip-cleanup: true
+          keep-history: false
           repo: iodide-project/master
           verbose: false
           local-dir: prod
