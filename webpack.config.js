@@ -38,7 +38,7 @@ module.exports = (env) => {
       } else {
         APP_VERSION_STRING = gitRev.branch()
       }
-      APP_PATH_STRING = 'https://iodide.io/master/'
+      APP_PATH_STRING = `https://iodide.io/${APP_VERSION_STRING}/`
     } else {
       APP_VERSION_STRING = gitRev.tag()
       APP_PATH_STRING = 'https://iodide.io/dist/'
