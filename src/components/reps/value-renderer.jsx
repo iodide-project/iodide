@@ -10,7 +10,10 @@ import dataFrameHandler from './dataframe-handler'
 import matrixHandler from './matrix-handler'
 import arrayHandler from './array-handler'
 import dateHandler from './date-handler'
-import scalarHandler from './scalar-handler'
+import stringHandler from './string-handler'
+import booleanHandler from './boolean-handler'
+import numberHandler from './number-handler'
+import functionHandler from './function-handler'
 import promiseHandler from './promise-handler'
 import domElementHandler from './dom-element-handler'
 import defaultHandler from './default-handler'
@@ -74,26 +77,68 @@ const errorHandler = {
   },
 }
 
-const handlers = [
-  errorHandler,
+
+// this wraps all the handlers in a bit of try/catch
+function wrapHandler(handler) {
+  return {
+    shouldHandle: (value) => {
+      try {
+        return handler.shouldHandle(value)
+      } catch (error) {
+        console.error('output handler error', error);
+        return false
+      }
+    },
+    render: (value) => {
+      try {
+        return handler.render(value)
+      } catch (error) {
+        console.error('output handler render error', error);
+        return (
+          <div>output handler failed:
+            {errorHandler.render(error)}
+          </div>
+        )
+      }
+    },
+  }
+}
+
+// NOTE: handler order matters! handlers higher in the list take precedence!
+// SMPLE TYPE HANDLERS MUST COME FIRST -- otherwise, handlers that look for e.g.
+// a property in a null will break
+const simpleTypeHandlers = [
   nullHandler,
   undefinedHandler,
+  stringHandler,
+  numberHandler,
+  booleanHandler,
+].map(h => wrapHandler(h))
+
+const complexHandlers = [
   renderMethodHandler,
+  // data frame (array of objects must come before array)
   dataFrameHandler,
+  // matrix must come before array!
   matrixHandler,
   arrayHandler,
   dateHandler,
-  scalarHandler,
+  functionHandler,
+  errorHandler,
   domElementHandler,
   promiseHandler,
   defaultHandler,
-]
+].map(h => wrapHandler(h))
+
+let handlers = simpleTypeHandlers.concat(complexHandlers)
+
+
+const userHandlers = []
 
 export function addOutputHandler(handler) {
-  // TODO: We may want to be smarter about inserting handlers at
-  // certain places in the handler array.  Right now, this just
-  // puts the new handler at the front.
-  handlers.unshift(handler)
+  // insert new handlers *after* the scalar handlers
+  userHandlers.unshift(wrapHandler(handler))
+  handlers = simpleTypeHandlers.concat(userHandlers, complexHandlers)
 }
 
 
@@ -105,16 +150,15 @@ export class ValueRenderer extends React.Component {
 
   render() {
     // console.log(`CellOutput rendered: ${this.props.cellId}`)
-    if (!this.props.render ||
-        this.props.valueToRender === undefined) {
+    if (!this.props.render) {
       return <div className="empty-resultset" />
     }
 
     const value = this.props.valueToRender
     const resultElem = renderValue(value)
-    if (resultElem !== undefined) {
-      return <div className="rep-container">{resultElem}</div>
-    }
-    return <div className="empty-resultset" />
+    // if (resultElem !== undefined) {
+    return <div className="rep-container">{resultElem}</div>
+    // }
+    // return <div className="empty-resultset" />
   }
 }

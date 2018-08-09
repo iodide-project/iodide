@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import Tooltip from 'material-ui/Tooltip'
-import Menu from 'material-ui/Menu'
-import ArrowDropDown from 'material-ui-icons/ArrowDropDown'
+import Tooltip from '@material-ui/core/Tooltip'
+import Menu from '@material-ui/core/Menu'
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
 import CellMenu from './cell-menu'
 
 import * as actions from '../../actions/actions'
@@ -44,7 +44,6 @@ export class CellMenuContainerUnconnected extends React.Component {
             classes={{ tooltip: 'iodide-tooltip' }}
             placement="bottom"
             title="Cell skipped during run all"
-            enterDelay={600}
           >
             {
               <div className="warning-pill">skip</div>
@@ -60,9 +59,8 @@ export class CellMenuContainerUnconnected extends React.Component {
           classes={{ tooltip: 'iodide-tooltip' }}
           placement="bottom"
           title="Cell Settings"
-          enterDelay={600}
         >
-          <React.Fragment>
+          <div>
             <Menu
               id="cell-menu"
               anchorEl={this.state.anchorElement}
@@ -82,11 +80,11 @@ export class CellMenuContainerUnconnected extends React.Component {
               aria-haspopup="true"
               onClick={this.handleClick}
             >
-              {this.props.label}
               <ArrowDropDown style={{ fontSize: 20 }} />
+              {this.props.label}
 
             </div>
-          </React.Fragment>
+          </div>
         </Tooltip>
         <div className="cell-status-indicators">{skipInRunAllIndicator}</div>
       </div>

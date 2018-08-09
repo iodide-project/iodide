@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
-
-import CodeMirror from '@skidding/react-codemirror'
+import ReactCodeMirror from '@skidding/react-codemirror'
 import js from 'codemirror/mode/javascript/javascript' // eslint-disable-line no-unused-vars
 import markdown from 'codemirror/mode/markdown/markdown' // eslint-disable-line no-unused-vars
 import css from 'codemirror/mode/css/css' // eslint-disable-line no-unused-vars
@@ -18,65 +17,7 @@ import 'codemirror/addon/hint/javascript-hint'
 import sublime from '../../codemirror-keymap-sublime' // eslint-disable-line no-unused-vars
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
-
-// This block is from CodeMirror's loadmode.js, modified to work in this environment
-{
-  const CodeMirrorBase = require('codemirror') // eslint-disable-line
-  CodeMirrorBase.modeUrl =
-    `https://cdnjs.cloudflare.com/ajax/libs/codemirror/${CodeMirrorBase.version}/mode/%N/%N.js`
-  window.CodeMirror = CodeMirrorBase
-
-  const modeLoading = {}
-  function splitCallback(cont, n) {
-    let countDown = n
-    return () => {
-      countDown -= 1
-      if (countDown === 0) {
-        cont()
-      }
-    }
-  }
-
-  function ensureDeps(mode, cont) {
-    const deps = CodeMirrorBase.modes[mode].dependencies
-    if (!deps) return cont()
-    const missing = []
-    for (let i = 0; i < deps.length; ++i) {
-      if (!Object.prototype.hasOwnProperty.call(CodeMirrorBase.modes, deps[i])) {
-        missing.push(deps[i])
-      }
-    }
-    if (!missing.length) return cont()
-    const split = splitCallback(cont, missing.length)
-    for (let i = 0; i < missing.length; ++i) {
-      CodeMirrorBase.requireMode(missing[i], split)
-    }
-    return undefined
-  }
-
-  CodeMirrorBase.requireMode = (mode, cont) => {
-    if (Object.prototype.hasOwnProperty.call(CodeMirrorBase.modes, mode)) {
-      return ensureDeps(mode, cont)
-    }
-    if (Object.prototype.hasOwnProperty.call(modeLoading, mode)) {
-      return modeLoading[mode].push(cont)
-    }
-
-    const file = CodeMirrorBase.modeUrl.replace(/%N/g, mode)
-    const script = document.createElement('script')
-    script.src = file
-    const others = document.getElementsByTagName('script')[0]
-    modeLoading[mode] = [cont]
-    const list = modeLoading[mode]
-    CodeMirrorBase.on(script, 'load', () => {
-      ensureDeps(mode, () => {
-        for (let i = 0; i < list.length; ++i) list[i]()
-      })
-    })
-    others.parentNode.insertBefore(script, others)
-    return undefined
-  }
-}
+import { postMessageToEvalFrame } from '../../port-to-eval-frame'
 
 class CellEditor extends React.Component {
   static propTypes = {
@@ -84,14 +25,12 @@ class CellEditor extends React.Component {
     cellId: PropTypes.number.isRequired,
     cellType: PropTypes.string,
     content: PropTypes.string,
-    viewMode: PropTypes.oneOf(['editor', 'presentation']),
-    languageIsAvailable: PropTypes.bool,
+    codeMirrorModeLoaded: PropTypes.bool,
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
       changeMode: PropTypes.func.isRequired,
       updateInputContent: PropTypes.func.isRequired,
     }).isRequired,
-    inputRef: PropTypes.func,
     containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
   }
@@ -99,16 +38,14 @@ class CellEditor extends React.Component {
   constructor(props) {
     super(props)
     // explicitly bind "this" for all methods in constructors
-    this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
+    // React.createRef()
   }
 
   componentDidMount() {
-    if (this.props.thisCellBeingEdited
-      && this.refs.hasOwnProperty('editor') // eslint-disable-line
-    ) {
+    if (this.props.thisCellBeingEdited) {
       this.editor.focus()
     }
   }
@@ -125,22 +62,19 @@ class CellEditor extends React.Component {
   }
 
   handleFocusChange(focused) {
-    if (focused && this.props.viewMode === 'editor') {
+    if (focused) {
       if (!this.props.thisCellBeingEdited) {
         this.props.actions.selectCell(this.props.cellId)
-        this.props.actions.changeMode('edit')
+        this.props.actions.changeMode('EDIT_MODE')
       }
-    } else if (!focused && this.props.viewMode === 'editor') {
-      this.props.actions.changeMode('command')
+    } else if (!focused) {
+      this.props.actions.changeMode('COMMAND_MODE')
     }
   }
 
   storeEditorElementRef(editorElt) {
     this.editor = editorElt
     // pass this cm instance ref up to the parent cell with this callback
-    if (this.props.inputRef) {
-      this.props.inputRef(editorElt)
-    }
   }
 
   updateInputContent(content) {
@@ -148,46 +82,95 @@ class CellEditor extends React.Component {
   }
 
   autoComplete = (cm) => {
+    // this is ported directly from CodeMirror's javascript-hint.
+    // we are splitting the functionality of that module so we can run half
+    // in the editor (the CodeMirror tokenization) and the other half in the eval-frame
+    // (the completion list generation).
+    window.ACTIVE_EDITOR_REF = cm
+    let context = []
     const codeMirror = this.editor.getCodeMirrorInstance()
-    // hint options for specific plugin & general show-hint
-    // Other general hint config, like 'completeSingle' and 'completeOnSingleClick'
-    // should be specified here and will be honored
-    const hintOptions = {
-      disableKeywords: true,
-      completeSingle: false,
-      completeOnSingleClick: false,
+    const { Pos } = codeMirror
+    const cur = cm.getCursor()
+    const getToken = (editor, cursor) => editor.getTokenAt(cursor)
+    let token = getToken(cm, cur)
+    const innerMode = codeMirror.innerMode(cm.getMode(), token.state);
+    if (innerMode.mode.helperType === 'json') return;
+    token.state = innerMode.state;
+
+    // If it's not a 'word-style' token, ignore the token.
+    if (!/^[\w$_]*$/.test(token.string)) {
+      token = {
+        start: cur.ch,
+        end: cur.ch,
+        string: '',
+        state: token.state,
+        type: token.string === '.' ? 'property' : null,
+      };
+    } else if (token.end > cur.ch) {
+      token.end = cur.ch;
+      token.string = token.string.slice(0, cur.ch - token.start);
     }
-    // Reference the hint function imported here when including other hint addons
-    // or supply your own
-    codeMirror.showHint(cm, codeMirror.hint.javascript, hintOptions);
+
+    let tprop = token;
+    // If it is a property, find out what it is a property of.
+    while (tprop.type === 'property') {
+      tprop = getToken(cm, Pos(cur.line, tprop.start));
+      if (tprop.string !== '.') return // don't do anything.
+      tprop = getToken(cm, Pos(cur.line, tprop.start));
+      if (!context) context = [];
+      context.push(tprop);
+    }
+
+    // remove all functions to allow message passing to eval-frame.
+    token.state.tokenize = undefined
+    delete token.state.cc
+    context.forEach((c) => {
+      const cc = c
+      cc.state.tokenize = undefined
+      delete cc.state.cc
+    })
+
+    const from = Pos(cur.line, token.start)
+    const to = Pos(cur.line, token.end)
+
+    // the eval-frame, after receiving this message,
+    // generates the completion suggestions and sends back
+    // to be rendered by the CodeMirror instsance saved in
+    // window.ACTIVE_EDITOR_REF.
+    // After the .showHint function is called, we set window.ACTIVE_EDITOR_REF = undefined.
+    postMessageToEvalFrame('REQUEST_AUTOCOMPLETE_SUGGESTIONS', {
+      token, context, from, to,
+    })
   }
 
   render() {
-    const editorOptions = Object.assign({}, {
-      mode: this.props.languageIsAvailable ? this.props.codeMirrorMode : '',
-      lineWrapping: false,
-      matchBrackets: true,
-      autoCloseBrackets: true,
-      theme: 'eclipse',
-      autoRefresh: true,
-      lineNumbers: true,
-      keyMap: 'sublime',
-      extraKeys: {
-        'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
-      },
-      comment: this.props.codeMirrorMode === 'javascript',
-      readOnly: this.props.viewMode === 'presentation',
-    }, this.props.editorOptions)
+    // const editorOptions = Object.assign({}, {
+    //   mode: this.props.codeMirrorModeLoaded ? this.props.codeMirrorMode : '',
+    //   lineWrapping: false,
+    //   matchBrackets: true,
+    //   autoCloseBrackets: true,
+    //   theme: 'eclipse',
+    //   autoRefresh: true,
+    //   lineNumbers: true,
+    //   keyMap: 'sublime',
+    //   extraKeys: {
+    //     'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
+    //   },
+    //   comment: this.props.codeMirrorMode === 'javascript',
+    // }, this.props.editorOptions)
+    this.props.editorOptions.extraKeys = {
+      'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
+    }
 
     return (
       <div
         className="editor"
         style={this.props.containerStyle}
       >
-        <CodeMirror
+        <ReactCodeMirror
           ref={this.storeEditorElementRef}
           value={this.props.content}
-          options={editorOptions}
+          options={this.props.editorOptions}
           onChange={this.updateInputContent}
           onFocusChange={this.handleFocusChange}
         />
@@ -200,21 +183,58 @@ class CellEditor extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
-  const languageModule = cell.language in state.languages ?
-    state.languages[cell.language].module : null
+
+  const { codeMirrorModeLoaded } = state.languages[cell.language]
 
   const codeMirrorMode = (
     cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
   )
 
+  const editorOptions = {
+    mode: codeMirrorModeLoaded ? codeMirrorMode : '',
+    lineWrapping: false,
+    matchBrackets: true,
+    autoCloseBrackets: true,
+    theme: 'eclipse',
+    autoRefresh: true,
+    lineNumbers: true,
+    keyMap: 'sublime',
+    comment: codeMirrorMode === 'javascript',
+  }
+  switch (cell.cellType) {
+    case 'markdown':
+      editorOptions.lineWrapping = true
+      editorOptions.matchBrackets = false
+      editorOptions.autoCloseBrackets = false
+      editorOptions.lineNumbers = false
+      break
+
+    case 'raw':
+    case 'plugin':
+      editorOptions.matchBrackets = false
+      editorOptions.autoCloseBrackets = false
+      break
+    case 'code':
+    case 'external dependencies':
+    case 'css':
+    default:
+      // no op, use default options
+  }
+
+  if (state.wrapEditors === true) { editorOptions.lineWrapping = true }
+
   return {
-    thisCellBeingEdited: cell.selected && state.mode === 'edit',
-    viewMode: state.viewMode,
+    thisCellBeingEdited: (
+      cell.selected
+      && state.mode === 'EDIT_MODE'
+      && state.viewMode === 'EXPLORE_VIEW'
+    ),
     cellType: cell.cellType,
     content: cell.content,
     cellId,
     codeMirrorMode,
-    languageIsAvailable: cell.cellType !== 'code' ? true : window[languageModule] !== undefined,
+    codeMirrorModeLoaded,
+    editorOptions,
   }
 }
 

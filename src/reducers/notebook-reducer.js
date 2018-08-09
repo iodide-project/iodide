@@ -1,5 +1,5 @@
 import copy from 'copy-to-clipboard';
-import { newNotebook, newCell, blankState, newCellID } from '../state-prototypes'
+import { newNotebook, newCell, newCellID } from '../editor-state-prototypes'
 import {
   exportJsmdBundle,
   exportJsmdToString,
@@ -7,6 +7,7 @@ import {
   stateFromJsmd,
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
+import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 const AUTOSAVE = 'AUTOSAVE: '
 
@@ -48,34 +49,6 @@ function getUserData() {
   return { userData: window.userData || {} }
 }
 
-function clearHistory(loadedState) {
-  // TODO: Don't assign to passed parameter
-
-  /* eslint-disable */
-  // remove history and declared properties before exporting the state.
-  loadedState.userDefinedVarNames = []
-  loadedState.history = []
-  loadedState.externalDependencies = []
-  loadedState.executionNumber = 0
-  loadedState.cells = [...loadedState.cells.slice()]
-  loadedState.cells.forEach((cell) => {
-    cell.evalStatus = undefined
-    if (cell.cellType === 'code' || cell.cellType === 'external dependencies') cell.value = undefined
-  })
-  /* eslint-enable */
-}
-
-function clearUserDefinedVars(userDefinedVarNames) {
-  // remove user defined variables when loading/importing a new/saved NB
-  userDefinedVarNames.forEach((varName) => {
-    try {
-      delete window[varName]
-    } catch (e) {
-      console.log(e)
-    }
-  })
-}
-
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
@@ -88,14 +61,13 @@ const notebookReducer = (state = newNotebook(), action) => {
 
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      clearUserDefinedVars(state.userDefinedVarNames)
       return Object.assign(newNotebook(), getSavedNotebooks(), getUserData())
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
         {},
         state,
-        { viewMode: action.exportAsReport ? 'presentation' : 'editor' },
+        { viewMode: action.exportAsReport ? 'REPORT_VIEW' : 'EXPLORE_VIEW' },
       )
       if (action.exportToClipboard) {
         const jsmdStr = encodeURIComponent(exportJsmdToString(exportState))
@@ -112,16 +84,34 @@ const notebookReducer = (state = newNotebook(), action) => {
       return state
     }
 
+    case 'TOGGLE_WRAP_IN_EDITORS':
+      return Object.assign({}, state, { wrapEditors: !state.wrapEditors })
+
+    case 'EVAL_FRAME_READY': {
+      state.evalFrameMessageQueue.forEach((actionToPost) => {
+        postActionToEvalFrame(actionToPost)
+      })
+      const { viewMode } = state
+      // need to send viewMode since iframe defaults to viewMode='REPORT_VIEW'
+      postActionToEvalFrame({ type: 'SET_VIEW_MODE', viewMode })
+      return Object.assign({}, state, { evalFrameReady: true, evalFrameMessageQueue: [] })
+    }
+
+    case 'ADD_TO_EVAL_FRAME_MESSAGE_QUEUE': {
+      console.log('ADD_TO_EVAL_FRAME_MESSAGE_QUEUE', action.actionToPost)
+      const evalFrameMessageQueue = state.evalFrameMessageQueue.slice()
+      evalFrameMessageQueue.push(action.actionToPost)
+      return Object.assign({}, state, { evalFrameMessageQueue })
+    }
+
     case 'IMPORT_NOTEBOOK': {
     // note: loading a NB should always assign to a copy of the latest global
     // and per-cell state for backwards compatibility
       nextState = action.newState
-      clearUserDefinedVars(state.userDefinedVarNames)
-      clearHistory(nextState)
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
       return Object.assign(
-        blankState(), nextState, { cells }, getSavedNotebooks(),
+        newNotebook(), nextState, { cells }, getSavedNotebooks(),
         getUserData(),
       )
     }
@@ -135,30 +125,19 @@ const notebookReducer = (state = newNotebook(), action) => {
         ({ lastSaved } = state)
         title = AUTOSAVE + title
       }
-      nextState = Object.assign({}, state, { lastSaved }, {
-        cells: state.cells.slice().map((c) => {
-          const newC = Object.assign({}, c)
-          newC.evalStatus = undefined
-          if (newC.cellType === 'code' || newC.cellType === 'external dependencies') {
-            newC.value = undefined
-          }
-          return newC
-        }),
-      }, { title: state.title })
-      clearHistory(nextState)
-      window.localStorage.setItem(title, stringifyStateToJsmd(nextState))
-      return Object.assign({}, state, { lastSaved }, getSavedNotebooks())
+      const stateToSave = Object.assign({}, state, { lastSaved })
+      delete stateToSave.savedEnvironment
+      window.localStorage.setItem(title, stringifyStateToJsmd(stateToSave))
+      return Object.assign({}, state, getSavedNotebooks(), { lastSaved })
     }
 
     case 'LOAD_NOTEBOOK': {
-      clearUserDefinedVars(state.userDefinedVarNames)
       nextState = stateFromJsmd(window.localStorage.getItem(action.title))
-      clearHistory(nextState)
       // note: loading a NB should always assign to a copy of the latest global
       // and per-cell state for backwards compatibility
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(blankState(), nextState, getSavedNotebooks(), getUserData())
+      return Object.assign(newNotebook(), nextState, getSavedNotebooks(), getUserData())
     }
 
     case 'DELETE_NOTEBOOK': {
@@ -179,10 +158,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'CLEAR_VARIABLES': {
-      clearUserDefinedVars(state.userDefinedVarNames)
       nextState = Object.assign({}, state)
       nextState.userDefinedVarNames = {}
-      nextState.externalDependencies = []
       return nextState
     }
 
@@ -192,6 +169,21 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'SET_VIEW_MODE': {
       const { viewMode } = action
       return Object.assign({}, state, { viewMode })
+    }
+
+    // case 'TOGGLE_EVAL_FRAME_VISIBILITY': {
+    //   const showFrame = !state.showFrame
+    //   return Object.assign({}, state, { showFrame })
+    // }
+
+    // case 'TOGGLE_EDITOR_VISIBILITY': {
+    //   const showEditor = !state.showEditor
+    //   return Object.assign({}, state, { showEditor })
+    // }
+
+    case 'TOGGLE_EDITOR_LINK': {
+      const scrollingLinked = !state.scrollingLinked
+      return Object.assign({}, state, { scrollingLinked })
     }
 
     case 'CHANGE_MODE': {
@@ -206,6 +198,11 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'CHANGE_SIDE_PANE_WIDTH': {
       const width = state.sidePaneWidth + action.widthShift
       return Object.assign({}, state, { sidePaneWidth: width })
+    }
+
+    case 'CHANGE_EDITOR_WIDTH': {
+      const width = state.editorWidth + action.widthShift
+      return Object.assign({}, state, { editorWidth: width })
     }
 
     case 'INCREMENT_EXECUTION_NUMBER': {
@@ -227,8 +224,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'APPEND_TO_EVAL_HISTORY': {
       const history = [...state.history]
       history.push({
-        cellID: action.cellId,
-        lastRan: new Date(),
+        cellId: action.cellId,
+        lastRan: Date.now(),
         content: action.content,
       })
       return Object.assign({}, state, { history })
@@ -249,11 +246,11 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
-      const { cellID } = action
-      return Object.assign({}, state, { runningCellID: cellID })
+      const { cellId } = action
+      return Object.assign({}, state, { runningCellID: cellId })
     }
 
-    case 'SAVE_ENVIRONMENT': {
+    case 'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME': {
       let newSavedEnvironment
       if (action.update) {
         newSavedEnvironment = Object
@@ -264,12 +261,26 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
     }
 
-    case 'ADD_LANGUAGE': {
+    case 'ADD_LANGUAGE_TO_EDITOR': {
+      const { languageDefinition } = action
+      languageDefinition.codeMirrorModeLoaded = false
       const languages = Object.assign(
         {},
         state.languages,
-        { [action.languageDefinition.languageId]: action.languageDefinition },
+        { [languageDefinition.languageId]: languageDefinition },
       )
+      return Object.assign({}, state, { languages })
+    }
+
+    case 'CODEMIRROR_MODE_READY': {
+      const { codeMirrorMode } = action
+      const languages = Object.assign({}, state.languages)
+      // set all languages with correct codeMirrorMode to have codeMirrorModeLoaded===true
+      Object.keys(languages).forEach((langKey) => {
+        if (languages[langKey].codeMirrorMode === codeMirrorMode) {
+          languages[langKey].codeMirrorModeLoaded = true
+        }
+      })
       return Object.assign({}, state, { languages })
     }
 

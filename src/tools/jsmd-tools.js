@@ -1,8 +1,8 @@
-/* global IODIDE_JS_PATH IODIDE_CSS_PATH IODIDE_VERSION */
+/* global IODIDE_JS_PATH IODIDE_CSS_PATH IODIDE_VERSION IODIDE_EVAL_FRAME_PATH */
 import deepEqual from 'deep-equal'
 import _ from 'lodash'
 
-import { newNotebook, blankState, newCell } from '../state-prototypes'
+import { newNotebook, newCell } from '../editor-state-prototypes'
 import htmlTemplate from '../html-template'
 
 const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']
@@ -38,10 +38,31 @@ const jsmdValidNotebookSettings = [
 ]
 const jsmdValidCellSettingPaths = [
   'language',
-  'rowSettings.REPORT.input',
-  'rowSettings.REPORT.output',
   'skipInRunAll',
 ]
+
+// format is eg: 'jsmd.path'.'old-value'.'NEW_VALUE'
+const jsmdLegacyValueMappings = {
+  viewMode: {
+    presentation: 'REPORT_VIEW',
+    editor: 'EXPLORE_VIEW',
+  },
+}
+
+export function translateLegacyJsmd(state) {
+  Object.keys(jsmdLegacyValueMappings).forEach((mappingPath) => {
+    const valueAtPath = _.get(state, mappingPath)
+    const mappingOfValuesToUpdate = _.get(jsmdLegacyValueMappings, mappingPath)
+    if (valueAtPath in mappingOfValuesToUpdate) {
+      _.set(
+        state,
+        mappingPath,
+        mappingOfValuesToUpdate[valueAtPath],
+      )
+    }
+  })
+  return state
+}
 
 function getNonDefaultValuesForPaths(paths, target, template) {
   const out = {}
@@ -170,7 +191,9 @@ function stateFromJsmd(jsmdString) {
     console.warn('JSMD parse errors', parseWarnings)
   }
   // initialize a blank notebook
-  const initialState = blankState()
+  const initialState = newNotebook()
+  // delete the default empty cell
+  initialState.cells = []
   // add top-level meta settings if any exist
   const meta = chunkObjects.filter(c => c.chunkType === 'meta')[0]
   if (meta) {
@@ -188,7 +211,7 @@ function stateFromJsmd(jsmdString) {
   }
   // set cell 0  to be the selected cell
   initialState.cells[0].selected = true
-  return initialState
+  return translateLegacyJsmd(initialState)
 }
 
 
@@ -239,6 +262,7 @@ function exportJsmdBundle(state) {
     APP_PATH_STRING: IODIDE_JS_PATH,
     CSS_PATH_STRING: IODIDE_CSS_PATH,
     APP_VERSION_STRING: IODIDE_VERSION,
+    EVAL_FRAME_PATH_STRING: IODIDE_EVAL_FRAME_PATH,
     JSMD: stringifyStateToJsmd(state, new Date().toISOString()),
   })
 }

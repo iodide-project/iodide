@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Button from 'material-ui/Button'
-import SnackBar from 'material-ui/Snackbar'
+import Button from '@material-ui/core/Button'
+import SnackBar from '@material-ui/core/Snackbar'
 import tasks from '../../actions/task-definitions'
 
 export class appMessagesUnconnected extends React.Component {

@@ -1,35 +1,19 @@
-import MarkdownIt from 'markdown-it'
-import MarkdownItKatex from 'markdown-it-katex'
-import MarkdownItAnchor from 'markdown-it-anchor'
+import CodeMirror from 'codemirror'
 
 import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
-import {
-  addExternalDependency,
-  getSelectedCell,
-} from '../reducers/cell-reducer-utils'
+import { postActionToEvalFrame } from '../port-to-eval-frame'
 
-import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
+import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
 import { addLanguageKeybinding } from '../keybindings'
 
-let evaluationQueue = Promise.resolve()
-
-const MD = MarkdownIt({ html: true })
-MD.use(MarkdownItKatex).use(MarkdownItAnchor)
-
-const CodeMirror = require('codemirror') // eslint-disable-line
-
-export function temporarilySaveRunningCellID(cellID) {
-  return {
-    type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',
-    cellID,
-  }
-}
+import {
+  alignCellTopTo,
+  handleCellAndOutputScrolling,
+} from './scroll-helpers'
 
 export function updateAppMessages(messageObj) {
-  //     message.when = (new Date()).toString()
-  //     message.details, when, message.
   const { message } = messageObj
   let { details, when } = messageObj
   if (when === undefined) when = new Date().toString()
@@ -40,19 +24,42 @@ export function updateAppMessages(messageObj) {
   }
 }
 
-export function importNotebook(newState) {
-  return {
-    type: 'IMPORT_NOTEBOOK',
-    newState,
+
+export function importNotebook(importedState) {
+  return (dispatch, getState) => {
+  // note that we need to not trample on evalFrameMessageQueue or
+  // evalFrameReady, so we'll copy those from the current state
+    const newState = Object.assign({}, importedState)
+    newState.evalFrameMessageQueue = getState().evalFrameMessageQueue
+    newState.evalFrameReady = getState().evalFrameReady
+    dispatch({
+      type: 'IMPORT_NOTEBOOK',
+      newState,
+    })
   }
 }
 
-export function importFromURL(importedState) {
+export function importInitialJsmd(importedState) {
   return (dispatch) => {
     dispatch(importNotebook(importedState))
-    dispatch(updateAppMessages({ message: 'Notebook successfully imported from URL.' }))
-    return Promise.resolve()
+    // whitelist the part of the state in the JSMD that should be
+    // pushed to the eval-frame at initialization, and post it over
+    const statePathsToUpdate = [
+      'savedEnvironment',
+      'cells',
+      'viewMode',
+    ]
+    const stateUpdatesFromEditor = {}
+    statePathsToUpdate.forEach((k) => { stateUpdatesFromEditor[k] = importedState[k] })
+    dispatch({
+      type: 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD',
+      stateUpdatesFromEditor,
+    })
   }
+}
+
+export function toggleWrapInEditors() {
+  return { type: 'TOGGLE_WRAP_IN_EDITORS' }
 }
 
 export function exportNotebook(exportAsReport = false, exportToClipboard = false) {
@@ -124,6 +131,7 @@ export function updateInputContent(text) {
   }
 }
 
+
 export function changeCellType(cellType, language = 'js') {
   return (dispatch, getState) => {
     if (isCommandMode(getState())) {
@@ -136,11 +144,24 @@ export function changeCellType(cellType, language = 'js') {
   }
 }
 
-export function appendToEvalHistory(cellId, content) {
-  return {
-    type: 'APPEND_TO_EVAL_HISTORY',
-    cellId,
-    content,
+export function addLanguage(languageDefinition) {
+  return (dispatch) => {
+    const {
+      keybinding,
+      languageId,
+      codeMirrorMode,
+    } = languageDefinition
+    if (keybinding.length === 1 && (typeof keybinding === 'string')) {
+      addLanguageKeybinding(
+        [keybinding],
+        () => dispatch(changeCellType('code', languageId)),
+      )
+    }
+    CodeMirror.requireMode(codeMirrorMode, () => { })
+    dispatch({
+      type: 'ADD_LANGUAGE_TO_EDITOR',
+      languageDefinition,
+    })
   }
 }
 
@@ -154,236 +175,25 @@ export function updateCellProperties(cellId, updatedProperties) {
   }
 }
 
-export function incrementExecutionNumber() {
-  return {
-    type: 'INCREMENT_EXECUTION_NUMBER',
-  }
-}
-export function updateUserVariables() {
-  return {
-    type: 'UPDATE_USER_VARIABLES',
-  }
-}
-
-
-function evaluateCodeCell(cell) {
-  return (dispatch, getState) => {
-    // this variable may get changed in eval.
-    const state = getState()
-    let output
-    let evalStatus
-    const code = cell.content
-    const languageModule = state.languages[cell.language].module
-    const { evaluator } = state.languages[cell.language]
-    // this is one place where we have to directly mutate the DOM b/c we need
-    // this to happen outside of React's update schedule. see also iodide-api/print.js
-    document.getElementById(`cell-${cell.id}-side-effect-target`).innerHTML = ''
-    dispatch(temporarilySaveRunningCellID(cell.id))
-    try {
-      output = window[languageModule][evaluator](code)
-    } catch (e) {
-      output = e
-      evalStatus = 'ERROR'
-    }
-    const updateCellAfterEvaluation = () => {
-      const cellProperties = { value: output, rendered: true }
-      if (evalStatus === 'ERROR') cellProperties.evalStatus = evalStatus
-      dispatch(updateCellProperties(cell.id, cellProperties))
-      dispatch(incrementExecutionNumber())
-      dispatch(appendToEvalHistory(cell.id, cell.content))
-      dispatch(updateUserVariables())
-    }
-
-    const evaluation = Promise.resolve()
-      .then(updateCellAfterEvaluation)
-      .then(waitForExplicitContinuationStatusResolution)
-      .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
-    return evaluation
-  }
-}
-
-function evaluateMarkdownCell(cell) {
-  return dispatch => dispatch(updateCellProperties(
-    cell.id,
-    {
-      value: MD.render(cell.content),
-      rendered: true,
-      evalStatus: 'SUCCESS',
-    },
-  ))
-}
-
-function evaluateResourceCell(cell) {
-  return (dispatch, getState) => {
-    const externalDependencies = [...getState().externalDependencies]
-    const dependencies = cell.content.split('\n').filter(d => d.trim().slice(0, 2) !== '//')
-    const newValues = dependencies
-      .filter(d => !externalDependencies.includes(d))
-      .map(addExternalDependency)
-
-    newValues.forEach((d) => {
-      if (!externalDependencies.includes(d.src)) {
-        externalDependencies.push(d.src)
-      }
-    })
-    const evalStatus = newValues.map(d => d.status).includes('error') ? 'ERROR' : 'SUCCESS'
-    dispatch(updateCellProperties(
-      cell.id,
-      {
-        value: new Array(...[...cell.value || [], ...newValues]),
-        rendered: true,
-        evalStatus,
-      },
-    ))
-    if (newValues.length) {
-      dispatch(appendToEvalHistory(
-        cell.id,
-        `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
-      ))
-    }
-    dispatch(incrementExecutionNumber())
-    dispatch(updateUserVariables())
-  }
-}
-
-function evaluateCSSCell(cell) {
-  return (dispatch) => {
-    dispatch(updateCellProperties(
-      cell.id,
-      {
-        value: cell.content,
-        rendered: true,
-        evalStatus: 'SUCCESS',
-      },
-    ))
-  }
-}
-
-export function addLanguage(languageDefinition) {
-  return {
-    type: 'ADD_LANGUAGE',
-    languageDefinition,
-  }
-}
-
-function evaluateLanguagePluginCell(cell) {
-  return (dispatch) => {
-    let pluginData
-    let value
-    let evalStatus
-    let languagePluginPromise
-    const rendered = true
-    try {
-      pluginData = JSON.parse(cell.content)
-    } catch (err) {
-      value = `plugin definition failed to parse:\n${err.message}`
-      evalStatus = 'ERROR'
-    }
-
-    if (pluginData.url === undefined) {
-      value = 'plugin definition missing "url"'
-      evalStatus = 'ERROR'
-      dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
-    } else {
-      const {
-        url, keybinding, languageId, displayName,
-      } = pluginData
-
-      languagePluginPromise = new Promise((resolve, reject) => {
-        const xhrObj = new XMLHttpRequest()
-
-        xhrObj.addEventListener('progress', (evt) => {
-          value = `downloading plugin: ${evt.loaded} bytes loaded`
-          if (evt.total > 0) {
-            value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
-          }
-          evalStatus = 'ASYNC_PENDING'
-          dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
-        })
-
-        xhrObj.addEventListener('load', () => {
-          value = `${displayName} plugin downloaded, initializing`
-          dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
-          // see the following for asynchronous loading of scripts from strings:
-          // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
-
-          // Here, we wrap whatever the return value of the eval into a promise.
-          // If it is simply evaling a code block, then it returns undefined.
-          // But if it returns a Promise, then we can wait for that promise to resolve
-          // before we continue execution.
-          const pr = Promise.resolve(window
-            .eval(xhrObj.responseText)) // eslint-disable-line no-eval
-
-          pr.then(() => {
-            value = `${displayName} plugin ready`
-            evalStatus = 'SUCCESS'
-            dispatch(addLanguage(pluginData))
-            // FIXME: adding the keybinding move to a reducer ideally, but since it mutates
-            // a part of global state in a snowflake sideffect-ish way, and since it
-            // needs `dispatch` we'll do it here.
-            if (keybinding.length === 1 && (typeof keybinding === 'string')) {
-              addLanguageKeybinding(
-                [keybinding],
-                () => dispatch(changeCellType('code', languageId)),
-              )
-            }
-            dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
-            resolve()
-          })
-        })
-
-        xhrObj.addEventListener('error', () => {
-          value = `${displayName} plugin failed to load`
-          evalStatus = 'ERROR'
-          dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
-          reject()
-        })
-
-        xhrObj.open('GET', url, true)
-        xhrObj.send()
-        CodeMirror.requireMode(pluginData.codeMirrorMode, () => { })
-      })
-    }
-    return languagePluginPromise
-  }
-}
-
 export function evaluateCell(cellId) {
   return (dispatch, getState) => {
-    let evaluation
     let cell
     if (cellId === undefined) {
       cell = getSelectedCell(getState())
     } else {
       cell = getCellById(getState().cells, cellId)
     }
-    // here is where we should mark a cell as PENDING.
-    if (cell.cellType === 'code') {
-      evaluationQueue = evaluationQueue
-        .then(() => dispatch(evaluateCodeCell(cell)))
-      evaluation = evaluationQueue
-    } else if (cell.cellType === 'markdown') {
-      evaluation = dispatch(evaluateMarkdownCell(cell))
-    } else if (cell.cellType === 'external dependencies') {
-      evaluation = dispatch(evaluateResourceCell(cell))
-    } else if (cell.cellType === 'css') {
-      evaluation = dispatch(evaluateCSSCell(cell))
-    } else if (cell.cellType === 'plugin') {
-      if (JSON.parse(cell.content).pluginType === 'language') {
-        evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
-        evaluation = evaluationQueue
-      } else {
-        evaluation = dispatch(updateAppMessages({ message: 'No loader for plugin type or missing "pluginType" entry' }))
-      }
-    } else {
-      cell.rendered = false
-    }
-    return evaluation
+    dispatch(updateCellProperties(
+      cell.id,
+      Object.assign(cell, { lastEvalTime: Date.now() }),
+    ))
+    dispatch({ type: 'TRIGGER_CELL_EVAL_IN_FRAME', cellId: cell.id })
   }
 }
 
-export function evaluateAllCells(cells) {
-  return (dispatch) => {
+export function evaluateAllCells() {
+  return (dispatch, getState) => {
+    const { cells } = getState()
     let p = Promise.resolve()
     cells.forEach((cell) => {
       if (cell.cellType === 'css' && !cell.skipInRunAll) {
@@ -400,17 +210,6 @@ export function evaluateAllCells(cells) {
         p = p.then(() => dispatch(evaluateCell(cell.id)))
       }
     })
-  }
-}
-
-
-export function setCellRowCollapsedState(viewMode, rowType, rowOverflow, cellId) {
-  return {
-    type: 'SET_CELL_ROW_COLLAPSE_STATE',
-    viewMode,
-    rowType,
-    rowOverflow,
-    cellId,
   }
 }
 
@@ -516,14 +315,30 @@ export function exportGist() {
 }
 
 export function cellUp() {
-  return {
-    type: 'CELL_UP',
+  return (dispatch, getState) => {
+    dispatch({ type: 'CELL_UP' })
+    const targetPxToTopOfFrame = handleCellAndOutputScrolling(getSelectedCell(getState()).id)
+    if (getState().scrollingLinked) {
+      postActionToEvalFrame({
+        type: 'ALIGN_OUTPUT_TO_EDITOR',
+        cellId: getSelectedCell(getState()).id,
+        pxFromViewportTop: targetPxToTopOfFrame,
+      })
+    }
   }
 }
 
 export function cellDown() {
-  return {
-    type: 'CELL_DOWN',
+  return (dispatch, getState) => {
+    dispatch({ type: 'CELL_DOWN' })
+    const targetPxToTopOfFrame = handleCellAndOutputScrolling(getSelectedCell(getState()).id)
+    if (getState().scrollingLinked) {
+      postActionToEvalFrame({
+        type: 'ALIGN_OUTPUT_TO_EDITOR',
+        cellId: getSelectedCell(getState()).id,
+        pxFromViewportTop: targetPxToTopOfFrame,
+      })
+    }
   }
 }
 
@@ -542,11 +357,44 @@ export function addCell(cellType) {
   }
 }
 
-export function selectCell(cellID, scrollToCell = false) {
-  return {
-    type: 'SELECT_CELL',
-    id: cellID,
-    scrollToCell,
+export function selectCell(
+  cellId,
+  autoScrollToCell = false,
+  pxFromTopOfEvalFrame = undefined,
+) {
+  return (dispatch, getState) => {
+    // first dispatch the change to the store...
+    dispatch({
+      type: 'SELECT_CELL',
+      id: cellId,
+    })
+
+    // ...then we'll deal with scrolling
+
+    // NOTE: pxFromTopOfEvalFrame should always be undefined unless this
+    // action was fired as a result of a message recieved from the eval frame
+    const clickInEvalFrame = pxFromTopOfEvalFrame !== undefined
+    const { scrollingLinked } = getState()
+    if (clickInEvalFrame && scrollingLinked) {
+      // if selectCell triggered by a click in the eval frame,
+      // just align editor cell top to value from eval frame
+      alignCellTopTo(cellId, pxFromTopOfEvalFrame)
+    } else if (!clickInEvalFrame && scrollingLinked) {
+      // select cell triggered from within editor; scroll if needed and send msg
+      // to eval frame to align
+      const targetPxToTopOfFrame = handleCellAndOutputScrolling(cellId, autoScrollToCell)
+      postActionToEvalFrame({
+        type: 'ALIGN_OUTPUT_TO_EDITOR',
+        cellId,
+        pxFromViewportTop: targetPxToTopOfFrame,
+      })
+    } else if (!clickInEvalFrame && !scrollingLinked) {
+      // if selectCell initiated in editor, scroll as needed but don't align output
+      handleCellAndOutputScrolling(cellId, autoScrollToCell)
+    }
+    // note that in the 4th case: (clickInEvalFrame && !scrollingLinked)
+    // if click came from the eval frame and scrolling not linked,
+    // then *no* scrolling is needed.
   }
 }
 
@@ -556,17 +404,21 @@ export function deleteCell() {
   }
 }
 
-export function changeElementType(elementType) {
-  return {
-    type: 'CHANGE_ELEMENT_TYPE',
-    elementType,
-  }
-}
+// export function toggleEvalFrameVisibility() {
+//   return {
+//     type: 'TOGGLE_EVAL_FRAME_VISIBILITY',
+//   }
+// }
 
-export function changeDOMElementID(elemID) {
+// export function toggleEditorVisibility() {
+//   return {
+//     type: 'TOGGLE_EDITOR_VISIBILITY',
+//   }
+// }
+
+export function toggleEditorLink() {
   return {
-    type: 'CHANGE_DOM_ELEMENT_ID',
-    elemID,
+    type: 'TOGGLE_EDITOR_LINK',
   }
 }
 
@@ -580,6 +432,13 @@ export function changeSidePaneMode(mode) {
 export function changeSidePaneWidth(widthShift) {
   return {
     type: 'CHANGE_SIDE_PANE_WIDTH',
+    widthShift,
+  }
+}
+
+export function changeEditorWidth(widthShift) {
+  return {
+    type: 'CHANGE_EDITOR_WIDTH',
     widthShift,
   }
 }

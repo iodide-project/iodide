@@ -1,5 +1,6 @@
+import '../../store'
 import cellReducer from '../cell-reducer'
-import { newNotebook } from '../../state-prototypes'
+import { newNotebook } from '../../editor-state-prototypes'
 
 describe('add cells', () => {
   const state = newNotebook()

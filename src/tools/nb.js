@@ -24,12 +24,39 @@ nb.isRowDf = function(obj,rowsToCheck = 100){
   return true
 }
 
-nb.isMatrix = function(obj,rowsToCheck = 100){
-  if (!_.isArray(obj) || obj.length==0) {return false}
-  rowsToCheck = Math.min(rowsToCheck,_.size(obj))
-  for (let i=0; i<rowsToCheck; i++){
-    if (! _.isArray(obj[i]) || obj.length==0) {return false}
-    if (! obj[0].length===obj[i].length) {return false}
+nb.isSimpleArray = function(obj){
+  // make sure array has no extra keys
+  return _.isArray(obj) && obj.length === Object.keys(obj).length
+}
+
+nb.isMatrixLike = function(obj,rowsToCheck = 100, colsToCheck = 20){
+  // looking for array containing arrays of same length,
+  // lengths must be >0,
+  // and must have simple scalar base objects
+  // and must not have extra keys
+
+  // outer array is simple array of length > 0
+  if (!nb.isSimpleArray(obj) || obj.length === 0) {return false}
+
+  rowsToCheck = Math.min(rowsToCheck, obj.length)
+  // check that the first row is ok
+  if (!nb.isSimpleArray(obj[0]) || obj[0].length === 0) {return false}
+  const rowsLength = obj[0].length
+
+  colsToCheck = Math.min(colsToCheck, obj[0].length)
+  // check that values are not objectlike
+  for (let j = 0; j < colsToCheck; j++) {
+    if (_.isObjectLike(obj[0][j])) {return false}
+  }
+
+  // check the remaining rows
+  for (let i = 1; i < rowsToCheck; i++) {
+    // make sure all rows are simple arrays the same length
+    if (!nb.isSimpleArray(obj[i]) || obj[i].length !== rowsLength) {return false}
+    // check that values are not objectlike
+    for (let j = 0; j < colsToCheck; j++) {
+      if (_.isObjectLike(obj[i][j])) {return false}
+    }
   }
   return true
 }
@@ -68,7 +95,7 @@ nb.shape = function(obj){
     return [obj[cols[0]].length, cols.length]
   } else if (nb.isRowDf(obj)){
     return ([_.size(obj), _.size(obj[0])])
-  } else if (nb.isMatrix(obj)){
+  } else if (nb.isMatrixLike(obj)){
     return [obj.length, obj[0].length]
   } else {
     return [undefined,undefined]

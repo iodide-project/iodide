@@ -1,5 +1,6 @@
+import '../../store'
 import notebookReducer from '../notebook-reducer'
-import { newNotebook, blankState, addNewCellToState } from '../../state-prototypes'
+import { newNotebook, newCell } from '../../editor-state-prototypes'
 import {
   // exportJsmdBundle, we'll need to test this
   // stringifyStateToJsmd, we'll need to test this
@@ -9,9 +10,9 @@ import {
 const EXAMPLE_NOTEBOOK_1 = 'example notebook with content'
 
 function exampleNotebookWithContent(title = EXAMPLE_NOTEBOOK_1) {
-  let state = newNotebook()
-  state = addNewCellToState(state, 'code')
-  state = addNewCellToState(state, 'markdown')
+  const state = newNotebook()
+  state.cells.push(newCell(0, 'code'))
+  state.cells.push(newCell(1, 'markdown'))
   state.cells[0].selected = true
   state.title = title
   return state
@@ -23,7 +24,7 @@ beforeEach(() => {
 
 describe('blank-state-reducer', () => {
   it('should return the initial state', () => {
-    expect(notebookReducer(blankState(), {})).toEqual(blankState())
+    expect(notebookReducer(newNotebook(), {})).toEqual(newNotebook())
   })
 })
 

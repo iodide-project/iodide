@@ -5,7 +5,6 @@ import * as actions from './actions'
 import {
   isCommandMode,
   viewModeIsEditor,
-  getCells,
   getCellBelowSelectedId,
   getCellAboveSelectedId, prettyDate, formatDateString,
 } from '../tools/notebook-utils'
@@ -34,7 +33,7 @@ tasks.evaluateCell = new UserTask({
   keybindings: ['mod+enter'],
 
   callback() {
-    dispatcher.changeMode('command')
+    dispatcher.changeMode('COMMAND_MODE')
     dispatcher.saveNotebook(true)
     dispatcher.evaluateCell()
   },
@@ -45,7 +44,7 @@ tasks.evaluateAllCells = new UserTask({
   menuTitle: 'Run All Cells',
   callback() {
     dispatcher.saveNotebook(true)
-    dispatcher.evaluateAllCells(getCells(), store)
+    dispatcher.evaluateAllCells()
   },
 })
 
@@ -54,7 +53,7 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
   keybindings: ['shift+enter'],
   keybindingPrecondition: viewModeIsEditor,
   callback() {
-    dispatcher.changeMode('command')
+    dispatcher.changeMode('COMMAND_MODE')
     dispatcher.saveNotebook(true)
     dispatcher.evaluateCell()
     const cellBelowId = getCellBelowSelectedId()
@@ -128,6 +127,27 @@ tasks.selectDown = new UserTask({
     const cellBelowId = getCellBelowSelectedId()
     if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
   },
+})
+
+tasks.scrollOutputPaneToCell = new UserTask({
+  title: 'Scroll output pane to this cell',
+  displayKeybinding: 'Right', // '\u2193',
+  keybindings: ['right'],
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() {
+    const cellBelowId = getCellBelowSelectedId()
+    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
+  },
+})
+
+tasks.toggleWrapInEditors = new UserTask({
+  title: 'Toggle wrapping in editors',
+  displayKeybinding: 'W', // '\u2193',
+  keybindings: ['w'],
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.toggleWrapInEditors() },
 })
 
 tasks.addCellAbove = new UserTask({
@@ -230,7 +250,7 @@ tasks.changeMode = new UserTask({
 
 tasks.changeToMenuMode = new UserTask({
   title: 'Change to Menu Mode',
-  callback() { dispatcher.changeMode('title-edit') },
+  callback() { dispatcher.changeMode('APP_MODE') },
 })
 
 tasks.changeToEditMode = new UserTask({
@@ -239,14 +259,14 @@ tasks.changeToEditMode = new UserTask({
   displayKeybinding: 'Enter',
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
-  callback() { dispatcher.changeMode('edit') },
+  callback() { dispatcher.changeMode('EDIT_MODE') },
 })
 
 tasks.changeToCommandMode = new UserTask({
   title: 'Change to Command Mode',
   keybindings: ['esc'],
   preventDefaultKeybinding: true,
-  callback() { dispatcher.changeMode('command') },
+  callback() { dispatcher.changeMode('COMMAND_MODE') },
 })
 
 tasks.changeTitle = new UserTask({
@@ -307,8 +327,8 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
   callback() {
-    if (store.getState().sidePaneMode !== 'declared variables') {
-      dispatcher.changeSidePaneMode('declared variables')
+    if (store.getState().sidePaneMode !== 'DECLARED_VARIABLES') {
+      dispatcher.changeSidePaneMode('DECLARED_VARIABLES')
     } else {
       dispatcher.changeSidePaneMode()
     }
@@ -316,20 +336,32 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
 })
 
 tasks.toggleHistoryPane = new UserTask({
-  title: 'Toggle the History Pane',
-  menuTitle: 'History',
+  title: 'Toggle the Console Pane',
+  menuTitle: 'Console',
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: `${commandKey()}+H`,
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
   callback() {
-    if (store.getState().sidePaneMode !== 'history') {
-      dispatcher.changeSidePaneMode('history')
+    if (store.getState().sidePaneMode !== '_CONSOLE') {
+      dispatcher.changeSidePaneMode('_CONSOLE')
     } else {
       dispatcher.changeSidePaneMode()
     }
   },
 })
+
+// tasks.toggleConsolePane = new UserTask({
+//   title: 'Toggle the Console Pane',
+//   menuTitle: 'Console',
+//   callback() {
+//     if (store.getState().sidePaneMode !== '_CONSOLE') {
+//       dispatcher.changeSidePaneMode('_CONSOLE')
+//     } else {
+//       dispatcher.changeSidePaneMode()
+//     }
+//   },
+// })
 
 tasks.toggleAppInfoPane = new UserTask({
   title: 'Toggle the Iodide Info Pane',
@@ -350,16 +382,30 @@ tasks.toggleAppInfoPane = new UserTask({
 tasks.setViewModeToEditor = new UserTask({
   title: 'Set View Mode to Editor',
   callback() {
-    dispatcher.setViewMode('editor')
+    dispatcher.setViewMode('EXPLORE_VIEW')
   },
 })
 
 tasks.setViewModeToPresentation = new UserTask({
   title: 'Set View Mode to Presentation',
   callback() {
-    dispatcher.setViewMode('presentation')
+    dispatcher.setViewMode('REPORT_VIEW')
   },
 })
+
+// tasks.toggleEditorVisibility = new UserTask({
+//   title: 'Toggle Editor Visibility',
+//   keybindings: ['1'],
+//   keybindingPrecondition: isCommandMode,
+//   callback() { dispatcher.toggleEditorVisibility() },
+// })
+
+// tasks.toggleEvalFrameVisibility = new UserTask({
+//   title: 'Toggle Eval Frame Visibility',
+//   keybindings: ['2'],
+//   keybindingPrecondition: isCommandMode,
+//   callback() { dispatcher.toggleEvalFrameVisibility() },
+// })
 
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',

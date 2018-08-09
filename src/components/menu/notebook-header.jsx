@@ -1,8 +1,10 @@
 import React from 'react'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import PresentationModeToolbar from './presentation-mode-toolbar'
 import EditorModeToolbar from './editor-mode-toolbar'
+
+import AppMessages from '../app-messages/app-messages'
 
 const theme = createMuiTheme({
   palette: {
@@ -19,7 +21,7 @@ export default class NotebookHeader extends React.Component {
           <EditorModeToolbar />
         </MuiThemeProvider>
         <PresentationModeToolbar />
-
+        <AppMessages />
       </div>
     )
   }

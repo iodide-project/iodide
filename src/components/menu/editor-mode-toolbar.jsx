@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import Toolbar from 'material-ui/Toolbar'
+import Toolbar from '@material-ui/core/Toolbar'
 import EditorModeControls from './editor-mode-controls'
 import ViewControls from './view-controls'
 
@@ -16,7 +16,7 @@ export class EditorModeToolbarUnconnected extends React.Component {
     return (
       <div
         className="notebook-toolbar-container"
-        style={{ display: this.props.viewMode === 'editor' ? 'block' : 'none' }}
+        style={{ display: this.props.viewMode === 'EXPLORE_VIEW' ? 'block' : 'none' }}
       >
         <Toolbar classes={{ root: 'notebook-toolbar' }}>
           <EditorModeControls isFirstChild />

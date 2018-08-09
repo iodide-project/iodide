@@ -1,6 +1,6 @@
-function moveCell(cells, cellID, dir) {
+function moveCell(cells, cellId, dir) {
   const cellsSlice = cells.slice()
-  const index = cellsSlice.findIndex(c => c.id === cellID)
+  const index = cellsSlice.findIndex(c => c.id === cellId)
 
   let moveIndex
   let moveCondition
@@ -18,46 +18,6 @@ function moveCell(cells, cellID, dir) {
   }
   return cellsSlice
 }
-
-function scrollToCellIfNeeded(cellID) {
-  const elem = document.getElementById(`cell-${cellID}`)
-  const rect = elem.getBoundingClientRect()
-  const viewportRect = document.getElementById('cells').getBoundingClientRect()
-  const windowHeight = (window.innerHeight || document.documentElement.clientHeight)
-  const tallerThanWindow = (rect.bottom - rect.top) > windowHeight
-  let cellPosition
-  // verbose but readable
-  if (rect.bottom <= viewportRect.top) {
-    cellPosition = 'ABOVE_VIEWPORT'
-  } else if (rect.top >= viewportRect.bottom) {
-    cellPosition = 'BELOW_VIEWPORT'
-  } else if ((rect.top <= viewportRect.top) && (viewportRect.top <= rect.bottom)) {
-    cellPosition = 'BOTTOM_IN_VIEWPORT'
-  } else if ((rect.top <= viewportRect.bottom) && (viewportRect.bottom <= rect.bottom)) {
-    cellPosition = 'TOP_IN_VIEWPORT'
-  } else {
-    cellPosition = 'IN_VIEWPORT'
-  }
-
-  if ((cellPosition === 'ABOVE_VIEWPORT')
-    || (cellPosition === 'BOTTOM_IN_VIEWPORT')
-    || ((cellPosition === 'BELOW_VIEWPORT') && (tallerThanWindow))
-    || ((cellPosition === 'TOP_IN_VIEWPORT') && (tallerThanWindow))
-  ) { // in these cases, scroll the window such that the cell top is at the window top
-    elem.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    })
-  } else if (((cellPosition === 'BELOW_VIEWPORT') && !(tallerThanWindow))
-    || ((cellPosition === 'TOP_IN_VIEWPORT') && !(tallerThanWindow))
-  ) { // in these cases, scroll the window such that the cell bottom is at the window bottom
-    elem.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    })
-  }
-}
-
 
 function addExternalDependency(dep) {
   // FIXME there must be a better way to do this with promises etc...
@@ -179,40 +139,13 @@ function newStateWithSelectedCellPropsAssigned(state, cellPropsToSet) {
   return newStateWithPropsAssignedForCell(state, getSelectedCellId(state), cellPropsToSet)
 }
 
-function newStateWithRowOverflowSet(state, cellId, rowType, viewModeToSet, rowOverflow) {
-  const cells = state.cells.slice()
-  const cellIndex = cells.findIndex(c => c.id === cellId)
-  const cell = cells[cellIndex]
-  // this block can be deprecated if we move to enums for VIEWs
-  let view
-  switch (viewModeToSet) {
-    case 'editor':
-      view = 'EXPLORE'
-      break
-    case 'presentation':
-      view = 'REPORT'
-      break
-    default:
-      throw Error(`Unsupported viewMode: ${viewModeToSet}`)
-  }
-  cell.rowSettings[view][rowType] = rowOverflow
-
-  cells[cellIndex] = Object.assign({}, cells[cellIndex])
-
-
-  return Object.assign({}, state, { cells })
-}
-
-
 export {
   moveCell,
-  scrollToCellIfNeeded,
   addExternalDependency,
   getSelectedCell,
   getSelectedCellId,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
-  newStateWithRowOverflowSet,
   newStateWithPropsAssignedForCell,
 }

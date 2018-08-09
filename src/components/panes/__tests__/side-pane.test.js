@@ -1,8 +1,8 @@
 import { shallow } from 'enzyme'
 import React from 'react'
 
-import Drawer from 'material-ui/Drawer'
-import { MuiThemeProvider } from 'material-ui/styles'
+import Drawer from '@material-ui/core/Drawer'
+import { MuiThemeProvider } from '@material-ui/core/styles'
 import Resizable from 're-resizable'
 
 import { SidePaneUnconnected, mapStateToProps } from '../side-pane'
@@ -48,7 +48,7 @@ describe('SidePaneUnconnected React component', () => {
 
   it("sets the Drawer's open prop to be false for incorrect props", () => {
     props.sidePaneMode = '_APP_INFO'
-    props.openOnMode = 'history'
+    props.openOnMode = '_CONSOLE'
     expect(sidePane().find(Drawer).props().open)
       .toBe(false)
   })
@@ -85,7 +85,7 @@ describe('SidePane mapStateToProps', () => {
 
   beforeEach(() => {
     state = {
-      sidePaneMode: 'history',
+      sidePaneMode: '_CONSOLE',
       sidePaneWidth: '562',
     }
   })
@@ -93,7 +93,7 @@ describe('SidePane mapStateToProps', () => {
   it('should return the correct basic info', () => {
     expect(mapStateToProps(state))
       .toEqual({
-        sidePaneMode: 'history',
+        sidePaneMode: '_CONSOLE',
         sidePaneWidth: '562',
       })
   })

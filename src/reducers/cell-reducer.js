@@ -1,21 +1,12 @@
-import MarkdownIt from 'markdown-it'
-import MarkdownItKatex from 'markdown-it-katex'
-import MarkdownItAnchor from 'markdown-it-anchor'
-
-import { newCell, newCellID, newNotebook } from '../state-prototypes'
+import { newCell, newCellID, newNotebook, rowOverflowEnum } from '../editor-state-prototypes'
 
 import {
-  moveCell, scrollToCellIfNeeded,
+  moveCell,
   getSelectedCellId,
-  getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
-  newStateWithRowOverflowSet,
   newStateWithPropsAssignedForCell,
 } from './cell-reducer-utils'
-
-const MD = MarkdownIt({ html: true }) // eslint-disable-line
-MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const cellReducer = (state = newNotebook(), action) => {
   let nextState
@@ -47,22 +38,23 @@ const cellReducer = (state = newNotebook(), action) => {
       const cells = state.cells.slice()
       cells.forEach((c) => { c.selected = false })  // eslint-disable-line
       const index = cells.findIndex(c => c.id === action.id)
+      if (index === -1) {
+        return state
+      }
       const thisCell = cells[index]
       thisCell.selected = true
-      if (action.scrollToCell) { scrollToCellIfNeeded(thisCell.id) }
+      thisCell.inputFolding = rowOverflowEnum.VISIBLE
       nextState = Object.assign({}, state, { cells })
       return nextState
     }
 
     case 'CELL_UP':
-      scrollToCellIfNeeded(getSelectedCellId(state))
       return Object.assign(
         {}, state,
         { cells: moveCell(state.cells, getSelectedCellId(state), 'up') },
       )
 
     case 'CELL_DOWN':
-      scrollToCellIfNeeded(getCellBelowSelectedId(state))
       return Object.assign(
         {}, state,
         { cells: moveCell(state.cells, getSelectedCellId(state), 'down') },
@@ -84,30 +76,16 @@ const cellReducer = (state = newNotebook(), action) => {
       // create a newCell of the given type to get the defaults that
       // will need to be updated for the new cell type
       const { language } = action
-      const { rowSettings } = newCell(-1, action.cellType)
       const newState = newStateWithSelectedCellPropsAssigned(
         state,
         {
           cellType: action.cellType,
           value: undefined,
           rendered: false,
-          rowSettings,
           language,
         },
       )
       return Object.assign(newState, { languageLastUsed: language })
-    }
-
-    case 'SET_CELL_ROW_COLLAPSE_STATE': {
-      let { cellId } = action
-      if (cellId === undefined) { cellId = getSelectedCellId(state) }
-      return newStateWithRowOverflowSet(
-        state,
-        cellId,
-        action.rowType,
-        action.viewMode,
-        action.rowOverflow,
-      )
     }
 
     case 'MARK_CELL_NOT_RENDERED':

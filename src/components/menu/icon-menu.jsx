@@ -1,10 +1,10 @@
 import React from 'react'
-// import IconMenu from 'material-ui/IconMenu'
+// import IconMenu from '@material-ui/core/IconMenu'
 
-import IconButton from 'material-ui/IconButton'
-import Menu from 'material-ui/Menu'
-import MenuIcon from 'material-ui-icons/Menu'
-import Tooltip from 'material-ui/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu'
+import MenuIcon from '@material-ui/icons/Menu'
+import Tooltip from '@material-ui/core/Tooltip'
 
 export default class NotebookIconMenu extends React.Component {
   constructor(props) {
@@ -40,7 +40,6 @@ export default class NotebookIconMenu extends React.Component {
             open={Boolean(anchorElement)}
             onClose={this.handleIconButtonClose}
             anchorReference="anchorPosition"
-            transitionDuration={10}
             anchorPosition={{ top: 50, left: 0 }}
           >
             {children}
@@ -51,6 +50,7 @@ export default class NotebookIconMenu extends React.Component {
             aria-haspopup="true"
             onClick={this.handleClick}
             style={{ color: 'white' }}
+            classes={{ root: 'editor-icon-menu' }}
           >
             <MenuIcon />
           </IconButton>

@@ -1,15 +1,15 @@
 import { store } from '../store'
 
 function viewModeIsEditor() {
-  return store.getState().viewMode === 'editor'
+  return store.getState().viewMode === 'EXPLORE_VIEW'
 }
 
 function isCommandMode() {
-  return store.getState().mode === 'command' && viewModeIsEditor()
+  return store.getState().mode === 'COMMAND_MODE' && viewModeIsEditor()
 }
 
 function viewModeIsPresentation() {
-  return store.getState().viewMode === 'presentation'
+  return store.getState().viewMode === 'REPORT_VIEW'
 }
 
 function getCells() {
@@ -40,9 +40,9 @@ function getCellAboveSelectedId() {
   throw new Error('no cell currently selected')
 }
 
-function getCellById(cells, cellID) {
+function getCellById(cells, cellId) {
   // returns a reference to the cell.
-  const thisCellIndex = cells.findIndex(c => c.id === cellID)
+  const thisCellIndex = cells.findIndex(c => c.id === cellId)
   const thisCell = cells[thisCellIndex]
   return thisCell
 }

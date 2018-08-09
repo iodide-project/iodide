@@ -1,0 +1,140 @@
+/*  cell and cell container styles*/
+
+div.cell-container {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  outline: #f4f4f4 1px solid;
+  width: calc(100%);
+  /* put the .cell-menu-container and .cell-row-container in a row */
+  display: flex;
+  overflow-x: auto;
+  flex-direction: row; 
+}
+
+/* These may need to be integrated into the presentation mode style sheets
+but I don't see why we would have to do this immediately.
+*/
+
+
+.cell-status-indicators {
+    text-align: right;
+    padding-right: 6px;
+    color: hsla(275, 4%, 51%, 1);
+}
+
+.warning-pill {
+    background-color: hsla(53, 80%, 86%, 1);
+    color: hsl(53, 35%, 48%);
+    height: 18px;
+    padding: 0 6px;
+    border: 1px solid hsla(53, 94%, 83%, 1);
+    border-radius: 3px;
+    display: inline-block;
+}
+
+div.cell-row {
+  display: flex;
+  padding: 1px;
+}
+
+div.collapse-button {
+  margin-right: 5px;
+  margin-left: 3px;
+  width: 18px;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+div.collapse-button:hover {
+  background: #fbfbfb;
+  outline: 1px solid #ddd;
+  cursor: pointer;
+}
+
+div.HIDDEN div.collapse-button-tooltip-wrapper {
+    width: calc(100% - 3px); /* 100% minus a .collapse-button width margin-right*/
+
+}
+
+div.HIDDEN div.collapse-button {
+    width: calc(100% - 3px);
+    /* when collapsed, make the button visible*/
+  background: #fdfdfd;
+  outline: 1px solid #ddd;
+  cursor: pointer;
+  height: 20px;
+}
+
+div.main-component {
+    width: calc(100% - 25px); /* 100% minus .collapse-button width (including margins) */
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+div.input div.main-component {
+  outline: 1px solid #f1f1f1;
+}
+
+div.HIDDEN div.main-component {
+  height: 18px;
+  flex-shrink: 1;
+  flex-basis: 0px;
+  flex-grow: 0;
+  overflow: hidden;
+  outline: none;
+}
+
+
+div.selected-cell {
+  outline: 2px solid #ccc;
+}
+
+div.cell-container.not-evaluated {
+  outline: none;
+}
+
+div.cell-container.not-evaluated.selected-cell {
+  background-color: none;
+  outline: 2px solid #ccc;
+}
+
+div.SCROLL.output .main-component {
+  max-height: 300px;
+  outline: 1px solid #ddd;
+    overflow-y: scroll;
+}
+
+.dependency-row {
+  display: flex;
+  align-items: center;
+}
+
+.dependency-row a {
+  color: #337ab7;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dependency-row a:hover,
+.dependency-row a:focus {
+  color: #23527c;
+  text-decoration: underline;
+}
+
+.rep-container {
+  overflow-x: auto;
+}
+
+div.dataframe-rep {
+  font-size:12px;
+}
+
+pre.unevaluated-content {
+  font-style: italic;
+  color:rgb(190, 190, 190);
+  font-size:12px;
+}

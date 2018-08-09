@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import MenuItem from 'material-ui/Menu/MenuItem'
-import Menu from 'material-ui/Menu/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
 
 import NotebookMenuSubsection from '../notebook-menu-subsection'
 import NotebookMenuItem from '..//notebook-menu-item'
