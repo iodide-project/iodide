@@ -24,9 +24,6 @@ matrix:
             git clone https://github.com/iodide-project/dist.git --depth 1 dist;
             cp -r dist/* prod;
           fi
-        - mkdir stable-eval
-        - mkdir stable-eval/stable
-        - cp -r prod/* stable-eval/stable
 
       deploy:
         - provider: pages
@@ -44,29 +41,7 @@ matrix:
           github-token: "$GITHUB_TOKEN"
           skip-cleanup: true
           keep-history: false
-          repo: iodide-project/stable-eval
-          verbose: false
-          local-dir: stable-eval/stable
-          target-branch: master
-          on:
-            branch: stable
-
-        - provider: pages
-          github-token: "$GITHUB_TOKEN"
-          skip-cleanup: true
-          keep-history: false
-          repo: iodide-project/master-deploy
-          verbose: false
-          local-dir: prod
-          target-branch: master
-          on:
-            branch: master
-
-        - provider: pages
-          github-token: "$GITHUB_TOKEN"
-          skip-cleanup: true
-          keep-history: false
-          repo: iodide-project/master-eval-deploy
+          repo: iodide-project/master-eval
           verbose: false
           local-dir: prod
           target-branch: master
@@ -78,17 +53,6 @@ matrix:
           skip-cleanup: true
           keep-history: true
           repo: iodide-project/dist
-          verbose: true
-          local-dir: prod
-          target-branch: master
-          on:
-            tags: true
-
-        - provider: pages
-          github-token: "$GITHUB_TOKEN"
-          skip-cleanup: true
-          keep-history: true
-          repo: iodide-project/dist-eval
           verbose: true
           local-dir: prod
           target-branch: master
