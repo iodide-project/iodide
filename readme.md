@@ -6,7 +6,7 @@
    <br />
   The Iodide notebook</h1>
 
-_Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)! ([More examples](https://github.com/iodide-project/iodide-examples))_
+_Try it in your browser [right now](https://iodide.io/iodide-examples/what-a-web-notebook-looks-like.html)! ([More examples](https://github.com/iodide-project/iodide-examples))_
 
 ### Please note: Iodide is in early alpha, and still subject to breakage, changes, and overhauls
 

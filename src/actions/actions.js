@@ -509,7 +509,7 @@ export function exportGist() {
         dispatch(updateAppMessages({
           message,
           details: `${message}<br /><a href="${json.html_url}" target="_blank">Gist</a> -
-        <a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`,
+        <a href="https://iodide.io/stable/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`,
         }))
       })
   }
