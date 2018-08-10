@@ -11,7 +11,7 @@
     "start": "webpack --watch --env=dev",
     "build": "webpack --env=production",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
-    "build-server": "webpack --env=server"
+    "build-server": "webpack --env=production"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/test/setupTests.js",
