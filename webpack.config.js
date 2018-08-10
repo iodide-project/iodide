@@ -4,6 +4,9 @@ const CreateFileWebpack = require('create-file-webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const _ = require('lodash')
+const argv = require('minimist')(process.argv.slice(2))
+
+const reduxLogMode = argv._.includes('reduxVerbose') ? 'VERBOSE' : 'SILENT'
 
 const editorHtmlTemplate = require('./src/html-template.js')
 const evalFrameHtmlTemplate = require('./src/eval-frame/html-template.js')
@@ -11,14 +14,17 @@ const evalFrameHtmlTemplate = require('./src/eval-frame/html-template.js')
 const editorHtmlTemplateCompiler = _.template(editorHtmlTemplate)
 const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate)
 
-let DEV_SERVER_PORT
+const DEV_SERVER_PORT = 8000
 let BUILD_DIR
 let APP_PATH_STRING
 let EVAL_FRAME_PATH_STRING
 let CSS_PATH_STRING
-let APP_VERSION_STRING
 let EVAL_FRAME_ORIGIN
 let EDITOR_ORIGIN
+
+// note that we'll always use APP_VERSION_STRING = 'dev'
+// unless we're dealing with a tag
+let APP_VERSION_STRING = 'dev'
 
 
 const APP_DIR = path.resolve(__dirname, 'src/')
@@ -32,20 +38,25 @@ module.exports = (env) => {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
     const gitRev = require('git-rev-sync')
     if (gitRev.isTagDirty()) {
+      let branch
       if (process.env.TRAVIS_BRANCH !== undefined) {
         // On Travis-CI, the git branches are detached so use env variable instead
-        APP_VERSION_STRING = process.env.TRAVIS_BRANCH
+        branch = process.env.TRAVIS_BRANCH
       } else {
-        APP_VERSION_STRING = gitRev.branch()
+        branch = gitRev.branch()
       }
-      if (APP_VERSION_STRING === 'master') {
+      if (branch === 'master') {
         EDITOR_ORIGIN = 'https://extremely-alpha.iodide.io'
         EVAL_FRAME_ORIGIN = 'https://extremely-alpha.iodide.app'
-      } else if (APP_VERSION_STRING === 'stable') {
+      } else if (branch === 'stable') {
+        // only uglify tags and stable
+        plugins.push(new UglifyJSPlugin())
         EDITOR_ORIGIN = 'https://iodide.io/stable'
         EVAL_FRAME_ORIGIN = 'https://iodide.app/stable'
       }
     } else {
+      // only uglify tags and stable
+      plugins.push(new UglifyJSPlugin())
       APP_VERSION_STRING = gitRev.tag()
       EDITOR_ORIGIN = 'https://iodide.io/dist'
       EVAL_FRAME_ORIGIN = 'https://iodide.app/dist'
@@ -53,25 +64,17 @@ module.exports = (env) => {
     APP_PATH_STRING = `${EDITOR_ORIGIN}/`
     EVAL_FRAME_PATH_STRING = `${EVAL_FRAME_ORIGIN}/`
     CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
-    plugins.push(new UglifyJSPlugin())
-  } else if (env === 'server') {
+  } else if (env === 'dev') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
-    DEV_SERVER_PORT = 8000
-    APP_VERSION_STRING = 'iodide-server'
-    // APP_PATH_STRING = ''
-    // CSS_PATH_STRING = APP_PATH_STRING
     EDITOR_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
-    EVAL_FRAME_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
+    EVAL_FRAME_ORIGIN = EDITOR_ORIGIN
     APP_PATH_STRING = ''
     EVAL_FRAME_PATH_STRING = ''
     CSS_PATH_STRING = ''
-    plugins.push(new UglifyJSPlugin())
-  } else if (env === 'dev') {
+  } else if (env === 'dev-client-only') {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
-    DEV_SERVER_PORT = 8888
     EDITOR_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
-    EVAL_FRAME_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
-    APP_VERSION_STRING = 'dev'
+    EVAL_FRAME_ORIGIN = EDITOR_ORIGIN
     APP_PATH_STRING = `${EDITOR_ORIGIN}/`
     EVAL_FRAME_PATH_STRING = `${EVAL_FRAME_ORIGIN}/`
     CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
@@ -162,6 +165,7 @@ module.exports = (env) => {
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify(env),
+        IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
       new ExtractTextPlugin(`[name].${APP_VERSION_STRING}.css`),
     ],
