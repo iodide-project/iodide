@@ -100,6 +100,11 @@ tasks.logoutGithub = new UserTask({
   callback() { dispatcher.logout() },
 })
 
+tasks.saveNotebookToServer = new UserTask({
+  title: 'Save Server',
+  callback() { dispatcher.saveNotebookToServer() },
+})
+
 tasks.exportGist = new UserTask({
   title: 'Export Gist',
   callback() { dispatcher.exportGist() },

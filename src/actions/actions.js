@@ -263,6 +263,46 @@ export function logout() {
   }
 }
 
+export function saveNotebookToServer() {
+  return (dispatch, getState) => {
+    const state = getState()
+    const data = {
+      title: state.title,
+      content: exportJsmdBundle(state),
+    }
+
+    // Get CSRF Cookie for Django CSRF Middleware
+    function getCookie(name) {
+      if (!document.cookie) {
+        return null
+      }
+      const token = document.cookie.split(';')
+        .map(c => c.trim())
+        .filter(c => c.startsWith(`${name}=`))
+
+      if (token.length === 0) {
+        return null;
+      }
+      return decodeURIComponent(token[0].split('=')[1])
+    }
+
+    const csrftoken = getCookie('csrftoken')
+
+    fetch('/api/v1/notebooks/', {
+      body: JSON.stringify(data),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+      },
+    })
+      .then(response => response.json())
+      .then((json) => {
+        console.log(json)
+      })
+  }
+}
+
 export function exportGist() {
   // Go through all gist of the user
   // Match the discription and fileName for each gist
