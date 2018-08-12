@@ -75,8 +75,15 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'server.urls'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "server", "react/static"),
+    os.path.join(BASE_DIR, "server", "static"),
 ]
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',  # end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, "server/static", "webpack-stats.json"),
+    }
+}
 
 TEMPLATES = [
     {
