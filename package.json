@@ -11,6 +11,7 @@
     "start": "webpack --watch --env=dev",
     "build": "webpack",
     "build-production": "webpack --env=production",
+    "build-ghpages": "webpack --env=ghpages",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix"
   },
   "jest": {
