@@ -2,7 +2,7 @@
 
 build:
 	npm install
-	npm run build-server
+	npm run build
 	docker-compose build
 
 shell:

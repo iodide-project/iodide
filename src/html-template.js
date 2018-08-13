@@ -12,7 +12,7 @@ const template = `<!DOCTYPE html>
 <div id="panes-container">
   <iframe
     id="eval-frame"
-    src="<%= EVAL_FRAME_PATH_STRING %>iodide.eval-frame.<%= APP_VERSION_STRING %>.html"
+    src="<%= EVAL_FRAME_ORIGIN %>/iodide.eval-frame.<%= APP_VERSION_STRING %>.html"
     sandbox="allow-scripts allow-same-origin"
     allowfullscreen="true"
     allowvr="yes"

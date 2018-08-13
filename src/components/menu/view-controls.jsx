@@ -1,4 +1,4 @@
-/* global IODIDE_BUILD_MODE */
+/* global IODIDE_BUILD_TYPE */
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
@@ -44,7 +44,7 @@ export class ViewControlsUnconnected extends React.Component {
 
         {/* <AppInfoPane /> */}
 
-        {IODIDE_BUILD_MODE === 'server' && (
+        {IODIDE_BUILD_TYPE === 'server' && (
           <UserButton
             isAuthenticated={this.props.isAuthenticated}
             avatar={this.props.avatar}

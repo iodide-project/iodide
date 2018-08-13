@@ -16,7 +16,7 @@ matrix:
         - npm test
 
       before_deploy:
-        - npm run build
+        - npm run build-ghpages
         - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
         - # Get existing releases from iodide-project/dist so we don't overwrite them
         - >
