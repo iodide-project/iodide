@@ -17,7 +17,6 @@ const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate)
 const DEV_SERVER_PORT = 8000
 let BUILD_DIR
 let APP_PATH_STRING
-let EVAL_FRAME_PATH_STRING
 let CSS_PATH_STRING
 let EVAL_FRAME_ORIGIN
 let EDITOR_ORIGIN
@@ -26,7 +25,6 @@ let EDITOR_ORIGIN
 // unless we're dealing with a tag
 let APP_VERSION_STRING = 'dev'
 
-
 const APP_DIR = path.resolve(__dirname, 'src/')
 const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
@@ -34,7 +32,7 @@ const plugins = []
 
 // const config
 module.exports = (env) => {
-  if (env === 'production') {
+  if (env === 'ghpages') {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
     const gitRev = require('git-rev-sync')
     if (gitRev.isTagDirty()) {
@@ -62,22 +60,20 @@ module.exports = (env) => {
       EVAL_FRAME_ORIGIN = 'https://iodide.app/dist'
     }
     APP_PATH_STRING = `${EDITOR_ORIGIN}/`
-    EVAL_FRAME_PATH_STRING = `${EVAL_FRAME_ORIGIN}/`
     CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
-  } else if (env === 'dev') {
-    BUILD_DIR = path.resolve(__dirname, 'prod/')
-    EDITOR_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
-    EVAL_FRAME_ORIGIN = EDITOR_ORIGIN
-    APP_PATH_STRING = ''
-    EVAL_FRAME_PATH_STRING = ''
-    CSS_PATH_STRING = ''
   } else if (env === 'dev-client-only') {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
     EDITOR_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
     EVAL_FRAME_ORIGIN = EDITOR_ORIGIN
     APP_PATH_STRING = `${EDITOR_ORIGIN}/`
-    EVAL_FRAME_PATH_STRING = `${EVAL_FRAME_ORIGIN}/`
     CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
+  } else {
+    // default case: heroku or local python server using docker-compose
+    BUILD_DIR = path.resolve(__dirname, 'prod/')
+    EDITOR_ORIGIN = process.env.SERVER_URI || `http://localhost:${DEV_SERVER_PORT}`
+    EVAL_FRAME_ORIGIN = process.env.EVAL_FRAME_ORIGIN || EDITOR_ORIGIN
+    APP_PATH_STRING = ''
+    CSS_PATH_STRING = ''
   }
 
   return {
@@ -140,7 +136,7 @@ module.exports = (env) => {
         content: editorHtmlTemplateCompiler({
           APP_VERSION_STRING,
           APP_PATH_STRING,
-          EVAL_FRAME_PATH_STRING,
+          EVAL_FRAME_ORIGIN,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: 'new notebook',
           JSMD: '',
@@ -151,7 +147,7 @@ module.exports = (env) => {
         fileName: `iodide.eval-frame.${APP_VERSION_STRING}.html`,
         content: evalFrameHtmlTemplateCompiler({
           APP_VERSION_STRING: `eval-frame.${APP_VERSION_STRING}`,
-          EVAL_FRAME_PATH_STRING,
+          EVAL_FRAME_ORIGIN,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: 'new notebook',
           JSMD: '',
@@ -159,12 +155,12 @@ module.exports = (env) => {
       }),
       new webpack.DefinePlugin({
         IODIDE_VERSION: JSON.stringify(APP_VERSION_STRING),
-        IODIDE_EVAL_FRAME_PATH: JSON.stringify(EVAL_FRAME_PATH_STRING),
         IODIDE_EVAL_FRAME_ORIGIN: JSON.stringify(EVAL_FRAME_ORIGIN),
         IODIDE_EDITOR_ORIGIN: JSON.stringify(EDITOR_ORIGIN),
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
-        IODIDE_BUILD_MODE: JSON.stringify(env),
+        IODIDE_BUILD_MODE: JSON.stringify((env && env.startswith('dev')) ? 'dev' : 'production'),
+        IODIDE_BUILD_TYPE: JSON.stringify(env ? 'standalone' : 'server'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
       new ExtractTextPlugin(`[name].${APP_VERSION_STRING}.css`),

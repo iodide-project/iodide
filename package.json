@@ -9,9 +9,9 @@
     "test": "jest --no-cache",
     "start-and-serve": "webpack-dev-server --watch --env=dev-client-only",
     "start": "webpack --watch --env=dev",
-    "build": "webpack --env=production",
-    "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
-    "build-server": "webpack --env=production"
+    "build": "webpack",
+    "build-production": "webpack --env=production",
+    "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/test/setupTests.js",
