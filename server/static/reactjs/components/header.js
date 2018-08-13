@@ -44,7 +44,7 @@ export class HeaderUnconnected extends Component {
                     Logout
                   </Button>
                   <Avatar
-                    className='avatar'
+                    className='header-avatar'
                     alt={this.props.userData.name}
                     src={this.props.userData.avatar}
                   />

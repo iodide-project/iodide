@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
-import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
+import { exportJsmdBundle, titleToHtmlFilename, exportJsmdToString } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import {
   addExternalDependency,
@@ -469,7 +469,7 @@ export function saveNotebookToServer() {
     const state = getState()
     const data = {
       title: state.title,
-      content: exportJsmdBundle(state),
+      content: exportJsmdToString(state),
     }
 
     // Get CSRF Cookie for Django CSRF Middleware

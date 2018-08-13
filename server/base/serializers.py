@@ -20,4 +20,4 @@ class UserSerializer(serializers.ModelSerializer):
         return NotebookUserListSerializer(notebooks_queryset, many=True).data
     class Meta:
         model = User
-        fields = ('id', 'username', 'avatar', 'notebooks')
+        fields = ('id', 'username', 'avatar', 'first_name', 'last_name','notebooks')

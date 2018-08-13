@@ -28,5 +28,5 @@ urlpatterns = [
 
     # url(r'^$', server.views.index, name='index'),
     # react bundles to views
-    url(r'^$', server.views.homepage, name='homepage'),
+    url(r'^(?!oauth/|notebooks)', server.views.homepage, name='homepage'),
 ]
