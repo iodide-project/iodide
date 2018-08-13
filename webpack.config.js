@@ -159,7 +159,7 @@ module.exports = (env) => {
         IODIDE_EDITOR_ORIGIN: JSON.stringify(EDITOR_ORIGIN),
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
-        IODIDE_BUILD_MODE: JSON.stringify((env && env.startswith('dev')) ? 'dev' : 'production'),
+        IODIDE_BUILD_MODE: JSON.stringify((env && env.startsWith('dev')) ? 'dev' : 'production'),
         IODIDE_BUILD_TYPE: JSON.stringify(env ? 'standalone' : 'server'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
