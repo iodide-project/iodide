@@ -1,10 +1,11 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Header from '../components/Header';
 import Homepage from '../pages/Homepage';
 import UserPage from '../pages/UserPage';
 import UserNotebook from '../pages/UserNotebook';
+import Header from '../components/header';
+import Footer from '../components/footer';
 
 const routes = (
   <div>
@@ -14,6 +15,7 @@ const routes = (
       <Route exact path="/:user" component={UserPage} />
       <Route path="/:user/:id" component={UserNotebook} />
     </Switch>
+    <Footer />
   </div>
 )
 

@@ -11,6 +11,7 @@ admin.autodiscover()
 urlpatterns = [
     # notebook stuff
     url(r'^api/v1/', include('server.notebooks.api_urls')),
+    url(r'^api/v1/', include('server.base.api_urls')),
     url(r'^notebooks/', include('server.notebooks.urls')),
 
     # various views to help with the authentication pipe    line
@@ -19,6 +20,7 @@ urlpatterns = [
         name='login_success'),
     url(r'^logout/$', server.views.logout, name='logout'),
 
+    # route for creating anonymous notebooks
     url(r'^notebook', server.views.index, name='index'),
 
     # admin stuff
@@ -26,5 +28,5 @@ urlpatterns = [
 
     # url(r'^$', server.views.index, name='index'),
     # react bundles to views
-    url(r'^$', generic.TemplateView.as_view(template_name='main.html')),
+    url(r'^$', server.views.homepage, name='homepage'),
 ]

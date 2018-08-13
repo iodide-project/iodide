@@ -6,19 +6,25 @@ var BundleTracker = require('webpack-bundle-tracker');
 const IS_DEV = (process.env.NODE_ENV === 'dev');
 
 module.exports = {
+  mode: 'development',
+  
   context: __dirname,
 
   entry: [
-    'react-hot-loader/patch',
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
     './static/reactjs/index',
   ],
 
   output: {
       path: path.resolve('./static/bundles/'),
       filename: "[name]-[hash].js",
+      publicPath: 'http://localhost:3000/assets/bundles/',
   },
 
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(), // don't reload if there is an error
     new BundleTracker({filename: './static/webpack-stats.json'}),
   ],
   module: {
