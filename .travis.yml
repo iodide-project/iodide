@@ -17,7 +17,9 @@ matrix:
 
       before_deploy:
         - npm run build-ghpages
-        - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
+        # test commenting the cp out for now, b/c going forward we'll be using the
+        # django server to serve the landing page
+        # - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
         - # Get existing releases from iodide-project/dist so we don't overwrite them
         - >
           if [ -n "$TRAVIS_TAG" ]; then
