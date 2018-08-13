@@ -1,6 +1,6 @@
 import CodeMirror from 'codemirror'
 
-import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
+import { exportJsmdBundle, titleToHtmlFilename, exportJsmdToString } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
@@ -268,7 +268,7 @@ export function saveNotebookToServer() {
     const state = getState()
     const data = {
       title: state.title,
-      content: exportJsmdBundle(state),
+      content: exportJsmdToString(state),
     }
 
     // Get CSRF Cookie for Django CSRF Middleware
