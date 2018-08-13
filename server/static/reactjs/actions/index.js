@@ -14,6 +14,15 @@ function loginFailure() {
   }
 }
 
+export function getUserData() {
+  return (dispatch) => {
+    dispatch({
+      type: 'GET_USER_DATA',
+    })
+    console.log('actions 2', window)
+  }
+}
+
 export function login() {
   const url = '/oauth/login/github'
   const name = 'github_login'
