@@ -30,7 +30,7 @@ div#panes-container {
 
 div#editor-react-root{
   /* this prevents the resizer from getting too wide and covering the eval frame*/
-  max-width: calc(100% - 300px);
+  max-width: calc(100%);
 }
 
 div#cells-resizer {
@@ -44,10 +44,6 @@ div#cells {
   box-sizing: border-box;
   /*height: 100%;*/
   overflow-y: auto;
-  padding-top: 15px;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-bottom: 20px;
   border-right: 2px solid lightgray;
 }
 

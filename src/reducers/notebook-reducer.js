@@ -183,6 +183,29 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { editorWidth: width })
     }
 
+    /* eslint-disable prefer-destructuring */
+
+    case 'INCREASE_EDITOR_WIDTH': {
+      let width = state.editorWidth
+      if (width < paneSizes[1]) width = paneSizes[1]
+      else if (width < paneSizes[2]) width = paneSizes[2]
+      else if (width < paneSizes[3]) width = paneSizes[3]
+      else width = paneSizes[4]
+      return Object.assign({}, state, { editorWidth: width })
+    }
+
+    case 'DECREASE_EDITOR_WIDTH': {
+      let width = state.editorWidth
+      if (width > paneSizes[3]) width = paneSizes[3]
+      else if (width > paneSizes[2]) width = paneSizes[2]
+      else if (width > paneSizes[1]) width = paneSizes[1]
+      else width = paneSizes[0]
+      console.log(width, document.documentElement.clientWidth)
+      return Object.assign({}, state, { editorWidth: width })
+    }
+
+    /* eslint-enable prefer-destructuring */
+
     case 'INCREMENT_EXECUTION_NUMBER': {
       let { executionNumber } = state
       executionNumber += 1
