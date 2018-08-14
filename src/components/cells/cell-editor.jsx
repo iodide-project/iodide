@@ -30,6 +30,7 @@ class CellEditor extends React.Component {
       selectCell: PropTypes.func.isRequired,
       changeMode: PropTypes.func.isRequired,
       updateInputContent: PropTypes.func.isRequired,
+      unHighlightCells: PropTypes.func.isRequired,
     }).isRequired,
     containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
@@ -64,6 +65,7 @@ class CellEditor extends React.Component {
   handleFocusChange(focused) {
     if (focused) {
       if (!this.props.thisCellBeingEdited) {
+        this.props.actions.unHighlightCells()
         this.props.actions.selectCell(this.props.cellId)
         this.props.actions.changeMode('EDIT_MODE')
       }
@@ -190,6 +192,12 @@ function mapStateToProps(state, ownProps) {
     cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
   )
 
+  function getReadOnly() {
+    if (state.viewMode === 'presentation') return true
+    if (cell.highlighted) return 'nocursor'
+    return false
+  }
+
   const editorOptions = {
     mode: codeMirrorModeLoaded ? codeMirrorMode : '',
     lineWrapping: false,
@@ -200,6 +208,7 @@ function mapStateToProps(state, ownProps) {
     lineNumbers: true,
     keyMap: 'sublime',
     comment: codeMirrorMode === 'javascript',
+    readOnly: getReadOnly(),
   }
   switch (cell.cellType) {
     case 'markdown':

@@ -76,6 +76,7 @@ const cellSchema = {
     value: {}, // empty schema, `value` can be anything
     rendered: { type: 'boolean' },
     selected: { type: 'boolean' },
+    highlighted: { type: 'boolean' },
     executionStatus: { type: 'string' },
     evalStatus: {
       type: 'string',
@@ -127,6 +128,14 @@ const stateSchema = {
     languages: {
       type: 'object',
       additionalProperties: languageSchema,
+    },
+    copiedCells: {
+      type: 'array',
+      items: cellSchema,
+    },
+    cutCells: {
+      type: 'array',
+      items: cellSchema,
     },
     languageLastUsed: { type: 'string' },
     mode: {
@@ -202,6 +211,7 @@ function newCell(cellId, cellType = 'code', language = 'js') {
     value: undefined,
     rendered: false,
     selected: false,
+    highlighted: false,
     executionStatus: ' ',
     evalStatus: 'UNEVALUATED',
     hasSideEffect: false,
@@ -236,6 +246,8 @@ function newNotebook() {
     appMessages: [],
     autoSave: undefined,
     locallySaved: [],
+    copiedCells: [],
+    cutCells: [],
     savedEnvironment: {},
     runningCellID: undefined,
   }

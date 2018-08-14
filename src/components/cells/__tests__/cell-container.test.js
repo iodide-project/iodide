@@ -8,6 +8,9 @@ import CellEditor from '../cell-editor'
 describe('CellContainerUnconnected React component', () => {
   let selectCell
   let updateCellProperties
+  let highlightCell
+  let unHighlightCells
+  let multipleCellHighlight
   let props
   let mountedCont
   const node = <span>Hello</span>
@@ -22,9 +25,15 @@ describe('CellContainerUnconnected React component', () => {
   beforeEach(() => {
     selectCell = jest.fn()
     updateCellProperties = jest.fn()
+    highlightCell = jest.fn()
+    unHighlightCells = jest.fn()
+    multipleCellHighlight = jest.fn()
     props = {
       cellId: 1,
-      cellContainerStyle: { outline: 'CONTAINER_OUTLINE_TEST_STRING' },
+      cellContainerStyle: {
+        outline: 'CONTAINER_OUTLINE_TEST_STRING',
+        background: 'CONTAINER_BACKGROUND_TEST_STRING',
+      },
       mainComponentStyle: {
         outline: 'MAIN_COMPONENT_OUTLINE_TEST_STRING',
         display: 'MAIN_COMPONENT_DISPLAY_TEST_STRING',
@@ -35,6 +44,9 @@ describe('CellContainerUnconnected React component', () => {
       // action props
       selectCell,
       updateCellProperties,
+      highlightCell,
+      unHighlightCells,
+      multipleCellHighlight,
     }
     mountedCont = undefined
   })
@@ -63,17 +75,53 @@ describe('CellContainerUnconnected React component', () => {
       .toEqual(cellContainer().instance().handleCellClick)
   })
 
-  it('mousedown on cell container div fires selectCell with cell not selected', () => {
+  it('mouse down on cell container div fires selectCell with correct props', () => {
+    props.viewMode = 'editor'
     props.selected = false
-    cellContainer().simulate('mousedown')
+    cellContainer().simulate('mousedown', {
+      ctrlKey: false,
+      metaKey: false,
+      target: document.createElement('mockElement'),
+    })
     expect(selectCell.mock.calls.length).toBe(1)
     expect(selectCell.mock.calls[0].length).toBe(2)
   })
 
-  it('mousedown on cell container div DOES NOT fires selectCell if cell is selected', () => {
-    props.selected = true
-    cellContainer().simulate('mousedown')
-    expect(selectCell.mock.calls.length).toBe(0)
+  it('mouse down on cell container div fires unHighlightCells with correct props', () => {
+    props.viewMode = 'editor'
+    props.highlighted = true
+    cellContainer().simulate('mousedown', {
+      ctrlKey: false,
+      metaKey: false,
+      target: document.createElement('mockElement'),
+    })
+    expect(unHighlightCells.mock.calls.length).toBe(1)
+    expect(unHighlightCells.mock.calls[0].length).toBe(0)
+  })
+
+  it('mouse down on cell container fires multipleCellHighlight with Shift press', () => {
+    props.viewMode = 'editor'
+    cellContainer().simulate('mousedown', {
+      shiftKey: true,
+      ctrlKey: true,
+      metaKey: false,
+      target: document.createElement('mockElement'),
+      preventDefault: () => {
+      },
+    })
+    expect(multipleCellHighlight.mock.calls.length).toBe(1)
+    expect(multipleCellHighlight.mock.calls[0].length).toBe(1)
+  })
+
+  it('mouse down on cell container fires highlightCell with correct props and Ctrl press', () => {
+    props.viewMode = 'editor'
+    cellContainer().simulate('mousedown', {
+      ctrlKey: true,
+      metaKey: false,
+      target: document.createElement('mockElement'),
+    })
+    expect(highlightCell.mock.calls.length).toBe(1)
+    expect(highlightCell.mock.calls[0].length).toBe(1)
   })
 
   it('always renders one CellMenuContainer inside top div', () => {
@@ -111,31 +159,51 @@ describe('CellContainer mapStateToProps', () => {
   const stateToContainerStylesMappings = [
     {
       state: {
-        cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
+        cells: [{
+          id: 5,
+          highlighted: false,
+          selected: true,
+          inputFolding: 'VISIBLE',
+        }],
         mode: 'EDIT_MODE',
       },
-      style: { outline: 'solid #bbb 1px' },
+      style: { outline: 'solid #bbb 1px', background: 'none' },
     },
     {
       state: {
-        cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
+        cells: [{
+          id: 5,
+          highlighted: true,
+          selected: false,
+          inputFolding: 'VISIBLE',
+        }],
         mode: 'EDI_MODE',
       },
-      style: { outline: 'solid #f1f1f1 1px' },
+      style: { outline: 'solid #f1f1f1 1px', background: 'rgba(116, 185, 255, 0.2)' },
     },
     {
       state: {
-        cells: [{ id: 5, selected: true, inputFolding: 'VISIBLE' }],
+        cells: [{
+          id: 5,
+          highlighted: false,
+          selected: true,
+          inputFolding: 'VISIBLE',
+        }],
         mode: 'COMMAND_MODE',
       },
-      style: { outline: 'solid #bbb 2px' },
+      style: { outline: 'solid #bbb 2px', background: 'none' },
     },
     {
       state: {
-        cells: [{ id: 5, selected: false, inputFolding: 'VISIBLE' }],
+        cells: [{
+          id: 5,
+          highlighted: false,
+          selected: false,
+          inputFolding: 'VISIBLE',
+        }],
         mode: 'COMMAND_MODE',
       },
-      style: { outline: 'solid #f1f1f1 1px' },
+      style: { outline: 'solid #f1f1f1 1px', background: 'none' },
     },
   ]
   stateToContainerStylesMappings.forEach((testCase, i) => {

@@ -100,6 +100,15 @@ function getSelectedCellId(state) {
   return undefined // for now
 }
 
+function getSelectedCellIndex(state) {
+  const { cells } = state
+  const index = cells.findIndex(c => c.selected)
+  if (index > -1) {
+    return index
+  }
+  return undefined // for now
+}
+
 function getCellBelowSelectedId(state) {
   const { cells } = state
   const index = cells.findIndex(c => c.selected)
@@ -119,6 +128,21 @@ function getSelectedCell(state) {
     return cells[index]
   }
   return undefined // for now
+}
+
+function checkForHighlightedCells(state) {
+  const cells = state.cells.slice()
+  return cells.find(c => c.highlighted)
+}
+
+function newStateWithPropsAssignedForHighlightedCells(state, cellPropsToSet) {
+  const cells = state.cells.slice()
+  cells.forEach((cell, i) => {
+    if (cell.highlighted) {
+      cells[i] = Object.assign({}, cell, cellPropsToSet)
+    }
+  })
+  return Object.assign({}, state, { cells })
 }
 
 function newStateWithSelectedCellPropertySet(state, cellPropToSet, newValue) {
@@ -143,9 +167,12 @@ export {
   moveCell,
   addExternalDependency,
   getSelectedCell,
+  getSelectedCellIndex,
   getSelectedCellId,
   getCellBelowSelectedId,
   newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
   newStateWithPropsAssignedForCell,
+  checkForHighlightedCells,
+  newStateWithPropsAssignedForHighlightedCells,
 }
