@@ -1,5 +1,5 @@
 import React from 'react';
 
-const UserNotebook = () => <h1>UserNotebook</h1>;
+const UserNotebook = () => <p>Under Construction. This route will be used for versioning and revisions</p>;
 
 export default UserNotebook;
