@@ -123,6 +123,7 @@ const stateSchema = {
     sidePaneMode: {}, // FIXME change to string ONLY
     sidePaneWidth: { type: 'integer' },
     userData: { type: 'object' },
+    notebookId: { type: 'number' },
     externalDependencies: { type: 'array' },
     executionNumber: { type: 'integer', minimum: 0 },
     appMessages: {
@@ -236,6 +237,7 @@ function blankState() {
     userDefinedVarNames: [],
     lastSaved: undefined,
     userData: {},
+    notebookId: window.notebook_id,
     mode: 'command', // command, edit
     viewMode: 'editor', // editor, presentation
     sidePaneMode: undefined,
