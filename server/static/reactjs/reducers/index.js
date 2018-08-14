@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
-import counterReducer from './counter'
+import userDataReducer from './user-data'
 
 const rootReducer = combineReducers({
-  count: counterReducer,
+  userData: userDataReducer,
 })
 
 export default rootReducer

@@ -1,8 +1,6 @@
-const defaultState = {
-  userData: window.userData || {}
-}
+const defaultUserData = window.userData || {}
 
-const counterReducer = (state = defaultState, action) => {
+const userDataReducer = (state = defaultUserData, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS': {
       const { userData } = action
@@ -18,4 +16,4 @@ const counterReducer = (state = defaultState, action) => {
   }
 }
 
-export default counterReducer
+export default userDataReducer

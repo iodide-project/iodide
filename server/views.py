@@ -18,14 +18,14 @@ def get_user_info_dict(user):
         }
     return {}
 
-def homepage(request):
+def index(request):
     template = loader.get_template('main.html')
     return HttpResponse(template.render({
         'user_info': json.dumps(get_user_info_dict(request.user))
     }, request))
 
 
-def index(request):
+def notebook(request):
     # basically just an empty placeholder for now
     template = loader.get_template('notebook.html')
     return HttpResponse(template.render({

@@ -20,13 +20,13 @@ urlpatterns = [
         name='login_success'),
     url(r'^logout/$', server.views.logout, name='logout'),
 
-    # route for creating anonymous notebooks
-    url(r'^notebook', server.views.index, name='index'),
+    # route for creating new notebooks
+    url(r'^notebook', server.views.notebook, name='notebook'),
 
     # admin stuff
     path('admin/', admin.site.urls),
 
     # url(r'^$', server.views.index, name='index'),
     # react bundles to views
-    url(r'^(?!oauth/|notebooks)', server.views.homepage, name='homepage'),
+    url(r'^(?!oauth/|notebooks)', server.views.index, name='index'),
 ]

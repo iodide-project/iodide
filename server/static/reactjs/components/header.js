@@ -67,8 +67,8 @@ export class HeaderUnconnected extends Component {
 
 export function mapStateToProps(state) {
   return {
-    isLoggedIn: Boolean(state.count.userData.name),
-    userData: state.count.userData,
+    isLoggedIn: Boolean(state.userData.name),
+    userData: state.userData,
   }
 }
 
