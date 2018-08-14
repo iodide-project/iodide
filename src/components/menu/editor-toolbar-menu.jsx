@@ -8,6 +8,7 @@ import NotebookMenuItem from './notebook-menu-item'
 import NotebookMenuDivider from './notebook-menu-divider'
 
 import SavedNotebooksAndExamplesSubsection from './saved-notebooks-and-examples-subsection'
+import ServerOptionsSubsection from './server-options-subsection'
 
 export class EditorToolbarMenuUnconnected extends React.Component {
   static propTypes = {
@@ -23,9 +24,8 @@ export class EditorToolbarMenuUnconnected extends React.Component {
         <NotebookMenuItem task={tasks.exportNotebookAsReport} />
         <NotebookMenuItem task={tasks.exportNotebookToClipboard} />
         <NotebookMenuItem task={tasks.clearVariables} />
-        <NotebookMenuItem task={tasks.saveNotebookToServer} />
         {
-          this.props.isAuthenticated && <NotebookMenuItem task={tasks.exportGist} />
+          this.props.isAuthenticated && <ServerOptionsSubsection />
         }
         <SavedNotebooksAndExamplesSubsection />
 

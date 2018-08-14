@@ -138,6 +138,7 @@ const stateSchema = {
       items: { type: 'object' },
     },
     evalFrameReady: { type: 'boolean' },
+    notebookId: { type: 'number' },
     externalDependencies: { type: 'array' },
     // showFrame: { type: 'boolean' },
     // showEditor: { type: 'boolean' },
@@ -220,9 +221,16 @@ function newNotebook() {
     userDefinedVarNames: [],
     lastSaved: undefined,
     userData: {},
+<<<<<<< 90e226027a144b5caad0c1a0cb30816a431ac6de:src/editor-state-prototypes.js
     mode: 'COMMAND_MODE', // command, edit
     viewMode: 'EXPLORE_VIEW', // editor, presentation
     sidePaneMode: '_CONSOLE',
+=======
+    notebookId: window.notebook_id,
+    mode: 'command', // command, edit
+    viewMode: 'editor', // editor, presentation
+    sidePaneMode: undefined,
+>>>>>>> Add server options to notebook:src/state-prototypes.js
     sidePaneWidth: 562,
     history: [],
     // showFrame: true,
