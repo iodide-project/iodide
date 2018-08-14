@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --hot --mode development",
-    "build": "webpack --config webpack.config.js --progress --colors --mode development",
+    "start": "node react-server.js",
+    "build": "webpack --config webpack.prod.config.js --progress --colors --mode development",
     "watch": "webpack --config webpack.config.js --watch --mode development"
   },
   "author": "Dhiraj Barnwal",
