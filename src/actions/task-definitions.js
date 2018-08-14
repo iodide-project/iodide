@@ -407,6 +407,20 @@ tasks.setViewModeToPresentation = new UserTask({
 //   callback() { dispatcher.toggleEvalFrameVisibility() },
 // })
 
+tasks.increaseEditorWidth = new UserTask({
+  title: 'Set Editor Size',
+  keybindings: ['ctrl+right'],
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.increaseEditorWidth() },
+})
+
+tasks.decreaseEditorWidth = new UserTask({
+  title: 'Set Editor Size',
+  keybindings: ['ctrl+left'],
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.decreaseEditorWidth() },
+})
+
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',
   menuTitle: 'File an Issue ...',

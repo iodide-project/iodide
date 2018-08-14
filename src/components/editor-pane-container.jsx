@@ -54,7 +54,7 @@ class EditorPaneContainer extends React.Component {
           }}
           handleClasses={{ right: 'resizer' }}
           bounds="window"
-          minWidth={300}
+          minWidth={0}
           onResizeStop={this.onResizeStopHandler}
           size={{ width: this.props.cellResizerWidth }}
           style={{
@@ -62,7 +62,7 @@ class EditorPaneContainer extends React.Component {
             flexDirection: 'column',
           }}
         >
-          <div id="cells">
+          <div style={this.props.cellsClass} id="cells">
 
             {cellInputComponents}
           </div>
@@ -73,11 +73,16 @@ class EditorPaneContainer extends React.Component {
 }
 
 function mapStateToProps(state) {
+  const cellsClass = { padding: '15px 15px 20px 15px' }
+  if (state.editorWidth < 30) {
+    cellsClass.padding = '15px 0 20px 0'
+  }
   return {
     cellIds: state.cells.map(c => c.id),
     cellResizerWidth: state.editorWidth,
     cellResizerDisplayStyle: state.viewMode === 'REPORT_VIEW' ? 'none' : 'flex',
     // showFrame: state.showFrame,
+    cellsClass,
   }
 }
 

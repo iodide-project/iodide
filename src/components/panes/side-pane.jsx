@@ -52,7 +52,7 @@ export class SidePaneUnconnected extends React.Component {
               }}
               handleClasses={{ left: 'resizer' }}
               maxWidth={800}
-              minWidth={300}
+              minWidth={100}
               size={{
                 width: this.props.sidePaneMode === this.props.openOnMode ?
                        this.props.sidePaneWidth :
