@@ -44,6 +44,7 @@ matrix:
           skip-cleanup: true
           keep-history: false
           repo: iodide-project/master-eval
+          fqdn: extremely-alpha.iodide.app
           verbose: false
           local-dir: prod
           target-branch: master
