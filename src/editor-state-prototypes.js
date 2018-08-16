@@ -221,19 +221,10 @@ function newNotebook() {
     userDefinedVarNames: [],
     lastSaved: undefined,
     userData: {},
-<<<<<<< HEAD:src/editor-state-prototypes.js
-<<<<<<< 90e226027a144b5caad0c1a0cb30816a431ac6de:src/editor-state-prototypes.js
     mode: 'COMMAND_MODE', // command, edit
     viewMode: 'EXPLORE_VIEW', // editor, presentation
     sidePaneMode: '_CONSOLE',
-=======
-=======
->>>>>>> 77e0aca394528af5a1dc14cbfc68a9c36d4c6001:src/state-prototypes.js
     notebookId: window.notebook_id,
-    mode: 'command', // command, edit
-    viewMode: 'editor', // editor, presentation
-    sidePaneMode: undefined,
->>>>>>> Add server options to notebook:src/state-prototypes.js
     sidePaneWidth: 562,
     history: [],
     // showFrame: true,
