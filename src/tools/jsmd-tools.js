@@ -267,10 +267,6 @@ function exportJsmdBundle(state) {
   })
 }
 
-function exportJsmdToString(state) {
-  return stringifyStateToJsmd(state, new Date().toISOString())
-}
-
 function titleToHtmlFilename(title) {
   return `${title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.html`
 }
@@ -284,6 +280,5 @@ export {
   jsmdValidCellSettingPaths,
   stringifyStateToJsmd,
   exportJsmdBundle,
-  exportJsmdToString,
   titleToHtmlFilename,
 }

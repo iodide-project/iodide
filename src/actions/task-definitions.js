@@ -300,14 +300,6 @@ tasks.exportNotebookAsReport = new UserTask({
   callback() { dispatcher.exportNotebook(true, false) },
 })
 
-tasks.exportNotebookToClipboard = new UserTask({
-  title: 'Export Notebook to Clipboard',
-  callback() {
-    dispatcher.exportNotebook(false, true)
-    dispatcher.updateAppMessages({ message: 'Notebook copied to clipboard' })
-  },
-})
-
 tasks.clearVariables = new UserTask({
   title: 'Clear Variables',
   preventDefaultKeybinding: true,
