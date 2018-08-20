@@ -1,16 +1,26 @@
+export function updateAppMessage(messageObj) {
+  const { message } = messageObj
+  let { when } = messageObj
+  if (when === undefined) when = new Date().toString()
+  return {
+    type: 'UPDATE_APP_MESSAGE',
+    message: { message, when },
+  }
+}
+
 function loginSuccess(userData) {
   return (dispatch) => {
     dispatch({
       type: 'LOGIN_SUCCESS',
       userData,
     })
-    console.log({ message: 'You are logged in' })
+    dispatch(updateAppMessage({ message: 'You are logged in' }))
   }
 }
 
 function loginFailure() {
   return (dispatch) => {
-    console.log({ message: 'Login Failed' })
+    dispatch(updateAppMessage({ message: 'Login Failed' }))
   }
 }
 
@@ -36,8 +46,8 @@ export function logout() {
       .then((response) => {
         if (response.ok) {
           dispatch({ type: 'LOGOUT' })
-          console.log({ message: 'Logged Out' })
-        } else console.log({ message: 'Logout Failed' })
+          dispatch(updateAppMessage({ message: 'Logged Out' }))
+        } else dispatch(updateAppMessage({ message: 'Logout Failed' }))
       })
   }
 }

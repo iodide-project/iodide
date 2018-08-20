@@ -3,13 +3,11 @@ const defaultUserData = window.userData || {}
 const userDataReducer = (state = defaultUserData, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS': {
-      const { userData } = action
-      return Object.assign({}, state, { userData })
+      return action.userData
     }
 
     case 'LOGOUT': {
-      const userData = {}
-      return Object.assign({}, state, { userData })
+      return {}
     }
     default:
       return state

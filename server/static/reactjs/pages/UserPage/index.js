@@ -18,10 +18,10 @@ class UserPage extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/v1/users/username/${this.props.match.params.user}`)
+    fetch(`/api/v1/users/?username=${this.props.match.params.user}`)
     .then(response => response.json())
     .then(data => {
-      if (data.id) this.setState({user: data})
+      if (data[0].id) this.setState({user: data[0]})
       else this.setState({caughtError: true})
     })
     .catch((error) => {
@@ -31,7 +31,6 @@ class UserPage extends React.Component {
   }
 
   render() {
-    console.log('state', this.state.user)
     let name = this.state.user.username
     if (this.state.user.first_name && this.state.user.last_name) {
       name = `${this.state.user.first_name} ${this.state.user.last_name}`

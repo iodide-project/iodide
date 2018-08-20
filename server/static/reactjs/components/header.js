@@ -8,8 +8,8 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar';
 
+import AppMessage from './app-message'
 import * as actions from '../actions'
-// import Logo from '../assets/images/logo.png';
 
 export class HeaderUnconnected extends Component {
   render() {
@@ -23,7 +23,7 @@ export class HeaderUnconnected extends Component {
               </a>
             </Grid>
             <Grid item sm={8} xs={9} className='header-button-container'>
-              <Button variant="contained" href="/notebooks" className='header-button'>
+              <Button variant="contained" href="/notebooks/new" className='header-button'>
                 New Notebook
               </Button>
               {
@@ -60,6 +60,7 @@ export class HeaderUnconnected extends Component {
             </Grid>
           </Grid>
         </Toolbar>
+        <AppMessage />
       </div>
     );
   }
