@@ -356,7 +356,7 @@ export function saveNotebookToServer() {
           const message = 'Updated Notebook'
           dispatch(updateAppMessages({
             message,
-            details: `${message} <br />Notebook saved with id ${json.id}`,
+            details: `${message} <br />Your notebook has been updated}`,
           }))
           console.log(json)
         })
@@ -368,7 +368,7 @@ export function saveNotebookToServer() {
           const message = 'Notebook saved to server'
           dispatch(updateAppMessages({
             message,
-            details: `${message} <br />Notebook saved with id ${json.id}`,
+            details: `${message} <br />New notebook has been created`,
           }))
           console.log(json)
           dispatch({ type: 'ADD_NOTEBOOK_ID', id: json.id })
