@@ -407,6 +407,12 @@ tasks.setViewModeToPresentation = new UserTask({
 //   callback() { dispatcher.toggleEvalFrameVisibility() },
 // })
 
+tasks.fileAnIssue = new ExternalLinkTask({
+  title: 'File an Issue',
+  menuTitle: 'File an Issue ...',
+  url: 'http://github.com/iodide-project/iodide/issues/new',
+})
+
 tasks.seeAllExamples = new ExternalLinkTask({
   title: 'See All Examples',
   menuTitle: 'See All Examples ...',
