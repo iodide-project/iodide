@@ -11,13 +11,23 @@ from .models import Notebook
 def notebook_view(request, pk):
     template = loader.get_template('notebook.html')
     notebook = get_object_or_404(Notebook, pk=pk)
-    latest_revision = notebook.revisions.first()
+    latest_revision = notebook.revisions.last()
     if request.user.is_authenticated:
         user_info = json.dumps(get_user_info_dict(request.user))
     else:
         user_info = json.dumps({})
     return HttpResponse(
         template.render({
+            'notebook_id': pk,
             'user_info': user_info,
             'jsmd': latest_revision.content
         }, request))
+
+
+def new_notebook(request):
+    # basically just an empty placeholder for now
+    template = loader.get_template('notebook.html')
+    return HttpResponse(template.render({
+        'user_info': json.dumps(get_user_info_dict(request.user)),
+        'notebook_id': 0
+    }, request))

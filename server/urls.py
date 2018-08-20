@@ -10,6 +10,7 @@ admin.autodiscover()
 urlpatterns = [
     # notebook stuff
     url(r'^api/v1/', include('server.notebooks.api_urls')),
+    url(r'^api/v1/', include('server.base.api_urls')),
     url(r'^notebooks/', include('server.notebooks.urls')),
 
     # various views to help with the authentication pipeline
@@ -21,5 +22,6 @@ urlpatterns = [
     # admin stuff
     path('admin/', admin.site.urls),
 
-    url(r'^$', server.views.index, name='index'),
+    # react website
+    url(r'^(?!oauth/|notebooks|api)', server.views.index, name='index'),
 ]

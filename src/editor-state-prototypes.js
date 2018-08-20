@@ -138,6 +138,7 @@ const stateSchema = {
       items: { type: 'object' },
     },
     evalFrameReady: { type: 'boolean' },
+    notebookId: { type: 'number' },
     externalDependencies: { type: 'array' },
     // showFrame: { type: 'boolean' },
     // showEditor: { type: 'boolean' },
@@ -223,6 +224,7 @@ function newNotebook() {
     mode: 'COMMAND_MODE', // command, edit
     viewMode: 'EXPLORE_VIEW', // editor, presentation
     sidePaneMode: '_CONSOLE',
+    notebookId: window.notebook_id,
     sidePaneWidth: 562,
     history: [],
     // showFrame: true,

@@ -1,0 +1,67 @@
+.notebooks-list .row {
+  background: #eee;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.hero-unit {
+  background: rgba(0, 0, 0, 0) url("../../assets/images/paper.png") repeat scroll 0% 0%;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 75px 0;
+}
+
+.hero-content p {
+  font-family: 'Verala Round', sans-serif;
+  font-size: 1.15rem;
+  margin-bottom: 25px;
+}
+
+.hero-content h1 {
+  font-family: 'Varela Round', sans-serif;
+}
+
+.hero-content a{
+  text-transform: none;
+  font-family: 'Varela Round', sans-serif;
+}
+
+.all-notebooks {
+    max-width: 975px;
+    margin: 0 auto;
+}
+
+.all-notebooks-container {
+  padding: 20px;
+  background: #f7f7f7;
+}
+
+.notebook {
+    background: #fff;
+    color: #888;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 1px 1px 6px #ddd;
+}
+
+.notebook a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+.notebook-owner a {
+    font-weight: normal;
+}
+
+.notebook:hover {
+    background: #1a58e7;
+    color: #ddd;
+}
+
+.notebook:hover a {
+  color: #fff;
+}

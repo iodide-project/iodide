@@ -1,0 +1,64 @@
+.preloader {
+    position: relative;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    height: 500px;
+    background: #333;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.user-info {
+  padding: 20px;
+}
+
+.user-card {
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 75px !important;
+  height: 75px !important;
+  margin-right: 20px;
+}
+
+.user-notebooks .notebook {
+    background: #fff;
+    color: #888;
+    padding: 10px;
+    margin: 5px 0;
+    box-shadow: 1px 1px 6px #ddd;
+    width: 800px;
+}
+
+.user-notebooks .notebook a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+.user-notebooks .notebook:hover {
+    background: #1a58e7;
+    color: #ddd;
+}
+
+.user-notebooks .notebook:hover a {
+  color: #fff;
+}
+
+.user-notebooks {
+  background: #efefef;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

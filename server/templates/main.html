@@ -1,0 +1,16 @@
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta charset="UTF-8">
+ <title>Iodide</title>
+ </head>
+
+ <body>
+ <div id="react"></div>
+ <script>
+   window.userData = {{ user_info|safe }}
+ </script>
+ {% render_bundle 'main' %}
+ </body>
+</html>

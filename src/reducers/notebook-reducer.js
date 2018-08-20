@@ -163,6 +163,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return nextState
     }
 
+    case 'ADD_NOTEBOOK_ID': {
+      return Object.assign({}, state, { notebookId: action.id })
+    }
+
     case 'CHANGE_PAGE_TITLE':
       return Object.assign({}, state, { title: action.title })
 
