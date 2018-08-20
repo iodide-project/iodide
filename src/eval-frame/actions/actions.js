@@ -126,6 +126,8 @@ export function evalConsoleInput(languageId) {
     const state = getState()
     let output
     const code = state.consoleText
+    // exit if there is no code in the console to  eval
+    if (!code) { return undefined }
     const evalLanguageId = languageId === undefined ? state.languageLastUsed : languageId
     const languageModule = state.languages[evalLanguageId].module
     const { evaluator } = state.languages[evalLanguageId]
@@ -385,14 +387,20 @@ function evaluateLanguagePluginCell(cell) {
 
 export function evaluateCell(cellId) {
   return (dispatch, getState) => {
-    dispatch(incrementExecutionNumber())
-    let evaluation
     let cell
     if (cellId === undefined) {
       cell = getSelectedCell(getState())
     } else {
       cell = getCellById(getState().cells, cellId)
     }
+
+    if (!cell.content) {
+      // if the cell has no content, evaluation is a no-op
+      return undefined
+    }
+
+    let evaluation
+    dispatch(incrementExecutionNumber())
     // here is where we should mark a cell as PENDING.
     if (cell.cellType === 'code') {
       evaluationQueue = evaluationQueue
