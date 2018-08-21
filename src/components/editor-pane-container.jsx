@@ -17,6 +17,8 @@ class EditorPaneContainer extends React.Component {
     cellResizerDisplayStyle: PropTypes.string.isRequired,
     cellResizerWidth: PropTypes.number.isRequired,
     cellIds: PropTypes.array.isRequired,
+    paneMinWidth: PropTypes.number.isRequired,
+    // showFrame: PropTypes.bool.isRequired,
   }
   constructor(props) {
     super(props)
@@ -53,7 +55,7 @@ class EditorPaneContainer extends React.Component {
           }}
           handleClasses={{ right: 'resizer' }}
           bounds="window"
-          minWidth={0}
+          minWidth={this.props.paneMinWidth}
           onResizeStop={this.onResizeStopHandler}
           size={{ width: this.props.cellResizerWidth }}
           style={{
@@ -61,7 +63,7 @@ class EditorPaneContainer extends React.Component {
             flexDirection: 'column',
           }}
         >
-          <div style={this.props.cellsClass} id="cells">
+          <div style={this.props.cellsStyle} id="cells">
 
             {cellInputComponents}
           </div>
@@ -72,16 +74,17 @@ class EditorPaneContainer extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const cellsClass = { padding: '15px 15px 20px 15px' }
+  const cellsStyle = { padding: '15px 15px 20px 15px' }
   if (state.editorWidth < 30) {
-    cellsClass.padding = '15px 0 20px 0'
+    cellsStyle.padding = '15px 0 20px 0'
   }
   return {
     cellIds: state.cells.map(c => c.id),
     cellResizerWidth: state.editorWidth,
     cellResizerDisplayStyle: state.viewMode === 'REPORT_VIEW' ? 'none' : 'flex',
     // showFrame: state.showFrame,
-    cellsClass,
+    cellsStyle,
+    paneMinWidth: state.editorWidth ? 300 : 0,
   }
 }
 
