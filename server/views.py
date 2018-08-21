@@ -20,8 +20,7 @@ def get_user_info_dict(user):
 
 
 def index(request):
-    # basically just an empty placeholder for now
-    template = loader.get_template('notebook.html')
+    template = loader.get_template('home.html')
     return HttpResponse(template.render({
         'user_info': json.dumps(get_user_info_dict(request.user))
     }, request))
