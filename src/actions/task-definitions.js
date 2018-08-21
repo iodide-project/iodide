@@ -379,6 +379,19 @@ tasks.toggleAppInfoPane = new UserTask({
   },
 })
 
+tasks.toggleHelpModal = new UserTask({
+  title: 'Toggle the Console Pane',
+  menuTitle: 'Console',
+  keybindings: ['h'],
+  displayKeybinding: 'h',
+  preventDefaultKeybinding: true,
+  keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
+  callback() {
+    dispatcher.toggleHelpModal()
+  },
+})
+
 tasks.setViewModeToEditor = new UserTask({
   title: 'Set View Mode to Editor',
   callback() {

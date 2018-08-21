@@ -120,6 +120,7 @@ const stateSchema = {
       type: 'string',
       enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],
     },
+    helpModalOpen: { type: 'boolean' },
     history: {
       type: 'array',
     },
@@ -224,6 +225,7 @@ function newNotebook() {
     viewMode: 'EXPLORE_VIEW', // editor, presentation
     sidePaneMode: '_CONSOLE',
     sidePaneWidth: 562,
+    helpModalOpen: false,
     history: [],
     // showFrame: true,
     // showEditor: true,
