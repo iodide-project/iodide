@@ -1,5 +1,5 @@
 import copy from 'copy-to-clipboard';
-import { newNotebook, newCell, newCellID, paneSizes } from '../editor-state-prototypes'
+import { newNotebook, newCell, newCellID, paneRatios } from '../editor-state-prototypes'
 import {
   exportJsmdBundle,
   exportJsmdToString,
@@ -208,6 +208,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     /* eslint-disable prefer-destructuring */
 
     case 'INCREASE_EDITOR_WIDTH': {
+      const SCREEN_WIDTH = document.documentElement.clientWidth
+      const paneSizes = paneRatios.map(x => Math.round(x * SCREEN_WIDTH))
       let width = state.editorWidth
       if (width < paneSizes[1]) width = paneSizes[1]
       else if (width < paneSizes[2]) width = paneSizes[2]
@@ -217,12 +219,13 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'DECREASE_EDITOR_WIDTH': {
+      const SCREEN_WIDTH = document.documentElement.clientWidth
+      const paneSizes = paneRatios.map(x => Math.round(x * SCREEN_WIDTH))
       let width = state.editorWidth
       if (width > paneSizes[3]) width = paneSizes[3]
       else if (width > paneSizes[2]) width = paneSizes[2]
       else if (width > paneSizes[1]) width = paneSizes[1]
       else width = paneSizes[0]
-      console.log(width, document.documentElement.clientWidth)
       return Object.assign({}, state, { editorWidth: width })
     }
 
