@@ -300,14 +300,6 @@ tasks.exportNotebookAsReport = new UserTask({
   callback() { dispatcher.exportNotebook(true, false) },
 })
 
-tasks.exportNotebookToClipboard = new UserTask({
-  title: 'Export Notebook to Clipboard',
-  callback() {
-    dispatcher.exportNotebook(false, true)
-    dispatcher.updateAppMessages({ message: 'Notebook copied to clipboard' })
-  },
-})
-
 tasks.clearVariables = new UserTask({
   title: 'Clear Variables',
   preventDefaultKeybinding: true,
@@ -336,8 +328,8 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
 })
 
 tasks.toggleHistoryPane = new UserTask({
-  title: 'Toggle the History Pane',
-  menuTitle: 'History',
+  title: 'Toggle the Console Pane',
+  menuTitle: 'Console',
   keybindings: ['ctrl+h', 'meta+h'],
   displayKeybinding: `${commandKey()}+H`,
   preventDefaultKeybinding: true,
@@ -381,19 +373,19 @@ tasks.setViewModeToPresentation = new UserTask({
   },
 })
 
-tasks.toggleEditorVisibility = new UserTask({
-  title: 'Toggle Editor Visibility',
-  keybindings: ['1'],
-  keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.toggleEditorVisibility() },
-})
+// tasks.toggleEditorVisibility = new UserTask({
+//   title: 'Toggle Editor Visibility',
+//   keybindings: ['1'],
+//   keybindingPrecondition: isCommandMode,
+//   callback() { dispatcher.toggleEditorVisibility() },
+// })
 
-tasks.toggleEvalFrameVisibility = new UserTask({
-  title: 'Toggle Eval Frame Visibility',
-  keybindings: ['2'],
-  keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.toggleEvalFrameVisibility() },
-})
+// tasks.toggleEvalFrameVisibility = new UserTask({
+//   title: 'Toggle Eval Frame Visibility',
+//   keybindings: ['2'],
+//   keybindingPrecondition: isCommandMode,
+//   callback() { dispatcher.toggleEvalFrameVisibility() },
+// })
 
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',

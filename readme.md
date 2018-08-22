@@ -6,7 +6,7 @@
    <br />
   The Iodide notebook</h1>
 
-_Try it in your browser [right now](https://iodide-project.github.io/iodide-examples/what-a-web-notebook-looks-like.html)! ([More examples](https://github.com/iodide-project/iodide-examples))_
+_Try it in your browser [right now](https://iodide.io/iodide-examples/what-a-web-notebook-looks-like.html)! ([More examples](https://github.com/iodide-project/iodide-examples))_
 
 ### Please note: Iodide is in early alpha, and still subject to breakage, changes, and overhauls
 
@@ -43,16 +43,17 @@ Run `npm install` after cloning this repository.
 
 ## Running/Building
 
-### Development mode
+### Client-only mode
 
-Use `npm run start` to write development versions of the Iodide app resources to `dev/` and to serve the files in that folder at `http://localhost:8888`. You can open
-`http://localhost:8888/iodide.dev.html` in your browser to get started with a blank notebook, or open `http://localhost:8888` to see the list of files saved in `dev/` (in case you have saved other test notebooks in that folder)
+If you're only working on client code and don't need to use/test any of the server functionality described below. You can use `npm run start-and-serve` to write development versions of the Iodide client-side app resources to `dev/` and to serve the files in that folder at `http://localhost:8000`. You can open `http://localhost:8000/iodide.dev.html` in your browser to get started with a blank notebook, or open `http://localhost:8000` to see the list of files saved in `dev/` (in case you have exported other test notebooks in that folder)
 
-The command `npm run start` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually to see the changes -- we have disabled "hot reloading" because automatically refreshing the browser would cause any active notebooks to lose their evaluation state.
+The command `npm run start-and-serve` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually to see the changes -- we have disabled "hot reloading" because automatically refreshing the browser would cause any active notebooks to lose their evaluation state.
 
-#### Exporting from dev mode
+If you require verbose Redux logging, you can use the command `npm run start-and-serve -- reduxVerbose`
 
-In dev mode, resource paths are set to be relative to the `dev/` directory. Thus, you export a bundled notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js/css/font files (and if you want to share a notebook that you created in a dev environment, you'll need to update the paths to point to the web-accessible resources at iodide.io).
+#### Exporting from client-only dev mode
+
+In this mode, resource paths are set to be relative to the `dev/` directory. Thus, if you export a bundled notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js, css, and font files (and if you want to share a notebook that you created in a dev environment, you'll need to update the paths to point to the web-accessible resources at `iodide.io` and `iodide.app`).
 
 
 ### Server mode
@@ -63,8 +64,13 @@ it supports are login/identity (via the github API). To test/run it locally, fol
 * Register a [github oauth token](https://github.com/settings/applications/new). Set the homepage URL to be
 "http://localhost:8000" and the authentication callback URL to be "http://localhost:8000/oauth/complete/github/".
 * Copy `.env-dist` to `.env` and set the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to the values provided above.
+* Make sure you have [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed and working correctly
 * Run `make build && make up`
-* You should now be able to navigate to a test server instance at `http://localhost:8000`
+* You should now be able to navigate to a test server instance at http://localhost:8000
+
+On subsequent runs, you only need to run `make up`.
+
+Additionally, if you are working on client code, you can run `npm run start` in a separate terminal to run webpack in watch mode (which will make your client code changes visible on page reload). If you require verbose Redux logging, you can use the command `npm run start -- reduxVerbose`
 
 ## Testing
 

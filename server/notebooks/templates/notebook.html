@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<script id="jsmd" type="text/jsmd">
+{{ jsmd|safe }}
+</script>
+<div id="page"></div>
+<script>
+  window.userData = {{ user_info|safe }}
+</script>
+<script src="/iodide.dev.js"></script>
+{% endblock %}

@@ -1,4 +1,4 @@
-/* global IODIDE_JS_PATH IODIDE_CSS_PATH IODIDE_VERSION IODIDE_EVAL_FRAME_PATH */
+/* global IODIDE_JS_PATH IODIDE_CSS_PATH IODIDE_VERSION IODIDE_EVAL_FRAME_ORIGIN */
 import deepEqual from 'deep-equal'
 import _ from 'lodash'
 
@@ -38,8 +38,6 @@ const jsmdValidNotebookSettings = [
 ]
 const jsmdValidCellSettingPaths = [
   'language',
-  'rowSettings.REPORT.input',
-  'rowSettings.REPORT.output',
   'skipInRunAll',
 ]
 
@@ -264,13 +262,9 @@ function exportJsmdBundle(state) {
     APP_PATH_STRING: IODIDE_JS_PATH,
     CSS_PATH_STRING: IODIDE_CSS_PATH,
     APP_VERSION_STRING: IODIDE_VERSION,
-    EVAL_FRAME_PATH_STRING: IODIDE_EVAL_FRAME_PATH,
+    EVAL_FRAME_ORIGIN: IODIDE_EVAL_FRAME_ORIGIN,
     JSMD: stringifyStateToJsmd(state, new Date().toISOString()),
   })
-}
-
-function exportJsmdToString(state) {
-  return stringifyStateToJsmd(state, new Date().toISOString())
 }
 
 function titleToHtmlFilename(title) {
@@ -286,6 +280,5 @@ export {
   jsmdValidCellSettingPaths,
   stringifyStateToJsmd,
   exportJsmdBundle,
-  exportJsmdToString,
   titleToHtmlFilename,
 }

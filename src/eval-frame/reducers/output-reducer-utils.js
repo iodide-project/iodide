@@ -1,9 +1,9 @@
 const SCROLL_BY_BEHAVIOR = 'smooth'
 const SCROLL_PADDING = 30 // extra px for scrolling
 
-function moveCell(cells, cellID, dir) {
+function moveCell(cells, cellId, dir) {
   const cellsSlice = cells.slice()
-  const index = cellsSlice.findIndex(c => c.id === cellID)
+  const index = cellsSlice.findIndex(c => c.id === cellId)
 
   let moveIndex
   let moveCondition

@@ -1,17 +1,7 @@
 const DEFAULT_EDITOR_WIDTH = Math.round(0.5 * document.documentElement.clientWidth)
 const DEFAULT_PANE_HEIGHT = Math.round(0.4 * document.documentElement.clientHeight)
 
-function requireDisjointProperties(obj1, obj2, whitelist) {
-  Object.keys(obj1).forEach((k1) => {
-    if (k1 in obj2 && !whitelist.includes(k1)) {
-      throw Error(`objects have shared property "${k1}"`)
-    }
-  })
-}
-
-
 // ETC SCHEMAS ===========================
-
 
 const appMessageSchema = {
   type: 'object',
@@ -106,7 +96,7 @@ export const mirroredCellProperties = {
   },
 }
 
-const editorOnlyCellProperties = {
+export const editorOnlyCellProperties = {
   inputFolding: {
     type: 'string',
     enum: ['VISIBLE', 'SCROLL', 'HIDDEN'],
@@ -114,7 +104,7 @@ const editorOnlyCellProperties = {
   },
 }
 
-const evalFrameOnlyCellProperties = {
+export const evalFrameOnlyCellProperties = {
   asyncProcessCount: {
     type: 'integer',
     minimum: 0,
@@ -137,10 +127,6 @@ const evalFrameOnlyCellProperties = {
     default: undefined,
   }, // empty schema, `value` can be anything
 }
-
-requireDisjointProperties(mirroredCellProperties, editorOnlyCellProperties)
-requireDisjointProperties(mirroredCellProperties, evalFrameOnlyCellProperties)
-requireDisjointProperties(editorOnlyCellProperties, evalFrameOnlyCellProperties)
 
 export const editorCellSchema = {
   type: 'object',
@@ -167,6 +153,10 @@ export function newCellFromSchema(schema, cellId, cellType = 'code', language = 
   return cell
 }
 
+export function newEditorCell(cellId, cellType = 'code', language = 'js') {
+  return newCellFromSchema(editorCellSchema, cellId, cellType, language)
+}
+
 export function newEvalFrameCell(cellId, cellType = 'code', language = 'js') {
   return newCellFromSchema(evalFrameCellSchema, cellId, cellType, language)
 }
@@ -174,6 +164,36 @@ export function newEvalFrameCell(cellId, cellType = 'code', language = 'js') {
 
 // ////////////////// OVERALL STATE
 
+export const historySchema = {
+  type: 'object',
+  properties: {
+    cellId: { type: ['integer', 'null'] },
+    // cellType: { type: 'string' },
+    content: { type: 'string' },
+    historyId: { type: 'integer' },
+    historyType: {
+      type: 'string',
+      enum: [
+        'CELL_EVAL_VALUE',
+        'CELL_EVAL_EXTERNAL_RESOURCE',
+        'CELL_EVAL_INFO',
+        'APP_INFO',
+        'SAVED_REP',
+        'CONSOLE_EVAL',
+        'SNIPPET_EVAL',
+      ],
+    },
+    lastRan: { type: 'integer' },
+    value: {},
+  },
+  additionalProperties: false,
+}
+
+
+// note that 'cells' and 'viewMode' are defined in all 3 because:
+// -these two do need to be mirrored; BUT
+// -viewMode needs a different default in the two environments
+// -cells uses different prototypes in the two environments
 
 export const mirroredStateProperties = {
   appMessages: {
@@ -213,7 +233,7 @@ export const mirroredStateProperties = {
   viewMode: {},
 }
 
-const editorOnlyStateProperties = {
+export const editorOnlyStateProperties = {
   autoSave: {
     type: 'string',
     default: undefined,
@@ -254,6 +274,10 @@ const editorOnlyStateProperties = {
     enum: ['COMMAND_MODE', 'EDIT_MODE', 'APP_MODE'],
     default: 'COMMAND_MODE',
   },
+  title: {
+    type: 'string',
+    default: 'untitled',
+  },
   viewMode: {
     type: 'string',
     enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],
@@ -266,7 +290,7 @@ const editorOnlyStateProperties = {
 }
 
 
-const evalFrameOnlyStateProperties = {
+export const evalFrameOnlyStateProperties = {
   cells: {
     type: 'array',
     items: evalFrameCellSchema,
@@ -278,6 +302,7 @@ const evalFrameOnlyStateProperties = {
   },
   history: {
     type: 'array',
+    items: historySchema,
     default: [],
   },
   paneHeight: {
@@ -296,26 +321,12 @@ const evalFrameOnlyStateProperties = {
   },
 }
 
-
-// note that 'cells' and 'viewMode' are defined in all 3 because:
-// -these two do need to be mirrored; BUT
-// -viewMode needs a different default in the two environments
-// -cells uses different prototypes in the two environments
-requireDisjointProperties(
-  mirroredStateProperties,
-  editorOnlyStateProperties,
-  ['cells', 'viewMode'],
-)
-requireDisjointProperties(
-  mirroredStateProperties,
-  evalFrameOnlyStateProperties,
-  ['cells', 'viewMode'],
-)
-requireDisjointProperties(
-  editorOnlyStateProperties,
-  evalFrameOnlyStateProperties,
-  ['cells', 'viewMode'],
-)
+export const editorStateSchema = {
+  type: 'object',
+  properties:
+    Object.assign({}, mirroredStateProperties, evalFrameOnlyStateProperties),
+  additionalProperties: false,
+}
 
 export const evalFrameStateSchema = {
   type: 'object',
@@ -329,62 +340,14 @@ function newNotebookFromSchema(schema) {
   Object.keys(schema.properties).forEach((k) => {
     initialState[k] = schema.properties[k].default
   })
-  // push a new cell
-  // initialState.cells.push()
-  // set the cell that was just pushed to be the selected cell
   initialState.cells[0].selected = true
-  // console.log(initialState)
   return initialState
+}
+
+export function newEditorNotebook() {
+  return newNotebookFromSchema(editorStateSchema)
 }
 
 export function newEvalFrameNotebook() {
   return newNotebookFromSchema(evalFrameStateSchema)
 }
-
-// function newCell(cellId, cellType = 'code', language = 'js') {
-//   return {
-//     asyncProcessCount: 0,
-//     content: cellType === 'plugin' ? pluginCellDefaultContent : '',
-//     id: cellId,
-//     cellType,
-//     value: undefined,
-//     rendered: false,
-//     selected: false,
-//     evalStatus: 'UNEVALUATED',
-//     hasSideEffect: false,
-//     inputFolding: 'VISIBLE',
-//     skipInRunAll: false,
-//     language, // default language is js, but it only matters if the cell is a code cell
-//   }
-// }
-
-// function newCellID(cells) {
-//   return Math.max(-1, ...cells.map(c => c.id)) + 1
-// }
-
-
-// function newNotebook() {
-//   const initialState = {
-//     cells: [newCell(0)],
-//     languages: { js: jsLanguageDefinition },
-//     languageLastUsed: 'js',
-//     userDefinedVarNames: [],
-//     lastSaved: undefined,
-//     mode: 'COMMAND_MODE',
-//     viewMode: 'REPORT_VIEW',
-//     sidePaneMode: '_CONSOLE',
-//     paneHeight: 400,
-//     history: [],
-//     scrollingLinked: false,
-//     externalDependencies: [],
-//     executionNumber: 0,
-//     appMessages: [],
-//     autoSave: undefined,
-//     locallySaved: [],
-//     savedEnvironment: {},
-//     runningCellID: undefined,
-//   }
-//   // set the cell that was just pushed to be the selected cell
-//   initialState.cells[0].selected = true
-//   return initialState
-// }

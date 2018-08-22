@@ -8,7 +8,7 @@ import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
 import { addLanguageKeybinding } from '../keybindings'
 
-import { mirroredStateProperties, mirroredCellProperties } from '../mirrored-state-prototypes'
+import { mirroredStateProperties, mirroredCellProperties } from '../state-schemas/mirrored-state-schema'
 
 import {
   alignCellTopTo,
@@ -72,11 +72,10 @@ export function toggleWrapInEditors() {
   return { type: 'TOGGLE_WRAP_IN_EDITORS' }
 }
 
-export function exportNotebook(exportAsReport = false, exportToClipboard = false) {
+export function exportNotebook(exportAsReport = false) {
   return {
     type: 'EXPORT_NOTEBOOK',
     exportAsReport,
-    exportToClipboard,
   }
 }
 
@@ -314,7 +313,7 @@ export function exportGist() {
         dispatch(updateAppMessages({
           message,
           details: `${message}<br /><a href="${json.html_url}" target="_blank">Gist</a> -
-        <a href="https://iodide-project.github.io/master/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`,
+        <a href="https://iodide.io/stable/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`,
         }))
       })
   }
@@ -410,17 +409,17 @@ export function deleteCell() {
   }
 }
 
-export function toggleEvalFrameVisibility() {
-  return {
-    type: 'TOGGLE_EVAL_FRAME_VISIBILITY',
-  }
-}
+// export function toggleEvalFrameVisibility() {
+//   return {
+//     type: 'TOGGLE_EVAL_FRAME_VISIBILITY',
+//   }
+// }
 
-export function toggleEditorVisibility() {
-  return {
-    type: 'TOGGLE_EDITOR_VISIBILITY',
-  }
-}
+// export function toggleEditorVisibility() {
+//   return {
+//     type: 'TOGGLE_EDITOR_VISIBILITY',
+//   }
+// }
 
 export function toggleEditorLink() {
   return {

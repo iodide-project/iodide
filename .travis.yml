@@ -16,8 +16,10 @@ matrix:
         - npm test
 
       before_deploy:
-        - npm run build
-        - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
+        - npm run build-ghpages
+        # test commenting the cp out for now, b/c going forward we'll be using the
+        # django server to serve the landing page
+        # - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
         - # Get existing releases from iodide-project/dist so we don't overwrite them
         - >
           if [ -n "$TRAVIS_TAG" ]; then
@@ -30,7 +32,19 @@ matrix:
           github-token: "$GITHUB_TOKEN"
           skip-cleanup: true
           keep-history: false
-          repo: iodide-project/master
+          repo: iodide-project/stable
+          verbose: false
+          local-dir: prod
+          target-branch: master
+          on:
+            branch: stable
+
+        - provider: pages
+          github-token: "$GITHUB_TOKEN"
+          skip-cleanup: true
+          keep-history: false
+          repo: iodide-project/master-eval
+          fqdn: extremely-alpha.iodide.app
           verbose: false
           local-dir: prod
           target-branch: master
@@ -57,13 +71,31 @@ matrix:
       services:
         - docker
 
+      before_install:
+        # need a more recent version of docker-compose than is currently supported by travis
+        - sudo rm /usr/local/bin/docker-compose
+        - curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+        - chmod +x docker-compose
+        - sudo mv docker-compose /usr/local/bin
+        # Shut down postgres because it blocks our db container's port map to :5432
+        - sudo service postgresql stop
+        # Wait for it to stop
+        - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
+
       install:
         - npm install
 
       script:
         - cp .env-dist .env
         - make build
+        # bring up docker containers and wait for db setup to complete
+        - docker-compose up -d
+        # this command waits for the db to be accessible at port 5432 before continuing
+        # (FIXME: need some sort of timeout here)
+        - docker-compose run server bash -c "while ! echo > /dev/tcp/db/5432 > /dev/null 2>&1; do sleep 1 && echo waiting for db; done"
+        # run actual tests
         - make flake8
+        - make test
 
 env:
   global:

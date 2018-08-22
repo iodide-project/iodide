@@ -6,7 +6,7 @@ set -euo pipefail
 
 # Create a `prod/` directory containing built/minified versions of the frontend assets.
 # Uses the node binaries/packages installed by the nodejs buildpack previously.
-npm install && npm run build-server
+npm install && npm run build
 
 # Generate gzipped versions of files that would benefit from compression, that
 # WhiteNoise can then serve in preference to the originals. This is required

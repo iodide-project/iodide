@@ -18,9 +18,9 @@ describe('HistoryItem React component', () => {
   beforeEach(() => {
     props = {
       cell: {
-        cellID: 0,
+        cellId: 0,
         display: true,
-        lastRan: new Date('2018-06-16T10:32:46.422Z'),
+        lastRan: 1533078293981,
         content: 'var a = 3',
       },
       display: true,

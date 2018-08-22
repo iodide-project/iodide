@@ -19,7 +19,9 @@ export default async function handleInitialJsmd(store) {
   console.log('INITIAL JSMD STATE', state)
   if (state !== undefined) {
     store.dispatch(importInitialJsmd(state))
-    store.dispatch(updateAppMessages({ message: 'Notebook successfully imported from URL.' }))
+    if (window.location.search) {
+      store.dispatch(updateAppMessages({ message: 'Notebook imported from URL.' }))
+    }
     if (state.viewMode === 'REPORT_VIEW') {
       store.dispatch(evaluateAllCells())
     }

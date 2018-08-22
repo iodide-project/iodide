@@ -1,4 +1,4 @@
-/* global IODIDE_EVAL_FRAME_PATH IODIDE_VERSION */
+/* global IODIDE_EVAL_FRAME_ORIGIN IODIDE_VERSION */
 
 import React from 'react'
 import { Provider } from 'react-redux'
@@ -45,7 +45,7 @@ if (iframeElt === null) {
   // insert an iframe
   iframeElt = document.createElement('iframe')
   iframeElt.id = 'eval-frame'
-  iframeElt.src = `${IODIDE_EVAL_FRAME_PATH}iodide.eval-frame.${IODIDE_VERSION}.html`
+  iframeElt.src = `${IODIDE_EVAL_FRAME_ORIGIN}/iodide.eval-frame.${IODIDE_VERSION}.html`
   iframeElt.setAttribute('sandbox', 'allow-scripts allow-same-origin')
   iframeElt.setAttribute('allowfullscreen', 'true')
   iframeElt.setAttribute('allowvr', 'yes')

@@ -1,6 +1,6 @@
-function moveCell(cells, cellID, dir) {
+function moveCell(cells, cellId, dir) {
   const cellsSlice = cells.slice()
-  const index = cellsSlice.findIndex(c => c.id === cellID)
+  const index = cellsSlice.findIndex(c => c.id === cellId)
 
   let moveIndex
   let moveCondition

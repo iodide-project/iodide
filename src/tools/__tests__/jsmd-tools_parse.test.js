@@ -30,7 +30,7 @@ $$
 X_{t,i}
 $$
 
-%% js {"rowSettings.REPORT.input": "SCROLL", "rowSettings.REPORT.output": "VISIBLE"}
+%% js
 // this is a JS code cell. We can use normal JS and browser APIs.
 range = []
 for (let i=0; i<10; i++){range.push(i)}
@@ -70,12 +70,7 @@ describe('jsmd parser Ex 1', () => {
   it('should have zero parse warnings', () => {
     expect(parseWarnings.length).toEqual(0)
   })
-  it('cell 2 should have settings (1 of 2) "rowSettings.REPORT.input": "SCROLL"', () => {
-    expect(cells[1].rowSettings.REPORT.input).toEqual('SCROLL')
-  })
-  it('cell 2 should have settings (2 of 2) "rowSettings.REPORT.output": "VISIBLE"', () => {
-    expect(cells[1].rowSettings.REPORT.output).toEqual('VISIBLE')
-  })
+
   it('should have correct meta settings: title', () => {
     expect(state.title).toEqual('What a web notebook looks like')
   })
@@ -89,12 +84,12 @@ jsmdTestCase = `
 
 %% js
 foo
-%% JS       {"rowSettings.REPORT.input":"SCROLL"}
+%% JS       {"skipInRunAll":true}
 foo
 %%Js
 foo
 
-%%    jS     {"rowSettings.REPORT.output":"VISIBLE"}
+%%    jS     {"skipInRunAll":false}
 
 foo
 
@@ -150,9 +145,9 @@ describe('jsmd parser test case 4', () => {
 jsmdTestCase = `
 %% js {"collapseEditViewInput": badjson%@#$^
 foo
-%% js {"badcellsettingkey": "SCROLLABLE", "rowSettings.REPORT.output":"VISIBLE"}
+%% js {"badcellsettingkey": "SCROLLABLE", "skipInRunAll":true}
 foo
-%% badcelltype {"rowSettings.REPORT.input":"SCROLL_carrots"}
+%% badcelltype {"skipInRunAll":true}
 foo
 `
 describe('jsmd parser test case 5, error parsing and bad cell type conversion', () => {
@@ -166,11 +161,11 @@ describe('jsmd parser test case 5, error parsing and bad cell type conversion', 
   it('all cells should have cellType==js (bad cellTypes should convert to js)', () => {
     expect(cells.map(c => c.cellType)).toEqual(['code', 'code', 'code'])
   })
-  it('cell 1 should have "rowSettings.REPORT.output":"VISIBLE"', () => {
-    expect(cells[1].rowSettings.REPORT.output).toEqual('VISIBLE')
+  it('cell 1 should have skipInRunAll===true', () => {
+    expect(cells[1].skipInRunAll).toEqual(true)
   })
-  it('cell 2 should have "rowSettings.REPORT.output"=="SCROLL"', () => {
-    expect(cells[2].rowSettings.REPORT.input).toEqual('SCROLL_carrots')
+  it('cell 2 should have skipInRunAll===true', () => {
+    expect(cells[2].skipInRunAll).toEqual(true)
   })
   it('all cells should have content=="foo"', () => {
     expect(cells.map(c => c.content)).toEqual(expect.arrayContaining(['foo']))
@@ -203,9 +198,9 @@ describe('jsmd parser test case 6, bad meta parsing and creation of default JS c
 
 // test multiple cell settings
 jsmdTestCase = `
-%% js {"rowSettings.REPORT.input": "VALUE_1", "rowSettings.REPORT.output":"VALUE_2"}
+%% js {"language": "VALUE_1", "skipInRunAll":"VALUE_2"}
 test cell
-%% js {"rowSettings.REPORT.input": "VALUE_1","skipInRunAll":true}
+%% js {"language": "VALUE_3","skipInRunAll":true}
 test cell
 `
 describe('jsmd parser test case 7, cell settings', () => {
@@ -219,11 +214,11 @@ describe('jsmd parser test case 7, cell settings', () => {
   it('should have 0 parse warnings', () => {
     expect(parseWarnings.length).toEqual(0)
   })
-  it('cell 0 should have "rowSettings.REPORT.input":"VALUE_1"', () => {
-    expect(cells[0].rowSettings.REPORT.input).toEqual('VALUE_1')
+  it('cell 0 should have language==="VALUE_1"', () => {
+    expect(cells[0].language).toEqual('VALUE_1')
   })
-  it('cell 0 should have "rowSettings.REPORT.output"=="VALUE_2"', () => {
-    expect(cells[0].rowSettings.REPORT.output).toEqual('VALUE_2')
+  it('cell 0 should have "skipInRunAll"=="VALUE_2"', () => {
+    expect(cells[0].skipInRunAll).toEqual('VALUE_2')
   })
   it('cell 1 should have "skipInRunAll"===true', () => {
     expect(cells[1].skipInRunAll).toEqual(true)

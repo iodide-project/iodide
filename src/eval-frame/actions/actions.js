@@ -21,6 +21,16 @@ MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const CodeMirror = require('codemirror') // eslint-disable-line
 
+function IdFactory() {
+  this.state = 0
+  this.nextId = () => {
+    this.state += 1
+    return this.state
+  }
+}
+
+const historyIdGen = new IdFactory()
+
 export function newNotebook() {
   // we still need this for some tests to work, even though it's not really used
   return {
@@ -28,19 +38,40 @@ export function newNotebook() {
   }
 }
 
-export function temporarilySaveRunningCellID(cellID) {
+export function temporarilySaveRunningCellID(cellId) {
   return {
     type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',
-    cellID,
+    cellId,
   }
 }
 
 
-export function appendToEvalHistory(cellId, content) {
+export function appendToEvalHistory(cellId, content, value, historyOptions = {}) {
+  // const cellType = historyOptions.cellType === undefined ?
+  //   'code' : historyOptions.cellType
+  const historyId = historyOptions.historyId === undefined ?
+    historyIdGen.nextId() : historyOptions.historyId
+  const historyType = historyOptions.historyType === undefined ?
+    'CELL_EVAL_VALUE' : historyOptions.historyType
+
+  // returned obj must match history schema
   return {
     type: 'APPEND_TO_EVAL_HISTORY',
     cellId,
+    // cellType,
     content,
+    historyId,
+    historyType,
+    lastRan: Date.now(),
+    value,
+  }
+}
+
+export function updateValueInHistory(historyId, value) {
+  return {
+    type: 'UPDATE_VALUE_IN_HISTORY',
+    historyId,
+    value,
   }
 }
 
@@ -101,13 +132,13 @@ function evaluateCodeCell(cell) {
       evalStatus = 'ERROR'
     }
     const updateCellAfterEvaluation = () => {
-      const cellProperties = { value: output, rendered: true }
+      const cellProperties = { rendered: true }
       if (evalStatus === 'ERROR') {
         cellProperties.evalStatus = evalStatus
       }
       dispatch(updateCellProperties(cell.id, cellProperties))
-      dispatch(incrementExecutionNumber())
-      dispatch(appendToEvalHistory(cell.id, cell.content))
+      // dispatch(incrementExecutionNumber())
+      dispatch(appendToEvalHistory(cell.id, cell.content, output))
       dispatch(updateUserVariables())
     }
 
@@ -144,21 +175,28 @@ function evaluateResourceCell(cell) {
       }
     })
     const evalStatus = newValues.map(d => d.status).includes('error') ? 'ERROR' : 'SUCCESS'
-    dispatch(updateCellProperties(
+    dispatch(updateCellProperties(cell.id, { evalStatus }))
+    dispatch(appendToEvalHistory(
       cell.id,
-      {
-        value: new Array(...[...cell.value || [], ...newValues]),
-        rendered: true,
-        evalStatus,
-      },
+      `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
+      new Array(...[...cell.value || [], ...newValues]),
+      { historyType: 'CELL_EVAL_EXTERNAL_RESOURCE' },
     ))
-    if (newValues.length) {
-      dispatch(appendToEvalHistory(
-        cell.id,
-        `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
-      ))
-    }
-    dispatch(incrementExecutionNumber())
+
+    // dispatch(updateCellProperties(
+    //   cell.id,
+    //   {
+    //     value: new Array(...[...cell.value || [], ...newValues]),
+    //     rendered: true,
+    //     evalStatus,
+    //   },
+    // ))
+    // if (newValues.length) {
+    //   dispatch(appendToEvalHistory(
+    //     cell.id,
+    //     `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
+    //   ))
+    // }
     dispatch(updateUserVariables())
   }
 }
@@ -173,7 +211,12 @@ function evaluateCSSCell(cell) {
         evalStatus: 'SUCCESS',
       },
     ))
-    dispatch(appendToEvalHistory(cell.id, cell.content))
+    dispatch(appendToEvalHistory(
+      cell.id,
+      cell.content,
+      'Page styles updated',
+      { historyType: 'CELL_EVAL_INFO' },
+    ))
   }
 }
 
@@ -197,12 +240,21 @@ function evaluateLanguagePluginCell(cell) {
       value = `plugin definition failed to parse:\n${err.message}`
       evalStatus = 'ERROR'
     }
-    dispatch(appendToEvalHistory(cell.id, cell.content))
+    const historyId = historyIdGen.nextId()
+    // dispatch(appendToEvalHistory(cell.id, cell.content, historyId))
+    dispatch(appendToEvalHistory(
+      cell.id,
+      cell.content,
+      value,
+      { historyId, historyType: 'CELL_EVAL_INFO' },
+    ))
 
     if (pluginData.url === undefined) {
       value = 'plugin definition missing "url"'
       evalStatus = 'ERROR'
-      dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+      // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+      dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
+      dispatch(updateValueInHistory(historyId, value))
     } else {
       const {
         url,
@@ -221,12 +273,16 @@ function evaluateLanguagePluginCell(cell) {
             value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
           }
           evalStatus = 'ASYNC_PENDING'
-          dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+          // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+          dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
+          dispatch(updateValueInHistory(historyId, value))
         })
 
         xhrObj.addEventListener('load', () => {
           value = `${displayName} plugin downloaded, initializing`
-          dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+          // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+          dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
+          dispatch(updateValueInHistory(historyId, value))
           // see the following for asynchronous loading of scripts from strings:
           // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
 
@@ -242,7 +298,9 @@ function evaluateLanguagePluginCell(cell) {
             evalStatus = 'SUCCESS'
             dispatch(addLanguage(pluginData))
             postMessageToEditor('POST_LANGUAGE_DEF_TO_EDITOR', pluginData)
-            dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+            // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+            dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
+            dispatch(updateValueInHistory(historyId, value))
             resolve()
           })
         })
@@ -250,15 +308,14 @@ function evaluateLanguagePluginCell(cell) {
         xhrObj.addEventListener('error', () => {
           value = `${displayName} plugin failed to load`
           evalStatus = 'ERROR'
-          dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+          // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
+          dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
+          dispatch(updateValueInHistory(historyId, value))
           reject()
         })
 
         xhrObj.open('GET', url, true)
         xhrObj.send()
-        // FIXME this will need to send a message back to the editor scope somehow
-        // in order to have the codemirror mode fetched/loaded whatevs in that scope
-        // CodeMirror.requireMode(pluginData.codeMirrorMode, () => { })
       })
     }
     return languagePluginPromise
@@ -267,6 +324,7 @@ function evaluateLanguagePluginCell(cell) {
 
 export function evaluateCell(cellId) {
   return (dispatch, getState) => {
+    dispatch(incrementExecutionNumber())
     let evaluation
     let cell
     if (cellId === undefined) {

@@ -1,8 +1,6 @@
-import copy from 'copy-to-clipboard';
 import { newNotebook, newCell, newCellID } from '../editor-state-prototypes'
 import {
   exportJsmdBundle,
-  exportJsmdToString,
   stringifyStateToJsmd,
   stateFromJsmd,
   titleToHtmlFilename,
@@ -69,17 +67,12 @@ const notebookReducer = (state = newNotebook(), action) => {
         state,
         { viewMode: action.exportAsReport ? 'REPORT_VIEW' : 'EXPLORE_VIEW' },
       )
-      if (action.exportToClipboard) {
-        const jsmdStr = encodeURIComponent(exportJsmdToString(exportState))
-        copy(`${window.location.href.split('?')[0]}?jsmd=${jsmdStr}`)
-      } else {
-        const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
-        const dlAnchorElem = document.getElementById('export-anchor')
-        dlAnchorElem.setAttribute('href', dataStr)
-        title = exportState.title === undefined ? 'new-notebook' : exportState.title
-        dlAnchorElem.setAttribute('download', titleToHtmlFilename(title))
-        dlAnchorElem.click()
-      }
+      const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
+      const dlAnchorElem = document.getElementById('export-anchor')
+      dlAnchorElem.setAttribute('href', dataStr)
+      title = exportState.title === undefined ? 'new-notebook' : exportState.title
+      dlAnchorElem.setAttribute('download', titleToHtmlFilename(title))
+      dlAnchorElem.click()
 
       return state
     }
@@ -125,9 +118,10 @@ const notebookReducer = (state = newNotebook(), action) => {
         ({ lastSaved } = state)
         title = AUTOSAVE + title
       }
-      const savedState = Object.assign({}, state, { lastSaved })
-      window.localStorage.setItem(title, stringifyStateToJsmd(savedState))
-      return Object.assign({}, savedState, getSavedNotebooks())
+      const stateToSave = Object.assign({}, state, { lastSaved })
+      delete stateToSave.savedEnvironment
+      window.localStorage.setItem(title, stringifyStateToJsmd(stateToSave))
+      return Object.assign({}, state, getSavedNotebooks(), { lastSaved })
     }
 
     case 'LOAD_NOTEBOOK': {
@@ -170,15 +164,15 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { viewMode })
     }
 
-    case 'TOGGLE_EVAL_FRAME_VISIBILITY': {
-      const showFrame = !state.showFrame
-      return Object.assign({}, state, { showFrame })
-    }
+    // case 'TOGGLE_EVAL_FRAME_VISIBILITY': {
+    //   const showFrame = !state.showFrame
+    //   return Object.assign({}, state, { showFrame })
+    // }
 
-    case 'TOGGLE_EDITOR_VISIBILITY': {
-      const showEditor = !state.showEditor
-      return Object.assign({}, state, { showEditor })
-    }
+    // case 'TOGGLE_EDITOR_VISIBILITY': {
+    //   const showEditor = !state.showEditor
+    //   return Object.assign({}, state, { showEditor })
+    // }
 
     case 'TOGGLE_EDITOR_LINK': {
       const scrollingLinked = !state.scrollingLinked
@@ -220,10 +214,33 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { userData })
     }
 
+    case 'APPEND_TO_EVAL_HISTORY': {
+      const history = [...state.history]
+      history.push({
+        cellId: action.cellId,
+        lastRan: Date.now(),
+        content: action.content,
+      })
+      return Object.assign({}, state, { history })
+    }
+
+    case 'UPDATE_USER_VARIABLES': {
+      const userDefinedVarNames = []
+      Object.keys(window)
+        .filter(g => !initialVariables.has(g))
+        .forEach((g) => { userDefinedVarNames.push(g) })
+      return Object.assign({}, state, { userDefinedVarNames })
+    }
+
     case 'UPDATE_APP_MESSAGES': {
       nextState = Object.assign({}, state)
       nextState.appMessages = nextState.appMessages.slice()
       return addAppMessageToState(nextState, Object.assign({}, action.message))
+    }
+
+    case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
+      const { cellId } = action
+      return Object.assign({}, state, { runningCellID: cellId })
     }
 
     case 'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME': {
