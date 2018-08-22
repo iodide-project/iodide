@@ -380,8 +380,8 @@ tasks.toggleAppInfoPane = new UserTask({
 })
 
 tasks.toggleHelpModal = new UserTask({
-  title: 'Toggle the Console Pane',
-  menuTitle: 'Console',
+  title: 'Open the Help Pane',
+  menuTitle: 'Help',
   keybindings: ['h'],
   displayKeybinding: 'h',
   preventDefaultKeybinding: true,
