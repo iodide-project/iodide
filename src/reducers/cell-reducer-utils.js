@@ -19,77 +19,6 @@ function moveCell(cells, cellId, dir) {
   return cellsSlice
 }
 
-function addExternalDependency(dep) {
-  // FIXME there must be a better way to do this with promises etc...
-  const head = document.getElementsByTagName('head')[0]
-  let elem
-  const outElem = {}
-  // check for js: or css:
-  let src
-  let depType
-
-  if (dep.trim().slice(0, 2) === '//') {
-    return undefined
-  }
-
-  if (dep.slice(0, 4) === 'css:') {
-    depType = 'css'
-    src = dep.slice(4)
-  } else if (dep.slice(0, 3) === 'js:') {
-    depType = 'js'
-    src = dep.slice(3)
-  } else if (dep.slice(dep.length - 2) === 'js') {
-    depType = 'js'
-    src = dep
-  } else if (dep.slice(dep.length - 3) === 'css') {
-    depType = 'css'
-    src = dep
-  } else {
-    src = dep
-  }
-
-  src = src.trim()
-
-  if (depType === 'js') {
-    elem = document.createElement('script')
-    elem.type = 'text/javascript'
-    const xhrObj = new XMLHttpRequest()
-    xhrObj.open('GET', src, false)
-    try {
-      xhrObj.send('')
-      elem.text = xhrObj.responseText
-      outElem.status = 'loaded'
-    } catch (err) {
-      outElem.status = 'error'
-      outElem.statusExplanation = err.message
-    }
-  } else if (depType === 'css') {
-    elem = document.createElement('link')
-    elem.rel = 'stylesheet'
-    elem.type = 'text/css'
-    elem.href = src
-    outElem.status = 'loaded'
-  } else {
-    outElem.status = 'error'
-    outElem.statusExplanation = 'unknown dependency type.'
-    outElem.src = src
-    outElem.dependencyType = depType
-    return outElem
-  }
-
-  const initialWindow = Object.keys(window)
-
-  head.appendChild(elem)
-
-  const newWindow = Object.keys(window)
-
-  outElem.variables = newWindow.filter(v => !initialWindow.includes(v))
-
-  outElem.src = src
-  outElem.dependencyType = depType
-
-  return outElem
-}
 
 function getSelectedCellId(state) {
   const { cells } = state
@@ -141,7 +70,6 @@ function newStateWithSelectedCellPropsAssigned(state, cellPropsToSet) {
 
 export {
   moveCell,
-  addExternalDependency,
   getSelectedCell,
   getSelectedCellId,
   getCellBelowSelectedId,
