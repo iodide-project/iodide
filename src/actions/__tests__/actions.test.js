@@ -4,8 +4,6 @@ import * as actions from '../actions';
 describe('Actions', () => {
   describe('exportNotebook', () => {
     it('should return the default value', () => {
-      const status = false;
-
       const expected = {
         type: 'EXPORT_NOTEBOOK',
         exportAsReport: false,
