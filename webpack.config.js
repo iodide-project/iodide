@@ -80,6 +80,7 @@ module.exports = (env) => {
     entry: {
       iodide: `${APP_DIR}/index.jsx`,
       'iodide.eval-frame': `${APP_DIR}/eval-frame/index.jsx`,
+      'server.home': `${APP_DIR}/server/index.jsx`,
     },
     output: {
       path: BUILD_DIR,
