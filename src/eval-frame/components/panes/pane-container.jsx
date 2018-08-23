@@ -86,12 +86,13 @@ export function mapStateToProps(state) {
     _CONSOLE: 'Console',
     _APP_INFO: 'App Info',
     DECLARED_VARIABLES: 'Declared Variables',
+    _CLOSED: '(pane is closed)',
     undefined: 'PANE MODE UNDEFINED!!',
   }[state.sidePaneMode]
 
   return {
-    viewPaneDisplayStyle: state.sidePaneMode !== undefined ? 'flex' : 'none',
-    paneHeight: state.sidePaneMode !== undefined ? state.paneHeight : 0,
+    viewPaneDisplayStyle: state.sidePaneMode !== '_CLOSED' ? 'flex' : 'none',
+    paneHeight: state.sidePaneMode !== '_CLOSED' ? state.paneHeight : 0,
     paneTitle,
   }
 }

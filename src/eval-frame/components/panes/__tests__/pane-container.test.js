@@ -47,7 +47,7 @@ describe('PaneContainer mapStateToProps', () => {
     }
   })
 
-  it('should have "flex" display and correct height when sidePaneMode is defined', () => {
+  it('should have "flex" display and correct height when sidePaneMode is NOT "_CLOSED"', () => {
     expect(mapStateToProps(state))
       .toEqual({
         viewPaneDisplayStyle: 'flex',
@@ -56,13 +56,13 @@ describe('PaneContainer mapStateToProps', () => {
       })
   })
 
-  it('should have "none" display and 0 height when sidePaneMode is NOT defined', () => {
-    state.sidePaneMode = undefined
+  it('should have "none" display and 0 height when sidePaneMode is "_CLOSED"', () => {
+    state.sidePaneMode = '_CLOSED'
     expect(mapStateToProps(state))
       .toEqual({
         viewPaneDisplayStyle: 'none',
         paneHeight: 0,
-        paneTitle: 'PANE MODE UNDEFINED!!',
+        paneTitle: '(pane is closed)',
       })
   })
 })
