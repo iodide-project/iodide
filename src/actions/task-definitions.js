@@ -322,7 +322,7 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
     if (store.getState().sidePaneMode !== 'DECLARED_VARIABLES') {
       dispatcher.changeSidePaneMode('DECLARED_VARIABLES')
     } else {
-      dispatcher.changeSidePaneMode()
+      dispatcher.changeSidePaneMode('_CLOSED')
     }
   },
 })
@@ -338,7 +338,7 @@ tasks.toggleHistoryPane = new UserTask({
     if (store.getState().sidePaneMode !== '_CONSOLE') {
       dispatcher.changeSidePaneMode('_CONSOLE')
     } else {
-      dispatcher.changeSidePaneMode()
+      dispatcher.changeSidePaneMode('_CLOSED')
     }
   },
 })
@@ -350,7 +350,7 @@ tasks.toggleHistoryPane = new UserTask({
 //     if (store.getState().sidePaneMode !== '_CONSOLE') {
 //       dispatcher.changeSidePaneMode('_CONSOLE')
 //     } else {
-//       dispatcher.changeSidePaneMode()
+//       dispatcher.changeSidePaneMode('_CLOSED')
 //     }
 //   },
 // })
@@ -366,7 +366,7 @@ tasks.toggleAppInfoPane = new UserTask({
     if (store.getState().sidePaneMode !== '_APP_INFO') {
       dispatcher.changeSidePaneMode('_APP_INFO')
     } else {
-      dispatcher.changeSidePaneMode()
+      dispatcher.changeSidePaneMode('_CLOSED')
     }
   },
 })
