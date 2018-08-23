@@ -1,13 +1,18 @@
 import {
-  newEvalFrameCell,
-  newEvalFrameNotebook,
+  evalFrameCellSchema,
   evalFrameStateSchema,
-} from '../state-schemas/mirrored-state-schema'
+} from '../state-schemas/eval-frame-only-state-schemas'
+
+import {
+  newCellFromSchema,
+  newNotebookFromSchema,
+} from '../state-schemas/state-prototype-from-schema'
+
 
 const stateSchema = evalFrameStateSchema
 
 function newCell(cellId, cellType = 'code', language = 'js') {
-  return newEvalFrameCell(cellId, cellType, language)
+  return newCellFromSchema(evalFrameCellSchema, cellId, cellType, language)
 }
 
 function newCellID(cells) {
@@ -15,7 +20,7 @@ function newCellID(cells) {
 }
 
 function newNotebook() {
-  return newEvalFrameNotebook()
+  return newNotebookFromSchema(evalFrameStateSchema)
 }
 
 export {

@@ -1,10 +1,3 @@
-import _ from 'lodash'
-
-const DEFAULT_EDITOR_WIDTH = Math.round(0.5 * document.documentElement.clientWidth)
-const DEFAULT_PANE_HEIGHT = Math.round(0.4 * document.documentElement.clientHeight)
-
-// ETC SCHEMAS ===========================
-
 const appMessageSchema = {
   type: 'object',
   properties: {
@@ -32,7 +25,6 @@ const languageSchema = {
   additionalProperties: false,
 }
 
-
 const jsLanguageDefinition = {
   pluginType: 'language',
   languageId: 'js',
@@ -45,18 +37,6 @@ const jsLanguageDefinition = {
   url: '',
 }
 
-// const pluginCellDefaultContent = `{
-//   "pluginType": ""
-//   "languageId": "",
-//   "displayName": "",
-//   "codeMirrorMode": "",
-//   "keybinding": "",
-//   "url": "",
-//   "module": "",
-//   "evaluator": ""
-// }`
-
-
 const environmentVariableSchema = {
   type: 'array',
   items: [
@@ -64,9 +44,6 @@ const environmentVariableSchema = {
     { type: 'string' },
   ],
 }
-
-
-// CELL SCHEMAS ===========================
 
 
 export const mirroredCellProperties = {
@@ -98,103 +75,10 @@ export const mirroredCellProperties = {
   },
 }
 
-export const editorOnlyCellProperties = {
-  inputFolding: {
-    type: 'string',
-    enum: ['VISIBLE', 'SCROLL', 'HIDDEN'],
-    default: 'VISIBLE',
-  },
-}
 
-export const evalFrameOnlyCellProperties = {
-  asyncProcessCount: {
-    type: 'integer',
-    minimum: 0,
-    default: 0,
-  },
-  evalStatus: {
-    type: 'string',
-    enum: ['UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR'],
-    default: 'UNEVALUATED',
-  },
-  hasSideEffect: {
-    type: 'boolean',
-    default: false,
-  },
-  rendered: {
-    type: 'boolean',
-    default: false,
-  },
-  value: {
-    default: undefined,
-  }, // empty schema, `value` can be anything
-}
-
-export const editorCellSchema = {
-  type: 'object',
-  properties:
-    Object.assign({}, mirroredCellProperties, editorOnlyCellProperties),
-  additionalProperties: false,
-}
-
-export const evalFrameCellSchema = {
-  type: 'object',
-  properties:
-    Object.assign({}, mirroredCellProperties, evalFrameOnlyCellProperties),
-  additionalProperties: false,
-}
-
-export function newCellFromSchema(schema, cellId, cellType = 'code', language = 'js') {
-  const cell = {}
-  Object.keys(schema.properties).forEach((k) => {
-    // we must clone object prototypes to avoid creating multiple references
-    // to the same actual object
-    cell[k] = _.cloneDeep(schema.properties[k].default)
-  })
-  cell.id = cellId
-  cell.cellType = cellType
-  cell.language = language
-  return cell
-}
-
-export function newEditorCell(cellId, cellType = 'code', language = 'js') {
-  return newCellFromSchema(editorCellSchema, cellId, cellType, language)
-}
-
-export function newEvalFrameCell(cellId, cellType = 'code', language = 'js') {
-  return newCellFromSchema(evalFrameCellSchema, cellId, cellType, language)
-}
-
-
-// ////////////////// OVERALL STATE
-
-export const historySchema = {
-  type: 'object',
-  properties: {
-    cellId: { type: ['integer', 'null'] },
-    // cellType: { type: 'string' },
-    content: { type: 'string' },
-    historyId: { type: 'integer' },
-    historyType: {
-      type: 'string',
-      enum: [
-        'CELL_EVAL_VALUE',
-        'CELL_EVAL_EXTERNAL_RESOURCE',
-        'CELL_EVAL_INFO',
-        'APP_INFO',
-        'SAVED_REP',
-        'CONSOLE_EVAL',
-        'SNIPPET_EVAL',
-      ],
-    },
-    lastRan: { type: 'integer' },
-    value: {},
-  },
-  additionalProperties: false,
-}
-
-
-// note that 'cells' and 'viewMode' are defined in all 3 because:
+// note that 'cells' and 'viewMode' are defined in all 3 of
+// mirroredStateProperties, editorOnlyStateProperties, evalFrameOnlyStateProperties,
+// because:
 // -these two do need to be mirrored; BUT
 // -viewMode needs a different default in the two environments
 // -cells uses different prototypes in the two environments
@@ -235,130 +119,4 @@ export const mirroredStateProperties = {
     default: undefined,
   },
   viewMode: {},
-}
-
-export const editorOnlyStateProperties = {
-  autoSave: {
-    type: 'string',
-    default: undefined,
-  },
-  cells: {
-    type: 'array',
-    items: editorCellSchema,
-    default: [newCellFromSchema(editorCellSchema, 0)],
-  },
-  editorWidth: {
-    type: 'integer',
-    default: DEFAULT_EDITOR_WIDTH,
-  },
-  evalFrameMessageQueue: {
-    type: 'array',
-    items: { type: 'object' },
-    default: [],
-  },
-  languageLastUsed: {
-    type: 'string',
-    default: 'js',
-  },
-  lastSaved: {
-    type: 'string',
-    default: '_NEVER',
-  },
-  lastExport: {
-    type: 'string',
-    default: '_NEVER',
-  },
-  locallySaved: {
-    type: 'array',
-    items: { type: 'string' },
-    default: [],
-  },
-  mode: {
-    type: 'string',
-    enum: ['COMMAND_MODE', 'EDIT_MODE', 'APP_MODE'],
-    default: 'COMMAND_MODE',
-  },
-  title: {
-    type: 'string',
-    default: 'untitled',
-  },
-  userData: {
-    // FIXME userData needs full schema!!
-    type: 'object',
-    default: {},
-  },
-  viewMode: {
-    type: 'string',
-    enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],
-    default: 'EXPLORE_VIEW',
-  },
-  wrapEditors: {
-    type: 'boolean',
-    default: false,
-  },
-}
-
-
-export const evalFrameOnlyStateProperties = {
-  cells: {
-    type: 'array',
-    items: evalFrameCellSchema,
-    default: [newCellFromSchema(evalFrameCellSchema, 0)],
-  },
-  externalDependencies: {
-    type: 'array',
-    default: [],
-  },
-  history: {
-    type: 'array',
-    items: historySchema,
-    default: [],
-  },
-  paneHeight: {
-    type: 'integer',
-    default: DEFAULT_PANE_HEIGHT,
-  },
-  userDefinedVarNames: {
-    type: 'array',
-    items: { type: 'string' },
-    default: [],
-  },
-  viewMode: {
-    type: 'string',
-    enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],
-    default: 'REPORT_VIEW',
-  },
-}
-
-export const editorStateSchema = {
-  type: 'object',
-  properties:
-    Object.assign({}, mirroredStateProperties, editorOnlyStateProperties),
-  additionalProperties: false,
-}
-
-export const evalFrameStateSchema = {
-  type: 'object',
-  properties:
-    Object.assign({}, mirroredStateProperties, evalFrameOnlyStateProperties),
-  additionalProperties: false,
-}
-
-function newNotebookFromSchema(schema) {
-  const initialState = {}
-  Object.keys(schema.properties).forEach((k) => {
-    // we must clone object prototypes to avoid creating multiple references
-    // to the same actual object
-    initialState[k] = _.cloneDeep(schema.properties[k].default)
-  })
-  initialState.cells[0].selected = true
-  return initialState
-}
-
-export function newEditorNotebook() {
-  return newNotebookFromSchema(editorStateSchema)
-}
-
-export function newEvalFrameNotebook() {
-  return newNotebookFromSchema(evalFrameStateSchema)
 }

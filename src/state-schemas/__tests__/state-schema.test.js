@@ -1,11 +1,16 @@
 import {
   mirroredStateProperties,
-  editorOnlyStateProperties,
-  evalFrameOnlyStateProperties,
   mirroredCellProperties,
-  editorOnlyCellProperties,
-  evalFrameOnlyCellProperties,
 } from '../mirrored-state-schema'
+import {
+  editorOnlyStateProperties,
+  editorOnlyCellProperties,
+} from '../editor-only-state-schemas'
+import {
+  evalFrameOnlyStateProperties,
+  evalFrameOnlyCellProperties,
+} from '../eval-frame-only-state-schemas'
+
 
 function getPropertyIntersection(obj1, obj2) {
   const propIntersection = []

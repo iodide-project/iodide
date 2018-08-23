@@ -1,13 +1,19 @@
 import {
-  newEditorCell,
-  newEditorNotebook,
+  // newEditorCell,
+  // newEditorNotebook,
+  editorCellSchema,
   editorStateSchema,
-} from './state-schemas/mirrored-state-schema'
+} from './state-schemas/editor-only-state-schemas'
+
+import {
+  newCellFromSchema,
+  newNotebookFromSchema,
+} from './state-schemas/state-prototype-from-schema'
 
 const stateSchema = editorStateSchema
 
 function newCell(cellId, cellType = 'code', language = 'js') {
-  return newEditorCell(cellId, cellType, language)
+  return newCellFromSchema(editorCellSchema, cellId, cellType, language)
 }
 
 function newCellID(cells) {
@@ -15,7 +21,7 @@ function newCellID(cells) {
 }
 
 function newNotebook() {
-  return newEditorNotebook()
+  return newNotebookFromSchema(editorStateSchema)
 }
 
 export {
