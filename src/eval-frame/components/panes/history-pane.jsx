@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
 
 import HistoryItem from './history-item'
+import ConsoleInput from './console-input'
 import EmptyPaneContents from './empty-pane-contents'
 
 export class HistoryPaneUnconnected extends React.Component {
@@ -47,11 +48,35 @@ export class HistoryPaneUnconnected extends React.Component {
 
     return (
       <div
-        className="pane-content history-cells"
-        style={{ display: this.props.paneDisplay }}
-        ref={this.historyScrollerRef}
+        className="pane-content"
+        style={{
+          display: this.props.paneDisplay,
+          overflow: 'hidden',
+        }}
       >
-        {histContents}
+        <div
+          className="console-pane"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 1,
+            maxWidth: '100%',
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            className="history-cells"
+            style={{
+              flexGrow: 1,
+              maxHeight: '100%',
+              overflow: 'auto',
+            }}
+            ref={this.historyScrollerRef}
+          >
+            {histContents}
+          </div>
+          <ConsoleInput />
+        </div>
       </div>
     )
   }
@@ -61,7 +86,7 @@ export function mapStateToProps(state) {
   return {
     sidePaneMode: state.sidePaneMode,
     history: state.history,
-    paneDisplay: state.sidePaneMode === '_CONSOLE' ? 'block' : 'none',
+    paneDisplay: state.sidePaneMode === '_CONSOLE' ? 'flex' : 'none',
   }
 }
 

@@ -62,17 +62,10 @@ const cellReducer = (state = newNotebook(), action) => {
         { hasSideEffect: action.hasSideEffect },
       )
 
-
     case 'ALIGN_OUTPUT_TO_EDITOR': {
       alignCellTopTo(action.cellId, action.pxFromViewportTop)
       return state
     }
-
-    case 'UPDATE_CELL_LIST':
-      return Object.assign(
-        {}, state,
-        { cells: action.cells },
-      )
 
     case 'CELL_UP':
       return Object.assign(
@@ -88,15 +81,6 @@ const cellReducer = (state = newNotebook(), action) => {
 
     case 'UPDATE_CELL_PROPERTIES':
       return newStateWithPropsAssignedForCell(state, action.cellId, action.updatedProperties)
-
-    case 'UPDATE_INPUT_CONTENT':
-      return newStateWithSelectedCellPropertySet(state, 'content', action.content)
-
-    case 'CHANGE_ELEMENT_TYPE':
-      return newStateWithSelectedCellPropertySet(state, 'elementType', action.elementType)
-
-    case 'CHANGE_DOM_ELEMENT_ID':
-      return newStateWithSelectedCellPropertySet(state, 'domElementID', action.elemID)
 
     case 'CHANGE_CELL_TYPE': {
       // create a newCell of the given type to get the defaults that

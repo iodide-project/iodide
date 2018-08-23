@@ -1,0 +1,17 @@
+.help-modal-contents {
+    overflow: auto;
+    padding: 20px;
+}
+
+.key-combo-column {
+    text-align: right;
+    padding: 4px 11px 0px 0px;
+}
+
+.key-combo-pill {
+    margin: 0px;
+    border: #ccc solid 1px;
+    display: inline;
+    padding: 2px ;
+    background: #f9f9f9;
+}

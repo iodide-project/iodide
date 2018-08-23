@@ -135,11 +135,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'DELETE_NOTEBOOK': {
       ({ title } = action)
-
-      // FIXME: for some reason, airbnb-eslint doesn't like using hasOwnProperty
-      // but changing to the recommended syntax breaks a test b/c our localStorage
-      // mock is bare-bones. We could upgrade the mock or change the approach
-      if (window.localStorage.hasOwnProperty(title)) { // eslint-disable-line
+      if (Object.prototype.hasOwnProperty.call(window.localStorage, 'title')) {
         window.localStorage.removeItem(title)
       }
       nextState = (
@@ -150,18 +146,17 @@ const notebookReducer = (state = newNotebook(), action) => {
       return nextState
     }
 
-    case 'CLEAR_VARIABLES': {
-      nextState = Object.assign({}, state)
-      nextState.userDefinedVarNames = {}
-      return nextState
-    }
-
     case 'CHANGE_PAGE_TITLE':
       return Object.assign({}, state, { title: action.title })
 
     case 'SET_VIEW_MODE': {
       const { viewMode } = action
       return Object.assign({}, state, { viewMode })
+    }
+
+    case 'TOGGLE_HELP_MODAL': {
+      const helpModalOpen = !state.helpModalOpen
+      return Object.assign({}, state, { helpModalOpen })
     }
 
     case 'TOGGLE_EDITOR_LINK': {
@@ -212,14 +207,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         content: action.content,
       })
       return Object.assign({}, state, { history })
-    }
-
-    case 'UPDATE_USER_VARIABLES': {
-      const userDefinedVarNames = []
-      Object.keys(window)
-        .filter(g => !initialVariables.has(g))
-        .forEach((g) => { userDefinedVarNames.push(g) })
-      return Object.assign({}, state, { userDefinedVarNames })
     }
 
     case 'UPDATE_APP_MESSAGES': {

@@ -21,7 +21,7 @@ class SavedNotebooksAndExamplesSubsection extends React.Component {
     if (this.props.autoSave) {
       const autoSave = getLocalStorageNotebook(this.props.autoSave)
       autoSaveMenuItems = (
-        <div> {/* // FIXME: use React 16 fragments instead of useless container div */}
+        <div>
           <NotebookMenuHeader key="autosave" title="Auto-Saved" />
           <NotebookMenuItem task={autoSave} />
           <NotebookMenuDivider key="autosave-divider" />
@@ -32,7 +32,7 @@ class SavedNotebooksAndExamplesSubsection extends React.Component {
     let locallySavedMenuItems
     if (this.props.locallySaved.length > 0) {
       locallySavedMenuItems = (
-        <div> {/* // FIXME: use React 16 fragments instead of useless container div */}
+        <div>
           <NotebookMenuHeader key="local storage" title="Locally Saved Notebooks" />
           {
             this.props.locallySaved.map((l) => {

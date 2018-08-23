@@ -5,10 +5,10 @@ import {
   jsmdValidCellTypes,
   jsmdToCellTypeMap,
 } from '../jsmd-tools'
-import {
-  newNotebook,
-  cellTypeEnum,
-} from '../../editor-state-prototypes'
+import { newNotebook } from '../../editor-state-prototypes'
+import { mirroredCellProperties } from '../../state-schemas/mirrored-state-schema'
+
+const cellTypeEnum = mirroredCellProperties.cellType.enum
 
 let jsmdTestCase = `%% meta
 {"title": "What a web notebook looks like",
@@ -322,7 +322,7 @@ foo`
       expect(cells[0].cellType).toEqual(jsmdToCellTypeMap.get(cellTypeStr))
     })
     it(`jsmd cell type parse to a state-prototypes cell type (cell type: ${cellTypeStr})`, () => {
-      expect(cellTypeEnum.values()).toContain(cells[0].cellType)
+      expect(cellTypeEnum).toContain(cells[0].cellType)
     })
   })
 })

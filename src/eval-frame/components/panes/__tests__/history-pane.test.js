@@ -86,7 +86,7 @@ describe('HistoryPane mapStateToProps', () => {
           lastRan: 1533078293981,
           content: 'var a = 3',
         }],
-        paneDisplay: 'block',
+        paneDisplay: 'flex',
       })
   })
 

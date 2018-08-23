@@ -1,5 +1,7 @@
 import UserTask from '../../actions/user-task'
 import { postKeypressToEditor, postActionToEditor } from '../port-to-editor'
+import { store } from '../store'
+import { evalConsoleInput } from './actions'
 
 
 const tasks = {}
@@ -67,6 +69,17 @@ tasks.toggleEditorLink = new UserTask({
     postActionToEditor({
       type: 'TOGGLE_EDITOR_LINK',
     })
+  },
+})
+
+// the following task operates only in the eval frame
+tasks.evalConsoleInput = new UserTask({
+  title: 'Evaluate code in the console input area',
+  menuTitle: 'Evaluate console',
+  keybindings: ['mod+enter', 'shift+enter'],
+  preventDefaultKeybinding: true,
+  callback() {
+    store.dispatch(evalConsoleInput())
   },
 })
 
