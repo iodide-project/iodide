@@ -3,7 +3,7 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 
-import createValidatedReducer from './reducers/create-validated-reducer'
+import createValidatedReducer from '../reducers/create-validated-reducer'
 import reducer from './reducers/reducer'
 import { stateSchema, newNotebook } from './eval-frame-state-prototypes'
 
