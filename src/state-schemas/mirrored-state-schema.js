@@ -278,6 +278,11 @@ export const editorOnlyStateProperties = {
     type: 'string',
     default: 'untitled',
   },
+  userData: {
+    // FIXME userData needs full schema!!
+    type: 'object',
+    default: {},
+  },
   viewMode: {
     type: 'string',
     enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],
@@ -324,7 +329,7 @@ export const evalFrameOnlyStateProperties = {
 export const editorStateSchema = {
   type: 'object',
   properties:
-    Object.assign({}, mirroredStateProperties, evalFrameOnlyStateProperties),
+    Object.assign({}, mirroredStateProperties, editorOnlyStateProperties),
   additionalProperties: false,
 }
 
