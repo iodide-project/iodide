@@ -10,7 +10,6 @@ const evalFrameActionForwarder = (state, action) => {
   switch (action.type) {
     // notebook level actions
     case 'SET_VIEW_MODE':
-    case 'UPDATE_CELL_LIST':
     case 'CHANGE_SIDE_PANE_MODE':
     case 'TOGGLE_EDITOR_LINK':
     case 'UPDATE_APP_MESSAGES':
