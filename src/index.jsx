@@ -17,6 +17,7 @@ import './style/header-bar-styles.css'
 import './style/side-panes.css'
 import './style/menu-and-button-and-ui-styles.css'
 import './style/cell-styles.css'
+import './style/help-modal-styles.css'
 
 import NotebookHeader from './components/menu/notebook-header'
 import EditorPaneContainer from './components/editor-pane-container'

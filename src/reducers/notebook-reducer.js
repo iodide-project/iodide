@@ -146,12 +146,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return nextState
     }
 
-    case 'CLEAR_VARIABLES': {
-      nextState = Object.assign({}, state)
-      nextState.userDefinedVarNames = {}
-      return nextState
-    }
-
     case 'CHANGE_PAGE_TITLE':
       return Object.assign({}, state, { title: action.title })
 
@@ -160,15 +154,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { viewMode })
     }
 
-    // case 'TOGGLE_EVAL_FRAME_VISIBILITY': {
-    //   const showFrame = !state.showFrame
-    //   return Object.assign({}, state, { showFrame })
-    // }
-
-    // case 'TOGGLE_EDITOR_VISIBILITY': {
-    //   const showEditor = !state.showEditor
-    //   return Object.assign({}, state, { showEditor })
-    // }
+    case 'TOGGLE_HELP_MODAL': {
+      const helpModalOpen = !state.helpModalOpen
+      return Object.assign({}, state, { helpModalOpen })
+    }
 
     case 'TOGGLE_EDITOR_LINK': {
       const scrollingLinked = !state.scrollingLinked
@@ -218,14 +207,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         content: action.content,
       })
       return Object.assign({}, state, { history })
-    }
-
-    case 'UPDATE_USER_VARIABLES': {
-      const userDefinedVarNames = []
-      Object.keys(window)
-        .filter(g => !initialVariables.has(g))
-        .forEach((g) => { userDefinedVarNames.push(g) })
-      return Object.assign({}, state, { userDefinedVarNames })
     }
 
     case 'UPDATE_APP_MESSAGES': {

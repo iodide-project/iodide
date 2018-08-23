@@ -66,12 +66,6 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'UPDATE_INPUT_CONTENT':
       return newStateWithSelectedCellPropertySet(state, 'content', action.content)
 
-    case 'CHANGE_ELEMENT_TYPE':
-      return newStateWithSelectedCellPropertySet(state, 'elementType', action.elementType)
-
-    case 'CHANGE_DOM_ELEMENT_ID':
-      return newStateWithSelectedCellPropertySet(state, 'domElementID', action.elemID)
-
     case 'CHANGE_CELL_TYPE': {
       // create a newCell of the given type to get the defaults that
       // will need to be updated for the new cell type

@@ -25,6 +25,7 @@ export class EditorToolbarMenuUnconnected extends React.Component {
           this.props.isAuthenticated && <NotebookMenuItem task={tasks.exportGist} />
         }
         <SavedNotebooksAndExamplesSubsection />
+        <NotebookMenuItem task={tasks.toggleHelpModal} />
       </NotebookIconMenu>
 
     )

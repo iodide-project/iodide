@@ -8,6 +8,8 @@ import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
 import { addLanguageKeybinding } from '../keybindings'
 
+import { mirroredStateProperties, mirroredCellProperties } from '../state-schemas/mirrored-state-schema'
+
 import {
   alignCellTopTo,
   handleCellAndOutputScrolling,
@@ -44,13 +46,21 @@ export function importInitialJsmd(importedState) {
     dispatch(importNotebook(importedState))
     // whitelist the part of the state in the JSMD that should be
     // pushed to the eval-frame at initialization, and post it over
-    const statePathsToUpdate = [
-      'savedEnvironment',
-      'cells',
-      'viewMode',
-    ]
+
+    // copy mirrored state props
+    const statePathsToUpdate = Object.keys(mirroredStateProperties)
     const stateUpdatesFromEditor = {}
     statePathsToUpdate.forEach((k) => { stateUpdatesFromEditor[k] = importedState[k] })
+    // copy mirrored cell props
+    const cellPathsToUpdate = Object.keys(mirroredCellProperties)
+    // stateUpdatesFromEditor.cells =
+    // const updatedCells
+    stateUpdatesFromEditor.cells = stateUpdatesFromEditor.cells.map((cell) => {
+      const cellOut = {}
+      cellPathsToUpdate.forEach((k) => { cellOut[k] = cell[k] })
+      return cellOut
+    })
+
     dispatch({
       type: 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD',
       stateUpdatesFromEditor,
@@ -182,10 +192,6 @@ export function evaluateCell(cellId) {
     } else {
       cell = getCellById(getState().cells, cellId)
     }
-    dispatch(updateCellProperties(
-      cell.id,
-      Object.assign(cell, { lastEvalTime: Date.now() }),
-    ))
     dispatch({ type: 'TRIGGER_CELL_EVAL_IN_FRAME', cellId: cell.id })
   }
 }
@@ -403,17 +409,11 @@ export function deleteCell() {
   }
 }
 
-// export function toggleEvalFrameVisibility() {
-//   return {
-//     type: 'TOGGLE_EVAL_FRAME_VISIBILITY',
-//   }
-// }
-
-// export function toggleEditorVisibility() {
-//   return {
-//     type: 'TOGGLE_EDITOR_VISIBILITY',
-//   }
-// }
+export function toggleHelpModal() {
+  return {
+    type: 'TOGGLE_HELP_MODAL',
+  }
+}
 
 export function toggleEditorLink() {
   return {

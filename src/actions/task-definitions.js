@@ -24,16 +24,15 @@ if (oscpu.indexOf('Mac') !== -1) OSName = 'MacOS'
 if (oscpu.indexOf('X11') !== -1) OSName = 'UNIX'
 if (oscpu.indexOf('Linux') !== -1) OSName = 'Linux'
 
-const commandKey = () => (OSName === 'MacOS' ? '⌘' : 'Ctrl')
+const commandKey = OSName === 'MacOS' ? '⌘' : 'Ctrl'
 
 const tasks = {}
 
 tasks.evaluateCell = new UserTask({
   title: 'Run Cell',
   keybindings: ['mod+enter'],
-
+  displayKeybinding: `${commandKey}+Enter`,
   callback() {
-    dispatcher.changeMode('COMMAND_MODE')
     dispatcher.saveNotebook(true)
     dispatcher.evaluateCell()
   },
@@ -51,6 +50,7 @@ tasks.evaluateAllCells = new UserTask({
 tasks.evaluateCellAndSelectBelow = new UserTask({
   title: 'Evaluate Cell and Select Below',
   keybindings: ['shift+enter'],
+  displayKeybinding: 'Shift+Enter',
   keybindingPrecondition: viewModeIsEditor,
   callback() {
     dispatcher.changeMode('COMMAND_MODE')
@@ -72,6 +72,7 @@ tasks.moveCellUp = new UserTask({
   displayKeybinding: 'Shift+Up', // '\u21E7 \u2191',
   keybindings: ['shift+up'],
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
   callback() {
     dispatcher.cellUp()
@@ -84,6 +85,7 @@ tasks.moveCellDown = new UserTask({
   displayKeybinding: 'Shift+Down', // '\u21E7 \u2193',
   keybindings: ['shift+down'],
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
   callback() {
     dispatcher.cellDown()
@@ -110,6 +112,7 @@ tasks.selectUp = new UserTask({
   displayKeybinding: 'Up', // \u2191',
   keybindings: ['up'],
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
   callback() {
     const cellAboveId = getCellAboveSelectedId()
@@ -122,6 +125,7 @@ tasks.selectDown = new UserTask({
   displayKeybinding: 'Down', // '\u2193',
   keybindings: ['down'],
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
   callback() {
     const cellBelowId = getCellBelowSelectedId()
@@ -134,6 +138,7 @@ tasks.scrollOutputPaneToCell = new UserTask({
   displayKeybinding: 'Right', // '\u2193',
   keybindings: ['right'],
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
   callback() {
     const cellBelowId = getCellBelowSelectedId()
@@ -143,9 +148,10 @@ tasks.scrollOutputPaneToCell = new UserTask({
 
 tasks.toggleWrapInEditors = new UserTask({
   title: 'Toggle wrapping in editors',
-  displayKeybinding: 'W', // '\u2193',
+  displayKeybinding: 'w', // '\u2193',
   keybindings: ['w'],
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
   callback() { dispatcher.toggleWrapInEditors() },
 })
@@ -153,8 +159,9 @@ tasks.toggleWrapInEditors = new UserTask({
 tasks.addCellAbove = new UserTask({
   title: 'Add Cell Above',
   keybindings: ['a'],
-  displayKeybinding: 'A',
+  displayKeybinding: 'a',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() {
     dispatcher.insertCell('code', 'above')
     dispatcher.selectCell(getCellAboveSelectedId(), true)
@@ -164,8 +171,9 @@ tasks.addCellAbove = new UserTask({
 tasks.addCellBelow = new UserTask({
   title: 'Add Cell Below',
   keybindings: ['b'],
-  displayKeybinding: 'B',
+  displayKeybinding: 'b',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
 
   callback() {
     dispatcher.insertCell('code', 'below')
@@ -178,14 +186,16 @@ tasks.deleteCell = new UserTask({
   keybindings: ['shift+backspace'],
   displayKeybinding: 'Shift+Backspace', // '\u21E7 \u232b',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() { dispatcher.deleteCell() },
 })
 
 tasks.changeToJavascriptCell = new UserTask({
   title: 'Change to Javascript',
   keybindings: ['j'],
-  displayKeybinding: 'J',
+  displayKeybinding: 'j',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() {
     dispatcher.changeCellType('code', 'js')
   },
@@ -194,8 +204,9 @@ tasks.changeToJavascriptCell = new UserTask({
 tasks.changeToMarkdownCell = new UserTask({
   title: 'Change to Markdown',
   keybindings: ['m'],
-  displayKeybinding: 'M',
+  displayKeybinding: 'm',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() {
     dispatcher.changeCellType('markdown')
   },
@@ -204,8 +215,9 @@ tasks.changeToMarkdownCell = new UserTask({
 tasks.changeToExternalResourceCell = new UserTask({
   title: 'Change to External Resource',
   keybindings: ['e'],
-  displayKeybinding: 'E',
+  displayKeybinding: 'e',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() {
     dispatcher.changeCellType('external dependencies')
   },
@@ -214,32 +226,36 @@ tasks.changeToExternalResourceCell = new UserTask({
 tasks.changeToRawCell = new UserTask({
   title: 'Change to Raw',
   keybindings: ['r'],
-  displayKeybinding: 'R',
+  displayKeybinding: 'r',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() { dispatcher.changeCellType('raw') },
 })
 
 tasks.changeToCSSCell = new UserTask({
   title: 'Change to CSS',
   keybindings: ['c'],
-  displayKeybinding: 'C',
+  displayKeybinding: 'c',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() { dispatcher.changeCellType('css') },
 })
 
 tasks.changeToPluginCell = new UserTask({
   title: 'Change to Plugin Loader',
   keybindings: ['l'],
-  displayKeybinding: 'L',
+  displayKeybinding: 'l',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() { dispatcher.changeCellType('plugin') },
 })
 
 tasks.toggleSkipCellInRunAll = new UserTask({
   title: 'Toggle Skipping Cell in Run All',
   keybindings: ['s'],
-  displayKeybinding: 'S',
+  displayKeybinding: 's',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() { dispatcher.setCellSkipInRunAll() },
 })
 
@@ -258,6 +274,7 @@ tasks.changeToEditMode = new UserTask({
   keybindings: ['enter', 'return'],
   displayKeybinding: 'Enter',
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
   callback() { dispatcher.changeMode('EDIT_MODE') },
 })
@@ -283,7 +300,7 @@ tasks.createNewNotebook = new UserTask({
 tasks.saveNotebook = new UserTask({
   title: 'Save Notebook',
   keybindings: ['ctrl+s', 'meta+s'],
-  displayKeybinding: `${commandKey()}+S`,
+  displayKeybinding: `${commandKey}+s`,
   preventDefaultKeybinding: true,
   callback() { dispatcher.saveNotebook() },
 })
@@ -291,7 +308,7 @@ tasks.saveNotebook = new UserTask({
 tasks.exportNotebook = new UserTask({
   title: 'Export Notebook',
   keybindings: ['ctrl+shift+e', 'meta+shift+e'],
-  displayKeybinding: `Shift+${commandKey()}+E`,
+  displayKeybinding: `Shift+${commandKey}+e`,
   callback() { dispatcher.exportNotebook() },
 })
 
@@ -315,9 +332,10 @@ tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
   menuTitle: 'Declared Variables',
   keybindings: ['ctrl+d', 'meta+d'],
-  displayKeybinding: `${commandKey()}+D`,
+  displayKeybinding: `${commandKey}+d`,
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() {
     if (store.getState().sidePaneMode !== 'DECLARED_VARIABLES') {
       dispatcher.changeSidePaneMode('DECLARED_VARIABLES')
@@ -331,9 +349,10 @@ tasks.toggleHistoryPane = new UserTask({
   title: 'Toggle the Console Pane',
   menuTitle: 'Console',
   keybindings: ['ctrl+h', 'meta+h'],
-  displayKeybinding: `${commandKey()}+H`,
+  displayKeybinding: `${commandKey}+h`,
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() {
     if (store.getState().sidePaneMode !== '_CONSOLE') {
       dispatcher.changeSidePaneMode('_CONSOLE')
@@ -359,15 +378,29 @@ tasks.toggleAppInfoPane = new UserTask({
   title: 'Toggle the Iodide Info Pane',
   menuTitle: 'App Messages',
   keybindings: ['ctrl+i', 'meta+i'],
-  displayKeybinding: `${commandKey()}+I`,
+  displayKeybinding: `${commandKey}+i`,
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
   callback() {
     if (store.getState().sidePaneMode !== '_APP_INFO') {
       dispatcher.changeSidePaneMode('_APP_INFO')
     } else {
       dispatcher.changeSidePaneMode('_CLOSED')
     }
+  },
+})
+
+tasks.toggleHelpModal = new UserTask({
+  title: 'Open the Help Pane',
+  menuTitle: 'Help',
+  keybindings: ['h'],
+  displayKeybinding: 'h',
+  preventDefaultKeybinding: true,
+  keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
+  callback() {
+    dispatcher.toggleHelpModal()
   },
 })
 
@@ -384,20 +417,6 @@ tasks.setViewModeToPresentation = new UserTask({
     dispatcher.setViewMode('REPORT_VIEW')
   },
 })
-
-// tasks.toggleEditorVisibility = new UserTask({
-//   title: 'Toggle Editor Visibility',
-//   keybindings: ['1'],
-//   keybindingPrecondition: isCommandMode,
-//   callback() { dispatcher.toggleEditorVisibility() },
-// })
-
-// tasks.toggleEvalFrameVisibility = new UserTask({
-//   title: 'Toggle Eval Frame Visibility',
-//   keybindings: ['2'],
-//   keybindingPrecondition: isCommandMode,
-//   callback() { dispatcher.toggleEvalFrameVisibility() },
-// })
 
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',
