@@ -127,9 +127,9 @@ const stateSchema = {
       type: 'array',
       items: { type: 'string' },
     },
-    lastSaved: {}, // FIXME change to string ONLY with default 'never'
-    lastExport: {}, // FIXME change to string ONLY
-    sidePaneMode: {}, // FIXME change to string ONLY
+    lastSaved: {},
+    lastExport: {},
+    sidePaneMode: {},
     sidePaneWidth: { type: 'integer' },
     editorWidth: { type: 'integer' },
     userData: { type: 'object' },
