@@ -124,6 +124,15 @@ const stateSchema = {
       type: 'array',
       items: cellSchema,
     },
+    consoleText: { type: 'string' },
+    consoleTextCache: {
+      // stores the current entry when keying up/down
+      type: 'string',
+    },
+    consoleScrollbackPosition: {
+      // the position from the END of the history when keying up/down in the console
+      type: 'integer',
+    },
     languages: {
       type: 'object',
       additionalProperties: languageSchema,
@@ -221,6 +230,9 @@ function newNotebook() {
   const initialState = {
     title: 'untitled',
     cells: [newCell(0)],
+    consoleText: '',
+    consoleTextCache: '',
+    consoleScrollbackPosition: 0,
     languages: { js: jsLanguageDefinition },
     languageLastUsed: 'js',
     userDefinedVarNames: [],
