@@ -150,12 +150,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return nextState
     }
 
-    case 'CLEAR_VARIABLES': {
-      nextState = Object.assign({}, state)
-      nextState.userDefinedVarNames = {}
-      return nextState
-    }
-
     case 'CHANGE_PAGE_TITLE':
       return Object.assign({}, state, { title: action.title })
 
@@ -222,14 +216,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         content: action.content,
       })
       return Object.assign({}, state, { history })
-    }
-
-    case 'UPDATE_USER_VARIABLES': {
-      const userDefinedVarNames = []
-      Object.keys(window)
-        .filter(g => !initialVariables.has(g))
-        .forEach((g) => { userDefinedVarNames.push(g) })
-      return Object.assign({}, state, { userDefinedVarNames })
     }
 
     case 'UPDATE_APP_MESSAGES': {

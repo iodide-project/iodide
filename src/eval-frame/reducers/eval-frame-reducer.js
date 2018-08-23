@@ -53,7 +53,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'CLEAR_VARIABLES': {
       clearUserDefinedVars(state.userDefinedVarNames)
       nextState = Object.assign({}, state)
-      nextState.userDefinedVarNames = {}
+      nextState.userDefinedVarNames = []
       nextState.externalDependencies = []
       return nextState
     }
