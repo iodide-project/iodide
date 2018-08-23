@@ -1,5 +1,4 @@
 import React from 'react'
-// import Paper from '@material-ui/core/Paper'
 import NotebookMenuItem from './notebook-menu-item'
 import NotebookMenuDivider from './notebook-menu-divider'
 import NotebookMenuHeader from './notebook-menu-header'

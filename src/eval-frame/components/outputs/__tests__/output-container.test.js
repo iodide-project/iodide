@@ -33,10 +33,8 @@ describe('OutputContainerUnconnected React component', () => {
   })
 
   it('mouse down on cell container div fires postMessageToEditor with correct props', () => {
-    // const spy = jest.spyOn(global.MessageChannel.prototype.port1, 'postMessage')
     props.selected = false
     outputContainer().simulate('mousedown')
-    // expect(spy).toHaveBeenCalled()
     expect(postMessageToEditorMock.mock.calls.length).toBe(1)
     expect(postMessageToEditorMock.mock.calls[0][0]).toEqual(
       'CLICK_ON_OUTPUT',

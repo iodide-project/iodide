@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-// import Drawer from '@material-ui/core/Drawer'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import Resizable from 're-resizable'

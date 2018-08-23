@@ -362,18 +362,6 @@ tasks.toggleHistoryPane = new UserTask({
   },
 })
 
-// tasks.toggleConsolePane = new UserTask({
-//   title: 'Toggle the Console Pane',
-//   menuTitle: 'Console',
-//   callback() {
-//     if (store.getState().sidePaneMode !== '_CONSOLE') {
-//       dispatcher.changeSidePaneMode('_CONSOLE')
-//     } else {
-//       dispatcher.changeSidePaneMode('_CLOSED')
-//     }
-//   },
-// })
-
 tasks.toggleAppInfoPane = new UserTask({
   title: 'Toggle the Iodide Info Pane',
   menuTitle: 'App Messages',

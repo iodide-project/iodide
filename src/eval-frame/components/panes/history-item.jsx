@@ -45,7 +45,6 @@ export class HistoryItemUnconnected extends React.Component {
   }
 
   render() {
-    // const id = this.props.cell.cellId
     let output
     let showCellReturnButton = true
     switch (this.props.historyType) {

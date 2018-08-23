@@ -1,5 +1,4 @@
 import { newNotebook, newCellID } from '../eval-frame-state-prototypes'
-// import { getCellById } from '../../state-selectors'
 
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
@@ -35,8 +34,6 @@ initialVariables.add('CodeMirror')
 
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState
-  // let title
-  // let cells
 
   switch (action.type) {
     case 'NEW_NOTEBOOK':
@@ -44,9 +41,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign(newNotebook())
 
     case 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD': {
-      // nextState = newNotebook()
-      // Object.keys(nextState).forEach((k) => { nextState[k] = action.newState[k] })
-      // return nextState
       return Object.assign(newNotebook(), action.stateUpdatesFromEditor)
     }
 
@@ -87,7 +81,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       const actionCopy = Object.assign({}, action)
       delete actionCopy.type
       const history = [...state.history, actionCopy]
-      // history.push(Object.assign({}, action))
       return Object.assign({}, state, { history })
     }
 
@@ -163,7 +156,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       } else {
         newSavedEnvironment = action.updateObj
       }
-      // console.log('update?', action.update, 'obj:', newSavedEnvironment)
       return Object.assign({}, state, { savedEnvironment: newSavedEnvironment })
     }
 
@@ -190,7 +182,5 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
   }
 }
-
-// export { getSavedNotebooks }
 
 export default notebookReducer

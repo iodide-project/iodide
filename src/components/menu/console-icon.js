@@ -8,12 +8,3 @@ export default function DeclaredVariableIcon(props) {
     </SvgIcon>
   )
 }
-
-// export class DeclaredVariableIcon extends React.Component {
-//   render() {
-//     return (
-//       <SvgIcon {...props}>
-//       </SvgIcon>
-//     )
-//   }
-// }

@@ -36,13 +36,3 @@ export const output = {
     return node
   },
 }
-
-
-// export function html(s) {
-
-// }
-
-
-// export function append(s) {
-
-// }

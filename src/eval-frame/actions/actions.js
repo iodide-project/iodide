@@ -47,8 +47,6 @@ export function temporarilySaveRunningCellID(cellId) {
 
 
 export function appendToEvalHistory(cellId, content, value, historyOptions = {}) {
-  // const cellType = historyOptions.cellType === undefined ?
-  //   'code' : historyOptions.cellType
   const historyId = historyOptions.historyId === undefined ?
     historyIdGen.nextId() : historyOptions.historyId
   const historyType = historyOptions.historyType === undefined ?
@@ -58,7 +56,6 @@ export function appendToEvalHistory(cellId, content, value, historyOptions = {})
   return {
     type: 'APPEND_TO_EVAL_HISTORY',
     cellId,
-    // cellType,
     content,
     historyId,
     historyType,
@@ -245,21 +242,6 @@ function evaluateResourceCell(cell) {
       new Array(...[...cell.value || [], ...newValues]),
       { historyType: 'CELL_EVAL_EXTERNAL_RESOURCE' },
     ))
-
-    // dispatch(updateCellProperties(
-    //   cell.id,
-    //   {
-    //     value: new Array(...[...cell.value || [], ...newValues]),
-    //     rendered: true,
-    //     evalStatus,
-    //   },
-    // ))
-    // if (newValues.length) {
-    //   dispatch(appendToEvalHistory(
-    //     cell.id,
-    //     `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
-    //   ))
-    // }
     dispatch(updateUserVariables())
   }
 }
@@ -304,7 +286,6 @@ function evaluateLanguagePluginCell(cell) {
       evalStatus = 'ERROR'
     }
     const historyId = historyIdGen.nextId()
-    // dispatch(appendToEvalHistory(cell.id, cell.content, historyId))
     dispatch(appendToEvalHistory(
       cell.id,
       cell.content,
@@ -315,15 +296,11 @@ function evaluateLanguagePluginCell(cell) {
     if (pluginData.url === undefined) {
       value = 'plugin definition missing "url"'
       evalStatus = 'ERROR'
-      // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
       dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
       dispatch(updateValueInHistory(historyId, value))
     } else {
       const {
         url,
-        // keybinding,
-        // languageId,
-        // codeMirrorMode,
         displayName,
       } = pluginData
 
@@ -336,14 +313,12 @@ function evaluateLanguagePluginCell(cell) {
             value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
           }
           evalStatus = 'ASYNC_PENDING'
-          // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
           dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
           dispatch(updateValueInHistory(historyId, value))
         })
 
         xhrObj.addEventListener('load', () => {
           value = `${displayName} plugin downloaded, initializing`
-          // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
           dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
           dispatch(updateValueInHistory(historyId, value))
           // see the following for asynchronous loading of scripts from strings:
@@ -361,7 +336,6 @@ function evaluateLanguagePluginCell(cell) {
             evalStatus = 'SUCCESS'
             dispatch(addLanguage(pluginData))
             postMessageToEditor('POST_LANGUAGE_DEF_TO_EDITOR', pluginData)
-            // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
             dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
             dispatch(updateValueInHistory(historyId, value))
             resolve()
@@ -371,7 +345,6 @@ function evaluateLanguagePluginCell(cell) {
         xhrObj.addEventListener('error', () => {
           value = `${displayName} plugin failed to load`
           evalStatus = 'ERROR'
-          // dispatch(updateCellProperties(cell.id, { value, evalStatus, rendered }))
           dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
           dispatch(updateValueInHistory(historyId, value))
           reject()
@@ -416,9 +389,6 @@ export function evaluateCell(cellId) {
       if (JSON.parse(cell.content).pluginType === 'language') {
         evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
         evaluation = evaluationQueue
-      } else {
-        // evaluation =
-        // dispatch(updateAppMessages('No loader for plugin type or missing "pluginType" entry'))
       }
     } else {
       cell.rendered = false

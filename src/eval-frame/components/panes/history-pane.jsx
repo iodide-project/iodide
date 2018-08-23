@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
 
-// import Pane from './pane-container'
-// import tasks from '../../actions/eval-frame-tasks'
 import HistoryItem from './history-item'
 import ConsoleInput from './console-input'
 import EmptyPaneContents from './empty-pane-contents'

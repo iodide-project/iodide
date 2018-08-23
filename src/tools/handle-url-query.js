@@ -13,7 +13,6 @@ async function loadJsmdFromNotebookUrl(url) {
     const doc = parser.parseFromString(notebookString, 'text/html');
     const jsmd = doc.querySelector('#jsmd').innerHTML
     state = stateFromJsmd(jsmd)
-    // loadJsmd(jsmd)
   } catch (err) {
     console.error('failed to load notebook url', err);
   }
@@ -37,7 +36,6 @@ async function loadIpynbFromUrl(url) {
 function loadFromUrlString(urlString) {
   let state
   try {
-    // loadJsmd(urlString)
     state = stateFromJsmd(urlString)
   } catch (err) {
     console.error('failed to load notebook from urlString', err)

@@ -9,8 +9,3 @@ describe('add cells', () => {
     expect(nextState.cells[nextState.cells.length - 1].cellType).toEqual('code')
   })
 })
-
-// describe('insert cells', ()=> {
-//     var state = NB.newNotebook()
-//     var nextState = cell()
-// })

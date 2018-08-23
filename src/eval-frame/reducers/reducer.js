@@ -1,4 +1,3 @@
-// import { combineReducers } from 'redux'
 import notebookReducer from './eval-frame-reducer'
 import cellReducer from './output-reducer'
 

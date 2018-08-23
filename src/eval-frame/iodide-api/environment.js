@@ -62,8 +62,6 @@ function loadFromEnvironment(varList) {
 }
 
 export const environment = {
-  // set: obj => saveToEnvironment(obj, { raw: false, update: false }),
-  // setRawString: obj => saveToEnvironment(obj, { raw: true, update: false }),
   freeze: obj => saveToEnvironment(obj, { raw: false, update: true }),
   freezeRawString: obj => saveToEnvironment(obj, { raw: true, update: true }),
 
