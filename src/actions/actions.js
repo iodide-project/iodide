@@ -192,6 +192,12 @@ export function evaluateCell(cellId) {
     } else {
       cell = getCellById(getState().cells, cellId)
     }
+    // update the cell props in the eval frame
+    const cellPathsToUpdate = Object.keys(mirroredCellProperties)
+    const evalFrameCell = {}
+    cellPathsToUpdate.forEach((k) => { evalFrameCell[k] = cell[k] })
+    dispatch(updateCellProperties(cell.id, evalFrameCell))
+    // trigger the cell eval
     dispatch({ type: 'TRIGGER_CELL_EVAL_IN_FRAME', cellId: cell.id })
   }
 }
