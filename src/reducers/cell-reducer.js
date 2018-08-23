@@ -1,4 +1,4 @@
-import { newCell, newCellID, newNotebook, rowOverflowEnum } from '../editor-state-prototypes'
+import { newCell, newCellID, newNotebook } from '../editor-state-prototypes'
 
 import {
   moveCell,
@@ -43,7 +43,7 @@ const cellReducer = (state = newNotebook(), action) => {
       }
       const thisCell = cells[index]
       thisCell.selected = true
-      thisCell.inputFolding = rowOverflowEnum.VISIBLE
+      thisCell.inputFolding = 'VISIBLE'
       nextState = Object.assign({}, state, { cells })
       return nextState
     }
