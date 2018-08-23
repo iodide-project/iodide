@@ -25,7 +25,6 @@ tasks.exportNotebook = new UserTask({
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
 
-
 tasks.closePanes = new UserTask({
   title: 'Close the eval context info panes',
   menuTitle: 'close pane',
