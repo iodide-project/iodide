@@ -53,7 +53,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'CLEAR_VARIABLES': {
       clearUserDefinedVars(state.userDefinedVarNames)
       nextState = Object.assign({}, state)
-      nextState.userDefinedVarNames = {}
+      nextState.userDefinedVarNames = []
       nextState.externalDependencies = []
       return nextState
     }
@@ -174,26 +174,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'TOGGLE_EDITOR_LINK': {
       const scrollingLinked = !state.scrollingLinked
       return Object.assign({}, state, { scrollingLinked })
-    }
-
-    case 'CHANGE_REPORT_PANE_SORT': {
-      const reportPaneSort = action.sortType
-      return Object.assign({}, state, { reportPaneSort })
-    }
-
-    case 'CHANGE_CONSOLE_PANE_SORT': {
-      const consolePaneSort = action.sortType
-      return Object.assign({}, state, { consolePaneSort })
-    }
-
-    case 'CHANGE_REPORT_PANE_FILTER': {
-      const { reportPaneOutputFilter } = action
-      return Object.assign({}, state, { reportPaneOutputFilter })
-    }
-
-    case 'CHANGE_CONSOLE_PANE_FILTER': {
-      const { consolePaneOutputFilter } = action
-      return Object.assign({}, state, { consolePaneOutputFilter })
     }
 
     case 'ADD_LANGUAGE_TO_EVAL_FRAME': {
