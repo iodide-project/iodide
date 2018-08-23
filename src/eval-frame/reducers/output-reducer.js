@@ -8,7 +8,6 @@ import {
   moveCell,
   alignCellTopTo,
   getSelectedCellId,
-  newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
   newStateWithPropsAssignedForCell,
 } from './output-reducer-utils'
