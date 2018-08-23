@@ -74,8 +74,6 @@ const cellReducer = (state = newNotebook(), action) => {
         state,
         {
           cellType: action.cellType,
-          value: undefined,
-          rendered: false,
           language,
         },
       )
