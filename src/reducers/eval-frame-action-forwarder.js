@@ -22,7 +22,6 @@ const evalFrameActionForwarder = (state, action) => {
     // cell actions
     case 'UPDATE_CELL_PROPERTIES':
     case 'CHANGE_CELL_TYPE':
-    case 'MARK_CELL_NOT_RENDERED':
     case 'CELL_UP':
     case 'CELL_DOWN':
     case 'SELECT_CELL':
