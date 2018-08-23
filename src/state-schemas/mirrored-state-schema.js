@@ -100,6 +100,10 @@ export const mirroredStateProperties = {
     additionalProperties: languageSchema,
     default: { js: jsLanguageDefinition },
   },
+  languageLastUsed: {
+    type: 'string',
+    default: 'js',
+  },
   savedEnvironment: {
     type: 'object',
     additionalProperties: environmentVariableSchema,

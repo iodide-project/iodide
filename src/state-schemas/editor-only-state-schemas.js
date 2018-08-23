@@ -45,9 +45,9 @@ export const editorOnlyStateProperties = {
     type: 'boolean',
     default: false,
   },
-  languageLastUsed: {
-    type: 'string',
-    default: 'js',
+  helpModalOpen: {
+    type: 'boolean',
+    default: false,
   },
   lastSaved: {
     type: 'string',

@@ -409,17 +409,11 @@ export function deleteCell() {
   }
 }
 
-// export function toggleEvalFrameVisibility() {
-//   return {
-//     type: 'TOGGLE_EVAL_FRAME_VISIBILITY',
-//   }
-// }
-
-// export function toggleEditorVisibility() {
-//   return {
-//     type: 'TOGGLE_EDITOR_VISIBILITY',
-//   }
-// }
+export function toggleHelpModal() {
+  return {
+    type: 'TOGGLE_HELP_MODAL',
+  }
+}
 
 export function toggleEditorLink() {
   return {

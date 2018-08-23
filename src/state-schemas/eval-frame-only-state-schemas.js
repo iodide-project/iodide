@@ -69,6 +69,20 @@ export const evalFrameOnlyStateProperties = {
     items: evalFrameCellSchema,
     default: [newCellFromSchema(evalFrameCellSchema, 0)],
   },
+  consoleText: {
+    type: 'string',
+    default: '',
+  },
+  consoleTextCache: {
+    // stores the current entry when keying up/down
+    type: 'string',
+    default: '',
+  },
+  consoleScrollbackPosition: {
+    // the position from the END of the history when keying up/down in the console
+    type: 'integer',
+    default: 0,
+  },
   externalDependencies: {
     type: 'array',
     default: [],

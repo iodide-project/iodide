@@ -17,7 +17,9 @@ import { postMessageToEditor } from '../../port-to-editor'
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string.isRequired,
-    cellId: PropTypes.number.isRequired,
+    cellId: PropTypes.number,
+    historyId: PropTypes.number.isRequired,
+    historyType: PropTypes.string.isRequired,
     lastRan: PropTypes.number.isRequired,
   }
   constructor(props) {
@@ -44,27 +46,35 @@ export class HistoryItemUnconnected extends React.Component {
 
   render() {
     // const id = this.props.cell.cellId
-    let cellOutput
+    let output
+    let showCellReturnButton = true
     switch (this.props.historyType) {
       case 'CELL_EVAL_VALUE':
-        cellOutput = (<ValueRenderer
+        output = (<ValueRenderer
           render
           valueToRender={this.props.valueToRender}
         />)
         break
       case 'CELL_EVAL_EXTERNAL_RESOURCE':
-        cellOutput = <ExternalResourceOutputHandler value={this.props.valueToRender} />
+        output = <ExternalResourceOutputHandler value={this.props.valueToRender} />
         break
       case 'CELL_EVAL_INFO':
-        cellOutput = this.props.valueToRender
+        output = this.props.valueToRender
+        break
+      case 'CONSOLE_EVAL':
+        output = (<ValueRenderer
+          render
+          valueToRender={this.props.valueToRender}
+        />)
+        showCellReturnButton = false
         break
       default:
         // TODO: Use better class for inline error
-        cellOutput = <div>Unknown history type {this.props.historyType}</div>
+        output = <div>Unknown history type {this.props.historyType}</div>
         break
     }
 
-    const historyMetadata = (
+    const cellReturnButton = showCellReturnButton ? (
       <div className="history-metadata-positioner">
         <div className="history-metadata">
           <div className="history-show-actual-cell">
@@ -78,15 +88,16 @@ export class HistoryItemUnconnected extends React.Component {
           {/* <div className="history-time-since"> {this.state.timeSince} </div> */}
         </div>
       </div>)
+      : ''
 
     return (
-      <div id={`cell-${this.props.cellId}-history`} className="history-cell">
+      <div id={`history-item-id-${this.props.historyId}`} className="history-cell">
         <div className="history-content editor">
-          {historyMetadata}
+          {cellReturnButton}
           <pre className="history-item-code">{this.props.content}</pre>
         </div>
         <div className="history-item-output">
-          {cellOutput}
+          {output}
         </div>
       </div>
     )
@@ -95,8 +106,9 @@ export class HistoryItemUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   return {
-    cellId: ownProps.historyItem.cellId,
     content: ownProps.historyItem.content,
+    cellId: ownProps.historyItem.cellId,
+    historyId: ownProps.historyItem.historyId,
     historyType: ownProps.historyItem.historyType,
     lastRan: ownProps.historyItem.lastRan,
     valueToRender: ownProps.historyItem.value,
