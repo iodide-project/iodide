@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 const DEFAULT_EDITOR_WIDTH = Math.round(0.5 * document.documentElement.clientWidth)
 const DEFAULT_PANE_HEIGHT = Math.round(0.4 * document.documentElement.clientHeight)
 
@@ -145,7 +147,9 @@ export const evalFrameCellSchema = {
 export function newCellFromSchema(schema, cellId, cellType = 'code', language = 'js') {
   const cell = {}
   Object.keys(schema.properties).forEach((k) => {
-    cell[k] = schema.properties[k].default
+    // we must clone object prototypes to avoid creating multiple references
+    // to the same actual object
+    cell[k] = _.cloneDeep(schema.properties[k].default)
   })
   cell.id = cellId
   cell.cellType = cellType
@@ -343,7 +347,9 @@ export const evalFrameStateSchema = {
 function newNotebookFromSchema(schema) {
   const initialState = {}
   Object.keys(schema.properties).forEach((k) => {
-    initialState[k] = schema.properties[k].default
+    // we must clone object prototypes to avoid creating multiple references
+    // to the same actual object
+    initialState[k] = _.cloneDeep(schema.properties[k].default)
   })
   initialState.cells[0].selected = true
   return initialState
