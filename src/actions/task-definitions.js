@@ -343,18 +343,6 @@ tasks.toggleHistoryPane = new UserTask({
   },
 })
 
-// tasks.toggleConsolePane = new UserTask({
-//   title: 'Toggle the Console Pane',
-//   menuTitle: 'Console',
-//   callback() {
-//     if (store.getState().sidePaneMode !== '_CONSOLE') {
-//       dispatcher.changeSidePaneMode('_CONSOLE')
-//     } else {
-//       dispatcher.changeSidePaneMode('_CLOSED')
-//     }
-//   },
-// })
-
 tasks.toggleAppInfoPane = new UserTask({
   title: 'Toggle the Iodide Info Pane',
   menuTitle: 'App Messages',
@@ -384,20 +372,6 @@ tasks.setViewModeToPresentation = new UserTask({
     dispatcher.setViewMode('REPORT_VIEW')
   },
 })
-
-// tasks.toggleEditorVisibility = new UserTask({
-//   title: 'Toggle Editor Visibility',
-//   keybindings: ['1'],
-//   keybindingPrecondition: isCommandMode,
-//   callback() { dispatcher.toggleEditorVisibility() },
-// })
-
-// tasks.toggleEvalFrameVisibility = new UserTask({
-//   title: 'Toggle Eval Frame Visibility',
-//   keybindings: ['2'],
-//   keybindingPrecondition: isCommandMode,
-//   callback() { dispatcher.toggleEvalFrameVisibility() },
-// })
 
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',

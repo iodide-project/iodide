@@ -28,20 +28,6 @@ describe('CodeOutput_unconnected react component', () => {
       .toHaveLength(1)
   })
 
-  // it('if both "show" props are false, output container has no children', () => {
-  //   expect(output().find(OutputContainer).children())
-  //     .toHaveLength(0)
-  // })
-
-  // it("if showOutputRow = true, there's an output row with an output renderer", () => {
-  //   props.showOutputRow = true
-  //   expect(output().find(OutputRow))
-  //     .toHaveLength(1)
-
-  //   expect(output().find(OutputRow).find(OutputRenderer))
-  //     .toHaveLength(1)
-  // })
-
   it('always renders a side-effect-target div', () => {
     expect(output().find('div'))
       .toHaveLength(1)

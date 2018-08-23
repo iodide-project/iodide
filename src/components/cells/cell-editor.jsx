@@ -21,7 +21,6 @@ import { postMessageToEvalFrame } from '../../port-to-eval-frame'
 
 class CellEditor extends React.Component {
   static propTypes = {
-    // readOnly: PropTypes.bool.isRequired,
     cellId: PropTypes.number.isRequired,
     cellType: PropTypes.string,
     content: PropTypes.string,
@@ -41,7 +40,6 @@ class CellEditor extends React.Component {
     this.handleFocusChange = this.handleFocusChange.bind(this)
     this.updateInputContent = this.updateInputContent.bind(this)
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
-    // React.createRef()
   }
 
   componentDidMount() {
@@ -144,20 +142,6 @@ class CellEditor extends React.Component {
   }
 
   render() {
-    // const editorOptions = Object.assign({}, {
-    //   mode: this.props.codeMirrorModeLoaded ? this.props.codeMirrorMode : '',
-    //   lineWrapping: false,
-    //   matchBrackets: true,
-    //   autoCloseBrackets: true,
-    //   theme: 'eclipse',
-    //   autoRefresh: true,
-    //   lineNumbers: true,
-    //   keyMap: 'sublime',
-    //   extraKeys: {
-    //     'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
-    //   },
-    //   comment: this.props.codeMirrorMode === 'javascript',
-    // }, this.props.editorOptions)
     this.props.editorOptions.extraKeys = {
       'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
     }

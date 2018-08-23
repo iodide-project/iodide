@@ -1,9 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
-// import lightBaseTheme from '@material-ui/core/styles/baseThemes/lightBaseTheme'
-// import getMuiTheme from '@material-ui/core/styles/getMuiTheme'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import ErrorCircle from '@material-ui/icons/Error'
 import UnloadedCircle from '@material-ui/icons/Remove'

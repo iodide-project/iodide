@@ -149,16 +149,12 @@ export class ValueRenderer extends React.Component {
   }
 
   render() {
-    // console.log(`CellOutput rendered: ${this.props.cellId}`)
     if (!this.props.render) {
       return <div className="empty-resultset" />
     }
 
     const value = this.props.valueToRender
     const resultElem = renderValue(value)
-    // if (resultElem !== undefined) {
     return <div className="rep-container">{resultElem}</div>
-    // }
-    // return <div className="empty-resultset" />
   }
 }

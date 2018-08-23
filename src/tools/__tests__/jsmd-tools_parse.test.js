@@ -57,7 +57,6 @@ describe('jsmd parser Ex 1', () => {
   const { parseWarnings } = parseJsmd(jsmdTestCase)
   const state = stateFromJsmd(jsmdTestCase)
   const { cells } = state
-  // const { parseWarnings } = jsmdParsed
 
   it('new cells should start with "\n%%" or "%%" at the start of the file. drop empty cells.', () => {
     expect(cells.length).toEqual(7)

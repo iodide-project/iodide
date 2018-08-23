@@ -1,19 +1,13 @@
 /* global IODIDE_BUILD_TYPE */
 import React from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types';
-// import { ToolbarGroup } from '@material-ui/core/Toolbar'
-
-// import HistoryIcon from '@material-ui/icons/History'
-// import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
+import PropTypes from 'prop-types'
 import InfoIcon from '@material-ui/icons/InfoOutline'
-// import SvgIcon from '@material-ui/core/SvgIcon'
 
 import NotebookTaskButton from './notebook-task-button'
 import UserButton from './user-button'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
-// import AppInfoPane from '../panes/app-info-pane'
 
 import tasks from '../../actions/task-definitions'
 import DeclaredVariableIcon from './declared-variable-icon'
@@ -41,8 +35,6 @@ export class ViewControlsUnconnected extends React.Component {
         <NotebookTaskButton task={tasks.toggleHistoryPane}>
           <ConsoleIcon />
         </NotebookTaskButton>
-
-        {/* <AppInfoPane /> */}
 
         {IODIDE_BUILD_TYPE === 'server' && (
           <UserButton

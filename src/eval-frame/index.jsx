@@ -13,7 +13,6 @@ import './style/eval-container.css'
 import './style/side-panes.css'
 import './style/cell-styles.css'
 import './style/default-presentation.css'
-// import './style/markdown-styles.css'
 
 import { initializeDefaultKeybindings } from './keybindings'
 

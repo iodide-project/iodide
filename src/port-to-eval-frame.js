@@ -16,10 +16,6 @@ const approvedReduxActionsFromEvalFrame = [
   'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME',
   'CHANGE_SIDE_PANE_MODE',
   'TOGGLE_EDITOR_LINK',
-  // 'CHANGE_REPORT_PANE_SORT',
-  // 'CHANGE_CONSOLE_PANE_SORT',
-  // 'CHANGE_REPORT_PANE_FILTER',
-  // 'CHANGE_CONSOLE_PANE_FILTER',
 ]
 
 const approvedKeys = [
@@ -32,7 +28,6 @@ const approvedKeys = [
 ]
 
 function receiveMessage(event) {
-  // console.log('eval frame port got message', event)
   const trustedMessage = true
   if (trustedMessage) {
     const { messageType, message } = event.data

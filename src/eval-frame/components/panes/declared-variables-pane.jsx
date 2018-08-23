@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
 
-// import Pane from './pane-container'
-
 import { DeclaredVariable } from './declared-variable'
 import { FrozenVariable } from './frozen-variable'
 import EmptyPaneContents from './empty-pane-contents'

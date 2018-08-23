@@ -1,5 +1,4 @@
 /* global it describe expect */
-// import _ from 'lodash'
 
 import { translateLegacyJsmd } from '../jsmd-tools'
 import { newNotebook } from '../../editor-state-prototypes'

@@ -164,16 +164,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { viewMode })
     }
 
-    // case 'TOGGLE_EVAL_FRAME_VISIBILITY': {
-    //   const showFrame = !state.showFrame
-    //   return Object.assign({}, state, { showFrame })
-    // }
-
-    // case 'TOGGLE_EDITOR_VISIBILITY': {
-    //   const showEditor = !state.showEditor
-    //   return Object.assign({}, state, { showEditor })
-    // }
-
     case 'TOGGLE_EDITOR_LINK': {
       const scrollingLinked = !state.scrollingLinked
       return Object.assign({}, state, { scrollingLinked })

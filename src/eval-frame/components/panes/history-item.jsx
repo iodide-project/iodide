@@ -43,7 +43,6 @@ export class HistoryItemUnconnected extends React.Component {
   }
 
   render() {
-    // const id = this.props.cell.cellId
     let cellOutput
     switch (this.props.historyType) {
       case 'CELL_EVAL_VALUE':

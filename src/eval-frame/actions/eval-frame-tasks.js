@@ -1,6 +1,5 @@
 import UserTask from '../../actions/user-task'
 import { postKeypressToEditor, postActionToEditor } from '../port-to-editor'
-// import { store } from '../store'
 
 
 const tasks = {}
