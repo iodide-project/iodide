@@ -25,7 +25,7 @@ const languageSchema = {
   additionalProperties: false,
 }
 
-const jsLanguageDefinition = {
+export const jsLanguageDefinition = {
   pluginType: 'language',
   languageId: 'js',
   displayName: 'Javascript',

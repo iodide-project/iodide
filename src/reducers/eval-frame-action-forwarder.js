@@ -36,7 +36,6 @@ const evalFrameActionForwarder = (state, action) => {
       }
       // if the eval frame is not ready, return a copy of the state with this
       // action appended to the eval queue
-      console.log('attempt to enqueue action:', action)
       const evalFrameMessageQueue = state.evalFrameMessageQueue.slice()
       evalFrameMessageQueue.push(action)
       return Object.assign({}, state, { evalFrameMessageQueue })
