@@ -1,4 +1,4 @@
-import { newNotebook, newCell, newCellID } from '../editor-state-prototypes'
+import { newNotebook, newCell, newCellID, paneRatios } from '../editor-state-prototypes'
 import {
   exportJsmdBundle,
   stringifyStateToJsmd,

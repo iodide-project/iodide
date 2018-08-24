@@ -18,7 +18,6 @@ class EditorPaneContainer extends React.Component {
     cellResizerWidth: PropTypes.number.isRequired,
     cellIds: PropTypes.array.isRequired,
     paneMinWidth: PropTypes.number.isRequired,
-    // showFrame: PropTypes.bool.isRequired,
   }
   constructor(props) {
     super(props)
@@ -82,7 +81,6 @@ function mapStateToProps(state) {
     cellIds: state.cells.map(c => c.id),
     cellResizerWidth: state.editorWidth,
     cellResizerDisplayStyle: state.viewMode === 'REPORT_VIEW' ? 'none' : 'flex',
-    // showFrame: state.showFrame,
     cellsStyle,
     paneMinWidth: state.editorWidth ? 300 : 0,
   }
