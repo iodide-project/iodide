@@ -4,18 +4,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 
-import nullHandler from './null-handler'
-import undefinedHandler from './undefined-handler'
 import dataFrameHandler from './dataframe-handler'
 import matrixHandler from './matrix-handler'
 import arrayHandler from './array-handler'
-import dateHandler from './date-handler'
-import stringHandler from './string-handler'
-import booleanHandler from './boolean-handler'
-import numberHandler from './number-handler'
-import functionHandler from './function-handler'
 import promiseHandler from './promise-handler'
-import domElementHandler from './dom-element-handler'
 import defaultHandler from './default-handler'
 
 export function renderValue(value, inContainer = false) {
@@ -32,10 +24,13 @@ export function renderValue(value, inContainer = false) {
       } else if (resultElem.type !== undefined) {
         return resultElem
       }
-      console.warn(`Unknown output handler result type from ${handler}`)
+      console.warn(`Unknown out handler result type from ${handler}`)
       // Fallback to other handlers if it's something invalid
     }
   }
+
+  // We should never get here, since the default handler should handle everything
+  console.warn(`No output handler found to handle ${value}`)
   return undefined
 }
 
@@ -104,17 +99,6 @@ function wrapHandler(handler) {
   }
 }
 
-// NOTE: handler order matters! handlers higher in the list take precedence!
-// SMPLE TYPE HANDLERS MUST COME FIRST -- otherwise, handlers that look for e.g.
-// a property in a null will break
-const simpleTypeHandlers = [
-  nullHandler,
-  undefinedHandler,
-  stringHandler,
-  numberHandler,
-  booleanHandler,
-].map(h => wrapHandler(h))
-
 const complexHandlers = [
   renderMethodHandler,
   // data frame (array of objects must come before array)
@@ -122,23 +106,19 @@ const complexHandlers = [
   // matrix must come before array!
   matrixHandler,
   arrayHandler,
-  dateHandler,
-  functionHandler,
   errorHandler,
-  domElementHandler,
   promiseHandler,
   defaultHandler,
 ].map(h => wrapHandler(h))
 
-let handlers = simpleTypeHandlers.concat(complexHandlers)
-
+let handlers = complexHandlers
 
 const userHandlers = []
 
 export function addOutputHandler(handler) {
   // insert new handlers *after* the scalar handlers
-  userHandlers.unshift(wrapHandler(handler))
-  handlers = simpleTypeHandlers.concat(userHandlers, complexHandlers)
+  userHandlers.unshift(handler)
+  handlers = userHandlers.concat(complexHandlers)
 }
 
 
@@ -146,6 +126,7 @@ export class ValueRenderer extends React.Component {
   static propTypes = {
     render: PropTypes.bool.isRequired,
     valueToRender: PropTypes.any,
+    inCollection: PropTypes.bool,
   }
 
   render() {
@@ -153,8 +134,7 @@ export class ValueRenderer extends React.Component {
       return <div className="empty-resultset" />
     }
 
-    const value = this.props.valueToRender
-    const resultElem = renderValue(value)
+    const resultElem = renderValue(this.props.valueToRender, this.props.inCollection)
     return <div className="rep-container">{resultElem}</div>
   }
 }
