@@ -4,6 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 
+import nullHandler from './null-handler'
 import dataFrameHandler from './dataframe-handler'
 import matrixHandler from './matrix-handler'
 import arrayHandler from './array-handler'
@@ -84,9 +85,9 @@ function wrapHandler(handler) {
         return false
       }
     },
-    render: (value) => {
+    render: (value, inContainer) => {
       try {
-        return handler.render(value)
+        return handler.render(value, inContainer)
       } catch (error) {
         console.error('output handler render error', error);
         return (
@@ -98,6 +99,10 @@ function wrapHandler(handler) {
     },
   }
 }
+
+const simpleHandlers = [
+  nullHandler,
+].map(h => wrapHandler(h))
 
 const complexHandlers = [
   renderMethodHandler,
@@ -111,14 +116,14 @@ const complexHandlers = [
   defaultHandler,
 ].map(h => wrapHandler(h))
 
-let handlers = complexHandlers
+let handlers = simpleHandlers.concat(complexHandlers)
 
 const userHandlers = []
 
 export function addOutputHandler(handler) {
   // insert new handlers *after* the scalar handlers
   userHandlers.unshift(handler)
-  handlers = userHandlers.concat(complexHandlers)
+  handlers = simpleHandlers.concat(userHandlers, complexHandlers)
 }
 
 
@@ -126,7 +131,7 @@ export class ValueRenderer extends React.Component {
   static propTypes = {
     render: PropTypes.bool.isRequired,
     valueToRender: PropTypes.any,
-    inCollection: PropTypes.bool,
+    inContainer: PropTypes.bool,
   }
 
   render() {
@@ -134,7 +139,6 @@ export class ValueRenderer extends React.Component {
       return <div className="empty-resultset" />
     }
 
-    const resultElem = renderValue(this.props.valueToRender, this.props.inCollection)
-    return <div className="rep-container">{resultElem}</div>
+    return renderValue(this.props.valueToRender, this.props.inContainer)
   }
 }
