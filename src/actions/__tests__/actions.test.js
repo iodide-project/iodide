@@ -11,9 +11,8 @@ describe('Actions', () => {
       const results = actions.exportNotebook();
 
       expect(results).toEqual(expected)
-    })
-
-    it('should have a type of "EXPORT_NOTEBOOK"', () => {
+    });
+    it('should return an object with the type of "EXPORT_NOTEBOOK"', () => {
       const expected = {
         type: 'EXPORT_NOTEBOOK',
         exportAsReport: true,
@@ -24,9 +23,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('saveNotebook', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'SAVE_NOTEBOOK',
         autosave: false,
@@ -35,24 +33,20 @@ describe('Actions', () => {
       const results = actions.saveNotebook();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "SAVE_NOTEBOOK"', () => {
-      const status = true;
-
       const expected = {
         type: 'SAVE_NOTEBOOK',
         autosave: true,
       };
 
-      const results = actions.saveNotebook(status);
+      const results = actions.saveNotebook(true);
 
       expect(results).toEqual(expected)
     });
   });
-
   describe('loadNotebook', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'LOAD_NOTEBOOK',
         title: undefined,
@@ -61,8 +55,7 @@ describe('Actions', () => {
       const results = actions.loadNotebook();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "LOAD_NOTEBOOK"', () => {
       const status = 'title string';
 
@@ -76,9 +69,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('deleteNotebook', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'DELETE_NOTEBOOK',
         title: undefined,
@@ -87,8 +79,7 @@ describe('Actions', () => {
       const results = actions.deleteNotebook();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "DELETE_NOTEBOOK"', () => {
       const status = 'delete title string';
 
@@ -102,7 +93,6 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('newNotebook', () => {
     it('should have a type of "NEW_NOTEBOOK"', () => {
       const expected = {
@@ -114,8 +104,6 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
-
   describe('clearVariables', () => {
     it('should have a type of "CLEAR_VARIABLE"', () => {
       const expected = {
@@ -127,9 +115,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('changePageTitle', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'CHANGE_PAGE_TITLE',
         title: undefined,
@@ -138,8 +125,7 @@ describe('Actions', () => {
       const results = actions.changePageTitle();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "CHANGE_PAGE_TITLE"', () => {
       const status = 'new title string';
 
@@ -153,9 +139,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('changeMode', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'CHANGE_MODE',
         mode: undefined,
@@ -164,8 +149,7 @@ describe('Actions', () => {
       const results = actions.changeMode();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "CHANGE_MODE"', () => {
       const status = 'new mode';
 
@@ -179,9 +163,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('setViewMode', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'SET_VIEW_MODE',
         viewMode: undefined,
@@ -190,8 +173,7 @@ describe('Actions', () => {
       const results = actions.setViewMode();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "SET_VIEW_MODE"', () => {
       const status = 'new mode';
 
@@ -205,9 +187,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('updateInputContent', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'UPDATE_INPUT_CONTENT',
         content: undefined,
@@ -216,8 +197,7 @@ describe('Actions', () => {
       const results = actions.updateInputContent();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "UPDATE_INPUT_CONTENT"', () => {
       const text = 'content text';
 
@@ -231,9 +211,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('updateCellProperties', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'UPDATE_CELL_PROPERTIES',
         cellId: undefined,
@@ -243,8 +222,7 @@ describe('Actions', () => {
       const results = actions.updateCellProperties();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "UPDATE_INPUT_CONTENT"', () => {
       const cellId = 1;
       const updatedProperties = []
@@ -260,7 +238,6 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('markCellNotRendered', () => {
     it('should have a type of "MARK_CELL_NOT_RENDERED"', () => {
       const expected = {
@@ -272,9 +249,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('insertCell', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'INSERT_CELL',
         cellType: undefined,
@@ -284,8 +260,7 @@ describe('Actions', () => {
       const results = actions.insertCell();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "INSERT_CELL"', () => {
       const cellType = 'Column';
       const direction = 'Right'
@@ -301,9 +276,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('addCell', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'ADD_CELL',
         cellType: undefined,
@@ -312,8 +286,7 @@ describe('Actions', () => {
       const results = actions.addCell();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "ADD_CELL"', () => {
       const cellType = 'Column';
 
@@ -327,7 +300,6 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('deleteCell', () => {
     it('should have a type of "DELETE_CELL"', () => {
       const expected = {
@@ -339,7 +311,6 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('toggleEditorLink', () => {
     it('should have a type of "TOGGLE_EDITOR_LINK"', () => {
       const expected = {
@@ -351,9 +322,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('changeSidePaneMode', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'CHANGE_SIDE_PANE_MODE',
         mode: undefined,
@@ -362,8 +332,7 @@ describe('Actions', () => {
       const results = actions.changeSidePaneMode();
 
       expect(results).toEqual(expected)
-    })
-
+    });
     it('should have a type of "CHANGE_SIDE_PANE_MODE"', () => {
       const mode = 'selected';
 
@@ -377,9 +346,8 @@ describe('Actions', () => {
       expect(results).toEqual(expected)
     });
   });
-
   describe('changeSidePaneWidth', () => {
-    it('should return the default value', () => {
+    it('should return the default value if no argument is given', () => {
       const expected = {
         type: 'CHANGE_SIDE_PANE_WIDTH',
         widthShift: undefined,
@@ -388,19 +356,5 @@ describe('Actions', () => {
       const results = actions.changeSidePaneWidth();
 
       expect(results).toEqual(expected)
-    })
-
-    it('should have a type of "CHANGE_SIDE_PANE_WIDTH"', () => {
-      const widthShift = '10px';
-
-      const expected = {
-        type: 'CHANGE_SIDE_PANE_WIDTH',
-        widthShift,
-      };
-
-      const results = actions.changeSidePaneWidth(widthShift);
-
-      expect(results).toEqual(expected)
     });
-  });
-});
+    it('should have a type of "CHANGE_SIDE_PANE_WIDTH"', 
