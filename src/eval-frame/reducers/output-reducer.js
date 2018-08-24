@@ -8,7 +8,6 @@ import {
   moveCell,
   alignCellTopTo,
   getSelectedCellId,
-  newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
   newStateWithPropsAssignedForCell,
 } from './output-reducer-utils'
@@ -97,12 +96,6 @@ const cellReducer = (state = newNotebook(), action) => {
       )
       return Object.assign(newState, { languageLastUsed: language })
     }
-
-    case 'MARK_CELL_NOT_RENDERED':
-      return newStateWithSelectedCellPropertySet(
-        state,
-        'rendered', false,
-      )
 
     case 'DELETE_CELL': {
       const selectedId = getSelectedCellId(state)

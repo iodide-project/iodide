@@ -224,12 +224,6 @@ export function evaluateAllCells() {
   }
 }
 
-export function markCellNotRendered() {
-  return {
-    type: 'MARK_CELL_NOT_RENDERED',
-  }
-}
-
 function loginSuccess(userData) {
   return (dispatch) => {
     dispatch({
