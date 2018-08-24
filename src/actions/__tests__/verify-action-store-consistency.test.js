@@ -246,5 +246,4 @@ describe('make sure action creators leave store in a consitent state', () => {
     expect(() => store.dispatch(actions.saveEnvironment({ a: 'foo' }, false)))
       .not.toThrow()
   })
-
 })
