@@ -25,7 +25,7 @@ export function renderValue(value, inContainer = false) {
       } else if (resultElem.type !== undefined) {
         return resultElem
       }
-      console.warn(`Unknown out handler result type from ${handler}`)
+      console.warn(`Unknown output handler result type from ${handler}`)
       // Fallback to other handlers if it's something invalid
     }
   }
@@ -122,7 +122,7 @@ const userHandlers = []
 
 export function addOutputHandler(handler) {
   // insert new handlers *after* the scalar handlers
-  userHandlers.unshift(handler)
+  userHandlers.unshift(wrapHandler(handler))
   handlers = simpleHandlers.concat(userHandlers, complexHandlers)
 }
 
