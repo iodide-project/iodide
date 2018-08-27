@@ -1,5 +1,6 @@
 import { shallow } from 'enzyme'
 import React from 'react'
+import { ValueRenderer } from '../value-renderer'
 import promiseHandler, { PromiseRep } from '../promise-handler'
 
 describe('promiseHandler shouldHandle', () => {

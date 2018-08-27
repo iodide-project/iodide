@@ -1,3 +1,4 @@
+import { ValueRenderer } from '../value-renderer'
 import matrixHandler from '../matrix-handler'
 
 describe('dateHandler shouldHandle', () => {
