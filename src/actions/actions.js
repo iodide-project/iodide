@@ -224,13 +224,7 @@ export function evaluateAllCells() {
   }
 }
 
-export function markCellNotRendered() {
-  return {
-    type: 'MARK_CELL_NOT_RENDERED',
-  }
-}
-
-function loginSuccess(userData) {
+export function loginSuccess(userData) {
   return (dispatch) => {
     dispatch({
       type: 'LOGIN_SUCCESS',
@@ -240,7 +234,7 @@ function loginSuccess(userData) {
   }
 }
 
-function loginFailure() {
+export function loginFailure() {
   return (dispatch) => {
     dispatch(updateAppMessages({ message: 'Login Failed' }))
   }
@@ -431,13 +425,6 @@ export function changeSidePaneMode(mode) {
   return {
     type: 'CHANGE_SIDE_PANE_MODE',
     mode,
-  }
-}
-
-export function changeSidePaneWidth(widthShift) {
-  return {
-    type: 'CHANGE_SIDE_PANE_WIDTH',
-    widthShift,
   }
 }
 

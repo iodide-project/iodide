@@ -22,7 +22,6 @@ const evalFrameActionForwarder = (state, action) => {
     // cell actions
     case 'UPDATE_CELL_PROPERTIES':
     case 'CHANGE_CELL_TYPE':
-    case 'MARK_CELL_NOT_RENDERED':
     case 'CELL_UP':
     case 'CELL_DOWN':
     case 'SELECT_CELL':
@@ -37,7 +36,6 @@ const evalFrameActionForwarder = (state, action) => {
       }
       // if the eval frame is not ready, return a copy of the state with this
       // action appended to the eval queue
-      console.log('attempt to enqueue action:', action)
       const evalFrameMessageQueue = state.evalFrameMessageQueue.slice()
       evalFrameMessageQueue.push(action)
       return Object.assign({}, state, { evalFrameMessageQueue })
