@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme'
 import React from 'react'
-import { ValueRenderer } from '../value-renderer'
+import { ValueRenderer } from '../value-renderer' // eslint-disable-line
 import promiseHandler, { PromiseRep } from '../promise-handler'
 
 describe('promiseHandler shouldHandle', () => {

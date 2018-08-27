@@ -1,4 +1,4 @@
-import { ValueRenderer } from '../value-renderer'
+import { ValueRenderer } from '../value-renderer' // eslint-disable-line
 import matrixHandler from '../matrix-handler'
 
 describe('dateHandler shouldHandle', () => {
