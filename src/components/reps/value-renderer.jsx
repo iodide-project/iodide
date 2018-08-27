@@ -3,13 +3,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-
-import nullHandler from './null-handler'
-import dataFrameHandler from './dataframe-handler'
-import matrixHandler from './matrix-handler'
 import arrayHandler from './array-handler'
-import promiseHandler from './promise-handler'
+import dataFrameHandler from './dataframe-handler'
 import defaultHandler from './default-handler'
+import errorHandler from './error-handler'
+import matrixHandler from './matrix-handler'
+import nullHandler from './null-handler'
+import promiseHandler from './promise-handler'
 import stringHandler from './string-handler'
 
 export function renderValue(value, inContainer = false) {
@@ -46,31 +46,6 @@ const renderMethodHandler = {
       return <div dangerouslySetInnerHTML={{ __html: output }} /> // eslint-disable-line
     }
     return undefined
-  },
-}
-
-
-const errorHandler = {
-  shouldHandle: value => value instanceof Error,
-  render: (e) => {
-    let { stack } = e
-    if (e.lineNumber) {
-      // this is firefox
-      // prepend the name and message
-      stack = `${e.name}: ${e.message}\n${stack}`
-      // lines after the line beginning with "cellReducer@" can
-      // be discarded, because they refer to app state not notebook state
-      // stack = stack.slice(0, stack.indexOf('cellReducer@'))
-    } else {
-      // not FF;
-      // for now, treat as chrome. it appears that anything after:
-      // '    at cellReducer' is not useful.
-    }
-    return (
-      <div className="error-output">
-        <pre>{stack}</pre>
-      </div>
-    )
   },
 }
 
