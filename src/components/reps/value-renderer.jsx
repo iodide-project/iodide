@@ -67,9 +67,7 @@ const errorHandler = {
       // '    at cellReducer' is not useful.
     }
     return (
-      <div className="error-output">
-        <pre>{stack}</pre>
-      </div>
+      <pre className="error-output">{stack}</pre>
     )
   },
 }

@@ -43,11 +43,12 @@ div.cells-list {
   padding-bottom: 4px;
 }
 
-div.error-output {
-background: #fff1f4;
-padding: 5px;
-color: #a41c1c;
-overflow-x: auto;
+.error-output {
+  background: #fff1f4;
+  padding: 5px;
+  color: #a41c1c;
+  overflow-x: auto;
+  font-size: 90%;
 }
 
 .string-rep {
