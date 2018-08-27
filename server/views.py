@@ -6,6 +6,8 @@ from django.shortcuts import redirect
 from django.template import loader
 from social_django.models import UserSocialAuth
 
+from .notebooks.models import Notebook
+
 
 def get_user_info_dict(user):
     if user.is_authenticated:
@@ -21,8 +23,13 @@ def get_user_info_dict(user):
 
 def index(request):
     template = loader.get_template('home.html')
+    # this is horrible and will not scale
     return HttpResponse(template.render({
-        'user_info': json.dumps(get_user_info_dict(request.user))
+        'user_info': json.dumps(get_user_info_dict(request.user)),
+        'notebook_list': json.dumps(
+            [{'id': v[0], 'title': v[1], 'owner': v[2]} for v in
+             Notebook.objects.values_list('id', 'title', 'owner__username')
+             ])
     }, request))
 
 
