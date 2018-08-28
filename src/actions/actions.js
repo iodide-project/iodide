@@ -79,27 +79,6 @@ export function exportNotebook(exportAsReport = false) {
   }
 }
 
-export function saveNotebook(autosave = false) {
-  return {
-    type: 'SAVE_NOTEBOOK',
-    autosave,
-  }
-}
-
-export function loadNotebook(title) {
-  return {
-    type: 'LOAD_NOTEBOOK',
-    title,
-  }
-}
-
-export function deleteNotebook(title) {
-  return {
-    type: 'DELETE_NOTEBOOK',
-    title,
-  }
-}
-
 export function newNotebook() {
   return {
     type: 'NEW_NOTEBOOK',

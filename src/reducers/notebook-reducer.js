@@ -25,24 +25,6 @@ function addAppMessageToState(state, appMessage) {
   return state
 }
 
-function getSavedNotebooks() {
-  const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
-  const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
-  locallySaved.sort((a, b) => {
-    const p = (_) => {
-      let ls = localStorage.getItem(_)
-      if (!ls) return -1
-      ls = stateFromJsmd(ls)
-      return Date.parse(ls.lastSaved)
-    }
-    return p(b) - p(a)
-  })
-  return {
-    autoSave,
-    locallySaved,
-  }
-}
-
 function getUserData() {
   return { userData: window.userData || {} }
 }
@@ -59,7 +41,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      return Object.assign(newNotebook(), getSavedNotebooks(), getUserData())
+      return Object.assign(newNotebook(), getUserData())
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
@@ -104,46 +86,17 @@ const notebookReducer = (state = newNotebook(), action) => {
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
       return Object.assign(
-        newNotebook(), nextState, { cells }, getSavedNotebooks(),
+        newNotebook(), nextState, { cells },
         getUserData(),
       )
     }
 
-    case 'SAVE_NOTEBOOK': {
-      ({ title } = state)
-      let lastSaved
-      if (!action.autosave) {
-        lastSaved = (new Date()).toISOString()
-      } else {
-        ({ lastSaved } = state)
-        title = AUTOSAVE + title
-      }
-      const stateToSave = Object.assign({}, state, { lastSaved })
-      delete stateToSave.savedEnvironment
-      window.localStorage.setItem(title, stringifyStateToJsmd(stateToSave))
-      return Object.assign({}, state, getSavedNotebooks(), { lastSaved })
+    case 'NOTEBOOK_SAVED': {
+      return Object.assign({}, state, { lastSaved: new Date().toISOString() })
     }
 
-    case 'LOAD_NOTEBOOK': {
-      nextState = stateFromJsmd(window.localStorage.getItem(action.title))
-      // note: loading a NB should always assign to a copy of the latest global
-      // and per-cell state for backwards compatibility
-      cells = nextState.cells.map((cell, i) =>
-        Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(newNotebook(), nextState, getSavedNotebooks(), getUserData())
-    }
-
-    case 'DELETE_NOTEBOOK': {
-      ({ title } = action)
-      if (Object.prototype.hasOwnProperty.call(window.localStorage, 'title')) {
-        window.localStorage.removeItem(title)
-      }
-      nextState = (
-        (title === state.title) ?
-          Object.assign({}, newNotebook()) :
-          Object.assign({}, state)
-      )
-      return nextState
+    case 'ADD_NOTEBOOK_ID': {
+      return Object.assign({}, state, { notebookId: action.id })
     }
 
     case 'CHANGE_PAGE_TITLE':
@@ -260,6 +213,6 @@ const notebookReducer = (state = newNotebook(), action) => {
   }
 }
 
-export { getSavedNotebooks, getUserData }
+export { getUserData }
 
 export default notebookReducer
