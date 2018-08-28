@@ -36,6 +36,7 @@
     "codemirror": "^5.37.0",
     "codemirror-no-newlines": "^1.0.2",
     "deep-equal": "^1.0.1",
+    "error-stack-parser": "^2.0.2",
     "font-awesome": "^4.7.0",
     "fuse.js": "^3.2.0",
     "lodash": "^4.17.10",
@@ -57,7 +58,8 @@
     "react-table": "^6.8.2",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "stackframe": "^1.0.4"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
