@@ -6,7 +6,7 @@ const MAX_CHARS = 1000
 
 const renderString = (value, inCollection) => {
   const maxChars = inCollection ? 20 : MAX_CHARS
-  if (value.length < maxChars) {
+  if (value.length <= maxChars) {
     return (
       <React.Fragment>
         <span className="string-rep string-rep-before-quote string-rep-after-quote">{value}</span>
