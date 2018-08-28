@@ -2,7 +2,7 @@
 {% block content %}
 <div id="page"></div>
 <script>
-  window.userData = {{ user_info|safe }};
+  window.userInfo = {{ user_info|safe }};
   window.notebookList = {{ notebook_list|safe }};
 </script>
 <script src="/server.home.dev.js"></script>
