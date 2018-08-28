@@ -32,7 +32,7 @@ const plugins = []
 
 // const config
 module.exports = (env) => {
-  if (env === 'ghpages') {
+  if (env.startsWith('ghpages')) {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
     const gitRev = require('git-rev-sync')
     if (gitRev.isTagDirty()) {
@@ -161,7 +161,7 @@ module.exports = (env) => {
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify((env && env.startsWith('dev')) ? 'dev' : 'production'),
-        IODIDE_BUILD_TYPE: JSON.stringify(env ? 'standalone' : 'server'),
+        IODIDE_BUILD_TYPE: JSON.stringify((env && env.includes('client-only')) ? 'standalone' : 'server'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
       new ExtractTextPlugin(`[name].${APP_VERSION_STRING}.css`),
