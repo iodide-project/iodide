@@ -63,6 +63,10 @@ overflow-x: auto;
     color: #555;
 }
 
+.number-rep {
+    color: rgb(28, 0, 207);
+}
+
 .elements-omitted-info-rep {
     font-style: italic;
     background-color: #fafafa;
