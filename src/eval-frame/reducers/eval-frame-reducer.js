@@ -1,4 +1,4 @@
-import { newNotebook, newCellID } from '../eval-frame-state-prototypes'
+import { newNotebook, newCell, newCellID } from '../eval-frame-state-prototypes'
 
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
@@ -41,7 +41,16 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign(newNotebook())
 
     case 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD': {
-      return Object.assign(newNotebook(), action.stateUpdatesFromEditor)
+      const cells = action.stateUpdatesFromEditor.cells
+        .map(c => Object.assign(newCell(), c))
+      console.log('cells cells cells', cells)
+      const newState = Object.assign(
+        newNotebook(),
+        action.stateUpdatesFromEditor,
+        { cells },
+      )
+      console.log('newState newState newState', newState)
+      return newState
     }
 
     case 'CLEAR_VARIABLES': {
