@@ -1,3 +1,4 @@
+import { ValueRenderer } from '../value-renderer' // eslint-disable-line
 import dataframeHandler from '../dataframe-handler'
 
 describe('dateHandler shouldHandle', () => {

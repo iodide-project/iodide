@@ -53,7 +53,6 @@
     "react-dom": "^16.3.2",
     "react-helmet": "^5.2.0",
     "react-inspector": "^2.3.0",
-    "react-json-tree": "^0.11.0",
     "react-redux": "^5.0.7",
     "react-table": "^6.8.2",
     "redux": "^3.7.2",
