@@ -51,18 +51,15 @@ overflow-x: auto;
 }
 
 .string-rep {
-    margin: 0px;
     word-break: break-word;
-    color: #3821ad;
+    color: #c41a16;
 }
 .string-rep-before-quote::before {
     content: '"';
-    font-size: 18px;
     color: #555;
 }
 .string-rep-after-quote::after {
     content: '"';
-    font-size: 18px;
     color: #555;
 }
 
