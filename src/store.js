@@ -22,7 +22,6 @@ if (IODIDE_BUILD_MODE === 'production') {
     applyMiddleware(thunk),
     applyMiddleware(createLogger({
       predicate: (getState, action) => action.type !== 'UPDATE_INPUT_CONTENT',
-      colors: { title: () => '#27ae60' },
     })),
   )
 }
