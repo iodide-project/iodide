@@ -32,7 +32,7 @@ const plugins = []
 
 // const config
 module.exports = (env) => {
-  if (env.startsWith('ghpages')) {
+  if (env && env.startsWith('ghpages')) {
     BUILD_DIR = path.resolve(__dirname, 'prod/')
     const gitRev = require('git-rev-sync')
     if (gitRev.isTagDirty()) {
