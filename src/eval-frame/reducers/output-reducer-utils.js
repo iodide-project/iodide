@@ -164,13 +164,6 @@ function newStateWithPropsAssignedForHighlightedCells(state, cellPropsToSet) {
   return Object.assign({}, state, { cells })
 }
 
-function newStateWithSelectedCellPropertySet(state, cellPropToSet, newValue) {
-  const cells = state.cells.slice()
-  const thisCell = getSelectedCell(state)
-  thisCell[cellPropToSet] = newValue
-  return Object.assign({}, state, { cells })
-}
-
 function newStateWithPropsAssignedForCell(state, cellId, cellPropsToSet) {
   const cells = state.cells.slice()
   const index = cells.findIndex(c => c.id === cellId)

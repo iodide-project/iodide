@@ -32,6 +32,16 @@ export const editorOnlyStateProperties = {
     items: editorCellSchema,
     default: [newCellFromSchema(editorCellSchema, 0)],
   },
+  copiedCells: {
+    type: 'array',
+    items: editorCellSchema,
+    default: [],
+  },
+  cutCells: {
+    type: 'array',
+    items: editorCellSchema,
+    default: [],
+  },
   editorWidth: {
     type: 'integer',
     default: DEFAULT_EDITOR_WIDTH,

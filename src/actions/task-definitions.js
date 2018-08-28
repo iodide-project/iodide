@@ -70,7 +70,7 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
 
 tasks.moveCellUp = new UserTask({
   title: 'Move Cell Up',
-  displayKeybinding: `${commandKey()}+Up`,
+  displayKeybinding: `${commandKey}+Up`,
   keybindings: ['ctrl+up', 'meta+up'],
   keybindingPrecondition: isCommandMode,
   commandModeOnlyKey: true,
@@ -83,7 +83,7 @@ tasks.moveCellUp = new UserTask({
 
 tasks.moveCellDown = new UserTask({
   title: 'Move Cell Down',
-  displayKeybinding: `${commandKey()}+Down`,
+  displayKeybinding: `${commandKey}+Down`,
   keybindings: ['ctrl+down', 'meta+down'],
   keybindingPrecondition: isCommandMode,
   commandModeOnlyKey: true,
@@ -175,7 +175,7 @@ tasks.selectDown = new UserTask({
 tasks.copyCell = new UserTask({
   title: 'Copy Cell',
   keybindings: ['ctrl+c', 'command+c'],
-  displayKeybinding: `${commandKey()}+C`,
+  displayKeybinding: `${commandKey}+C`,
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
   callback() { dispatcher.cellCopy() },
@@ -184,7 +184,7 @@ tasks.copyCell = new UserTask({
 tasks.cutCell = new UserTask({
   title: 'Cut Cell',
   keybindings: ['ctrl+x', 'command+x'],
-  displayKeybinding: `${commandKey()}+X`,
+  displayKeybinding: `${commandKey}+X`,
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
   callback() { dispatcher.cellCut() },
@@ -193,7 +193,7 @@ tasks.cutCell = new UserTask({
 tasks.pasteCell = new UserTask({
   title: 'Paste Cell',
   keybindings: ['ctrl+v', 'command+v'],
-  displayKeybinding: `${commandKey()}+V`,
+  displayKeybinding: `${commandKey}+V`,
   keybindingPrecondition: isCommandMode,
   preventDefaultKeybinding: true,
   callback() { dispatcher.cellPaste() },

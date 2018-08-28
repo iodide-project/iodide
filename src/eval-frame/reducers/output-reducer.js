@@ -10,7 +10,6 @@ import {
   getSelectedCell,
   getSelectedCellId,
   getSelectedCellIndex,
-  newStateWithSelectedCellPropertySet,
   newStateWithSelectedCellPropsAssigned,
   newStateWithPropsAssignedForCell,
   checkForHighlightedCells,
@@ -69,46 +68,6 @@ const cellReducer = (state = newNotebook(), action) => {
     case 'ALIGN_OUTPUT_TO_EDITOR': {
       alignCellTopTo(action.cellId, action.pxFromViewportTop)
       return state
-    }
-
-    case 'UPDATE_CELL_LIST':
-      return Object.assign(
-        {}, state,
-        { cells: action.cells },
-      )
-
-    case 'HIGHLIGHT_CELL': {
-      const cells = state.cells.slice()
-      const index = cells.findIndex(c => c.id === action.id)
-      const thisCell = cells[index]
-      if (action.revert) thisCell.highlighted = !thisCell.highlighted
-      else thisCell.highlighted = true
-      nextState = Object.assign({}, state, { cells })
-      return nextState
-    }
-
-    case 'UNHIGHLIGHT_CELLS': {
-      const cells = state.cells.slice()
-      cells.forEach((c) => { c.highlighted = false }) // eslint-disable-line
-      return Object.assign({}, state, { cells })
-    }
-
-    case 'MULTIPLE_CELL_HIGHLIGHT': {
-      const cells = state.cells.slice()
-      const index1 = getSelectedCellIndex(state)
-      const index2 = cells.findIndex(c => c.id === action.id)
-      const low = Math.min(index1, index2)
-      const high = Math.max(index1, index2)
-      cells.forEach((c, index) => {
-        if (low <= index && index <= high) {
-          c.highlighted = true // eslint-disable-line
-        } else {
-          c.highlighted = false // eslint-disable-line
-        }
-      })
-      cells[index1].selected = false
-      cells[index2].selected = true
-      return Object.assign({}, state, { cells })
     }
 
     case 'CELL_COPY': {

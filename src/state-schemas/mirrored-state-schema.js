@@ -69,6 +69,10 @@ export const mirroredCellProperties = {
     type: 'boolean',
     default: false,
   },
+  highlighted: {
+    type: 'boolean',
+    default: false,
+  },
   skipInRunAll: {
     type: 'boolean',
     default: false,
@@ -90,6 +94,8 @@ export const mirroredStateProperties = {
     default: [],
   },
   cells: {},
+  copiedCells: {},
+  cutCells: {},
   executionNumber: {
     type: 'integer',
     minimum: 0,
