@@ -63,8 +63,16 @@ overflow-x: auto;
     color: #555;
 }
 
+.string-rep-ellipsis {
+    color: #555;
+}
+
 .number-rep {
     color: rgb(28, 0, 207);
+}
+
+.date-rep-small {
+    word-break: normal;
 }
 
 .elements-omitted-info-rep {
