@@ -94,7 +94,7 @@ tasks.moveCellDown = new UserTask({
 })
 
 tasks.highlightUp = new UserTask({
-  title: 'Select Cell Above',
+  title: 'Highlight Cell Above',
   displayKeybinding: 'Shift+Up', // '\u21E7 \u2191',
   keybindings: ['shift+up'],
   keybindingPrecondition: isCommandMode,
@@ -110,7 +110,7 @@ tasks.highlightUp = new UserTask({
 })
 
 tasks.highlightDown = new UserTask({
-  title: 'Select Cell Down',
+  title: 'Highlight Cell Down',
   displayKeybinding: 'Shift+Up', // '\u21E7 \u2193',
   keybindings: ['shift+down'],
   keybindingPrecondition: isCommandMode,

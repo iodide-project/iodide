@@ -32,12 +32,7 @@ export const editorOnlyStateProperties = {
     items: editorCellSchema,
     default: [newCellFromSchema(editorCellSchema, 0)],
   },
-  copiedCells: {
-    type: 'array',
-    items: editorCellSchema,
-    default: [],
-  },
-  cutCells: {
+  cellClipboard: {
     type: 'array',
     items: editorCellSchema,
     default: [],

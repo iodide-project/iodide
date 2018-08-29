@@ -94,8 +94,7 @@ export const mirroredStateProperties = {
     default: [],
   },
   cells: {},
-  copiedCells: {},
-  cutCells: {},
+  cellClipboard: {},
   executionNumber: {
     type: 'integer',
     minimum: 0,

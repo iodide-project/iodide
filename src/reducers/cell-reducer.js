@@ -12,6 +12,10 @@ import {
   newStateWithPropsAssignedForHighlightedCells,
 } from './cell-reducer-utils'
 
+// In presence of multiple highlighted cells the following
+// states can be mutated at once for all the cells
+const approvedMultipleChanges = ['skipInRunAll']
+
 const cellReducer = (state = newNotebook(), action) => {
   let nextState
   switch (action.type) {
@@ -63,8 +67,7 @@ const cellReducer = (state = newNotebook(), action) => {
     }
 
     case 'UNHIGHLIGHT_CELLS': {
-      const cells = state.cells.slice()
-      cells.forEach((c) => { c.highlighted = false }) // eslint-disable-line
+      const cells = state.cells.map(c => Object.assign({}, c, { highlighted: false }))
       return Object.assign({}, state, { cells })
     }
 
@@ -76,9 +79,9 @@ const cellReducer = (state = newNotebook(), action) => {
       const high = Math.max(index1, index2)
       cells.forEach((c, index) => {
         if (low <= index && index <= high) {
-          c.highlighted = true // eslint-disable-line
+          c.highlighted = true // eslint-disable-line no-param-reassign
         } else {
-          c.highlighted = false // eslint-disable-line
+          c.highlighted = false // eslint-disable-line no-param-reassign
         }
       })
       cells[index1].selected = false
@@ -87,21 +90,18 @@ const cellReducer = (state = newNotebook(), action) => {
     }
 
     case 'CELL_COPY': {
-      const cutCells = []
       const cells = state.cells.slice()
       let copiedCells = cells.filter(c => c.highlighted)
       if (!copiedCells.length) {
         copiedCells = [getSelectedCell(state)]
       }
-      return Object.assign({}, state, { copiedCells, cutCells })
+      return Object.assign({}, state, { cellClipboard: copiedCells })
     }
 
     case 'CELL_CUT': {
-      const copiedCells = []
       let isNotebookEmpty = false
-      let cutCells
       let cells = state.cells.slice()
-      cutCells = cells.filter(c => c.highlighted)
+      let cutCells = cells.filter(c => c.highlighted)
       if (!cutCells.length) {
         const index = getSelectedCellIndex(state)
         cutCells = [cells[index]]
@@ -119,7 +119,7 @@ const cellReducer = (state = newNotebook(), action) => {
         if (cells[lastHiglighted + 1]) {
           cells[lastHiglighted + 1].selected = true
         } else {
-          let lastUnHighlightedCell
+          let lastUnHighlightedCell = null
           let cellIndex = lastHiglighted
           let highlightIndex = cutIndices.length - 1
           while (highlightIndex >= 0 || cellIndex >= 0) {
@@ -130,7 +130,7 @@ const cellReducer = (state = newNotebook(), action) => {
             cellIndex -= 1
             highlightIndex -= 1
           }
-          if (lastUnHighlightedCell) {
+          if (lastUnHighlightedCell !== null) {
             cells[lastUnHighlightedCell].selected = true
           } else {
             isNotebookEmpty = true
@@ -143,19 +143,16 @@ const cellReducer = (state = newNotebook(), action) => {
         nextCell.selected = true
         cells = [nextCell]
       }
-      return Object.assign({}, state, { cells, cutCells, copiedCells })
+      return Object.assign({}, state, { cells, cellClipboard: cutCells })
     }
 
     case 'CELL_PASTE': {
-      if (state.copiedCells.length && state.cutCells.length) {
+      if (!state.cellClipboard.length) {
         return state
       }
       const newState = Object.assign({}, state)
       const cells = newState.cells.slice()
-      let cellsToPaste = newState.copiedCells.length ?
-        newState.copiedCells.slice()
-        :
-        newState.cutCells.slice()
+      let cellsToPaste = newState.cellClipboard.slice()
       const pasteIndex = getSelectedCellIndex(state)
       const newId = newCellID(cells)
       cellsToPaste = cellsToPaste.map((cell, i) => Object.assign(
@@ -166,8 +163,7 @@ const cellReducer = (state = newNotebook(), action) => {
       cells[pasteIndex].selected = false
       cellsToPaste[cellsToPaste.length - 1].selected = true
       cells.splice(pasteIndex + 1, 0, ...cellsToPaste)
-      nextState = Object.assign({}, newState, { cells: [...cells], copiedCells: [], cutCells: [] })
-      return nextState
+      return Object.assign({}, newState, { cells: [...cells], cellClipboard: [] })
     }
 
     case 'CELL_UP':
@@ -183,11 +179,10 @@ const cellReducer = (state = newNotebook(), action) => {
       )
 
     case 'UPDATE_CELL_PROPERTIES': {
-      const approvedMultipleChanges = new Set(['skipInRunAll'])
       if (
         checkForHighlightedCells(state) &&
         Object.keys(action.updatedProperties).length === 1 &&
-        approvedMultipleChanges.has(Object.keys(action.updatedProperties)[0])
+        approvedMultipleChanges.indexOf(Object.keys(action.updatedProperties)[0] > -1)
       ) {
         return newStateWithPropsAssignedForHighlightedCells(state, action.updatedProperties)
       }

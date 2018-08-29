@@ -176,12 +176,6 @@ function mapStateToProps(state, ownProps) {
     cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
   )
 
-  function getReadOnly() {
-    if (state.viewMode === 'presentation') return true
-    if (cell.highlighted) return 'nocursor'
-    return false
-  }
-
   const editorOptions = {
     mode: codeMirrorModeLoaded ? codeMirrorMode : '',
     lineWrapping: false,
@@ -192,7 +186,7 @@ function mapStateToProps(state, ownProps) {
     lineNumbers: true,
     keyMap: 'sublime',
     comment: codeMirrorMode === 'javascript',
-    readOnly: getReadOnly(),
+    readOnly: cell.highlighted ? 'nocursor' : false,
   }
   switch (cell.cellType) {
     case 'markdown':

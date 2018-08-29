@@ -69,12 +69,7 @@ export const evalFrameOnlyStateProperties = {
     items: evalFrameCellSchema,
     default: [newCellFromSchema(evalFrameCellSchema, 0)],
   },
-  copiedCells: {
-    type: 'array',
-    items: evalFrameCellSchema,
-    default: [],
-  },
-  cutCells: {
+  cellClipboard: {
     type: 'array',
     items: evalFrameCellSchema,
     default: [],

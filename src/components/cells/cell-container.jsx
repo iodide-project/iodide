@@ -46,19 +46,21 @@ export class CellContainerUnconnected extends React.Component {
   }
 
   handleCellClick = (event) => {
-    if (!event.target.classList.contains('CodeMirror-line')) {
-      const scrollToCell = false
-      if (!this.props.selected && !event.shiftKey) {
-        this.props.selectCell(this.props.cellId, scrollToCell)
-      }
-      if (event.shiftKey) {
-        event.preventDefault();
-        this.props.multipleCellHighlight(this.props.cellId)
-      } else if (event.ctrlKey || event.metaKey) {
-        this.props.highlightCell(this.props.cellId)
-      } else {
-        this.props.unHighlightCells()
-      }
+    const scrollToCell = false
+    if (!this.props.selected) {
+      this.props.selectCell(this.props.cellId, scrollToCell)
+    }
+    if (!(event.shiftKey || event.ctrlKey || event.metaKey)) {
+      this.props.unHighlightCells()
+    }
+  }
+
+  handleCellHeader = (event) => {
+    if (event.shiftKey) {
+      event.preventDefault();
+      this.props.multipleCellHighlight(this.props.cellId)
+    } else if (event.ctrlKey || event.metaKey) {
+      this.props.highlightCell(this.props.cellId)
     }
   }
 
@@ -84,7 +86,7 @@ export class CellContainerUnconnected extends React.Component {
         onMouseDown={this.handleCellClick}
         style={this.props.cellContainerStyle}
       >
-        <div className="cell-header">
+        <div onClick={this.handleCellHeader} className="cell-header">
           <CellMenuContainer cellId={this.props.cellId} />
           <Tooltip
             classes={{ tooltip: 'iodide-tooltip' }}
