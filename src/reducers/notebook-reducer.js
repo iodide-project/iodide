@@ -1,13 +1,10 @@
+/* global IODIDE_BUILD_TYPE */
 import { newNotebook, newCell, newCellID } from '../editor-state-prototypes'
 import {
   exportJsmdBundle,
-  stringifyStateToJsmd,
-  stateFromJsmd,
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
-
-const AUTOSAVE = 'AUTOSAVE: '
 
 function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
   return {
@@ -85,8 +82,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       nextState = action.newState
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
+      const notebookId = (IODIDE_BUILD_TYPE && IODIDE_BUILD_TYPE === 'server') ?
+        parseInt(window.location.pathname.split('/').filter(s => s.length).pop(), 10) : undefined;
+
       return Object.assign(
-        newNotebook(), nextState, { cells },
+        newNotebook(), nextState, { cells, notebookId },
         getUserData(),
       )
     }

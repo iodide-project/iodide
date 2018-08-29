@@ -6,9 +6,8 @@ import {
   isCommandMode,
   viewModeIsEditor,
   getCellBelowSelectedId,
-  getCellAboveSelectedId, prettyDate, formatDateString,
+  getCellAboveSelectedId,
 } from '../tools/notebook-utils'
-import { stateFromJsmd } from '../tools/jsmd-tools'
 
 const dispatcher = {}
 for (const action in actions) {
@@ -33,7 +32,6 @@ tasks.evaluateCell = new UserTask({
   keybindings: ['mod+enter'],
   displayKeybinding: `${commandKey}+Enter`,
   callback() {
-    dispatcher.changeMode('COMMAND_MODE')
     dispatcher.evaluateCell()
   },
 })
@@ -300,7 +298,7 @@ tasks.saveNotebook = new UserTask({
   keybindings: ['ctrl+s', 'meta+s'],
   displayKeybinding: `${commandKey}+s`,
   preventDefaultKeybinding: true,
-  callback() { dispatcher.saveNotebook() },
+  callback() { dispatcher.saveNotebookToServer() },
 })
 
 tasks.exportNotebook = new UserTask({
