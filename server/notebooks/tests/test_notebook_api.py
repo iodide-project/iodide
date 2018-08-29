@@ -38,12 +38,31 @@ def test_notebook_detail(client, test_notebook):
     assert resp.json() == {
         "id": test_notebook.id,
         "owner": "testuser1",
-        "title": test_notebook.title,
+        "title": "First revision",
         "latest_revision": {
             "content": "*fake notebook content*",
             "created": "2018-07-01T13:00:00Z",
             "id": 1,
             "title": "First revision"
+        }
+    }
+
+    # add another revision, make sure all return values are updated
+    # appropriately
+    NotebookRevision.objects.create(notebook=test_notebook,
+                                    title="Second revision",
+                                    content="*updated fake notebook content*")
+    resp = client.get(reverse('notebooks-detail', kwargs={'pk': test_notebook.id}))
+    assert resp.status_code == 200
+    assert resp.json() == {
+        "id": test_notebook.id,
+        "owner": "testuser1",
+        "title": "Second revision",
+        "latest_revision": {
+            "content": "*updated fake notebook content*",
+            "created": "2018-07-01T13:00:00Z",
+            "id": 2,
+            "title": "Second revision"
         }
     }
 
