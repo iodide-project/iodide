@@ -50,6 +50,13 @@ color: #a41c1c;
 overflow-x: auto;
 }
 
+.rep-base {
+  word-break: break-all;
+  line-height: 14px;
+  font-family: Menlo, monospace;
+  font-size: 11px;
+}
+
 .string-rep {
     word-break: break-word;
     color: #c41a16;
