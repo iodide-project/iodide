@@ -11,6 +11,8 @@ import matrixHandler from './matrix-handler'
 import nullHandler from './null-handler'
 import promiseHandler from './promise-handler'
 import stringHandler from './string-handler'
+import numberHandler from './number-handler'
+import dateHandler from './date-handler'
 
 export function renderValue(value, inContainer = false) {
   for (const handler of handlers) {
@@ -78,7 +80,9 @@ function wrapHandler(handler) {
 
 const simpleHandlers = [
   nullHandler,
+  dateHandler,
   stringHandler,
+  numberHandler,
 ].map(h => wrapHandler(h))
 
 const complexHandlers = [

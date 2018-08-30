@@ -84,9 +84,10 @@ pre.history-item-code {
   /*border-left: 1px solid #ccc;*/
   /*border-right: 1px solid #ccc;*/
   word-break: break-all;
+  line-height: 14px;
+  font-family: Menlo, monospace;
+  font-size: 11px;
 }
-
-
 
 div.history-content {
   /*border: 1px solid #f1f1f1;*/
