@@ -28,7 +28,7 @@ export const output = {
     // dumbly puts a string in a side effect div
     for (const line of s.toString().split('\n')) {
       const div = sideEffectDiv('side-effect-print', reportSideEffect)
-      div.innerHTML = line
+      div.innerText = line
     }
   },
   element: (nodeType, reportSideEffect = true) => {
