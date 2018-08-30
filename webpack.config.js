@@ -57,7 +57,7 @@ module.exports = (env) => {
       plugins.push(new UglifyJSPlugin())
       APP_VERSION_STRING = gitRev.tag()
       EDITOR_ORIGIN = 'https://iodide.io/dist'
-      EVAL_FRAME_ORIGIN = 'https://iodide.app/dist'
+      EVAL_FRAME_ORIGIN = 'https://iodide.app'
     }
     APP_PATH_STRING = `${EDITOR_ORIGIN}/`
     CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
