@@ -407,15 +407,17 @@ tasks.setViewModeToPresentation = new UserTask({
 })
 
 tasks.increaseEditorWidth = new UserTask({
-  title: 'Set Editor Size',
-  keybindings: ['ctrl+right'],
+  title: 'Increase Editor Width',
+  keybindings: ['ctrl+shift+right'],
+  displayKeybinding: 'Ctrl+Shift+Right',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.increaseEditorWidth() },
 })
 
 tasks.decreaseEditorWidth = new UserTask({
-  title: 'Set Editor Size',
-  keybindings: ['ctrl+left'],
+  title: 'Decrease Editor Width',
+  keybindings: ['ctrl+shift+left'],
+  displayKeybinding: 'Ctrl+Shift+Left',
   keybindingPrecondition: isCommandMode,
   callback() { dispatcher.decreaseEditorWidth() },
 })
