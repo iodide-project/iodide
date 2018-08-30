@@ -120,38 +120,40 @@ const cellReducer = (state = newNotebook(), action) => {
       let isNotebookEmpty = false
       let cells = state.cells.slice()
       let cutCells = cells.filter(c => c.highlighted)
+      const selectedCellIndex = getSelectedCellIndex(state)
       if (!cutCells.length) {
-        const index = getSelectedCellIndex(state)
-        cutCells = [cells[index]]
-        if (cells[index + 1]) {
-          cells[index + 1].selected = true
-        } else if (cells[index - 1]) {
-          cells[index - 1].selected = true
+        cutCells = [cells[selectedCellIndex]]
+        if (cells[selectedCellIndex + 1]) {
+          cells[selectedCellIndex + 1].selected = true
+        } else if (cells[selectedCellIndex - 1]) {
+          cells[selectedCellIndex - 1].selected = true
         } else {
           isNotebookEmpty = true
         }
-        cells.splice(index, 1)
+        cells.splice(selectedCellIndex, 1)
       } else {
         const cutIndices = cells.map((c, i) => (c.highlighted ? i : '')).filter(String)
         const lastHiglighted = cutIndices[cutIndices.length - 1]
-        if (cells[lastHiglighted + 1]) {
-          cells[lastHiglighted + 1].selected = true
-        } else {
-          let lastUnHighlightedCell = null
-          let cellIndex = lastHiglighted
-          let highlightIndex = cutIndices.length - 1
-          while (highlightIndex >= 0 || cellIndex >= 0) {
-            if (cutIndices[highlightIndex] !== cellIndex) {
-              lastUnHighlightedCell = cellIndex
-              break
-            }
-            cellIndex -= 1
-            highlightIndex -= 1
-          }
-          if (lastUnHighlightedCell !== null) {
-            cells[lastUnHighlightedCell].selected = true
+        if (cutIndices.indexOf(selectedCellIndex) > -1) {
+          if (cells[lastHiglighted + 1]) {
+            cells[lastHiglighted + 1].selected = true
           } else {
-            isNotebookEmpty = true
+            let lastUnHighlightedCell = null
+            let cellIndex = lastHiglighted
+            let highlightIndex = cutIndices.length - 1
+            while (highlightIndex >= 0 || cellIndex >= 0) {
+              if (cutIndices[highlightIndex] !== cellIndex) {
+                lastUnHighlightedCell = cellIndex
+                break
+              }
+              cellIndex -= 1
+              highlightIndex -= 1
+            }
+            if (lastUnHighlightedCell !== null) {
+              cells[lastUnHighlightedCell].selected = true
+            } else {
+              isNotebookEmpty = true
+            }
           }
         }
         cells = cells.filter(c => !c.highlighted)
