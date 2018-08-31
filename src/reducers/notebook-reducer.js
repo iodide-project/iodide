@@ -1,5 +1,5 @@
 /* global IODIDE_BUILD_TYPE */
-import { newNotebook, newCell, newCellID } from '../editor-state-prototypes'
+import { newNotebook, getUserData, newCell, newCellID } from '../editor-state-prototypes'
 import {
   exportJsmdBundle,
   titleToHtmlFilename,
@@ -20,10 +20,6 @@ function addAppMessageToState(state, appMessage) {
   state.appMessages
     .push(newAppMessage(nextAppMessageId, appMessage.message, appMessage.details, appMessage.when))
   return state
-}
-
-function getUserData() {
-  return { userData: window.userData || {} }
 }
 
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
