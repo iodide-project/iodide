@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^login_success/$', server.views.login_success,
         name='login_success'),
     url(r'^logout/$', server.views.logout, name='logout'),
+    url(r'^login/?', server.views.login, name='login'),
 
     # admin stuff
     path('admin/', admin.site.urls),
