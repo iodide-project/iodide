@@ -80,7 +80,7 @@ class Header extends React.Component {
                 <Button
                   variant="contained"
                   className="header-button"
-                  onClick={() => this.login()}
+                  href={`/oauth/login/github/?next=${window.location.pathname}`}
                 >
                   Log In
                 </Button>
