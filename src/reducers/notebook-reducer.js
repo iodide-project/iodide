@@ -33,7 +33,7 @@ const notebookReducer = (state = newNotebook(), action) => {
   let cells
 
   switch (action.type) {
-    case 'NEW_NOTEBOOK':
+    case 'RESET_NOTEBOOK':
       return Object.assign(newNotebook(), getUserData())
 
     case 'EXPORT_NOTEBOOK': {

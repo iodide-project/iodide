@@ -1,11 +1,11 @@
 import { environment } from '../environment'
 import { store } from '../../store'
-import { newNotebook } from '../../actions/actions'
+import { resetNotebook } from '../../actions/actions'
 
 
 describe('environment methods (integration test)', () => {
   beforeEach(() => {
-    store.dispatch(newNotebook())
+    store.dispatch(resetNotebook())
   })
 
   it('freeze an environment with an object', () => {

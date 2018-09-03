@@ -7,13 +7,13 @@ import {
   getRunningCellAsyncProcessStatus,
 } from '../evalQueue'
 import { store } from '../../store'
-import { temporarilySaveRunningCellID, newNotebook } from '../../actions/actions'
+import { resetNotebook, temporarilySaveRunningCellID } from '../../actions/actions'
 
 jest.useFakeTimers()
 
 describe('getRunningCellID', () => {
   beforeEach(() => {
-    store.dispatch(newNotebook())
+    store.dispatch(resetNotebook())
     store.dispatch(temporarilySaveRunningCellID(0))
   })
   it('properly retrieves the running cell ID', () => {
@@ -24,7 +24,7 @@ describe('getRunningCellID', () => {
 
 describe('flow API', () => {
   beforeEach(() => {
-    store.dispatch(newNotebook())
+    store.dispatch(resetNotebook())
     store.dispatch(temporarilySaveRunningCellID(0))
   })
 

@@ -85,9 +85,9 @@ export function saveNotebook() {
   }
 }
 
-export function newNotebook() {
+export function resetNotebook() {
   return {
-    type: 'NEW_NOTEBOOK',
+    type: 'RESET_NOTEBOOK',
   }
 }
 

@@ -36,7 +36,7 @@ const notebookReducer = (state = newNotebook(), action) => {
   let nextState
 
   switch (action.type) {
-    case 'NEW_NOTEBOOK':
+    case 'RESET_NOTEBOOK':
       clearUserDefinedVars(state.userDefinedVarNames)
       return Object.assign(newNotebook())
 
