@@ -75,12 +75,18 @@ describe('CellContainerUnconnected React component', () => {
       .toEqual(cellContainer().instance().handleCellClick)
   })
 
+  it("sets the cell-header's onClick prop to handleCellHeader", () => {
+    expect(cellContainer().find('.cell-header').props().onClick)
+      .toEqual(cellContainer().instance().handleCellHeader)
+  })
+
   it('mouse down on cell container div fires selectCell with correct props', () => {
     props.viewMode = 'editor'
     props.selected = false
     cellContainer().simulate('mousedown', {
       ctrlKey: false,
       metaKey: false,
+      shiftKey: false,
       target: document.createElement('mockElement'),
     })
     expect(selectCell.mock.calls.length).toBe(1)
@@ -93,18 +99,19 @@ describe('CellContainerUnconnected React component', () => {
     cellContainer().simulate('mousedown', {
       ctrlKey: false,
       metaKey: false,
+      shiftKey: false,
       target: document.createElement('mockElement'),
     })
     expect(unHighlightCells.mock.calls.length).toBe(1)
     expect(unHighlightCells.mock.calls[0].length).toBe(0)
   })
 
-  it('mouse down on cell container fires multipleCellHighlight with Shift press', () => {
+  it('mouse down on cell header fires multipleCellHighlight with Shift press', () => {
     props.viewMode = 'editor'
-    cellContainer().simulate('mousedown', {
-      shiftKey: true,
-      ctrlKey: true,
+    cellContainer().find('.cell-header').simulate('click', {
+      ctrlKey: false,
       metaKey: false,
+      shiftKey: true,
       target: document.createElement('mockElement'),
       preventDefault: () => {
       },
@@ -115,9 +122,22 @@ describe('CellContainerUnconnected React component', () => {
 
   it('mouse down on cell container fires highlightCell with correct props and Ctrl press', () => {
     props.viewMode = 'editor'
-    cellContainer().simulate('mousedown', {
+    cellContainer().find('.cell-header').simulate('click', {
       ctrlKey: true,
       metaKey: false,
+      shiftKey: false,
+      target: document.createElement('mockElement'),
+    })
+    expect(highlightCell.mock.calls.length).toBe(1)
+    expect(highlightCell.mock.calls[0].length).toBe(1)
+  })
+
+  it('mouse down on cell container fires highlightCell with correct props and Meta press', () => {
+    props.viewMode = 'editor'
+    cellContainer().find('.cell-header').simulate('click', {
+      ctrlKey: false,
+      metaKey: true,
+      shiftKey: false,
       target: document.createElement('mockElement'),
     })
     expect(highlightCell.mock.calls.length).toBe(1)
