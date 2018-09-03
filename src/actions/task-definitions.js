@@ -287,10 +287,9 @@ tasks.changeTitle = new UserTask({
   callback(t) { dispatcher.changePageTitle(t) },
 })
 
-tasks.createNewNotebook = new UserTask({
+tasks.newNotebook = new ExternalLinkTask({
   title: 'New Notebook',
-  preventDefaultKeybinding: true,
-  callback() { dispatcher.newNotebook() },
+  url: '/new',
 })
 
 tasks.saveNotebook = new UserTask({
