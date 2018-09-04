@@ -9,8 +9,8 @@ admin.autodiscover()
 
 urlpatterns = [
     # user urls
-    url(r'^user/$', server.views.user, name='user'),
-    url(r'^user/(?P<name>[a-zA-Z0-9]+)', server.views.user, name='user'),
+    url(r'^users/$', server.views.user, name='user'),
+    url(r'^users/(?P<name>[a-zA-Z0-9]+)', server.views.user, name='user'),
 
     # notebook stuff
     url(r'^api/v1/', include('server.notebooks.api_urls')),

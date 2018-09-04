@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 
 import Header from './components/header';
 
-const { userInfo, notebookList } = window;
+const { userInfo, thisUser, notebookList } = window;
 
 render(
   <div>
