@@ -471,10 +471,10 @@ export function toggleEditorLink() {
   }
 }
 
-export function changeSidePaneMode(mode) {
+export function changeSidePaneMode(sidePaneMode) {
   return {
     type: 'CHANGE_SIDE_PANE_MODE',
-    mode,
+    sidePaneMode,
   }
 }
 
