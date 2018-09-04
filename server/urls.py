@@ -8,6 +8,10 @@ import server.views
 admin.autodiscover()
 
 urlpatterns = [
+    # user urls
+    url(r'^user/$', server.views.user, name='user'),
+    url(r'^user/(?P<name>[a-zA-Z0-9]+)', server.views.user, name='user'),
+
     # notebook stuff
     url(r'^api/v1/', include('server.notebooks.api_urls')),
     url(r'^notebooks/', include('server.notebooks.urls')),
@@ -20,6 +24,5 @@ urlpatterns = [
 
     # admin stuff
     path('admin/', admin.site.urls),
-
     url(r'^$', server.views.index, name='index'),
 ]

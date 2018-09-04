@@ -13,9 +13,12 @@ def get_user_info_dict(user):
     if user.is_authenticated:
         user_social_auth = UserSocialAuth.objects.get(user=user)
         social_auth_extra_data = user_social_auth.extra_data
+        # print('!!!', dir(social_auth_extra_data), dir(user_social_auth))
+        # print(dir(user))
         return {
             'name': social_auth_extra_data['login'],
             'avatar': user.avatar,
+            'user_id': user.pk,
             'accessToken': user.social_auth_extra_data['access_token']
         }
     return {}
@@ -32,6 +35,18 @@ def index(request):
              ])
     }, request))
 
+def user(request, name=None):
+    print('user_name', name)
+    template = loader.get_template('user.html')
+    userInfo = get_user_info_dict(request.user)
+    print(Notebook.objects.filter(owner_id=1).values_list('id', 'title'))
+    return HttpResponse(template.render({
+        'user_info': json.dumps(userInfo),
+        'notebook_list': json.dumps(
+            [{'id': v[0], 'title': v[1]} for v in
+            Notebook.objects.filter(owner_id=userInfo['user_id']).values_list('id', 'title')
+             ])
+    }, request))
 
 def login_success(request):
     if not request.user.is_authenticated:

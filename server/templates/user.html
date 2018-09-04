@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="page"></div>
+<script>
+  window.userInfo = {{ user_info|safe }};
+  window.notebookList = {{ notebook_list|safe }};
+</script>
+<script src="/server.user.dev.js"></script>
+{% endblock %}
