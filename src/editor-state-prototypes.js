@@ -24,7 +24,12 @@ function newNotebook() {
   return newNotebookFromSchema(editorStateSchema)
 }
 
+function getUserData() {
+  return { userData: window.userData || {} }
+}
+
 export {
+  getUserData,
   newCell,
   newCellID,
   newNotebook,

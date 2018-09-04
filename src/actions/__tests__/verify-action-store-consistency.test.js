@@ -83,23 +83,6 @@ describe('make sure action creators leave store in a consitent state', () => {
       .not.toThrow()
   })
 
-  // FIXME: side effects in the reducer make these hard to test
-  //  related to localStorage, soon to be deprecated
-  // it('loadNotebook', () => {
-  //   expect(() => store.dispatch(actions.loadNotebook('test title')))
-  //     .not.toThrow()
-  // })
-
-  it('deleteNotebook', () => {
-    expect(() => store.dispatch(actions.deleteNotebook('test title')))
-      .not.toThrow()
-  })
-
-  it('newNotebook', () => {
-    expect(() => store.dispatch(actions.newNotebook()))
-      .not.toThrow()
-  })
-
   it('clearVariables', () => {
     expect(() => store.dispatch(actions.clearVariables()))
       .not.toThrow()

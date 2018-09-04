@@ -48,6 +48,13 @@ def user(request, name=None):
              ])
     }, request))
 
+def login(request):
+    if request.user.is_authenticated:
+        return redirect('/new')
+    template = loader.get_template('login.html')
+    return HttpResponse(template.render(), request)
+
+
 def login_success(request):
     if not request.user.is_authenticated:
         raise PermissionDenied
