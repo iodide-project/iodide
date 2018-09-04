@@ -6,19 +6,16 @@ from django.shortcuts import redirect
 from django.template import loader
 from social_django.models import UserSocialAuth
 
-from .notebooks.models import Notebook
-
+from .notebooks.models import Notebook, NotebookRevision
+from .base.models import User
 
 def get_user_info_dict(user):
     if user.is_authenticated:
         user_social_auth = UserSocialAuth.objects.get(user=user)
         social_auth_extra_data = user_social_auth.extra_data
-        # print('!!!', dir(social_auth_extra_data), dir(user_social_auth))
-        # print(dir(user))
         return {
             'name': social_auth_extra_data['login'],
             'avatar': user.avatar,
-            'user_id': user.pk,
             'accessToken': user.social_auth_extra_data['access_token']
         }
     return {}
@@ -35,16 +32,21 @@ def index(request):
              ])
     }, request))
 
-def user(request, name=None):
-    print('user_name', name)
+def user(request, name=None):        
     template = loader.get_template('user.html')
-    userInfo = get_user_info_dict(request.user)
-    print(Notebook.objects.filter(owner_id=1).values_list('id', 'title'))
+    auth_info = get_user_info_dict(request.user)
+    this_user = User.objects.get(username=name if name else auth_info['name'])
+
+    user_info = {}
+    user_info['full_name'] = '{} {}'.format(this_user.first_name, this_user.last_name)
+    user_info['avatar'] = this_user.avatar
+    user_info['name'] = this_user.username
     return HttpResponse(template.render({
-        'user_info': json.dumps(userInfo),
+        'auth_info': json.dumps(auth_info),
+        'user_info': json.dumps(user_info),
         'notebook_list': json.dumps(
-            [{'id': v[0], 'title': v[1]} for v in
-            Notebook.objects.filter(owner_id=userInfo['user_id']).values_list('id', 'title')
+            [{'id': v[0], 'title': v[1], 'last_revision': NotebookRevision.objects.filter(notebook_id=v[0]).last().created.isoformat(sep=' ')} for v in
+            Notebook.objects.filter(owner_id=this_user.id).values_list('id', 'title')
              ])
     }, request))
 
