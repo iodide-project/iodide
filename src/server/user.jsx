@@ -14,13 +14,13 @@ render(
     }}
     >
       <div style={{ marginBottom: 0 }}>
-        <img style={{ borderRadius: '5px' }} width={150} src={userInfo.avatar} alt={`${userInfo.name}'s avatar`} />
+        <img style={{ borderRadius: '5px' }} width={150} src={thisUser.avatar} alt={`${thisUser.name}'s avatar`} />
         <h1 style={{
             marginTop: 20, marginBottom: 0, fontWeight: 900, textTransform: 'uppercase',
             }}
-        >{userInfo.full_name}
+        >{thisUser.full_name}
         </h1>
-        <h2 style={{ fontWeight: 300, marginTop: 0 }}>{userInfo.name}</h2>
+        <h2 style={{ fontWeight: 300, marginTop: 0 }}>{thisUser.name}</h2>
       </div>
       <h2>notebooks</h2>
       <table >
