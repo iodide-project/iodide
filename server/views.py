@@ -9,6 +9,7 @@ from social_django.models import UserSocialAuth
 from .notebooks.models import Notebook, NotebookRevision
 from .base.models import User
 
+
 def get_user_info_dict(user):
     if user.is_authenticated:
         user_social_auth = UserSocialAuth.objects.get(user=user)
@@ -32,7 +33,8 @@ def index(request):
              ])
     }, request))
 
-def user(request, name=None):        
+
+def user(request, name=None):
     template = loader.get_template('user.html')
     user_info = get_user_info_dict(request.user)
     user = User.objects.get(username=name if name else user_info['name'])
@@ -45,10 +47,15 @@ def user(request, name=None):
         'user_info': json.dumps(user_info),
         'this_user': json.dumps(this_user),
         'notebook_list': json.dumps(
-            [{'id': v[0], 'title': v[1], 'last_revision': NotebookRevision.objects.filter(notebook_id=v[0]).last().created.isoformat(sep=' ')} for v in
-            Notebook.objects.filter(owner_id=user.id).values_list('id', 'title')
+            [{
+                'id': v[0],
+                'title': v[1],
+                'last_revision': NotebookRevision.objects
+                .filter(notebook_id=v[0]).last().created.isoformat(sep=' ')
+            } for v in Notebook.objects.filter(owner_id=user.id).values_list('id', 'title')
              ])
     }, request))
+
 
 def login(request):
     if request.user.is_authenticated:
