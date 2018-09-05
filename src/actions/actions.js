@@ -471,6 +471,18 @@ export function toggleEditorLink() {
   }
 }
 
+export function increaseEditorWidth() {
+  return {
+    type: 'INCREASE_EDITOR_WIDTH',
+  }
+}
+
+export function decreaseEditorWidth() {
+  return {
+    type: 'DECREASE_EDITOR_WIDTH',
+  }
+}
+
 export function changeSidePaneMode(sidePaneMode) {
   return {
     type: 'CHANGE_SIDE_PANE_MODE',

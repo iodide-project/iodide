@@ -397,6 +397,22 @@ tasks.setViewModeToPresentation = new UserTask({
   },
 })
 
+tasks.increaseEditorWidth = new UserTask({
+  title: 'Increase Editor Width',
+  keybindings: ['ctrl+shift+right'],
+  displayKeybinding: 'Ctrl+Shift+Right',
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.increaseEditorWidth() },
+})
+
+tasks.decreaseEditorWidth = new UserTask({
+  title: 'Decrease Editor Width',
+  keybindings: ['ctrl+shift+left'],
+  displayKeybinding: 'Ctrl+Shift+Left',
+  keybindingPrecondition: isCommandMode,
+  callback() { dispatcher.decreaseEditorWidth() },
+})
+
 tasks.fileAnIssue = new ExternalLinkTask({
   title: 'File an Issue',
   menuTitle: 'File an Issue ...',
