@@ -2,14 +2,13 @@ import UserTask from './user-task'
 import ExternalLinkTask from './external-link-task'
 import { store } from '../store'
 import * as actions from './actions'
+import { getSelectedCellId } from '../reducers/cell-reducer-utils'
 import {
   isCommandMode,
   viewModeIsEditor,
   getCellBelowSelectedId,
   getCellAboveSelectedId,
 } from '../tools/notebook-utils'
-import { getSelectedCellId } from '../reducers/cell-reducer-utils'
-
 
 const dispatcher = {}
 for (const action in actions) {
