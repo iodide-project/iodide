@@ -119,7 +119,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'CHANGE_SIDE_PANE_MODE': {
-      return Object.assign({}, state, { sidePaneMode: action.mode })
+      const { sidePaneMode } = action
+      return Object.assign({}, state, { sidePaneMode })
     }
 
     case 'CHANGE_SIDE_PANE_WIDTH': {
