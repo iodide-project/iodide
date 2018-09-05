@@ -37,12 +37,13 @@ def index(request):
 def user(request, name=None):
     template = loader.get_template('user.html')
     user_info = get_user_info_dict(request.user)
-    user = User.objects.get(username=name if name else user_info['name'])
+    user = User.objects.get(username=name)
 
-    this_user = {}
-    this_user['full_name'] = '{} {}'.format(user.first_name, user.last_name)
-    this_user['avatar'] = user.avatar
-    this_user['name'] = user.username
+    this_user = {
+        'full_name': '{} {}'.format(user.first_name, user.last_name),
+        'avatar': user.avatar,
+        'name': user.username,
+    }
     return HttpResponse(template.render({
         'user_info': json.dumps(user_info),
         'this_user': json.dumps(this_user),
@@ -52,7 +53,7 @@ def user(request, name=None):
                 'title': v[1],
                 'last_revision': NotebookRevision.objects
                 .filter(notebook_id=v[0]).last().created.isoformat(sep=' ')
-            } for v in Notebook.objects.filter(owner_id=user.id).values_list('id', 'title')
+            } for v in Notebook.objects.filter(owner=user).values_list('id', 'title')
              ])
     }, request))
 

@@ -28,11 +28,10 @@ render(
           {notebookList.map(notebook => (
             <tr key={notebook.id}>
               <td style={{ width: 200 }}><a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a></td>
-              <td>{notebook.last_revision}</td>
+              <td>{notebook.last_revision.slice(0, 19)}</td>
             </tr>
     ))}
         </tbody>
-
       </table>
     </div>
   </div>,

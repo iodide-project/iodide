@@ -9,7 +9,6 @@ admin.autodiscover()
 
 urlpatterns = [
     # user urls
-    url(r'^users/$', server.views.user, name='user'),
     url(r'^users/(?P<name>[a-zA-Z0-9]+)', server.views.user, name='user'),
 
     # notebook stuff
@@ -27,5 +26,6 @@ urlpatterns = [
 
     # admin stuff
     path('admin/', admin.site.urls),
+
     url(r'^$', server.views.index, name='index'),
 ]
