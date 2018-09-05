@@ -25,4 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     url(r'^$', server.views.index, name='index'),
+
+    # user urls
+    url(r'^(?P<name>[a-zA-Z0-9]+)', server.views.user, name='user'),
 ]
