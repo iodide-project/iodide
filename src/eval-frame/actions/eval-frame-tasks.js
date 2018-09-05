@@ -40,15 +40,15 @@ tasks.closePanes = new UserTask({
 })
 
 tasks.increaseEditorWidth = new UserTask({
-  title: 'Set Editor Size',
-  keybindings: ['ctrl+right'],
+  title: 'Increase Editor Width',
+  keybindings: ['ctrl+shift+right'],
   preventDefaultKeybinding: true,
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
 
 tasks.decreaseEditorWidth = new UserTask({
-  title: 'Set Editor Size',
-  keybindings: ['ctrl+left'],
+  title: 'Decrease Editor Width',
+  keybindings: ['ctrl+shift+left'],
   preventDefaultKeybinding: true,
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
