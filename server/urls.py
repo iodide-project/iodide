@@ -21,11 +21,11 @@ urlpatterns = [
     url(r'^logout/$', server.views.logout, name='logout'),
     url(r'^login/?', server.views.login, name='login'),
 
-    # user urls
-    url(r'^(?P<name>[a-zA-Z0-9]+)', server.views.user, name='user'),
-
     # admin stuff
     path('admin/', admin.site.urls),
 
     url(r'^$', server.views.index, name='index'),
+
+    # user urls
+    url(r'^(?P<name>[a-zA-Z0-9]+)', server.views.user, name='user'),
 ]
