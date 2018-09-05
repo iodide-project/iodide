@@ -11,7 +11,10 @@ const path = location.pathname.replace(/^\/|\/$/g, '');
 const content = (path === '') ? (
   <div>
     <Header userInfo={userInfo} />
-    <NotebookList notebookList={notebookList} />
+    <div style={{ marginLeft: 30, marginTop: 20 }}>
+      <h1>Latest Iodide Notebooks</h1>
+      <NotebookList notebookList={notebookList} />
+    </div>
   </div>
 ) : <LoginPanel />
 
