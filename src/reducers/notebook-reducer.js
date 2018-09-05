@@ -5,6 +5,7 @@ import {
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
+import { addChangeLanguageTask } from '../actions/task-definitions'
 
 function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
   return {
@@ -182,6 +183,11 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'ADD_LANGUAGE_TO_EDITOR': {
       const { languageDefinition } = action
+      addChangeLanguageTask(
+        languageDefinition.languageId,
+        languageDefinition.displayName,
+        languageDefinition.keybinding,
+      )
       languageDefinition.codeMirrorModeLoaded = false
       const languages = Object.assign(
         {},

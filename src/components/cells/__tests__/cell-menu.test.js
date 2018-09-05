@@ -21,6 +21,7 @@ describe('CellMenuUnconnected React component', () => {
       menuLabel: 'css',
       cellId: 5,
       skipInRunAll: false,
+      languages: [],
     }
     mountedMenu = undefined
   })
@@ -60,6 +61,19 @@ describe('cellMenu mapStateToProps', () => {
         id: 5,
         skipInRunAll: false,
       }],
+      languages: {
+        js: {
+          pluginType: 'language',
+          languageId: 'js',
+          displayName: 'Javascript',
+          codeMirrorMode: 'javascript',
+          codeMirrorModeLoaded: true,
+          module: 'window',
+          evaluator: 'eval',
+          keybinding: 'j',
+          url: '',
+        },
+      },
     }
   })
 
@@ -68,6 +82,7 @@ describe('cellMenu mapStateToProps', () => {
     expect(mapStateToProps(state, ownProps))
       .toEqual({
         skipInRunAll: false,
+        languages: [],
       })
   })
 })
