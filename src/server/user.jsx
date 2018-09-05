@@ -1,6 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 
+import Button from '@material-ui/core/Button';
+
 import Header from './components/header';
 
 const { userInfo, thisUser, notebookList } = window;
@@ -23,6 +25,13 @@ render(
         <h2 style={{ fontWeight: 300, marginTop: 0 }}>{thisUser.name}</h2>
       </div>
       <h2>notebooks</h2>
+      <Button
+        variant="contained"
+        className="header-button"
+        href="/new"
+      >
+        New notebook
+      </Button>
       <table >
         <tbody>
           {notebookList.map(notebook => (
