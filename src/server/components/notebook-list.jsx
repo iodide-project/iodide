@@ -18,7 +18,7 @@ export default class NotebookList extends React.Component {
                   <a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a>
                 </td>
                 <td>
-                  <a href={`/users/${notebook.owner}`}>{notebook.owner}</a>
+                  <a href={`/${notebook.owner}`}>{notebook.owner}</a>
                 </td>
               </tr>
             ))

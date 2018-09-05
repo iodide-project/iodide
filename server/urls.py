@@ -8,9 +8,6 @@ import server.views
 admin.autodiscover()
 
 urlpatterns = [
-    # user urls
-    url(r'^users/(?P<name>[a-zA-Z0-9]+)', server.views.user, name='user'),
-
     # notebook stuff
     url(r'^api/v1/', include('server.notebooks.api_urls')),
     url(r'^notebooks/', include('server.notebooks.urls')),
@@ -23,6 +20,9 @@ urlpatterns = [
         name='login_success'),
     url(r'^logout/$', server.views.logout, name='logout'),
     url(r'^login/?', server.views.login, name='login'),
+
+    # user urls
+    url(r'^(?P<name>[a-zA-Z0-9]+)', server.views.user, name='user'),
 
     # admin stuff
     path('admin/', admin.site.urls),
