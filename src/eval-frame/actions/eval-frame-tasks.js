@@ -39,6 +39,20 @@ tasks.closePanes = new UserTask({
   },
 })
 
+tasks.increaseEditorWidth = new UserTask({
+  title: 'Increase Editor Width',
+  keybindings: ['ctrl+shift+right'],
+  preventDefaultKeybinding: true,
+  callback() { postKeypressToEditor(this.keybindings[0]) },
+})
+
+tasks.decreaseEditorWidth = new UserTask({
+  title: 'Decrease Editor Width',
+  keybindings: ['ctrl+shift+left'],
+  preventDefaultKeybinding: true,
+  callback() { postKeypressToEditor(this.keybindings[0]) },
+})
+
 tasks.toggleDeclaredVariablesPane = new UserTask({
   title: 'Toggle the Declared Variables Pane',
   menuTitle: 'Declared Variables',
