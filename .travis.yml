@@ -101,9 +101,6 @@ matrix:
         - make build
         # bring up docker containers and wait for db setup to complete
         - docker-compose up -d
-        # this command waits for the db to be accessible at port 5432 before continuing
-        # (FIXME: need some sort of timeout here)
-        - docker-compose run server bash -c "while ! echo > /dev/tcp/db/5432 > /dev/null 2>&1; do sleep 1 && echo waiting for db; done"
         # run actual tests
         - make flake8
         - make test

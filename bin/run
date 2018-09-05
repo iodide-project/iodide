@@ -3,13 +3,28 @@ set -eo pipefail
 
 # default variables
 : "${PORT:=8000}"
+: "${SLEEP:=1}"
+: "${TRIES:=60}"
 
 usage() {
   echo "usage: bin/run dev"
   exit 1
 }
 
+wait_for() {
+  tries=0
+  echo "Waiting for $1 to listen on $2..."
+  until nc -z $1 $2; do
+    [[ $tries -lt $TRIES ]] || return
+    [[ $? -eq 0 ]] && return
+    sleep $SLEEP
+    tries=$((tries + 1))
+  done
+}
+
 [ $# -lt 1 ] && usage
+
+wait_for db 5432
 
 case $1 in
   dev)
