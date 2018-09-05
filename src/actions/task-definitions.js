@@ -33,7 +33,6 @@ export function addChangeLanguageTask(languageId, displayName, keybinding) {
     keybindings: [keybinding],
     displayKeybinding: keybinding,
     keybindingPrecondition: isCommandMode,
-    language: languageId,
     commandModeOnlyKey: true,
     callback() {
       dispatcher.changeCellType('code', languageId)
