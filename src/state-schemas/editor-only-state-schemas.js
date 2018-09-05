@@ -23,10 +23,6 @@ export const editorCellSchema = {
 }
 
 export const editorOnlyStateProperties = {
-  autoSave: {
-    type: 'string',
-    default: undefined,
-  },
   cells: {
     type: 'array',
     items: editorCellSchema,
@@ -56,16 +52,11 @@ export const editorOnlyStateProperties = {
   },
   lastSaved: {
     type: 'string',
-    default: '_NEVER',
+    default: undefined,
   },
   lastExport: {
     type: 'string',
-    default: '_NEVER',
-  },
-  locallySaved: {
-    type: 'array',
-    items: { type: 'string' },
-    default: [],
+    default: undefined,
   },
   mode: {
     type: 'string',
@@ -85,6 +76,10 @@ export const editorOnlyStateProperties = {
     type: 'string',
     enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],
     default: 'EXPLORE_VIEW',
+  },
+  notebookId: {
+    type: 'integer',
+    default: undefined,
   },
   wrapEditors: {
     type: 'boolean',

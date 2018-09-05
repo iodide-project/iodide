@@ -6,9 +6,10 @@ import {
   isCommandMode,
   viewModeIsEditor,
   getCellBelowSelectedId,
-  getCellAboveSelectedId, prettyDate, formatDateString,
+  getCellAboveSelectedId,
 } from '../tools/notebook-utils'
 import { getSelectedCellId } from '../reducers/cell-reducer-utils'
+
 
 const dispatcher = {}
 for (const action in actions) {
@@ -33,7 +34,6 @@ tasks.evaluateCell = new UserTask({
   keybindings: ['mod+enter'],
   displayKeybinding: `${commandKey}+Enter`,
   callback() {
-    dispatcher.saveNotebook(true)
     dispatcher.evaluateCell()
   },
 })
@@ -42,7 +42,6 @@ tasks.evaluateAllCells = new UserTask({
   title: 'Run All Cells',
   menuTitle: 'Run All Cells',
   callback() {
-    dispatcher.saveNotebook(true)
     dispatcher.evaluateAllCells()
   },
 })
@@ -54,7 +53,6 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
   keybindingPrecondition: viewModeIsEditor,
   callback() {
     dispatcher.changeMode('COMMAND_MODE')
-    dispatcher.saveNotebook(true)
     dispatcher.evaluateCell()
     const cellBelowId = getCellBelowSelectedId()
     if (cellBelowId !== null) {
@@ -367,7 +365,7 @@ tasks.saveNotebook = new UserTask({
   keybindings: ['ctrl+s', 'meta+s'],
   displayKeybinding: `${commandKey}+s`,
   preventDefaultKeybinding: true,
-  callback() { dispatcher.saveNotebook() },
+  callback() { dispatcher.saveNotebookToServer() },
 })
 
 tasks.exportNotebook = new UserTask({
@@ -477,19 +475,5 @@ tasks.seeAllExamples = new ExternalLinkTask({
   menuTitle: 'See All Examples ...',
   url: 'http://github.com/iodide-project/iodide-examples/',
 })
-
-export function getLocalStorageNotebook(name) {
-  const localStorageEntry = localStorage.getItem(name)
-  if (localStorageEntry == null) return undefined
-  let { lastSaved } = stateFromJsmd(localStorageEntry)
-  lastSaved = (lastSaved !== undefined) ? prettyDate(formatDateString(lastSaved)) : ' '
-  return new UserTask({
-    title: name,
-    secondaryText: lastSaved,
-    callback() {
-      dispatcher.loadNotebook(name)
-    },
-  })
-}
 
 export default tasks

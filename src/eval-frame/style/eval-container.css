@@ -51,19 +51,28 @@ overflow-x: auto;
 }
 
 .string-rep {
-    margin: 0px;
     word-break: break-word;
-    color: #3821ad;
+    color: #c41a16;
 }
 .string-rep-before-quote::before {
     content: '"';
-    font-size: 18px;
     color: #555;
 }
 .string-rep-after-quote::after {
     content: '"';
-    font-size: 18px;
     color: #555;
+}
+
+.string-rep-ellipsis {
+    color: #555;
+}
+
+.number-rep {
+    color: rgb(28, 0, 207);
+}
+
+.date-rep-small {
+    word-break: normal;
 }
 
 .elements-omitted-info-rep {
@@ -74,27 +83,6 @@ overflow-x: auto;
     padding: 0px 3px;
     white-space: nowrap;
 }
-
-.number-rep {
-    color: #186649;
-}
-
-.boolean-rep {
-    color: #9c2020;
-}
-
-.function-rep {
-    color: #7f0055;
-}
-
-.undefined-rep,
-.null-rep {
-  display: inline-block;
-  margin: 0px;
-  color: #777;
-  font-style: italic;
-}
-
 
 div.promise-handler-state {
   display:flex;

@@ -2,12 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import nb from '../../tools/nb'
+import { renderValue } from './value-renderer'
 
 function cellText(matrixLike, i, j) {
   const [numRows, numCols] = nb.shape(matrixLike)
   let text = ''
   if (_.isNumber(i) && _.isNumber(j)) {
-    text = nb.prettyFormatNumber(matrixLike[i][j], 6)
+    text = renderValue(matrixLike[i][j], true)
   } else if (_.isString(i) && _.isString(j)) {
     text = '⋱'
   } else if (_.isString(i) && (j === 0 || j === numCols - 1)) {
@@ -54,7 +55,7 @@ class PrettyMatrix extends React.Component {
   cellText(i, j) {
     let text = ''
     if (_.isNumber(i) && _.isNumber(j)) {
-      text = nb.prettyFormatNumber(this.matrix[i][j], 6)
+      text = renderValue(this.matrix[i][j], true)
     } else if (_.isString(i) && _.isString(j)) {
       text = '⋱'
     } else if (_.isString(i) && (j === 0 || j === this.numCols - 1)) {

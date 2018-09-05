@@ -37,8 +37,19 @@ class Header extends React.Component {
       this.setState({ isLoggedIn: true })
     }
     window.loginFailure = () => {
-      // do something smart here
+      // do something smart here (probably pop up a notification)
     }
+  }
+
+  logout() {
+    fetch('/logout/')
+      .then((response) => {
+        if (response.ok) {
+          this.setState({ isLoggedIn: false })
+        } else {
+          // do something smart here (probably pop up a notification)
+        }
+      });
   }
 
   render() {
@@ -57,6 +68,7 @@ class Header extends React.Component {
                   <Button
                     variant="contained"
                     className="header-button"
+                    onClick={() => this.logout()}
                   >
                     Logout
                   </Button>
@@ -68,7 +80,7 @@ class Header extends React.Component {
                 <Button
                   variant="contained"
                   className="header-button"
-                  onClick={() => this.login()}
+                  href={`/oauth/login/github/?next=${window.location.pathname}`}
                 >
                   Log In
                 </Button>
