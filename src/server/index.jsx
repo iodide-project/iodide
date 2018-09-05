@@ -2,10 +2,17 @@ import React from 'react';
 import { render } from 'react-dom';
 
 import Header from './components/header';
+import LoginPanel from './components/login-panel';
+import NotebookList from './components/notebook-list';
 
-const userInfo = window.userData;
+const { location, userInfo, notebookList } = window;
+const path = location.pathname.replace(/^\/|\/$/g, '');
 
-render(
-  <div><Header userInfo={userInfo} /></div>,
-  document.getElementById('page'),
-)
+const content = (path === '') ? (
+  <div>
+    <Header userInfo={userInfo} />
+    <NotebookList notebookList={notebookList} />
+  </div>
+) : <LoginPanel />
+
+render(content, document.getElementById('page'))

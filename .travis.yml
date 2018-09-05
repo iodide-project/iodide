@@ -61,6 +61,17 @@ matrix:
           target-branch: master
           on:
             tags: true
+            
+        - provider: pages
+          github-token: "$GITHUB_TOKEN"
+          skip-cleanup: true
+          keep-history: true
+          repo: iodide-project/dist-eval
+          verbose: true
+          local-dir: prod
+          target-branch: master
+          on:
+            tags: true
 
     # experimental iodide server
     - env: server

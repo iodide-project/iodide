@@ -11,7 +11,7 @@
     "start": "webpack --watch --env=dev",
     "build": "webpack",
     "build-production": "webpack --env=production",
-    "build-ghpages": "webpack --env=ghpages",
+    "build-ghpages": "webpack --env=ghpages-client-only",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix"
   },
   "jest": {
@@ -21,7 +21,8 @@
     ],
     "globals": {
       "window": true,
-      "IODIDE_BUILD_MODE": "test"
+      "IODIDE_BUILD_MODE": "test",
+      "IODIDE_BUILD_TYPE": "standalone"
     },
     "setupFiles": [
       "jest-localstorage-mock"
@@ -36,6 +37,7 @@
     "codemirror": "^5.37.0",
     "codemirror-no-newlines": "^1.0.2",
     "deep-equal": "^1.0.1",
+    "error-stack-parser": "^2.0.2",
     "font-awesome": "^4.7.0",
     "fuse.js": "^3.2.0",
     "lodash": "^4.17.10",
@@ -53,12 +55,12 @@
     "react-dom": "^16.3.2",
     "react-helmet": "^5.2.0",
     "react-inspector": "^2.3.0",
-    "react-json-tree": "^0.11.0",
     "react-redux": "^5.0.7",
     "react-table": "^6.8.2",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "stackframe": "^1.0.4"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

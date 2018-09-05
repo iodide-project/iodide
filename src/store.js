@@ -5,7 +5,7 @@ import { createLogger } from 'redux-logger'
 
 import createValidatedReducer from './reducers/create-validated-reducer'
 import reducer from './reducers/reducer'
-import { newNotebook, stateSchema } from './editor-state-prototypes'
+import { getUserData, newNotebook, stateSchema } from './editor-state-prototypes'
 
 let enhancer
 let finalReducer
@@ -22,11 +22,10 @@ if (IODIDE_BUILD_MODE === 'production') {
     applyMiddleware(thunk),
     applyMiddleware(createLogger({
       predicate: (getState, action) => action.type !== 'UPDATE_INPUT_CONTENT',
-      colors: { title: () => '#27ae60' },
     })),
   )
 }
-const store = createStore(finalReducer, newNotebook(), enhancer)
+const store = createStore(finalReducer, Object.assign(newNotebook(), getUserData()), enhancer)
 
 const { dispatch } = store
 

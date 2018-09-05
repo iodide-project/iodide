@@ -1,6 +1,6 @@
 import CodeMirror from 'codemirror'
 
-import { exportJsmdBundle, titleToHtmlFilename } from '../tools/jsmd-tools'
+import { exportJsmdBundle, exportJsmdToString, titleToHtmlFilename } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
@@ -79,24 +79,9 @@ export function exportNotebook(exportAsReport = false) {
   }
 }
 
-export function saveNotebook(autosave = false) {
+export function saveNotebook() {
   return {
     type: 'SAVE_NOTEBOOK',
-    autosave,
-  }
-}
-
-export function loadNotebook(title) {
-  return {
-    type: 'LOAD_NOTEBOOK',
-    title,
-  }
-}
-
-export function deleteNotebook(title) {
-  return {
-    type: 'DELETE_NOTEBOOK',
-    title,
   }
 }
 
@@ -224,13 +209,7 @@ export function evaluateAllCells() {
   }
 }
 
-export function markCellNotRendered() {
-  return {
-    type: 'MARK_CELL_NOT_RENDERED',
-  }
-}
-
-function loginSuccess(userData) {
+export function loginSuccess(userData) {
   return (dispatch) => {
     dispatch({
       type: 'LOGIN_SUCCESS',
@@ -240,7 +219,7 @@ function loginSuccess(userData) {
   }
 }
 
-function loginFailure() {
+export function loginFailure() {
   return (dispatch) => {
     dispatch(updateAppMessages({ message: 'Login Failed' }))
   }
@@ -271,6 +250,71 @@ export function logout() {
           dispatch(updateAppMessages({ message: 'Logged Out' }))
         } else dispatch(updateAppMessages({ message: 'Logout Failed' }))
       })
+  }
+}
+
+export function saveNotebookToServer() {
+  return (dispatch, getState) => {
+    const state = getState()
+
+    const notebookInServer = Boolean(state.notebookId)
+    const data = {
+      title: state.title,
+      content: exportJsmdToString(state),
+    }
+
+    // Get CSRF Cookie for Django CSRF Middleware
+    function getCookie(name) {
+      if (!document.cookie) {
+        return null
+      }
+      const token = document.cookie.split(';')
+        .map(c => c.trim())
+        .filter(c => c.startsWith(`${name}=`))
+
+      if (token.length === 0) {
+        return null;
+      }
+      return decodeURIComponent(token[0].split('=')[1])
+    }
+
+    const csrftoken = getCookie('csrftoken')
+
+    const postRequestOptions = {
+      body: JSON.stringify(data),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+      },
+    }
+
+    if (notebookInServer) {
+      // Update Exisiting Notebook
+      fetch(`/api/v1/notebooks/${state.notebookId}/revisions/`, postRequestOptions)
+        .then(response => response.json())
+        .then(() => {
+          const message = 'Updated Notebook'
+          dispatch(updateAppMessages({
+            message,
+            details: `${message} <br />Notebook saved`,
+          }))
+        })
+    } else {
+      // Create a New Notebook in Database
+      fetch('/api/v1/notebooks/', postRequestOptions)
+        .then(response => response.json())
+        .then((json) => {
+          const message = 'Notebook saved to server'
+          dispatch(updateAppMessages({
+            message,
+            details: `${message} <br />Notebook saved`,
+          }))
+          dispatch({ type: 'ADD_NOTEBOOK_ID', id: json.id })
+          window.history.pushState('', {}, `/notebooks/${json.id}`)
+        })
+    }
+    dispatch({ type: 'NOTEBOOK_SAVED' })
   }
 }
 
@@ -443,13 +487,6 @@ export function changeSidePaneMode(mode) {
   return {
     type: 'CHANGE_SIDE_PANE_MODE',
     mode,
-  }
-}
-
-export function changeSidePaneWidth(widthShift) {
-  return {
-    type: 'CHANGE_SIDE_PANE_WIDTH',
-    widthShift,
   }
 }
 

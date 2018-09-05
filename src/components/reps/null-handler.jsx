@@ -1,7 +1,9 @@
 import React from 'react'
 
+import { ObjectValue } from 'react-inspector'
+
 export default {
   shouldHandle: value => (value === null),
 
-  render: () => <pre className="null-rep">null</pre>,
+  render: value => <ObjectValue object={value} />,
 }

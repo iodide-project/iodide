@@ -80,12 +80,6 @@ const cellReducer = (state = newNotebook(), action) => {
       return Object.assign(newState, { languageLastUsed: language })
     }
 
-    case 'MARK_CELL_NOT_RENDERED':
-      return newStateWithSelectedCellPropertySet(
-        state,
-        'rendered', false,
-      )
-
     case 'DELETE_CELL': {
       const selectedId = getSelectedCellId(state)
       const cells = state.cells.slice()

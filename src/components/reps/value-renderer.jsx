@@ -3,20 +3,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-
-import nullHandler from './null-handler'
-import undefinedHandler from './undefined-handler'
-import dataFrameHandler from './dataframe-handler'
-import matrixHandler from './matrix-handler'
 import arrayHandler from './array-handler'
-import dateHandler from './date-handler'
-import stringHandler from './string-handler'
-import booleanHandler from './boolean-handler'
-import numberHandler from './number-handler'
-import functionHandler from './function-handler'
-import promiseHandler from './promise-handler'
-import domElementHandler from './dom-element-handler'
+import dataFrameHandler from './dataframe-handler'
 import defaultHandler from './default-handler'
+import errorHandler from './error-handler'
+import matrixHandler from './matrix-handler'
+import nullHandler from './null-handler'
+import promiseHandler from './promise-handler'
+import stringHandler from './string-handler'
+import numberHandler from './number-handler'
+import dateHandler from './date-handler'
 
 export function renderValue(value, inContainer = false) {
   for (const handler of handlers) {
@@ -36,6 +32,9 @@ export function renderValue(value, inContainer = false) {
       // Fallback to other handlers if it's something invalid
     }
   }
+
+  // We should never get here, since the default handler should handle everything
+  console.warn(`No output handler found to handle ${value}`)
   return undefined
 }
 
@@ -53,31 +52,6 @@ const renderMethodHandler = {
 }
 
 
-const errorHandler = {
-  shouldHandle: value => value instanceof Error,
-  render: (e) => {
-    let { stack } = e
-    if (e.lineNumber) {
-      // this is firefox
-      // prepend the name and message
-      stack = `${e.name}: ${e.message}\n${stack}`
-      // lines after the line beginning with "cellReducer@" can
-      // be discarded, because they refer to app state not notebook state
-      // stack = stack.slice(0, stack.indexOf('cellReducer@'))
-    } else {
-      // not FF;
-      // for now, treat as chrome. it appears that anything after:
-      // '    at cellReducer' is not useful.
-    }
-    return (
-      <div className="error-output">
-        <pre>{stack}</pre>
-      </div>
-    )
-  },
-}
-
-
 // this wraps all the handlers in a bit of try/catch
 function wrapHandler(handler) {
   return {
@@ -89,9 +63,9 @@ function wrapHandler(handler) {
         return false
       }
     },
-    render: (value) => {
+    render: (value, inContainer) => {
       try {
-        return handler.render(value)
+        return handler.render(value, inContainer)
       } catch (error) {
         console.error('output handler render error', error);
         return (
@@ -104,15 +78,11 @@ function wrapHandler(handler) {
   }
 }
 
-// NOTE: handler order matters! handlers higher in the list take precedence!
-// SMPLE TYPE HANDLERS MUST COME FIRST -- otherwise, handlers that look for e.g.
-// a property in a null will break
-const simpleTypeHandlers = [
+const simpleHandlers = [
   nullHandler,
-  undefinedHandler,
+  dateHandler,
   stringHandler,
   numberHandler,
-  booleanHandler,
 ].map(h => wrapHandler(h))
 
 const complexHandlers = [
@@ -122,23 +92,19 @@ const complexHandlers = [
   // matrix must come before array!
   matrixHandler,
   arrayHandler,
-  dateHandler,
-  functionHandler,
   errorHandler,
-  domElementHandler,
   promiseHandler,
   defaultHandler,
 ].map(h => wrapHandler(h))
 
-let handlers = simpleTypeHandlers.concat(complexHandlers)
-
+let handlers = simpleHandlers.concat(complexHandlers)
 
 const userHandlers = []
 
 export function addOutputHandler(handler) {
   // insert new handlers *after* the scalar handlers
   userHandlers.unshift(wrapHandler(handler))
-  handlers = simpleTypeHandlers.concat(userHandlers, complexHandlers)
+  handlers = simpleHandlers.concat(userHandlers, complexHandlers)
 }
 
 
@@ -146,6 +112,7 @@ export class ValueRenderer extends React.Component {
   static propTypes = {
     render: PropTypes.bool.isRequired,
     valueToRender: PropTypes.any,
+    inContainer: PropTypes.bool,
   }
 
   render() {
@@ -153,8 +120,6 @@ export class ValueRenderer extends React.Component {
       return <div className="empty-resultset" />
     }
 
-    const value = this.props.valueToRender
-    const resultElem = renderValue(value)
-    return <div className="rep-container">{resultElem}</div>
+    return renderValue(this.props.valueToRender, this.props.inContainer)
   }
 }

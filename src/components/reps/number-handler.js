@@ -1,7 +1,11 @@
 import React from 'react'
 
+import nb from '../../tools/nb'
+
 export default {
   shouldHandle: value => typeof (value) === 'number',
-  render: value =>
-    <span className="number-rep">{value}</span>,
+  render: (value, inContainer) => {
+    const displayValue = inContainer ? nb.prettyFormatNumber(value, 6) : value
+    return <span className="number-rep">{displayValue}</span>
+  },
 }

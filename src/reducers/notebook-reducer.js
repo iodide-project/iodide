@@ -1,13 +1,10 @@
-import { newNotebook, newCell, newCellID, paneRatios } from '../editor-state-prototypes'
+/* global IODIDE_BUILD_TYPE */
+import { newNotebook, getUserData, newCell, newCellID, paneRatios } from '../editor-state-prototypes'
 import {
   exportJsmdBundle,
-  stringifyStateToJsmd,
-  stateFromJsmd,
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
-
-const AUTOSAVE = 'AUTOSAVE: '
 
 function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
   return {
@@ -25,28 +22,6 @@ function addAppMessageToState(state, appMessage) {
   return state
 }
 
-function getSavedNotebooks() {
-  const autoSave = Object.keys(localStorage).filter(n => n.includes(AUTOSAVE))[0]
-  const locallySaved = Object.keys(localStorage).filter(n => !n.includes(AUTOSAVE))
-  locallySaved.sort((a, b) => {
-    const p = (_) => {
-      let ls = localStorage.getItem(_)
-      if (!ls) return -1
-      ls = stateFromJsmd(ls)
-      return Date.parse(ls.lastSaved)
-    }
-    return p(b) - p(a)
-  })
-  return {
-    autoSave,
-    locallySaved,
-  }
-}
-
-function getUserData() {
-  return { userData: window.userData || {} }
-}
-
 const initialVariables = new Set(Object.keys(window)) // gives all global variables
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
@@ -59,7 +34,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
   switch (action.type) {
     case 'NEW_NOTEBOOK':
-      return Object.assign(newNotebook(), getSavedNotebooks(), getUserData())
+      return Object.assign(newNotebook(), getUserData())
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
@@ -103,47 +78,21 @@ const notebookReducer = (state = newNotebook(), action) => {
       nextState = action.newState
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
+      const notebookId = (IODIDE_BUILD_TYPE && IODIDE_BUILD_TYPE === 'server') ?
+        parseInt(window.location.pathname.split('/').filter(s => s.length).pop(), 10) : undefined;
+
       return Object.assign(
-        newNotebook(), nextState, { cells }, getSavedNotebooks(),
+        newNotebook(), nextState, { cells, notebookId },
         getUserData(),
       )
     }
 
-    case 'SAVE_NOTEBOOK': {
-      ({ title } = state)
-      let lastSaved
-      if (!action.autosave) {
-        lastSaved = (new Date()).toISOString()
-      } else {
-        ({ lastSaved } = state)
-        title = AUTOSAVE + title
-      }
-      const stateToSave = Object.assign({}, state, { lastSaved })
-      delete stateToSave.savedEnvironment
-      window.localStorage.setItem(title, stringifyStateToJsmd(stateToSave))
-      return Object.assign({}, state, getSavedNotebooks(), { lastSaved })
+    case 'NOTEBOOK_SAVED': {
+      return Object.assign({}, state, { lastSaved: new Date().toISOString() })
     }
 
-    case 'LOAD_NOTEBOOK': {
-      nextState = stateFromJsmd(window.localStorage.getItem(action.title))
-      // note: loading a NB should always assign to a copy of the latest global
-      // and per-cell state for backwards compatibility
-      cells = nextState.cells.map((cell, i) =>
-        Object.assign(newCell(i, cell.cellType), cell))
-      return Object.assign(newNotebook(), nextState, getSavedNotebooks(), getUserData())
-    }
-
-    case 'DELETE_NOTEBOOK': {
-      ({ title } = action)
-      if (Object.prototype.hasOwnProperty.call(window.localStorage, 'title')) {
-        window.localStorage.removeItem(title)
-      }
-      nextState = (
-        (title === state.title) ?
-          Object.assign({}, newNotebook()) :
-          Object.assign({}, state)
-      )
-      return nextState
+    case 'ADD_NOTEBOOK_ID': {
+      return Object.assign({}, state, { notebookId: action.id })
     }
 
     case 'CHANGE_PAGE_TITLE':
@@ -286,6 +235,6 @@ const notebookReducer = (state = newNotebook(), action) => {
   }
 }
 
-export { getSavedNotebooks, getUserData }
+export { getUserData }
 
 export default notebookReducer

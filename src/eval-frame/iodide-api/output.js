@@ -26,8 +26,10 @@ function sideEffectDiv(sideEffectClass, reportSideEffect) {
 export const output = {
   text: (s, reportSideEffect = false) => {
     // dumbly puts a string in a side effect div
-    const div = sideEffectDiv('side-effect-print', reportSideEffect)
-    div.innerHTML = s.toString()
+    for (const line of s.toString().split('\n')) {
+      const div = sideEffectDiv('side-effect-print', reportSideEffect)
+      div.innerText = line
+    }
   },
   element: (nodeType, reportSideEffect = true) => {
     const div = sideEffectDiv('side-effect-element', reportSideEffect)

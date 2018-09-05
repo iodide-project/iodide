@@ -4,7 +4,7 @@
 import Ajv from 'ajv'
 import _ from 'lodash'
 
-class SchemaValidationError extends Error {
+export class SchemaValidationError extends Error {
   constructor(message) {
     super(message)
     this.message = message

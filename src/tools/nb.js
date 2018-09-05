@@ -44,19 +44,11 @@ nb.isMatrixLike = function(obj,rowsToCheck = 100, colsToCheck = 20){
   const rowsLength = obj[0].length
 
   colsToCheck = Math.min(colsToCheck, obj[0].length)
-  // check that values are not objectlike
-  for (let j = 0; j < colsToCheck; j++) {
-    if (_.isObjectLike(obj[0][j])) {return false}
-  }
 
   // check the remaining rows
   for (let i = 1; i < rowsToCheck; i++) {
     // make sure all rows are simple arrays the same length
     if (!nb.isSimpleArray(obj[i]) || obj[i].length !== rowsLength) {return false}
-    // check that values are not objectlike
-    for (let j = 0; j < colsToCheck; j++) {
-      if (_.isObjectLike(obj[i][j])) {return false}
-    }
   }
   return true
 }
