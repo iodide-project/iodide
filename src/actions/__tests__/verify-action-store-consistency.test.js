@@ -13,11 +13,12 @@ import { jsLanguageDefinition } from '../../state-schemas/mirrored-state-schema'
 // note that updateCellProperties is not not tested, b/c this can introduce
 // arbitrary props with arbitrary values into cells
 
-const mockUserData = {
-  accessToken: 'accessToken',
-  name: 'name',
-  avatar: 'avatar',
-}
+// NOTE: muting this for the new login workflow.
+// const mockUserData = {
+//   accessToken: 'accessToken',
+//   name: 'name',
+//   avatar: 'avatar',
+// }
 
 describe('make sure createValidatedReducer is checking correctly', () => {
   beforeEach(() => {
