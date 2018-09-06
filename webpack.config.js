@@ -82,6 +82,7 @@ module.exports = (env) => {
       'iodide.eval-frame': `${APP_DIR}/eval-frame/index.jsx`,
       'server.home': `${APP_DIR}/server/index.jsx`,
       'server.user': `${APP_DIR}/server/user.jsx`,
+      'server.revisions': `${APP_DIR}/server/revisions.jsx`,
 
     },
     output: {
