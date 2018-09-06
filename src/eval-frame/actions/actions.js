@@ -31,10 +31,10 @@ function IdFactory() {
 
 const historyIdGen = new IdFactory()
 
-export function newNotebook() {
+export function resetNotebook() {
   // we still need this for some tests to work, even though it's not really used
   return {
-    type: 'NEW_NOTEBOOK',
+    type: 'RESET_NOTEBOOK',
   }
 }
 

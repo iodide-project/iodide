@@ -10,8 +10,7 @@ describe('blank-state-reducer', () => {
 describe('new notebooks', () => {
   const nextState = newNotebook()
 
-  it('should create newNotebook() on NEW_NOTEBOOK', () => {
-    expect(notebookReducer(nextState, { type: 'NEW_NOTEBOOK' })).toEqual(newNotebook())
+  it('should create newNotebook() on RESET_NOTEBOOK', () => {
+    expect(notebookReducer(nextState, { type: 'RESET_NOTEBOOK' })).toEqual(newNotebook())
   })
 })
-
