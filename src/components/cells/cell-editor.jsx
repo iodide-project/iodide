@@ -24,7 +24,6 @@ class CellEditor extends React.Component {
     cellId: PropTypes.number.isRequired,
     cellType: PropTypes.string,
     content: PropTypes.string,
-    codeMirrorModeLoaded: PropTypes.bool,
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
       changeMode: PropTypes.func.isRequired,
@@ -168,14 +167,14 @@ function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
 
-  const { codeMirrorModeLoaded } = state.languages[cell.language]
-
-  const codeMirrorMode = (
-    cell.cellType === 'code' ? state.languages[cell.language].codeMirrorMode : cell.cellType
-  )
+  const codeMirrorMode = (cell.cellType === 'code'
+      && state.languages[cell.language]
+      && state.languages[cell.language].codeMirrorModeLoaded)
+    ? state.languages[cell.language].codeMirrorMode
+    : ''
 
   const editorOptions = {
-    mode: codeMirrorModeLoaded ? codeMirrorMode : '',
+    mode: codeMirrorMode,
     lineWrapping: false,
     matchBrackets: true,
     autoCloseBrackets: true,
@@ -217,7 +216,6 @@ function mapStateToProps(state, ownProps) {
     content: cell.content,
     cellId,
     codeMirrorMode,
-    codeMirrorModeLoaded,
     editorOptions,
   }
 }
