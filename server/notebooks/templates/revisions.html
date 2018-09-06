@@ -3,8 +3,8 @@
 <div id="page"></div>
 <script>
   window.userInfo = {{ user_info|safe }};
-  window.thisUser = {{ this_user|safe }};
-  window.notebookList = {{ notebook_list|safe }};
+  window.ownerInfo = {{ owner_info|safe }};
+  window.revisions = {{ revisions|safe }};
 </script>
 <script src="/server.revisions.dev.js"></script>
 {% endblock %}

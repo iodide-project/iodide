@@ -4,22 +4,10 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.template import loader
-from social_django.models import UserSocialAuth
 
 from .notebooks.models import Notebook, NotebookRevision
 from .base.models import User
-
-
-def get_user_info_dict(user):
-    if user.is_authenticated:
-        user_social_auth = UserSocialAuth.objects.get(user=user)
-        social_auth_extra_data = user_social_auth.extra_data
-        return {
-            'name': social_auth_extra_data['login'],
-            'avatar': user.avatar,
-            'accessToken': user.social_auth_extra_data['access_token']
-        }
-    return {}
+from .shared.get_user_info_dict import get_user_info_dict
 
 
 def index(request):

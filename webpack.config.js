@@ -83,7 +83,6 @@ module.exports = (env) => {
       'server.home': `${APP_DIR}/server/index.jsx`,
       'server.user': `${APP_DIR}/server/user.jsx`,
       'server.revisions': `${APP_DIR}/server/revisions.jsx`,
-
     },
     output: {
       path: BUILD_DIR,
