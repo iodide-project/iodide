@@ -2,7 +2,8 @@ import json
 from django.contrib.auth import logout as django_logout
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
+
 from django.template import loader
 from social_django.models import UserSocialAuth
 
@@ -37,7 +38,7 @@ def index(request):
 def user(request, name=None):
     template = loader.get_template('user.html')
     user_info = get_user_info_dict(request.user)
-    user = User.objects.get(username=name)
+    user = get_object_or_404(User, username=name)
 
     this_user = {
         'full_name': '{} {}'.format(user.first_name, user.last_name),
