@@ -3,7 +3,6 @@ from django.contrib.auth import logout as django_logout
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
-
 from django.template import loader
 from social_django.models import UserSocialAuth
 
