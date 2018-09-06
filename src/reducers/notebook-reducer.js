@@ -164,16 +164,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { executionNumber })
     }
 
-    case 'LOGIN_SUCCESS': {
-      const { userData } = action
-      return Object.assign({}, state, { userData })
-    }
-
-    case 'LOGOUT': {
-      const userData = {}
-      return Object.assign({}, state, { userData })
-    }
-
     case 'APPEND_TO_EVAL_HISTORY': {
       const history = [...state.history]
       history.push({

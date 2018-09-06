@@ -5,7 +5,8 @@ import PropTypes from 'prop-types'
 import InfoIcon from '@material-ui/icons/InfoOutline'
 
 import NotebookTaskButton from './notebook-task-button'
-import UserButton from './user-button'
+// import UserButton from './user-button'
+import UserMenu from '../../shared/user-menu'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
 
@@ -37,9 +38,10 @@ export class ViewControlsUnconnected extends React.Component {
         </NotebookTaskButton>
 
         {IODIDE_BUILD_TYPE === 'server' && (
-          <UserButton
+          <UserMenu
             isAuthenticated={this.props.isAuthenticated}
             avatar={this.props.avatar}
+            username={this.props.name}
           />
         )}
 

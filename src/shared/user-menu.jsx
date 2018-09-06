@@ -8,14 +8,14 @@ import Tooltip from '@material-ui/core/Tooltip'
 
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import NotebookMenuDivider from '../../components/menu/notebook-menu-divider'
+import NotebookMenuDivider from '../components/menu/notebook-menu-divider'
 
 export default class UserMenu extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       anchorElement: null,
-      isLoggedIn: props.userInfo && props.userInfo.name,
+      isLoggedIn: props.isAuthenticated,
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -33,9 +33,8 @@ export default class UserMenu extends React.Component {
   }
 
   goToProfile() {
-    const { name } = this.props.userInfo
-    // const a = document.createElement('a')
-    document.location = `/users/${name}`
+    // maybe we should replace this with Link from react-router-dom
+    document.location = `/${this.props.username}`
   }
 
   login() {
@@ -67,7 +66,7 @@ export default class UserMenu extends React.Component {
   render() {
     const { anchorElement } = this.state
     return (
-      <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title="Menu">
+      <Tooltip title="Menu">
         <React.Fragment>
           {
               this.state.isLoggedIn && (
@@ -79,6 +78,7 @@ export default class UserMenu extends React.Component {
                     open={Boolean(anchorElement)}
                     onClose={this.handleMenuClose}
                     transitionDuration={50}
+                    transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                   >
                     <MenuItem dense>
                       <ListItemText onClick={this.goToProfile} primary="Go to Profile" />
@@ -98,8 +98,8 @@ export default class UserMenu extends React.Component {
                     onClick={this.handleClick}
                     style={{ color: 'white' }}
                   >
-                    <Avatar sizes="5" src={this.props.userInfo.avatar} />
-                    <ExpandMore />
+                    <Avatar style={{ width: 28, height: 28 }} src={this.props.avatar} />
+                    <ExpandMore style={{ width: 15, height: 15 }} />
                   </Button>
                 </React.Fragment>
               )
@@ -107,7 +107,8 @@ export default class UserMenu extends React.Component {
           {
               !this.state.isLoggedIn && (
                 <Button
-                  variant="contained"
+                  variant="outlined"
+                  style={{ color: 'white' }}
                   className="header-button"
                   href={`/oauth/login/github/?next=${window.location.pathname}`}
                 >

@@ -225,34 +225,6 @@ export function loginFailure() {
   }
 }
 
-export function login() {
-  const url = '/oauth/login/github'
-  const name = 'github_login'
-  const specs = 'width=500,height=600'
-  const authWindow = window.open(url, name, specs)
-  authWindow.focus()
-
-  return (dispatch) => {
-    // Functions to be called by child window
-    window.loginSuccess = (userData) => {
-      dispatch(loginSuccess(userData))
-    }
-    window.loginFailure = () => dispatch(loginFailure())
-  }
-}
-
-export function logout() {
-  return (dispatch) => {
-    fetch('/logout/')
-      .then((response) => {
-        if (response.ok) {
-          dispatch({ type: 'LOGOUT' })
-          dispatch(updateAppMessages({ message: 'Logged Out' }))
-        } else dispatch(updateAppMessages({ message: 'Logout Failed' }))
-      })
-  }
-}
-
 export function saveNotebookToServer() {
   return (dispatch, getState) => {
     const state = getState()

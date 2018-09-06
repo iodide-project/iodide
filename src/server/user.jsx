@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 
 import Button from '@material-ui/core/Button';
-
+import AddIcon from '@material-ui/icons/Add'
 import Header from './components/header';
 
 const { userInfo, thisUser, notebookList } = window;
@@ -27,12 +27,14 @@ render(
       <h2>notebooks</h2>
       <Button
         variant="contained"
+        size="small"
         className="header-button"
         href="/new"
       >
+        <AddIcon style={{ fontSize: 15, marginTop: -2 }} />
         New notebook
       </Button>
-      <table >
+      <table style={{ marginTop: '20px' }} >
         <tbody>
           {notebookList.map(notebook => (
             <tr key={notebook.id}>
