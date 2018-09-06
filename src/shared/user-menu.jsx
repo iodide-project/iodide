@@ -106,14 +106,15 @@ export default class UserMenu extends React.Component {
             }
           {
               !this.state.isLoggedIn && (
-                <Button
-                  variant="outlined"
-                  style={{ color: 'white' }}
-                  className="header-button"
-                  href={`/oauth/login/github/?next=${window.location.pathname}`}
-                >
-                  Log In
-                </Button>
+              <Button
+                variant="text"
+                style={{
+                  color: 'white', width: '80px', padding: '0',
+                }}
+                href={`/oauth/login/github/?next=${window.location.pathname}`}
+              >
+                Log In
+              </Button>
               )
             }
         </React.Fragment>
@@ -121,3 +122,14 @@ export default class UserMenu extends React.Component {
     )
   }
 }
+
+/* <Button
+variant="outlined"
+style={{
+color: 'white', outline: '1px solid white', width: '50px', margin: '0',
+}}
+className="header-button"
+href={`/oauth/login/github/?next=${window.location.pathname}`}
+>
+Log In
+</Button> */
