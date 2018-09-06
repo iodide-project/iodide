@@ -11,7 +11,7 @@ const path = location.pathname.replace(/^\/|\/$/g, '');
 const content = (path === '') ? (
   <div>
     <Header userInfo={userInfo} />
-    <div style={{ width: '1000px', margin: 'auto' }}>
+    <div style={{ width: '1000px', margin: 'auto', paddingLeft: 25 }}>
       <h1>Latest Iodide Notebooks</h1>
       <NotebookList notebookList={notebookList} />
     </div>
