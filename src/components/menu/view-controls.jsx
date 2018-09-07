@@ -51,7 +51,7 @@ export class ViewControlsUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state) {
-  const isAuthenticated = Boolean(state.userData.accessToken)
+  const isAuthenticated = Boolean(state.userData.name)
   return {
     isAuthenticated,
     name: state.userData.name,
