@@ -19,14 +19,16 @@ def get_user_info_dict(user):
 
 
 def index(request):
-    # this is horrible and will not scale
     return render(
-        request, 'home.html', {
-            'user_info': json.dumps(get_user_info_dict(request.user)),
-            'notebook_list': json.dumps([
-                {'id': v[0], 'title': v[1], 'owner': v[2]} for v in
-                Notebook.objects.values_list('id', 'title', 'owner__username')
-            ])
+        request, 'index.html', {
+            'page_data': json.dumps({
+                'userInfo': get_user_info_dict(request.user),
+                # this is horrible and will not scale
+                'notebookList': [
+                    {'id': v[0], 'title': v[1], 'owner': v[2]} for v in
+                    Notebook.objects.values_list('id', 'title', 'owner__username')
+                ]
+            })
         }
     )
 
@@ -40,24 +42,24 @@ def user(request, name=None):
         'avatar': user.avatar,
         'name': user.username,
     }
-    return render(request, 'user.html', {
-        'user_info': json.dumps(user_info),
-        'this_user': json.dumps(this_user),
-        'notebook_list': json.dumps(
-            [{
+    return render(request, 'index.html', {
+        'page_data': json.dumps({
+            'userInfo': user_info,
+            'thisUser': this_user,
+            'notebookList': [{
                 'id': v[0],
                 'title': v[1],
                 'last_revision': NotebookRevision.objects
                 .filter(notebook_id=v[0]).last().created.isoformat(sep=' ')
-            } for v in Notebook.objects.filter(owner=user).values_list('id', 'title')
-             ])
+            } for v in Notebook.objects.filter(owner=user).values_list('id', 'title')]
+        })
     })
 
 
 def login(request):
     if request.user.is_authenticated:
         return redirect('/new')
-    return render(request, 'login.html')
+    return render(request, 'index.html', {'page_data': json.dumps({})})
 
 
 def login_success(request):
