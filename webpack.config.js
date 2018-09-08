@@ -133,6 +133,12 @@ module.exports = (env) => {
     watchOptions: { poll: true },
     plugins: [
       ...plugins,
+      new webpack.ProvidePlugin({
+        React: 'react',
+        ReactDOM: 'react-dom',
+        $: 'jquery',
+        jQuery: 'jquery',
+      }),
       new CreateFileWebpack({
         path: BUILD_DIR,
         fileName: (env === 'server') ? 'index.html' : `iodide.${APP_VERSION_STRING}.html`,
