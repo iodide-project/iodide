@@ -6,7 +6,7 @@ import React from 'react'
 
 import ReportPane from './panes/report-pane'
 import DeclaredVariablesPane from './panes/declared-variables-pane'
-import HistoryPane from './panes/history-pane'
+import ConsolePane from './panes/console-pane'
 import AppInfoPane from './panes/app-info-pane'
 
 import FixedPositionContainer from '../../components/fixed-position-container'
@@ -22,7 +22,7 @@ export default class EvalContainer extends React.Component {
         </FixedPositionContainer>
 
         <FixedPositionContainer paneId="ConsolePositioner">
-          <HistoryPane />
+          <ConsolePane />
         </FixedPositionContainer>
 
         <FixedPositionContainer paneId="WorkspacePositioner">
