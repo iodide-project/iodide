@@ -22,6 +22,7 @@ class FixedPositionContainerUnconnected extends React.Component {
             position: 'fixed',
             border: '1px solid #cbcbcb',
             zIndex: 10,
+            overflow: 'hidden',
           },
           this.props.style,
           )}
