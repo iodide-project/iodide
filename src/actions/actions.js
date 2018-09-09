@@ -483,13 +483,6 @@ export function decreaseEditorWidth() {
   }
 }
 
-export function changeSidePaneMode(sidePaneMode) {
-  return {
-    type: 'CHANGE_SIDE_PANE_MODE',
-    sidePaneMode,
-  }
-}
-
 export function changeEditorWidth(widthShift) {
   return {
     type: 'CHANGE_EDITOR_WIDTH',

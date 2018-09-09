@@ -1,36 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
 
 import CellContainer from './cells/cell-container'
 import FixedPositionContainer from './fixed-position-container'
 import LayoutManager from './layout-manager'
 
-import * as actions from '../actions/actions'
-
 class EditorPaneContainer extends React.Component {
   static propTypes = {
-    actions: PropTypes.shape({
-      changeEditorWidth: PropTypes.func.isRequired,
+    cellsStyle: PropTypes.shape({
+      padding: PropTypes.string.isRequired,
+      overflow: PropTypes.string.isRequired,
+      height: PropTypes.string.isRequired,
     }).isRequired,
-    cellResizerDisplayStyle: PropTypes.string.isRequired,
-    cellResizerWidth: PropTypes.number.isRequired,
     cellIds: PropTypes.array.isRequired,
-    paneMinWidth: PropTypes.number.isRequired,
-  }
-  constructor(props) {
-    super(props)
-    this.onResizeStopHandler = this.onResizeStopHandler.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
-  }
-
-  onResizeStopHandler(e, direction, ref, d) {
-    this.props.actions.changeEditorWidth(d.width)
   }
 
   render() {
@@ -56,23 +44,11 @@ function mapStateToProps(state) {
     overflow: 'auto',
     height: '100%',
   }
-  if (state.editorWidth < 30) {
-    cellsStyle.padding = '15px 0 20px 0'
-  }
+
   return {
     cellIds: state.cells.map(c => c.id),
-    cellResizerWidth: state.editorWidth,
-    cellResizerDisplayStyle: state.viewMode === 'REPORT_VIEW' ? 'none' : 'flex',
     cellsStyle,
-    paneMinWidth: state.editorWidth ? 300 : 0,
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch),
-  }
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditorPaneContainer)
+export default connect(mapStateToProps)(EditorPaneContainer)

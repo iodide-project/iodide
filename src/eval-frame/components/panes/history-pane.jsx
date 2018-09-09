@@ -17,10 +17,16 @@ export class HistoryPaneUnconnected extends React.Component {
     this.historyScrollerRef = React.createRef()
   }
 
+  // shouldComponentUpdate(nextProps) {
+  //   return (!deepEqual(this.props, nextProps)
+  //     && (this.props.sidePaneMode === '_CONSOLE'
+  //       || nextProps.sidePaneMode === '_CONSOLE')
+  //   )
+  // }
+
   shouldComponentUpdate(nextProps) {
     return (!deepEqual(this.props, nextProps)
-      && (this.props.sidePaneMode === '_CONSOLE'
-        || nextProps.sidePaneMode === '_CONSOLE')
+      && (this.props.paneVisible || nextProps.paneVisible)
     )
   }
 
@@ -50,7 +56,7 @@ export class HistoryPaneUnconnected extends React.Component {
       <div
         className="pane-content"
         style={{
-          display: this.props.paneDisplay,
+          // display: this.props.paneDisplay,
           overflow: 'hidden',
         }}
       >
@@ -84,9 +90,10 @@ export class HistoryPaneUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   return {
-    sidePaneMode: state.sidePaneMode,
+    // sidePaneMode: state.sidePaneMode,
     history: state.history,
-    paneDisplay: state.sidePaneMode === '_CONSOLE' ? 'flex' : 'none',
+    paneVisible: state.panePositions.ConsolePositioner.display === 'block',
+    // paneDisplay: state.sidePaneMode === '_CONSOLE' ? 'flex' : 'none',
   }
 }
 

@@ -15,7 +15,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return (!deepEqual(this.props, nextProps)
-      && (this.props.workspacePaneVisible || nextProps.workspacePaneVisible)
+      && (this.props.paneVisible || nextProps.paneVisible)
     )
   }
 
@@ -62,7 +62,7 @@ export function mapStateToProps(state) {
   return {
     environmentVariables: state.savedEnvironment,
     userDefinedVarNames: state.userDefinedVarNames,
-    workspacePaneVisible: state.panePositions.WorkspacePositioner.display === 'block',
+    paneVisible: state.panePositions.WorkspacePositioner.display === 'block',
   }
 }
 

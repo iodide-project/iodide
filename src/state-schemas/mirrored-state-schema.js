@@ -138,11 +138,6 @@ export const mirroredStateProperties = {
     type: 'boolean',
     default: false,
   },
-  sidePaneMode: {
-    type: 'string',
-    enum: ['_CLOSED', '_CONSOLE', 'DECLARED_VARIABLES', '_APP_INFO'],
-    default: '_CONSOLE',
-  },
   runningCellID: {
     type: 'integer',
     default: undefined,
