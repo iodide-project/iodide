@@ -1,12 +1,13 @@
 import React from 'react'
 
-import CellsList from './cells-list'
+// import CellsList from './cells-list'
 // import PaneContainer from './panes/pane-container'
-import EditorLinkButton from './controls/editor-link-button'
+// import EditorLinkButton from './controls/editor-link-button'
 
+import ReportPane from './panes/report-pane'
 import DeclaredVariablesPane from './panes/declared-variables-pane'
 import HistoryPane from './panes/history-pane'
-import AppInfo from './panes/app-info-pane'
+import AppInfoPane from './panes/app-info-pane'
 
 import FixedPositionContainer from '../../components/fixed-position-container'
 
@@ -17,17 +18,7 @@ export default class EvalContainer extends React.Component {
       <React.Fragment>
 
         <FixedPositionContainer paneId="ReportPositioner">
-          <div
-            className="display-none-in-report"
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-            }}
-          >
-            <EditorLinkButton />
-          </div>
-          <CellsList id="cells" />
+          <ReportPane />
         </FixedPositionContainer>
 
         <FixedPositionContainer paneId="ConsolePositioner">
@@ -39,7 +30,7 @@ export default class EvalContainer extends React.Component {
         </FixedPositionContainer>
 
         <FixedPositionContainer paneId="AppInfoPositioner">
-          <AppInfo />
+          <AppInfoPane />
         </FixedPositionContainer>
 
       </React.Fragment>
