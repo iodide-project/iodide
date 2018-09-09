@@ -45,6 +45,21 @@ const environmentVariableSchema = {
   ],
 }
 
+const panePositionSchema = {
+  type: 'object',
+  properties: {
+    display: { type: 'string', enum: ['none', 'block'], default: 'none' },
+    top: { type: 'integer', default: 0 },
+    left: { type: 'integer', default: 0 },
+    width: { type: 'integer', default: 0 },
+    height: { type: 'integer', default: 0 },
+  },
+  additionalProperties: false,
+}
+
+const positionerDefaults = {
+  display: 'none', top: 0, left: 0, width: 0, height: 0,
+}
 
 export const mirroredCellProperties = {
   cellType: {
@@ -75,7 +90,6 @@ export const mirroredCellProperties = {
   },
 }
 
-
 // note that 'cells' and 'viewMode' are defined in all 3 of
 // mirroredStateProperties, editorOnlyStateProperties, evalFrameOnlyStateProperties,
 // because:
@@ -103,6 +117,16 @@ export const mirroredStateProperties = {
   languageLastUsed: {
     type: 'string',
     default: 'js',
+  },
+  panePositions: {
+    type: 'object',
+    additionalProperties: panePositionSchema,
+    default: {
+      EditorPositioner: Object.assign({}, positionerDefaults),
+      ReportPositioner: Object.assign({}, positionerDefaults),
+      ConsolePositioner: Object.assign({}, positionerDefaults),
+      WorkspacePositioner: Object.assign({}, positionerDefaults),
+    },
   },
   savedEnvironment: {
     type: 'object',

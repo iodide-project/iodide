@@ -230,6 +230,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { languages })
     }
 
+    case 'UPDATE_PANE_POSITIONS': {
+      return Object.assign({}, state, { panePositions: action.panePositions })
+    }
+
     default: {
       return state
     }

@@ -1,6 +1,9 @@
 import React from 'react'
 import GoldenLayout from 'golden-layout'
 
+import { dispatch } from '../store'
+
+
 const config = {
   settings: {
     showPopoutIcon: false,
@@ -73,17 +76,10 @@ class Positioner extends React.Component {
 }
 
 const positionerDefaults = {
-  visible: false, top: 0, left: 0, width: 0, height: 0,
+  display: 'none', top: 0, left: 0, width: 0, height: 0,
 }
 
-function getLayoutPositions(layout) {
-  // console.log(layout._getAllContentItems() // eslint-disable-line no-underscore-dangle
-  //   .filter(c => c.isComponent)
-  //   .map(c => [
-  //     c.container.isHidden,
-  //     c.element[0].getBoundingClientRect(),
-  //   ]))
-
+function updateLayoutPositions(layout) {
   const panePositions = {
     EditorPositioner: Object.assign({}, positionerDefaults),
     ReportPositioner: Object.assign({}, positionerDefaults),
@@ -96,7 +92,7 @@ function getLayoutPositions(layout) {
     .forEach((c) => {
       const rect = c.element[0].getBoundingClientRect()
       panePositions[c.config.props.positionerId] = {
-        visible: true,
+        display: 'block',
         top: rect.top,
         left: rect.left,
         width: rect.width,
@@ -105,6 +101,10 @@ function getLayoutPositions(layout) {
     })
 
   console.log(panePositions)
+  dispatch({
+    type: 'UPDATE_PANE_POSITIONS',
+    panePositions,
+  })
 }
 
 export default class LayoutManager extends React.PureComponent {
@@ -144,7 +144,7 @@ export default class LayoutManager extends React.PureComponent {
       })
       layout.on('stateChanged', () => {
         console.log(layout.toConfig())
-        getLayoutPositions(layout)
+        updateLayoutPositions(layout)
       })
       window.GoldenLayout = layout
     }
