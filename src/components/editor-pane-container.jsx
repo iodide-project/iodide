@@ -36,9 +36,7 @@ class EditorPaneContainer extends React.Component {
   render() {
     const cellInputComponents = this.props.cellIds.map(id =>
       <CellContainer cellId={id} key={id} />)
-    // NB: #cells-resizer must wrap #cells in order for the resizer
-    // drag bar to be *outside* of the scroll bar when there are enough
-    // cells to require scrolling. #cells manages the scrolling
+
     return (
       <React.Fragment>
         <LayoutManager />
@@ -53,7 +51,11 @@ class EditorPaneContainer extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const cellsStyle = { padding: '15px 15px 20px 15px' }
+  const cellsStyle = {
+    padding: '15px 15px 20px 15px',
+    overflow: 'auto',
+    height: '100%',
+  }
   if (state.editorWidth < 30) {
     cellsStyle.padding = '15px 0 20px 0'
   }

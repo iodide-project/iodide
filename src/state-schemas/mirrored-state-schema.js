@@ -126,6 +126,7 @@ export const mirroredStateProperties = {
       ReportPositioner: Object.assign({}, positionerDefaults),
       ConsolePositioner: Object.assign({}, positionerDefaults),
       WorkspacePositioner: Object.assign({}, positionerDefaults),
+      AppInfoPositioner: Object.assign({}, positionerDefaults),
     },
   },
   savedEnvironment: {

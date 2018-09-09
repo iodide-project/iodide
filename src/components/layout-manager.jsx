@@ -44,6 +44,13 @@ const config = {
                 props: { label: 'C', positionerId: 'WorkspacePositioner' },
                 isClosable: false,
               },
+              {
+                title: 'App Info',
+                type: 'react-component',
+                component: 'Positioner',
+                props: { label: 'C', positionerId: 'AppInfoPositioner' },
+                isClosable: false,
+              },
             ],
           },
         ],
@@ -66,11 +73,10 @@ class Positioner extends React.Component {
         style={{
           width: '100%',
           height: '100%',
-          backgroundColor: 'rgba(251, 0, 255, 0.08)',
         }}
         id={this.props.positionerId}
-      >{this.props.positionerId}
-      </div>
+        className="layout-positioner"
+      />
     )
   }
 }
@@ -85,6 +91,7 @@ function updateLayoutPositions(layout) {
     ReportPositioner: Object.assign({}, positionerDefaults),
     ConsolePositioner: Object.assign({}, positionerDefaults),
     WorkspacePositioner: Object.assign({}, positionerDefaults),
+    AppInfoPositioner: Object.assign({}, positionerDefaults),
   }
 
   layout._getAllContentItems() // eslint-disable-line no-underscore-dangle
@@ -154,9 +161,9 @@ export default class LayoutManager extends React.PureComponent {
     return (
       <div
         ref={this.gotDiv.bind(this)}
-        className={this.props.className}
+        className="layout-manager"
         style={{
-          height: '500px',
+          height: '100%',
         }}
       />
     )

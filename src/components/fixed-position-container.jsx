@@ -12,16 +12,17 @@ class FixedPositionContainerUnconnected extends React.Component {
       height: PropTypes.number.isRequired,
     }).isRequired,
   }
-  // constructor(props) {
-  //   super(props)
-  //   this.onResizeStopHandler = this.onResizeStopHandler.bind(this)
-  // }
 
   render() {
     return (
       <div
+        className="fixed-position-container"
         style={Object.assign(
-          { position: 'fixed' },
+          {
+            position: 'fixed',
+            border: '1px solid #cbcbcb',
+            zIndex: 10,
+          },
           this.props.style,
           )}
       >

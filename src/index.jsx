@@ -11,7 +11,7 @@ import 'codemirror/theme/eclipse.css'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/hint/show-hint.css'
 import 'golden-layout/src/css/goldenlayout-base.css'
-import 'golden-layout/src/css/goldenlayout-dark-theme.css'
+import 'golden-layout/src/css/goldenlayout-light-theme.css'
 
 // iodide styles
 import './style/top-level-container-styles.css'
