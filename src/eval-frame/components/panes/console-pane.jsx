@@ -7,7 +7,7 @@ import HistoryItem from './history-item'
 import ConsoleInput from './console-input'
 import EmptyPaneContents from './empty-pane-contents'
 
-export class HistoryPaneUnconnected extends React.Component {
+export class ConsolePaneUnconnected extends React.Component {
   static propTypes = {
     history: PropTypes.array,
   }
@@ -16,13 +16,6 @@ export class HistoryPaneUnconnected extends React.Component {
     super(props);
     this.historyScrollerRef = React.createRef()
   }
-
-  // shouldComponentUpdate(nextProps) {
-  //   return (!deepEqual(this.props, nextProps)
-  //     && (this.props.sidePaneMode === '_CONSOLE'
-  //       || nextProps.sidePaneMode === '_CONSOLE')
-  //   )
-  // }
 
   shouldComponentUpdate(nextProps) {
     return (!deepEqual(this.props, nextProps)
@@ -56,7 +49,6 @@ export class HistoryPaneUnconnected extends React.Component {
       <div
         className="pane-content"
         style={{
-          // display: this.props.paneDisplay,
           overflow: 'hidden',
         }}
       >
@@ -67,6 +59,7 @@ export class HistoryPaneUnconnected extends React.Component {
             flexDirection: 'column',
             flexGrow: 1,
             maxWidth: '100%',
+            height: '100%',
             overflow: 'hidden',
           }}
         >
@@ -90,11 +83,9 @@ export class HistoryPaneUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   return {
-    // sidePaneMode: state.sidePaneMode,
     history: state.history,
     paneVisible: state.panePositions.ConsolePositioner.display === 'block',
-    // paneDisplay: state.sidePaneMode === '_CONSOLE' ? 'flex' : 'none',
   }
 }
 
-export default connect(mapStateToProps)(HistoryPaneUnconnected)
+export default connect(mapStateToProps)(ConsolePaneUnconnected)
