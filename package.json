@@ -40,6 +40,7 @@
     "error-stack-parser": "^2.0.2",
     "font-awesome": "^4.7.0",
     "fuse.js": "^3.2.0",
+    "golden-layout": "^1.5.9",
     "lodash": "^4.17.10",
     "lz-string": "^1.4.4",
     "markdown-it": "^8.4.1",

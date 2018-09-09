@@ -6,7 +6,7 @@ html, body {
   font-size: 14px;
   line-height: 1.42857143;
   color: #333;
-  background-color: #fff;
+  /*background-color: #fff;*/
   overflow: hidden;
   position: relative;
   display: flex;
@@ -47,9 +47,21 @@ div#cells {
   border-right: 2px solid lightgray;
 }
 
+/*
 iframe#eval-frame {
   border: none;
   flex-grow: 1;
   min-width: 300px;
   min-height: 100%;
+}*/
+
+iframe#eval-frame {
+    border: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -999;
 }
+

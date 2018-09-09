@@ -6,6 +6,7 @@ import deepEqual from 'deep-equal'
 import Resizable from 're-resizable'
 
 import CellContainer from './cells/cell-container'
+import LayoutManager from './layout-manager'
 
 import * as actions from '../actions/actions'
 
@@ -66,6 +67,7 @@ class EditorPaneContainer extends React.Component {
 
             {cellInputComponents}
           </div>
+          <LayoutManager />
         </Resizable>
       </React.Fragment>
     )
