@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import deepEqual from 'deep-equal'
-import Resizable from 're-resizable'
 
 import CellContainer from './cells/cell-container'
+import FixedPositionContainer from './fixed-position-container'
 import LayoutManager from './layout-manager'
 
 import * as actions from '../actions/actions'
@@ -41,34 +41,12 @@ class EditorPaneContainer extends React.Component {
     // cells to require scrolling. #cells manages the scrolling
     return (
       <React.Fragment>
-        <Resizable
-          id="cells-resizer"
-          enable={{
-            bottom: false,
-            top: false,
-            right: true,
-            topRight: false,
-            bottomRight: false,
-            bottomLeft: false,
-            topLeft: false,
-            left: false,
-          }}
-          handleClasses={{ right: 'resizer' }}
-          bounds="window"
-          minWidth={this.props.paneMinWidth}
-          onResizeStop={this.onResizeStopHandler}
-          size={{ width: this.props.cellResizerWidth }}
-          style={{
-            display: this.props.cellResizerDisplayStyle,
-            flexDirection: 'column',
-          }}
-        >
+        <LayoutManager />
+        <FixedPositionContainer paneId="EditorPositioner">
           <div style={this.props.cellsStyle} id="cells">
-
             {cellInputComponents}
           </div>
-          <LayoutManager />
-        </Resizable>
+        </FixedPositionContainer>
       </React.Fragment>
     )
   }
