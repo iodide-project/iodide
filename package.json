@@ -54,7 +54,6 @@
     "re-resizable": "^4.4.8",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "react-golden-layout": "^1.0.6",
     "react-helmet": "^5.2.0",
     "react-inspector": "^2.3.0",
     "react-redux": "^5.0.7",
