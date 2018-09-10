@@ -8,8 +8,8 @@ class FixedPositionContainerUnconnected extends React.Component {
       display: PropTypes.string.isRequired,
       top: PropTypes.number.isRequired,
       left: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-      height: PropTypes.number.isRequired,
+      width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     }).isRequired,
   }
 
@@ -34,8 +34,24 @@ class FixedPositionContainerUnconnected extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
+  // need to assign to new object so that component updates when getting props
+  let style = Object.assign({}, state.panePositions[ownProps.paneId])
+  if (ownProps.hidden) {
+    console.log('ownProps.hidden', ownProps.paneId)
+    style.display = 'none'
+  }
+  if (ownProps.fullscreen) {
+    console.log('ownProps.fullscreen', ownProps.paneId)
+    style = {
+      display: 'block',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+    }
+  }
   return {
-    style: state.panePositions[ownProps.paneId],
+    style,
   }
 }
 

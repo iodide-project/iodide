@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 // import CellsList from './cells-list'
 // import PaneContainer from './panes/pane-container'
@@ -12,24 +14,29 @@ import AppInfoPane from './panes/app-info-pane'
 import FixedPositionContainer from '../../components/fixed-position-container'
 
 
-export default class EvalContainer extends React.Component {
+export class EvalContainerUnconnected extends React.Component {
+  static propTypes = {
+    reportOnly: PropTypes.bool.isRequired,
+  }
+
   render() {
+    const { reportOnly } = this.props
     return (
       <React.Fragment>
 
-        <FixedPositionContainer paneId="ReportPositioner">
+        <FixedPositionContainer paneId="ReportPositioner" fullscreen={reportOnly}>
           <ReportPane />
         </FixedPositionContainer>
 
-        <FixedPositionContainer paneId="ConsolePositioner">
+        <FixedPositionContainer paneId="ConsolePositioner" hidden={reportOnly}>
           <ConsolePane />
         </FixedPositionContainer>
 
-        <FixedPositionContainer paneId="WorkspacePositioner">
+        <FixedPositionContainer paneId="WorkspacePositioner" hidden={reportOnly}>
           <DeclaredVariablesPane />
         </FixedPositionContainer>
 
-        <FixedPositionContainer paneId="AppInfoPositioner">
+        <FixedPositionContainer paneId="AppInfoPositioner" hidden={reportOnly}>
           <AppInfoPane />
         </FixedPositionContainer>
 
@@ -37,3 +44,11 @@ export default class EvalContainer extends React.Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    reportOnly: state.viewMode === 'REPORT_VIEW',
+  }
+}
+
+export default connect(mapStateToProps)(EvalContainerUnconnected)
