@@ -98,11 +98,6 @@ tasks.logoutGithub = new UserTask({
   callback() { dispatcher.logout() },
 })
 
-tasks.exportGist = new UserTask({
-  title: 'Export Gist',
-  callback() { dispatcher.exportGist() },
-})
-
 tasks.selectUp = new UserTask({
   title: 'Select Cell Above',
   displayKeybinding: 'Up', // \u2191',
