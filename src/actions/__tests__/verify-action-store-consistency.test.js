@@ -14,7 +14,6 @@ import { jsLanguageDefinition } from '../../state-schemas/mirrored-state-schema'
 // arbitrary props with arbitrary values into cells
 
 const mockUserData = {
-  accessToken: 'accessToken',
   name: 'name',
   avatar: 'avatar',
 }
