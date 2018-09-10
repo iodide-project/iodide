@@ -4,7 +4,7 @@ import CellsList from '../cells-list'
 // import PaneContainer from './panes/pane-container'
 import EditorLinkButton from '../controls/editor-link-button'
 
-export default class HistoryPaneUnconnected extends React.Component {
+export default class ReportPaneUnconnected extends React.Component {
   render() {
     return (
       <div className="pane-content" >
