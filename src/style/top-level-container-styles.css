@@ -13,11 +13,6 @@ html, body {
   flex-direction: column;
 }
 
-div#page {
-  /*height: 100%;*/
-  /*overflow: hidden;*/
-}
-
 div#notebook-header {
     z-index: 1000;
 }
@@ -25,11 +20,6 @@ div#notebook-header {
 div#panes-container {
   flex-grow: 1;
   display: flex;
-  /*flex-direction: row;*/
-  /* the following prevents #panes-container from having a computed
-  height greater than the available space, which is needed for correct
-  overflow of child elts*/
-  /*overflow: hidden;*/
 }
 
 div#editor-react-root{
@@ -37,6 +27,7 @@ div#editor-react-root{
   flex-grow: 1;
   /*needed to ensure that the layout-manager can auto-resize horizontally*/
   width: 100%;
+  display: flex;
 }
 
 
