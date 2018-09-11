@@ -21,6 +21,7 @@ export default class UserMenu extends React.Component {
     this.handleClick = this.handleClick.bind(this)
     this.goToProfile = this.goToProfile.bind(this)
     this.handleMenuClose = this.handleMenuClose.bind(this)
+    this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
   }
 
@@ -38,9 +39,12 @@ export default class UserMenu extends React.Component {
   }
 
   login() {
+    const loginSuccess = () => {
+      this.setState({ isLoggedIn: true })
+      this.handleMenuClose()
+    }
     if (this.props.loginCallback) {
-      this.props.loginCallback()
-      console.warn('loginCallback')
+      this.props.loginCallback(loginSuccess)
     } else {
       const url = '/oauth/login/github'
       const name = 'github_login'
@@ -48,10 +52,7 @@ export default class UserMenu extends React.Component {
       const authWindow = window.open(url, name, specs)
       authWindow.focus()
 
-      window.loginSuccess = () => {
-        this.setState({ isLoggedIn: true })
-        this.handleMenuClose()
-      }
+      window.loginSuccess = loginSuccess
 
       window.loginFailure = () => {
       // do something smart here (probably pop up a notification)
@@ -64,16 +65,13 @@ export default class UserMenu extends React.Component {
     if (this.props.logoutCallback) {
       this.props.logoutCallback()
       this.setState({ isLoggedIn: false })
-      console.warn('logoutCallback')
     } else {
-      console.warn('logout.')
       fetch('/logout/')
         .then((response) => {
           if (response.ok) {
             this.setState({ isLoggedIn: false })
-            console.warn('logout called')
           } else {
-            console.error('Login did not work', response)
+            console.error('Login unsuccessful', response)
           // do something smart here (probably pop up a notification)
           }
         });
@@ -82,13 +80,12 @@ export default class UserMenu extends React.Component {
   }
 
   render() {
-    const loggedIn = this.state.isLoggedIn
     const { anchorElement } = this.state
     return (
       <Tooltip title="Menu">
         <React.Fragment>
           {
-              loggedIn && (
+              this.state.isLoggedIn && (
                 <React.Fragment>
                   <Menu
                     dense="true"
@@ -124,13 +121,13 @@ export default class UserMenu extends React.Component {
               )
             }
           {
-              !loggedIn && (
+              !this.state.isLoggedIn && (
               <Button
                 variant="text"
                 style={{
                   color: 'white', width: '80px', padding: '0',
                 }}
-                href={`/oauth/login/github/?next=${window.location.pathname}`}
+                onClick={this.login}
               >
                 Log In
               </Button>
