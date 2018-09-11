@@ -38,6 +38,7 @@ export default class HomePage extends React.Component {
                 <tr key={notebook.id}>
                   <td style={{ width: 200 }}><a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a></td>
                   <td>{notebook.last_revision.slice(0, 19)}</td>
+                  <td><a href={`/notebooks/${notebook.id}/revisions/`}>revisions</a></td>
                 </tr>
         ))}
             </tbody>
