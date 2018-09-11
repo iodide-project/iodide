@@ -9,6 +9,7 @@ from .notebooks.models import Notebook, NotebookRevision
 from .base.models import User
 from .shared.get_user_info_dict import get_user_info_dict
 
+
 def index(request):
     return render(
         request, 'index.html', {
@@ -62,7 +63,6 @@ def revisions(request, pk):
         'title': revision.title,
         'date': revision.created.isoformat(sep=' ')}
         for revision in NotebookRevision.objects.filter(notebook_id=pk)]))
-    
     return render(request, 'index.html', {
             'page_data': json.dumps({
                 'userInfo': get_user_info_dict(request.user),

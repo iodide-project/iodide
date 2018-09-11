@@ -5,8 +5,7 @@ from django.shortcuts import (get_object_or_404,
                               render)
 
 from ..shared.get_user_info_dict import get_user_info_dict
-from .models import Notebook, NotebookRevision
-from ..base.models import User
+from .models import Notebook
 
 
 def _get_user_info_json(user):
@@ -22,6 +21,7 @@ def notebook_view(request, pk):
         'user_info': _get_user_info_json(request.user),
         'jsmd': latest_revision.content
     })
+
 
 @login_required
 def new_notebook_view(request):
