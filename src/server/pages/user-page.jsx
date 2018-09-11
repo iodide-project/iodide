@@ -1,0 +1,49 @@
+import React from 'react';
+
+import Button from '@material-ui/core/Button';
+
+import Header from '../components/header';
+
+export default class HomePage extends React.Component {
+  render() {
+    const { thisUser, userInfo, notebookList } = this.props
+    return (
+      <div>
+        <Header userInfo={userInfo} />
+        <div style={{
+            marginLeft: '30px',
+            marginTop: 35,
+        }}
+        >
+          <div style={{ marginBottom: 0 }}>
+            <img style={{ borderRadius: '5px' }} width={150} src={thisUser.avatar} alt={`${thisUser.name}'s avatar`} />
+            <h1 style={{
+                marginTop: 20, marginBottom: 0, fontWeight: 900, textTransform: 'uppercase',
+                }}
+            >{thisUser.full_name}
+            </h1>
+            <h2 style={{ fontWeight: 300, marginTop: 0 }}>{thisUser.name}</h2>
+          </div>
+          <h2>notebooks</h2>
+          <Button
+            variant="contained"
+            className="header-button"
+            href="/new"
+          >
+            New notebook
+          </Button>
+          <table >
+            <tbody>
+              {notebookList.map(notebook => (
+                <tr key={notebook.id}>
+                  <td style={{ width: 200 }}><a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a></td>
+                  <td>{notebook.last_revision.slice(0, 19)}</td>
+                </tr>
+        ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
+}

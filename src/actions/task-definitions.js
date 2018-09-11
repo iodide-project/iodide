@@ -90,17 +90,14 @@ tasks.moveCellDown = new UserTask({
 
 tasks.loginGithub = new UserTask({
   title: 'Login using GitHub',
-  callback() { dispatcher.login() },
+  callback(loginSuccess = undefined, loginFailure = undefined) {
+    dispatcher.login(loginSuccess, loginFailure)
+  },
 })
 
 tasks.logoutGithub = new UserTask({
   title: 'Logout',
   callback() { dispatcher.logout() },
-})
-
-tasks.exportGist = new UserTask({
-  title: 'Export Gist',
-  callback() { dispatcher.exportGist() },
 })
 
 tasks.selectUp = new UserTask({

@@ -14,7 +14,6 @@ import { jsLanguageDefinition } from '../../state-schemas/mirrored-state-schema'
 // arbitrary props with arbitrary values into cells
 
 const mockUserData = {
-  accessToken: 'accessToken',
   name: 'name',
   avatar: 'avatar',
 }
@@ -140,21 +139,10 @@ describe('make sure action creators leave store in a consitent state', () => {
     expect(() => store.dispatch(actions.loginSuccess(mockUserData)))
       .not.toThrow()
   })
-
   it('loginFailure', () => {
     expect(() => store.dispatch(actions.loginFailure()))
       .not.toThrow()
   })
-
-  // FIXME: side effects in the action make these hard to test
-  // it('login', () => {
-  //   expect(() => store.dispatch(actions.login()))
-  //     .not.toThrow()
-  // })
-  // it('logout', () => {
-  //   expect(() => store.dispatch(actions.logout()))
-  //     .not.toThrow()
-  // })
 
   // FIXME: side effects in the action make these hard to test
   // it('cellUp', () => {

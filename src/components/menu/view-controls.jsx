@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import InfoIcon from '@material-ui/icons/InfoOutline'
 
 import NotebookTaskButton from './notebook-task-button'
-import UserButton from './user-button'
+import UserMenu from '../../shared/user-menu'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
 
@@ -37,9 +37,12 @@ export class ViewControlsUnconnected extends React.Component {
         </NotebookTaskButton>
 
         {IODIDE_BUILD_TYPE === 'server' && (
-          <UserButton
+          <UserMenu
             isAuthenticated={this.props.isAuthenticated}
+            loginCallback={tasks.loginGithub.callback}
+            logoutCallback={tasks.logoutGithub.callback}
             avatar={this.props.avatar}
+            username={this.props.name}
           />
         )}
 
@@ -51,7 +54,7 @@ export class ViewControlsUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state) {
-  const isAuthenticated = Boolean(state.userData.accessToken)
+  const isAuthenticated = Boolean(state.userData.name)
   return {
     isAuthenticated,
     name: state.userData.name,
