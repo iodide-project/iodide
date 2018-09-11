@@ -34,7 +34,6 @@ export default class UserMenu extends React.Component {
   }
 
   goToProfile() {
-    // maybe we should replace this with Link from react-router-dom
     document.location = `/${this.props.username}`
   }
 
