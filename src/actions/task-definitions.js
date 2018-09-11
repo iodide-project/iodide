@@ -88,9 +88,14 @@ tasks.moveCellDown = new UserTask({
   },
 })
 
-tasks.exportGist = new UserTask({
-  title: 'Export Gist',
-  callback() { dispatcher.exportGist() },
+tasks.loginGithub = new UserTask({
+  title: 'Login using GitHub',
+  callback() { dispatcher.login() },
+})
+
+tasks.logoutGithub = new UserTask({
+  title: 'Logout',
+  callback() { dispatcher.logout() },
 })
 
 tasks.selectUp = new UserTask({
@@ -277,10 +282,9 @@ tasks.changeTitle = new UserTask({
   callback(t) { dispatcher.changePageTitle(t) },
 })
 
-tasks.createNewNotebook = new UserTask({
+tasks.newNotebook = new ExternalLinkTask({
   title: 'New Notebook',
-  preventDefaultKeybinding: true,
-  callback() { dispatcher.newNotebook() },
+  url: '/new',
 })
 
 tasks.saveNotebook = new UserTask({

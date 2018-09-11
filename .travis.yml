@@ -16,16 +16,17 @@ matrix:
         - npm test
 
       before_deploy:
-        - npm run build-ghpages
         # test commenting the cp out for now, b/c going forward we'll be using the
         # django server to serve the landing page
         # - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
         - # Get existing releases from iodide-project/dist so we don't overwrite them
         - >
           if [ -n "$TRAVIS_TAG" ]; then
+            mkdir prod;
             git clone https://github.com/iodide-project/dist.git --depth 1 dist;
             cp -r dist/* prod;
           fi
+        - npm run build-ghpages
 
       deploy:
         - provider: pages
@@ -101,9 +102,6 @@ matrix:
         - make build
         # bring up docker containers and wait for db setup to complete
         - docker-compose up -d
-        # this command waits for the db to be accessible at port 5432 before continuing
-        # (FIXME: need some sort of timeout here)
-        - docker-compose run server bash -c "while ! echo > /dev/tcp/db/5432 > /dev/null 2>&1; do sleep 1 && echo waiting for db; done"
         # run actual tests
         - make flake8
         - make test

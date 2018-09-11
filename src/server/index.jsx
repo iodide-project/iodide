@@ -1,21 +1,21 @@
 import React from 'react';
 import { render } from 'react-dom';
+import UniversalRouter from 'universal-router'
 
-import Header from './components/header';
-import LoginPanel from './components/login-panel';
-import NotebookList from './components/notebook-list';
+import HomePage from './pages/home-page'
+import LoginPage from './pages/login-page'
+import UserPage from './pages/user-page'
 
-const { location, userInfo, notebookList } = window;
-const path = location.pathname.replace(/^\/|\/$/g, '');
+const { pageData } = window;
 
-const content = (path === '') ? (
-  <div>
-    <Header userInfo={userInfo} />
-    <div style={{ width: '1000px', margin: 'auto', paddingLeft: 25 }}>
-      <h1>Latest Iodide Notebooks</h1>
-      <NotebookList notebookList={notebookList} />
-    </div>
-  </div>
-) : <LoginPanel />
+const routes = [
+  { name: 'index', path: '', action: () => <HomePage userInfo={pageData.userInfo} notebookList={pageData.notebookList} /> },
+  { name: 'login', path: '/login', action: () => <LoginPage /> },
+  { name: 'user', path: '/:username', action: () => <UserPage userInfo={pageData.userInfo} thisUser={pageData.thisUser} notebookList={pageData.notebookList} /> },
+];
 
-render(content, document.getElementById('page'))
+const router = new UniversalRouter(routes)
+
+router.resolve({ pathname: window.location.pathname }).then((content) => {
+  render(content, document.getElementById('page'))
+})

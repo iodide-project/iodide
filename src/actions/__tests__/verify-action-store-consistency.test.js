@@ -13,9 +13,14 @@ import { jsLanguageDefinition } from '../../state-schemas/mirrored-state-schema'
 // note that updateCellProperties is not not tested, b/c this can introduce
 // arbitrary props with arbitrary values into cells
 
+const mockUserData = {
+  name: 'name',
+  avatar: 'avatar',
+}
+
 describe('make sure createValidatedReducer is checking correctly', () => {
   beforeEach(() => {
-    store.dispatch(actions.newNotebook())
+    store.dispatch(actions.resetNotebook())
   })
   it('createValidatedReducer should throw an error if we pass an action that inserts an invalid state value', () => {
     // note that change mode must be a string
@@ -31,7 +36,7 @@ describe('make sure createValidatedReducer is checking correctly', () => {
 
 describe('make sure action creators leave store in a consitent state', () => {
   beforeEach(() => {
-    store.dispatch(actions.newNotebook())
+    store.dispatch(actions.resetNotebook())
   })
 
   it('updateAppMessages, no details', () => {

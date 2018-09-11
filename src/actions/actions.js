@@ -1,6 +1,6 @@
 import CodeMirror from 'codemirror'
 
-import { exportJsmdBundle, exportJsmdToString, titleToHtmlFilename } from '../tools/jsmd-tools'
+import { exportJsmdToString } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
@@ -85,9 +85,9 @@ export function saveNotebook() {
   }
 }
 
-export function newNotebook() {
+export function resetNotebook() {
   return {
-    type: 'NEW_NOTEBOOK',
+    type: 'RESET_NOTEBOOK',
   }
 }
 
@@ -290,57 +290,6 @@ export function saveNotebookToServer() {
   }
 }
 
-export function exportGist() {
-  // Go through all gist of the user
-  // Match the discription and fileName for each gist
-  // If mactch found, update it
-  // If none found then create a new Gist
-  const API_ROUTE = 'https://api.github.com'
-  return (dispatch, getState) => {
-    const state = getState()
-    const filename = titleToHtmlFilename(state.title)
-    let matchDescription
-    let gistCreated = false
-    const gistData = {
-      description: state.title,
-      public: true,
-      files: {
-        [filename]: { content: exportJsmdBundle(state) },
-      },
-    };
-    fetch(`${API_ROUTE}/gists?access_token=${state.userData.accessToken}`)
-      .then(response => response.json())
-      .then((json) => {
-        matchDescription = json.filter(gist =>
-          gist.description === gistData.description &&
-          Object.keys(gist.files).length === 1 &&
-          Object.keys(gist.files)[0] === filename)
-
-        if (!matchDescription.length) {
-          return fetch(`${API_ROUTE}/gists?access_token=${state.userData.accessToken}`, {
-            body: JSON.stringify(gistData),
-            method: 'POST',
-          })
-        }
-        gistCreated = true
-        const gistID = matchDescription[0].id
-        return fetch(`${API_ROUTE}/gists/${gistID}?access_token=${state.userData.accessToken}`, {
-          body: JSON.stringify(gistData),
-          method: 'PATCH',
-        })
-      })
-      .then(response => response.json())
-      .then((json) => {
-        const message = gistCreated ? 'Updated Gist' : 'Exported to GitHub Gist'
-        dispatch(updateAppMessages({
-          message,
-          details: `${message}<br /><a href="${json.html_url}" target="_blank">Gist</a> -
-        <a href="https://iodide.io/stable/?gist=${json.owner.login}/${json.id}" target="_blank"> Runnable notebook</a>`,
-        }))
-      })
-  }
-}
-
 export function cellUp() {
   return (dispatch, getState) => {
     dispatch({ type: 'CELL_UP' })
@@ -455,10 +404,10 @@ export function decreaseEditorWidth() {
   }
 }
 
-export function changeSidePaneMode(mode) {
+export function changeSidePaneMode(sidePaneMode) {
   return {
     type: 'CHANGE_SIDE_PANE_MODE',
-    mode,
+    sidePaneMode,
   }
 }
 
