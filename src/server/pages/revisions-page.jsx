@@ -43,7 +43,6 @@ const revisionDateStyle = {
 
 export default class RevisionsPage extends React.Component {
   render() {
-    console.warn(this.props)
     return (
       <div>
         <Header userInfo={this.props.userInfo} />
