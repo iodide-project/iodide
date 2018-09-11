@@ -3,7 +3,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import UserButton from './user-button'
+import NotebookTaskButton from './notebook-task-button'
+import UserMenu from '../../shared/user-menu'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
 
@@ -18,9 +19,12 @@ export class ViewControlsUnconnected extends React.Component {
         <LastSavedText />
 
         {IODIDE_BUILD_TYPE === 'server' && (
-          <UserButton
+          <UserMenu
             isAuthenticated={this.props.isAuthenticated}
+            loginCallback={tasks.loginGithub.callback}
+            logoutCallback={tasks.logoutGithub.callback}
             avatar={this.props.avatar}
+            username={this.props.name}
           />
         )}
 
