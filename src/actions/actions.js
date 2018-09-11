@@ -229,14 +229,12 @@ export function login(successCallback, failCallback) {
   const url = '/oauth/login/github'
   const name = 'github_login'
   const specs = 'width=500,height=600'
-  console.warn('dispatch occurred')
   const authWindow = window.open(url, name, specs)
   authWindow.focus()
   return (dispatch) => {
     // Functions to be called by child window
     window.loginSuccess = (userData) => {
       dispatch(loginSuccess(userData))
-      console.warn('loginSuccess')
       if (successCallback) successCallback()
     }
     window.loginFailure = () => {
