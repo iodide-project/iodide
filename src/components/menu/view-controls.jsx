@@ -39,6 +39,8 @@ export class ViewControlsUnconnected extends React.Component {
         {IODIDE_BUILD_TYPE === 'server' && (
           <UserMenu
             isAuthenticated={this.props.isAuthenticated}
+            loginCallback={tasks.loginGithub.callback}
+            logoutCallback={tasks.logoutGithub.callback}
             avatar={this.props.avatar}
             username={this.props.name}
           />

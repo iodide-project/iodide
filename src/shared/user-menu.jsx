@@ -38,38 +38,57 @@ export default class UserMenu extends React.Component {
   }
 
   login() {
-    const url = '/oauth/login/github'
-    const name = 'github_login'
-    const specs = 'width=500,height=600'
-    const authWindow = window.open(url, name, specs)
-    authWindow.focus()
+    if (this.props.loginCallback) {
+      this.props.loginCallback()
+      console.warn('loginCallback')
+    } else {
+      const url = '/oauth/login/github'
+      const name = 'github_login'
+      const specs = 'width=500,height=600'
+      const authWindow = window.open(url, name, specs)
+      authWindow.focus()
 
-    window.loginSuccess = () => {
-      this.setState({ isLoggedIn: true })
-    }
-    window.loginFailure = () => {
+      window.loginSuccess = () => {
+        this.setState({ isLoggedIn: true })
+        this.handleMenuClose()
+      }
+
+      window.loginFailure = () => {
       // do something smart here (probably pop up a notification)
+        this.handleMenuClose()
+      }
     }
   }
 
   logout() {
-    fetch('/logout/')
-      .then((response) => {
-        if (response.ok) {
-          this.setState({ isLoggedIn: false })
-        } else {
+    if (this.props.logoutCallback) {
+      this.props.logoutCallback()
+      this.setState({ isLoggedIn: false })
+      console.warn('logoutCallback')
+    } else {
+      console.warn('logout.')
+      fetch('/logout/')
+        .then((response) => {
+          if (response.ok) {
+            this.setState({ isLoggedIn: false })
+            console.warn('logout called')
+          } else {
+            console.error('Login did not work', response)
           // do something smart here (probably pop up a notification)
-        }
-      });
+          }
+        });
+    }
+    this.handleMenuClose()
   }
 
   render() {
+    const loggedIn = this.state.isLoggedIn
     const { anchorElement } = this.state
     return (
       <Tooltip title="Menu">
         <React.Fragment>
           {
-              this.state.isLoggedIn && (
+              loggedIn && (
                 <React.Fragment>
                   <Menu
                     dense="true"
@@ -105,7 +124,7 @@ export default class UserMenu extends React.Component {
               )
             }
           {
-              !this.state.isLoggedIn && (
+              !loggedIn && (
               <Button
                 variant="text"
                 style={{
