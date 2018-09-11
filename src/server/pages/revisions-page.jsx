@@ -47,7 +47,7 @@ export default class RevisionsPage extends React.Component {
       <div>
         <Header userInfo={this.props.userInfo} />
         <div style={contentStyle}>
-          <h2>{this.props.ownerInfo.title} <span style={revisionLabelStyle}> / revisions</span></h2>
+          <h2><a href={`/notebooks/${this.props.ownerInfo.notebookId}`}>{this.props.ownerInfo.title}</a> <span style={revisionLabelStyle}> / revisions</span></h2>
 
           <a style={blockLinkStyle} href={`/${this.props.ownerInfo.username}`}>
             <div style={infoTable}>
@@ -81,7 +81,7 @@ export default class RevisionsPage extends React.Component {
                             }
                             return (
                               <tr style={revisionsRowStyle} key={r.id}>
-                                <td style={revisionDateStyle}>{r.date.slice(0, 19)}</td>
+                                <td style={revisionDateStyle}><a href={`/notebooks/${r.notebookId}/revisions/${r.id}/`}>{r.date.slice(0, 19)}</a></td>
                                 <td>{theTitle}</td>
                               </tr>
                         )

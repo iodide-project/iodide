@@ -56,10 +56,12 @@ def revisions(request, pk):
         'username': owner.username,
         'full_name': '{} {}'.format(owner.first_name, owner.last_name),
         'avatar': owner.avatar,
-        'title': nb.title
+        'title': nb.title,
+        'notebookId': nb.id
     }
     revisions = list(reversed([{
         'id': revision.id,
+        'notebookId': revision.notebook_id,
         'title': revision.title,
         'date': revision.created.isoformat(sep=' ')}
         for revision in NotebookRevision.objects.filter(notebook_id=pk)]))

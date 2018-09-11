@@ -5,7 +5,7 @@ from django.shortcuts import (get_object_or_404,
                               render)
 
 from ..shared.get_user_info_dict import get_user_info_dict
-from .models import Notebook
+from .models import Notebook, NotebookRevision
 
 
 def _get_user_info_json(user):
@@ -20,6 +20,15 @@ def notebook_view(request, pk):
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
         'jsmd': latest_revision.content
+    })
+
+
+def revision_view(request, nb, pk):
+    print('------ made it here', nb, pk)
+    notebook_revision = get_object_or_404(NotebookRevision, pk=pk)
+    return render(request, 'notebook.html', {
+        'user_info': _get_user_info_json(request.user),
+        'jsmd': notebook_revision.content
     })
 
 
