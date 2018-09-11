@@ -38,7 +38,7 @@ const styles = theme => ({
   },
 });
 
-function LoginPanel(props) {
+function LoginPage(props) {
   const { classes } = props;
   const next = new URLSearchParams(window.location.search).get('next');
   const query = next ? `?next=${next}` : '';
@@ -66,8 +66,8 @@ function LoginPanel(props) {
   );
 }
 
-LoginPanel.propTypes = {
+LoginPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(LoginPanel);
+export default withStyles(styles)(LoginPage);

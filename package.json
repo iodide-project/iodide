@@ -61,7 +61,8 @@
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "stackframe": "^1.0.4"
+    "stackframe": "^1.0.4",
+    "universal-router": "^6.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

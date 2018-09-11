@@ -5,8 +5,7 @@
 {% block content %}
 <div id="page"></div>
 <script>
-  window.userInfo = {{ user_info|safe }};
-  window.notebookList = {{ notebook_list|safe }};
+  window.pageData = {{ page_data|safe }};
 </script>
 <script src="/server.home.dev.js"></script>
 {% endblock %}
