@@ -10,6 +10,7 @@ admin.autodiscover()
 urlpatterns = [
     # notebook stuff
     url(r'^api/v1/', include('server.notebooks.api_urls')),
+    url(r'^notebooks/(?P<pk>[a-zA-Z0-9]+)/revisions/$', server.views.revisions, name='revisions'),
     url(r'^notebooks/', include('server.notebooks.urls')),
     url(r'^new/?', server.notebooks.views.new_notebook_view,
         name='new-notebook'),

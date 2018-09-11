@@ -23,30 +23,6 @@ def notebook_view(request, pk):
         'jsmd': latest_revision.content
     })
 
-
-def revisions_view(request, pk):
-    template = loader.get_template('revisions.html')
-    nb = get_object_or_404(Notebook, pk=pk)
-    owner = get_object_or_404(User, pk=nb.owner_id)
-    owner_info = {
-        'username': owner.username,
-        'full_name': '{} {}'.format(owner.first_name, owner.last_name),
-        'avatar': owner.avatar,
-        'title': nb.title
-    }
-    revisions = list(reversed([{
-        'id': revision.id,
-        'title': revision.title,
-        'date': revision.created.isoformat(sep=' ')}
-        for revision in NotebookRevision.objects.filter(notebook_id=pk)]))
-    return HttpResponse(
-        template.render({
-            'user_info': _get_user_info_json(request.user),
-            'owner_info': owner_info,
-            'revisions': revisions,
-        }, request))
-
-
 @login_required
 def new_notebook_view(request):
     return render(request, 'notebook.html', {

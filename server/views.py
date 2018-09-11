@@ -47,6 +47,32 @@ def user(request, name=None):
     })
 
 
+def revisions(request, pk):
+    pk = int(pk)
+    nb = get_object_or_404(Notebook, pk=pk)
+    owner = get_object_or_404(User, pk=nb.owner_id)
+    owner_info = {
+        'username': owner.username,
+        'full_name': '{} {}'.format(owner.first_name, owner.last_name),
+        'avatar': owner.avatar,
+        'title': nb.title
+    }
+    revisions = list(reversed([{
+        'id': revision.id,
+        'title': revision.title,
+        'date': revision.created.isoformat(sep=' ')}
+        for revision in NotebookRevision.objects.filter(notebook_id=pk)]))
+    
+    return render(request, 'index.html', {
+            'page_data': json.dumps({
+                'userInfo': get_user_info_dict(request.user),
+                'ownerInfo': owner_info,
+                'revisions': revisions,
+            })
+        }
+    )
+
+
 def login(request):
     if request.user.is_authenticated:
         return redirect('/new')
