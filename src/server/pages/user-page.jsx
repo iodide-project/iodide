@@ -15,7 +15,6 @@ export default class HomePage extends React.Component {
             marginTop: 35,
         }}
         >
-          Cheeezburger
           <div style={{ marginBottom: 0 }}>
             <img style={{ borderRadius: '5px' }} width={150} src={thisUser.avatar} alt={`${thisUser.name}'s avatar`} />
             <h1 style={{
