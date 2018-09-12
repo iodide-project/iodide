@@ -410,9 +410,17 @@ export function deleteCell() {
   }
 }
 
-export function toggleHelpModal() {
+export function setModalState(modalState) {
   return {
-    type: 'TOGGLE_HELP_MODAL',
+    type: 'SET_MODAL_STATE',
+    modalState,
+  }
+}
+
+export function toggleHelpModal() {
+  return (dispatch, getState) => {
+    const modalState = getState().modalState === 'HELP_MODAL' ? 'MODALS_CLOSED' : 'HELP_MODAL'
+    dispatch(setModalState(modalState))
   }
 }
 

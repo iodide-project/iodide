@@ -35,9 +35,10 @@ export const editorOnlyStateProperties = {
     type: 'boolean',
     default: false,
   },
-  helpModalOpen: {
-    type: 'boolean',
-    default: false,
+  modalState: {
+    type: 'string',
+    enum: ['HELP_MODAL', 'MODALS_CLOSED'],
+    default: 'MODALS_CLOSED',
   },
   lastSaved: {
     type: 'string',
