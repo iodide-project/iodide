@@ -19,13 +19,14 @@ def get_user_info_dict(user):
 
 
 def index(request):
+    user_info = get_user_info_dict(request.user)
     return render(
         request, 'index.html', {
             'page_data': json.dumps({
-                'userInfo': get_user_info_dict(request.user),
+                'userInfo': user_info,
                 # this is horrible and will not scale
                 'notebookList': [
-                    {'id': v[0], 'title': v[1], 'owner': v[2]} for v in
+                    {'id': v[0], 'title': v[1], 'owner': v[2], 'avatar': user_info['avatar']} for v in
                     Notebook.objects.values_list('id', 'title', 'owner__username')
                 ]
             })

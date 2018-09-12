@@ -1,15 +1,14 @@
 import React from 'react';
 
-const trStyle = {
-  textAlign: 'left',
-}
+import Table from '../components/table'
+import { SmallUserName as UserName } from '../components/user-name'
 
 export default class NotebookList extends React.Component {
   render() {
     return (
-      <table>
+      <Table>
         <thead>
-          <tr style={trStyle}>
+          <tr>
             <th>Notebook</th>
             <th>Owner</th>
           </tr>
@@ -17,18 +16,18 @@ export default class NotebookList extends React.Component {
         <tbody>
           {
             this.props.notebookList.map(notebook => (
-              <tr key={notebook.id} style={trStyle}>
+              <tr key={notebook.id}>
                 <td>
                   <a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a>
                 </td>
                 <td>
-                  <a href={`/${notebook.owner}`}>{notebook.owner}</a>
+                  <UserName avatar={notebook.avatar} username={notebook.owner} />
                 </td>
               </tr>
             ))
           }
         </tbody>
-      </table>
+      </Table>
     )
   }
 }
