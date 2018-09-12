@@ -27,10 +27,10 @@ export default class KeyboardShortcutList extends React.Component {
     return (
       <div className="help-modal-contents">
         <h2>Global keys</h2>
-        <table className="keyboard-shortcuts-global">{globalKeys}</table>
+        <table className="keyboard-shortcuts-global"><tbody>{globalKeys}</tbody></table>
         <h2>Command mode keys (press <pre className="key-combo-pill">Esc</pre> to enter command mode)
         </h2>
-        <table className="keyboard-shortcuts-command-mode">{commandModeKeys}</table>
+        <table className="keyboard-shortcuts-command-mode"><tbody>{commandModeKeys}</tbody></table>
       </div>
     )
   }
