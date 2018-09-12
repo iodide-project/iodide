@@ -70,22 +70,13 @@ export default class RevisionsPage extends React.Component {
                 <th>Title</th>
               </tr>
               {
-                        this.props.revisions.map((r, i) => {
-                            let theTitle
-                            if (i > 0 &&
-                                this.props.revisions[i].title ===
-                                this.props.revisions[i - 1].title) {
-                                theTitle = '-'
-                            } else {
-                                theTitle = r.title
-                            }
-                            return (
-                              <tr style={revisionsRowStyle} key={r.id}>
-                                <td style={revisionDateStyle}><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{r.date.slice(0, 19)}</a></td>
-                                <td>{theTitle}</td>
-                              </tr>
-                        )
-                    })
+                        this.props.revisions.map((r, i) => (
+                          <tr style={revisionsRowStyle} key={r.id}>
+                            <td style={revisionDateStyle}><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{r.date.slice(0, 19)}</a></td>
+                            <td>{ (i > 0 && this.props.revisions[i].title === this.props.revisions[i - 1].title) ? '-' : r.title }
+                            </td>
+                          </tr>
+                        ))
                     }
             </tbody>
           </table>
