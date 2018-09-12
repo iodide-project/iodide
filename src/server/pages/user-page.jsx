@@ -50,6 +50,7 @@ export default class HomePage extends React.Component {
               <tr>
                 <th>title</th>
                 <th>last saved</th>
+                <th />
               </tr>
             </thead>
             <tbody>

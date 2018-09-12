@@ -1,86 +1,66 @@
 import React from 'react';
+import styled from 'react-emotion';
+
+import PageBody from '../components/page-body';
 import Header from '../components/header';
+import Table from '../components/table';
+import { MediumUserName } from '../components/user-name'
 
-const contentStyle = {
-  paddingLeft: '20px',
-  paddingTop: '20px',
+const RevisionsPageHeader = styled('h2')`
+span {
+  font-style: italic;
+  color: gray;
+  font-weight: 300;
 }
 
-const revisionLabelStyle = {
-  fontStyle: 'italic',
-  color: 'gray',
-  fontWeight: '300',
+a {
+  text-decoration: none;
+  color:black;
 }
 
-const avatarStyle = {
-  borderRadius: '7px',
-  marginRight: '15px',
+a:hover {
+  text-decoration: underline;
 }
-
-const infoTable = {
-  display: 'flex',
-  alignItems: 'center',
-  marginBottom: '20px',
-}
-
-const blockLinkStyle = {
-  textDecoration: 'none',
-  color: 'black',
-}
-
-const revTable = {
-  paddingBottom: '40px',
-}
-
-const revisionsRowStyle = {
-  paddingBottom: '5px',
-  textAlign: 'left',
-}
-
-const revisionDateStyle = {
-  width: '200px',
-}
+`
 
 export default class RevisionsPage extends React.Component {
   render() {
     return (
       <div>
         <Header userInfo={this.props.userInfo} />
-        <div style={contentStyle}>
-          <h2><a href={`/notebooks/${this.props.ownerInfo.notebookId}`}>{this.props.ownerInfo.title}</a> <span style={revisionLabelStyle}> / revisions</span></h2>
-
-          <a style={blockLinkStyle} href={`/${this.props.ownerInfo.username}`}>
-            <div style={infoTable}>
-              <img
-                style={avatarStyle}
-                src={this.props.ownerInfo.avatar}
-                alt={this.props.ownerInfo.username}
-                width={35}
-              />
-              <div style={{ fontSize: '14px' }}>
-                {this.props.ownerInfo.full_name} <i>({this.props.ownerInfo.username})</i>
-              </div>
-            </div>
-          </a>
+        <PageBody>
+          <RevisionsPageHeader>
+            <a href={`/notebooks/${this.props.ownerInfo.notebookId}`}>
+              {this.props.ownerInfo.title}
+            </a> <span> / revisions</span>
+          </RevisionsPageHeader>
+          <MediumUserName
+            username={this.props.ownerInfo.username}
+            fullName={this.props.ownerInfo.full_name}
+            avatar={this.props.ownerInfo.avatar}
+          />
           <h3>Revisions</h3>
-          <table style={revTable}>
+          <Table>
             <tbody>
-              <tr style={revisionsRowStyle}>
+              <tr>
                 <th>When</th>
                 <th>Title</th>
               </tr>
               {
                         this.props.revisions.map((r, i) => (
-                          <tr style={revisionsRowStyle} key={r.id}>
-                            <td style={revisionDateStyle}><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{r.date.slice(0, 19)}</a></td>
-                            <td>{ (i > 0 && this.props.revisions[i].title === this.props.revisions[i - 1].title) ? '-' : r.title }
+                          <tr key={r.id}>
+                            <td><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{r.date.slice(0, 19)}</a></td>
+                            <td>
+                              <a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>
+                                { (i > 0 && this.props.revisions[i].title === this.props.revisions[i - 1].title) ? '-' : r.title }
+                              </a>
                             </td>
                           </tr>
                         ))
                     }
             </tbody>
-          </table>
-        </div>
+          </Table>
+        </PageBody>
       </div>
     )
   }

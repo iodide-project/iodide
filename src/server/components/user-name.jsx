@@ -31,3 +31,44 @@ export const SmallUserName = ({ username, avatar }) => (
     <div>{username}</div>
   </UserNameContainer>
 )
+
+
+const MediumUserNameContainer = styled('a')`
+display: block;
+text-decoration: none;
+color: black;
+
+:hover {
+  text-decoration: underline;
+}
+
+div.info-table {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+div.user-name {
+  font-size: 14px;
+}
+
+img {
+  border-radius: 7px;
+  margin-right: 15px;
+}
+`
+
+export const MediumUserName = ({ username, fullName, avatar }) => (
+  <MediumUserNameContainer href={`/${username}`}>
+    <div className="info-table">
+      <img
+        src={avatar}
+        alt={username}
+        width={35}
+      />
+      <div className="user-name">
+        {fullName} <i>({username})</i>
+      </div>
+    </div>
+  </MediumUserNameContainer>
+)
