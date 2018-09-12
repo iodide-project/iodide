@@ -1,7 +1,15 @@
 import { css, injectGlobal } from 'emotion'
 
 /*
-This is a baseline
+This is a baseline css reset, mostly based off
+of normalize.css. As such it shouldn't really do
+anything specific. Leave specific styling to the local components
+themselves.
+
+For more information on this approach, see:
+https://medium.com/seek-blog/the-end-of-global-css-90d2a4a06284
+https://hackernoon.com/i-swore-never-to-use-css-in-js-here-are-6-reasons-why-i-was-wrong-541fe3dfdeb7
+https://hackernoon.com/all-you-need-to-know-about-css-in-js-984a72d48ebc
 
 */
 
