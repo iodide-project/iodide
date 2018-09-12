@@ -22,9 +22,7 @@ let CSS_PATH_STRING
 let { EVAL_FRAME_ORIGIN } = process.env
 let { EDITOR_ORIGIN } = process.env
 
-// note that we'll always use APP_VERSION_STRING = 'dev'
-// unless we're dealing with a tag
-let APP_VERSION_STRING = 'dev'
+let { APP_VERSION_STRING } = process.env || 'dev'
 
 const APP_DIR = path.resolve(__dirname, 'src/')
 const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
@@ -33,44 +31,23 @@ const plugins = []
 
 // const config
 module.exports = (env) => {
-  if (env && env.startsWith('ghpages')) {
-    BUILD_DIR = path.resolve(__dirname, 'prod/')
-    const gitRev = require('git-rev-sync')
-    if (gitRev.isTagDirty()) {
-      let branch
-      if (process.env.TRAVIS_BRANCH !== undefined) {
-        // On Travis-CI, the git branches are detached so use env variable instead
-        branch = process.env.TRAVIS_BRANCH
-      } else {
-        branch = gitRev.branch()
-      }
-      if (branch === 'master') {
-        // EDITOR_ORIGIN = 'https://extremely-alpha.iodide.io'
-        // EVAL_FRAME_ORIGIN = 'https://extremely-alpha.iodide.app'
-      } else if (branch === 'stable') {
-        // only uglify tags and stable
-        plugins.push(new UglifyJSPlugin())
-        // EDITOR_ORIGIN = 'https://iodide.io/stable'
-        // EVAL_FRAME_ORIGIN = 'https://iodide.app/stable'
-      }
-    } else {
-      // only uglify tags and stable
-      plugins.push(new UglifyJSPlugin())
-      APP_VERSION_STRING = gitRev.tag()
-      // EDITOR_ORIGIN = 'https://iodide.io/dist'
-      // EVAL_FRAME_ORIGIN = 'https://iodide.app'
-    }
-    APP_PATH_STRING = `${EDITOR_ORIGIN}/`
-    CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
-  } else if (env === 'dev-client-only') {
+  env = env || ''
+
+  if (env.startsWith('dev')) {
     BUILD_DIR = path.resolve(__dirname, 'dev/')
-    // EDITOR_ORIGIN = `http://localhost:${DEV_SERVER_PORT}`
-    EVAL_FRAME_ORIGIN = EDITOR_ORIGIN
+  } else {
+    plugins.push(new UglifyJSPlugin())
+    BUILD_DIR = path.resolve(__dirname, 'prod/')
+  }
+
+  if (env.includes('client-only')) {
+    if (env.startsWith('dev')) {
+      EVAL_FRAME_ORIGIN = EDITOR_ORIGIN
+    }
     APP_PATH_STRING = `${EDITOR_ORIGIN}/`
     CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
   } else {
     // default case: heroku or local python server using docker-compose
-    BUILD_DIR = path.resolve(__dirname, 'prod/')
     EDITOR_ORIGIN = process.env.SERVER_URI || `http://localhost:${DEV_SERVER_PORT}`
     EVAL_FRAME_ORIGIN = process.env.EVAL_FRAME_ORIGIN || EDITOR_ORIGIN
     APP_PATH_STRING = ''

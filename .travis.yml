@@ -25,8 +25,20 @@ matrix:
             mkdir prod;
             git clone https://github.com/iodide-project/dist.git --depth 1 dist;
             cp -r dist/* prod;
+            export EDITOR_ORIGIN = 'https://iodide.io/dist';
+            export EVAL_FRAME_ORIGIN = 'https://iodide.app';
+            export APP_VERSION_SRING = $TRAVIS_TAG;
+            npm run build-prod-client-only;
+          else
+            if [ $TRAVIS_BRANCH = "master" ]; then
+              export EDITOR_ORIGIN = 'https://extremely-alpha.iodide.io';
+              export EVAL_FRAME_ORIGIN = 'https://extremely-alpha.iodide.app';
+            else
+              export EDITOR_ORIGIN="https://iodide.io/stable";
+              export EVAL_FRAME_ORIGIN="https://iodide.app/stable";
+            fi
+            npm run build-dev-client-only;
           fi
-        - npm run build-ghpages
 
       deploy:
         - provider: pages
@@ -35,7 +47,7 @@ matrix:
           keep-history: false
           repo: iodide-project/stable
           verbose: false
-          local-dir: prod
+          local-dir: dev
           target-branch: master
           on:
             branch: stable
@@ -47,7 +59,7 @@ matrix:
           repo: iodide-project/master-eval
           fqdn: extremely-alpha.iodide.app
           verbose: false
-          local-dir: prod
+          local-dir: dev
           target-branch: master
           on:
             branch: master
