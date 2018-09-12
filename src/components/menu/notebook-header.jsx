@@ -6,7 +6,7 @@ import EditorModeToolbar from './editor-mode-toolbar'
 
 import AppMessages from '../app-messages/app-messages'
 
-import HelpModal from '../modals/help-modal'
+import IodideModalsRoot from '../modals/iodide-modals-root'
 
 const theme = createMuiTheme({
   palette: {
@@ -24,7 +24,7 @@ export default class NotebookHeader extends React.Component {
         </MuiThemeProvider>
         <PresentationModeToolbar />
         <AppMessages />
-        <HelpModal />
+        <IodideModalsRoot />
       </div>
     )
   }

@@ -103,9 +103,8 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { viewMode })
     }
 
-    case 'TOGGLE_HELP_MODAL': {
-      const helpModalOpen = !state.helpModalOpen
-      return Object.assign({}, state, { helpModalOpen })
+    case 'SET_MODAL_STATE': {
+      return Object.assign({}, state, { modalState: action.modalState })
     }
 
     case 'TOGGLE_EDITOR_LINK': {

@@ -19,7 +19,6 @@ describe('HelpModalUnconnected React component', () => {
   beforeEach(() => {
     // postMessageToEditorMock = jest.fn()
     props = {
-      helpModalOpen: true,
       tasks: {
         a: new UserTask({
           title: 'task a',
