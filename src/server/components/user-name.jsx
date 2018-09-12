@@ -32,7 +32,6 @@ export const SmallUserName = ({ username, avatar }) => (
   </UserNameContainer>
 )
 
-
 const MediumUserNameContainer = styled('a')`
 display: block;
 text-decoration: none;
