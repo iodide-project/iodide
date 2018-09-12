@@ -81,7 +81,7 @@ export default class RevisionsPage extends React.Component {
                             }
                             return (
                               <tr style={revisionsRowStyle} key={r.id}>
-                                <td style={revisionDateStyle}><a href={`/notebooks/${r.notebookId}/revisions/${r.id}/`}>{r.date.slice(0, 19)}</a></td>
+                                <td style={revisionDateStyle}><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{r.date.slice(0, 19)}</a></td>
                                 <td>{theTitle}</td>
                               </tr>
                         )
