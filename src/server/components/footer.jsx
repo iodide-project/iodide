@@ -43,7 +43,7 @@ span {
 }
 `
 
-export const Logo = () => (
+const Logo = () => (
   <LogoContainer color="grey">
     <div className={innerLogoStyle}>I<span>&#x207B;</span></div>
   </LogoContainer>
