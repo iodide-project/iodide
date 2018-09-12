@@ -2,9 +2,12 @@ import { stateFromJsmd } from './tools/jsmd-tools'
 import handleUrlQuery from './tools/handle-url-query'
 import { updateAppMessages, importInitialJsmd, evaluateAllCells } from './actions/actions'
 
+const SERVER_QUERY_STRINGS = ['revision']
+
 export default async function handleInitialJsmd(store) {
   let state
-  if (window.location.search) {
+  if (window.location.search &&
+    SERVER_QUERY_STRINGS.every(s => !window.location.search.includes(s))) {
     // if there is a query string, handle it and skip parsing the local jsmd
     state = await handleUrlQuery()
   } else {
