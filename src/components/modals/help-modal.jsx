@@ -2,17 +2,13 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-// import { connect } from 'react-redux'
 
-// import Modal from '@material-ui/core/Modal'
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-// import Close from '@material-ui/icons/Close'
 
 import KeyboardShortcutList from './keyboard-shortcut-list'
 
-// import { toggleHelpModal } from '../../actions/actions'
 import tasks from '../../actions/task-definitions'
 
 function AboutIodide() {
@@ -84,17 +80,3 @@ export default class HelpModal extends React.Component {
     )
   }
 }
-
-// export function mapStateToProps(state) {
-//   return {
-//     helpModalOpen: state.helpModalOpen,
-//   }
-// }
-
-// export function mapDispatchToProps(dispatch) {
-//   return {
-//     toggleHelpModal: () => dispatch(toggleHelpModal()),
-//   }
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(HelpModalUnconnected)
