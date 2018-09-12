@@ -24,7 +24,6 @@ def notebook_view(request, pk):
 
 
 def revision_view(request, nb, pk):
-    print('------ made it here', nb, pk)
     notebook_revision = get_object_or_404(NotebookRevision, pk=pk)
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
