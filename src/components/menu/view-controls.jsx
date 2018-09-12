@@ -3,10 +3,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import NotebookTaskButton from './notebook-task-button'
 import UserMenu from '../../shared/user-menu'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
+
+import tasks from '../../actions/task-definitions'
 
 export class ViewControlsUnconnected extends React.Component {
   static propTypes = {
