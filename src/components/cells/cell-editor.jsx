@@ -4,17 +4,18 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 
 import ReactCodeMirror from '@skidding/react-codemirror'
-import js from 'codemirror/mode/javascript/javascript' // eslint-disable-line no-unused-vars
-import markdown from 'codemirror/mode/markdown/markdown' // eslint-disable-line no-unused-vars
-import css from 'codemirror/mode/css/css' // eslint-disable-line no-unused-vars
-import matchbrackets from 'codemirror/addon/edit/matchbrackets' // eslint-disable-line no-unused-vars
-import closebrackets from 'codemirror/addon/edit/closebrackets' // eslint-disable-line no-unused-vars
-import autorefresh from 'codemirror/addon/display/autorefresh' // eslint-disable-line no-unused-vars
-import comment from 'codemirror/addon/comment/comment' // eslint-disable-line no-unused-vars
+
+import 'codemirror/mode/javascript/javascript'
+import 'codemirror/mode/markdown/markdown'
+import 'codemirror/mode/css/css'
+import 'codemirror/addon/edit/matchbrackets'
+import 'codemirror/addon/edit/closebrackets'
+import 'codemirror/addon/display/autorefresh'
+import 'codemirror/addon/comment/comment'
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/hint/javascript-hint'
+import '../../codemirror-keymap-sublime'
 
-import sublime from '../../codemirror-keymap-sublime' // eslint-disable-line no-unused-vars
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
 import { postMessageToEvalFrame } from '../../port-to-eval-frame'
