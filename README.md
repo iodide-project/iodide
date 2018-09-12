@@ -71,7 +71,7 @@ it supports are login/identity (via the github API). To test/run it locally, fol
 
 On subsequent runs, you only need to run `make up`.
 
-Additionally, if you are working on client code, you can run `npm run start` in a separate terminal to run webpack in watch mode (which will make your client code changes visible on page reload). If you require verbose Redux logging, you can use the command `npm run start -- reduxVerbose`
+Additionally, if you are working on client code, you can run `npm run start` in a separate terminal to run webpack in watch mode (which will make your client code changes visible on page reload). If you require verbose Redux logging, you can set the environment variable `REDUX_LOGGING=VERBOSE` with the command `REDUX_LOGGING=VERBOSE npm run start`
 
 ## Testing
 
