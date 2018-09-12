@@ -4,9 +4,8 @@ const CreateFileWebpack = require('create-file-webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const _ = require('lodash')
-const argv = require('minimist')(process.argv.slice(2))
 
-const reduxLogMode = argv._.includes('reduxVerbose') ? 'VERBOSE' : 'SILENT'
+const reduxLogMode = process.env.REDUX_LOGGING === 'VERBOSE' ? 'VERBOSE' : 'SILENT'
 
 const editorHtmlTemplate = require('./src/html-template.js')
 const evalFrameHtmlTemplate = require('./src/eval-frame/html-template.js')
