@@ -7,6 +7,8 @@ import LoginPage from './pages/login-page'
 import UserPage from './pages/user-page'
 import RevisionsPage from './pages/revisions-page'
 
+import './style/base'
+
 const { pageData } = window;
 
 const routes = [

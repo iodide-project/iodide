@@ -26,8 +26,9 @@ def index(request):
                 'userInfo': get_user_info_dict(request.user),
                 # this is horrible and will not scale
                 'notebookList': [
-                    {'id': v[0], 'title': v[1], 'owner': v[2]} for v in
-                    Notebook.objects.values_list('id', 'title', 'owner__username')
+                    {'id': v[0], 'title': v[1], 'owner': v[2], 'avatar': v[3]}
+                    for v in
+                    Notebook.objects.values_list('id', 'title', 'owner__username', 'owner__avatar')
                 ]
             })
         }
