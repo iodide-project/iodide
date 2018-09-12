@@ -4,10 +4,22 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import (get_object_or_404,
                               redirect,
                               render)
+from social_django.models import UserSocialAuth
 
 from .notebooks.models import Notebook, NotebookRevision
 from .base.models import User
-from .shared.get_user_info_dict import get_user_info_dict
+
+
+def get_user_info_dict(user):
+    if user.is_authenticated:
+        user_social_auth = UserSocialAuth.objects.get(user=user)
+        social_auth_extra_data = user_social_auth.extra_data
+        return {
+            'name': social_auth_extra_data['login'],
+            'avatar': user.avatar,
+            'accessToken': user.social_auth_extra_data['access_token']
+        }
+    return {}
 
 
 def index(request):
@@ -46,33 +58,6 @@ def user(request, name=None):
             } for v in Notebook.objects.filter(owner=user).values_list('id', 'title')]
         })
     })
-
-
-def revisions(request, pk):
-    pk = int(pk)
-    nb = get_object_or_404(Notebook, pk=pk)
-    owner = get_object_or_404(User, pk=nb.owner_id)
-    owner_info = {
-        'username': owner.username,
-        'full_name': '{} {}'.format(owner.first_name, owner.last_name),
-        'avatar': owner.avatar,
-        'title': nb.title,
-        'notebookId': nb.id
-    }
-    revisions = list(reversed([{
-        'id': revision.id,
-        'notebookId': revision.notebook_id,
-        'title': revision.title,
-        'date': revision.created.isoformat(sep=' ')}
-        for revision in NotebookRevision.objects.filter(notebook_id=pk)]))
-    return render(request, 'index.html', {
-            'page_data': json.dumps({
-                'userInfo': get_user_info_dict(request.user),
-                'ownerInfo': owner_info,
-                'revisions': revisions,
-            })
-        }
-    )
 
 
 def login(request):
