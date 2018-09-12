@@ -10,9 +10,9 @@ align-items: center;
 padding-top: 15px;
 padding-bottom: 15px;
 font-size: 0.815rem;
-text-transform: uppercase;
 margin-top: 30px;
 text-align: center;
+color: gray;
 `
 
 const LogoContainer = styled('div')`
