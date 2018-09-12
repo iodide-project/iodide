@@ -23,7 +23,7 @@ font-size: 40px;
 font-family: monospace;
 border: 2px solid ${props => props.color};
 border-radius: 5px;
-padding-left:11px;
+padding-left: 14px;
 padding-top: 4px;
 padding-bottom:2px;
 `

@@ -6,7 +6,7 @@ import HomePage from './pages/home-page'
 import LoginPage from './pages/login-page'
 import UserPage from './pages/user-page'
 
-import BaseStyle from './style/base' // eslint-disable-line
+import './style/base'
 
 const { pageData } = window;
 
