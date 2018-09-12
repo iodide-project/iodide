@@ -17,9 +17,7 @@ describe('HelpModalUnconnected React component', () => {
   }
 
   beforeEach(() => {
-    // postMessageToEditorMock = jest.fn()
     props = {
-      helpModalOpen: true,
       tasks: {
         a: new UserTask({
           title: 'task a',
@@ -56,12 +54,16 @@ describe('HelpModalUnconnected React component', () => {
   })
 
   it('has the right number of global shortcuts', () => {
-    expect(getTestComponent().find('.keyboard-shortcuts-global').children().length)
+    expect(getTestComponent()
+      .find('table.keyboard-shortcuts-global tbody')
+      .children().length)
       .toEqual(3)
   })
 
   it('has the right number of command mode shortcuts', () => {
-    expect(getTestComponent().find('.keyboard-shortcuts-command-mode').children().length)
+    expect(getTestComponent()
+      .find('table.keyboard-shortcuts-command-mode tbody')
+      .children().length)
       .toEqual(2)
   })
 })
