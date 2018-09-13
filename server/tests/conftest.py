@@ -2,7 +2,8 @@ import pytest
 from rest_framework.test import APIClient
 
 from server.base.models import User
-from server.notebooks.models import Notebook
+from server.notebooks.models import (Notebook,
+                                     NotebookRevision)
 
 
 @pytest.fixture
@@ -30,12 +31,22 @@ def fake_user2(transactional_db):
 
 @pytest.fixture
 def test_notebook(fake_user):
-    return Notebook.objects.create(owner=fake_user,
-                                   title='Fake notebook')
+    notebook = Notebook.objects.create(owner=fake_user,
+                                       title='Fake notebook')
+    NotebookRevision.objects.create(notebook=notebook,
+                                    title="First revision",
+                                    content="*fake notebook content*")
+    return notebook
 
 
 @pytest.fixture
 def two_test_notebooks(fake_user):
-    return [Notebook.objects.create(owner=fake_user,
-                                    title='Fake notebook %s' % i)
-            for i in range(2)]
+    notebooks = []
+    for i in range(2):
+        notebook = Notebook.objects.create(owner=fake_user,
+                                           title='Fake notebook %s' % i)
+        NotebookRevision.objects.create(notebook=notebook,
+                                        title="First revision of notebook %s" % i,
+                                        content="*fake notebook content %s*" % i)
+        notebooks.append(notebook)
+    return notebooks
