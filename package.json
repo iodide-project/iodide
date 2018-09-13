@@ -44,7 +44,7 @@
     "lodash": "^4.17.10",
     "lz-string": "^1.4.4",
     "markdown-it": "^8.4.1",
-    "markdown-it-anchor": "^4.0.0",
+    "markdown-it-anchor": "^5.0.0",
     "markdown-it-katex": "^2.0.3",
     "method-override": "^2.3.10",
     "mousetrap": "^1.6.1",
