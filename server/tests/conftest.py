@@ -2,7 +2,6 @@ import pytest
 from rest_framework.test import APIClient
 
 from server.base.models import User
-
 from server.notebooks.models import Notebook
 
 
