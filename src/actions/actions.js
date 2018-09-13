@@ -235,7 +235,7 @@ export function login(successCallback, failCallback) {
     // Functions to be called by child window
     window.loginSuccess = (userData) => {
       dispatch(loginSuccess(userData))
-      if (successCallback) successCallback()
+      if (successCallback) successCallback(userData)
     }
     window.loginFailure = () => {
       dispatch(loginFailure())
