@@ -16,6 +16,8 @@ export default class UserMenu extends React.Component {
     this.state = {
       anchorElement: null,
       isLoggedIn: props.isAuthenticated,
+      name: props.username,
+      avatar: props.avatar,
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -34,11 +36,16 @@ export default class UserMenu extends React.Component {
   }
 
   goToProfile() {
-    document.location = `/${this.props.username}`
+    window.open(`/${this.state.name}`)
+    this.handleMenuClose()
   }
 
   login() {
-    const loginSuccess = () => {
+    const loginSuccess = (args) => {
+      if (args) {
+        const { name, avatar } = args
+        this.setState({ name, avatar })
+      }
       this.setState({ isLoggedIn: true })
       this.handleMenuClose()
     }
@@ -70,8 +77,8 @@ export default class UserMenu extends React.Component {
           if (response.ok) {
             this.setState({ isLoggedIn: false })
           } else {
-            console.error('Login unsuccessful', response)
           // do something smart here (probably pop up a notification)
+            console.error('Login unsuccessful', response)
           }
         });
     }
@@ -113,7 +120,7 @@ export default class UserMenu extends React.Component {
                     onClick={this.handleClick}
                     style={{ color: 'white' }}
                   >
-                    <Avatar style={{ width: 28, height: 28 }} src={this.props.avatar} />
+                    <Avatar style={{ width: 28, height: 28 }} src={this.state.avatar} />
                     <ExpandMore style={{ width: 15, height: 15 }} />
                   </Button>
                 </React.Fragment>

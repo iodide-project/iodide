@@ -2,6 +2,7 @@ import UserTask from './user-task'
 import ExternalLinkTask from './external-link-task'
 import { store } from '../store'
 import * as actions from './actions'
+import { getSelectedCellId } from '../reducers/cell-reducer-utils'
 import {
   isCommandMode,
   viewModeIsEditor,
@@ -65,8 +66,8 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
 
 tasks.moveCellUp = new UserTask({
   title: 'Move Cell Up',
-  displayKeybinding: 'Shift+Up', // '\u21E7 \u2191',
-  keybindings: ['shift+up'],
+  displayKeybinding: `${commandKey}+Up`,
+  keybindings: ['ctrl+up', 'meta+up'],
   keybindingPrecondition: isCommandMode,
   commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
@@ -78,13 +79,45 @@ tasks.moveCellUp = new UserTask({
 
 tasks.moveCellDown = new UserTask({
   title: 'Move Cell Down',
-  displayKeybinding: 'Shift+Down', // '\u21E7 \u2193',
-  keybindings: ['shift+down'],
+  displayKeybinding: `${commandKey}+Down`,
+  keybindings: ['ctrl+down', 'meta+down'],
   keybindingPrecondition: isCommandMode,
   commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
   callback() {
     dispatcher.cellDown()
+  },
+})
+
+tasks.highlightUp = new UserTask({
+  title: 'Highlight Cell Above',
+  displayKeybinding: 'Shift+Up', // '\u21E7 \u2191',
+  keybindings: ['shift+up'],
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() {
+    const cellAboveId = getCellAboveSelectedId()
+    dispatcher.highlightCell(getSelectedCellId(store.getState()), false)
+    if (cellAboveId !== null) {
+      dispatcher.highlightCell(cellAboveId, false)
+      dispatcher.selectCell(cellAboveId, true)
+    }
+  },
+})
+
+tasks.highlightDown = new UserTask({
+  title: 'Highlight Cell Down',
+  displayKeybinding: 'Shift+Up', // '\u21E7 \u2193',
+  keybindings: ['shift+down'],
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() {
+    const cellBelowId = getCellBelowSelectedId()
+    dispatcher.highlightCell(getSelectedCellId(store.getState()), false)
+    if (cellBelowId !== null) {
+      dispatcher.highlightCell(cellBelowId, false)
+      dispatcher.selectCell(cellBelowId, true)
+    }
   },
 })
 
@@ -109,7 +142,10 @@ tasks.selectUp = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     const cellAboveId = getCellAboveSelectedId()
-    if (cellAboveId !== null) { dispatcher.selectCell(cellAboveId, true) }
+    if (cellAboveId !== null) {
+      dispatcher.selectCell(cellAboveId, true)
+      dispatcher.unHighlightCells()
+    }
   },
 })
 
@@ -122,8 +158,38 @@ tasks.selectDown = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     const cellBelowId = getCellBelowSelectedId()
-    if (cellBelowId !== null) { dispatcher.selectCell(cellBelowId, true) }
+    if (cellBelowId !== null) {
+      dispatcher.selectCell(cellBelowId, true)
+      dispatcher.unHighlightCells()
+    }
   },
+})
+
+tasks.copyCell = new UserTask({
+  title: 'Copy Cell',
+  keybindings: ['ctrl+c', 'command+c'],
+  displayKeybinding: `${commandKey}+C`,
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.cellCopy() },
+})
+
+tasks.cutCell = new UserTask({
+  title: 'Cut Cell',
+  keybindings: ['ctrl+x', 'command+x'],
+  displayKeybinding: `${commandKey}+X`,
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.cellCut() },
+})
+
+tasks.pasteCell = new UserTask({
+  title: 'Paste Cell',
+  keybindings: ['ctrl+v', 'command+v'],
+  displayKeybinding: `${commandKey}+V`,
+  keybindingPrecondition: isCommandMode,
+  preventDefaultKeybinding: true,
+  callback() { dispatcher.cellPaste() },
 })
 
 tasks.scrollOutputPaneToCell = new UserTask({

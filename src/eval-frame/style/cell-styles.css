@@ -12,7 +12,7 @@ div.cell-container {
   /* put the .cell-menu-container and .cell-row-container in a row */
   display: flex;
   overflow-x: auto;
-  flex-direction: row; 
+  flex-direction: row;
 }
 
 /* These may need to be integrated into the presentation mode style sheets

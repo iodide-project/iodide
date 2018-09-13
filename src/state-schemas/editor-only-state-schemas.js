@@ -26,6 +26,11 @@ export const editorOnlyStateProperties = {
     items: editorCellSchema,
     default: [newCellFromSchema(editorCellSchema, 0)],
   },
+  cellClipboard: {
+    type: 'array',
+    items: editorCellSchema,
+    default: [],
+  },
   evalFrameMessageQueue: {
     type: 'array',
     items: { type: 'object' },

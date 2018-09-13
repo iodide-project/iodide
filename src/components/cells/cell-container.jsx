@@ -5,7 +5,13 @@ import Tooltip from '@material-ui/core/Tooltip'
 
 import UnfoldLess from '@material-ui/icons/UnfoldLess'
 
-import { selectCell, updateCellProperties } from '../../actions/actions'
+import {
+  selectCell,
+  updateCellProperties,
+  highlightCell,
+  unHighlightCells,
+  multipleCellHighlight,
+} from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
 
 import CellMenuContainer from './cell-menu-container'
@@ -28,6 +34,9 @@ export class CellContainerUnconnected extends React.Component {
     // action props
     selectCell: PropTypes.func.isRequired,
     updateCellProperties: PropTypes.func.isRequired,
+    highlightCell: PropTypes.func.isRequired,
+    unHighlightCells: PropTypes.func.isRequired,
+    multipleCellHighlight: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -36,10 +45,22 @@ export class CellContainerUnconnected extends React.Component {
     this.editor = React.createRef()
   }
 
-  handleCellClick = () => {
+  handleCellClick = (event) => {
     const scrollToCell = false
     if (!this.props.selected) {
       this.props.selectCell(this.props.cellId, scrollToCell)
+    }
+    if (!(event.shiftKey || event.ctrlKey || event.metaKey)) {
+      this.props.unHighlightCells()
+    }
+  }
+
+  handleCellHeader = (event) => {
+    if (event.shiftKey) {
+      event.preventDefault();
+      this.props.multipleCellHighlight(this.props.cellId)
+    } else if (event.ctrlKey || event.metaKey) {
+      this.props.highlightCell(this.props.cellId)
     }
   }
 
@@ -65,7 +86,7 @@ export class CellContainerUnconnected extends React.Component {
         onMouseDown={this.handleCellClick}
         style={this.props.cellContainerStyle}
       >
-        <div className="cell-header">
+        <div onClick={this.handleCellHeader} className="cell-header">
           <CellMenuContainer cellId={this.props.cellId} />
           <Tooltip
             classes={{ tooltip: 'iodide-tooltip' }}
@@ -96,8 +117,10 @@ export function mapStateToProps(state, ownProps) {
 
   const cellContainerBorderWidth = (cell.selected && !editingCell) ? '2px' : '1px'
   const cellContainerBorderColor = cell.selected ? '#bbb' : '#f1f1f1'
+  const cellContainerBackground = cell.highlighted ? 'rgba(116, 185, 255, 0.2)' : 'none'
   const cellContainerStyle = {
     outline: `solid ${cellContainerBorderColor} ${cellContainerBorderWidth}`,
+    background: cellContainerBackground,
   }
 
   const mainComponentStyle = {
@@ -130,6 +153,15 @@ function mapDispatchToProps(dispatch) {
     },
     updateCellProperties: (cellId, newProps) => {
       dispatch(updateCellProperties(cellId, newProps))
+    },
+    highlightCell: (cellId) => {
+      dispatch(highlightCell(cellId))
+    },
+    unHighlightCells: () => {
+      dispatch(unHighlightCells())
+    },
+    multipleCellHighlight: (cellId) => {
+      dispatch(multipleCellHighlight(cellId))
     },
   }
 }

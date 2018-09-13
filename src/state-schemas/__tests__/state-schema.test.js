@@ -44,16 +44,16 @@ describe('cell schemas should all have disjoint properties', () => {
 describe('state schemas should all have disjoint properties except for "cells" and "viewMode', () => {
   it('mirroredStateProperties, editorOnlyStateProperties have correct intersection', () => {
     expect(getPropertyIntersection(mirroredStateProperties, editorOnlyStateProperties))
-      .toEqual(['cells', 'viewMode'])
+      .toEqual(['cells', 'cellClipboard', 'viewMode'])
   })
 
   it('mirroredStateProperties, evalFrameOnlyStateProperties have correct intersection', () => {
     expect(getPropertyIntersection(mirroredStateProperties, evalFrameOnlyStateProperties))
-      .toEqual(['cells', 'viewMode'])
+      .toEqual(['cells', 'cellClipboard', 'viewMode'])
   })
 
   it('evalFrameOnlyStateProperties, editorOnlyStateProperties have correct intersection', () => {
     expect(getPropertyIntersection(evalFrameOnlyStateProperties, editorOnlyStateProperties))
-      .toEqual(['cells', 'viewMode'])
+      .toEqual(['cells', 'cellClipboard', 'viewMode'])
   })
 })
