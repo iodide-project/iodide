@@ -1,10 +1,11 @@
+/* global IODIDE_BUILD_TYPE */
 import { stateFromJsmd } from './tools/jsmd-tools'
 import handleUrlQuery from './tools/handle-url-query'
 import { updateAppMessages, importInitialJsmd, evaluateAllCells } from './actions/actions'
 
 export default async function handleInitialJsmd(store) {
   let state
-  if (window.location.search) {
+  if (window.location.search && IODIDE_BUILD_TYPE !== 'server') {
     // if there is a query string, handle it and skip parsing the local jsmd
     state = await handleUrlQuery()
   } else {

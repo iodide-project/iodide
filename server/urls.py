@@ -4,7 +4,6 @@ from django.urls import path
 
 import server.views
 
-
 admin.autodiscover()
 
 urlpatterns = [
