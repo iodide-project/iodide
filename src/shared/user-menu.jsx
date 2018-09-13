@@ -134,7 +134,7 @@ export default class UserMenu extends React.Component {
                 }}
                 onClick={this.login}
               >
-                log in
+                Log In
               </Button>
               )
             }
