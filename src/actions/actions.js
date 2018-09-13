@@ -476,3 +476,37 @@ export function saveEnvironment(updateObj, update) {
     update,
   }
 }
+
+export function highlightCell(cellID, revert = true) {
+  return {
+    type: 'HIGHLIGHT_CELL',
+    id: cellID,
+    revert,
+  }
+}
+export function unHighlightCells() {
+  return {
+    type: 'UNHIGHLIGHT_CELLS',
+  }
+}
+export function multipleCellHighlight(cellID) {
+  return {
+    type: 'MULTIPLE_CELL_HIGHLIGHT',
+    id: cellID,
+  }
+}
+export function cellCopy() {
+  return {
+    type: 'CELL_COPY',
+  }
+}
+export function cellCut() {
+  return {
+    type: 'CELL_CUT',
+  }
+}
+export function cellPaste() {
+  return {
+    type: 'CELL_PASTE',
+  }
+}
