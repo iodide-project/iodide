@@ -4,6 +4,7 @@ import _ from 'lodash'
 
 import { newNotebook, newCell } from '../editor-state-prototypes'
 import htmlTemplate from '../html-template'
+import { addChangeLanguageTask } from '../actions/task-definitions'
 
 const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']
 
@@ -198,6 +199,18 @@ function stateFromJsmd(jsmdString) {
   const meta = chunkObjects.filter(c => c.chunkType === 'meta')[0]
   if (meta) {
     Object.assign(initialState, meta.iodideSettings)
+    if (meta.iodideSettings.languages) {
+      const { languages } = meta.iodideSettings
+      Object.keys(languages)
+        .filter(language => language !== 'js')
+        .forEach((language) => {
+          addChangeLanguageTask(
+            languages[language].languageId,
+            languages[language].displayName,
+            languages[language].keybinding,
+          )
+        })
+    }
   }
 
   chunkObjects
