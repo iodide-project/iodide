@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'react-emotion';
 import Button from '@material-ui/core/Button';
-
 import Header from '../components/header';
 import PageBody from '../components/page-body'
 import Table from '../components/table'
@@ -42,8 +41,9 @@ export default class HomePage extends React.Component {
             variant="contained"
             className="header-button"
             href="/new"
+            target="_blank"
           >
-            New notebook
+            New Notebook
           </Button>
           <Table>
             <thead>

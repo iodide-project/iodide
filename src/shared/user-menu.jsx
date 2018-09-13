@@ -36,7 +36,8 @@ export default class UserMenu extends React.Component {
   }
 
   goToProfile() {
-    document.location = `/${this.state.name}`
+    window.open(`/${this.state.name}`)
+    this.handleMenuClose()
   }
 
   login() {
