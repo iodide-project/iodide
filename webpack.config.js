@@ -143,7 +143,7 @@ module.exports = (env) => {
       new ExtractTextPlugin(`[name].${APP_VERSION_STRING}.css`),
     ],
     devServer: {
-      contentBase: path.join(__dirname, 'dev'),
+      contentBase: path.join(__dirname, 'build'),
       // compress: true,
       port: DEV_SERVER_PORT,
       hot: false,
