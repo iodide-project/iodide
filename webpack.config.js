@@ -15,14 +15,15 @@ const editorHtmlTemplateCompiler = _.template(editorHtmlTemplate)
 const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate)
 
 const DEV_SERVER_PORT = 8000
-let BUILD_DIR
+
+const BUILD_DIR = path.resolve(__dirname, 'build/')
 let APP_PATH_STRING
 let CSS_PATH_STRING
 
 let { EVAL_FRAME_ORIGIN } = process.env
 let { EDITOR_ORIGIN } = process.env
 
-let { APP_VERSION_STRING } = process.env || 'dev'
+const { APP_VERSION_STRING } = process.env || 'dev'
 
 const APP_DIR = path.resolve(__dirname, 'src/')
 const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
@@ -33,11 +34,8 @@ const plugins = []
 module.exports = (env) => {
   env = env || ''
 
-  if (env.startsWith('dev')) {
-    BUILD_DIR = path.resolve(__dirname, 'dev/')
-  } else {
+  if (!env.startsWith('dev')) {
     plugins.push(new UglifyJSPlugin())
-    BUILD_DIR = path.resolve(__dirname, 'prod/')
   }
 
   if (env.includes('client-only')) {

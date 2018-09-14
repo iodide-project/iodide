@@ -151,7 +151,7 @@ USE_TZ = True
 
 
 # Files in this directory will be served by WhiteNoise at the site root.
-WHITENOISE_ROOT = os.path.join(ROOT, 'prod')
+WHITENOISE_ROOT = os.path.join(ROOT, 'build')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 

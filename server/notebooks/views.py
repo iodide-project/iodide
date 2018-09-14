@@ -6,6 +6,7 @@ from .models import Notebook, NotebookRevision
 from ..base.models import User
 from ..views import get_user_info_dict
 
+env = environ.Env()
 
 def _get_user_info_json(user):
     if user.is_authenticated:
@@ -25,7 +26,11 @@ def notebook_view(request, pk):
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
         'notebook_info': notebook_info,
-        'jsmd': notebook_content.content
+        'jsmd': notebook_content.content,
+        'iframe_src': '{}/iodide.eval-frame.{}.html'.format(
+            env.str('EVAL_FRAME_ORIGIN'),
+            env.str('APP_VERSION_STRING')
+            )
     })
 
 
