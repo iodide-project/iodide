@@ -46,7 +46,6 @@
     "markdown-it": "^8.4.1",
     "markdown-it-anchor": "^4.0.0",
     "markdown-it-katex": "^2.0.3",
-    "method-override": "^2.3.10",
     "mousetrap": "^1.6.1",
     "opensans-npm-webfont": "^1.0.0",
     "prop-types": "^15.6.1",
