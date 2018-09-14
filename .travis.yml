@@ -47,7 +47,7 @@ matrix:
           keep-history: false
           repo: iodide-project/stable
           verbose: false
-          local-dir: dev
+          local-dir: build
           target-branch: master
           on:
             branch: stable
@@ -59,7 +59,7 @@ matrix:
           repo: iodide-project/master-eval
           fqdn: extremely-alpha.iodide.app
           verbose: false
-          local-dir: dev
+          local-dir: build
           target-branch: master
           on:
             branch: master
