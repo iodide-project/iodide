@@ -8,6 +8,7 @@ from ..views import get_user_info_dict
 
 env = environ.Env()
 
+
 def _get_user_info_json(user):
     if user.is_authenticated:
         return get_user_info_dict(user)
