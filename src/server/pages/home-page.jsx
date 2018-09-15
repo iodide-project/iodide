@@ -4,7 +4,7 @@ import Header from '../components/header';
 import PageBody from '../components/page-body';
 import PageHeader from '../components/page-header';
 import TrendingNotebooksList from '../components/trending-notebooks-list';
-import { ContainedButton } from '../components/Buttons'
+import { ContainedButton } from '../components/buttons'
 import AttentionBlock from '../components/attention-block'
 
 const TrendingNotebooksPage = ({ notebookList }) => (
