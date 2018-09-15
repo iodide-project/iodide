@@ -61,7 +61,7 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return NotebookRevisionSerializer
         return NotebookRevisionDetailSerializer
-    
+
     def perform_destroy(self, instance):
         if instance.notebook.owner != self.request.user:
             raise PermissionDenied
