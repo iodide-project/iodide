@@ -3,7 +3,7 @@ import React from 'react';
 import Table from '../components/table'
 import { SmallUserName as UserName } from '../components/user-name'
 
-export default class NotebookList extends React.Component {
+export default class TrendingNotebooksList extends React.Component {
   render() {
     return (
       <Table>

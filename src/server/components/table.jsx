@@ -6,6 +6,8 @@ border-spacing: 0;
 border-collapse: collapse;
 width: 100%;
 
+margin-top:20px;
+
 td, th, tr {
   margin: 0px;
   border: none;

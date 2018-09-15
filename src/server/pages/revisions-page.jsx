@@ -5,6 +5,7 @@ import PageBody from '../components/page-body';
 import Header from '../components/header';
 import Table from '../components/table';
 import { MediumUserName } from '../components/user-name'
+import DeleteElementButton from '../components/delete-element-button'
 
 const RevisionsPageHeader = styled('h2')`
 span {
@@ -24,7 +25,24 @@ a:hover {
 `
 
 export default class RevisionsPage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { revisions: this.props.revisions }
+    this.onDeleteNotebook = this.onDeleteNotebook.bind(this)
+    this.onDeleteRevision = this.onDeleteRevision.bind(this)
+  }
+
+  onDeleteNotebook() {
+    window.location = `/${this.props.userInfo.name}/`;
+  }
+
+  onDeleteRevision(revisionID) {
+    const revisions = this.state.revisions.filter(r => r.id !== revisionID)
+    this.setState({ revisions })
+  }
+
   render() {
+    const isCurrentUsersPage = (this.props.ownerInfo.username === this.props.userInfo.name)
     return (
       <div>
         <Header userInfo={this.props.userInfo} />
@@ -39,22 +57,48 @@ export default class RevisionsPage extends React.Component {
             fullName={this.props.ownerInfo.full_name}
             avatar={this.props.ownerInfo.avatar}
           />
+          {
+            isCurrentUsersPage &&
+              <DeleteElementButton
+                text="delete this notebook"
+                url={`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`}
+                modalTitle={`delete the notebook  "${this.props.ownerInfo.title}"?`}
+                elementID={this.props.ownerInfo.notebookId}
+                onDelete={this.onDeleteNotebook}
+              />
+          }
           <h3>Revisions</h3>
           <Table>
             <tbody>
               <tr>
                 <th>When</th>
                 <th>Title</th>
+                {isCurrentUsersPage ? <th /> : undefined}
               </tr>
               {
-                        this.props.revisions.map((r, i) => (
+                        this.state.revisions.map((r, i) => (
                           <tr key={r.id}>
                             <td><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{r.date.slice(0, 19)}</a></td>
                             <td>
                               <a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>
-                                { (i > 0 && this.props.revisions[i].title === this.props.revisions[i - 1].title) ? '-' : r.title }
+                                { (i > 0 && this.state.revisions[i].title === this.state.revisions[i - 1].title) ? '-' : r.title }
                               </a>
                             </td>
+
+                            {
+                                isCurrentUsersPage ?
+                                  <td>
+                                    <DeleteElementButton
+                                      text="delete"
+                                      url={`/api/v1/notebooks/${r.notebookId}/revisions/${r.id}`}
+                                      modalTitle={`delete the notebook  "${r.title}"?`}
+                                      elementID={r.id}
+                                      onDelete={this.onDeleteRevision}
+                                    />
+                                  </td> :
+                              undefined
+                              }
+
                           </tr>
                         ))
                     }

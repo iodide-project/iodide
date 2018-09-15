@@ -45,7 +45,7 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     # revisions should be considered immutable once created
-    http_method_names = ['get', 'post', 'head']
+    http_method_names = ['get', 'post', 'head', 'delete']
 
     def get_serializer_context(self):
         notebook_id = int(self.kwargs['notebook_id'])
@@ -61,6 +61,11 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return NotebookRevisionSerializer
         return NotebookRevisionDetailSerializer
+    
+    def perform_destroy(self, instance):
+        if instance.notebook.owner != self.request.user:
+            raise PermissionDenied
+        viewsets.ModelViewSet.perform_destroy(self, instance)
 
     def perform_create(self, serializer):
         ctx = self.get_serializer_context()
