@@ -6,7 +6,8 @@ from .models import Notebook, NotebookRevision
 from ..base.models import User
 from ..views import get_user_info_dict
 
-env = environ.Env()
+from ..settings import (APP_VERSION_STRING,
+                        EVAL_FRAME_ORIGIN)
 
 
 def _get_user_info_json(user):
@@ -29,8 +30,8 @@ def notebook_view(request, pk):
         'notebook_info': notebook_info,
         'jsmd': notebook_content.content,
         'iframe_src': '{}/iodide.eval-frame.{}.html'.format(
-            env.str('EVAL_FRAME_ORIGIN'),
-            env.str('APP_VERSION_STRING')
+            EVAL_FRAME_ORIGIN,
+            APP_VERSION_STRING,
             )
     })
 
