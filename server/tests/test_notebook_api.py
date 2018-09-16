@@ -1,6 +1,5 @@
 import pytest
 from django.urls import reverse
-from freezegun import freeze_time
 
 from server.notebooks.models import (Notebook,
                                      NotebookRevision)
@@ -18,40 +17,27 @@ def test_notebook_list(client, two_test_notebooks):
     ]
 
 
-@freeze_time('2018-07-01 13:00')
 def test_notebook_detail(client, test_notebook):
+    initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     resp = client.get(reverse('notebooks-detail', kwargs={'pk': test_notebook.id}))
     assert resp.status_code == 200
     assert resp.json() == {
         "id": test_notebook.id,
         "owner": "testuser1",
-        "title": test_notebook.title,
-        "latest_revision": None
-    }
-
-    # add a revision, make sure it displays
-    NotebookRevision.objects.create(notebook=test_notebook,
-                                    title="First revision",
-                                    content="*fake notebook content*")
-    resp = client.get(reverse('notebooks-detail', kwargs={'pk': test_notebook.id}))
-    assert resp.status_code == 200
-    assert resp.json() == {
-        "id": test_notebook.id,
-        "owner": "testuser1",
-        "title": "First revision",
+        "title": initial_revision.title,
         "latest_revision": {
-            "content": "*fake notebook content*",
-            "created": "2018-07-01T13:00:00Z",
-            "id": 1,
-            "title": "First revision"
+            "content": initial_revision.content,
+            "created": initial_revision.created.isoformat()[:-6] + 'Z',
+            "id": initial_revision.id,
+            "title": initial_revision.title
         }
     }
 
     # add another revision, make sure all return values are updated
     # appropriately
-    NotebookRevision.objects.create(notebook=test_notebook,
-                                    title="Second revision",
-                                    content="*updated fake notebook content*")
+    new_revision = NotebookRevision.objects.create(notebook=test_notebook,
+                                                   title="Second revision",
+                                                   content="*updated fake notebook content*")
     resp = client.get(reverse('notebooks-detail', kwargs={'pk': test_notebook.id}))
     assert resp.status_code == 200
     assert resp.json() == {
@@ -59,10 +45,10 @@ def test_notebook_detail(client, test_notebook):
         "owner": "testuser1",
         "title": "Second revision",
         "latest_revision": {
-            "content": "*updated fake notebook content*",
-            "created": "2018-07-01T13:00:00Z",
-            "id": 2,
-            "title": "Second revision"
+            "content": new_revision.content,
+            "created": new_revision.created.isoformat()[:-6] + 'Z',
+            "id": new_revision.id,
+            "title": new_revision.title
         }
     }
 
