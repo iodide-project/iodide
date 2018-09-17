@@ -49,7 +49,7 @@
     "mousetrap": "^1.6.1",
     "opensans-npm-webfont": "^1.0.0",
     "prop-types": "^15.6.1",
-    "query-string": "^5.1.1",
+    "query-string": "^6.0.0",
     "re-resizable": "^4.4.8",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
