@@ -20,7 +20,7 @@ def notebook_view(request, pk):
     else:
         notebook_content = notebook.revisions.last()
     notebook_info = {
-        'user_can_save': notebook.owner_id == request.user
+        'user_can_save': notebook.owner_id == request.user.id
     }
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
