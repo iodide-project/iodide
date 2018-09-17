@@ -2,8 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import Button from '@material-ui/core/Button'
-
 import { createNewNotebookOnServer, login } from '../../actions/actions'
 
 export class HeaderMessagesUnconnected extends React.Component {
@@ -20,7 +18,7 @@ export class HeaderMessagesUnconnected extends React.Component {
       case 'NEED_TO_LOGIN':
         content = (
           <span>
-            To save to this server, you need to <Button onClick={this.props.login}>login</Button>
+            To save to this server, you need to <a onClick={this.props.login}>login</a>.
           </span>
         )
         break
@@ -28,7 +26,7 @@ export class HeaderMessagesUnconnected extends React.Component {
         content = (
           <span>
             This notebook is owned by another user.
-            <Button onClick={this.props.makeCopy}>Make a copy to your account</Button>
+            <a onClick={this.props.makeCopy}>Make a copy to your account</a>.
           </span>
         )
         break
