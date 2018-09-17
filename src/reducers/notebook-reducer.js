@@ -1,5 +1,5 @@
 /* global IODIDE_BUILD_TYPE */
-import { newNotebook, getUserData, newCell, newCellID, paneRatios } from '../editor-state-prototypes'
+import { newNotebook, getUserData, getNotebookInfo, newCell, newCellID, paneRatios } from '../editor-state-prototypes'
 import {
   exportJsmdBundle,
   titleToHtmlFilename,
@@ -83,7 +83,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
       return Object.assign(
         newNotebook(), nextState, { cells, notebookId },
-        getUserData(),
+        getUserData(), getNotebookInfo(),
       )
     }
 

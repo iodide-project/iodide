@@ -255,43 +255,70 @@ export function logout() {
   }
 }
 
+function getNotebookSaveRequestOptions(state) {
+  const data = {
+    title: state.title,
+    content: exportJsmdToString(state),
+  }
+
+  // Get CSRF Cookie for Django CSRF Middleware
+  function getCookie(name) {
+    if (!document.cookie) {
+      return null
+    }
+    const token = document.cookie.split(';')
+      .map(c => c.trim())
+      .filter(c => c.startsWith(`${name}=`))
+
+    if (token.length === 0) {
+      return null;
+    }
+    return decodeURIComponent(token[0].split('=')[1])
+  }
+
+  const csrftoken = getCookie('csrftoken')
+
+  const postRequestOptions = {
+    body: JSON.stringify(data),
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken,
+    },
+  }
+
+  return postRequestOptions
+}
+
+export function createNewNotebookOnServer() {
+  return (dispatch, getState) => {
+    const state = getState()
+
+    const postRequestOptions = getNotebookSaveRequestOptions(state)
+    // Create a New Notebook in Database
+    fetch('/api/v1/notebooks/', postRequestOptions)
+      .then(response => response.json())
+      .then((json) => {
+        const message = 'Notebook saved to server'
+        dispatch(updateAppMessages({
+          message,
+          details: `${message} <br />Notebook saved`,
+        }))
+        dispatch({ type: 'ADD_NOTEBOOK_ID', id: json.id })
+        window.history.pushState('', {}, `/notebooks/${json.id}`)
+      })
+    dispatch({ type: 'NOTEBOOK_SAVED' })
+  }
+}
+
 export function saveNotebookToServer() {
   return (dispatch, getState) => {
     const state = getState()
 
     const notebookInServer = Boolean(state.notebookId)
-    const data = {
-      title: state.title,
-      content: exportJsmdToString(state),
-    }
-
-    // Get CSRF Cookie for Django CSRF Middleware
-    function getCookie(name) {
-      if (!document.cookie) {
-        return null
-      }
-      const token = document.cookie.split(';')
-        .map(c => c.trim())
-        .filter(c => c.startsWith(`${name}=`))
-
-      if (token.length === 0) {
-        return null;
-      }
-      return decodeURIComponent(token[0].split('=')[1])
-    }
-
-    const csrftoken = getCookie('csrftoken')
-
-    const postRequestOptions = {
-      body: JSON.stringify(data),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrftoken,
-      },
-    }
 
     if (notebookInServer) {
+      const postRequestOptions = getNotebookSaveRequestOptions(state)
       // Update Exisiting Notebook
       fetch(`/api/v1/notebooks/${state.notebookId}/revisions/`, postRequestOptions)
         .then(response => response.json())
@@ -302,21 +329,10 @@ export function saveNotebookToServer() {
             details: `${message} <br />Notebook saved`,
           }))
         })
+      dispatch({ type: 'NOTEBOOK_SAVED' })
     } else {
-      // Create a New Notebook in Database
-      fetch('/api/v1/notebooks/', postRequestOptions)
-        .then(response => response.json())
-        .then((json) => {
-          const message = 'Notebook saved to server'
-          dispatch(updateAppMessages({
-            message,
-            details: `${message} <br />Notebook saved`,
-          }))
-          dispatch({ type: 'ADD_NOTEBOOK_ID', id: json.id })
-          window.history.pushState('', {}, `/notebooks/${json.id}`)
-        })
+      createNewNotebookOnServer()(dispatch, getState)
     }
-    dispatch({ type: 'NOTEBOOK_SAVED' })
   }
 }
 

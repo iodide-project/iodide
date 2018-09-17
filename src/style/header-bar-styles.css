@@ -4,6 +4,17 @@
   height: 50px
 }
 
+.notebook-header-messages-container {
+  background-color: lightyellow;
+  padding: 10px;
+  border-bottom: darkgrey solid 1px;
+}
+
+.notebook-header-messages-container a {
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .notebook-toolbar {
   height:50px;
   display: flex;

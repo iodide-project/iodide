@@ -4,6 +4,8 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import PresentationModeToolbar from './presentation-mode-toolbar'
 import EditorModeToolbar from './editor-mode-toolbar'
 
+import HeaderMessages from './header-messages'
+
 import AppMessages from '../app-messages/app-messages'
 
 import IodideModalsRoot from '../modals/iodide-modals-root'
@@ -22,6 +24,7 @@ export default class NotebookHeader extends React.Component {
         <MuiThemeProvider theme={theme}>
           <EditorModeToolbar />
         </MuiThemeProvider>
+        <HeaderMessages />
         <PresentationModeToolbar />
         <AppMessages />
         <IodideModalsRoot />
