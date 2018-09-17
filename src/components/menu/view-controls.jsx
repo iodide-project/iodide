@@ -2,7 +2,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import InfoIcon from '@material-ui/icons/InfoOutline'
+import InfoIcon from '@material-ui/icons/InfoOutlined'
 
 import NotebookTaskButton from './notebook-task-button'
 import UserMenu from '../../shared/user-menu'
