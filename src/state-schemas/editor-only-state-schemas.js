@@ -69,8 +69,12 @@ export const editorOnlyStateProperties = {
     default: 'untitled',
   },
   userData: {
-    // FIXME userData needs full schema!!
     type: 'object',
+    properties: {
+      name: { type: 'string' },
+      avatar: { type: 'string' },
+    },
+    additionalProperties: false,
     default: {},
   },
   viewMode: {
