@@ -1,5 +1,3 @@
-import json
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import (get_object_or_404,
                               render)
@@ -11,8 +9,8 @@ from ..views import get_user_info_dict
 
 def _get_user_info_json(user):
     if user.is_authenticated:
-        return json.dumps(get_user_info_dict(user))
-    return json.dumps({})
+        return get_user_info_dict(user)
+    return {}
 
 
 def notebook_view(request, pk):
@@ -45,11 +43,11 @@ def notebook_revisions(request, pk):
         'date': revision.created.isoformat(sep=' ')}
         for revision in NotebookRevision.objects.filter(notebook_id=pk)]))
     return render(request, '../templates/index.html', {
-            'page_data': json.dumps({
+            'page_data': {
                 'userInfo': get_user_info_dict(request.user),
                 'ownerInfo': owner_info,
                 'revisions': revisions,
-            })
+            }
         }
     )
 

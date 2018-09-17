@@ -27,7 +27,11 @@ function newNotebook() {
 }
 
 function getUserData() {
-  return { userData: window.userData || {} }
+  const userData = document.getElementById('userData')
+  if (userData) {
+    return { userData: JSON.parse(userData.textContent) }
+  }
+  return {}
 }
 
 export {
