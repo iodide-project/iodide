@@ -291,18 +291,7 @@ export function saveNotebookToServer() {
       },
     }
 
-    if (notebookInServer) {
-      // Update Exisiting Notebook
-      fetch(`/api/v1/notebooks/${state.notebookId}/revisions/`, postRequestOptions)
-        .then(response => response.json())
-        .then(() => {
-          const message = 'Updated Notebook'
-          dispatch(updateAppMessages({
-            message,
-            details: `${message} <br />Notebook saved`,
-          }))
-        })
-    } else {
+    const createNewNotebook = () => {
       // Create a New Notebook in Database
       fetch('/api/v1/notebooks/', postRequestOptions)
         .then(response => response.json())
@@ -315,6 +304,25 @@ export function saveNotebookToServer() {
           dispatch({ type: 'ADD_NOTEBOOK_ID', id: json.id })
           window.history.pushState('', {}, `/notebooks/${json.id}`)
         })
+    }
+
+    if (notebookInServer) {
+      // Update Exisiting Notebook
+      fetch(`/api/v1/notebooks/${state.notebookId}/revisions/`, postRequestOptions)
+        .then(response => [response.ok, response.json()])
+        .then(([ok]) => {
+          if (ok) {
+            const message = 'Updated Notebook'
+            dispatch(updateAppMessages({
+              message,
+              details: `${message} <br />Notebook saved`,
+            }))
+          } else if (window.confirm('Save a copy to your account?')) { // eslint-disable-line no-alert
+            createNewNotebook()
+          }
+        })
+    } else {
+      createNewNotebook()
     }
     dispatch({ type: 'NOTEBOOK_SAVED' })
   }
