@@ -1,4 +1,3 @@
-import json
 from django.contrib.auth import logout as django_logout
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import (get_object_or_404,
@@ -13,8 +12,7 @@ def get_user_info_dict(user):
     if user.is_authenticated:
         return {
             'name': user.username,
-            'avatar': user.avatar,
-            'accessToken': user.social_auth_extra_data['access_token']
+            'avatar': user.avatar
         }
     return {}
 
@@ -22,7 +20,7 @@ def get_user_info_dict(user):
 def index(request):
     return render(
         request, 'index.html', {
-            'page_data': json.dumps({
+            'page_data': {
                 'userInfo': get_user_info_dict(request.user),
                 # this is horrible and will not scale
                 'notebookList': [
@@ -30,7 +28,7 @@ def index(request):
                     for v in
                     Notebook.objects.values_list('id', 'title', 'owner__username', 'owner__avatar')
                 ]
-            })
+            }
         }
     )
 
@@ -45,7 +43,7 @@ def user(request, name=None):
         'name': user.username,
     }
     return render(request, 'index.html', {
-        'page_data': json.dumps({
+        'page_data': {
             'userInfo': user_info,
             'thisUser': this_user,
             'notebookList': [{
@@ -54,21 +52,21 @@ def user(request, name=None):
                 'last_revision': NotebookRevision.objects
                 .filter(notebook_id=v[0]).last().created.isoformat(sep=' ')
             } for v in Notebook.objects.filter(owner=user).values_list('id', 'title')]
-        })
+        }
     })
 
 
 def login(request):
     if request.user.is_authenticated:
         return redirect('/new')
-    return render(request, 'index.html', {'page_data': json.dumps({})})
+    return render(request, 'index.html', {'page_data': {}})
 
 
 def login_success(request):
     if not request.user.is_authenticated:
         raise PermissionDenied
     return render(request, 'login_success.html', {
-        'user_info': json.dumps(get_user_info_dict(request.user))
+        'user_info': get_user_info_dict(request.user)
     })
 
 

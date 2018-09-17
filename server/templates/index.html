@@ -4,8 +4,6 @@
 {% endblock %}
 {% block content %}
 <div id="page"></div>
-<script>
-  window.pageData = {{ page_data|safe }};
-</script>
+{{ page_data|json_script:"pageData" }}
 <script src="/server.home.dev.js"></script>
 {% endblock %}
