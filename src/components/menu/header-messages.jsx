@@ -25,7 +25,7 @@ export class HeaderMessagesUnconnected extends React.Component {
       case 'NEED_TO_MAKE_COPY':
         content = (
           <span>
-            This notebook is owned by another user.
+            This notebook is owned by another user. {}
             <a onClick={this.props.makeCopy}>Make a copy to your account</a>.
           </span>
         )
