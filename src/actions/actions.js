@@ -306,8 +306,8 @@ export function createNewNotebookOnServer() {
         }))
         dispatch({ type: 'ADD_NOTEBOOK_ID', id: json.id })
         window.history.pushState('', {}, `/notebooks/${json.id}`)
+        dispatch({ type: 'NOTEBOOK_SAVED' })
       })
-    dispatch({ type: 'NOTEBOOK_SAVED' })
   }
 }
 

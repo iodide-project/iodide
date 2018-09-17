@@ -88,7 +88,10 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'NOTEBOOK_SAVED': {
-      return Object.assign({}, state, { lastSaved: new Date().toISOString() })
+      return Object.assign({}, state, {
+        lastSaved: new Date().toISOString(),
+        notebookInfo: Object.assign({}, state.notebookInfo, { user_can_save: true }),
+      })
     }
 
     case 'ADD_NOTEBOOK_ID': {
