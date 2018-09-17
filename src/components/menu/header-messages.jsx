@@ -6,7 +6,7 @@ import { createNewNotebookOnServer, login } from '../../actions/actions'
 
 export class HeaderMessagesUnconnected extends React.Component {
   static propTypes = {
-    message: PropTypes.oneOf(['LOGIN', 'MAKE_COPY']),
+    message: PropTypes.oneOf(['NEED_TO_LOGIN', 'NEED_TO_MAKE_COPY']),
     login: PropTypes.func.isRequired,
     makeCopy: PropTypes.func.isRequired,
   }
