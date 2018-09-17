@@ -12,8 +12,7 @@ def get_user_info_dict(user):
     if user.is_authenticated:
         return {
             'name': user.username,
-            'avatar': user.avatar,
-            'accessToken': user.social_auth_extra_data['access_token']
+            'avatar': user.avatar
         }
     return {}
 
