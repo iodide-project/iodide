@@ -9,7 +9,7 @@ import RevisionsPage from './pages/revisions-page'
 
 import './style/base'
 
-const { pageData } = window;
+const pageData = JSON.parse(document.getElementById('pageData').textContent);
 
 const routes = [
   { name: 'index', path: '', action: () => <HomePage userInfo={pageData.userInfo} notebookList={pageData.notebookList} /> },

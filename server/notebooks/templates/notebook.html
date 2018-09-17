@@ -7,8 +7,6 @@
 {{ jsmd|safe }}
 </script>
 <div id="page"></div>
-<script>
-  window.userData = {{ user_info|safe }}
-</script>
+{{ user_info|json_script:"userData" }}
 <script src="/iodide.dev.js"></script>
 {% endblock %}
