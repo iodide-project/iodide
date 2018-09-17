@@ -37,7 +37,6 @@ export class HeaderMessagesUnconnected extends React.Component {
     return (
       <div
         className="notebook-header-messages-container"
-        style={{ display: this.props.message ? 'block' : 'none' }}
       >
         {content}
       </div>
