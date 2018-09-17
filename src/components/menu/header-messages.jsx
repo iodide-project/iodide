@@ -70,5 +70,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const HeaderMessages = connect(mapStateToProps, mapDispatchToProps)(HeaderMessagesUnconnected)
-export default HeaderMessages
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderMessagesUnconnected)
