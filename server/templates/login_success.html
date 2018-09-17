@@ -3,9 +3,10 @@
 <div id="content">
   Login Successful!
 </div>
+{{ user_info|json_script:"userData" }}
 <script type="text/javascript">
   function switchWindow() {
-    window.opener.loginSuccess({{ user_info|safe }});
+    window.opener.loginSuccess(JSON.parse(document.getElementById('userData').textContent));
     window.opener.focus();
     window.close()
   }

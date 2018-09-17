@@ -6,7 +6,7 @@ from django.urls import reverse
 
 
 def _get_page_data(page_content_str):
-    m = re.search('window.pageData = (\{.*\});', str(page_content_str))
+    m = re.search(r'<script id="pageData" type="application/json">(\{.*\})</script>', str(page_content_str))
     return json.loads(m.group(1))
 
 
