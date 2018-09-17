@@ -69,3 +69,4 @@ ext_resources/
 
 # vscode configs
 .vscode/
+wallaby.js
