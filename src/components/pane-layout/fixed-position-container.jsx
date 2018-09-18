@@ -24,7 +24,7 @@ export class FixedPositionContainerUnconnected extends React.Component {
     return (
       <div
         className="fixed-position-container"
-        style={Object.assign(defaultStyle, this.props.style)}
+        style={Object.assign({}, defaultStyle, this.props.style)}
       >
         {this.props.children}
       </div>
