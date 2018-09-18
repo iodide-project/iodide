@@ -3,67 +3,7 @@ import { connect } from 'react-redux'
 
 import GoldenLayout from 'golden-layout'
 
-const config = {
-  settings: {
-    showPopoutIcon: false,
-    showCloseIcon: false,
-    showMaximiseIcon: false,
-  },
-  dimensions: {
-    dragProxyWidth: 300,
-    dragProxyHeight: 0,
-  },
-  content: [{
-    type: 'row',
-    content: [
-      {
-        type: 'column',
-        content: [
-          {
-            title: 'Editor',
-            type: 'react-component',
-            component: 'Positioner',
-            props: { positionerId: 'EditorPositioner' },
-            isClosable: false,
-          },
-          {
-            type: 'stack',
-            content: [
-              {
-                title: 'Console',
-                type: 'react-component',
-                component: 'Positioner',
-                props: { positionerId: 'ConsolePositioner' },
-                isClosable: false,
-              },
-              {
-                title: 'Workspace',
-                type: 'react-component',
-                component: 'Positioner',
-                props: { positionerId: 'WorkspacePositioner' },
-                isClosable: false,
-              },
-              {
-                title: 'App Info',
-                type: 'react-component',
-                component: 'Positioner',
-                props: { positionerId: 'AppInfoPositioner' },
-                isClosable: false,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: 'Report',
-        type: 'react-component',
-        component: 'Positioner',
-        props: { positionerId: 'ReportPositioner' },
-        isClosable: false,
-      },
-    ],
-  }],
-}
+import intialLayoutConfig from './layout-config-explore'
 
 class Positioner extends React.Component {
   render() {
@@ -125,7 +65,7 @@ export class LayoutManagerUnconnected extends React.PureComponent {
 
   componentDidMount() {
     // if (div && !this.state.goldenLayout) {
-    const layout = new GoldenLayout(config, this.layoutDiv.current)
+    const layout = new GoldenLayout(intialLayoutConfig, this.layoutDiv.current)
     layout.registerComponent('Positioner', Positioner)
     layout.init()
     layout.on('initialised', () => {
