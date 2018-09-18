@@ -172,11 +172,11 @@ export class LayoutManagerUnconnected extends React.PureComponent {
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   return { viewMode: state.viewMode }
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
   return {
     updateLayoutPositions: layout => dispatch(updateLayoutPositions(layout)),
   }
