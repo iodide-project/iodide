@@ -55,6 +55,9 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'TOGGLE_WRAP_IN_EDITORS':
       return Object.assign({}, state, { wrapEditors: !state.wrapEditors })
 
+    case 'UPDATE_NOTEBOOK_INFO':
+      return Object.assign({}, state, { notebookInfo: action.notebookInfo })
+
     case 'EVAL_FRAME_READY': {
       state.evalFrameMessageQueue.forEach((actionToPost) => {
         postActionToEvalFrame(actionToPost)

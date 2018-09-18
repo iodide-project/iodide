@@ -23,8 +23,8 @@ import NotebookHeader from './components/menu/notebook-header'
 import EditorPaneContainer from './components/editor-pane-container'
 import { store } from './store'
 import handleInitialJsmd from './handle-initial-jsmd'
+import handleServerVariables from './handle-server-variables'
 import { initializeDefaultKeybindings } from './keybindings'
-
 
 import { listenForEvalFramePortReady } from './port-to-eval-frame'
 
@@ -62,6 +62,7 @@ panesContainerElt.insertBefore(editorElt, iframeElt)
 
 
 handleInitialJsmd(store)
+handleServerVariables(store)
 
 render(
   <Provider store={store}>
