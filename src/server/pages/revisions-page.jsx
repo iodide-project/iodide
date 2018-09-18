@@ -6,6 +6,7 @@ import Header from '../components/header';
 import Table from '../components/table';
 import { MediumUserName } from '../components/user-name'
 import DeleteElementButton from '../components/delete-element-button'
+import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token'
 
 const RevisionsPageHeader = styled('h2')`
 span {
@@ -37,8 +38,14 @@ export default class RevisionsPage extends React.Component {
   }
 
   onDeleteRevision(revisionID) {
-    const revisions = this.state.revisions.filter(r => r.id !== revisionID)
-    this.setState({ revisions })
+    if (this.state.revisions.length === 1) {
+      fetchWithCSRFToken(`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`, {
+        method: 'DELETE',
+      }).then(this.onDeleteNotebook)
+    } else {
+      const revisions = this.state.revisions.filter(r => r.id !== revisionID)
+      this.setState({ revisions })
+    }
   }
 
   render() {
@@ -91,7 +98,10 @@ export default class RevisionsPage extends React.Component {
                                     <DeleteElementButton
                                       text="delete"
                                       url={`/api/v1/notebooks/${r.notebookId}/revisions/${r.id}`}
-                                      modalTitle={`delete the notebook  "${r.title}"?`}
+                                      modalTitle={`delete the revision "${r.title}"?`}
+                                      modalBody={this.state.revisions.length > 1 ?
+                                      'This action cannot be undone.' :
+                                      'Deleting this revision will also delete the notebook.'}
                                       elementID={r.id}
                                       onDelete={this.onDeleteRevision}
                                     />
