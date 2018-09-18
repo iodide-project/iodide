@@ -1,5 +1,6 @@
-import React from 'react'
-import styled, { keyframes } from 'react-emotion'
+import React from 'react';
+import styled, { keyframes } from 'react-emotion';
+import PropTypes from 'prop-types';
 
 const fadeIn = keyframes`
 0% {
@@ -9,7 +10,7 @@ const fadeIn = keyframes`
 100% {
   opacity: 1;
 }
-`
+`;
 
 const Backdrop = styled('div')`
 position: fixed;
@@ -32,7 +33,7 @@ animation-iteration-count: 1;
 animation-direction: normal;
 animation-fill-mode: forwards;
 animation-play-state: running;
-`
+`;
 
 const ModalWindow = styled('div')`
 background-color: #fff;
@@ -42,10 +43,11 @@ min-width: 400px;
 margin: 0 auto;
 padding: 8px;
 box-shadow: 0px 0px 60px rgba(0,0,0,.3);
-`
+`;
 
 // since our css is locally scoped,
-// we will need to select the body and apply a style.
+// we will need to select the body and apply a style
+// to prevent scrolling.
 const disableScrolling = () => {
   document.body.style.overflow = 'hidden'
 }
@@ -54,25 +56,24 @@ const enableScrolling = () => {
   document.body.style.overflow = 'auto'
 }
 
-
 export default class Modal extends React.Component {
   constructor(props) {
-    super(props)
-    this.closeModalOnEscapeKeypress = this.closeModalOnEscapeKeypress.bind(this)
+    super(props);
+    this.closeModalOnEscapeKeypress = this.closeModalOnEscapeKeypress.bind(this);
   }
 
   closeModalOnEscapeKeypress(event) {
-    if (event.key === 'Escape') this.props.onClose()
+    if (event.key === 'Escape') this.props.onClose();
   }
 
   render() {
     if (!this.props.visible) {
-      enableScrolling()
-      document.removeEventListener('keydown', this.closeModalOnEscapeKeypress)
+      enableScrolling();
+      document.removeEventListener('keydown', this.closeModalOnEscapeKeypress);
       return null;
     }
-    document.addEventListener('keydown', this.closeModalOnEscapeKeypress)
-    disableScrolling()
+    document.addEventListener('keydown', this.closeModalOnEscapeKeypress);
+    disableScrolling();
     return (
       <Backdrop
         onClick={(e) => {
@@ -86,4 +87,9 @@ export default class Modal extends React.Component {
       </Backdrop>
     )
   }
+}
+
+Modal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  onClose: PropTypes.func,
 }

@@ -53,4 +53,3 @@ export default class DeleteObjectButton extends React.Component {
     )
   }
 }
-

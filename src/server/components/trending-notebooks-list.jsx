@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Table from '../components/table'
 import { SmallUserName as UserName } from '../components/user-name'
@@ -30,4 +31,13 @@ export default class TrendingNotebooksList extends React.Component {
       </Table>
     )
   }
+}
+
+TrendingNotebooksList.propTypes = {
+  notebookList: PropTypes.arrayOf(PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    owner: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
+  })),
 }

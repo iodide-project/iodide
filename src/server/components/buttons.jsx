@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from 'emotion'
 import styled from 'react-emotion'
+import PropTypes from 'prop-types'
 
 const buttonReset = css`
 display: inline-block;
@@ -56,6 +57,26 @@ const ButtonFactory = (buttonType, props) => {
   return React.createElement(buttonType(buttonTask), props)
 }
 
-export const TextButton = props => ButtonFactory(TextButtonContainer, props)
-export const OutlineButton = props => ButtonFactory(OutlineButtonContainer, props)
-export const ContainedButton = props => ButtonFactory(ContainedButtonContainer, props)
+export class TextButton extends React.Component {
+  render() { return ButtonFactory(TextButtonContainer, this.props) }
+}
+
+export class OutlineButton extends React.Component {
+  render() { return ButtonFactory(OutlineButtonContainer, this.props) }
+}
+
+export class ContainedButton extends React.Component {
+  render() { return ButtonFactory(ContainedButtonContainer, this.props) }
+}
+
+const buttonPropTypes = {
+  size: PropTypes.number,
+  buttonColor: PropTypes.string,
+  buttonHoverColor: PropTypes.string,
+  href: PropTypes.string,
+  onClick: PropTypes.func,
+}
+
+TextButton.propTypes = buttonPropTypes
+OutlineButton.propTypes = buttonPropTypes
+ContainedButton.propTypes = buttonPropTypes
