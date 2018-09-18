@@ -28,7 +28,7 @@ matrix:
             export EDITOR_ORIGIN="https://iodide.io/dist";
             export EVAL_FRAME_ORIGIN="https://iodide.app";
             export APP_VERSION_SRING=$TRAVIS_TAG;
-            npm run build-prod-client-only;
+            npm run build prod-client-only;
           else
             if [ "$TRAVIS_BRANCH" == "master" ]; then
               export EDITOR_ORIGIN="https://extremely-alpha.iodide.io";
@@ -38,7 +38,7 @@ matrix:
               export EVAL_FRAME_ORIGIN="https://iodide.app/stable";
             fi;
             export APP_VERSION_STRING=$TRAVIS_BRANCH;
-            npm run build-dev-client-only;
+            npm run build dev-client-only;
           fi
 
       deploy:
