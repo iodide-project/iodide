@@ -1,8 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import Tooltip from '@material-ui/core/Tooltip'
+import deepEqual from 'deep-equal'
 
+import Tooltip from '@material-ui/core/Tooltip'
 import UnfoldLess from '@material-ui/icons/UnfoldLess'
 
 import {
@@ -43,6 +44,10 @@ export class CellContainerUnconnected extends React.Component {
     super(props)
 
     this.editor = React.createRef()
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !deepEqual(this.props, nextProps)
   }
 
   handleCellClick = (event) => {
