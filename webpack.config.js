@@ -21,7 +21,7 @@ let APP_PATH_STRING
 let CSS_PATH_STRING
 
 let { EDITOR_ORIGIN } = process.env
-let { EVAL_FRAME_ORIGIN } = process.env || EDITOR_ORIGIN
+let EVAL_FRAME_ORIGIN = process.env.EVAL_FRAME_ORIGIN || EDITOR_ORIGIN
 
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || 'dev'
 
