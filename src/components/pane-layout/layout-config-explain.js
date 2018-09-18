@@ -1,3 +1,11 @@
+import {
+  EditorPositioner,
+  ConsolePositioner,
+  ReportPositioner,
+  WorkspacePositioner,
+  AppInfoPositioner,
+} from './layout-config-content-items'
+
 export default {
   settings: {
     showPopoutIcon: false,
@@ -14,48 +22,18 @@ export default {
       {
         type: 'column',
         content: [
-          {
-            title: 'Editor',
-            type: 'react-component',
-            component: 'Positioner',
-            props: { positionerId: 'EditorPositioner' },
-            isClosable: false,
-          },
+          EditorPositioner,
           {
             type: 'stack',
             content: [
-              {
-                title: 'Console',
-                type: 'react-component',
-                component: 'Positioner',
-                props: { positionerId: 'ConsolePositioner' },
-                isClosable: false,
-              },
-              {
-                title: 'Workspace',
-                type: 'react-component',
-                component: 'Positioner',
-                props: { positionerId: 'WorkspacePositioner' },
-                isClosable: false,
-              },
-              {
-                title: 'App Info',
-                type: 'react-component',
-                component: 'Positioner',
-                props: { positionerId: 'AppInfoPositioner' },
-                isClosable: false,
-              },
+              ConsolePositioner,
+              WorkspacePositioner,
+              AppInfoPositioner,
             ],
           },
         ],
       },
-      {
-        title: 'Report',
-        type: 'react-component',
-        component: 'Positioner',
-        props: { positionerId: 'ReportPositioner' },
-        isClosable: false,
-      },
+      ReportPositioner,
     ],
   }],
 }
