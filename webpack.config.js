@@ -20,8 +20,8 @@ const BUILD_DIR = path.resolve(__dirname, 'build/')
 let APP_PATH_STRING
 let CSS_PATH_STRING
 
-let { EVAL_FRAME_ORIGIN } = process.env
 let { EDITOR_ORIGIN } = process.env
+let { EVAL_FRAME_ORIGIN } = process.env || EDITOR_ORIGIN
 
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || 'dev'
 
@@ -39,15 +39,11 @@ module.exports = (env) => {
   }
 
   if (env.includes('client-only')) {
-    if (env.startsWith('dev')) {
-      EVAL_FRAME_ORIGIN = EDITOR_ORIGIN
-    }
     APP_PATH_STRING = `${EDITOR_ORIGIN}/`
     CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
   } else {
     // default case: heroku or local python server using docker-compose
     EDITOR_ORIGIN = process.env.SERVER_URI || `http://localhost:${DEV_SERVER_PORT}`
-    EVAL_FRAME_ORIGIN = process.env.EVAL_FRAME_ORIGIN || EDITOR_ORIGIN
     APP_PATH_STRING = ''
     CSS_PATH_STRING = ''
   }
