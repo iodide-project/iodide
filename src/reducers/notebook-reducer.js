@@ -123,47 +123,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { mode })
     }
 
-    // case 'CHANGE_SIDE_PANE_MODE': {
-    //   const { sidePaneMode } = action
-    //   return Object.assign({}, state, { sidePaneMode })
-    // }
-
-    // case 'CHANGE_SIDE_PANE_WIDTH': {
-    //   const width = state.sidePaneWidth + action.widthShift
-    //   return Object.assign({}, state, { sidePaneWidth: width })
-    // }
-
-    // case 'CHANGE_EDITOR_WIDTH': {
-    //   const width = state.editorWidth + action.widthShift
-    //   return Object.assign({}, state, { editorWidth: width })
-    // }
-
-    // /* eslint-disable prefer-destructuring */
-
-    // case 'INCREASE_EDITOR_WIDTH': {
-    //   const SCREEN_WIDTH = document.documentElement.clientWidth
-    //   const paneSizes = paneRatios.map(x => Math.round(x * SCREEN_WIDTH))
-    //   let width = state.editorWidth
-    //   if (width < paneSizes[1]) width = paneSizes[1]
-    //   else if (width < paneSizes[2]) width = paneSizes[2]
-    //   else if (width < paneSizes[3]) width = paneSizes[3]
-    //   else width = paneSizes[4]
-    //   return Object.assign({}, state, { editorWidth: width })
-    // }
-
-    // case 'DECREASE_EDITOR_WIDTH': {
-    //   const SCREEN_WIDTH = document.documentElement.clientWidth
-    //   const paneSizes = paneRatios.map(x => Math.round(x * SCREEN_WIDTH))
-    //   let width = state.editorWidth
-    //   if (width > paneSizes[3]) width = paneSizes[3]
-    //   else if (width > paneSizes[2]) width = paneSizes[2]
-    //   else if (width > paneSizes[1]) width = paneSizes[1]
-    //   else width = paneSizes[0]
-    //   return Object.assign({}, state, { editorWidth: width })
-    // }
-
-    /* eslint-enable prefer-destructuring */
-
     case 'INCREMENT_EXECUTION_NUMBER': {
       let { executionNumber } = state
       executionNumber += 1

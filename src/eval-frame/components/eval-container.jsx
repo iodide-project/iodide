@@ -2,10 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-// import CellsList from './cells-list'
-// import PaneContainer from './panes/pane-container'
-// import EditorLinkButton from './controls/editor-link-button'
-
 import ReportPane from './panes/report-pane'
 import DeclaredVariablesPane from './panes/declared-variables-pane'
 import ConsolePane from './panes/console-pane'
