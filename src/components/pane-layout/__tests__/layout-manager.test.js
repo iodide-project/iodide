@@ -25,8 +25,8 @@ describe('LayoutManagerUnconnected React component', () => {
         display: 'a string',
         top: 1,
         left: 2,
-        width: 3,
-        height: 4,
+        width: 300,
+        height: 400,
       },
     }
     mountedComponent = undefined
