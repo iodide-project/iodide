@@ -23,7 +23,7 @@ let CSS_PATH_STRING
 let { EVAL_FRAME_ORIGIN } = process.env
 let { EDITOR_ORIGIN } = process.env
 
-const { APP_VERSION_STRING } = process.env || 'dev'
+const APP_VERSION_STRING = process.env.APP_VERSION_STRING || 'dev'
 
 const APP_DIR = path.resolve(__dirname, 'src/')
 const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
