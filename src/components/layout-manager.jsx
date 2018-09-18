@@ -3,9 +3,6 @@ import { connect } from 'react-redux'
 
 import GoldenLayout from 'golden-layout'
 
-// import { dispatch } from '../store'
-
-
 const config = {
   settings: {
     showPopoutIcon: false,
