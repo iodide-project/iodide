@@ -116,10 +116,36 @@ function updateLayoutPositions(layout) {
 export class LayoutManagerUnconnected extends React.PureComponent {
   constructor(props) {
     super(props)
+    this.layoutDiv = React.createRef()
     this.state = {
       goldenLayout: null,
       goldenLayoutResizer: null,
     }
+  }
+
+  componentDidMount() {
+    // if (div && !this.state.goldenLayout) {
+    const layout = new GoldenLayout(config, this.layoutDiv.current)
+    layout.registerComponent('Positioner', Positioner)
+    layout.init()
+    layout.on('initialised', () => {
+      if (this.state.goldenLayout === layout) return
+
+      const goldenLayoutResizer = () => {
+        layout.updateSize()
+      }
+
+      window.addEventListener('resize', goldenLayoutResizer)
+      this.setState({
+        goldenLayout: layout,
+        goldenLayoutResizer,
+      })
+    })
+    layout.on('stateChanged', () => {
+      console.log(layout.toConfig())
+      this.props.updateLayoutPositions(layout)
+    })
+    // }
   }
 
   componentDidUpdate() {
@@ -133,36 +159,10 @@ export class LayoutManagerUnconnected extends React.PureComponent {
     }
   }
 
-  gotDiv(div) {
-    if (div && !this.state.goldenLayout) {
-      const layout = new GoldenLayout(config, div)
-      layout.registerComponent('Positioner', Positioner)
-      layout.init()
-      layout.on('initialised', () => {
-        if (this.state.goldenLayout === layout) return
-
-        const goldenLayoutResizer = () => {
-          layout.updateSize()
-        }
-
-        window.addEventListener('resize', goldenLayoutResizer)
-        this.setState({
-          goldenLayout: layout,
-          goldenLayoutResizer,
-        })
-        if (this.props.goldenLayoutRef) this.props.goldenLayoutRef(layout)
-      })
-      layout.on('stateChanged', () => {
-        console.log(layout.toConfig())
-        this.props.updateLayoutPositions(layout)
-      })
-    }
-  }
-
   render() {
     return (
       <div
-        ref={this.gotDiv.bind(this)}
+        ref={this.layoutDiv}
         className="layout-manager"
         style={{
           height: '100%',
