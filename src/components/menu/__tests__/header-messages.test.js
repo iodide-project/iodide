@@ -1,12 +1,14 @@
-import { shallow } from 'enzyme'
-import React from 'react'
+// import { shallow } from 'enzyme'
+// import React from 'react'
 
-import { HeaderMessagesUnconnected, mapStateToProps } from '../header-messages'
+import {
+  // HeaderMessagesUnconnected,
+  mapStateToProps,
+} from '../header-messages'
 
-describe('HeaderMessagesUnconnected React component', () => {
- 
-})
-
+// describe('HeaderMessagesUnconnected React component', () => {
+//
+// })
 
 describe('CellContainer mapStateToProps', () => {
   let state
@@ -16,10 +18,10 @@ describe('CellContainer mapStateToProps', () => {
     state = {
       viewMode: 'EXPLORE_VIEW',
       userData: {
-        name: 'user'
+        name: 'user',
       },
       notebookInfo: {
-        user_can_save: true
+        user_can_save: true,
       },
     }
     ownProps = { }
