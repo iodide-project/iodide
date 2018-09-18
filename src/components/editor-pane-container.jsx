@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
 
 import CellContainer from './cells/cell-container'
-import FixedPositionContainer from './fixed-position-container'
-import LayoutManager from './layout-manager'
+import FixedPositionContainer from './pane-layout/fixed-position-container'
+import LayoutManager from './pane-layout/layout-manager'
 
 class EditorPaneContainer extends React.Component {
   static propTypes = {
