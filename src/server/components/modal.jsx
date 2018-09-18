@@ -54,12 +54,24 @@ const enableScrolling = () => {
   document.body.style.overflow = 'auto'
 }
 
+
 export default class Modal extends React.Component {
+  constructor(props) {
+    super(props)
+    this.closeModalOnEscapeKeypress = this.closeModalOnEscapeKeypress.bind(this)
+  }
+
+  closeModalOnEscapeKeypress(event) {
+    if (event.key === 'Escape') this.props.onClose()
+  }
+
   render() {
     if (!this.props.visible) {
       enableScrolling()
+      document.removeEventListener('keydown', this.closeModalOnEscapeKeypress)
       return null;
     }
+    document.addEventListener('keydown', this.closeModalOnEscapeKeypress)
     disableScrolling()
     return (
       <Backdrop
