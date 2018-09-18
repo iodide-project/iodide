@@ -4,21 +4,7 @@ import Modal from './modal'
 import ModalTitle from './modal-title'
 import ModalContent from './modal-content'
 import ModalCall from './modal-call'
-
-
-function getCookie(name) {
-  if (!document.cookie) {
-    return null
-  }
-  const token = document.cookie.split(';')
-    .map(c => c.trim())
-    .filter(c => c.startsWith(`${name}=`))
-
-  if (token.length === 0) {
-    return null;
-  }
-  return decodeURIComponent(token[0].split('=')[1])
-}
+import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token'
 
 export default class DeleteObjectButton extends React.Component {
   constructor(props) {
@@ -38,23 +24,13 @@ export default class DeleteObjectButton extends React.Component {
   }
 
   deleteObject() {
-    const csrfToken = getCookie('csrftoken')
-    const headers = {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrfToken,
-    };
-    // this.props.url ={`/api/v1/notebooks/${this.props.notebookID}/`}
-    // this.props.elementID
-
-    fetch(this.props.url, {
-      method: 'DELETE',
-      headers,
-    }).then(() => {
-      this.hideModal()
-      this.props.onDelete(this.props.elementID);
-    }).catch((err) => {
-      console.error(err)
-    })
+    fetchWithCSRFToken(this.props.url, { method: 'DELETE' })
+      .then(() => {
+        this.hideModal()
+        this.props.onDelete(this.props.elementID);
+      }).catch((err) => {
+        console.error(err)
+      })
   }
 
   render() {
