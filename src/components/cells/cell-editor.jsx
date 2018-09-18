@@ -1,7 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import deepEqual from 'deep-equal'
+// import _ from 'lodash'
+
 
 import ReactCodeMirror from '@skidding/react-codemirror'
 
@@ -19,6 +22,19 @@ import '../../codemirror-keymap-sublime'
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
 import { postMessageToEvalFrame } from '../../port-to-eval-frame'
+
+/* eslint-disable */
+function difference(object, base) {
+  function changes(object, base) {
+    return _.transform(object, (result, value, key) => {
+      if (!_.isEqual(value, base[key])) {
+        result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
+      }
+    });
+  }
+  return changes(object, base);
+}
+/*  eslint-enable */
 
 class CellEditor extends React.Component {
   static propTypes = {
@@ -49,7 +65,14 @@ class CellEditor extends React.Component {
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    // console.log('difference(this.props, nextProps):')
+    // console.log(difference(this.props, nextProps))
+    return !deepEqual(this.props, nextProps)
+  }
+
   componentDidUpdate() {
+    console.log('component updated:', this.constructor.name)
     if (this.props.thisCellBeingEdited) {
       this.editor.focus()
     } else if (
@@ -144,9 +167,15 @@ class CellEditor extends React.Component {
   }
 
   render() {
-    this.props.editorOptions.extraKeys = {
-      'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
-    }
+    const editorOptions = Object.assign(
+      {},
+      this.props.editorOptions,
+      {
+        extraKeys: {
+          'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
+        },
+      },
+    )
 
     return (
       <div
@@ -156,7 +185,7 @@ class CellEditor extends React.Component {
         <ReactCodeMirror
           ref={this.storeEditorElementRef}
           value={this.props.content}
-          options={this.props.editorOptions}
+          options={editorOptions}
           onChange={this.updateInputContent}
           onFocusChange={this.handleFocusChange}
         />
