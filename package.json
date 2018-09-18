@@ -93,7 +93,7 @@
     "file-loader": "1.1.11",
     "git-rev-sync": "1.12.0",
     "jest": "21.2.1",
-    "jest-cli": "22.4.3",
+    "jest-cli": "22.4.4",
     "jest-localstorage-mock": "2.2.0",
     "minimist": "1.2.0",
     "neutrino": "8.2.3",
