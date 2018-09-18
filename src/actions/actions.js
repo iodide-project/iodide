@@ -433,6 +433,13 @@ export function setModalState(modalState) {
   }
 }
 
+export function updateNotebookInfo(notebookInfo) {
+  return {
+    type: 'UPDATE_NOTEBOOK_INFO',
+    notebookInfo,
+  }
+}
+
 export function toggleHelpModal() {
   return (dispatch, getState) => {
     const modalState = getState().modalState === 'HELP_MODAL' ? 'MODALS_CLOSED' : 'HELP_MODAL'
