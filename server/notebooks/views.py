@@ -19,8 +19,12 @@ def notebook_view(request, pk):
         notebook_content = get_object_or_404(NotebookRevision, pk=int(request.GET['revision']))
     else:
         notebook_content = notebook.revisions.last()
+    notebook_info = {
+        'user_can_save': notebook.owner_id == request.user.id
+    }
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
+        'notebook_info': notebook_info,
         'jsmd': notebook_content.content
     })
 

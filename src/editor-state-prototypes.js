@@ -34,8 +34,17 @@ function getUserData() {
   return {}
 }
 
+function getNotebookInfo() {
+  const notebookInfo = document.getElementById('notebookInfo')
+  if (notebookInfo) {
+    return { notebookInfo: JSON.parse(notebookInfo.textContent) }
+  }
+  return {}
+}
+
 export {
   getUserData,
+  getNotebookInfo,
   newCell,
   newCellID,
   newNotebook,
