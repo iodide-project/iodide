@@ -46,7 +46,6 @@ function updateLayoutPositions(layout) {
       }
     })
 
-  console.log(panePositions)
   return {
     type: 'UPDATE_PANE_POSITIONS',
     panePositions,
@@ -82,7 +81,6 @@ export class LayoutManagerUnconnected extends React.PureComponent {
       })
     })
     layout.on('stateChanged', () => {
-      console.log(layout.toConfig())
       this.props.updateLayoutPositions(layout)
     })
     // }
