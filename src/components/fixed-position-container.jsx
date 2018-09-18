@@ -37,11 +37,9 @@ function mapStateToProps(state, ownProps) {
   // need to assign to new object so that component updates when getting props
   let style = Object.assign({}, state.panePositions[ownProps.paneId])
   if (ownProps.hidden) {
-    console.log('ownProps.hidden', ownProps.paneId)
     style.display = 'none'
   }
   if (ownProps.fullscreen) {
-    console.log('ownProps.fullscreen', ownProps.paneId)
     style = {
       display: 'block',
       top: 0,

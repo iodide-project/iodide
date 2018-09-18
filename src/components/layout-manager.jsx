@@ -1,7 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux'
+
 import GoldenLayout from 'golden-layout'
 
-import { dispatch } from '../store'
+// import { dispatch } from '../store'
 
 
 const config = {
@@ -108,19 +110,23 @@ function updateLayoutPositions(layout) {
     })
 
   console.log(panePositions)
-  dispatch({
+  return {
     type: 'UPDATE_PANE_POSITIONS',
     panePositions,
-  })
+  }
 }
 
-export default class LayoutManager extends React.PureComponent {
+export class LayoutManagerUnconnected extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {
       goldenLayout: null,
       goldenLayoutResizer: null,
     }
+  }
+
+  componentDidUpdate() {
+    this.state.goldenLayout.updateSize()
   }
 
   componentWillUnmount() {
@@ -151,9 +157,8 @@ export default class LayoutManager extends React.PureComponent {
       })
       layout.on('stateChanged', () => {
         console.log(layout.toConfig())
-        updateLayoutPositions(layout)
+        this.props.updateLayoutPositions(layout)
       })
-      window.GoldenLayout = layout
     }
   }
 
@@ -169,3 +174,15 @@ export default class LayoutManager extends React.PureComponent {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return { viewMode: state.viewMode }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    updateLayoutPositions: layout => dispatch(updateLayoutPositions(layout)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LayoutManagerUnconnected)
