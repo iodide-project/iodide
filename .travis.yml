@@ -100,8 +100,12 @@ matrix:
       script:
         - cp .env-dist .env
         - make build
-        # bring up docker containers and wait for db setup to complete
+        # bring up docker containers and wait for db setup to complete (otherwise
+        # our tests might try to bring up another instance of the db, which is a
+        # race condition)
+        # (FIXME: need some sort of timeout here)
         - docker-compose up -d
+        - docker-compose run server bash -c "while ! echo > /dev/tcp/db/5432 > /dev/null 2>&1; do sleep 1 && echo waiting for db; done"
         # run actual tests
         - make flake8
         - make test
