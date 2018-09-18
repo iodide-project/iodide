@@ -49,10 +49,10 @@ const panePositionSchema = {
   type: 'object',
   properties: {
     display: { type: 'string', enum: ['none', 'block'], default: 'none' },
-    top: { type: 'integer', default: 0 },
-    left: { type: 'integer', default: 0 },
-    width: { type: 'integer', default: 0 },
-    height: { type: 'integer', default: 0 },
+    top: { type: 'number', default: 0 },
+    left: { type: 'number', default: 0 },
+    width: { type: 'number', default: 0 },
+    height: { type: 'number', default: 0 },
   },
   additionalProperties: false,
 }
