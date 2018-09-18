@@ -87,7 +87,7 @@
     "eslint-plugin-emotion": "9.2.6",
     "eslint-plugin-import": "2.11.0",
     "eslint-plugin-jest": "21.15.1",
-    "eslint-plugin-jsx-a11y": "6.0.3",
+    "eslint-plugin-jsx-a11y": "6.1.1",
     "eslint-plugin-react": "7.8.2",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.11",
