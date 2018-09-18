@@ -4,6 +4,8 @@ import { exportJsmdToString } from '../tools/jsmd-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
+import { addChangeLanguageTask } from './task-definitions'
+
 import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
 import { addLanguageKeybinding } from '../keybindings'
@@ -152,6 +154,11 @@ export function addLanguage(languageDefinition) {
       )
     }
     CodeMirror.requireMode(codeMirrorMode, () => { })
+    addChangeLanguageTask(
+      languageDefinition.languageId,
+      languageDefinition.displayName,
+      languageDefinition.keybinding,
+    )
     dispatch({
       type: 'ADD_LANGUAGE_TO_EDITOR',
       languageDefinition,
