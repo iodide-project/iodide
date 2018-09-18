@@ -18,6 +18,5 @@ export default function fetchWithCSRFToken(url, otherParts) {
     'Content-Type': 'application/json',
     'X-CSRFToken': csrfToken,
   };
-  console.warn(Object.assign({}, otherParts, { headers }))
   return fetch(url, Object.assign({}, otherParts, { headers }))
 }
