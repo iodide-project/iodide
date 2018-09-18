@@ -19,11 +19,11 @@ matrix:
         # test commenting the cp out for now, b/c going forward we'll be using the
         # django server to serve the landing page
         # - cp prod/iodide.${TRAVIS_BRANCH}.html prod/index.html
-        - # Get existing releases from iodide-project/dist so we don't overwrite them
         - >
           if [ -n "$TRAVIS_TAG" ]; then
             mkdir prod;
             git clone https://github.com/iodide-project/dist.git --depth 1 dist;
+            # Get existing releases from iodide-project/dist so we don't overwrite them
             cp -r dist/* prod;
             export EDITOR_ORIGIN = 'https://iodide.io/dist';
             export EVAL_FRAME_ORIGIN = 'https://iodide.app';
@@ -37,6 +37,7 @@ matrix:
               export EDITOR_ORIGIN="https://iodide.io/stable";
               export EVAL_FRAME_ORIGIN="https://iodide.app/stable";
             fi
+            export APP_VERSION_STRING = $TRAVIS_BRANCH;
             npm run build-dev-client-only;
           fi
 
