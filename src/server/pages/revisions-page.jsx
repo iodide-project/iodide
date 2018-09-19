@@ -1,12 +1,19 @@
 import React from 'react';
 import styled from 'react-emotion';
+import Settings from '@material-ui/icons/Settings'
+import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
 import PageBody from '../components/page-body';
 import Header from '../components/header';
 import Table from '../components/table';
 import { MediumUserName } from '../components/user-name';
-import DeleteElementButton from '../components/delete-element-button';
 import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token';
+import NotebookActionsMenu from '../components/notebook-actions-menu';
+import RevisionActionsMenu from '../components/revision-actions-menu';
+
+const NotebookActionsContainer = styled('div')`
+width: 100px;
+`
 
 const RevisionsPageHeader = styled('h2')`
 span {
@@ -39,6 +46,7 @@ export default class RevisionsPage extends React.Component {
 
   onDeleteRevision(revisionID) {
     if (this.state.revisions.length === 1) {
+      // If we just deleted the last revision, let's delete the notebook.
       fetchWithCSRFToken(`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`, {
         method: 'DELETE',
       }).then(this.onDeleteNotebook);
@@ -66,13 +74,16 @@ export default class RevisionsPage extends React.Component {
           />
           {
             isCurrentUsersPage &&
-              <DeleteElementButton
-                text="delete this notebook"
-                url={`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`}
-                modalTitle={`delete the notebook  "${this.props.ownerInfo.title}"?`}
-                elementID={this.props.ownerInfo.notebookId}
+            <NotebookActionsContainer>
+              <NotebookActionsMenu
+                triggerElement={<Settings />}
+                hideRevisions
+                placement="left-start"
+                notebookID={this.props.ownerInfo.notebookId}
+                notebookTitle={this.props.ownerInfo.title}
                 onDelete={this.onDeleteNotebook}
               />
+            </NotebookActionsContainer>
           }
           <h3>Revisions</h3>
           <Table>
@@ -80,7 +91,7 @@ export default class RevisionsPage extends React.Component {
               <tr>
                 <th>When</th>
                 <th>Title</th>
-                {isCurrentUsersPage ? <th /> : undefined}
+                {isCurrentUsersPage ? <th>Actions</th> : undefined}
               </tr>
               {
                         this.state.revisions.map((r, i) => (
@@ -94,14 +105,11 @@ export default class RevisionsPage extends React.Component {
                             {
                                 isCurrentUsersPage ?
                                   <td>
-                                    <DeleteElementButton
-                                      text="delete"
-                                      url={`/api/v1/notebooks/${r.notebookId}/revisions/${r.id}`}
-                                      modalTitle={`delete the revision "${r.title}"?`}
-                                      modalBody={this.state.revisions.length > 1 ?
-                                      'This action cannot be undone.' :
-                                      'Deleting this revision will also delete the notebook.'}
-                                      elementID={r.id}
+                                    <RevisionActionsMenu
+                                      triggerElement={<MoreHoriz />}
+                                      notebookID={r.notebookId}
+                                      revisionID={r.id}
+                                      notebookTitle={this.props.ownerInfo.notebookId}
                                       onDelete={this.onDeleteRevision}
                                     />
                                   </td> :

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import styled, { keyframes } from 'react-emotion';
 import PropTypes from 'prop-types';
 
@@ -45,15 +46,57 @@ padding: 8px;
 box-shadow: 0px 0px 60px rgba(0,0,0,.3);
 `;
 
+let cached;
+
+function getScrollBarSize(fresh) {
+  // borrowed from rc-util
+  if (fresh || cached === undefined) {
+    const inner = document.createElement('div');
+    inner.style.width = '100%';
+    inner.style.height = '200px';
+
+    const outer = document.createElement('div');
+    const outerStyle = outer.style;
+
+    outerStyle.position = 'absolute';
+    outerStyle.top = 0;
+    outerStyle.left = 0;
+    outerStyle.pointerEvents = 'none';
+    outerStyle.visibility = 'hidden';
+    outerStyle.width = '200px';
+    outerStyle.height = '150px';
+    outerStyle.overflow = 'hidden';
+
+    outer.appendChild(inner);
+
+    document.body.appendChild(outer);
+
+    const widthContained = inner.offsetWidth;
+    outer.style.overflow = 'scroll';
+    let widthScroll = inner.offsetWidth;
+
+    if (widthContained === widthScroll) {
+      widthScroll = outer.clientWidth;
+    }
+
+    document.body.removeChild(outer);
+
+    cached = widthContained - widthScroll;
+  }
+  return cached;
+}
+
 // since our css is locally scoped,
 // we will need to select the body and apply a style
 // to prevent scrolling.
 const disableScrolling = () => {
-  document.body.style.overflow = 'hidden'
+  document.body.style.overflow = 'hidden';
+  document.body.style.paddingRight = `${getScrollBarSize()}px`;
 }
 
 const enableScrolling = () => {
-  document.body.style.overflow = 'auto'
+  document.body.style.overflow = 'auto';
+  document.body.style.paddingRight = '0px';
 }
 
 export default class Modal extends React.Component {
@@ -62,9 +105,14 @@ export default class Modal extends React.Component {
     this.closeModalOnEscapeKeypress = this.closeModalOnEscapeKeypress.bind(this);
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.closeModalOnEscapeKeypress);
+  }
+
   closeModalOnEscapeKeypress(event) {
     if (event.key === 'Escape') this.props.onClose();
   }
+
 
   render() {
     if (!this.props.visible) {
@@ -75,16 +123,19 @@ export default class Modal extends React.Component {
     document.addEventListener('keydown', this.closeModalOnEscapeKeypress);
     disableScrolling();
     return (
-      <Backdrop
-        onClick={(e) => {
+      ReactDOM.createPortal(
+        <Backdrop
+          onClick={(e) => {
           e.stopPropagation();
           this.props.onClose();
       }}
-      >
-        <ModalWindow onClick={(e) => { e.stopPropagation() }}>
-          {this.props.children}
-        </ModalWindow>
-      </Backdrop>
+        >
+          <ModalWindow onClick={(e) => { e.stopPropagation() }}>
+            {this.props.children}
+          </ModalWindow>
+        </Backdrop>,
+        document.body,
+      )
     )
   }
 }

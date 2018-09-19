@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'react-emotion';
+import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
 import Header from '../components/header';
 import PageBody from '../components/page-body'
 import Table from '../components/table'
-import DeleteElementButton from '../components/delete-element-button'
-import { ContainedButton } from '../components/buttons'
 import AttentionBlock from '../components/attention-block'
+import NotebookActionsMenu from '../components/notebook-actions-menu'
+import NewNotebookButton from '../components/new-notebook-button'
 
 const UserInformationContainer = styled('div')`
 img {
@@ -54,7 +55,6 @@ class UserNotebookList extends React.Component {
               <th>title</th>
               <th>last saved</th>
               <th />
-              <th />
             </tr>
           </thead>
           <tbody>
@@ -62,13 +62,12 @@ class UserNotebookList extends React.Component {
               <tr key={notebook.id}>
                 <td><a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a></td>
                 <td>{notebook.last_revision.slice(0, 19)}</td>
-                <td><a href={`/notebooks/${notebook.id}/revisions/`}>revisions</a></td>
                 <td>
-                  <DeleteElementButton
-                    url={`/api/v1/notebooks/${notebook.id}/`}
+                  <NotebookActionsMenu
+                    triggerElement={<MoreHoriz />}
+                    notebookID={notebook.id}
+                    notebookTitle={notebook.title}
                     onDelete={this.deleteNotebook}
-                    modalTitle={`delete the notebook  "${notebook.title}"?`}
-                    elementID={notebook.id}
                   />
                 </td>
               </tr>
@@ -81,8 +80,6 @@ class UserNotebookList extends React.Component {
     )
   }
 }
-
-const NewNotebookButton = () => (<ContainedButton target="_blank" href="/new">+ New Notebook</ContainedButton>)
 
 
 export const UserPageWithoutNotebooksPlaceholder = ({ isUserAccount }) => (

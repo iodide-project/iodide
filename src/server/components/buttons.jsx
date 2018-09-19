@@ -49,7 +49,6 @@ font-size: ${props => props.size || '13px'};
 :hover {
   background-color: ${props => props.buttonHoverColor || 'darkblue'};
 }
-
 `
 
 const ButtonFactory = (buttonType, props) => {
