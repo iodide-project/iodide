@@ -46,44 +46,43 @@ padding: 8px;
 box-shadow: 0px 0px 60px rgba(0,0,0,.3);
 `;
 
-let cached;
 
-function getScrollBarSize(fresh) {
+function getScrollBarSize() {
   // borrowed from rc-util
-  if (fresh || cached === undefined) {
-    const inner = document.createElement('div');
-    inner.style.width = '100%';
-    inner.style.height = '200px';
+  let value
+  const inner = document.createElement('div');
+  inner.style.width = '100%';
+  inner.style.height = '200px';
 
-    const outer = document.createElement('div');
-    const outerStyle = outer.style;
+  const outer = document.createElement('div');
+  const outerStyle = outer.style;
 
-    outerStyle.position = 'absolute';
-    outerStyle.top = 0;
-    outerStyle.left = 0;
-    outerStyle.pointerEvents = 'none';
-    outerStyle.visibility = 'hidden';
-    outerStyle.width = '200px';
-    outerStyle.height = '150px';
-    outerStyle.overflow = 'hidden';
+  outerStyle.position = 'absolute';
+  outerStyle.top = 0;
+  outerStyle.left = 0;
+  outerStyle.pointerEvents = 'none';
+  outerStyle.visibility = 'hidden';
+  outerStyle.width = '200px';
+  outerStyle.height = '150px';
+  outerStyle.overflow = 'hidden';
 
-    outer.appendChild(inner);
+  outer.appendChild(inner);
 
-    document.body.appendChild(outer);
+  document.body.appendChild(outer);
 
-    const widthContained = inner.offsetWidth;
-    outer.style.overflow = 'scroll';
-    let widthScroll = inner.offsetWidth;
+  const widthContained = inner.offsetWidth;
+  outer.style.overflow = 'scroll';
+  let widthScroll = inner.offsetWidth;
 
-    if (widthContained === widthScroll) {
-      widthScroll = outer.clientWidth;
-    }
-
-    document.body.removeChild(outer);
-
-    cached = widthContained - widthScroll;
+  if (widthContained === widthScroll) {
+    widthScroll = outer.clientWidth;
   }
-  return cached;
+
+  document.body.removeChild(outer);
+
+  value = widthContained - widthScroll;
+  if (document.body.scrollHeight <= window.innerHeight) value = 0;
+  return value;
 }
 
 // since our css is locally scoped,
