@@ -3,19 +3,23 @@ import PropTypes from 'prop-types';
 
 import Table from '../components/table'
 import { SmallUserName as UserName } from '../components/user-name'
+import NewNotebookButton from './new-notebook-button'
 
 export default class TrendingNotebooksList extends React.Component {
   render() {
     return (
-      <Table>
-        <thead>
-          <tr>
-            <th>Notebook</th>
-            <th>Owner</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
+      <React.Fragment>
+        <NewNotebookButton />
+
+        <Table>
+          <thead>
+            <tr>
+              <th>Notebook</th>
+              <th>Owner</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
             this.props.notebookList.map(notebook => (
               <tr key={notebook.id}>
                 <td>
@@ -27,8 +31,9 @@ export default class TrendingNotebooksList extends React.Component {
               </tr>
             ))
           }
-        </tbody>
-      </Table>
+          </tbody>
+        </Table>
+      </React.Fragment>
     )
   }
 }
