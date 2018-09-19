@@ -10,10 +10,7 @@ import { MediumUserName } from '../components/user-name';
 import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token';
 import NotebookActionsMenu from '../components/notebook-actions-menu';
 import RevisionActionsMenu from '../components/revision-actions-menu';
-
-const NotebookActionsContainer = styled('div')`
-width: 100px;
-`
+import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
 
 const RevisionsPageHeader = styled('h2')`
 span {
@@ -74,16 +71,19 @@ export default class RevisionsPage extends React.Component {
           />
           {
             isCurrentUsersPage &&
-            <NotebookActionsContainer>
+            <ActionsContainer>
               <NotebookActionsMenu
-                triggerElement={<Settings />}
+                triggerElement={<Settings
+                  style={{ width: BodyIconStyle.width }}
+                  className={BodyIconStyle}
+                />}
                 hideRevisions
                 placement="left-start"
                 notebookID={this.props.ownerInfo.notebookId}
                 notebookTitle={this.props.ownerInfo.title}
                 onDelete={this.onDeleteNotebook}
               />
-            </NotebookActionsContainer>
+            </ActionsContainer>
           }
           <h3>Revisions</h3>
           <Table>
@@ -105,13 +105,15 @@ export default class RevisionsPage extends React.Component {
                             {
                                 isCurrentUsersPage ?
                                   <td>
-                                    <RevisionActionsMenu
-                                      triggerElement={<MoreHoriz />}
-                                      notebookID={r.notebookId}
-                                      revisionID={r.id}
-                                      notebookTitle={this.props.ownerInfo.notebookId}
-                                      onDelete={this.onDeleteRevision}
-                                    />
+                                    <ActionsContainer>
+                                      <RevisionActionsMenu
+                                        triggerElement={<MoreHoriz className={BodyIconStyle} />}
+                                        notebookID={r.notebookId}
+                                        revisionID={r.id}
+                                        notebookTitle={this.props.ownerInfo.notebookId}
+                                        onDelete={this.onDeleteRevision}
+                                      />
+                                    </ActionsContainer>
                                   </td> :
                               undefined
                               }

@@ -8,6 +8,7 @@ import Table from '../components/table'
 import AttentionBlock from '../components/attention-block'
 import NotebookActionsMenu from '../components/notebook-actions-menu'
 import NewNotebookButton from '../components/new-notebook-button'
+import { ActionsContainer, BodyIconStyle } from '../style/icon-styles'
 
 const UserInformationContainer = styled('div')`
 img {
@@ -63,12 +64,14 @@ class UserNotebookList extends React.Component {
                 <td><a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a></td>
                 <td>{notebook.last_revision.slice(0, 19)}</td>
                 <td>
-                  <NotebookActionsMenu
-                    triggerElement={<MoreHoriz />}
-                    notebookID={notebook.id}
-                    notebookTitle={notebook.title}
-                    onDelete={this.deleteNotebook}
-                  />
+                  <ActionsContainer>
+                    <NotebookActionsMenu
+                      triggerElement={<MoreHoriz className={BodyIconStyle} />}
+                      notebookID={notebook.id}
+                      notebookTitle={notebook.title}
+                      onDelete={this.deleteNotebook}
+                    />
+                  </ActionsContainer>
                 </td>
               </tr>
             ))
