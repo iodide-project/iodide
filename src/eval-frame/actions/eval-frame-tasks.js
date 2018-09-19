@@ -26,20 +26,6 @@ tasks.exportNotebook = new UserTask({
   callback() { postKeypressToEditor(this.keybindings[0]) },
 })
 
-tasks.increaseEditorWidth = new UserTask({
-  title: 'Increase Editor Width',
-  keybindings: ['ctrl+shift+right'],
-  preventDefaultKeybinding: true,
-  callback() { postKeypressToEditor(this.keybindings[0]) },
-})
-
-tasks.decreaseEditorWidth = new UserTask({
-  title: 'Decrease Editor Width',
-  keybindings: ['ctrl+shift+left'],
-  preventDefaultKeybinding: true,
-  callback() { postKeypressToEditor(this.keybindings[0]) },
-})
-
 tasks.toggleEditorLink = new UserTask({
   title: 'Link Editor',
   callback() {
