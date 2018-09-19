@@ -6,7 +6,16 @@
 <script id="jsmd" type="text/jsmd">
 {{ jsmd|safe }}
 </script>
-<div id="page"></div>
+<div id="panes-container">
+  <iframe
+    id="eval-frame"
+    src="{{ iframe_src|safe }}"
+    sandbox="allow-scripts allow-same-origin"
+    allowfullscreen="true"
+    allowvr="yes"
+  ></iframe>
+</div>
 {{ user_info|json_script:"userData" }}
+{{ notebook_info|json_script:"notebookInfo" }}
 <script src="/iodide.dev.js"></script>
 {% endblock %}

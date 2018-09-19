@@ -2,10 +2,11 @@
 import {
   newNotebook,
   getUserData,
+  getNotebookInfo,
   newCell,
   newCellID,
-  // paneRatios
 } from '../editor-state-prototypes'
+
 import {
   exportJsmdBundle,
   titleToHtmlFilename,
@@ -61,6 +62,9 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'TOGGLE_WRAP_IN_EDITORS':
       return Object.assign({}, state, { wrapEditors: !state.wrapEditors })
 
+    case 'UPDATE_NOTEBOOK_INFO':
+      return Object.assign({}, state, { notebookInfo: action.notebookInfo })
+
     case 'EVAL_FRAME_READY': {
       state.evalFrameMessageQueue.forEach((actionToPost) => {
         postActionToEvalFrame(actionToPost)
@@ -89,12 +93,15 @@ const notebookReducer = (state = newNotebook(), action) => {
 
       return Object.assign(
         newNotebook(), nextState, { cells, notebookId },
-        getUserData(),
+        getUserData(), getNotebookInfo(),
       )
     }
 
     case 'NOTEBOOK_SAVED': {
-      return Object.assign({}, state, { lastSaved: new Date().toISOString() })
+      return Object.assign({}, state, {
+        lastSaved: new Date().toISOString(),
+        notebookInfo: Object.assign({}, state.notebookInfo, { user_can_save: true }),
+      })
     }
 
     case 'ADD_NOTEBOOK_ID': {

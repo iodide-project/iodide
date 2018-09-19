@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import deepEqual from 'deep-equal'
 
 import ReactCodeMirror from '@skidding/react-codemirror'
 
@@ -47,6 +48,10 @@ class CellEditor extends React.Component {
     if (this.props.thisCellBeingEdited) {
       this.editor.focus()
     }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !deepEqual(this.props, nextProps)
   }
 
   componentDidUpdate() {
@@ -144,9 +149,15 @@ class CellEditor extends React.Component {
   }
 
   render() {
-    this.props.editorOptions.extraKeys = {
-      'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
-    }
+    const editorOptions = Object.assign(
+      {},
+      this.props.editorOptions,
+      {
+        extraKeys: {
+          'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
+        },
+      },
+    )
 
     return (
       <div
@@ -156,7 +167,7 @@ class CellEditor extends React.Component {
         <ReactCodeMirror
           ref={this.storeEditorElementRef}
           value={this.props.content}
-          options={this.props.editorOptions}
+          options={editorOptions}
           onChange={this.updateInputContent}
           onFocusChange={this.handleFocusChange}
         />

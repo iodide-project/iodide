@@ -71,6 +71,15 @@ export const editorOnlyStateProperties = {
     additionalProperties: false,
     default: {},
   },
+  notebookInfo: {
+    type: 'object',
+    properties: {
+      user_can_save: { type: 'boolean' },
+    },
+    default: {
+      user_can_save: false,
+    },
+  },
   viewMode: {
     type: 'string',
     enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],

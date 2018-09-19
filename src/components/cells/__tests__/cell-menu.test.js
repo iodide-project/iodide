@@ -21,6 +21,7 @@ describe('CellMenuUnconnected React component', () => {
       menuLabel: 'css',
       cellId: 5,
       skipInRunAll: false,
+      userLanguages: [],
     }
     mountedMenu = undefined
   })
@@ -34,7 +35,7 @@ describe('CellMenuUnconnected React component', () => {
       .toBe('cell-menu-items-container')
   })
 
-  it('always renders seven NotebookMenuItem', () => {
+  it('always renders correct number of NotebookMenuItem without userLanguages', () => {
     expect(cellMenu().find(NotebookMenuItem).length).toBe(12)
   })
 
@@ -60,6 +61,19 @@ describe('cellMenu mapStateToProps', () => {
         id: 5,
         skipInRunAll: false,
       }],
+      languages: {
+        js: {
+          pluginType: 'language',
+          languageId: 'js',
+          displayName: 'Javascript',
+          codeMirrorMode: 'javascript',
+          codeMirrorModeLoaded: true,
+          module: 'window',
+          evaluator: 'eval',
+          keybinding: 'j',
+          url: '',
+        },
+      },
     }
   })
 
@@ -68,6 +82,40 @@ describe('cellMenu mapStateToProps', () => {
     expect(mapStateToProps(state, ownProps))
       .toEqual({
         skipInRunAll: false,
+        userLanguages: [],
+      })
+  })
+
+  it('should return the correct userLanguages for the cell', () => {
+    const ownProps = { cellId: 5 }
+    state.languages = {
+      js: {
+        pluginType: 'language',
+        languageId: 'js',
+        displayName: 'Javascript',
+        codeMirrorMode: 'javascript',
+        codeMirrorModeLoaded: true,
+        module: 'window',
+        evaluator: 'eval',
+        keybinding: 'j',
+        url: '',
+      },
+      py: {
+        pluginType: 'language',
+        languageId: 'py',
+        displayName: 'python',
+        codeMirrorMode: 'python',
+        codeMirrorModeLoaded: true,
+        module: 'pyodide',
+        evaluator: 'runPython',
+        keybinding: 'p',
+        url: 'https://iodide.io/pyodide-demo/pyodide.js',
+      },
+    }
+    expect(mapStateToProps(state, ownProps))
+      .toEqual({
+        skipInRunAll: false,
+        userLanguages: ['py'],
       })
   })
 })
