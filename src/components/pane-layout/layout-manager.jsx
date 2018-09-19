@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 
 import GoldenLayout from 'golden-layout'
+import { ResizeSensor } from 'css-element-queries'
 
 import intialLayoutConfig from './layout-config-explore'
 import {
@@ -69,31 +70,30 @@ export class LayoutManagerUnconnected extends React.PureComponent {
     this.state = {
       goldenLayout: null,
       goldenLayoutResizer: null,
+      layoutResizeSensor: null,
     }
   }
 
   componentDidMount() {
-    // if (div && !this.state.goldenLayout) {
     const layout = new GoldenLayout(intialLayoutConfig, this.layoutDiv.current)
     layout.registerComponent('Positioner', Positioner)
     layout.init()
     layout.on('initialised', () => {
       if (this.state.goldenLayout === layout) return
 
-      const goldenLayoutResizer = () => {
-        layout.updateSize()
-      }
-
+      const goldenLayoutResizer = () => layout.updateSize()
       window.addEventListener('resize', goldenLayoutResizer)
+      const layoutResizeSensor = new ResizeSensor(this.layoutDiv.current, goldenLayoutResizer)
+
       this.setState({
         goldenLayout: layout,
         goldenLayoutResizer,
+        layoutResizeSensor,
       })
     })
     layout.on('stateChanged', () => {
       this.props.updateLayoutPositions(layout)
     })
-    // }
   }
 
   componentDidUpdate() {
@@ -103,6 +103,7 @@ export class LayoutManagerUnconnected extends React.PureComponent {
   componentWillUnmount() {
     if (this.state.goldenLayout != null) {
       this.state.goldenLayout.destroy()
+      this.state.layoutResizeSensor.detach()
       window.removeEventListener('resize', this.state.goldenLayoutResizer)
     }
   }
