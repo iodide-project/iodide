@@ -3,6 +3,7 @@ const template = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="<%= EVAL_FRAME_ORIGIN %>iodide.<%= APP_VERSION_STRING %>.css">
+<base target="_blank">
 </head>
 <body>
 <style id='view-mode-styles'></style>

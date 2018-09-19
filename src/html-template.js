@@ -4,6 +4,7 @@ const template = `<!DOCTYPE html>
 <meta charset="UTF-8">
 <title><%= NOTEBOOK_TITLE %> - iodide</title>
 <link rel="stylesheet" type="text/css" href="<%= APP_PATH_STRING %>iodide.<%= APP_VERSION_STRING %>.css">
+<base target="_blank"
 </head>
 <body>
 <script id="jsmd" type="text/jsmd">

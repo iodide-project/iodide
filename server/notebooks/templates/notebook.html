@@ -2,6 +2,9 @@
 {% block style %}
 <link rel="stylesheet" type="text/css" href="/iodide.dev.css">
 {% endblock %}
+{% block targetblank %}
+<base target="_blank">
+{% endblock %}
 {% block content %}
 <script id="jsmd" type="text/jsmd">
 {{ jsmd|safe }}
@@ -9,7 +12,7 @@
 <iframe
   id="eval-frame"
   src="{{ iframe_src|safe }}"
-  sandbox="allow-scripts allow-same-origin"
+  sandbox="allow-scripts allow-same-origin allow-popups"
   allowfullscreen="true"
   allowvr="yes"
 ></iframe>
