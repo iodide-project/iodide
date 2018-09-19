@@ -1,10 +1,11 @@
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import './message-channel-stub'
 
 import $ from 'jquery'
 import React from 'react'
 import ReactDOM from 'react-dom'
+
+import './message-channel-stub'
 
 global.$ = $
 global.jQuery = $
