@@ -2,6 +2,10 @@ import { shallow } from 'enzyme'
 import React from 'react'
 
 import { LayoutManagerUnconnected, mapStateToProps } from '../layout-manager'
+import {
+  LAYOUT_MANAGER_IN_FRONT_ZINDEX,
+  LAYOUT_MANAGER_IN_BACK_ZINDEX,
+} from '../../../style/z-index-styles'
 
 describe('LayoutManagerUnconnected React component', () => {
   let props
@@ -20,16 +24,7 @@ describe('LayoutManagerUnconnected React component', () => {
   }
 
   beforeEach(() => {
-    props = {
-      style: {
-        display: 'a string',
-        top: 1,
-        left: 2,
-        width: 300,
-        height: 400,
-      },
-    }
-    mountedComponent = undefined
+    props = { zIndex: 10 }
   })
 
   it('always renders a div', () => {
@@ -42,12 +37,18 @@ describe('LayoutManagerUnconnected mapStateToProps', () => {
   let state
   beforeEach(() => {
     state = {
-      viewMode: 'TEST_VIEW_MODE',
+      viewMode: 'REPORT_VIEW',
     }
   })
 
-  it('default case', () => {
-    expect(mapStateToProps(state))
-      .toEqual({ viewMode: 'TEST_VIEW_MODE' })
+  it('in REPORT_VIEW, z-index set correctly', () => {
+    expect(mapStateToProps(state).zIndex)
+      .toEqual(LAYOUT_MANAGER_IN_BACK_ZINDEX)
+  })
+
+  it('if NOT in REPORT_VIEW, z-index set correctly', () => {
+    state.viewMode = 'NOT_REPORT'
+    expect(mapStateToProps(state).zIndex)
+      .toEqual(LAYOUT_MANAGER_IN_FRONT_ZINDEX)
   })
 })

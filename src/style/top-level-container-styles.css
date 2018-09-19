@@ -17,24 +17,16 @@ div#notebook-header {
     z-index: 1000;
 }
 
-div#panes-container {
-  flex-grow: 1;
-  display: flex;
-}
-
 div#editor-react-root{
     /*needed to ensure that the div grows to full height*/
   flex-grow: 1;
-  /*needed to ensure that the layout-manager can auto-resize horizontally*/
-  width: 100%;
   display: flex;
+  overflow: hidden; /* needed to ensure the contents are restriced in size */
 }
-
 
 div#cells {
   flex-grow: 1; /* grow cells to fill the #cell-resizer flex column */
   box-sizing: border-box;
-  /*height: 100%;*/
   overflow-y: auto;
 }
 
@@ -47,4 +39,3 @@ iframe#eval-frame {
     height: 100%;
     z-index: 0;
 }
-

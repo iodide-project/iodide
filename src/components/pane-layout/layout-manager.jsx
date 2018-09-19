@@ -1,9 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+
 
 import GoldenLayout from 'golden-layout'
 
 import intialLayoutConfig from './layout-config-explore'
+import {
+  LAYOUT_MANAGER_IN_FRONT_ZINDEX,
+  LAYOUT_MANAGER_IN_BACK_ZINDEX,
+} from '../../style/z-index-styles'
 
 class Positioner extends React.Component {
   render() {
@@ -53,6 +59,10 @@ function updateLayoutPositions(layout) {
 }
 
 export class LayoutManagerUnconnected extends React.PureComponent {
+  static propTypes = {
+    zIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  }
+
   constructor(props) {
     super(props)
     this.layoutDiv = React.createRef()
@@ -103,7 +113,9 @@ export class LayoutManagerUnconnected extends React.PureComponent {
         ref={this.layoutDiv}
         className="layout-manager"
         style={{
-          height: '100%',
+          flexGrow: 1,
+          minHeight: '100%',
+          zIndex: this.props.zIndex,
         }}
       />
     )
@@ -111,7 +123,11 @@ export class LayoutManagerUnconnected extends React.PureComponent {
 }
 
 export function mapStateToProps(state) {
-  return { viewMode: state.viewMode }
+  return {
+    zIndex: state.viewMode === 'REPORT_VIEW' ?
+      LAYOUT_MANAGER_IN_BACK_ZINDEX
+      : LAYOUT_MANAGER_IN_FRONT_ZINDEX,
+  }
 }
 
 export function mapDispatchToProps(dispatch) {

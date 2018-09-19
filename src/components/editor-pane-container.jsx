@@ -15,7 +15,7 @@ class EditorPaneContainer extends React.Component {
       height: PropTypes.string.isRequired,
     }).isRequired,
     cellIds: PropTypes.array.isRequired,
-    editorContainerZIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    hideEditor: PropTypes.bool.isRequired,
   }
 
   shouldComponentUpdate(nextProps) {
@@ -27,19 +27,17 @@ class EditorPaneContainer extends React.Component {
       <CellContainer cellId={id} key={id} />)
 
     return (
-      <div style={{
-        width: '100%',
-        flexGrow: 1,
-        zIndex: this.props.editorContainerZIndex,
-      }}
-      >
+      <React.Fragment>
         <LayoutManager />
-        <FixedPositionContainer paneId="EditorPositioner">
+        <FixedPositionContainer
+          paneId="EditorPositioner"
+          hidden={this.props.hideEditor}
+        >
           <div style={this.props.cellsStyle} id="cells">
             {cellInputComponents}
           </div>
         </FixedPositionContainer>
-      </div>
+      </React.Fragment>
     )
   }
 }
@@ -54,7 +52,7 @@ function mapStateToProps(state) {
   return {
     cellIds: state.cells.map(c => c.id),
     cellsStyle,
-    editorContainerZIndex: state.viewMode === 'REPORT_VIEW' ? -10 : 'unset',
+    hideEditor: state.viewMode === 'REPORT_VIEW',
   }
 }
 
