@@ -110,6 +110,7 @@ export default class RevisionsPage extends React.Component {
                                         triggerElement={<MoreHoriz className={BodyIconStyle} />}
                                         notebookID={r.notebookId}
                                         revisionID={r.id}
+                                        revisionTitle={r.title}
                                         notebookTitle={this.props.ownerInfo.notebookId}
                                         onDelete={this.onDeleteRevision}
                                       />
