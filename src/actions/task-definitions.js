@@ -394,57 +394,6 @@ tasks.clearVariables = new UserTask({
   callback() { dispatcher.clearVariables() },
 })
 
-tasks.toggleDeclaredVariablesPane = new UserTask({
-  title: 'Toggle the Declared Variables Pane',
-  menuTitle: 'Declared Variables',
-  keybindings: ['ctrl+d', 'meta+d'],
-  displayKeybinding: `${commandKey}+d`,
-  preventDefaultKeybinding: true,
-  keybindingPrecondition: isCommandMode,
-  commandModeOnlyKey: true,
-  callback() {
-    if (store.getState().sidePaneMode !== 'DECLARED_VARIABLES') {
-      dispatcher.changeSidePaneMode('DECLARED_VARIABLES')
-    } else {
-      dispatcher.changeSidePaneMode('_CLOSED')
-    }
-  },
-})
-
-tasks.toggleHistoryPane = new UserTask({
-  title: 'Toggle the Console Pane',
-  menuTitle: 'Console',
-  keybindings: ['ctrl+h', 'meta+h'],
-  displayKeybinding: `${commandKey}+h`,
-  preventDefaultKeybinding: true,
-  keybindingPrecondition: isCommandMode,
-  commandModeOnlyKey: true,
-  callback() {
-    if (store.getState().sidePaneMode !== '_CONSOLE') {
-      dispatcher.changeSidePaneMode('_CONSOLE')
-    } else {
-      dispatcher.changeSidePaneMode('_CLOSED')
-    }
-  },
-})
-
-tasks.toggleAppInfoPane = new UserTask({
-  title: 'Toggle the Iodide Info Pane',
-  menuTitle: 'App Messages',
-  keybindings: ['ctrl+i', 'meta+i'],
-  displayKeybinding: `${commandKey}+i`,
-  preventDefaultKeybinding: true,
-  keybindingPrecondition: isCommandMode,
-  commandModeOnlyKey: true,
-  callback() {
-    if (store.getState().sidePaneMode !== '_APP_INFO') {
-      dispatcher.changeSidePaneMode('_APP_INFO')
-    } else {
-      dispatcher.changeSidePaneMode('_CLOSED')
-    }
-  },
-})
-
 tasks.toggleHelpModal = new UserTask({
   title: 'Open the Help Pane',
   menuTitle: 'Help',
@@ -470,22 +419,6 @@ tasks.setViewModeToPresentation = new UserTask({
   callback() {
     dispatcher.setViewMode('REPORT_VIEW')
   },
-})
-
-tasks.increaseEditorWidth = new UserTask({
-  title: 'Increase Editor Width',
-  keybindings: ['ctrl+shift+right'],
-  displayKeybinding: 'Ctrl+Shift+Right',
-  keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.increaseEditorWidth() },
-})
-
-tasks.decreaseEditorWidth = new UserTask({
-  title: 'Decrease Editor Width',
-  keybindings: ['ctrl+shift+left'],
-  displayKeybinding: 'Ctrl+Shift+Left',
-  keybindingPrecondition: isCommandMode,
-  callback() { dispatcher.decreaseEditorWidth() },
 })
 
 tasks.fileAnIssue = new ExternalLinkTask({

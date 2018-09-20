@@ -460,32 +460,6 @@ export function toggleEditorLink() {
   }
 }
 
-export function increaseEditorWidth() {
-  return {
-    type: 'INCREASE_EDITOR_WIDTH',
-  }
-}
-
-export function decreaseEditorWidth() {
-  return {
-    type: 'DECREASE_EDITOR_WIDTH',
-  }
-}
-
-export function changeSidePaneMode(sidePaneMode) {
-  return {
-    type: 'CHANGE_SIDE_PANE_MODE',
-    sidePaneMode,
-  }
-}
-
-export function changeEditorWidth(widthShift) {
-  return {
-    type: 'CHANGE_EDITOR_WIDTH',
-    widthShift,
-  }
-}
-
 export function setCellSkipInRunAll(value) {
   return (dispatch, getState) => {
     let setValue = value

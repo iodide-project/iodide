@@ -4,15 +4,15 @@ import React from 'react'
 import HistoryItem from '../history-item'
 import EmptyPaneContents from '../empty-pane-contents'
 
-import { HistoryPaneUnconnected, mapStateToProps } from '../history-pane'
+import { ConsolePaneUnconnected, mapStateToProps } from '../console-pane'
 
-describe('HistoryPaneUnconnected React component', () => {
+describe('ConsolePaneUnconnected React component', () => {
   let props
   let mountedPane
 
-  const historyPane = () => {
+  const consolePane = () => {
     if (!mountedPane) {
-      mountedPane = shallow(<HistoryPaneUnconnected {...props} />)
+      mountedPane = shallow(<ConsolePaneUnconnected {...props} />)
     }
     return mountedPane
   }
@@ -29,18 +29,18 @@ describe('HistoryPaneUnconnected React component', () => {
   })
 
   it('always renders one div with class history-cells', () => {
-    expect(historyPane().find('div.history-cells'))
+    expect(consolePane().find('div.history-cells'))
       .toHaveLength(1)
   })
   // rewrite this test.
 
   it('always renders one div.no-history inside history-cells when history is empty', () => {
     props.history = []
-    expect(historyPane().find(EmptyPaneContents)).toHaveLength(1)
+    expect(consolePane().find(EmptyPaneContents)).toHaveLength(1)
   })
 
   it('always renders HistoryItem inside history-cells when history is non empty', () => {
-    expect(historyPane().find('div.history-cells').find(HistoryItem))
+    expect(consolePane().find('div.history-cells').find(HistoryItem))
       .toHaveLength(1)
   })
 
@@ -58,7 +58,7 @@ describe('HistoryPaneUnconnected React component', () => {
       },
     ]
 
-    expect(historyPane().find('div.history-cells').find(HistoryItem))
+    expect(consolePane().find('div.history-cells').find(HistoryItem))
       .toHaveLength(2)
   })
 })
@@ -68,31 +68,23 @@ describe('HistoryPane mapStateToProps', () => {
 
   beforeEach(() => {
     state = {
-      sidePaneMode: '_CONSOLE',
       history: [{
         cellId: 0,
         lastRan: 1533078293981,
         content: 'var a = 3',
       }],
+      panePositions: { ConsolePositioner: { display: 'block' } },
     }
   })
 
-  it('display=="block" if sidePaneMode=="_CONSOLE', () => {
-    expect(mapStateToProps(state))
-      .toEqual({
-        sidePaneMode: '_CONSOLE',
-        history: [{
-          cellId: 0,
-          lastRan: 1533078293981,
-          content: 'var a = 3',
-        }],
-        paneDisplay: 'flex',
-      })
+  it('paneVisible===true if state.panePositions.ConsolePositioner.display==="block"', () => {
+    expect(mapStateToProps(state).paneVisible)
+      .toEqual(true)
   })
 
-  it('display=="none" if sidePaneMode!=="_CONSOLE', () => {
-    state.sidePaneMode = 'not_CONSOLE'
-    expect(mapStateToProps(state).paneDisplay)
-      .toEqual('none')
+  it('paneVisible===true if state.panePositions.ConsolePositioner.display!=="block"', () => {
+    state.panePositions.ConsolePositioner.display = 'NOT_block'
+    expect(mapStateToProps(state).paneVisible)
+      .toEqual(false)
   })
 })
