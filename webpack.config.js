@@ -62,18 +62,6 @@ module.exports = (env) => {
     resolve: {
       extensions: ['.js', '.jsx'],
     },
-    // optimization: {
-    //   splitChunks: {
-    //     cacheGroups: {
-    //       styles: {
-    //         name: 'styles',
-    //         test: /\.css$/,
-    //         chunks: 'all',
-    //         enforce: true,
-    //       },
-    //     },
-    //   },
-    // },
     module: {
       rules: [
         {
@@ -101,16 +89,6 @@ module.exports = (env) => {
           test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
           loader: `file-loader?name=iodide.${APP_VERSION_STRING}.fonts/[name].[ext]`,
         },
-        // {
-        //   test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        //   use: [{
-        //     loader: 'file-loader',
-        //     options: {
-        //       name: '[name].[ext]',
-        //       outputPath: 'fonts/',
-        //     },
-        //   }],
-        // },
       ],
     },
     watchOptions: { poll: true },
@@ -154,12 +132,9 @@ module.exports = (env) => {
     ],
     devServer: {
       contentBase: path.join(__dirname, 'build'),
-      // compress: true,
       port: DEV_SERVER_PORT,
       hot: false,
       inline: false,
     },
   }
 }
-
-// module.exports = config
