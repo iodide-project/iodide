@@ -4,6 +4,7 @@ const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const WriteFilePlugin = require('write-file-webpack-plugin')
 const _ = require('lodash')
 
 const reduxLogMode = process.env.REDUX_LOGGING === 'VERBOSE' ? 'VERBOSE' : 'SILENT'
@@ -26,7 +27,6 @@ let { EVAL_FRAME_ORIGIN } = process.env
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || 'dev'
 
 const APP_DIR = path.resolve(__dirname, 'src/')
-const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
 const plugins = []
 
@@ -89,11 +89,6 @@ module.exports = (env) => {
           test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
           loader: `file-loader?name=iodide.${APP_VERSION_STRING}.fonts/[name].[ext]`,
         },
-        {
-          test: /\.jsmd$/,
-          include: EXAMPLE_DIR,
-          loader: 'raw-loader',
-        },
       ],
     },
     watchOptions: { poll: true },
@@ -138,16 +133,14 @@ module.exports = (env) => {
         IODIDE_BUILD_TYPE: JSON.stringify((env && env.includes('client-only')) ? 'standalone' : 'server'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
-      new MiniCssExtractPlugin(`[name].${APP_VERSION_STRING}.css`),
+      new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
+      new WriteFilePlugin(),
     ],
     devServer: {
       contentBase: path.join(__dirname, 'build'),
-      // compress: true,
       port: DEV_SERVER_PORT,
       hot: false,
       inline: false,
     },
   }
 }
-
-// module.exports = config
