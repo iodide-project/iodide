@@ -4,6 +4,7 @@ const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const WriteFilePlugin = require('write-file-webpack-plugin')
 const _ = require('lodash')
 
 const reduxLogMode = process.env.REDUX_LOGGING === 'VERBOSE' ? 'VERBOSE' : 'SILENT'
@@ -149,6 +150,7 @@ module.exports = (env) => {
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
       new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
+      new WriteFilePlugin(),
     ],
     devServer: {
       contentBase: path.join(__dirname, 'build'),
