@@ -83,7 +83,7 @@
     "eslint": "4.19.1",
     "eslint-config-airbnb": "16.1.0",
     "eslint-config-google": "0.10.0",
-    "eslint-loader": "1.9.0",
+    "eslint-loader": "2.1.1",
     "eslint-plugin-emotion": "9.2.6",
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-jest": "21.22.0",
