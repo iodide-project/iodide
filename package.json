@@ -90,7 +90,7 @@
     "eslint-plugin-jsx-a11y": "6.1.1",
     "eslint-plugin-react": "7.8.2",
     "extract-text-webpack-plugin": "3.0.2",
-    "file-loader": "1.1.11",
+    "file-loader": "2.0.0",
     "git-rev-sync": "1.12.0",
     "jest": "23.6.0",
     "jest-cli": "23.6.0",
