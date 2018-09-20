@@ -26,7 +26,6 @@ let { EVAL_FRAME_ORIGIN } = process.env
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || 'dev'
 
 const APP_DIR = path.resolve(__dirname, 'src/')
-const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
 const plugins = []
 
@@ -62,6 +61,18 @@ module.exports = (env) => {
     resolve: {
       extensions: ['.js', '.jsx'],
     },
+    // optimization: {
+    //   splitChunks: {
+    //     cacheGroups: {
+    //       styles: {
+    //         name: 'styles',
+    //         test: /\.css$/,
+    //         chunks: 'all',
+    //         enforce: true,
+    //       },
+    //     },
+    //   },
+    // },
     module: {
       rules: [
         {
@@ -89,11 +100,16 @@ module.exports = (env) => {
           test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
           loader: `file-loader?name=iodide.${APP_VERSION_STRING}.fonts/[name].[ext]`,
         },
-        {
-          test: /\.jsmd$/,
-          include: EXAMPLE_DIR,
-          loader: 'raw-loader',
-        },
+        // {
+        //   test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        //   use: [{
+        //     loader: 'file-loader',
+        //     options: {
+        //       name: '[name].[ext]',
+        //       outputPath: 'fonts/',
+        //     },
+        //   }],
+        // },
       ],
     },
     watchOptions: { poll: true },
@@ -132,7 +148,7 @@ module.exports = (env) => {
         IODIDE_BUILD_TYPE: JSON.stringify((env && env.includes('client-only')) ? 'standalone' : 'server'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
-      new MiniCssExtractPlugin(`[name].${APP_VERSION_STRING}.css`),
+      new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
     ],
     devServer: {
       contentBase: path.join(__dirname, 'build'),
