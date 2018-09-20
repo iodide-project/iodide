@@ -14,31 +14,6 @@ import stringHandler from './string-handler'
 import numberHandler from './number-handler'
 import dateHandler from './date-handler'
 
-export function renderValue(value, inContainer = false) {
-  for (const handler of handlers) {
-    if (handler.shouldHandle(value, inContainer)) {
-      const resultElem = handler.render(value, inContainer)
-      if (typeof resultElem === 'string') {
-        return (<div>{ resultElem }</div>)
-      } else if (resultElem.tagName !== undefined) {
-        // custom output handlers may return HTMLElements,
-        // so this checks for that, and if present dangerouslySetInnerHTML's it in
-        // a container.
-        return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} /> // eslint-disable-line
-      } else if (resultElem.type !== undefined) {
-        return resultElem
-      }
-      console.warn(`Unknown output handler result type from ${handler}`)
-      // Fallback to other handlers if it's something invalid
-    }
-  }
-
-  // We should never get here, since the default handler should handle everything
-  console.warn(`No output handler found to handle ${value}`)
-  return undefined
-}
-
-
 const renderMethodHandler = {
   shouldHandle: value => (value !== undefined && typeof value.iodideRender === 'function'),
 
@@ -107,6 +82,29 @@ export function addOutputHandler(handler) {
   handlers = simpleHandlers.concat(userHandlers, complexHandlers)
 }
 
+export function renderValue(value, inContainer = false) {
+  for (const handler of handlers) {
+    if (handler.shouldHandle(value, inContainer)) {
+      const resultElem = handler.render(value, inContainer)
+      if (typeof resultElem === 'string') {
+        return (<div>{resultElem}</div>)
+      } else if (resultElem.tagName !== undefined) {
+        // custom output handlers may return HTMLElements,
+        // so this checks for that, and if present dangerouslySetInnerHTML's it in
+        // a container.
+        return <div dangerouslySetInnerHTML={{ __html: resultElem.outerHTML }} /> // eslint-disable-line
+      } else if (resultElem.type !== undefined) {
+        return resultElem
+      }
+      console.warn(`Unknown output handler result type from ${handler}`)
+      // Fallback to other handlers if it's something invalid
+    }
+  }
+
+  // We should never get here, since the default handler should handle everything
+  console.warn(`No output handler found to handle ${value}`)
+  return undefined
+}
 
 export class ValueRenderer extends React.Component {
   static propTypes = {
