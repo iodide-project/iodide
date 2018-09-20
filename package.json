@@ -103,6 +103,6 @@
     "webpack-cli": "3.1.0",
     "webpack-dev-server": "3.1.8",
     "webpack-merge": "4.1.4",
-    "write-file-webpack-plugin": "^4.4.0"
+    "write-file-webpack-plugin": "4.4.0"
   }
 }
