@@ -2,7 +2,7 @@ require('dotenv').config()
 const webpack = require('webpack')
 const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const _ = require('lodash')
 
@@ -83,11 +83,7 @@ module.exports = (env) => {
         },
         {
           test: /\.css$/,
-          use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: 'css-loader',
-            // filename: `iodide.${APP_VERSION_STRING}.css`,
-          }),
+          use: [MiniCssExtractPlugin.loader, 'css-loader'],
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
@@ -136,7 +132,7 @@ module.exports = (env) => {
         IODIDE_BUILD_TYPE: JSON.stringify((env && env.includes('client-only')) ? 'standalone' : 'server'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
-      new ExtractTextPlugin(`[name].${APP_VERSION_STRING}.css`),
+      new MiniCssExtractPlugin(`[name].${APP_VERSION_STRING}.css`),
     ],
     devServer: {
       contentBase: path.join(__dirname, 'build'),
