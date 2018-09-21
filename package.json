@@ -85,7 +85,7 @@
     "eslint-loader": "2.1.1",
     "eslint-plugin-emotion": "9.2.6",
     "eslint-plugin-import": "2.14.0",
-    "eslint-plugin-jest": "21.22.0",
+    "eslint-plugin-jest": "21.22.1",
     "eslint-plugin-jsx-a11y": "6.1.1",
     "eslint-plugin-react": "7.11.1",
     "file-loader": "2.0.0",
