@@ -93,3 +93,33 @@ def test_create_notebook_revision(fake_user, test_notebook, client):
     # make sure that the title gets updated too
     test_notebook.refresh_from_db()
     assert test_notebook.title == post_blob['title']
+
+
+def test_delete_notebook_revision_not_logged_in(test_notebook, client):
+    # should not be able to delete a notebook revision if not logged in
+    resp = client.delete(reverse("notebook-revisions-detail", kwargs={
+        'notebook_id': test_notebook.id,
+        'pk': test_notebook.revisions.last().id
+    }))
+    assert resp.status_code == 403
+
+
+def test_delete_notebook_revision_not_owner(fake_user, fake_user2, test_notebook, client):
+    # should not be able to delete if not owner of the notebook revision
+    client.force_authenticate(user=fake_user2)
+    resp = client.delete(reverse("notebook-revisions-detail", kwargs={
+        'notebook_id': test_notebook.id,
+        'pk': test_notebook.revisions.last().id
+    }))
+    assert resp.status_code == 403
+
+
+def test_delete_notebook_revision_owner(fake_user, test_notebook, client):
+    # however, it should succeed if we are the owner
+    client.force_authenticate(user=fake_user)
+    resp = client.delete(reverse("notebook-revisions-detail", kwargs={
+        'notebook_id': test_notebook.id,
+        'pk': test_notebook.revisions.last().id
+    }))
+    assert resp.status_code == 204
+    assert NotebookRevision.objects.count() == 0

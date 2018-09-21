@@ -12,6 +12,8 @@ import { addLanguageKeybinding } from '../keybindings'
 
 import { mirroredStateProperties, mirroredCellProperties } from '../state-schemas/mirrored-state-schema'
 
+import fetchWithCSRFToken from './../shared/fetch-with-csrf-token'
+
 import {
   alignCellTopTo,
   handleCellAndOutputScrolling,
@@ -267,31 +269,9 @@ function getNotebookSaveRequestOptions(state) {
     title: state.title,
     content: exportJsmdToString(state),
   }
-
-  // Get CSRF Cookie for Django CSRF Middleware
-  function getCookie(name) {
-    if (!document.cookie) {
-      return null
-    }
-    const token = document.cookie.split(';')
-      .map(c => c.trim())
-      .filter(c => c.startsWith(`${name}=`))
-
-    if (token.length === 0) {
-      return null;
-    }
-    return decodeURIComponent(token[0].split('=')[1])
-  }
-
-  const csrftoken = getCookie('csrftoken')
-
   const postRequestOptions = {
     body: JSON.stringify(data),
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrftoken,
-    },
   }
 
   return postRequestOptions
@@ -303,7 +283,7 @@ export function createNewNotebookOnServer() {
 
     const postRequestOptions = getNotebookSaveRequestOptions(state)
     // Create a New Notebook in Database
-    fetch('/api/v1/notebooks/', postRequestOptions)
+    fetchWithCSRFToken('/api/v1/notebooks/', postRequestOptions)
       .then(response => response.json())
       .then((json) => {
         const message = 'Notebook saved to server'
@@ -327,7 +307,7 @@ export function saveNotebookToServer() {
     if (notebookInServer) {
       const postRequestOptions = getNotebookSaveRequestOptions(state)
       // Update Exisiting Notebook
-      fetch(`/api/v1/notebooks/${state.notebookId}/revisions/`, postRequestOptions)
+      fetchWithCSRFToken(`/api/v1/notebooks/${state.notebookId}/revisions/`, postRequestOptions)
         .then(response => response.json())
         .then(() => {
           const message = 'Updated Notebook'
@@ -457,6 +437,32 @@ export function toggleHelpModal() {
 export function toggleEditorLink() {
   return {
     type: 'TOGGLE_EDITOR_LINK',
+  }
+}
+
+export function increaseEditorWidth() {
+  return {
+    type: 'INCREASE_EDITOR_WIDTH',
+  }
+}
+
+export function decreaseEditorWidth() {
+  return {
+    type: 'DECREASE_EDITOR_WIDTH',
+  }
+}
+
+export function changeSidePaneMode(sidePaneMode) {
+  return {
+    type: 'CHANGE_SIDE_PANE_MODE',
+    sidePaneMode,
+  }
+}
+
+export function changeEditorWidth(widthShift) {
+  return {
+    type: 'CHANGE_EDITOR_WIDTH',
+    widthShift,
   }
 }
 

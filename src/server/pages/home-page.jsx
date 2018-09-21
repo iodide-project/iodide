@@ -3,16 +3,36 @@ import React from 'react';
 import Header from '../components/header';
 import PageBody from '../components/page-body';
 import PageHeader from '../components/page-header';
-import NotebookList from '../components/notebook-list';
+import TrendingNotebooksList from '../components/trending-notebooks-list';
+import AttentionBlock from '../components/attention-block'
+import NewNotebookButton from '../components/new-notebook-button'
+
+const TrendingNotebooksPage = ({ notebookList }) => (
+  <React.Fragment>
+    <PageHeader>Most Recent Notebooks</PageHeader>
+    <TrendingNotebooksList notebookList={notebookList} />
+  </React.Fragment>
+)
+
+
+const LetsGetStarted = () => (
+  <AttentionBlock>
+    <div>Welcome to Iodide. Shall we get started?</div>
+    <NewNotebookButton />
+  </AttentionBlock>
+)
 
 export default class HomePage extends React.Component {
   render() {
+    const { notebookList } = this.props
     return (
       <div>
         <Header userInfo={this.props.userInfo} />
         <PageBody>
-          <PageHeader>Most Recent Notebooks</PageHeader>
-          <NotebookList notebookList={this.props.notebookList} />
+          {notebookList.length ?
+            <TrendingNotebooksPage notebookList={notebookList} /> :
+            <LetsGetStarted />
+          }
         </PageBody>
       </div>
     )
