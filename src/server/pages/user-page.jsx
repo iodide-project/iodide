@@ -66,6 +66,7 @@ class UserNotebookList extends React.Component {
                 <td>
                   <ActionsContainer>
                     <NotebookActionsMenu
+                      isUserAccount={this.props.isUserAccount}
                       triggerElement={<MoreHoriz className={BodyIconStyle} />}
                       notebookID={notebook.id}
                       notebookTitle={notebook.title}
