@@ -15,8 +15,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return (!deepEqual(this.props, nextProps)
-      && (this.props.sidePaneMode === 'DECLARED_VARIABLES'
-        || nextProps.sidePaneMode === 'DECLARED_VARIABLES')
+      && (this.props.paneVisible || nextProps.paneVisible)
     )
   }
 
@@ -50,7 +49,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
       </div>
     ) : undefined
     return (
-      <div className="pane-content" style={{ display: this.props.paneDisplay }} >
+      <div className="pane-content" >
         {noVariables}
         {edvElem}
         {declaredVariables}
@@ -63,8 +62,7 @@ export function mapStateToProps(state) {
   return {
     environmentVariables: state.savedEnvironment,
     userDefinedVarNames: state.userDefinedVarNames,
-    sidePaneMode: state.sidePaneMode,
-    paneDisplay: state.sidePaneMode === 'DECLARED_VARIABLES' ? 'block' : 'none',
+    paneVisible: state.panePositions.WorkspacePositioner.display === 'block',
   }
 }
 

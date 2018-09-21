@@ -1,26 +1,50 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-import CellsList from './cells-list'
-import PaneContainer from './panes/pane-container'
-import EditorLinkButton from './controls/editor-link-button'
+import ReportPane from './panes/report-pane'
+import DeclaredVariablesPane from './panes/declared-variables-pane'
+import ConsolePane from './panes/console-pane'
+import AppInfoPane from './panes/app-info-pane'
 
-export default class EvalContainer extends React.Component {
+import FixedPositionContainer from '../../components/pane-layout/fixed-position-container'
+
+
+export class EvalContainerUnconnected extends React.Component {
+  static propTypes = {
+    reportOnly: PropTypes.bool.isRequired,
+  }
+
   render() {
+    const { reportOnly } = this.props
     return (
       <React.Fragment>
-        <div
-          className="display-none-in-report"
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-          }}
-        >
-          <EditorLinkButton />
-        </div>
-        <CellsList id="cells" containingPane="REPORT_PANE" />
-        <PaneContainer />
+
+        <FixedPositionContainer paneId="ReportPositioner" fullscreen={reportOnly}>
+          <ReportPane />
+        </FixedPositionContainer>
+
+        <FixedPositionContainer paneId="ConsolePositioner" hidden={reportOnly}>
+          <ConsolePane />
+        </FixedPositionContainer>
+
+        <FixedPositionContainer paneId="WorkspacePositioner" hidden={reportOnly}>
+          <DeclaredVariablesPane />
+        </FixedPositionContainer>
+
+        <FixedPositionContainer paneId="AppInfoPositioner" hidden={reportOnly}>
+          <AppInfoPane />
+        </FixedPositionContainer>
+
       </React.Fragment>
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    reportOnly: state.viewMode === 'REPORT_VIEW',
+  }
+}
+
+export default connect(mapStateToProps)(EvalContainerUnconnected)

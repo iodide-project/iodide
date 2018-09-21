@@ -2,8 +2,9 @@ require('dotenv').config()
 const webpack = require('webpack')
 const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const WriteFilePlugin = require('write-file-webpack-plugin')
 const _ = require('lodash')
 
 const reduxLogMode = process.env.REDUX_LOGGING === 'VERBOSE' ? 'VERBOSE' : 'SILENT'
@@ -26,7 +27,6 @@ let { EVAL_FRAME_ORIGIN } = process.env
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || 'dev'
 
 const APP_DIR = path.resolve(__dirname, 'src/')
-const EXAMPLE_DIR = path.resolve(__dirname, 'examples/')
 
 const plugins = []
 
@@ -38,14 +38,12 @@ module.exports = (env) => {
     plugins.push(new UglifyJSPlugin())
   }
 
-  if (env.includes('client-only')) {
-    APP_PATH_STRING = `${EDITOR_ORIGIN}/`
-    CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
-  } else {
+  APP_PATH_STRING = `${EDITOR_ORIGIN}/`
+  CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
+
+  if (!env.includes('client-only')) {
     // default case: heroku or local python server using docker-compose
     EDITOR_ORIGIN = process.env.SERVER_URI || `http://localhost:${DEV_SERVER_PORT}`
-    APP_PATH_STRING = ''
-    CSS_PATH_STRING = ''
   }
 
   EVAL_FRAME_ORIGIN = EVAL_FRAME_ORIGIN || EDITOR_ORIGIN
@@ -85,26 +83,23 @@ module.exports = (env) => {
         },
         {
           test: /\.css$/,
-          use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: 'css-loader',
-            // filename: `iodide.${APP_VERSION_STRING}.css`,
-          }),
+          use: [MiniCssExtractPlugin.loader, 'css-loader'],
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
           loader: `file-loader?name=iodide.${APP_VERSION_STRING}.fonts/[name].[ext]`,
-        },
-        {
-          test: /\.jsmd$/,
-          include: EXAMPLE_DIR,
-          loader: 'raw-loader',
         },
       ],
     },
     watchOptions: { poll: true },
     plugins: [
       ...plugins,
+      new webpack.ProvidePlugin({
+        React: 'react',
+        ReactDOM: 'react-dom',
+        $: 'jquery',
+        jQuery: 'jquery',
+      }),
       new CreateFileWebpack({
         path: BUILD_DIR,
         fileName: (env === 'server') ? 'index.html' : `iodide.${APP_VERSION_STRING}.html`,
@@ -138,16 +133,14 @@ module.exports = (env) => {
         IODIDE_BUILD_TYPE: JSON.stringify((env && env.includes('client-only')) ? 'standalone' : 'server'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
-      new ExtractTextPlugin(`[name].${APP_VERSION_STRING}.css`),
+      new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
+      new WriteFilePlugin(),
     ],
     devServer: {
       contentBase: path.join(__dirname, 'build'),
-      // compress: true,
       port: DEV_SERVER_PORT,
       hot: false,
       inline: false,
     },
   }
 }
-
-// module.exports = config

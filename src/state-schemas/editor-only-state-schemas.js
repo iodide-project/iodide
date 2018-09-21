@@ -5,8 +5,6 @@ import {
 
 import { newCellFromSchema } from '../state-schemas/state-prototype-from-schema'
 
-const DEFAULT_EDITOR_WIDTH = Math.round(0.5 * document.documentElement.clientWidth)
-
 export const editorOnlyCellProperties = {
   inputFolding: {
     type: 'string',
@@ -32,10 +30,6 @@ export const editorOnlyStateProperties = {
     type: 'array',
     items: editorCellSchema,
     default: [],
-  },
-  editorWidth: {
-    type: 'integer',
-    default: DEFAULT_EDITOR_WIDTH,
   },
   evalFrameMessageQueue: {
     type: 'array',

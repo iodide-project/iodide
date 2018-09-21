@@ -29,7 +29,6 @@ describe('AppInfoPane', () => {
           id: 1,
         },
       ],
-      sidePaneMode: '_APP_INFO',
     }
     mountedItem = undefined
   })
@@ -57,7 +56,6 @@ describe('AppInfoPane mapStateToProps', () => {
         id: 1,
       },
     ],
-    sidePaneMode: '_APP_INFO',
   }
   it('reverses the app message order', () => {
     expect(mapStateToProps(props).appMessages.map(d => d.id)).toEqual([1, 0])

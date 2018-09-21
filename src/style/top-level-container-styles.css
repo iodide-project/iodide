@@ -6,50 +6,36 @@ html, body {
   font-size: 14px;
   line-height: 1.42857143;
   color: #333;
-  background-color: #fff;
+  /*background-color: #fff;*/
   overflow: hidden;
   position: relative;
   display: flex;
   flex-direction: column;
 }
 
-div#page {
-  height: 100%;
-  overflow: hidden;
-}
-
-div#panes-container {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: row;
-  /* the following prevents #panes-container from having a computed
-  height greater than the available space, which is needed for correct
-  overflow of child elts*/
-  overflow: hidden;
+div#notebook-header {
+    z-index: 1000;
 }
 
 div#editor-react-root{
-  /* this prevents the resizer from getting too wide and covering the eval frame*/
-  max-width: calc(100%);
-}
-
-div#cells-resizer {
-  max-width: 100%; /* this keeps #cells at full width of #editor-react-root */
-  min-height: 100%;
-  max-height: 100%;
+    /*needed to ensure that the div grows to full height*/
+  flex-grow: 1;
+  display: flex;
+  overflow: hidden; /* needed to ensure the contents are restriced in size */
 }
 
 div#cells {
   flex-grow: 1; /* grow cells to fill the #cell-resizer flex column */
   box-sizing: border-box;
-  /*height: 100%;*/
   overflow-y: auto;
-  border-right: 2px solid lightgray;
 }
 
 iframe#eval-frame {
-  border: none;
-  flex-grow: 1;
-  min-width: 300px;
-  min-height: 100%;
+    border: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
 }
