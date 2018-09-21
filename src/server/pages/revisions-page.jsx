@@ -77,8 +77,9 @@ export default class RevisionsPage extends React.Component {
                   style={{ width: BodyIconStyle.width }}
                   className={BodyIconStyle}
                 />}
+                isUserAccount={isCurrentUsersPage}
                 hideRevisions
-                placement="left-start"
+                placement="right-start"
                 notebookID={this.props.ownerInfo.notebookId}
                 notebookTitle={this.props.ownerInfo.title}
                 onDelete={this.onDeleteNotebook}

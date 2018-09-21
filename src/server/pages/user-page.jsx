@@ -66,6 +66,7 @@ class UserNotebookList extends React.Component {
                 <td>
                   <ActionsContainer>
                     <NotebookActionsMenu
+                      isUserAccount={this.props.isUserAccount}
                       triggerElement={<MoreHoriz className={BodyIconStyle} />}
                       notebookID={notebook.id}
                       notebookTitle={notebook.title}
@@ -100,9 +101,12 @@ export const UserPageWithoutNotebooksPlaceholder = ({ isUserAccount }) => (
   </AttentionBlock>
 )
 
+export const isLoggedIn = userInfo => 'name' in userInfo
+
 export default class UserPage extends React.Component {
   render() {
     const { thisUser, userInfo, notebookList } = this.props
+    console.log(thisUser.name, userInfo.name)
     return (
       <div>
         <Header userInfo={userInfo} />
@@ -115,7 +119,7 @@ export default class UserPage extends React.Component {
           </UserInformationContainer>
 
           <UserNotebookList
-            isUserAccount={thisUser.username === userInfo.username}
+            isUserAccount={isLoggedIn(userInfo) && thisUser.name === userInfo.name}
             notebookList={notebookList}
           />
         </PageBody>

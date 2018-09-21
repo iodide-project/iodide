@@ -32,6 +32,7 @@ export default class NotebookActionsMenu extends React.Component {
   }
 
   render() {
+    if (this.props.hideRevisions && !this.props.isUserAccount) return null
     return (
       <React.Fragment>
         <Popover
@@ -41,8 +42,9 @@ export default class NotebookActionsMenu extends React.Component {
           <Menu>
             {this.props.hideRevisions ? undefined :
             <MenuItem onClick={this.goToRevisionsPage}>View Revisions...</MenuItem>}
-            {this.props.hideRevisions ? undefined : <MenuDivider />}
-            <MenuItem onClick={this.deleteNotebook}>Delete This Notebook...</MenuItem>
+            {this.props.hideRevisions || !this.props.isUserAccount ? undefined : <MenuDivider />}
+            {!this.props.isUserAccount ? undefined :
+            <MenuItem onClick={this.deleteNotebook}>Delete This Notebook...</MenuItem>}
           </Menu>
         </Popover>
         <DeleteModal
