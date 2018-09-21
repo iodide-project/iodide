@@ -101,6 +101,8 @@ export const UserPageWithoutNotebooksPlaceholder = ({ isUserAccount }) => (
   </AttentionBlock>
 )
 
+export const isLoggedIn = userInfo => 'name' in userInfo
+
 export default class UserPage extends React.Component {
   render() {
     const { thisUser, userInfo, notebookList } = this.props
@@ -116,7 +118,7 @@ export default class UserPage extends React.Component {
           </UserInformationContainer>
 
           <UserNotebookList
-            isUserAccount={thisUser.username === userInfo.username}
+            isUserAccount={isLoggedIn(userInfo) && thisUser.username === userInfo.username}
             notebookList={notebookList}
           />
         </PageBody>
