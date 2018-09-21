@@ -106,6 +106,7 @@ export const isLoggedIn = userInfo => 'name' in userInfo
 export default class UserPage extends React.Component {
   render() {
     const { thisUser, userInfo, notebookList } = this.props
+    console.log(thisUser.name, userInfo.name)
     return (
       <div>
         <Header userInfo={userInfo} />
@@ -118,7 +119,7 @@ export default class UserPage extends React.Component {
           </UserInformationContainer>
 
           <UserNotebookList
-            isUserAccount={isLoggedIn(userInfo) && thisUser.username === userInfo.username}
+            isUserAccount={isLoggedIn(userInfo) && thisUser.name === userInfo.name}
             notebookList={notebookList}
           />
         </PageBody>
