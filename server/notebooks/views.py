@@ -68,9 +68,5 @@ def new_notebook_view(request):
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
         'notebook_info': {'user_can_save': True},
-        'jsmd': '',
-        'iframe_src': '{}/iodide.eval-frame.{}.html'.format(
-            EVAL_FRAME_ORIGIN,
-            APP_VERSION_STRING,
-            )
+        'jsmd': ''
     })

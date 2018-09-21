@@ -71,6 +71,16 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { mode })
     }
 
+    case 'CHANGE_SIDE_PANE_MODE': {
+      const { sidePaneMode } = action
+      return Object.assign({}, state, { sidePaneMode })
+    }
+
+    case 'CHANGE_PANE_HEIGHT': {
+      const paneHeight = state.paneHeight + action.heightShift
+      return Object.assign({}, state, { paneHeight })
+    }
+
     case 'INCREMENT_EXECUTION_NUMBER': {
       let { executionNumber } = state
       executionNumber += 1
@@ -175,10 +185,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         { [action.languageDefinition.languageId]: action.languageDefinition },
       )
       return Object.assign({}, state, { languages })
-    }
-
-    case 'UPDATE_PANE_POSITIONS': {
-      return Object.assign({}, state, { panePositions: action.panePositions })
     }
 
     default: {

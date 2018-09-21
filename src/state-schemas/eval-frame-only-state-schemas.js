@@ -5,6 +5,8 @@ import {
 
 import { newCellFromSchema } from '../state-schemas/state-prototype-from-schema'
 
+const DEFAULT_PANE_HEIGHT = Math.round(0.4 * document.documentElement.clientHeight)
+
 export const historySchema = {
   type: 'object',
   properties: {
@@ -94,6 +96,10 @@ export const evalFrameOnlyStateProperties = {
     type: 'array',
     items: historySchema,
     default: [],
+  },
+  paneHeight: {
+    type: 'integer',
+    default: DEFAULT_PANE_HEIGHT,
   },
   userDefinedVarNames: {
     type: 'array',

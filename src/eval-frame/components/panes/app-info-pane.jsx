@@ -25,7 +25,7 @@ export class AppInfoPaneUnconnected extends React.Component {
     }
     /* eslint-enable */
     return (
-      <div className="pane-content">
+      <div className="pane-content" style={{ display: this.props.paneDisplay }} >
         {messageDivs}
       </div>
     )
@@ -41,6 +41,8 @@ export function mapStateToProps(state) {
   })
   return {
     appMessages,
+    sidePaneMode: state.sidePaneMode,
+    paneDisplay: state.sidePaneMode === '_APP_INFO' ? 'block' : 'none',
   }
 }
 

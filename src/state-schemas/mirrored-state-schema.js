@@ -45,21 +45,6 @@ const environmentVariableSchema = {
   ],
 }
 
-const panePositionSchema = {
-  type: 'object',
-  properties: {
-    display: { type: 'string', enum: ['none', 'block'], default: 'none' },
-    top: { type: 'number', default: 0 },
-    left: { type: 'number', default: 0 },
-    width: { type: 'number', default: 0 },
-    height: { type: 'number', default: 0 },
-  },
-  additionalProperties: false,
-}
-
-const positionerDefaults = {
-  display: 'none', top: 0, left: 0, width: 0, height: 0,
-}
 
 export const mirroredCellProperties = {
   cellType: {
@@ -94,6 +79,7 @@ export const mirroredCellProperties = {
   },
 }
 
+
 // note that 'cells' and 'viewMode' are defined in all 3 of
 // mirroredStateProperties, editorOnlyStateProperties, evalFrameOnlyStateProperties,
 // because:
@@ -123,17 +109,6 @@ export const mirroredStateProperties = {
     type: 'string',
     default: 'js',
   },
-  panePositions: {
-    type: 'object',
-    additionalProperties: panePositionSchema,
-    default: {
-      EditorPositioner: Object.assign({}, positionerDefaults),
-      ReportPositioner: Object.assign({}, positionerDefaults),
-      ConsolePositioner: Object.assign({}, positionerDefaults),
-      WorkspacePositioner: Object.assign({}, positionerDefaults),
-      AppInfoPositioner: Object.assign({}, positionerDefaults),
-    },
-  },
   savedEnvironment: {
     type: 'object',
     additionalProperties: environmentVariableSchema,
@@ -142,6 +117,11 @@ export const mirroredStateProperties = {
   scrollingLinked: {
     type: 'boolean',
     default: false,
+  },
+  sidePaneMode: {
+    type: 'string',
+    enum: ['_CLOSED', '_CONSOLE', 'DECLARED_VARIABLES', '_APP_INFO'],
+    default: '_CONSOLE',
   },
   runningCellID: {
     type: 'integer',

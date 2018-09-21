@@ -47,7 +47,7 @@ export default class ExternalResourceOutput extends React.Component {
           <div className="dependency-row">
             {statusIcon}
             <div style={{ display: 'flex', flexWrap: 'wrap', lineHeight: '1.5em' }}>
-              <div className="dependency-src"><a href={d.src} target="_blank" rel="noopener noreferrer">{source}</a></div>
+              <div className="dependency-src"><a href={d.src} target="_blank">{source}</a></div>
               { introducedVariables }
             </div>
 

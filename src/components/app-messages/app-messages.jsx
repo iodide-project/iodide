@@ -3,10 +3,12 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Button from '@material-ui/core/Button'
 import SnackBar from '@material-ui/core/Snackbar'
+import tasks from '../../actions/task-definitions'
 
 export class appMessagesUnconnected extends React.Component {
   static propTypes = {
     appMessages: PropTypes.array,
+    sidePaneMode: PropTypes.string,
   }
 
   constructor(props) {
@@ -35,9 +37,8 @@ export class appMessagesUnconnected extends React.Component {
   }
 
   handleMore = () => {
-    // FIXME: should show the AppInfo tab
-    // this.setState({ open: false })
-    // if (this.props.sidePaneMode !== '_APP_INFO') { tasks.toggleAppInfoPane.callback() }
+    this.setState({ open: false })
+    if (this.props.sidePaneMode !== '_APP_INFO') { tasks.toggleAppInfoPane.callback() }
   }
 
   render() {
@@ -60,6 +61,7 @@ export class appMessagesUnconnected extends React.Component {
 function mapStateToProps(state) {
   return {
     appMessages: state.appMessages,
+    sidePaneMode: state.sidePaneMode,
   }
 }
 

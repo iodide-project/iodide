@@ -21,7 +21,7 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
   beforeEach(() => {
     props = {
       userDefinedVarNames: ['iodide', 'a', 'b'],
-      paneVisible: true,
+      sidePaneMode: 'DECLARED_VARIABLES',
       environmentVariables: {
         x: [
           'object',
@@ -35,7 +35,7 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
     }
     nextProps = {
       userDefinedVarNames: ['iodide', 'a', 'b'],
-      paneVisible: true,
+      sidePaneMode: 'DECLARED_VARIABLES',
       environmentVariables: {
         x: [
           'object',
@@ -81,7 +81,7 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
       .toHaveLength(0)
   })
 
-  it('updates the component when props change and paneVisible===true', () => {
+  it('updates the component when props change and nextProps.sidePaneMode==="DECLARED_VARIABLES"', () => {
     nextProps.userDefinedVarNames = ['iodide', 'a', 'b', 'foo']
     expect(declaredVariablesPane().instance().shouldComponentUpdate(nextProps))
       .toBe(true)
@@ -94,28 +94,12 @@ describe('DeclaredVariablesPaneUnconnected React component', () => {
       .toBe(false)
   })
 
-  it('never updates the component when neither of props & nextProps have paneVisible==true', () => {
+  it('never updates the component when props & nextProps have sidePaneMode!=="DECLARED_VARIABLES"', () => {
     nextProps.userDefinedVarNames = ['iodide', 'a', 'b', 'foo']
-    props.paneVisible = false
-    nextProps.paneVisible = false
+    props.sidePaneMode = 'not_DECLARED_VARIABLES'
+    nextProps.sidePaneMode = 'not_DECLARED_VARIABLES'
     expect(declaredVariablesPane().instance().shouldComponentUpdate(nextProps))
       .toBe(false)
-  })
-
-  it('DO updates the component if just props has paneVisible==true', () => {
-    nextProps.userDefinedVarNames = ['iodide', 'a', 'b', 'foo']
-    props.paneVisible = true
-    nextProps.paneVisible = false
-    expect(declaredVariablesPane().instance().shouldComponentUpdate(nextProps))
-      .toBe(true)
-  })
-
-  it('DO updates the component if just nextProps has paneVisible==true', () => {
-    nextProps.userDefinedVarNames = ['iodide', 'a', 'b', 'foo']
-    props.paneVisible = false
-    nextProps.paneVisible = true
-    expect(declaredVariablesPane().instance().shouldComponentUpdate(nextProps))
-      .toBe(true)
   })
 })
 
@@ -127,7 +111,7 @@ describe('DeclaredVariablesPane mapStateToProps', () => {
     state = {
       savedEnvironment: {},
       userDefinedVarNames: ['iodide', 'a'],
-      panePositions: { WorkspacePositioner: { display: 'block' } },
+      sidePaneMode: 'DECLARED_VARIABLES',
     }
   })
 
@@ -136,13 +120,14 @@ describe('DeclaredVariablesPane mapStateToProps', () => {
       .toEqual({
         environmentVariables: {},
         userDefinedVarNames: ['iodide', 'a'],
-        paneVisible: true,
+        sidePaneMode: 'DECLARED_VARIABLES',
+        paneDisplay: 'block',
       })
   })
 
-  it('paneVisible===false if state.panePositions.WorkspacePositioner.display!=="block"', () => {
-    state.panePositions.WorkspacePositioner.display = 'NOT_block'
-    expect(mapStateToProps(state).paneVisible)
-      .toEqual(false)
+  it('display=="none" if sidePaneMode!=="DECLARED_VARIABLES', () => {
+    state.sidePaneMode = 'not_DECLARED_VARIABLES'
+    expect(mapStateToProps(state).paneDisplay)
+      .toEqual('none')
   })
 })

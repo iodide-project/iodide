@@ -193,6 +193,16 @@ describe('make sure action creators leave store in a consitent state', () => {
       .not.toThrow()
   })
 
+  it('changeSidePaneMode', () => {
+    expect(() => store.dispatch(actions.changeSidePaneMode('_CONSOLE')))
+      .not.toThrow()
+  })
+
+  it('changeEditorWidth', () => {
+    expect(() => store.dispatch(actions.changeEditorWidth(76)))
+      .not.toThrow()
+  })
+
   it('setCellSkipInRunAll', () => {
     expect(() => store.dispatch(actions.setCellSkipInRunAll(true)))
       .not.toThrow()

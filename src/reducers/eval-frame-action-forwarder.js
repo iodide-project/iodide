@@ -14,7 +14,6 @@ const evalFrameActionForwarder = (state, action) => {
     case 'TOGGLE_EDITOR_LINK':
     case 'UPDATE_APP_MESSAGES':
     case 'CLEAR_VARIABLES':
-    case 'UPDATE_PANE_POSITIONS':
     // special case: passes to eval frame without changing editor pane state,
     // but by sending them as redux actions, they are automatically queued
     // until the ports are open
