@@ -1,3 +1,5 @@
+import urllib.parse
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import (get_object_or_404,
                               render)
@@ -16,6 +18,13 @@ def _get_user_info_json(user):
     return {}
 
 
+def _get_iframe_src():
+    return urllib.parse.urljoin(
+        EVAL_FRAME_ORIGIN,
+        'iodide.eval-frame.{}.html'.format(APP_VERSION_STRING)
+    )
+
+
 def notebook_view(request, pk):
     notebook = get_object_or_404(Notebook, pk=pk)
     if 'revision' in request.GET:
@@ -29,10 +38,7 @@ def notebook_view(request, pk):
         'user_info': _get_user_info_json(request.user),
         'notebook_info': notebook_info,
         'jsmd': notebook_content.content,
-        'iframe_src': '{}/iodide.eval-frame.{}.html'.format(
-            EVAL_FRAME_ORIGIN,
-            APP_VERSION_STRING,
-            )
+        'iframe_src': _get_iframe_src()
     })
 
 
@@ -69,8 +75,5 @@ def new_notebook_view(request):
         'user_info': _get_user_info_json(request.user),
         'notebook_info': {'user_can_save': True},
         'jsmd': '',
-        'iframe_src': '{}/iodide.eval-frame.{}.html'.format(
-            EVAL_FRAME_ORIGIN,
-            APP_VERSION_STRING,
-            )
+        'iframe_src': _get_iframe_src(),
     })

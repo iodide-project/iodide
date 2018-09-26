@@ -34,7 +34,7 @@ SITE_URL = env("SERVER_URI", default="http://localhost:8000/")
 SITE_HOSTNAME = furl(SITE_URL).host
 ALLOWED_HOSTS = [SITE_HOSTNAME]
 APP_VERSION_STRING = env.str('APP_VERSION_STRING', 'dev')
-EVAL_FRAME_ORIGIN = env.str('EVAL_FRAME_ORIGIN', None)
+EVAL_FRAME_ORIGIN = env.str('EVAL_FRAME_ORIGIN', SITE_URL)
 
 # Social auth
 SOCIAL_AUTH_GITHUB_KEY = env.str('GITHUB_CLIENT_ID', None)
@@ -154,8 +154,8 @@ USE_TZ = True
 
 # Files in this directory will be served by WhiteNoise at the site root.
 WHITENOISE_ROOT = os.path.join(ROOT, 'build')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/static/'
+STATIC_ROOT = WHITENOISE_ROOT
+STATIC_URL = EVAL_FRAME_ORIGIN
 
 # Create hashed+gzipped versions of assets during collectstatic,
 # which will then be served by WhiteNoise with a suitable max-age.
