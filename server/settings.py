@@ -69,9 +69,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',
-    'server.github.middleware.GithubAuthMiddleware',
 ]
+
+if SOCIAL_AUTH_GITHUB_KEY:
+    MIDDLEWARE.append([
+        'social_django.middleware.SocialAuthExceptionMiddleware',
+        'server.github.middleware.GithubAuthMiddleware'
+    ])
+
 
 ROOT_URLCONF = 'server.urls'
 
@@ -117,7 +122,7 @@ DATABASES = {
 }
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.github.GithubOAuth2' if SOCIAL_AUTH_GITHUB_KEY else
     'django.contrib.auth.backends.ModelBackend',
 )
 
