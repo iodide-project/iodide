@@ -43,7 +43,7 @@ module.exports = (env) => {
 
   if (!env.includes('client-only')) {
     // default case: heroku or local python server using docker-compose
-    EDITOR_ORIGIN = process.env.SERVER_URI || `http://localhost:${DEV_SERVER_PORT}`
+    EDITOR_ORIGIN = process.env.SERVER_URI || `http://localhost:${DEV_SERVER_PORT}/`
   }
 
   EVAL_FRAME_ORIGIN = EVAL_FRAME_ORIGIN || EDITOR_ORIGIN
