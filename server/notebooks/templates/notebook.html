@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-{% block style %}
+{% block head %}
 <link rel="stylesheet" type="text/css" href="/iodide.dev.css">
+<base target="_blank" rel="noopener noreferrer">
 {% endblock %}
 {% block content %}
 <script id="jsmd" type="text/jsmd">
@@ -9,7 +10,7 @@
 <iframe
   id="eval-frame"
   src="{{ iframe_src|safe }}"
-  sandbox="allow-scripts allow-same-origin"
+  sandbox="allow-scripts allow-same-origin allow-popups"
   allowfullscreen="true"
   allowvr="yes"
 ></iframe>

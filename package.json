@@ -7,7 +7,7 @@
   "license": "MPL-2.0",
   "scripts": {
     "test": "jest --no-cache",
-    "start-and-serve": "webpack-dev-server --watch --mode=development --env=dev-client-only",
+    "start-and-serve": "webpack-dev-server --watch --mode=development --env=dev",
     "start": "webpack --watch --mode=development --env=dev",
     "build": "webpack",
     "build-production": "webpack --env=production",
@@ -101,9 +101,9 @@
     "redux-mock-store": "1.5.3",
     "style-loader": "0.23.0",
     "uglifyjs-webpack-plugin": "1.3.0",
-    "webpack": "4.19.1",
+    "webpack": "4.20.2",
     "webpack-cli": "3.1.1",
-    "webpack-dev-server": "3.1.8",
+    "webpack-dev-server": "3.1.9",
     "webpack-merge": "4.1.4",
     "write-file-webpack-plugin": "4.4.0"
   }

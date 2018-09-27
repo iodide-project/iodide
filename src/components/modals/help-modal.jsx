@@ -70,7 +70,7 @@ export default class HelpModal extends React.Component {
           <Tabs value={value} onChange={this.handleChange}>
             <Tab label="Keyboard shortcuts" />
             <Tab label="More resources" />
-            <Tab label="About Iodide" href="#basic-tabs" />
+            <Tab label="About Iodide" />
           </Tabs>
         </AppBar>
         {value === 0 && <KeyboardShortcutList tasks={tasks} />}
