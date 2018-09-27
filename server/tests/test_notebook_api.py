@@ -3,6 +3,7 @@ from django.urls import reverse
 
 from server.notebooks.models import (Notebook,
                                      NotebookRevision)
+from helpers import get_rest_framework_time_string
 
 
 def test_notebook_list(client, two_test_notebooks):
@@ -27,7 +28,7 @@ def test_notebook_detail(client, test_notebook):
         "title": initial_revision.title,
         "latest_revision": {
             "content": initial_revision.content,
-            "created": initial_revision.created.isoformat()[:-6] + 'Z',
+            "created": get_rest_framework_time_string(initial_revision.created),
             "id": initial_revision.id,
             "title": initial_revision.title
         }
@@ -46,7 +47,7 @@ def test_notebook_detail(client, test_notebook):
         "title": "Second revision",
         "latest_revision": {
             "content": new_revision.content,
-            "created": new_revision.created.isoformat()[:-6] + 'Z',
+            "created": get_rest_framework_time_string(new_revision.created),
             "id": new_revision.id,
             "title": new_revision.title
         }

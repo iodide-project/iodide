@@ -1,6 +1,7 @@
 from django.urls import reverse
 
 from server.notebooks.models import NotebookRevision
+from helpers import get_rest_framework_time_string
 
 
 def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
@@ -21,7 +22,7 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
     resp = client.get(reverse('notebook-revisions-list', kwargs={'notebook_id': test_notebook.id}))
     assert resp.status_code == 200
     assert resp.json() == [{
-        'created': revision.created.isoformat()[:-6] + 'Z',
+        'created': get_rest_framework_time_string(revision.created),
         'id': revision.id,
         'title': revision.title
     } for revision in NotebookRevision.objects.filter(notebook=test_notebook)]
@@ -34,7 +35,7 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
     }))
     assert resp.json() == {
         'content': test_revision.content,
-        'created': test_revision.created.isoformat()[:-6] + 'Z',
+        'created': get_rest_framework_time_string(test_revision.created),
         'id': test_revision.id,
         'title': test_revision.title
     }
