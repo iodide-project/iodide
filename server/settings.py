@@ -42,6 +42,10 @@ SOCIAL_AUTH_GITHUB_SECRET = env.str('GITHUB_CLIENT_SECRET', None)
 SOCIAL_AUTH_GITHUB_SCOPE = ['gist']
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
+# Maximum file length for uploaded data / assets
+MAX_FILENAME_LENGTH = 120
+MAX_FILE_SIZE = 1024*1024*10  # 10 megabytes is the default
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -58,6 +62,7 @@ INSTALLED_APPS = [
     'social_django',
     'server.base',
     'server.notebooks',
+    'server.files',
 ]
 
 MIDDLEWARE = [
