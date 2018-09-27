@@ -12,7 +12,7 @@ import { addLanguageKeybinding } from '../keybindings'
 
 import { mirroredStateProperties, mirroredCellProperties } from '../state-schemas/mirrored-state-schema'
 
-import fetchWithCSRFToken from './../shared/fetch-with-csrf-token'
+import fetchWithCSRFToken from '../shared/fetch-with-csrf-token'
 
 import {
   alignCellTopTo,

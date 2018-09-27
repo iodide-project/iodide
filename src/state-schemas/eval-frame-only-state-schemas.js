@@ -1,9 +1,9 @@
 import {
   mirroredStateProperties,
   mirroredCellProperties,
-} from '../state-schemas/mirrored-state-schema'
+} from './mirrored-state-schema'
 
-import { newCellFromSchema } from '../state-schemas/state-prototype-from-schema'
+import { newCellFromSchema } from './state-prototype-from-schema'
 
 export const historySchema = {
   type: 'object',

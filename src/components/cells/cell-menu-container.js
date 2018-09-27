@@ -37,9 +37,10 @@ export class CellMenuContainerUnconnected extends React.Component {
 
   render() {
     const { anchorElement } = this.state
+    const { skipInRunAll, cellId, label } = this.props
     const skipInRunAllIndicator = (
-      this.props.skipInRunAll ?
-        (
+      skipInRunAll
+        ? (
           <Tooltip
             classes={{ tooltip: 'iodide-tooltip' }}
             placement="bottom"
@@ -49,8 +50,8 @@ export class CellMenuContainerUnconnected extends React.Component {
               <div className="warning-pill">skip</div>
             }
           </Tooltip>
-        ) :
-        ''
+        )
+        : ''
     )
 
     return (
@@ -63,7 +64,7 @@ export class CellMenuContainerUnconnected extends React.Component {
           <div>
             <Menu
               id="cell-menu"
-              anchorEl={this.state.anchorElement}
+              anchorEl={anchorElement}
               open={Boolean(anchorElement)}
               onClose={this.handleIconButtonClose}
               anchorReference="anchorEl"
@@ -72,7 +73,7 @@ export class CellMenuContainerUnconnected extends React.Component {
               anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             >
-              <CellMenu cellId={this.props.cellId} menuLabel={this.props.label} />
+              <CellMenu cellId={cellId} menuLabel={label} />
             </Menu>
             <div
               className="cell-type-label"
@@ -81,8 +82,7 @@ export class CellMenuContainerUnconnected extends React.Component {
               onClick={this.handleClick}
             >
               <ArrowDropDown style={{ fontSize: 20 }} />
-              {this.props.label}
-
+              {label}
             </div>
           </div>
         </Tooltip>

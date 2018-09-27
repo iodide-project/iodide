@@ -22,7 +22,7 @@ function getCellBelowSelectedId() {
   if (index === cells.length - 1) {
     // if there is no cell below, return null
     return null
-  } else if (index >= 0 && index < (cells.length - 1)) {
+  } if (index >= 0 && index < (cells.length - 1)) {
     return cells[index + 1].id
   }
   throw new Error('no cell currently selected')
@@ -34,7 +34,7 @@ function getCellAboveSelectedId() {
   if (index === 0) {
     // if there is no cell above, return null
     return null
-  } else if (index > 0 && index <= (cells.length - 1)) {
+  } if (index > 0 && index <= (cells.length - 1)) {
     return cells[index - 1].id
   }
   throw new Error('no cell currently selected')
@@ -58,17 +58,17 @@ function prettyDate(time) {
 
   return (
     (dayDiff === 0 && (
-      (diff < 10 && 'just now') ||
-      (diff < 30 && `${Math.floor(diff)} secs ago`) ||
-      (diff < 60 && '30 secs ago') ||
-      (diff < 120 && '1 min ago') ||
-      (diff < 3600 && `${Math.floor(diff / 60)} mins ago`) ||
-      (diff < 7200 && '1 hr ago') ||
-      (diff < 86400 && `${Math.floor(diff / 3600)} hr ago`))
-    ) ||
-    (dayDiff === 1 && 'Yesterday') ||
-    (dayDiff < 7 && `${dayDiff} days ago`) ||
-    (dayDiff < 31 && `${Math.ceil(dayDiff / 7)} weeks ago`)
+      (diff < 10 && 'just now')
+      || (diff < 30 && `${Math.floor(diff)} secs ago`)
+      || (diff < 60 && '30 secs ago')
+      || (diff < 120 && '1 min ago')
+      || (diff < 3600 && `${Math.floor(diff / 60)} mins ago`)
+      || (diff < 7200 && '1 hr ago')
+      || (diff < 86400 && `${Math.floor(diff / 3600)} hr ago`))
+    )
+    || (dayDiff === 1 && 'Yesterday')
+    || (dayDiff < 7 && `${dayDiff} days ago`)
+    || (dayDiff < 31 && `${Math.ceil(dayDiff / 7)} weeks ago`)
   )
 }
 
@@ -81,13 +81,13 @@ function formatDateString(d) {
 function getCompletions(token, context) {
   // this function is ported directly from the CodeMirror plugin.
   // Feel free to improve this, but don't judge me for what's here :)
-  const stringProps = ('charAt charCodeAt indexOf lastIndexOf substring substr slice trim trimLeft trimRight ' +
-  'toUpperCase toLowerCase split concat match replace search').split(' ');
-  const arrayProps = ('length concat join splice push pop shift unshift slice reverse sort indexOf ' +
- 'lastIndexOf every some filter forEach map reduce reduceRight ').split(' ');
+  const stringProps = ('charAt charCodeAt indexOf lastIndexOf substring substr slice trim trimLeft trimRight '
+  + 'toUpperCase toLowerCase split concat match replace search').split(' ');
+  const arrayProps = ('length concat join splice push pop shift unshift slice reverse sort indexOf '
+ + 'lastIndexOf every some filter forEach map reduce reduceRight ').split(' ');
   const funcProps = 'prototype apply call bind'.split(' ');
-  const javascriptKeywords = ('break case catch class const continue debugger default delete do else export extends false finally for function ' +
-  'if in import instanceof new null return super switch this throw true try typeof var void while with yield').split(' ')
+  const javascriptKeywords = ('break case catch class const continue debugger default delete do else export extends false finally for function '
+  + 'if in import instanceof new null return super switch this throw true try typeof var void while with yield').split(' ')
   const found = []
   const start = token.string
   const global = window
@@ -125,8 +125,8 @@ function getCompletions(token, context) {
     } else if (obj.type === 'atom') {
       base = 1;
     } else if (obj.type === 'function') {
-      if (global.jQuery != null && (obj.string === '$' || obj.string === 'jQuery') &&
-          (typeof global.jQuery === 'function')) { base = global.jQuery(); } else if (global._ != null && (obj.string === '_') && (typeof global._ === 'function')) { base = global._(); }
+      if (global.jQuery != null && (obj.string === '$' || obj.string === 'jQuery')
+          && (typeof global.jQuery === 'function')) { base = global.jQuery(); } else if (global._ != null && (obj.string === '_') && (typeof global._ === 'function')) { base = global._(); }
     }
     while (base != null && context.length) { base = base[context.pop().string]; }
     if (base != null) gatherCompletions(base);

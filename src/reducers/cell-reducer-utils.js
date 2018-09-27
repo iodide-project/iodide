@@ -44,7 +44,7 @@ function getCellBelowSelectedId(state) {
   if (index === cells.length - 1) {
     // if there is no cell below, return this cell's id
     return cells[index].id
-  } else if (index >= 0 && index < (cells.length - 1)) {
+  } if (index >= 0 && index < (cells.length - 1)) {
     return cells[index + 1].id
   }
   throw new Error('no cell currently selected')

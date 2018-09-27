@@ -86,10 +86,9 @@ const notebookReducer = (state = newNotebook(), action) => {
     // note: loading a NB should always assign to a copy of the latest global
     // and per-cell state for backwards compatibility
       nextState = action.newState
-      cells = nextState.cells.map((cell, i) =>
-        Object.assign(newCell(i, cell.cellType), cell))
-      const notebookId = (IODIDE_BUILD_TYPE && IODIDE_BUILD_TYPE === 'server') ?
-        parseInt(window.location.pathname.split('/').filter(s => s.length).pop(), 10) : undefined;
+      cells = nextState.cells.map((cell, i) => Object.assign(newCell(i, cell.cellType), cell))
+      const notebookId = (IODIDE_BUILD_TYPE && IODIDE_BUILD_TYPE === 'server')
+        ? parseInt(window.location.pathname.split('/').filter(s => s.length).pop(), 10) : undefined;
 
       return Object.assign(
         newNotebook(), nextState, { cells, notebookId },

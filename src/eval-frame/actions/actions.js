@@ -47,10 +47,10 @@ export function temporarilySaveRunningCellID(cellId) {
 
 
 export function appendToEvalHistory(cellId, content, value, historyOptions = {}) {
-  const historyId = historyOptions.historyId === undefined ?
-    historyIdGen.nextId() : historyOptions.historyId
-  const historyType = historyOptions.historyType === undefined ?
-    'CELL_EVAL_VALUE' : historyOptions.historyType
+  const historyId = historyOptions.historyId === undefined
+    ? historyIdGen.nextId() : historyOptions.historyId
+  const historyType = historyOptions.historyType === undefined
+    ? 'CELL_EVAL_VALUE' : historyOptions.historyType
 
   // returned obj must match history schema
   return {

@@ -7,7 +7,7 @@ import EditorLinkButton from '../controls/editor-link-button'
 export default class ReportPaneUnconnected extends React.Component {
   render() {
     return (
-      <div className="pane-content" >
+      <div className="pane-content">
         <div
           className="display-none-in-report"
           style={{

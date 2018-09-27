@@ -11,7 +11,7 @@ export class ConsoleInputUnconnected extends React.Component {
   }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.textAreaRef = React.createRef()
     this.containerRef = React.createRef()
     this.handleTextInput = this.handleTextInput.bind(this)
@@ -34,24 +34,27 @@ export class ConsoleInputUnconnected extends React.Component {
   handleTextInput() {
     const textArea = this.textAreaRef.current
     this.resizeToFitText()
-    this.props.updateConsoleText(textArea.value)
+    const { updateConsole } = this.props
+    updateConsole(textArea.value)
   }
 
   handleKeyDown(event) {
+    const { consoleHistoryStepBack: historyStep } = this.props
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       const textArea = this.textAreaRef.current
       const currentLine = textArea.value.substr(0, textArea.selectionStart).split('\n').length
       const totalLines = textArea.value.split('\n').length
       if (event.key === 'ArrowUp' && currentLine === 1) {
-        this.props.consoleHistoryStepBack(1)
+        historyStep(1)
       }
       if (event.key === 'ArrowDown' && currentLine === totalLines) {
-        this.props.consoleHistoryStepBack(-1)
+        historyStep(-1)
       }
     }
   }
 
   render() {
+    const { consoleText } = this.props
     return (
       <div
         ref={this.containerRef}
@@ -79,7 +82,7 @@ export class ConsoleInputUnconnected extends React.Component {
               boxSizing: 'border-box',
               outline: 'none',
             }}
-            value={this.props.consoleText}
+            value={consoleText}
           />
         </div>
       </div>

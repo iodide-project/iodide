@@ -201,9 +201,9 @@ const cellReducer = (state = newNotebook(), action) => {
 
     case 'UPDATE_CELL_PROPERTIES': {
       if (
-        checkForHighlightedCells(state) &&
-        Object.keys(action.updatedProperties).length === 1 &&
-        approvedMultipleChanges.indexOf(Object.keys(action.updatedProperties)[0] > -1)
+        checkForHighlightedCells(state)
+        && Object.keys(action.updatedProperties).length === 1
+        && approvedMultipleChanges.indexOf(Object.keys(action.updatedProperties)[0] > -1)
       ) {
         return newStateWithPropsAssignedForHighlightedCells(state, action.updatedProperties)
       }

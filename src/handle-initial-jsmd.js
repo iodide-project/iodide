@@ -11,9 +11,9 @@ export default async function handleInitialJsmd(store) {
   } else {
     // if there is no query string, attempt to parse jsmd from html
     const jsmdElt = document.getElementById('jsmd')
-    if (jsmdElt &&
-        jsmdElt.innerHTML &&
-        jsmdElt.innerHTML.trim() !== '') {
+    if (jsmdElt
+        && jsmdElt.innerHTML
+        && jsmdElt.innerHTML.trim() !== '') {
       state = stateFromJsmd(jsmdElt.innerHTML)
     }
   }

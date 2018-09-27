@@ -22,7 +22,7 @@ function getCellBelowSelectedId() {
   if (index === cells.length - 1) {
     // if there is no cell below, return null
     return null
-  } else if (index >= 0 && index < (cells.length - 1)) {
+  } if (index >= 0 && index < (cells.length - 1)) {
     return cells[index + 1].id
   }
   throw new Error('no cell currently selected')
@@ -34,7 +34,7 @@ function getCellAboveSelectedId() {
   if (index === 0) {
     // if there is no cell above, return null
     return null
-  } else if (index > 0 && index <= (cells.length - 1)) {
+  } if (index > 0 && index <= (cells.length - 1)) {
     return cells[index - 1].id
   }
   throw new Error('no cell currently selected')
@@ -58,15 +58,15 @@ function prettyDate(time) {
 
   return (
     (dayDiff === 0 && (
-      (diff < 60 && 'just now') ||
-      (diff < 120 && '1 minute ago') ||
-      (diff < 3600 && `${Math.floor(diff / 60)} minutes ago`) ||
-      (diff < 7200 && '1 hour ago') ||
-      (diff < 86400 && `${Math.floor(diff / 3600)} hours ago`))
-    ) ||
-    (dayDiff === 1 && 'Yesterday') ||
-    (dayDiff < 7 && `${dayDiff} days ago`) ||
-    (dayDiff < 31 && `${Math.ceil(dayDiff / 7)} weeks ago`)
+      (diff < 60 && 'just now')
+      || (diff < 120 && '1 minute ago')
+      || (diff < 3600 && `${Math.floor(diff / 60)} minutes ago`)
+      || (diff < 7200 && '1 hour ago')
+      || (diff < 86400 && `${Math.floor(diff / 3600)} hours ago`))
+    )
+    || (dayDiff === 1 && 'Yesterday')
+    || (dayDiff < 7 && `${dayDiff} days ago`)
+    || (dayDiff < 31 && `${Math.ceil(dayDiff / 7)} weeks ago`)
   )
 }
 

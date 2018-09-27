@@ -8,14 +8,15 @@ export default class KeyboardShortcutRep extends React.Component {
   }
 
   render() {
+    const { task: { displayKeybinding, title } } = this.props
     return (
       <tr>
         <td className="key-combo-column">
           <pre className="key-combo-pill">
-            {this.props.task.displayKeybinding}
+            {displayKeybinding}
           </pre>
         </td>
-        <td>{this.props.task.title}</td>
+        <td>{title}</td>
       </tr>
     )
   }

@@ -12,35 +12,34 @@ export class SchemaValidationError extends Error {
   }
 }
 
-const createValidatedReducer =
-  (reducer, schema, options) => {
-    const ajv = new Ajv(options)
-    const validate = ajv.compile(schema)
+const createValidatedReducer = (reducer, schema, options) => {
+  const ajv = new Ajv(options)
+  const validate = ajv.compile(schema)
 
-    const validatedReducer = (state, action) => {
-      const futureState = reducer(state, action)
+  const validatedReducer = (state, action) => {
+    const futureState = reducer(state, action)
 
-      if (!validate(futureState)) {
-        const badValues = {}
-        validate.errors.forEach((error) => {
-          if (error.dataPath !== undefined) {
-            const dataPath = error.dataPath[0] === '.' ?
-              error.dataPath.slice(1)
-              : error.dataPath
-            badValues[dataPath] = _.get(futureState, dataPath)
-          }
-        })
-
-        throw new SchemaValidationError(`${
-          JSON.stringify(validate.errors, null, ' ')
+    if (!validate(futureState)) {
+      const badValues = {}
+      validate.errors.forEach((error) => {
+        if (error.dataPath !== undefined) {
+          const dataPath = error.dataPath[0] === '.'
+            ? error.dataPath.slice(1)
+            : error.dataPath
+          badValues[dataPath] = _.get(futureState, dataPath)
         }
+      })
+
+      throw new SchemaValidationError(`${
+        JSON.stringify(validate.errors, null, ' ')
+      }
 bad values:
 ${JSON.stringify(badValues, null, ' ')}`)
-      }
-
-      return futureState
     }
-    return validatedReducer
+
+    return futureState
   }
+  return validatedReducer
+}
 
 export default createValidatedReducer

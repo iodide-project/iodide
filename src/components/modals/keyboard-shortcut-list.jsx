@@ -12,11 +12,11 @@ export default class KeyboardShortcutList extends React.Component {
   render() {
     const globalKeys = []
     const commandModeKeys = []
-    // console.log('tasks', this.props.tasks)
-    Object.keys(this.props.tasks)
-      .filter(k => this.props.tasks[k].displayKeybinding)
+    const { tasks } = this.props
+    Object.keys(tasks)
+      .filter(k => tasks[k].displayKeybinding)
       .forEach((k) => {
-        const task = this.props.tasks[k]
+        const task = tasks[k]
         if (task.commandModeOnlyKey === true) {
           commandModeKeys.push(<KeyboardShortcutRep key={k} task={task} />)
         } else {
@@ -28,7 +28,10 @@ export default class KeyboardShortcutList extends React.Component {
       <div className="help-modal-contents">
         <h2>Global keys</h2>
         <table className="keyboard-shortcuts-global"><tbody>{globalKeys}</tbody></table>
-        <h2>Command mode keys (press <pre className="key-combo-pill">Esc</pre> to enter command mode)
+        <h2>
+          {'Command mode keys (press '}
+          <pre className="key-combo-pill">Esc</pre>
+          {' to enter command mode)'}
         </h2>
         <table className="keyboard-shortcuts-command-mode"><tbody>{commandModeKeys}</tbody></table>
       </div>

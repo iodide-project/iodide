@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 
 import NotebookMenuSubsection from '../notebook-menu-subsection'
-import NotebookMenuItem from '..//notebook-menu-item'
+import NotebookMenuItem from '../notebook-menu-item'
 import UserTask from '../../../actions/user-task'
 
 describe('barebones NotebookMenuSubsection', () => {
@@ -28,7 +28,7 @@ describe('A nested NotebookMenuSubsection', () => {
       <NotebookMenuItem task={new UserTask({
         title: 'ok',
         callback: () => { console.log('wow!'); /* innerSentinel = true }, */ },
-})}
+      })}
       />
     </NotebookMenuSubsection>
   ))

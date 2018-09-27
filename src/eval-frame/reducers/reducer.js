@@ -10,11 +10,10 @@ so we can more manageably test them.
 */
 
 function reduceReducers(...reducers) {
-  return (previous, current) =>
-    reducers.reduce(
-      (p, r) => r(p, current),
-      previous,
-    )
+  return (previous, current) => reducers.reduce(
+    (p, r) => r(p, current),
+    previous,
+  )
 }
 
 export default reduceReducers(notebookReducer, cellReducer)
