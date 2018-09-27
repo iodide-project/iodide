@@ -11,8 +11,6 @@
     "start": "webpack --watch --mode=development --env=dev",
     "build": "webpack",
     "build-production": "webpack --env=production",
-    "build-dev-client-only": "webpack --env=dev-client-only",
-    "build-prod-client-only": "webpack --env=prod-client-only",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix"
   },
   "jest": {
