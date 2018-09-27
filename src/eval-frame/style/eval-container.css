@@ -71,6 +71,11 @@ overflow-x: auto;
     color: rgb(28, 0, 207);
 }
 
+.array-rep ul {
+    margin: 0;
+    padding-left: 10px;
+}
+
 .date-rep-small {
     word-break: normal;
 }

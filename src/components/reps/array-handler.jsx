@@ -13,12 +13,12 @@ const MAX_ELTS = 200
 const HALF_MAX_ELTS = Math.round(MAX_ELTS / 2)
 
 export default {
-  shouldHandle: (value, inContainer) => !inContainer && (
+  shouldHandle: value => (
     Array.isArray(value) ||
     isTypedArray(value)
   ),
 
-  render: (value) => {
+  render: (value, inContainer) => {
     const arrayType = isTypedArray(value) ? typedArrayType(value) : 'array'
     const dataSetInfo = `${value.length} element ${arrayType}`
     const len = value.length
@@ -53,12 +53,26 @@ export default {
         <span key="array_elt_empty" title="empty array" />
       )
     }
+
+    if (inContainer) {
+      return (
+        <div className="array-rep">
+          [
+          <ul>
+            {arrayElements}
+          </ul>
+          ]
+        </div>
+      )
+    }
     return (
       <div className="array-rep">
-        <div className="data-set-info">{dataSetInfo}</div>
-        <div>
-            [{arrayElements}]
-        </div>
+        <div id="data-set-info">{dataSetInfo}</div>
+        [
+        <ul>
+          {arrayElements}
+        </ul>
+        ]
       </div>
     )
   },
