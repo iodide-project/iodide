@@ -7,8 +7,8 @@
   "license": "MPL-2.0",
   "scripts": {
     "test": "jest --no-cache",
-    "start-and-serve": "webpack-dev-server --watch --env=dev-client-only",
-    "start": "webpack --watch --env=dev",
+    "start-and-serve": "webpack-dev-server --watch --mode=development --env=dev-client-only",
+    "start": "webpack --watch --mode=development --env=dev",
     "build": "webpack",
     "build-production": "webpack --env=production",
     "build-dev-client-only": "webpack --env=dev-client-only",
