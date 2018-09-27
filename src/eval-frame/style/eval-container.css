@@ -62,6 +62,19 @@ overflow-x: auto;
     content: '"';
     color: #555;
 }
+.string-rep-truncated {
+    max-width: 60px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: "…";
+    display: inline-block;
+    vertical-align: bottom;
+}
+.string-rep-expanded {
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: bottom;
+}
 
 .string-rep-ellipsis {
     color: #555;
