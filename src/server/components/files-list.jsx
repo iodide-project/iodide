@@ -1,6 +1,11 @@
 import React from 'react'
 import styled from 'react-emotion'
 import FileIcon from '@material-ui/icons/Note'
+import MoreHoriz from '@material-ui/icons/MoreHoriz'
+
+import FileActionsMenu from './file-actions-menu'
+import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
+
 
 const bytesToHumanReadable = (bytes) => {
   const KB = 1024
@@ -51,8 +56,20 @@ vertical-align: middle;
 `
 
 export default class FilesList extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { files: this.props.files }
+    this.onDelete = this.onDelete.bind(this)
+  }
+
+  onDelete(fileID) {
+    const files = this.state.files.filter(r => r.id !== fileID);
+    this.setState({ files });
+  }
+
   render() {
-    const { files } = this.props
+    const { isUserAccount, notebookID } = this.props
+    const { files } = this.state
     return (
       <React.Fragment>
         <FileTable>
@@ -69,6 +86,21 @@ export default class FilesList extends React.Component {
                     <FileSizeContainer>
                       {bytesToHumanReadable(file.size)}
                     </FileSizeContainer>
+                    {
+                      isUserAccount ?
+                        <td>
+                          <ActionsContainer>
+                            <FileActionsMenu
+                              triggerElement={<MoreHoriz className={BodyIconStyle} />}
+                              fileID={file.id}
+                              notebookID={notebookID}
+                              filename={file.filename}
+                              onDelete={this.onDelete}
+                            />
+                          </ActionsContainer>
+                        </td> :
+                      undefined
+                    }
                   </FileElement>
                 ))
             }

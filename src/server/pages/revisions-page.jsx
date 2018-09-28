@@ -131,7 +131,11 @@ export default class RevisionsPage extends React.Component {
           <h3>Files</h3>
           {
             (this.props.files && this.props.files.length) ?
-              <FilesList notebookID={this.props.ownerInfo.notebookId} files={this.props.files} /> :
+              <FilesList
+                notebookID={this.props.ownerInfo.notebookId}
+                isUserAccount={isCurrentUsersPage}
+                files={this.props.files}
+              /> :
               <SmallAttentionBlock>
               No Files
               </SmallAttentionBlock>
