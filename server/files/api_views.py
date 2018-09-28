@@ -14,8 +14,6 @@ class FileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = FilesSerializer
 
-    # modifying a notebook doesn't make sense once created (if you want to
-    # change the title, add a revision doing just that)
     http_method_names = ['post', 'put', 'delete']
 
     def perform_destroy(self, instance):
@@ -26,7 +24,6 @@ class FileViewSet(viewsets.ModelViewSet):
     def create(self, request):
         (metadata, file) = (json.loads(self.request.data['metadata']),
                             self.request.data['file'])
-        print(metadata, file)
         f = File.objects.create(
             notebook_id=metadata['notebook_id'],
             filename=metadata['filename'],

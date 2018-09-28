@@ -130,12 +130,13 @@ export default class RevisionsPage extends React.Component {
           }
           <h3>Files</h3>
           {
-            (this.props.files && this.props.files.length) ? <FilesList files={this.props.files} /> :
-            <SmallAttentionBlock>
+            (this.props.files && this.props.files.length) ?
+              <FilesList notebookID={this.props.ownerInfo.notebookId} files={this.props.files} /> :
+              <SmallAttentionBlock>
               No Files
-            </SmallAttentionBlock>
+              </SmallAttentionBlock>
           }
-          <h3>Revisions</h3>
+          <h3>Notebook Revisions</h3>
           <Table>
             <tbody>
               <tr>

@@ -46,6 +46,8 @@ SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 MAX_FILENAME_LENGTH = 120
 MAX_FILE_SIZE = 1024*1024*10  # 10 megabytes is the default
 
+APPEND_SLASH = False
+
 # Application definition
 
 INSTALLED_APPS = [
