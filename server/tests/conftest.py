@@ -5,6 +5,7 @@ import pytest
 from rest_framework.test import APIClient
 
 from server.base.models import User
+from server.files.models import File
 from server.notebooks.models import (Notebook,
                                      NotebookRevision)
 
@@ -42,6 +43,13 @@ def test_notebook(fake_user):
                                     title="First revision",
                                     content="*fake notebook content*")
     return notebook
+
+
+@pytest.fixture
+def test_file(test_notebook):
+    return File.objects.create(notebook=test_notebook,
+                               filename='test.csv',
+                               content=b'a,b\n12,34\n56,78')
 
 
 @pytest.fixture

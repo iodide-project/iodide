@@ -9,7 +9,9 @@ admin.autodiscover()
 urlpatterns = [
     # notebook stuff
     url(r'^api/v1/', include('server.notebooks.api_urls')),
+    url(r'^api/v1/', include('server.files.api_urls')),
     url(r'^notebooks/', include('server.notebooks.urls')),
+    url(r'^notebooks/', include('server.files.urls')),
     url(r'^new/?', server.notebooks.views.new_notebook_view,
         name='new-notebook'),
 
