@@ -7,7 +7,7 @@ import PageBody from '../components/page-body';
 import Header from '../components/header';
 import Table from '../components/table';
 import { MediumUserName } from '../components/user-name';
-import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token';
+import { fetchWithCSRFTokenAndJSONContent } from '../../shared/fetch-with-csrf-token';
 import NotebookActionsMenu from '../components/notebook-actions-menu';
 import RevisionActionsMenu from '../components/revision-actions-menu';
 import FilesList from '../components/files-list'
@@ -75,7 +75,7 @@ export default class RevisionsPage extends React.Component {
   onDeleteRevision(revisionID) {
     if (this.state.revisions.length === 1) {
       // If we just deleted the last revision, let's delete the notebook.
-      fetchWithCSRFToken(`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`, {
+      fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`, {
         method: 'DELETE',
       }).then(this.onDeleteNotebook);
     } else {

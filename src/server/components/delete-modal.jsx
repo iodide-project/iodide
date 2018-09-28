@@ -4,7 +4,7 @@ import ModalTitle from './modal-title'
 import ModalContent from './modal-content'
 import ModalCall from './modal-call'
 import { TextButton } from './buttons'
-import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token'
+import { fetchWithCSRFTokenAndJSONContent } from '../../shared/fetch-with-csrf-token'
 
 
 export default class DeleteModal extends React.Component {
@@ -14,7 +14,7 @@ export default class DeleteModal extends React.Component {
   }
 
   deleteObject() {
-    fetchWithCSRFToken(this.props.url, { method: 'DELETE' })
+    fetchWithCSRFTokenAndJSONContent(this.props.url, { method: 'DELETE' })
       .then(() => {
         this.props.onClose();
         this.props.onDelete(this.props.elementID);

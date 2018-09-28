@@ -12,6 +12,7 @@ export function getCookie(name) {
   return decodeURIComponent(token[0].split('=')[1])
 }
 
+// for POST of files, primarily
 export default function fetchWithCSRFToken(url, otherParts, headers = {}) {
   const csrfToken = getCookie('csrftoken')
   const defaultHeaders = {
@@ -19,6 +20,12 @@ export default function fetchWithCSRFToken(url, otherParts, headers = {}) {
     'X-CSRFToken': csrfToken,
   };
   const combinedHeaders = Object.assign({}, defaultHeaders, headers)
-  console.warn(combinedHeaders)
   return fetch(url, Object.assign({}, otherParts, { headers: combinedHeaders }))
+}
+
+// for POST, DELETE of notebooks and revisions,
+// we need to assign a Content-Type for sending the CSRFToken for deleting.
+export function fetchWithCSRFTokenAndJSONContent(url, otherParts, headers = {}) {
+  const combinedHeaders = Object.assign({}, headers, { 'Content-Type': 'application/json' })
+  return fetchWithCSRFToken(url, otherParts, combinedHeaders)
 }

@@ -12,7 +12,7 @@ import { addLanguageKeybinding } from '../keybindings'
 
 import { mirroredStateProperties, mirroredCellProperties } from '../state-schemas/mirrored-state-schema'
 
-import fetchWithCSRFToken from './../shared/fetch-with-csrf-token'
+import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
 
 import {
   alignCellTopTo,
@@ -295,7 +295,7 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
       state,
       { forkedFrom: options.forkedFrom },
     )
-    fetchWithCSRFToken('/api/v1/notebooks/', postRequestOptions)
+    fetchWithCSRFTokenAndJSONContent('/api/v1/notebooks/', postRequestOptions)
       .then(response => response.json())
       .then((json) => {
         const message = 'Notebook saved to server'
@@ -319,7 +319,7 @@ export function saveNotebookToServer() {
     if (notebookInServer) {
       const postRequestOptions = getNotebookSaveRequestOptions(state)
       // Update Exisiting Notebook
-      fetchWithCSRFToken(`/api/v1/notebooks/${state.notebookId}/revisions/`, postRequestOptions)
+      fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${state.notebookId}/revisions/`, postRequestOptions)
         .then(response => response.json())
         .then(() => {
           const message = 'Updated Notebook'
