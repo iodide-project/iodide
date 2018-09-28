@@ -10,6 +10,9 @@ import { MediumUserName } from '../components/user-name';
 import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token';
 import NotebookActionsMenu from '../components/notebook-actions-menu';
 import RevisionActionsMenu from '../components/revision-actions-menu';
+import FilesList from '../components/files-list'
+import SmallAttentionBlock from '../components/small-attention-block'
+
 import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
 import { formatServerDate } from '../../shared/date-formatters'
 
@@ -124,6 +127,13 @@ export default class RevisionsPage extends React.Component {
                 onDelete={this.onDeleteNotebook}
               />
             </ActionsContainer>
+          }
+          <h3>Files</h3>
+          {
+            (this.props.files && this.props.files.length) ? <FilesList files={this.props.files} /> :
+            <SmallAttentionBlock>
+              No Files
+            </SmallAttentionBlock>
           }
           <h3>Revisions</h3>
           <Table>

@@ -12,11 +12,13 @@ export function getCookie(name) {
   return decodeURIComponent(token[0].split('=')[1])
 }
 
-export default function fetchWithCSRFToken(url, otherParts) {
+export default function fetchWithCSRFToken(url, otherParts, headers = {}) {
   const csrfToken = getCookie('csrftoken')
-  const headers = {
-    'Content-Type': 'application/json',
+  const defaultHeaders = {
+    'Content-Type': 'application/json', // THIS NEEDS TO BE REPLACED NOW!
     'X-CSRFToken': csrfToken,
   };
-  return fetch(url, Object.assign({}, otherParts, { headers }))
+  const combinedHeaders = Object.assign({}, defaultHeaders, headers)
+  console.warn(combinedHeaders)
+  return fetch(url, Object.assign({}, otherParts, { headers: combinedHeaders }))
 }

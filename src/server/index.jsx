@@ -15,7 +15,16 @@ const routes = [
   { name: 'index', path: '', action: () => <HomePage userInfo={pageData.userInfo} notebookList={pageData.notebookList} /> },
   { name: 'login', path: '/login', action: () => <LoginPage /> },
   { name: 'user', path: '/:username', action: () => <UserPage userInfo={pageData.userInfo} thisUser={pageData.thisUser} notebookList={pageData.notebookList} /> },
-  { name: 'revisions', path: '/notebooks/:notebookId/revisions/', action: () => <RevisionsPage userInfo={pageData.userInfo} ownerInfo={pageData.ownerInfo} revisions={pageData.revisions} /> },
+  {
+    name: 'revisions',
+    path: '/notebooks/:notebookId/revisions/',
+    action: () => (<RevisionsPage
+      userInfo={pageData.userInfo}
+      ownerInfo={pageData.ownerInfo}
+      revisions={pageData.revisions}
+      files={pageData.files}
+    />),
+  },
 ];
 
 const router = new UniversalRouter(routes)

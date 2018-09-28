@@ -26,6 +26,7 @@ class FileViewSet(viewsets.ModelViewSet):
     def create(self, request):
         (metadata, file) = (json.loads(self.request.data['metadata']),
                             self.request.data['file'])
+        print(metadata, file)
         f = File.objects.create(
             notebook_id=metadata['notebook_id'],
             filename=metadata['filename'],
