@@ -6,7 +6,7 @@ function clearUserDefinedVars(userDefinedVarNames) {
     try {
       delete window[varName]
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   })
 }
@@ -32,9 +32,13 @@ initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 initialVariables.add('CodeMirror')
 
+function getUserDefinedVarsFromWindow() {
+  return Object.keys(window)
+    .filter(g => !initialVariables.has(g))
+}
+
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState
-
   switch (action.type) {
     case 'RESET_NOTEBOOK':
       clearUserDefinedVars(state.userDefinedVarNames)
@@ -43,13 +47,12 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD': {
       const cells = action.stateUpdatesFromEditor.cells
         .map(c => Object.assign(newCell(), c))
-      console.log('cells cells cells', cells)
       const newState = Object.assign(
         newNotebook(),
         action.stateUpdatesFromEditor,
         { cells },
+        { userDefinedVarNames: getUserDefinedVarsFromWindow() },
       )
-      console.log('newState newState newState', newState)
       return newState
     }
 
@@ -138,9 +141,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_USER_VARIABLES': {
-      const userDefinedVarNames = Object.keys(window)
-        .filter(g => !initialVariables.has(g))
-      return Object.assign({}, state, { userDefinedVarNames })
+      return Object.assign({}, state, { userDefinedVarNames: getUserDefinedVarsFromWindow() })
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
