@@ -185,8 +185,7 @@ function mapStateToProps(state, ownProps) {
       && state.languages[cell.language]
       && state.languages[cell.language].codeMirrorModeLoaded)
     ? state.languages[cell.language].codeMirrorMode
-    : ''
-
+    : (cell.cellType || '')
   const editorOptions = {
     mode: codeMirrorMode,
     lineWrapping: false,
