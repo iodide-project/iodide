@@ -11,6 +11,7 @@ import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token';
 import NotebookActionsMenu from '../components/notebook-actions-menu';
 import RevisionActionsMenu from '../components/revision-actions-menu';
 import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
+import { formatServerDate } from '../../shared/date-formatters'
 
 const RevisionsPageHeader = styled('h2')`
 span {
@@ -97,7 +98,7 @@ export default class RevisionsPage extends React.Component {
               {
                         this.state.revisions.map((r, i) => (
                           <tr key={r.id}>
-                            <td><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{r.date.slice(0, 19)}</a></td>
+                            <td><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{formatServerDate(r.date)}</a></td>
                             <td>
                               <a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>
                                 { (i > 0 && this.state.revisions[i].title === this.state.revisions[i - 1].title) ? '-' : r.title }
