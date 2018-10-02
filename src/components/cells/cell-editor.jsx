@@ -181,11 +181,18 @@ function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
 
-  const codeMirrorMode = (cell.cellType === 'code'
+  let codeMirrorMode
+  if (cell.cellType === 'code'
       && state.languages[cell.language]
-      && state.languages[cell.language].codeMirrorModeLoaded)
-    ? state.languages[cell.language].codeMirrorMode
-    : ''
+      && state.languages[cell.language].codeMirrorModeLoaded) {
+    codeMirrorMode = state.languages[cell.language].codeMirrorMode // eslint-disable-line
+  } else if (cell.cellType !== 'code') {
+    // e.g. md / css cell
+    codeMirrorMode = cell.cellType
+  } else {
+    // unknown cell type
+    codeMirrorMode = ''
+  }
 
   const editorOptions = {
     mode: codeMirrorMode,
