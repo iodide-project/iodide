@@ -27,16 +27,6 @@ function addAppMessageToState(state, appMessage) {
   return state
 }
 
-const initialVariables = new Set(Object.keys(window)) // gives all global variables
-initialVariables.add('__core-js_shared__')
-initialVariables.add('Mousetrap')
-initialVariables.add('CodeMirror')
-
-function getUserDefinedVarsFromWindow() {
-  return Object.keys(window)
-    .filter(g => !initialVariables.has(g))
-}
-
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState
   switch (action.type) {
@@ -51,7 +41,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         newNotebook(),
         action.stateUpdatesFromEditor,
         { cells },
-        { userDefinedVarNames: getUserDefinedVarsFromWindow() },
       )
       return newState
     }
@@ -141,7 +130,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_USER_VARIABLES': {
-      return Object.assign({}, state, { userDefinedVarNames: getUserDefinedVarsFromWindow() })
+      const { userDefinedVarNames } = action
+      return Object.assign({}, state, { userDefinedVarNames })
     }
 
     case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {

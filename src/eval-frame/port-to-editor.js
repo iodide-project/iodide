@@ -1,6 +1,6 @@
 /* global IODIDE_EDITOR_ORIGIN */
 import { store } from './store'
-import { evaluateCell } from './actions/actions'
+import { evaluateCell, updateUserVariables } from './actions/actions'
 import { getCompletions } from './tools/notebook-utils'
 
 const mc = new MessageChannel();
@@ -38,6 +38,12 @@ function receiveMessage(event) {
           // action to fire a thunk action rather than dispatching
           // directly to the eval frame store
           store.dispatch(evaluateCell(message.cellId))
+        } else if (message.type === 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD') {
+          // in this case, we need to update the declared variables
+          // pane to include variables that are in the environment, such as
+          // the iodide API.
+          store.dispatch(message)
+          store.dispatch(updateUserVariables())
         } else {
           store.dispatch(message)
         }

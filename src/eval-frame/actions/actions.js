@@ -21,6 +21,16 @@ MD.use(MarkdownItKatex).use(MarkdownItAnchor)
 
 const CodeMirror = require('codemirror') // eslint-disable-line
 
+const initialVariables = new Set(Object.keys(window)) // gives all global variables
+initialVariables.add('__core-js_shared__')
+initialVariables.add('Mousetrap')
+initialVariables.add('CodeMirror')
+
+function getUserDefinedVariablesFromWindow() {
+  return Object.keys(window)
+    .filter(g => !initialVariables.has(g))
+}
+
 function IdFactory() {
   this.state = 0
   this.nextId = () => {
@@ -44,7 +54,6 @@ export function temporarilySaveRunningCellID(cellId) {
     cellId,
   }
 }
-
 
 export function appendToEvalHistory(cellId, content, value, historyOptions = {}) {
   const historyId = historyOptions.historyId === undefined ?
@@ -101,6 +110,7 @@ export function incrementExecutionNumber() {
 export function updateUserVariables() {
   return {
     type: 'UPDATE_USER_VARIABLES',
+    userDefinedVarNames: getUserDefinedVariablesFromWindow(),
   }
 }
 
