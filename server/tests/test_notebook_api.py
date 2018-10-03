@@ -120,15 +120,18 @@ def notebook_fork_post_blob():
         'forked_from': 9
     }
 
+
 def test_fork_notebook_not_logged_in(client, notebook_fork_post_blob):
     resp = client.post(reverse('notebooks-list'), notebook_fork_post_blob)
     assert resp.status_code == 403
 
 
-def test_fork_notebook_logged_in(client, fake_user, fake_user2, test_notebook, notebook_fork_post_blob):
-    # log in
+def test_fork_notebook_logged_in(client,
+                                 fake_user,
+                                 fake_user2,
+                                 test_notebook,
+                                 notebook_fork_post_blob):
     client.force_authenticate(user=fake_user)
     resp = client.post(reverse('notebooks-list'), notebook_fork_post_blob)
     assert resp.status_code == 201
     assert resp.json()['forked_from'] == test_notebook.revisions.get().id
-    
