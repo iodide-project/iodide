@@ -31,11 +31,11 @@ class NotebookViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         with transaction.atomic():
-            print(self.request.data['forked_from'])
-            if 'forked_from' in self.request.data: 
+            if 'forked_from' in self.request.data:
                 nbr_id = self.request.data['forked_from']
                 forked_from = NotebookRevision.objects.get(id=nbr_id)
-            else: forked_from = None
+            else:
+                forked_from = None
             notebook = serializer.save(owner=self.request.user, forked_from=forked_from)
             NotebookRevision.objects.create(
                 notebook=notebook,

@@ -13,7 +13,12 @@ class Notebook(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=MAX_TITLE_LENGTH)
-    forked_from = models.ForeignKey('NotebookRevision', on_delete=models.SET_NULL, null=True, blank=True, related_name='fork')
+    forked_from = models.ForeignKey('NotebookRevision',
+                                    on_delete=models.SET_NULL,
+                                    null=True,
+                                    blank=True,
+                                    related_name='fork')
+
     def __str__(self):  # pragma: no cover
         return self.title
 
@@ -27,7 +32,8 @@ class NotebookRevision(models.Model):
     '''
     A revision of a specific notebook
     '''
-    notebook = models.ForeignKey(Notebook, on_delete=models.CASCADE,
+    notebook = models.ForeignKey(Notebook,
+                                 on_delete=models.CASCADE,
                                  related_name='revisions')
 
     title = models.CharField(max_length=Notebook.MAX_TITLE_LENGTH)

@@ -36,7 +36,7 @@ def notebook_view(request, pk):
         'notebook_id': notebook.id,
         'revision_id': notebook_content.id,
     }
-    if notebook.forked_from != None:
+    if notebook.forked_from is not None:
         notebook_info['forked_from'] = notebook.forked_from.id
     else:
         notebook_info['forked_from'] = False
@@ -59,12 +59,12 @@ def notebook_revisions(request, pk):
         'title': nb.title,
         'notebookId': nb.id,
     }
-    if (nb.forked_from != None):
+    if (nb.forked_from is not None):
         owner_info['forkedFromTitle'] = nb.forked_from.title
         owner_info['forkedFromRevisionID'] = nb.forked_from.id
         owner_info['forkedFromNotebookID'] = nb.forked_from.notebook_id
         owner_info['forkedFromUsername'] = nb.forked_from.notebook.owner.username
-    
+
     revisions = list(reversed([{
         'id': revision.id,
         'notebookId': revision.notebook_id,
