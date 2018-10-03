@@ -13,7 +13,8 @@ def test_notebook_list(client, two_test_notebooks):
         {
             "id": notebook.id,
             "owner": "testuser1",
-            "title": notebook.title
+            "title": notebook.title,
+            "forked_from": None
         } for notebook in Notebook.objects.all()
     ]
 
@@ -26,6 +27,7 @@ def test_notebook_detail(client, test_notebook):
         "id": test_notebook.id,
         "owner": "testuser1",
         "title": initial_revision.title,
+        "forked_from": None,
         "latest_revision": {
             "content": initial_revision.content,
             "created": get_rest_framework_time_string(initial_revision.created),
@@ -45,6 +47,7 @@ def test_notebook_detail(client, test_notebook):
         "id": test_notebook.id,
         "owner": "testuser1",
         "title": "Second revision",
+        "forked_from": None,
         "latest_revision": {
             "content": new_revision.content,
             "created": get_rest_framework_time_string(new_revision.created),
