@@ -320,7 +320,7 @@ function evaluateLanguagePluginCell(cell) {
         xhrObj.addEventListener('progress', (evt) => {
           value = `downloading plugin: ${evt.loaded} bytes loaded`
           if (evt.total > 0) {
-            value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
+            value += `out of ${evt.total} (${(evt.loaded / evt.total) * 100}%)`
           }
           evalStatus = 'ASYNC_PENDING'
           dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
