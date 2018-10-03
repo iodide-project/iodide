@@ -269,6 +269,13 @@ function getNotebookSaveRequestOptions(state) {
     title: state.title,
     content: exportJsmdToString(state),
   }
+  const revisionID = state.notebookInfo.revision_id
+  const userOwns = state.notebookInfo.user_can_save
+  const forkedFrom = revisionID || undefined
+  // only set forked_from if user doesn't own this notebook.
+  if (!userOwns) {
+    data.forked_from = forkedFrom
+  }
   const postRequestOptions = {
     body: JSON.stringify(data),
     method: 'POST',

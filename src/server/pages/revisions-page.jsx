@@ -30,6 +30,33 @@ a:hover {
 }
 `
 
+const ForkedFromLinkContainer = styled('div')`
+margin-bottom: 20px;
+font-style: italic;
+font-weight: 300;
+font-size:14px;
+
+a {
+  color: gray;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+`
+
+const ForkedFromLink = ({
+  revisionID, notebookID, forkOwner, forkTitle,
+}) => {
+  const revisionLink = `/notebooks/${notebookID}?revision=${revisionID}`
+  return (
+    <ForkedFromLinkContainer>
+      forked from <a href={`/${forkOwner}`}>{forkOwner}</a> / <a href={revisionLink}>{forkTitle}</a>
+    </ForkedFromLinkContainer>
+  )
+}
+
 export default class RevisionsPage extends React.Component {
   constructor(props) {
     super(props);
@@ -56,6 +83,7 @@ export default class RevisionsPage extends React.Component {
 
   render() {
     const isCurrentUsersPage = (this.props.ownerInfo.username === this.props.userInfo.name);
+    const forkedFrom = Boolean(this.props.ownerInfo.forkedFromRevisionID)
     return (
       <div>
         <Header userInfo={this.props.userInfo} />
@@ -65,6 +93,16 @@ export default class RevisionsPage extends React.Component {
               {this.props.ownerInfo.title}
             </a> <span> / revisions</span>
           </RevisionsPageHeader>
+          {
+            forkedFrom ?
+              <ForkedFromLink
+                revisionID={this.props.ownerInfo.forkedFromRevisionID}
+                notebookID={this.props.ownerInfo.forkedFromNotebookID}
+                forkOwner={this.props.ownerInfo.forkedFromUsername}
+                forkTitle={this.props.ownerInfo.forkedFromTitle}
+              /> :
+              undefined
+          }
           <MediumUserName
             username={this.props.ownerInfo.username}
             fullName={this.props.ownerInfo.full_name}

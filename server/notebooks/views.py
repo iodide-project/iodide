@@ -32,8 +32,14 @@ def notebook_view(request, pk):
     else:
         notebook_content = notebook.revisions.last()
     notebook_info = {
-        'user_can_save': notebook.owner_id == request.user.id
+        'user_can_save': notebook.owner_id == request.user.id,
+        'notebook_id': notebook.id,
+        'revision_id': notebook_content.id,
     }
+    if notebook.forked_from != None:
+        notebook_info['forked_from'] = notebook.forked_from.id
+    else:
+        notebook_info['forked_from'] = False
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
         'notebook_info': notebook_info,
@@ -51,8 +57,14 @@ def notebook_revisions(request, pk):
         'full_name': '{} {}'.format(owner.first_name, owner.last_name),
         'avatar': owner.avatar,
         'title': nb.title,
-        'notebookId': nb.id
+        'notebookId': nb.id,
     }
+    if (nb.forked_from != None):
+        owner_info['forkedFromTitle'] = nb.forked_from.title
+        owner_info['forkedFromRevisionID'] = nb.forked_from.id
+        owner_info['forkedFromNotebookID'] = nb.forked_from.notebook_id
+        owner_info['forkedFromUsername'] = nb.forked_from.notebook.owner.username
+    
     revisions = list(reversed([{
         'id': revision.id,
         'notebookId': revision.notebook_id,
