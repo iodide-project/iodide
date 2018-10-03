@@ -121,9 +121,26 @@ def notebook_fork_post_blob():
     }
 
 
+@pytest.fixture
+def incorrect_notebook_fork_post_blob():
+    # this blob should be sufficient to create a new notebook (assuming the user of
+    # the api is authorized to do so)
+    return {
+        'title': 'My cool notebook',
+        'content': 'Fake notebook content',
+        'forked_from': 1
+    }
+
+
 def test_fork_notebook_not_logged_in(client, notebook_fork_post_blob):
     resp = client.post(reverse('notebooks-list'), notebook_fork_post_blob)
     assert resp.status_code == 403
+
+
+def test_incorrect_fork_notebook(client, fake_user, incorrect_notebook_fork_post_blob):
+    client.force_authenticate(user=fake_user)
+    resp = client.post(reverse('notebooks-list'), incorrect_notebook_fork_post_blob)
+    assert resp.status_code == 400
 
 
 def test_fork_notebook_logged_in(client,
