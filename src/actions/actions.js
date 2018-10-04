@@ -264,19 +264,12 @@ export function logout() {
   }
 }
 
-function getNotebookSaveRequestOptions(state, { forkedFrom }) {
+function getNotebookSaveRequestOptions(state, options = undefined) {
   const data = {
     title: state.title,
     content: exportJsmdToString(state),
   }
-  if (forkedFrom !== undefined) data.forked_from = forkedFrom
-  console.warn(data)
-  // const revisionID = state.notebookInfo.revision_id
-  // const userOwns = state.notebookInfo.user_can_save
-  // // only set forked_from if user doesn't own this notebook.
-  // if (!userOwns) {
-  //   data.forked_from = revisionID
-  // }
+  if (options && options.forkedFrom !== undefined) data.forked_from = options.forkedFrom
   const postRequestOptions = {
     body: JSON.stringify(data),
     method: 'POST',
@@ -285,12 +278,13 @@ function getNotebookSaveRequestOptions(state, { forkedFrom }) {
   return postRequestOptions
 }
 
-export function createNewNotebookOnServer({ forkedFrom = undefined }) {
+export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
   return (dispatch, getState) => {
     const state = getState()
-
-    const postRequestOptions = getNotebookSaveRequestOptions(state, { forkedFrom })
-    // Create a New Notebook in Database
+    const postRequestOptions = getNotebookSaveRequestOptions(
+      state,
+      { forkedFrom: options.forkedFrom },
+    )
     fetchWithCSRFToken('/api/v1/notebooks/', postRequestOptions)
       .then(response => response.json())
       .then((json) => {

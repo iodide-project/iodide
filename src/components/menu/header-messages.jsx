@@ -9,11 +9,11 @@ export class HeaderMessagesUnconnected extends React.Component {
     message: PropTypes.oneOf(['NEED_TO_LOGIN', 'NEED_TO_MAKE_COPY']),
     login: PropTypes.func.isRequired,
     makeCopy: PropTypes.func.isRequired,
+    revisionId: PropTypes.number,
   }
 
   render() {
     let content;
-
     switch (this.props.message) {
       case 'NEED_TO_LOGIN':
         content = (
@@ -26,7 +26,10 @@ export class HeaderMessagesUnconnected extends React.Component {
         content = (
           <span>
             This notebook is owned by another user. {}
-            <a onClick={this.props.makeCopy}>Make a copy to your account</a>.
+            <a onClick={() =>
+              this.props.makeCopy(this.props.revisionId)}
+            >Make a copy to your account
+            </a>.
           </span>
         )
         break
@@ -49,7 +52,7 @@ export function mapStateToProps(state) {
     if (state.userData.name === undefined) {
       return { message: 'NEED_TO_LOGIN' }
     } else if (!state.notebookInfo.user_can_save) {
-      return { message: 'NEED_TO_MAKE_COPY' }
+      return { message: 'NEED_TO_MAKE_COPY', revisionId: state.notebookInfo.revision_id }
     }
   }
 
@@ -61,8 +64,8 @@ function mapDispatchToProps(dispatch) {
     login: () => {
       dispatch(login())
     },
-    makeCopy: () => {
-      dispatch(createNewNotebookOnServer())
+    makeCopy: (revisionId) => {
+      dispatch(createNewNotebookOnServer({ forkedFrom: revisionId }))
     },
   }
 }

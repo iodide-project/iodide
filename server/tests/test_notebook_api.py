@@ -152,3 +152,24 @@ def test_fork_notebook_logged_in(client,
     resp = client.post(reverse('notebooks-list'), notebook_fork_post_blob)
     assert resp.status_code == 201
     assert resp.json()['forked_from'] == test_notebook.revisions.get().id
+
+
+def test_fork_notebook_and_delete_original(client, fake_user,
+                                           fake_user2,
+                                           test_notebook,
+                                           notebook_fork_post_blob):
+    client.force_authenticate(user=fake_user)
+    revision = test_notebook.revisions.latest('created')
+    response = client.post(reverse('notebooks-list'), {
+        'title': 'test',
+        'content': 'some fantastic content',
+        'forked_from': revision.id
+    })
+    forked_notebook = Notebook.objects.get(id=response.json()['id'])
+    client.delete(reverse('notebooks-detail', kwargs={'pk': test_notebook.id}))
+    forked_response = client.get(reverse('notebooks-detail', kwargs={'pk': forked_notebook.id}))
+    forked_notebook_after_deletion = Notebook.objects.get(id=forked_response.json()['id'])
+    assert Notebook.objects.count() == 1
+    assert forked_notebook_after_deletion.forked_from is None
+    assert forked_notebook_after_deletion.title == 'test'
+    assert forked_response.status_code == 200
