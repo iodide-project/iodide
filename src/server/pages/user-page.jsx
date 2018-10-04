@@ -9,6 +9,7 @@ import AttentionBlock from '../components/attention-block'
 import NotebookActionsMenu from '../components/notebook-actions-menu'
 import NewNotebookButton from '../components/new-notebook-button'
 import { ActionsContainer, BodyIconStyle } from '../style/icon-styles'
+import { formatServerDate } from '../../shared/date-formatters'
 
 const UserInformationContainer = styled('div')`
 img {
@@ -62,7 +63,10 @@ class UserNotebookList extends React.Component {
             {this.state.notebookList.map(notebook => (
               <tr key={notebook.id}>
                 <td><a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a></td>
-                <td>{notebook.last_revision.slice(0, 19)}</td>
+                <td>{
+                  formatServerDate(notebook.last_revision)
+                  }
+                </td>
                 <td>
                   <ActionsContainer>
                     <NotebookActionsMenu
@@ -106,7 +110,6 @@ export const isLoggedIn = userInfo => 'name' in userInfo
 export default class UserPage extends React.Component {
   render() {
     const { thisUser, userInfo, notebookList } = this.props
-    console.log(thisUser.name, userInfo.name)
     return (
       <div>
         <Header userInfo={userInfo} />

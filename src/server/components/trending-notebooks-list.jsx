@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import Table from '../components/table'
 import { SmallUserName as UserName } from '../components/user-name'
 import NewNotebookButton from './new-notebook-button'
