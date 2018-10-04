@@ -3,7 +3,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import StarRate from '@material-ui/icons/StarRate'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import arrayHandler from './array-handler'
@@ -143,10 +142,13 @@ export class ValueRenderer extends React.Component {
 
     if (!this.props.inContainer) {
       let tooltip;
+      let buttonText;
       if (!this.state.useDefault) {
         tooltip = 'Switch to default representation';
+        buttonText = '{}';
       } else {
         tooltip = 'Switch to specialized representation';
+        buttonText = '★';
       }
       return (
         <div>
@@ -155,7 +157,7 @@ export class ValueRenderer extends React.Component {
               className="pane-button light-pane-button button-content-centered default-rep-button"
               onClick={this.toggleDefault}
             >
-              <StarRate style={{ fontSize: '12px' }} />
+              {buttonText}
             </button>
           </Tooltip>
           {value}
