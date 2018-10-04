@@ -32,7 +32,7 @@ export default {
       if (len > MAX_ELTS) {
         arrayElements.push((
           <span key="array_elts_omitted" className="elements-omitted-info-rep">
-            {` ... ${len - MAX_ELTS} elements omitted ...`}
+            {` … ${len - MAX_ELTS} elements omitted …`}
           </span>))
         arrayElements = arrayElements
           .concat(_.range(len - HALF_MAX_ELTS, len - 1)
