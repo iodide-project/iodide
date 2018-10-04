@@ -25,6 +25,7 @@ import EditorPaneContainer from './components/editor-pane-container'
 import { store } from './store'
 import handleInitialJsmd from './handle-initial-jsmd'
 import handleServerVariables from './handle-server-variables'
+import handleLanguageDefinitions from './handle-language-definitions'
 import { initializeDefaultKeybindings } from './keybindings'
 
 import { listenForEvalFramePortReady } from './port-to-eval-frame'
@@ -36,6 +37,7 @@ initializeDefaultKeybindings()
 
 window.addEventListener('message', listenForEvalFramePortReady, false)
 
+handleLanguageDefinitions(store)
 handleInitialJsmd(store)
 handleServerVariables(store)
 

@@ -18,6 +18,11 @@ export class CellMenuUnconnected extends React.Component {
   render() {
     return (
       <div className="cell-menu-items-container">
+        <NotebookMenuItem
+          key={tasks.changeToJavascriptCell.title}
+          task={tasks.changeToJavascriptCell}
+          disabled={this.props.menuLabel === 'js'}
+        />
         {this.props.userLanguages.map(language => (
           <NotebookMenuItem
             key={tasks[`changeTo${language}Cell`].title}
@@ -25,11 +30,6 @@ export class CellMenuUnconnected extends React.Component {
             disabled={this.props.menuLabel === language}
           />
         ))}
-        <NotebookMenuItem
-          key={tasks.changeToJavascriptCell.title}
-          task={tasks.changeToJavascriptCell}
-          disabled={this.props.menuLabel === 'js'}
-        />
         <NotebookMenuItem
           key={tasks.changeToMarkdownCell.title}
           task={tasks.changeToMarkdownCell}
@@ -91,7 +91,8 @@ export class CellMenuUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
-  const userLanguages = Object.keys(state.languages).filter(language => language !== 'js')
+  let userLanguages = Object.assign({}, state.languageDefinitions, state.loadedLanguages)
+  userLanguages = Object.keys(userLanguages).filter(language => language !== 'js')
   const { skipInRunAll } = getCellById(state.cells, cellId)
   return {
     skipInRunAll,

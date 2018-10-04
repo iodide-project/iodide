@@ -61,7 +61,7 @@ describe('cellMenu mapStateToProps', () => {
         id: 5,
         skipInRunAll: false,
       }],
-      languages: {
+      languageDefinitions: {
         js: {
           pluginType: 'language',
           languageId: 'js',
@@ -88,7 +88,7 @@ describe('cellMenu mapStateToProps', () => {
 
   it('should return the correct userLanguages for the cell', () => {
     const ownProps = { cellId: 5 }
-    state.languages = {
+    state.languageDefinitions = {
       js: {
         pluginType: 'language',
         languageId: 'js',
@@ -111,11 +111,22 @@ describe('cellMenu mapStateToProps', () => {
         keybinding: 'p',
         url: 'https://iodide.io/pyodide-demo/pyodide.js',
       },
+      ocaml: {
+        pluginType: 'language',
+        languageId: 'ocaml',
+        displayName: 'OCaml',
+        codeMirrorMode: 'ocaml',
+        codeMirrorModeLoaded: true,
+        module: 'domical',
+        evaluator: 'runOcaml',
+        keybinding: 'o',
+        url: 'https://nowhere.com',
+      },
     }
     expect(mapStateToProps(state, ownProps))
       .toEqual({
         skipInRunAll: false,
-        userLanguages: ['py'],
+        userLanguages: ['py', 'ocaml'],
       })
   })
 })

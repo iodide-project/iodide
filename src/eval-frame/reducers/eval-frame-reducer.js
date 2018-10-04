@@ -79,7 +79,12 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'UPDATE_VALUE_IN_HISTORY': {
       const history = [...state.history]
       const historyEntry = history.find(h => h.historyId === action.historyId)
-      if (historyEntry) { historyEntry.value = action.value }
+      if (historyEntry) {
+        historyEntry.value = action.value
+        if (action.historyType) {
+          historyEntry.historyType = action.historyType
+        }
+      }
       return Object.assign({}, state, { history })
     }
 
@@ -160,12 +165,12 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'ADD_LANGUAGE_TO_EVAL_FRAME': {
-      const languages = Object.assign(
+      const loadedLanguages = Object.assign(
         {},
-        state.languages,
+        state.loadedLanguages,
         { [action.languageDefinition.languageId]: action.languageDefinition },
       )
-      return Object.assign({}, state, { languages })
+      return Object.assign({}, state, { loadedLanguages })
     }
 
     case 'UPDATE_PANE_POSITIONS': {

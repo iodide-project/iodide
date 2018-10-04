@@ -197,16 +197,21 @@ function stateFromJsmd(jsmdString) {
   // add top-level meta settings if any exist
   const meta = chunkObjects.filter(c => c.chunkType === 'meta')[0]
   if (meta) {
-    Object.assign(initialState, meta.iodideSettings)
+    // For backward-compatibility
     if (meta.iodideSettings.languages) {
-      const { languages } = meta.iodideSettings
-      Object.keys(languages)
+      meta.iodideSettings.loadedLanguages = meta.iodideSettings.languages
+      delete meta.iodideSettings.languages
+    }
+    Object.assign(initialState, meta.iodideSettings)
+    if (meta.iodideSettings.loadedLanguages) {
+      const { loadedLanguages } = meta.iodideSettings
+      Object.keys(loadedLanguages)
         .filter(language => language !== 'js')
         .forEach((language) => {
           addChangeLanguageTask(
-            languages[language].languageId,
-            languages[language].displayName,
-            languages[language].keybinding,
+            loadedLanguages[language].languageId,
+            loadedLanguages[language].displayName,
+            loadedLanguages[language].keybinding,
           )
         })
     }
