@@ -133,7 +133,6 @@ export function ensureLanguageAvailable(languageId, cell, state, dispatch) {
 }
 
 export function runCodeWithLanguage(language, code) {
-  const languageModule = language.module
-  const { evaluator } = language
-  return window[languageModule][evaluator](code)
+  const { module, evaluator } = language
+  return window[module][evaluator](code)
 }
