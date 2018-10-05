@@ -13,7 +13,8 @@ def test_notebook_list(client, two_test_notebooks):
         {
             "id": notebook.id,
             "owner": "testuser1",
-            "title": notebook.title
+            "title": notebook.title,
+            "forked_from": None
         } for notebook in Notebook.objects.all()
     ]
 
@@ -26,6 +27,7 @@ def test_notebook_detail(client, test_notebook):
         "id": test_notebook.id,
         "owner": "testuser1",
         "title": initial_revision.title,
+        "forked_from": None,
         "latest_revision": {
             "content": initial_revision.content,
             "created": get_rest_framework_time_string(initial_revision.created),
@@ -45,6 +47,7 @@ def test_notebook_detail(client, test_notebook):
         "id": test_notebook.id,
         "owner": "testuser1",
         "title": "Second revision",
+        "forked_from": None,
         "latest_revision": {
             "content": new_revision.content,
             "created": get_rest_framework_time_string(new_revision.created),
@@ -105,3 +108,68 @@ def test_delete_notebook_owner(fake_user, test_notebook, client):
     assert resp.status_code == 204
     assert Notebook.objects.count() == 0
     assert NotebookRevision.objects.count() == 0
+
+
+@pytest.fixture
+def notebook_fork_post_blob():
+    # this blob should be sufficient to create a new notebook (assuming the user of
+    # the api is authorized to do so)
+    return {
+        'title': 'My cool notebook',
+        'content': 'Fake notebook content',
+        'forked_from': 9
+    }
+
+
+@pytest.fixture
+def incorrect_notebook_fork_post_blob():
+    # this blob should be sufficient to create a new notebook (assuming the user of
+    # the api is authorized to do so)
+    return {
+        'title': 'My cool notebook',
+        'content': 'Fake notebook content',
+        'forked_from': 1
+    }
+
+
+def test_fork_notebook_not_logged_in(client, notebook_fork_post_blob):
+    resp = client.post(reverse('notebooks-list'), notebook_fork_post_blob)
+    assert resp.status_code == 403
+
+
+def test_incorrect_fork_notebook(client, fake_user, incorrect_notebook_fork_post_blob):
+    client.force_authenticate(user=fake_user)
+    resp = client.post(reverse('notebooks-list'), incorrect_notebook_fork_post_blob)
+    assert resp.status_code == 400
+
+
+def test_fork_notebook_logged_in(client,
+                                 fake_user,
+                                 fake_user2,
+                                 test_notebook,
+                                 notebook_fork_post_blob):
+    client.force_authenticate(user=fake_user)
+    resp = client.post(reverse('notebooks-list'), notebook_fork_post_blob)
+    assert resp.status_code == 201
+    assert resp.json()['forked_from'] == test_notebook.revisions.get().id
+
+
+def test_fork_notebook_and_delete_original(client, fake_user,
+                                           fake_user2,
+                                           test_notebook,
+                                           notebook_fork_post_blob):
+    client.force_authenticate(user=fake_user)
+    revision = test_notebook.revisions.latest('created')
+    response = client.post(reverse('notebooks-list'), {
+        'title': 'test',
+        'content': 'some fantastic content',
+        'forked_from': revision.id
+    })
+    forked_notebook = Notebook.objects.get(id=response.json()['id'])
+    client.delete(reverse('notebooks-detail', kwargs={'pk': test_notebook.id}))
+    forked_response = client.get(reverse('notebooks-detail', kwargs={'pk': forked_notebook.id}))
+    forked_notebook_after_deletion = Notebook.objects.get(id=forked_response.json()['id'])
+    assert Notebook.objects.count() == 1
+    assert forked_notebook_after_deletion.forked_from is None
+    assert forked_notebook_after_deletion.title == 'test'
+    assert forked_response.status_code == 200

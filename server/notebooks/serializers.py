@@ -22,7 +22,7 @@ class NotebookListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notebook
-        fields = ('id', 'owner', 'title')
+        fields = ('id', 'owner', 'title', 'forked_from')
 
 
 class NotebookDetailSerializer(NotebookListSerializer):
@@ -31,7 +31,7 @@ class NotebookDetailSerializer(NotebookListSerializer):
 
     class Meta:
         model = Notebook
-        fields = ('id', 'owner', 'title', 'latest_revision')
+        fields = ('id', 'owner', 'title', 'latest_revision', 'forked_from')
 
 
 class NotebookRevisionSerializer(serializers.ModelSerializer):
