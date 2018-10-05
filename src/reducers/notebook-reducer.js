@@ -186,7 +186,12 @@ const notebookReducer = (state = newNotebook(), action) => {
         state.loadedLanguages,
         { [languageDefinition.languageId]: languageDefinition },
       )
-      return Object.assign({}, state, { loadedLanguages })
+      const languageDefinitions = Object.assign(
+        {},
+        state.languageDefinitions,
+        { [languageDefinition.languageId]: languageDefinition },
+      )
+      return Object.assign({}, state, { loadedLanguages, languageDefinitions })
     }
 
     case 'CODEMIRROR_MODE_READY': {
