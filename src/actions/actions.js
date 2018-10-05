@@ -132,7 +132,7 @@ export function updateInputContent(text) {
 
 export function changeCellType(cellType, language = 'js') {
   return (dispatch, getState) => {
-    if (isCommandMode(getState())) {
+    if (isCommandMode(getState()) && getSelectedCell(getState()).cellType !== cellType) {
       dispatch({
         type: 'CHANGE_CELL_TYPE',
         cellType,
