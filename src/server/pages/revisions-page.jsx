@@ -11,7 +11,6 @@ import { fetchWithCSRFTokenAndJSONContent } from '../../shared/fetch-with-csrf-t
 import NotebookActionsMenu from '../components/notebook-actions-menu';
 import RevisionActionsMenu from '../components/revision-actions-menu';
 import FilesList from '../components/files-list'
-import SmallAttentionBlock from '../components/small-attention-block'
 
 import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
 import { formatServerDate } from '../../shared/date-formatters'
@@ -63,13 +62,26 @@ const ForkedFromLink = ({
 export default class RevisionsPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { revisions: this.props.revisions };
+    this.state = { revisions: this.props.revisions, files: this.props.files };
     this.onDeleteNotebook = this.onDeleteNotebook.bind(this);
     this.onDeleteRevision = this.onDeleteRevision.bind(this);
+    this.onDeleteFile = this.onDeleteFile.bind(this);
+    this.onUploadFile = this.onUploadFile.bind(this)
+  }
+
+  onUploadFile(newFileInfo) {
+    const { files } = this.state
+    files.push(newFileInfo)
+    this.setState({ files })
   }
 
   onDeleteNotebook() {
     window.location = `/${this.props.userInfo.name}/`;
+  }
+
+  onDeleteFile(fileID) {
+    const files = this.state.files.filter(r => r.id !== fileID);
+    this.setState({ files });
   }
 
   onDeleteRevision(revisionID) {
@@ -125,21 +137,16 @@ export default class RevisionsPage extends React.Component {
                 notebookID={this.props.ownerInfo.notebookId}
                 notebookTitle={this.props.ownerInfo.title}
                 onDelete={this.onDeleteNotebook}
+                onUploadFile={this.onUploadFile}
               />
             </ActionsContainer>
           }
-          <h3>Files</h3>
-          {
-            (this.props.files && this.props.files.length) ?
-              <FilesList
-                notebookID={this.props.ownerInfo.notebookId}
-                isUserAccount={isCurrentUsersPage}
-                files={this.props.files}
-              /> :
-              <SmallAttentionBlock>
-              No Files
-              </SmallAttentionBlock>
-          }
+          <FilesList
+            notebookID={this.props.ownerInfo.notebookId}
+            isUserAccount={isCurrentUsersPage}
+            files={this.state.files}
+            onDelete={this.onDeleteFile}
+          />
           <h3>Notebook Revisions</h3>
           <Table>
             <tbody>

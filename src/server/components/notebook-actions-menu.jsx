@@ -6,7 +6,7 @@ import MenuDivider from './menu-divider'
 import DeleteModal from './delete-modal'
 import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token'
 
-function uploadFile(notebookID) {
+function uploadFile(notebookID, successCallback = () => {}) {
   const filePicker = document.createElement('input')
   filePicker.type = 'file'
   filePicker.id = 'file-picker'
@@ -23,7 +23,8 @@ function uploadFile(notebookID) {
     fetchWithCSRFToken('/api/v1/files/', {
       body: formData,
       method: 'POST',
-    })
+    }).then(output => output.json())
+      .then(output => successCallback(output))
   })
 }
 
@@ -35,6 +36,13 @@ export default class NotebookActionsMenu extends React.Component {
     this.showDeleteModal = this.showDeleteModal.bind(this)
     this.hideDeleteModal = this.hideDeleteModal.bind(this)
     this.goToRevisionsPage = this.goToRevisionsPage.bind(this)
+    this.onUploadNewFile = this.onUploadNewFile.bind(this)
+  }
+
+  onUploadNewFile(notebookID) {
+    uploadFile(notebookID, (response) => {
+      this.props.onUploadFile(response);
+    });
   }
 
   hideDeleteModal() {
@@ -65,7 +73,7 @@ export default class NotebookActionsMenu extends React.Component {
             {this.props.hideRevisions ? undefined :
             <MenuItem onClick={this.goToRevisionsPage}>View Revisions...</MenuItem>}
             <MenuItem
-              onClick={() => uploadFile(this.props.notebookID)}
+              onClick={() => this.onUploadNewFile(this.props.notebookID)}
             >Upload a File ...
             </MenuItem>
             {this.props.hideRevisions || !this.props.isUserAccount ? undefined : <MenuDivider />}
