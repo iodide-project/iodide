@@ -33,11 +33,11 @@ import { listenForEvalFramePortReady } from './port-to-eval-frame'
 import './tools/initialize-codemirror-loadmode'
 import './tools/initialize-dom'
 
+handleLanguageDefinitions(store)
 initializeDefaultKeybindings()
 
 window.addEventListener('message', listenForEvalFramePortReady, false)
 
-handleLanguageDefinitions(store)
 handleInitialJsmd(store)
 handleServerVariables(store)
 
