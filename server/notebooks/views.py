@@ -67,10 +67,10 @@ def notebook_revisions(request, pk):
         owner_info['forkedFromUsername'] = nb.forked_from.notebook.owner.username
 
     files = [
-        {'filename': file.filename, 
-        'id': file.id, 
-        'last_updated': file.last_updated.isoformat(sep=' '),
-        'size': len(file.content)}
+        {'filename': file.filename,
+         'id': file.id,
+         'last_updated': file.last_updated.isoformat(sep=' '),
+         'size': len(file.content)}
         for file in File.objects.filter(notebook_id=pk)
     ]
     revisions = list(reversed([{

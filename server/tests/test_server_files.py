@@ -9,4 +9,4 @@ def test_read_server_file(client, test_file):
         })
     )
     assert resp.status_code == 200
-    assert resp.content == test_file.content
+    assert [k for k in resp.streaming_content][0] == test_file.content

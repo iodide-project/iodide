@@ -16,7 +16,6 @@ export function getCookie(name) {
 export default function fetchWithCSRFToken(url, otherParts, headers = {}) {
   const csrfToken = getCookie('csrftoken')
   const defaultHeaders = {
-    // 'Content-Type': 'application/json', // THIS NEEDS TO BE REPLACED NOW!
     'X-CSRFToken': csrfToken,
   };
   const combinedHeaders = Object.assign({}, defaultHeaders, headers)
