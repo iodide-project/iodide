@@ -123,3 +123,9 @@ export function ensureLanguageAvailable(languageId, historyId, cell, state, disp
   // editing you could...
   return new Promise((resolve, reject) => reject())
 }
+
+export function runCodeWithLanguage(language, code) {
+  const languageModule = language.module
+  const { evaluator } = language
+  return window[languageModule][evaluator](code)
+}

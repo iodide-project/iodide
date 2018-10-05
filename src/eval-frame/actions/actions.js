@@ -13,7 +13,11 @@ import {
 
 import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
 
-import { evaluateLanguagePluginCell, ensureLanguageAvailable } from './language-actions'
+import {
+  evaluateLanguagePluginCell,
+  ensureLanguageAvailable,
+  runCodeWithLanguage,
+} from './language-actions'
 
 let evaluationQueue = Promise.resolve()
 
@@ -138,8 +142,6 @@ export function evalConsoleInput(languageId) {
     // exit if there is no code in the console to  eval
     if (!code) { return undefined }
     const evalLanguageId = languageId === undefined ? state.languageLastUsed : languageId
-    const languageModule = state.loadedLanguages[evalLanguageId].module
-    const { evaluator } = state.loadedLanguages[evalLanguageId]
 
     // FIXME: deal with side-effects for console evals
     // // clear stuff relating to the side effect target before evaling
@@ -152,7 +154,7 @@ export function evalConsoleInput(languageId) {
     // dispatch(temporarilySaveRunningCellID(cell.id))
     dispatch(incrementExecutionNumber())
     try {
-      output = window[languageModule][evaluator](code)
+      output = runCodeWithLanguage(state.loadedLanguages[evalLanguageId], code)
     } catch (e) {
       output = e
       // evalStatus = 'ERROR'
@@ -204,12 +206,10 @@ function evaluateCodeCell(cell) {
 
     ensureLanguageAvailable(cell.language, historyId, cell, state, dispatch)
       .then((language) => {
-        const languageModule = language.module
-        const { evaluator } = language
         let output
         let evalStatus
         try {
-          output = window[languageModule][evaluator](code)
+          output = runCodeWithLanguage(language, code)
         } catch (e) {
           output = e
           evalStatus = 'ERROR'
