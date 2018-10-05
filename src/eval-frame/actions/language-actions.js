@@ -106,11 +106,19 @@ export function evaluateLanguagePluginCell(cell) {
   }
 }
 
-export function ensureLanguageAvailable(languageId, historyId, cell, state, dispatch) {
+export function ensureLanguageAvailable(languageId, cell, state, dispatch) {
   if (Object.prototype.hasOwnProperty.call(state.loadedLanguages, languageId)) {
     return new Promise(resolve => resolve(state.loadedLanguages[languageId]))
   }
   if (Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)) {
+    const historyId = historyIdGen.nextId()
+    dispatch(appendToEvalHistory(
+      cell.id,
+      `Loading ${state.languageDefinitions[languageId].displayName} language plugin`,
+      undefined,
+      { historyId, historyType: 'CELL_EVAL_INFO' },
+    ))
+
     return loadLanguagePlugin(
       state.languageDefinitions[languageId],
       historyId,

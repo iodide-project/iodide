@@ -78,12 +78,11 @@ export function appendToEvalHistory(cellId, content, value, historyOptions = {})
   }
 }
 
-export function updateValueInHistory(historyId, value, historyType) {
+export function updateValueInHistory(historyId, value) {
   return {
     type: 'UPDATE_VALUE_IN_HISTORY',
     historyId,
     value,
-    historyType,
   }
 }
 
@@ -187,14 +186,6 @@ function evaluateCodeCell(cell) {
     const state = getState()
     const code = cell.content
 
-    const historyId = historyIdGen.nextId()
-    dispatch(appendToEvalHistory(
-      cell.id,
-      cell.content,
-      undefined,
-      { historyId, historyType: 'CELL_EVAL_INFO' },
-    ))
-
     // clear stuff relating to the side effect target before evaling
     dispatch({ type: 'CELL_SIDE_EFFECT_STATUS', cellId: cell.id, hasSideEffect: false })
     // this is one place where we have to directly mutate the DOM b/c we need
@@ -204,7 +195,7 @@ function evaluateCodeCell(cell) {
 
     dispatch(temporarilySaveRunningCellID(cell.id))
 
-    ensureLanguageAvailable(cell.language, historyId, cell, state, dispatch)
+    ensureLanguageAvailable(cell.language, cell, state, dispatch)
       .then((language) => {
         let output
         let evalStatus
@@ -221,7 +212,7 @@ function evaluateCodeCell(cell) {
           }
           dispatch(updateCellProperties(cell.id, cellProperties))
           // dispatch(incrementExecutionNumber())
-          dispatch(updateValueInHistory(historyId, output, 'CELL_EVAL_VALUE'))
+          dispatch(appendToEvalHistory(cell.id, cell.content, output))
           dispatch(updateUserVariables())
         }
 

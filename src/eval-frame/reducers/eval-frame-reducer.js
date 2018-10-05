@@ -79,12 +79,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'UPDATE_VALUE_IN_HISTORY': {
       const history = [...state.history]
       const historyEntry = history.find(h => h.historyId === action.historyId)
-      if (historyEntry) {
-        historyEntry.value = action.value
-        if (action.historyType) {
-          historyEntry.historyType = action.historyType
-        }
-      }
+      if (historyEntry) { historyEntry.value = action.value }
       return Object.assign({}, state, { history })
     }
 
