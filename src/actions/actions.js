@@ -116,9 +116,19 @@ export function changeMode(mode) {
 }
 
 export function setViewMode(viewMode) {
-  return {
-    type: 'SET_VIEW_MODE',
-    viewMode,
+  return (dispatch, getState) => {
+    const state = getState()
+
+    if (state.notebookId) {
+      // if there is a notebook id, then persist the fact that this is a Report
+      // in the url
+      const params = (viewMode === 'REPORT_VIEW') ? '?viewMode=report' : ''
+      window.history.replaceState({}, '', `/notebooks/${state.notebookId}/${params}`)
+    }
+    dispatch({
+      type: 'SET_VIEW_MODE',
+      viewMode,
+    })
   }
 }
 

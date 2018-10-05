@@ -2,6 +2,7 @@
 import { stateFromJsmd } from './tools/jsmd-tools'
 import handleUrlQuery from './tools/handle-url-query'
 import { updateAppMessages, importInitialJsmd, evaluateAllCells } from './actions/actions'
+import { getUrlParams } from './editor-state-prototypes'
 
 export default async function handleInitialJsmd(store) {
   let state
@@ -17,6 +18,8 @@ export default async function handleInitialJsmd(store) {
       state = stateFromJsmd(jsmdElt.innerHTML)
     }
   }
+  // url parameters may override initial jsmd state if specified
+  Object.assign(state, getUrlParams())
   console.log('INITIAL JSMD STATE', state)
   if (state !== undefined) {
     store.dispatch(importInitialJsmd(state))

@@ -25,7 +25,11 @@ if (IODIDE_BUILD_MODE === 'production') {
     })),
   )
 }
-const store = createStore(finalReducer, Object.assign(newNotebook(), getUserData()), enhancer)
+const store = createStore(
+  finalReducer,
+  Object.assign(newNotebook(), getUserData()),
+  enhancer,
+)
 
 const { dispatch } = store
 
