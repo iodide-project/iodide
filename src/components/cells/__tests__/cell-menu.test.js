@@ -21,7 +21,7 @@ describe('CellMenuUnconnected React component', () => {
       menuLabel: 'css',
       cellId: 5,
       skipInRunAll: false,
-      userLanguages: [],
+      availableLanguages: [],
     }
     mountedMenu = undefined
   })
@@ -35,7 +35,7 @@ describe('CellMenuUnconnected React component', () => {
       .toBe('cell-menu-items-container')
   })
 
-  it('always renders correct number of NotebookMenuItem without userLanguages', () => {
+  it('always renders correct number of NotebookMenuItem without availableLanguages', () => {
     expect(cellMenu().find(NotebookMenuItem).length).toBe(12)
   })
 
@@ -82,11 +82,11 @@ describe('cellMenu mapStateToProps', () => {
     expect(mapStateToProps(state, ownProps))
       .toEqual({
         skipInRunAll: false,
-        userLanguages: [],
+        availableLanguages: [],
       })
   })
 
-  it('should return the correct userLanguages for the cell', () => {
+  it('should return the correct availableLanguages for the cell', () => {
     const ownProps = { cellId: 5 }
     state.languageDefinitions = {
       js: {
@@ -126,7 +126,7 @@ describe('cellMenu mapStateToProps', () => {
     expect(mapStateToProps(state, ownProps))
       .toEqual({
         skipInRunAll: false,
-        userLanguages: ['py', 'ocaml'],
+        availableLanguages: ['py', 'ocaml'],
       })
   })
 })
