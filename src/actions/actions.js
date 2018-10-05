@@ -294,7 +294,7 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
           details: `${message} <br />Notebook saved`,
         }))
         dispatch({ type: 'ADD_NOTEBOOK_ID', id: json.id })
-        window.history.pushState('', {}, `/notebooks/${json.id}`)
+        window.history.replaceState({}, '', `/notebooks/${json.id}`)
         dispatch({ type: 'NOTEBOOK_SAVED' })
       })
   }
