@@ -71,6 +71,10 @@ export const editorOnlyStateProperties = {
     additionalProperties: false,
     default: {},
   },
+  notebookId: {
+    type: ['integer', 'null'],
+    default: undefined,
+  },
   notebookInfo: {
     type: 'object',
     properties: {
@@ -84,10 +88,6 @@ export const editorOnlyStateProperties = {
     type: 'string',
     enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],
     default: 'EXPLORE_VIEW',
-  },
-  notebookId: {
-    type: 'integer',
-    default: undefined,
   },
   wrapEditors: {
     type: 'boolean',
