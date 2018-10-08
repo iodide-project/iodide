@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import deepEqual from 'deep-equal'
 
-import CellContainer from './cells/cell-container'
+// import CellContainer from './cells/cell-container'
+import JsmdEditor from './jsmd-editor'
 import FixedPositionContainer from './pane-layout/fixed-position-container'
 import LayoutManager from './pane-layout/layout-manager'
 
@@ -23,8 +24,8 @@ class EditorPaneContainer extends React.Component {
   }
 
   render() {
-    const cellInputComponents = this.props.cellIds.map(id =>
-      <CellContainer cellId={id} key={id} />)
+    // const cellInputComponents = this.props.cellIds.map(id =>
+    //   <CellContainer cellId={id} key={id} />)
 
     return (
       <React.Fragment>
@@ -33,9 +34,10 @@ class EditorPaneContainer extends React.Component {
           paneId="EditorPositioner"
           hidden={this.props.hideEditor}
         >
-          <div style={this.props.cellsStyle} id="cells">
+          <JsmdEditor />
+          {/* <div style={this.props.cellsStyle} id="cells">
             {cellInputComponents}
-          </div>
+          </div> */}
         </FixedPositionContainer>
       </React.Fragment>
     )
