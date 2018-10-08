@@ -20,6 +20,13 @@ export const editorCellSchema = {
   additionalProperties: false,
 }
 
+const jsmdElt = document.getElementById('jsmd')
+const jsmd = (jsmdElt &&
+  jsmdElt.innerHTML &&
+  jsmdElt.innerHTML.trim() !== '')
+  ? jsmdElt.innerHTML : ''
+
+
 export const editorOnlyStateProperties = {
   cells: {
     type: 'array',
@@ -39,6 +46,10 @@ export const editorOnlyStateProperties = {
   evalFrameReady: {
     type: 'boolean',
     default: false,
+  },
+  jsmd: {
+    type: 'string',
+    default: jsmd,
   },
   modalState: {
     type: 'string',

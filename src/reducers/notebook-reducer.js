@@ -106,6 +106,8 @@ const notebookReducer = (state = newNotebook(), action) => {
 
       return Object.assign({}, state, { cells, title: action.title })
     }
+    case 'UPDATE_JSMD_CONTENT':
+      return Object.assign({}, state, { jsmd: action.content })
 
     case 'NOTEBOOK_SAVED': {
       return Object.assign({}, state, {

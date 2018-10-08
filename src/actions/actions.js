@@ -168,6 +168,13 @@ export function updateInputContent(text) {
   }
 }
 
+export function updateJsmdContent(text) {
+  return {
+    type: 'UPDATE_JSMD_CONTENT',
+    content: text,
+  }
+}
+
 export function changeCellType(cellType, language = 'js') {
   return (dispatch, getState) => {
     if (isCommandMode(getState())
