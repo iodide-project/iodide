@@ -72,7 +72,7 @@ MIDDLEWARE = [
 ]
 
 if SOCIAL_AUTH_GITHUB_KEY:
-    MIDDLEWARE.append([
+    MIDDLEWARE.extend([
         'social_django.middleware.SocialAuthExceptionMiddleware',
         'server.github.middleware.GithubAuthMiddleware'
     ])
