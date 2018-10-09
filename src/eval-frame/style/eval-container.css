@@ -23,6 +23,12 @@ div#eval-container.presentation-mode {
   overflow-y: auto;
 }
 
+.default-rep-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  word-break: keep-all;
+}
 
 div.cells-list {
   box-sizing: border-box;

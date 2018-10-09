@@ -3,6 +3,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import Tooltip from '@material-ui/core/Tooltip'
+
 import arrayHandler from './array-handler'
 import dataFrameHandler from './dataframe-handler'
 import defaultHandler from './default-handler'
@@ -82,8 +84,9 @@ export function addOutputHandler(handler) {
   handlers = simpleHandlers.concat(userHandlers, complexHandlers)
 }
 
-export function renderValue(value, inContainer = false) {
-  for (const handler of handlers) {
+export function renderValue(value, inContainer = false, useDefault = false) {
+  const useHandlers = useDefault ? [wrapHandler(defaultHandler)] : handlers;
+  for (const handler of useHandlers) {
     if (handler.shouldHandle(value, inContainer)) {
       const resultElem = handler.render(value, inContainer)
       if (typeof resultElem === 'string') {
@@ -113,11 +116,55 @@ export class ValueRenderer extends React.Component {
     inContainer: PropTypes.bool,
   }
 
+  constructor(props) {
+    super(props);
+    this.state = { useDefault: false };
+
+    this.toggleDefault = this.toggleDefault.bind(this);
+  }
+
+  toggleDefault() {
+    this.setState(state => ({
+      useDefault: !state.useDefault,
+    }));
+  }
+
   render() {
     if (!this.props.render) {
       return <div className="empty-resultset" />
     }
 
-    return renderValue(this.props.valueToRender, this.props.inContainer)
+    const value = renderValue(
+      this.props.valueToRender,
+      this.props.inContainer,
+      this.state.useDefault,
+    );
+
+    if (!this.props.inContainer) {
+      let tooltip;
+      let buttonText;
+      if (!this.state.useDefault) {
+        tooltip = 'Switch to default representation';
+        buttonText = '{}';
+      } else {
+        tooltip = 'Switch to specialized representation';
+        buttonText = '★';
+      }
+      return (
+        <div>
+          <Tooltip className="default-rep-button" classes={{ tooltip: 'iodide-tooltip' }} title={tooltip}>
+            <button
+              className="pane-button light-pane-button button-content-centered default-rep-button"
+              onClick={this.toggleDefault}
+            >
+              {buttonText}
+            </button>
+          </Tooltip>
+          {value}
+        </div>
+      )
+    }
+
+    return value;
   }
 }

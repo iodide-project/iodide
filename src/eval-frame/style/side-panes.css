@@ -86,6 +86,7 @@ pre.history-item-code {
   line-height: 14px;
   font-family: Menlo, monospace;
   font-size: 11px;
+  position: relative;
 }
 
 div.history-content {
