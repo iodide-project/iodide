@@ -3,22 +3,16 @@ import styled from 'react-emotion'
 import FileIcon from '@material-ui/icons/Note'
 import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
+import numeral from 'numeral'
+
 import FileActionsMenu from './file-actions-menu'
 import SmallAttentionBlock from './small-attention-block'
 import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
 
-
 const bytesToHumanReadable = (bytes) => {
   if (bytes === null || bytes === undefined) return ''
-  const KB = 1024
-  const MB = KB * 1024
-  const GB = MB * 1024
-  const TB = GB * 1024
-  const round = (n, k = 2) => Math.round(n * ((10 * k) || 1)) / (10 * (k) || 1)
-  if (bytes < 1024) return `${bytes}b`
-  if (bytes < MB) return `${round(bytes / KB, 0)}kb`
-  if (bytes < GB) return `${round(bytes / MB)}mb`
-  return `${round(bytes / TB, 3)}gb`
+  const formatter = bytes < 1024 ? '0' : '0.00'
+  return numeral(bytes).format(`${formatter} b`)
 }
 
 const FileTable = styled('table')`
