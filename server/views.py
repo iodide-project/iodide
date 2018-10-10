@@ -3,8 +3,9 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import (get_object_or_404,
                               redirect,
                               render)
+from django.db.models import Max
 
-from .notebooks.models import Notebook, NotebookRevision
+from .notebooks.models import Notebook
 from .base.models import User
 
 
@@ -18,15 +19,18 @@ def get_user_info_dict(user):
 
 
 def index(request):
+    notebooks = Notebook.objects \
+        .annotate(latest_revision=Max('revisions__created')) \
+        .order_by('-latest_revision') \
+        .values_list('id', 'title', 'owner__username', 'owner__avatar')
     return render(
         request, 'index.html', {
             'page_data': {
                 'userInfo': get_user_info_dict(request.user),
                 # this is horrible and will not scale
                 'notebookList': [
-                    {'id': v[0], 'title': v[1], 'owner': v[2], 'avatar': v[3]}
-                    for v in
-                    Notebook.objects.values_list('id', 'title', 'owner__username', 'owner__avatar')
+                    {'id': nb_id, 'title': title, 'owner': owner, 'avatar': avatar}
+                    for (nb_id, title, owner, avatar) in notebooks
                 ]
             }
         }
@@ -42,16 +46,19 @@ def user(request, name=None):
         'avatar': user.avatar,
         'name': user.username,
     }
+    notebooks = Notebook.objects \
+        .filter(owner=user) \
+        .annotate(latest_revision=Max('revisions__created')) \
+        .order_by('-latest_revision').values_list('id', 'title', 'latest_revision')
     return render(request, 'index.html', {
         'page_data': {
             'userInfo': user_info,
             'thisUser': this_user,
             'notebookList': [{
-                'id': v[0],
-                'title': v[1],
-                'last_revision': NotebookRevision.objects
-                .filter(notebook_id=v[0]).last().created.isoformat(sep=' ')
-            } for v in Notebook.objects.filter(owner=user).values_list('id', 'title')]
+                'id': nb_id,
+                'title': title,
+                'last_revision': latest_revision.isoformat(sep=' ')
+            } for (nb_id, title, latest_revision) in notebooks]
         }
     })
 

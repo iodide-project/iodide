@@ -42,7 +42,8 @@ class UserNotebookList extends React.Component {
   }
 
   render() {
-    if (!this.state.notebookList.length) {
+    const { notebookList } = this.state
+    if (!notebookList.length) {
       return <UserPageWithoutNotebooksPlaceholder isUserAccount={this.props.isUserAccount} />
     }
     return (
@@ -60,7 +61,7 @@ class UserNotebookList extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.notebookList.map(notebook => (
+            {notebookList.map(notebook => (
               <tr key={notebook.id}>
                 <td><a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a></td>
                 <td>{
