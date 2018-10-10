@@ -4,6 +4,29 @@ import Menu from './menu'
 import MenuItem from './menu-item'
 import MenuDivider from './menu-divider'
 import DeleteModal from './delete-modal'
+import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token'
+
+function uploadFile(notebookID, successCallback = () => {}) {
+  const filePicker = document.createElement('input')
+  filePicker.type = 'file'
+  filePicker.id = 'file-picker'
+  filePicker.name = 'files[]'
+  filePicker.click();
+  filePicker.addEventListener('change', (evt) => {
+    const file = evt.target.files[0];
+    const formData = new FormData();
+    formData.append('metadata', JSON.stringify({
+      filename: file.name,
+      notebook_id: notebookID,
+    }))
+    formData.append('file', file)
+    fetchWithCSRFToken('/api/v1/files/', {
+      body: formData,
+      method: 'POST',
+    }).then(output => output.json())
+      .then(output => successCallback(output))
+  })
+}
 
 export default class NotebookActionsMenu extends React.Component {
   constructor(props) {
@@ -13,6 +36,13 @@ export default class NotebookActionsMenu extends React.Component {
     this.showDeleteModal = this.showDeleteModal.bind(this)
     this.hideDeleteModal = this.hideDeleteModal.bind(this)
     this.goToRevisionsPage = this.goToRevisionsPage.bind(this)
+    this.onUploadNewFile = this.onUploadNewFile.bind(this)
+  }
+
+  onUploadNewFile(notebookID) {
+    uploadFile(notebookID, (response) => {
+      if (this.props.onUploadFile) this.props.onUploadFile(response)
+    });
   }
 
   hideDeleteModal() {
@@ -42,6 +72,10 @@ export default class NotebookActionsMenu extends React.Component {
           <Menu>
             {this.props.hideRevisions ? undefined :
             <MenuItem onClick={this.goToRevisionsPage}>View Revisions...</MenuItem>}
+            <MenuItem
+              onClick={() => this.onUploadNewFile(this.props.notebookID)}
+            >Upload a File ...
+            </MenuItem>
             {this.props.hideRevisions || !this.props.isUserAccount ? undefined : <MenuDivider />}
             {!this.props.isUserAccount ? undefined :
             <MenuItem onClick={this.deleteNotebook}>Delete This Notebook...</MenuItem>}

@@ -7,9 +7,11 @@ import PageBody from '../components/page-body';
 import Header from '../components/header';
 import Table from '../components/table';
 import { MediumUserName } from '../components/user-name';
-import fetchWithCSRFToken from '../../shared/fetch-with-csrf-token';
+import { fetchWithCSRFTokenAndJSONContent } from '../../shared/fetch-with-csrf-token';
 import NotebookActionsMenu from '../components/notebook-actions-menu';
 import RevisionActionsMenu from '../components/revision-actions-menu';
+import FilesList from '../components/files-list'
+
 import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
 import { formatServerDate } from '../../shared/date-formatters'
 
@@ -60,19 +62,32 @@ const ForkedFromLink = ({
 export default class RevisionsPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { revisions: this.props.revisions };
+    this.state = { revisions: this.props.revisions, files: this.props.files };
     this.onDeleteNotebook = this.onDeleteNotebook.bind(this);
     this.onDeleteRevision = this.onDeleteRevision.bind(this);
+    this.onDeleteFile = this.onDeleteFile.bind(this);
+    this.onUploadFile = this.onUploadFile.bind(this)
+  }
+
+  onUploadFile(newFileInfo) {
+    const { files } = this.state
+    files.push(newFileInfo)
+    this.setState({ files })
   }
 
   onDeleteNotebook() {
     window.location = `/${this.props.userInfo.name}/`;
   }
 
+  onDeleteFile(fileID) {
+    const files = this.state.files.filter(r => r.id !== fileID);
+    this.setState({ files });
+  }
+
   onDeleteRevision(revisionID) {
     if (this.state.revisions.length === 1) {
       // If we just deleted the last revision, let's delete the notebook.
-      fetchWithCSRFToken(`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`, {
+      fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`, {
         method: 'DELETE',
       }).then(this.onDeleteNotebook);
     } else {
@@ -122,10 +137,17 @@ export default class RevisionsPage extends React.Component {
                 notebookID={this.props.ownerInfo.notebookId}
                 notebookTitle={this.props.ownerInfo.title}
                 onDelete={this.onDeleteNotebook}
+                onUploadFile={this.onUploadFile}
               />
             </ActionsContainer>
           }
-          <h3>Revisions</h3>
+          <FilesList
+            notebookID={this.props.ownerInfo.notebookId}
+            isUserAccount={isCurrentUsersPage}
+            files={this.state.files}
+            onDelete={this.onDeleteFile}
+          />
+          <h3>Notebook Revisions</h3>
           <Table>
             <tbody>
               <tr>

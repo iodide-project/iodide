@@ -117,7 +117,7 @@ def notebook_fork_post_blob():
     return {
         'title': 'My cool notebook',
         'content': 'Fake notebook content',
-        'forked_from': 9
+        'forked_from': 11
     }
 
 
@@ -146,10 +146,14 @@ def test_incorrect_fork_notebook(client, fake_user, incorrect_notebook_fork_post
 def test_fork_notebook_logged_in(client,
                                  fake_user,
                                  fake_user2,
-                                 test_notebook,
-                                 notebook_fork_post_blob):
+                                 test_notebook):
     client.force_authenticate(user=fake_user)
-    resp = client.post(reverse('notebooks-list'), notebook_fork_post_blob)
+    blob = {
+        'title': 'My cool notebook',
+        'content': 'Fake notebook content',
+        'forked_from': test_notebook.revisions.latest('created').id
+    }
+    resp = client.post(reverse('notebooks-list'), blob)
     assert resp.status_code == 201
     assert resp.json()['forked_from'] == test_notebook.revisions.get().id
 
