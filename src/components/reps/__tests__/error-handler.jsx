@@ -17,7 +17,7 @@ describe('errorHandler shouldHandle', () => {
       () => undefined,
       (err) => {
         expect(trimStack(err).split('\n').length).toBe(2)
-      }
+      },
     )
   })
 })
