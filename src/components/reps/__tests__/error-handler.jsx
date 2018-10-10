@@ -1,18 +1,17 @@
 import { ValueRenderer } from '../value-renderer' // eslint-disable-line
-import { trimStack } from '../error-handler'
-import errorHandler from '../error-handler'
+import { shouldHandle, trimStack } from '../error-handler'
 import { runCodeWithLanguage } from '../../../eval-frame/actions/language-actions'
 
 describe('errorHandler shouldHandle', () => {
   it('handles the correct type', () => {
-    expect(errorHandler.shouldHandle(undefined)).toBe(false)
-    expect(errorHandler.shouldHandle(new Error())).toBe(true)
+    expect(shouldHandle(undefined)).toBe(false)
+    expect(shouldHandle(new Error())).toBe(true)
   })
   it('trims stack frames', () => {
-    const code = 'throw new Error(\"FOO\")'
+    const code = 'throw new Error("FOO")'
     const language = {
       module: 'window',
-      evaluator: 'eval'
+      evaluator: 'eval',
     }
     let err;
     try {
