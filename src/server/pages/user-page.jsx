@@ -28,21 +28,30 @@ h2 {
   margin-top:0;
 }
 `
+const notebookComparator = (a, b) => {
+  if (a.last_revision > b.last_revision) return -1
+  if (b.last_revision > a.last_revision) return 1
+  return 0
+}
 
 class UserNotebookList extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { notebookList: this.props.notebookList }
+    const { notebookList } = this.props
+    notebookList.sort(notebookComparator)
+    this.state = { notebookList }
     this.deleteNotebook = this.deleteNotebook.bind(this)
   }
 
   deleteNotebook(nbID) {
     const notebookList = this.state.notebookList.filter(nb => nb.id !== nbID)
+    notebookList.sort(notebookComparator)
     this.setState({ notebookList })
   }
 
   render() {
-    if (!this.state.notebookList.length) {
+    const { notebookList } = this.state
+    if (!notebookList.length) {
       return <UserPageWithoutNotebooksPlaceholder isUserAccount={this.props.isUserAccount} />
     }
     return (

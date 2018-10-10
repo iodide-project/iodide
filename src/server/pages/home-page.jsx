@@ -25,6 +25,7 @@ const LetsGetStarted = () => (
 export default class HomePage extends React.Component {
   render() {
     const { notebookList } = this.props
+    notebookList.reverse()
     return (
       <div>
         <Header userInfo={this.props.userInfo} />
