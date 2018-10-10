@@ -32,8 +32,7 @@ h2 {
 class UserNotebookList extends React.Component {
   constructor(props) {
     super(props)
-    const { notebookList } = this.props
-    this.state = { notebookList }
+    this.state = { notebookList: this.props.notebookList }
     this.deleteNotebook = this.deleteNotebook.bind(this)
   }
 
