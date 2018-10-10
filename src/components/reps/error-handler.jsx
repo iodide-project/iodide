@@ -60,7 +60,6 @@ ErrorStackParser.parseFFOrSafari = (error) => {
       if (line.indexOf(' > eval') > -1) {
         const regExp = / > (eval:\d+:\d+)$/
         const evalParts = regExp.exec(line)
-        console.log(JSON.stringify(evalParts))
         if (evalParts) {
           const evalLocationParts = ErrorStackParser.extractLocation(evalParts[1]);
           return new StackFrame({
@@ -102,7 +101,6 @@ export default {
     const outputFrames = []
 
     for (const frame of frames) {
-      console.log(`${frame.functionName} ${frame.fileName}`);
       if ((frame.functionName !== undefined &&
            frame.functionName.startsWith('evaluateCodeCell')) ||
           (frame.functionName === undefined &&
