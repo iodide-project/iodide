@@ -15,7 +15,7 @@ function importIpynb(url, json) {
 %% meta
 {
   "title": "${title}",
-  "languages": {
+  "loadedLanguages": {
     "js": {
       "pluginType": "language",
       "languageId": "js",

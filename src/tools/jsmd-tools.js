@@ -5,6 +5,7 @@ import _ from 'lodash'
 import { newNotebook, newCell } from '../editor-state-prototypes'
 import htmlTemplate from '../html-template'
 import { addChangeLanguageTask } from '../actions/task-definitions'
+import { languageDefinitions as builtinLanguageDefinitions } from '../state-schemas/language-definitions'
 
 const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']
 
@@ -197,19 +198,31 @@ function stateFromJsmd(jsmdString) {
   // add top-level meta settings if any exist
   const meta = chunkObjects.filter(c => c.chunkType === 'meta')[0]
   if (meta) {
-    Object.assign(initialState, meta.iodideSettings)
+    // For backward-compatibility: what used to be called "languages"
+    // is now called "languageDefinitions"
     if (meta.iodideSettings.languages) {
-      const { languages } = meta.iodideSettings
-      Object.keys(languages)
+      meta.iodideSettings.languageDefinitions = meta.iodideSettings.languages
+      delete meta.iodideSettings.languages
+    }
+
+    // Only language definitions that are different than the built-in ones
+    // are saved to the jsmd, so we want to merge any new ones here.
+    if (meta.iodideSettings.languageDefinitions) {
+      const { languageDefinitions } = meta.iodideSettings
+      Object.keys(languageDefinitions)
         .filter(language => language !== 'js')
         .forEach((language) => {
+          const languageDefinition = languageDefinitions[language]
           addChangeLanguageTask(
-            languages[language].languageId,
-            languages[language].displayName,
-            languages[language].keybinding,
+            languageDefinition.languageId,
+            languageDefinition.displayName,
+            languageDefinition.keybinding,
           )
+          initialState.languageDefinitions[language] = languageDefinition
         })
+      delete meta.iodideSettings.languageDefinitions
     }
+    Object.assign(initialState, meta.iodideSettings)
   }
 
   chunkObjects
@@ -261,6 +274,19 @@ ${cell.content}`
       metaSettings[setting] = state[setting]
     }
   }
+
+  // Only save language definitions that aren't identical to the built-in ones
+  const customLanguageDefinitions = {}
+  for (const language of Object.keys(state.languageDefinitions)) {
+    if (JSON.stringify(builtinLanguageDefinitions[language]) !==
+        JSON.stringify(state.languageDefinitions[language])) {
+      customLanguageDefinitions[language] = state.languageDefinitions[language]
+    }
+  }
+  if (Object.keys(customLanguageDefinitions).length) {
+    metaSettings.languageDefinitions = customLanguageDefinitions
+  }
+
   metaSettings.lastExport = exportDatetimeString
   let metaSettingsStr = JSON.stringify(metaSettings, undefined, 2)
   metaSettingsStr = metaSettingsStr === '{}' ? '' : `%% meta\n${metaSettingsStr}\n\n`

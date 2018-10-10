@@ -183,9 +183,9 @@ function mapStateToProps(state, ownProps) {
 
   let codeMirrorMode
   if (cell.cellType === 'code'
-      && state.languages[cell.language]
-      && state.languages[cell.language].codeMirrorModeLoaded) {
-    codeMirrorMode = state.languages[cell.language].codeMirrorMode // eslint-disable-line
+      && state.loadedLanguages[cell.language]
+      && state.loadedLanguages[cell.language].codeMirrorModeLoaded) {
+    codeMirrorMode = state.loadedLanguages[cell.language].codeMirrorMode // eslint-disable-line
   } else if (cell.cellType !== 'code') {
     // e.g. md / css cell
     codeMirrorMode = cell.cellType

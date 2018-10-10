@@ -186,24 +186,29 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'ADD_LANGUAGE_TO_EDITOR': {
       const { languageDefinition } = action
       languageDefinition.codeMirrorModeLoaded = false
-      const languages = Object.assign(
+      const loadedLanguages = Object.assign(
         {},
-        state.languages,
+        state.loadedLanguages,
         { [languageDefinition.languageId]: languageDefinition },
       )
-      return Object.assign({}, state, { languages })
+      const languageDefinitions = Object.assign(
+        {},
+        state.languageDefinitions,
+        { [languageDefinition.languageId]: languageDefinition },
+      )
+      return Object.assign({}, state, { loadedLanguages, languageDefinitions })
     }
 
     case 'CODEMIRROR_MODE_READY': {
       const { codeMirrorMode } = action
-      const languages = Object.assign({}, state.languages)
+      const loadedLanguages = Object.assign({}, state.loadedLanguages)
       // set all languages with correct codeMirrorMode to have codeMirrorModeLoaded===true
-      Object.keys(languages).forEach((langKey) => {
-        if (languages[langKey].codeMirrorMode === codeMirrorMode) {
-          languages[langKey].codeMirrorModeLoaded = true
+      Object.keys(loadedLanguages).forEach((langKey) => {
+        if (loadedLanguages[langKey].codeMirrorMode === codeMirrorMode) {
+          loadedLanguages[langKey].codeMirrorModeLoaded = true
         }
       })
-      return Object.assign({}, state, { languages })
+      return Object.assign({}, state, { loadedLanguages })
     }
 
     case 'UPDATE_PANE_POSITIONS': {

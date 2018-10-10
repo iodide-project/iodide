@@ -21,7 +21,7 @@ describe('CellMenuUnconnected React component', () => {
       menuLabel: 'css',
       cellId: 5,
       skipInRunAll: false,
-      userLanguages: [],
+      availableLanguages: [],
     }
     mountedMenu = undefined
   })
@@ -35,7 +35,7 @@ describe('CellMenuUnconnected React component', () => {
       .toBe('cell-menu-items-container')
   })
 
-  it('always renders correct number of NotebookMenuItem without userLanguages', () => {
+  it('always renders correct number of NotebookMenuItem without availableLanguages', () => {
     expect(cellMenu().find(NotebookMenuItem).length).toBe(12)
   })
 
@@ -61,7 +61,7 @@ describe('cellMenu mapStateToProps', () => {
         id: 5,
         skipInRunAll: false,
       }],
-      languages: {
+      languageDefinitions: {
         js: {
           pluginType: 'language',
           languageId: 'js',
@@ -82,13 +82,13 @@ describe('cellMenu mapStateToProps', () => {
     expect(mapStateToProps(state, ownProps))
       .toEqual({
         skipInRunAll: false,
-        userLanguages: [],
+        availableLanguages: [],
       })
   })
 
-  it('should return the correct userLanguages for the cell', () => {
+  it('should return the correct availableLanguages for the cell', () => {
     const ownProps = { cellId: 5 }
-    state.languages = {
+    state.languageDefinitions = {
       js: {
         pluginType: 'language',
         languageId: 'js',
@@ -111,11 +111,22 @@ describe('cellMenu mapStateToProps', () => {
         keybinding: 'p',
         url: 'https://iodide.io/pyodide-demo/pyodide.js',
       },
+      ocaml: {
+        pluginType: 'language',
+        languageId: 'ocaml',
+        displayName: 'OCaml',
+        codeMirrorMode: 'ocaml',
+        codeMirrorModeLoaded: true,
+        module: 'domical',
+        evaluator: 'runOcaml',
+        keybinding: 'o',
+        url: 'https://nowhere.com',
+      },
     }
     expect(mapStateToProps(state, ownProps))
       .toEqual({
         skipInRunAll: false,
-        userLanguages: ['py'],
+        availableLanguages: ['py', 'ocaml'],
       })
   })
 })

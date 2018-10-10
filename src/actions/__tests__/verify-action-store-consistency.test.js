@@ -2,7 +2,7 @@ import { store } from '../../store'
 import { newNotebook } from '../../editor-state-prototypes'
 import * as actions from '../actions'
 import { SchemaValidationError } from '../../reducers/create-validated-reducer'
-import { jsLanguageDefinition } from '../../state-schemas/mirrored-state-schema'
+import { languageDefinitions } from '../../state-schemas/language-definitions'
 
 // the integration tests in this file DO NOT verify the correctness
 // of the action creators; rather, they ensure that when the action
@@ -120,7 +120,7 @@ describe('make sure action creators leave store in a consitent state', () => {
   it('addLanguage', () => {
     expect(() => store.dispatch({
       type: 'ADD_LANGUAGE_TO_EDITOR',
-      languageDefinition: jsLanguageDefinition,
+      languageDefinition: languageDefinitions.js,
     }))
       .not.toThrow()
   })

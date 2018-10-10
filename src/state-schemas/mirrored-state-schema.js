@@ -1,3 +1,5 @@
+import { languageDefinitions } from './language-definitions'
+
 const appMessageSchema = {
   type: 'object',
   properties: {
@@ -23,18 +25,6 @@ const languageSchema = {
     url: { type: 'string' },
   },
   additionalProperties: false,
-}
-
-export const jsLanguageDefinition = {
-  pluginType: 'language',
-  languageId: 'js',
-  displayName: 'Javascript',
-  codeMirrorMode: 'javascript',
-  codeMirrorModeLoaded: true,
-  module: 'window',
-  evaluator: 'eval',
-  keybinding: 'j',
-  url: '',
 }
 
 const environmentVariableSchema = {
@@ -114,10 +104,15 @@ export const mirroredStateProperties = {
     minimum: 0,
     default: 0,
   },
-  languages: {
+  languageDefinitions: {
     type: 'object',
     additionalProperties: languageSchema,
-    default: { js: jsLanguageDefinition },
+    default: languageDefinitions,
+  },
+  loadedLanguages: {
+    type: 'object',
+    additionalProperties: languageSchema,
+    default: { js: languageDefinitions.js },
   },
   languageLastUsed: {
     type: 'string',

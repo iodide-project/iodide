@@ -160,12 +160,12 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'ADD_LANGUAGE_TO_EVAL_FRAME': {
-      const languages = Object.assign(
+      const loadedLanguages = Object.assign(
         {},
-        state.languages,
+        state.loadedLanguages,
         { [action.languageDefinition.languageId]: action.languageDefinition },
       )
-      return Object.assign({}, state, { languages })
+      return Object.assign({}, state, { loadedLanguages })
     }
 
     case 'UPDATE_PANE_POSITIONS': {
