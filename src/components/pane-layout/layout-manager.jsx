@@ -117,6 +117,7 @@ export class LayoutManagerUnconnected extends React.PureComponent {
           flexGrow: 1,
           minHeight: '100%',
           zIndex: this.props.zIndex,
+          width: '100%',
         }}
       />
     )
