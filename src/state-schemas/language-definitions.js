@@ -14,7 +14,7 @@ export const jsLanguageDefinition = {
 
 const pyLanguageDefinition = {
   languageId: 'py',
-  displayName: 'python',
+  displayName: 'Python',
   codeMirrorMode: 'python',
   keybinding: 'p',
   url: 'https://iodide.io/pyodide-demo/pyodide.js',
