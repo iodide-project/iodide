@@ -43,7 +43,7 @@ export default class UserMenu extends React.Component {
   login() {
     const loginSuccess = (args) => {
       if (this.props.refreshOnLoginLogout) {
-          window.location.reload()
+        window.location.reload()
       }
       // else...
       if (args) {
