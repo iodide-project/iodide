@@ -42,6 +42,10 @@ export default class UserMenu extends React.Component {
 
   login() {
     const loginSuccess = (args) => {
+      if (this.props.refreshOnLoginLogout) {
+        window.location.reload()
+      }
+      // else...
       if (args) {
         const { name, avatar } = args
         this.setState({ name, avatar })
@@ -75,6 +79,10 @@ export default class UserMenu extends React.Component {
       fetch('/logout/')
         .then((response) => {
           if (response.ok) {
+            if (this.props.refreshOnLoginLogout) {
+              window.location.reload()
+            }
+            // else...
             this.setState({ isLoggedIn: false })
           } else {
           // do something smart here (probably pop up a notification)
