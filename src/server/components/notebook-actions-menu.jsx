@@ -41,7 +41,7 @@ export default class NotebookActionsMenu extends React.Component {
 
   onUploadNewFile(notebookID) {
     uploadFile(notebookID, (response) => {
-      this.props.onUploadFile(response);
+      if (this.props.onUploadFile) this.props.onUploadFile(response)
     });
   }
 
