@@ -13,11 +13,11 @@ describe('errorHandler shouldHandle', () => {
       module: 'window',
       evaluator: 'eval',
     }
-    let err;
     runCodeWithLanguage(language, code).then(
       () => undefined,
       (err) => {
         expect(trimStack(err).split('\n').length).toBe(2)
-      })
+      }
+    )
   })
 })
