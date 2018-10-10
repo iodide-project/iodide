@@ -166,7 +166,7 @@ export function evalConsoleInput(languageId) {
     }
 
     return runCodeWithLanguage(language, code)
-      .then(output => updateAfterEvaluation(output))
+      .then(updateAfterEvaluation)
       .then(waitForExplicitContinuationStatusResolution)
       // .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
   }
