@@ -81,7 +81,10 @@ export class LayoutManagerUnconnected extends React.PureComponent {
     layout.on('initialised', () => {
       if (this.state.goldenLayout === layout) return
 
-      const goldenLayoutResizer = () => layout.updateSize()
+      const goldenLayoutResizer = () => {
+        layout.updateSize()
+        console.log('window resize')
+      }
       window.addEventListener('resize', goldenLayoutResizer)
       const layoutResizeSensor = new ResizeSensor(this.layoutDiv.current, goldenLayoutResizer)
       this.setState({
