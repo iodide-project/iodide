@@ -152,7 +152,7 @@ export class ValueRenderer extends React.Component {
       }
       return (
         <div>
-          <Tooltip className="default-rep-button" classes={{ tooltip: 'iodide-tooltip' }} title={tooltip}>
+          <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title={tooltip}>
             <button
               className="pane-button light-pane-button button-content-centered default-rep-button"
               onClick={this.toggleDefault}

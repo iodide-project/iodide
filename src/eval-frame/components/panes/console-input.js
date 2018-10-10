@@ -66,7 +66,7 @@ export class ConsoleInputUnconnected extends React.Component {
           <textarea
             name="text"
             ref={this.textAreaRef}
-            onInput={this.handleTextInput}
+            onChange={this.handleTextInput}
             onKeyDown={this.handleKeyDown}
             rows="1"
             style={{
