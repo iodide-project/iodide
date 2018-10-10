@@ -69,7 +69,7 @@ class UserNotebookList extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.notebookList.map(notebook => (
+            {notebookList.map(notebook => (
               <tr key={notebook.id}>
                 <td><a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a></td>
                 <td>{
