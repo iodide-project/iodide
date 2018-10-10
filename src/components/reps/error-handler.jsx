@@ -96,24 +96,27 @@ ErrorStackParser.parseFFOrSafari = (error) => {
   );
 }
 
+export function trimStack(e) {
+  const frames = ErrorStackParser.parse(e)
+  const outputFrames = []
+
+  for (const frame of frames) {
+    if ((frame.functionName !== undefined &&
+         frame.functionName.startsWith(runCodeWithLanguage.name)) ||
+        (frame.functionName === undefined &&
+         frame.fileName !== 'cell')) {
+      break
+    }
+    outputFrames.push(frame.toString())
+  }
+
+  return `${e.name}: ${e.message}\n${outputFrames.join('\n')}`
+}
+
 export default {
   shouldHandle: value => value instanceof Error,
   render: (e) => {
-    const frames = ErrorStackParser.parse(e)
-    const outputFrames = []
-
-    for (const frame of frames) {
-      if ((frame.functionName !== undefined &&
-           frame.functionName.startsWith(runCodeWithLanguage.name)) ||
-          (frame.functionName === undefined &&
-           frame.fileName !== 'cell')) {
-        break
-      }
-      outputFrames.push(frame.toString())
-    }
-
-    const stack = `${e.name}: ${e.message}\n${outputFrames.join('\n')}`
-
+    const stack = trimStack(e)
     return (
       <div className="error-output">
         <pre>{stack}</pre>
