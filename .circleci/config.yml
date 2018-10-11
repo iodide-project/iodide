@@ -1,0 +1,135 @@
+# These environment variables must be set in CircleCI UI
+#
+# DOCKERHUB_REPO - docker hub repo, format: <username>/<repo>
+# DOCKER_USER
+# DOCKER_PASS
+#
+
+save_javascript_cache: &save_javascript_cache
+  save_cache:
+    paths:
+      - ~/cache/npm
+      - node_modules
+    key: v1-javascript-dependencies-{{ checksum "package.json" }}
+
+restore_javascript_cache: &restore_javascript_cache
+  restore_cache:
+    keys:
+      - v1-javascript-dependencies-{{ checksum "package.json" }}
+      - v1-javascript-dependencies-
+
+save_python_cache: &save_python_cache
+  save_cache:
+    paths:
+      - ~/cache/pip
+      - ~/cache/pipenv
+      - .venv
+    key: v1-python-dependencies-{{ checksum "Pipfile.lock" }}
+
+restore_python_cache: &restore_python_cache
+  restore_cache:
+    keys:
+      - v1-python-dependencies-{{ checksum "Pipfile.lock" }}
+      - v1-python-dependencies-
+
+version: 2
+jobs:
+  test-javascript:
+    docker:
+      - image: circleci/node:8
+    working_directory: ~/iodide
+    environment:
+      npm_config_cache: ~/cache/npm
+    steps:
+      - checkout
+      - *restore_javascript_cache
+      - run: npm install
+      - *save_javascript_cache
+      - run: npm run lint
+      - run: npm test
+
+  test-python:
+    docker:
+      - image: circleci/python:3
+      - image: circleci/postgres:9
+    working_directory: ~/iodide
+    environment:
+      PIP_CACHE_DIR: ~/cache/pip
+      PIPENV_CACHE_DIR: ~/cache/pipenv
+      PIPENV_VENV_IN_PROJECT: 1
+    steps:
+      - checkout
+      - *restore_python_cache
+      - run: pipenv install --dev
+      - *save_python_cache
+      - run: pipenv run flake8 server
+      - run:
+          command: pipenv run py.test
+          environment:
+            SECRET_KEY: 59114b6a-2858-4caf-8878-482a24ee9542
+            DATABASE_URL: postgres://postgres@localhost/circle_test
+            IODIDE_SERVER_DEBUG: 1
+
+  build-and-deploy:
+    docker:
+      - image: circleci/node:8
+    working_directory: ~/iodide
+    environment:
+      npm_config_cache: ~/cache/npm
+    steps:
+      - checkout
+      - *restore_javascript_cache
+      - run: npm install
+      - *save_javascript_cache
+      - run: npm run build
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Create version.json
+          command: |
+            printf '{"commit":"%s","version":"%s","source":"https://github.com/%s/%s","build":"%s"}\n' \
+            "$CIRCLE_SHA1" \
+            "$CIRCLE_TAG" \
+            "$CIRCLE_PROJECT_USERNAME" \
+            "$CIRCLE_PROJECT_REPONAME" \
+            "$CIRCLE_BUILD_URL" > version.json
+      - run:
+          name: Build Docker image
+          command: docker build -t app:build .
+      - run:
+          name: Push image to Docker Hub
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            # deploy master
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker tag app:build ${DOCKERHUB_REPO}:latest
+              docker push ${DOCKERHUB_REPO}:latest
+            elif [ ! -z "${CIRCLE_TAG}" ]; then
+            # deploy a release tag...
+              echo "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
+              docker tag app:build "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
+              docker images
+              docke push "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
+            fi
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - test-javascript:
+          filters:
+            tags:
+              only: /.*/
+      - test-python:
+          filters:
+            tags:
+              only: /.*/
+      - build-and-deploy:
+          requires:
+            - test-javascript
+            - test-python
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: master
