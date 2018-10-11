@@ -165,7 +165,11 @@ export function evalConsoleInput(languageId) {
       dispatch(updateUserVariables())
     }
 
-    return runCodeWithLanguage(language, code)
+    const messageCallback = (msg) => {
+      dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
+    }
+
+    return runCodeWithLanguage(language, code, messageCallback)
       .then(updateAfterEvaluation)
       .then(waitForExplicitContinuationStatusResolution)
       // .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
@@ -198,8 +202,12 @@ function evaluateCodeCell(cell) {
       dispatch(updateUserVariables())
     }
 
+    const messageCallback = (msg) => {
+      dispatch(appendToEvalHistory(cell.id, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
+    }
+
     return ensureLanguageAvailable(cell.language, cell, state, dispatch)
-      .then(language => runCodeWithLanguage(language, code))
+      .then(language => runCodeWithLanguage(language, code, messageCallback))
       .then(
         output => updateCellAfterEvaluation(output),
         output => updateCellAfterEvaluation(output, 'ERROR'),
