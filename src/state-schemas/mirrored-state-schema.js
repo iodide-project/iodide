@@ -22,6 +22,7 @@ const languageSchema = {
     keybinding: { type: 'string' },
     module: { type: 'string' },
     evaluator: { type: 'string' },
+    asyncEvaluator: { type: 'string' },
     url: { type: 'string' },
   },
   additionalProperties: false,

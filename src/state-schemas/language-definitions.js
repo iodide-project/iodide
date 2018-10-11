@@ -20,6 +20,7 @@ const pyLanguageDefinition = {
   url: 'https://iodide.io/pyodide-demo/pyodide.js',
   module: 'pyodide',
   evaluator: 'runPython',
+  asyncEvaluator: 'runPythonAsync',
   pluginType: 'language',
 }
 
