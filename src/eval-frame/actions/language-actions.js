@@ -137,7 +137,7 @@ export function runCodeWithLanguage(language, code, messageCallback) {
 
   if (asyncEvaluator !== undefined) {
     const messageCb = (messageCallback === undefined) ? () => {} : messageCallback
-    window[module][asyncEvaluator](code, messageCb)
+    return window[module][asyncEvaluator](code, messageCb)
   }
   return new Promise((resolve, reject) => {
     try {
