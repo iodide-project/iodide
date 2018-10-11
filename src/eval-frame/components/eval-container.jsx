@@ -15,6 +15,10 @@ export class EvalContainerUnconnected extends React.Component {
     reportOnly: PropTypes.bool.isRequired,
   }
 
+  componentDidMount() {
+    document.querySelector('.fixed-position-container:first-child').setAttribute('id', 'report')
+  }
+
   render() {
     const { reportOnly } = this.props
     return (
