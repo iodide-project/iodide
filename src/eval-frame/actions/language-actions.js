@@ -134,5 +134,12 @@ export function ensureLanguageAvailable(languageId, cell, state, dispatch) {
 
 export function runCodeWithLanguage(language, code) {
   const { module, evaluator } = language
-  return window[module][evaluator](code)
+
+  return new Promise((resolve, reject) => {
+    try {
+      resolve(window[module][evaluator](code))
+    } catch (e) {
+      reject(e)
+    }
+  })
 }

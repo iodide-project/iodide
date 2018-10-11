@@ -136,11 +136,11 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
 export function evalConsoleInput(languageId) {
   return (dispatch, getState) => {
     const state = getState()
-    let output
     const code = state.consoleText
     // exit if there is no code in the console to  eval
     if (!code) { return undefined }
     const evalLanguageId = languageId === undefined ? state.languageLastUsed : languageId
+    const language = state.loadedLanguages[evalLanguageId]
 
     // FIXME: deal with side-effects for console evals
     // // clear stuff relating to the side effect target before evaling
@@ -152,31 +152,23 @@ export function evalConsoleInput(languageId) {
 
     // dispatch(temporarilySaveRunningCellID(cell.id))
     dispatch(incrementExecutionNumber())
-    try {
-      output = runCodeWithLanguage(state.loadedLanguages[evalLanguageId], code)
-    } catch (e) {
-      output = e
-      // evalStatus = 'ERROR'
-    }
-    // clear the console input and text cache immediately after eval
-    dispatch(updateConsoleText(''))
-    dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
 
-    const updateAfterEvaluation = () => {
+    const updateAfterEvaluation = (output) => {
       // const cellProperties = { rendered: true }
       // if (evalStatus === 'ERROR') {
       //   cellProperties.evalStatus = evalStatus
       // }
       // dispatch(updateCellProperties(cell.id, cellProperties))
+      dispatch(updateConsoleText(''))
+      dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
       dispatch(appendToEvalHistory(null, code, output))
       dispatch(updateUserVariables())
     }
 
-    const evaluation = Promise.resolve()
+    return runCodeWithLanguage(language, code)
       .then(updateAfterEvaluation)
       .then(waitForExplicitContinuationStatusResolution)
       // .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
-    return evaluation
   }
 }
 
@@ -195,33 +187,25 @@ function evaluateCodeCell(cell) {
 
     dispatch(temporarilySaveRunningCellID(cell.id))
 
-    ensureLanguageAvailable(cell.language, cell, state, dispatch)
-      .then((language) => {
-        let output
-        let evalStatus
-        try {
-          output = runCodeWithLanguage(language, code)
-        } catch (e) {
-          output = e
-          evalStatus = 'ERROR'
-        }
-        const updateCellAfterEvaluation = () => {
-          const cellProperties = { rendered: true }
-          if (evalStatus === 'ERROR') {
-            cellProperties.evalStatus = evalStatus
-          }
-          dispatch(updateCellProperties(cell.id, cellProperties))
-          // dispatch(incrementExecutionNumber())
-          dispatch(appendToEvalHistory(cell.id, cell.content, output))
-          dispatch(updateUserVariables())
-        }
+    const updateCellAfterEvaluation = (output, evalStatus) => {
+      const cellProperties = { rendered: true }
+      if (evalStatus === 'ERROR') {
+        cellProperties.evalStatus = evalStatus
+      }
+      dispatch(updateCellProperties(cell.id, cellProperties))
+      // dispatch(incrementExecutionNumber())
+      dispatch(appendToEvalHistory(cell.id, cell.content, output))
+      dispatch(updateUserVariables())
+    }
 
-        const evaluation = Promise.resolve()
-          .then(updateCellAfterEvaluation)
-          .then(waitForExplicitContinuationStatusResolution)
-          .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
-        return evaluation
-      })
+    return ensureLanguageAvailable(cell.language, cell, state, dispatch)
+      .then(language => runCodeWithLanguage(language, code))
+      .then(
+        output => updateCellAfterEvaluation(output),
+        output => updateCellAfterEvaluation(output, 'ERROR'),
+      )
+      .then(waitForExplicitContinuationStatusResolution)
+      .then(() => dispatch(temporarilySaveRunningCellID(undefined)));
   }
 }
 
