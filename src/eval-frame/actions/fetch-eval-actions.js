@@ -1,5 +1,3 @@
-import re_weburl from '../tools/regex-weburl'
-
 export function isValidVarname(varName) {
   if (varName !== varName.replace(/;/g, '')) {
     return false
