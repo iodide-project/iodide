@@ -273,6 +273,17 @@ tasks.changeToJavascriptCell = new UserTask({
   },
 })
 
+tasks.changeToFetchCell = new UserTask({
+  title: 'Change to Fetch',
+  keybindings: ['f'],
+  displayKeybinding: 'f',
+  keybindingPrecondition: isCommandMode,
+  commandModeOnlyKey: true,
+  callback() {
+    dispatcher.changeCellType('fetch')
+  },
+})
+
 tasks.changeToMarkdownCell = new UserTask({
   title: 'Change to Markdown',
   keybindings: ['m'],

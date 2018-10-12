@@ -109,6 +109,8 @@ function mapStateToProps(state, ownProps) {
     label = 'resource'
   } else if (cell.cellType === 'raw') {
     label = 'raw'
+  } else if (cell.cellType === 'fetch') {
+    label = 'fetch'
   }
   return {
     label,
