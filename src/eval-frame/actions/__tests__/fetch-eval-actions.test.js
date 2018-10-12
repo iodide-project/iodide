@@ -1,5 +1,5 @@
 describe('stub', () => {
-  it(`stub`, () => {
+  it('stub', () => {
     expect(true).toEqual(true)
   })
 })
