@@ -3,6 +3,7 @@ import {
   commentOnlyLine,
   emptyLine,
   parseAssignmentCommand,
+  parseFetchCell,
 } from '../fetch-eval-actions'
 
 // test commentOnlyLine /////////////////////////
@@ -203,5 +204,38 @@ describe('return correct errors for invalid fetch lines', () => {
       expect(parseFetchCellLine(testCase.line).error)
         .toEqual(testCase.result.error)
     })
+  })
+})
+
+
+describe('return correct number of fetch cell fetches', () => {
+  const fetchCellText1 = `
+file: asd## = https://iodide.io/data/foo.csv
+
+
+// some comment
+
+js: http://foo.com/bar.js
+css: data/style.css
+`
+  it('fetch cell text case 1', () => {
+    expect(parseFetchCell(fetchCellText1).length)
+      .toEqual(3)
+  })
+
+  const fetchCellText2 = `
+
+//  comment
+            // comment
+
+file: foo = https://iodide.io/data/foo.csv
+
+
+// some comment
+
+`
+  it('fetch cell text case 2', () => {
+    expect(parseFetchCell(fetchCellText2).length)
+      .toEqual(1)
   })
 })
