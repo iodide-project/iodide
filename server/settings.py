@@ -85,12 +85,8 @@ MIDDLEWARE = [
 ]
 
 if DOCKERFLOW_ENABLED:
-    INSTALLED_APPS.extend([
-        'dockerflow.django',
-    ])
-    MIDDLEWARE.extend([
-        'dockerflow.django.middleware.DockerflowMiddleware',
-    ])
+    INSTALLED_APPS.append('dockerflow.django')
+    MIDDLEWARE.append('dockerflow.django.middleware.DockerflowMiddleware')
 
 if SOCIAL_AUTH_GITHUB_KEY:
     MIDDLEWARE.extend([
