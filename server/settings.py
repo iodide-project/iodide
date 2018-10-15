@@ -42,6 +42,9 @@ SOCIAL_AUTH_GITHUB_SECRET = env.str('GITHUB_CLIENT_SECRET', None)
 SOCIAL_AUTH_GITHUB_SCOPE = ['gist']
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
+# OpenIDC (aka auth0 identity/authentication)
+USE_OPENIDC_AUTH = env.bool("USE_OPENIDC_AUTH", default=False)
+
 # Maximum file length for uploaded data / assets
 MAX_FILENAME_LENGTH = 120
 MAX_FILE_SIZE = 1024*1024*10  # 10 megabytes is the default
@@ -84,6 +87,9 @@ if SOCIAL_AUTH_GITHUB_KEY:
         'server.github.middleware.GithubAuthMiddleware'
     ])
 
+if USE_OPENIDC_AUTH:
+    INSTALLED_APPS.append('server.openidc')
+    MIDDLEWARE.append('server.openidc.middleware.OpenIDCAuthMiddleware')
 
 ROOT_URLCONF = 'server.urls'
 
@@ -153,6 +159,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+OPENIDC_EMAIL_HEADER = env.str('OPENIDC_HEADER', default='HTTP_X_FORWARDED_USER')
+OPENIDC_AUTH_WHITELIST = []
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/

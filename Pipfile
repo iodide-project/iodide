@@ -11,6 +11,8 @@ django-environ = "*"
 "psycopg2-binary" = "*"
 furl = "*"
 django-rest-framework = "*"
+faker = "*"
+mock = "*"
 
 [requires]
 python_version = "3.6"
