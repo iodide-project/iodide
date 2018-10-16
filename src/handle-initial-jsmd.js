@@ -18,10 +18,10 @@ export default async function handleInitialJsmd(store) {
       state = stateFromJsmd(jsmdElt.innerHTML)
     }
   }
-  // url parameters may override initial jsmd state if specified
-  Object.assign(state, getUrlParams())
-  console.log('INITIAL JSMD STATE', state)
   if (state !== undefined) {
+    // url parameters may override initial jsmd state if specified
+    Object.assign(state, getUrlParams())
+    console.log('INITIAL JSMD STATE', state)
     store.dispatch(importInitialJsmd(state))
     if (window.location.search) {
       store.dispatch(updateAppMessages({ message: 'Notebook imported from URL.' }))
