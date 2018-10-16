@@ -27,7 +27,7 @@ describe('A nested NotebookMenuSubsection', () => {
     <NotebookMenuSubsection onClick={outerClick}>
       <NotebookMenuItem task={new UserTask({
         title: 'ok',
-        callback: () => { console.log('wow!'); /* innerSentinel = true }, */ },
+        callback: () => { console.debug('wow!'); /* innerSentinel = true }, */ },
 })}
       />
     </NotebookMenuSubsection>

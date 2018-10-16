@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import { connectionModeIsServer } from '../../tools/server-tools'
 import { createNewNotebookOnServer, login } from '../../actions/actions'
 
 export class HeaderMessagesUnconnected extends React.Component {
@@ -49,9 +50,9 @@ export class HeaderMessagesUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   if (state.viewMode === 'EXPLORE_VIEW') {
-    if (state.userData.name === undefined) {
+    if (state.userData.name === undefined && connectionModeIsServer(state)) {
       return { message: 'NEED_TO_LOGIN' }
-    } else if (!state.notebookInfo.user_can_save) {
+    } else if (!state.notebookInfo.user_can_save && connectionModeIsServer(state)) {
       return { message: 'NEED_TO_MAKE_COPY', revisionId: state.notebookInfo.revision_id }
     }
   }

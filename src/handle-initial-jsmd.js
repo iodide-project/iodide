@@ -1,12 +1,13 @@
-/* global IODIDE_BUILD_TYPE */
 import { stateFromJsmd } from './tools/jsmd-tools'
 import handleUrlQuery from './tools/handle-url-query'
 import { updateAppMessages, importInitialJsmd, evaluateAllCells } from './actions/actions'
-import { getUrlParams } from './editor-state-prototypes'
+import { getUrlParams, getNotebookInfo } from './editor-state-prototypes'
 
 export default async function handleInitialJsmd(store) {
   let state
-  if (window.location.search && IODIDE_BUILD_TYPE !== 'server') {
+  // shorthand for server-loaded, since we haven't actually checked window for server vars yet.
+  const notebookInfo = getNotebookInfo() || undefined
+  if (window.location.search && notebookInfo) {
     // if there is a query string, handle it and skip parsing the local jsmd
     state = await handleUrlQuery()
   } else {
@@ -18,10 +19,9 @@ export default async function handleInitialJsmd(store) {
       state = stateFromJsmd(jsmdElt.innerHTML)
     }
   }
-  // url parameters may override initial jsmd state if specified
-  Object.assign(state, getUrlParams())
-  console.log('INITIAL JSMD STATE', state)
   if (state !== undefined) {
+    // url parameters may override initial jsmd state if specified
+    Object.assign(state, getUrlParams())
     store.dispatch(importInitialJsmd(state))
     if (window.location.search) {
       store.dispatch(updateAppMessages({ message: 'Notebook imported from URL.' }))

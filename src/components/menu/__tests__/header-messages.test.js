@@ -10,7 +10,7 @@ import {
 //
 // })
 
-describe('CellContainer mapStateToProps', () => {
+describe('HeaderMessages mapStateToProps', () => {
   let state
   let ownProps
 
@@ -22,6 +22,7 @@ describe('CellContainer mapStateToProps', () => {
       },
       notebookInfo: {
         user_can_save: true,
+        connectionMode: 'SERVER',
       },
     }
     ownProps = { }

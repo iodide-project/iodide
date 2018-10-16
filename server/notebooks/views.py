@@ -36,6 +36,7 @@ def notebook_view(request, pk):
         'user_can_save': notebook.owner_id == request.user.id,
         'notebook_id': notebook.id,
         'revision_id': notebook_content.id,
+        'connectionMode': 'SERVER'
     }
     if notebook.forked_from is not None:
         notebook_info['forked_from'] = notebook.forked_from.id
@@ -94,7 +95,7 @@ def notebook_revisions(request, pk):
 def new_notebook_view(request):
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
-        'notebook_info': {'user_can_save': True},
+        'notebook_info': {'user_can_save': True, 'connectionMode': "SERVER"},
         'jsmd': '',
         'iframe_src': _get_iframe_src(),
     })

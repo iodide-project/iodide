@@ -1,4 +1,3 @@
-/* global IODIDE_BUILD_TYPE */
 import {
   newNotebook,
   getUserData,
@@ -11,6 +10,9 @@ import {
   exportJsmdBundle,
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
+import {
+  connectionModeIsServer,
+} from '../tools/server-tools'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
@@ -88,10 +90,9 @@ const notebookReducer = (state = newNotebook(), action) => {
       nextState = action.newState
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-
       // FIXME: getting the notebook id from the URL is terribly brittle,
       // already caused a bug in standalone `npm run start-and-serve` mode, see #1007.
-      let notebookId = (IODIDE_BUILD_TYPE && IODIDE_BUILD_TYPE === 'server') ?
+      let notebookId = connectionModeIsServer(nextState) ?
         parseInt(window.location.pathname.split('/').filter(s => s.length).pop(), 10) : undefined
 
       notebookId = Number.isSafeInteger(notebookId) ? notebookId : undefined

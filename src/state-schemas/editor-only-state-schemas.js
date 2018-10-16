@@ -79,9 +79,14 @@ export const editorOnlyStateProperties = {
     type: 'object',
     properties: {
       user_can_save: { type: 'boolean' },
+      connectionMode: {
+        type: 'string',
+        enum: ['SERVER', 'STANDALONE'],
+      },
     },
     default: {
       user_can_save: false,
+      connectionMode: 'STANDALONE',
     },
   },
   viewMode: {
