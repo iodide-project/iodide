@@ -36,6 +36,9 @@ ALLOWED_HOSTS = [SITE_HOSTNAME]
 APP_VERSION_STRING = env.str('APP_VERSION_STRING', 'dev')
 EVAL_FRAME_ORIGIN = env.str('EVAL_FRAME_ORIGIN', SITE_URL)
 
+# Dockerflow
+DOCKERFLOW_ENABLED = env.bool("DOCKERFLOW_ENABLED", default=False)
+
 # Social auth
 SOCIAL_AUTH_GITHUB_KEY = env.str('GITHUB_CLIENT_ID', None)
 SOCIAL_AUTH_GITHUB_SECRET = env.str('GITHUB_CLIENT_SECRET', None)
@@ -80,6 +83,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DOCKERFLOW_ENABLED:
+    INSTALLED_APPS.append('dockerflow.django')
+    MIDDLEWARE.append('dockerflow.django.middleware.DockerflowMiddleware')
 
 if SOCIAL_AUTH_GITHUB_KEY:
     MIDDLEWARE.extend([
