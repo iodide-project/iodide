@@ -12,7 +12,6 @@ export default class KeyboardShortcutList extends React.Component {
   render() {
     const globalKeys = []
     const commandModeKeys = []
-    // console.log('tasks', this.props.tasks)
     Object.keys(this.props.tasks)
       .filter(k => this.props.tasks[k].displayKeybinding)
       .forEach((k) => {

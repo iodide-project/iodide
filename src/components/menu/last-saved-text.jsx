@@ -9,7 +9,6 @@ export class LastSavedTextUnconnected extends React.Component {
     lastSaved: PropTypes.string,
   }
   render() {
-    console.log(this.props.lastSaved)
     return (
       <Typography
         classes={{ root: 'last-saved-text' }}

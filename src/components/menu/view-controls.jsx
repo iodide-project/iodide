@@ -1,4 +1,3 @@
-/* global IODIDE_BUILD_TYPE */
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -9,9 +8,14 @@ import LastSavedText from './last-saved-text'
 
 import tasks from '../../actions/task-definitions'
 
+import { connectionModeIsServer } from '../../tools/server-tools'
+
 export class ViewControlsUnconnected extends React.Component {
   static propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,
+    name: PropTypes.string,
+    avatar: PropTypes.string,
+    isServer: PropTypes.bool.isRequired,
   }
 
   render() {
@@ -19,7 +23,7 @@ export class ViewControlsUnconnected extends React.Component {
       <div className="view-controls">
         <LastSavedText />
 
-        {IODIDE_BUILD_TYPE === 'server' && (
+        {this.props.isServer && (
           <UserMenu
             isAuthenticated={this.props.isAuthenticated}
             loginCallback={tasks.loginGithub.callback}
@@ -42,6 +46,7 @@ export function mapStateToProps(state) {
     isAuthenticated,
     name: state.userData.name,
     avatar: state.userData.avatar,
+    isServer: connectionModeIsServer(state),
   }
 }
 
