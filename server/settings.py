@@ -75,6 +75,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+]
+
+if DOCKERFLOW_ENABLED:
+    INSTALLED_APPS.append('dockerflow.django')
+    MIDDLEWARE.append('dockerflow.django.middleware.DockerflowMiddleware')
+
+MIDDLEWARE.extend([
     'server.middleware.CustomWhiteNoise',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,11 +89,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-if DOCKERFLOW_ENABLED:
-    INSTALLED_APPS.append('dockerflow.django')
-    MIDDLEWARE.append('dockerflow.django.middleware.DockerflowMiddleware')
+])
 
 if SOCIAL_AUTH_GITHUB_KEY:
     MIDDLEWARE.extend([
@@ -136,7 +139,7 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-DB_REQUIRES_SSL = not DEBUG
+DB_REQUIRES_SSL = env.bool('DB_REQUIRES_SSL', default=not DEBUG)
 DATABASES = {
     'default': dj_database_url.config(conn_max_age=500, ssl_require=DB_REQUIRES_SSL)
 }
@@ -181,7 +184,7 @@ USE_TZ = True
 
 # Files in this directory will be served by WhiteNoise at the site root.
 WHITENOISE_ROOT = os.path.join(ROOT, 'build')
-STATIC_ROOT = WHITENOISE_ROOT
+STATIC_ROOT = os.path.join(ROOT, 'static')
 STATIC_URL = EVAL_FRAME_ORIGIN
 
 # Create hashed+gzipped versions of assets during collectstatic,
