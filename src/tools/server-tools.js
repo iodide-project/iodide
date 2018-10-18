@@ -1,3 +1,19 @@
+export function getUserDataFromDocument() {
+  const userData = document.getElementById('userData')
+  if (userData) {
+    return { userData: JSON.parse(userData.textContent) }
+  }
+  return {}
+}
+
+export function getNotebookInfoFromDocument() {
+  const notebookInfo = document.getElementById('notebookInfo')
+  if (notebookInfo) {
+    return { notebookInfo: JSON.parse(notebookInfo.textContent) }
+  }
+  return {}
+}
+
 export function getConnectionMode(state) {
   if (!('connectionMode' in state.notebookInfo)) throw Error('state does not have connectionMode')
   return state.notebookInfo.connectionMode

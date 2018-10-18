@@ -1,7 +1,5 @@
 import {
   newNotebook,
-  getUserDataFromDocument,
-  getNotebookInfoFromDocument,
   newCell,
   newCellID,
 } from '../editor-state-prototypes'
@@ -10,6 +8,8 @@ import {
   exportJsmdBundle,
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
+
+import { getNotebookInfoFromDocument, getUserDataFromDocument } from '../tools/server-tools'
 
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
@@ -216,7 +216,5 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
   }
 }
-
-export { getUserDataFromDocument }
 
 export default notebookReducer

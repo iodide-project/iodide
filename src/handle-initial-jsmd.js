@@ -1,7 +1,8 @@
 import { stateFromJsmd } from './tools/jsmd-tools'
 import handleUrlQuery from './tools/handle-url-query'
 import { updateAppMessages, importInitialJsmd, evaluateAllCells } from './actions/actions'
-import { getUrlParams, getNotebookInfoFromDocument } from './editor-state-prototypes'
+import { getUrlParams } from './editor-state-prototypes'
+import { getNotebookInfoFromDocument } from './tools/server-tools'
 
 export default async function handleInitialJsmd(store) {
   let state

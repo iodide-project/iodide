@@ -1,4 +1,4 @@
-import { getNotebookInfoFromDocument } from './editor-state-prototypes'
+import { getNotebookInfoFromDocument } from './tools/server-tools'
 import { updateNotebookInfo } from './actions/actions'
 
 export default function handleServerVariables(store) {
