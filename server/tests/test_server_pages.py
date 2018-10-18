@@ -1,8 +1,12 @@
 import json
 import re
-from server.notebooks.models import Notebook
 
+import pytest
 from django.urls import reverse
+
+from server.base.models import User
+from server.notebooks.models import (Notebook,
+                                     NotebookRevision)
 
 
 def _get_page_data(page_content_str):
@@ -18,9 +22,18 @@ def test_index_view(client, two_test_notebooks):
                                                                  'notebookList'])
 
 
-def test_user_view(client, fake_user, two_test_notebooks):
-    resp = client.get(reverse('user', kwargs={'name': fake_user.username}))
+@pytest.mark.parametrize("username", ['testuser', 'test-user', 'testuser@foo.com'])
+def test_user_view_with_different_names(transactional_db, client, username):
+    test_user = User.objects.create(
+        username=username,
+        email="user@foo.com",
+        password="123")
+    notebook = Notebook.objects.create(owner=test_user,
+                                       title='Fake notebook')
+    NotebookRevision.objects.create(notebook=notebook,
+                                    title="First revision",
+                                    content="*fake notebook content*")
+    resp = client.get(reverse('user', kwargs={'name': test_user.username}))
     assert resp.status_code == 200
-    print(Notebook.objects.count())
     assert set(_get_page_data(str(resp.content)).keys()) == set(
         ['userInfo', 'notebookList', 'thisUser'])

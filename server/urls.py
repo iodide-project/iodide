@@ -29,5 +29,5 @@ urlpatterns = [
 
     # user urls
     # based on https://github.com/shinnn/github-username-regex
-    url(r'^(?P<name>\w(?:\w|-(?=\w)){0,38})/$', server.views.user, name='user'),
+    url(r'^(?P<name>\w(?:\w|-|@|\.(?=\w)){0,38})/$', server.views.user, name='user'),
 ]
