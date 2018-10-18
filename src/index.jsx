@@ -35,9 +35,6 @@ import { listenForEvalFramePortReady } from './port-to-eval-frame'
 import './tools/initialize-codemirror-loadmode'
 import './tools/initialize-dom'
 
-// handleInitialJsmd.
-// then handleServerVariables.
-
 handleLanguageDefinitions(store)
 initializeDefaultKeybindings()
 
