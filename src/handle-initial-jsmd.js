@@ -1,12 +1,12 @@
 import { stateFromJsmd } from './tools/jsmd-tools'
 import handleUrlQuery from './tools/handle-url-query'
 import { updateAppMessages, importInitialJsmd, evaluateAllCells } from './actions/actions'
-import { getUrlParams, getNotebookInfo } from './editor-state-prototypes'
+import { getUrlParams, getNotebookInfoFromDocument } from './editor-state-prototypes'
 
 export default async function handleInitialJsmd(store) {
   let state
   // shorthand for server-loaded, since we haven't actually checked window for server vars yet.
-  const notebookInfo = getNotebookInfo() || undefined
+  const notebookInfo = getNotebookInfoFromDocument() || undefined
   if (window.location.search && notebookInfo) {
     // if there is a query string, handle it and skip parsing the local jsmd
     state = await handleUrlQuery()

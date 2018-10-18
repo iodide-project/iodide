@@ -34,7 +34,7 @@ function getUrlParams() {
   return { viewMode: report ? 'REPORT_VIEW' : 'EXPLORE_VIEW' }
 }
 
-function getUserData() {
+function getUserDataFromDocument() {
   const userData = document.getElementById('userData')
   if (userData) {
     return { userData: JSON.parse(userData.textContent) }
@@ -42,7 +42,7 @@ function getUserData() {
   return {}
 }
 
-function getNotebookInfo() {
+function getNotebookInfoFromDocument() {
   const notebookInfo = document.getElementById('notebookInfo')
   if (notebookInfo) {
     return { notebookInfo: JSON.parse(notebookInfo.textContent) }
@@ -52,8 +52,8 @@ function getNotebookInfo() {
 
 export {
   getUrlParams,
-  getUserData,
-  getNotebookInfo,
+  getUserDataFromDocument,
+  getNotebookInfoFromDocument,
   newCell,
   newCellID,
   newNotebook,

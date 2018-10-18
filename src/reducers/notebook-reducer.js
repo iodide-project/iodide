@@ -1,7 +1,7 @@
 import {
   newNotebook,
-  getUserData,
-  getNotebookInfo,
+  getUserDataFromDocument,
+  getNotebookInfoFromDocument,
   newCell,
   newCellID,
 } from '../editor-state-prototypes'
@@ -10,9 +10,7 @@ import {
   exportJsmdBundle,
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
-import {
-  getNotebookID,
-} from '../tools/server-tools'
+
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
@@ -43,7 +41,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
   switch (action.type) {
     case 'RESET_NOTEBOOK':
-      return Object.assign(newNotebook(), getUserData())
+      return Object.assign(newNotebook(), getUserDataFromDocument())
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
@@ -91,12 +89,9 @@ const notebookReducer = (state = newNotebook(), action) => {
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
 
-      const notebookId = getNotebookID(nextState)
-      const { notebookInfo } = nextState
-      notebookInfo.notebook_id = notebookId
       return Object.assign(
-        newNotebook(), nextState, { cells, notebookInfo },
-        getUserData(), getNotebookInfo(),
+        newNotebook(), nextState, { cells },
+        getUserDataFromDocument(), getNotebookInfoFromDocument(),
       )
     }
 
@@ -222,6 +217,6 @@ const notebookReducer = (state = newNotebook(), action) => {
   }
 }
 
-export { getUserData }
+export { getUserDataFromDocument }
 
 export default notebookReducer
