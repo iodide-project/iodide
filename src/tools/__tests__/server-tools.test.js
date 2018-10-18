@@ -33,9 +33,11 @@ describe('connectionModeIsStandalone && connectionModeIsServer', () => {
 })
 
 describe('getNotebookID', () => {
-  it('returns a noteobokID if one exists and one is on a server', () => {
+  it('returns a noteobookID if one exists and one is on a server. Otherwise returns undefined.', () => {
     const nb = makeState('SERVER')
     expect(getNotebookID(nb)).toBe(NOTEBOOK_ID)
+    nb.notebookInfo.notebook_id = undefined
+    expect(getNotebookID(nb)).toBe(undefined)
   })
   it('returns undefined if the notebook is in standalone mode', () => {
     const nb = makeState('STANDALONE')
