@@ -13,5 +13,7 @@ export function connectionModeIsServer(state) {
 
 export function getNotebookID(state) {
   if (!connectionModeIsServer(state)) return undefined
-  return state.notebookInfo.notebook_id
+  const notebookID = state.notebookInfo.notebook_id
+  if (!Number.isSafeInteger(notebookID) && notebookID !== undefined) throw Error('notebook_id must be undefined or an integer')
+  return notebookID
 }

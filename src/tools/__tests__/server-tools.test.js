@@ -43,4 +43,9 @@ describe('getNotebookID', () => {
     // notebook_id is still 100 in nb.notebookInfo, and we should still return undefined.
     expect(getNotebookID(nb)).toBe(undefined)
   })
+  it('throws if state.notebookInfo.notebook_id is not an integer nor undefined', () => {
+    const nb = makeState('SERVER')
+    nb.notebookInfo.notebook_id = 'some string'
+    expect(() => getNotebookID(nb)).toThrow()
+  })
 })
