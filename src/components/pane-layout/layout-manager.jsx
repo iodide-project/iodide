@@ -97,7 +97,6 @@ export class LayoutManagerUnconnected extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    console.debug('componentDidUpdate')
     this.state.goldenLayout.updateSize()
   }
 
