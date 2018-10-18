@@ -35,6 +35,5 @@ def test_user_view_with_different_names(transactional_db, client, username):
                                     content="*fake notebook content*")
     resp = client.get(reverse('user', kwargs={'name': test_user.username}))
     assert resp.status_code == 200
-    print(Notebook.objects.count())
     assert set(_get_page_data(str(resp.content)).keys()) == set(
         ['userInfo', 'notebookList', 'thisUser'])
