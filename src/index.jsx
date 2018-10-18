@@ -26,6 +26,8 @@ import { store } from './store'
 import handleInitialJsmd from './handle-initial-jsmd'
 import handleServerVariables from './handle-server-variables'
 import handleLanguageDefinitions from './handle-language-definitions'
+import handleUrlParams from './handle-url-params'
+import handleInitialViewModeEvaluation from './handle-initial-view-mode-evaluation'
 import { initializeDefaultKeybindings } from './keybindings'
 
 import { listenForEvalFramePortReady } from './port-to-eval-frame'
@@ -42,7 +44,9 @@ initializeDefaultKeybindings()
 window.addEventListener('message', listenForEvalFramePortReady, false)
 
 handleInitialJsmd(store)
+handleUrlParams(store)
 handleServerVariables(store)
+handleInitialViewModeEvaluation(store)
 
 render(
   <Provider store={store}>

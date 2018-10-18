@@ -1,16 +1,20 @@
 import { stateFromJsmd } from './tools/jsmd-tools'
-import handleUrlQuery from './tools/handle-url-query'
-import { updateAppMessages, importInitialJsmd, evaluateAllCells } from './actions/actions'
-import { getUrlParams } from './editor-state-prototypes'
+import { getStateFromJsmdQueryParams, getUrlParams, JSMD_QUERY_PARAMS } from './tools/query-param-tools'
+import { updateAppMessages, importInitialJsmd } from './actions/actions'
 import { getNotebookInfoFromDocument } from './tools/server-tools'
 
 export default async function handleInitialJsmd(store) {
   let state
-  // shorthand for server-loaded, since we haven't actually checked window for server vars yet.
+  let notebookImportedFromUrl = true
+  const urlParams = getUrlParams()
+  const jsmdURLPresent = Object.keys(urlParams).some(param => JSMD_QUERY_PARAMS.has(param))
   const notebookInfo = getNotebookInfoFromDocument() || undefined
-  if (window.location.search && notebookInfo) {
-    // if there is a query string, handle it and skip parsing the local jsmd
-    state = await handleUrlQuery()
+  if (jsmdURLPresent && notebookInfo) {
+    const newState = await getStateFromJsmdQueryParams()
+    if (newState !== undefined) {
+      state = newState
+      notebookImportedFromUrl = true
+    }
   } else {
     // if there is no query string, attempt to parse jsmd from html
     const jsmdElt = document.getElementById('jsmd')
@@ -21,14 +25,9 @@ export default async function handleInitialJsmd(store) {
     }
   }
   if (state !== undefined) {
-    // url parameters may override initial jsmd state if specified
-    Object.assign(state, getUrlParams())
     store.dispatch(importInitialJsmd(state))
-    if (window.location.search) {
+    if (notebookImportedFromUrl) {
       store.dispatch(updateAppMessages({ message: 'Notebook imported from URL.' }))
-    }
-    if (state.viewMode === 'REPORT_VIEW') {
-      store.dispatch(evaluateAllCells())
     }
   }
 }

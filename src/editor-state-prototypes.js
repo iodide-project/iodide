@@ -1,5 +1,3 @@
-import queryString from 'query-string'
-
 import {
   // newEditorCell,
   // newEditorNotebook,
@@ -28,13 +26,7 @@ function newNotebook() {
   return newNotebookFromSchema(editorStateSchema)
 }
 
-function getUrlParams() {
-  const queryParams = queryString.parse(window.location.search);
-  const report = queryParams.viewMode === 'report'
-  return { viewMode: report ? 'REPORT_VIEW' : 'EXPLORE_VIEW' }
-}
 export {
-  getUrlParams,
   newCell,
   newCellID,
   newNotebook,
