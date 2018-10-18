@@ -71,10 +71,6 @@ export const editorOnlyStateProperties = {
     additionalProperties: false,
     default: {},
   },
-  notebookId: {
-    type: ['integer', 'null'],
-    default: undefined,
-  },
   notebookInfo: {
     type: 'object',
     properties: {

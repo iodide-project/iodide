@@ -92,9 +92,10 @@ const notebookReducer = (state = newNotebook(), action) => {
         Object.assign(newCell(i, cell.cellType), cell))
 
       const notebookId = getNotebookID(nextState)
-
+      const { notebookInfo } = nextState
+      notebookInfo.notebook_id = notebookId
       return Object.assign(
-        newNotebook(), nextState, { cells, notebookId },
+        newNotebook(), nextState, { cells, notebookInfo },
         getUserData(), getNotebookInfo(),
       )
     }
@@ -107,7 +108,10 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'ADD_NOTEBOOK_ID': {
-      return Object.assign({}, state, { notebookId: action.id })
+      const { notebookId } = action
+      const { notebookInfo } = state
+      notebookInfo.notebook_id = notebookId
+      return Object.assign({}, state, { notebookInfo })
     }
 
     case 'CHANGE_PAGE_TITLE':
