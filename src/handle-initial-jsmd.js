@@ -5,7 +5,7 @@ import { getNotebookInfoFromDocument } from './tools/server-tools'
 
 export default async function handleInitialJsmd(store) {
   let state
-  let notebookImportedFromUrl = true
+  let notebookImportedFromUrl = false
   const urlParams = getUrlParams()
   const jsmdURLPresent = Object.keys(urlParams).some(param => JSMD_QUERY_PARAMS.has(param))
   const notebookInfo = getNotebookInfoFromDocument() || undefined
