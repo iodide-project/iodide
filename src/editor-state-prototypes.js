@@ -33,27 +33,8 @@ function getUrlParams() {
   const report = queryParams.viewMode === 'report'
   return { viewMode: report ? 'REPORT_VIEW' : 'EXPLORE_VIEW' }
 }
-
-function getUserData() {
-  const userData = document.getElementById('userData')
-  if (userData) {
-    return { userData: JSON.parse(userData.textContent) }
-  }
-  return {}
-}
-
-function getNotebookInfo() {
-  const notebookInfo = document.getElementById('notebookInfo')
-  if (notebookInfo) {
-    return { notebookInfo: JSON.parse(notebookInfo.textContent) }
-  }
-  return {}
-}
-
 export {
   getUrlParams,
-  getUserData,
-  getNotebookInfo,
   newCell,
   newCellID,
   newNotebook,

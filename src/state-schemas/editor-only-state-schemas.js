@@ -71,20 +71,18 @@ export const editorOnlyStateProperties = {
     additionalProperties: false,
     default: {},
   },
-  notebookId: {
-    type: ['integer', 'null'],
-    default: undefined,
-  },
   notebookInfo: {
     type: 'object',
     properties: {
       user_can_save: { type: 'boolean' },
+      notebook_id: { type: 'integer' },
       connectionMode: {
         type: 'string',
         enum: ['SERVER', 'STANDALONE'],
       },
     },
     default: {
+      notebook_id: undefined,
       user_can_save: false,
       connectionMode: 'STANDALONE',
     },

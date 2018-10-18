@@ -1,6 +1,7 @@
 import CodeMirror from 'codemirror'
 
 import { exportJsmdToString } from '../tools/jsmd-tools'
+import { getNotebookID } from '../tools/server-tools'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
@@ -118,12 +119,12 @@ export function changeMode(mode) {
 export function setViewMode(viewMode) {
   return (dispatch, getState) => {
     const state = getState()
-
-    if (state.notebookId) {
+    const notebookId = getNotebookID(state)
+    if (notebookId) {
       // if there is a notebook id, then persist the fact that this is a Report
       // in the url
       const params = (viewMode === 'REPORT_VIEW') ? '?viewMode=report' : ''
-      window.history.replaceState({}, '', `/notebooks/${state.notebookId}/${params}`)
+      window.history.replaceState({}, '', `/notebooks/${notebookId}/${params}`)
     }
     dispatch({
       type: 'SET_VIEW_MODE',
@@ -315,13 +316,12 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
 export function saveNotebookToServer() {
   return (dispatch, getState) => {
     const state = getState()
-
-    const notebookInServer = Boolean(state.notebookId)
-
+    const notebookId = getNotebookID(state)
+    const notebookInServer = Boolean(notebookId)
     if (notebookInServer) {
       const postRequestOptions = getNotebookSaveRequestOptions(state)
       // Update Exisiting Notebook
-      fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${state.notebookId}/revisions/`, postRequestOptions)
+      fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${notebookId}/revisions/`, postRequestOptions)
         .then(response => response.json())
         .then(() => {
           const message = 'Updated Notebook'

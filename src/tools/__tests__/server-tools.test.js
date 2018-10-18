@@ -1,10 +1,12 @@
 import {
   getConnectionMode,
+  getNotebookID,
   connectionModeIsStandalone,
   connectionModeIsServer,
 } from '../server-tools'
 
-const makeState = connectionMode => ({ notebookInfo: { connectionMode } })
+const NOTEBOOK_ID = 100
+const makeState = connectionMode => ({ notebookInfo: { connectionMode, notebook_id: NOTEBOOK_ID } })
 
 describe('getConnectionMode', () => {
   it('correctly reads connection mode', () => {
@@ -30,3 +32,22 @@ describe('connectionModeIsStandalone && connectionModeIsServer', () => {
   })
 })
 
+describe('getNotebookID', () => {
+  it('returns a noteobookID if one exists and one is on a server. Otherwise returns undefined.', () => {
+    const nb = makeState('SERVER')
+    expect(getNotebookID(nb)).toBe(NOTEBOOK_ID)
+    nb.notebookInfo.notebook_id = undefined
+    expect(getNotebookID(nb)).toBe(undefined)
+  })
+  it('returns undefined if the notebook is in standalone mode', () => {
+    const nb = makeState('STANDALONE')
+    // this is an edge case, but here
+    // notebook_id is still 100 in nb.notebookInfo, and we should still return undefined.
+    expect(getNotebookID(nb)).toBe(undefined)
+  })
+  it('throws if state.notebookInfo.notebook_id is not an integer nor undefined', () => {
+    const nb = makeState('SERVER')
+    nb.notebookInfo.notebook_id = 'some string'
+    expect(() => getNotebookID(nb)).toThrow()
+  })
+})

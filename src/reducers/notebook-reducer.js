@@ -1,7 +1,5 @@
 import {
   newNotebook,
-  getUserData,
-  getNotebookInfo,
   newCell,
   newCellID,
 } from '../editor-state-prototypes'
@@ -10,9 +8,9 @@ import {
   exportJsmdBundle,
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
-import {
-  connectionModeIsServer,
-} from '../tools/server-tools'
+
+import { getNotebookInfoFromDocument, getUserDataFromDocument } from '../tools/server-tools'
+
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
@@ -43,7 +41,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
   switch (action.type) {
     case 'RESET_NOTEBOOK':
-      return Object.assign(newNotebook(), getUserData())
+      return Object.assign(newNotebook(), getUserDataFromDocument())
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
@@ -90,16 +88,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       nextState = action.newState
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      // FIXME: getting the notebook id from the URL is terribly brittle,
-      // already caused a bug in standalone `npm run start-and-serve` mode, see #1007.
-      let notebookId = connectionModeIsServer(nextState) ?
-        parseInt(window.location.pathname.split('/').filter(s => s.length).pop(), 10) : undefined
-
-      notebookId = Number.isSafeInteger(notebookId) ? notebookId : undefined
 
       return Object.assign(
-        newNotebook(), nextState, { cells, notebookId },
-        getUserData(), getNotebookInfo(),
+        newNotebook(), nextState, { cells },
+        getUserDataFromDocument(), getNotebookInfoFromDocument(),
       )
     }
 
@@ -111,7 +103,10 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'ADD_NOTEBOOK_ID': {
-      return Object.assign({}, state, { notebookId: action.id })
+      const notebookId = action.id
+      const notebookInfo = Object.assign({}, state.notebookInfo)
+      notebookInfo.notebook_id = notebookId
+      return Object.assign({}, state, { notebookInfo })
     }
 
     case 'CHANGE_PAGE_TITLE':
@@ -221,7 +216,5 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
   }
 }
-
-export { getUserData }
 
 export default notebookReducer
