@@ -306,6 +306,7 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
           message,
           details: `${message} <br />Notebook saved`,
         }))
+        console.warn('json id', json, json.id)
         dispatch({ type: 'ADD_NOTEBOOK_ID', id: json.id })
         window.history.replaceState({}, '', `/notebooks/${json.id}`)
         dispatch({ type: 'NOTEBOOK_SAVED' })

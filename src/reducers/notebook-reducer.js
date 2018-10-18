@@ -108,8 +108,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'ADD_NOTEBOOK_ID': {
-      const { notebookId } = action
-      const { notebookInfo } = state
+      const notebookId = action.id
+      const notebookInfo = Object.assign({}, state.notebookInfo)
       notebookInfo.notebook_id = notebookId
       return Object.assign({}, state, { notebookInfo })
     }
