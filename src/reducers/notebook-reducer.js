@@ -11,7 +11,7 @@ import {
   titleToHtmlFilename,
 } from '../tools/jsmd-tools'
 import {
-  connectionModeIsServer,
+  getNotebookID,
 } from '../tools/server-tools'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
@@ -90,12 +90,8 @@ const notebookReducer = (state = newNotebook(), action) => {
       nextState = action.newState
       cells = nextState.cells.map((cell, i) =>
         Object.assign(newCell(i, cell.cellType), cell))
-      // FIXME: getting the notebook id from the URL is terribly brittle,
-      // already caused a bug in standalone `npm run start-and-serve` mode, see #1007.
-      let notebookId = connectionModeIsServer(nextState) ?
-        parseInt(window.location.pathname.split('/').filter(s => s.length).pop(), 10) : undefined
 
-      notebookId = Number.isSafeInteger(notebookId) ? notebookId : undefined
+      const notebookId = getNotebookID(nextState)
 
       return Object.assign(
         newNotebook(), nextState, { cells, notebookId },
