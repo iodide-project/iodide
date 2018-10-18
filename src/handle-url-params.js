@@ -3,7 +3,7 @@ import { setViewMode } from './actions/actions'
 
 export default function handleUrlParams(store) {
   const otherParams = getStatePropsFromUrlParams()
-  if ('viewMode' in otherParams) {
+  if (otherParams.viewMode === 'REPORT_VIEW') {
     store.dispatch(setViewMode(otherParams.viewMode))
   }
 }

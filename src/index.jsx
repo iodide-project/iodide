@@ -39,7 +39,6 @@ handleLanguageDefinitions(store)
 initializeDefaultKeybindings()
 
 window.addEventListener('message', listenForEvalFramePortReady, false)
-
 handleInitialJsmd(store)
 handleUrlParams(store)
 handleServerVariables(store)
