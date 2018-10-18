@@ -2,6 +2,7 @@
 build/
 prod/
 dev/
+static/
 
 # Logs
 logs
