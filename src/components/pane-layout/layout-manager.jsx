@@ -76,7 +76,6 @@ export class LayoutManagerUnconnected extends React.PureComponent {
 
   componentDidMount() {
     const layout = new GoldenLayout(intialLayoutConfig, this.layoutDiv.current)
-    console.debug('layout', layout)
     layout.registerComponent('Positioner', Positioner)
     layout.init()
     layout.on('initialised', () => {
