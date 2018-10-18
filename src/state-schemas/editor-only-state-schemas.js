@@ -75,12 +75,14 @@ export const editorOnlyStateProperties = {
     type: 'object',
     properties: {
       user_can_save: { type: 'boolean' },
+      notebook_id: { type: 'integer' },
       connectionMode: {
         type: 'string',
         enum: ['SERVER', 'STANDALONE'],
       },
     },
     default: {
+      notebook_id: undefined,
       user_can_save: false,
       connectionMode: 'STANDALONE',
     },
