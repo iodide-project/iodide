@@ -4,7 +4,8 @@ import Menu from './menu'
 import MenuItem from './menu-item'
 import MenuDivider from './menu-divider'
 import DeleteModal from './delete-modal'
-import uploadFile from '../../shared/upload-file'
+import UploadModal from './upload-modal'
+import { selectFile, uploadFile } from '../../shared/upload-file'
 
 export default class NotebookActionsMenu extends React.Component {
   constructor(props) {
@@ -18,9 +19,12 @@ export default class NotebookActionsMenu extends React.Component {
   }
 
   onUploadNewFile(notebookID) {
-    uploadFile(notebookID, (response) => {
-      if (this.props.onUploadFile) this.props.onUploadFile(response)
-    });
+    selectFile(notebookID)
+      .then(uploadFile)
+      .then(response => response.json())
+      .then((response) => {
+        if (this.props.onUploadFile) this.props.onUploadFile(response)
+      })
   }
 
   hideDeleteModal() {
@@ -68,6 +72,16 @@ export default class NotebookActionsMenu extends React.Component {
           onDelete={this.props.onDelete}
           elementID={this.props.notebookID}
           url={`/api/v1/notebooks/${this.props.notebookID}/`}
+        />
+        <UploadModal
+          visible={this.state.uploadModalVisible}
+          onClose={this.hideUploadModal}
+          title={`replace file in the notebook  "${this.props.notebookTitle}"?`}
+          content={this.props.modalBody}
+          onCancel={this.hideDeleteModal}
+          onDelete={this.props.onReplaceUpload}
+          elementID={this.props.notebookID}
+          url={`/api/v1/notebooks/${this.props.notebookID}/files/`}
         />
       </React.Fragment>
     )

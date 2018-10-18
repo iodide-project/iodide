@@ -62,7 +62,10 @@ const ForkedFromLink = ({
 export default class RevisionsPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { revisions: this.props.revisions, files: this.props.files };
+    this.state = {
+      revisions: this.props.revisions,
+      files: this.props.files,
+    };
     this.onDeleteNotebook = this.onDeleteNotebook.bind(this);
     this.onDeleteRevision = this.onDeleteRevision.bind(this);
     this.onDeleteFile = this.onDeleteFile.bind(this);
