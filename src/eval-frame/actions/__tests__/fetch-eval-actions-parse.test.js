@@ -4,7 +4,7 @@ import {
   emptyLine,
   parseAssignmentCommand,
   parseFetchCell,
-} from '../fetch-eval-actions'
+} from '../fetch-cell-parser'
 
 // test commentOnlyLine /////////////////////////
 describe('correctly identify when a line IS a commentOnlyLine', () => {
