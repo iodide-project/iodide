@@ -19,6 +19,8 @@ import {
   runCodeWithLanguage,
 } from './language-actions'
 
+import { evaluateFetchCell } from './fetch-cell-eval-actions'
+
 let evaluationQueue = Promise.resolve()
 
 const MD = MarkdownIt({ html: true })
@@ -299,6 +301,8 @@ export function evaluateCell(cellId) {
       evaluation = dispatch(evaluateResourceCell(cell))
     } else if (cell.cellType === 'css') {
       evaluation = dispatch(evaluateCSSCell(cell))
+    } else if (cell.cellType === 'fetch') {
+      evaluation = dispatch(evaluateFetchCell(cell))
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
         evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
