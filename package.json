@@ -20,7 +20,7 @@
     ],
     "globals": {
       "window": true,
-      "IODIDE_BUILD_MODE": "test",
+      "IODIDE_BUILD_MODE": "test"
     },
     "setupFiles": [
       "jest-localstorage-mock"
