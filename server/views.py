@@ -4,6 +4,7 @@ from django.shortcuts import (get_object_or_404,
                               redirect,
                               render)
 from django.db.models import Max
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .notebooks.models import Notebook
 from .base.models import User
@@ -18,6 +19,7 @@ def get_user_info_dict(user):
     return {}
 
 
+@ensure_csrf_cookie
 def index(request):
     notebooks = Notebook.objects \
         .annotate(latest_revision=Max('revisions__created')) \
@@ -37,6 +39,7 @@ def index(request):
     )
 
 
+@ensure_csrf_cookie
 def user(request, name=None):
     user_info = get_user_info_dict(request.user)
     user = get_object_or_404(User, username=name)

@@ -3,6 +3,7 @@ import urllib.parse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import (get_object_or_404,
                               render)
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .models import Notebook, NotebookRevision
 from ..files.models import File
@@ -26,6 +27,7 @@ def _get_iframe_src():
     )
 
 
+@ensure_csrf_cookie
 def notebook_view(request, pk):
     notebook = get_object_or_404(Notebook, pk=pk)
     if 'revision' in request.GET:
@@ -50,6 +52,7 @@ def notebook_view(request, pk):
     })
 
 
+@ensure_csrf_cookie
 def notebook_revisions(request, pk):
     pk = int(pk)
     nb = get_object_or_404(Notebook, pk=pk)
@@ -92,6 +95,7 @@ def notebook_revisions(request, pk):
 
 
 @login_required
+@ensure_csrf_cookie
 def new_notebook_view(request):
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
