@@ -127,7 +127,6 @@ module.exports = (env) => {
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify((env && env.startsWith('dev')) ? 'dev' : 'production'),
-        IODIDE_BUILD_TYPE: 'server',
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
       new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
