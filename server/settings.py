@@ -74,22 +74,19 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
-]
-
-if DOCKERFLOW_ENABLED:
-    INSTALLED_APPS.append('dockerflow.django')
-    MIDDLEWARE.append('dockerflow.django.middleware.DockerflowMiddleware')
-
-MIDDLEWARE.extend([
-    'server.middleware.CustomWhiteNoise',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-])
+]
+
+if DOCKERFLOW_ENABLED:
+    INSTALLED_APPS.append('dockerflow.django')
+    MIDDLEWARE.append('dockerflow.django.middleware.DockerflowMiddleware')
 
 if SOCIAL_AUTH_GITHUB_KEY:
     MIDDLEWARE.extend([
