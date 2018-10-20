@@ -26,15 +26,13 @@ import { store } from './store'
 import handleInitialJsmd from './handle-initial-jsmd'
 import handleServerVariables from './handle-server-variables'
 import handleLanguageDefinitions from './handle-language-definitions'
+import handleReportViewModeInitialization from './handle-report-view-mode-initialization'
 import { initializeDefaultKeybindings } from './keybindings'
 
 import { listenForEvalFramePortReady } from './port-to-eval-frame'
 
 import './tools/initialize-codemirror-loadmode'
 import './tools/initialize-dom'
-
-// handleInitialJsmd.
-// then handleServerVariables.
 
 handleLanguageDefinitions(store)
 initializeDefaultKeybindings()
@@ -43,6 +41,7 @@ window.addEventListener('message', listenForEvalFramePortReady, false)
 
 handleInitialJsmd(store)
 handleServerVariables(store)
+handleReportViewModeInitialization(store)
 
 render(
   <Provider store={store}>

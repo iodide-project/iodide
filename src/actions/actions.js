@@ -121,8 +121,9 @@ export function setViewMode(viewMode) {
     const state = getState()
     const notebookId = getNotebookID(state)
     if (notebookId) {
-      // if there is a notebook id, then persist the fact that this is a Report
-      // in the url
+      // FIXME: This URL replacement step is fundamentally broken. If there are other
+      // params here that we want to pass (we are, for instance, using ?revision=<revision_id>
+      // they will simply be overwritten.
       const params = (viewMode === 'REPORT_VIEW') ? '?viewMode=report' : ''
       window.history.replaceState({}, '', `/notebooks/${notebookId}/${params}`)
     }

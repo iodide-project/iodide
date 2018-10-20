@@ -43,8 +43,20 @@ function loadFromUrlString(urlString) {
   return state
 }
 
-function handleUrlQuery() {
-  const queryParams = queryString.parse(window.location.search);
+export function getUrlParams() {
+  return queryString.parse(window.location.search)
+}
+
+export function getStatePropsFromUrlParams() {
+  const queryParams = getUrlParams()
+  const report = queryParams.viewMode === 'report'
+  return { viewMode: report ? 'REPORT_VIEW' : 'EXPLORE_VIEW' }
+}
+
+export const JSMD_QUERY_PARAMS = new Set(['url', 'gist', 'ipynb', 'jsmd'])
+
+export function getStateFromJsmdQueryParams() {
+  const queryParams = getUrlParams()
   let state
   if ({}.hasOwnProperty.call(queryParams, 'url')) {
     state = loadJsmdFromNotebookUrl(queryParams.url)
@@ -57,5 +69,3 @@ function handleUrlQuery() {
   }
   return state
 }
-
-export default handleUrlQuery
