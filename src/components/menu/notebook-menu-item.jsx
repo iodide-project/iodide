@@ -9,6 +9,7 @@ export default class NotebookMenuItem extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     onClick: PropTypes.func,
+    disabled: PropTypes.bool,
     submenuOnClick: PropTypes.func,
     task: PropTypes.oneOfType([
       PropTypes.instanceOf(UserTask),
@@ -33,6 +34,7 @@ export default class NotebookMenuItem extends React.Component {
         {...this.extraMenuProps}
         classes={{ root: 'iodide-menu-item' }}
         key={this.props.task.title}
+        disabled={this.props.disabled}
         onClick={() => {
           this.props.task.callback()
           if (this.props.onClick) this.props.onClick()
