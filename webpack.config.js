@@ -38,11 +38,8 @@ module.exports = (env) => {
     plugins.push(new UglifyJSPlugin())
   }
 
-  if (!env.includes('client-only')) {
-    // default case: heroku or local python server using docker-compose
-    EDITOR_ORIGIN = process.env.SERVER_URI || `http://localhost:${DEV_SERVER_PORT}/`
-  }
-
+  // default case: heroku or local python server using docker-compose
+  EDITOR_ORIGIN = EDITOR_ORIGIN || process.env.SERVER_URI || `http://localhost:${DEV_SERVER_PORT}/`
   APP_PATH_STRING = `${EDITOR_ORIGIN}/`
   CSS_PATH_STRING = `${EDITOR_ORIGIN}/`
 
@@ -130,7 +127,6 @@ module.exports = (env) => {
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify((env && env.startsWith('dev')) ? 'dev' : 'production'),
-        IODIDE_BUILD_TYPE: JSON.stringify((env && env.includes('client-only')) ? 'standalone' : 'server'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
       }),
       new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),

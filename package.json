@@ -11,8 +11,6 @@
     "start": "webpack --watch --mode=development --env=dev",
     "build": "webpack",
     "build-production": "webpack --env=production",
-    "build-dev-client-only": "webpack --env=dev-client-only",
-    "build-prod-client-only": "webpack --env=prod-client-only",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix"
   },
   "jest": {
@@ -22,8 +20,7 @@
     ],
     "globals": {
       "window": true,
-      "IODIDE_BUILD_MODE": "test",
-      "IODIDE_BUILD_TYPE": "standalone"
+      "IODIDE_BUILD_MODE": "test"
     },
     "setupFiles": [
       "jest-localstorage-mock"
