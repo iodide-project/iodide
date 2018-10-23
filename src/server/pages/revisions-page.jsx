@@ -139,7 +139,6 @@ export default class RevisionsPage extends React.Component {
                 files={this.state.files}
                 onDelete={this.onDeleteNotebook}
                 onUploadFile={this.onUploadFile}
-
               />
             </ActionsContainer>
           }
