@@ -70,8 +70,7 @@ export default class RevisionsPage extends React.Component {
   }
 
   onUploadFile(newFileInfo) {
-    let { files } = this.state
-    files = files.filter(f => f.filename !== newFileInfo.filename)
+    const files = this.state.files.filter(f => f.filename !== newFileInfo.filename)
     files.push(newFileInfo)
     files.sort((a, b) => a.last_updated < b.last_updated)
     this.setState({ files })
