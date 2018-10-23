@@ -1,6 +1,6 @@
 import fetchWithCSRFToken from './fetch-with-csrf-token'
 
-export function selectFile(notebookID) {
+export function selectFileAndFormatMetadata(notebookID) {
   return new Promise((resolve) => {
     const filePicker = document.createElement('input')
     filePicker.type = 'file'
@@ -25,6 +25,10 @@ export function uploadFile(formData) {
     body: formData,
     method: 'POST',
   })
+}
+
+export function updateFile(fileID, formData) {
+  return fetchWithCSRFToken(`/api/v1/files/${fileID}/`, { method: 'PUT', body: formData })
 }
 
 export function selectAndUploadFile(notebookID, successCallback = () => {}) {

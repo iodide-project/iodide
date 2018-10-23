@@ -37,7 +37,7 @@ vertical-align: middle;
 
 const FileNameContainer = styled('td')`
 padding-left:12px;
-padding-right:12px;
+padding-right: 30px;
 vertical-align: middle;
 min-width: 120px;
 `

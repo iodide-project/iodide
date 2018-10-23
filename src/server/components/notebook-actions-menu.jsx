@@ -5,7 +5,7 @@ import MenuItem from './menu-item'
 import MenuDivider from './menu-divider'
 import DeleteModal from './delete-modal'
 import UploadModal from './upload-modal'
-import { selectFile, uploadFile } from '../../shared/upload-file'
+import { selectFileAndFormatMetadata, uploadFile, updateFile } from '../../shared/upload-file'
 
 export default class NotebookActionsMenu extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class NotebookActionsMenu extends React.Component {
     this.state = {
       deleteModalVisible: false,
       uploadFileConfirmationVisible: false,
-      currentFile: undefined,
+      newFile: undefined,
       oldFile: undefined,
     }
     // notebook delete functions
@@ -21,15 +21,16 @@ export default class NotebookActionsMenu extends React.Component {
     this.showDeleteModal = this.showDeleteModal.bind(this)
     this.hideDeleteModal = this.hideDeleteModal.bind(this)
     // file handling functions
-    this.onSelectFile = this.onSelectFile.bind(this)
+    this.selectFile = this.selectFile.bind(this)
     this.uploadFile = this.uploadFile.bind(this)
+    this.updateFile = this.updateFile.bind(this)
     this.hideUploadFileConfirmationModal = this.hideUploadFileConfirmationModal.bind(this)
     // nav functions
     this.goToRevisionsPage = this.goToRevisionsPage.bind(this)
   }
 
-  onSelectFile(notebookID) {
-    selectFile(notebookID)
+  selectFile(notebookID) {
+    selectFileAndFormatMetadata(notebookID)
       .then((formData) => {
         let filename
         try {
@@ -40,12 +41,12 @@ export default class NotebookActionsMenu extends React.Component {
         }
         const fileDoesntExistYet = !this.props.files.map(f => f.filename).includes(filename)
         if (fileDoesntExistYet) {
-          this.setState({ currentFile: undefined })
+          this.setState({ newFile: undefined })
           this.uploadFile(formData)
         } else {
           // if filename is in this.props.files ask before uploading and replacing.
           const oldFile = this.props.files.filter(f => f.filename === filename)[0]
-          this.setState({ currentFile: formData, uploadFileConfirmationVisible: true, oldFile })
+          this.setState({ newFile: formData, uploadFileConfirmationVisible: true, oldFile })
         }
       })
   }
@@ -55,6 +56,15 @@ export default class NotebookActionsMenu extends React.Component {
       .then(response => response.json())
       .then((response) => {
         if (this.props.onUploadFile) this.props.onUploadFile(response)
+      })
+  }
+
+  updateFile() {
+    return updateFile(this.state.oldFile.id, this.state.newFile)
+      .then(response => response.json())
+      .then((response) => {
+        if (this.props.onUploadFile) this.props.onUploadFile(response)
+        this.hideUploadFileConfirmationModal()
       })
   }
 
@@ -91,7 +101,7 @@ export default class NotebookActionsMenu extends React.Component {
             <MenuItem onClick={this.goToRevisionsPage}>View Revisions...</MenuItem>}
             { (this.props.isUserAccount && this.props.onUploadFile) ?
               <MenuItem
-                onClick={() => this.onSelectFile(this.props.notebookID)}
+                onClick={() => this.selectFile(this.props.notebookID)}
               >Upload a File ...
               </MenuItem> : undefined
             }
@@ -114,12 +124,8 @@ export default class NotebookActionsMenu extends React.Component {
           visible={this.state.uploadFileConfirmationVisible}
           onClose={this.hideUploadFileConfirmationModal}
           onCancel={this.hideUploadFileConfirmationModal}
-          onUpload={() => {
-            this.uploadFile(this.state.currentFile)
-          }}
+          onUpdateFile={this.updateFile}
           oldFile={this.state.oldFile}
-          notebookID={this.props.notebookID}
-          url={`/api/v1/notebooks/${this.props.notebookID}/files/`}
         />
       </React.Fragment>
     )
