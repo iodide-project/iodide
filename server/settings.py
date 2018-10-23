@@ -48,6 +48,9 @@ SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 # OpenIDC (aka auth0 identity/authentication)
 USE_OPENIDC_AUTH = env.bool("USE_OPENIDC_AUTH", default=False)
 
+# Use Gravatar middleware to display user avatars
+USE_GRAVATAR = env.bool("USE_GRAVATAR", default=not SOCIAL_AUTH_GITHUB_KEY)
+
 # Maximum file length for uploaded data / assets
 MAX_FILENAME_LENGTH = 120
 MAX_FILE_SIZE = 1024*1024*10  # 10 megabytes is the default
@@ -67,7 +70,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'rest_framework',
-    'social_django',
     'server.base',
     'server.notebooks',
     'server.files',
@@ -88,15 +90,18 @@ if DOCKERFLOW_ENABLED:
     INSTALLED_APPS.append('dockerflow.django')
     MIDDLEWARE.append('dockerflow.django.middleware.DockerflowMiddleware')
 
-if SOCIAL_AUTH_GITHUB_KEY:
+if USE_OPENIDC_AUTH:
+    INSTALLED_APPS.append('server.openidc')
+    MIDDLEWARE.append('server.openidc.middleware.OpenIDCAuthMiddleware')
+elif SOCIAL_AUTH_GITHUB_KEY:
+    INSTALLED_APPS.append('social_django')
     MIDDLEWARE.extend([
         'social_django.middleware.SocialAuthExceptionMiddleware',
         'server.github.middleware.GithubAuthMiddleware'
     ])
 
-if USE_OPENIDC_AUTH:
-    INSTALLED_APPS.append('server.openidc')
-    MIDDLEWARE.append('server.openidc.middleware.OpenIDCAuthMiddleware')
+if USE_GRAVATAR:
+    MIDDLEWARE.append('server.gravatar.middleware.GravatarMiddleware')
 
 ROOT_URLCONF = 'server.urls'
 

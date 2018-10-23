@@ -8,7 +8,7 @@ from helpers import get_rest_framework_time_string
 
 
 def test_post_to_file_api(fake_user, client, test_notebook):
-    client.force_authenticate(user=fake_user)
+    client.force_login(user=fake_user)
     with tempfile.NamedTemporaryFile(mode='w+') as f:
         f.write('hello')
         f.seek(0)

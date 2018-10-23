@@ -66,7 +66,7 @@ def test_create_notebook_revision_non_owner(fake_user, fake_user2, test_notebook
     post_blob = {"title": "My cool notebook",
                  "content": "*modified test content"}
     # should not be able to add a revision if not owner of notebook
-    client.force_authenticate(user=fake_user2)
+    client.force_login(fake_user2)
     resp = client.post(
         reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}),
         post_blob,
@@ -80,7 +80,7 @@ def test_create_notebook_revision(fake_user, test_notebook, client):
                  "content": "*modified test content"}
 
     # should be able to create a revision if we are the owner
-    client.force_authenticate(user=fake_user)
+    client.force_login(user=fake_user)
     resp = client.post(
         reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}),
         post_blob,
@@ -107,7 +107,7 @@ def test_delete_notebook_revision_not_logged_in(test_notebook, client):
 
 def test_delete_notebook_revision_not_owner(fake_user, fake_user2, test_notebook, client):
     # should not be able to delete if not owner of the notebook revision
-    client.force_authenticate(user=fake_user2)
+    client.force_login(fake_user2)
     resp = client.delete(reverse("notebook-revisions-detail", kwargs={
         'notebook_id': test_notebook.id,
         'pk': test_notebook.revisions.last().id
@@ -117,7 +117,7 @@ def test_delete_notebook_revision_not_owner(fake_user, fake_user2, test_notebook
 
 def test_delete_notebook_revision_owner(fake_user, test_notebook, client):
     # however, it should succeed if we are the owner
-    client.force_authenticate(user=fake_user)
+    client.force_login(user=fake_user)
     resp = client.delete(reverse("notebook-revisions-detail", kwargs={
         'notebook_id': test_notebook.id,
         'pk': test_notebook.revisions.last().id
