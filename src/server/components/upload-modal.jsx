@@ -16,9 +16,9 @@ export default class UploadModal extends React.Component {
           with other notebooks will not be affected.
         </ModalContent>
         <ModalCall>
-          <TextButton onClick={this.props.onCancel || this.props.onClose}>cancel
+          <TextButton onClick={this.props.onCancel || this.props.onClose}>Cancel
           </TextButton>
-          <TextButton onClick={this.props.onUpdateFile}>replace file
+          <TextButton onClick={this.props.onUpdateFile}>Replace File
           </TextButton>
         </ModalCall>
       </Modal>
