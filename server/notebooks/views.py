@@ -75,7 +75,7 @@ def notebook_revisions(request, pk):
          'id': file.id,
          'last_updated': file.last_updated.isoformat(sep=' '),
          'size': len(file.content)}
-        for file in File.objects.filter(notebook_id=pk)
+        for file in File.objects.filter(notebook_id=pk).order_by('-last_updated')
     ]
     revisions = list(reversed([{
         'id': revision.id,

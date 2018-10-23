@@ -62,10 +62,7 @@ const ForkedFromLink = ({
 export default class RevisionsPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      revisions: this.props.revisions,
-      files: this.props.files,
-    };
+    this.state = { revisions: this.props.revisions, files: this.props.files };
     this.onDeleteNotebook = this.onDeleteNotebook.bind(this);
     this.onDeleteRevision = this.onDeleteRevision.bind(this);
     this.onDeleteFile = this.onDeleteFile.bind(this);
@@ -73,8 +70,10 @@ export default class RevisionsPage extends React.Component {
   }
 
   onUploadFile(newFileInfo) {
-    const { files } = this.state
+    let { files } = this.state
+    files = files.filter(f => f.filename !== newFileInfo.filename)
     files.push(newFileInfo)
+    files.sort((a, b) => a.last_updated < b.last_updated)
     this.setState({ files })
   }
 
@@ -89,7 +88,6 @@ export default class RevisionsPage extends React.Component {
 
   onDeleteRevision(revisionID) {
     if (this.state.revisions.length === 1) {
-      // If we just deleted the last revision, let's delete the notebook.
       fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`, {
         method: 'DELETE',
       }).then(this.onDeleteNotebook);
@@ -139,8 +137,10 @@ export default class RevisionsPage extends React.Component {
                 placement="right-start"
                 notebookID={this.props.ownerInfo.notebookId}
                 notebookTitle={this.props.ownerInfo.title}
+                files={this.state.files}
                 onDelete={this.onDeleteNotebook}
                 onUploadFile={this.onUploadFile}
+
               />
             </ActionsContainer>
           }
