@@ -89,10 +89,12 @@ export default class NotebookActionsMenu extends React.Component {
           <Menu>
             {this.props.hideRevisions ? undefined :
             <MenuItem onClick={this.goToRevisionsPage}>View Revisions...</MenuItem>}
-            <MenuItem
-              onClick={() => this.onSelectFile(this.props.notebookID)}
-            >Upload a File ...
-            </MenuItem>
+            { (this.props.isUserAccount && this.props.onUploadFile) ?
+              <MenuItem
+                onClick={() => this.onSelectFile(this.props.notebookID)}
+              >Upload a File ...
+              </MenuItem> : undefined
+            }
             {this.props.hideRevisions || !this.props.isUserAccount ? undefined : <MenuDivider />}
             {!this.props.isUserAccount ? undefined :
             <MenuItem onClick={this.deleteNotebook}>Delete This Notebook...</MenuItem>}
@@ -113,7 +115,6 @@ export default class NotebookActionsMenu extends React.Component {
           onClose={this.hideUploadFileConfirmationModal}
           onCancel={this.hideUploadFileConfirmationModal}
           onUpload={() => {
-            console.debug(this.state.currentFile)
             this.uploadFile(this.state.currentFile)
           }}
           oldFile={this.state.oldFile}
