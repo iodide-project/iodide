@@ -17,7 +17,7 @@ export class EditorToolbarMenuUnconnected extends React.Component {
   render() {
     return (
       <NotebookIconMenu>
-        {this.props.isServer ? <NotebookMenuItem task={tasks.newNotebook} /> : undefined }
+        { this.props.isServer && <NotebookMenuItem task={tasks.newNotebook} /> }
         <NotebookMenuItem task={tasks.exportNotebook} />
         <NotebookMenuItem task={tasks.exportNotebookAsReport} />
         <NotebookMenuItem task={tasks.clearVariables} />
