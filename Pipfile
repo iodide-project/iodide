@@ -14,6 +14,7 @@ django-rest-framework = "*"
 faker = "*"
 mock = "*"
 dockerflow = "*"
+pytest-env = "*"
 
 [requires]
 python_version = "3.7"

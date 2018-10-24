@@ -76,7 +76,7 @@ def test_create_notebook_not_logged_in(transactional_db, client, notebook_post_b
 
 def test_create_notebook_logged_in(fake_user, client, notebook_post_blob):
     # should be able to create notebook if logged in
-    client.force_authenticate(user=fake_user)
+    client.force_login(user=fake_user)
     resp = client.post(reverse('notebooks-list'), notebook_post_blob)
     assert resp.status_code == 201
     assert Notebook.objects.count() == 1
@@ -96,14 +96,14 @@ def test_delete_notebook_not_logged_in(test_notebook, client):
 
 def test_delete_notebook_not_owner(fake_user, fake_user2, test_notebook, client):
     # should not be able to delete if not owner of the notebook
-    client.force_authenticate(user=fake_user2)
+    client.force_login(fake_user2)
     resp = client.delete(reverse('notebooks-detail', kwargs={'pk': test_notebook.id}))
     assert resp.status_code == 403
 
 
 def test_delete_notebook_owner(fake_user, test_notebook, client):
     # however, it should succeed if we are the owner
-    client.force_authenticate(user=fake_user)
+    client.force_login(user=fake_user)
     resp = client.delete(reverse('notebooks-detail', kwargs={'pk': test_notebook.id}))
     assert resp.status_code == 204
     assert Notebook.objects.count() == 0
@@ -138,7 +138,7 @@ def test_fork_notebook_not_logged_in(client, notebook_fork_post_blob):
 
 
 def test_incorrect_fork_notebook(client, fake_user, incorrect_notebook_fork_post_blob):
-    client.force_authenticate(user=fake_user)
+    client.force_login(user=fake_user)
     resp = client.post(reverse('notebooks-list'), incorrect_notebook_fork_post_blob)
     assert resp.status_code == 400
 
@@ -147,7 +147,7 @@ def test_fork_notebook_logged_in(client,
                                  fake_user,
                                  fake_user2,
                                  test_notebook):
-    client.force_authenticate(user=fake_user)
+    client.force_login(user=fake_user)
     blob = {
         'title': 'My cool notebook',
         'content': 'Fake notebook content',
@@ -162,7 +162,7 @@ def test_fork_notebook_and_delete_original(client, fake_user,
                                            fake_user2,
                                            test_notebook,
                                            notebook_fork_post_blob):
-    client.force_authenticate(user=fake_user)
+    client.force_login(user=fake_user)
     revision = test_notebook.revisions.latest('created')
     response = client.post(reverse('notebooks-list'), {
         'title': 'test',

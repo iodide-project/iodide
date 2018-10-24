@@ -2,7 +2,6 @@ import sys
 import os
 
 import pytest
-from rest_framework.test import APIClient
 
 from server.base.models import User
 from server.files.models import File
@@ -13,26 +12,17 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'helpers'))
 
 
 @pytest.fixture
-def client():
-    """
-    A django-rest-framework APIClient instance:
-    http://www.django-rest-framework.org/api-guide/testing/#apiclient
-    """
-    return APIClient()
-
-
-@pytest.fixture
 def fake_user(transactional_db):
-    return User.objects.create(username="testuser1",
-                               email="user@foo.com",
-                               password="123")
+    user = User.objects.create(username="testuser1",
+                               email="user@foo.com")
+    return user
 
 
 @pytest.fixture
 def fake_user2(transactional_db):
-    return User.objects.create(username="testuser2",
-                               email="user@bar.com",
-                               password="123")
+    user = User.objects.create(username="testuser2",
+                               email="user@bar.com")
+    return user
 
 
 @pytest.fixture
