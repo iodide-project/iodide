@@ -32,7 +32,7 @@ def test_post_to_file_api(fake_user, client, test_notebook):
 
 
 def test_put_to_file_api(fake_user, client, test_notebook, test_file):
-    client.force_authenticate(user=fake_user)
+    client.force_login(user=fake_user)
     with tempfile.NamedTemporaryFile(mode='w+') as f:
         f.write('new-information')
         f.seek(0)
