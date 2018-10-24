@@ -3,6 +3,8 @@ import styled from 'react-emotion';
 import Settings from '@material-ui/icons/Settings'
 import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
+import '../style/base'
+
 import PageBody from '../components/page-body';
 import Header from '../components/header';
 import Table from '../components/table';

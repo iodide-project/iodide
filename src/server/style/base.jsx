@@ -1,5 +1,5 @@
 import { css, injectGlobal } from 'emotion'
-
+import ZillaSlab from './ZillaSlab-Light.woff'
 /*
 This is a baseline css reset, mostly based off
 of normalize.css. As such it shouldn't really do
@@ -23,6 +23,12 @@ body {
 
 export default injectGlobal`
  
+ @font-face {
+  font-family: 'Zilla Slab';
+  src: url("${ZillaSlab}");
+  src: url("/iodide.dev.fonts/ZillaSlab-Light.otf") ;
+}
+
 html {
   line-height: 1.15; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
