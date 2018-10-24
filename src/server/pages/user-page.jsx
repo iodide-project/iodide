@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'react-emotion';
 import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
-import '../style/base'
-
 import Header from '../components/header';
 import PageBody from '../components/page-body'
 import Table from '../components/table'
