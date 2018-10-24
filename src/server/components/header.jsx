@@ -44,7 +44,7 @@ class Header extends React.Component {
           >
             <div>
               <Toolbar variant="dense">
-                <Typography variant="title" color="inherit" className={classes.flex}>
+                <Typography id="logo" variant="title" color="inherit" className={classes.flex}>
                   <a href="/" style={{ color: 'white', textDecoration: 'none' }}>Iodide</a>
                 </Typography>
                 <UserMenu

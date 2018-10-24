@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block head %}
+<link href="https://fonts.googleapis.com/css?family=Zilla+Slab:300,400" rel="stylesheet">
+{% endblock %}
 {% block content %}
 <div id="page"></div>
 {{ page_data|json_script:"pageData" }}

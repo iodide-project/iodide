@@ -2,12 +2,12 @@ import React from 'react';
 import { render } from 'react-dom';
 import UniversalRouter from 'universal-router'
 
+import './style/base'
+
 import HomePage from './pages/home-page'
 import LoginPage from './pages/login-page'
 import UserPage from './pages/user-page'
 import RevisionsPage from './pages/revisions-page'
-
-import './style/base'
 
 const pageData = JSON.parse(document.getElementById('pageData').textContent);
 
