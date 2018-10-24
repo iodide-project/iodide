@@ -2,6 +2,7 @@ import sys
 import os
 
 import pytest
+from rest_framework.test import APIClient
 
 from server.base.models import User
 from server.files.models import File
@@ -9,6 +10,15 @@ from server.notebooks.models import (Notebook,
                                      NotebookRevision)
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'helpers'))
+
+
+@pytest.fixture
+def api_client():
+    """
+    A django-rest-framework APIClient instance:
+    http://www.django-rest-framework.org/api-guide/testing/#apiclient
+    """
+    return APIClient()
 
 
 @pytest.fixture

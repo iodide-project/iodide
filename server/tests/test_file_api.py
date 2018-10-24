@@ -31,13 +31,14 @@ def test_post_to_file_api(fake_user, client, test_notebook):
         }
 
 
-def test_put_to_file_api(fake_user, client, test_notebook, test_file):
-    client.force_login(user=fake_user)
+def test_put_to_file_api(fake_user, api_client, test_notebook, test_file):
+    # we use the django rest framework's api client for this test, as it
+    # lets us use the same payload for a put request as for post
+    api_client.force_authenticate(user=fake_user)
     with tempfile.NamedTemporaryFile(mode='w+') as f:
         f.write('new-information')
         f.seek(0)
-        print(reverse('files-detail', kwargs={'pk': test_file.id}))
-        resp = client.put(reverse('files-detail', kwargs={'pk': test_file.id}), {
+        resp = api_client.put(reverse('files-detail', kwargs={'pk': test_file.id}), {
             'metadata': json.dumps({
                 'filename': 'test-2.csv',
                 'notebook_id': test_notebook.id
