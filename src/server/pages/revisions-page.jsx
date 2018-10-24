@@ -70,8 +70,9 @@ export default class RevisionsPage extends React.Component {
   }
 
   onUploadFile(newFileInfo) {
-    const { files } = this.state
+    const files = this.state.files.filter(f => f.filename !== newFileInfo.filename)
     files.push(newFileInfo)
+    files.sort((a, b) => a.last_updated < b.last_updated)
     this.setState({ files })
   }
 
@@ -86,7 +87,6 @@ export default class RevisionsPage extends React.Component {
 
   onDeleteRevision(revisionID) {
     if (this.state.revisions.length === 1) {
-      // If we just deleted the last revision, let's delete the notebook.
       fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`, {
         method: 'DELETE',
       }).then(this.onDeleteNotebook);
@@ -136,6 +136,7 @@ export default class RevisionsPage extends React.Component {
                 placement="right-start"
                 notebookID={this.props.ownerInfo.notebookId}
                 notebookTitle={this.props.ownerInfo.title}
+                files={this.state.files}
                 onDelete={this.onDeleteNotebook}
                 onUploadFile={this.onUploadFile}
               />

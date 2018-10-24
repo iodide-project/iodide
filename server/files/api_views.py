@@ -32,4 +32,16 @@ class FileViewSet(viewsets.ModelViewSet):
         serializer = FilesSerializer(f)
         return Response(serializer.data, status=201)
 
+    def update(self, request, pk):
+        (metadata, file) = (json.loads(self.request.data['metadata']),
+                            self.request.data['file'])
+        file_to_update = File.objects.get(pk=pk)
+        updated_filename = metadata['filename'].strip()
+        file_to_update.filename = updated_filename
+        if file:
+            file_to_update.content = file.read()
+        file_to_update.save()
+        serializer = FilesSerializer(file_to_update)
+        return Response(serializer.data, status=201)
+
     queryset = File.objects.all()

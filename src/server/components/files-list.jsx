@@ -36,19 +36,17 @@ vertical-align: middle;
 `
 
 const FileNameContainer = styled('td')`
-padding:4px;
 padding-left:12px;
-padding-right:12px;
+padding-right: 30px;
 vertical-align: middle;
 min-width: 120px;
 `
 
 const FileSizeContainer = styled('td')`
-font-size: .9em;
 color:gray;
+padding-right: 30px;
+text-align: right;
 font-style: italic;
-padding:4px;
-vertical-align: middle;
 `
 
 export default class FilesList extends React.Component {

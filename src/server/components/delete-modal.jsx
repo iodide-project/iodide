@@ -29,9 +29,9 @@ export default class DeleteModal extends React.Component {
         <ModalTitle>{this.props.title}</ModalTitle>
         <ModalContent>{this.props.content || 'This action cannot be undone.'}</ModalContent>
         <ModalCall>
-          <TextButton onClick={this.props.onCancel || this.props.onClose}>cancel
+          <TextButton onClick={this.props.onCancel || this.props.onClose}>Cancel
           </TextButton>
-          <TextButton onClick={this.deleteObject}>delete
+          <TextButton onClick={this.deleteObject}>Delete
           </TextButton>
         </ModalCall>
       </Modal>
