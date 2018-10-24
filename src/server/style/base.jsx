@@ -1,5 +1,6 @@
 import { css, injectGlobal } from 'emotion'
-import ZillaSlab from './ZillaSlab-Light.woff'
+import ZillaSlab from './ZillaSlab-Light.woff';
+
 /*
 This is a baseline css reset, mostly based off
 of normalize.css. As such it shouldn't really do
@@ -22,11 +23,10 @@ body {
 /*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
 
 export default injectGlobal`
- 
- @font-face {
+
+@font-face {
   font-family: 'Zilla Slab';
-  src: url("${ZillaSlab}");
-  src: url("/iodide.dev.fonts/ZillaSlab-Light.otf") ;
+  src: url("/${ZillaSlab}");
 }
 
 html {
