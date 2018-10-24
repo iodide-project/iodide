@@ -5,7 +5,8 @@ import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import UserMenu from '../../shared/user-menu'
+
+import UserMenu from '../../shared/user-menu';
 
 const theme = createMuiTheme({
   palette: {
@@ -44,7 +45,7 @@ class Header extends React.Component {
           >
             <div>
               <Toolbar variant="dense">
-                <Typography variant="title" color="inherit" className={classes.flex}>
+                <Typography id="logo" variant="title" color="inherit" className={classes.flex}>
                   <a href="/" style={{ color: 'white', textDecoration: 'none' }}>Iodide</a>
                 </Typography>
                 <UserMenu
