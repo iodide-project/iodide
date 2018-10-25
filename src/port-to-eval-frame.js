@@ -1,6 +1,6 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
-import { addLanguage, selectCell } from './actions/actions'
+import { addLanguage, selectCell, setKernelState } from './actions/actions'
 import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
 
 let portToEvalFrame
@@ -17,6 +17,7 @@ const approvedReduxActionsFromEvalFrame = [
   'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME',
   'CHANGE_SIDE_PANE_MODE',
   'TOGGLE_EDITOR_LINK',
+  'SET_KERNEL_STATE',
 ]
 
 const approvedKeys = [
@@ -97,6 +98,7 @@ export const listenForEvalFramePortReady = (messageEvent) => {
     portToEvalFrame = messageEvent.ports[0] // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage
     store.dispatch({ type: 'EVAL_FRAME_READY' })
+    store.dispatch(setKernelState('KERNEL_IDLE'))
     // stop listening for messages once a connection to the eval-frame is made
     window.removeEventListener('message', listenForEvalFramePortReady, false)
   }

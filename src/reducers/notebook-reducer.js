@@ -223,6 +223,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { panePositions: action.panePositions })
     }
 
+    case 'SET_KERNEL_STATE': {
+      return Object.assign({}, state, { kernelState: action.kernelState })
+    }
+
     default: {
       return state
     }

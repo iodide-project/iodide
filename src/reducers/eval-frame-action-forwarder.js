@@ -34,6 +34,7 @@ const evalFrameActionForwarder = (state, action) => {
     case 'SELECT_CELL':
     case 'INSERT_CELL':
     case 'ADD_CELL':
+    case 'SET_KERNEL_STATE':
     case 'DELETE_CELL': {
       if (state.evalFrameReady) {
         // if the eval frame is ready, send the action on to the frame

@@ -144,6 +144,13 @@ export function changeMode(mode) {
   }
 }
 
+export function setKernelState(kernelState) {
+  return {
+    type: 'SET_KERNEL_STATE',
+    kernelState,
+  }
+}
+
 export function setViewMode(viewMode) {
   return (dispatch, getState) => {
     const state = getState()
@@ -562,3 +569,4 @@ export function cellPaste() {
     type: 'CELL_PASTE',
   }
 }
+

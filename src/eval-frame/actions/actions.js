@@ -18,6 +18,7 @@ import {
   ensureLanguageAvailable,
   runCodeWithLanguage,
 } from './language-actions'
+import { postActionToEditor } from '../port-to-editor';
 
 import { evaluateFetchCell } from './fetch-cell-eval-actions'
 
@@ -136,6 +137,10 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
   }
 }
 
+export function setKernelState(kernelState) {
+  return postActionToEditor({ type: 'SET_KERNEL_STATE', kernelState })
+}
+
 export function evalConsoleInput(languageId) {
   return (dispatch, getState) => {
     const state = getState()
@@ -155,6 +160,7 @@ export function evalConsoleInput(languageId) {
 
     // dispatch(temporarilySaveRunningCellID(cell.id))
     dispatch(incrementExecutionNumber())
+    setKernelState('KERNEL_BUSY')
 
     const updateAfterEvaluation = (output) => {
       // const cellProperties = { rendered: true }
@@ -175,6 +181,7 @@ export function evalConsoleInput(languageId) {
     return runCodeWithLanguage(language, code, messageCallback)
       .then(updateAfterEvaluation)
       .then(waitForExplicitContinuationStatusResolution)
+      .then(() => setKernelState('KERNEL_IDLE'))
       // .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
   }
 }
@@ -208,7 +215,7 @@ function evaluateCodeCell(cell) {
     const messageCallback = (msg) => {
       dispatch(appendToEvalHistory(cell.id, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
     }
-
+    setKernelState('KERNEL_BUSY')
     return ensureLanguageAvailable(cell.language, cell, state, dispatch)
       .then(language => runCodeWithLanguage(language, code, messageCallback))
       .then(
@@ -216,7 +223,8 @@ function evaluateCodeCell(cell) {
         output => updateCellAfterEvaluation(output, 'ERROR'),
       )
       .then(waitForExplicitContinuationStatusResolution)
-      .then(() => dispatch(temporarilySaveRunningCellID(undefined)));
+      .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
+      .then(() => setKernelState('KERNEL_IDLE'));
   }
 }
 
