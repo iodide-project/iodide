@@ -14,6 +14,12 @@ export function postMessageToEditor(messageType, message) {
   portToEditor.postMessage({ messageType, message })
 }
 
+export function sendHealthPingToEditor() {
+  postMessageToEditor('HEALTH_PING', true)
+}
+
+setInterval(sendHealthPingToEditor, 1000)
+
 function receiveMessage(event) {
   const trustedMessage = true
   if (trustedMessage) {
@@ -71,4 +77,8 @@ export function postActionToEditor(actionObj) {
 
 export function postKeypressToEditor(keypressStr) {
   postMessageToEditor('KEYPRESS', keypressStr)
+}
+
+window.onerror = () => {
+  postActionToEditor({ type: 'SET_KERNEL_STATE', kernelState: 'KERNEL_ERROR' })
 }

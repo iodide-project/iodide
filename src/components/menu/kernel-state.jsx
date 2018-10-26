@@ -7,6 +7,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye'
 import Error from '@material-ui/icons/Error'
+import ErrorOutline from '@material-ui/icons/ErrorOutline'
 
 const KernelContainer = styled('div')`
 width: 35px;
@@ -52,12 +53,17 @@ export class KernelStateUnconnected extends React.Component {
             {
                 kernelState === 'KERNEL_ERROR' &&
                 <IconContainer color="red">
+                  <ErrorOutline size={20} />
+                </IconContainer>
+            }
+            {
+                kernelState === 'KERNEL_LOAD_ERROR' &&
+                <IconContainer color="gray">
                   <Error size={20} />
                 </IconContainer>
             }
           </KernelContainer>
         </Tooltip>
-
       )
     }
 }
@@ -74,6 +80,9 @@ export function mapStateToProps(state) {
       break
     case 'KERNEL_ERROR':
       kernelText = 'Kernel Error'
+      break
+    case 'KERNEL_LOAD_ERROR':
+      kernelText = 'Kernel Didn\'t Load'
       break
     default:
       kernelText = 'Kernel Status'

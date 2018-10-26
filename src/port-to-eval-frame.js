@@ -31,6 +31,22 @@ const approvedKeys = [
   'ctrl+shift+right',
 ]
 
+// health ping interval
+let timeSince = new Date()
+setInterval(() => {
+  if (store.getState().evalFrameReady && new Date() - timeSince >= 2000) {
+    store.dispatch(setKernelState('KERNEL_ERROR'))
+  }
+}, 2 * 1000)
+
+// if initial frame doesn't load in K seconds, throw a KERNEL_LOAD_ERROR
+
+setTimeout(() => {
+  if (!store.getState().evalFrameReady) {
+    store.dispatch(setKernelState('KERNEL_LOAD_ERROR'))
+  }
+}, 10 * 1000)
+
 function receiveMessage(event) {
   const trustedMessage = true
   if (trustedMessage) {
@@ -85,6 +101,9 @@ function receiveMessage(event) {
       case 'CLICK_ON_OUTPUT':
         if (message.autoScrollToCell === undefined) { message.autoScrollToCell = false }
         store.dispatch(selectCell(message.id, message.autoScrollToCell, message.pxFromViewportTop))
+        break
+      case 'HEALTH_PING':
+        timeSince = new Date()
         break
       default:
         console.error('unknown messageType', message)
