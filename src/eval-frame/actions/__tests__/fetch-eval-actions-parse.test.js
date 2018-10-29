@@ -117,7 +117,7 @@ describe('parseAssignmentCommand gives correct results', () => {
 })
 
 
-// test parseAssignmentCommand /////////////////////////
+// test parseFetchCellLine /////////////////////////
 const validFetchLines = [
   {
     line: 'js: https://d3js.org/d3.v5.min.js',
@@ -179,6 +179,9 @@ describe('return valid results for valid fetch lines', () => {
   })
 })
 
+
+// test error handling /////////////////////////
+
 const invalidFetchLines = [
   {
     line: 'just made up irrelevant text',
@@ -207,6 +210,8 @@ describe('return correct errors for invalid fetch lines', () => {
   })
 })
 
+
+// test parseFetchCell (integration-ish test) /////////////////////////
 
 describe('return correct number of fetch cell fetches', () => {
   const fetchCellText1 = `
