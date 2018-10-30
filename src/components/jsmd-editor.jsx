@@ -165,18 +165,14 @@ class JsmdEditorUnconnected extends React.Component {
     // )
 
     return (
-      <div
-        className="editor"
-        style={this.props.containerStyle}
-      >
-        <ReactCodeMirror
-          ref={this.storeEditorElementRef}
-          value={this.props.content}
-          options={this.props.editorOptions}
-          onChange={this.updateJsmdContent}
-          // onFocusChange={this.handleFocusChange}
-        />
-      </div>
+      <ReactCodeMirror
+        ref={this.storeEditorElementRef}
+        value={this.props.content}
+        options={this.props.editorOptions}
+        onChange={this.updateJsmdContent}
+        style={{ height: '100%' }}
+        // onFocusChange={this.handleFocusChange}
+      />
     )
   }
 }
