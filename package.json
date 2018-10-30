@@ -90,7 +90,6 @@
     "eslint-plugin-jsx-a11y": "6.1.2",
     "eslint-plugin-react": "7.11.1",
     "file-loader": "2.0.0",
-    "git-rev-sync": "1.12.0",
     "jest": "23.6.0",
     "jest-cli": "23.6.0",
     "jest-localstorage-mock": "2.2.0",
