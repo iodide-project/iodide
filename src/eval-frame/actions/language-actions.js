@@ -4,6 +4,7 @@ import {
   historyIdGen,
   updateCellProperties,
   updateValueInHistory,
+  setKernelState,
 } from './actions'
 
 export function addLanguage(languageDefinition) {
@@ -18,12 +19,12 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
   let evalStatus
   let languagePluginPromise
   const rendered = true
-
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"'
     evalStatus = 'ERROR'
     dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
     dispatch(updateValueInHistory(historyId, value))
+    setKernelState('KERNEL_ERROR')
   } else {
     const {
       url,
@@ -64,6 +65,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
           postMessageToEditor('POST_LANGUAGE_DEF_TO_EDITOR', pluginData)
           dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
           dispatch(updateValueInHistory(historyId, value))
+          setKernelState('KERNEL_IDLE')
           resolve()
         })
       })
@@ -73,6 +75,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
         evalStatus = 'ERROR'
         dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
         dispatch(updateValueInHistory(historyId, value))
+        setKernelState('KERNEL_ERROR')
         reject()
       })
 
@@ -85,6 +88,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
 
 export function evaluateLanguagePluginCell(cell) {
   return (dispatch) => {
+    setKernelState('KERNEL_BUSY')
     const historyId = historyIdGen.nextId()
     dispatch(appendToEvalHistory(
       cell.id,
@@ -92,13 +96,13 @@ export function evaluateLanguagePluginCell(cell) {
       undefined,
       { historyId, historyType: 'CELL_EVAL_INFO' },
     ))
-
     let pluginData
     try {
       pluginData = JSON.parse(cell.content)
     } catch (err) {
       dispatch(updateCellProperties(cell.id, { evalStatus: 'ERROR', rendered: true }))
       dispatch(updateValueInHistory(historyId, `plugin definition failed to parse:\n${err.message}`))
+      setKernelState('KERNEL_ERROR')
       return Promise.reject()
     }
 
