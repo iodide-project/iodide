@@ -7,8 +7,7 @@ describe('setKernelState', () => {
   beforeEach(() => {
     store.dispatch(resetNotebook())
   })
-  it('createValidatedReducer should throw an error if we pass an action that inserts an invalid state value', () => {
-    // note that change mode must be a string
+  it('createValidatedReducer should throw an error if we pass an invalid arg into setKernelState', () => {
     expect(() => store.dispatch(setKernelState('fake state')))
       .toThrowError(SchemaValidationError)
     expect(() => store.dispatch(setKernelState(12342323)))
