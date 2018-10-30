@@ -31,7 +31,6 @@ export function syntaxErrorToString(fetchSpec) {
   }
 }
 
-
 export function fetchProgressInitialStrings(fetchSpec) {
   return {
     text: `fetching ${fetchSpec.parsed.fetchType} from ${fetchSpec.parsed.filePath}
@@ -47,7 +46,7 @@ function handleErrors(response) {
   return response
 }
 
-function addCss(fetchSpec) {
+function addCSS(fetchSpec) {
   // remove css if it already present
   document
     .querySelectorAll(`link[href='${fetchSpec.parsed.filePath}']`)
@@ -79,6 +78,7 @@ function loadScriptFromBlob(blob) {
 }
 
 export async function handleFetch(fetchSpec) {
+  console.log(fetchSpec)
   switch (fetchSpec.parsed.fetchType) {
     case 'js':
       return fetch(fetchSpec.parsed.filePath)
@@ -86,11 +86,11 @@ export async function handleFetch(fetchSpec) {
         .then(resp => resp.blob())
         .then(loadScriptFromBlob)
         .then(
-          () => Promise.resolve(),
+          () => Promise.resolve('Finish'),
           () => Promise.reject(new Error(`Script load error: ${fetchSpec.parsed.filePath}`)),
         )
     case 'css':
-      return addCss(fetchSpec)
+      return addCSS(fetchSpec)
     default:
       return Promise.resolve()
   }
@@ -127,13 +127,7 @@ export function evaluateFetchCell(cell) {
       { historyId, historyType: 'FETCH_CELL_INFO' },
     ))
 
-    return Promise.all(fetches.map(handleFetch)).then(
-      () => {
-        console.log('all resolved')
-        return Promise.resolve()
-      },
-      () => Promise.reject(),
-    )
+    return Promise.all(fetches.map(handleFetch))
   }
 }
 

@@ -350,7 +350,8 @@ export function saveNotebookToServer() {
       // Update Exisiting Notebook
       fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${notebookId}/revisions/`, postRequestOptions)
         .then(response => response.json())
-        .then(() => {
+        .then((response) => {
+          console.warn(response)
           const message = 'Updated Notebook'
           updateAutosave(state, true)
           dispatch(updateAppMessages({
