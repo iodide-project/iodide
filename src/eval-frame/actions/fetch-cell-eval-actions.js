@@ -2,6 +2,7 @@ import parseFetchCell from './fetch-cell-parser'
 import {
   appendToEvalHistory,
   historyIdGen,
+  updateUserVariables,
   // updateCellProperties,
   // updateValueInHistory,
 } from './actions'
@@ -15,7 +16,6 @@ spec of desired behavior:
 */
 // export async function handleFetches(params) {
 // }
-
 
 const fetchErrorTypesToStrings = {
   MISSING_FETCH_TYPE: 'fetch type not specified',
@@ -46,18 +46,8 @@ function handleErrors(response) {
   return response
 }
 
-function addCSS(fetchSpec) {
-  // remove css if it already present
-  document
-    .querySelectorAll(`link[href='${fetchSpec.parsed.filePath}']`)
-    .forEach(linkNode => linkNode.parentNode.removeChild(linkNode))
-
-  // add css
-  const elem = document.createElement('link')
-  elem.rel = 'stylesheet'
-  elem.type = 'text/css'
-  elem.href = fetchSpec.parsed.filePath
-  return Promise.resolve()
+function setVariableInWindow(variableName, variableValue) {
+  window[variableName] = variableValue
 }
 
 export async function fetchFileViaEditor(filePath) {
@@ -77,13 +67,53 @@ function loadScriptFromBlob(blob) {
   });
 }
 
+export async function fetchAndGetContent(fetchSpec, responseType) {
+  return fetch(fetchSpec.parsed.filePath)
+    .catch(handleErrors)
+    .then(response => (response ? response[responseType]() : undefined))
+}
+
+export async function fetchAndAssignVariableToWindow(fetchSpec, responseType) {
+  const output = await fetchAndGetContent(fetchSpec, responseType)
+  if (output !== undefined) {
+    setVariableInWindow(fetchSpec.parsed.varName, output)
+    return output
+  }
+  return Promise.reject()
+}
+
+async function addCSS(fetchSpec) {
+  // remove css if it already present
+  document
+    .querySelectorAll(`style[data-href='${fetchSpec.parsed.filePath}']`)
+    .forEach((linkNode) => {
+      linkNode.parentNode.removeChild(linkNode)
+    })
+
+  const stylesheet = await fetchAndGetContent(fetchSpec, 'text')
+    .then((css) => {
+      const style = document.createElement('style')
+      style.innerHTML = css
+      style.setAttribute('data-href', fetchSpec.parsed.filePath)
+      document.head.appendChild(style)
+    })
+  if (!stylesheet) return Promise.reject()
+  return stylesheet
+}
+
 export async function handleFetch(fetchSpec) {
-  console.log(fetchSpec)
   switch (fetchSpec.parsed.fetchType) {
+    case 'text': {
+      return fetchAndAssignVariableToWindow(fetchSpec, 'text')
+    }
+    case 'json': {
+      return fetchAndAssignVariableToWindow(fetchSpec, 'json')
+    }
+    case 'blob': {
+      return fetchAndAssignVariableToWindow(fetchSpec, 'blob')
+    }
     case 'js':
-      return fetch(fetchSpec.parsed.filePath)
-        .then(handleErrors)
-        .then(resp => resp.blob())
+      return fetchAndGetContent(fetchSpec, 'blob')
         .then(loadScriptFromBlob)
         .then(
           () => Promise.resolve('Finish'),
@@ -101,9 +131,6 @@ export function evaluateFetchCell(cell) {
     const historyId = historyIdGen.nextId()
     const cellText = cell.content
     const fetches = parseFetchCell(cellText)
-
-    // console.log('fetches', fetches)
-
     const syntaxErrors = fetches
       .filter(f => f.parsed.error !== undefined)
       .map(syntaxErrorToString)
@@ -119,7 +146,6 @@ export function evaluateFetchCell(cell) {
     }
 
     const intialProgressStrings = fetches.map(fetchProgressInitialStrings)
-    // console.log('intialProgressStrings', intialProgressStrings)
     dispatch(appendToEvalHistory(
       cell.id,
       cell.content,
@@ -127,7 +153,9 @@ export function evaluateFetchCell(cell) {
       { historyId, historyType: 'FETCH_CELL_INFO' },
     ))
 
-    return Promise.all(fetches.map(handleFetch))
+    return Promise.all(fetches.map(handleFetch)).finally(() => {
+      dispatch(updateUserVariables())
+    })
   }
 }
 

@@ -62,7 +62,11 @@ export function parseFetchCellLine(line) {
     // first, strip out comment from the end of line (if it exists)
     const fetchCommand = fetchContent.trim().split(' //')[0].trim()
     switch (fetchType) {
-      case 'file':
+      case 'text':
+        return Object.assign({}, { fetchType }, parseAssignmentCommand(fetchCommand))
+      case 'json':
+        return Object.assign({}, { fetchType }, parseAssignmentCommand(fetchCommand))
+      case 'blob':
         return Object.assign({}, { fetchType }, parseAssignmentCommand(fetchCommand))
       case 'js':
         return Object.assign({}, { fetchType }, parseFileLine(fetchCommand))

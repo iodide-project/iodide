@@ -99,7 +99,7 @@ export function evaluateLanguagePluginCell(cell) {
     } catch (err) {
       dispatch(updateCellProperties(cell.id, { evalStatus: 'ERROR', rendered: true }))
       dispatch(updateValueInHistory(historyId, `plugin definition failed to parse:\n${err.message}`))
-      return Promise((resolve, reject) => reject())
+      return Promise.reject()
     }
 
     return loadLanguagePlugin(pluginData, historyId, cell, dispatch)

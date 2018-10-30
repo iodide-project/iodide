@@ -143,28 +143,55 @@ const validFetchLines = [
     },
   },
   {
-    line: ' file:   foo =   https://d3js.org/d3.v5.min.js //comment',
+    line: ' text:   foo =   https://d3js.org/d3.v5.min.js //comment',
     result: {
-      fetchType: 'file',
+      fetchType: 'text',
       varName: 'foo',
       filePath: 'https://d3js.org/d3.v5.min.js',
       isRelPath: false,
     },
   },
   {
-    line: ' file:   $fo_o    =   /d3js.org/d3.v5.min.js //comment',
+    line: ' text:   $fo_o    =   /d3js.org/d3.v5.min.js //comment',
     result: {
-      fetchType: 'file',
+      fetchType: 'text',
       varName: '$fo_o',
       filePath: '/d3js.org/d3.v5.min.js',
       isRelPath: true,
     },
   },
   {
-    line: ' file:   ಠ_ಠ =   https://d3js.org/d3.v5.min.js //comment',
+    line: ' text:   ಠ_ಠ =   https://d3js.org/d3.v5.min.js //comment',
     result: {
-      fetchType: 'file',
+      fetchType: 'text',
       varName: 'ಠ_ಠ',
+      filePath: 'https://d3js.org/d3.v5.min.js',
+      isRelPath: false,
+    },
+  },
+  {
+    line: ' json:   test =   https://d3js.org/d3.v5.min.js //comment',
+    result: {
+      fetchType: 'json',
+      varName: 'test',
+      filePath: 'https://d3js.org/d3.v5.min.js',
+      isRelPath: false,
+    },
+  },
+  {
+    line: ' json:   test =   https://d3js.org/d3.v5.min.js //comment',
+    result: {
+      fetchType: 'json',
+      varName: 'test',
+      filePath: 'https://d3js.org/d3.v5.min.js',
+      isRelPath: false,
+    },
+  },
+  {
+    line: ' blob:   test =  https://d3js.org/d3.v5.min.js //comment',
+    result: {
+      fetchType: 'blob',
+      varName: 'test',
       filePath: 'https://d3js.org/d3.v5.min.js',
       isRelPath: false,
     },
@@ -195,7 +222,15 @@ const invalidFetchLines = [
     result: { error: 'INVALID_FETCH_TYPE' },
   },
   {
-    line: 'file: asd## = https://iodide.io/data/foo.csv',
+    line: 'text: asd## = https://iodide.io/data/foo.csv',
+    result: { error: 'INVALID_VARIABLE_NAME' },
+  },
+  {
+    line: 'json: ---asd## = https://iodide.io/data/foo.csv',
+    result: { error: 'INVALID_VARIABLE_NAME' },
+  },
+  {
+    line: 'blob: 1234567890 = https://iodide.io/data/foo.csv',
     result: { error: 'INVALID_VARIABLE_NAME' },
   },
 ]
