@@ -75,7 +75,7 @@ export function parseFetchCellLine(line) {
   return { error: 'MISSING_FETCH_TYPE' }
 }
 
-export function parseFetchCell(cellText) {
+export default function parseFetchCell(cellText) {
   // idea: parses the text in the cell, then returns an array of objects
   // encoding the kinds of fetches that need to be carried out
 
@@ -95,7 +95,11 @@ export function parseFetchCell(cellText) {
   */
   const fetches = cellText
     .split('\n')
-    .map(parseFetchCellLine)
-    .filter(x => x !== undefined)
+    .map((line, i) => ({
+      line,
+      parsed: parseFetchCellLine(line),
+      id: `fetchSpec-${i}`,
+    }))
+    .filter(l => l.parsed !== undefined)
   return fetches
 }

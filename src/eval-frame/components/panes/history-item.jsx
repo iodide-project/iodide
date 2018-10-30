@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { ValueRenderer } from '../../../components/reps/value-renderer'
 import ExternalResourceOutputHandler from '../../../components/reps/output-handler-external-resource'
+import PreformattedTextItemsHandler from '../../../components/reps/preformatted-text-items-handler'
 
 import PaneContentButton from './pane-content-button'
 import { postMessageToEditor } from '../../port-to-editor'
@@ -66,6 +67,11 @@ export class HistoryItemUnconnected extends React.Component {
           valueToRender={this.props.valueToRender}
         />)
         showCellReturnButton = false
+        break
+      case 'FETCH_CELL_INFO':
+        output = (<PreformattedTextItemsHandler
+          textItems={this.props.valueToRender}
+        />)
         break
       default:
         // TODO: Use better class for inline error

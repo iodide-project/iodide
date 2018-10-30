@@ -1,9 +1,8 @@
-import {
+import parseFetchCell, {
   parseFetchCellLine,
   commentOnlyLine,
   emptyLine,
   parseAssignmentCommand,
-  parseFetchCell,
 } from '../fetch-cell-parser'
 
 // test commentOnlyLine /////////////////////////
