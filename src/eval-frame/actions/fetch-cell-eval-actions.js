@@ -16,14 +16,6 @@ spec of desired behavior:
 // export async function handleFetches(params) {
 // }
 
-// export async function handleFetch(fetchSpec) {
-//   if (fetchSpec.error) {
-//   }
-// }
-
-export async function requestFileViaEditor(filePath) {
-  return filePath
-}
 
 const fetchErrorTypesToStrings = {
   MISSING_FETCH_TYPE: 'fetch type not specified',
@@ -48,6 +40,61 @@ export function fetchProgressInitialStrings(fetchSpec) {
   }
 }
 
+function handleErrors(response) {
+  if (!response.ok) {
+    throw Error(response.statusText)
+  }
+  return response
+}
+
+function addCss(fetchSpec) {
+  // remove css if it already present
+  document
+    .querySelectorAll(`link[href='${fetchSpec.parsed.filePath}']`)
+    .forEach(linkNode => linkNode.parentNode.removeChild(linkNode))
+
+  // add css
+  const elem = document.createElement('link')
+  elem.rel = 'stylesheet'
+  elem.type = 'text/css'
+  elem.href = fetchSpec.parsed.filePath
+  return Promise.resolve()
+}
+
+export async function fetchFileViaEditor(filePath) {
+  return filePath
+}
+
+function loadScriptFromBlob(blob) {
+  // for async script loading from blobs, see:
+  // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script')
+    const url = URL.createObjectURL(blob)
+    script.onload = () => resolve()
+    script.onerror = () => reject()
+    script.src = url
+    document.head.appendChild(script)
+  });
+}
+
+export async function handleFetch(fetchSpec) {
+  switch (fetchSpec.parsed.fetchType) {
+    case 'js':
+      return fetch(fetchSpec.parsed.filePath)
+        .then(handleErrors)
+        .then(resp => resp.blob())
+        .then(loadScriptFromBlob)
+        .then(
+          () => Promise.resolve(),
+          () => Promise.reject(new Error(`Script load error: ${fetchSpec.parsed.filePath}`)),
+        )
+    case 'css':
+      return addCss(fetchSpec)
+    default:
+      return Promise.resolve()
+  }
+}
 
 export function evaluateFetchCell(cell) {
   return (dispatch) => {
@@ -55,7 +102,7 @@ export function evaluateFetchCell(cell) {
     const cellText = cell.content
     const fetches = parseFetchCell(cellText)
 
-    console.log('fetches', fetches)
+    // console.log('fetches', fetches)
 
     const syntaxErrors = fetches
       .filter(f => f.parsed.error !== undefined)
@@ -68,18 +115,25 @@ export function evaluateFetchCell(cell) {
         syntaxErrors,
         { historyId, historyType: 'FETCH_CELL_INFO' },
       ))
-    } else {
-      const intialProgressStrings = fetches.map(fetchProgressInitialStrings)
-      console.log('intialProgressStrings', intialProgressStrings)
-      dispatch(appendToEvalHistory(
-        cell.id,
-        cell.content,
-        intialProgressStrings,
-        { historyId, historyType: 'FETCH_CELL_INFO' },
-      ))
-      // intialProgressStrings
+      return Promise.resolve()
     }
-    // let fetchResults = Promise.all(fetches.map(handleFetch))
+
+    const intialProgressStrings = fetches.map(fetchProgressInitialStrings)
+    // console.log('intialProgressStrings', intialProgressStrings)
+    dispatch(appendToEvalHistory(
+      cell.id,
+      cell.content,
+      intialProgressStrings,
+      { historyId, historyType: 'FETCH_CELL_INFO' },
+    ))
+
+    return Promise.all(fetches.map(handleFetch)).then(
+      () => {
+        console.log('all resolved')
+        return Promise.resolve()
+      },
+      () => Promise.reject(),
+    )
   }
 }
 

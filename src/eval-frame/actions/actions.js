@@ -302,7 +302,9 @@ export function evaluateCell(cellId) {
     } else if (cell.cellType === 'css') {
       evaluation = dispatch(evaluateCSSCell(cell))
     } else if (cell.cellType === 'fetch') {
-      evaluation = dispatch(evaluateFetchCell(cell))
+      evaluationQueue = evaluationQueue
+        .then(() => dispatch(evaluateFetchCell(cell)))
+      evaluation = evaluationQueue
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
         evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
