@@ -65,6 +65,11 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'UPDATE_NOTEBOOK_INFO':
       return Object.assign({}, state, { notebookInfo: action.notebookInfo })
 
+    case 'SET_PREVIOUS_AUTOSAVE': {
+      const { hasPreviousAutoSave } = action
+      return Object.assign({}, state, { hasPreviousAutoSave })
+    }
+
     case 'EVAL_FRAME_READY': {
       state.evalFrameMessageQueue.forEach((actionToPost) => {
         postActionToEvalFrame(actionToPost)
@@ -93,6 +98,13 @@ const notebookReducer = (state = newNotebook(), action) => {
         newNotebook(), nextState, { cells },
         getUserDataFromDocument(), getNotebookInfoFromDocument(),
       )
+    }
+
+    case 'REPLACE_NOTEBOOK_CONTENT': {
+      cells = action.cells.map((cell, i) =>
+        Object.assign(newCell(i, cell.cellType), cell))
+
+      return Object.assign({}, state, { cells, title: action.title })
     }
 
     case 'NOTEBOOK_SAVED': {

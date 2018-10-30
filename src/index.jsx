@@ -33,15 +33,17 @@ import { listenForEvalFramePortReady } from './port-to-eval-frame'
 
 import './tools/initialize-codemirror-loadmode'
 import './tools/initialize-dom'
+import { checkForAutosave, subscribeToAutoSave } from './tools/autosave'
 
 handleLanguageDefinitions(store)
 initializeDefaultKeybindings()
 
 window.addEventListener('message', listenForEvalFramePortReady, false)
 
-handleInitialJsmd(store)
 handleServerVariables(store)
+handleInitialJsmd(store)
 handleReportViewModeInitialization(store)
+checkForAutosave(store)
 
 render(
   <Provider store={store}>
@@ -56,3 +58,5 @@ render(
   </Provider>,
   document.getElementById('editor-react-root'),
 )
+
+subscribeToAutoSave(store)

@@ -28,6 +28,19 @@ describe('HeaderMessages mapStateToProps', () => {
     ownProps = { }
   })
 
+  it('displays local save message', () => {
+    state.hasPreviousAutoSave = true
+    const connectionModes = ['STANDALONE', 'SERVER']
+    connectionModes.forEach((connectionMode) => {
+      state.notebookInfo.connectionMode = connectionMode
+      expect(mapStateToProps(state, ownProps))
+        .toEqual({
+          message: 'HAS_PREVIOUS_AUTOSAVE',
+          connectionModeIsServer: connectionMode === 'SERVER',
+        })
+    })
+  })
+
   it('displays login message', () => {
     state.userData.name = undefined
     state.notebookInfo.user_can_save = false

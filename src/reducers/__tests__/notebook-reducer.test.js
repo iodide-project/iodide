@@ -29,3 +29,14 @@ describe('importing a notebook via state', () => {
     expect(notebookReducer(state, { type: 'IMPORT_NOTEBOOK', newState: nextState })).toEqual(nextState)
   })
 })
+
+describe('replacing notebook content', () => {
+  const state = newNotebook()
+  const actionPayload = { cells: [newCell(0, 'code')], title: 'my cool title' }
+  const expectedNextState = Object.assign(state, actionPayload)
+
+  it('should replace content', () => {
+    expect(notebookReducer(state, { type: 'REPLACE_NOTEBOOK_CONTENT', ...actionPayload }))
+      .toEqual(expectedNextState)
+  })
+})
