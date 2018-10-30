@@ -267,7 +267,7 @@ css: data/style.css
 //  comment
             // comment
 
-file: foo = https://iodide.io/data/foo.csv
+text: foo = https://iodide.io/data/foo.csv
 
 
 // some comment
