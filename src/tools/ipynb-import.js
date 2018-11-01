@@ -15,28 +15,6 @@ function importIpynb(url, json) {
 %% meta
 {
   "title": "${title}",
-  "loadedLanguages": {
-    "js": {
-      "pluginType": "language",
-      "languageId": "js",
-      "displayName": "Javascript",
-      "codeMirrorMode": "javascript",
-      "module": "window",
-      "evaluator": "eval",
-      "keybinding": "j",
-      "url": ""
-    },
-    "py": {
-      "languageId": "py",
-      "displayName": "python",
-      "codeMirrorMode": "python",
-      "keybinding": "p",
-      "url": "https://iodide.io/pyodide-demo/pyodide.js",
-      "module": "pyodide",
-      "evaluator": "runPython",
-      "pluginType": "language"
-    }
-  },
   "lastExport": "${new Date().toISOString()}"
 }
 
@@ -48,20 +26,6 @@ Support for importing Jupyter notebooks into Iodide is experimental.  In particu
 
 - IPython magics (lines starting with \`%\`)
 
-%% plugin
-{
-  "languageId": "py",
-  "displayName": "python",
-  "codeMirrorMode": "python",
-  "keybinding": "p",
-  "url": "https://iodide.io/pyodide-demo/pyodide.js",
-  "module": "pyodide",
-  "evaluator": "runPython",
-  "pluginType": "language"
-}
-
-%% js
-pyodide.loadPackage('matplotlib')
 `;
 
   cells.forEach((cell) => {
