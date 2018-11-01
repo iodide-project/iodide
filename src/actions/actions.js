@@ -1,6 +1,5 @@
 import CodeMirror from 'codemirror'
-import queryString from 'query-string'
-import { getUrlParams } from '../tools/query-param-tools'
+import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
 import { exportJsmdToString } from '../tools/jsmd-tools'
 import { getNotebookID } from '../tools/server-tools'
@@ -126,7 +125,7 @@ export function setViewMode(viewMode) {
       const params = getUrlParams()
       if (viewMode === 'REPORT_VIEW') params.viewMode = 'report'
       else delete params.viewMode
-      window.history.replaceState({}, '', `/notebooks/${notebookId}/?${queryString.stringify(params)}`)
+      window.history.replaceState({}, '', `/notebooks/${notebookId}/?${objectToQueryString(params)}`)
     }
     dispatch({
       type: 'SET_VIEW_MODE',
