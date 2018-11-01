@@ -32,6 +32,7 @@ const initialVariables = new Set(Object.keys(window)) // gives all global variab
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 initialVariables.add('CodeMirror')
+initialVariables.add('FETCH_RESOLVERS')
 
 function getUserDefinedVariablesFromWindow() {
   return Object.keys(window)

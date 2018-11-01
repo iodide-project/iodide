@@ -2,6 +2,7 @@
 import { store } from './store'
 import { evaluateCell, updateUserVariables } from './actions/actions'
 import { getCompletions } from './tools/notebook-utils'
+import { onParentContextFileFetchSuccess, onParentContextFileFetchError } from '../tools/fetch-tools'
 
 const mc = new MessageChannel();
 
@@ -18,6 +19,14 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data
     switch (messageType) {
+      case 'REQUESTED_FILE_SUCCESS': {
+        onParentContextFileFetchSuccess(message.file, message.path)
+        break
+      }
+      case 'REQUESTED_FILE_ERROR': {
+        onParentContextFileFetchError(message.reason, message.path)
+        break
+      }
       case 'REQUEST_AUTOCOMPLETE_SUGGESTIONS': {
         const {
           token, context, from, to,
@@ -49,7 +58,7 @@ function receiveMessage(event) {
         }
         break
       default:
-        console.log('unknown messageType', message)
+        console.error('unknown messageType', message)
     }
   }
 }

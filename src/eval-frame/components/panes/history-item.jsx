@@ -10,11 +10,6 @@ import PreformattedTextItemsHandler from '../../../components/reps/preformatted-
 import PaneContentButton from './pane-content-button'
 import { postMessageToEditor } from '../../port-to-editor'
 
-// import {
-//   // prettyDate,
-//   getCellById,
-// } from '../../tools/notebook-utils'
-
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string.isRequired,
@@ -28,12 +23,6 @@ export class HistoryItemUnconnected extends React.Component {
     // this.state = { timeSince: 'just now' }
     this.showEditorCell = this.showEditorCell.bind(this)
   }
-
-  // componentDidMount() {
-  //   setInterval(() => {
-  //     this.setState({ timeSince: prettyDate(new Date(this.props.lastRan)) })
-  //   }, 5000)
-  // }
 
   showEditorCell() {
     postMessageToEditor(
