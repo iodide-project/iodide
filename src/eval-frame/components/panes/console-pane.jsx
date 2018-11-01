@@ -6,6 +6,7 @@ import deepEqual from 'deep-equal'
 import HistoryItem from './history-item'
 import ConsoleInput from './console-input'
 import EmptyPaneContents from './empty-pane-contents'
+import ConsoleToolbar from './console-toolbar'
 
 export class ConsolePaneUnconnected extends React.Component {
   static propTypes = {
@@ -63,6 +64,7 @@ export class ConsolePaneUnconnected extends React.Component {
             overflow: 'hidden',
           }}
         >
+          <ConsoleToolbar />
           <div
             className="history-cells"
             style={{
