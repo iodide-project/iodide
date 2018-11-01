@@ -73,6 +73,10 @@ On subsequent runs, you only need to run `make up`.
 
 Additionally, if you are working on client code, you can run `npm run start` in a separate terminal to run webpack in watch mode (which will make your client code changes visible on page reload). If you require verbose Redux logging, you can set the environment variable `REDUX_LOGGING=VERBOSE` with the command `REDUX_LOGGING=VERBOSE npm run start`
 
+Sometimes, for debugging purposes, it is useful to have a shell session inside the "app" docker container. You
+can use either the `make shell` command (creates a shell session with the "app" user) or the `make root-shell`
+commands (creates a shell session logged in as root, useful for experimenting with new python packages).
+
 ## Testing
 
 Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.

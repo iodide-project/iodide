@@ -5,6 +5,9 @@ build:
 	npm run build
 	docker-compose build
 
+root-shell:
+	docker-compose run -u 0 server bash
+
 shell:
 	docker-compose run server bash
 
