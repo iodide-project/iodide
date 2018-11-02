@@ -83,6 +83,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { history })
     }
 
+    case 'CLEAR_HISTORY': {
+      return Object.assign({}, state, { history: [] })
+    }
+
     case 'UPDATE_CONSOLE_TEXT': {
       return Object.assign({}, state, { consoleText: action.consoleText })
     }
