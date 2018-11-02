@@ -21,7 +21,11 @@ export class ConsoleToolbarUnconnected extends React.Component {
   render() {
     return (
       <MiniToolbar>
-        <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title="Clear console">
+        <Tooltip
+          classes={{ tooltip: 'iodide-tooltip' }}
+          title="Clear console"
+          placement="bottom-start"
+        >
           <IconButton
             size="small"
             classes={{ root: 'mini-toolbar-button' }}
