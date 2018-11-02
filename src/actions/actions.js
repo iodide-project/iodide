@@ -1,4 +1,5 @@
 import CodeMirror from 'codemirror'
+import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
 import { exportJsmdToString } from '../tools/jsmd-tools'
 import { getNotebookID } from '../tools/server-tools'
@@ -121,11 +122,10 @@ export function setViewMode(viewMode) {
     const state = getState()
     const notebookId = getNotebookID(state)
     if (notebookId) {
-      // FIXME: This URL replacement step is fundamentally broken. If there are other
-      // params here that we want to pass (we are, for instance, using ?revision=<revision_id>
-      // they will simply be overwritten.
-      const params = (viewMode === 'REPORT_VIEW') ? '?viewMode=report' : ''
-      window.history.replaceState({}, '', `/notebooks/${notebookId}/${params}`)
+      const params = getUrlParams()
+      if (viewMode === 'REPORT_VIEW') params.viewMode = 'report'
+      else delete params.viewMode
+      window.history.replaceState({}, '', `/notebooks/${notebookId}/?${objectToQueryString(params)}`)
     }
     dispatch({
       type: 'SET_VIEW_MODE',
