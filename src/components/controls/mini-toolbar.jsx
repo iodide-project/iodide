@@ -7,7 +7,7 @@ export class MiniToolbarUnconnected extends React.Component {
   render() {
     return (
       <Toolbar
-        style={{ minHeight: '0' }}
+        style={{ minHeight: '24px' }}
         variant="dense"
         disableGutters
         classes={{ root: 'mini-toolbar' }}
