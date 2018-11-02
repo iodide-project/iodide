@@ -25,7 +25,6 @@ import { iodide } from './iodide-api/api'
 import './port-to-editor'
 
 window.iodide = iodide
-window.FETCH_RESOLVERS = {}
 
 initializeDefaultKeybindings()
 // initialize variables available to the user in an empty notebook, such as

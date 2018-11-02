@@ -1,6 +1,6 @@
 import { postMessageToEditor } from '../eval-frame/port-to-editor'
 
-function handleErrors(err) {
+export function handleErrors(err) {
   throw new Error(err)
 }
 
@@ -23,6 +23,20 @@ export function genericFetch(path, fetchType) {
 // //////////////////////////////////////////////////////////////
 // ///////////////////// eval frame /////////////////////////////
 // //////////////////////////////////////////////////////////////
+
+const FETCH_RESOLVERS = {}
+
+export function addResolvers(path, resolve, reject) {
+  FETCH_RESOLVERS[path] = { resolve, reject }
+}
+
+export function getResolvers(path) {
+  return FETCH_RESOLVERS[path]
+}
+
+export function deleteResolvers(path) {
+  delete FETCH_RESOLVERS[path]
+}
 
 export const errorTypeToString = {
   MISSING_FETCH_TYPE: 'fetch type not specified',
@@ -57,17 +71,17 @@ export async function fetchFileFromParentContext(path, fetchType) {
   return new Promise((resolve, reject) => {
     // resolve and reject are handled in port-to-editor.js when
     // the file is received by the editor.
-    window.FETCH_RESOLVERS[path] = { resolve, reject }
+    addResolvers(path, resolve, reject)
     postMessageToEditor('REQUEST_FETCH', { path, fetchType })
   })
 }
 
 export function onParentContextFileFetchSuccess(file, path) {
-  window.FETCH_RESOLVERS[path].resolve(file)
-  delete window.FETCH_RESOLVERS[path]
+  getResolvers(path).resolve(file)
+  deleteResolvers(path)
 }
 
 export function onParentContextFileFetchError(reason, path) {
-  window.FETCH_RESOLVERS[path].reject(new Error(reason))
-  delete window.FETCH_RESOLVERS[path]
+  getResolvers(path).reject(new Error(reason))
+  deleteResolvers(path)
 }
