@@ -26,6 +26,6 @@ services:
       - DJANGO_LOG_FORMAT=json
 
   db:
-    image: postgres:9.5-alpine
+    image: postgres:9.6-alpine
     logging:
       driver: "none"
