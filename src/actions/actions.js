@@ -17,6 +17,9 @@ import { mirroredStateProperties, mirroredCellProperties } from '../state-schema
 
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
 
+import { getEvalInfo } from './jsmd-eval-parser'
+
+
 import {
   alignCellTopTo,
   handleCellAndOutputScrolling,
@@ -222,6 +225,23 @@ export function updateCellProperties(cellId, updatedProperties) {
     type: 'UPDATE_CELL_PROPERTIES',
     cellId,
     updatedProperties,
+  }
+}
+
+export function evaluateText() {
+  return (dispatch, getState) => {
+    const cm = window.ACTIVE_CODEMIRROR
+    const doc = cm.getDoc()
+
+    let actionObj
+
+    if (!doc.somethingSelected()) {
+      actionObj = Object.assign(
+        { type: 'TRIGGER_TEXT_EVAL_IN_FRAME' },
+        getEvalInfo(getState().jsmd, doc.getCursor().line),
+      )
+    }
+    dispatch(actionObj)
   }
 }
 
