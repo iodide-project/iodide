@@ -46,7 +46,7 @@ tasks.evaluateCell = new UserTask({
   keybindings: ['mod+enter'],
   displayKeybinding: `${commandKey}+Enter`,
   callback() {
-    dispatcher.evaluateCell()
+    dispatcher.evaluateText()
   },
 })
 
