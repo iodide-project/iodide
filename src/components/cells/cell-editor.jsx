@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import deepEqual from 'deep-equal'
 
 import ReactCodeMirror from '@skidding/react-codemirror'
-import CodeMirror from 'codemirror'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/markdown/markdown'
 import 'codemirror/mode/css/css'
@@ -17,20 +16,11 @@ import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/hint/javascript-hint'
 import 'codemirror/addon/mode/simple'
 import '../../codemirror-keymap-sublime'
+import './codemirror-fetch-mode'
 
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
 import { postMessageToEvalFrame } from '../../port-to-eval-frame'
-
-CodeMirror.defineSimpleMode('fetch', {
-  start: [
-    { regex: /\/\/.*/, token: 'comment', sol: true },
-    { regex: /[\s]+\/\/.*/, token: 'comment' },
-    { regex: /(blob: |text: |json: )(\w+)(\s*=\s*)(\S+)/, token: ['fetch-type', 'fetch-variable-declaration', null, 'fetch-path'] },
-    { regex: /(js: |css: )(\S+)/, token: ['fetch-type', 'fetch-path'] },
-    { regex: /text: |blob: |json: |js: |css: /, token: 'fetch-type' },
-  ],
-})
 
 class CellEditor extends React.Component {
   static propTypes = {
