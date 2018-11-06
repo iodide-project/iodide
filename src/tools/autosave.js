@@ -1,8 +1,9 @@
+import { connectionModeIsStandalone } from './server-tools'
 import { exportJsmdToString } from './jsmd-tools'
 import { setPreviousAutosave } from '../actions/actions'
 
 function getAutosaveKey(state) {
-  const documentId = (state.notebookInfo.connectionMode === 'STANDALONE') ?
+  const documentId = connectionModeIsStandalone(state) ?
     `standalone-${window.location.pathname}` : state.notebookInfo.notebook_id
   return `autosave-${documentId}`
 }
@@ -46,7 +47,7 @@ function updateAutosave(state, original) {
       originalSaved: new Date().toISOString(),
     })
   } else {
-    const autosaveState = getAutosaveState(autosaveKey)
+    const autosaveState = getAutosaveState(state)
     saveAutosaveState(autosaveKey, Object.assign(autosaveState, {
       dirtyCopy: jsmd,
       dirtySaved: new Date().toISOString(),
@@ -54,15 +55,16 @@ function updateAutosave(state, original) {
   }
 }
 
+let autoSaveTimeout
+
 function subscribeToAutoSave(store) {
-  let timeout
   store.subscribe(() => {
     // use a subscribe event so we don't pay the penalty of checking
     // for jsmd changes unless user is actively interacting with the ui
     // also, throttle save events to one per second
-    if (!timeout) {
-      timeout = setTimeout(() => {
-        timeout = undefined;
+    if (!autoSaveTimeout) {
+      autoSaveTimeout = setTimeout(() => {
+        autoSaveTimeout = undefined;
 
         const state = store.getState()
         if (state.hasPreviousAutoSave) {
@@ -93,6 +95,7 @@ function subscribeToAutoSave(store) {
 export {
   checkForAutosave,
   getAutosaveJsmd,
+  getAutosaveState,
   clearAutosave,
   updateAutosave,
   subscribeToAutoSave,
