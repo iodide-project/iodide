@@ -1,7 +1,7 @@
 import { store } from '../../store'
 import { setKernelState, resetNotebook } from '../actions'
 import { SchemaValidationError } from '../../reducers/create-validated-reducer'
-import { mirroredStateProperties } from '../../state-schemas/mirrored-state-schema'
+import { editorOnlyStateProperties } from '../../state-schemas/editor-only-state-schemas'
 
 describe('setKernelState', () => {
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe('setKernelState', () => {
       .toThrowError(SchemaValidationError)
   })
   it('correctly sets the kernel state', () => {
-    mirroredStateProperties.kernelState.enum.forEach((kernelState) => {
+    editorOnlyStateProperties.kernelState.enum.forEach((kernelState) => {
       store.dispatch(setKernelState(kernelState))
       expect(store.getState().kernelState).toBe(kernelState)
     })
