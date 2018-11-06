@@ -32,9 +32,11 @@ describe('PromiseRep', () => {
     const rep = shallow(<PromiseRep promise={pr} />)
     rep.state().promise.then((v) => {
       expect(v).toBe(val)
-      expect(rep.state().status).toBe('resolved')
+      expect(rep.state().status).toBe('fulfilled')
     })
-      .catch(() => {})
+      .catch((err) => {
+        console.warn(err)
+      })
   })
   it('rejects correctly', () => {
     const val = 'test value'
@@ -44,7 +46,8 @@ describe('PromiseRep', () => {
       expect(v).toBe(val)
       expect(rep.state().status).toBe('rejected')
     })
-      .catch(() => {
+      .catch((err) => {
+        console.warn(err)
       })
   })
 })
