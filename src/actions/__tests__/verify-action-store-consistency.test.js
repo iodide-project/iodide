@@ -32,14 +32,8 @@ describe('make sure createValidatedReducer is checking correctly', () => {
     expect(() => store.dispatch(actions.updateCellProperties(0, { INVALID_CELL_PROP: 0 })))
       .toThrowError(SchemaValidationError)
   })
-  it('createValidatedReducer should throw an error if we pass an invalid arg into setKernelState', () => {
-    expect(() => store.dispatch(actions.setKernelState('fake state')))
-      .toThrowError(SchemaValidationError)
-    expect(() => store.dispatch(actions.setKernelState(12342323)))
-      .toThrowError(SchemaValidationError)
-  })
 })
-describe('make sure action creators leave store in a consitent state', () => {
+describe('make sure action creators leave store in a consistent state', () => {
   beforeEach(() => {
     store.dispatch(actions.resetNotebook())
   })
@@ -216,5 +210,20 @@ describe('make sure action creators leave store in a consitent state', () => {
   it('saveEnvironment', () => {
     expect(() => store.dispatch(actions.saveEnvironment({ a: 'foo' }, false)))
       .not.toThrow()
+  })
+})
+
+describe('setKernelState', () => {
+  it('createValidatedReducer should throw an error if we pass an invalid arg into setKernelState', () => {
+    expect(() => store.dispatch(actions.setKernelState('fake state')))
+      .toThrowError(SchemaValidationError)
+    expect(() => store.dispatch(actions.setKernelState(12342323)))
+      .toThrowError(SchemaValidationError)
+  })
+  it('passes on correct set of enums for setKernelState', () => {
+    const enums = ['KERNEL_LOADING', 'KERNEL_LOAD_ERROR', 'KERNEL_ERROR', 'KERNEL_IDLE', 'KERNEL_BUSY']
+    enums.forEach((kernelState) => {
+      expect(() => store.dispatch(actions.setKernelState(kernelState))).not.toThrow()
+    })
   })
 })
