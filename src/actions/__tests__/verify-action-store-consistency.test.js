@@ -32,11 +32,21 @@ describe('make sure createValidatedReducer is checking correctly', () => {
     expect(() => store.dispatch(actions.updateCellProperties(0, { INVALID_CELL_PROP: 0 })))
       .toThrowError(SchemaValidationError)
   })
+  it('createValidatedReducer should throw an error if we pass an invalid arg into setKernelState', () => {
+    expect(() => store.dispatch(actions.setKernelState('fake state')))
+      .toThrowError(SchemaValidationError)
+    expect(() => store.dispatch(actions.setKernelState(12342323)))
+      .toThrowError(SchemaValidationError)
+  })
 })
-
 describe('make sure action creators leave store in a consitent state', () => {
   beforeEach(() => {
     store.dispatch(actions.resetNotebook())
+  })
+
+  it('setKernelState', () => {
+    expect(() => store.dispatch(actions.setKernelState('KERNEL_BUSY')))
+      .not.toThrow()
   })
 
   it('updateAppMessages, no details', () => {
