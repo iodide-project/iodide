@@ -1,10 +1,9 @@
-import { postMessageToEditor } from '../port-to-editor'
+import { postMessageToEditor, sendKernelStateToEditor } from '../port-to-editor'
 import {
   appendToEvalHistory,
   historyIdGen,
   updateCellProperties,
   updateValueInHistory,
-  setKernelState,
 } from './actions'
 
 export function addLanguage(languageDefinition) {
@@ -24,7 +23,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
     evalStatus = 'ERROR'
     dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
     dispatch(updateValueInHistory(historyId, value))
-    setKernelState('KERNEL_ERROR')
+    sendKernelStateToEditor('KERNEL_ERROR')
   } else {
     const {
       url,
@@ -65,7 +64,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
           postMessageToEditor('POST_LANGUAGE_DEF_TO_EDITOR', pluginData)
           dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
           dispatch(updateValueInHistory(historyId, value))
-          setKernelState('KERNEL_IDLE')
+          sendKernelStateToEditor('KERNEL_IDLE')
           resolve()
         })
       })
@@ -75,7 +74,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
         evalStatus = 'ERROR'
         dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
         dispatch(updateValueInHistory(historyId, value))
-        setKernelState('KERNEL_ERROR')
+        sendKernelStateToEditor('KERNEL_ERROR')
         reject()
       })
 
@@ -88,7 +87,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
 
 export function evaluateLanguagePluginCell(cell) {
   return (dispatch) => {
-    setKernelState('KERNEL_BUSY')
+    sendKernelStateToEditor('KERNEL_BUSY')
     const historyId = historyIdGen.nextId()
     dispatch(appendToEvalHistory(
       cell.id,
@@ -102,7 +101,7 @@ export function evaluateLanguagePluginCell(cell) {
     } catch (err) {
       dispatch(updateCellProperties(cell.id, { evalStatus: 'ERROR', rendered: true }))
       dispatch(updateValueInHistory(historyId, `plugin definition failed to parse:\n${err.message}`))
-      setKernelState('KERNEL_ERROR')
+      sendKernelStateToEditor('KERNEL_ERROR')
       return Promise.reject()
     }
 
@@ -141,6 +140,7 @@ export function runCodeWithLanguage(language, code, messageCallback) {
 
   if (asyncEvaluator !== undefined) {
     const messageCb = (messageCallback === undefined) ? () => {} : messageCallback
+    sendKernelStateToEditor('KERNEL_BUSY')
     return window[module][asyncEvaluator](code, messageCb)
   }
   return new Promise((resolve, reject) => {
