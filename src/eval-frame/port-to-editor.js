@@ -2,7 +2,7 @@
 import { store } from './store'
 import { evaluateCell, updateUserVariables } from './actions/actions'
 import { getCompletions } from './tools/notebook-utils'
-import { onParentContextFileFetchSuccess, onParentContextFileFetchError } from '../tools/fetch-tools'
+import { onParentContextFileFetchSuccess, onParentContextFileFetchError } from './tools/fetch-file-from-parent-context'
 
 const mc = new MessageChannel();
 

@@ -9,10 +9,11 @@ import {
 } from './actions'
 
 import { genericFetch as fetchLocally,
-  fetchFileFromParentContext,
   syntaxErrorToString,
   successMessage,
   errorMessage } from '../../tools/fetch-tools'
+
+import fetchFileFromParentContext from '../tools/fetch-file-from-parent-context'
 
 /*
 spec of desired behavior:
