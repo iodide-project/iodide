@@ -143,10 +143,5 @@ export const mirroredStateProperties = {
     type: 'integer',
     default: undefined,
   },
-  kernelState: {
-    type: 'string',
-    enum: ['KERNEL_LOADING', 'KERNEL_LOAD_ERROR', 'KERNEL_ERROR', 'KERNEL_IDLE', 'KERNEL_BUSY'],
-    default: 'KERNEL_LOADING',
-  },
   viewMode: {},
 }

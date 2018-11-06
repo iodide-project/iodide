@@ -91,6 +91,11 @@ export const editorOnlyStateProperties = {
     type: 'boolean',
     default: false,
   },
+  kernelState: {
+    type: 'string',
+    enum: ['KERNEL_LOADING', 'KERNEL_LOAD_ERROR', 'KERNEL_ERROR', 'KERNEL_IDLE', 'KERNEL_BUSY'],
+    default: 'KERNEL_LOADING',
+  },
   viewMode: {
     type: 'string',
     enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],
