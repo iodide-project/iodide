@@ -141,7 +141,10 @@ export function runCodeWithLanguage(language, code, messageCallback) {
   if (asyncEvaluator !== undefined) {
     const messageCb = (messageCallback === undefined) ? () => {} : messageCallback
     sendKernelStateToEditor('KERNEL_BUSY')
-    return window[module][asyncEvaluator](code, messageCb)
+    return window[module][asyncEvaluator](code, messageCb).then((out) => {
+      sendKernelStateToEditor('KERNEL_IDLE')
+      return out
+    })
   }
   return new Promise((resolve, reject) => {
     try {
