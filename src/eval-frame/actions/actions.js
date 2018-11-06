@@ -86,12 +86,6 @@ export function updateValueInHistory(historyId, value) {
   }
 }
 
-export function clearHistory() {
-  return {
-    type: 'CLEAR_HISTORY',
-  }
-}
-
 export function updateAppMessages(messageObj) {
   const { message } = messageObj
   let { details, when } = messageObj
