@@ -21,20 +21,15 @@ import 'codemirror/addon/hint/javascript-hint'
 import '../codemirror-keymap-sublime'
 import './jsmd-codemirror-mode'
 
-// import { getCellById } from '../tools/notebook-utils'
 import * as actions from '../actions/actions'
 import { postMessageToEvalFrame } from '../port-to-eval-frame'
 
 class JsmdEditorUnconnected extends React.Component {
   static propTypes = {
-    // cellId: PropTypes.number.isRequired,
-    // cellType: PropTypes.string,
     content: PropTypes.string,
     actions: PropTypes.shape({
-      // selectCell: PropTypes.func.isRequired,
       changeMode: PropTypes.func.isRequired,
       updateJsmdContent: PropTypes.func.isRequired,
-      // unHighlightCells: PropTypes.func.isRequired,
     }).isRequired,
     containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
@@ -48,12 +43,6 @@ class JsmdEditorUnconnected extends React.Component {
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
   }
 
-  // componentDidMount() {
-  //   if (this.props.thisCellBeingEdited) {
-  //     this.editor.focus()
-  //   }
-  // }
-
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
   }
@@ -66,18 +55,6 @@ class JsmdEditorUnconnected extends React.Component {
   //     this.editor.getCodeMirror().display.input.textarea !== undefined
   //   ) {
   //     this.editor.getCodeMirror().display.input.textarea.blur()
-  //   }
-  // }
-
-  // handleFocusChange(focused) {
-  //   if (focused) {
-  //     if (!this.props.thisCellBeingEdited) {
-  //       this.props.actions.unHighlightCells()
-  //       this.props.actions.selectCell(this.props.cellId)
-  //       this.props.actions.changeMode('EDIT_MODE')
-  //     }
-  //   } else if (!focused) {
-  //     this.props.actions.changeMode('COMMAND_MODE')
   //   }
   // }
 
@@ -172,7 +149,6 @@ class JsmdEditorUnconnected extends React.Component {
         options={this.props.editorOptions}
         onChange={this.updateJsmdContent}
         style={{ height: '100%' }}
-        // onFocusChange={this.handleFocusChange}
       />
     )
   }
@@ -180,22 +156,6 @@ class JsmdEditorUnconnected extends React.Component {
 
 
 function mapStateToProps(state) {
-  // const { cellId } = ownProps
-  // const cell = getCellById(state.cells, cellId)
-
-  // let codeMirrorMode
-  // if (cell.cellType === 'code'
-  //     && state.languages[cell.language]
-  //     && state.languages[cell.language].codeMirrorModeLoaded) {
-  //   codeMirrorMode = state.languages[cell.language].codeMirrorMode // eslint-disable-line
-  // } else if (cell.cellType !== 'code') {
-  //   // e.g. md / css cell
-  //   codeMirrorMode = cell.cellType
-  // } else {
-  //   // unknown cell type
-  //   codeMirrorMode = ''
-  // }
-
   const codeMirrorMode = 'jsmd'
   const editorOptions = {
     mode: codeMirrorMode,
@@ -209,25 +169,6 @@ function mapStateToProps(state) {
     comment: true,
     // readOnly: cell.highlighted ? 'nocursor' : false,
   }
-  // switch (cell.cellType) {
-  //   case 'markdown':
-  //     editorOptions.lineWrapping = true
-  //     editorOptions.matchBrackets = false
-  //     editorOptions.autoCloseBrackets = false
-  //     editorOptions.lineNumbers = false
-  //     break
-
-  //   case 'raw':
-  //   case 'plugin':
-  //     editorOptions.matchBrackets = false
-  //     editorOptions.autoCloseBrackets = false
-  //     break
-  //   case 'code':
-  //   case 'external dependencies':
-  //   case 'css':
-  //   default:
-  //     // no op, use default options
-  // }
 
   if (state.wrapEditors === true) { editorOptions.lineWrapping = true }
 

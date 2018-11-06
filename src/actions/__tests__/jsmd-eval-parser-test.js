@@ -19,15 +19,7 @@ _md block 2_
 fetch block 1`
 
 describe('jsmdSample1 parses correct eval actions', () => {
-//   it('jsmdSample1, cursor line 0', () => {
-//     expect(getEvalInfo(jsmdSample1, 0))
-//       .toEqual({
-//         evalText: `
-// blankblock
-// `,
-//         evalType: '',
-//       })
-//   })
+
   for (const cursorLine of [0, 1]) {
     it(`jsmdSample1, cursor line ${cursorLine}`, () => {
       expect(getEvalInfo(jsmdSample1, cursorLine))
