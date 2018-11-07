@@ -47,7 +47,7 @@ describe('PromiseRep', () => {
       expect(rep.state().status).toBe('rejected')
     })
       .catch((err) => {
-        console.warn(err)
+        throw new Error(err)
       })
   })
 })
