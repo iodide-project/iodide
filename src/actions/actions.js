@@ -90,7 +90,6 @@ export function loadAutosave() {
       cells: newState.cells,
       title: newState.title,
     })
-    clearAutosave(getState())
     dispatch(setPreviousAutosave(false))
   }
 }
