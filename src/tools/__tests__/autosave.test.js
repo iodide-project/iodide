@@ -2,8 +2,10 @@ import { updateAutosave, getAutosaveState } from '../autosave'
 import { stateFromJsmd } from '../jsmd-tools'
 import { newNotebook, newCell } from '../../editor-state-prototypes'
 
+let states
+
 describe('updateAutosave', () => {
-  function setUp() {
+  beforeEach(() => {
     const originalState = newNotebook()
     updateAutosave(originalState, true)
 
@@ -15,15 +17,13 @@ describe('updateAutosave', () => {
     stateUpdate.cells[0].selected = true
     const updatedState = Object.assign({}, originalState, stateUpdate)
 
-    return {
+    states = {
       originalState,
       updatedState,
     }
-  }
+  })
 
   it('saves over original when asked to', () => {
-    const states = setUp()
-
     updateAutosave(states.updatedState, true)
     const newAutosavedState = getAutosaveState(states.updatedState)
     expect(Object.keys(newAutosavedState).sort()).toEqual(['originalCopy', 'originalSaved'])
@@ -34,8 +34,6 @@ describe('updateAutosave', () => {
   })
 
   it('only updates dirty copy when not asked to write over original', () => {
-    const states = setUp()
-
     updateAutosave(states.updatedState, false)
     const newAutosavedState = getAutosaveState(states.updatedState)
     expect(Object.keys(newAutosavedState).sort())
