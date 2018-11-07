@@ -87,6 +87,10 @@ export const editorOnlyStateProperties = {
       connectionMode: 'STANDALONE',
     },
   },
+  hasPreviousAutoSave: {
+    type: 'boolean',
+    default: false,
+  },
   viewMode: {
     type: 'string',
     enum: ['EXPLORE_VIEW', 'REPORT_VIEW'],

@@ -287,7 +287,9 @@ ${cell.content}`
     metaSettings.languageDefinitions = customLanguageDefinitions
   }
 
-  metaSettings.lastExport = exportDatetimeString
+  if (exportDatetimeString) {
+    metaSettings.lastExport = exportDatetimeString
+  }
   let metaSettingsStr = JSON.stringify(metaSettings, undefined, 2)
   metaSettingsStr = metaSettingsStr === '{}' ? '' : `%% meta\n${metaSettingsStr}\n\n`
   return metaSettingsStr + cellsStr
@@ -305,8 +307,8 @@ function exportJsmdBundle(state) {
   })
 }
 
-function exportJsmdToString(state) {
-  return stringifyStateToJsmd(state, new Date().toISOString())
+function exportJsmdToString(state, includeDate = true) {
+  return stringifyStateToJsmd(state, includeDate && new Date().toISOString())
 }
 
 function titleToHtmlFilename(title) {

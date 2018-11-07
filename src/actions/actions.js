@@ -1,8 +1,9 @@
 import CodeMirror from 'codemirror'
 import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
-import { exportJsmdToString } from '../tools/jsmd-tools'
+import { exportJsmdToString, stateFromJsmd } from '../tools/jsmd-tools'
 import { getNotebookID } from '../tools/server-tools'
+import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
@@ -74,6 +75,32 @@ export function importInitialJsmd(importedState) {
   }
 }
 
+export function setPreviousAutosave(hasPreviousAutoSave) {
+  return {
+    type: 'SET_PREVIOUS_AUTOSAVE',
+    hasPreviousAutoSave,
+  }
+}
+
+export function loadAutosave() {
+  return (dispatch, getState) => {
+    const newState = stateFromJsmd(getAutosaveJsmd(getState()))
+    dispatch({
+      type: 'REPLACE_NOTEBOOK_CONTENT',
+      cells: newState.cells,
+      title: newState.title,
+    })
+    dispatch(setPreviousAutosave(false))
+  }
+}
+
+export function discardAutosave() {
+  return (dispatch, getState) => {
+    clearAutosave(getState())
+    dispatch(setPreviousAutosave(false))
+  }
+}
+
 export function toggleWrapInEditors() {
   return { type: 'TOGGLE_WRAP_IN_EDITORS' }
 }
@@ -140,7 +167,6 @@ export function updateInputContent(text) {
     content: text,
   }
 }
-
 
 export function changeCellType(cellType, language = 'js') {
   return (dispatch, getState) => {
@@ -326,6 +352,7 @@ export function saveNotebookToServer() {
         .then(response => response.json())
         .then(() => {
           const message = 'Updated Notebook'
+          updateAutosave(state, true)
           dispatch(updateAppMessages({
             message,
             details: `${message} <br />Notebook saved`,
