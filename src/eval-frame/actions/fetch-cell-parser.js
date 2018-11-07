@@ -63,13 +63,10 @@ export function parseFetchCellLine(line) {
     const fetchCommand = fetchContent.trim().split(' //')[0].trim()
     switch (fetchType) {
       case 'text':
-        return Object.assign({}, { fetchType }, parseAssignmentCommand(fetchCommand))
       case 'json':
-        return Object.assign({}, { fetchType }, parseAssignmentCommand(fetchCommand))
       case 'blob':
         return Object.assign({}, { fetchType }, parseAssignmentCommand(fetchCommand))
       case 'js':
-        return Object.assign({}, { fetchType }, parseFileLine(fetchCommand))
       case 'css':
         return Object.assign({}, { fetchType }, parseFileLine(fetchCommand))
       default:

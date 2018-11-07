@@ -10,7 +10,7 @@ export function syntaxErrorToString(fetchInfo) {
   `
 }
 
-export function handleErrors(err) {
+function handleErrors(err) {
   throw new Error(err)
 }
 
@@ -37,8 +37,7 @@ export function successMessage(fetchInfo) {
 }
 
 export function errorMessage(fetchInfo, msg) {
-  let firstLine = ''
-  if (fetchInfo.parsed.filePath) firstLine = `${fetchInfo.parsed.filePath}\n\t`
+  const firstLine = (fetchInfo.parsed.filePath) ? `${fetchInfo.parsed.filePath}\n\t` : ''
   const text = `ERROR: ${firstLine}${msg}\n\n`
   return {
     text, id: fetchInfo.id,
