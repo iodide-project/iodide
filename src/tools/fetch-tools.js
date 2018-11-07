@@ -6,8 +6,7 @@ export const errorTypeToString = {
 
 export function syntaxErrorToString(fetchInfo) {
   return `Syntax error, ${errorTypeToString[fetchInfo.parsed.error]} in:
-      "${fetchInfo.line}"
-  `
+      "${fetchInfo.line}"`
 }
 
 function handleErrors(err) {

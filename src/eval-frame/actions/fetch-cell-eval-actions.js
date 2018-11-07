@@ -29,7 +29,7 @@ spec of desired behavior:
 export function fetchProgressInitialStrings(fetchInfo) {
   let text
   if (fetchInfo.parsed.error) text = `${syntaxErrorToString(fetchInfo)}\n`
-  else text = `fetching ${fetchInfo.parsed.fetchType} from ${fetchInfo.parsed.filePath}\n\n`
+  else text = `fetching ${fetchInfo.parsed.fetchType} from ${fetchInfo.parsed.filePath}\n`
   return {
     text,
     id: fetchInfo.id,
