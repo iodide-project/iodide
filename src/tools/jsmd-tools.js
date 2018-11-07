@@ -323,6 +323,7 @@ export {
   stateFromJsmd,
   jsmdValidCellTypes,
   jsmdToCellTypeMap,
+  cellTypeToJsmdMap,
   jsmdValidNotebookSettings,
   jsmdValidCellSettingPaths,
   stringifyStateToJsmd,

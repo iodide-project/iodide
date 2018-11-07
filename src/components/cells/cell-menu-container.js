@@ -9,7 +9,7 @@ import CellMenu from './cell-menu'
 
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
-import { jsmdToCellTypeMap } from '../../tools/jsmd-tools'
+import { cellTypeToJsmdMap } from '../../tools/jsmd-tools'
 
 
 export class CellMenuContainerUnconnected extends React.Component {
@@ -97,7 +97,7 @@ export class CellMenuContainerUnconnected extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
-  const label = cell.cellType === 'code' ? cell.language : jsmdToCellTypeMap.get(cell.cellType)
+  const label = cell.cellType === 'code' ? cell.language : cellTypeToJsmdMap.get(cell.cellType)
   return {
     label,
     skipInRunAll: cell.skipInRunAll,
