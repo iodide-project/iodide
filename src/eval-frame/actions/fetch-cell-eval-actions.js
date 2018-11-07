@@ -107,18 +107,34 @@ export function evaluateFetchCell(cell) {
     const historyId = historyIdGen.nextId()
     const cellText = cell.content
     const fetches = parseFetchCell(cellText)
+    const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error)
+    if (syntaxErrors.length) {
+      dispatch(appendToEvalHistory(
+        cell.id,
+        cell.content,
+        syntaxErrors.map(fetchProgressInitialStrings),
+        { historyId, historyType: 'FETCH_CELL_INFO' },
+      ))
+      return Promise.resolve()
+    }
 
-    const initialProgressStrings = fetches.map(fetchProgressInitialStrings)
+    let progressStrings = fetches.map(fetchProgressInitialStrings)
+
     dispatch(appendToEvalHistory(
       cell.id,
       cell.content,
-      initialProgressStrings,
+      progressStrings,
       { historyId, historyType: 'FETCH_CELL_INFO' },
     ))
 
-    return Promise.all(fetches.map(handleFetch)).then((outcome) => {
-      dispatch(updateValueInHistory(historyId, outcome))
-    }).finally(() => {
+    const fetchCalls = fetches.map((f, i) => handleFetch(f).then((outcome) => {
+      progressStrings = progressStrings.map(entry => Object.assign({}, entry))
+      progressStrings[i] = outcome
+      dispatch(updateValueInHistory(historyId, progressStrings))
+      return outcome
+    }))
+
+    return Promise.all(fetchCalls).finally(() => {
       dispatch(updateUserVariables())
     })
   }
