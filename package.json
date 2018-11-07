@@ -5,6 +5,9 @@
   "main": "index.jsx",
   "author": "Iodide Project Team",
   "license": "MPL-2.0",
+  "engines": {
+    "node": "8.x"
+  },
   "scripts": {
     "test": "jest --no-cache",
     "start-and-serve": "webpack-dev-server --watch --mode=development --env=dev",
@@ -86,7 +89,7 @@
     "eslint-loader": "2.1.1",
     "eslint-plugin-emotion": "9.2.6",
     "eslint-plugin-import": "2.14.0",
-    "eslint-plugin-jest": "21.26.2",
+    "eslint-plugin-jest": "21.27.1",
     "eslint-plugin-jsx-a11y": "6.1.2",
     "eslint-plugin-react": "7.11.1",
     "file-loader": "2.0.0",

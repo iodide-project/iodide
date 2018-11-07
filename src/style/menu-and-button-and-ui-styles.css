@@ -60,6 +60,10 @@
   height:40px !important;
 }
 
+.menu-button:hover {
+  outline: 1px solid #fafafa
+}
+
 .view-mode-toggle-from-presentation {
   position: fixed;
   right: 20px;
@@ -107,19 +111,6 @@ button.display-button:focus {
  
 button.display-button:hover {
   background-color: #686868;
-}
-
-.mini-toolbar {
-  height:24px;
-  background-color: #e1e1e1;
-  border-bottom: 1px solid #888888;
-}
-
-.mini-toolbar-button {
-  color: #fafafa;
-  width: 20px !important;
-  height:20px !important;
-  padding: 2px
 }
 
 /************************************************/
