@@ -9,6 +9,7 @@ import CellMenu from './cell-menu'
 
 import * as actions from '../../actions/actions'
 import { getCellById } from '../../tools/notebook-utils'
+import { jsmdToCellTypeMap } from '../../tools/jsmd-tools'
 
 
 export class CellMenuContainerUnconnected extends React.Component {
@@ -96,22 +97,7 @@ export class CellMenuContainerUnconnected extends React.Component {
 function mapStateToProps(state, ownProps) {
   const { cellId } = ownProps
   const cell = getCellById(state.cells, cellId)
-  let label
-  if (cell.cellType === 'code') {
-    label = cell.language
-  } else if (cell.cellType === 'markdown') {
-    label = 'md'
-  } else if (cell.cellType === 'css') {
-    label = 'css'
-  } else if (cell.cellType === 'plugin') {
-    label = 'plugin'
-  } else if (cell.cellType === 'external dependencies') {
-    label = 'resource'
-  } else if (cell.cellType === 'raw') {
-    label = 'raw'
-  } else if (cell.cellType === 'fetch') {
-    label = 'fetch'
-  }
+  const label = cell.cellType === 'code' ? cell.language : jsmdToCellTypeMap.get(cell.cellType)
   return {
     label,
     skipInRunAll: cell.skipInRunAll,
