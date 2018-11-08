@@ -46,6 +46,7 @@ jobs:
       - run: npm install
       - *save_javascript_cache
       - run: npm run lint
+      - run: npm run build
       - run: npm test
 
   test-python:
