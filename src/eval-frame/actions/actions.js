@@ -19,6 +19,8 @@ import {
   runCodeWithLanguage,
 } from './language-actions'
 
+import { evaluateFetchCell } from './fetch-cell-eval-actions'
+
 let evaluationQueue = Promise.resolve()
 
 const MD = MarkdownIt({ html: true })
@@ -30,6 +32,7 @@ const initialVariables = new Set(Object.keys(window)) // gives all global variab
 initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 initialVariables.add('CodeMirror')
+initialVariables.add('FETCH_RESOLVERS')
 
 function getUserDefinedVariablesFromWindow() {
   return Object.keys(window)
@@ -299,6 +302,10 @@ export function evaluateCell(cellId) {
       evaluation = dispatch(evaluateResourceCell(cell))
     } else if (cell.cellType === 'css') {
       evaluation = dispatch(evaluateCSSCell(cell))
+    } else if (cell.cellType === 'fetch') {
+      evaluationQueue = evaluationQueue
+        .then(() => dispatch(evaluateFetchCell(cell)))
+      evaluation = evaluationQueue
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
         evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))

@@ -21,6 +21,7 @@ export const historySchema = {
         'SAVED_REP',
         'CONSOLE_EVAL',
         'SNIPPET_EVAL',
+        'FETCH_CELL_INFO',
       ],
     },
     lastRan: { type: 'integer' },

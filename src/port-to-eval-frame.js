@@ -1,6 +1,7 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
 import { addLanguage, selectCell } from './actions/actions'
+import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
 
 let portToEvalFrame
 
@@ -34,6 +35,21 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data
     switch (messageType) {
+      case 'REQUEST_FETCH': {
+        fetchFileFromServer(message.path, message.fetchType)
+          .then((file) => {
+            postMessageToEvalFrame('REQUESTED_FILE_SUCCESS', {
+              file,
+              path: message.path,
+            })
+          }).catch((err) => {
+            postMessageToEvalFrame('REQUESTED_FILE_ERROR', {
+              path: message.path,
+              reason: err.message,
+            })
+          })
+        break
+      }
       case 'AUTOCOMPLETION_SUGGESTIONS': {
         const hintOptions = {
           disableKeywords: true,
@@ -70,7 +86,7 @@ function receiveMessage(event) {
         store.dispatch(selectCell(message.id, message.autoScrollToCell, message.pxFromViewportTop))
         break
       default:
-        console.log('unknown messageType', message)
+        console.error('unknown messageType', message)
     }
   }
 }

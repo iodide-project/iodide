@@ -7,7 +7,7 @@ import htmlTemplate from '../html-template'
 import { addChangeLanguageTask } from '../actions/task-definitions'
 import { languageDefinitions as builtinLanguageDefinitions } from '../state-schemas/language-definitions'
 
-const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin']
+const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin', 'fetch']
 
 
 const jsmdToCellTypeMap = new Map([
@@ -20,6 +20,7 @@ const jsmdToCellTypeMap = new Map([
   ['resource', 'external dependencies'],
   ['raw', 'raw'],
   ['css', 'css'],
+  ['fetch', 'fetch'],
 ])
 
 const cellTypeToJsmdMap = new Map([
@@ -29,6 +30,7 @@ const cellTypeToJsmdMap = new Map([
   ['external dependencies', 'resource'],
   ['raw', 'raw'],
   ['css', 'css'],
+  ['fetch', 'fetch'],
 ])
 
 const jsmdValidNotebookSettings = [
@@ -321,6 +323,7 @@ export {
   stateFromJsmd,
   jsmdValidCellTypes,
   jsmdToCellTypeMap,
+  cellTypeToJsmdMap,
   jsmdValidNotebookSettings,
   jsmdValidCellSettingPaths,
   stringifyStateToJsmd,
