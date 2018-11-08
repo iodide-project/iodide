@@ -25,7 +25,9 @@ function saveAutosaveState(autosaveKey, autosaveState) {
 function checkForAutosave(store) {
   const state = store.getState()
   const autosaveState = getAutosaveState(state)
-  if (autosaveState && autosaveState.dirtyCopy) {
+  if (autosaveState &&
+      autosaveState.dirtyCopy &&
+      autosaveState.dirtyCopy !== autosaveState.originalCopy) {
     store.dispatch(setPreviousAutosave(true))
   }
 }
