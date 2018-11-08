@@ -15,6 +15,7 @@ const evalFrameActionForwarder = (state, action) => {
     case 'UPDATE_APP_MESSAGES':
     case 'CLEAR_VARIABLES':
     case 'UPDATE_PANE_POSITIONS':
+    case 'TRIGGER_TEXT_EVAL_IN_FRAME':
     // special case: passes to eval frame without changing editor pane state,
     // but by sending them as redux actions, they are automatically queued
     // until the ports are open

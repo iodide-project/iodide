@@ -178,6 +178,29 @@ export function evalConsoleInput(languageId) {
   }
 }
 
+export function evaluateText(evalText, evalType, evalFlags) {
+  return (dispatch, getState) => {
+    const state = getState()
+    // exit if there is no code in the console to  eval
+    if (!evalText || !evalType) { return undefined }
+
+    const updateAfterEvaluation = (output) => {
+      dispatch(appendToEvalHistory(null, evalText, output))
+      dispatch(updateUserVariables())
+      dispatch(incrementExecutionNumber())
+    }
+
+    const messageCallback = (msg) => {
+      dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
+    }
+
+    return runCodeWithLanguage(evalType, evalText, messageCallback)
+      .then(updateAfterEvaluation)
+      .then(waitForExplicitContinuationStatusResolution)
+    // .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
+  }
+}
+
 function evaluateCodeCell(cell) {
   return (dispatch, getState) => {
     // this variable may get changed in eval.

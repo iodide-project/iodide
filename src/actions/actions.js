@@ -241,6 +241,7 @@ export function evaluateText() {
         getEvalInfo(getState().jsmd, doc.getCursor().line),
       )
     }
+    // here's where we'll put: if kernelState === ready
     dispatch(actionObj)
   }
 }
