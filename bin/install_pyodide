@@ -1,0 +1,6 @@
+#!/bin/sh
+set PYODIDE_VERSION=0.1.11
+if [ ! -d $1 ]; then
+  mkdir $1;
+  curl -L https://github.com/iodide-project/pyodide/releases/download/$PYODIDE_VERSION/pyodide-build-$PYODIDE_VERSION.tar.bz2 | tar jx -C $1
+fi

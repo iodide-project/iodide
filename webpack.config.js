@@ -4,6 +4,7 @@ const path = require('path')
 const CreateFileWebpack = require('create-file-webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const WebpackShellPlugin = require('webpack-shell-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const _ = require('lodash')
 
@@ -131,6 +132,10 @@ module.exports = (env) => {
       }),
       new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
       new WriteFilePlugin(),
+      // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
+      new WebpackShellPlugin({
+        onBuildStart: [`bin/install_pyodide ${BUILD_DIR}/pyodide`]
+      })
     ],
     devServer: {
       contentBase: path.join(__dirname, 'build'),
