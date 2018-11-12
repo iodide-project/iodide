@@ -8,10 +8,6 @@ set -euo pipefail
 # Uses the node binaries/packages installed by the nodejs buildpack previously.
 npm install && npm run build
 
-# Pull in the Pyodide static resources
-git clone --depth=1 --branch=master https://github.com/iodide-project/pyodide-demo.git build/pyodide
-rm -rf build/pyodide/.git
-
 # Generate gzipped versions of files that would benefit from compression, that
 # WhiteNoise can then serve in preference to the originals. This is required
 # since WhiteNoise's Django storage backend only gzips assets handled by
