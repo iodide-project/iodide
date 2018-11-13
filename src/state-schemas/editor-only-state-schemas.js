@@ -80,7 +80,7 @@ export const editorOnlyStateProperties = {
   mode: {
     type: 'string',
     enum: ['COMMAND_MODE', 'EDIT_MODE', 'APP_MODE'],
-    default: 'COMMAND_MODE',
+    default: 'EDIT_MODE',
   },
   title: {
     type: 'string',

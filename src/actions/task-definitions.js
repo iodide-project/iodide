@@ -221,7 +221,7 @@ tasks.scrollOutputPaneToCell = new UserTask({
 tasks.toggleWrapInEditors = new UserTask({
   title: 'Toggle wrapping in editors',
   displayKeybinding: 'w', // '\u2193',
-  keybindings: ['w'],
+  keybindings: ['alt+w'],
   keybindingPrecondition: isCommandMode,
   commandModeOnlyKey: true,
   preventDefaultKeybinding: true,
@@ -362,12 +362,12 @@ tasks.changeToEditMode = new UserTask({
   callback() { dispatcher.changeMode('EDIT_MODE') },
 })
 
-tasks.changeToCommandMode = new UserTask({
-  title: 'Change to Command Mode',
-  keybindings: ['esc'],
-  preventDefaultKeybinding: true,
-  callback() { dispatcher.changeMode('COMMAND_MODE') },
-})
+// tasks.changeToCommandMode = new UserTask({
+//   title: 'Change to Command Mode',
+//   keybindings: ['esc'],
+//   preventDefaultKeybinding: true,
+//   callback() { dispatcher.changeMode('COMMAND_MODE') },
+// })
 
 tasks.changeTitle = new UserTask({
   title: 'Change Title',
@@ -408,7 +408,7 @@ tasks.clearVariables = new UserTask({
 tasks.toggleHelpModal = new UserTask({
   title: 'Open the Help Pane',
   menuTitle: 'Help',
-  keybindings: ['h'],
+  keybindings: ['alt+h'],
   displayKeybinding: 'h',
   preventDefaultKeybinding: true,
   keybindingPrecondition: isCommandMode,
