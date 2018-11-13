@@ -15,7 +15,6 @@ export const historySchema = {
       type: 'string',
       enum: [
         'CELL_EVAL_VALUE',
-        'CELL_EVAL_EXTERNAL_RESOURCE',
         'CELL_EVAL_INFO',
         'APP_INFO',
         'SAVED_REP',
@@ -86,10 +85,6 @@ export const evalFrameOnlyStateProperties = {
     // the position from the END of the history when keying up/down in the console
     type: 'integer',
     default: 0,
-  },
-  externalDependencies: {
-    type: 'array',
-    default: [],
   },
   history: {
     type: 'array',

@@ -130,35 +130,6 @@ div.iodide-tooltip {
   display: none;
 }
 
-.dependency-output {
-  padding-top: 10px;
-}
-
-.dependency-container {
-  margin-bottom: 6px;
-}
-
-.dependency-src {
-	font-size:13px;
-	margin: 3px 10px 3px 8px;
-
-}
-
-.dependency-src a {
-	color: black;	
-	font-weight:normal
-}
-
-.dependency-src a:hover {
-	text-decoration: underline
-}
-.dependency-status-explanation {
-  margin-left: 35px;
-  font-size: 11px;
-  color: red;
-  margin-top: -5px;
-}
-
 code {
   padding: 0.2em 0.4em;
   margin: 0;

@@ -43,7 +43,7 @@ describe('CellMenuUnconnected React component', () => {
     expect(cellMenu().find(NotebookMenuDivider).length).toBe(3)
   })
 
-  const cellTypes = ['js', 'md', 'css', 'resource', 'raw', 'plugin']
+  const cellTypes = ['js', 'md', 'css', 'raw', 'plugin']
 
   cellTypes.forEach((cellType, i) => {
     it(`sets the NotebookMenuItem disabled prop to be correct for option ${cellType}`, () => {

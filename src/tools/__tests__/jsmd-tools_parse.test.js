@@ -40,11 +40,8 @@ A = range.map( (x,i) => range.map( (y,j) => (Math.random()+i-.5)))
 this is a raw cell. it's available in jupyter, so we have it too. not clear what the use case is, but it's here in case you want it. notice that raw cells don't wrap (unlike MD cell editors)
 
 %% md
-## External resource cell
-the cell below allows you to load external scripts
-
-%% resource
-https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js
+## css cell
+the cell below allows you to add styles to your report
 
 %% css
 .text {text-align:center;}
@@ -63,7 +60,7 @@ describe('jsmd parser Ex 1', () => {
   })
   it('should have correct cell types', () => {
     expect(cells.map(c => c.cellType)).toEqual([
-      'markdown', 'code', 'raw', 'markdown', 'external dependencies', 'css', 'code',
+      'markdown', 'code', 'raw', 'markdown', 'css', 'code',
     ])
   })
   it('should have zero parse warnings', () => {

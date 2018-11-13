@@ -108,23 +108,6 @@ div.SCROLL.output .main-component {
     overflow-y: scroll;
 }
 
-.dependency-row {
-  display: flex;
-  align-items: center;
-}
-
-.dependency-row a {
-  color: #337ab7;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.dependency-row a:hover,
-.dependency-row a:focus {
-  color: #23527c;
-  text-decoration: underline;
-}
-
 .rep-container {
   overflow-x: auto;
 }
