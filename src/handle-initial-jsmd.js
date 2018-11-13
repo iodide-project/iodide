@@ -1,10 +1,12 @@
 import { stateFromJsmd } from './tools/jsmd-tools'
 import { getStateFromJsmdQueryParams, getUrlParams, JSMD_QUERY_PARAMS } from './tools/query-param-tools'
 import { updateAppMessages, importInitialJsmd } from './actions/actions'
+import { jsmdParser } from './actions/jsmd-parser'
 import { getNotebookInfoFromDocument } from './tools/server-tools'
 
 export default async function handleInitialJsmd(store) {
   let state
+  let jsmd = ''
   let notebookImportedFromUrl = false
   const urlParams = getUrlParams()
   const jsmdURLPresent = Object.keys(urlParams).some(param => JSMD_QUERY_PARAMS.has(param))
@@ -21,7 +23,10 @@ export default async function handleInitialJsmd(store) {
     if (jsmdElt &&
         jsmdElt.innerHTML &&
         jsmdElt.innerHTML.trim() !== '') {
-      state = stateFromJsmd(jsmdElt.innerHTML)
+      jsmd = jsmdElt.innerHTML
+      state = stateFromJsmd(jsmd)
+      state.jsmd = jsmd
+      state.jsmdChunks = jsmdParser(jsmd)
     }
   }
   if (state !== undefined) {

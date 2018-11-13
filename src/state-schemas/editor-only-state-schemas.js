@@ -20,12 +20,6 @@ export const editorCellSchema = {
   additionalProperties: false,
 }
 
-const jsmdElt = document.getElementById('jsmd')
-const jsmd = (jsmdElt &&
-  jsmdElt.innerHTML &&
-  jsmdElt.innerHTML.trim() !== '')
-  ? jsmdElt.innerHTML : ''
-
 
 export const editorOnlyStateProperties = {
   cells: {
@@ -49,7 +43,26 @@ export const editorOnlyStateProperties = {
   },
   jsmd: {
     type: 'string',
-    default: jsmd,
+    default: '',
+  },
+  jsmdChunks: {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        cellContent: { type: 'string' },
+        cellType: { type: 'string' },
+        evalFlags: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+        startLine: { type: 'integer' },
+        endLine: { type: 'integer' },
+      },
+      additionalProperties: false,
+      default: {},
+    },
+    default: [],
   },
   modalState: {
     type: 'string',
@@ -109,7 +122,7 @@ export const editorOnlyStateProperties = {
   },
   wrapEditors: {
     type: 'boolean',
-    default: false,
+    default: true,
   },
 }
 
