@@ -23,28 +23,31 @@ describe('promiseHandler shouldHandle', () => {
 
 
 describe('PromiseRep', () => {
-  it('resolves correctly', () => {
+  it('resolves correctly', async () => {
     const val = 'test value'
     const pr = new Promise((resolve) => {
       const newValue = val
       resolve(newValue)
     })
     const rep = shallow(<PromiseRep promise={pr} />)
-    rep.state().promise.then((v) => {
+    await rep.state().promise.then((v) => {
       expect(v).toBe(val)
-      expect(rep.state().status).toBe('resolved')
+      expect(rep.state().status).toBe('fulfilled')
     })
-      .catch(() => {})
+      .catch((err) => {
+        throw new Error(err)
+      })
   })
-  it('rejects correctly', () => {
+  it('rejects correctly', async () => {
     const val = 'test value'
     const pr = Promise.reject(val)
     const rep = shallow(<PromiseRep promise={pr} />)
-    rep.state().promise.then((v) => {
+    await rep.state().promise.then((v) => {
       expect(v).toBe(val)
       expect(rep.state().status).toBe('rejected')
     })
-      .catch(() => {
+      .catch((err) => {
+        throw new Error(err)
       })
   })
 })

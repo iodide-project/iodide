@@ -7,17 +7,16 @@ describe('errorHandler shouldHandle', () => {
     expect(errorHandler.shouldHandle(undefined)).toBe(false)
     expect(errorHandler.shouldHandle(new Error())).toBe(true)
   })
-  it('trims stack frames', () => {
+  it('trims stack frames', async () => {
     const code = 'throw new Error("FOO")'
     const language = {
       module: 'window',
       evaluator: 'eval',
     }
-    runCodeWithLanguage(language, code).then(
-      () => undefined,
-      (err) => {
-        expect(trimStack(err).split('\n').length).toBe(2)
-      },
-    )
+    await runCodeWithLanguage(language, code).catch((err) => {
+      expect(trimStack(err).split('\n').length).toBe(3)
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 })
