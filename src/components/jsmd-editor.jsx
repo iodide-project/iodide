@@ -19,7 +19,8 @@ import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/hint/javascript-hint'
 
 import '../codemirror-keymap-sublime'
-import './jsmd-codemirror-mode'
+import './codemirror-fetch-mode'
+import './codemirror-jsmd-mode'
 
 import * as actions from '../actions/actions'
 import { postMessageToEvalFrame } from '../port-to-eval-frame'

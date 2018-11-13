@@ -6,6 +6,7 @@ CodeMirror.defineMode('jsmd', () => {
   const jsMode = CodeMirror.getMode({}, { name: 'javascript' })
   const mdMode = CodeMirror.getMode({}, { name: 'markdown' })
   const plainMode = CodeMirror.getMode({}, { name: 'text/plain' })
+  const fetchMode = CodeMirror.getMode({}, { name: 'fetch' })
 
   return {
     startState: () => ({
@@ -33,10 +34,14 @@ CodeMirror.defineMode('jsmd', () => {
         thisToken = 'line-background-cm-jsmd-delim-line'
         state.localMode = mdMode
         state.localState = mdMode.startState()
+      } else if (stream.sol() && stream.match(/%%\s*fetch.*/, true)) {
+        thisToken = 'line-background-cm-jsmd-delim-line'
+        state.localMode = fetchMode
+        state.localState = fetchMode.startState()
       } else if (stream.sol() && stream.match(/%%.*/, true)) {
+        // NB: THIS ELSE IF HAS TO COME LAST !!!!!
         // any '%%' without a known chunk type just
         // delimits the block without changing mode
-        // NB: this has to come last!!!
         thisToken = 'line-background-cm-jsmd-delim-line'
       } else {
         thisToken = state.localMode.token(stream, state.localState)

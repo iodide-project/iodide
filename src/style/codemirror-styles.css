@@ -22,3 +22,17 @@ div.main-component.SCROLL div.CodeMirror div.CodeMirror-scroll {
 .cm-jsmd-delim-line {
   border-top: 1px solid #e6e6e6;
 }
+
+
+.cm-fetch-type {
+  font-weight: bold;
+}
+
+.cm-fetch-variable-declaration {
+  color: blue;
+  font-weight: bold;
+}
+
+.cm-fetch-path {
+  font-style: italic;
+}
