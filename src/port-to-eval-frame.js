@@ -33,20 +33,20 @@ const approvedKeys = [
 
 // health ping interval
 
-const HEALTH_PING_INTERVAL = 2 * 1000
+const HEALTH_PING_POLLING_TIME = 10 * 1000
 let timeSince = new Date()
 setInterval(() => {
-  if (store.getState().evalFrameReady && new Date() - timeSince >= HEALTH_PING_INTERVAL) {
+  if (store.getState().evalFrameReady && new Date() - timeSince >= HEALTH_PING_POLLING_TIME) {
     store.dispatch(setKernelState('KERNEL_ERROR'))
   }
-}, HEALTH_PING_INTERVAL)
+}, HEALTH_PING_POLLING_TIME)
 
 // if initial frame doesn't load in K seconds, throw a KERNEL_LOAD_ERROR
 setTimeout(() => {
   if (!store.getState().evalFrameReady) {
     store.dispatch(setKernelState('KERNEL_LOAD_ERROR'))
   }
-}, 10 * 1000)
+}, HEALTH_PING_POLLING_TIME)
 
 function receiveMessage(event) {
   const trustedMessage = true
