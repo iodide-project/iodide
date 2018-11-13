@@ -1,7 +1,7 @@
 import CodeMirror from 'codemirror'
 import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
-import { exportJsmdToString, stateFromJsmd } from '../tools/jsmd-tools'
+import { stateFromJsmd } from '../tools/jsmd-tools'
 import { getNotebookID } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
 import { getCellById, isCommandMode } from '../tools/notebook-utils'

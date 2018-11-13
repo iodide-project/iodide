@@ -19,7 +19,7 @@ import {
   runCodeWithLanguage,
 } from './language-actions'
 
-import { evaluateFetchCell } from './fetch-cell-eval-actions'
+import { evaluateFetchCell, evaluateFetchText } from './fetch-cell-eval-actions'
 
 let evaluationQueue = Promise.resolve()
 
@@ -179,28 +179,45 @@ export function evalConsoleInput(languageId) {
   }
 }
 
-export function evaluateText(evalText, evalType, evalFlags) {
-  return (dispatch, getState) => {
-    if (evalFlags) console.log(evalFlags)
-    const state = getState()
-    const language = state.loadedLanguages[evalType]
-    // exit if there is no code in the console to  eval
-    if (!evalText || !evalType) { return undefined }
-
-    const updateAfterEvaluation = (output) => {
-      dispatch(appendToEvalHistory(null, evalText, output))
+function evaluateCode(code, language, state) {
+  return (dispatch) => {
+    const updateCellAfterEvaluation = (output, evalStatus) => {
+      const cellProperties = { rendered: true }
+      if (evalStatus === 'ERROR') {
+        cellProperties.evalStatus = evalStatus
+      }
+      dispatch(appendToEvalHistory(null, code, output))
       dispatch(updateUserVariables())
-      dispatch(incrementExecutionNumber())
     }
 
     const messageCallback = (msg) => {
       dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
     }
 
-    return runCodeWithLanguage(language, evalText, messageCallback)
-      .then(updateAfterEvaluation)
+    return ensureLanguageAvailable(language, state, dispatch)
+      .then(languageEvaluator => runCodeWithLanguage(languageEvaluator, code, messageCallback))
+      .then(
+        output => updateCellAfterEvaluation(output),
+        output => updateCellAfterEvaluation(output, 'ERROR'),
+      )
       .then(waitForExplicitContinuationStatusResolution)
-    // .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
+  }
+}
+
+export function evaluateText(evalText, evalType, evalFlags) {
+  // allowed types:
+  // md
+  return (dispatch, getState) => {
+    // exit if there is no code to eval or no eval type
+    // if (!evalText || !evalType) { return undefined }
+    // FIXME use evalFlags for something real
+    if (evalFlags.length) console.log(evalFlags)
+    const state = getState()
+    if (evalType === 'fetch') {
+      dispatch(evaluateFetchText(evalText))
+    } else if (Object.keys(state.languageDefinitions).includes(evalType)) {
+      dispatch(evaluateCode(evalText, evalType, state))
+    }
   }
 }
 
