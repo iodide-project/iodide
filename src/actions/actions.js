@@ -42,14 +42,15 @@ export function updateJsmdContent(text) {
     const reportChunks = jsmdChunks
       .filter(c => c.cellType === 'md' || c.cellType === 'html')
     dispatch({
+      // this dispatch really just forwards to the eval frame
       type: 'UPDATE_MARKDOWN_CHUNKS',
       reportChunks,
     })
-    return {
+    dispatch({
       type: 'UPDATE_JSMD_CONTENT',
       jsmd: text,
       jsmdChunks,
-    }
+    })
   }
 }
 
@@ -360,7 +361,7 @@ export function logout() {
 function getNotebookSaveRequestOptions(state, options = undefined) {
   const data = {
     title: state.title,
-    content: exportJsmdToString(state),
+    content: state.jsmd, // exportJsmdToString(state),
   }
   if (options && options.forkedFrom !== undefined) data.forked_from = options.forkedFrom
   const postRequestOptions = {
