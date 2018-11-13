@@ -2,7 +2,6 @@ import { postMessageToEditor } from '../port-to-editor'
 import {
   appendToEvalHistory,
   historyIdGen,
-  updateCellProperties,
   updateValueInHistory,
 } from './actions'
 
@@ -13,16 +12,12 @@ export function addLanguage(languageDefinition) {
   }
 }
 
-function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
+function loadLanguagePlugin(pluginData, historyId, dispatch) {
   let value
-  let evalStatus
   let languagePluginPromise
-  const rendered = true
 
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"'
-    evalStatus = 'ERROR'
-    dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
     dispatch(updateValueInHistory(historyId, value))
   } else {
     const {
@@ -38,14 +33,11 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
         if (evt.total > 0) {
           value += `out of ${evt.total} (${evt.loaded / evt.total}%)`
         }
-        evalStatus = 'ASYNC_PENDING'
-        dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
         dispatch(updateValueInHistory(historyId, value))
       })
 
       xhrObj.addEventListener('load', () => {
         value = `${displayName} plugin downloaded, initializing`
-        dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
         dispatch(updateValueInHistory(historyId, value))
         // see the following for asynchronous loading of scripts from strings:
         // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
@@ -61,10 +53,8 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
 
         pr.then(() => {
           value = `${displayName} plugin ready`
-          evalStatus = 'SUCCESS'
           dispatch(addLanguage(pluginData))
           postMessageToEditor('POST_LANGUAGE_DEF_TO_EDITOR', pluginData)
-          dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
           dispatch(updateValueInHistory(historyId, value))
           delete window.languagePluginUrl
           resolve()
@@ -73,8 +63,6 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
 
       xhrObj.addEventListener('error', () => {
         value = `${displayName} plugin failed to load`
-        evalStatus = 'ERROR'
-        dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
         dispatch(updateValueInHistory(historyId, value))
         reject()
       })
@@ -100,7 +88,7 @@ export function evaluateLanguagePluginCell(cell) {
     try {
       pluginData = JSON.parse(cell.content)
     } catch (err) {
-      dispatch(updateCellProperties(cell.id, { evalStatus: 'ERROR', rendered: true }))
+      // dispatch(updateCellProperties(cell.id, { evalStatus: 'ERROR', rendered: true }))
       dispatch(updateValueInHistory(historyId, `plugin definition failed to parse:\n${err.message}`))
       return Promise.reject()
     }
@@ -109,14 +97,15 @@ export function evaluateLanguagePluginCell(cell) {
   }
 }
 
-export function ensureLanguageAvailable(languageId, cell, state, dispatch) {
+export function ensureLanguageAvailable(languageId, state, dispatch) {
+  console.log('ensureLanguageAvailable')
   if (Object.prototype.hasOwnProperty.call(state.loadedLanguages, languageId)) {
     return new Promise(resolve => resolve(state.loadedLanguages[languageId]))
   }
   if (Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)) {
     const historyId = historyIdGen.nextId()
     dispatch(appendToEvalHistory(
-      cell.id,
+      null,
       `Loading ${state.languageDefinitions[languageId].displayName} language plugin`,
       undefined,
       { historyId, historyType: 'CELL_EVAL_INFO' },
@@ -125,7 +114,6 @@ export function ensureLanguageAvailable(languageId, cell, state, dispatch) {
     return loadLanguagePlugin(
       state.languageDefinitions[languageId],
       historyId,
-      cell,
       dispatch,
     ).then(() => state.languageDefinitions[languageId])
   }
@@ -136,6 +124,7 @@ export function ensureLanguageAvailable(languageId, cell, state, dispatch) {
 }
 
 export function runCodeWithLanguage(language, code, messageCallback) {
+  console.log('runCodeWithLanguage')
   const { module, evaluator, asyncEvaluator } = language
 
   if (asyncEvaluator !== undefined) {

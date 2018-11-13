@@ -139,3 +139,40 @@ export function evaluateFetchCell(cell) {
     })
   }
 }
+
+export function evaluateFetchText(fetchText) {
+  return (dispatch) => {
+    const historyId = historyIdGen.nextId()
+    const fetches = parseFetchCell(fetchText)
+    const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error)
+    if (syntaxErrors.length) {
+      dispatch(appendToEvalHistory(
+        null,
+        fetchText,
+        syntaxErrors.map(fetchProgressInitialStrings),
+        { historyId, historyType: 'FETCH_CELL_INFO' },
+      ))
+      return Promise.resolve()
+    }
+
+    let progressStrings = fetches.map(fetchProgressInitialStrings)
+
+    dispatch(appendToEvalHistory(
+      null,
+      fetchText,
+      progressStrings,
+      { historyId, historyType: 'FETCH_CELL_INFO' },
+    ))
+
+    const fetchCalls = fetches.map((f, i) => handleFetch(f).then((outcome) => {
+      progressStrings = progressStrings.map(entry => Object.assign({}, entry))
+      progressStrings[i] = outcome
+      dispatch(updateValueInHistory(historyId, progressStrings))
+      return outcome
+    }))
+
+    return Promise.all(fetchCalls).finally(() => {
+      dispatch(updateUserVariables())
+    })
+  }
+}
