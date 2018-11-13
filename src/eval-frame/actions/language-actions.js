@@ -85,7 +85,6 @@ export function evaluateLanguagePluginCell(cell) {
     try {
       pluginData = JSON.parse(cell.content)
     } catch (err) {
-      // dispatch(updateCellProperties(cell.id, { evalStatus: 'ERROR', rendered: true }))
       dispatch(updateValueInHistory(historyId, `plugin definition failed to parse:\n${err.message}`))
       return Promise.reject()
     }
@@ -95,7 +94,6 @@ export function evaluateLanguagePluginCell(cell) {
 }
 
 export function ensureLanguageAvailable(languageId, state, dispatch) {
-  console.log('ensureLanguageAvailable')
   if (Object.prototype.hasOwnProperty.call(state.loadedLanguages, languageId)) {
     return new Promise(resolve => resolve(state.loadedLanguages[languageId]))
   }
@@ -121,7 +119,6 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
 }
 
 export function runCodeWithLanguage(language, code, messageCallback) {
-  console.log('runCodeWithLanguage')
   const { module, evaluator, asyncEvaluator } = language
 
   if (asyncEvaluator !== undefined) {
