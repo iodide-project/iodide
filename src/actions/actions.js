@@ -17,7 +17,7 @@ import { mirroredStateProperties, mirroredCellProperties } from '../state-schema
 
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
 
-import { getEvalInfo } from './jsmd-eval-parser'
+import { jsmdParser } from './jsmd-parser'
 
 
 import {
@@ -171,12 +171,6 @@ export function updateInputContent(text) {
   }
 }
 
-export function updateJsmdContent(text) {
-  return {
-    type: 'UPDATE_JSMD_CONTENT',
-    content: text,
-  }
-}
 
 export function changeCellType(cellType, language = 'js') {
   return (dispatch, getState) => {
@@ -228,6 +222,25 @@ export function updateCellProperties(cellId, updatedProperties) {
   }
 }
 
+export function updateJsmdContent(text) {
+  const jsmdChunks = jsmdParser(text)
+  const markdownChunks = jsmdChunks
+    .filter(c => c.cellType === 'md')
+    .map(c => ({
+      cellContent: c.cellContent,
+      evalFlags: c.evalFlags,
+    }))
+  postActionToEvalFrame({
+    type: 'UPDATE_MARKDOWN_CHUNKS',
+    markdownChunks,
+  })
+  return {
+    type: 'UPDATE_JSMD_CONTENT',
+    jsmd: text,
+    jsmdChunks,
+  }
+}
+
 export function evaluateText() {
   return (dispatch, getState) => {
     const cm = window.ACTIVE_CODEMIRROR
@@ -236,10 +249,22 @@ export function evaluateText() {
     let actionObj
 
     if (!doc.somethingSelected()) {
-      actionObj = Object.assign(
-        { type: 'TRIGGER_TEXT_EVAL_IN_FRAME' },
-        getEvalInfo(getState().jsmd, doc.getCursor().line),
-      )
+      const { line } = doc.getCursor()
+      const [activeChunk] = getState()
+        .jsmdChunks
+        .filter(c => c.startLine <= line && line <= c.endLine)
+
+      actionObj = Object.assign({
+        type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
+        evalText: activeChunk.cellContent,
+        evalType: activeChunk.cellType,
+        evalFlags: activeChunk.evalFlags,
+      })
+    } else {
+      // FIXME handle case of code selected
+      // in this case, eval the first selection
+      // probably via codemirror doc.listSelections()[0],
+      // as long as the selection is contained by a code chunk
     }
     // here's where we'll put: if kernelState === ready
     dispatch(actionObj)
