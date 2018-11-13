@@ -87,7 +87,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
 
 export function evaluateLanguagePluginCell(cell) {
   return (dispatch) => {
-    sendKernelStateToEditor('KERNEL_BUSY')
+    // sendKernelStateToEditor('KERNEL_BUSY')
     const historyId = historyIdGen.nextId()
     dispatch(appendToEvalHistory(
       cell.id,
@@ -101,7 +101,7 @@ export function evaluateLanguagePluginCell(cell) {
     } catch (err) {
       dispatch(updateCellProperties(cell.id, { evalStatus: 'ERROR', rendered: true }))
       dispatch(updateValueInHistory(historyId, `plugin definition failed to parse:\n${err.message}`))
-      sendKernelStateToEditor('KERNEL_IDLE')
+      // sendKernelStateToEditor('KERNEL_IDLE')
       return Promise.reject()
     }
 
@@ -140,6 +140,7 @@ export function runCodeWithLanguage(language, code, messageCallback) {
 
   if (asyncEvaluator !== undefined) {
     const messageCb = (messageCallback === undefined) ? () => {} : messageCallback
+    // This nested function needs to set the kernel state.
     sendKernelStateToEditor('KERNEL_BUSY')
     return window[module][asyncEvaluator](code, messageCb).then((out) => {
       sendKernelStateToEditor('KERNEL_IDLE')

@@ -7,9 +7,6 @@ import {
   // updateCellProperties,
   // updateValueInHistory,
 } from './actions'
-import {
-  sendKernelStateToEditor,
-} from '../port-to-editor'
 
 import { genericFetch as fetchLocally,
   syntaxErrorToString,
@@ -107,7 +104,6 @@ export async function handleFetch(fetchInfo) {
 
 export function evaluateFetchCell(cell) {
   return (dispatch) => {
-    sendKernelStateToEditor('KERNEL_BUSY')
     const historyId = historyIdGen.nextId()
     const cellText = cell.content
     const fetches = parseFetchCell(cellText)
@@ -119,7 +115,6 @@ export function evaluateFetchCell(cell) {
         syntaxErrors.map(fetchProgressInitialStrings),
         { historyId, historyType: 'FETCH_CELL_INFO' },
       ))
-      sendKernelStateToEditor('KERNEL_IDLE')
       return Promise.resolve()
     }
 
@@ -141,7 +136,6 @@ export function evaluateFetchCell(cell) {
 
     return Promise.all(fetchCalls).finally(() => {
       dispatch(updateUserVariables())
-      sendKernelStateToEditor('KERNEL_IDLE')
     })
   }
 }

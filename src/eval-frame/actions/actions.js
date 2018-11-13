@@ -211,7 +211,6 @@ function evaluateCodeCell(cell) {
     const messageCallback = (msg) => {
       dispatch(appendToEvalHistory(cell.id, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
     }
-    sendKernelStateToEditor('KERNEL_BUSY')
     return ensureLanguageAvailable(cell.language, cell, state, dispatch)
       .then(language => runCodeWithLanguage(language, code, messageCallback))
       .then(
@@ -220,7 +219,6 @@ function evaluateCodeCell(cell) {
       )
       .then(waitForExplicitContinuationStatusResolution)
       .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
-      .then(() => sendKernelStateToEditor('KERNEL_IDLE'));
   }
 }
 
@@ -279,6 +277,13 @@ function evaluateCSSCell(cell) {
   }
 }
 
+function sendKernelStateAndEvaluate(pr, dispatch, cell, evaluator) {
+  return pr
+    .then(() => sendKernelStateToEditor('KERNEL_BUSY'))
+    .then(() => dispatch(evaluator(cell)))
+    .then(() => sendKernelStateToEditor('KERNEL_IDLE'))
+}
+
 export function evaluateCell(cellId) {
   return (dispatch, getState) => {
     let cell
@@ -297,8 +302,10 @@ export function evaluateCell(cellId) {
     dispatch(incrementExecutionNumber())
     // here is where we should mark a cell as PENDING.
     if (cell.cellType === 'code') {
-      evaluationQueue = evaluationQueue
-        .then(() => dispatch(evaluateCodeCell(cell)))
+      evaluationQueue = sendKernelStateAndEvaluate(
+        evaluationQueue,
+        dispatch, cell, evaluateCodeCell,
+      )
       evaluation = evaluationQueue
     } else if (cell.cellType === 'markdown') {
       evaluation = dispatch(evaluateMarkdownCell(cell))
@@ -307,12 +314,17 @@ export function evaluateCell(cellId) {
     } else if (cell.cellType === 'css') {
       evaluation = dispatch(evaluateCSSCell(cell))
     } else if (cell.cellType === 'fetch') {
-      evaluationQueue = evaluationQueue
-        .then(() => dispatch(evaluateFetchCell(cell)))
+      evaluationQueue = sendKernelStateAndEvaluate(
+        evaluationQueue,
+        dispatch, cell, evaluateFetchCell,
+      )
       evaluation = evaluationQueue
     } else if (cell.cellType === 'plugin') {
       if (JSON.parse(cell.content).pluginType === 'language') {
-        evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
+        evaluationQueue = sendKernelStateAndEvaluate(
+          evaluationQueue,
+          dispatch, cell, evaluateLanguagePluginCell,
+        )
         evaluation = evaluationQueue
       }
     } else {
