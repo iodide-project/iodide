@@ -91,6 +91,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { consoleTextCache: '' })
     }
 
+    case 'UPDATE_MARKDOWN_CHUNKS': {
+      const { markdownChunks } = action
+      return Object.assign({}, state, { markdownChunks })
+    }
+
     case 'CONSOLE_HISTORY_MOVE': {
       const historyLength = state.history.length
       // note that we bound consoleScrollbackPosition between
