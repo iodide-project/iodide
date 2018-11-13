@@ -36,7 +36,7 @@ describe('CellMenuUnconnected React component', () => {
   })
 
   it('always renders correct number of NotebookMenuItem without availableLanguages', () => {
-    expect(cellMenu().find(NotebookMenuItem).length).toBe(13)
+    expect(cellMenu().find(NotebookMenuItem).length).toBe(12)
   })
 
   it('always renders one NotebookMenuDivider', () => {
