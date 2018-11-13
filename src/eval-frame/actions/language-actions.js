@@ -74,7 +74,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
         evalStatus = 'ERROR'
         dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
         dispatch(updateValueInHistory(historyId, value))
-        sendKernelStateToEditor('KERNEL_ERROR')
+        sendKernelStateToEditor('KERNEL_IDLE')
         reject()
       })
 
@@ -101,7 +101,7 @@ export function evaluateLanguagePluginCell(cell) {
     } catch (err) {
       dispatch(updateCellProperties(cell.id, { evalStatus: 'ERROR', rendered: true }))
       dispatch(updateValueInHistory(historyId, `plugin definition failed to parse:\n${err.message}`))
-      sendKernelStateToEditor('KERNEL_ERROR')
+      sendKernelStateToEditor('KERNEL_IDLE')
       return Promise.reject()
     }
 

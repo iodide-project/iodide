@@ -79,10 +79,6 @@ export function postKeypressToEditor(keypressStr) {
   postMessageToEditor('KEYPRESS', keypressStr)
 }
 
-window.onerror = () => {
-  postActionToEditor({ type: 'SET_KERNEL_STATE', kernelState: 'KERNEL_ERROR' })
-}
-
 export function sendKernelStateToEditor(kernelState) {
   return postActionToEditor({ type: 'SET_KERNEL_STATE', kernelState })
 }

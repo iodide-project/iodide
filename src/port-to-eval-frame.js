@@ -32,15 +32,16 @@ const approvedKeys = [
 ]
 
 // health ping interval
+
+const HEALTH_PING_INTERVAL = 2 * 1000
 let timeSince = new Date()
 setInterval(() => {
-  if (store.getState().evalFrameReady && new Date() - timeSince >= 2000) {
+  if (store.getState().evalFrameReady && new Date() - timeSince >= HEALTH_PING_INTERVAL) {
     store.dispatch(setKernelState('KERNEL_ERROR'))
   }
-}, 2 * 1000)
+}, HEALTH_PING_INTERVAL)
 
 // if initial frame doesn't load in K seconds, throw a KERNEL_LOAD_ERROR
-
 setTimeout(() => {
   if (!store.getState().evalFrameReady) {
     store.dispatch(setKernelState('KERNEL_LOAD_ERROR'))
