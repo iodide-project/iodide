@@ -36,6 +36,22 @@ export function updateAppMessages(messageObj) {
   }
 }
 
+export function updateJsmdContent(text) {
+  return (dispatch) => {
+    const jsmdChunks = jsmdParser(text)
+    const reportChunks = jsmdChunks
+      .filter(c => c.cellType === 'md' || c.cellType === 'html')
+    dispatch({
+      type: 'UPDATE_MARKDOWN_CHUNKS',
+      reportChunks,
+    })
+    return {
+      type: 'UPDATE_JSMD_CONTENT',
+      jsmd: text,
+      jsmdChunks,
+    }
+  }
+}
 
 export function importNotebook(importedState) {
   return (dispatch, getState) => {
@@ -75,6 +91,9 @@ export function importInitialJsmd(importedState) {
       type: 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD',
       stateUpdatesFromEditor,
     })
+    // FIXME: the following is a hack to make sure the MD is available
+    // in the eval-frame report at start
+    dispatch(updateJsmdContent(importedState.jsmd))
   }
 }
 
@@ -219,21 +238,6 @@ export function updateCellProperties(cellId, updatedProperties) {
     type: 'UPDATE_CELL_PROPERTIES',
     cellId,
     updatedProperties,
-  }
-}
-
-export function updateJsmdContent(text) {
-  const jsmdChunks = jsmdParser(text)
-  const reportChunks = jsmdChunks
-    .filter(c => c.cellType === 'md' || c.cellType === 'html')
-  postActionToEvalFrame({
-    type: 'UPDATE_MARKDOWN_CHUNKS',
-    reportChunks,
-  })
-  return {
-    type: 'UPDATE_JSMD_CONTENT',
-    jsmd: text,
-    jsmdChunks,
   }
 }
 

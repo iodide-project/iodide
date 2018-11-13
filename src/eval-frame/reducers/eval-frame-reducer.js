@@ -91,7 +91,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_MARKDOWN_CHUNKS': {
-      const { reportChunks } = action
+      const reportChunks = [...action.reportChunks]
       return Object.assign({}, state, { reportChunks })
     }
 
