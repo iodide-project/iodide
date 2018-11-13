@@ -224,15 +224,11 @@ export function updateCellProperties(cellId, updatedProperties) {
 
 export function updateJsmdContent(text) {
   const jsmdChunks = jsmdParser(text)
-  const markdownChunks = jsmdChunks
-    .filter(c => c.cellType === 'md')
-    .map(c => ({
-      cellContent: c.cellContent,
-      evalFlags: c.evalFlags,
-    }))
+  const reportChunks = jsmdChunks
+    .filter(c => c.cellType === 'md' || c.cellType === 'html')
   postActionToEvalFrame({
     type: 'UPDATE_MARKDOWN_CHUNKS',
-    markdownChunks,
+    reportChunks,
   })
   return {
     type: 'UPDATE_JSMD_CONTENT',

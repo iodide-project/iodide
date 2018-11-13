@@ -96,16 +96,19 @@ export const evalFrameOnlyStateProperties = {
     items: historySchema,
     default: [],
   },
-  markdownChunks: {
+  reportChunks: {
     type: 'array',
     items: {
       type: 'object',
       properties: {
         cellContent: { type: 'string' },
+        cellType: { type: 'string' },
         evalFlags: {
           type: 'array',
           items: { type: 'string' },
         },
+        startLine: { type: 'integer' },
+        endLine: { type: 'integer' },
       },
       additionalProperties: false,
       default: {},
