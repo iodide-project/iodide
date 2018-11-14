@@ -6,13 +6,6 @@ import { evalConsoleInput } from './actions'
 
 const tasks = {}
 
-tasks.changeToCommandMode = new UserTask({
-  title: 'Change to Command Mode',
-  keybindings: ['esc'],
-  preventDefaultKeybinding: true,
-  callback() { postKeypressToEditor(this.keybindings[0]) },
-})
-
 tasks.saveNotebook = new UserTask({
   title: 'Save Notebook',
   keybindings: ['ctrl+s', 'meta+s'],

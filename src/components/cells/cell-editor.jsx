@@ -16,7 +16,6 @@ import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/hint/javascript-hint'
 import 'codemirror/addon/mode/simple'
 import '../../codemirror-keymap-sublime'
-import './codemirror-fetch-mode'
 
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
@@ -71,10 +70,7 @@ class CellEditor extends React.Component {
       if (!this.props.thisCellBeingEdited) {
         this.props.actions.unHighlightCells()
         this.props.actions.selectCell(this.props.cellId)
-        this.props.actions.changeMode('EDIT_MODE')
       }
-    } else if (!focused) {
-      this.props.actions.changeMode('COMMAND_MODE')
     }
   }
 

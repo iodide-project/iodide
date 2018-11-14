@@ -23,11 +23,6 @@ describe('make sure createValidatedReducer is checking correctly', () => {
     store.dispatch(actions.resetNotebook())
   })
   it('createValidatedReducer should throw an error if we pass an action that inserts an invalid state value', () => {
-    // note that change mode must be a string
-    expect(() => store.dispatch(actions.changeMode(542132)))
-      .toThrowError(SchemaValidationError)
-  })
-  it('createValidatedReducer should throw an error if we pass an action that inserts an invalid state value', () => {
     // this inserts an invalid property into `state.cells[0]``
     expect(() => store.dispatch(actions.updateCellProperties(0, { INVALID_CELL_PROP: 0 })))
       .toThrowError(SchemaValidationError)
@@ -89,11 +84,6 @@ describe('make sure action creators leave store in a consitent state', () => {
 
   it('changePageTitle', () => {
     expect(() => store.dispatch(actions.changePageTitle('test title')))
-      .not.toThrow()
-  })
-
-  it('changeMode', () => {
-    expect(() => store.dispatch(actions.changeMode('COMMAND_MODE')))
       .not.toThrow()
   })
 

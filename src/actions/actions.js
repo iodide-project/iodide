@@ -4,7 +4,7 @@ import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 import { stateFromJsmd } from '../tools/jsmd-tools'
 import { getNotebookID } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
-import { getCellById, isCommandMode } from '../tools/notebook-utils'
+import { getCellById } from '../tools/notebook-utils'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 import { addChangeLanguageTask } from './task-definitions'
@@ -194,8 +194,7 @@ export function updateInputContent(text) {
 
 export function changeCellType(cellType, language = 'js') {
   return (dispatch, getState) => {
-    if (isCommandMode(getState())
-      && (getSelectedCell(getState()).cellType !== cellType
+    if ((getSelectedCell(getState()).cellType !== cellType
       || getSelectedCell(getState()).language !== language)) {
       dispatch({
         type: 'CHANGE_CELL_TYPE',

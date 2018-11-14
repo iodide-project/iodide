@@ -4,7 +4,6 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 
 import {
   getCellById,
-  // isCommandMode
 } from '../tools/notebook-utils'
 import {
   getSelectedCell,
