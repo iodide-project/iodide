@@ -28,7 +28,6 @@ class CellEditor extends React.Component {
     content: PropTypes.string,
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
-      changeMode: PropTypes.func.isRequired,
       updateInputContent: PropTypes.func.isRequired,
       unHighlightCells: PropTypes.func.isRequired,
     }).isRequired,
@@ -228,7 +227,6 @@ function mapStateToProps(state, ownProps) {
   return {
     thisCellBeingEdited: (
       cell.selected
-      && state.mode === 'EDIT_MODE'
       && state.viewMode === 'EXPLORE_VIEW'
     ),
     cellType: cell.cellType,

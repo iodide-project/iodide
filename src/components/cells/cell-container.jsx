@@ -118,7 +118,7 @@ export class CellContainerUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   const cell = getCellById(state.cells, ownProps.cellId)
-  const editingCell = (cell.selected && state.mode === 'EDIT_MODE')
+  const editingCell = (cell.selected)
 
   const cellContainerBorderWidth = (cell.selected && !editingCell) ? '2px' : '1px'
   const cellContainerBorderColor = cell.selected ? '#bbb' : '#f1f1f1'
