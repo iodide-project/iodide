@@ -143,11 +143,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { scrollingLinked })
     }
 
-    case 'CHANGE_MODE': {
-      const { mode } = action
-      return Object.assign({}, state, { mode })
-    }
-
     case 'INCREMENT_EXECUTION_NUMBER': {
       let { executionNumber } = state
       executionNumber += 1

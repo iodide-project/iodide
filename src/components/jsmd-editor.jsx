@@ -29,7 +29,6 @@ class JsmdEditorUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
     actions: PropTypes.shape({
-      changeMode: PropTypes.func.isRequired,
       updateJsmdContent: PropTypes.func.isRequired,
     }).isRequired,
     containerStyle: PropTypes.object,

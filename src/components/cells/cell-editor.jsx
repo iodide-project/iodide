@@ -16,7 +16,6 @@ import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/hint/javascript-hint'
 import 'codemirror/addon/mode/simple'
 import '../../codemirror-keymap-sublime'
-import './codemirror-fetch-mode'
 
 import { getCellById } from '../../tools/notebook-utils'
 import * as actions from '../../actions/actions'
@@ -29,7 +28,6 @@ class CellEditor extends React.Component {
     content: PropTypes.string,
     actions: PropTypes.shape({
       selectCell: PropTypes.func.isRequired,
-      changeMode: PropTypes.func.isRequired,
       updateInputContent: PropTypes.func.isRequired,
       unHighlightCells: PropTypes.func.isRequired,
     }).isRequired,
@@ -71,10 +69,7 @@ class CellEditor extends React.Component {
       if (!this.props.thisCellBeingEdited) {
         this.props.actions.unHighlightCells()
         this.props.actions.selectCell(this.props.cellId)
-        this.props.actions.changeMode('EDIT_MODE')
       }
-    } else if (!focused) {
-      this.props.actions.changeMode('COMMAND_MODE')
     }
   }
 
@@ -232,7 +227,6 @@ function mapStateToProps(state, ownProps) {
   return {
     thisCellBeingEdited: (
       cell.selected
-      && state.mode === 'EDIT_MODE'
       && state.viewMode === 'EXPLORE_VIEW'
     ),
     cellType: cell.cellType,
