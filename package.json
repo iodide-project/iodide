@@ -27,7 +27,8 @@
     },
     "setupFiles": [
       "jest-localstorage-mock"
-    ]
+    ],
+    "testPathIgnorePatterns": ["/node_modules/", "/build/"]
   },
   "dependencies": {
     "@material-ui/core": "^3.0.0",
