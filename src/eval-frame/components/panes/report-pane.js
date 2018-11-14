@@ -9,29 +9,46 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 const mdIt = MarkdownIt({ html: true })
 mdIt.use(MarkdownItKatex).use(MarkdownItAnchor)
 
+const mdDiv = html => (<div
+  className="user-markdown"
+  dangerouslySetInnerHTML={{ __html: html }} // eslint-disable-line react/no-danger
+/>)
+
+const styleTag = css => (<style
+  dangerouslySetInnerHTML={{ __html: css }} // eslint-disable-line react/no-danger
+/>)
+
 export class ReportPaneUnconnected extends React.Component {
   static propTypes = {
     reportChunks: PropTypes.arrayOf(PropTypes.shape({
       chunkContent: PropTypes.string.isRequired,
       chunkType: PropTypes.string.isRequired,
+      chunkId: PropTypes.string.isRequired,
       evalFlags: PropTypes.arrayOf(PropTypes.string),
-      startLine: PropTypes.number.isRequired,
-      endLine: PropTypes.number.isRequired,
     })),
   }
 
   render() {
     const mdComponents = this.props.reportChunks.map((chunk) => {
-      const key = `chunk_${chunk.startLine}-${chunk.endLine}`
-      // FIXME: 'html' chunks are really markdown chunks --
-      // we pass them thru the MD parser (for validation)
-      // before putting in the report
-      const html = mdIt.render(chunk.chunkContent)
-      return (<div
-        key={key}
-        className="user-markdown"
-        dangerouslySetInnerHTML={{ __html: html }} // eslint-disable-line
-      />)
+      const key = chunk.chunkId
+      let contents
+      switch (chunk.chunkType) {
+        case 'md':
+        case 'html':
+          // FIXME: 'html' chunks are really markdown chunks --
+          // we pass them thru the MD parser (for validation)
+          // before putting in the report
+          contents = mdDiv(mdIt.render(chunk.chunkContent))
+          break
+        case 'css':
+          contents = styleTag(chunk.chunkContent)
+          break
+        default:
+          // in the case of code and other cell types,
+          // just want an empty div; `contents` can remain undefined
+          break
+      }
+      return (<div key={key}>{contents}</div>)
     })
 
     return (

@@ -103,12 +103,11 @@ export const evalFrameOnlyStateProperties = {
       properties: {
         chunkContent: { type: 'string' },
         chunkType: { type: 'string' },
+        chunkId: { type: 'string' },
         evalFlags: {
           type: 'array',
           items: { type: 'string' },
         },
-        startLine: { type: 'integer' },
-        endLine: { type: 'integer' },
       },
       additionalProperties: false,
       default: {},

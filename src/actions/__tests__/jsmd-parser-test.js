@@ -191,3 +191,21 @@ js 2
   })
 })
 
+describe('jsmd hashes are distinct', () => {
+  const jsmdSample = `%% js
+js
+%% js
+js
+%% js
+js`
+
+  it('length of set of hashes is correct', () => {
+    expect(new Set(jsmdParser(jsmdSample).map(c => c.chunkId)).size)
+      .toEqual(3)
+  })
+
+  it('hashes of identical content have correct suffixes', () => {
+    expect(jsmdParser(jsmdSample).map(c => c.chunkId.split('_')[1]))
+      .toEqual(['0', '1', '2'])
+  })
+})

@@ -52,6 +52,7 @@ export const editorOnlyStateProperties = {
       properties: {
         chunkContent: { type: 'string' },
         chunkType: { type: 'string' },
+        chunkId: { type: 'string' },
         evalFlags: {
           type: 'array',
           items: { type: 'string' },
