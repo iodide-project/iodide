@@ -18,20 +18,6 @@ restore_javascript_cache: &restore_javascript_cache
       - v1-javascript-dependencies-{{ checksum "package.json" }}
       - v1-javascript-dependencies-
 
-save_python_cache: &save_python_cache
-  save_cache:
-    paths:
-      - ~/cache/pip
-      - ~/cache/pipenv
-      - .venv
-    key: v1-python-dependencies-{{ checksum "Pipfile.lock" }}
-
-restore_python_cache: &restore_python_cache
-  restore_cache:
-    keys:
-      - v1-python-dependencies-{{ checksum "Pipfile.lock" }}
-      - v1-python-dependencies-
-
 version: 2
 jobs:
   test-javascript:
@@ -49,29 +35,7 @@ jobs:
       - run: npm run build
       - run: npm test
 
-  test-python:
-    docker:
-      - image: circleci/python:3
-      - image: circleci/postgres:9
-    working_directory: ~/iodide
-    environment:
-      PIP_CACHE_DIR: ~/cache/pip
-      PIPENV_CACHE_DIR: ~/cache/pipenv
-      PIPENV_VENV_IN_PROJECT: 1
-    steps:
-      - checkout
-      - *restore_python_cache
-      - run: pipenv install --dev
-      - *save_python_cache
-      - run: pipenv run flake8 server
-      - run:
-          command: pipenv run py.test
-          environment:
-            SECRET_KEY: 59114b6a-2858-4caf-8878-482a24ee9542
-            DATABASE_URL: postgres://postgres@localhost/circle_test
-            IODIDE_SERVER_DEBUG: 1
-
-  build-and-deploy:
+  build:
     docker:
       - image: circleci/node:8
     working_directory: ~/iodide
@@ -97,6 +61,58 @@ jobs:
       - run:
           name: Build Docker image
           command: docker build -t app:build .
+      # save the built docker container into CircleCI's cache. This is
+      # required since Workflows do not have the same remote docker instance.
+      - run:
+          name: docker save app:build
+          command: mkdir -p /tmp; docker save -o /tmp/docker.tar "app:build"
+      - save_cache:
+          key: v1-{{ .Branch }}-{{epoch}}
+          paths:
+            - /tmp/docker.tar
+            - Dockerfile
+            - docker-compose.yml
+
+  test-server:
+    machine:
+      enable: true
+    environment:
+      DEVELOPMENT: 1
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-{{.Branch}}
+      - run:
+          name: Restore Docker image cache
+          command: docker load -i /tmp/docker.tar
+
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+            pip install --upgrade docker-compose
+
+      - run:
+          name: Test Code
+          command: |
+            cp .env-dist .env
+            docker-compose up -d
+            docker-compose run server bash -c "while ! echo > /dev/tcp/db/5432 > /dev/null 2>&1; do sleep 1 && echo waiting for db; done"
+            make flake8
+            make test
+
+  deploy:
+    docker:
+      - image: docker:18.02.0-ce
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-{{.Branch}}
+      - run:
+          name: Restore Docker image cache
+          command: docker load -i /tmp/docker.tar
       - run:
           name: Push image to Docker Hub
           command: |
@@ -121,14 +137,19 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - test-python:
+      - build:
           filters:
             tags:
               only: /.*/
-      - build-and-deploy:
+      - test-server:
           requires:
-            - test-javascript
-            - test-python
+            - build
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - test-server
           filters:
             tags:
               only: /.*/
