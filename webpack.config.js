@@ -25,6 +25,9 @@ let CSS_PATH_STRING
 let { EDITOR_ORIGIN } = process.env
 let { EVAL_FRAME_ORIGIN } = process.env
 
+const PYODIDE_VERSION = process.env.PYODIDE_VERSION || '0.2.0'
+process.env.PYODIDE_VERSION = PYODIDE_VERSION
+
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || 'dev'
 
 const APP_DIR = path.resolve(__dirname, 'src/')
@@ -129,6 +132,7 @@ module.exports = (env) => {
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify((env && env.startsWith('dev')) ? 'dev' : 'production'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
+        PYODIDE_VERSION: JSON.stringify(PYODIDE_VERSION),
       }),
       new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
       new WriteFilePlugin(),

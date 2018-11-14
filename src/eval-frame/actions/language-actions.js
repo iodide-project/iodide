@@ -50,6 +50,8 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
         // see the following for asynchronous loading of scripts from strings:
         // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
 
+        window.languagePluginUrl = url
+
         // Here, we wrap whatever the return value of the eval into a promise.
         // If it is simply evaling a code block, then it returns undefined.
         // But if it returns a Promise, then we can wait for that promise to resolve
@@ -64,6 +66,7 @@ function loadLanguagePlugin(pluginData, historyId, cell, dispatch) {
           postMessageToEditor('POST_LANGUAGE_DEF_TO_EDITOR', pluginData)
           dispatch(updateCellProperties(cell.id, { evalStatus, rendered }))
           dispatch(updateValueInHistory(historyId, value))
+          delete window.languagePluginUrl
           resolve()
         })
       })

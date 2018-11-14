@@ -1,3 +1,5 @@
+/* global PYODIDE_VERSION */
+
 // This defines the "built-in" language definitions
 
 export const jsLanguageDefinition = {
@@ -17,7 +19,7 @@ const pyLanguageDefinition = {
   displayName: 'Python',
   codeMirrorMode: 'python',
   keybinding: 'p',
-  url: 'https://iodide.io/pyodide-demo/pyodide.js',
+  url: `/pyodide-${PYODIDE_VERSION}/pyodide.js`,
   module: 'pyodide',
   evaluator: 'runPython',
   asyncEvaluator: 'runPythonAsync',
