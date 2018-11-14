@@ -12,8 +12,8 @@ mdIt.use(MarkdownItKatex).use(MarkdownItAnchor)
 export class ReportPaneUnconnected extends React.Component {
   static propTypes = {
     reportChunks: PropTypes.arrayOf(PropTypes.shape({
-      cellContent: PropTypes.string.isRequired,
-      cellType: PropTypes.string.isRequired,
+      chunkContent: PropTypes.string.isRequired,
+      chunkType: PropTypes.string.isRequired,
       evalFlags: PropTypes.arrayOf(PropTypes.string),
       startLine: PropTypes.number.isRequired,
       endLine: PropTypes.number.isRequired,
@@ -26,7 +26,7 @@ export class ReportPaneUnconnected extends React.Component {
       // FIXME: 'html' chunks are really markdown chunks --
       // we pass them thru the MD parser (for validation)
       // before putting in the report
-      const html = mdIt.render(chunk.cellContent)
+      const html = mdIt.render(chunk.chunkContent)
       return (<div
         key={key}
         className="user-markdown"
