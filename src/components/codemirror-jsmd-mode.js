@@ -13,17 +13,6 @@ CodeMirror.defineMode('jsmd', () => {
       localMode: plainMode,
       localState: null,
     }),
-    // copyState: (state) => {
-    //   var local;
-    //   if (state.localState) {
-    //     local = CodeMirror.copyState(state.localMode, state.localState);
-    //   }
-    //   return {
-    //     token: state.token, inTag: state.inTag,
-    //     localMode: state.localMode, localState: local,
-    //     htmlState: CodeMirror.copyState(htmlMode, state.htmlState)
-    //   };
-    // },
     token: (stream, state) => {
       let thisToken
       if (stream.sol() && stream.match(/%%\s*js.*/, true)) {
