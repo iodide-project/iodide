@@ -4,7 +4,7 @@
 # Make non-zero exit codes & other errors fatal.
 set -euo pipefail
 
-# Create a `prod/` directory containing built/minified versions of the frontend assets.
+# Create a `build/` directory containing built/minified versions of the frontend assets.
 # Uses the node binaries/packages installed by the nodejs buildpack previously.
 npm install && npm run build
 
@@ -12,7 +12,7 @@ npm install && npm run build
 # WhiteNoise can then serve in preference to the originals. This is required
 # since WhiteNoise's Django storage backend only gzips assets handled by
 # collectstatic, and so does not affect files in the `dist/` directory.
-python -m whitenoise.compress prod
+python -m whitenoise.compress build
 
 # Remove nodejs files to reduce slug size (and avoid environment variable
 # pollution from the nodejs profile script), since they are no longer
