@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { ValueRenderer } from '../../../components/reps/value-renderer'
-import ExternalResourceOutputHandler from '../../../components/reps/output-handler-external-resource'
 import PreformattedTextItemsHandler from '../../../components/reps/preformatted-text-items-handler'
 
 import PaneContentButton from './pane-content-button'
@@ -43,9 +42,6 @@ export class HistoryItemUnconnected extends React.Component {
           render
           valueToRender={this.props.valueToRender}
         />)
-        break
-      case 'CELL_EVAL_EXTERNAL_RESOURCE':
-        output = <ExternalResourceOutputHandler value={this.props.valueToRender} />
         break
       case 'CELL_EVAL_INFO':
         output = this.props.valueToRender

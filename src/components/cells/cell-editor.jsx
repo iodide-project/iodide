@@ -221,7 +221,6 @@ function mapStateToProps(state, ownProps) {
       editorOptions.autoCloseBrackets = false
       break
     case 'code':
-    case 'external dependencies':
     case 'css':
     default:
       // no op, use default options

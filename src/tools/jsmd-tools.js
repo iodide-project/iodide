@@ -7,7 +7,7 @@ import htmlTemplate from '../html-template'
 import { addChangeLanguageTask } from '../actions/task-definitions'
 import { languageDefinitions as builtinLanguageDefinitions } from '../state-schemas/language-definitions'
 
-const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'resource', 'css', 'plugin', 'fetch']
+const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'css', 'plugin', 'fetch']
 
 
 const jsmdToCellTypeMap = new Map([
@@ -16,8 +16,6 @@ const jsmdToCellTypeMap = new Map([
   ['md', 'markdown'],
   ['plugin', 'plugin'],
   ['markdown', 'markdown'],
-  ['external', 'external dependencies'],
-  ['resource', 'external dependencies'],
   ['raw', 'raw'],
   ['css', 'css'],
   ['fetch', 'fetch'],
@@ -27,7 +25,6 @@ const cellTypeToJsmdMap = new Map([
   ['plugin', 'plugin'],
   ['code', 'code'],
   ['markdown', 'md'],
-  ['external dependencies', 'resource'],
   ['raw', 'raw'],
   ['css', 'css'],
   ['fetch', 'fetch'],

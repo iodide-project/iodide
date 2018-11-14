@@ -79,7 +79,7 @@ describe('jsmd stringifier test case 4, non-default cell settings 2', () => {
   state.cells[0].content = 'foo'
   _.set(state, 'cells[0].skipInRunAll', true)
 
-  const cellTypes = ['markdown', 'external dependencies', 'raw']
+  const cellTypes = ['markdown', 'raw']
   cellTypes.forEach((cellType, i) => {
     state.cells.push(newCell(i + 1, cellType))
     state.cells[i + 1].content = 'foo'
@@ -96,9 +96,6 @@ describe('jsmd stringifier test case 4, non-default cell settings 2', () => {
 foo
 
 %% md
-foo
-
-%% resource
 foo
 
 %% raw

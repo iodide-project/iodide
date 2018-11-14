@@ -7,7 +7,6 @@ import {
   // isCommandMode
 } from '../tools/notebook-utils'
 import {
-  addExternalDependency,
   getSelectedCell,
 } from '../reducers/output-reducer-utils'
 
@@ -231,31 +230,6 @@ function evaluateMarkdownCell(cell) {
   ))
 }
 
-function evaluateResourceCell(cell) {
-  return (dispatch, getState) => {
-    const externalDependencies = [...getState().externalDependencies]
-    const dependencies = cell.content.split('\n').filter(d => d.trim().slice(0, 2) !== '//')
-    const newValues = dependencies
-      .filter(d => !externalDependencies.includes(d))
-      .map(addExternalDependency)
-
-    newValues.forEach((d) => {
-      if (!externalDependencies.includes(d.src)) {
-        externalDependencies.push(d.src)
-      }
-    })
-    const evalStatus = newValues.map(d => d.status).includes('error') ? 'ERROR' : 'SUCCESS'
-    dispatch(updateCellProperties(cell.id, { evalStatus }))
-    dispatch(appendToEvalHistory(
-      cell.id,
-      `// added external dependencies:\n${newValues.map(s => `// ${s.src}`).join('\n')}`,
-      new Array(...[...cell.value || [], ...newValues]),
-      { historyType: 'CELL_EVAL_EXTERNAL_RESOURCE' },
-    ))
-    dispatch(updateUserVariables())
-  }
-}
-
 function evaluateCSSCell(cell) {
   return (dispatch) => {
     dispatch(updateCellProperties(
@@ -298,8 +272,6 @@ export function evaluateCell(cellId) {
       evaluation = evaluationQueue
     } else if (cell.cellType === 'markdown') {
       evaluation = dispatch(evaluateMarkdownCell(cell))
-    } else if (cell.cellType === 'external dependencies') {
-      evaluation = dispatch(evaluateResourceCell(cell))
     } else if (cell.cellType === 'css') {
       evaluation = dispatch(evaluateCSSCell(cell))
     } else if (cell.cellType === 'fetch') {

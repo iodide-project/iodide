@@ -295,17 +295,6 @@ tasks.changeToMarkdownCell = new UserTask({
   },
 })
 
-tasks.changeToExternalResourceCell = new UserTask({
-  title: 'Change to External Resource',
-  keybindings: ['e'],
-  displayKeybinding: 'e',
-  keybindingPrecondition: isCommandMode,
-  commandModeOnlyKey: true,
-  callback() {
-    dispatcher.changeCellType('external dependencies')
-  },
-})
-
 tasks.changeToRawCell = new UserTask({
   title: 'Change to Raw',
   keybindings: ['r'],

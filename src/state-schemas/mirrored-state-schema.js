@@ -55,7 +55,7 @@ const positionerDefaults = {
 export const mirroredCellProperties = {
   cellType: {
     type: 'string',
-    enum: ['code', 'markdown', 'raw', 'css', 'fetch', 'external dependencies', 'plugin'],
+    enum: ['code', 'markdown', 'raw', 'css', 'fetch', 'plugin'],
     default: 'code',
   },
   content: {

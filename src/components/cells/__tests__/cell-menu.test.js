@@ -36,14 +36,14 @@ describe('CellMenuUnconnected React component', () => {
   })
 
   it('always renders correct number of NotebookMenuItem without availableLanguages', () => {
-    expect(cellMenu().find(NotebookMenuItem).length).toBe(13)
+    expect(cellMenu().find(NotebookMenuItem).length).toBe(12)
   })
 
   it('always renders one NotebookMenuDivider', () => {
     expect(cellMenu().find(NotebookMenuDivider).length).toBe(3)
   })
 
-  const cellTypes = ['js', 'md', 'css', 'resource', 'raw', 'plugin']
+  const cellTypes = ['js', 'md', 'css', 'raw', 'plugin']
 
   cellTypes.forEach((cellType, i) => {
     it(`sets the NotebookMenuItem disabled prop to be correct for option ${cellType}`, () => {

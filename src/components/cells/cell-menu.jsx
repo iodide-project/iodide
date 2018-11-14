@@ -46,11 +46,6 @@ export class CellMenuUnconnected extends React.Component {
           disabled={this.props.menuLabel === 'fetch'}
         />
         <NotebookMenuItem
-          key={tasks.changeToExternalResourceCell.title}
-          task={tasks.changeToExternalResourceCell}
-          disabled={this.props.menuLabel === 'resource'}
-        />
-        <NotebookMenuItem
           key={tasks.changeToRawCell.title}
           task={tasks.changeToRawCell}
           disabled={this.props.menuLabel === 'raw'}
