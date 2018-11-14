@@ -51,6 +51,9 @@ USE_OPENIDC_AUTH = env.bool("USE_OPENIDC_AUTH", default=False)
 # Use Gravatar middleware to display user avatars
 USE_GRAVATAR = env.bool("USE_GRAVATAR", default=not SOCIAL_AUTH_GITHUB_KEY)
 
+# Google analytics key (if unset, google analytics will be disabled)
+GA_TRACKING_ID = env.str('GA_TRACKING_ID', None)
+
 # Maximum file length for uploaded data / assets
 MAX_FILENAME_LENGTH = 120
 MAX_FILE_SIZE = 1024*1024*10  # 10 megabytes is the default
@@ -120,6 +123,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'server.context_processors.google_analytics',
             ],
         },
     },

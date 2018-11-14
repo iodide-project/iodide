@@ -1,10 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  {% block head %}{% endblock %}
-</head>
-<body>
-  {% block content %}{% endblock %}
-</body>
+  <head>
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    {% block content %}{% endblock %}
+    {{ google_analytics }}
+  </body>
 </html>
