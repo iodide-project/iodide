@@ -203,14 +203,18 @@ function evaluateCode(code, language, state) {
   }
 }
 
-export function evaluateText(evalText, evalType, evalFlags) {
+
+// FIXME use evalFlags for something real
+export function evaluateText(
+  evalText,
+  evalType,
+  evalFlags, // eslint-disable-line
+) {
   // allowed types:
   // md
   return (dispatch, getState) => {
     // exit if there is no code to eval or no eval type
     // if (!evalText || !evalType) { return undefined }
-    // FIXME use evalFlags for something real
-    if (evalFlags.length) console.log(evalFlags)
     const state = getState()
     if (evalType === 'fetch') {
       dispatch(evaluateFetchText(evalText))
