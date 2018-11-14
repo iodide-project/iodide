@@ -105,9 +105,10 @@ jobs:
 
   deploy:
     docker:
-      - image: circleci/node:8
+      - image: docker:18.02.0-ce
     steps:
       - checkout
+      - setup_remote_docker
       - restore_cache:
           key: v1-{{.Branch}}
       - run:
