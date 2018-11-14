@@ -13,8 +13,8 @@ export function jsmdParser(fullJsmd) {
       if (i !== 0) {
         // DON'T push a chunk if we're only on line 0
         chunks.push({
-          cellContent: currentChunkLines.join('\n'),
-          cellType: currentEvalType,
+          chunkContent: currentChunkLines.join('\n'),
+          chunkType: currentEvalType,
           evalFlags,
           startLine: currentChunkStartLine,
           endLine: i - 1,
@@ -41,8 +41,8 @@ export function jsmdParser(fullJsmd) {
   }
   // this is what's left over in the final chunk
   chunks.push({
-    cellContent: currentChunkLines.join('\n'),
-    cellType: currentEvalType,
+    chunkContent: currentChunkLines.join('\n'),
+    chunkType: currentEvalType,
     evalFlags,
     startLine: currentChunkStartLine,
     endLine: jsmdLines.length - 1,

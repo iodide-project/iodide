@@ -101,8 +101,8 @@ export const evalFrameOnlyStateProperties = {
     items: {
       type: 'object',
       properties: {
-        cellContent: { type: 'string' },
-        cellType: { type: 'string' },
+        chunkContent: { type: 'string' },
+        chunkType: { type: 'string' },
         evalFlags: {
           type: 'array',
           items: { type: 'string' },

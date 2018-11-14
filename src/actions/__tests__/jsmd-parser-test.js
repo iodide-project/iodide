@@ -13,12 +13,12 @@ fooblock contents`
   })
 
   it('jsmdSample, has correct chunk types', () => {
-    expect(jsmdParser(jsmdSample).map(c => c.cellType))
+    expect(jsmdParser(jsmdSample).map(c => c.chunkType))
       .toEqual(['js', 'fooblock'])
   })
 
   it('jsmdSample, has correct chunk content', () => {
-    expect(jsmdParser(jsmdSample).map(c => c.cellContent))
+    expect(jsmdParser(jsmdSample).map(c => c.chunkContent))
       .toEqual([
         `js block 1
 foo`,
@@ -65,12 +65,12 @@ fetch block 1`
   })
 
   it('jsmdSample, has correct chunk types', () => {
-    expect(jsmdParser(jsmdSample).map(c => c.cellType))
+    expect(jsmdParser(jsmdSample).map(c => c.chunkType))
       .toEqual(['', 'js', 'fooblock', 'md', 'md', 'fetch'])
   })
 
   it('jsmdSample, has correct chunk content', () => {
-    expect(jsmdParser(jsmdSample).map(c => c.cellContent))
+    expect(jsmdParser(jsmdSample).map(c => c.chunkContent))
       .toEqual([
         `
 blankblock`,
@@ -117,12 +117,12 @@ foo
   })
 
   it('jsmdSample, has correct chunk types', () => {
-    expect(jsmdParser(jsmdSample).map(c => c.cellType))
+    expect(jsmdParser(jsmdSample).map(c => c.chunkType))
       .toEqual(['js', 'fooblock'])
   })
 
   it('jsmdSample, has correct chunk content', () => {
-    expect(jsmdParser(jsmdSample).map(c => c.cellContent))
+    expect(jsmdParser(jsmdSample).map(c => c.chunkContent))
       .toEqual([
         `js block 1
 foo`,
@@ -159,12 +159,12 @@ js 2
   })
 
   it('jsmdSample, has correct chunk types', () => {
-    expect(jsmdParser(jsmdSample).map(c => c.cellType))
+    expect(jsmdParser(jsmdSample).map(c => c.chunkType))
       .toEqual(['js', 'fooblock', 'js', 'js', 'md'])
   })
 
   it('jsmdSample, has correct chunk content', () => {
-    expect(jsmdParser(jsmdSample).map(c => c.cellContent))
+    expect(jsmdParser(jsmdSample).map(c => c.chunkContent))
       .toEqual([
         'js 1',
         '',

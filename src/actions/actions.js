@@ -40,7 +40,7 @@ export function updateJsmdContent(text) {
   return (dispatch) => {
     const jsmdChunks = jsmdParser(text)
     const reportChunks = jsmdChunks
-      .filter(c => c.cellType === 'md' || c.cellType === 'html')
+      .filter(c => c.chunkType === 'md' || c.chunkType === 'html')
     dispatch({
       // this dispatch really just forwards to the eval frame
       type: 'UPDATE_MARKDOWN_CHUNKS',
@@ -257,8 +257,8 @@ export function evaluateText() {
 
       actionObj = Object.assign({
         type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
-        evalText: activeChunk.cellContent,
-        evalType: activeChunk.cellType,
+        evalText: activeChunk.chunkContent,
+        evalType: activeChunk.chunkType,
         evalFlags: activeChunk.evalFlags,
       })
     } else {
