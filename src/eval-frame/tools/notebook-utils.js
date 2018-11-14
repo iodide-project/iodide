@@ -4,10 +4,6 @@ function viewModeIsEditor() {
   return store.getState().viewMode === 'EXPLORE_VIEW'
 }
 
-function isCommandMode() {
-  return store.getState().mode === 'COMMAND_MODE' && viewModeIsEditor()
-}
-
 function viewModeIsPresentation() {
   return store.getState().viewMode === 'REPORT_VIEW'
 }
@@ -148,7 +144,6 @@ export {
   formatDateString,
   getCellById,
   getCellBelowSelectedId, getCellAboveSelectedId,
-  isCommandMode,
   viewModeIsEditor, viewModeIsPresentation,
   getCompletions,
 }

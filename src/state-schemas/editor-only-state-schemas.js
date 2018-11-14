@@ -77,11 +77,6 @@ export const editorOnlyStateProperties = {
     type: 'string',
     default: undefined,
   },
-  mode: {
-    type: 'string',
-    enum: ['COMMAND_MODE', 'EDIT_MODE', 'APP_MODE'],
-    default: 'EDIT_MODE',
-  },
   title: {
     type: 'string',
     default: 'untitled',
