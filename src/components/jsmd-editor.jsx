@@ -48,17 +48,6 @@ class JsmdEditorUnconnected extends React.Component {
     return !deepEqual(this.props, nextProps)
   }
 
-  // componentDidUpdate() {
-  //   if (this.props.thisCellBeingEdited) {
-  //     this.editor.focus()
-  //   } else if (
-  //     // this check prevents a bug on mobile
-  //     this.editor.getCodeMirror().display.input.textarea !== undefined
-  //   ) {
-  //     this.editor.getCodeMirror().display.input.textarea.blur()
-  //   }
-  // }
-
   storeEditorElementRef(editorElt) {
     this.editor = editorElt
     window.ACTIVE_CODEMIRROR = editorElt.getCodeMirror()
@@ -174,7 +163,6 @@ function mapStateToProps(state) {
   if (state.wrapEditors === true) { editorOptions.lineWrapping = true }
 
   return {
-    thisCellBeingEdited: true,
     content: state.jsmd,
     editorOptions,
   }
