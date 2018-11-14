@@ -105,7 +105,7 @@ jobs:
 
   deploy:
     docker:
-      - image: docker:18.02.0-ce
+      - image: circleci/node:8
     steps:
       - checkout
       - restore_cache:
