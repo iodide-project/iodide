@@ -7,7 +7,6 @@ import OutputContainer from '../output-container'
 describe('MarkdownOutput_unconnected react component', () => {
   let props
   let mountedCell
-  let changeMode
 
   const output = () => {
     if (!mountedCell) {
@@ -17,12 +16,10 @@ describe('MarkdownOutput_unconnected react component', () => {
   }
 
   beforeEach(() => {
-    changeMode = jest.fn()
     props = {
       cellId: 1,
       value: 'a _markdown_ string',
       viewMode: 'EXPLORE_VIEW',
-      actions: { changeMode },
     }
     mountedCell = undefined
   })

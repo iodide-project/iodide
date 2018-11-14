@@ -18,10 +18,7 @@ export class TitleUnconnected extends React.Component {
   }
 
   getTitle() {
-    if (this.props.pageMode !== 'APP_MODE') {
-      return `${this.props.title || 'New Notebook'} - Iodide`
-    }
-    return undefined
+    return `${this.props.title || 'New Notebook'} - Iodide`
   }
 
   render() {
@@ -50,7 +47,7 @@ export class TitleUnconnected extends React.Component {
 function mapStateToProps(state) {
   return {
     title: state.title,
-    additionalContainerClasses: state.mode !== 'APP_MODE' ? 'unselected-title-field' : '',
+    additionalContainerClasses: '',
     titleInputClasses: state.title === undefined ? 'unrendered-title' : '',
   }
 }

@@ -160,13 +160,6 @@ export function changePageTitle(title) {
   }
 }
 
-export function changeMode(mode) {
-  return {
-    type: 'CHANGE_MODE',
-    mode,
-  }
-}
-
 export function setViewMode(viewMode) {
   return (dispatch, getState) => {
     const state = getState()
