@@ -2,10 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import NotebookMenuItem from '../menu/notebook-menu-item'
-import NotebookMenuDivider from '../menu/notebook-menu-divider'
+// import NotebookMenuItem from '../menu/notebook-menu-item'
+// import NotebookMenuDivider from '../menu/notebook-menu-divider'
 import { getCellById } from '../../tools/notebook-utils'
-import tasks from '../../actions/task-definitions'
+// import tasks from '../../actions/task-definitions'
 
 export class CellMenuUnconnected extends React.Component {
   static propTypes = {
@@ -16,9 +16,11 @@ export class CellMenuUnconnected extends React.Component {
   }
 
   render() {
+    // FIXME: retain this template commented out
+    // we might reuse this template a chunk menu
     return (
       <div className="cell-menu-items-container">
-        <NotebookMenuItem
+        {/* <NotebookMenuItem
           key={tasks.changeToJavascriptCell.title}
           task={tasks.changeToJavascriptCell}
           disabled={this.props.menuLabel === 'js'}
@@ -62,32 +64,11 @@ export class CellMenuUnconnected extends React.Component {
         />
 
         <NotebookMenuDivider />
-        <NotebookMenuItem
-          key={tasks.moveCellUp.title}
-          task={tasks.moveCellUp}
-        />
-        <NotebookMenuItem
-          key={tasks.moveCellDown.title}
-          task={tasks.moveCellDown}
-        />
-        <NotebookMenuItem
-          key={tasks.addCellAbove.title}
-          task={tasks.addCellAbove}
-        />
-        <NotebookMenuItem
-          key={tasks.addCellBelow.title}
-          task={tasks.addCellBelow}
-        />
-        <NotebookMenuDivider />
+
         <NotebookMenuItem
           key={tasks.toggleSkipCellInRunAll.title}
           task={tasks.toggleSkipCellInRunAll}
-        />
-        <NotebookMenuDivider />
-        <NotebookMenuItem
-          key={tasks.deleteCell.title}
-          task={tasks.deleteCell}
-        />
+        /> */}
       </div>
     )
   }

@@ -2,8 +2,6 @@ import { shallow } from 'enzyme'
 import React from 'react'
 
 import { CellMenuUnconnected, mapStateToProps } from '../cell-menu'
-import NotebookMenuItem from '../../menu/notebook-menu-item'
-import NotebookMenuDivider from '../../menu/notebook-menu-divider'
 
 describe('CellMenuUnconnected React component', () => {
   let props
@@ -33,23 +31,6 @@ describe('CellMenuUnconnected React component', () => {
   it('sets the div to have class cell-menu-items-containe', () => {
     expect(cellMenu().find('div').props().className)
       .toBe('cell-menu-items-container')
-  })
-
-  it('always renders correct number of NotebookMenuItem without availableLanguages', () => {
-    expect(cellMenu().find(NotebookMenuItem).length).toBe(13)
-  })
-
-  it('always renders one NotebookMenuDivider', () => {
-    expect(cellMenu().find(NotebookMenuDivider).length).toBe(3)
-  })
-
-  const cellTypes = ['js', 'md', 'css', 'resource', 'raw', 'plugin']
-
-  cellTypes.forEach((cellType, i) => {
-    it(`sets the NotebookMenuItem disabled prop to be correct for option ${cellType}`, () => {
-      expect(cellMenu().find(NotebookMenuItem).at(i).props().disabled)
-        .toBe(props.menuLabel === cellType)
-    })
   })
 })
 
