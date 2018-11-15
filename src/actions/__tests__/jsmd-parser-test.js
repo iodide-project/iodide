@@ -209,3 +209,23 @@ js`
       .toEqual(['0', '1', '2'])
   })
 })
+
+
+describe('correct chunk types in tricky cases', () => {
+  const jsmdSample = `%% chunk1
+%%    
+%%%%%%%%%%   
+% notAChunk
+%%%%%%%%    chunk2
+%%      chunk3
+%   %% notAChunk
+ %% notAChunk
+     %% notAChunk
+%% % chunkIsPercentSign
+%%%%%%%% %%% chunkIsPercentSign`
+
+  it('has correct chunk types', () => {
+    expect(jsmdParser(jsmdSample).map(c => c.chunkType))
+      .toEqual(['chunk1', 'chunk1', 'chunk1', 'chunk2', 'chunk3', '%', '%%%'])
+  })
+})
