@@ -6,11 +6,6 @@ import deepEqual from 'deep-equal'
 
 import ReactCodeMirror from '@skidding/react-codemirror'
 
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/markdown/markdown'
-import 'codemirror/mode/css/css'
-import 'codemirror/mode/htmlmixed/htmlmixed'
-
 import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/edit/closebrackets'
 import 'codemirror/addon/display/autorefresh'
