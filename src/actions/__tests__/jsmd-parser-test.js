@@ -191,3 +191,41 @@ js 2
   })
 })
 
+describe('jsmd hashes are distinct', () => {
+  const jsmdSample = `%% js
+js
+%% js
+js
+%% js
+js`
+
+  it('length of set of hashes is correct', () => {
+    expect(new Set(jsmdParser(jsmdSample).map(c => c.chunkId)).size)
+      .toEqual(3)
+  })
+
+  it('hashes of identical content have correct suffixes', () => {
+    expect(jsmdParser(jsmdSample).map(c => c.chunkId.split('_')[1]))
+      .toEqual(['0', '1', '2'])
+  })
+})
+
+
+describe('correct chunk types in tricky cases', () => {
+  const jsmdSample = `%% chunk1
+%%    
+%%%%%%%%%%   
+% notAChunk
+%%%%%%%%    chunk2
+%%      chunk3
+%   %% notAChunk
+ %% notAChunk
+     %% notAChunk
+%% % chunkIsPercentSign
+%%%%%%%% %%% chunkIsPercentSign`
+
+  it('has correct chunk types', () => {
+    expect(jsmdParser(jsmdSample).map(c => c.chunkType))
+      .toEqual(['chunk1', 'chunk1', 'chunk1', 'chunk2', 'chunk3', '%', '%%%'])
+  })
+})

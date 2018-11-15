@@ -37,10 +37,21 @@ export function updateAppMessages(messageObj) {
 }
 
 export function updateJsmdContent(text) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     const jsmdChunks = jsmdParser(text)
+    const reportChunkTypes = Object
+      .keys(getState().languageDefinitions)
+      .concat(['md', 'html', 'css'])
+
     const reportChunks = jsmdChunks
-      .filter(c => c.chunkType === 'md' || c.chunkType === 'html')
+      .filter(c => reportChunkTypes.includes(c.chunkType))
+      .map(c => ({
+        chunkContent: c.chunkContent,
+        chunkType: c.chunkType,
+        chunkId: c.chunkId,
+        evalFlags: c.evalFlags,
+      }))
+
     dispatch({
       // this dispatch really just forwards to the eval frame
       type: 'UPDATE_MARKDOWN_CHUNKS',
