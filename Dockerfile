@@ -30,7 +30,7 @@ COPY . /app
 RUN chown app:app -R .
 USER app
 
-RUN DEBUG=False SECRET_KEY=foo ALLOWED_HOSTS=localhost, PRESTO_URL=foo DATABASE_URL=sqlite:// ./manage.py collectstatic --noinput -c
+RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
 # where volume-mounted files do not have execute bits set.
