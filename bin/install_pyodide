@@ -1,7 +1,5 @@
 #!/bin/sh
-PYODIDE_VERSION="${PYODIDE_VERSION:-0.1.11}"
 if [ ! -d $1-$PYODIDE_VERSION ]; then
   mkdir -p $1-$PYODIDE_VERSION;
   curl -L https://github.com/iodide-project/pyodide/releases/download/$PYODIDE_VERSION/pyodide-build-$PYODIDE_VERSION.tar.bz2 | tar jx -C $1-$PYODIDE_VERSION
 fi
-ln -sf $1-$PYODIDE_VERSION $1

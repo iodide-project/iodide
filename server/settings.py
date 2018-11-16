@@ -196,3 +196,6 @@ STATIC_URL = EVAL_FRAME_ORIGIN
 # Create hashed+gzipped versions of assets during collectstatic,
 # which will then be served by WhiteNoise with a suitable max-age.
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Add a MIME type for .wasm files (which is not included in WhiteNoise's defaults)
+WHITENOISE_MIMETYPES = {'.wasm': 'application/wasm'}
