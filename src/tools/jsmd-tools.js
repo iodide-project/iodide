@@ -276,9 +276,11 @@ ${cell.content}`
 
   // Only save language definitions that aren't identical to the built-in ones
   const customLanguageDefinitions = {}
+  const relevantKeys = ['url', 'module', 'evaluator', 'asyncEvaluator']
   for (const language of Object.keys(state.languageDefinitions)) {
-    if (JSON.stringify(builtinLanguageDefinitions[language]) !==
-        JSON.stringify(state.languageDefinitions[language])) {
+    const src = builtinLanguageDefinitions[language]
+    const dst = state.languageDefinitions[language]
+    if (relevantKeys.some(x => src[x] !== dst[x])) {
       customLanguageDefinitions[language] = state.languageDefinitions[language]
     }
   }
