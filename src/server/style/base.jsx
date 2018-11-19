@@ -1,5 +1,4 @@
 import { css, injectGlobal } from 'emotion'
-import ZillaSlab from './ZillaSlab-Light.woff';
 
 /*
 This is a baseline css reset, mostly based off
@@ -23,12 +22,6 @@ body {
 /*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
 
 export default injectGlobal`
-
-@font-face {
-  font-family: 'Zilla Slab';
-  src: url("/${ZillaSlab}");
-}
-
 html {
   line-height: 1.15; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
@@ -41,12 +34,6 @@ body {
 h1 {
   font-size: 2em;
   margin: 0.67em 0;
-}
-
-h2#logo {
-  font-family: 'Zilla Slab', serif;
-  font-size:30px;
-  font-weight: 300;
 }
 
 hr {

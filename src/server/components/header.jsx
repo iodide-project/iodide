@@ -4,8 +4,8 @@ import React from 'react';
 import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 
+import IodideLogo from '../../shared/iodide-logo'
 import UserMenu from '../../shared/user-menu';
 
 const theme = createMuiTheme({
@@ -45,9 +45,9 @@ class Header extends React.Component {
           >
             <div>
               <Toolbar variant="dense">
-                <Typography id="logo" variant="title" color="inherit" className={classes.flex}>
-                  <a href="/" style={{ color: 'white', textDecoration: 'none' }}>Iodide</a>
-                </Typography>
+                <div className={classes.flex}>
+                  <IodideLogo backLink="/" />
+                </div>
                 <UserMenu
                   isAuthenticated={this.props.userInfo && this.props.userInfo.name}
                   username={this.props.userInfo.name}

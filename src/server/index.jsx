@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import UniversalRouter from 'universal-router'
 
+import '../shared/style/base'
 import './style/base'
 
 import HomePage from './pages/home-page'
