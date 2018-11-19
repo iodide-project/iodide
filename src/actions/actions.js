@@ -4,12 +4,9 @@ import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 import { stateFromJsmd } from '../tools/jsmd-tools'
 import { getNotebookID } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
-import { getCellById } from '../tools/notebook-utils'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 import { addChangeLanguageTask } from './task-definitions'
-
-import { getSelectedCell } from '../reducers/cell-reducer-utils'
 
 import { addLanguageKeybinding } from '../keybindings'
 
@@ -195,31 +192,16 @@ export function updateInputContent(text) {
   }
 }
 
-
-export function changeCellType(cellType, language = 'js') {
-  return (dispatch, getState) => {
-    if ((getSelectedCell(getState()).cellType !== cellType
-      || getSelectedCell(getState()).language !== language)) {
-      dispatch({
-        type: 'CHANGE_CELL_TYPE',
-        cellType,
-        language,
-      })
-    }
-  }
-}
-
 export function addLanguage(languageDefinition) {
   return (dispatch) => {
     const {
       keybinding,
-      languageId,
       codeMirrorMode,
     } = languageDefinition
     if (keybinding.length === 1 && (typeof keybinding === 'string')) {
       addLanguageKeybinding(
         [keybinding],
-        () => dispatch(changeCellType('code', languageId)),
+        () => {},
       )
     }
     CodeMirror.requireMode(codeMirrorMode, () => { })
@@ -297,45 +279,48 @@ export function moveCursorToNextChunk() {
   }
 }
 
-export function evaluateCell(cellId) {
-  return (dispatch, getState) => {
-    let cell
-    if (cellId === undefined) {
-      cell = getSelectedCell(getState())
-    } else {
-      cell = getCellById(getState().cells, cellId)
-    }
-    // update the cell props in the eval frame
-    const cellPathsToUpdate = Object.keys(mirroredCellProperties)
-    const evalFrameCell = {}
-    cellPathsToUpdate.forEach((k) => { evalFrameCell[k] = cell[k] })
-    dispatch(updateCellProperties(cell.id, evalFrameCell))
-    // trigger the cell eval
-    dispatch({ type: 'TRIGGER_CELL_EVAL_IN_FRAME', cellId: cell.id })
-  }
-}
+// FIXME: update evaluateAllCells -> evaluateNotebook or something like that,
+// using evaluateText or whatever term we're using.
 
-export function evaluateAllCells() {
-  return (dispatch, getState) => {
-    const { cells } = getState()
-    let p = Promise.resolve()
-    cells.forEach((cell) => {
-      if (cell.cellType === 'css' && !cell.skipInRunAll) {
-        p = p.then(() => dispatch(evaluateCell(cell.id)))
-      }
-    })
-    cells.forEach((cell) => {
-      if (cell.cellType === 'markdown' && !cell.skipInRunAll) {
-        p = p.then(() => dispatch(evaluateCell(cell.id)))
-      }
-    })
-    cells.forEach((cell) => {
-      if (cell.cellType !== 'markdown' && cell.cellType !== 'css' && !cell.skipInRunAll) {
-        p = p.then(() => dispatch(evaluateCell(cell.id)))
-      }
-    })
-  }
-}
+// export function evaluateCell(cellId) {
+//   return (dispatch, getState) => {
+//     let cell
+//     if (cellId === undefined) {
+//       cell = getSelectedCell(getState())
+//     } else {
+//       cell = getCellById(getState().cells, cellId)
+//     }
+//     // update the cell props in the eval frame
+//     const cellPathsToUpdate = Object.keys(mirroredCellProperties)
+//     const evalFrameCell = {}
+//     cellPathsToUpdate.forEach((k) => { evalFrameCell[k] = cell[k] })
+//     dispatch(updateCellProperties(cell.id, evalFrameCell))
+//     // trigger the cell eval
+//     dispatch({ type: 'TRIGGER_CELL_EVAL_IN_FRAME', cellId: cell.id })
+//   }
+// }
+
+// export function evaluateAllCells() {
+//   return (dispatch, getState) => {
+//     const { cells } = getState()
+//     let p = Promise.resolve()
+//     cells.forEach((cell) => {
+//       if (cell.cellType === 'css' && !cell.skipInRunAll) {
+//         p = p.then(() => dispatch(evaluateCell(cell.id)))
+//       }
+//     })
+//     cells.forEach((cell) => {
+//       if (cell.cellType === 'markdown' && !cell.skipInRunAll) {
+//         p = p.then(() => dispatch(evaluateCell(cell.id)))
+//       }
+//     })
+//     cells.forEach((cell) => {
+//       if (cell.cellType !== 'markdown' && cell.cellType !== 'css' && !cell.skipInRunAll) {
+//         p = p.then(() => dispatch(evaluateCell(cell.id)))
+//       }
+//     })
+//   }
+// }
 
 export function loginSuccess(userData) {
   return (dispatch) => {
@@ -440,34 +425,6 @@ export function saveNotebookToServer() {
       dispatch({ type: 'NOTEBOOK_SAVED' })
     } else {
       createNewNotebookOnServer()(dispatch, getState)
-    }
-  }
-}
-
-export function cellUp() {
-  return (dispatch, getState) => {
-    dispatch({ type: 'CELL_UP' })
-    const targetPxToTopOfFrame = handleCellAndOutputScrolling(getSelectedCell(getState()).id)
-    if (getState().scrollingLinked) {
-      postActionToEvalFrame({
-        type: 'ALIGN_OUTPUT_TO_EDITOR',
-        cellId: getSelectedCell(getState()).id,
-        pxFromViewportTop: targetPxToTopOfFrame,
-      })
-    }
-  }
-}
-
-export function cellDown() {
-  return (dispatch, getState) => {
-    dispatch({ type: 'CELL_DOWN' })
-    const targetPxToTopOfFrame = handleCellAndOutputScrolling(getSelectedCell(getState()).id)
-    if (getState().scrollingLinked) {
-      postActionToEvalFrame({
-        type: 'ALIGN_OUTPUT_TO_EDITOR',
-        cellId: getSelectedCell(getState()).id,
-        pxFromViewportTop: targetPxToTopOfFrame,
-      })
     }
   }
 }
@@ -584,19 +541,6 @@ export function changeEditorWidth(widthShift) {
   return {
     type: 'CHANGE_EDITOR_WIDTH',
     widthShift,
-  }
-}
-
-export function setCellSkipInRunAll(value) {
-  return (dispatch, getState) => {
-    let setValue = value
-    if (setValue === undefined) {
-      setValue = !getSelectedCell(getState()).skipInRunAll
-    }
-    dispatch(updateCellProperties(
-      getSelectedCell(getState()).id,
-      { skipInRunAll: setValue },
-    ))
   }
 }
 
