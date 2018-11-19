@@ -1,13 +1,12 @@
 import React from 'react'
 import { css } from 'emotion'
-import Typography from '@material-ui/core/Typography'
 
 export default class IodideLogo extends React.Component {
   render() {
     return (
-      <Typography
-        variant="title"
+      <h2
         className={css`
+          margin: 0;
           font-family: 'Zilla Slab', serif;
           font-size: 30px;
           font-weight: 300;`}
@@ -21,7 +20,7 @@ export default class IodideLogo extends React.Component {
         >
           Iodide
         </a>
-      </Typography>
+      </h2>
     );
   }
 }
