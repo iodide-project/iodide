@@ -9,10 +9,16 @@ export default class IodideLogo extends React.Component {
         variant="title"
         className={css`
           font-family: 'Zilla Slab', serif;
-          font-size:30px;
+          font-size: 30px;
           font-weight: 300;`}
       >
-        <a href={this.props.backLink} target="_self" style={{ color: 'white', textDecoration: 'none' }}>
+        <a
+          href={this.props.backLink}
+          target="_self"
+          className={css`
+            color: white;
+            text-decoration: none;`}
+        >
           Iodide
         </a>
       </Typography>

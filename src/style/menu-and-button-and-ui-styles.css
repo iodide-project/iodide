@@ -119,14 +119,3 @@ button.display-button:hover {
 div.iodide-tooltip {
   font-size: 0.900rem;
 }
-
-a:hover {
-    text-decoration: underline;
-}
-a:active, a:hover {
-    outline-width: 0;
-}
-a {
-    color: #0366d6;
-    text-decoration: none;
-}
