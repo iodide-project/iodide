@@ -1,6 +1,7 @@
 import { store } from '../../store'
 import { newNotebook } from '../../editor-state-prototypes'
 import * as actions from '../actions'
+import { SchemaValidationError } from '../../reducers/create-validated-reducer'
 import { languageDefinitions } from '../../state-schemas/language-definitions'
 
 // the integration tests in this file DO NOT verify the correctness
@@ -17,20 +18,18 @@ const mockUserData = {
   avatar: 'avatar',
 }
 
-
-// FIXME: rewrite this test to not focus on cells.
-// describe('make sure createValidatedReducer is checking correctly', () => {
-//   beforeEach(() => {
-//     store.dispatch(actions.resetNotebook())
-//   })
-//   it('createValidatedReducer should throw an error if we
-// pass an action that inserts an invalid state value',
-// () => {
-//     // this inserts an invalid property into `state.cells[0]``
-//     expect(() => store.dispatch(actions.updateCellProperties(0, { INVALID_CELL_PROP: 0 })))
-//       .toThrowError(SchemaValidationError)
-//   })
-// })
+describe('make sure createValidatedReducer is checking correctly', () => {
+  beforeEach(() => {
+    store.dispatch(actions.resetNotebook())
+  })
+  it(
+    'createValidatedReducer should throw an error if we pass an action that inserts an invalid state value',
+    () => {
+      expect(() => store.dispatch(actions.setModalState(100)))
+        .toThrowError(SchemaValidationError)
+    },
+  )
+})
 
 describe('make sure action creators leave store in a consitent state', () => {
   beforeEach(() => {
