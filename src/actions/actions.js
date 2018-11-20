@@ -225,14 +225,22 @@ function getChunkContainingLine(jsmdChunks, line) {
   return activeChunk
 }
 
-export function evaluateText() {
+export function evaluateText(chunk = undefined) {
   return (dispatch, getState) => {
     const cm = window.ACTIVE_CODEMIRROR
     const doc = cm.getDoc()
 
     let actionObj
 
-    if (!doc.somethingSelected()) {
+    if (chunk) {
+      // explicit chunk passed in - evaluate it.
+      actionObj = {
+        type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
+        evalText: chunk.chunkContent,
+        evalType: chunk.chunkType,
+        evalFlags: chunk.evalFlags,
+      }
+    } else if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
       const activeChunk = getChunkContainingLine(getState().jsmdChunks, line)
 
@@ -249,7 +257,7 @@ export function evaluateText() {
       // as long as the selection is contained by a code chunk
     }
     // here's where we'll put: if kernelState === ready
-    dispatch(actionObj)
+    return Promise.resolve(dispatch(actionObj))
   }
 }
 
@@ -313,6 +321,33 @@ export function moveCursorToNextChunk() {
 //     })
 //   }
 // }
+
+export function evaluateNotebook() {
+  return (dispatch, getState) => {
+    const { jsmdChunks } = getState()
+    let p = Promise.resolve()
+    jsmdChunks.forEach((chunk) => {
+      if (!['md', 'css'].includes(chunk.chunkType)) {
+        p = p.then(() => dispatch(evaluateText(chunk)))
+      }
+    })
+    // cells.forEach((cell) => {
+    //   if (cell.cellType === 'css' && !cell.skipInRunAll) {
+    //     p = p.then(() => dispatch(evaluateCell(cell.id)))
+    //   }
+    // })
+    // cells.forEach((cell) => {
+    //   if (cell.cellType === 'markdown' && !cell.skipInRunAll) {
+    //     p = p.then(() => dispatch(evaluateCell(cell.id)))
+    //   }
+    // })
+    // cells.forEach((cell) => {
+    //   if (cell.cellType !== 'markdown' && cell.cellType !== 'css' && !cell.skipInRunAll) {
+    //     p = p.then(() => dispatch(evaluateCell(cell.id)))
+    //   }
+    // })
+  }
+}
 
 export function loginSuccess(userData) {
   return (dispatch) => {

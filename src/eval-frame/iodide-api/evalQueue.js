@@ -37,12 +37,13 @@ export const getRunningCellEvalStatus = () => {
   return undefined
 }
 
-export const setRunningCellEvalStatus = (evalStatus) => {
-  if (evalStatus === undefined) throw new Error('status must be defined')
-  const cellId = getRunningCellID()
-  store.dispatch(updateCellProperties(cellId, {
-    evalStatus,
-  }))
+export const setRunningCellEvalStatus = () => {
+  // FIXME: needs to be reimplemented
+  // if (evalStatus === undefined) throw new Error('status must be defined')
+  // const cellId = getRunningCellID()
+  // store.dispatch(updateCellProperties(cellId, {
+  //   evalStatus,
+  // }))
 }
 
 export const waitForExplicitContinuationStatusResolution = () => new Promise((resolve) => {
@@ -59,22 +60,24 @@ export const waitForExplicitContinuationStatusResolution = () => new Promise((re
   }
 })
 
-const awaitPromises = (promises) => {
-  setRunningCellEvalStatus('ASYNC_PENDING')
-  incrementAsyncProcessCount()
-  return Promise.resolve().then(() => Promise.all(promises).catch((err) => {
-    resetAsyncProcessCount()
-    setRunningCellEvalStatus('ERROR')
-    throw Error(err)
-  }))
-    .then((resolutions) => {
-      incrementAsyncProcessCount(-1)
-      if (getRunningCellAsyncProcessStatus() === 0) {
-        setRunningCellEvalStatus('SUCCESS')
-      }
-      return resolutions
-    })
-}
+const awaitPromises = promises =>
+// FIXME: this needs to get reimpleented. Maybe not.
+  Promise.all(promises)
+  // setRunningCellEvalStatus('ASYNC_PENDING')
+  // incrementAsyncProcessCount()
+  // return Promise.resolve().then(() => Promise.all(promises).catch((err) => {
+  //   resetAsyncProcessCount()
+  //   setRunningCellEvalStatus('ERROR')
+  //   throw Error(err)
+  // }))
+  //   .then((resolutions) => {
+  //     incrementAsyncProcessCount(-1)
+  //     if (getRunningCellAsyncProcessStatus() === 0) {
+  //       setRunningCellEvalStatus('SUCCESS')
+  //     }
+  //     return resolutions
+  //   })
+
 
 export const evalQueue = {
   requireExplicitContinuation: () => {

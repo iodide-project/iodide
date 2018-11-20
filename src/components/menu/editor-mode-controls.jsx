@@ -17,7 +17,7 @@ export default class EditorModeControls extends React.Component {
         <NotebookTaskButton task={tasks.evaluateCell}>
           <PlayButton />
         </NotebookTaskButton>
-        <NotebookTaskButton task={tasks.evaluateAllCells}>
+        <NotebookTaskButton task={tasks.evaluateNotebook}>
           <FastForward />
         </NotebookTaskButton>
       </div>
