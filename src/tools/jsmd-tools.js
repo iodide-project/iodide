@@ -62,16 +62,6 @@ export function translateLegacyJsmd(state) {
   return state
 }
 
-function getNonDefaultValuesForPaths(paths, target, template) {
-  const out = {}
-  paths.forEach((p) => {
-    if (_.get(target, p) !== _.get(template, p)) {
-      out[p] = _.get(target, p)
-    }
-  })
-  return out
-}
-
 function parseMetaChunk(content, parseWarnings) {
   let metaSettings
   try {

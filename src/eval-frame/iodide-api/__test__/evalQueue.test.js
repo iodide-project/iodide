@@ -50,7 +50,8 @@ describe('getRunningCellID', () => {
 //     expect(runningEvalStatus()).toBe('ERROR')
 //   })
 
-//   it('correctly waits until waitForExplicitContinuationStatusResolution has resolved (async)', () => {
+//   it('correctly waits until waitForExplicitContinuationStatusResolution has resolved (async)',
+// () => {
 //     jest.clearAllTimers()
 //     evalQueue.requireExplicitContinuation()
 //     waitForExplicitContinuationStatusResolution()
@@ -64,7 +65,8 @@ describe('getRunningCellID', () => {
 //     jest.runAllTimers()
 //   })
 
-//   it('correctly waits until waitForExplicitContinuationStatusResolution has resolved (sync)', () => {
+//   it('correctly waits until waitForExplicitContinuationStatusResolution has resolved (sync)',
+//      () => {
 //     jest.clearAllTimers()
 //     waitForExplicitContinuationStatusResolution()
 //       .then(() => {

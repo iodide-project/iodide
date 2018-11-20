@@ -23,7 +23,9 @@ const mockUserData = {
 //   beforeEach(() => {
 //     store.dispatch(actions.resetNotebook())
 //   })
-//   it('createValidatedReducer should throw an error if we pass an action that inserts an invalid state value', () => {
+//   it('createValidatedReducer should throw an error if we
+// pass an action that inserts an invalid state value',
+// () => {
 //     // this inserts an invalid property into `state.cells[0]``
 //     expect(() => store.dispatch(actions.updateCellProperties(0, { INVALID_CELL_PROP: 0 })))
 //       .toThrowError(SchemaValidationError)

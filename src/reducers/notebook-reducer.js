@@ -1,6 +1,5 @@
 import {
   newNotebook,
-  newCell,
   newCellID,
 } from '../editor-state-prototypes'
 
@@ -97,7 +96,11 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'REPLACE_NOTEBOOK_CONTENT': {
-      return Object.assign({}, state, { jsmd: action.jsmd, jsmdChunks: action.jsmdChunks, title: action.title })
+      return Object.assign({}, state, {
+        jsmd: action.jsmd,
+        jsmdChunks: action.jsmdChunks,
+        title: action.title,
+      })
     }
 
     case 'UPDATE_JSMD_CONTENT': {
