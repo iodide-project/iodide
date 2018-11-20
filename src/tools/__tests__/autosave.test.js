@@ -35,7 +35,6 @@ describe('updateAutosave', () => {
     expect(Object.keys(newAutosavedState).sort()).toEqual(['originalCopy', 'originalSaved'])
 
     const originalCopyState = newAutosavedState.originalCopy
-    console.log(newAutosavedState)
     expect(originalCopyState).toEqual(states.updatedState.jsmd)
     // FIXME: deprecating the meta tag where we receive title.
     // expect(originalCopyState.title).toEqual(states.updatedState.title)
