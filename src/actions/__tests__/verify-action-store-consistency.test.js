@@ -107,11 +107,10 @@ describe('make sure action creators leave store in a consitent state', () => {
       .not.toThrow()
   })
 
-  // FIXME: re-implement this test once we've updated evaluateAllCells -> evaluateNotebook
-  // it('evaluateAllCells', () => {
-  //   expect(() => store.dispatch(actions.evaluateAllCells()))
-  //     .not.toThrow()
-  // })
+  it('evaluateNotebook', () => {
+    expect(() => store.dispatch(actions.evaluateNotebook()))
+      .not.toThrow()
+  })
 
   it('loginSuccess', () => {
     expect(() => store.dispatch(actions.loginSuccess(mockUserData)))
@@ -121,16 +120,6 @@ describe('make sure action creators leave store in a consitent state', () => {
     expect(() => store.dispatch(actions.loginFailure()))
       .not.toThrow()
   })
-
-  // FIXME: side effects in the action make these hard to test
-  // it('cellUp', () => {
-  //   expect(() => store.dispatch(actions.cellUp()))
-  //     .not.toThrow()
-  // })
-  // it('cellDown', () => {
-  //   expect(() => store.dispatch(actions.cellDown()))
-  //     .not.toThrow()
-  // })
 
   it('toggleHelpModal', () => {
     expect(() => store.dispatch(actions.clearVariables()))
