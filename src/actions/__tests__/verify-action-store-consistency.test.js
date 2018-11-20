@@ -1,7 +1,6 @@
 import { store } from '../../store'
 import { newNotebook } from '../../editor-state-prototypes'
 import * as actions from '../actions'
-import { SchemaValidationError } from '../../reducers/create-validated-reducer'
 import { languageDefinitions } from '../../state-schemas/language-definitions'
 
 // the integration tests in this file DO NOT verify the correctness
@@ -18,16 +17,18 @@ const mockUserData = {
   avatar: 'avatar',
 }
 
-describe('make sure createValidatedReducer is checking correctly', () => {
-  beforeEach(() => {
-    store.dispatch(actions.resetNotebook())
-  })
-  it('createValidatedReducer should throw an error if we pass an action that inserts an invalid state value', () => {
-    // this inserts an invalid property into `state.cells[0]``
-    expect(() => store.dispatch(actions.updateCellProperties(0, { INVALID_CELL_PROP: 0 })))
-      .toThrowError(SchemaValidationError)
-  })
-})
+
+// FIXME: rewrite this test to not focus on cells.
+// describe('make sure createValidatedReducer is checking correctly', () => {
+//   beforeEach(() => {
+//     store.dispatch(actions.resetNotebook())
+//   })
+//   it('createValidatedReducer should throw an error if we pass an action that inserts an invalid state value', () => {
+//     // this inserts an invalid property into `state.cells[0]``
+//     expect(() => store.dispatch(actions.updateCellProperties(0, { INVALID_CELL_PROP: 0 })))
+//       .toThrowError(SchemaValidationError)
+//   })
+// })
 
 describe('make sure action creators leave store in a consitent state', () => {
   beforeEach(() => {
@@ -97,16 +98,6 @@ describe('make sure action creators leave store in a consitent state', () => {
       .not.toThrow()
   })
 
-  it('changeCellType', () => {
-    expect(() => store.dispatch(actions.changeCellType('code')))
-      .not.toThrow()
-  })
-
-  it('changeCellType(code, language)', () => {
-    expect(() => store.dispatch(actions.changeCellType('code', 'test language')))
-      .not.toThrow()
-  })
-
   it('addLanguage', () => {
     expect(() => store.dispatch({
       type: 'ADD_LANGUAGE_TO_EDITOR',
@@ -115,15 +106,11 @@ describe('make sure action creators leave store in a consitent state', () => {
       .not.toThrow()
   })
 
-  it('evaluateCell', () => {
-    expect(() => store.dispatch(actions.evaluateCell()))
-      .not.toThrow()
-  })
-
-  it('evaluateAllCells', () => {
-    expect(() => store.dispatch(actions.evaluateAllCells()))
-      .not.toThrow()
-  })
+  // FIXME: re-implement this test once we've updated evaluateAllCells -> evaluateNotebook
+  // it('evaluateAllCells', () => {
+  //   expect(() => store.dispatch(actions.evaluateAllCells()))
+  //     .not.toThrow()
+  // })
 
   it('loginSuccess', () => {
     expect(() => store.dispatch(actions.loginSuccess(mockUserData)))
@@ -143,35 +130,6 @@ describe('make sure action creators leave store in a consitent state', () => {
   //   expect(() => store.dispatch(actions.cellDown()))
   //     .not.toThrow()
   // })
-  it('cellUp', () => {
-    expect(() => store.dispatch({ type: 'CELL_UP' }))
-      .not.toThrow()
-  })
-  it('cellDown', () => {
-    expect(() => store.dispatch({ type: 'CELL_DOWN' }))
-      .not.toThrow()
-  })
-
-
-  it('insertCell(code)', () => {
-    expect(() => store.dispatch(actions.insertCell('code', 1)))
-      .not.toThrow()
-  })
-
-  it('addCell', () => {
-    expect(() => store.dispatch(actions.addCell('code')))
-      .not.toThrow()
-  })
-
-  it('selectCell', () => {
-    expect(() => store.dispatch({ type: 'SELECT_CELL', id: 0 }))
-      .not.toThrow()
-  })
-
-  it('deleteCell', () => {
-    expect(() => store.dispatch(actions.clearVariables()))
-      .not.toThrow()
-  })
 
   it('toggleHelpModal', () => {
     expect(() => store.dispatch(actions.clearVariables()))
@@ -180,11 +138,6 @@ describe('make sure action creators leave store in a consitent state', () => {
 
   it('toggleEditorLink', () => {
     expect(() => store.dispatch(actions.clearVariables()))
-      .not.toThrow()
-  })
-
-  it('setCellSkipInRunAll', () => {
-    expect(() => store.dispatch(actions.setCellSkipInRunAll(true)))
       .not.toThrow()
   })
 

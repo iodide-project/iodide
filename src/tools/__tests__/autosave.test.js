@@ -1,8 +1,15 @@
 import { updateAutosave, getAutosaveState } from '../autosave'
 import { stateFromJsmd } from '../jsmd-tools'
-import { newNotebook, newCell } from '../../editor-state-prototypes'
+import { newNotebook } from '../../editor-state-prototypes'
 
 let states
+const jsmdContent = `%% js
+var x = 10
+
+%% md
+
+# the title
+`
 
 describe('updateAutosave', () => {
   beforeEach(() => {
@@ -11,10 +18,9 @@ describe('updateAutosave', () => {
 
     // add some state
     const stateUpdate = {
-      cells: [newCell(1, 'code'), newCell(2, 'markdown')],
+      jsmd: jsmdContent,
       title: 'autosaved title',
     }
-    stateUpdate.cells[0].selected = true
     const updatedState = Object.assign({}, originalState, stateUpdate)
 
     states = {
@@ -28,9 +34,11 @@ describe('updateAutosave', () => {
     const newAutosavedState = getAutosaveState(states.updatedState)
     expect(Object.keys(newAutosavedState).sort()).toEqual(['originalCopy', 'originalSaved'])
 
-    const originalCopyState = stateFromJsmd(newAutosavedState.originalCopy)
-    expect(originalCopyState.cells).toEqual(states.updatedState.cells)
-    expect(originalCopyState.title).toEqual(states.updatedState.title)
+    const originalCopyState = newAutosavedState.originalCopy
+    console.log(newAutosavedState)
+    expect(originalCopyState).toEqual(states.updatedState.jsmd)
+    // FIXME: deprecating the meta tag where we receive title.
+    // expect(originalCopyState.title).toEqual(states.updatedState.title)
   })
 
   it('only updates dirty copy when not asked to write over original', () => {
@@ -39,13 +47,15 @@ describe('updateAutosave', () => {
     expect(Object.keys(newAutosavedState).sort())
       .toEqual(['dirtyCopy', 'dirtySaved', 'originalCopy', 'originalSaved'])
 
-    const originalCopyState = stateFromJsmd(newAutosavedState.originalCopy)
-    expect(originalCopyState.cells).toEqual(states.originalState.cells)
-    expect(originalCopyState.title).toEqual(states.originalState.title)
+    const originalCopyState = newAutosavedState.originalCopy
+    expect(originalCopyState).toEqual(states.originalState.jsmd)
+    // FIXME: deprecating the meta tag where we receive title. Will this test be relevant?
+    // expect(originalCopyState.title).toEqual(states.originalState.title)
 
-    const dirtyCopyState = stateFromJsmd(newAutosavedState.dirtyCopy)
-    expect(dirtyCopyState.cells).toEqual(states.updatedState.cells)
-    expect(dirtyCopyState.title).toEqual(states.updatedState.title)
+    const dirtyCopyState = newAutosavedState.dirtyCopy
+    expect(dirtyCopyState).toEqual(states.updatedState.jsmd)
+    // FIXME: deprecating the meta tag where we receive title.
+    // expect(dirtyCopyState.title).toEqual(states.updatedState.title)
   })
 })
 

@@ -1,11 +1,9 @@
 /* global IODIDE_JS_PATH IODIDE_CSS_PATH IODIDE_VERSION IODIDE_EVAL_FRAME_ORIGIN */
-import deepEqual from 'deep-equal'
 import _ from 'lodash'
 
 import { newNotebook, newCell } from '../editor-state-prototypes'
 import htmlTemplate from '../html-template'
 import { addChangeLanguageTask } from '../actions/task-definitions'
-import { languageDefinitions as builtinLanguageDefinitions } from '../state-schemas/language-definitions'
 
 const jsmdValidCellTypes = ['md', 'js', 'code', 'raw', 'css', 'plugin', 'fetch']
 
@@ -192,8 +190,6 @@ function stateFromJsmd(jsmdString) {
   }
   // initialize a blank notebook
   const initialState = newNotebook()
-  // delete the default empty cell
-  initialState.cells = []
   // add top-level meta settings if any exist
   const meta = chunkObjects.filter(c => c.chunkType === 'meta')[0]
   if (meta) {
@@ -223,76 +219,7 @@ function stateFromJsmd(jsmdString) {
     }
     Object.assign(initialState, meta.iodideSettings)
   }
-
-  chunkObjects
-    .filter(c => c.chunkType !== 'meta')
-    .forEach((c) => {
-      initialState.cells.push(c.cell)
-    })
-  // if only a meta cell exists, return a default JS cell
-  if (initialState.cells.length === 0) {
-    initialState.cells.push(newCell(0, 'code'))
-  }
-  // set cell 0  to be the selected cell
-  initialState.cells[0].selected = true
   return translateLegacyJsmd(initialState)
-}
-
-
-function stringifyStateToJsmd(state, exportDatetimeString) {
-  // we pass in exportDatetimeString as a string to keep this function
-  // **functional** -- makes testing easier
-  const defaultState = newNotebook()
-  // let defaultCellPrototype = defaultState.cells[0]
-  // serialize cells. most of the work here is seeing if cell properties
-  // are in the jsmd valid list, and seeing if they are not default
-  // values for this cell type
-  const cellsStr = state.cells.map((cell) => {
-    const defaultCell = newCell(0, cell.cellType)
-    const cellSettings = getNonDefaultValuesForPaths(
-      jsmdValidCellSettingPaths,
-      cell,
-      defaultCell,
-    )
-    let cellSettingsStr = JSON.stringify(cellSettings)
-    let jsmdCellType = cellTypeToJsmdMap.get(cell.cellType)
-    // note: js is the DEFAULT language, so if the lang of this cell is JS,
-    // cellSettings.language will be undefined since it matches that default
-    jsmdCellType = jsmdCellType === 'code' && cellSettings.language === undefined ? 'js' : jsmdCellType
-    cellSettingsStr = cellSettingsStr === '{}' ? '' : ` ${cellSettingsStr}`
-    return `\n%% ${jsmdCellType}${cellSettingsStr}
-${cell.content}`
-  }).join('\n').trim()
-
-  // serialize global settings. as above, check if state properties
-  // are in the jsmd valid list, and check if they are non-default
-  const metaSettings = {}
-  for (const setting of jsmdValidNotebookSettings) {
-    if (Object.prototype.hasOwnProperty.call(state, setting)
-      && !deepEqual(state[setting], defaultState[setting])) {
-      metaSettings[setting] = state[setting]
-    }
-  }
-
-  // Only save language definitions that aren't identical to the built-in ones
-  const customLanguageDefinitions = {}
-  for (const language of Object.keys(state.languageDefinitions)) {
-    const src = builtinLanguageDefinitions[language]
-    const dst = state.languageDefinitions[language]
-    if (['url', 'module', 'evaluator', 'asyncEvaluator'].some(x => src[x] !== dst[x])) {
-      customLanguageDefinitions[language] = state.languageDefinitions[language]
-    }
-  }
-  if (Object.keys(customLanguageDefinitions).length) {
-    metaSettings.languageDefinitions = customLanguageDefinitions
-  }
-
-  if (exportDatetimeString) {
-    metaSettings.lastExport = exportDatetimeString
-  }
-  let metaSettingsStr = JSON.stringify(metaSettings, undefined, 2)
-  metaSettingsStr = metaSettingsStr === '{}' ? '' : `%% meta\n${metaSettingsStr}\n\n`
-  return metaSettingsStr + cellsStr
 }
 
 function exportJsmdBundle(state) {
@@ -303,12 +230,8 @@ function exportJsmdBundle(state) {
     CSS_PATH_STRING: IODIDE_CSS_PATH,
     APP_VERSION_STRING: IODIDE_VERSION,
     EVAL_FRAME_ORIGIN: IODIDE_EVAL_FRAME_ORIGIN,
-    JSMD: stringifyStateToJsmd(state, new Date().toISOString()),
+    JSMD: state.jsmd,
   })
-}
-
-function exportJsmdToString(state, includeDate = true) {
-  return stringifyStateToJsmd(state, includeDate && new Date().toISOString())
 }
 
 function titleToHtmlFilename(title) {
@@ -316,7 +239,6 @@ function titleToHtmlFilename(title) {
 }
 
 export {
-  exportJsmdToString,
   parseJsmd,
   stateFromJsmd,
   jsmdValidCellTypes,
@@ -324,7 +246,6 @@ export {
   cellTypeToJsmdMap,
   jsmdValidNotebookSettings,
   jsmdValidCellSettingPaths,
-  stringifyStateToJsmd,
   exportJsmdBundle,
   titleToHtmlFilename,
 }

@@ -3,12 +3,8 @@ import {
   parseJsmd,
   stateFromJsmd,
   jsmdValidCellTypes,
-  jsmdToCellTypeMap,
 } from '../jsmd-tools'
 import { newNotebook } from '../../editor-state-prototypes'
-import { mirroredCellProperties } from '../../state-schemas/mirrored-state-schema'
-
-const cellTypeEnum = mirroredCellProperties.cellType.enum
 
 let jsmdTestCase = `%% meta
 {"title": "What a web notebook looks like",
@@ -53,16 +49,7 @@ spinCubeInTarget("#dom-cell-2")`
 describe('jsmd parser Ex 1', () => {
   const { parseWarnings } = parseJsmd(jsmdTestCase)
   const state = stateFromJsmd(jsmdTestCase)
-  const { cells } = state
 
-  it('new cells should start with "\n%%" or "%%" at the start of the file. drop empty cells.', () => {
-    expect(cells.length).toEqual(6)
-  })
-  it('should have correct cell types', () => {
-    expect(cells.map(c => c.cellType)).toEqual([
-      'markdown', 'code', 'raw', 'markdown', 'css', 'code',
-    ])
-  })
   it('should have zero parse warnings', () => {
     expect(parseWarnings.length).toEqual(0)
   })
@@ -93,24 +80,13 @@ foo
 
 describe('jsmd parser test case 3', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
-  const state = stateFromJsmd(jsmdTestCase)
-  const { cells } = state
   const { parseWarnings } = jsmdParsed
 
-  it('should have 4 cells and not trip up on caps or whitespace', () => {
-    expect(cells.length).toEqual(4)
-  })
   it('should have zero parse warnings', () => {
     expect(parseWarnings.length).toEqual(0)
   })
   it('parseWarnings should be an empty array', () => {
     expect(parseWarnings).toEqual([])
-  })
-  it('all cells should have cellType==js', () => {
-    expect(cells.map(c => c.cellType)).toEqual(expect.arrayContaining(['code']))
-  })
-  it('all cells should have content=="foo"', () => {
-    expect(cells.map(c => c.content)).toEqual(expect.arrayContaining(['foo']))
   })
 })
 
@@ -121,18 +97,10 @@ jsmdTestCase = `
 `
 describe('jsmd parser test case 4', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
-  const state = stateFromJsmd(jsmdTestCase)
-  const { cells } = state
   const { parseWarnings } = jsmdParsed
 
-  it('should have 1 cell', () => {
-    expect(cells.length).toEqual(1)
-  })
   it('should have zero parse warnings', () => {
     expect(parseWarnings.length).toEqual(0)
-  })
-  it('cell 0 should have no content', () => {
-    expect(cells[0].content).toEqual('')
   })
 })
 
@@ -148,23 +116,9 @@ foo
 `
 describe('jsmd parser test case 5, error parsing and bad cell type conversion', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
-  const state = stateFromJsmd(jsmdTestCase)
-  const { cells } = state
   const { parseWarnings } = jsmdParsed
   it('should have 3 parse warnings', () => {
     expect(parseWarnings.length).toEqual(3)
-  })
-  it('all cells should have cellType==js (bad cellTypes should convert to js)', () => {
-    expect(cells.map(c => c.cellType)).toEqual(['code', 'code', 'code'])
-  })
-  it('cell 1 should have skipInRunAll===true', () => {
-    expect(cells[1].skipInRunAll).toEqual(true)
-  })
-  it('cell 2 should have skipInRunAll===true', () => {
-    expect(cells[2].skipInRunAll).toEqual(true)
-  })
-  it('all cells should have content=="foo"', () => {
-    expect(cells.map(c => c.content)).toEqual(expect.arrayContaining(['foo']))
   })
 })
 
@@ -176,16 +130,9 @@ invalid_json_content for meta setings
 describe('jsmd parser test case 6, bad meta parsing and creation of default JS cell', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
   const state = stateFromJsmd(jsmdTestCase)
-  const { cells } = state
   const { parseWarnings } = jsmdParsed
-  it('should have 1 cells (%% meta is not converted to a cell)', () => {
-    expect(cells.length).toEqual(1)
-  })
   it('should have 1 parse warning1', () => {
     expect(parseWarnings.length).toEqual(1)
-  })
-  it('the cells should have cellType==js (bad cellTypes should convert to code)', () => {
-    expect(cells.map(c => c.cellType)).toEqual(['code'])
   })
   it('state should be a default notebook with no additions', () => {
     expect(state).toEqual(newNotebook())
@@ -201,26 +148,9 @@ test cell
 `
 describe('jsmd parser test case 7, cell settings', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
-  const state = stateFromJsmd(jsmdTestCase)
-  const { cells } = state
   const { parseWarnings } = jsmdParsed
-  it('should have 2 cells', () => {
-    expect(cells.length).toEqual(2)
-  })
   it('should have 0 parse warnings', () => {
     expect(parseWarnings.length).toEqual(0)
-  })
-  it('cell 0 should have language==="VALUE_1"', () => {
-    expect(cells[0].language).toEqual('VALUE_1')
-  })
-  it('cell 0 should have "skipInRunAll"=="VALUE_2"', () => {
-    expect(cells[0].skipInRunAll).toEqual('VALUE_2')
-  })
-  it('cell 1 should have "skipInRunAll"===true', () => {
-    expect(cells[1].skipInRunAll).toEqual(true)
-  })
-  it('all cells should have content=="test cell"', () => {
-    expect(cells.map(c => c.content)).toEqual(expect.arrayContaining(['test cell']))
   })
 })
 
@@ -247,27 +177,9 @@ foo
 `
 describe('jsmd parser test case 7, multi line cell content should parse ok', () => {
   const jsmdParsed = parseJsmd(jsmdTestCase)
-  const state = stateFromJsmd(jsmdTestCase)
-  const { cells } = state
   const { parseWarnings } = jsmdParsed
-  it('should have 1 cells', () => {
-    expect(cells.length).toEqual(1)
-  })
   it('should have 0 parse warnings', () => {
     expect(parseWarnings.length).toEqual(0)
-  })
-  it('multi line cell content should parse ok', () => {
-    expect(cells[0].content).toEqual(`foo
-foo
-foo
-
-
-foo
-
-
-
-
-foo`)
   })
 })
 
@@ -277,23 +189,9 @@ describe('jsmd parser test case 7, non-js code cells should parse ok', () => {
 %% code {"language":"python"}
 foo`
   const jsmdParsed = parseJsmd(jsmdTestCase)
-  const state = stateFromJsmd(jsmdTestCase)
-  const { cells } = state
   const { parseWarnings } = jsmdParsed
-  it('should have 1 cells', () => {
-    expect(cells.length).toEqual(1)
-  })
   it('should have 0 parse warnings', () => {
     expect(parseWarnings.length).toEqual(0)
-  })
-  it('cell content should parse ok', () => {
-    expect(cells[0].content).toEqual('foo')
-  })
-  it('cell type parse ok', () => {
-    expect(cells[0].cellType).toEqual('code')
-  })
-  it('cell language parse ok', () => {
-    expect(cells[0].language).toEqual('python')
   })
 })
 
@@ -303,23 +201,9 @@ describe('all jsmdValidCellTypes (including legacy cell types) should convert to
 %% ${cellTypeStr}
 foo`
     const jsmdParsed = parseJsmd(jsmdTestCase)
-    const state = stateFromJsmd(jsmdTestCase)
-    const { cells } = state
     const { parseWarnings } = jsmdParsed
-    it(`should have 1 cell (cell type: ${cellTypeStr})`, () => {
-      expect(cells.length).toEqual(1)
-    })
     it(`should have 0 parse warnings (cell type: ${cellTypeStr})`, () => {
       expect(parseWarnings.length).toEqual(0)
-    })
-    it(`cell content should parse ok (cell type: ${cellTypeStr})`, () => {
-      expect(cells[0].content).toEqual('foo')
-    })
-    it(`jsmd cell type parse to expected cell type (cell type: ${cellTypeStr})`, () => {
-      expect(cells[0].cellType).toEqual(jsmdToCellTypeMap.get(cellTypeStr))
-    })
-    it(`jsmd cell type parse to a state-prototypes cell type (cell type: ${cellTypeStr})`, () => {
-      expect(cellTypeEnum).toContain(cells[0].cellType)
     })
   })
 })

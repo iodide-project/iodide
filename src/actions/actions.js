@@ -1,7 +1,6 @@
 import CodeMirror from 'codemirror'
 import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
-import { stateFromJsmd } from '../tools/jsmd-tools'
 import { getNotebookID } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
@@ -10,7 +9,7 @@ import { addChangeLanguageTask } from './task-definitions'
 
 import { addLanguageKeybinding } from '../keybindings'
 
-import { mirroredStateProperties, mirroredCellProperties } from '../state-schemas/mirrored-state-schema'
+import { mirroredStateProperties } from '../state-schemas/mirrored-state-schema'
 
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
 
@@ -86,14 +85,6 @@ export function importInitialJsmd(importedState) {
     const stateUpdatesFromEditor = {}
     statePathsToUpdate.forEach((k) => { stateUpdatesFromEditor[k] = importedState[k] })
     // copy mirrored cell props
-    const cellPathsToUpdate = Object.keys(mirroredCellProperties)
-    // stateUpdatesFromEditor.cells =
-    // const updatedCells
-    stateUpdatesFromEditor.cells = stateUpdatesFromEditor.cells.map((cell) => {
-      const cellOut = {}
-      cellPathsToUpdate.forEach((k) => { cellOut[k] = cell[k] })
-      return cellOut
-    })
 
     dispatch({
       type: 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD',
@@ -114,11 +105,13 @@ export function setPreviousAutosave(hasPreviousAutoSave) {
 
 export function loadAutosave() {
   return (dispatch, getState) => {
-    const newState = stateFromJsmd(getAutosaveJsmd(getState()))
+    // jsmd, jsmdChunks
+    const jsmd = getAutosaveJsmd(getState())
+    const jsmdChunks = jsmdParser(jsmd)
     dispatch({
       type: 'REPLACE_NOTEBOOK_CONTENT',
-      cells: newState.cells,
-      title: newState.title,
+      jsmd,
+      jsmdChunks,
     })
     dispatch(setPreviousAutosave(false))
   }
@@ -370,7 +363,7 @@ export function logout() {
 function getNotebookSaveRequestOptions(state, options = undefined) {
   const data = {
     title: state.title,
-    content: state.jsmd, // exportJsmdToString(state),
+    content: state.jsmd,
   }
   if (options && options.forkedFrom !== undefined) data.forked_from = options.forkedFrom
   const postRequestOptions = {
