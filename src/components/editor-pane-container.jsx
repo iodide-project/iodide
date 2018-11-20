@@ -9,12 +9,6 @@ import LayoutManager from './pane-layout/layout-manager'
 
 class EditorPaneContainer extends React.Component {
   static propTypes = {
-    cellsStyle: PropTypes.shape({
-      padding: PropTypes.string.isRequired,
-      overflow: PropTypes.string.isRequired,
-      height: PropTypes.string.isRequired,
-    }).isRequired,
-    cellIds: PropTypes.array.isRequired,
     hideEditor: PropTypes.bool.isRequired,
   }
 
@@ -38,15 +32,7 @@ class EditorPaneContainer extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const cellsStyle = {
-    padding: '15px 15px 20px 15px',
-    overflow: 'auto',
-    height: '100%',
-  }
-
   return {
-    cellIds: state.cells.map(c => c.id),
-    cellsStyle,
     hideEditor: state.viewMode === 'REPORT_VIEW',
   }
 }

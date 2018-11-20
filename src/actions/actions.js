@@ -16,7 +16,6 @@ import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-to
 
 import { jsmdParser } from './jsmd-parser'
 
-
 import {
   alignCellTopTo,
   handleCellAndOutputScrolling,
