@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import UniversalRouter from 'universal-router'
 
+import 'font-awesome/css/font-awesome.css'
 import '../shared/style/base'
 import './style/base'
 

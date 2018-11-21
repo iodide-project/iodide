@@ -4,7 +4,7 @@ import styled from 'react-emotion'
 
 import { Manager, Reference, Popper } from 'react-popper';
 
-import { TextButton } from './buttons'
+import { TextButton } from '../../shared/components/buttons'
 
 
 const ClickContainer = styled('div')`

@@ -9,6 +9,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import NotebookMenuDivider from '../components/menu/notebook-menu-divider'
+import LoginModal from './login-modal'
 
 export default class UserMenu extends React.Component {
   constructor(props) {
@@ -18,6 +19,7 @@ export default class UserMenu extends React.Component {
       isLoggedIn: props.isAuthenticated,
       name: props.username,
       avatar: props.avatar,
+      loginModalVisible: false,
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -25,6 +27,8 @@ export default class UserMenu extends React.Component {
     this.handleMenuClose = this.handleMenuClose.bind(this)
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
+    this.showLoginModal = this.showLoginModal.bind(this)
+    this.hideLoginModal = this.hideLoginModal.bind(this)
   }
 
   handleClick(event) {
@@ -38,6 +42,14 @@ export default class UserMenu extends React.Component {
   goToProfile() {
     window.open(`/${this.state.name}`)
     this.handleMenuClose()
+  }
+
+  hideLoginModal() {
+    this.setState({ loginModalVisible: false })
+  }
+
+  showLoginModal() {
+    this.setState({ loginModalVisible: true })
   }
 
   login() {
@@ -136,15 +148,22 @@ export default class UserMenu extends React.Component {
             }
           {
               !this.state.isLoggedIn && (
-              <Button
-                variant="text"
-                style={{
-                  color: 'white', width: '80px', padding: '0',
-                }}
-                onClick={this.login}
-              >
-                Log In
-              </Button>
+              <div>
+                <Button
+                  variant="text"
+                  style={{
+                    color: 'white', width: '80px', padding: '0',
+                  }}
+                  onClick={this.showLoginModal}
+                >
+                  Log In
+                </Button>
+                <LoginModal
+                  visible={this.state.loginModalVisible}
+                  onClose={this.hideLoginModal}
+                  login={this.login}
+                />
+              </div>
               )
             }
         </React.Fragment>
