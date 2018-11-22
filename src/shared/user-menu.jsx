@@ -10,6 +10,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import NotebookMenuDivider from '../components/menu/notebook-menu-divider'
 
+class Foo extends React.Component {
+render() {
+  return {}
+}
+}
+
 export default class UserMenu extends React.Component {
   constructor(props) {
     super(props)

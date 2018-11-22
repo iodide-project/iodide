@@ -70,7 +70,7 @@ export default class DeleteObjectButton extends React.Component {
   }
 
   render() {
-    return (
+  return (
       <React.Fragment>
         <OutlineButton buttonHoverColor="red" buttonColor="#cc5500" onClick={this.showModal}>
           {this.props.text || 'delete'}
