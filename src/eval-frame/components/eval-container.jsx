@@ -26,13 +26,21 @@ export class EvalContainerUnconnected extends React.Component {
       error,
       errorInfo: info,
     })
-    console.log(error, info)
   }
 
 
   render() {
     const { reportOnly } = this.props
-    let render = (
+    if (this.state.hasError) {
+      return (
+        <React.Fragment>
+          <ErrorPane error={this.state.error} errorInfo={this.state.errorInfo} />
+        </React.Fragment>
+      );
+    }
+
+
+    return (
       <React.Fragment>
 
         <FixedPositionContainer paneId="ReportPositioner" fullscreen={reportOnly}>
@@ -50,17 +58,6 @@ export class EvalContainerUnconnected extends React.Component {
         <FixedPositionContainer paneId="AppInfoPositioner" hidden={reportOnly}>
           <AppInfoPane />
         </FixedPositionContainer>
-
-      </React.Fragment>)
-    if (this.state.hasError) {
-      render = <ErrorPane error={this.state.error} errorInfo={this.state.errorInfo} />
-    }
-
-
-    return (
-      <React.Fragment>
-
-        {render}
 
       </React.Fragment>
     )
