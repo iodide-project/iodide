@@ -2,10 +2,6 @@
 
 Thank you for your interest in contributing to Iodide! There are many ways to contribute, and we appreciate all of them. Here are some guidelines & pointers for diving into it.
 
-## Code of Conduct
-
-Iodide has adopted a [Code of Conduct](CODE-OF-CONDUCT.md) that we expect all contributors and core members to adhere to.
-
 ## Development
 
 Work on Iodide happens on Github. Core members and contributors can make Pull Requests to fix issues and add features, which all go through the same review process. We’ll detail how you can start making PRs below.
@@ -94,6 +90,9 @@ Readability counts.
 ...
 ```
 
+## Code of Conduct
+
+Contributors to Iodide are expected to follow the [Mozilla Community Participation Guidelines](https://www.mozilla.org/en-US/about/governance/policies/participation/)
 
 ## License
 
