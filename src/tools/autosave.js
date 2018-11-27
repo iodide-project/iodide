@@ -83,10 +83,7 @@ function subscribeToAutoSave(store) {
           return
         }
 
-        const currentJsmd = exportJsmd(
-          store.getState(),
-          false,
-        )
+        const currentJsmd = exportJsmd(store.getState())
         if (currentJsmd !== autosaveState.dirtyCopy) {
           // dirty copy has been updated, save it
           updateAutosave(state, false)

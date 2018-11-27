@@ -40,7 +40,7 @@ describe('cell schemas should all have disjoint properties', () => {
   })
 })
 
-
+// FIXME: remove when we tackle removing cellClipboard
 describe('state schemas should all have disjoint properties except for "cells" and "viewMode', () => {
   it('mirroredStateProperties, editorOnlyStateProperties have correct intersection', () => {
     expect(getPropertyIntersection(mirroredStateProperties, editorOnlyStateProperties))

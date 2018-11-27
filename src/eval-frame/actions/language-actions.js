@@ -74,29 +74,6 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
   return languagePluginPromise
 }
 
-// export function evaluateLanguagePluginCell(cell) {
-//   return (dispatch) => {
-//     const historyId = historyIdGen.nextId()
-//     dispatch(appendToEvalHistory(
-//       cell.id,
-//       cell.content,
-//       undefined,
-//       { historyId, historyType: 'CELL_EVAL_INFO' },
-//     ))
-
-//     let pluginData
-//     try {
-//       pluginData = JSON.parse(cell.content)
-//     } catch (err) {
-//       dispatch(updateValueInHistory(historyId,
-// `plugin definition failed to parse:\n${err.message}`))
-//       return Promise.reject()
-//     }
-
-//     return loadLanguagePlugin(pluginData, historyId, cell, dispatch)
-//   }
-// }
-
 export function evaluateLanguagePlugin(pluginText) {
   return (dispatch) => {
     const historyId = historyIdGen.nextId()

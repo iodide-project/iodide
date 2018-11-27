@@ -7,8 +7,6 @@ import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 import { addChangeLanguageTask } from './task-definitions'
 
-import { addLanguageKeybinding } from '../keybindings'
-
 import { mirroredStateProperties } from '../state-schemas/mirrored-state-schema'
 
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
@@ -187,15 +185,8 @@ export function updateInputContent(text) {
 export function addLanguage(languageDefinition) {
   return (dispatch) => {
     const {
-      keybinding,
       codeMirrorMode,
     } = languageDefinition
-    if (keybinding.length === 1 && (typeof keybinding === 'string')) {
-      addLanguageKeybinding(
-        [keybinding],
-        () => {},
-      )
-    }
     CodeMirror.requireMode(codeMirrorMode, () => { })
     addChangeLanguageTask(
       languageDefinition.languageId,
