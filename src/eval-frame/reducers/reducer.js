@@ -1,5 +1,4 @@
 import notebookReducer from './eval-frame-reducer'
-import cellReducer from './output-reducer'
 
 /*
 It is suggested that using combineReducers, and following the standard
@@ -17,4 +16,4 @@ function reduceReducers(...reducers) {
     )
 }
 
-export default reduceReducers(notebookReducer, cellReducer)
+export default reduceReducers(notebookReducer)
