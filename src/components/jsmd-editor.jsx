@@ -151,7 +151,6 @@ function mapStateToProps(state) {
     lineNumbers: true,
     keyMap: 'sublime',
     comment: true,
-    // readOnly: cell.highlighted ? 'nocursor' : false,
   }
 
   if (state.wrapEditors === true) { editorOptions.lineWrapping = true }

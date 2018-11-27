@@ -60,11 +60,6 @@ export const evalFrameCellSchema = {
 }
 
 export const evalFrameOnlyStateProperties = {
-  cellClipboard: {
-    type: 'array',
-    items: evalFrameCellSchema,
-    default: [],
-  },
   consoleText: {
     type: 'string',
     default: '',
