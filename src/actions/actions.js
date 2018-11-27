@@ -194,6 +194,15 @@ function getChunkContainingLine(jsmdChunks, line) {
   return activeChunk
 }
 
+function triggerTextInEvalFrame(chunk) {
+    return {
+      type: 'TRIGGER_TEXT_IN_FRAME',
+      evalText: chunk.chunkContent,
+      evalType: chunk.chunkType,
+      evalFrags: chunk.evalFlags
+    }
+}
+
 export function evaluateText(chunk = undefined) {
   return (dispatch, getState) => {
     const cm = window.ACTIVE_CODEMIRROR
@@ -221,6 +230,16 @@ export function evaluateText(chunk = undefined) {
         chunkId: activeChunk.chunkId,
       })
     } else {
+      const selection = jsmdParser(doc.getSelection())
+      if (selection[0].chunkType === '') {
+        console.log(selection[0])
+        selection[0].chunkType = getChunkContainingLine(getState().jsmdChunks, doc.getCursor('from')).chunkType
+      }
+      return Promise.all(selection.map(chunk => {
+          return Promise.resolve(dispatch(triggerTextInEvalFrame(chunk)))
+      })
+
+      // parse selection.
       // FIXME handle case of code selected
       // in this case, eval the first selection
       // probably via codemirror doc.listSelections()[0],
