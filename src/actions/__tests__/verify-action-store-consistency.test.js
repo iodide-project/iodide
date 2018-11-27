@@ -10,9 +10,6 @@ import { languageDefinitions } from '../../state-schemas/language-definitions'
 // according to the state schema.
 // This relies on the functionality in createValidatedReducer
 
-// note that updateCellProperties is not not tested, b/c this can introduce
-// arbitrary props with arbitrary values into cells
-
 const mockUserData = {
   name: 'name',
   avatar: 'avatar',

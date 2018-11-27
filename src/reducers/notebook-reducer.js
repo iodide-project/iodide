@@ -79,7 +79,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'ADD_TO_EVAL_FRAME_MESSAGE_QUEUE': {
-      console.log('ADD_TO_EVAL_FRAME_MESSAGE_QUEUE', action.actionToPost)
       const evalFrameMessageQueue = state.evalFrameMessageQueue.slice()
       evalFrameMessageQueue.push(action.actionToPost)
       return Object.assign({}, state, { evalFrameMessageQueue })

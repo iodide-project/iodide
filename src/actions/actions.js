@@ -209,15 +209,6 @@ export function addLanguage(languageDefinition) {
   }
 }
 
-// note: this function is NOT EXPORTED. It is a private function meant
-// to be wrapped by other actions that will configure and dispatch it.
-export function updateCellProperties(cellId, updatedProperties) {
-  return {
-    type: 'UPDATE_CELL_PROPERTIES',
-    cellId,
-    updatedProperties,
-  }
-}
 
 function getChunkContainingLine(jsmdChunks, line) {
   const [activeChunk] = jsmdChunks
@@ -231,7 +222,6 @@ export function evaluateText(chunk = undefined) {
     const doc = cm.getDoc()
 
     let actionObj
-
     if (chunk) {
       // explicit chunk passed in - evaluate it.
       actionObj = {
@@ -279,49 +269,6 @@ export function moveCursorToNextChunk() {
   }
 }
 
-// FIXME: update evaluateAllCells -> evaluateNotebook or something like that,
-// using evaluateText or whatever term we're using.
-
-// export function evaluateCell(cellId) {
-//   return (dispatch, getState) => {
-//     let cell
-//     if (cellId === undefined) {
-//       cell = getSelectedCell(getState())
-//     } else {
-//       cell = getCellById(getState().cells, cellId)
-//     }
-//     // update the cell props in the eval frame
-//     const cellPathsToUpdate = Object.keys(mirroredCellProperties)
-//     const evalFrameCell = {}
-//     cellPathsToUpdate.forEach((k) => { evalFrameCell[k] = cell[k] })
-//     dispatch(updateCellProperties(cell.id, evalFrameCell))
-//     // trigger the cell eval
-//     dispatch({ type: 'TRIGGER_CELL_EVAL_IN_FRAME', cellId: cell.id })
-//   }
-// }
-
-// export function evaluateAllCells() {
-//   return (dispatch, getState) => {
-//     const { cells } = getState()
-//     let p = Promise.resolve()
-//     cells.forEach((cell) => {
-//       if (cell.cellType === 'css' && !cell.skipInRunAll) {
-//         p = p.then(() => dispatch(evaluateCell(cell.id)))
-//       }
-//     })
-//     cells.forEach((cell) => {
-//       if (cell.cellType === 'markdown' && !cell.skipInRunAll) {
-//         p = p.then(() => dispatch(evaluateCell(cell.id)))
-//       }
-//     })
-//     cells.forEach((cell) => {
-//       if (cell.cellType !== 'markdown' && cell.cellType !== 'css' && !cell.skipInRunAll) {
-//         p = p.then(() => dispatch(evaluateCell(cell.id)))
-//       }
-//     })
-//   }
-// }
-
 export function evaluateNotebook() {
   return (dispatch, getState) => {
     const { jsmdChunks } = getState()
@@ -331,21 +278,6 @@ export function evaluateNotebook() {
         p = p.then(() => dispatch(evaluateText(chunk)))
       }
     })
-    // cells.forEach((cell) => {
-    //   if (cell.cellType === 'css' && !cell.skipInRunAll) {
-    //     p = p.then(() => dispatch(evaluateCell(cell.id)))
-    //   }
-    // })
-    // cells.forEach((cell) => {
-    //   if (cell.cellType === 'markdown' && !cell.skipInRunAll) {
-    //     p = p.then(() => dispatch(evaluateCell(cell.id)))
-    //   }
-    // })
-    // cells.forEach((cell) => {
-    //   if (cell.cellType !== 'markdown' && cell.cellType !== 'css' && !cell.skipInRunAll) {
-    //     p = p.then(() => dispatch(evaluateCell(cell.id)))
-    //   }
-    // })
   }
 }
 

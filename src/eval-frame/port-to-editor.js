@@ -43,9 +43,6 @@ function receiveMessage(event) {
       }
       case 'REDUX_ACTION':
         if (message.type === 'TRIGGER_TEXT_EVAL_IN_FRAME') {
-          // in this one special case, we need to intecept the
-          // action to fire a thunk action rather than dispatching
-          // directly to the eval frame store
           store.dispatch(evaluateText(
             message.evalText,
             message.evalType,

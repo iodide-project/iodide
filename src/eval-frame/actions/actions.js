@@ -6,6 +6,7 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 
 import {
   // evaluateLanguagePluginCell,
+  evaluateLanguagePlugin,
   ensureLanguageAvailable,
   runCodeWithLanguage,
 } from './language-actions'
@@ -148,11 +149,6 @@ export function evalConsoleInput(languageId) {
     dispatch(incrementExecutionNumber())
 
     const updateAfterEvaluation = (output) => {
-      // const cellProperties = { rendered: true }
-      // if (evalStatus === 'ERROR') {
-      //   cellProperties.evalStatus = evalStatus
-      // }
-      // dispatch(updateCellProperties(cell.id, cellProperties))
       dispatch(updateConsoleText(''))
       dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
       dispatch(appendToEvalHistory(null, code, output))
@@ -165,8 +161,6 @@ export function evalConsoleInput(languageId) {
 
     return runCodeWithLanguage(language, code, messageCallback)
       .then(updateAfterEvaluation)
-      // .then(waitForExplicitContinuationStatusResolution)
-      // .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
   }
 }
 
@@ -191,7 +185,6 @@ function evaluateCode(code, language, state) {
         output => updateCellAfterEvaluation(output),
         output => updateCellAfterEvaluation(output, 'ERROR'),
       )
-      // .then(waitForExplicitContinuationStatusResolution)
   }
 }
 
@@ -210,7 +203,9 @@ export function evaluateText(
     const state = getState()
     if (evalType === 'fetch') {
       evaluationQueue = evaluationQueue.then(() => dispatch(evaluateFetchText(evalText)))
-    } else if (Object.keys(state.languageDefinitions).includes(evalType)) {
+    } else if (evalType === 'plugin') {
+      evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePlugin(evalText)))
+    } else if (Object.keys(state.loadedLanguages).includes(evalType)) {
       evaluationQueue = evaluationQueue.then(() =>
         dispatch(evaluateCode(evalText, evalType, state)))
     }
