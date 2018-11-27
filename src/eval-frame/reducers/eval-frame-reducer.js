@@ -1,4 +1,4 @@
-import { newNotebook, newCell, newCellID } from '../eval-frame-state-prototypes'
+import { newNotebook, newCellID } from '../eval-frame-state-prototypes'
 
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
