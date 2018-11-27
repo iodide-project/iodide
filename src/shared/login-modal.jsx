@@ -17,19 +17,20 @@ export default class LoginModal extends React.Component {
     return (
       <Modal visible={this.props.visible} onClose={this.props.onClose}>
         <ModalContent>
-          <p>
-            When you log in to iodide via <a href="https://github.com/">GitHub</a>,
-            you will be granting us access to a small amount of information about
-            your account (user name, profile photo). Your information will not be
-            shared with or sold to third parties.
+          <p>When you log in to iodide via <a href="https://github.com/">GitHub</a>,
+            Mozilla (that’s us) gets access to a small amount of information in your
+            Github account (such as your user name and profile photo). We handle your data
+            according to our <a href="https://www.mozilla.org/privacy/websites/">Privacy Policy</a>.
           </p>
           <p>
-            Any notebooks you create or fork will be associated with your account.
-            By creating and sharing notebooks on our site, you are implicitly
-            granting others permission to share and reuse your work under the&nbsp;
-            <a href="http://creativecommons.org/licenses/by-sa/2.5/" target="_blank" rel="noopener noreferrer">
-              Creative Commons Attribution Sharealike license
-            </a>.
+            When you create or fork a notebook, the open source&nbsp;
+            <a href="https://creativecommons.org/licenses/by-sa/3.0/">
+              Commons Attribution-Share Alike license
+            </a>&nbsp;
+            applies to your content. Your notebooks are associated with your account.
+          </p>
+          <p>
+            When you sign in, you agree to our <a href="https://www.mozilla.org/about/legal/terms/mozilla">Terms of Service</a>.
           </p>
           <center>
             <ContainedButton
