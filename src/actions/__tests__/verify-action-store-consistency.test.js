@@ -91,11 +91,6 @@ describe('make sure action creators leave store in a consitent state', () => {
       .not.toThrow()
   })
 
-  it('updateInputContent', () => {
-    expect(() => store.dispatch(actions.updateInputContent('test input')))
-      .not.toThrow()
-  })
-
   it('addLanguage', () => {
     expect(() => store.dispatch({
       type: 'ADD_LANGUAGE_TO_EDITOR',

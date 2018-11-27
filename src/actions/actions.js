@@ -169,13 +169,6 @@ export function setViewMode(viewMode) {
   }
 }
 
-export function updateInputContent(text) {
-  return {
-    type: 'UPDATE_INPUT_CONTENT',
-    content: text,
-  }
-}
-
 export function addLanguage(languageDefinition) {
   return (dispatch) => {
     const {
@@ -397,32 +390,6 @@ export function toggleHelpModal() {
 export function toggleEditorLink() {
   return {
     type: 'TOGGLE_EDITOR_LINK',
-  }
-}
-
-export function increaseEditorWidth() {
-  return {
-    type: 'INCREASE_EDITOR_WIDTH',
-  }
-}
-
-export function decreaseEditorWidth() {
-  return {
-    type: 'DECREASE_EDITOR_WIDTH',
-  }
-}
-
-export function changeSidePaneMode(sidePaneMode) {
-  return {
-    type: 'CHANGE_SIDE_PANE_MODE',
-    sidePaneMode,
-  }
-}
-
-export function changeEditorWidth(widthShift) {
-  return {
-    type: 'CHANGE_EDITOR_WIDTH',
-    widthShift,
   }
 }
 
