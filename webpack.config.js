@@ -24,6 +24,7 @@ let CSS_PATH_STRING
 
 let { EDITOR_ORIGIN } = process.env
 let { EVAL_FRAME_ORIGIN } = process.env
+let { MOZILLA_OFFICIAL } = process.env || false
 
 const PYODIDE_VERSION = process.env.PYODIDE_VERSION || '0.2.0'
 process.env.PYODIDE_VERSION = PYODIDE_VERSION
@@ -133,6 +134,7 @@ module.exports = (env) => {
         IODIDE_BUILD_MODE: JSON.stringify((env && env.startsWith('dev')) ? 'dev' : 'production'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
         PYODIDE_VERSION: JSON.stringify(PYODIDE_VERSION),
+        MOZILLA_OFFICIAL: !!MOZILLA_OFFICIAL
       }),
       new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
       new WriteFilePlugin(),

@@ -1,3 +1,4 @@
+/* global MOZILLA_OFFICIAL */
 import React from 'react'
 import styled from 'react-emotion'
 import { css } from 'emotion'
@@ -49,14 +50,48 @@ const Logo = () => (
   </LogoContainer>
 )
 
+const FooterDiv = styled('div')`
+text-align: left;
+padding: 0px;
+ul {
+  padding-inline-start: 0px;
+}
+li {
+  display: inline-block;
+  margin-right: 20px;
+}
+`
+
 export default () => (
   <FooterContainer>
-    <div>
-    © Iodide 2018
-    </div>
+    <FooterDiv>
+      <p>iodide is brought to you by <a href="https://mozilla.org">Mozilla</a>.</p>
+      {
+        // only display terms of service on an official mozilla installation
+        MOZILLA_OFFICIAL && (
+          <ul>
+            <li><a href="https://www.mozilla.org/about/legal/terms/mozilla">Terms</a></li>
+            <li><a href="https://www.mozilla.org/privacy/websites/">Privacy</a></li>
+            <li><a href="https://www.mozilla.org/privacy/websites/#cookies">Cookies</a></li>
+          </ul>
+        )
+      }
+      <p><small>© 2018 Mozilla and other contributors</small>.</p>
+    </FooterDiv>
     <Logo />
-    <div>
-        Extremely Alpha
-    </div>
+    <FooterDiv>
+      {
+        MOZILLA_OFFICIAL && (
+          <p>
+            Site licensed under the <a href="https://www.mozilla.org/en-US/MPL/">MPL</a>,&nbsp;
+            content available under the terms of the&nbsp;
+            <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.en" target="_blank" rel="noopener noreferrer">
+              Creative Commons Attribution-ShareAlike 3.0 Unported license
+            </a>.
+          </p>
+        )
+      }
+      <p>Extremely alpha software - <a href="https://github.com/iodide-project/iodide">contribute</a>.</p>
+    </FooterDiv>
   </FooterContainer>
 )
