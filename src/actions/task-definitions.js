@@ -41,11 +41,11 @@ tasks.evaluateCell = new UserTask({
   },
 })
 
-tasks.evaluateAllCells = new UserTask({
+tasks.evaluateNotebook = new UserTask({
   title: 'Run All Cells',
   menuTitle: 'Run All Cells',
   callback() {
-    dispatcher.evaluateAllCells()
+    dispatcher.evaluateNotebook()
   },
 })
 

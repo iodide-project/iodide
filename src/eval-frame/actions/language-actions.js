@@ -74,25 +74,24 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
   return languagePluginPromise
 }
 
-export function evaluateLanguagePluginCell(cell) {
+export function evaluateLanguagePlugin(pluginText) {
   return (dispatch) => {
     const historyId = historyIdGen.nextId()
     dispatch(appendToEvalHistory(
-      cell.id,
-      cell.content,
+      null,
+      pluginText,
       undefined,
       { historyId, historyType: 'CELL_EVAL_INFO' },
     ))
 
     let pluginData
     try {
-      pluginData = JSON.parse(cell.content)
+      pluginData = JSON.parse(pluginText)
     } catch (err) {
       dispatch(updateValueInHistory(historyId, `plugin definition failed to parse:\n${err.message}`))
       return Promise.reject()
     }
-
-    return loadLanguagePlugin(pluginData, historyId, cell, dispatch)
+    return loadLanguagePlugin(pluginData, historyId, dispatch)
   }
 }
 
@@ -100,6 +99,7 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
   if (Object.prototype.hasOwnProperty.call(state.loadedLanguages, languageId)) {
     return new Promise(resolve => resolve(state.loadedLanguages[languageId]))
   }
+
   if (Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)) {
     const historyId = historyIdGen.nextId()
     dispatch(appendToEvalHistory(
@@ -108,7 +108,6 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
       undefined,
       { historyId, historyType: 'CELL_EVAL_INFO' },
     ))
-
     return loadLanguagePlugin(
       state.languageDefinitions[languageId],
       historyId,
@@ -123,7 +122,6 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
 
 export function runCodeWithLanguage(language, code, messageCallback) {
   const { module, evaluator, asyncEvaluator } = language
-
   if (asyncEvaluator !== undefined) {
     const messageCb = (messageCallback === undefined) ? () => {} : messageCallback
     return window[module][asyncEvaluator](code, messageCb)

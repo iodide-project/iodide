@@ -2,22 +2,16 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
-import {
-  getCellById,
-} from '../tools/notebook-utils'
-import {
-  getSelectedCell,
-} from '../reducers/output-reducer-utils'
-
-import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
+// import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
 
 import {
-  evaluateLanguagePluginCell,
+  // evaluateLanguagePluginCell,
+  evaluateLanguagePlugin,
   ensureLanguageAvailable,
   runCodeWithLanguage,
 } from './language-actions'
 
-import { evaluateFetchCell, evaluateFetchText } from './fetch-cell-eval-actions'
+import { evaluateFetchText } from './fetch-cell-eval-actions'
 
 let evaluationQueue = Promise.resolve()
 
@@ -155,11 +149,6 @@ export function evalConsoleInput(languageId) {
     dispatch(incrementExecutionNumber())
 
     const updateAfterEvaluation = (output) => {
-      // const cellProperties = { rendered: true }
-      // if (evalStatus === 'ERROR') {
-      //   cellProperties.evalStatus = evalStatus
-      // }
-      // dispatch(updateCellProperties(cell.id, cellProperties))
       dispatch(updateConsoleText(''))
       dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
       dispatch(appendToEvalHistory(null, code, output))
@@ -172,8 +161,6 @@ export function evalConsoleInput(languageId) {
 
     return runCodeWithLanguage(language, code, messageCallback)
       .then(updateAfterEvaluation)
-      .then(waitForExplicitContinuationStatusResolution)
-      // .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
   }
 }
 
@@ -198,7 +185,6 @@ function evaluateCode(code, language, state) {
         output => updateCellAfterEvaluation(output),
         output => updateCellAfterEvaluation(output, 'ERROR'),
       )
-      .then(waitForExplicitContinuationStatusResolution)
   }
 }
 
@@ -216,122 +202,16 @@ export function evaluateText(
     // if (!evalText || !evalType) { return undefined }
     const state = getState()
     if (evalType === 'fetch') {
-      dispatch(evaluateFetchText(evalText))
-    } else if (Object.keys(state.languageDefinitions).includes(evalType)) {
-      dispatch(evaluateCode(evalText, evalType, state))
+      evaluationQueue = evaluationQueue.then(() => dispatch(evaluateFetchText(evalText)))
+    } else if (evalType === 'plugin') {
+      evaluationQueue = evaluationQueue.then(() =>
+        dispatch(evaluateLanguagePlugin(evalText)))
+    } else if (Object.keys(state.loadedLanguages).includes(evalType) ||
+      Object.keys(state.languageDefinitions).includes(evalType)) {
+      evaluationQueue = evaluationQueue.then(() =>
+        dispatch(evaluateCode(evalText, evalType, state)))
     }
-  }
-}
-
-function evaluateCodeCell(cell) {
-  return (dispatch, getState) => {
-    // this variable may get changed in eval.
-    const state = getState()
-    const code = cell.content
-
-    // clear stuff relating to the side effect target before evaling
-    dispatch({ type: 'CELL_SIDE_EFFECT_STATUS', cellId: cell.id, hasSideEffect: false })
-    // this is one place where we have to directly mutate the DOM b/c we need
-    // this to happen outside of React's update schedule. see also iodide-api/output.js
-    const sideEffectTarget = document.getElementById(`cell-${cell.id}-side-effect-target`)
-    if (sideEffectTarget) { sideEffectTarget.innerHTML = '' }
-
-    dispatch(temporarilySaveRunningCellID(cell.id))
-
-    const updateCellAfterEvaluation = (output, evalStatus) => {
-      const cellProperties = { rendered: true }
-      if (evalStatus === 'ERROR') {
-        cellProperties.evalStatus = evalStatus
-      }
-      dispatch(updateCellProperties(cell.id, cellProperties))
-      // dispatch(incrementExecutionNumber())
-      dispatch(appendToEvalHistory(cell.id, cell.content, output))
-      dispatch(updateUserVariables())
-    }
-
-    const messageCallback = (msg) => {
-      dispatch(appendToEvalHistory(cell.id, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
-    }
-
-    return ensureLanguageAvailable(cell.language, cell, state, dispatch)
-      .then(language => runCodeWithLanguage(language, code, messageCallback))
-      .then(
-        output => updateCellAfterEvaluation(output),
-        output => updateCellAfterEvaluation(output, 'ERROR'),
-      )
-      .then(waitForExplicitContinuationStatusResolution)
-      .then(() => dispatch(temporarilySaveRunningCellID(undefined)));
-  }
-}
-
-function evaluateMarkdownCell(cell) {
-  return dispatch => dispatch(updateCellProperties(
-    cell.id,
-    {
-      value: MD.render(cell.content),
-      rendered: true,
-      evalStatus: 'SUCCESS',
-    },
-  ))
-}
-
-function evaluateCSSCell(cell) {
-  return (dispatch) => {
-    dispatch(updateCellProperties(
-      cell.id,
-      {
-        value: cell.content,
-        rendered: true,
-        evalStatus: 'SUCCESS',
-      },
-    ))
-    dispatch(appendToEvalHistory(
-      cell.id,
-      cell.content,
-      'Page styles updated',
-      { historyType: 'CELL_EVAL_INFO' },
-    ))
-  }
-}
-
-export function evaluateCell(cellId) {
-  return (dispatch, getState) => {
-    let cell
-    if (cellId === undefined) {
-      cell = getSelectedCell(getState())
-    } else {
-      cell = getCellById(getState().cells, cellId)
-    }
-
-    if (!cell.content) {
-      // if the cell has no content, evaluation is a no-op
-      return undefined
-    }
-
-    let evaluation
-    dispatch(incrementExecutionNumber())
-    // here is where we should mark a cell as PENDING.
-    if (cell.cellType === 'code') {
-      evaluationQueue = evaluationQueue
-        .then(() => dispatch(evaluateCodeCell(cell)))
-      evaluation = evaluationQueue
-    } else if (cell.cellType === 'markdown') {
-      evaluation = dispatch(evaluateMarkdownCell(cell))
-    } else if (cell.cellType === 'css') {
-      evaluation = dispatch(evaluateCSSCell(cell))
-    } else if (cell.cellType === 'fetch') {
-      evaluationQueue = evaluationQueue
-        .then(() => dispatch(evaluateFetchCell(cell)))
-      evaluation = evaluationQueue
-    } else if (cell.cellType === 'plugin') {
-      if (JSON.parse(cell.content).pluginType === 'language') {
-        evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
-        evaluation = evaluationQueue
-      }
-    } else {
-      cell.rendered = false
-    }
-    return evaluation
+    return evaluationQueue
   }
 }
 

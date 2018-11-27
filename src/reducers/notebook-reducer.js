@@ -1,6 +1,5 @@
 import {
   newNotebook,
-  newCell,
   newCellID,
 } from '../editor-state-prototypes'
 
@@ -37,7 +36,6 @@ initialVariables.add('CodeMirror')
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState
   let title
-  let cells
 
   switch (action.type) {
     case 'RESET_NOTEBOOK':
@@ -81,7 +79,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'ADD_TO_EVAL_FRAME_MESSAGE_QUEUE': {
-      console.log('ADD_TO_EVAL_FRAME_MESSAGE_QUEUE', action.actionToPost)
       const evalFrameMessageQueue = state.evalFrameMessageQueue.slice()
       evalFrameMessageQueue.push(action.actionToPost)
       return Object.assign({}, state, { evalFrameMessageQueue })
@@ -91,20 +88,18 @@ const notebookReducer = (state = newNotebook(), action) => {
     // note: loading a NB should always assign to a copy of the latest global
     // and per-cell state for backwards compatibility
       nextState = action.newState
-      cells = nextState.cells.map((cell, i) =>
-        Object.assign(newCell(i, cell.cellType), cell))
-
       return Object.assign(
-        newNotebook(), nextState, { cells },
+        newNotebook(), nextState,
         getUserDataFromDocument(), getNotebookInfoFromDocument(),
       )
     }
 
     case 'REPLACE_NOTEBOOK_CONTENT': {
-      cells = action.cells.map((cell, i) =>
-        Object.assign(newCell(i, cell.cellType), cell))
-
-      return Object.assign({}, state, { cells, title: action.title })
+      return Object.assign({}, state, {
+        jsmd: action.jsmd,
+        jsmdChunks: action.jsmdChunks,
+        title: action.title,
+      })
     }
 
     case 'UPDATE_JSMD_CONTENT': {

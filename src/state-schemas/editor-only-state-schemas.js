@@ -3,8 +3,6 @@ import {
   mirroredCellProperties,
 } from '../state-schemas/mirrored-state-schema'
 
-import { newCellFromSchema } from '../state-schemas/state-prototype-from-schema'
-
 export const editorOnlyCellProperties = {
   inputFolding: {
     type: 'string',
@@ -22,11 +20,6 @@ export const editorCellSchema = {
 
 
 export const editorOnlyStateProperties = {
-  cells: {
-    type: 'array',
-    items: editorCellSchema,
-    default: [newCellFromSchema(editorCellSchema, 0)],
-  },
   cellClipboard: {
     type: 'array',
     items: editorCellSchema,

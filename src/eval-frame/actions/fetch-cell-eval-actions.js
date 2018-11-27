@@ -4,8 +4,6 @@ import {
   updateValueInHistory,
   historyIdGen,
   updateUserVariables,
-  // updateCellProperties,
-  // updateValueInHistory,
 } from './actions'
 
 import { genericFetch as fetchLocally,

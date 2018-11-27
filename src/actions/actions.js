@@ -1,29 +1,16 @@
 import CodeMirror from 'codemirror'
 import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
-import { stateFromJsmd } from '../tools/jsmd-tools'
 import { getNotebookID } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
-import { getCellById } from '../tools/notebook-utils'
-import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 import { addChangeLanguageTask } from './task-definitions'
 
-import { getSelectedCell } from '../reducers/cell-reducer-utils'
-
-import { addLanguageKeybinding } from '../keybindings'
-
-import { mirroredStateProperties, mirroredCellProperties } from '../state-schemas/mirrored-state-schema'
+import { mirroredStateProperties } from '../state-schemas/mirrored-state-schema'
 
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
 
 import { jsmdParser } from './jsmd-parser'
-
-
-import {
-  alignCellTopTo,
-  handleCellAndOutputScrolling,
-} from './scroll-helpers'
 
 export function updateAppMessages(messageObj) {
   const { message } = messageObj
@@ -90,14 +77,6 @@ export function importInitialJsmd(importedState) {
     const stateUpdatesFromEditor = {}
     statePathsToUpdate.forEach((k) => { stateUpdatesFromEditor[k] = importedState[k] })
     // copy mirrored cell props
-    const cellPathsToUpdate = Object.keys(mirroredCellProperties)
-    // stateUpdatesFromEditor.cells =
-    // const updatedCells
-    stateUpdatesFromEditor.cells = stateUpdatesFromEditor.cells.map((cell) => {
-      const cellOut = {}
-      cellPathsToUpdate.forEach((k) => { cellOut[k] = cell[k] })
-      return cellOut
-    })
 
     dispatch({
       type: 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD',
@@ -118,11 +97,13 @@ export function setPreviousAutosave(hasPreviousAutoSave) {
 
 export function loadAutosave() {
   return (dispatch, getState) => {
-    const newState = stateFromJsmd(getAutosaveJsmd(getState()))
+    // jsmd, jsmdChunks
+    const jsmd = getAutosaveJsmd(getState())
+    const jsmdChunks = jsmdParser(jsmd)
     dispatch({
       type: 'REPLACE_NOTEBOOK_CONTENT',
-      cells: newState.cells,
-      title: newState.title,
+      jsmd,
+      jsmdChunks,
     })
     dispatch(setPreviousAutosave(false))
   }
@@ -195,33 +176,11 @@ export function updateInputContent(text) {
   }
 }
 
-
-export function changeCellType(cellType, language = 'js') {
-  return (dispatch, getState) => {
-    if ((getSelectedCell(getState()).cellType !== cellType
-      || getSelectedCell(getState()).language !== language)) {
-      dispatch({
-        type: 'CHANGE_CELL_TYPE',
-        cellType,
-        language,
-      })
-    }
-  }
-}
-
 export function addLanguage(languageDefinition) {
   return (dispatch) => {
     const {
-      keybinding,
-      languageId,
       codeMirrorMode,
     } = languageDefinition
-    if (keybinding.length === 1 && (typeof keybinding === 'string')) {
-      addLanguageKeybinding(
-        [keybinding],
-        () => dispatch(changeCellType('code', languageId)),
-      )
-    }
     CodeMirror.requireMode(codeMirrorMode, () => { })
     addChangeLanguageTask(
       languageDefinition.languageId,
@@ -235,15 +194,6 @@ export function addLanguage(languageDefinition) {
   }
 }
 
-// note: this function is NOT EXPORTED. It is a private function meant
-// to be wrapped by other actions that will configure and dispatch it.
-export function updateCellProperties(cellId, updatedProperties) {
-  return {
-    type: 'UPDATE_CELL_PROPERTIES',
-    cellId,
-    updatedProperties,
-  }
-}
 
 function getChunkContainingLine(jsmdChunks, line) {
   const [activeChunk] = jsmdChunks
@@ -251,14 +201,21 @@ function getChunkContainingLine(jsmdChunks, line) {
   return activeChunk
 }
 
-export function evaluateText() {
+export function evaluateText(chunk = undefined) {
   return (dispatch, getState) => {
     const cm = window.ACTIVE_CODEMIRROR
     const doc = cm.getDoc()
 
     let actionObj
-
-    if (!doc.somethingSelected()) {
+    if (chunk) {
+      // explicit chunk passed in - evaluate it.
+      actionObj = {
+        type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
+        evalText: chunk.chunkContent,
+        evalType: chunk.chunkType,
+        evalFlags: chunk.evalFlags,
+      }
+    } else if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
       const activeChunk = getChunkContainingLine(getState().jsmdChunks, line)
 
@@ -275,7 +232,7 @@ export function evaluateText() {
       // as long as the selection is contained by a code chunk
     }
     // here's where we'll put: if kernelState === ready
-    dispatch(actionObj)
+    return Promise.resolve(dispatch(actionObj))
   }
 }
 
@@ -297,41 +254,13 @@ export function moveCursorToNextChunk() {
   }
 }
 
-export function evaluateCell(cellId) {
+export function evaluateNotebook() {
   return (dispatch, getState) => {
-    let cell
-    if (cellId === undefined) {
-      cell = getSelectedCell(getState())
-    } else {
-      cell = getCellById(getState().cells, cellId)
-    }
-    // update the cell props in the eval frame
-    const cellPathsToUpdate = Object.keys(mirroredCellProperties)
-    const evalFrameCell = {}
-    cellPathsToUpdate.forEach((k) => { evalFrameCell[k] = cell[k] })
-    dispatch(updateCellProperties(cell.id, evalFrameCell))
-    // trigger the cell eval
-    dispatch({ type: 'TRIGGER_CELL_EVAL_IN_FRAME', cellId: cell.id })
-  }
-}
-
-export function evaluateAllCells() {
-  return (dispatch, getState) => {
-    const { cells } = getState()
+    const { jsmdChunks } = getState()
     let p = Promise.resolve()
-    cells.forEach((cell) => {
-      if (cell.cellType === 'css' && !cell.skipInRunAll) {
-        p = p.then(() => dispatch(evaluateCell(cell.id)))
-      }
-    })
-    cells.forEach((cell) => {
-      if (cell.cellType === 'markdown' && !cell.skipInRunAll) {
-        p = p.then(() => dispatch(evaluateCell(cell.id)))
-      }
-    })
-    cells.forEach((cell) => {
-      if (cell.cellType !== 'markdown' && cell.cellType !== 'css' && !cell.skipInRunAll) {
-        p = p.then(() => dispatch(evaluateCell(cell.id)))
+    jsmdChunks.forEach((chunk) => {
+      if (!['md', 'css'].includes(chunk.chunkType)) {
+        p = p.then(() => dispatch(evaluateText(chunk)))
       }
     })
   }
@@ -386,7 +315,7 @@ export function logout() {
 function getNotebookSaveRequestOptions(state, options = undefined) {
   const data = {
     title: state.title,
-    content: state.jsmd, // exportJsmdToString(state),
+    content: state.jsmd,
   }
   if (options && options.forkedFrom !== undefined) data.forked_from = options.forkedFrom
   const postRequestOptions = {
@@ -444,96 +373,6 @@ export function saveNotebookToServer() {
   }
 }
 
-export function cellUp() {
-  return (dispatch, getState) => {
-    dispatch({ type: 'CELL_UP' })
-    const targetPxToTopOfFrame = handleCellAndOutputScrolling(getSelectedCell(getState()).id)
-    if (getState().scrollingLinked) {
-      postActionToEvalFrame({
-        type: 'ALIGN_OUTPUT_TO_EDITOR',
-        cellId: getSelectedCell(getState()).id,
-        pxFromViewportTop: targetPxToTopOfFrame,
-      })
-    }
-  }
-}
-
-export function cellDown() {
-  return (dispatch, getState) => {
-    dispatch({ type: 'CELL_DOWN' })
-    const targetPxToTopOfFrame = handleCellAndOutputScrolling(getSelectedCell(getState()).id)
-    if (getState().scrollingLinked) {
-      postActionToEvalFrame({
-        type: 'ALIGN_OUTPUT_TO_EDITOR',
-        cellId: getSelectedCell(getState()).id,
-        pxFromViewportTop: targetPxToTopOfFrame,
-      })
-    }
-  }
-}
-
-export function insertCell(cellType, direction) {
-  return {
-    type: 'INSERT_CELL',
-    cellType,
-    direction,
-  }
-}
-
-export function addCell(cellType) {
-  return {
-    type: 'ADD_CELL',
-    cellType,
-  }
-}
-
-export function selectCell(
-  cellId,
-  autoScrollToCell = false,
-  pxFromTopOfEvalFrame = undefined,
-) {
-  return (dispatch, getState) => {
-    // first dispatch the change to the store...
-    dispatch({
-      type: 'SELECT_CELL',
-      id: cellId,
-    })
-
-    // ...then we'll deal with scrolling
-
-    // NOTE: pxFromTopOfEvalFrame should always be undefined unless this
-    // action was fired as a result of a message recieved from the eval frame
-    const clickInEvalFrame = pxFromTopOfEvalFrame !== undefined
-    const { scrollingLinked } = getState()
-    if (clickInEvalFrame && scrollingLinked) {
-      // if selectCell triggered by a click in the eval frame,
-      // just align editor cell top to value from eval frame
-      alignCellTopTo(cellId, pxFromTopOfEvalFrame)
-    } else if (!clickInEvalFrame && scrollingLinked) {
-      // select cell triggered from within editor; scroll if needed and send msg
-      // to eval frame to align
-      const targetPxToTopOfFrame = handleCellAndOutputScrolling(cellId, autoScrollToCell)
-      postActionToEvalFrame({
-        type: 'ALIGN_OUTPUT_TO_EDITOR',
-        cellId,
-        pxFromViewportTop: targetPxToTopOfFrame,
-      })
-    } else if (!clickInEvalFrame && !scrollingLinked) {
-      // if selectCell initiated in editor, scroll as needed but don't align output
-      handleCellAndOutputScrolling(cellId, autoScrollToCell)
-    }
-    // note that in the 4th case: (clickInEvalFrame && !scrollingLinked)
-    // if click came from the eval frame and scrolling not linked,
-    // then *no* scrolling is needed.
-  }
-}
-
-export function deleteCell() {
-  return {
-    type: 'DELETE_CELL',
-  }
-}
-
 export function setModalState(modalState) {
   return {
     type: 'SET_MODAL_STATE',
@@ -584,19 +423,6 @@ export function changeEditorWidth(widthShift) {
   return {
     type: 'CHANGE_EDITOR_WIDTH',
     widthShift,
-  }
-}
-
-export function setCellSkipInRunAll(value) {
-  return (dispatch, getState) => {
-    let setValue = value
-    if (setValue === undefined) {
-      setValue = !getSelectedCell(getState()).skipInRunAll
-    }
-    dispatch(updateCellProperties(
-      getSelectedCell(getState()).id,
-      { skipInRunAll: setValue },
-    ))
   }
 }
 

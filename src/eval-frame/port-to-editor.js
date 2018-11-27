@@ -1,6 +1,6 @@
 /* global IODIDE_EDITOR_ORIGIN */
 import { store } from './store'
-import { evaluateCell, evaluateText, updateUserVariables } from './actions/actions'
+import { evaluateText, updateUserVariables } from './actions/actions'
 import { getCompletions } from './tools/notebook-utils'
 import { onParentContextFileFetchSuccess, onParentContextFileFetchError } from './tools/fetch-file-from-parent-context'
 
@@ -42,15 +42,7 @@ function receiveMessage(event) {
         break
       }
       case 'REDUX_ACTION':
-        if (message.type === 'TRIGGER_CELL_EVAL_IN_FRAME') {
-          // in this one special case, we need to intecept the
-          // action to fire a thunk action rather than dispatching
-          // directly to the eval frame store
-          store.dispatch(evaluateCell(message.cellId))
-        } else if (message.type === 'TRIGGER_TEXT_EVAL_IN_FRAME') {
-          // in this one special case, we need to intecept the
-          // action to fire a thunk action rather than dispatching
-          // directly to the eval frame store
+        if (message.type === 'TRIGGER_TEXT_EVAL_IN_FRAME') {
           store.dispatch(evaluateText(
             message.evalText,
             message.evalType,
