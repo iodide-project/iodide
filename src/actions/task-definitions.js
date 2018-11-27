@@ -2,9 +2,6 @@ import UserTask from './user-task'
 import ExternalLinkTask from './external-link-task'
 import { store } from '../store'
 import * as actions from './actions'
-import {
-  viewModeIsEditor,
-} from '../tools/notebook-utils'
 
 const dispatcher = {}
 for (const action in actions) {
@@ -56,10 +53,10 @@ tasks.evaluateCellAndSelectBelow = new UserTask({
   title: 'Evaluate Cell and Select Below',
   keybindings: ['shift+enter'],
   displayKeybinding: 'Shift+Enter',
-  keybindingPrecondition: viewModeIsEditor,
+  preventDefaultKeybinding: true,
   callback() {
-    // FIXME: need action that moves cursor to next chunk
     dispatcher.evaluateText()
+    dispatcher.moveCursorToNextChunk()
   },
 })
 

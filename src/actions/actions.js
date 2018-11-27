@@ -245,6 +245,12 @@ export function updateCellProperties(cellId, updatedProperties) {
   }
 }
 
+function getChunkContainingLine(jsmdChunks, line) {
+  const [activeChunk] = jsmdChunks
+    .filter(c => c.startLine <= line && line <= c.endLine)
+  return activeChunk
+}
+
 export function evaluateText() {
   return (dispatch, getState) => {
     const cm = window.ACTIVE_CODEMIRROR
@@ -254,9 +260,7 @@ export function evaluateText() {
 
     if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
-      const [activeChunk] = getState()
-        .jsmdChunks
-        .filter(c => c.startLine <= line && line <= c.endLine)
+      const activeChunk = getChunkContainingLine(getState().jsmdChunks, line)
 
       actionObj = Object.assign({
         type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
@@ -272,6 +276,24 @@ export function evaluateText() {
     }
     // here's where we'll put: if kernelState === ready
     dispatch(actionObj)
+  }
+}
+
+export function moveCursorToNextChunk() {
+  return (dispatch, getState) => {
+    const cm = window.ACTIVE_CODEMIRROR
+    const doc = cm.getDoc()
+    let targetLine
+
+    if (!doc.somethingSelected()) {
+      targetLine = doc.getCursor().line
+    } else {
+      const selections = doc.listSelections()
+      const lastSelection = selections[selections.length - 1]
+      targetLine = Math.max(lastSelection.anchor.line, lastSelection.anchor.line)
+    }
+    const targetChunk = getChunkContainingLine(getState().jsmdChunks, targetLine)
+    cm.setCursor(targetChunk.endLine + 1, 0)
   }
 }
 
