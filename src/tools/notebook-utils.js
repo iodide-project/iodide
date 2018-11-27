@@ -8,10 +8,6 @@ function viewModeIsPresentation() {
   return store.getState().viewMode === 'REPORT_VIEW'
 }
 
-function getCells() {
-  return store.getState().cells
-}
-
 function getCellBelowSelectedId() {
   const { cells } = store.getState()
   const index = cells.findIndex(c => c.selected)
@@ -72,7 +68,6 @@ function formatDateString(d) {
 }
 
 export {
-  getCells,
   prettyDate,
   formatDateString,
   getCellById,
