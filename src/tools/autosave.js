@@ -42,7 +42,7 @@ function clearAutosave(state) {
 
 function updateAutosave(state, original) {
   const autosaveKey = getAutosaveKey(state)
-  const jsmd = exportJsmd(state, false)
+  const jsmd = exportJsmd(state)
   if (original) {
     // save (over) original, clear any existing dirty copy
     saveAutosaveState(autosaveKey, {

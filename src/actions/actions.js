@@ -3,7 +3,6 @@ import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
 import { getNotebookID } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
-import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 import { addChangeLanguageTask } from './task-definitions'
 
@@ -12,11 +11,6 @@ import { mirroredStateProperties } from '../state-schemas/mirrored-state-schema'
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
 
 import { jsmdParser } from './jsmd-parser'
-
-import {
-  alignCellTopTo,
-  handleCellAndOutputScrolling,
-} from './scroll-helpers'
 
 export function updateAppMessages(messageObj) {
   const { message } = messageObj
@@ -376,68 +370,6 @@ export function saveNotebookToServer() {
     } else {
       createNewNotebookOnServer()(dispatch, getState)
     }
-  }
-}
-
-export function insertCell(cellType, direction) {
-  return {
-    type: 'INSERT_CELL',
-    cellType,
-    direction,
-  }
-}
-
-export function addCell(cellType) {
-  return {
-    type: 'ADD_CELL',
-    cellType,
-  }
-}
-
-export function selectCell(
-  cellId,
-  autoScrollToCell = false,
-  pxFromTopOfEvalFrame = undefined,
-) {
-  return (dispatch, getState) => {
-    // first dispatch the change to the store...
-    dispatch({
-      type: 'SELECT_CELL',
-      id: cellId,
-    })
-
-    // ...then we'll deal with scrolling
-
-    // NOTE: pxFromTopOfEvalFrame should always be undefined unless this
-    // action was fired as a result of a message recieved from the eval frame
-    const clickInEvalFrame = pxFromTopOfEvalFrame !== undefined
-    const { scrollingLinked } = getState()
-    if (clickInEvalFrame && scrollingLinked) {
-      // if selectCell triggered by a click in the eval frame,
-      // just align editor cell top to value from eval frame
-      alignCellTopTo(cellId, pxFromTopOfEvalFrame)
-    } else if (!clickInEvalFrame && scrollingLinked) {
-      // select cell triggered from within editor; scroll if needed and send msg
-      // to eval frame to align
-      const targetPxToTopOfFrame = handleCellAndOutputScrolling(cellId, autoScrollToCell)
-      postActionToEvalFrame({
-        type: 'ALIGN_OUTPUT_TO_EDITOR',
-        cellId,
-        pxFromViewportTop: targetPxToTopOfFrame,
-      })
-    } else if (!clickInEvalFrame && !scrollingLinked) {
-      // if selectCell initiated in editor, scroll as needed but don't align output
-      handleCellAndOutputScrolling(cellId, autoScrollToCell)
-    }
-    // note that in the 4th case: (clickInEvalFrame && !scrollingLinked)
-    // if click came from the eval frame and scrolling not linked,
-    // then *no* scrolling is needed.
-  }
-}
-
-export function deleteCell() {
-  return {
-    type: 'DELETE_CELL',
   }
 }
 
