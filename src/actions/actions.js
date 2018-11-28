@@ -195,12 +195,12 @@ function getChunkContainingLine(jsmdChunks, line) {
 }
 
 function triggerTextInEvalFrame(chunk) {
-    return {
-      type: 'TRIGGER_TEXT_IN_FRAME',
-      evalText: chunk.chunkContent,
-      evalType: chunk.chunkType,
-      evalFrags: chunk.evalFlags
-    }
+  return Object.assign({
+    type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
+    evalText: chunk.chunkContent,
+    evalType: chunk.chunkType,
+    evalFrags: chunk.evalFlags,
+  })
 }
 
 export function evaluateText(chunk = undefined) {
@@ -210,40 +210,30 @@ export function evaluateText(chunk = undefined) {
 
     let actionObj
     if (chunk) {
-      // explicit chunk passed in - evaluate it.
-      actionObj = {
-        type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
-        evalText: chunk.chunkContent,
-        evalType: chunk.chunkType,
-        evalFlags: chunk.evalFlags,
-        chunkId: chunk.chunkId,
-      }
+      actionObj = triggerTextInEvalFrame(chunk)
     } else if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
       const activeChunk = getChunkContainingLine(getState().jsmdChunks, line)
 
-      actionObj = Object.assign({
-        type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
-        evalText: activeChunk.chunkContent,
-        evalType: activeChunk.chunkType,
-        evalFlags: activeChunk.evalFlags,
-        chunkId: activeChunk.chunkId,
-      })
+      actionObj = triggerTextInEvalFrame(activeChunk)
     } else {
       const selection = jsmdParser(doc.getSelection())
+      const start = doc.getCursor('from').line
+      const end = doc.getCursor('to').line
+      const startingChunk = getChunkContainingLine(getState().jsmdChunks, start)
+      const endingChunk = getChunkContainingLine(getState().jsmdChunks, end)
       if (selection[0].chunkType === '') {
-        console.log(selection[0])
-        selection[0].chunkType = getChunkContainingLine(getState().jsmdChunks, doc.getCursor('from')).chunkType
+        selection[0].chunkType = startingChunk.chunkType
       }
-      return Promise.all(selection.map(chunk => {
-          return Promise.resolve(dispatch(triggerTextInEvalFrame(chunk)))
-      })
+      if (startingChunk.chunkType === 'plugin') {
+        selection[0].chunkContent = startingChunk.chunkContent
+      }
+      if (startingChunk.endType === 'plugin') {
+        selection[selection.length - 1].chunkContent = endingChunk.chunkContent
+      }
 
-      // parse selection.
-      // FIXME handle case of code selected
-      // in this case, eval the first selection
-      // probably via codemirror doc.listSelections()[0],
-      // as long as the selection is contained by a code chunk
+      return Promise.all(selection.map(selectedChunk =>
+        Promise.resolve(dispatch(triggerTextInEvalFrame(selectedChunk)))))
     }
     // here's where we'll put: if kernelState === ready
     return Promise.resolve(dispatch(actionObj))
