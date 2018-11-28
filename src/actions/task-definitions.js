@@ -33,7 +33,7 @@ export function addChangeLanguageTask(languageId, displayName, keybinding) {
 }
 
 tasks.evaluateCell = new UserTask({
-  title: 'Run Cell',
+  title: 'Run Code Chunk',
   keybindings: ['mod+enter'],
   displayKeybinding: `${commandKey}+Enter`,
   callback() {
@@ -42,8 +42,8 @@ tasks.evaluateCell = new UserTask({
 })
 
 tasks.evaluateNotebook = new UserTask({
-  title: 'Run All Cells',
-  menuTitle: 'Run All Cells',
+  title: 'Run Full Notebook',
+  menuTitle: 'Run Full Notebook',
   callback() {
     dispatcher.evaluateNotebook()
   },

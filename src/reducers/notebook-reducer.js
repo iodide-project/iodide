@@ -1,12 +1,6 @@
-import {
-  newNotebook,
-  newCellID,
-} from '../editor-state-prototypes'
-
-import {
-  exportJsmdBundle,
-  titleToHtmlFilename,
-} from '../tools/jsmd-tools'
+import { newNotebook } from '../editor-state-prototypes'
+import { historyIdGen } from '../actions/history-id-generator'
+import { exportJsmdBundle, titleToHtmlFilename } from '../tools/export-tools'
 
 import { getNotebookInfoFromDocument, getUserDataFromDocument } from '../tools/server-tools'
 
@@ -22,7 +16,7 @@ function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessa
 }
 
 function addAppMessageToState(state, appMessage) {
-  const nextAppMessageId = newCellID(state.appMessages)
+  const nextAppMessageId = historyIdGen.nextId()
   state.appMessages
     .push(newAppMessage(nextAppMessageId, appMessage.message, appMessage.details, appMessage.when))
   return state
@@ -47,7 +41,9 @@ const notebookReducer = (state = newNotebook(), action) => {
         state,
         { viewMode: action.exportAsReport ? 'REPORT_VIEW' : 'EXPLORE_VIEW' },
       )
-      const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
+      const dataStr = `data:text/json;charset=utf-8,${
+        encodeURIComponent(exportJsmdBundle(exportState.jsmd, exportState.title))
+      }`
       const dlAnchorElem = document.getElementById('export-anchor')
       dlAnchorElem.setAttribute('href', dataStr)
       title = exportState.title === undefined ? 'new-notebook' : exportState.title
