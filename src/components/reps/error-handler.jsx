@@ -99,8 +99,11 @@ export function trimStack(e) {
   const outputFrames = []
 
   for (const frame of frames) {
-    if (frame.fileName !== undefined || frame.fileName !== 'cell') {
-      break
+    if (frame.fileName !== undefined) {
+      const parts = frame.fileName.split('/')
+      if (parts[parts.length - 1].startsWith('iodide.eval-frame')) {
+        break
+      }
     }
     outputFrames.push(frame.toString())
   }
