@@ -47,6 +47,7 @@ function receiveMessage(event) {
             message.evalText,
             message.evalType,
             message.evalFlags,
+            message.chunkId,
           ))
         } else if (message.type === 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD') {
           // in this case, we need to update the declared variables
