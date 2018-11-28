@@ -217,23 +217,31 @@ export function evaluateText(chunk = undefined) {
 
       actionObj = triggerTextInEvalFrame(activeChunk)
     } else {
-      const selection = jsmdParser(doc.getSelection())
-      const start = doc.getCursor('from').line
-      const end = doc.getCursor('to').line
-      const startingChunk = getChunkContainingLine(getState().jsmdChunks, start)
-      const endingChunk = getChunkContainingLine(getState().jsmdChunks, end)
-      if (selection[0].chunkType === '') {
-        selection[0].chunkType = startingChunk.chunkType
-      }
-      if (startingChunk.chunkType === 'plugin') {
-        selection[0].chunkContent = startingChunk.chunkContent
-      }
-      if (startingChunk.endType === 'plugin') {
-        selection[selection.length - 1].chunkContent = endingChunk.chunkContent
-      }
+      const selections = doc.getSelections()
+      const selectionLines = doc.listSelections()
+      const selectionSet = selections.map((sel, i) => ({
+        selectionText: sel,
+        start: selectionLines[i].anchor.line,
+        end: selectionLines[i].head.line,
+      }))
 
-      return Promise.all(selection.map(selectedChunk =>
-        Promise.resolve(dispatch(triggerTextInEvalFrame(selectedChunk)))))
+      return Promise.all(selectionSet.map((s) => {
+        const { selectionText, start, end } = s
+        const selection = jsmdParser(selectionText)
+        const startingChunk = getChunkContainingLine(getState().jsmdChunks, start)
+        const endingChunk = getChunkContainingLine(getState().jsmdChunks, end)
+        if (selection[0].chunkType === '') {
+          selection[0].chunkType = startingChunk.chunkType
+        }
+        if (startingChunk.chunkType === 'plugin') {
+          selection[0].chunkContent = startingChunk.chunkContent
+        }
+        if (startingChunk.endType === 'plugin') {
+          selection[selection.length - 1].chunkContent = endingChunk.chunkContent
+        }
+        return Promise.all(selection.map(selectedChunk =>
+          Promise.resolve(dispatch(triggerTextInEvalFrame(selectedChunk)))))
+      }))
     }
     // here's where we'll put: if kernelState === ready
     return Promise.resolve(dispatch(actionObj))
