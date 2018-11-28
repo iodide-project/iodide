@@ -219,17 +219,48 @@ export function evaluateText(chunk = undefined) {
     } else {
       const selections = doc.getSelections()
       const selectionLines = doc.listSelections()
-      const selectionSet = selections.map((sel, i) => ({
-        selectionText: sel,
-        start: selectionLines[i].anchor.line,
-        end: selectionLines[i].head.line,
-      }))
+
+      const selectionSet = selections.map((sel, i) => {
+        // head & anchor depends on how you drag, so we have to sort by line+ch.
+        const startEnd = [selectionLines[i].anchor, selectionLines[i].head]
+        startEnd.sort((a, b) => {
+          if (a.line > b.line) return 1
+          else if (a.line < b.line) return 0
+          return a.ch > b.ch
+        })
+        return {
+          start: startEnd[0].line,
+          startCh: startEnd[0].ch,
+          end: startEnd[1].line,
+          endCh: startEnd[1].ch,
+        }
+      })
 
       return Promise.all(selectionSet.map((s) => {
-        const { selectionText, start, end } = s
-        const selection = jsmdParser(selectionText)
+        const {
+          start, end,
+        } = s
+        let { startCh, endCh } = s
         const startingChunk = getChunkContainingLine(getState().jsmdChunks, start)
         const endingChunk = getChunkContainingLine(getState().jsmdChunks, end)
+        // set the ends if part of a fetch chunk line is highlighted.
+        if (startingChunk.chunkType === 'fetch') {
+          if (startCh !== 0) {
+            startCh = 0
+          }
+        }
+        if (endingChunk.chunkType === 'fetch') {
+          const lastLine = doc.getLine(end)
+          if (endCh !== lastLine.length) {
+            endCh = lastLine.length
+          }
+        }
+
+        const selection = jsmdParser(doc.getRange(
+          { line: start, ch: startCh },
+          { line: end, ch: endCh },
+        ))
+
         if (selection[0].chunkType === '') {
           selection[0].chunkType = startingChunk.chunkType
         }
@@ -239,6 +270,7 @@ export function evaluateText(chunk = undefined) {
         if (startingChunk.endType === 'plugin') {
           selection[selection.length - 1].chunkContent = endingChunk.chunkContent
         }
+
         return Promise.all(selection.map(selectedChunk =>
           Promise.resolve(dispatch(triggerTextInEvalFrame(selectedChunk)))))
       }))
