@@ -92,16 +92,6 @@ export function updateAppMessages(messageObj) {
   }
 }
 
-// note: this function is NOT EXPORTED. It is a private function meant
-// to be wrapped by other actions that will configure and dispatch it.
-export function updateCellProperties(cellId, updatedProperties) {
-  return {
-    type: 'UPDATE_CELL_PROPERTIES',
-    cellId,
-    updatedProperties,
-  }
-}
-
 export function incrementExecutionNumber() {
   return {
     type: 'INCREMENT_EXECUTION_NUMBER',
