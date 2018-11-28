@@ -41,6 +41,26 @@ function IdFactory() {
 
 export const historyIdGen = new IdFactory()
 
+class Singleton {
+  constructor() {
+    this.data = null
+  }
+  set(data) {
+    this.data = data
+  }
+  get() {
+    return this.data
+  }
+}
+
+const MOST_RECENT_CHUNK_ID = new Singleton()
+
+export { MOST_RECENT_CHUNK_ID }
+
+
+// ////////////// actual actions
+
+
 export function resetNotebook() {
   // we still need this for some tests to work, even though it's not really used
   return {
@@ -184,12 +204,15 @@ export function evaluateText(
   evalText,
   evalType,
   evalFlags, // eslint-disable-line
+  chunkId = null,
 ) {
   // allowed types:
   // md
   return (dispatch, getState) => {
     // exit if there is no code to eval or no eval type
     // if (!evalText || !evalType) { return undefined }
+    MOST_RECENT_CHUNK_ID.set(chunkId)
+    document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`).innerText = null
     const state = getState()
     if (evalType === 'fetch') {
       evaluationQueue = evaluationQueue.then(() => dispatch(evaluateFetchText(evalText)))

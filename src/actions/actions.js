@@ -207,6 +207,7 @@ export function evaluateText(chunk = undefined) {
         evalText: chunk.chunkContent,
         evalType: chunk.chunkType,
         evalFlags: chunk.evalFlags,
+        chunkId: chunk.chunkId,
       }
     } else if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
@@ -217,6 +218,7 @@ export function evaluateText(chunk = undefined) {
         evalText: activeChunk.chunkContent,
         evalType: activeChunk.chunkType,
         evalFlags: activeChunk.evalFlags,
+        chunkId: activeChunk.chunkId,
       })
     } else {
       // FIXME handle case of code selected

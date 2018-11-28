@@ -32,6 +32,7 @@ export class ReportPaneUnconnected extends React.Component {
     const mdComponents = this.props.reportChunks.map((chunk) => {
       const key = chunk.chunkId
       let contents
+      let htmlId
       switch (chunk.chunkType) {
         case 'md':
         case 'html':
@@ -46,9 +47,10 @@ export class ReportPaneUnconnected extends React.Component {
         default:
           // in the case of code and other cell types,
           // just want an empty div; `contents` can remain undefined
+          htmlId = `side-effect-target-${key}`
           break
       }
-      return (<div key={key}>{contents}</div>)
+      return (<div key={key} id={htmlId}>{contents}</div>)
     })
 
     return (

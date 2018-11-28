@@ -210,6 +210,22 @@ js`
   })
 })
 
+describe('jsmd hashes are distinct for empty cells', () => {
+  const jsmdSample = `%% js
+%% js
+%% js
+%% js`
+
+  it('length of set of hashes is correct', () => {
+    expect(new Set(jsmdParser(jsmdSample).map(c => c.chunkId)).size)
+      .toEqual(4)
+  })
+
+  it('hashes of identical content have correct suffixes', () => {
+    expect(jsmdParser(jsmdSample).map(c => c.chunkId.split('_')[1]))
+      .toEqual(['0', '1', '2', '3'])
+  })
+})
 
 describe('correct chunk types in tricky cases', () => {
   const jsmdSample = `%% chunk1

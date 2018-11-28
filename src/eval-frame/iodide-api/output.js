@@ -1,4 +1,4 @@
-import { store } from '../store'
+import { MOST_RECENT_CHUNK_ID } from '../actions/actions'
 
 /*
 These functions operate outside of the normal React/redux update cycle
@@ -14,12 +14,12 @@ things out.
 
 function sideEffectDiv(sideEffectClass, reportSideEffect) {
   // appends a side effect div to the side effect area
-  const cellId = store.getState().runningCellID
-  store.dispatch({ type: 'CELL_SIDE_EFFECT_STATUS', cellId, hasSideEffect: true })
+  // const cellId = store.getState().runningCellID
+  // store.dispatch({ type: 'CELL_SIDE_EFFECT_STATUS', cellId, hasSideEffect: true })
   const div = document.createElement('div')
   div.setAttribute('class', sideEffectClass)
   if (reportSideEffect === false) { div.setAttribute('style', 'display:') }
-  document.getElementById(`cell-${cellId}-side-effect-target`).append(div)
+  document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`).append(div)
   return div
 }
 
