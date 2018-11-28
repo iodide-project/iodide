@@ -14,7 +14,7 @@ describe('errorHandler shouldHandle', () => {
       evaluator: 'eval',
     }
     await runCodeWithLanguage(language, code).catch((err) => {
-      expect(trimStack(err).split('\n').length).toBe(3)
+      expect(trimStack(err).split('\n').length).toBe(2)
     }).catch((err) => {
       throw new Error(err)
     })

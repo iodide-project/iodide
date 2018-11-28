@@ -2,8 +2,6 @@ import React from 'react'
 import ErrorStackParser from 'error-stack-parser'
 import StackFrame from 'stackframe'
 
-import { runCodeWithLanguage } from '../../eval-frame/actions/language-actions'
-
 
 ErrorStackParser.parseV8OrIE = (error) => {
   const filtered = error.stack.split('\n').filter(
@@ -101,10 +99,7 @@ export function trimStack(e) {
   const outputFrames = []
 
   for (const frame of frames) {
-    if ((frame.functionName !== undefined &&
-         frame.functionName.startsWith(runCodeWithLanguage.name)) ||
-        (frame.functionName === undefined &&
-         frame.fileName !== 'cell')) {
+    if (frame.fileName !== undefined || frame.fileName !== 'cell') {
       break
     }
     outputFrames.push(frame.toString())
