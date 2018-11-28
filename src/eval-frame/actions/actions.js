@@ -230,10 +230,12 @@ export function evaluateText(
         dispatch(evaluateCode(evalText, evalType, state)))
     } else {
       evaluationQueue = evaluationQueue.then(() => {
-        const error = new Error(`eval type ${evalType} is not defined`)
-        dispatch(appendToEvalHistory(null, evalText, error, {
-          historyType: 'CONSOLE_EVAL',
-        }))
+        dispatch(appendToEvalHistory(
+          null, evalText,
+          new Error(`eval type ${evalType} is not defined`), {
+            historyType: 'CONSOLE_EVAL',
+          },
+        ))
       })
     }
     return evaluationQueue
