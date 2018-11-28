@@ -1,4 +1,4 @@
-/* global MOZILLA_OFFICIAL */
+/* global IODIDE_PUBLIC_TOS */
 import React from 'react'
 import styled from 'react-emotion'
 import { css } from 'emotion'
@@ -68,7 +68,7 @@ export default () => (
       <p>iodide is brought to you by <a href="https://mozilla.org">Mozilla</a>.</p>
       {
         // only display terms of service on an official mozilla installation
-        MOZILLA_OFFICIAL && (
+        IODIDE_PUBLIC_TOS && (
           <ul>
             <li><a href="https://www.mozilla.org/about/legal/terms/mozilla">Terms</a></li>
             <li><a href="https://www.mozilla.org/privacy/websites/">Privacy</a></li>
@@ -81,10 +81,9 @@ export default () => (
     <Logo />
     <FooterDiv>
       {
-        MOZILLA_OFFICIAL && (
+        IODIDE_PUBLIC_TOS && (
           <p>
-            Site licensed under the <a href="https://www.mozilla.org/en-US/MPL/">MPL</a>,&nbsp;
-            content available under the terms of the&nbsp;
+            Content available under the terms of the&nbsp;
             <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.en" target="_blank" rel="noopener noreferrer">
               Creative Commons Attribution-ShareAlike 3.0 Unported license
             </a>.
