@@ -76,7 +76,6 @@ export function importInitialJsmd(importedState) {
     const statePathsToUpdate = Object.keys(mirroredStateProperties)
     const stateUpdatesFromEditor = {}
     statePathsToUpdate.forEach((k) => { stateUpdatesFromEditor[k] = importedState[k] })
-    // copy mirrored cell props
 
     dispatch({
       type: 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD',
