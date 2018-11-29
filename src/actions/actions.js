@@ -262,7 +262,7 @@ export function selectionToChunks(originalSelection, jsmdChunks) {
   if (startingChunk.chunkType === 'plugin') {
     selection[0].chunkContent = startingChunk.chunkContent
   }
-  if (startingChunk.endType === 'plugin') {
+  if (endingChunk.chunkType === 'plugin') {
     selection[selection.length - 1].chunkContent = endingChunk.chunkContent
   }
   return selection
