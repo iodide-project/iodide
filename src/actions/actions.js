@@ -203,77 +203,86 @@ function triggerTextInEvalFrame(chunk) {
   })
 }
 
-export function evaluateText(chunk = undefined) {
+export function getAllSelections(doc) {
+  const selections = doc.getSelections()
+  const selectionLines = doc.listSelections()
+  const selectionSet = selections.map((sel, i) => {
+    // head & anchor depends on how you drag, so we have to sort by line+ch.
+    const startEnd = [selectionLines[i].anchor, selectionLines[i].head]
+    startEnd.sort((a, b) => {
+      if (a.line > b.line) return 1
+      else if (a.line < b.line) return 0
+      return a.ch > b.ch
+    })
+    return {
+      start: startEnd[0].line,
+      end: startEnd[1].line,
+      selectedText: sel,
+    }
+  })
+  return selectionSet
+}
+
+export function padOutFetchChunk(selectedChunkContent, fullChunkContent, lineNumber, side) {
+  const lineToReplace = fullChunkContent.split('\n')[lineNumber]
+  const content = selectedChunkContent.split('\n')
+  content[side === 'start' ? 0 : content.length - 1] = lineToReplace
+  return content.join('\n')
+}
+
+export function selectionToChunks(originalSelection, jsmdChunks) {
+  const {
+    start, end,
+  } = originalSelection
+  const { selectedText } = originalSelection
+  const startingChunk = getChunkContainingLine(jsmdChunks, start)
+  const endingChunk = getChunkContainingLine(jsmdChunks, end)
+
+  const selection = jsmdParser(selectedText)
+
+  if (selection[0].chunkType === '') {
+    selection[0].chunkType = startingChunk.chunkType
+  }
+  if (startingChunk.chunkType === 'fetch') {
+    selection[0].chunkContent = padOutFetchChunk(
+      selection[0].chunkContent,
+      startingChunk.chunkContent, start - startingChunk.startLine - 1, 'start',
+    )
+  }
+  if (endingChunk.chunkType === 'fetch') {
+    const lastSelectedChunk = selection[selection.length - 1]
+    lastSelectedChunk.chunkContent = padOutFetchChunk(
+      lastSelectedChunk.chunkContent, endingChunk.chunkContent,
+      end - endingChunk.startLine - 1,
+      'end',
+    )
+    selection[selection.length - 1] = lastSelectedChunk
+  }
+
+  if (startingChunk.chunkType === 'plugin') {
+    selection[0].chunkContent = startingChunk.chunkContent
+  }
+  if (startingChunk.endType === 'plugin') {
+    selection[selection.length - 1].chunkContent = endingChunk.chunkContent
+  }
+  return selection
+}
+
+export function evaluateText() {
   return (dispatch, getState) => {
+    const { jsmdChunks } = getState()
     const cm = window.ACTIVE_CODEMIRROR
     const doc = cm.getDoc()
-
     let actionObj
-    if (chunk) {
-      actionObj = triggerTextInEvalFrame(chunk)
-    } else if (!doc.somethingSelected()) {
+    if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
-      const activeChunk = getChunkContainingLine(getState().jsmdChunks, line)
-
+      const activeChunk = getChunkContainingLine(jsmdChunks, line)
       actionObj = triggerTextInEvalFrame(activeChunk)
     } else {
-      const selections = doc.getSelections()
-      const selectionLines = doc.listSelections()
-
-      const selectionSet = selections.map((sel, i) => {
-        // head & anchor depends on how you drag, so we have to sort by line+ch.
-        const startEnd = [selectionLines[i].anchor, selectionLines[i].head]
-        startEnd.sort((a, b) => {
-          if (a.line > b.line) return 1
-          else if (a.line < b.line) return 0
-          return a.ch > b.ch
-        })
-        return {
-          start: startEnd[0].line,
-          startCh: startEnd[0].ch,
-          end: startEnd[1].line,
-          endCh: startEnd[1].ch,
-        }
-      })
-
-      return Promise.all(selectionSet.map((s) => {
-        const {
-          start, end,
-        } = s
-        let { startCh, endCh } = s
-        const startingChunk = getChunkContainingLine(getState().jsmdChunks, start)
-        const endingChunk = getChunkContainingLine(getState().jsmdChunks, end)
-        // set the ends if part of a fetch chunk line is highlighted.
-        if (startingChunk.chunkType === 'fetch') {
-          if (startCh !== 0) {
-            startCh = 0
-          }
-        }
-        if (endingChunk.chunkType === 'fetch') {
-          const lastLine = doc.getLine(end)
-          if (endCh !== lastLine.length) {
-            endCh = lastLine.length
-          }
-        }
-
-        const selection = jsmdParser(doc.getRange(
-          { line: start, ch: startCh },
-          { line: end, ch: endCh },
-        ))
-
-        if (selection[0].chunkType === '') {
-          selection[0].chunkType = startingChunk.chunkType
-        }
-        if (startingChunk.chunkType === 'plugin') {
-          selection[0].chunkContent = startingChunk.chunkContent
-        }
-        if (startingChunk.endType === 'plugin') {
-          selection[selection.length - 1].chunkContent = endingChunk.chunkContent
-        }
-
-        return Promise.all(selection.map(selectedChunk =>
-          Promise.resolve(dispatch(triggerTextInEvalFrame(selectedChunk)))))
-      }))
+      const selectionChunkSet = getAllSelections(doc).map(selection =>
+        selectionToChunks(selection, jsmdChunks, doc))
+      return Promise.all(selectionChunkSet.map(selection => Promise.all(selection.map(chunk =>
+        Promise.resolve(dispatch(triggerTextInEvalFrame(chunk)))))))
     }
     // here's where we'll put: if kernelState === ready
     return Promise.resolve(dispatch(actionObj))
@@ -304,7 +313,7 @@ export function evaluateNotebook() {
     let p = Promise.resolve()
     jsmdChunks.forEach((chunk) => {
       if (!['md', 'css'].includes(chunk.chunkType)) {
-        p = p.then(() => dispatch(evaluateText(chunk)))
+        p = p.then(() => dispatch(triggerTextInEvalFrame(chunk)))
       }
     })
   }
