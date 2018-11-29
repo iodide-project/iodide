@@ -1,9 +1,9 @@
 import React from 'react'
-import Modal from './modal'
-import ModalTitle from './modal-title'
-import ModalContent from './modal-content'
-import ModalCall from './modal-call'
-import { TextButton } from './buttons'
+import Modal from '../../shared/components/modal'
+import ModalTitle from '../../shared/components/modal-title'
+import ModalContent from '../../shared/components/modal-content'
+import ModalCall from '../../shared/components/modal-call'
+import { TextButton } from '../../shared/components/buttons'
 
 export default class UploadModal extends React.Component {
   render() {
