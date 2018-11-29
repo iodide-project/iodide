@@ -140,6 +140,13 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
   }
 }
 
+export function setConsoleLanguage(language) {
+  return {
+    type: 'SET_CONSOLE_LANGUAGE',
+    language,
+  }
+}
+
 export function evalConsoleInput(languageId) {
   return (dispatch, getState) => {
     const state = getState()
@@ -147,7 +154,6 @@ export function evalConsoleInput(languageId) {
     // exit if there is no code in the console to  eval
     if (!code) { return undefined }
     const evalLanguageId = languageId === undefined ? state.languageLastUsed : languageId
-    const language = state.loadedLanguages[evalLanguageId]
 
     // FIXME: deal with side-effects for console evals
     // // clear stuff relating to the side effect target before evaling
@@ -159,6 +165,7 @@ export function evalConsoleInput(languageId) {
 
     // dispatch(temporarilySaveRunningCellID(cell.id))
     dispatch(incrementExecutionNumber())
+    dispatch(setConsoleLanguage(evalLanguageId))
 
     const updateAfterEvaluation = (output) => {
       dispatch(updateConsoleText(''))
@@ -171,8 +178,12 @@ export function evalConsoleInput(languageId) {
       dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
     }
 
-    return runCodeWithLanguage(language, code, messageCallback)
-      .then(updateAfterEvaluation)
+    return ensureLanguageAvailable(evalLanguageId, state, dispatch)
+      .then(languageEvaluator => runCodeWithLanguage(languageEvaluator, code, messageCallback))
+      .then(
+        output => updateAfterEvaluation(output),
+        output => updateAfterEvaluation(output, 'ERROR'),
+      )
   }
 }
 
@@ -190,6 +201,8 @@ function evaluateCode(code, language, state) {
     const messageCallback = (msg) => {
       dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
     }
+
+    dispatch(setConsoleLanguage(language))
 
     return ensureLanguageAvailable(language, state, dispatch)
       .then(languageEvaluator => runCodeWithLanguage(languageEvaluator, code, messageCallback))

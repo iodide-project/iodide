@@ -168,6 +168,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { panePositions: action.panePositions })
     }
 
+    case 'SET_CONSOLE_LANGUAGE': {
+      return Object.assign({}, state, { languageLastUsed: action.language })
+    }
+
     default: {
       return state
     }

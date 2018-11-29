@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import DoubleChevronIcon from './double-chevron-icon'
 
 import { updateConsoleText, consoleHistoryStepBack } from '../../actions/actions'
+import ConsoleLanguageMenu from './console-language-menu'
 
 export class ConsoleInputUnconnected extends React.Component {
   static propTypes = {
@@ -82,6 +83,7 @@ export class ConsoleInputUnconnected extends React.Component {
             value={this.props.consoleText}
           />
         </div>
+        <ConsoleLanguageMenu />
       </div>
     )
   }
