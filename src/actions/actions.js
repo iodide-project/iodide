@@ -4,8 +4,6 @@ import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 import { getNotebookID } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
 
-import { addChangeLanguageTask } from './task-definitions'
-
 import { mirroredStateProperties } from '../state-schemas/mirrored-state-schema'
 
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
@@ -174,11 +172,6 @@ export function addLanguage(languageDefinition) {
       codeMirrorMode,
     } = languageDefinition
     CodeMirror.requireMode(codeMirrorMode, () => { })
-    addChangeLanguageTask(
-      languageDefinition.languageId,
-      languageDefinition.displayName,
-      languageDefinition.keybinding,
-    )
     dispatch({
       type: 'ADD_LANGUAGE_TO_EDITOR',
       languageDefinition,
