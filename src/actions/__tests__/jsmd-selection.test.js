@@ -136,11 +136,20 @@ const FULL_PLUGIN_CHUNK = `
 }
 `
 
+const partialPluginSelections = [
+  {
+    start: 22,
+    end: 22,
+    selectedText: 'orMode": "j',
+    expectedValue: FULL_PLUGIN_CHUNK,
+  },
+]
+
 describe('selectionToChunks', () => {
   const jsmdChunks = jsmdParser(NOTEBOOK)
 
-  it('correctly backs out various fetch selections', () => {
-    fetchSelections.forEach((line) => {
+  it('correctly backs out various fetch selections and plugin chunks', () => {
+    [...fetchSelections, ...partialPluginSelections].forEach((line) => {
       const [chunk] = selectionToChunks(line, jsmdChunks)
       expect(chunk.chunkContent).toBe(line.expectedValue)
     })
