@@ -2,8 +2,6 @@
 
 import {
   selectionToChunks,
-  padOutFetchChunk,
-  getAllSelections,
 } from '../actions'
 
 import { jsmdParser } from '../jsmd-parser'
