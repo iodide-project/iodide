@@ -95,7 +95,8 @@ ErrorStackParser.parseFFOrSafari = (error) => {
 }
 
 export function trimStack(e) {
-  const frames = ErrorStackParser.parse(e)
+  // Handle passing in an Array of pre-parsed frames for testing
+  const frames = (e instanceof Array) ? e : ErrorStackParser.parse(e)
   const outputFrames = []
 
   for (const frame of frames) {
