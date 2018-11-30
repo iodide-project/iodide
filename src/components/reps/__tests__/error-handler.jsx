@@ -1,6 +1,5 @@
 import { ValueRenderer } from '../value-renderer' // eslint-disable-line
 import errorHandler, { trimStack } from '../error-handler'
-import { runCodeWithLanguage } from '../../../eval-frame/actions/language-actions'
 
 describe('errorHandler shouldHandle', () => {
   it('handles the correct type', () => {
@@ -12,6 +11,7 @@ describe('errorHandler shouldHandle', () => {
   // testing available.
 
   it('trims stack frames', async () => {
+    /* eslint-disable */
     const mockFrames = [
       {
         "isEval": true,
@@ -160,6 +160,7 @@ describe('errorHandler shouldHandle', () => {
         "source": "@http://localhost:8000/iodide.eval-frame.dev.js:1:11"
       }
     ]
+    /* eslint-enable */
 
     expect(trimStack(mockFrames).split('\n').length).toBe(2)
   })
