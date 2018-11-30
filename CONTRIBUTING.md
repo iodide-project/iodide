@@ -2,10 +2,6 @@
 
 Thank you for your interest in contributing to Iodide! There are many ways to contribute, and we appreciate all of them. Here are some guidelines & pointers for diving into it.
 
-## Code of Conduct
-
-Iodide has adopted a [Code of Conduct](CODE-OF-CONDUCT.md) that we expect all contributors and core members to adhere to.
-
 ## Development
 
 Work on Iodide happens on Github. Core members and contributors can make Pull Requests to fix issues and add features, which all go through the same review process. We’ll detail how you can start making PRs below.
@@ -94,10 +90,13 @@ Readability counts.
 ...
 ```
 
+## Code of Conduct
+
+Contributors to Iodide are expected to follow the [Mozilla Community Participation Guidelines](https://www.mozilla.org/en-US/about/governance/policies/participation/)
 
 ## License
 
-All contributions to Iodide will be licensed under the [Mozilla Public License 2.0 (MPL 2.0)](https://www.mozilla.org/en-US/MPL/2.0/). This is considered a "weak copyleft" license. Check out the [tl;drLegal entry](https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2)) for more information, as well as Mozilla's [MPL 2.0 FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/) if you need further clarification on what is and isn't permitted.
+All contributions to Iodide will be licensed under the [Mozilla Public License 2.0 (MPL 2.0)](https://www.mozilla.org/en-US/MPL/2.0/). This is considered a "weak copyleft" license. Any code pulled to the tree must be compatible with the MPL 2.0. Please read Mozilla's [MPL 2.0 FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/) if you need further clarification on what is and isn't permitted.
 
 
 ## Get in Touch

@@ -1,4 +1,4 @@
-import { connectionModeIsStandalone } from './server-tools'
+import { connectionModeIsServer } from './server-tools'
 import { setPreviousAutosave } from '../actions/actions'
 
 function exportJsmd(state) {
@@ -6,8 +6,7 @@ function exportJsmd(state) {
 }
 
 function getAutosaveKey(state) {
-  const documentId = connectionModeIsStandalone(state) ?
-    `standalone-${window.location.pathname}` : state.notebookInfo.notebook_id
+  const documentId = connectionModeIsServer(state) ? state.notebookInfo.notebook_id : `standalone-${window.location.pathname}`
   return `autosave-${documentId}`
 }
 
@@ -68,10 +67,15 @@ function subscribeToAutoSave(store) {
     // also, throttle save events to one per second
     if (!autoSaveTimeout) {
       autoSaveTimeout = setTimeout(() => {
-        autoSaveTimeout = undefined;
+        autoSaveTimeout = undefined
 
         const state = store.getState()
-        if (state.hasPreviousAutoSave) {
+
+        // if we have a previous autosave, don't overwrite it. also, don't
+        // autosave the "new" document, as anything beyond an initial sketch
+        // is usually saved at least once
+        if (state.hasPreviousAutoSave ||
+            (connectionModeIsServer(state) && !state.notebookInfo.notebook_id)) {
           return
         }
 

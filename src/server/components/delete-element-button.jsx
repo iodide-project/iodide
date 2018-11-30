@@ -1,5 +1,5 @@
 import React from 'react'
-import { OutlineButton } from './buttons'
+import { OutlineButton } from '../../shared/components/buttons'
 import DeleteModal from './delete-modal'
 
 // export class WithDeleteModal extends React.Component {
