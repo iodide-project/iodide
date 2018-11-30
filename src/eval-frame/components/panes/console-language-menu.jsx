@@ -22,14 +22,14 @@ export class ConsoleLanguageMenuUnconnected extends React.Component {
       anchorElement: null,
     }
     this.handleClick = this.handleClick.bind(this)
-    this.handleIconButtonClose = this.handleIconButtonClose.bind(this)
+    this.handleClose = this.handleClose.bind(this)
   }
 
   handleClick(event) {
     this.setState({ anchorElement: event.currentTarget })
   }
 
-  handleIconButtonClose() {
+  handleClose() {
     this.setState({ anchorElement: null })
   }
 
@@ -37,7 +37,7 @@ export class ConsoleLanguageMenuUnconnected extends React.Component {
     const { anchorElement } = this.state
 
     return (
-      <div className="cell-menu-container">
+      <div>
         <Tooltip
           classes={{ tooltip: 'iodide-tooltip' }}
           placement="bottom"
@@ -45,30 +45,29 @@ export class ConsoleLanguageMenuUnconnected extends React.Component {
         >
           <div>
             <Menu
-              id="cell-menu"
+              id="console-language-menu"
               open={Boolean(anchorElement)}
-              onClose={this.handleIconButtonClose}
+              onClose={this.handleClose}
               transitionDuration={70}
               getContentAnchorEl={null}
+              anchorEl={anchorElement}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             >
-              <div className="cell-menu-items-container">
+              <div>
                 {Object.values(this.props.availableLanguages).map(language => (
                   <MenuItem
                     classes={{ root: 'iodide-menu-item' }}
                     key={language.languageId}
                     onClick={() => {
                       this.props.setConsoleLanguage(language.languageId)
-                      this.handleIconButtonClose()
+                      this.handleClose()
                     }}
                   >
                     <ListItemText
-                      classes={{ root: 'primary-menu-item' }}
                       primary={language.languageId}
                     />
                     <ListItemText
-                      classes={{ root: 'primary-menu-item' }}
                       primary={language.displayName}
                     />
                   </MenuItem>
@@ -76,7 +75,7 @@ export class ConsoleLanguageMenuUnconnected extends React.Component {
               </div>
             </Menu>
             <div
-              className="cell-type-label"
+              aria-owns={anchorElement ? 'simple-menu' : undefined}
               aria-haspopup="true"
               onClick={this.handleClick}
             >
