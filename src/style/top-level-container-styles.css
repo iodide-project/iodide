@@ -24,12 +24,6 @@ div#editor-react-root{
   overflow: hidden; /* needed to ensure the contents are restriced in size */
 }
 
-div#cells {
-  flex-grow: 1; /* grow cells to fill the #cell-resizer flex column */
-  box-sizing: border-box;
-  overflow-y: auto;
-}
-
 iframe#eval-frame {
     border: none;
     position: fixed;

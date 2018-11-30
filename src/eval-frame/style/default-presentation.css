@@ -49,29 +49,6 @@ retaining the narrower column view for readability and flow.
   margin: auto;
 }
 
-div#cells.EXPLORE_VIEW .user-markdown p,
-div#cells.EXPLORE_VIEW .user-markdown h1, 
-div#cells.EXPLORE_VIEW .user-markdown h2, 
-div#cells.EXPLORE_VIEW .user-markdown h3, 
-div#cells.EXPLORE_VIEW .user-markdown h4, 
-div#cells.EXPLORE_VIEW .user-markdown h5, 
-div#cells.EXPLORE_VIEW .user-markdown h6,
-div#cells.EXPLORE_VIEW .user-markdown ol, 
-div#cells.EXPLORE_VIEW .user-markdown ul,
-div#cells.EXPLORE_VIEW .user-markdown pre,
-div#cells.EXPLORE_VIEW .user-markdown address,
-div#cells.EXPLORE_VIEW .user-markdown blockquote,
-div#cells.EXPLORE_VIEW .user-markdown dl,
-div#cells.EXPLORE_VIEW .user-markdown div,
-div#cells.EXPLORE_VIEW .user-markdown fieldset,
-div#cells.EXPLORE_VIEW .user-markdown form,
-div#cells.EXPLORE_VIEW .user-markdown hr,
-div#cells.EXPLORE_VIEW .user-markdown noscript,
-div#cells.EXPLORE_VIEW .user-markdown table {
-  margin-left: 0px; /* aligned with the */
-}
-
-
 /* establish block-level elements to be a certain width */
 
 @media (max-width:800px) {
