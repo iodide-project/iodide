@@ -211,8 +211,13 @@ export function evaluateText(
   return (dispatch, getState) => {
     // exit if there is no code to eval or no eval type
     // if (!evalText || !evalType) { return undefined }
+    // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
+    // in the direct jsmd editing paradigm.
     MOST_RECENT_CHUNK_ID.set(chunkId)
-    document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`).innerText = null
+    const sideEffect = document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
+    if (sideEffect) {
+      sideEffect.innerText = null
+    }
     const state = getState()
     if (evalType === 'fetch') {
       evaluationQueue = evaluationQueue.then(() => dispatch(evaluateFetchText(evalText)))
