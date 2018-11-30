@@ -9,8 +9,6 @@ describe('handleInitialJsmd is correct when no #jsmd elt is found', () => {
 `
   beforeEach(() => {
     store.dispatch(resetNotebook())
-    // global.document.getElementById = () => undefined
-    // console.log(document)
   })
 
   it('store is valid when no #jsmd elt is found', () => {
@@ -57,7 +55,6 @@ blah blah
     document.body.innerHTML = `
 <script id="jsmd">${jsmdString}</script>
 `
-    console.log(document)
   })
 
   it('store is valid', () => {
