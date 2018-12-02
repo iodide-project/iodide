@@ -4,7 +4,7 @@ import {
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet,
   padOutFetchChunk,
-} from '../actions'
+} from '../jsmd-selection'
 
 import { jsmdParser } from '../jsmd-parser'
 
