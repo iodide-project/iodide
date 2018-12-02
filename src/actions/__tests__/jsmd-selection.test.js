@@ -3,6 +3,7 @@
 import {
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet,
+  padOutFetchChunk,
 } from '../actions'
 
 import { jsmdParser } from '../jsmd-parser'
@@ -274,5 +275,38 @@ describe('removeDuplicatePluginChunksInSelectionSet', () => {
     expect(chunk1[0].chunkContent).toBe(FULL_PLUGIN_CHUNK)
     expect(chunk2.filter(c => c.chunkContent === FULL_PLUGIN_CHUNK).length).toBe(0)
     expect(chunk2.filter(c => c.chunkType === 'plugin').length).toBe(1)
+  })
+})
+const FULL_FETCH_CHUNK = `js: https://whatever.com
+css: https://another-domain.biz
+file: /files/gritty-data.csv`
+
+const moreFetchSelections = [
+  {
+    start: 3,
+    selectedText: `js: https://whatever.com
+css: https://another-domain.biz
+file: /files/gri`,
+    expectedValue: FULL_FETCH_CHUNK,
+    side: 'end',
+  },
+  {
+    start: 1,
+    selectedText: `hatever.com
+css: https://another-domain.biz
+file: /files/gritty-data.csv`,
+    expectedValue: FULL_FETCH_CHUNK,
+    side: 'start',
+  },
+]
+
+describe('padOutFetchChunk', () => {
+  const fullText = jsmdChunks[2].chunkContent
+  it('pads out the selection area of a fetch chunk selection to go to start / end of line', () => {
+    moreFetchSelections.forEach((selection) => {
+      const { selectedText, side, start } = selection
+      const editedChunk = padOutFetchChunk(selectedText, fullText, start, side)
+      expect(editedChunk).toBe(selection.expectedValue)
+    })
   })
 })
