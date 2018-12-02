@@ -268,6 +268,19 @@ export function selectionToChunks(originalSelection, jsmdChunks) {
   return selection
 }
 
+export function removeDuplicatePluginChunksInSelectionSet() {
+  const plugins = new Set()
+  return selection => selection.map((chunk) => {
+    if (chunk.chunkType === 'plugin') {
+      if (plugins.has(chunk.chunkContent)) {
+        return undefined
+      }
+      plugins.add(chunk.chunkContent)
+    }
+    return chunk
+  }).filter(chunk => chunk !== undefined)
+}
+
 export function evaluateText() {
   return (dispatch, getState) => {
     const { jsmdChunks } = getState()
@@ -279,8 +292,10 @@ export function evaluateText() {
       const activeChunk = getChunkContainingLine(jsmdChunks, line)
       actionObj = triggerTextInEvalFrame(activeChunk)
     } else {
-      const selectionChunkSet = getAllSelections(doc).map(selection =>
-        selectionToChunks(selection, jsmdChunks, doc))
+      const selectionChunkSet = getAllSelections(doc)
+        .map(selection =>
+          selectionToChunks(selection, jsmdChunks, doc))
+        .map(removeDuplicatePluginChunksInSelectionSet())
       return Promise.all(selectionChunkSet.map(selection => Promise.all(selection.map(chunk =>
         Promise.resolve(dispatch(triggerTextInEvalFrame(chunk)))))))
     }

@@ -2,6 +2,7 @@
 
 import {
   selectionToChunks,
+  removeDuplicatePluginChunksInSelectionSet,
 } from '../actions'
 
 import { jsmdParser } from '../jsmd-parser'
@@ -43,6 +44,19 @@ x = [1,2,3,4,5]
 var x = 10
 var y = 20
 var z = 30
+
+%% plugin
+
+{
+  "languageId": "blahblah",
+  "displayName": "blahblah",
+  "codeMirrorMode": "blahblah",
+  "keybinding": "b",
+  "url": "blah.com/language.json",
+  "module": "bla",
+  "evaluator": "evaluateBlahBlah",
+  "pluginType": "language"
+}
 
 `
 
@@ -143,9 +157,10 @@ const partialPluginSelections = [
   },
 ]
 
-describe('selectionToChunks', () => {
-  const jsmdChunks = jsmdParser(NOTEBOOK)
+const jsmdChunks = jsmdParser(NOTEBOOK)
 
+
+describe('selectionToChunks', () => {
   it('correctly backs out various fetch selections and plugin chunks', () => {
     [...fetchSelections, ...partialPluginSelections].forEach((line) => {
       const [chunk] = selectionToChunks(line, jsmdChunks)
@@ -218,5 +233,46 @@ describe('selectionToChunks', () => {
   it('correctly identifies the second (declared) chunk type from the selection', () => {
     expect(secondChunkD.chunkType).toBe('js')
     expect(secondChunkD.chunkContent).toBe('\nvar x = 10\nvar y = 20')
+  })
+})
+
+// FIXME: write tests for remove
+
+const pluginChunkA = {
+  start: 20, end: 20, selectedText: 'geId": "js',
+}
+
+const pluginChunkB = {
+  start: 21, end: 39, selectedText: `Name": "jsx",
+  "codeMirrorMode": "jsx",
+  "keybinding": "x",
+  "url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
+  "module": "jsx",
+  "evaluator": "evaluateJSX",
+  "pluginType": "language"
+}
+
+%% js
+
+var x = 10
+var y = 20
+var z = 30
+
+%% plugin
+
+{
+  "language`,
+}
+
+describe('removeDuplicatePluginChunksInSelectionSet', () => {
+  it('removes duplicates in selection set', () => {
+    const [chunk1, chunk2] = [pluginChunkA, pluginChunkB]
+      .map((selection => selectionToChunks(selection, jsmdChunks)))
+      .map(removeDuplicatePluginChunksInSelectionSet())
+    expect(chunk1.length).toBe(1)
+    expect(chunk1.filter(c => c.chunkContent === FULL_PLUGIN_CHUNK).length).toBe(1)
+    expect(chunk1[0].chunkContent).toBe(FULL_PLUGIN_CHUNK)
+    expect(chunk2.filter(c => c.chunkContent === FULL_PLUGIN_CHUNK).length).toBe(0)
+    expect(chunk2.filter(c => c.chunkType === 'plugin').length).toBe(1)
   })
 })
