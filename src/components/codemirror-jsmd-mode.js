@@ -6,11 +6,14 @@ import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/markdown/markdown'
 import 'codemirror/mode/css/css'
 import 'codemirror/mode/htmlmixed/htmlmixed'
+// FIXME perhaps python should only load if used, but this is fine for now
+import 'codemirror/mode/python/python'
 
 export const delimLineRegex = /^%%\s*(\w*)/
 
 export const innerModes = {
   js: CodeMirror.getMode({}, { name: 'javascript' }),
+  py: CodeMirror.getMode({}, { name: 'python' }),
   md: CodeMirror.getMode({}, { name: 'markdown' }),
   css: CodeMirror.getMode({}, { name: 'css' }),
   raw: CodeMirror.getMode({}, { name: 'text/plain' }),
