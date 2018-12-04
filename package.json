@@ -28,7 +28,10 @@
     "setupFiles": [
       "jest-localstorage-mock"
     ],
-    "testPathIgnorePatterns": ["/node_modules/", "/build/"]
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/build/"
+    ]
   },
   "dependencies": {
     "@material-ui/core": "^3.0.0",
@@ -67,6 +70,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "stackframe": "^1.0.4",
+    "sync-client": "^1.0.0-beta.11",
     "universal-router": "^7.0.0",
     "webpack-shell-plugin": "^0.5.0"
   },
