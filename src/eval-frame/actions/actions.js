@@ -228,7 +228,7 @@ export function evaluateText(
       Object.keys(state.languageDefinitions).includes(evalType)) {
       evaluationQueue = evaluationQueue.then(() =>
         dispatch(evaluateCode(evalText, evalType, state)))
-    } else {
+    } else if (!['css', 'md', 'meta', 'raw'].includes(evalType)) {
       evaluationQueue = evaluationQueue.then(() => {
         dispatch(appendToEvalHistory(
           null, evalText,
