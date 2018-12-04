@@ -11,6 +11,7 @@ import { mirroredStateProperties } from '../state-schemas/mirrored-state-schema'
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
 
 import { jsmdParser } from './jsmd-parser'
+import { getAllSelections, selectionToChunks, removeDuplicatePluginChunksInSelectionSet } from './jsmd-selection'
 
 export function updateAppMessages(messageObj) {
   const { message } = messageObj
@@ -188,43 +189,39 @@ export function addLanguage(languageDefinition) {
 }
 
 
-function getChunkContainingLine(jsmdChunks, line) {
+export function getChunkContainingLine(jsmdChunks, line) {
   const [activeChunk] = jsmdChunks
     .filter(c => c.startLine <= line && line <= c.endLine)
   return activeChunk
 }
 
-export function evaluateText(chunk = undefined) {
+function triggerTextInEvalFrame(chunk) {
+  return Object.assign({
+    type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
+    evalText: chunk.chunkContent,
+    evalType: chunk.chunkType,
+    evalFrags: chunk.evalFlags,
+  })
+}
+
+
+export function evaluateText() {
   return (dispatch, getState) => {
+    const { jsmdChunks } = getState()
     const cm = window.ACTIVE_CODEMIRROR
     const doc = cm.getDoc()
-
     let actionObj
-    if (chunk) {
-      // explicit chunk passed in - evaluate it.
-      actionObj = {
-        type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
-        evalText: chunk.chunkContent,
-        evalType: chunk.chunkType,
-        evalFlags: chunk.evalFlags,
-        chunkId: chunk.chunkId,
-      }
-    } else if (!doc.somethingSelected()) {
+    if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
-      const activeChunk = getChunkContainingLine(getState().jsmdChunks, line)
-
-      actionObj = Object.assign({
-        type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
-        evalText: activeChunk.chunkContent,
-        evalType: activeChunk.chunkType,
-        evalFlags: activeChunk.evalFlags,
-        chunkId: activeChunk.chunkId,
-      })
+      const activeChunk = getChunkContainingLine(jsmdChunks, line)
+      actionObj = triggerTextInEvalFrame(activeChunk)
     } else {
-      // FIXME handle case of code selected
-      // in this case, eval the first selection
-      // probably via codemirror doc.listSelections()[0],
-      // as long as the selection is contained by a code chunk
+      const selectionChunkSet = getAllSelections(doc)
+        .map(selection =>
+          selectionToChunks(selection, jsmdChunks, doc))
+        .map(removeDuplicatePluginChunksInSelectionSet())
+      return Promise.all(selectionChunkSet.map(selection => Promise.all(selection.map(chunk =>
+        Promise.resolve(dispatch(triggerTextInEvalFrame(chunk)))))))
     }
     // here's where we'll put: if kernelState === ready
     return Promise.resolve(dispatch(actionObj))
@@ -255,7 +252,7 @@ export function evaluateNotebook() {
     let p = Promise.resolve()
     jsmdChunks.forEach((chunk) => {
       if (!['md', 'css'].includes(chunk.chunkType)) {
-        p = p.then(() => dispatch(evaluateText(chunk)))
+        p = p.then(() => dispatch(triggerTextInEvalFrame(chunk)))
       }
     })
   }

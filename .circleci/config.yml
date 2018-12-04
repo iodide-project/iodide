@@ -29,6 +29,7 @@ jobs:
     steps:
       - checkout
       - *restore_javascript_cache
+      - run: rm -rf node_modules/*/.git
       - run: npm install
       - *save_javascript_cache
       - run: npm run lint
@@ -44,6 +45,7 @@ jobs:
     steps:
       - checkout
       - *restore_javascript_cache
+      - run: rm -rf node_modules/*/.git
       - run: npm install
       - *save_javascript_cache
       - run: npm run build
