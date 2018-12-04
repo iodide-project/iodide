@@ -237,8 +237,6 @@ describe('selectionToChunks', () => {
   })
 })
 
-// FIXME: write tests for remove
-
 const pluginChunkA = {
   start: 20, end: 20, selectedText: 'geId": "js',
 }
