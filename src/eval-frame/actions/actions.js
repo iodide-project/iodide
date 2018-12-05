@@ -200,7 +200,6 @@ function evaluateCode(code, language, state) {
   }
 }
 
-
 // FIXME use evalFlags for something real
 export function evaluateText(
   evalText,
@@ -215,31 +214,31 @@ export function evaluateText(
     // if (!evalText || !evalType) { return undefined }
     // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
     // in the direct jsmd editing paradigm.
-    MOST_RECENT_CHUNK_ID.set(chunkId)
-    const sideEffect = document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
-    if (sideEffect) {
-      sideEffect.innerText = null
-    }
-    const state = getState()
-    if (evalType === 'fetch') {
-      evaluationQueue = evaluationQueue.then(() => dispatch(evaluateFetchText(evalText)))
-    } else if (evalType === 'plugin') {
-      evaluationQueue = evaluationQueue.then(() =>
-        dispatch(evaluateLanguagePlugin(evalText)))
-    } else if (Object.keys(state.loadedLanguages).includes(evalType) ||
+
+    evaluationQueue = evaluationQueue.then(() => {
+      MOST_RECENT_CHUNK_ID.set(chunkId)
+      const sideEffect = document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
+      if (sideEffect) {
+        sideEffect.innerText = null
+      }
+      const state = getState()
+      if (evalType === 'fetch') {
+        return dispatch(evaluateFetchText(evalText))
+      } else if (evalType === 'plugin') {
+        return dispatch(evaluateLanguagePlugin(evalText))
+      } else if (Object.keys(state.loadedLanguages).includes(evalType) ||
       Object.keys(state.languageDefinitions).includes(evalType)) {
-      evaluationQueue = evaluationQueue.then(() =>
-        dispatch(evaluateCode(evalText, evalType, state)))
-    } else if (!NONCODE_EVAL_TYPES.includes(evalType)) {
-      evaluationQueue = evaluationQueue.then(() => {
-        dispatch(appendToEvalHistory(
+        return dispatch(evaluateCode(evalText, evalType, state))
+      } else if (!NONCODE_EVAL_TYPES.includes(evalType)) {
+        return dispatch(appendToEvalHistory(
           null, evalText,
           new Error(`eval type ${evalType} is not defined`), {
             historyType: 'CONSOLE_EVAL',
           },
         ))
-      })
-    }
+      }
+      return Promise.resolve()
+    })
     return evaluationQueue
   }
 }
