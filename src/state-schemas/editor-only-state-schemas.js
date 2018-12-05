@@ -11,6 +11,8 @@ export const editorOnlyCellProperties = {
   },
 }
 
+export const NONCODE_EVAL_TYPES = ['css', 'md', 'meta', 'raw']
+
 export const editorCellSchema = {
   type: 'object',
   properties:
