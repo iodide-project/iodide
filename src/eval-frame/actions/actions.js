@@ -2,7 +2,9 @@ import MarkdownIt from 'markdown-it'
 import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
-// import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
+import {
+  NONCODE_EVAL_TYPES,
+} from '../../state-schemas/editor-only-state-schemas'
 
 import {
   // evaluateLanguagePluginCell,
@@ -228,7 +230,7 @@ export function evaluateText(
       Object.keys(state.languageDefinitions).includes(evalType)) {
       evaluationQueue = evaluationQueue.then(() =>
         dispatch(evaluateCode(evalText, evalType, state)))
-    } else if (!['css', 'md', 'meta', 'raw'].includes(evalType)) {
+    } else if (!NONCODE_EVAL_TYPES.includes(evalType)) {
       evaluationQueue = evaluationQueue.then(() => {
         dispatch(appendToEvalHistory(
           null, evalText,
