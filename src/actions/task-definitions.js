@@ -21,18 +21,7 @@ const commandKey = OSName === 'MacOS' ? '⌘' : 'Ctrl'
 
 const tasks = {}
 
-export function addChangeLanguageTask(languageId, displayName, keybinding) {
-  tasks[`changeTo${languageId}Cell`] = new UserTask({
-    title: `Change to ${displayName}`,
-    keybindings: [keybinding],
-    displayKeybinding: keybinding,
-    callback() {
-      dispatcher.changeCellType('code', languageId)
-    },
-  })
-}
-
-tasks.evaluateCell = new UserTask({
+tasks.evaluateChunk = new UserTask({
   title: 'Run Code Chunk',
   keybindings: ['mod+enter'],
   displayKeybinding: `${commandKey}+Enter`,
@@ -49,7 +38,7 @@ tasks.evaluateNotebook = new UserTask({
   },
 })
 
-tasks.evaluateCellAndSelectBelow = new UserTask({
+tasks.evaluateChunkAndSelectBelow = new UserTask({
   title: 'Evaluate Cell and Select Below',
   keybindings: ['shift+enter'],
   displayKeybinding: 'Shift+Enter',

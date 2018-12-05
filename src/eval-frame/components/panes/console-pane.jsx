@@ -64,7 +64,7 @@ export class ConsolePaneUnconnected extends React.Component {
           }}
         >
           <div
-            className="history-cells"
+            className="history-items"
             style={{
               flexGrow: 1,
               maxHeight: '100%',

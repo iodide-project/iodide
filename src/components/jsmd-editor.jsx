@@ -45,7 +45,6 @@ class JsmdEditorUnconnected extends React.Component {
   storeEditorElementRef(editorElt) {
     this.editor = editorElt
     window.ACTIVE_CODEMIRROR = editorElt.getCodeMirror()
-    // pass this cm instance ref up to the parent cell with this callback
   }
 
   updateJsmdContent(content) {

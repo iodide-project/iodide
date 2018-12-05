@@ -40,7 +40,7 @@ describe('cell schemas should all have disjoint properties', () => {
   })
 })
 
-describe('state schemas should all have disjoint properties except for "cells" and "viewMode', () => {
+describe('state schemas should all have disjoint properties except for "viewMode', () => {
   it('mirroredStateProperties, editorOnlyStateProperties have correct intersection', () => {
     expect(getPropertyIntersection(mirroredStateProperties, editorOnlyStateProperties))
       .toEqual(['viewMode'])

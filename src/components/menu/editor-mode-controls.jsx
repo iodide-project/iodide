@@ -14,7 +14,7 @@ export default class EditorModeControls extends React.Component {
       <div className="editor-mode-controls" >
         <EditorToolbarMenu />
 
-        <NotebookTaskButton task={tasks.evaluateCell}>
+        <NotebookTaskButton task={tasks.evaluateChunkAndSelectBelow}>
           <PlayButton />
         </NotebookTaskButton>
         <NotebookTaskButton task={tasks.evaluateNotebook}>
