@@ -1,4 +1,4 @@
-import { newNotebook, newCellID } from '../eval-frame-state-prototypes'
+import { newNotebook } from '../eval-frame-state-prototypes'
 
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
@@ -21,7 +21,7 @@ function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessa
 }
 
 function addAppMessageToState(state, appMessage) {
-  const nextAppMessageId = newCellID(state.appMessages)
+  const nextAppMessageId = Math.random()
   state.appMessages
     .push(newAppMessage(nextAppMessageId, appMessage.message, appMessage.details, appMessage.when))
   return state
