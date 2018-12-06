@@ -5,33 +5,26 @@ import PropTypes from 'prop-types'
 import deepEqual from 'deep-equal'
 
 import ReactCodeMirror from '@skidding/react-codemirror'
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/markdown/markdown'
-import 'codemirror/mode/css/css'
+
 import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/edit/closebrackets'
 import 'codemirror/addon/display/autorefresh'
 import 'codemirror/addon/comment/comment'
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/addon/hint/javascript-hint'
-import 'codemirror/addon/mode/simple'
-import '../../codemirror-keymap-sublime'
+
+import '../codemirror-keymap-sublime'
 import './codemirror-fetch-mode'
+import './codemirror-jsmd-mode'
 
-import { getCellById } from '../../tools/notebook-utils'
-import * as actions from '../../actions/actions'
-import { postMessageToEvalFrame } from '../../port-to-eval-frame'
+import * as actions from '../actions/actions'
+import { postMessageToEvalFrame } from '../port-to-eval-frame'
 
-class CellEditor extends React.Component {
+class JsmdEditorUnconnected extends React.Component {
   static propTypes = {
-    cellId: PropTypes.number.isRequired,
-    cellType: PropTypes.string,
     content: PropTypes.string,
     actions: PropTypes.shape({
-      selectCell: PropTypes.func.isRequired,
-      changeMode: PropTypes.func.isRequired,
-      updateInputContent: PropTypes.func.isRequired,
-      unHighlightCells: PropTypes.func.isRequired,
+      updateJsmdContent: PropTypes.func.isRequired,
     }).isRequired,
     containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
@@ -40,51 +33,22 @@ class CellEditor extends React.Component {
   constructor(props) {
     super(props)
     // explicitly bind "this" for all methods in constructors
-    this.handleFocusChange = this.handleFocusChange.bind(this)
-    this.updateInputContent = this.updateInputContent.bind(this)
+    // this.handleFocusChange = this.handleFocusChange.bind(this)
+    this.updateJsmdContent = this.updateJsmdContent.bind(this)
     this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
-  }
-
-  componentDidMount() {
-    if (this.props.thisCellBeingEdited) {
-      this.editor.focus()
-    }
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
   }
 
-  componentDidUpdate() {
-    if (this.props.thisCellBeingEdited) {
-      this.editor.focus()
-    } else if (
-      // this check prevents a bug on mobile
-      this.editor.getCodeMirror().display.input.textarea !== undefined
-    ) {
-      this.editor.getCodeMirror().display.input.textarea.blur()
-    }
-  }
-
-  handleFocusChange(focused) {
-    if (focused) {
-      if (!this.props.thisCellBeingEdited) {
-        this.props.actions.unHighlightCells()
-        this.props.actions.selectCell(this.props.cellId)
-        this.props.actions.changeMode('EDIT_MODE')
-      }
-    } else if (!focused) {
-      this.props.actions.changeMode('COMMAND_MODE')
-    }
-  }
-
   storeEditorElementRef(editorElt) {
     this.editor = editorElt
-    // pass this cm instance ref up to the parent cell with this callback
+    window.ACTIVE_CODEMIRROR = editorElt.getCodeMirror()
   }
 
-  updateInputContent(content) {
-    this.props.actions.updateInputContent(content)
+  updateJsmdContent(content) {
+    this.props.actions.updateJsmdContent(content)
   }
 
   autoComplete = (cm) => {
@@ -150,51 +114,32 @@ class CellEditor extends React.Component {
   }
 
   render() {
-    const editorOptions = Object.assign(
-      {},
-      this.props.editorOptions,
-      {
-        extraKeys: {
-          'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ? this.autoComplete : undefined,
-        },
-      },
-    )
+    // const editorOptions = Object.assign(
+    //   {},
+    //   this.props.editorOptions,
+    //   {
+    //     extraKeys: {
+    //       'Ctrl-Space': this.props.codeMirrorMode === 'javascript' ?
+    // this.autoComplete : undefined,
+    //     },
+    //   },
+    // )
 
     return (
-      <div
-        className="editor"
-        style={this.props.containerStyle}
-      >
-        <ReactCodeMirror
-          ref={this.storeEditorElementRef}
-          value={this.props.content}
-          options={editorOptions}
-          onChange={this.updateInputContent}
-          onFocusChange={this.handleFocusChange}
-        />
-      </div>
+      <ReactCodeMirror
+        ref={this.storeEditorElementRef}
+        value={this.props.content}
+        options={this.props.editorOptions}
+        onChange={this.updateJsmdContent}
+        style={{ height: '100%' }}
+      />
     )
   }
 }
 
 
-function mapStateToProps(state, ownProps) {
-  const { cellId } = ownProps
-  const cell = getCellById(state.cells, cellId)
-
-  let codeMirrorMode
-  if (cell.cellType === 'code'
-      && state.loadedLanguages[cell.language]
-      && state.loadedLanguages[cell.language].codeMirrorModeLoaded) {
-    codeMirrorMode = state.loadedLanguages[cell.language].codeMirrorMode // eslint-disable-line
-  } else if (cell.cellType !== 'code') {
-    // e.g. md / css cell
-    codeMirrorMode = cell.cellType
-  } else {
-    // unknown cell type
-    codeMirrorMode = ''
-  }
-
+function mapStateToProps(state) {
+  const codeMirrorMode = 'jsmd'
   const editorOptions = {
     mode: codeMirrorMode,
     lineWrapping: false,
@@ -204,40 +149,13 @@ function mapStateToProps(state, ownProps) {
     autoRefresh: true,
     lineNumbers: true,
     keyMap: 'sublime',
-    comment: codeMirrorMode === 'javascript',
-    readOnly: cell.highlighted ? 'nocursor' : false,
-  }
-  switch (cell.cellType) {
-    case 'markdown':
-      editorOptions.lineWrapping = true
-      editorOptions.matchBrackets = false
-      editorOptions.autoCloseBrackets = false
-      editorOptions.lineNumbers = false
-      break
-
-    case 'raw':
-    case 'plugin':
-      editorOptions.matchBrackets = false
-      editorOptions.autoCloseBrackets = false
-      break
-    case 'code':
-    case 'css':
-    default:
-      // no op, use default options
+    comment: true,
   }
 
   if (state.wrapEditors === true) { editorOptions.lineWrapping = true }
 
   return {
-    thisCellBeingEdited: (
-      cell.selected
-      && state.mode === 'EDIT_MODE'
-      && state.viewMode === 'EXPLORE_VIEW'
-    ),
-    cellType: cell.cellType,
-    content: cell.content,
-    cellId,
-    codeMirrorMode,
+    content: state.jsmd,
     editorOptions,
   }
 }
@@ -248,4 +166,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CellEditor)
+export default connect(mapStateToProps, mapDispatchToProps)(JsmdEditorUnconnected)

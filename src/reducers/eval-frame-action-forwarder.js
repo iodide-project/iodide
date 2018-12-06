@@ -15,26 +15,13 @@ const evalFrameActionForwarder = (state, action) => {
     case 'UPDATE_APP_MESSAGES':
     case 'CLEAR_VARIABLES':
     case 'UPDATE_PANE_POSITIONS':
+    case 'TRIGGER_TEXT_EVAL_IN_FRAME':
+    case 'UPDATE_MARKDOWN_CHUNKS':
     // special case: passes to eval frame without changing editor pane state,
     // but by sending them as redux actions, they are automatically queued
     // until the ports are open
     case 'TRIGGER_CELL_EVAL_IN_FRAME':
-    case 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD':
-    // cell actions
-    case 'UPDATE_CELL_PROPERTIES':
-    case 'CHANGE_CELL_TYPE':
-    case 'HIGHLIGHT_CELL':
-    case 'UNHIGHLIGHT_CELLS':
-    case 'MULTIPLE_CELL_HIGHLIGHT':
-    case 'CELL_COPY':
-    case 'CELL_CUT':
-    case 'CELL_PASTE':
-    case 'CELL_UP':
-    case 'CELL_DOWN':
-    case 'SELECT_CELL':
-    case 'INSERT_CELL':
-    case 'ADD_CELL':
-    case 'DELETE_CELL': {
+    case 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD': {
       if (state.evalFrameReady) {
         // if the eval frame is ready, send the action on to the frame
         //  and return the identical state

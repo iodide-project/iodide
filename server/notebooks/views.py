@@ -38,7 +38,8 @@ def notebook_view(request, pk):
         'user_can_save': notebook.owner_id == request.user.id,
         'notebook_id': notebook.id,
         'revision_id': notebook_content.id,
-        'connectionMode': 'SERVER'
+        'connectionMode': 'SERVER',
+        'title': notebook_content.title
     }
     if notebook.forked_from is not None:
         notebook_info['forked_from'] = notebook.forked_from.id

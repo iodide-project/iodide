@@ -1,25 +1,69 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-import CellsList from '../cells-list'
-// import PaneContainer from './panes/pane-container'
-import EditorLinkButton from '../controls/editor-link-button'
+import MarkdownIt from 'markdown-it'
+import MarkdownItKatex from 'markdown-it-katex'
+import MarkdownItAnchor from 'markdown-it-anchor'
 
-export default class ReportPaneUnconnected extends React.Component {
+const mdIt = MarkdownIt({ html: true })
+mdIt.use(MarkdownItKatex).use(MarkdownItAnchor)
+
+const mdDiv = html => (<div
+  className="user-markdown"
+  dangerouslySetInnerHTML={{ __html: html }} // eslint-disable-line react/no-danger
+/>)
+
+const styleTag = css => (<style
+  dangerouslySetInnerHTML={{ __html: css }} // eslint-disable-line react/no-danger
+/>)
+
+export class ReportPaneUnconnected extends React.Component {
+  static propTypes = {
+    reportChunks: PropTypes.arrayOf(PropTypes.shape({
+      chunkContent: PropTypes.string.isRequired,
+      chunkType: PropTypes.string.isRequired,
+      chunkId: PropTypes.string.isRequired,
+      evalFlags: PropTypes.arrayOf(PropTypes.string),
+    })),
+  }
+
   render() {
+    const mdComponents = this.props.reportChunks.map((chunk) => {
+      const key = chunk.chunkId
+      let contents
+      let htmlId
+      switch (chunk.chunkType) {
+        case 'md':
+        case 'html':
+          // FIXME: 'html' chunks are really markdown chunks --
+          // we pass them thru the MD parser (for validation)
+          // before putting in the report
+          contents = mdDiv(mdIt.render(chunk.chunkContent))
+          break
+        case 'css':
+          contents = styleTag(chunk.chunkContent)
+          break
+        default:
+          // in the case of code and other cell types,
+          // just want an empty div; `contents` can remain undefined
+          htmlId = `side-effect-target-${key}`
+          break
+      }
+      return (<div key={key} id={htmlId}>{contents}</div>)
+    })
+
     return (
       <div className="pane-content" >
-        <div
-          className="display-none-in-report"
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-          }}
-        >
-          <EditorLinkButton />
-        </div>
-        <CellsList id="cells" />
+        { mdComponents }
       </div>
     )
   }
 }
+
+
+function mapStateToProps(state) {
+  return { reportChunks: state.reportChunks }
+}
+
+export default connect(mapStateToProps)(ReportPaneUnconnected)

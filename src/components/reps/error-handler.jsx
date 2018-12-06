@@ -2,8 +2,6 @@ import React from 'react'
 import ErrorStackParser from 'error-stack-parser'
 import StackFrame from 'stackframe'
 
-import { runCodeWithLanguage } from '../../eval-frame/actions/language-actions'
-
 
 ErrorStackParser.parseV8OrIE = (error) => {
   const filtered = error.stack.split('\n').filter(
@@ -97,15 +95,16 @@ ErrorStackParser.parseFFOrSafari = (error) => {
 }
 
 export function trimStack(e) {
-  const frames = ErrorStackParser.parse(e)
+  // Handle passing in an Array of pre-parsed frames for testing
+  const frames = (e instanceof Array) ? e : ErrorStackParser.parse(e)
   const outputFrames = []
 
   for (const frame of frames) {
-    if ((frame.functionName !== undefined &&
-         frame.functionName.startsWith(runCodeWithLanguage.name)) ||
-        (frame.functionName === undefined &&
-         frame.fileName !== 'cell')) {
-      break
+    if (frame.fileName !== undefined) {
+      const parts = frame.fileName.split('/')
+      if (parts[parts.length - 1].startsWith('iodide.eval-frame')) {
+        break
+      }
     }
     outputFrames.push(frame.toString())
   }

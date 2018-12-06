@@ -98,8 +98,6 @@ export const mirroredStateProperties = {
     items: appMessageSchema,
     default: [],
   },
-  cells: {},
-  cellClipboard: {},
   executionNumber: {
     type: 'integer',
     minimum: 0,

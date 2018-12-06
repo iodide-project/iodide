@@ -1,6 +1,9 @@
 import { connectionModeIsServer } from './server-tools'
-import { exportJsmdToString } from './jsmd-tools'
 import { setPreviousAutosave } from '../actions/actions'
+
+function exportJsmd(state) {
+  return state.jsmd
+}
 
 function getAutosaveKey(state) {
   const documentId = connectionModeIsServer(state) ? state.notebookInfo.notebook_id : `standalone-${window.location.pathname}`
@@ -38,8 +41,7 @@ function clearAutosave(state) {
 
 function updateAutosave(state, original) {
   const autosaveKey = getAutosaveKey(state)
-  const jsmd = exportJsmdToString(state, false)
-
+  const jsmd = exportJsmd(state)
   if (original) {
     // save (over) original, clear any existing dirty copy
     saveAutosaveState(autosaveKey, {
@@ -85,10 +87,7 @@ function subscribeToAutoSave(store) {
           return
         }
 
-        const currentJsmd = exportJsmdToString(
-          store.getState(),
-          false,
-        )
+        const currentJsmd = exportJsmd(store.getState())
         if (currentJsmd !== autosaveState.dirtyCopy) {
           // dirty copy has been updated, save it
           updateAutosave(state, false)
