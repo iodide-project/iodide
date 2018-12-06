@@ -1,6 +1,5 @@
 import {
   mirroredStateProperties,
-  mirroredCellProperties,
 } from '../state-schemas/mirrored-state-schema'
 
 export const historySchema = {
@@ -24,38 +23,6 @@ export const historySchema = {
     lastRan: { type: 'integer' },
     value: {},
   },
-  additionalProperties: false,
-}
-
-export const evalFrameOnlyCellProperties = {
-  asyncProcessCount: {
-    type: 'integer',
-    minimum: 0,
-    default: 0,
-  },
-  evalStatus: {
-    type: 'string',
-    enum: ['UNEVALUATED', 'PENDING', 'ASYNC_PENDING', 'SUCCESS', 'ERROR'],
-    default: 'UNEVALUATED',
-  },
-  hasSideEffect: {
-    type: 'boolean',
-    default: false,
-  },
-  rendered: {
-    type: 'boolean',
-    default: false,
-  },
-  value: {
-    // empty schema because `value` can be anything
-    default: undefined,
-  },
-}
-
-export const evalFrameCellSchema = {
-  type: 'object',
-  properties:
-    Object.assign({}, mirroredCellProperties, evalFrameOnlyCellProperties),
   additionalProperties: false,
 }
 
