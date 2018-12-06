@@ -52,45 +52,12 @@ const positionerDefaults = {
   display: 'none', top: 0, left: 0, width: 0, height: 0,
 }
 
-export const mirroredCellProperties = {
-  cellType: {
-    type: 'string',
-    enum: ['code', 'markdown', 'raw', 'css', 'fetch', 'plugin'],
-    default: 'code',
-  },
-  content: {
-    type: 'string',
-    default: '',
-  },
-  id: {
-    type: 'integer',
-    minimum: 0,
-    default: 0,
-  },
-  language: {
-    type: 'string',
-    default: 'js',
-  },
-  selected: {
-    type: 'boolean',
-    default: false,
-  },
-  highlighted: {
-    type: 'boolean',
-    default: false,
-  },
-  skipInRunAll: {
-    type: 'boolean',
-    default: false,
-  },
-}
 
-// note that 'cells' and 'viewMode' are defined in all 3 of
+// note that 'viewMode' is defined in all 3 of
 // mirroredStateProperties, editorOnlyStateProperties, evalFrameOnlyStateProperties,
 // because:
 // -these two do need to be mirrored; BUT
 // -viewMode needs a different default in the two environments
-// -cells uses different prototypes in the two environments
 
 export const mirroredStateProperties = {
   appMessages: {

@@ -1,25 +1,8 @@
 import {
   mirroredStateProperties,
-  mirroredCellProperties,
 } from '../state-schemas/mirrored-state-schema'
 
-export const editorOnlyCellProperties = {
-  inputFolding: {
-    type: 'string',
-    enum: ['VISIBLE', 'SCROLL', 'HIDDEN'],
-    default: 'VISIBLE',
-  },
-}
-
 export const NONCODE_EVAL_TYPES = ['css', 'md', 'meta', 'raw']
-
-export const editorCellSchema = {
-  type: 'object',
-  properties:
-    Object.assign({}, mirroredCellProperties, editorOnlyCellProperties),
-  additionalProperties: false,
-}
-
 
 export const editorOnlyStateProperties = {
   evalFrameMessageQueue: {
