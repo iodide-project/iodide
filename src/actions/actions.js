@@ -193,6 +193,7 @@ function triggerTextInEvalFrame(chunk) {
     evalText: chunk.chunkContent,
     evalType: chunk.chunkType,
     evalFrags: chunk.evalFlags,
+    chunkId: chunk.chunkId,
   })
 }
 
