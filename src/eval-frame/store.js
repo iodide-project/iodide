@@ -4,7 +4,8 @@ import thunk from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 
 import reducer from './reducers/reducer'
-import { newEvalFrameState } from './eval-frame-state-prototypes'
+import { newNotebook } from '../editor-state-prototypes'
+import evalFrameStateSelector from '../state-schemas/eval-frame-state-selector'
 
 let enhancer
 
@@ -22,7 +23,7 @@ if (IODIDE_BUILD_MODE === 'production') {
   )
 }
 
-const initialState = newEvalFrameState()
+const initialState = evalFrameStateSelector(newNotebook())
 
 const store = createStore(reducer, initialState, enhancer)
 
