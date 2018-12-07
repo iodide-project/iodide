@@ -1,63 +1,10 @@
-import { newNotebook } from '../eval-frame-state-prototypes'
-
-function clearUserDefinedVars(userDefinedVarNames) {
-  // remove user defined variables when loading/importing a new/saved NB
-  userDefinedVarNames.forEach((varName) => {
-    try {
-      delete window[varName]
-    } catch (e) {
-      console.error(e)
-    }
-  })
-}
-
-function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
-  return {
-    id: appMessageId,
-    message: appMessageText,
-    details: appMessageDetails,
-    when: appMessageWhen,
-  }
-}
-
-function addAppMessageToState(state, appMessage) {
-  const nextAppMessageId = Math.random()
-  state.appMessages
-    .push(newAppMessage(nextAppMessageId, appMessage.message, appMessage.details, appMessage.when))
-  return state
-}
-
-const notebookReducer = (state = newNotebook(), action) => {
+export default function evalFrameActionReducer(state, action) {
   let nextState
   switch (action.type) {
-    case 'RESET_NOTEBOOK':
-      clearUserDefinedVars(state.userDefinedVarNames)
-      return Object.assign(newNotebook())
-
-    case 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD': {
-      const newState = Object.assign(
-        newNotebook(),
-        action.stateUpdatesFromEditor,
-      )
-      return newState
-    }
-
     case 'CLEAR_VARIABLES': {
-      clearUserDefinedVars(state.userDefinedVarNames)
       nextState = Object.assign({}, state)
       nextState.userDefinedVarNames = []
       return nextState
-    }
-
-    case 'SET_VIEW_MODE': {
-      const { viewMode } = action
-      return Object.assign({}, state, { viewMode })
-    }
-
-    case 'INCREMENT_EXECUTION_NUMBER': {
-      let { executionNumber } = state
-      executionNumber += 1
-      return Object.assign({}, state, { executionNumber })
     }
 
     case 'APPEND_TO_EVAL_HISTORY': {
@@ -80,11 +27,6 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'CLEAR_CONSOLE_TEXT_CACHE': {
       return Object.assign({}, state, { consoleTextCache: '' })
-    }
-
-    case 'UPDATE_MARKDOWN_CHUNKS': {
-      const reportChunks = [...action.reportChunks]
-      return Object.assign({}, state, { reportChunks })
     }
 
     case 'CONSOLE_HISTORY_MOVE': {
@@ -119,12 +61,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       })
     }
 
-    case 'UPDATE_APP_MESSAGES': {
-      nextState = Object.assign({}, state)
-      nextState.appMessages = nextState.appMessages.slice()
-      return addAppMessageToState(nextState, Object.assign({}, action.message))
-    }
-
     case 'UPDATE_USER_VARIABLES': {
       const { userDefinedVarNames } = action
       return Object.assign({}, state, { userDefinedVarNames })
@@ -154,21 +90,8 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { loadedLanguages })
     }
 
-    case 'UPDATE_PANE_POSITIONS': {
-      return Object.assign({}, state, {
-        panePositions: {
-          ReportPositioner: action.panePositions.ReportPositioner,
-          ConsolePositioner: action.panePositions.ConsolePositioner,
-          WorkspacePositioner: action.panePositions.WorkspacePositioner,
-          AppInfoPositioner: action.panePositions.AppInfoPositioner,
-        },
-      })
-    }
-
     default: {
       return state
     }
   }
 }
-
-export default notebookReducer

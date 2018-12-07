@@ -20,7 +20,7 @@ const propsToCopy = [
   'viewMode',
 ]
 
-export function evalFrameStateSelector(state) {
+export default function evalFrameStateSelector(state) {
   const evalFrameState = _.pick(state, propsToCopy)
 
   const reportChunkTypes = Object
@@ -31,4 +31,6 @@ export function evalFrameStateSelector(state) {
   evalFrameState.reportChunks = state.jsmdChunks
     .filter(c => reportChunkTypes.includes(c.chunkType))
     .map(c => _.pick(c, ['chunkContent', 'chunkType', 'chunkId', 'evalFlags']))
+
+  return evalFrameState
 }

@@ -129,11 +129,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { modalState: action.modalState })
     }
 
-    case 'TOGGLE_EDITOR_LINK': {
-      const scrollingLinked = !state.scrollingLinked
-      return Object.assign({}, state, { scrollingLinked })
-    }
-
     case 'INCREMENT_EXECUTION_NUMBER': {
       let { executionNumber } = state
       executionNumber += 1
@@ -150,25 +145,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { userData })
     }
 
-    case 'APPEND_TO_EVAL_HISTORY': {
-      const history = [...state.history]
-      history.push({
-        cellId: action.cellId,
-        lastRan: Date.now(),
-        content: action.content,
-      })
-      return Object.assign({}, state, { history })
-    }
-
     case 'UPDATE_APP_MESSAGES': {
       nextState = Object.assign({}, state)
       nextState.appMessages = nextState.appMessages.slice()
       return addAppMessageToState(nextState, Object.assign({}, action.message))
-    }
-
-    case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
-      const { cellId } = action
-      return Object.assign({}, state, { runningCellID: cellId })
     }
 
     case 'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME': {
