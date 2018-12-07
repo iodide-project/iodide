@@ -124,12 +124,12 @@ describe('make sure action creators leave store in a consitent state', () => {
   })
 
   it('saveEnvironment', () => {
-    expect(() => store.dispatch(actions.saveEnvironment({ a: 'foo' }, true)))
+    expect(() => store.dispatch(actions.saveEnvironment({ a: ['string', 'foo'] }, true)))
       .not.toThrow()
   })
 
   it('saveEnvironment', () => {
-    expect(() => store.dispatch(actions.saveEnvironment({ a: 'foo' }, false)))
+    expect(() => store.dispatch(actions.saveEnvironment({ a: ['string', 'foo'] }, false)))
       .not.toThrow()
   })
 })
