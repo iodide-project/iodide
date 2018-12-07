@@ -1,4 +1,5 @@
-/* global IODIDE_EDITOR_ORIGIN */
+/* global IODIDE_EDITOR_ORIGIN  */
+
 import _ from 'lodash'
 import { store } from './store'
 import {
@@ -21,6 +22,15 @@ function difference(object, base) {
 }
 /* eslint-enable */
 
+// let mc
+// if (IODIDE_BUILD_MODE === 'test') {
+//   // FIXME
+//   // this sets the message chanel to be a terrible mock
+//   // when in testing mode. see /test/message-channel-stub
+//   mc = global.MessageChannel
+// } else {
+//   mc = new MessageChannel();
+// }
 const mc = new MessageChannel();
 
 window.parent.postMessage('EVAL_FRAME_READY_MESSAGE', IODIDE_EDITOR_ORIGIN, [mc.port2]);

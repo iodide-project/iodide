@@ -4,7 +4,7 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 
 import {
   NONCODE_EVAL_TYPES,
-} from '../../state-schemas/editor-only-state-schemas'
+} from '../../state-schemas/state-schema'
 
 import {
   // evaluateLanguagePluginCell,

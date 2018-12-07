@@ -4,8 +4,6 @@ import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 import { getNotebookID } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
 
-import { mirroredStateProperties } from '../state-schemas/mirrored-state-schema'
-
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
 
 import { jsmdParser } from './jsmd-parser'
@@ -71,15 +69,6 @@ export function importInitialJsmd(importedState) {
     // whitelist the part of the state in the JSMD that should be
     // pushed to the eval-frame at initialization, and post it over
 
-    // copy mirrored state props
-    const statePathsToUpdate = Object.keys(mirroredStateProperties)
-    const stateUpdatesFromEditor = {}
-    statePathsToUpdate.forEach((k) => { stateUpdatesFromEditor[k] = importedState[k] })
-
-    dispatch({
-      type: 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD',
-      stateUpdatesFromEditor,
-    })
     // FIXME: the following is a hack to make sure the MD is available
     // in the eval-frame report at start
     dispatch(updateJsmdContent(importedState.jsmd))

@@ -1,5 +1,7 @@
 import { languageDefinitions } from './language-definitions'
 
+export const NONCODE_EVAL_TYPES = ['css', 'md', 'meta', 'raw']
+
 const appMessageSchema = {
   type: 'object',
   properties: {
