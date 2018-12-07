@@ -104,9 +104,5 @@ export const mirroredStateProperties = {
     type: 'boolean',
     default: false,
   },
-  runningCellID: {
-    type: 'integer',
-    default: undefined,
-  },
   viewMode: {},
 }
