@@ -36,8 +36,8 @@ export function updateAppMessages(messageObj) {
 
 export function importNotebook(importedState) {
   return (dispatch, getState) => {
-  // note that we need to not trample on evalFrameMessageQueue or
-  // evalFrameReady, so we'll copy those from the current state
+    // note that we need to not trample on evalFrameMessageQueue or
+    // evalFrameReady, so we'll copy those from the current state
     const newState = Object.assign({}, importedState)
     newState.evalFrameMessageQueue = getState().evalFrameMessageQueue
     newState.evalFrameReady = getState().evalFrameReady
@@ -84,20 +84,23 @@ export function setPreviousAutosave(hasPreviousAutoSave) {
 
 export function loadAutosave() {
   return (dispatch, getState) => {
-    const newState = stateFromJsmd(getAutosaveJsmd(getState()))
-    dispatch({
-      type: 'REPLACE_NOTEBOOK_CONTENT',
-      cells: newState.cells,
-      title: newState.title,
+    getAutosaveJsmd(getState()).then((value) => {
+      const newState = stateFromJsmd(value)
+      dispatch({
+        type: 'REPLACE_NOTEBOOK_CONTENT',
+        cells: newState.cells,
+        title: newState.title,
+      })
+      dispatch(setPreviousAutosave(false))
     })
-    dispatch(setPreviousAutosave(false))
   }
 }
 
 export function discardAutosave() {
   return (dispatch, getState) => {
-    clearAutosave(getState())
-    dispatch(setPreviousAutosave(false))
+    clearAutosave(getState()).then(() => {
+      dispatch(setPreviousAutosave(false))
+    })
   }
 }
 
@@ -172,7 +175,7 @@ export function changeCellType(cellType, language = 'js') {
   return (dispatch, getState) => {
     if (isCommandMode(getState())
       && (getSelectedCell(getState()).cellType !== cellType
-      || getSelectedCell(getState()).language !== language)) {
+        || getSelectedCell(getState()).language !== language)) {
       dispatch({
         type: 'CHANGE_CELL_TYPE',
         cellType,
