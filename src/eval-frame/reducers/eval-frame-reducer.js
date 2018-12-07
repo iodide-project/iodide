@@ -155,7 +155,14 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'UPDATE_PANE_POSITIONS': {
-      return Object.assign({}, state, { panePositions: action.panePositions })
+      return Object.assign({}, state, {
+        panePositions: {
+          ReportPositioner: action.panePositions.ReportPositioner,
+          ConsolePositioner: action.panePositions.ConsolePositioner,
+          WorkspacePositioner: action.panePositions.WorkspacePositioner,
+          AppInfoPositioner: action.panePositions.AppInfoPositioner,
+        },
+      })
     }
 
     default: {

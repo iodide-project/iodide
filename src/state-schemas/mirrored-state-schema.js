@@ -88,7 +88,7 @@ export const mirroredStateProperties = {
     type: 'object',
     additionalProperties: panePositionSchema,
     default: {
-      EditorPositioner: Object.assign({}, positionerDefaults),
+      // EditorPositioner: Object.assign({}, positionerDefaults),
       ReportPositioner: Object.assign({}, positionerDefaults),
       ConsolePositioner: Object.assign({}, positionerDefaults),
       WorkspacePositioner: Object.assign({}, positionerDefaults),
@@ -99,10 +99,6 @@ export const mirroredStateProperties = {
     type: 'object',
     additionalProperties: environmentVariableSchema,
     default: {},
-  },
-  scrollingLinked: {
-    type: 'boolean',
-    default: false,
   },
   viewMode: {},
 }
