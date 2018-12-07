@@ -1,6 +1,5 @@
 /* global IODIDE_EDITOR_ORIGIN  */
 
-import _ from 'lodash'
 import { store } from './store'
 import {
   evaluateText,
@@ -9,28 +8,6 @@ import {
 import { getCompletions } from './tools/notebook-utils'
 import { onParentContextFileFetchSuccess, onParentContextFileFetchError } from './tools/fetch-file-from-parent-context'
 
-/* eslint-disable */
-function difference(object, base) {
-  function changes(object, base) {
-    return _.transform(object, function (result, value, key) {
-      if (!_.isEqual(value, base[key])) {
-        result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
-      }
-    });
-  }
-  return changes(object, base);
-}
-/* eslint-enable */
-
-// let mc
-// if (IODIDE_BUILD_MODE === 'test') {
-//   // FIXME
-//   // this sets the message chanel to be a terrible mock
-//   // when in testing mode. see /test/message-channel-stub
-//   mc = global.MessageChannel
-// } else {
-//   mc = new MessageChannel();
-// }
 const mc = new MessageChannel();
 
 window.parent.postMessage('EVAL_FRAME_READY_MESSAGE', IODIDE_EDITOR_ORIGIN, [mc.port2]);
@@ -47,25 +24,6 @@ function receiveMessage(event) {
     const { messageType, message } = event.data
     switch (messageType) {
       case 'STATE_UPDATE_FROM_EDITOR': {
-        // console.log(
-        //   'STATE_UPDATE_FROM_EDITOR ======= message',
-        //   { messageType, message },
-        // )
-        // console.log(
-        //   'STATE_UPDATE_FROM_EDITOR ======= ed -> eval',
-        //   difference(message, store.getState()),
-        // )
-        // console.log(
-        //   'STATE_UPDATE_FROM_EDITOR ======= eval -> ed',
-        //   difference(store.getState(), message),
-        // )
-        // console.log(
-        //   'STATE_UPDATE_FROM_EDITOR ======= states',
-        //   {
-        //     evalframe: store.getState(),
-        //     editor: message,
-        //   },
-        // )
         store.dispatch({ type: 'REPLACE_STATE', state: message })
         break
       }
@@ -100,15 +58,6 @@ function receiveMessage(event) {
             message.chunkId,
           ))
         }
-        // else if (message.type === 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD') {
-        //   // in this case, we need to update the declared variables
-        //   // pane to include variables that are in the environment, such as
-        //   // the iodide API.
-        //   store.dispatch(message)
-        //   store.dispatch(updateUserVariables())
-        // } else {
-        //   // store.dispatch(message)
-        // }
         break
       default:
         console.error('unknown messageType', message)
