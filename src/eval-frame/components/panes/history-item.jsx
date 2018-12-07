@@ -8,6 +8,7 @@ import PreformattedTextItemsHandler from '../../../components/reps/preformatted-
 
 import PaneContentButton from './pane-content-button'
 import { postMessageToEditor } from '../../port-to-editor'
+import { EVALUATION_RESULTS } from '../../actions/actions'
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
@@ -101,7 +102,7 @@ export function mapStateToProps(state, ownProps) {
     historyId: ownProps.historyItem.historyId,
     historyType: ownProps.historyItem.historyType,
     lastRan: ownProps.historyItem.lastRan,
-    valueToRender: ownProps.historyItem.value,
+    valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId],
   }
 }
 

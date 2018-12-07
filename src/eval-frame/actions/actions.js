@@ -77,11 +77,15 @@ export function temporarilySaveRunningCellID(cellId) {
   }
 }
 
+export const EVALUATION_RESULTS = {}
+
 export function appendToEvalHistory(cellId, content, value, historyOptions = {}) {
   const historyId = historyOptions.historyId === undefined ?
     historyIdGen.nextId() : historyOptions.historyId
   const historyType = historyOptions.historyType === undefined ?
     'CELL_EVAL_VALUE' : historyOptions.historyType
+
+  EVALUATION_RESULTS[historyId] = value
 
   // returned obj must match history schema
   return {
@@ -91,15 +95,14 @@ export function appendToEvalHistory(cellId, content, value, historyOptions = {})
     historyId,
     historyType,
     lastRan: Date.now(),
-    value,
   }
 }
 
 export function updateValueInHistory(historyId, value) {
+  EVALUATION_RESULTS[historyId] = value
   return {
     type: 'UPDATE_VALUE_IN_HISTORY',
     historyId,
-    value,
   }
 }
 
