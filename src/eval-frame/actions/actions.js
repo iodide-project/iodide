@@ -70,13 +70,6 @@ export function resetNotebook() {
   }
 }
 
-export function temporarilySaveRunningCellID(cellId) {
-  return {
-    type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',
-    cellId,
-  }
-}
-
 export const EVALUATION_RESULTS = {}
 
 export function appendToEvalHistory(cellId, content, value, historyOptions = {}) {

@@ -202,14 +202,6 @@ export const stateProperties = {
     additionalProperties: environmentVariableSchema,
     default: {},
   },
-  scrollingLinked: {
-    type: 'boolean',
-    default: false,
-  },
-  runningCellID: {
-    type: 'integer',
-    default: undefined,
-  },
   title: {
     type: 'string',
     default: 'untitled',

@@ -130,11 +130,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { userDefinedVarNames })
     }
 
-    case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
-      const { cellId } = action
-      return Object.assign({}, state, { runningCellID: cellId })
-    }
-
     case 'SAVE_ENVIRONMENT': {
       let newSavedEnvironment
       if (action.update) {
@@ -148,11 +143,6 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'ENVIRONMENT_UPDATE_FROM_EDITOR': {
       return Object.assign({}, state, { savedEnvironment: action.savedEnvironment })
-    }
-
-    case 'TOGGLE_EDITOR_LINK': {
-      const scrollingLinked = !state.scrollingLinked
-      return Object.assign({}, state, { scrollingLinked })
     }
 
     case 'ADD_LANGUAGE_TO_EVAL_FRAME': {
