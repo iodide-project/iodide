@@ -1,5 +1,14 @@
+/* eslint-disable class-methods-use-this */
 import React, { Component } from 'react'
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button'
 import PropTypes from 'prop-types'
+
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+});
 
 
 class ErrorPane extends Component {
@@ -7,8 +16,17 @@ class ErrorPane extends Component {
     error: PropTypes.object.isRequired,
     errorInfo: PropTypes.object.isRequired,
   }
+
+  handleReload() {
+    window.reload()
+  }
+
+  handleSave() {
+
+  }
   render() {
     const { error, errorInfo } = this.props
+    const { classes } = this.props;
     return (
       <div style={{
         zIndex: 100,
@@ -26,12 +44,16 @@ class ErrorPane extends Component {
             You can still save your changes to the editor.
           </h3>
         </p>
-        <button>Save</button>
-        <button>Reload</button>
+        <Button onClick={this.handleSave} color="primary" variant="contained" className={classes.button} >
+          Save
+        </Button>
+        <Button onClick={this.handleReload} color="secondary" variant="contained" >
+          Reload
+        </Button>
       </div>
     )
   }
 }
 
-export default ErrorPane;
+export default withStyles(styles)(ErrorPane);
 

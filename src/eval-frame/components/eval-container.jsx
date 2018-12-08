@@ -17,8 +17,8 @@ export class EvalContainerUnconnected extends React.Component {
   }
   state = {
     hasError: false,
-    error: null,
-    errorInfo: null,
+    error: '',
+    errorInfo: '',
   }
   componentDidCatch(error, info) {
     this.setState({
