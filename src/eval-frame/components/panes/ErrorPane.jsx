@@ -1,8 +1,14 @@
 /* eslint-disable class-methods-use-this */
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button'
 import PropTypes from 'prop-types'
+
+import {
+  loadAutosave,
+  saveNotebookToServer,
+} from '../../../actions/actions'
 
 const styles = theme => ({
   button: {
@@ -17,13 +23,6 @@ class ErrorPane extends Component {
     errorInfo: PropTypes.object.isRequired,
   }
 
-  handleReload() {
-    window.reload()
-  }
-
-  handleSave() {
-
-  }
   render() {
     const { error, errorInfo } = this.props
     const { classes } = this.props;
@@ -44,16 +43,28 @@ class ErrorPane extends Component {
             You can still save your changes to the editor.
           </h3>
         </p>
-        <Button onClick={this.handleSave} color="primary" variant="contained" className={classes.button} >
+        <Button onClick={this.props.saveNotebook} color="primary" variant="contained" className={classes.button} >
           Save
         </Button>
-        <Button onClick={this.handleReload} color="secondary" variant="contained" >
+        <Button onClick={this.props.loadAutosave} color="secondary" variant="contained" >
           Reload
         </Button>
+        <h3>{this.props.reportOnly}</h3>
       </div>
     )
   }
 }
 
-export default withStyles(styles)(ErrorPane);
+function mapDispatchToProps(dispatch) {
+  return {
+    loadAutosave: () => {
+      dispatch(loadAutosave())
+    },
+    saveNotebook: () => {
+      dispatch(saveNotebookToServer())
+    },
+  }
+}
+
+export default withStyles(styles)(connect(null, mapDispatchToProps)(ErrorPane));
 
