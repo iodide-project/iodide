@@ -62,14 +62,6 @@ export { MOST_RECENT_CHUNK_ID }
 
 // ////////////// actual actions
 
-
-export function resetNotebook() {
-  // we still need this for some tests to work, even though it's not really used
-  return {
-    type: 'RESET_NOTEBOOK',
-  }
-}
-
 export const EVALUATION_RESULTS = {}
 
 export function appendToEvalHistory(cellId, content, value, historyOptions = {}) {
