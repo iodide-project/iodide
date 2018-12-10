@@ -107,7 +107,7 @@ jobs:
 
   deploy:
     docker:
-      - image: docker:18.06.1-ce
+      - image: docker:18.09.0-ce-tp6
     steps:
       - checkout
       - setup_remote_docker
