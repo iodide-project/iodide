@@ -26,7 +26,7 @@ let { EDITOR_ORIGIN } = process.env
 let { EVAL_FRAME_ORIGIN } = process.env
 let { IODIDE_PUBLIC_TOS } = process.env || false
 
-const PYODIDE_VERSION = process.env.PYODIDE_VERSION || '0.2.0'
+const PYODIDE_VERSION = process.env.PYODIDE_VERSION || '0.4.0'
 process.env.PYODIDE_VERSION = PYODIDE_VERSION
 
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || 'dev'
