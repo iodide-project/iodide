@@ -47,11 +47,6 @@ describe('make sure action creators leave store in a consitent state', () => {
       .not.toThrow()
   })
 
-  it('importInitialJsmd', () => {
-    expect(() => store.dispatch(actions.importInitialJsmd(newNotebook())))
-      .not.toThrow()
-  })
-
   it('toggleWrapInEditors', () => {
     expect(() => store.dispatch(actions.toggleWrapInEditors()))
       .not.toThrow()

@@ -63,18 +63,6 @@ export function importNotebook(importedState) {
   }
 }
 
-export function importInitialJsmd(importedState) {
-  return (dispatch) => {
-    dispatch(importNotebook(importedState))
-    // whitelist the part of the state in the JSMD that should be
-    // pushed to the eval-frame at initialization, and post it over
-
-    // FIXME: the following is a hack to make sure the MD is available
-    // in the eval-frame report at start
-    dispatch(updateJsmdContent(importedState.jsmd))
-  }
-}
-
 export function setPreviousAutosave(hasPreviousAutoSave) {
   return {
     type: 'SET_PREVIOUS_AUTOSAVE',
