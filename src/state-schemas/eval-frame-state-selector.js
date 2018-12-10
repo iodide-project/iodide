@@ -6,7 +6,6 @@ const propsToCopy = [
   'consoleText',
   'consoleTextCache',
   'consoleScrollbackPosition',
-  'executionNumber',
   'history',
   'languageDefinitions',
   'loadedLanguages',

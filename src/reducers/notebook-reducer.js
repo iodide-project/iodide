@@ -129,12 +129,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { modalState: action.modalState })
     }
 
-    case 'INCREMENT_EXECUTION_NUMBER': {
-      let { executionNumber } = state
-      executionNumber += 1
-      return Object.assign({}, state, { executionNumber })
-    }
-
     case 'LOGIN_SUCCESS': {
       const { userData } = action
       return Object.assign({}, state, { userData })

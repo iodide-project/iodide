@@ -107,11 +107,6 @@ export const stateProperties = {
     type: 'boolean',
     default: false,
   },
-  executionNumber: {
-    type: 'integer',
-    minimum: 0,
-    default: 0,
-  },
   hasPreviousAutoSave: {
     type: 'boolean',
     default: false,

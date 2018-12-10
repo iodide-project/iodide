@@ -110,11 +110,6 @@ export function updateAppMessages(messageObj) {
   }
 }
 
-export function incrementExecutionNumber() {
-  return {
-    type: 'INCREMENT_EXECUTION_NUMBER',
-  }
-}
 export function updateUserVariables() {
   return {
     type: 'UPDATE_USER_VARIABLES',
@@ -153,8 +148,6 @@ export function evalConsoleInput(languageId) {
     // const sideEffectTarget = document.getElementById(`cell-${cell.id}-side-effect-target`)
     // if (sideEffectTarget) { sideEffectTarget.innerHTML = '' }
 
-    // dispatch(temporarilySaveRunningCellID(cell.id))
-    dispatch(incrementExecutionNumber())
 
     const updateAfterEvaluation = (output) => {
       dispatch(updateConsoleText(''))
