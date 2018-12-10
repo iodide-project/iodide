@@ -80,16 +80,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { evalFrameMessageQueue })
     }
 
-    case 'IMPORT_NOTEBOOK': {
-    // note: loading a NB should always assign to a copy of the latest global
-    // and per-cell state for backwards compatibility
-      nextState = action.newState
-      return Object.assign(
-        newNotebook(), nextState,
-        getUserDataFromDocument(), getNotebookInfoFromDocument(),
-      )
-    }
-
     case 'REPLACE_NOTEBOOK_CONTENT': {
       return Object.assign({}, state, {
         jsmd: action.jsmd,

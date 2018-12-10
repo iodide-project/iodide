@@ -42,11 +42,6 @@ describe('make sure action creators leave store in a consitent state', () => {
       .not.toThrow()
   })
 
-  it('importNotebook', () => {
-    expect(() => store.dispatch(actions.importNotebook(newNotebook())))
-      .not.toThrow()
-  })
-
   it('toggleWrapInEditors', () => {
     expect(() => store.dispatch(actions.toggleWrapInEditors()))
       .not.toThrow()

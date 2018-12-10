@@ -49,20 +49,6 @@ export function updateJsmdContent(text) {
   }
 }
 
-export function importNotebook(importedState) {
-  return (dispatch, getState) => {
-  // note that we need to not trample on evalFrameMessageQueue or
-  // evalFrameReady, so we'll copy those from the current state
-    const newState = Object.assign({}, importedState)
-    newState.evalFrameMessageQueue = getState().evalFrameMessageQueue
-    newState.evalFrameReady = getState().evalFrameReady
-    dispatch({
-      type: 'IMPORT_NOTEBOOK',
-      newState,
-    })
-  }
-}
-
 export function setPreviousAutosave(hasPreviousAutoSave) {
   return {
     type: 'SET_PREVIOUS_AUTOSAVE',
