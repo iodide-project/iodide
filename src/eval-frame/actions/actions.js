@@ -225,10 +225,3 @@ export function saveEnvironment(updateObj, update) {
     update,
   }
 }
-
-export function changePaneHeight(heightShift) {
-  return {
-    type: 'CHANGE_PANE_HEIGHT',
-    heightShift,
-  }
-}
