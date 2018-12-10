@@ -1,7 +1,7 @@
 import CodeMirror from 'codemirror'
 import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
-import { getNotebookID } from '../tools/server-tools'
+import { getNotebookID, getUserDataFromDocument } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
 
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
@@ -94,9 +94,11 @@ export function saveNotebook() {
   }
 }
 
-export function resetNotebook() {
+export function resetNotebook(userData = undefined) {
+  // NB: this action creator is not used in the code, but is useful for tests
   return {
     type: 'RESET_NOTEBOOK',
+    userData: userData && getUserDataFromDocument(),
   }
 }
 

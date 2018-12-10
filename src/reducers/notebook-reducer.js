@@ -1,9 +1,6 @@
 import { newNotebook } from '../editor-state-prototypes'
 import { historyIdGen } from '../actions/history-id-generator'
 import { exportJsmdBundle, titleToHtmlFilename } from '../tools/export-tools'
-
-import { getNotebookInfoFromDocument, getUserDataFromDocument } from '../tools/server-tools'
-
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
@@ -33,7 +30,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
   switch (action.type) {
     case 'RESET_NOTEBOOK':
-      return Object.assign(newNotebook(), getUserDataFromDocument())
+      return Object.assign(newNotebook(), action.userData)
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
