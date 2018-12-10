@@ -99,17 +99,6 @@ export function updateValueInHistory(historyId, value) {
   }
 }
 
-export function updateAppMessages(messageObj) {
-  const { message } = messageObj
-  let { details, when } = messageObj
-  if (when === undefined) when = new Date().toString()
-  if (details === undefined) details = message
-  return {
-    type: 'UPDATE_APP_MESSAGES',
-    message: { message, details, when },
-  }
-}
-
 export function updateUserVariables() {
   return {
     type: 'UPDATE_USER_VARIABLES',
