@@ -1,4 +1,4 @@
-import db from '../indexDB'
+import db from './autosave-client'
 import { connectionModeIsServer } from './server-tools'
 import { exportJsmdToString } from './jsmd-tools'
 import { setPreviousAutosave } from '../actions/actions'
@@ -60,7 +60,7 @@ async function updateAutosave(state, original) {
 
 let autoSaveTimeout
 
-async function subscribeToAutoSave(store) {
+function subscribeToAutoSave(store) {
   store.subscribe(() => {
     // use a subscribe event so we don't pay the penalty of checking
     // for jsmd changes unless user is actively interacting with the ui
