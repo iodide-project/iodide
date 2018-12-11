@@ -43,6 +43,9 @@ span {
   left: -3px;
 }
 `
+const aStyle = {
+  textDecoration: 'none',
+};
 
 const Logo = () => (
   <LogoContainer color="grey">
@@ -65,7 +68,7 @@ li {
 export default () => (
   <FooterContainer>
     <FooterDiv>
-      <p>iodide is brought to you by <a href="https://mozilla.org">Mozilla</a>.</p>
+      <p>iodide is brought to you by <a style={aStyle} href="https://mozilla.org">Mozilla</a>.</p>
       {
         // only display terms of service on an official mozilla installation
         IODIDE_PUBLIC_TOS && (
@@ -90,7 +93,7 @@ export default () => (
           </p>
         )
       }
-      <p>Extremely alpha software - <a href="https://github.com/iodide-project/iodide">contribute</a>.</p>
+      <p>Extremely alpha software - <a style={aStyle} href="https://github.com/iodide-project/iodide">contribute</a>.</p>
     </FooterDiv>
   </FooterContainer>
 )

@@ -28,6 +28,17 @@ h2 {
   margin-top:0;
 }
 `
+const fullName = {
+  color: '#282c32',
+}
+
+const userName = {
+  color: '#737373',
+}
+
+const notebookStyle = {
+  color: '#30353a',
+}
 
 class UserNotebookList extends React.Component {
   constructor(props) {
@@ -48,8 +59,8 @@ class UserNotebookList extends React.Component {
     }
     return (
       <React.Fragment>
-        <h2>
-            notebooks
+        <h2 style={notebookStyle}>
+          Notebooks
         </h2>
         <NewNotebookButton />
         <Table>
@@ -66,7 +77,7 @@ class UserNotebookList extends React.Component {
                 <td><a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a></td>
                 <td>{
                   formatServerDate(notebook.last_revision)
-                  }
+                }
                 </td>
                 <td>
                   <ActionsContainer>
@@ -81,7 +92,7 @@ class UserNotebookList extends React.Component {
                 </td>
               </tr>
             ))
-          }
+            }
           </tbody>
         </Table>
       </React.Fragment>
@@ -97,11 +108,11 @@ export const UserPageWithoutNotebooksPlaceholder = ({ isUserAccount }) => (
       isUserAccount ?
         <React.Fragment>
           <div>
-              Shall we get started?
+            Shall we get started?
           </div>
           <NewNotebookButton />
         </React.Fragment> : 'This user regrettably has no notebooks.'
-        }
+    }
 
   </AttentionBlock>
 )
@@ -116,10 +127,10 @@ export default class UserPage extends React.Component {
         <Header userInfo={userInfo} />
         <PageBody>
           <UserInformationContainer>
-            <img width={150} src={thisUser.avatar} alt={`${thisUser.name}'s avatar`} />
-            <h1 >{thisUser.full_name}
+            <img width={220} src={thisUser.avatar} alt={`${thisUser.name}'s avatar`} />
+            <h1 style={fullName}>{thisUser.full_name}
             </h1>
-            <h2>{thisUser.name}</h2>
+            <h3 style={userName}>{thisUser.name}</h3>
           </UserInformationContainer>
 
           <UserNotebookList
