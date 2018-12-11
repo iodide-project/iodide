@@ -11,6 +11,10 @@ import AppMessages from '../app-messages/app-messages'
 import IodideModalsRoot from '../modals/iodide-modals-root'
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true,
+  },
   palette: {
     type: 'dark',
   },

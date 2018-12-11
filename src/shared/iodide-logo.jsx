@@ -12,7 +12,7 @@ export default class IodideLogo extends React.Component {
           font-weight: 300;`}
       >
         <a
-          href={this.props.backLink}
+          href={this.props.backLink.toString()}
           target="_self"
           className={css`
             color: white;
