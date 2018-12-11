@@ -26,6 +26,7 @@ import NotebookHeader from './components/menu/notebook-header'
 import EditorPaneContainer from './components/editor-pane-container'
 import { store } from './store'
 import handleInitialJsmd from './handle-initial-jsmd'
+import handleInitialSave from './handle-initial-save'
 import handleServerVariables from './handle-server-variables'
 import handleReportViewModeInitialization from './handle-report-view-mode-initialization'
 import { initializeDefaultKeybindings } from './keybindings'
@@ -42,6 +43,7 @@ window.addEventListener('message', listenForEvalFramePortReady, false)
 
 handleServerVariables(store)
 handleInitialJsmd(store)
+handleInitialSave(store)
 handleReportViewModeInitialization(store)
 checkForAutosave(store)
 
