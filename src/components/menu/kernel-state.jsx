@@ -36,6 +36,7 @@ export class KernelStateUnconnected extends React.Component {
     shouldComponentUpdate(nextProps) {
       // FIXME: this seem unnecessary, but I'm noticing that
       // render() is fired on every single state update, and I'm not sure why.
+      // probably because props.StatusIcon can't be checked easily.
       return (this.props.kernelText !== nextProps.kernelText)
     }
 
@@ -61,6 +62,9 @@ export function mapStateToProps(state) {
   let color = 'white'
   let StatusIcon = () => <CircularProgress size={20} />
   switch (kernelState) {
+    case 'KERNEL_BUSY':
+      kernelText = 'Kernel Busy'
+      break
     case 'KERNEL_LOADING':
       kernelText = 'Kernel Loading'
       break
@@ -78,7 +82,6 @@ export function mapStateToProps(state) {
       kernelText = 'Kernel Didn\'t Load'
       StatusIcon = () => <Error size={20} />
       color = 'red'
-
       break
     default:
       kernelText = 'Kernel Status'
