@@ -111,7 +111,7 @@ function receiveMessage(event) {
 }
 
 export const listenForEvalFramePortReady = (messageEvent) => {
-  console.log('listenForEvalFramePortReady', messageEvent.data, messageEvent.origin)
+  console.info('listenForEvalFramePortReady', messageEvent.data, messageEvent.origin)
   if (messageEvent.data === 'EVAL_FRAME_READY_MESSAGE') {
     portToEvalFrame = messageEvent.ports[0] // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage
