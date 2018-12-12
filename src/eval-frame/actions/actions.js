@@ -146,6 +146,11 @@ export function evalConsoleInput(languageId) {
 
     return runCodeWithLanguage(language, code, messageCallback)
       .then(updateAfterEvaluation)
+      .catch((err) => {
+        dispatch(appendToEvalHistory(null, code, err, { historyType: 'CONSOLE_EVAL' }))
+        dispatch(updateConsoleText(''))
+        dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
+      })
   }
 }
 

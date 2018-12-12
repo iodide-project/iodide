@@ -1,5 +1,4 @@
 import { store } from '../../store'
-import { newNotebook } from '../../editor-state-prototypes'
 import * as actions from '../actions'
 import { SchemaValidationError } from '../../reducers/create-validated-reducer'
 import { languageDefinitions } from '../../state-schemas/language-definitions'
