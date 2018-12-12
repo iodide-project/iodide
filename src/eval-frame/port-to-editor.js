@@ -51,11 +51,13 @@ function receiveMessage(event) {
       }
       case 'REDUX_ACTION':
         if (message.type === 'TRIGGER_TEXT_EVAL_IN_FRAME') {
+          console.debug('received new eval', message.evalType, message.evalId)
           store.dispatch(evaluateText(
             message.evalText,
             message.evalType,
             message.evalFlags,
             message.chunkId,
+            message.evalId,
           ))
         }
         break

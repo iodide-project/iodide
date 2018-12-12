@@ -2,6 +2,7 @@ import Mousetrap from 'mousetrap'
 import { store } from './store'
 import { addLanguage } from './actions/actions'
 import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
+import { resolveEvaluation, rejectEvaluation } from './actions/evaluation-queue';
 
 let portToEvalFrame
 
@@ -43,6 +44,12 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data
     switch (messageType) {
+      case 'EVALUATION_RESPONSE': {
+        const { evalId, status } = message
+        if (status === 'SUCCESS') resolveEvaluation(evalId)
+        else rejectEvaluation(evalId)
+        break
+      }
       case 'REQUEST_FETCH': {
         fetchFileFromServer(message.path, message.fetchType)
           .then((file) => {

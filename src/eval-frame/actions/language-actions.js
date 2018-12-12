@@ -3,9 +3,11 @@ import {
   appendToEvalHistory,
   historyIdGen,
   updateValueInHistory,
+  sendStatusResponseToEditor,
 } from './actions'
 
 export function addLanguage(languageDefinition) {
+  console.debug(languageDefinition)
   return {
     type: 'ADD_LANGUAGE_TO_EVAL_FRAME',
     languageDefinition,
@@ -74,7 +76,7 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
   return languagePluginPromise
 }
 
-export function evaluateLanguagePlugin(pluginText) {
+export function evaluateLanguagePlugin(pluginText, evalId) {
   return (dispatch) => {
     const historyId = historyIdGen.nextId()
     dispatch(appendToEvalHistory(
@@ -89,9 +91,12 @@ export function evaluateLanguagePlugin(pluginText) {
       pluginData = JSON.parse(pluginText)
     } catch (err) {
       dispatch(updateValueInHistory(historyId, `plugin definition failed to parse:\n${err.message}`))
+      sendStatusResponseToEditor('ERROR', evalId)
       return Promise.reject()
     }
-    return loadLanguagePlugin(pluginData, historyId, dispatch)
+    return loadLanguagePlugin(pluginData, historyId, dispatch).then(() => {
+      sendStatusResponseToEditor('SUCCESS', evalId)
+    })
   }
 }
 

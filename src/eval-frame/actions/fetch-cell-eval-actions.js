@@ -4,6 +4,7 @@ import {
   updateValueInHistory,
   historyIdGen,
   updateUserVariables,
+  sendStatusResponseToEditor,
 } from './actions'
 
 import { genericFetch as fetchLocally,
@@ -100,45 +101,7 @@ export async function handleFetch(fetchInfo) {
   return Promise.resolve(successMessage(fetchInfo))
 }
 
-export function evaluateFetchCell(cell) {
-  return (dispatch) => {
-    const historyId = historyIdGen.nextId()
-    const cellText = cell.content
-    const fetches = parseFetchCell(cellText)
-    const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error)
-    if (syntaxErrors.length) {
-      dispatch(appendToEvalHistory(
-        cell.id,
-        cell.content,
-        syntaxErrors.map(fetchProgressInitialStrings),
-        { historyId, historyType: 'FETCH_CELL_INFO' },
-      ))
-      return Promise.resolve()
-    }
-
-    let progressStrings = fetches.map(fetchProgressInitialStrings)
-
-    dispatch(appendToEvalHistory(
-      cell.id,
-      cell.content,
-      progressStrings,
-      { historyId, historyType: 'FETCH_CELL_INFO' },
-    ))
-
-    const fetchCalls = fetches.map((f, i) => handleFetch(f).then((outcome) => {
-      progressStrings = progressStrings.map(entry => Object.assign({}, entry))
-      progressStrings[i] = outcome
-      dispatch(updateValueInHistory(historyId, progressStrings))
-      return outcome
-    }))
-
-    return Promise.all(fetchCalls).finally(() => {
-      dispatch(updateUserVariables())
-    })
-  }
-}
-
-export function evaluateFetchText(fetchText) {
+export function evaluateFetchText(fetchText, evalId) {
   return (dispatch) => {
     const historyId = historyIdGen.nextId()
     const fetches = parseFetchCell(fetchText)
@@ -171,6 +134,9 @@ export function evaluateFetchText(fetchText) {
 
     return Promise.all(fetchCalls).finally(() => {
       dispatch(updateUserVariables())
+    }).then(() => {
+      console.debug('hey did this work?', evalId)
+      sendStatusResponseToEditor('SUCCESS', evalId)
     })
   }
 }
