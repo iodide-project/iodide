@@ -32,6 +32,13 @@ export class KernelStateUnconnected extends React.Component {
     static propTypes = {
       kernelText: PropTypes.string.isRequired,
     }
+
+    shouldComponentUpdate(nextProps) {
+      // FIXME: this seem unnecessary, but I'm noticing that
+      // render() is fired on every single state update, and I'm not sure why.
+      return (this.props.kernelText !== nextProps.kernelText)
+    }
+
     render() {
       const {
         kernelText, color, StatusIcon,
