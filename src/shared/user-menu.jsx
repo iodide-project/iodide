@@ -8,7 +8,6 @@ import Tooltip from '@material-ui/core/Tooltip'
 
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import NotebookMenuDivider from '../components/menu/notebook-menu-divider'
 import LoginModal from './login-modal'
 
 export default class UserMenu extends React.Component {
@@ -124,10 +123,6 @@ export default class UserMenu extends React.Component {
                   >
                     <MenuItem dense>
                       <ListItemText onClick={this.goToProfile} primary="Go to Profile" />
-                    </MenuItem>
-                    <NotebookMenuDivider />
-                    <MenuItem dense>
-                      <ListItemText onClick={this.logout} primary="Log Out" />
                     </MenuItem>
                   </Menu>
                   <Button

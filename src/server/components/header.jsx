@@ -9,6 +9,10 @@ import IodideLogo from '../../shared/iodide-logo'
 import UserMenu from '../../shared/user-menu';
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true,
+  },
   palette: {
     primary: {
       main: '#000000', // '#004d40',
