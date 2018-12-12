@@ -116,6 +116,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { modalState: action.modalState })
     }
 
+    case 'SET_KERNEL_STATE': {
+      return Object.assign({}, state, { kernelState: action.kernelState })
+    }
+
     case 'LOGIN_SUCCESS': {
       const { userData } = action
       return Object.assign({}, state, { userData })

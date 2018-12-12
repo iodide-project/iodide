@@ -135,7 +135,6 @@ export function evaluateFetchText(fetchText, evalId) {
     return Promise.all(fetchCalls).finally(() => {
       dispatch(updateUserVariables())
     }).then(() => {
-      console.debug('hey did this work?', evalId)
       sendStatusResponseToEditor('SUCCESS', evalId)
     })
   }

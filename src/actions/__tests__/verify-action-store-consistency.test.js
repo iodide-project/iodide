@@ -32,6 +32,11 @@ describe('make sure action creators leave store in a consitent state', () => {
     store.dispatch(actions.resetNotebook())
   })
 
+  it('setKernelState', () => {
+    expect(() => store.dispatch(actions.setKernelState('KERNEL_BUSY')))
+      .not.toThrow()
+  })
+
   it('updateAppMessages, no details', () => {
     expect(() => store.dispatch(actions.updateAppMessages({ message: 'foo' })))
       .not.toThrow()
@@ -120,5 +125,20 @@ describe('make sure action creators leave store in a consitent state', () => {
   it('saveEnvironment', () => {
     expect(() => store.dispatch(actions.saveEnvironment({ a: ['string', 'foo'] }, false)))
       .not.toThrow()
+  })
+})
+
+describe('setKernelState', () => {
+  it('createValidatedReducer should throw an error if we pass an invalid arg into setKernelState', () => {
+    expect(() => store.dispatch(actions.setKernelState('fake state')))
+      .toThrowError(SchemaValidationError)
+    expect(() => store.dispatch(actions.setKernelState(12342323)))
+      .toThrowError(SchemaValidationError)
+  })
+  it('passes on correct set of enums for setKernelState', () => {
+    const enums = ['KERNEL_LOADING', 'KERNEL_LOAD_ERROR', 'KERNEL_ERROR', 'KERNEL_IDLE', 'KERNEL_BUSY']
+    enums.forEach((kernelState) => {
+      expect(() => store.dispatch(actions.setKernelState(kernelState))).not.toThrow()
+    })
   })
 })

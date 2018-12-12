@@ -1,8 +1,8 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
-import { addLanguage, triggerTextInEvalFrame } from './actions/actions'
+import { addLanguage, triggerTextInEvalFrame, setKernelState } from './actions/actions'
 import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
-import { resolveEvaluation, rejectEvaluation } from './actions/evaluation-queue';
+import { resolveEvaluation, rejectEvaluation, getQueueSize } from './actions/evaluation-queue';
 
 let portToEvalFrame
 
@@ -52,6 +52,10 @@ function receiveMessage(event) {
         const { evalId, status } = message
         if (status === 'SUCCESS') resolveEvaluation(evalId)
         else rejectEvaluation(evalId)
+        const queueSize = getQueueSize()
+        if (!queueSize) {
+          store.dispatch(setKernelState('KERNEL_IDLE'))
+        }
         break
       }
       case 'REQUEST_FETCH': {

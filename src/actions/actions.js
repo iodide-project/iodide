@@ -11,6 +11,13 @@ import { getAllSelections, selectionToChunks, removeDuplicatePluginChunksInSelec
 
 import { appendChunkToEvaluationQueue } from './evaluation-queue'
 
+export function setKernelState(kernelState) {
+  return {
+    type: 'SET_KERNEL_STATE',
+    kernelState,
+  }
+}
+
 export function updateAppMessages(messageObj) {
   const { message } = messageObj
   let { details, when } = messageObj
@@ -167,7 +174,8 @@ export function triggerTextInEvalFrame(chunk, dispatch) {
 
 export function evaluateText() {
   return (dispatch, getState) => {
-    const { jsmdChunks } = getState()
+    const { jsmdChunks, kernelState } = getState()
+    if (kernelState !== 'KERNEL_BUSY') dispatch(setKernelState('KERNEL_BUSY'))
     const cm = window.ACTIVE_CODEMIRROR
     const doc = cm.getDoc()
     let actionObj
@@ -183,7 +191,6 @@ export function evaluateText() {
       return Promise.all(selectionChunkSet.map(selection => Promise.all(selection.map(chunk =>
         Promise.resolve(triggerTextInEvalFrame(chunk, dispatch))))))
     }
-    // here's where we'll put: if kernelState === ready
     return Promise.resolve(actionObj)
   }
 }
@@ -208,10 +215,10 @@ export function moveCursorToNextChunk() {
 
 export function evaluateNotebook() {
   return (dispatch, getState) => {
-    const { jsmdChunks } = getState()
+    const { jsmdChunks, kernelState } = getState()
+    if (kernelState !== 'KERNEL_BUSY') dispatch(setKernelState('KERNEL_BUSY'))
     jsmdChunks.forEach((chunk) => {
       if (!['md', 'css', 'raw', ''].includes(chunk.chunkType)) {
-        console.debug('evaluateNotebook', chunk)
         triggerTextInEvalFrame(chunk, dispatch)
       }
     })

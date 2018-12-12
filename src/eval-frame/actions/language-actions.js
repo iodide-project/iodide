@@ -7,7 +7,6 @@ import {
 } from './actions'
 
 export function addLanguage(languageDefinition) {
-  console.debug(languageDefinition)
   return {
     type: 'ADD_LANGUAGE_TO_EVAL_FRAME',
     languageDefinition,
