@@ -24,7 +24,7 @@ const actionForwarder = (state, action) => {
   try {
     postActionToEditor(action)
   } catch (error) {
-    console.log('EVAL FRAME ACTION POST TO EDITOR FAILED')
+    // console.log('EVAL FRAME ACTION POST TO EDITOR FAILED')
   }
   // }
   return state
