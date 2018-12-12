@@ -1,10 +1,10 @@
 import { getEvaluationResolvers, resolveEvaluation, rejectEvaluation,
-  appendToEvaluationQueue, evalIdGenerator, getQueueSize } from '../evaluation-queue'
+  appendChunkToEvaluationQueue, evalIdGenerator, getQueueSize } from '../evaluation-queue'
 
 
-describe('appendToEvaluationQueue', () => {
+describe('appendChunkToEvaluationQueue', () => {
   it('appropriately resolves the evaluationQueue', async () => {
-    appendToEvaluationQueue({}, () => {})
+    appendChunkToEvaluationQueue({}, () => {})
     // the await below forces the above microtask queue to finish before moving on.
     await Promise.resolve().then(() => {})
     const currentId = evalIdGenerator.state
@@ -17,8 +17,8 @@ describe('appendToEvaluationQueue', () => {
     expect(getQueueSize()).toBe(0)
   })
   it('resolves a chain of evals from the evaluationQueue', async () => {
-    appendToEvaluationQueue({}, () => {}) // 2
-    appendToEvaluationQueue({}, () => {}) // 3
+    appendChunkToEvaluationQueue({}, () => {}) // 2
+    appendChunkToEvaluationQueue({}, () => {}) // 3
     await Promise.resolve().then(() => {})
     expect(getQueueSize()).toBe(2)
     resolveEvaluation(2)
@@ -33,24 +33,25 @@ describe('appendToEvaluationQueue', () => {
     await Promise.resolve().then(() => {})
   })
   it('stops the evaluationQueue when rejectEvaluation is called', async () => {
-    appendToEvaluationQueue({}, () => {}) // 4
-    appendToEvaluationQueue({}, () => {}) // 5
-    appendToEvaluationQueue({}, () => {}) // 6, REJECT
-    appendToEvaluationQueue({}, () => {}) // 7, never called.
+    appendChunkToEvaluationQueue({}, () => {}) // 4
+    appendChunkToEvaluationQueue({}, () => {}) // 5
+    appendChunkToEvaluationQueue({}, () => {}) // 6, REJECT
+    appendChunkToEvaluationQueue({}, () => {}) // 7, never called.
 
     await Promise.resolve().then(() => {})
     let resolvers = getEvaluationResolvers()
     expect(Object.keys(resolvers).length).toBe(1)
     expect(Object.keys(resolvers)).toEqual(['4'])
     expect(getQueueSize()).toBe(4)
-    resolveEvaluation(4)
 
+    await resolveEvaluation(4)
     await Promise.resolve().then(() => {})
+
     resolvers = getEvaluationResolvers()
     expect(Object.keys(resolvers).length).toBe(1)
     expect(Object.keys(resolvers)).toEqual(['5'])
     expect(getQueueSize()).toBe(3)
-    resolveEvaluation(5)
+    await resolveEvaluation(5)
 
     // this appears to be necessary.
     await Promise.resolve().then(() => {})
@@ -60,7 +61,7 @@ describe('appendToEvaluationQueue', () => {
     expect(Object.keys(resolvers).length).toBe(1)
     expect(Object.keys(resolvers)).toEqual(['6'])
     expect(getQueueSize()).toBe(2)
-    rejectEvaluation(6)
+    await rejectEvaluation(6)
 
     await Promise.resolve().then(() => {})
     resolvers = getEvaluationResolvers()

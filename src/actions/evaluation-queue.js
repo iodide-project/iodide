@@ -13,6 +13,7 @@ export const resolveEvaluation = (evalId) => {
   evaluationResolvers[evalId].resolve()
   queueSize -= 1
   delete evaluationResolvers[evalId]
+  return Promise.resolve()
 }
 export const rejectEvaluation = (evalId) => {
   evaluationResolvers[evalId].reject()
@@ -20,9 +21,10 @@ export const rejectEvaluation = (evalId) => {
   evaluationResolvers = {}
   queueSize = 0
   evaluationQueue = Promise.resolve()
+  return Promise.resolve()
 }
 
-export const appendToEvaluationQueue = (chunk, dispatchFunction) => {
+export const appendChunkToEvaluationQueue = (chunk, dispatchFunction) => {
   const evalId = evalIdGenerator.nextId()
   queueSize += 1
   evaluationQueue = evaluationQueue

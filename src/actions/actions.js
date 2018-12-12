@@ -9,7 +9,7 @@ import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-to
 import { jsmdParser } from './jsmd-parser'
 import { getAllSelections, selectionToChunks, removeDuplicatePluginChunksInSelectionSet } from './jsmd-selection'
 
-import { appendToEvaluationQueue } from './evaluation-queue'
+import { appendChunkToEvaluationQueue } from './evaluation-queue'
 
 export function updateAppMessages(messageObj) {
   const { message } = messageObj
@@ -162,7 +162,7 @@ export function triggerTextInEvalFrame(chunk, dispatch) {
     evalFlags: chunk.evalFlags,
     chunkId: chunk.chunkId,
   })
-  appendToEvaluationQueue(action, act => dispatch(act))
+  appendChunkToEvaluationQueue(action, act => dispatch(act))
 }
 
 export function evaluateText() {
