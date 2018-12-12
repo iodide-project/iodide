@@ -1,6 +1,6 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
-import { addLanguage } from './actions/actions'
+import { addLanguage, triggerTextInEvalFrame } from './actions/actions'
 import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
 import { resolveEvaluation, rejectEvaluation } from './actions/evaluation-queue';
 
@@ -44,6 +44,10 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data
     switch (messageType) {
+      case 'ADD_TO_EVALUATION_QUEUE': {
+        triggerTextInEvalFrame(message, store.dispatch)
+        break
+      }
       case 'EVALUATION_RESPONSE': {
         const { evalId, status } = message
         if (status === 'SUCCESS') resolveEvaluation(evalId)

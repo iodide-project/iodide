@@ -154,7 +154,7 @@ export function getChunkContainingLine(jsmdChunks, line) {
   return activeChunk
 }
 
-function triggerTextInEvalFrame(chunk, dispatch) {
+export function triggerTextInEvalFrame(chunk, dispatch) {
   const action = Object.assign({
     type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
     evalText: chunk.chunkContent,

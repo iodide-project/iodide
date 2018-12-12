@@ -31,6 +31,10 @@ export function sendStatusResponseToEditor(status, evalId) {
   postMessageToEditor('EVALUATION_RESPONSE', { status, evalId })
 }
 
+export function addToEvaluationQueue(chunk) {
+  postMessageToEditor('ADD_TO_EVALUATION_QUEUE', chunk)
+}
+
 function getUserDefinedVariablesFromWindow() {
   return Object.keys(window)
     .filter(g => !initialVariables.has(g))
@@ -122,7 +126,6 @@ export function evalConsoleInput(languageId) {
     // exit if there is no code in the console to  eval
     if (!code) { return undefined }
     const evalLanguageId = languageId === undefined ? state.languageLastUsed : languageId
-    const language = state.loadedLanguages[evalLanguageId]
 
     // FIXME: deal with side-effects for console evals
     // // clear stuff relating to the side effect target before evaling
@@ -132,25 +135,15 @@ export function evalConsoleInput(languageId) {
     // const sideEffectTarget = document.getElementById(`cell-${cell.id}-side-effect-target`)
     // if (sideEffectTarget) { sideEffectTarget.innerHTML = '' }
 
-
-    const updateAfterEvaluation = (output) => {
-      dispatch(updateConsoleText(''))
-      dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
-      dispatch(appendToEvalHistory(null, code, output))
-      dispatch(updateUserVariables())
-    }
-
-    const messageCallback = (msg) => {
-      dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
-    }
-
-    return runCodeWithLanguage(language, code, messageCallback)
-      .then(updateAfterEvaluation)
-      .catch((err) => {
-        dispatch(appendToEvalHistory(null, code, err, { historyType: 'CONSOLE_EVAL' }))
-        dispatch(updateConsoleText(''))
-        dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
-      })
+    dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
+    dispatch(updateConsoleText(''))
+    addToEvaluationQueue({
+      chunkType: evalLanguageId,
+      chunkId: undefined,
+      chunkContent: code,
+      evalFlags: '',
+    })
+    return Promise.resolve()
   }
 }
 

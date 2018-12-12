@@ -52,6 +52,7 @@ describe('appendToEvaluationQueue', () => {
     expect(getQueueSize()).toBe(3)
     resolveEvaluation(5)
 
+    // this appears to be necessary.
     await Promise.resolve().then(() => {})
     await Promise.resolve().then(() => {})
 
