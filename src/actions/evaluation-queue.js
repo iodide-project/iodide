@@ -1,43 +1,60 @@
-import { IdFactory } from '../actions/history-id-generator'
+import { IdFactory } from './id-generators'
 
-export const evalIdGenerator = new IdFactory()
+export class EvaluationQueue {
+  constructor() {
+    this.queue = Promise.resolve()
+    this.queueSize = 0
+    this.evaluationResolvers = {}
+    this.idGenerator = new IdFactory()
+  }
 
-let evaluationQueue = Promise.resolve()
-let evaluationResolvers = {}
-let queueSize = 0
+  evaluate(chunk, dispatch) {
+    const evalId = this.idGenerator.nextId()
+    this.queueSize += 1
 
-const awaitEvaluationResponse = evalId => () => new Promise((resolve, reject) => {
-  evaluationResolvers[evalId] = { resolve, reject }
-})
-export const resolveEvaluation = (evalId) => {
-  evaluationResolvers[evalId].resolve()
-  queueSize -= 1
-  delete evaluationResolvers[evalId]
-  return Promise.resolve()
-}
-export const rejectEvaluation = (evalId) => {
-  evaluationResolvers[evalId].reject()
-  delete evaluationResolvers[evalId]
-  evaluationResolvers = {}
-  queueSize = 0
-  evaluationQueue = Promise.resolve()
-  return Promise.resolve()
-}
-
-export const appendChunkToEvaluationQueue = (chunk, dispatchFunction) => {
-  const evalId = evalIdGenerator.nextId()
-  queueSize += 1
-  evaluationQueue = evaluationQueue
-    .then(() => {
-      const chunkAndId = Object.assign({}, chunk, { evalId })
-      dispatchFunction(chunkAndId)
+    const evaluationResolver = new Promise((resolve, reject) => {
+      this.evaluationResolvers[evalId] = { resolve, reject }
     })
-    .then(awaitEvaluationResponse(evalId))
-  return evaluationQueue
+
+    this.queue = this.queue
+      .then(() => {
+        const evalAction = Object.assign({}, {
+          type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
+          evalText: chunk.chunkContent,
+          evalType: chunk.chunkType,
+          evalFlags: chunk.evalFlags,
+          chunkId: chunk.chunkId,
+          evalId,
+        })
+        dispatch(evalAction)
+      })
+      .then(() => evaluationResolver)
+    return this
+  }
+
+  reset() {
+    this.evaluationResolvers = {}
+    this.queueSize = 0
+    this.queue = Promise.resolve()
+    return this
+  }
+
+  resolveEvaluation(evalId) {
+    this.evaluationResolvers[evalId].resolve()
+    this.queueSize -= 1
+    delete this.evaluationResolvers[evalId]
+  }
+
+  rejectEvaluation(evalId) {
+    this.evaluationResolvers[evalId].reject()
+    this.reset()
+    return this
+  }
+
+  getQueueSize() {
+    return this.queueSize
+  }
 }
 
-// for testing
-
-export const getEvaluationQueue = () => evaluationQueue
-export const getEvaluationResolvers = () => evaluationResolvers
-export const getQueueSize = () => queueSize
+const EQ = new EvaluationQueue()
+export default EQ

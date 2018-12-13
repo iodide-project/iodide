@@ -1,72 +1,55 @@
-import { getEvaluationResolvers, resolveEvaluation, rejectEvaluation,
-  appendChunkToEvaluationQueue, evalIdGenerator, getQueueSize } from '../evaluation-queue'
+import { EvaluationQueue } from '../evaluation-queue'
 
+// small mock for dispatcher.
+const dispatcher = () => {}
 
-describe('appendChunkToEvaluationQueue', () => {
-  it('appropriately resolves the evaluationQueue', async () => {
-    appendChunkToEvaluationQueue({}, () => {})
-    // the await below forces the above microtask queue to finish before moving on.
-    await Promise.resolve().then(() => {})
-    const currentId = evalIdGenerator.state
-    const resolvers = getEvaluationResolvers()
-    expect(Object.keys(resolvers).length).toBe(1)
-    expect(currentId).toBe(1)
-    expect(getQueueSize()).toBe(1)
-    resolveEvaluation(currentId)
-    expect(Object.keys(resolvers).length).toBe(0)
-    expect(getQueueSize()).toBe(0)
+describe('EvaluationQueue', () => {
+  it('resolves a single evaluation', () => {
+    const evalQueue = new EvaluationQueue()
+    evalQueue.evaluate({}, dispatcher)
+    expect(evalQueue.getQueueSize()).toBe(1)
+    evalQueue.resolveEvaluation(1)
+    expect(evalQueue.getQueueSize()).toBe(0)
   })
-  it('resolves a chain of evals from the evaluationQueue', async () => {
-    appendChunkToEvaluationQueue({}, () => {}) // 2
-    appendChunkToEvaluationQueue({}, () => {}) // 3
-    await Promise.resolve().then(() => {})
-    expect(getQueueSize()).toBe(2)
-    resolveEvaluation(2)
+  it('resolves a chain of evaluations', () => {
+    const evalQueue = new EvaluationQueue()
 
-    await Promise.resolve().then(() => {})
-    expect(getQueueSize()).toBe(1)
-    resolveEvaluation(3)
+    evalQueue.evaluate({}, dispatcher, '2.1')
+    evalQueue.evaluate({}, dispatcher, '2.2')
 
-    await Promise.resolve().then(() => {})
-    expect(getQueueSize()).toBe(0)
+    expect(evalQueue.getQueueSize()).toBe(2)
 
-    await Promise.resolve().then(() => {})
+    evalQueue.resolveEvaluation(1)
+
+    expect(evalQueue.getQueueSize()).toBe(1)
+    expect(Object.keys(evalQueue.evaluationResolvers)).toEqual(['2'])
+
+    evalQueue.resolveEvaluation(2)
+
+    expect(evalQueue.getQueueSize()).toBe(0)
+    expect(Object.keys(evalQueue.evaluationResolvers)).toEqual([])
   })
-  it('stops the evaluationQueue when rejectEvaluation is called', async () => {
-    appendChunkToEvaluationQueue({}, () => {}) // 4
-    appendChunkToEvaluationQueue({}, () => {}) // 5
-    appendChunkToEvaluationQueue({}, () => {}) // 6, REJECT
-    appendChunkToEvaluationQueue({}, () => {}) // 7, never called.
+  it('stops the evaluationQueue when rejectEvaluation is called', () => {
+    const evalQueue = new EvaluationQueue()
 
-    await Promise.resolve().then(() => {})
-    let resolvers = getEvaluationResolvers()
-    expect(Object.keys(resolvers).length).toBe(1)
-    expect(Object.keys(resolvers)).toEqual(['4'])
-    expect(getQueueSize()).toBe(4)
+    evalQueue.evaluate({}, dispatcher) // 1
+    evalQueue.evaluate({}, dispatcher) // 2
+    evalQueue.evaluate({}, dispatcher) // 3, REJECT
+    evalQueue.evaluate({}, dispatcher) // 4, never called.
 
-    await resolveEvaluation(4)
-    await Promise.resolve().then(() => {})
+    expect(evalQueue.getQueueSize()).toBe(4)
+    expect(Object.keys(evalQueue.evaluationResolvers)).toEqual(['1', '2', '3', '4'])
 
-    resolvers = getEvaluationResolvers()
-    expect(Object.keys(resolvers).length).toBe(1)
-    expect(Object.keys(resolvers)).toEqual(['5'])
-    expect(getQueueSize()).toBe(3)
-    await resolveEvaluation(5)
+    evalQueue.resolveEvaluation(1)
+    expect(evalQueue.getQueueSize()).toBe(3)
+    expect(Object.keys(evalQueue.evaluationResolvers)).toEqual(['2', '3', '4'])
 
-    // this appears to be necessary.
-    await Promise.resolve().then(() => {})
-    await Promise.resolve().then(() => {})
+    evalQueue.resolveEvaluation(2)
+    expect(evalQueue.getQueueSize()).toBe(2)
+    expect(Object.keys(evalQueue.evaluationResolvers)).toEqual(['3', '4'])
 
-    resolvers = getEvaluationResolvers()
-    expect(Object.keys(resolvers).length).toBe(1)
-    expect(Object.keys(resolvers)).toEqual(['6'])
-    expect(getQueueSize()).toBe(2)
-    await rejectEvaluation(6)
-
-    await Promise.resolve().then(() => {})
-    resolvers = getEvaluationResolvers()
-    expect(getQueueSize()).toBe(0)
-    expect(Object.keys(resolvers).length).toBe(0)
-    expect(resolvers).toEqual({})
+    evalQueue.rejectEvaluation(3)
+    expect(evalQueue.getQueueSize()).toBe(0)
+    expect(Object.keys(evalQueue.evaluationResolvers)).toEqual([])
   })
 })

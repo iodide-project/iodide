@@ -9,7 +9,7 @@ import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-to
 import { jsmdParser } from './jsmd-parser'
 import { getAllSelections, selectionToChunks, removeDuplicatePluginChunksInSelectionSet } from './jsmd-selection'
 
-import { appendChunkToEvaluationQueue } from './evaluation-queue'
+import evalQueue from './evaluation-queue'
 
 export function setKernelState(kernelState) {
   return {
@@ -162,14 +162,7 @@ export function getChunkContainingLine(jsmdChunks, line) {
 }
 
 export function triggerTextInEvalFrame(chunk, dispatch) {
-  const action = Object.assign({
-    type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
-    evalText: chunk.chunkContent,
-    evalType: chunk.chunkType,
-    evalFlags: chunk.evalFlags,
-    chunkId: chunk.chunkId,
-  })
-  appendChunkToEvaluationQueue(action, act => dispatch(act))
+  evalQueue.evaluate(chunk, dispatch)
 }
 
 export function evaluateText() {

@@ -1,5 +1,5 @@
 import { newNotebook } from '../editor-state-prototypes'
-import { historyIdGen } from '../actions/history-id-generator'
+import { historyIdGen } from '../actions/id-generators'
 import { exportJsmdBundle, titleToHtmlFilename } from '../tools/export-tools'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
