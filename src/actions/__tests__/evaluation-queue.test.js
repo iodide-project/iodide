@@ -14,10 +14,10 @@ describe('EvaluationQueue', () => {
   it('resolves a chain of evaluations', () => {
     const evalQueue = new EvaluationQueue()
 
-    evalQueue.evaluate({}, dispatcher, '2.1')
-    evalQueue.evaluate({}, dispatcher, '2.2')
-
+    evalQueue.evaluate({}, dispatcher)
+    evalQueue.evaluate({}, dispatcher)
     expect(evalQueue.getQueueSize()).toBe(2)
+
 
     evalQueue.resolveEvaluation(1)
 
@@ -32,10 +32,10 @@ describe('EvaluationQueue', () => {
   it('stops the evaluationQueue when rejectEvaluation is called', () => {
     const evalQueue = new EvaluationQueue()
 
-    evalQueue.evaluate({}, dispatcher) // 1
-    evalQueue.evaluate({}, dispatcher) // 2
-    evalQueue.evaluate({}, dispatcher) // 3, REJECT
-    evalQueue.evaluate({}, dispatcher) // 4, never called.
+    evalQueue.evaluate({}, dispatcher)
+    evalQueue.evaluate({}, dispatcher)
+    evalQueue.evaluate({}, dispatcher) // we will reject this one below (3)
+    evalQueue.evaluate({}, dispatcher) // this will never "run"
 
     expect(evalQueue.getQueueSize()).toBe(4)
     expect(Object.keys(evalQueue.evaluationResolvers)).toEqual(['1', '2', '3', '4'])
