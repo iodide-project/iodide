@@ -4,34 +4,25 @@ import { EvaluationQueue } from '../evaluation-queue'
 const dispatcher = () => {}
 
 describe('EvaluationQueue', () => {
-  it('resolves a single evaluation', () => {
-    const evalQueue = new EvaluationQueue()
-    evalQueue.evaluate({}, dispatcher)
-    expect(evalQueue.getQueueSize()).toBe(1)
-    evalQueue.continue(1)
-    expect(evalQueue.getQueueSize()).toBe(0)
+  let evalQueue
+  beforeEach(() => {
+    evalQueue = new EvaluationQueue()
   })
-  it('resolves a chain of evaluations', () => {
-    const evalQueue = new EvaluationQueue()
 
+  it('continues chain of evaluations', () => {
     evalQueue.evaluate({}, dispatcher)
     evalQueue.evaluate({}, dispatcher)
     expect(evalQueue.getQueueSize()).toBe(2)
 
-
     evalQueue.continue(1)
-
     expect(evalQueue.getQueueSize()).toBe(1)
     expect(Object.keys(evalQueue.evaluationResolvers)).toEqual(['2'])
 
     evalQueue.continue(2)
-
     expect(evalQueue.getQueueSize()).toBe(0)
     expect(Object.keys(evalQueue.evaluationResolvers)).toEqual([])
   })
-  it('stops the evaluationQueue when halt is called', () => {
-    const evalQueue = new EvaluationQueue()
-
+  it('stops the evaluationQueue when evalQueue.clear(id) is called', () => {
     evalQueue.evaluate({}, dispatcher)
     evalQueue.evaluate({}, dispatcher)
     evalQueue.evaluate({}, dispatcher) // we will reject this one below (3)
