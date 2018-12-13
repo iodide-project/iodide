@@ -14,17 +14,6 @@ import { genericFetch as fetchLocally,
 
 import fetchFileFromParentContext from '../tools/fetch-file-from-parent-context'
 
-/*
-spec of desired behavior:
-- if there are any syntax errors, immediately print them in the console
-- if there are no syntax errors, kick off a fetch per valid line
-- while loading files, provide updates on status of each
-
-*/
-// export async function handleFetches(params) {
-// }
-
-
 export function fetchProgressInitialStrings(fetchInfo) {
   let text
   if (fetchInfo.parsed.error) text = `${syntaxErrorToString(fetchInfo)}\n`

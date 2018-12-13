@@ -53,11 +53,6 @@ describe('HistoryItem React component', () => {
     expect(historyItem().wrap(historyItem().find('div.history-cell'))
       .find('div.history-content')).toHaveLength(1)
   })
-
-  it.skip('always renders one div with class history-date inside history-cell', () => {
-    expect(historyItem().wrap(historyItem().find('div.history-cell'))
-      .find('div.history-date')).toHaveLength(1)
-  })
   it.skip('always renders one pre inside history-content', () => {
     expect(historyItem().find('pre.history-item-code')).toHaveLength(1)
   })
