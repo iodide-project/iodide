@@ -31,24 +31,27 @@ color: ${props => props.color || 'white'};
 export class KernelStateUnconnected extends React.Component {
     static propTypes = {
       kernelText: PropTypes.string.isRequired,
-    }
-
-    shouldComponentUpdate(nextProps) {
-      // FIXME: this seem unnecessary, but I'm noticing that
-      // render() is fired on every single state update, and I'm not sure why.
-      // probably because props.StatusIcon can't be checked easily.
-      return (this.props.kernelText !== nextProps.kernelText)
+      color: PropTypes.string,
     }
 
     render() {
       const {
-        kernelText, color, StatusIcon,
+        kernelText, color,
       } = this.props
+      let StatusIcon
+
+      switch (kernelText) {
+        case 'Kernel Idle': StatusIcon = <PanoramaFishEye size={20} />; break;
+        case 'Kernel Error': StatusIcon = <ErrorOutline size={20} />; break;
+        case 'Kernel Didn\'t Load': StatusIcon = <Error size={20} />; break;
+        default: StatusIcon = <CircularProgress size={20} />
+      }
+
       return (
         <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title={kernelText}>
           <KernelContainer>
             <IconContainer color={color}>
-              <StatusIcon />
+              {StatusIcon}
             </IconContainer>
           </KernelContainer>
         </Tooltip>
@@ -59,8 +62,7 @@ export class KernelStateUnconnected extends React.Component {
 export function mapStateToProps(state) {
   const { kernelState } = state
   let kernelText = 'Kernel Status'
-  let color = 'white'
-  let StatusIcon = () => <CircularProgress size={20} />
+  let color
   switch (kernelState) {
     case 'KERNEL_BUSY':
       kernelText = 'Kernel Busy'
@@ -71,23 +73,20 @@ export function mapStateToProps(state) {
     case 'KERNEL_IDLE':
       kernelText = 'Kernel Idle'
       color = 'forestgreen'
-      StatusIcon = () => <PanoramaFishEye size={20} />
       break
     case 'KERNEL_ERROR':
       kernelText = 'Kernel Error'
       color = 'gray'
-      StatusIcon = () => <ErrorOutline size={20} />
       break
     case 'KERNEL_LOAD_ERROR':
       kernelText = 'Kernel Didn\'t Load'
-      StatusIcon = () => <Error size={20} />
       color = 'red'
       break
     default:
       kernelText = 'Kernel Status'
   }
   return {
-    kernelText, color, StatusIcon,
+    kernelText, color,
   }
 }
 
