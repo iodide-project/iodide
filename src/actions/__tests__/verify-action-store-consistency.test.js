@@ -1,5 +1,6 @@
 import { store } from '../../store'
 import * as actions from '../actions'
+import { stateProperties } from '../../state-schemas/state-schema'
 import { SchemaValidationError } from '../../reducers/create-validated-reducer'
 import { languageDefinitions } from '../../state-schemas/language-definitions'
 
@@ -136,7 +137,7 @@ describe('setKernelState', () => {
       .toThrowError(SchemaValidationError)
   })
   it('passes on correct set of enums for setKernelState', () => {
-    const enums = ['KERNEL_LOADING', 'KERNEL_LOAD_ERROR', 'KERNEL_ERROR', 'KERNEL_IDLE', 'KERNEL_BUSY']
+    const enums = stateProperties.kernelState.enum
     enums.forEach((kernelState) => {
       expect(() => store.dispatch(actions.setKernelState(kernelState))).not.toThrow()
     })

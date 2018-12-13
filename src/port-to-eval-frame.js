@@ -1,6 +1,6 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
-import { addLanguage, triggerTextInEvalFrame, setKernelState } from './actions/actions'
+import { addLanguage, setKernelState } from './actions/actions'
 import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
 import evalQueue from './actions/evaluation-queue';
 
@@ -45,13 +45,14 @@ function receiveMessage(event) {
     const { messageType, message } = event.data
     switch (messageType) {
       case 'ADD_TO_EVALUATION_QUEUE': {
-        triggerTextInEvalFrame(message, store.dispatch)
+        evalQueue.evaluate(message, store.dispatch)
+        if (store.getState().kernelState !== 'KERNEL_BUSY') store.dispatch(setKernelState('KERNEL_BUSY'))
         break
       }
       case 'EVALUATION_RESPONSE': {
         const { evalId, status } = message
-        if (status === 'SUCCESS') evalQueue.resolveEvaluation(evalId)
-        else evalQueue.rejectEvaluation(evalId)
+        if (status === 'SUCCESS') evalQueue.continue(evalId)
+        else evalQueue.clear(evalId)
         const queueSize = evalQueue.getQueueSize()
         if (!queueSize) {
           store.dispatch(setKernelState('KERNEL_IDLE'))

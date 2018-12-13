@@ -161,30 +161,25 @@ export function getChunkContainingLine(jsmdChunks, line) {
   return activeChunk
 }
 
-export function triggerTextInEvalFrame(chunk, dispatch) {
-  evalQueue.evaluate(chunk, dispatch)
-}
-
 export function evaluateText() {
   return (dispatch, getState) => {
     const { jsmdChunks, kernelState } = getState()
     if (kernelState !== 'KERNEL_BUSY') dispatch(setKernelState('KERNEL_BUSY'))
     const cm = window.ACTIVE_CODEMIRROR
     const doc = cm.getDoc()
-    let actionObj
     if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
       const activeChunk = getChunkContainingLine(jsmdChunks, line)
-      actionObj = triggerTextInEvalFrame(activeChunk, dispatch)
+      evalQueue.evaluate(activeChunk, dispatch)
     } else {
       const selectionChunkSet = getAllSelections(doc)
         .map(selection =>
           selectionToChunks(selection, jsmdChunks, doc))
         .map(removeDuplicatePluginChunksInSelectionSet())
-      return Promise.all(selectionChunkSet.map(selection => Promise.all(selection.map(chunk =>
-        Promise.resolve(triggerTextInEvalFrame(chunk, dispatch))))))
+      selectionChunkSet.forEach((selection) => {
+        selection.forEach(chunk => evalQueue.evaluate(chunk, dispatch))
+      })
     }
-    return Promise.resolve(actionObj)
   }
 }
 
@@ -212,7 +207,7 @@ export function evaluateNotebook() {
     if (kernelState !== 'KERNEL_BUSY') dispatch(setKernelState('KERNEL_BUSY'))
     jsmdChunks.forEach((chunk) => {
       if (!['md', 'css', 'raw', ''].includes(chunk.chunkType)) {
-        triggerTextInEvalFrame(chunk, dispatch)
+        evalQueue.evaluate(chunk, dispatch)
       }
     })
   }
