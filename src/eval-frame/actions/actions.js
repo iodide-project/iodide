@@ -14,8 +14,7 @@ import {
 } from './language-actions'
 
 import { evaluateFetchText } from './fetch-cell-eval-actions'
-
-let evaluationQueue = Promise.resolve()
+import { postMessageToEditor } from '../port-to-editor';
 
 const MD = MarkdownIt({ html: true })
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
@@ -27,6 +26,14 @@ initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 initialVariables.add('CodeMirror')
 initialVariables.add('FETCH_RESOLVERS')
+
+export function sendStatusResponseToEditor(status, evalId) {
+  postMessageToEditor('EVALUATION_RESPONSE', { status, evalId })
+}
+
+export function addToEvaluationQueue(chunk) {
+  postMessageToEditor('ADD_TO_EVALUATION_QUEUE', chunk)
+}
 
 function getUserDefinedVariablesFromWindow() {
   return Object.keys(window)
@@ -119,7 +126,6 @@ export function evalConsoleInput(languageId) {
     // exit if there is no code in the console to  eval
     if (!code) { return undefined }
     const evalLanguageId = languageId === undefined ? state.languageLastUsed : languageId
-    const language = state.loadedLanguages[evalLanguageId]
 
     // FIXME: deal with side-effects for console evals
     // // clear stuff relating to the side effect target before evaling
@@ -129,34 +135,27 @@ export function evalConsoleInput(languageId) {
     // const sideEffectTarget = document.getElementById(`cell-${cell.id}-side-effect-target`)
     // if (sideEffectTarget) { sideEffectTarget.innerHTML = '' }
 
-
-    const updateAfterEvaluation = (output) => {
-      dispatch(updateConsoleText(''))
-      dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
-      dispatch(appendToEvalHistory(null, code, output))
-      dispatch(updateUserVariables())
-    }
-
-    const messageCallback = (msg) => {
-      dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
-    }
-
-    return runCodeWithLanguage(language, code, messageCallback)
-      .then(updateAfterEvaluation)
-      .catch((err) => {
-        dispatch(appendToEvalHistory(null, code, err, { historyType: 'CONSOLE_EVAL' }))
-        dispatch(updateConsoleText(''))
-        dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
-      })
+    dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
+    dispatch(updateConsoleText(''))
+    addToEvaluationQueue({
+      chunkType: evalLanguageId,
+      chunkId: undefined,
+      chunkContent: code,
+      evalFlags: '',
+    })
+    return Promise.resolve()
   }
 }
 
-function evaluateCode(code, language, state) {
+function evaluateCode(code, language, state, evalId) {
   return (dispatch) => {
     const updateCellAfterEvaluation = (output, evalStatus) => {
       const cellProperties = { rendered: true }
       if (evalStatus === 'ERROR') {
         cellProperties.evalStatus = evalStatus
+        sendStatusResponseToEditor('ERROR', evalId)
+      } else {
+        sendStatusResponseToEditor('SUCCESS', evalId)
       }
       dispatch(appendToEvalHistory(null, code, output))
       dispatch(updateUserVariables())
@@ -181,6 +180,7 @@ export function evaluateText(
   evalType,
   evalFlags, // eslint-disable-line
   chunkId = null,
+  evalId,
 ) {
   // allowed types:
   // md
@@ -190,31 +190,31 @@ export function evaluateText(
     // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
     // in the direct jsmd editing paradigm.
 
-    evaluationQueue = evaluationQueue.then(() => {
-      MOST_RECENT_CHUNK_ID.set(chunkId)
-      const sideEffect = document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
-      if (sideEffect) {
-        sideEffect.innerText = null
-      }
-      const state = getState()
-      if (evalType === 'fetch') {
-        return dispatch(evaluateFetchText(evalText))
-      } else if (evalType === 'plugin') {
-        return dispatch(evaluateLanguagePlugin(evalText))
-      } else if (Object.keys(state.loadedLanguages).includes(evalType) ||
+    MOST_RECENT_CHUNK_ID.set(chunkId)
+    const sideEffect = document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
+    if (sideEffect) {
+      sideEffect.innerText = null
+    }
+    const state = getState()
+    if (evalType === 'fetch') {
+      return dispatch(evaluateFetchText(evalText, evalId))
+    } else if (evalType === 'plugin') {
+      return dispatch(evaluateLanguagePlugin(evalText, evalId))
+    } else if (Object.keys(state.loadedLanguages).includes(evalType) ||
       Object.keys(state.languageDefinitions).includes(evalType)) {
-        return dispatch(evaluateCode(evalText, evalType, state))
-      } else if (!NONCODE_EVAL_TYPES.includes(evalType)) {
-        return dispatch(appendToEvalHistory(
-          null, evalText,
-          new Error(`eval type ${evalType} is not defined`), {
-            historyType: 'CONSOLE_EVAL',
-          },
-        ))
-      }
-      return Promise.resolve()
-    })
-    return evaluationQueue
+      return dispatch(evaluateCode(evalText, evalType, state, evalId))
+    } else if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === '') {
+      sendStatusResponseToEditor('SUCCESS', evalId)
+    } else {
+      sendStatusResponseToEditor('ERROR', evalId)
+      return dispatch(appendToEvalHistory(
+        null, evalText,
+        new Error(`eval type ${evalType} is not defined`), {
+          historyType: 'CONSOLE_EVAL',
+        },
+      ))
+    }
+    return Promise.resolve()
   }
 }
 

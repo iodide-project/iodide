@@ -32,7 +32,7 @@ function sendStateToEvalFrame(state) {
         evalFrameStateSelector(state),
       )
     } catch (e) {
-      console.log('STATE_UPDATE_FROM_EDITOR ----- NOT READY')
+      return state
     }
   }
   return state

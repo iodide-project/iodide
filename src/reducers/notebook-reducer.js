@@ -1,5 +1,5 @@
 import { newNotebook } from '../editor-state-prototypes'
-import { historyIdGen } from '../actions/history-id-generator'
+import { historyIdGen } from '../actions/id-generators'
 import { exportJsmdBundle, titleToHtmlFilename } from '../tools/export-tools'
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
@@ -114,6 +114,10 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'SET_MODAL_STATE': {
       return Object.assign({}, state, { modalState: action.modalState })
+    }
+
+    case 'SET_KERNEL_STATE': {
+      return Object.assign({}, state, { kernelState: action.kernelState })
     }
 
     case 'LOGIN_SUCCESS': {

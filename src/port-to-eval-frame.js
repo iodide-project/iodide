@@ -1,7 +1,8 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
-import { addLanguage } from './actions/actions'
+import { addLanguage, setKernelState } from './actions/actions'
 import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
+import evalQueue from './actions/evaluation-queue';
 
 let portToEvalFrame
 
@@ -43,6 +44,21 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data
     switch (messageType) {
+      case 'ADD_TO_EVALUATION_QUEUE': {
+        evalQueue.evaluate(message, store.dispatch)
+        if (store.getState().kernelState !== 'KERNEL_BUSY') store.dispatch(setKernelState('KERNEL_BUSY'))
+        break
+      }
+      case 'EVALUATION_RESPONSE': {
+        const { evalId, status } = message
+        if (status === 'SUCCESS') evalQueue.continue(evalId)
+        else evalQueue.clear(evalId)
+        const queueSize = evalQueue.getQueueSize()
+        if (!queueSize) {
+          store.dispatch(setKernelState('KERNEL_IDLE'))
+        }
+        break
+      }
       case 'REQUEST_FETCH': {
         fetchFileFromServer(message.path, message.fetchType)
           .then((file) => {
@@ -96,7 +112,7 @@ function receiveMessage(event) {
 }
 
 export const listenForEvalFramePortReady = (messageEvent) => {
-  console.log('listenForEvalFramePortReady', messageEvent.data, messageEvent.origin)
+  console.info('listenForEvalFramePortReady', messageEvent.data, messageEvent.origin)
   if (messageEvent.data === 'EVAL_FRAME_READY_MESSAGE') {
     portToEvalFrame = messageEvent.ports[0] // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage
