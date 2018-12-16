@@ -1,9 +1,24 @@
 {
-  "presets" : ["es2016", "react"],
-  "plugins" : ["transform-class-properties"],
+  "presets": [
+    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": 6
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "lodash",
+    "@babel/plugin-proposal-class-properties"
+  ],
   "env": {
     "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
+      "plugins": [
+        "@babel/plugin-transform-modules-commonjs"
+      ]
     }
   }
 }

@@ -5,6 +5,7 @@
   "main": "index.jsx",
   "author": "Iodide Project Team",
   "license": "MPL-2.0",
+  "sideEffects": false,
   "engines": {
     "node": "8.x"
   },
@@ -19,7 +20,7 @@
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/test/setupTests.js",
     "transformIgnorePatterns": [
-      "/node_modules/(?!test-component).+\\.js$"
+      "/node_modules/(?!MODULE_NAME_HERE).+\\.js$"
     ],
     "globals": {
       "window": true,
@@ -48,6 +49,7 @@
     "font-awesome": "^4.7.0",
     "golden-layout": "^1.5.9",
     "lodash": "^4.17.10",
+    "lodash-webpack-plugin": "^0.11.5",
     "lz-string": "^1.4.4",
     "markdown-it": "^8.4.1",
     "markdown-it-anchor": "^5.0.0",
@@ -74,14 +76,16 @@
     "webpack-shell-plugin": "^0.5.0"
   },
   "devDependencies": {
-    "babel-core": "6.26.3",
+    "@babel/core": "^7.2.0",
+    "@babel/plugin-proposal-class-properties": "^7.2.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.0.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
-    "babel-jest": "23.6.0",
-    "babel-loader": "7.1.5",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "6.26.2",
-    "babel-preset-es2016": "6.24.1",
-    "babel-preset-react": "6.24.1",
+    "babel-jest": "^23.4.2",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-lodash": "^3.3.4",
     "create-file-webpack": "1.0.2",
     "css-loader": "1.0.1",
     "dotenv": "6.2.0",
