@@ -1,53 +1,46 @@
-import { updateAutosave, getAutosaveState } from '../autosave'
-import { stateFromJsmd } from '../jsmd-tools'
-import { newNotebook, newCell } from '../../editor-state-prototypes'
+/* eslint-disable no-unused-vars */
+import { IDBFactory, IDBKeyRange, reset } from 'shelving-mock-indexeddb';
 
-let states
+window.indexedDB = new IDBFactory();
+window.IDBKeyRange = IDBKeyRange;
 
-describe('updateAutosave', () => {
+describe('it test the autosave', () => {
   beforeEach(() => {
-    const originalState = newNotebook()
-    updateAutosave(originalState, true)
+    reset();
+  });
+  afterEach(() => reset());
 
-    // add some state
-    const stateUpdate = {
-      cells: [newCell(1, 'code'), newCell(2, 'markdown')],
-      title: 'autosaved title',
-    }
-    stateUpdate.cells[0].selected = true
-    const updatedState = Object.assign({}, originalState, stateUpdate)
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.runAllTimers());
 
-    states = {
-      originalState,
-      updatedState,
-    }
-  })
+  it('getAutoSaveState', () => {
+    const request = window.indexedDB.open('myDatabase', 1);
 
-  it('saves over original when asked to', () => {
-    updateAutosave(states.updatedState, true)
-    const newAutosavedState = getAutosaveState(states.updatedState)
-    expect(Object.keys(newAutosavedState).sort()).toEqual(['originalCopy', 'originalSaved'])
+    request.addEventListener('upgradeneeded', () => {
+      const store = request.result.createObjectStore('myStore');
 
-    const originalCopyState = stateFromJsmd(newAutosavedState.originalCopy)
-    expect(originalCopyState.cells).toEqual(states.updatedState.cells)
-    expect(originalCopyState.title).toEqual(states.updatedState.title)
-  })
+      const index = store.createIndex('myNameIndex', 'name');
+      const anotherIndex = store.createIndex('myLengthIndex', 'length');
+    });
 
-  it('only updates dirty copy when not asked to write over original', () => {
-    updateAutosave(states.updatedState, false)
-    const newAutosavedState = getAutosaveState(states.updatedState)
-    expect(Object.keys(newAutosavedState).sort())
-      .toEqual(['dirtyCopy', 'dirtySaved', 'originalCopy', 'originalSaved'])
-
-    const originalCopyState = stateFromJsmd(newAutosavedState.originalCopy)
-    expect(originalCopyState.cells).toEqual(states.originalState.cells)
-    expect(originalCopyState.title).toEqual(states.originalState.title)
-
-    const dirtyCopyState = stateFromJsmd(newAutosavedState.dirtyCopy)
-    expect(dirtyCopyState.cells).toEqual(states.updatedState.cells)
-    expect(dirtyCopyState.title).toEqual(states.updatedState.title)
-  })
-})
-
-describe('updateAutosave', () => {
+    request.addEventListener('success', () => {
+      const putTransaction = request.result.transaction(['myStore'], 'readwrite');
+      const putStore = putTransaction.objectStore('myStore');
+      putStore.put({
+        originalCopy: '',
+        originalCopyRevision: '',
+        originalSaved: 'time at saving',
+      }, 'autosavekey')
+      const getTransaction = request.result.transaction(['myStore'], 'readonly');
+      const getStore = getTransaction.objectStore('myStore');
+      getStore.get('autosavekey').addEventListener('success', (event) => {
+        console.log('Found', event.target.result);
+        expect(event.target.result).toEqual({
+          originalCopy: '',
+          originalCopyRevision: '',
+          originalSaved: 'time at saving',
+        })
+      });
+    });
+  });
 })
