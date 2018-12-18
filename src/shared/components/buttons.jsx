@@ -17,6 +17,10 @@ transition: 50ms;
 border: 1px solid rgba(0,0,0,0);
 border-radius: 4px;
 text-decoration: none;
+
+:hover {
+  cursor: pointer;
+}
 `
 
 const TextButtonContainer = elementType => styled(elementType)`

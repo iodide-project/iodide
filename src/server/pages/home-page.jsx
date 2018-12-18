@@ -5,6 +5,7 @@ import PageBody from '../components/page-body';
 import PageHeader from '../components/page-header';
 import TopContainer from '../components/page-containers/top-container';
 import BelowFoldContainer from '../components/page-containers/below-fold-container';
+import SplashContent from '../components/splash-content'
 import NotebookDisplay from '../components/notebook-display'
 import NotebookDisplayItem from '../components/notebook-display-item'
 import TrendingNotebooksList from '../components/trending-notebooks-list';
@@ -34,6 +35,8 @@ export default class HomePage extends React.Component {
         <Header userInfo={this.props.userInfo} />
         <PageBody>
           <TopContainer>
+            <SplashContent />
+            <PageHeader>Try These Examples</PageHeader>
             <NotebookDisplay>
               <NotebookDisplayItem
                 title="What a Web Notebook Looks Like"
