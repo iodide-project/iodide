@@ -5,6 +5,7 @@ import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
 import PageBody from '../components/page-body';
 import Header from '../components/header';
+import BelowFoldContainer from '../components/page-containers/below-fold-container'
 import Table from '../components/table';
 import { MediumUserName } from '../components/user-name';
 import { fetchWithCSRFTokenAndJSONContent } from '../../shared/fetch-with-csrf-token';
@@ -103,12 +104,13 @@ export default class RevisionsPage extends React.Component {
       <div>
         <Header userInfo={this.props.userInfo} />
         <PageBody>
-          <RevisionsPageHeader>
-            <a href={`/notebooks/${this.props.ownerInfo.notebookId}`}>
-              {this.props.ownerInfo.title}
-            </a> <span> / revisions</span>
-          </RevisionsPageHeader>
-          {
+          <BelowFoldContainer>
+            <RevisionsPageHeader>
+              <a href={`/notebooks/${this.props.ownerInfo.notebookId}`}>
+                {this.props.ownerInfo.title}
+              </a> <span> / revisions</span>
+            </RevisionsPageHeader>
+            {
             forkedFrom ?
               <ForkedFromLink
                 revisionID={this.props.ownerInfo.forkedFromRevisionID}
@@ -118,12 +120,12 @@ export default class RevisionsPage extends React.Component {
               /> :
               undefined
           }
-          <MediumUserName
-            username={this.props.ownerInfo.username}
-            fullName={this.props.ownerInfo.full_name}
-            avatar={this.props.ownerInfo.avatar}
-          />
-          {
+            <MediumUserName
+              username={this.props.ownerInfo.username}
+              fullName={this.props.ownerInfo.full_name}
+              avatar={this.props.ownerInfo.avatar}
+            />
+            {
             isCurrentUsersPage &&
             <ActionsContainer>
               <NotebookActionsMenu
@@ -142,21 +144,21 @@ export default class RevisionsPage extends React.Component {
               />
             </ActionsContainer>
           }
-          <FilesList
-            notebookID={this.props.ownerInfo.notebookId}
-            isUserAccount={isCurrentUsersPage}
-            files={this.state.files}
-            onDelete={this.onDeleteFile}
-          />
-          <h3>Notebook Revisions</h3>
-          <Table>
-            <tbody>
-              <tr>
-                <th>When</th>
-                <th>Title</th>
-                {isCurrentUsersPage ? <th>Actions</th> : undefined}
-              </tr>
-              {
+            <FilesList
+              notebookID={this.props.ownerInfo.notebookId}
+              isUserAccount={isCurrentUsersPage}
+              files={this.state.files}
+              onDelete={this.onDeleteFile}
+            />
+            <h3>Notebook Revisions</h3>
+            <Table>
+              <tbody>
+                <tr>
+                  <th>When</th>
+                  <th>Title</th>
+                  {isCurrentUsersPage ? <th>Actions</th> : undefined}
+                </tr>
+                {
                         this.state.revisions.map((r, i) => (
                           <tr key={r.id}>
                             <td><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{formatServerDate(r.date)}</a></td>
@@ -184,8 +186,9 @@ export default class RevisionsPage extends React.Component {
                           </tr>
                         ))
                     }
-            </tbody>
-          </Table>
+              </tbody>
+            </Table>
+          </BelowFoldContainer>
         </PageBody>
       </div>
     )

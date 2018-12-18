@@ -3,6 +3,8 @@ import React from 'react';
 import Header from '../components/header';
 import PageBody from '../components/page-body';
 import PageHeader from '../components/page-header';
+import TopContainer from '../components/page-containers/top-container';
+import BelowFoldContainer from '../components/page-containers/below-fold-container';
 import NotebookDisplay from '../components/notebook-display'
 import NotebookDisplayItem from '../components/notebook-display-item'
 import TrendingNotebooksList from '../components/trending-notebooks-list';
@@ -31,28 +33,58 @@ export default class HomePage extends React.Component {
       <div>
         <Header userInfo={this.props.userInfo} />
         <PageBody>
-          <NotebookDisplay>
-            <NotebookDisplayItem
-              title="Lorenz Attractor"
-              description="
+          <TopContainer>
+            <NotebookDisplay>
+              <NotebookDisplayItem
+                title="What a Web Notebook Looks Like"
+                description="
+                   This tutorial walks through all the important parts of Iodide."
+                href="#"
+                imageSource="https://media.giphy.com/media/Rdo9axaQcvGBq/giphy.gif"
+              />
+              <NotebookDisplayItem
+                title="Lorenz Attractor"
+                description="
                    A concise example demonstrating how powerful
                    a web tech-focused notebook environment is for computational presentations."
-              href="#"
-              imageSource="https://media.giphy.com/media/ftdkB78fuQ1Eb3J2o1/giphy.gif"
-            />
-            <NotebookDisplayItem
-              title="Pyodide: Scientific Python in your Browser"
-              description="
+                href="#"
+                imageSource="https://media.giphy.com/media/ftdkB78fuQ1Eb3J2o1/giphy.gif"
+              />
+              <NotebookDisplayItem
+                title="Pyodide: Scientific Python in your Browser"
+                description="
                 A tutorial demonstrating how
                 to use Python, Numpy, Pandas, and Matplotlib entirely within your browser."
-              href="#"
-              imageSource="https://media.giphy.com/media/65NKOOH1IQrsLx5aZb/giphy.gif"
-            />
-          </NotebookDisplay>
-          {notebookList.length ?
-            <TrendingNotebooksPage notebookList={notebookList} /> :
-            <LetsGetStarted />
+                href="#"
+                imageSource="https://media.giphy.com/media/65NKOOH1IQrsLx5aZb/giphy.gif"
+              />
+              <NotebookDisplayItem
+                title="World Happiness Report"
+                description="A neat data exploration using the World Happiness Report."
+                href="#"
+                imageSource="https://media.giphy.com/media/i4rRuA3cksj8a9R58g/giphy.gif"
+              />
+              <NotebookDisplayItem
+                title="MRIs and You"
+                description="One man's cartoon / WebGL journey into his own brain."
+                href="#"
+                imageSource="https://media.giphy.com/media/9G6RGV7z6k4uzygzOQ/giphy.gif"
+              />
+              <NotebookDisplayItem
+                title="Eviction Notices By SF Neighborhood, 1999-present"
+                description="
+                A small data presentation about one aspect of the SF Housing crisis."
+                href="https://iodide.io/iodide-examples/eviction-notices-sf.html"
+                imageSource="https://media.giphy.com/media/MohSU55IoyGmAXgEkY/giphy.gif"
+              />
+            </NotebookDisplay>
+          </TopContainer>
+          <BelowFoldContainer>
+            {notebookList.length ?
+              <TrendingNotebooksPage notebookList={notebookList} /> :
+              <LetsGetStarted />
           }
+          </BelowFoldContainer>
         </PageBody>
       </div>
     )

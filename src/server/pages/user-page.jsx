@@ -3,7 +3,8 @@ import styled from 'react-emotion';
 import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
 import Header from '../components/header';
-import PageBody from '../components/page-body'
+import PageBody from '../components/page-body';
+import BelowFoldContainer from '../components/page-containers/below-fold-container'
 import Table from '../components/table'
 import AttentionBlock from '../components/attention-block'
 import NotebookActionsMenu from '../components/notebook-actions-menu'
@@ -115,17 +116,19 @@ export default class UserPage extends React.Component {
       <div>
         <Header userInfo={userInfo} />
         <PageBody>
-          <UserInformationContainer>
-            <img width={150} src={thisUser.avatar} alt={`${thisUser.name}'s avatar`} />
-            <h1 >{thisUser.full_name}
-            </h1>
-            <h2>{thisUser.name}</h2>
-          </UserInformationContainer>
+          <BelowFoldContainer>
+            <UserInformationContainer>
+              <img width={150} src={thisUser.avatar} alt={`${thisUser.name}'s avatar`} />
+              <h1 >{thisUser.full_name}
+              </h1>
+              <h2>{thisUser.name}</h2>
+            </UserInformationContainer>
 
-          <UserNotebookList
-            isUserAccount={isLoggedIn(userInfo) && thisUser.name === userInfo.name}
-            notebookList={notebookList}
-          />
+            <UserNotebookList
+              isUserAccount={isLoggedIn(userInfo) && thisUser.name === userInfo.name}
+              notebookList={notebookList}
+            />
+          </BelowFoldContainer>
         </PageBody>
       </div>
     );
