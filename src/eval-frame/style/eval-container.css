@@ -30,14 +30,6 @@ div#eval-container.presentation-mode {
   word-break: keep-all;
 }
 
-div.cells-list {
-  box-sizing: border-box;
-  width: 100%;
-  padding-top: 40px;
-  padding-bottom: 60px;
-  flex-grow: 1 
-}
-
 /************************************************/
 /* cell output styles */
 

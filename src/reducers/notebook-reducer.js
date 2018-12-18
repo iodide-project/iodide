@@ -1,13 +1,6 @@
-import {
-  newNotebook,
-  newCell,
-  newCellID,
-} from '../editor-state-prototypes'
-
-import {
-  exportJsmdBundle,
-  titleToHtmlFilename,
-} from '../tools/jsmd-tools'
+import { newNotebook } from '../editor-state-prototypes'
+import { historyIdGen } from '../actions/history-id-generator'
+import { exportJsmdBundle, titleToHtmlFilename } from '../tools/export-tools'
 
 import { getNotebookInfoFromDocument, getUserDataFromDocument } from '../tools/server-tools'
 
@@ -23,7 +16,7 @@ function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessa
 }
 
 function addAppMessageToState(state, appMessage) {
-  const nextAppMessageId = newCellID(state.appMessages)
+  const nextAppMessageId = historyIdGen.nextId()
   state.appMessages
     .push(newAppMessage(nextAppMessageId, appMessage.message, appMessage.details, appMessage.when))
   return state
@@ -37,7 +30,6 @@ initialVariables.add('CodeMirror')
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState
   let title
-  let cells
 
   switch (action.type) {
     case 'RESET_NOTEBOOK':
@@ -49,7 +41,9 @@ const notebookReducer = (state = newNotebook(), action) => {
         state,
         { viewMode: action.exportAsReport ? 'REPORT_VIEW' : 'EXPLORE_VIEW' },
       )
-      const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(exportJsmdBundle(exportState))}`
+      const dataStr = `data:text/json;charset=utf-8,${
+        encodeURIComponent(exportJsmdBundle(exportState.jsmd, exportState.title))
+      }`
       const dlAnchorElem = document.getElementById('export-anchor')
       dlAnchorElem.setAttribute('href', dataStr)
       title = exportState.title === undefined ? 'new-notebook' : exportState.title
@@ -81,7 +75,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case 'ADD_TO_EVAL_FRAME_MESSAGE_QUEUE': {
-      console.log('ADD_TO_EVAL_FRAME_MESSAGE_QUEUE', action.actionToPost)
       const evalFrameMessageQueue = state.evalFrameMessageQueue.slice()
       evalFrameMessageQueue.push(action.actionToPost)
       return Object.assign({}, state, { evalFrameMessageQueue })
@@ -91,20 +84,23 @@ const notebookReducer = (state = newNotebook(), action) => {
     // note: loading a NB should always assign to a copy of the latest global
     // and per-cell state for backwards compatibility
       nextState = action.newState
-      cells = nextState.cells.map((cell, i) =>
-        Object.assign(newCell(i, cell.cellType), cell))
-
       return Object.assign(
-        newNotebook(), nextState, { cells },
+        newNotebook(), nextState,
         getUserDataFromDocument(), getNotebookInfoFromDocument(),
       )
     }
 
     case 'REPLACE_NOTEBOOK_CONTENT': {
-      cells = action.cells.map((cell, i) =>
-        Object.assign(newCell(i, cell.cellType), cell))
+      return Object.assign({}, state, {
+        jsmd: action.jsmd,
+        jsmdChunks: action.jsmdChunks,
+        title: action.title,
+      })
+    }
 
-      return Object.assign({}, state, { cells, title: action.title })
+    case 'UPDATE_JSMD_CONTENT': {
+      const { jsmd, jsmdChunks } = action
+      return Object.assign({}, state, { jsmd, jsmdChunks })
     }
 
     case 'NOTEBOOK_SAVED': {
@@ -136,11 +132,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'TOGGLE_EDITOR_LINK': {
       const scrollingLinked = !state.scrollingLinked
       return Object.assign({}, state, { scrollingLinked })
-    }
-
-    case 'CHANGE_MODE': {
-      const { mode } = action
-      return Object.assign({}, state, { mode })
     }
 
     case 'INCREMENT_EXECUTION_NUMBER': {

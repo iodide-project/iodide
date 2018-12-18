@@ -3,22 +3,17 @@ import MarkdownItKatex from 'markdown-it-katex'
 import MarkdownItAnchor from 'markdown-it-anchor'
 
 import {
-  getCellById,
-  // isCommandMode
-} from '../tools/notebook-utils'
-import {
-  getSelectedCell,
-} from '../reducers/output-reducer-utils'
-
-import { waitForExplicitContinuationStatusResolution } from '../iodide-api/evalQueue'
+  NONCODE_EVAL_TYPES,
+} from '../../state-schemas/editor-only-state-schemas'
 
 import {
-  evaluateLanguagePluginCell,
+  // evaluateLanguagePluginCell,
+  evaluateLanguagePlugin,
   ensureLanguageAvailable,
   runCodeWithLanguage,
 } from './language-actions'
 
-import { evaluateFetchCell } from './fetch-cell-eval-actions'
+import { evaluateFetchText } from './fetch-cell-eval-actions'
 
 let evaluationQueue = Promise.resolve()
 
@@ -47,6 +42,26 @@ function IdFactory() {
 }
 
 export const historyIdGen = new IdFactory()
+
+class Singleton {
+  constructor() {
+    this.data = null
+  }
+  set(data) {
+    this.data = data
+  }
+  get() {
+    return this.data
+  }
+}
+
+const MOST_RECENT_CHUNK_ID = new Singleton()
+
+export { MOST_RECENT_CHUNK_ID }
+
+
+// ////////////// actual actions
+
 
 export function resetNotebook() {
   // we still need this for some tests to work, even though it's not really used
@@ -99,16 +114,6 @@ export function updateAppMessages(messageObj) {
   }
 }
 
-// note: this function is NOT EXPORTED. It is a private function meant
-// to be wrapped by other actions that will configure and dispatch it.
-export function updateCellProperties(cellId, updatedProperties) {
-  return {
-    type: 'UPDATE_CELL_PROPERTIES',
-    cellId,
-    updatedProperties,
-  }
-}
-
 export function incrementExecutionNumber() {
   return {
     type: 'INCREMENT_EXECUTION_NUMBER',
@@ -156,11 +161,6 @@ export function evalConsoleInput(languageId) {
     dispatch(incrementExecutionNumber())
 
     const updateAfterEvaluation = (output) => {
-      // const cellProperties = { rendered: true }
-      // if (evalStatus === 'ERROR') {
-      //   cellProperties.evalStatus = evalStatus
-      // }
-      // dispatch(updateCellProperties(cell.id, cellProperties))
       dispatch(updateConsoleText(''))
       dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
       dispatch(appendToEvalHistory(null, code, output))
@@ -173,120 +173,73 @@ export function evalConsoleInput(languageId) {
 
     return runCodeWithLanguage(language, code, messageCallback)
       .then(updateAfterEvaluation)
-      .then(waitForExplicitContinuationStatusResolution)
-      // .then(() => dispatch(temporarilySaveRunningCellID(undefined)))
   }
 }
 
-function evaluateCodeCell(cell) {
-  return (dispatch, getState) => {
-    // this variable may get changed in eval.
-    const state = getState()
-    const code = cell.content
-
-    // clear stuff relating to the side effect target before evaling
-    dispatch({ type: 'CELL_SIDE_EFFECT_STATUS', cellId: cell.id, hasSideEffect: false })
-    // this is one place where we have to directly mutate the DOM b/c we need
-    // this to happen outside of React's update schedule. see also iodide-api/output.js
-    const sideEffectTarget = document.getElementById(`cell-${cell.id}-side-effect-target`)
-    if (sideEffectTarget) { sideEffectTarget.innerHTML = '' }
-
-    dispatch(temporarilySaveRunningCellID(cell.id))
-
+function evaluateCode(code, language, state) {
+  return (dispatch) => {
     const updateCellAfterEvaluation = (output, evalStatus) => {
       const cellProperties = { rendered: true }
       if (evalStatus === 'ERROR') {
         cellProperties.evalStatus = evalStatus
       }
-      dispatch(updateCellProperties(cell.id, cellProperties))
-      // dispatch(incrementExecutionNumber())
-      dispatch(appendToEvalHistory(cell.id, cell.content, output))
+      dispatch(appendToEvalHistory(null, code, output))
       dispatch(updateUserVariables())
     }
 
     const messageCallback = (msg) => {
-      dispatch(appendToEvalHistory(cell.id, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
+      dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
     }
 
-    return ensureLanguageAvailable(cell.language, cell, state, dispatch)
-      .then(language => runCodeWithLanguage(language, code, messageCallback))
+    return ensureLanguageAvailable(language, state, dispatch)
+      .then(languageEvaluator => runCodeWithLanguage(languageEvaluator, code, messageCallback))
       .then(
         output => updateCellAfterEvaluation(output),
         output => updateCellAfterEvaluation(output, 'ERROR'),
       )
-      .then(waitForExplicitContinuationStatusResolution)
-      .then(() => dispatch(temporarilySaveRunningCellID(undefined)));
   }
 }
 
-function evaluateMarkdownCell(cell) {
-  return dispatch => dispatch(updateCellProperties(
-    cell.id,
-    {
-      value: MD.render(cell.content),
-      rendered: true,
-      evalStatus: 'SUCCESS',
-    },
-  ))
-}
-
-function evaluateCSSCell(cell) {
-  return (dispatch) => {
-    dispatch(updateCellProperties(
-      cell.id,
-      {
-        value: cell.content,
-        rendered: true,
-        evalStatus: 'SUCCESS',
-      },
-    ))
-    dispatch(appendToEvalHistory(
-      cell.id,
-      cell.content,
-      'Page styles updated',
-      { historyType: 'CELL_EVAL_INFO' },
-    ))
-  }
-}
-
-export function evaluateCell(cellId) {
+// FIXME use evalFlags for something real
+export function evaluateText(
+  evalText,
+  evalType,
+  evalFlags, // eslint-disable-line
+  chunkId = null,
+) {
+  // allowed types:
+  // md
   return (dispatch, getState) => {
-    let cell
-    if (cellId === undefined) {
-      cell = getSelectedCell(getState())
-    } else {
-      cell = getCellById(getState().cells, cellId)
-    }
+    // exit if there is no code to eval or no eval type
+    // if (!evalText || !evalType) { return undefined }
+    // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
+    // in the direct jsmd editing paradigm.
 
-    if (!cell.content) {
-      // if the cell has no content, evaluation is a no-op
-      return undefined
-    }
-
-    let evaluation
-    dispatch(incrementExecutionNumber())
-    // here is where we should mark a cell as PENDING.
-    if (cell.cellType === 'code') {
-      evaluationQueue = evaluationQueue
-        .then(() => dispatch(evaluateCodeCell(cell)))
-      evaluation = evaluationQueue
-    } else if (cell.cellType === 'markdown') {
-      evaluation = dispatch(evaluateMarkdownCell(cell))
-    } else if (cell.cellType === 'css') {
-      evaluation = dispatch(evaluateCSSCell(cell))
-    } else if (cell.cellType === 'fetch') {
-      evaluationQueue = evaluationQueue
-        .then(() => dispatch(evaluateFetchCell(cell)))
-      evaluation = evaluationQueue
-    } else if (cell.cellType === 'plugin') {
-      if (JSON.parse(cell.content).pluginType === 'language') {
-        evaluationQueue = evaluationQueue.then(() => dispatch(evaluateLanguagePluginCell(cell)))
-        evaluation = evaluationQueue
+    evaluationQueue = evaluationQueue.then(() => {
+      MOST_RECENT_CHUNK_ID.set(chunkId)
+      const sideEffect = document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
+      if (sideEffect) {
+        sideEffect.innerText = null
       }
-    } else {
-      cell.rendered = false
-    }
-    return evaluation
+      const state = getState()
+      if (evalType === 'fetch') {
+        return dispatch(evaluateFetchText(evalText))
+      } else if (evalType === 'plugin') {
+        return dispatch(evaluateLanguagePlugin(evalText))
+      } else if (Object.keys(state.loadedLanguages).includes(evalType) ||
+      Object.keys(state.languageDefinitions).includes(evalType)) {
+        return dispatch(evaluateCode(evalText, evalType, state))
+      } else if (!NONCODE_EVAL_TYPES.includes(evalType)) {
+        return dispatch(appendToEvalHistory(
+          null, evalText,
+          new Error(`eval type ${evalType} is not defined`), {
+            historyType: 'CONSOLE_EVAL',
+          },
+        ))
+      }
+      return Promise.resolve()
+    })
+    return evaluationQueue
   }
 }
 

@@ -49,7 +49,7 @@
   outline: none;
 }
 
-div.history-cells {
+div.history-items {
   /*padding-left: 20px;
   padding-right: 20px;
   padding-top: 20px;
@@ -59,7 +59,7 @@ div.history-cells {
 div.history-cell {
 }
 
-div.history-cells div.cell-container {
+div.history-items div.cell-container {
   padding-right:0px;
 }
 

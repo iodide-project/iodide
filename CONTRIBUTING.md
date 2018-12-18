@@ -69,6 +69,13 @@ The files built in prod mode have resource paths set to fixed web addresses, not
 
 `npm test` runs the test suite. If you are hoping to submit a PR for your changes, it is vital that the test suite passes.
 
+### Landing a PR!
+
+We're excited to have you land your first PR! Some key guidelines for having a PR accepted:
+1. Your PR should only contain commits pertaining to the change
+2. New code must have tests
+3. All new and existing tests must pass, the linter must pass, and CI must pass
+
 
 
 ## Style Guide

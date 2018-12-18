@@ -1,4 +1,4 @@
-import { newNotebook, newCell, newCellID } from '../eval-frame-state-prototypes'
+import { newNotebook, newCellID } from '../eval-frame-state-prototypes'
 
 function clearUserDefinedVars(userDefinedVarNames) {
   // remove user defined variables when loading/importing a new/saved NB
@@ -35,12 +35,9 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign(newNotebook())
 
     case 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD': {
-      const cells = action.stateUpdatesFromEditor.cells
-        .map(c => Object.assign(newCell(), c))
       const newState = Object.assign(
         newNotebook(),
         action.stateUpdatesFromEditor,
-        { cells },
       )
       return newState
     }
@@ -55,11 +52,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     case 'SET_VIEW_MODE': {
       const { viewMode } = action
       return Object.assign({}, state, { viewMode })
-    }
-
-    case 'CHANGE_MODE': {
-      const { mode } = action
-      return Object.assign({}, state, { mode })
     }
 
     case 'INCREMENT_EXECUTION_NUMBER': {
@@ -88,6 +80,11 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case 'CLEAR_CONSOLE_TEXT_CACHE': {
       return Object.assign({}, state, { consoleTextCache: '' })
+    }
+
+    case 'UPDATE_MARKDOWN_CHUNKS': {
+      const reportChunks = [...action.reportChunks]
+      return Object.assign({}, state, { reportChunks })
     }
 
     case 'CONSOLE_HISTORY_MOVE': {

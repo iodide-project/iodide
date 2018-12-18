@@ -20,6 +20,5 @@ export function newNotebookFromSchema(schema) {
     // to the same actual object
     initialState[k] = _.cloneDeep(schema.properties[k].default)
   })
-  initialState.cells[0].selected = true
   return initialState
 }

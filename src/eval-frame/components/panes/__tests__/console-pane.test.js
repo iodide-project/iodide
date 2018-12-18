@@ -28,23 +28,23 @@ describe('ConsolePaneUnconnected React component', () => {
     mountedPane = undefined
   })
 
-  it('always renders one div with class history-cells', () => {
-    expect(consolePane().find('div.history-cells'))
+  it('always renders one div with class history-items', () => {
+    expect(consolePane().find('div.history-items'))
       .toHaveLength(1)
   })
   // rewrite this test.
 
-  it('always renders one div.no-history inside history-cells when history is empty', () => {
+  it('always renders one div.no-history inside history-items when history is empty', () => {
     props.history = []
     expect(consolePane().find(EmptyPaneContents)).toHaveLength(1)
   })
 
-  it('always renders HistoryItem inside history-cells when history is non empty', () => {
-    expect(consolePane().find('div.history-cells').find(HistoryItem))
+  it('always renders HistoryItem inside history-items when history is non empty', () => {
+    expect(consolePane().find('div.history-items').find(HistoryItem))
       .toHaveLength(1)
   })
 
-  it('always renders correct number of HistoryItem inside history-cells', () => {
+  it('always renders correct number of HistoryItem inside history-items', () => {
     props.history = [
       {
         cellId: 0,
@@ -58,7 +58,7 @@ describe('ConsolePaneUnconnected React component', () => {
       },
     ]
 
-    expect(consolePane().find('div.history-cells').find(HistoryItem))
+    expect(consolePane().find('div.history-items').find(HistoryItem))
       .toHaveLength(2)
   })
 })

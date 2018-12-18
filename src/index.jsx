@@ -18,6 +18,7 @@ import './style/header-bar-styles.css'
 import './style/side-panes.css'
 import './style/menu-and-button-and-ui-styles.css'
 import './style/cell-styles.css'
+import './style/codemirror-styles.css'
 import './style/help-modal-styles.css'
 import './style/golden-layout-style-overrides.css'
 
@@ -26,7 +27,6 @@ import EditorPaneContainer from './components/editor-pane-container'
 import { store } from './store'
 import handleInitialJsmd from './handle-initial-jsmd'
 import handleServerVariables from './handle-server-variables'
-import handleLanguageDefinitions from './handle-language-definitions'
 import handleReportViewModeInitialization from './handle-report-view-mode-initialization'
 import { initializeDefaultKeybindings } from './keybindings'
 
@@ -36,7 +36,6 @@ import './tools/initialize-codemirror-loadmode'
 import './tools/initialize-dom'
 import { checkForAutosave, subscribeToAutoSave } from './tools/autosave'
 
-handleLanguageDefinitions(store)
 initializeDefaultKeybindings()
 
 window.addEventListener('message', listenForEvalFramePortReady, false)
