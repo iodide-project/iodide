@@ -5,7 +5,8 @@ import PageBody from '../components/page-body';
 import PageHeader from '../components/page-header';
 import TopContainer from '../components/page-containers/top-container';
 import BelowFoldContainer from '../components/page-containers/below-fold-container';
-import SplashContent from '../components/splash-content'
+import MarketingCopySplash from '../components/splash/marketing-copy-splash'
+import LoggedInSplash from '../components/splash/logged-in-splash'
 import NotebookDisplay from '../components/notebook-display'
 import NotebookDisplayItem from '../components/notebook-display-item'
 import TrendingNotebooksList from '../components/trending-notebooks-list';
@@ -29,13 +30,15 @@ const LetsGetStarted = () => (
 
 export default class HomePage extends React.Component {
   render() {
+    const isLoggedIn = 'name' in this.props.userInfo
     const { notebookList } = this.props
     return (
       <div>
         <Header userInfo={this.props.userInfo} />
         <PageBody>
           <TopContainer>
-            <SplashContent />
+            {!isLoggedIn && <MarketingCopySplash /> }
+            {isLoggedIn && <LoggedInSplash userInfo={this.props.userInfo} />}
             <PageHeader>Try These Examples</PageHeader>
             <NotebookDisplay>
               <NotebookDisplayItem

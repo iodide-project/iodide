@@ -21,14 +21,19 @@ def get_user_info_dict(user):
 
 @ensure_csrf_cookie
 def index(request):
+    user_info = get_user_info_dict(request.user)
     notebooks = Notebook.objects \
         .annotate(latest_revision=Max('revisions__created')) \
         .order_by('-latest_revision') \
         .values_list('id', 'title', 'owner__username', 'owner__avatar')
+    if not request.user.is_anonymous:
+        user_info['notebooks'] = [
+                    {'id': nb_id, 'title': title, 'latestRevision': latest_revision}
+                    for (nb_id, title, latest_revision) in get_formatted_notebooks(request.user)] 
     return render(
         request, 'index.html', {
             'page_data': {
-                'userInfo': get_user_info_dict(request.user),
+                'userInfo': user_info,
                 # this is horrible and will not scale
                 'notebookList': [
                     {'id': nb_id, 'title': title, 'owner': owner, 'avatar': avatar}
@@ -38,6 +43,11 @@ def index(request):
         }
     )
 
+def get_formatted_notebooks(user):
+    return Notebook.objects \
+        .filter(owner=user) \
+        .annotate(latest_revision=Max('revisions__created')) \
+        .order_by('-latest_revision').values_list('id', 'title', 'latest_revision')
 
 @ensure_csrf_cookie
 def user(request, name=None):
@@ -49,10 +59,7 @@ def user(request, name=None):
         'avatar': user.avatar,
         'name': user.username,
     }
-    notebooks = Notebook.objects \
-        .filter(owner=user) \
-        .annotate(latest_revision=Max('revisions__created')) \
-        .order_by('-latest_revision').values_list('id', 'title', 'latest_revision')
+    notebooks = get_formatted_notebooks(user)
     return render(request, 'index.html', {
         'page_data': {
             'userInfo': user_info,
