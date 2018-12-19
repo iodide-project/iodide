@@ -41,7 +41,7 @@ color: tomato;
 
 const SplashCopy = styled('div')`
 margin-bottom:60px;
-
+line-height: 1.5em;
 `
 
 const ButtonGroup = styled('div')`
@@ -91,7 +91,7 @@ export default class SplashContent extends React.Component {
           </SplashTitle>
         </SingleSplash>
         <SplashCopy>
-          {'Create, share, collaborate, and reproduce powerful reports and visualizations with tools you already know.'}
+          {'Create, share, collaborate, and reproduce powerful reports and visualizations with tools you already know. '}
         </SplashCopy>
         <ButtonGroup>
           <ContainedButton>Sign Up For Free</ContainedButton>
