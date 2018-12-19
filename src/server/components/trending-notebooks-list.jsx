@@ -6,7 +6,6 @@ import { SmallUserName as UserName } from '../components/user-name'
 import { OutlineButton } from '../../shared/components/buttons'
 import NewNotebookButton from './new-notebook-button'
 
-
 const PaginationContainer = styled('div')`
   display: block;
   margin:auto;
