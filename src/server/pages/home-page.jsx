@@ -14,7 +14,7 @@ import NewNotebookButton from '../components/new-notebook-button'
 
 const TrendingNotebooksPage = ({ notebookList }) => (
   <React.Fragment>
-    <PageHeader>Most Recent Notebooks</PageHeader>
+    <PageHeader>The Firehose of Notebooks</PageHeader>
     <TrendingNotebooksList notebookList={notebookList} />
   </React.Fragment>
 )
