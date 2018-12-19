@@ -39,14 +39,15 @@ export default class HomePage extends React.Component {
             <PageHeader>Try These Examples</PageHeader>
             <NotebookDisplay>
               <NotebookDisplayItem
-                title="What a Web Notebook Looks Like"
+                title="A Brief Tour through Iodide"
                 description="
-                   This tutorial walks through all the important parts of Iodide."
-                href="#"
-                imageSource="https://media.giphy.com/media/Rdo9axaQcvGBq/giphy.gif"
+                   A tutorial that walks through all the important parts of Iodide."
+                href="https://extremely-alpha.iodide.io/notebooks/154/"
+                // imageSource="https://media.giphy.com/media/Rdo9axaQcvGBq/giphy.gif"
+                imageSource="https://media.giphy.com/media/5qF68SjjIT6khDkS5T/giphy.gif"
               />
               <NotebookDisplayItem
-                title="Lorenz Attractor"
+                title="The Lorenz Attractor Up-Close"
                 description="
                    A concise example demonstrating how powerful
                    a web tech-focused notebook environment is for computational presentations."
@@ -58,7 +59,7 @@ export default class HomePage extends React.Component {
                 description="
                 A tutorial demonstrating how
                 to use Python, Numpy, Pandas, and Matplotlib entirely within your browser."
-                href="#"
+                href="https://extremely-alpha.iodide.io/notebooks/151/"
                 imageSource="https://media.giphy.com/media/65NKOOH1IQrsLx5aZb/giphy.gif"
               />
               <NotebookDisplayItem

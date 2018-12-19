@@ -21,7 +21,8 @@ font-size:40px;
 width: 600px;
 
 sub {
-  font-size:.8em;
+  font-size:.6em;
+  font-weight: 300;
 }
 `
 
