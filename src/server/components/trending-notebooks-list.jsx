@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'react-emotion'
 import PropTypes from 'prop-types';
-import Table from '../components/table'
+import PaginatedTable from './paginated-table'
 import { SmallUserName as UserName } from '../components/user-name'
 import { OutlineButton } from '../../shared/components/buttons'
 import NewNotebookButton from './new-notebook-button'
+import { formatServerDate } from '../../shared/date-formatters'
 
 const PaginationContainer = styled('div')`
   display: block;
@@ -79,44 +80,25 @@ export default class TrendingNotebooksList extends React.Component {
       <React.Fragment>
         <NewNotebookButton />
 
-        <Table>
-          <thead>
-            <tr>
-              <th>Owner</th>
-              <th>Notebook</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-            visibleNotebooks.map((notebook) => {
-              console.log()
-              if (notebook === undefined) {
-                return (
-                  <tr>
-                    <td />
-                    <td />
-                  </tr>
-                )
-              }
-              return (
-                <tr key={notebook.id}>
-                  <td width={140}>
-                    <UserName avatar={notebook.avatar} username={notebook.owner} />
-                  </td>
-                  <td>
-                    <a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a>
-                  </td>
-                </tr>
+        <PaginatedTable
+          pageSize={10}
+          header={['Owner', 'Last Updated', 'Notebook']}
+          rows={this.props.notebookList}
+          getRow={
+            d => (
+              <tr key={d.id}>
+                <td width={100}>
+                  <UserName avatar={d.avatar} username={d.owner} />
+                </td>
+                <td width={120}>
+                  {formatServerDate(d.latestRevision)}
+                </td>
+                <td>
+                  <a href={`/notebooks/${d.id}/`}>{d.title}</a>
+                </td>
+              </tr>
               )
-            })
           }
-          </tbody>
-        </Table>
-        <Pagination
-          onPrev={this.prev}
-          onNext={this.next}
-          pages={Math.ceil((this.props.notebookList.length) / PAGE_SIZE)}
-          currentPage={this.state.currentPage + 1}
         />
       </React.Fragment>
     )

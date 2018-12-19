@@ -20,7 +20,6 @@ const TrendingNotebooksPage = ({ notebookList }) => (
   </React.Fragment>
 )
 
-
 const LetsGetStarted = () => (
   <AttentionBlock>
     <div>Welcome to Iodide. Shall we get started?</div>

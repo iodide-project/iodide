@@ -25,10 +25,10 @@ def index(request):
     notebooks = Notebook.objects \
         .annotate(latest_revision=Max('revisions__created')) \
         .order_by('-latest_revision') \
-        .values_list('id', 'title', 'owner__username', 'owner__avatar')
+        .values_list('id', 'title', 'owner__username', 'owner__avatar', 'latest_revision')
     if not request.user.is_anonymous:
         user_info['notebooks'] = [
-                    {'id': nb_id, 'title': title, 'latestRevision': latest_revision}
+                    {'id': nb_id, 'title': title, 'latestRevision': latest_revision.isoformat(sep=' ')}
                     for (nb_id, title, latest_revision) in get_formatted_notebooks(request.user)] 
     return render(
         request, 'index.html', {
@@ -36,8 +36,14 @@ def index(request):
                 'userInfo': user_info,
                 # this is horrible and will not scale
                 'notebookList': [
-                    {'id': nb_id, 'title': title, 'owner': owner, 'avatar': avatar}
-                    for (nb_id, title, owner, avatar) in notebooks
+                    {
+                        'id': nb_id, 
+                        'title': title, 
+                        'owner': owner, 
+                        'avatar': avatar, 
+                        'latestRevision': latest_revision.isoformat(sep=' ')
+                    }
+                    for (nb_id, title, owner, avatar, latest_revision) in notebooks
                 ]
             }
         }

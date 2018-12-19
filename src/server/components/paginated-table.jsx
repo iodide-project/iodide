@@ -3,19 +3,18 @@ import styled from 'react-emotion'
 // import PropTypes from 'prop-types';
 import Table from '../components/table'
 import { OutlineButton } from '../../shared/components/buttons'
-import NewNotebookButton from './new-notebook-button'
 
 const PaginationContainer = styled('div')`
   display: block;
   margin:auto;
   text-align:center;
-  margin-top:20px;
+  margin-top:40px;
 `
 
 const Number = styled('span')`
 display: inline-block;
 padding:5px;
-width: 40px;
+width: 90px;
 text-align:center;
 `
 
@@ -44,14 +43,16 @@ export default class PaginatedTable extends React.Component {
   constructor(props) {
     super(props)
     this.state = { currentPage: 0 }
-    this.totalPages = Math.floor(props.rows.length / PAGE_SIZE)
+    this.pageSize = props.pageSize || PAGE_SIZE
+    this.totalPages = Math.floor(props.rows.length / this.pageSize)
     this.prev = this.prev.bind(this)
     this.next = this.next.bind(this)
   }
 
   next() {
     const { currentPage } = this.state
-    if (currentPage !== this.totalPages) {
+    console.log(this.props.rows.length, currentPage)
+    if (currentPage !== (this.totalPages)) {
       this.setState({
         currentPage: currentPage + 1,
       })
@@ -67,17 +68,15 @@ export default class PaginatedTable extends React.Component {
 
   render() {
     const { currentPage } = this.state
-    const ind = currentPage * PAGE_SIZE
-    const visibleRows = this.props.rows.slice(ind, ind + PAGE_SIZE)
-    if (visibleRows.length !== PAGE_SIZE) {
-      new Array(PAGE_SIZE - visibleRows.length).fill(null).forEach(() => {
+    const ind = currentPage * this.pageSize
+    const visibleRows = this.props.rows.slice(ind, ind + this.pageSize)
+    if (visibleRows.length < this.pageSize) {
+      new Array(this.pageSize - visibleRows.length).fill(null).forEach(() => {
         visibleRows.push(undefined)
       })
     }
     return (
       <React.Fragment>
-        <NewNotebookButton />
-
         <Table>
           {this.props.header &&
           <thead>
@@ -89,14 +88,15 @@ export default class PaginatedTable extends React.Component {
           </thead>}
           <tbody>
             {
-            visibleRows.map(row => this.props.getRow(row))
+            visibleRows.map(row => (row ? this.props.getRow(row) :
+            <tr><td colSpan={this.props.header.length || 0} /></tr>))
           }
           </tbody>
         </Table>
         <Pagination
           onPrev={this.prev}
           onNext={this.next}
-          pages={Math.ceil((this.props.rows.length) / PAGE_SIZE)}
+          pages={Math.ceil((this.props.rows.length) / this.pageSize)}
           currentPage={this.state.currentPage + 1}
         />
       </React.Fragment>
