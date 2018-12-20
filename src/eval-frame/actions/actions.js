@@ -119,30 +119,23 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
   }
 }
 
-export function evalConsoleInput(languageId) {
+export function evalConsoleInput(consoleText) {
   return (dispatch, getState) => {
     const state = getState()
-    const code = state.consoleText
+    // const code = state.consoleText
     // exit if there is no code in the console to  eval
-    if (!code) { return undefined }
-    const evalLanguageId = languageId === undefined ? state.languageLastUsed : languageId
-
-    // FIXME: deal with side-effects for console evals
-    // // clear stuff relating to the side effect target before evaling
-    // dispatch({ type: 'CELL_SIDE_EFFECT_STATUS', cellId: cell.id, hasSideEffect: false })
-    // // this is one place where we have to directly mutate the DOM b/c we need
-    // // this to happen outside of React's update schedule. see also iodide-api/output.js
-    // const sideEffectTarget = document.getElementById(`cell-${cell.id}-side-effect-target`)
-    // if (sideEffectTarget) { sideEffectTarget.innerHTML = '' }
+    if (!consoleText) { return undefined }
+    const evalLanguageId = state.languageLastUsed
 
     dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
-    dispatch(updateConsoleText(''))
+    dispatch({ type: 'RESET_HISTORY_CURSOR' })
     addToEvaluationQueue({
       chunkType: evalLanguageId,
       chunkId: undefined,
-      chunkContent: code,
+      chunkContent: consoleText,
       evalFlags: '',
     })
+    dispatch(updateConsoleText(''))
     return Promise.resolve()
   }
 }
