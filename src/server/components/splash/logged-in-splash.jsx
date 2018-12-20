@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'react-emotion'
 import { SplashTitle, HighlightedTitle, SplashContentContainer } from './shared-components'
 import Paginatedlist from '../paginated-list'
-import { ListItem, ListMain, ListDate, ListPrimaryText } from '../list'
+import { ListItem, ListMain, ListDate, ListPrimaryText, ListSecondaryText, ListSmallLink } from '../list'
 import { monthDayYear } from '../../../shared/date-formatters'
 import NewNotebookButton from '../new-notebook-button'
 import AttentionBlock from '../attention-block'
@@ -43,6 +43,14 @@ export default class LoggedInSplash extends React.Component {
                       <ListPrimaryText>
                         <a href={`/notebooks/${d.id}/`}>{d.title}</a>
                       </ListPrimaryText>
+                      <ListSecondaryText>
+                        <ListSmallLink href={`/notebooks/${d.id}/`}>
+                            source
+                        </ListSmallLink>
+                        <ListSmallLink href={`/notebooks/${d.id}/?viewMode=report`}>
+                            report
+                        </ListSmallLink>
+                      </ListSecondaryText>
                     </ListMain>
                     <ListDate>
                       <a href={`/notebooks/${d.id}/revisions`}>{monthDayYear(d.latestRevision)}</a>

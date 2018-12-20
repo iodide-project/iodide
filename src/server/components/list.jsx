@@ -57,6 +57,11 @@ const listItemHeight = (pr) => {
   return h
 }
 
+export const ListSmallLink = styled('a')`
+  padding-left:3px;
+  padding-right: 3px;
+`
+
 export const ListItem = styled('a')`
 padding: 16px;
 height: ${props => listItemHeight(props.type)};

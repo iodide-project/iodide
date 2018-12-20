@@ -6,7 +6,7 @@ import Header from '../components/header';
 import PageBody from '../components/page-body';
 import BelowFoldContainer from '../components/page-containers/below-fold-container'
 import PaginatedList from '../components/paginated-list'
-import { ListItem, ListMain, ListPrimaryText, ListDate, ListMetadata } from '../components/list'
+import { ListItem, ListMain, ListPrimaryText, ListSecondaryText, ListDate, ListMetadata, ListSmallLink } from '../components/list'
 import AttentionBlock from '../components/attention-block'
 import NotebookActionsMenu from '../components/notebook-actions-menu'
 import NewNotebookButton from '../components/new-notebook-button'
@@ -69,6 +69,10 @@ class UserNotebookList extends React.Component {
                   <ListPrimaryText>
                     <a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a>
                   </ListPrimaryText>
+                  <ListSecondaryText>
+                    <ListSmallLink href={`/notebooks/${notebook.id}/`}>source</ListSmallLink>
+                    <ListSmallLink href={`/notebooks/${notebook.id}/?viewMode=report`}>report</ListSmallLink>
+                  </ListSecondaryText>
                 </ListMain>
                 <ListDate>
                   {monthDayYear(notebook.last_revision)}
