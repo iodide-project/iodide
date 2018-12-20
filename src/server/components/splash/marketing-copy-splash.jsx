@@ -78,15 +78,15 @@ export default class MarketingCopySplash extends React.Component {
           </Point>
           <Point>
             <PointTitle>
-              Combine Python, Javascript, Markdown, and CSS willy-nilly
+              Combine Python, Javascript, Markdown, and CSS
             </PointTitle>
               Choose the right language for the task without ever leaving your notebook.
           </Point>
           <Point>
             <PointTitle>
-              Share, remix, fork, and merge your work
+              Share and remix your work
             </PointTitle>
-              Working with others is frictionless, innit?? blah blah blah blah blah
+              Your notebook should be as easy to share as a web page.
           </Point>
         </ThreePointsContainer>
         <BottomDivider />
