@@ -30,7 +30,8 @@ def test_index_view_with_gravatar(client, fake_user, logged_in):
     assert resp.status_code == 200
     expected_user_info = {
         'name': fake_user.username,
-        'avatar': 'http://www.gravatar.com/avatar/eaee5961bc7ad96538a4933cb069fda9?d=identicon'
+        'avatar': 'http://www.gravatar.com/avatar/eaee5961bc7ad96538a4933cb069fda9?d=identicon',
+        'notebooks': []
     } if logged_in else {}
     assert _get_page_data(str(resp.content))['userInfo'] == expected_user_info
 
