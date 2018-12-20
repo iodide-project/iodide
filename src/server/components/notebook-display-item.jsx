@@ -6,7 +6,7 @@ color: black;
 border: 1px solid rgba(0,0,0,.05);
 border-radius:3px;
 text-decoration: none;
-background:linear-gradient(65deg, rgb(250,250,250), rgb(245,245,245));
+background:linear-gradient(65deg, #f6f8fa, rgb(245,245,245));
 transition: 100ms;
 
 :hover {

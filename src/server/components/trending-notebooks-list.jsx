@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from 'react-emotion'
 import PropTypes from 'prop-types';
-import PaginatedTable from './paginated-table'
+import PaginatedList from './paginated-list'
+import {
+  ListIcon, ListItem, ListMain, ListPrimaryText, ListSecondaryText, ListDate,
+} from './list'
 import { SmallUserName as UserName } from '../components/user-name'
 import { OutlineButton } from '../../shared/components/buttons'
-import NewNotebookButton from './new-notebook-button'
-import { formatServerDate } from '../../shared/date-formatters'
+import { monthDayYear } from '../../shared/date-formatters'
 
 const PaginationContainer = styled('div')`
   display: block;
@@ -78,25 +80,26 @@ export default class TrendingNotebooksList extends React.Component {
     }
     return (
       <React.Fragment>
-        <NewNotebookButton />
-
-        <PaginatedTable
+        <PaginatedList
           pageSize={10}
           header={['Owner', 'Last Updated', 'Notebook']}
           rows={this.props.notebookList}
           getRow={
             d => (
-              <tr key={d.id}>
-                <td width={100}>
-                  <UserName avatar={d.avatar} username={d.owner} />
-                </td>
-                <td width={120}>
-                  {formatServerDate(d.latestRevision)}
-                </td>
-                <td>
-                  <a href={`/notebooks/${d.id}/`}>{d.title}</a>
-                </td>
-              </tr>
+              <ListItem key={d.id}>
+                <ListIcon>
+                  <UserName avatar={d.avatar} />
+                </ListIcon>
+                <ListMain>
+                  <ListPrimaryText><a href={`/notebooks/${d.id}/`} >{d.title}</a></ListPrimaryText>
+                  <ListSecondaryText>
+                    <a href={`/${d.owner}`}>by {d.owner}</a>
+                  </ListSecondaryText>
+                </ListMain>
+                <ListDate>
+                  {monthDayYear(d.latestRevision)}
+                </ListDate>
+              </ListItem>
               )
           }
         />
