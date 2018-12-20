@@ -38,14 +38,14 @@ export default class LoggedInSplash extends React.Component {
                 rows={this.props.userInfo.notebooks}
                 header={['LAST UPDATED', 'TITLE']}
                 getRow={d => (
-                  <ListItem key={d.id}>
+                  <ListItem key={d.id} type="single">
                     <ListMain>
                       <ListPrimaryText>
                         <a href={`/notebooks/${d.id}/`}>{d.title}</a>
                       </ListPrimaryText>
                     </ListMain>
                     <ListDate>
-                      {monthDayYear(d.latestRevision)}
+                      <a href={`/notebooks/${d.id}/revisions`}>{monthDayYear(d.latestRevision)}</a>
                     </ListDate>
                   </ListItem>
             )}

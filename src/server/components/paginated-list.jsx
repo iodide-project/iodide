@@ -71,7 +71,7 @@ export default class PaginatedTable extends React.Component {
     const ind = currentPage * this.pageSize
     const visibleRows = this.props.rows.slice(ind, ind + this.pageSize)
     if (visibleRows.length < this.pageSize) {
-      new Array(this.pageSize - visibleRows.length).fill(null).forEach(() => {
+      new Array((this.pageSize - visibleRows.length) + 1).fill(null).forEach(() => {
         visibleRows.push(undefined)
       })
     }

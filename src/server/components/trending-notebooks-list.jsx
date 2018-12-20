@@ -86,7 +86,7 @@ export default class TrendingNotebooksList extends React.Component {
           rows={this.props.notebookList}
           getRow={
             d => (
-              <ListItem key={d.id}>
+              <ListItem type="single" key={d.id}>
                 <ListIcon>
                   <UserName avatar={d.avatar} />
                 </ListIcon>
@@ -97,7 +97,7 @@ export default class TrendingNotebooksList extends React.Component {
                   </ListSecondaryText>
                 </ListMain>
                 <ListDate>
-                  {monthDayYear(d.latestRevision)}
+                  <a href={`/notebooks/${d.id}/revisions`}>{monthDayYear(d.latestRevision)}</a>
                 </ListDate>
               </ListItem>
               )

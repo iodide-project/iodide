@@ -27,7 +27,6 @@ const TextButtonContainer = elementType => styled(elementType)`
 ${buttonReset}
 color: ${props => props.buttonColor || 'darkblue'};
 font-size: ${props => props.size || '13px'};
-
 :hover {
   color: black;
 }
