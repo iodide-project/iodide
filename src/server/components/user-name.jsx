@@ -31,7 +31,6 @@ export class SmallUserName extends React.Component {
     return (
       <UserNameContainer href={`/${this.props.username}/`}>
         <div><Avatar src={this.props.avatar} /></div>
-        <div>{this.props.username}</div>
       </UserNameContainer>
     )
   }

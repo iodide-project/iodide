@@ -88,7 +88,7 @@ export default class TrendingNotebooksList extends React.Component {
             d => (
               <ListItem type="single" key={d.id}>
                 <ListIcon>
-                  <UserName avatar={d.avatar} />
+                  <UserName avatar={d.avatar} username={d.owner} />
                 </ListIcon>
                 <ListMain>
                   <ListPrimaryText><a href={`/notebooks/${d.id}/`} >{d.title}</a></ListPrimaryText>

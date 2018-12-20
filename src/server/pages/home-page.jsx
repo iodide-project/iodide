@@ -45,7 +45,6 @@ export default class HomePage extends React.Component {
                 description="
                    A tutorial that walks through all the important parts of Iodide."
                 href="https://extremely-alpha.iodide.io/notebooks/154/"
-                // imageSource="https://media.giphy.com/media/Rdo9axaQcvGBq/giphy.gif"
                 imageSource="https://media.giphy.com/media/5qF68SjjIT6khDkS5T/giphy.gif"
               />
               <NotebookDisplayItem
@@ -53,7 +52,7 @@ export default class HomePage extends React.Component {
                 description="
                    A concise example demonstrating how powerful
                    a web tech-focused notebook environment is for computational presentations."
-                href="#"
+                href="https://extremely-alpha.iodide.io/notebooks/34/?viewMode=report"
                 imageSource="https://media.giphy.com/media/ftdkB78fuQ1Eb3J2o1/giphy.gif"
               />
               <NotebookDisplayItem
@@ -67,20 +66,20 @@ export default class HomePage extends React.Component {
               <NotebookDisplayItem
                 title="World Happiness Report"
                 description="A neat data exploration using the World Happiness Report."
-                href="#"
+                href="https://extremely-alpha.iodide.io/notebooks/193/?viewMode=report"
                 imageSource="https://media.giphy.com/media/i4rRuA3cksj8a9R58g/giphy.gif"
               />
               <NotebookDisplayItem
-                title="MRIs and You"
+                title="Peering into the Unknown"
                 description="One man's cartoon / WebGL journey into his own brain."
-                href="#"
+                href="https://extremely-alpha.iodide.io/notebooks/194/?viewMode=report"
                 imageSource="https://media.giphy.com/media/9G6RGV7z6k4uzygzOQ/giphy.gif"
               />
               <NotebookDisplayItem
                 title="Eviction Notices By SF Neighborhood, 1999-present"
                 description="
                 A small data presentation about one aspect of the SF Housing crisis."
-                href="https://iodide.io/iodide-examples/eviction-notices-sf.html"
+                href="https://iodide.io/iodide-examples/eviction-notices-sf.html/?viewMode=report"
                 imageSource="https://media.giphy.com/media/MohSU55IoyGmAXgEkY/giphy.gif"
               />
             </NotebookDisplay>
