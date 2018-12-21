@@ -35,10 +35,11 @@ If you’d like to fix a currently-filed issue, please take a look at the commen
 We use [Jest](https://facebook.github.io/jest/) as our testing framework. Every PR will automatically run through our tests, and our test framework will alert you on Github if your PR doesn’t pass all of them. If your PR fails a test, try to figure out whether or not you can update your code to make the test pass again, or ask for help. As a policy we will not accept a PR that fails any of our tests, and will likely ask you to add tests if your PR adds new functionality. Writing tests can be scary, but they make open-source contributions easier for everyone to assess. Take a moment and look through how we’ve written our tests, and try to make your tests match. If you are having trouble, we can help you get started on your test-writing journey.
 
 We've found the following articles to be particularly useful, and we suggest reading them:
-- https://medium.freecodecamp.org/the-right-way-to-test-react-components-548a4736ab22
-- https://hackernoon.com/front-end-react-snapshot-testing-with-jest-what-is-it-for-7788f7bd5a2e
-- http://muness.blogspot.com/2008/04/testing-declarative-code.html
-- https://hackernoon.com/unit-testing-redux-connected-components-692fa3c4441c
+
+- [The right way to test React components](https://medium.freecodecamp.org/the-right-way-to-test-react-components-548a4736ab22)
+- [Frontend React snapshot testing with Jest](https://hackernoon.com/front-end-react-snapshot-testing-with-jest-what-is-it-for-7788f7bd5a2e)
+- [Testing declarative code](http://muness.blogspot.com/2008/04/testing-declarative-code.html)
+- [Unit-testing Redux connection components](https://hackernoon.com/unit-testing-redux-connected-components-692fa3c4441c)
 
 Some guidelines that we tend to follow:
 - we don't use snapshots for testing

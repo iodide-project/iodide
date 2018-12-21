@@ -75,6 +75,24 @@ jobs:
             - Dockerfile
             - docker-compose.yml
 
+  docs:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: sudo pip install mkdocs markdown-include
+      - run:
+          name: Build docs
+          command: mkdocs build
+      - deploy:
+          name: Deploy
+          command: |
+            if [ $CIRCLE_BRANCH == "master" ]; then
+              mkdocs gh-deploy
+            fi
+
   test-server:
     machine:
       enable: true
@@ -141,6 +159,10 @@ workflows:
             tags:
               only: /.*/
       - build:
+          filters:
+            tags:
+              only: /.*/
+      - docs:
           filters:
             tags:
               only: /.*/

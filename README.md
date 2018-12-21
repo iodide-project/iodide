@@ -38,48 +38,9 @@ Please feel free to join our [Google group](https://groups.google.com/forum/#!fo
 
 You can also [chat with us on Gitter](https://gitter.im/iodide-project/iodide).
 
-# Setup
+# Learn more about it
 
-Run `npm install` after cloning this repository.
-
-## Running/Building
-
-### Client-only mode
-
-If you're only working on client code and don't need to use/test any of the server functionality described below. You can use `npm run start-and-serve` to write development versions of the Iodide client-side app resources to `dev/` and to serve the files in that folder at `http://localhost:8000`. You can open `http://localhost:8000/iodide.dev.html` in your browser to get started with a blank notebook, or open `http://localhost:8000` to see the list of files saved in `dev/` (in case you have exported other test notebooks in that folder)
-
-The command `npm run start-and-serve` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually to see the changes -- we have disabled "hot reloading" because automatically refreshing the browser would cause any active notebooks to lose their evaluation state.
-
-If you require verbose Redux logging, you can use the command `npm run start-and-serve -- reduxVerbose`
-
-#### Exporting from client-only dev mode
-
-In this mode, resource paths are set to be relative to the `dev/` directory. Thus, if you export a bundled notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js, css, and font files (and if you want to share a notebook that you created in a dev environment, you'll need to update the paths to point to the web-accessible resources at `iodide.io` and `iodide.app`).
-
-
-### Server mode
-
-We have been building an experimental iodide server based on Python and Django. Currently the main features
-it supports are login/identity (via the github API). To test/run it locally, follow this set of steps:
-
-* Register a [github oauth token](https://github.com/settings/applications/new). Set the homepage URL to be
-"http://localhost:8000" and the authentication callback URL to be "http://localhost:8000/oauth/complete/github/".
-* Copy `.env-dist` to `.env` and set the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to the values provided above.
-* Make sure you have [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed and working correctly
-* Run `make build && make up`
-* You should now be able to navigate to a test server instance at http://localhost:8000
-
-On subsequent runs, you only need to run `make up`.
-
-Additionally, if you are working on client code, you can run `npm run start` in a separate terminal to run webpack in watch mode (which will make your client code changes visible on page reload). If you require verbose Redux logging, you can set the environment variable `REDUX_LOGGING=VERBOSE` with the command `REDUX_LOGGING=VERBOSE npm run start`
-
-Sometimes, for debugging purposes, it is useful to have a shell session inside the "app" docker container. You
-can use either the `make shell` command (creates a shell session with the "app" user) or the `make root-shell`
-commands (creates a shell session logged in as root, useful for experimenting with new python packages).
-
-## Testing
-
-Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.
+Please visit our [documentation](https://iodide-project.github.io/iodide/).
 
 # Using the notebook
 
@@ -87,11 +48,12 @@ Visit our examples repo at https://github.com/iodide-project/iodide-examples to 
 
 For now, work can be saved to local storage using the "Save Notebook <ctrl-s>" menu item, or exported with "Export Notebook <ctrl-e>", which allows you to download your work as HTML file that will run anywhere (for the time being, we advise periodically exporting any code you care about).
 
-We've modeled much of the experience on Jupyter as our jumping-off point, with a few additions. Check out our milestones & issues to see the direction we're going.
-
 # Contributing
 
-Please join us! The notebook is written using React+Redux, which, if you haven't used them, are pretty delightful -- there's some learning curve, but even for non-professional webdevs the curve is not too steep, and the mental model is clean and powerful.
+Please join us! The notebook is written using React+Redux, which, if you haven't
+used them, are pretty delightful -- there's some learning curve, but even for
+non-professional webdevs the curve is not too steep, and the mental model is
+clean and powerful.
 
 See our ["How to Contribute" page](CONTRIBUTING.md) for more information.
 
@@ -100,47 +62,31 @@ We especially need help with:
 - test coverage for everything in our system.
 - demos, tutorials, and documentation. The more we have, and the better organized it is, the better.
 
-# Our core principles
+# Design principles
+
+## Our core principles
+
 - Human factors come before everything else
 - Scientific computing and computational inquiry implies different needs than typical software development
 - We want to make the advantages of web tech available to scientists without requiring them to become fully fledged web devs
 
 ## Secondary principles
 Flowing from those core principles, we have a number of secondary principles/objectives that revolve around the notion of reduce friction for people that want out the platform.
+
 - Portability is key -- users should be able to get up and running immediately and be able to start doing real work entirely within the browser. 
+
     - Allowing the notebook to work with other client and/or server-side programs/components/tools (e.g. external editors, external compute kernels (other languages or big data thingies)) might be something cool to work on down the road, but is not an objective at the moment
     - Addons to do things that the browser restricts or can’t do for some reason (file system access, halting hung scripts) could potentially be ok for power users, but cannot be a requirement to get going with a satisfactory experience.
+
 - No magic APIs -- users should (within reason) not have to learn about a ton of idiosyncrasies of the notebook to get up and running.
+
     - Users need to be able to build off of existing work/examples/resources. Users need to be able to pull examples from bl.ocks.org or JSfiddle or Stackoverflow and have them run in the notebook without modification (within reason). This means, among other things, seamless access to all browser APIs is a hard requirement.
     - Helper libraries are desirable, but they should just act like regular JS libraries and not require users to contort their mental model of how vanilla JS works, or pollute the regular JS environment. (Ex: it would be preferable to add a single namespaced helper lib than to dump a bunch of utility functions into the global scope).
     - We want to support syntax extensions for mathematics, but we want them to be opt in, not something that a user will have to learn to be able to use a notebook.
 - Don’t innovate too much -- at least initially, we want to follow existing, familiar paradigms that will enable people to dive right in.
 
-You can read more about how these priciples have shaped the choices we've made so far [in our FAQ]( ../../wiki/FAQ )
-
 ## Initial use case
 In building this tool, we will keep our eyes on a broad swath of computational inquiry use cases, and we’ll strive to avoid making decisions that limit the tools use to a specific domain. We're initially be targeting small to medium _N_ data science workflows, since these often come up at Mozilla and we're very familiar with them, but if your use case requires something that we haven't addressed yet, please leave us a message at our [Google group](https://groups.google.com/forum/#!forum/iodide-dev).
-
-
-## Roadmap
-
-There are a bunch of features that we know we want to build to make this compelling. Here are a few in rough order of priority:
-
-- Export improvements
-    - Option to Inline bundle.js (rather than load from URL)
-    - Options to inline external libs in a saved snapshot
-    - Saving an “environment” (a la R and R Studio) with selected variables that were computed during a session
-        - serializing/compressing data inline (needed for bigger datasets),
-        - Estimate of total bundled size with all scripts and environment vars
-    - Export/import to gists, g-drive, dropbox, and other external repos
-- r-studio mode (direct editing of jsmd)
-- editor improvements
-    - Code editor
-        - Special character insertion (greek, special operators, etc)
-    - Latex editor
-        - hints, autocomplete (for latex, this includes special character insertion)
-        - Lyx-like wysiwyg preview for equation editing
-- UI for importing local data from file (with drag and drop? Needed for XSS reasons, lack of filesystem access reasons)
 
 # License
 
