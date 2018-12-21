@@ -86,6 +86,9 @@ jobs:
       - run:
           name: Build docs
           command: mkdocs build
+      - add_ssh_keys:
+          fingerprints:
+            "e2:81:9f:89:ea:24:ed:8a:da:a9:38:3b:61:bc:03:c9"
       - deploy:
           name: Deploy
           command: |
