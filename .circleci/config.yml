@@ -93,7 +93,8 @@ jobs:
           name: Deploy
           command: |
             if [ $CIRCLE_BRANCH == "master" ]; then
-              mkdocs gh-deploy
+              git remote add docs git@github.com:iodide-project/docs.git
+              mkdocs gh-deploy --remote-name=docs --remote-branch=master
             fi
 
   test-server:
