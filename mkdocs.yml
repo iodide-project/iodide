@@ -1,5 +1,5 @@
 site_name: Iodide Documentation
-site_url: https://iodide-project.github.io/iodide/
+site_url: https://iodide.io/docs/
 repo_url: https://github.com/iodide-project/iodide/
 theme: mkdocs
 extra_css: [extra.css]
