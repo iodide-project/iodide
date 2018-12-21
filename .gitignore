@@ -75,3 +75,6 @@ ext_resources/
 # vscode configs
 .vscode/
 wallaby.js
+
+# mkdocs
+site
