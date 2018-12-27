@@ -31,24 +31,27 @@ class OutsideClickBoundary extends React.Component {
   }
 
   handleClick(event) {
-    const { container } = this;
     const { onClickOutside } = this.props;
 
-    const { target } = event;
     if (typeof onClickOutside !== 'function') {
       return;
     }
-
-    // if target is container - container was not clicked outside
-    // if container contains clicked target - click was not outside of it
-    if (target !== container && !container.contains(target)) {
-      onClickOutside(event); // clicked outside - fire callback
-    }
+    onClickOutside(event); // clicked outside - fire callback
   }
 
   render() {
     return (
-      <div ref={(el) => { this.container = el }}>
+      <div
+        ref={(el) => { this.container = el }}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'fixed',
+          zIndex: 1000,
+          left: 0,
+          top: 0,
+        }}
+      >
         {this.props.children}
       </div>
     );
@@ -86,14 +89,13 @@ export default class Popover extends React.Component {
     } else {
       document.removeEventListener('keydown', this.closePopoverOnKeypress);
     }
-
     return (
       <Manager>
         <Reference>
           {({ ref }) => (
             <ClickContainer isActive={this.state.visible}>
-              <div ref={ref}>
-                <TextButton buttonColor="black" type="button" onClick={this.setVisibility}>
+              <div ref={ref} onClick={this.setVisibility}>
+                <TextButton buttonColor="black" type="button">
                   {this.props.title}
                 </TextButton>
               </div>

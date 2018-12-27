@@ -3,40 +3,29 @@ import Avatar from '@material-ui/core/Avatar'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import Button from '@material-ui/core/Button'
-import Menu from '@material-ui/core/Menu'
 import Tooltip from '@material-ui/core/Tooltip'
 
-import MenuItem from '@material-ui/core/MenuItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import NotebookMenuDivider from '../components/menu/notebook-menu-divider'
 import LoginModal from './login-modal'
+import Menu from './components/menu'
+import MenuItem from './components/menu-item'
+import MenuDivider from './components/menu-divider'
+import Popover from './components/popover'
 
 export default class UserMenu extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      anchorElement: null,
       isLoggedIn: props.isAuthenticated,
       name: props.username,
       avatar: props.avatar,
       loginModalVisible: false,
     }
 
-    this.handleClick = this.handleClick.bind(this)
     this.goToProfile = this.goToProfile.bind(this)
-    this.handleMenuClose = this.handleMenuClose.bind(this)
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
     this.showLoginModal = this.showLoginModal.bind(this)
     this.hideLoginModal = this.hideLoginModal.bind(this)
-  }
-
-  handleClick(event) {
-    this.setState({ anchorElement: event.currentTarget })
-  }
-
-  handleMenuClose() {
-    this.setState({ anchorElement: null })
   }
 
   goToProfile() {
@@ -53,6 +42,7 @@ export default class UserMenu extends React.Component {
   }
 
   login() {
+    let authWindow
     const loginSuccess = (args) => {
       if (this.props.refreshOnLoginLogout) {
         window.location.reload()
@@ -63,7 +53,9 @@ export default class UserMenu extends React.Component {
         this.setState({ name, avatar })
       }
       this.setState({ isLoggedIn: true })
-      this.handleMenuClose()
+      if (authWindow) {
+        authWindow.close()
+      }
     }
     if (this.props.loginCallback) {
       this.props.loginCallback(loginSuccess)
@@ -71,14 +63,14 @@ export default class UserMenu extends React.Component {
       const url = '/oauth/login/github'
       const name = 'github_login'
       const specs = 'width=500,height=600'
-      const authWindow = window.open(url, name, specs)
+      authWindow = window.open(url, name, specs)
       authWindow.focus()
 
       window.loginSuccess = loginSuccess
 
       window.loginFailure = () => {
-      // do something smart here (probably pop up a notification)
-        this.handleMenuClose()
+        // do something smart here (probably pop up a notification)
+        authWindow.close()
       }
     }
   }
@@ -106,46 +98,34 @@ export default class UserMenu extends React.Component {
   }
 
   render() {
-    const { anchorElement } = this.state
     return (
       <Tooltip title="Menu">
         <React.Fragment>
           {
               this.state.isLoggedIn && (
-                <React.Fragment>
-                  <Menu
-                    dense="true"
-                    id="user-controls"
-                    anchorEl={document.getElementById('user-controls-button')}
-                    open={Boolean(anchorElement)}
-                    onClose={this.handleMenuClose}
-                    transitionDuration={50}
-                    transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                <div style={{ marginRight: '20px' }}>
+                  <Popover
+                    title={
+                      <div style={{ alignItems: 'center', display: 'inline-flex', color: 'white' }}>
+                        <Avatar style={{ width: 28, height: 28 }} src={this.state.avatar} />
+                        <ExpandMore style={{ width: 15, height: 15 }} />
+                      </div>
+                    }
+                    placement={this.props.placement || 'bottom-start'}
                   >
-                    <MenuItem dense>
-                      <ListItemText onClick={this.goToProfile} primary="Go to Profile" />
-                    </MenuItem>
-                    <NotebookMenuDivider />
-                    <MenuItem dense>
-                      <ListItemText onClick={this.logout} primary="Log Out" />
-                    </MenuItem>
-                  </Menu>
-                  <Button
-                    id="user-controls-button"
-                    size="small"
-                    disableRipple
-                    aria-label="more"
-                    aria-owns={anchorElement ? 'user-controls' : null}
-                    aria-haspopup="true"
-                    onClick={this.handleClick}
-                    style={{ color: 'white' }}
-                  >
-                    <Avatar style={{ width: 28, height: 28 }} src={this.state.avatar} />
-                    <ExpandMore style={{ width: 15, height: 15 }} />
-                  </Button>
-                </React.Fragment>
+                    <Menu>
+                      <MenuItem onClick={this.goToProfile}>
+                        Go to Profile
+                      </MenuItem>
+                      <MenuDivider />
+                      <MenuItem onClick={this.logout}>
+                        Log Out
+                      </MenuItem>
+                    </Menu>
+                  </Popover>
+                </div>
               )
-            }
+          }
           {
               !this.state.isLoggedIn && (
               <div>
