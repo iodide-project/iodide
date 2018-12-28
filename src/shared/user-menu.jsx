@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'react-emotion';
 import Avatar from '@material-ui/core/Avatar'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
@@ -10,6 +11,13 @@ import Menu from './components/menu'
 import MenuItem from './components/menu-item'
 import MenuDivider from './components/menu-divider'
 import Popover from './components/popover'
+
+
+const AvatarButtonContainer = styled('div')`
+  align-items: center;
+  display: inline-flex;
+  color: white;
+`
 
 export default class UserMenu extends React.Component {
   constructor(props) {
@@ -106,10 +114,10 @@ export default class UserMenu extends React.Component {
                 <div style={{ marginRight: '20px' }}>
                   <Popover
                     title={
-                      <div style={{ alignItems: 'center', display: 'inline-flex', color: 'white' }}>
+                      <AvatarButtonContainer>
                         <Avatar style={{ width: 28, height: 28 }} src={this.state.avatar} />
                         <ExpandMore style={{ width: 15, height: 15 }} />
-                      </div>
+                      </AvatarButtonContainer>
                     }
                     placement={this.props.placement || 'bottom-start'}
                   >

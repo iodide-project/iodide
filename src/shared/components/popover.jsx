@@ -94,8 +94,8 @@ export default class Popover extends React.Component {
         <Reference>
           {({ ref }) => (
             <ClickContainer isActive={this.state.visible}>
-              <div ref={ref} onClick={this.setVisibility}>
-                <TextButton buttonColor="black" type="button">
+              <div ref={ref}>
+                <TextButton buttonColor="black" type="button" onClick={this.setVisibility}>
                   {this.props.title}
                 </TextButton>
               </div>
