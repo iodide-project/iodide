@@ -1,8 +1,25 @@
+<script>
+  // detecting "do not track" via these instructions:
+  // https://dev.to/corbindavenport/how-to-correctly-check-for-do-not-track-with-javascript-135d
+  if (window.doNotTrack == "1" ||
+      navigator.doNotTrack == "yes" || navigator.doNotTrack == "1" ||
+      navigator.msDoNotTrack == "1" ||
+      ('msTrackingProtectionEnabled' in window.external &&
+       window.external.msTrackingProtectionEnabled())) {
+    // do not track is enabled: disable per google's instructions:
+    // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
+    window['ga-disable-{{ GA_TRACKING_ID }}'] = true;
+  }
+</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ GA_TRACKING_ID }}"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  if (!window['ga-disable-{{ GA_TRACKING_ID }}']) {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', '{{ GA_TRACKING_ID }}');
+    gtag('config', '{{ GA_TRACKING_ID }}');
+  } else {
+    console.log('Do not track enabled, google analytics disabled')
+  }
 </script>
