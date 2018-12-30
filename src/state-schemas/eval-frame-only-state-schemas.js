@@ -3,8 +3,6 @@ import {
   mirroredCellProperties,
 } from '../state-schemas/mirrored-state-schema'
 
-import { newCellFromSchema } from '../state-schemas/state-prototype-from-schema'
-
 export const historySchema = {
   type: 'object',
   properties: {
@@ -62,16 +60,6 @@ export const evalFrameCellSchema = {
 }
 
 export const evalFrameOnlyStateProperties = {
-  cells: {
-    type: 'array',
-    items: evalFrameCellSchema,
-    default: [newCellFromSchema(evalFrameCellSchema, 0)],
-  },
-  cellClipboard: {
-    type: 'array',
-    items: evalFrameCellSchema,
-    default: [],
-  },
   consoleText: {
     type: 'string',
     default: '',
@@ -89,6 +77,24 @@ export const evalFrameOnlyStateProperties = {
   history: {
     type: 'array',
     items: historySchema,
+    default: [],
+  },
+  reportChunks: {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        chunkContent: { type: 'string' },
+        chunkType: { type: 'string' },
+        chunkId: { type: 'string' },
+        evalFlags: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+      },
+      additionalProperties: false,
+      default: {},
+    },
     default: [],
   },
   userDefinedVarNames: {

@@ -1,5 +1,4 @@
 import notebookReducer from './notebook-reducer'
-import cellReducer from './cell-reducer'
 import evalFrameActionForwarder from './eval-frame-action-forwarder'
 /*
 It is suggested that using combineReducers, and following the standard
@@ -17,4 +16,4 @@ function reduceReducers(...reducers) {
     )
 }
 
-export default reduceReducers(evalFrameActionForwarder, notebookReducer, cellReducer)
+export default reduceReducers(evalFrameActionForwarder, notebookReducer)

@@ -22,13 +22,11 @@ describe('HelpModalUnconnected React component', () => {
         a: new UserTask({
           title: 'task a',
           displayKeybinding: 'a',
-          commandModeOnlyKey: true,
           callback: () => jest.fn(),
         }),
         b: new UserTask({
           title: 'task b',
           displayKeybinding: 'b',
-          commandModeOnlyKey: true,
           callback: () => jest.fn(),
         }),
         c: new UserTask({
@@ -39,13 +37,11 @@ describe('HelpModalUnconnected React component', () => {
         d: new UserTask({
           title: 'task d',
           displayKeybinding: 'd',
-          commandModeOnlyKey: false,
           callback: () => jest.fn(),
         }),
         e: new UserTask({
           title: 'task e',
           displayKeybinding: 'e',
-          commandModeOnlyKey: false,
           callback: () => jest.fn(),
         }),
       },
@@ -57,13 +53,6 @@ describe('HelpModalUnconnected React component', () => {
     expect(getTestComponent()
       .find('table.keyboard-shortcuts-global tbody')
       .children().length)
-      .toEqual(3)
-  })
-
-  it('has the right number of command mode shortcuts', () => {
-    expect(getTestComponent()
-      .find('table.keyboard-shortcuts-command-mode tbody')
-      .children().length)
-      .toEqual(2)
+      .toEqual(5)
   })
 })

@@ -4,16 +4,8 @@ function viewModeIsEditor() {
   return store.getState().viewMode === 'EXPLORE_VIEW'
 }
 
-function isCommandMode() {
-  return store.getState().mode === 'COMMAND_MODE' && viewModeIsEditor()
-}
-
 function viewModeIsPresentation() {
   return store.getState().viewMode === 'REPORT_VIEW'
-}
-
-function getCells() {
-  return store.getState().cells
 }
 
 function getCellBelowSelectedId() {
@@ -143,12 +135,10 @@ function getCompletions(token, context) {
 
 
 export {
-  getCells,
   prettyDate,
   formatDateString,
   getCellById,
   getCellBelowSelectedId, getCellAboveSelectedId,
-  isCommandMode,
   viewModeIsEditor, viewModeIsPresentation,
   getCompletions,
 }

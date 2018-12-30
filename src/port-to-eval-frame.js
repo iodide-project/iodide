@@ -1,6 +1,6 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
-import { addLanguage, selectCell } from './actions/actions'
+import { addLanguage } from './actions/actions'
 import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
 
 let portToEvalFrame
@@ -80,10 +80,6 @@ function receiveMessage(event) {
       case 'POST_LANGUAGE_DEF_TO_EDITOR':
         // in this case, message is a languageDefinition
         store.dispatch(addLanguage(message))
-        break
-      case 'CLICK_ON_OUTPUT':
-        if (message.autoScrollToCell === undefined) { message.autoScrollToCell = false }
-        store.dispatch(selectCell(message.id, message.autoScrollToCell, message.pxFromViewportTop))
         break
       default:
         console.error('unknown messageType', message)

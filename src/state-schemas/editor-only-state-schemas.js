@@ -3,8 +3,6 @@ import {
   mirroredCellProperties,
 } from '../state-schemas/mirrored-state-schema'
 
-import { newCellFromSchema } from '../state-schemas/state-prototype-from-schema'
-
 export const editorOnlyCellProperties = {
   inputFolding: {
     type: 'string',
@@ -13,6 +11,8 @@ export const editorOnlyCellProperties = {
   },
 }
 
+export const NONCODE_EVAL_TYPES = ['css', 'md', 'meta', 'raw']
+
 export const editorCellSchema = {
   type: 'object',
   properties:
@@ -20,17 +20,8 @@ export const editorCellSchema = {
   additionalProperties: false,
 }
 
+
 export const editorOnlyStateProperties = {
-  cells: {
-    type: 'array',
-    items: editorCellSchema,
-    default: [newCellFromSchema(editorCellSchema, 0)],
-  },
-  cellClipboard: {
-    type: 'array',
-    items: editorCellSchema,
-    default: [],
-  },
   evalFrameMessageQueue: {
     type: 'array',
     items: { type: 'object' },
@@ -39,6 +30,30 @@ export const editorOnlyStateProperties = {
   evalFrameReady: {
     type: 'boolean',
     default: false,
+  },
+  jsmd: {
+    type: 'string',
+    default: '',
+  },
+  jsmdChunks: {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        chunkContent: { type: 'string' },
+        chunkType: { type: 'string' },
+        chunkId: { type: 'string' },
+        evalFlags: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+        startLine: { type: 'integer' },
+        endLine: { type: 'integer' },
+      },
+      additionalProperties: false,
+      default: {},
+    },
+    default: [],
   },
   modalState: {
     type: 'string',
@@ -52,11 +67,6 @@ export const editorOnlyStateProperties = {
   lastExport: {
     type: 'string',
     default: undefined,
-  },
-  mode: {
-    type: 'string',
-    enum: ['COMMAND_MODE', 'EDIT_MODE', 'APP_MODE'],
-    default: 'COMMAND_MODE',
   },
   title: {
     type: 'string',
@@ -98,7 +108,7 @@ export const editorOnlyStateProperties = {
   },
   wrapEditors: {
     type: 'boolean',
-    default: false,
+    default: true,
   },
 }
 

@@ -1,6 +1,6 @@
 /* global IODIDE_EDITOR_ORIGIN */
 import { store } from './store'
-import { evaluateCell, updateUserVariables } from './actions/actions'
+import { evaluateText, updateUserVariables } from './actions/actions'
 import { getCompletions } from './tools/notebook-utils'
 import { onParentContextFileFetchSuccess, onParentContextFileFetchError } from './tools/fetch-file-from-parent-context'
 
@@ -42,11 +42,13 @@ function receiveMessage(event) {
         break
       }
       case 'REDUX_ACTION':
-        if (message.type === 'TRIGGER_CELL_EVAL_IN_FRAME') {
-          // in this one special case, we need to intecept the
-          // action to fire a thunk action rather than dispatching
-          // directly to the eval frame store
-          store.dispatch(evaluateCell(message.cellId))
+        if (message.type === 'TRIGGER_TEXT_EVAL_IN_FRAME') {
+          store.dispatch(evaluateText(
+            message.evalText,
+            message.evalType,
+            message.evalFlags,
+            message.chunkId,
+          ))
         } else if (message.type === 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD') {
           // in this case, we need to update the declared variables
           // pane to include variables that are in the environment, such as

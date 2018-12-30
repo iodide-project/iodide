@@ -6,7 +6,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import IodideLogo from '../../shared/iodide-logo'
-import UserMenu from '../../shared/user-menu';
+import UserMenu from '../../shared/user-menu'
 
 const theme = createMuiTheme({
   typography: {

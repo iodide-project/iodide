@@ -58,10 +58,6 @@ export default class UserTask {
     return this.args.keybindings
   }
 
-  get commandModeOnlyKey() {
-    return this.args.commandModeOnlyKey
-  }
-
   get secondaryText() {
     // primarily things that go in keybinding spot, like "last saved" info
     return this.args.secondaryText
