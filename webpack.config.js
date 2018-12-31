@@ -25,7 +25,7 @@ let CSS_PATH_STRING
 
 let { EDITOR_ORIGIN } = process.env
 let { EVAL_FRAME_ORIGIN } = process.env
-const { IODIDE_PUBLIC_TOS } = process.env || false
+let { IODIDE_PUBLIC_TOS } = process.env || false
 
 const PYODIDE_VERSION = process.env.PYODIDE_VERSION || '0.2.0'
 process.env.PYODIDE_VERSION = PYODIDE_VERSION
@@ -143,14 +143,14 @@ module.exports = (env) => {
         IODIDE_BUILD_MODE: JSON.stringify((env && env.startsWith('dev')) ? 'dev' : 'production'),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
         PYODIDE_VERSION: JSON.stringify(PYODIDE_VERSION),
-        IODIDE_PUBLIC_TOS: !!IODIDE_PUBLIC_TOS,
+        IODIDE_PUBLIC_TOS: !!IODIDE_PUBLIC_TOS
       }),
       new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
       new WriteFilePlugin(),
       // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
       new WebpackShellPlugin({
-        onBuildStart: [`bin/install_pyodide ${BUILD_DIR}/pyodide`],
-      }),
+        onBuildStart: [`bin/install_pyodide ${BUILD_DIR}/pyodide`]
+      })
     ],
     devServer: {
       contentBase: path.join(__dirname, 'build'),
