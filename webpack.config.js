@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const _ = require('lodash')
 
 const reduxLogMode = process.env.REDUX_LOGGING === 'VERBOSE' ? 'VERBOSE' : 'SILENT'
@@ -82,6 +83,10 @@ module.exports = (env) => {
           test: /\.jsx?/,
           include: APP_DIR,
           loader: 'babel-loader',
+          options: {
+            plugins: ['lodash'],
+            presets: [['@babel/preset-env', { modules: false, targets: { node: 6 } }]],
+          },
         },
         {
           test: /\.css$/,
@@ -96,6 +101,10 @@ module.exports = (env) => {
     watchOptions: { poll: true },
     plugins: [
       ...plugins,
+      new LodashModuleReplacementPlugin({
+        collections: true,
+        paths: true,
+      }),
       new webpack.ProvidePlugin({
         React: 'react',
         ReactDOM: 'react-dom',
