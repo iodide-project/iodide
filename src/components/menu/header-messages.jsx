@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -22,6 +21,7 @@ export class HeaderMessagesUnconnected extends React.Component {
     makeCopy: PropTypes.func.isRequired,
     revisionId: PropTypes.number,
   }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -30,25 +30,17 @@ export class HeaderMessagesUnconnected extends React.Component {
     this.showLoginModal = this.showLoginModal.bind(this)
     this.hideLoginModal = this.hideLoginModal.bind(this)
   }
+
   showLoginModal() {
-    this.setState({
-      showLoginModal: true,
-    })
+    this.setState({ showLoginModal: true })
   }
+
   hideLoginModal() {
     this.setState({ showLoginModal: false })
   }
 
   render() {
     let content;
-    let showLoginModal;
-    if (this.state.showLoginModal) {
-      showLoginModal = (<LoginModal
-        visible={this.state.showLoginModal}
-        onClose={this.hideLoginModal}
-        login={this.props.login}
-      />)
-    }
     switch (this.props.message) {
       case 'HAS_PREVIOUS_AUTOSAVE':
         content = (
@@ -79,9 +71,9 @@ export class HeaderMessagesUnconnected extends React.Component {
       case 'NEED_TO_LOGIN':
         content = (
           <span>
-            To save to this server, you need to
+            To save to this server, you need to &nbsp;
             <a
-              onClick={this.showLoginModal.bind(this)}
+              onClick={this.showLoginModal}
             >login
             </a>.
           </span>
@@ -107,7 +99,11 @@ export class HeaderMessagesUnconnected extends React.Component {
         className="notebook-header-messages-container"
       >
         {content}
-        {showLoginModal}
+        <LoginModal
+          visible={this.state.showLoginModal}
+          onClose={this.hideLoginModal}
+          login={this.props.login}
+        />
       </div>
     )
   }

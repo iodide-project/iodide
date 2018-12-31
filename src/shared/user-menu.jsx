@@ -1,6 +1,4 @@
-/* eslint-disable prefer-destructuring */
 import React from 'react'
-import { connect } from 'react-redux'
 import styled from 'react-emotion';
 import Avatar from '@material-ui/core/Avatar'
 import ExpandMore from '@material-ui/icons/ExpandMore'
@@ -108,23 +106,16 @@ export default class UserMenu extends React.Component {
   }
 
   render() {
-    let { avatar } = this.state
-    if (this.props.avatar) {
-      avatar = this.props.avatar
-    }
     return (
       <Tooltip title="Menu">
         <React.Fragment>
           {
-              (this.state.isLoggedIn || this.props.isAuthenticated) && (
+              this.state.isLoggedIn && (
                 <div style={{ marginRight: '20px' }}>
                   <Popover
                     title={
                       <AvatarButtonContainer>
-                        <Avatar
-                          style={{ width: 28, height: 28 }}
-                          src={avatar}
-                        />
+                        <Avatar style={{ width: 28, height: 28 }} src={this.state.avatar} />
                         <ExpandMore style={{ width: 15, height: 15 }} />
                       </AvatarButtonContainer>
                     }
@@ -144,7 +135,7 @@ export default class UserMenu extends React.Component {
               )
           }
           {
-              !(this.state.isLoggedIn || this.props.isAuthenticated) && (
+              !this.state.isLoggedIn && (
               <div>
                 <Button
                   variant="text"
@@ -168,13 +159,3 @@ export default class UserMenu extends React.Component {
     )
   }
 }
-
-function mapStateToProps(state) {
-  const isAuthenticated = Boolean(state.userData.name)
-  return {
-    isAuthenticated,
-    avatar: state.userData.avatar,
-  }
-}
-
-connect(mapStateToProps)(UserMenu)
