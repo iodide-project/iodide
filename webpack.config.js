@@ -101,10 +101,7 @@ module.exports = (env) => {
     watchOptions: { poll: true },
     plugins: [
       ...plugins,
-      new LodashModuleReplacementPlugin({
-        collections: true,
-        paths: true,
-      }),
+      new LodashModuleReplacementPlugin,
       new webpack.ProvidePlugin({
         React: 'react',
         ReactDOM: 'react-dom',
