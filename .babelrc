@@ -1,17 +1,9 @@
 {
   "presets": [
     "@babel/preset-react",
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "node": 6
-        }
-      }
-    ]
+    "@babel/preset-env"
   ],
   "plugins": [
-    "lodash",
     "@babel/plugin-proposal-class-properties"
   ],
   "env": {
