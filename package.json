@@ -5,7 +5,6 @@
   "main": "index.jsx",
   "author": "Iodide Project Team",
   "license": "MPL-2.0",
-  "sideEffects": false,
   "browserslist": "> 0.25%, not dead",
   "engines": {
     "node": "8.x"
