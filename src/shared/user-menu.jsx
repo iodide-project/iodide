@@ -1,3 +1,5 @@
+/* global USE_OPENIDC_AUTH */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'react-emotion';
@@ -107,6 +109,10 @@ export default class UserMenu extends React.Component {
   }
 
   render() {
+    let logout = <MenuItem onClick={this.logout}>Log Out</MenuItem>
+    if (!USE_OPENIDC_AUTH) {
+      logout = ''
+    }
     const { avatar } = this.state.avatar ? this.state : this.props
     return (
       <Tooltip title="Menu">
@@ -128,9 +134,7 @@ export default class UserMenu extends React.Component {
                         Go to Profile
                       </MenuItem>
                       <MenuDivider />
-                      <MenuItem onClick={this.logout}>
-                        Log Out
-                      </MenuItem>
+                      {logout}
                     </Menu>
                   </Popover>
                 </div>
