@@ -109,10 +109,6 @@ export default class UserMenu extends React.Component {
   }
 
   render() {
-    let logout = <MenuItem onClick={this.logout}>Log Out</MenuItem>
-    if (!USE_OPENIDC_AUTH) {
-      logout = ''
-    }
     const { avatar } = this.state.avatar ? this.state : this.props
     return (
       <Tooltip title="Menu">
@@ -134,7 +130,13 @@ export default class UserMenu extends React.Component {
                         Go to Profile
                       </MenuItem>
                       <MenuDivider />
-                      {logout}
+                      {
+                        !USE_OPENIDC_AUTH && (
+                          <MenuItem onClick={this.logout}>
+                            Log Out
+                          </MenuItem>
+                        )
+                      }
                     </Menu>
                   </Popover>
                 </div>
