@@ -1,3 +1,5 @@
+/* global USE_OPENIDC_AUTH */
+
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'react-emotion';
@@ -128,9 +130,13 @@ export default class UserMenu extends React.Component {
                         Go to Profile
                       </MenuItem>
                       <MenuDivider />
-                      <MenuItem onClick={this.logout}>
-                        Log Out
-                      </MenuItem>
+                      {
+                        !USE_OPENIDC_AUTH && (
+                          <MenuItem onClick={this.logout}>
+                            Log Out
+                          </MenuItem>
+                        )
+                      }
                     </Menu>
                   </Popover>
                 </div>
