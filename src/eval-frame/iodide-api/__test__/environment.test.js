@@ -1,5 +1,6 @@
-import { environment } from '../environment'
 import { store } from '../../store'
+
+import { environment } from '../environment'
 import { resetNotebook } from '../../actions/actions'
 
 // FIXME

@@ -18,15 +18,14 @@ function replaceStateFromEditor(state, action) {
 // for securty reasons, any actions forwarded must be whitelisted
 // and verified against schema on the editor side.
 const actionForwarder = (state, action) => {
-  // FIXME: this is a terrible hack to make the tests work.
-  // it must be stamped out.
-  // if (IODIDE_BUILD_MODE !== 'test') {
+  // FIXME: this try.catch required to allow the eval frame to load properly --
+  // because we have circular dependencies in imports, postActionToEditor
+  // is not actually initialized when this is called the first time
   try {
-    postActionToEditor(action)
+    if (action.type !== 'REPLACE_STATE') postActionToEditor(action)
   } catch (error) {
-    // console.log('EVAL FRAME ACTION POST TO EDITOR FAILED')
+    console.log('EVAL FRAME ACTION POST TO EDITOR FAILED')
   }
-  // }
   return state
 }
 

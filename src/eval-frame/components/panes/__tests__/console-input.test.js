@@ -1,6 +1,11 @@
 import { mount } from 'enzyme'
 import React from 'react'
 
+// FIXME this is an ugly hack to make tests pass without errors;
+// importing the store initializes it before other files, pre-empting
+// errors that actually result from circular dependencies
+import { store } from '../../../store' /* eslint-disable-line no-unused-vars */
+
 // import DoubleChevronIcon from '../double-chevron-icon'
 
 import { ConsoleInputUnconnected, mapStateToProps } from '../console-input'
