@@ -1,9 +1,12 @@
-/* global IODIDE_PUBLIC_TOS */
+/* global IODIDE_PUBLIC */
 import React from 'react'
 import styled from 'react-emotion'
 import { css } from 'emotion'
+import { sharedProperties } from '../style/base'
 
 const FooterContainer = styled('footer')`
+width: ${sharedProperties.narrowContentWidth};
+margin: auto;
 display: grid;
 grid-template-columns: 1fr 1fr 1fr;
 justify-items: center;
@@ -68,7 +71,7 @@ export default () => (
       <p>iodide is brought to you by <a href="https://mozilla.org">Mozilla</a>.</p>
       {
         // only display terms of service on an official mozilla installation
-        IODIDE_PUBLIC_TOS && (
+        IODIDE_PUBLIC && (
           <ul>
             <li><a href="https://www.mozilla.org/about/legal/terms/mozilla">Terms</a></li>
             <li><a href="https://www.mozilla.org/privacy/websites/">Privacy</a></li>
@@ -81,7 +84,7 @@ export default () => (
     <Logo />
     <FooterDiv>
       {
-        IODIDE_PUBLIC_TOS && (
+        IODIDE_PUBLIC && (
           <p>
             Content available under the terms of the&nbsp;
             <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.en" target="_blank" rel="noopener noreferrer">

@@ -13,6 +13,10 @@ https://hackernoon.com/all-you-need-to-know-about-css-in-js-984a72d48ebc
 
 */
 
+export const sharedProperties = {
+  narrowContentWidth: '700px',
+}
+
 const baseCSS = css`
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";

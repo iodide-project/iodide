@@ -28,7 +28,7 @@ let CSS_PATH_STRING
 let { EDITOR_ORIGIN } = process.env
 let { EVAL_FRAME_ORIGIN } = process.env
 const { USE_OPENIDC_AUTH } = process.env
-const { IODIDE_PUBLIC_TOS } = process.env || false
+const { IODIDE_PUBLIC } = process.env || false
 
 const PYODIDE_VERSION = process.env.PYODIDE_VERSION || '0.4.0'
 process.env.PYODIDE_VERSION = PYODIDE_VERSION
@@ -158,7 +158,7 @@ module.exports = (env) => {
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
         PYODIDE_VERSION: JSON.stringify(PYODIDE_VERSION),
         USE_OPENIDC_AUTH: JSON.stringify(USE_OPENIDC_AUTH),
-        IODIDE_PUBLIC_TOS: !!IODIDE_PUBLIC_TOS,
+        IODIDE_PUBLIC: !!IODIDE_PUBLIC,
       }),
       new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
       new WriteFilePlugin(),

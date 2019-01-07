@@ -13,8 +13,8 @@ a:hover {
 }
 `
 
-export const List = styled('div')`
-`
+export const List = styled('div')``
+
 const listItemAlign = (pr) => {
   let h = 'baseline'
   switch (pr) {

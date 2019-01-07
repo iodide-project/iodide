@@ -1,3 +1,4 @@
+/* global IODIDE_PUBLIC */
 import React from 'react';
 
 import Header from '../components/header';
@@ -36,7 +37,8 @@ export default class HomePage extends React.Component {
         <Header userInfo={this.props.userInfo} />
         <PageBody>
           <TopContainer>
-            {!isLoggedIn && <MarketingCopySplash /> }
+            {(!isLoggedIn && IODIDE_PUBLIC) && <MarketingCopySplash /> }
+            {(!isLoggedIn && !IODIDE_PUBLIC) && <LetsGetStarted /> }
             {isLoggedIn && <LoggedInSplash userInfo={this.props.userInfo} />}
             <PageHeader>Try These Examples</PageHeader>
             <NotebookDisplay>

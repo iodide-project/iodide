@@ -51,7 +51,6 @@ export default class PaginatedTable extends React.Component {
 
   next() {
     const { currentPage } = this.state
-    console.log(this.props.rows.length, currentPage)
     if (currentPage !== (this.totalPages)) {
       this.setState({
         currentPage: currentPage + 1,
