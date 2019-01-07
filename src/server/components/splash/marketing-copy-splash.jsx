@@ -84,7 +84,7 @@ export default class MarketingCopySplash extends React.Component {
           </Point>
           <Point>
             <PointTitle>
-              Share and remix your work
+              Share and remix your work.
             </PointTitle>
               Your notebook should be as easy to share as a web page.
           </Point>
