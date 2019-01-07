@@ -1,7 +1,7 @@
 import React from 'react'
-import Popover from './popover'
-import Menu from './menu'
-import MenuItem from './menu-item'
+import Popover from '../../shared/components/popover'
+import Menu from '../../shared/components/menu'
+import MenuItem from '../../shared/components/menu-item'
 import DeleteModal from './delete-modal'
 
 export default class FileActionsMenu extends React.Component {
