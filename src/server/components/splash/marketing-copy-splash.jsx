@@ -72,7 +72,7 @@ export default class MarketingCopySplash extends React.Component {
         <ThreePointsContainer>
           <Point>
             <PointTitle>
-              Bring the power of the web to your data analysis
+              Bring the power of the web to your data analysis.
             </PointTitle>
             Directly import and utilize the best-in-class visualization and UI tools in Javascript.
           </Point>
