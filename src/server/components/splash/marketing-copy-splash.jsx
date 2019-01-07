@@ -78,7 +78,7 @@ export default class MarketingCopySplash extends React.Component {
           </Point>
           <Point>
             <PointTitle>
-              Combine Python, Javascript, Markdown, and CSS
+              Combine Python, Javascript, Markdown, and CSS.
             </PointTitle>
               Choose the right language for the task with zero additional installation.
           </Point>
