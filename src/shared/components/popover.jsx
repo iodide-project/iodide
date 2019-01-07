@@ -42,11 +42,9 @@ class OutsideClickBoundary extends React.Component {
   render() {
     return (
       <div
-        ref={(el) => { this.container = el }}
         style={{
           width: '100%',
-          height: '100%',
-          position: 'fixed',
+          position: 'absolute',
           zIndex: 1000,
           left: 0,
           top: 0,
