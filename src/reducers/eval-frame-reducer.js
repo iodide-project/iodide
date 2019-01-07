@@ -29,6 +29,10 @@ export default function evalFrameActionReducer(state, action) {
       return Object.assign({}, state, { consoleTextCache: '' })
     }
 
+    case 'RESET_HISTORY_CURSOR': {
+      return Object.assign({}, state, { consoleScrollbackPosition: 0 })
+    }
+
     case 'CONSOLE_HISTORY_MOVE': {
       const historyLength = state.history.length
       // note that we bound consoleScrollbackPosition between
