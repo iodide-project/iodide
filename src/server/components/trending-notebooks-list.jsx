@@ -10,10 +10,11 @@ import { OutlineButton } from '../../shared/components/buttons'
 import { monthDayYear } from '../../shared/date-formatters'
 
 const PaginationContainer = styled('div')`
-  display: block;
-  margin:auto;
-  text-align:center;
-  margin-top:20px;
+display: block;
+margin:auto;
+text-align:center;
+margin-top:20px;
+
 `
 
 const Number = styled('span')`
