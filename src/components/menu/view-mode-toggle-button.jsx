@@ -35,7 +35,7 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
         <Button
           style={{ color: this.props.textColor || '#fafafa' }}
           onClick={this.toggleViewMode}
-          variant="flat"
+          variant="text"
           mini
         >
           {this.props.viewMode === 'REPORT_VIEW' ? 'Explore' : 'Report'}

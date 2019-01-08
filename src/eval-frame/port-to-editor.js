@@ -1,6 +1,10 @@
-/* global IODIDE_EDITOR_ORIGIN */
+/* global IODIDE_EDITOR_ORIGIN  */
+
 import { store } from './store'
-import { evaluateText, updateUserVariables } from './actions/actions'
+import {
+  evaluateText,
+  // updateUserVariables
+} from './actions/actions'
 import { getCompletions } from './tools/notebook-utils'
 import { onParentContextFileFetchSuccess, onParentContextFileFetchError } from './tools/fetch-file-from-parent-context'
 
@@ -19,6 +23,10 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data
     switch (messageType) {
+      case 'STATE_UPDATE_FROM_EDITOR': {
+        store.dispatch({ type: 'REPLACE_STATE', state: message })
+        break
+      }
       case 'REQUESTED_FILE_SUCCESS': {
         onParentContextFileFetchSuccess(message.file, message.path)
         break
@@ -48,15 +56,8 @@ function receiveMessage(event) {
             message.evalType,
             message.evalFlags,
             message.chunkId,
+            message.evalId,
           ))
-        } else if (message.type === 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD') {
-          // in this case, we need to update the declared variables
-          // pane to include variables that are in the environment, such as
-          // the iodide API.
-          store.dispatch(message)
-          store.dispatch(updateUserVariables())
-        } else {
-          store.dispatch(message)
         }
         break
       default:

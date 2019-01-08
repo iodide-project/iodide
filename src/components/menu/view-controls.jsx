@@ -6,6 +6,8 @@ import UserMenu from '../../shared/user-menu'
 import ViewModeToggleButton from './view-mode-toggle-button'
 import LastSavedText from './last-saved-text'
 
+import KernelState from './kernel-state'
+
 import tasks from '../../actions/task-definitions'
 
 import { connectionModeIsServer } from '../../tools/server-tools'
@@ -22,7 +24,7 @@ export class ViewControlsUnconnected extends React.Component {
     return (
       <div className="view-controls">
         <LastSavedText />
-
+        <KernelState />
         {this.props.isServer && (
           <UserMenu
             isAuthenticated={this.props.isAuthenticated}

@@ -26,23 +26,3 @@ describe('misc. notebook operations that don\'t belong elsewhere', () => {
     expect(notebookReducer(state, { type: 'CHANGE_PAGE_TITLE', title: NEW_NAME }).title).toEqual(NEW_NAME)
   })
 })
-
-describe('importing a notebook via state', () => {
-  const state = newNotebook()
-  const nextState = exampleNotebookWithContent()
-
-  it('should import a notebook correctly on IMPORT_NOTEBOOK', () => {
-    expect(notebookReducer(state, { type: 'IMPORT_NOTEBOOK', newState: nextState })).toEqual(nextState)
-  })
-})
-
-// describe('replacing notebook content', () => {
-//   const state = newNotebook()
-//   const actionPayload = { cells: [newCell(0, 'code')], title: 'my cool title' }
-//   const expectedNextState = Object.assign(state, actionPayload)
-
-//   it('should replace content', () => {
-//     expect(notebookReducer(state, { type: 'REPLACE_NOTEBOOK_CONTENT', ...actionPayload }))
-//       .toEqual(expectedNextState)
-//   })
-// })

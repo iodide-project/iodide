@@ -124,13 +124,6 @@ div.notebook-actions {
   padding: 3px
 }
 
-div.cell-controls {
-  display: flex;
-  padding: 3px;
-  background-color: #fff;
-  justify-content: space-between
-}
-
 div.page-mode {
   margin-left: 10px;
   color: #999;

@@ -1,15 +1,22 @@
 import CodeMirror from 'codemirror'
 import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
-import { getNotebookID } from '../tools/server-tools'
+import { getNotebookID, getUserDataFromDocument } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
-
-import { mirroredStateProperties } from '../state-schemas/mirrored-state-schema'
 
 import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-token'
 
 import { jsmdParser } from './jsmd-parser'
 import { getAllSelections, selectionToChunks, removeDuplicatePluginChunksInSelectionSet } from './jsmd-selection'
+
+import evalQueue from './evaluation-queue'
+
+export function setKernelState(kernelState) {
+  return {
+    type: 'SET_KERNEL_STATE',
+    kernelState,
+  }
+}
 
 export function updateAppMessages(messageObj) {
   const { message } = messageObj
@@ -48,41 +55,6 @@ export function updateJsmdContent(text) {
       jsmd: text,
       jsmdChunks,
     })
-  }
-}
-
-export function importNotebook(importedState) {
-  return (dispatch, getState) => {
-  // note that we need to not trample on evalFrameMessageQueue or
-  // evalFrameReady, so we'll copy those from the current state
-    const newState = Object.assign({}, importedState)
-    newState.evalFrameMessageQueue = getState().evalFrameMessageQueue
-    newState.evalFrameReady = getState().evalFrameReady
-    dispatch({
-      type: 'IMPORT_NOTEBOOK',
-      newState,
-    })
-  }
-}
-
-export function importInitialJsmd(importedState) {
-  return (dispatch) => {
-    dispatch(importNotebook(importedState))
-    // whitelist the part of the state in the JSMD that should be
-    // pushed to the eval-frame at initialization, and post it over
-
-    // copy mirrored state props
-    const statePathsToUpdate = Object.keys(mirroredStateProperties)
-    const stateUpdatesFromEditor = {}
-    statePathsToUpdate.forEach((k) => { stateUpdatesFromEditor[k] = importedState[k] })
-
-    dispatch({
-      type: 'UPDATE_EVAL_FRAME_FROM_INITIAL_JSMD',
-      stateUpdatesFromEditor,
-    })
-    // FIXME: the following is a hack to make sure the MD is available
-    // in the eval-frame report at start
-    dispatch(updateJsmdContent(importedState.jsmd))
   }
 }
 
@@ -131,9 +103,11 @@ export function saveNotebook() {
   }
 }
 
-export function resetNotebook() {
+export function resetNotebook(userData = undefined) {
+  // NB: this action creator is not used in the code, but is useful for tests
   return {
     type: 'RESET_NOTEBOOK',
+    userData: userData && getUserDataFromDocument(),
   }
 }
 
@@ -187,37 +161,25 @@ export function getChunkContainingLine(jsmdChunks, line) {
   return activeChunk
 }
 
-function triggerTextInEvalFrame(chunk) {
-  return Object.assign({
-    type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
-    evalText: chunk.chunkContent,
-    evalType: chunk.chunkType,
-    evalFrags: chunk.evalFlags,
-    chunkId: chunk.chunkId,
-  })
-}
-
-
 export function evaluateText() {
   return (dispatch, getState) => {
-    const { jsmdChunks } = getState()
+    const { jsmdChunks, kernelState } = getState()
+    if (kernelState !== 'KERNEL_BUSY') dispatch(setKernelState('KERNEL_BUSY'))
     const cm = window.ACTIVE_CODEMIRROR
     const doc = cm.getDoc()
-    let actionObj
     if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
       const activeChunk = getChunkContainingLine(jsmdChunks, line)
-      actionObj = triggerTextInEvalFrame(activeChunk)
+      evalQueue.evaluate(activeChunk, dispatch)
     } else {
       const selectionChunkSet = getAllSelections(doc)
         .map(selection =>
           selectionToChunks(selection, jsmdChunks, doc))
         .map(removeDuplicatePluginChunksInSelectionSet())
-      return Promise.all(selectionChunkSet.map(selection => Promise.all(selection.map(chunk =>
-        Promise.resolve(dispatch(triggerTextInEvalFrame(chunk)))))))
+      selectionChunkSet.forEach((selection) => {
+        selection.forEach(chunk => evalQueue.evaluate(chunk, dispatch))
+      })
     }
-    // here's where we'll put: if kernelState === ready
-    return Promise.resolve(dispatch(actionObj))
   }
 }
 
@@ -241,11 +203,11 @@ export function moveCursorToNextChunk() {
 
 export function evaluateNotebook() {
   return (dispatch, getState) => {
-    const { jsmdChunks } = getState()
-    let p = Promise.resolve()
+    const { jsmdChunks, kernelState } = getState()
+    if (kernelState !== 'KERNEL_BUSY') dispatch(setKernelState('KERNEL_BUSY'))
     jsmdChunks.forEach((chunk) => {
-      if (!['md', 'css'].includes(chunk.chunkType)) {
-        p = p.then(() => dispatch(triggerTextInEvalFrame(chunk)))
+      if (!['md', 'css', 'raw', ''].includes(chunk.chunkType)) {
+        evalQueue.evaluate(chunk, dispatch)
       }
     })
   }

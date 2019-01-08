@@ -33,5 +33,4 @@ const store = createStore(
 )
 
 const { dispatch } = store
-
 export { store, dispatch }

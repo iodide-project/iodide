@@ -1,9 +1,6 @@
 import { newNotebook } from '../editor-state-prototypes'
-import { historyIdGen } from '../actions/history-id-generator'
+import { historyIdGen } from '../actions/id-generators'
 import { exportJsmdBundle, titleToHtmlFilename } from '../tools/export-tools'
-
-import { getNotebookInfoFromDocument, getUserDataFromDocument } from '../tools/server-tools'
-
 import { postActionToEvalFrame } from '../port-to-eval-frame'
 
 function newAppMessage(appMessageId, appMessageText, appMessageDetails, appMessageWhen) {
@@ -33,7 +30,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
   switch (action.type) {
     case 'RESET_NOTEBOOK':
-      return Object.assign(newNotebook(), getUserDataFromDocument())
+      return Object.assign(newNotebook(), action.userData)
 
     case 'EXPORT_NOTEBOOK': {
       const exportState = Object.assign(
@@ -80,16 +77,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { evalFrameMessageQueue })
     }
 
-    case 'IMPORT_NOTEBOOK': {
-    // note: loading a NB should always assign to a copy of the latest global
-    // and per-cell state for backwards compatibility
-      nextState = action.newState
-      return Object.assign(
-        newNotebook(), nextState,
-        getUserDataFromDocument(), getNotebookInfoFromDocument(),
-      )
-    }
-
     case 'REPLACE_NOTEBOOK_CONTENT': {
       return Object.assign({}, state, {
         jsmd: action.jsmd,
@@ -129,15 +116,8 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { modalState: action.modalState })
     }
 
-    case 'TOGGLE_EDITOR_LINK': {
-      const scrollingLinked = !state.scrollingLinked
-      return Object.assign({}, state, { scrollingLinked })
-    }
-
-    case 'INCREMENT_EXECUTION_NUMBER': {
-      let { executionNumber } = state
-      executionNumber += 1
-      return Object.assign({}, state, { executionNumber })
+    case 'SET_KERNEL_STATE': {
+      return Object.assign({}, state, { kernelState: action.kernelState })
     }
 
     case 'LOGIN_SUCCESS': {
@@ -150,25 +130,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { userData })
     }
 
-    case 'APPEND_TO_EVAL_HISTORY': {
-      const history = [...state.history]
-      history.push({
-        cellId: action.cellId,
-        lastRan: Date.now(),
-        content: action.content,
-      })
-      return Object.assign({}, state, { history })
-    }
-
     case 'UPDATE_APP_MESSAGES': {
       nextState = Object.assign({}, state)
       nextState.appMessages = nextState.appMessages.slice()
       return addAppMessageToState(nextState, Object.assign({}, action.message))
-    }
-
-    case 'TEMPORARILY_SAVE_RUNNING_CELL_ID': {
-      const { cellId } = action
-      return Object.assign({}, state, { runningCellID: cellId })
     }
 
     case 'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME': {
