@@ -65,6 +65,7 @@ export class ConsoleInputUnconnected extends React.Component {
         <div style={{ flexGrow: 1 }}>
           <textarea
             name="text"
+            spellCheck={false}
             ref={this.textAreaRef}
             onChange={this.handleTextInput}
             onKeyDown={this.handleKeyDown}
