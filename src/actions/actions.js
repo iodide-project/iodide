@@ -3,6 +3,7 @@ import { getUrlParams, objectToQueryString } from '../tools/query-param-tools'
 
 import { getNotebookID } from '../tools/server-tools'
 import { clearAutosave, getAutosaveJsmd, updateAutosave } from '../tools/autosave'
+import { loginToServer, logoutFromServer } from '../tools/login'
 
 import { mirroredStateProperties } from '../state-schemas/mirrored-state-schema'
 
@@ -268,13 +269,9 @@ export function loginFailure() {
 }
 
 export function login(successCallback, failCallback) {
-  const url = '/oauth/login/github'
-  const name = 'github_login'
-  const specs = 'width=500,height=600'
-  const authWindow = window.open(url, name, specs)
-  authWindow.focus()
+  loginToServer()
   return (dispatch) => {
-    // Functions to be called by child window
+    // Functions to be called by child window set up by loginToServer()
     window.loginSuccess = (userData) => {
       dispatch(loginSuccess(userData))
       if (successCallback) successCallback(userData)
@@ -285,15 +282,19 @@ export function login(successCallback, failCallback) {
     }
   }
 }
+
+function logoutSuccess(dispatch) {
+  dispatch({ type: 'LOGOUT' })
+  dispatch(updateAppMessages({ message: 'Logged Out' }))
+}
+
+function logoutFailure(dispatch) {
+  dispatch(updateAppMessages({ message: 'Logout Failed' }))
+}
+
 export function logout() {
   return (dispatch) => {
-    fetch('/logout/')
-      .then((response) => {
-        if (response.ok) {
-          dispatch({ type: 'LOGOUT' })
-          dispatch(updateAppMessages({ message: 'Logged Out' }))
-        } else dispatch(updateAppMessages({ message: 'Logout Failed' }))
-      })
+    logoutFromServer(logoutSuccess, logoutFailure, dispatch)
   }
 }
 

@@ -14,6 +14,7 @@ import Menu from './components/menu'
 import MenuItem from './components/menu-item'
 import MenuDivider from './components/menu-divider'
 import Popover from './components/popover'
+import { logoutFromServer, loginToServer } from '../tools/login'
 
 
 const AvatarButtonContainer = styled('div')`
@@ -35,6 +36,7 @@ export default class UserMenu extends React.Component {
     this.goToProfile = this.goToProfile.bind(this)
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
+    this.logoutSuccess = this.logoutSuccess.bind(this)
     this.showLoginModal = this.showLoginModal.bind(this)
     this.hideLoginModal = this.hideLoginModal.bind(this)
   }
@@ -50,6 +52,14 @@ export default class UserMenu extends React.Component {
 
   showLoginModal() {
     this.setState({ loginModalVisible: true })
+  }
+
+  logoutSuccess() {
+    if (this.props.refreshOnLoginLogout) {
+      window.location.reload()
+    }
+    // else...
+    this.setState({ isLoggedIn: false })
   }
 
   login() {
@@ -71,12 +81,7 @@ export default class UserMenu extends React.Component {
     if (this.props.loginCallback) {
       this.props.loginCallback(loginSuccess)
     } else {
-      const url = '/oauth/login/github'
-      const name = 'github_login'
-      const specs = 'width=500,height=600'
-      authWindow = window.open(url, name, specs)
-      authWindow.focus()
-
+      loginToServer()
       window.loginSuccess = loginSuccess
 
       window.loginFailure = () => {
@@ -86,26 +91,14 @@ export default class UserMenu extends React.Component {
     }
   }
 
+  // FIXME: we should handle the logout failure case somehow (e.g. by popping up a notification)
   logout() {
     if (this.props.logoutCallback) {
       this.props.logoutCallback()
       this.setState({ isLoggedIn: false })
     } else {
-      fetch('/logout/')
-        .then((response) => {
-          if (response.ok) {
-            if (this.props.refreshOnLoginLogout) {
-              window.location.reload()
-            }
-            // else...
-            this.setState({ isLoggedIn: false })
-          } else {
-          // do something smart here (probably pop up a notification)
-            console.error('Login unsuccessful', response)
-          }
-        });
+      logoutFromServer(this.logoutSuccess, response => console.error('Logout unsuccessful', response))
     }
-    this.handleMenuClose()
   }
 
   render() {
