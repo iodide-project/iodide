@@ -38,7 +38,7 @@
     "@material-ui/core": "3.0.0",
     "@material-ui/icons": "3.0.0",
     "@skidding/react-codemirror": "^1.0.0",
-    "ajv": "6.5.0",
+    "ajv": "6.6.2",
     "codemirror": "5.37.0",
     "codemirror-no-newlines": "1.0.2",
     "css-element-queries": "1.0.2",
