@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'react-emotion'
 // import PropTypes from 'prop-types';
-import { List, ListItem } from './list'
+import { List, Placeholder } from './list'
 import { OutlineButton } from '../../shared/components/buttons'
 
 const PaginationContainer = styled('div')`
@@ -44,15 +44,14 @@ export default class PaginatedTable extends React.Component {
     super(props)
     this.state = { currentPage: 0 }
     this.pageSize = props.pageSize || PAGE_SIZE
-    this.totalPages = Math.floor(props.rows.length / this.pageSize)
+    this.totalPages = Math.ceil(props.rows.length / this.pageSize)
     this.prev = this.prev.bind(this)
     this.next = this.next.bind(this)
   }
 
   next() {
     const { currentPage } = this.state
-    console.log(this.props.rows.length, currentPage)
-    if (currentPage !== (this.totalPages)) {
+    if (currentPage !== (this.totalPages - 1)) {
       this.setState({
         currentPage: currentPage + 1,
       })
@@ -69,8 +68,11 @@ export default class PaginatedTable extends React.Component {
   render() {
     const { currentPage } = this.state
     const ind = currentPage * this.pageSize
-    const visibleRows = this.props.rows.slice(ind, ind + this.pageSize)
-    if (visibleRows.length < this.pageSize) {
+    const visibleRows = this.props.rows.slice(
+      ind,
+      Math.min(ind + this.pageSize, this.props.rows.length),
+    )
+    if (this.totalPages > 1 && visibleRows.length < this.pageSize) {
       new Array((this.pageSize - visibleRows.length) + 1).fill(null).forEach(() => {
         visibleRows.push(undefined)
       })
@@ -80,25 +82,16 @@ export default class PaginatedTable extends React.Component {
         <List>
           {
             visibleRows.map(row => (row ? this.props.getRow(row) :
-            <ListItem><div /></ListItem>))
+            <Placeholder className="list-placeholder"><div /></Placeholder>))
           }
         </List>
-        <Pagination
+        {this.totalPages > 1 && <Pagination
           onPrev={this.prev}
           onNext={this.next}
           pages={Math.ceil((this.props.rows.length) / this.pageSize)}
           currentPage={this.state.currentPage + 1}
-        />
+        />}
       </React.Fragment>
     )
   }
 }
-
-// TrendingNotebooksList.propTypes = {
-//   notebookList: PropTypes.arrayOf(PropTypes.shape({
-//     title: PropTypes.string.isRequired,
-//     id: PropTypes.number.isRequired,
-//     owner: PropTypes.string.isRequired,
-//     avatar: PropTypes.string.isRequired,
-//   })),
-// }

@@ -5,7 +5,7 @@ import { css } from 'emotion'
 import { sharedProperties } from '../style/base'
 
 const FooterContainer = styled('footer')`
-width: ${sharedProperties.narrowContentWidth};
+width: ${sharedProperties.pageWidth}px;
 margin: auto;
 display: grid;
 grid-template-columns: 1fr 1fr 1fr;

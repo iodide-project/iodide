@@ -13,8 +13,6 @@ a:hover {
 }
 `
 
-export const List = styled('div')``
-
 const listItemAlign = (pr) => {
   let h = 'baseline'
   switch (pr) {
@@ -57,12 +55,11 @@ const listItemHeight = (pr) => {
   return h
 }
 
-export const ListSmallLink = styled('a')`
-  padding-left:3px;
-  padding-right: 3px;
-`
+const LIST_BORDER = '1px solid gainsboro';
+const PLACEHOLDER_BORDER = '1px solid transparent';
+const LIST_BORDER_RADIUS = '5px';
 
-export const ListItem = styled('a')`
+export const ListItem = styled('div')`
 padding: 16px;
 height: ${props => listItemHeight(props.type)};
 display: flex;
@@ -70,10 +67,49 @@ align-items: ${props => listItemAlign(props.type)};
 text-decoration: none;
 color: black;
 
-
 :hover {
     background-color: #f6f8fa;
 }
+`
+
+export const Placeholder = styled(ListItem)`
+border-left:   ${PLACEHOLDER_BORDER} !important;
+border-right:  ${PLACEHOLDER_BORDER} !important;
+border-bottom: ${PLACEHOLDER_BORDER} !important;
+
+:hover {
+  background-color: white;
+}
+`
+
+export const List = styled('div')`
+
+> div {
+  border-bottom: ${LIST_BORDER};
+  border-left: ${LIST_BORDER};
+  border-right: ${LIST_BORDER};
+}
+
+> div.list-placeholder {
+  border-bottom: none;
+}
+
+> div:first-child {
+  border-top: ${LIST_BORDER};
+  border-top-left-radius: ${LIST_BORDER_RADIUS};
+  border-top-right-radius: ${LIST_BORDER_RADIUS};
+}
+
+> div:last-child {
+  border-bottom-left-radius: ${LIST_BORDER_RADIUS};
+  border-bottom-right-radius: ${LIST_BORDER_RADIUS};
+}
+`
+
+
+export const ListSmallLink = styled('a')`
+  padding-left:3px;
+  padding-right: 3px;
 `
 
 export const ListIcon = styled('div')``

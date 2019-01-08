@@ -6,15 +6,19 @@ import MoreHoriz from '@material-ui/icons/MoreHoriz'
 import PageBody from '../components/page-body';
 import Header from '../components/header';
 import BelowFoldContainer from '../components/page-containers/below-fold-container'
-import Table from '../components/table';
+// import Table from '../components/table';
 import { MediumUserName } from '../components/user-name';
 import { fetchWithCSRFTokenAndJSONContent } from '../../shared/fetch-with-csrf-token';
 import NotebookActionsMenu from '../components/notebook-actions-menu';
 import RevisionActionsMenu from '../components/revision-actions-menu';
 import FilesList from '../components/files-list'
+import { monthDayYear } from '../../shared/date-formatters'
 
 import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
-import { formatServerDate } from '../../shared/date-formatters'
+// import { formatServerDate } from '../../shared/date-formatters'
+
+import PaginatedList from '../components/paginated-list'
+import { ListItem, ListMain, ListPrimaryText, ListSecondaryText, ListDate, ListMetadata, ListSmallLink } from '../components/list'
 
 const RevisionsPageHeader = styled('h2')`
 span {
@@ -151,43 +155,44 @@ export default class RevisionsPage extends React.Component {
               onDelete={this.onDeleteFile}
             />
             <h3>Notebook Revisions</h3>
-            <Table>
-              <tbody>
-                <tr>
-                  <th>When</th>
-                  <th>Title</th>
-                  {isCurrentUsersPage ? <th>Actions</th> : undefined}
-                </tr>
-                {
-                        this.state.revisions.map((r, i) => (
-                          <tr key={r.id}>
-                            <td><a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>{formatServerDate(r.date)}</a></td>
-                            <td>
-                              <a href={`/notebooks/${r.notebookId}/?revision=${r.id}`}>
-                                { (i > 0 && this.state.revisions[i].title === this.state.revisions[i - 1].title) ? '-' : r.title }
-                              </a>
-                            </td>
-                            {
-                                isCurrentUsersPage ?
-                                  <td>
-                                    <ActionsContainer>
-                                      <RevisionActionsMenu
-                                        triggerElement={<MoreHoriz className={BodyIconStyle} />}
-                                        notebookID={r.notebookId}
-                                        revisionID={r.id}
-                                        revisionTitle={r.title}
-                                        notebookTitle={this.props.ownerInfo.notebookId}
-                                        onDelete={this.onDeleteRevision}
-                                      />
-                                    </ActionsContainer>
-                                  </td> :
-                              undefined
-                              }
-                          </tr>
-                        ))
+            <PaginatedList
+              pageSize={10}
+              rows={this.state.revisions}
+              getRow={revision => (
+                <ListItem type="single" key={revision.id}>
+                  <ListMain>
+                    <ListPrimaryText>
+                      <a href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}>{revision.title}</a>
+                    </ListPrimaryText>
+                    <ListSecondaryText>
+                      <ListSmallLink href={`/notebooks/${revision.notebookId}/`}>source</ListSmallLink>
+                      <ListSmallLink href={`/notebooks/${revision.notebookId}/?viewMode=report`}>report</ListSmallLink>
+                    </ListSecondaryText>
+                  </ListMain>
+                  <ListDate>
+                    <a href={`/notebooks/${revision.notebookId}/revisions/`}>{monthDayYear(revision.date)}</a>
+                  </ListDate>
+                  <ListMetadata>
+                    {
+                      isCurrentUsersPage ?
+                        <td>
+                          <ActionsContainer>
+                            <RevisionActionsMenu
+                              triggerElement={<MoreHoriz className={BodyIconStyle} />}
+                              notebookID={revision.notebookId}
+                              revisionID={revision.id}
+                              revisionTitle={revision.title}
+                              notebookTitle={this.props.ownerInfo.notebookId}
+                              onDelete={this.onDeleteRevision}
+                            />
+                          </ActionsContainer>
+                        </td> :
+                    undefined
                     }
-              </tbody>
-            </Table>
+                  </ListMetadata>
+                </ListItem>
+            )}
+            />
           </BelowFoldContainer>
         </PageBody>
       </div>

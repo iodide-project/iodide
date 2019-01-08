@@ -14,7 +14,8 @@ https://hackernoon.com/all-you-need-to-know-about-css-in-js-984a72d48ebc
 */
 
 export const sharedProperties = {
-  narrowContentWidth: '700px',
+  textWidth: 700,
+  pageWidth: 900,
 }
 
 const baseCSS = css`

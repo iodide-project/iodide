@@ -75,7 +75,7 @@ class UserNotebookList extends React.Component {
                   </ListSecondaryText>
                 </ListMain>
                 <ListDate>
-                  {monthDayYear(notebook.last_revision)}
+                  <a href={`/notebooks/${notebook.id}/revisions/`}>{monthDayYear(notebook.last_revision)}</a>
                 </ListDate>
                 <ListMetadata>
                   <ActionsContainer>

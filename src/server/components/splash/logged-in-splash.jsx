@@ -7,10 +7,11 @@ import { monthDayYear } from '../../../shared/date-formatters'
 import NewNotebookButton from '../new-notebook-button'
 import AttentionBlock from '../attention-block'
 import PageHeader from '../page-header'
+import { sharedProperties } from '../../style/base'
 
 
 const UserNotebooks = styled('div')`
-  width: 600px;
+  width: ${sharedProperties.pageWidth}px;
   margin:auto;
 `
 const LetsGetStarted = () => (
@@ -49,6 +50,9 @@ export default class LoggedInSplash extends React.Component {
                         </ListSmallLink>
                         <ListSmallLink href={`/notebooks/${d.id}/?viewMode=report`}>
                             report
+                        </ListSmallLink>
+                        <ListSmallLink href={`/notebooks/${d.id}/revisions/`}>
+                            revisions
                         </ListSmallLink>
                       </ListSecondaryText>
                     </ListMain>
