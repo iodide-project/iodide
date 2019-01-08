@@ -4,6 +4,14 @@ import { languageSchema, historySchema } from '../state-schemas/state-schema'
 // these are the schemas of actions from the eval frame that
 // are ok to pass to the editor
 
+export class ActionSchemaValidationError extends Error {
+  constructor(message) {
+    super(message)
+    this.message = message
+    this.name = 'ActionSchemaValidationError'
+  }
+}
+
 const languageActionSchema = Object.assign({}, languageSchema)
 languageActionSchema.properties.type = { type: 'string' }
 
@@ -14,7 +22,14 @@ historyActionSchema.properties.type = { type: 'string' }
 const schemas = {
   ADD_LANGUAGE_TO_EVAL_FRAME: languageActionSchema,
   APPEND_TO_EVAL_HISTORY: historyActionSchema,
-  CLEAR_CONSOLE_TEXT_CACHE: null,
+  CLEAR_CONSOLE_TEXT_CACHE: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      type: { type: 'string' },
+    },
+    required: ['type'],
+  },
   CONSOLE_HISTORY_MOVE: {
     type: 'object',
     additionalProperties: false,
@@ -22,13 +37,21 @@ const schemas = {
       type: { type: 'string' },
       consoleCursorDelta: { type: 'integer' },
     },
+    required: ['type', 'consoleCursorDelta'],
   },
   // FIXME environment actions disabled for now
   // ENVIRONMENT_UPDATE_FROM_EDITOR: {
   // },
   // ENVIRONMENT_UPDATE_FROM_EVAL_FRAME: {
   // },
-  RESET_HISTORY_CURSOR: null,
+  RESET_HISTORY_CURSOR: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      type: { type: 'string' },
+    },
+    required: ['type'],
+  },
   // FIXME environment actions disabled for now
   // SAVE_ENVIRONMENT: {
   // },
@@ -39,6 +62,7 @@ const schemas = {
       type: { type: 'string' },
       consoleText: { type: 'string' },
     },
+    required: ['type', 'consoleText'],
   },
   UPDATE_USER_VARIABLES: {
     type: 'object',
@@ -50,6 +74,7 @@ const schemas = {
         items: { type: 'string' },
       },
     },
+    required: ['type', 'userDefinedVarNames'],
   },
   UPDATE_VALUE_IN_HISTORY: {
     type: 'object',
@@ -58,6 +83,7 @@ const schemas = {
       type: { type: 'string' },
       historyId: { type: 'integer' },
     },
+    required: ['type', 'historyId'],
   },
 }
 
@@ -79,21 +105,15 @@ const validator = memoizedValidators()
 
 export default function validateActionFromEvalFrame(action) {
   if (!action.type) {
-    console.warn('Got invalid message from eval frame: No action type')
-    return false
+    throw new ActionSchemaValidationError('Invalid action from eval frame: No action type')
   } else if (!Object.keys(schemas).includes(action.type)) {
-    console.warn('Got invalid message from eval frame: action type not permitted')
-    return false
-  } else if (Object.keys(action).length === 1 && Object.keys(action)[0] === 'type') {
-    // this is an action that only has a type and no payload
-    return true
+    throw new ActionSchemaValidationError('Invalid action from eval frame: action type not permitted')
   } else if (!validator(action.type)(action)) {
-    console.warn(`Got invalid message from eval frame: bad schema
+    throw new ActionSchemaValidationError(`Invalid action from eval frame: bad schema.
 schema error:
 ${JSON.stringify(validator(action.type).errors, null, ' ')}
 action causing error:
 ${JSON.stringify(action, null, ' ')}`)
-    return false
   }
 
   return true
