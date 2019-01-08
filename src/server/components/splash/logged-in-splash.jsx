@@ -4,6 +4,7 @@ import { SplashTitle, HighlightedTitle, SplashContentContainer } from './shared-
 import Paginatedlist from '../paginated-list'
 import { ListItem, ListMain, ListDate, ListPrimaryText, ListSecondaryText, ListSmallLink } from '../list'
 import { monthDayYear } from '../../../shared/date-formatters'
+import DocsButton from '../docs-button'
 import NewNotebookButton from '../new-notebook-button'
 import AttentionBlock from '../attention-block'
 import PageHeader from '../page-header'
@@ -33,6 +34,7 @@ export default class LoggedInSplash extends React.Component {
             this.props.userInfo.notebooks.length &&
             <React.Fragment>
               <NewNotebookButton />
+              <DocsButton />
               <PageHeader>Your Notebooks</PageHeader>
               <Paginatedlist
                 pageSize={7}

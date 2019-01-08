@@ -3,6 +3,13 @@ import { css } from 'emotion'
 import styled from 'react-emotion'
 import PropTypes from 'prop-types'
 
+export const ButtonGroup = styled('div')`
+margin:auto;
+text-align:center;
+margin-top:20px;
+margin-bottom:60px;
+`
+
 const buttonReset = css`
 display: inline-block;
 text-transform: uppercase;
