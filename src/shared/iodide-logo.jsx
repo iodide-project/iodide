@@ -14,7 +14,7 @@ export default class IodideLogo extends React.Component {
         <a
           href={this.props.backLink}
           rel="noopener noreferrer"
-          target="_blank"
+          target={this.props.target || '_blank'}
           className={css`
             color: white;
             text-decoration: none;`}
