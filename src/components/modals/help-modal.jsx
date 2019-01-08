@@ -26,7 +26,12 @@ function AboutIodide() {
 }
 
 function MoreResources() {
-  return (<div className="help-modal-contents">Coming soon...</div>);
+  return (
+    <div className="help-modal-contents">
+      <h2>Documentation</h2>
+      <p>Visit the <a href="https://iodide.io/docs">Iodide Documentation</a>.</p>
+    </div>
+  )
 }
 
 export default class HelpModal extends React.Component {
