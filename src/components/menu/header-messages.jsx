@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import LoginModal from '../../shared/login-modal'
 
 import { connectionModeIsServer, connectionModeIsStandalone } from '../../tools/server-tools'
 import {
@@ -19,6 +20,23 @@ export class HeaderMessagesUnconnected extends React.Component {
     login: PropTypes.func.isRequired,
     makeCopy: PropTypes.func.isRequired,
     revisionId: PropTypes.number,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      showLoginModal: false,
+    }
+    this.showLoginModal = this.showLoginModal.bind(this)
+    this.hideLoginModal = this.hideLoginModal.bind(this)
+  }
+
+  showLoginModal() {
+    this.setState({ showLoginModal: true })
+  }
+
+  hideLoginModal() {
+    this.setState({ showLoginModal: false })
   }
 
   render() {
@@ -53,7 +71,11 @@ export class HeaderMessagesUnconnected extends React.Component {
       case 'NEED_TO_LOGIN':
         content = (
           <span>
-            To save to this server, you need to <a onClick={this.props.login}>login</a>.
+            To save to this server, you need to&nbsp;
+            <a
+              onClick={this.showLoginModal}
+            >login
+            </a>.
           </span>
         )
         break
@@ -77,6 +99,11 @@ export class HeaderMessagesUnconnected extends React.Component {
         className="notebook-header-messages-container"
       >
         {content}
+        <LoginModal
+          visible={this.state.showLoginModal}
+          onClose={this.hideLoginModal}
+          login={this.props.login}
+        />
       </div>
     )
   }

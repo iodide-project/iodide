@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from server.base.models import User
 
 
@@ -21,6 +22,9 @@ class Notebook(models.Model):
 
     def __str__(self):  # pragma: no cover
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('notebook-view', args=[str(self.id)])
 
     class Meta:
         verbose_name = "Notebook"

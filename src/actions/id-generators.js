@@ -1,4 +1,4 @@
-function IdFactory() {
+export function IdFactory() {
   this.state = 0
   this.nextId = () => {
     this.state += 1

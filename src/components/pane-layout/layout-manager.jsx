@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import GoldenLayout from 'golden-layout'
 import { ResizeSensor } from 'css-element-queries'
 
-import intialLayoutConfig from './layout-config-explore'
+import intialLayoutConfig from './layout-config-onboarding'
 import {
   LAYOUT_MANAGER_IN_FRONT_ZINDEX,
   LAYOUT_MANAGER_IN_BACK_ZINDEX,

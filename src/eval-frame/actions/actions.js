@@ -4,7 +4,7 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 
 import {
   NONCODE_EVAL_TYPES,
-} from '../../state-schemas/editor-only-state-schemas'
+} from '../../state-schemas/state-schema'
 
 import {
   // evaluateLanguagePluginCell,
@@ -14,8 +14,7 @@ import {
 } from './language-actions'
 
 import { evaluateFetchText } from './fetch-cell-eval-actions'
-
-let evaluationQueue = Promise.resolve()
+import { postMessageToEditor } from '../port-to-editor';
 
 const MD = MarkdownIt({ html: true })
 MD.use(MarkdownItKatex).use(MarkdownItAnchor)
@@ -27,6 +26,14 @@ initialVariables.add('__core-js_shared__')
 initialVariables.add('Mousetrap')
 initialVariables.add('CodeMirror')
 initialVariables.add('FETCH_RESOLVERS')
+
+export function sendStatusResponseToEditor(status, evalId) {
+  postMessageToEditor('EVALUATION_RESPONSE', { status, evalId })
+}
+
+export function addToEvaluationQueue(chunk) {
+  postMessageToEditor('ADD_TO_EVALUATION_QUEUE', chunk)
+}
 
 function getUserDefinedVariablesFromWindow() {
   return Object.keys(window)
@@ -62,26 +69,15 @@ export { MOST_RECENT_CHUNK_ID }
 
 // ////////////// actual actions
 
-
-export function resetNotebook() {
-  // we still need this for some tests to work, even though it's not really used
-  return {
-    type: 'RESET_NOTEBOOK',
-  }
-}
-
-export function temporarilySaveRunningCellID(cellId) {
-  return {
-    type: 'TEMPORARILY_SAVE_RUNNING_CELL_ID',
-    cellId,
-  }
-}
+export const EVALUATION_RESULTS = {}
 
 export function appendToEvalHistory(cellId, content, value, historyOptions = {}) {
   const historyId = historyOptions.historyId === undefined ?
     historyIdGen.nextId() : historyOptions.historyId
   const historyType = historyOptions.historyType === undefined ?
     'CELL_EVAL_VALUE' : historyOptions.historyType
+
+  EVALUATION_RESULTS[historyId] = value
 
   // returned obj must match history schema
   return {
@@ -91,34 +87,17 @@ export function appendToEvalHistory(cellId, content, value, historyOptions = {})
     historyId,
     historyType,
     lastRan: Date.now(),
-    value,
   }
 }
 
 export function updateValueInHistory(historyId, value) {
+  EVALUATION_RESULTS[historyId] = value
   return {
     type: 'UPDATE_VALUE_IN_HISTORY',
     historyId,
-    value,
   }
 }
 
-export function updateAppMessages(messageObj) {
-  const { message } = messageObj
-  let { details, when } = messageObj
-  if (when === undefined) when = new Date().toString()
-  if (details === undefined) details = message
-  return {
-    type: 'UPDATE_APP_MESSAGES',
-    message: { message, details, when },
-  }
-}
-
-export function incrementExecutionNumber() {
-  return {
-    type: 'INCREMENT_EXECUTION_NUMBER',
-  }
-}
 export function updateUserVariables() {
   return {
     type: 'UPDATE_USER_VARIABLES',
@@ -140,48 +119,36 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
   }
 }
 
-export function evalConsoleInput(languageId) {
+export function evalConsoleInput(consoleText) {
   return (dispatch, getState) => {
     const state = getState()
-    const code = state.consoleText
+    // const code = state.consoleText
     // exit if there is no code in the console to  eval
-    if (!code) { return undefined }
-    const evalLanguageId = languageId === undefined ? state.languageLastUsed : languageId
-    const language = state.loadedLanguages[evalLanguageId]
+    if (!consoleText) { return undefined }
+    const evalLanguageId = state.languageLastUsed
 
-    // FIXME: deal with side-effects for console evals
-    // // clear stuff relating to the side effect target before evaling
-    // dispatch({ type: 'CELL_SIDE_EFFECT_STATUS', cellId: cell.id, hasSideEffect: false })
-    // // this is one place where we have to directly mutate the DOM b/c we need
-    // // this to happen outside of React's update schedule. see also iodide-api/output.js
-    // const sideEffectTarget = document.getElementById(`cell-${cell.id}-side-effect-target`)
-    // if (sideEffectTarget) { sideEffectTarget.innerHTML = '' }
-
-    // dispatch(temporarilySaveRunningCellID(cell.id))
-    dispatch(incrementExecutionNumber())
-
-    const updateAfterEvaluation = (output) => {
-      dispatch(updateConsoleText(''))
-      dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
-      dispatch(appendToEvalHistory(null, code, output))
-      dispatch(updateUserVariables())
-    }
-
-    const messageCallback = (msg) => {
-      dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
-    }
-
-    return runCodeWithLanguage(language, code, messageCallback)
-      .then(updateAfterEvaluation)
+    dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
+    dispatch({ type: 'RESET_HISTORY_CURSOR' })
+    addToEvaluationQueue({
+      chunkType: evalLanguageId,
+      chunkId: undefined,
+      chunkContent: consoleText,
+      evalFlags: '',
+    })
+    dispatch(updateConsoleText(''))
+    return Promise.resolve()
   }
 }
 
-function evaluateCode(code, language, state) {
+function evaluateCode(code, language, state, evalId) {
   return (dispatch) => {
     const updateCellAfterEvaluation = (output, evalStatus) => {
       const cellProperties = { rendered: true }
       if (evalStatus === 'ERROR') {
         cellProperties.evalStatus = evalStatus
+        sendStatusResponseToEditor('ERROR', evalId)
+      } else {
+        sendStatusResponseToEditor('SUCCESS', evalId)
       }
       dispatch(appendToEvalHistory(null, code, output))
       dispatch(updateUserVariables())
@@ -206,6 +173,7 @@ export function evaluateText(
   evalType,
   evalFlags, // eslint-disable-line
   chunkId = null,
+  evalId,
 ) {
   // allowed types:
   // md
@@ -215,31 +183,31 @@ export function evaluateText(
     // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
     // in the direct jsmd editing paradigm.
 
-    evaluationQueue = evaluationQueue.then(() => {
-      MOST_RECENT_CHUNK_ID.set(chunkId)
-      const sideEffect = document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
-      if (sideEffect) {
-        sideEffect.innerText = null
-      }
-      const state = getState()
-      if (evalType === 'fetch') {
-        return dispatch(evaluateFetchText(evalText))
-      } else if (evalType === 'plugin') {
-        return dispatch(evaluateLanguagePlugin(evalText))
-      } else if (Object.keys(state.loadedLanguages).includes(evalType) ||
+    MOST_RECENT_CHUNK_ID.set(chunkId)
+    const sideEffect = document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
+    if (sideEffect) {
+      sideEffect.innerText = null
+    }
+    const state = getState()
+    if (evalType === 'fetch') {
+      return dispatch(evaluateFetchText(evalText, evalId))
+    } else if (evalType === 'plugin') {
+      return dispatch(evaluateLanguagePlugin(evalText, evalId))
+    } else if (Object.keys(state.loadedLanguages).includes(evalType) ||
       Object.keys(state.languageDefinitions).includes(evalType)) {
-        return dispatch(evaluateCode(evalText, evalType, state))
-      } else if (!NONCODE_EVAL_TYPES.includes(evalType)) {
-        return dispatch(appendToEvalHistory(
-          null, evalText,
-          new Error(`eval type ${evalType} is not defined`), {
-            historyType: 'CONSOLE_EVAL',
-          },
-        ))
-      }
-      return Promise.resolve()
-    })
-    return evaluationQueue
+      return dispatch(evaluateCode(evalText, evalType, state, evalId))
+    } else if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === '') {
+      sendStatusResponseToEditor('SUCCESS', evalId)
+    } else {
+      sendStatusResponseToEditor('ERROR', evalId)
+      return dispatch(appendToEvalHistory(
+        null, evalText,
+        new Error(`eval type ${evalType} is not defined`), {
+          historyType: 'CONSOLE_EVAL',
+        },
+      ))
+    }
+    return Promise.resolve()
   }
 }
 
@@ -248,12 +216,5 @@ export function saveEnvironment(updateObj, update) {
     type: 'SAVE_ENVIRONMENT',
     updateObj,
     update,
-  }
-}
-
-export function changePaneHeight(heightShift) {
-  return {
-    type: 'CHANGE_PANE_HEIGHT',
-    heightShift,
   }
 }

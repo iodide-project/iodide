@@ -1,11 +1,13 @@
-import { editorStateSchema } from './state-schemas/editor-only-state-schemas'
+import {
+  stateSchema,
+} from './state-schemas/state-schema'
 
-import { newNotebookFromSchema } from './state-schemas/state-prototype-from-schema'
-
-const stateSchema = editorStateSchema
+import {
+  newNotebookFromSchema,
+} from './state-schemas/state-prototype-from-schema'
 
 function newNotebook() {
-  return newNotebookFromSchema(editorStateSchema)
+  return newNotebookFromSchema(stateSchema)
 }
 
 export {

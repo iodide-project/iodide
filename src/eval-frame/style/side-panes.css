@@ -49,20 +49,6 @@
   outline: none;
 }
 
-div.history-items {
-  /*padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 20px;
-  padding-top: 20px;*/
-}
-
-div.history-cell {
-}
-
-div.history-items div.cell-container {
-  padding-right:0px;
-}
-
 pre.history-item-code {
   overflow: auto;
   padding:3px;
@@ -87,10 +73,6 @@ pre.history-item-code {
   font-family: Menlo, monospace;
   font-size: 11px;
   position: relative;
-}
-
-div.history-content {
-  /*border: 1px solid #f1f1f1;*/
 }
 
 .history-metadata-positioner {
