@@ -3,6 +3,7 @@ import { store } from './store'
 import { addLanguage, setKernelState } from './actions/actions'
 import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
 import evalQueue from './actions/evaluation-queue';
+import validateActionFromEvalFrame from './actions/eval-frame-action-validator'
 
 let portToEvalFrame
 
@@ -13,21 +14,6 @@ export function postMessageToEvalFrame(messageType, message) {
 export function postActionToEvalFrame(actionObj) {
   postMessageToEvalFrame('REDUX_ACTION', actionObj)
 }
-
-const approvedReduxActionsFromEvalFrame = [
-  'ADD_LANGUAGE_TO_EVAL_FRAME',
-  'APPEND_TO_EVAL_HISTORY',
-  'CLEAR_VARIABLES',
-  'CLEAR_CONSOLE_TEXT_CACHE',
-  'CONSOLE_HISTORY_MOVE',
-  'ENVIRONMENT_UPDATE_FROM_EDITOR',
-  'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME',
-  'RESET_HISTORY_CURSOR',
-  'SAVE_ENVIRONMENT',
-  'UPDATE_CONSOLE_TEXT',
-  'UPDATE_USER_VARIABLES',
-  'UPDATE_VALUE_IN_HISTORY',
-]
 
 const approvedKeys = [
   'esc',
@@ -88,7 +74,7 @@ function receiveMessage(event) {
       }
       case 'REDUX_ACTION':
         // in this case, `message` is a redux action
-        if (approvedReduxActionsFromEvalFrame.includes(message.type)) {
+        if (validateActionFromEvalFrame(message)) {
           store.dispatch(message)
         } else {
           console.error(`got unapproved redux action from eval frame: ${message.type}`)

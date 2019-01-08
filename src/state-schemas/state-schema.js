@@ -13,7 +13,7 @@ const appMessageSchema = {
   additionalProperties: false,
 }
 
-const historySchema = {
+export const historySchema = {
   type: 'object',
   properties: {
     cellId: { type: ['integer', 'null'] },
@@ -37,7 +37,7 @@ const historySchema = {
   additionalProperties: false,
 }
 
-const languageSchema = {
+export const languageSchema = {
   type: 'object',
   properties: {
     pluginType: { type: 'string', enum: ['language'] },
