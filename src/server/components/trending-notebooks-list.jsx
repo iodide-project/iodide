@@ -98,6 +98,9 @@ export default class TrendingNotebooksList extends React.Component {
                   </ListPrimaryText>
                   <ListSecondaryText>
                     <ListAuthor> <a href={`/${d.owner}`}>{d.owner}</a></ListAuthor>
+
+                  </ListSecondaryText>
+                  <ListSecondaryText>
                     <UserNotebookMiniLinks id={d.id} />
                   </ListSecondaryText>
                 </ListMain>

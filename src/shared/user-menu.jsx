@@ -34,6 +34,7 @@ export default class UserMenu extends React.Component {
     }
 
     this.goToProfile = this.goToProfile.bind(this)
+    this.goToDocs = this.goToDocs.bind(this)
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
     this.logoutSuccess = this.logoutSuccess.bind(this)
@@ -43,6 +44,11 @@ export default class UserMenu extends React.Component {
 
   goToProfile() {
     window.open(`/${this.state.name}`)
+    this.handleMenuClose()
+  }
+
+  goToDocs() {
+    window.open('https://iodide.io/docs')
     this.handleMenuClose()
   }
 
@@ -120,9 +126,12 @@ export default class UserMenu extends React.Component {
                   >
                     <Menu>
                       <MenuItem onClick={this.goToProfile}>
-                        Go to Profile
+                        Your Profile
                       </MenuItem>
                       <MenuDivider />
+                      <MenuItem onClick={this.goToDocs}>
+                        Docs
+                      </MenuItem>
                       {
                         !USE_OPENIDC_AUTH && (
                           <MenuItem onClick={this.logout}>
