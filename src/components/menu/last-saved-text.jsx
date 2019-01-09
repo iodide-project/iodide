@@ -8,20 +8,22 @@ export class LastSavedTextUnconnected extends React.Component {
   static propTypes = {
     lastSaved: PropTypes.string,
   }
+
   render() {
     return (
       <Typography
         classes={{ root: 'last-saved-text' }}
         style={{ marginRight: '10px' }}
       >
-        {this.props.lastSaved === undefined ? ' ' : `saved ${prettyDate(this.props.lastSaved)}`}
+        {this.props.lastSaved}
       </Typography>)
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
+  const islastSaved = state.lastSaved === undefined
   return {
-    lastSaved: state.lastSaved,
+    lastSaved: islastSaved ? '' : `saved ${prettyDate(state.lastSaved)}`,
   }
 }
 
