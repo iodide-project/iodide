@@ -58,7 +58,7 @@
     "opensans-npm-webfont": "1.0.0",
     "prop-types": "15.6.2",
     "query-string": "6.2.0",
-    "re-resizable": "4.4.8",
+    "re-resizable": "4.11.0",
     "react": "16.5.2",
     "react-dom": "16.5.2",
     "react-emotion": "9.2.8",
