@@ -57,6 +57,7 @@ describe('ViewModeToggleButton mapStateToProps', () => {
       textColor: 'black',
       buttonText: 'Explore',
       tooltipText: 'Explore this notebook',
+      backgroundColor: { backgroundColor: '#eee', border: '1px solid #ccc' },
     })
   })
 
@@ -67,6 +68,7 @@ describe('ViewModeToggleButton mapStateToProps', () => {
       textColor: '#fafafa',
       buttonText: 'Report',
       tooltipText: 'Go to Report view',
+      backgroundColor: '',
     })
   })
 })
