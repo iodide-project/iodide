@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'react-emotion'
 import { SplashTitle, HighlightedTitle, SplashContentContainer } from './shared-components'
 import UserNotebookList from '../user-notebook-list'
-import DocsButton from '../docs-button'
 import NewNotebookButton from '../new-notebook-button'
 import AttentionBlock from '../attention-block'
 import PageHeader from '../page-header'
@@ -32,7 +31,6 @@ export default class LoggedInSplash extends React.Component {
             this.props.userInfo.notebooks.length &&
             <React.Fragment>
               <NewNotebookButton />
-              <DocsButton />
               <PageHeader>Your Notebooks</PageHeader>
               <UserNotebookList
                 showMenu

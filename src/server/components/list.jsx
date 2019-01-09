@@ -139,7 +139,7 @@ ${hoverSet('black')}
 export const ListAuthor = styled('span')`
 color: gray;
 font-size: 13px;
-padding-right:36px;
+padding-right:24px;
 a {
   color: gray;
 }
@@ -154,7 +154,6 @@ text-decoration: none;
     color: purple;
 }
 `
-
 
 export const ListSecondaryText = styled('div')`
 color: gray;
