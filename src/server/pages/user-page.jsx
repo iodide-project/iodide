@@ -1,21 +1,18 @@
 import React from 'react';
 import styled from 'react-emotion';
-import MoreHoriz from '@material-ui/icons/MoreHoriz'
+// import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
 import Header from '../components/header';
 import PageBody from '../components/page-body';
 import BelowFoldContainer from '../components/page-containers/below-fold-container'
-import PaginatedList from '../components/paginated-list'
-import { ListItem, ListMain, ListPrimaryText, ListSecondaryText, ListDate, ListMetadata, ListSmallLink } from '../components/list'
+// import PaginatedList from '../components/paginated-list'
 import AttentionBlock from '../components/attention-block'
-import NotebookActionsMenu from '../components/notebook-actions-menu'
+// import NotebookActionsMenu from '../components/notebook-actions-menu'
 import NewNotebookButton from '../components/new-notebook-button'
-import { ActionsContainer, BodyIconStyle } from '../style/icon-styles'
-import { monthDayYear } from '../../shared/date-formatters'
+// import { ActionsContainer, BodyIconStyle } from '../style/icon-styles'
+// import { monthDayYear } from '../../shared/date-formatters'
 
-const NotebookListContainer = styled('div')`
-margin-top:20px;
-`
+import UserNotebookList from '../components/user-notebook-list'
 
 const UserInformationContainer = styled('div')`
 img {
@@ -34,70 +31,6 @@ h2 {
   margin-top:0;
 }
 `
-
-class UserNotebookList extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { notebookList: this.props.notebookList }
-    this.deleteNotebook = this.deleteNotebook.bind(this)
-  }
-
-  deleteNotebook(nbID) {
-    const notebookList = this.state.notebookList.filter(nb => nb.id !== nbID)
-    this.setState({ notebookList })
-  }
-
-  render() {
-    const { notebookList } = this.state
-    if (!notebookList.length) {
-      return <UserPageWithoutNotebooksPlaceholder isUserAccount={this.props.isUserAccount} />
-    }
-    return (
-      <React.Fragment>
-        <NewNotebookButton />
-
-        <h2>
-            notebooks
-        </h2>
-        <NotebookListContainer>
-          <PaginatedList
-            pageSize={10}
-            rows={notebookList}
-            getRow={notebook => (
-              <ListItem type="single" key={notebook.id}>
-                <ListMain>
-                  <ListPrimaryText>
-                    <a href={`/notebooks/${notebook.id}/`}>{notebook.title}</a>
-                  </ListPrimaryText>
-                  <ListSecondaryText>
-                    <ListSmallLink href={`/notebooks/${notebook.id}/`}>source</ListSmallLink>
-                    <ListSmallLink href={`/notebooks/${notebook.id}/?viewMode=report`}>report</ListSmallLink>
-                  </ListSecondaryText>
-                </ListMain>
-                <ListDate>
-                  <a href={`/notebooks/${notebook.id}/revisions/`}>{monthDayYear(notebook.last_revision)}</a>
-                </ListDate>
-                <ListMetadata>
-                  <ActionsContainer>
-                    <NotebookActionsMenu
-                      isUserAccount={this.props.isUserAccount}
-                      triggerElement={<MoreHoriz width={15} className={BodyIconStyle} />}
-                      notebookID={notebook.id}
-                      notebookTitle={notebook.title}
-                      onDelete={this.deleteNotebook}
-                    />
-                  </ActionsContainer>
-                </ListMetadata>
-              </ListItem>
-            )}
-          />
-        </NotebookListContainer>
-      </React.Fragment>
-
-    )
-  }
-}
-
 
 export const UserPageWithoutNotebooksPlaceholder = ({ isUserAccount }) => (
   <AttentionBlock>
@@ -130,11 +63,21 @@ export default class UserPage extends React.Component {
               </h1>
               <h2>{thisUser.name}</h2>
             </UserInformationContainer>
-
-            <UserNotebookList
-              isUserAccount={isLoggedIn(userInfo) && thisUser.name === userInfo.name}
-              notebookList={notebookList}
-            />
+            {!notebookList.length &&
+            <UserPageWithoutNotebooksPlaceholder isUserAccount={thisUser.name === userInfo.name} />}
+            {notebookList.length && (
+            <React.Fragment>
+              <NewNotebookButton />
+              <h2>
+                notebooks
+              </h2>
+              <UserNotebookList
+                showMenu
+                isUserAccount={isLoggedIn(userInfo) && thisUser.name === userInfo.name}
+                notebooks={notebookList}
+              />
+            </React.Fragment>
+            )}
           </BelowFoldContainer>
         </PageBody>
       </div>

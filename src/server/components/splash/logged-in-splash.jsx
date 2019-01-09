@@ -1,9 +1,7 @@
 import React from 'react'
 import styled from 'react-emotion'
 import { SplashTitle, HighlightedTitle, SplashContentContainer } from './shared-components'
-import Paginatedlist from '../paginated-list'
-import { ListItem, ListMain, ListDate, ListPrimaryText, ListSecondaryText, ListSmallLink } from '../list'
-import { monthDayYear } from '../../../shared/date-formatters'
+import UserNotebookList from '../user-notebook-list'
 import DocsButton from '../docs-button'
 import NewNotebookButton from '../new-notebook-button'
 import AttentionBlock from '../attention-block'
@@ -36,33 +34,10 @@ export default class LoggedInSplash extends React.Component {
               <NewNotebookButton />
               <DocsButton />
               <PageHeader>Your Notebooks</PageHeader>
-              <Paginatedlist
-                pageSize={7}
-                rows={this.props.userInfo.notebooks}
-                header={['LAST UPDATED', 'TITLE']}
-                getRow={d => (
-                  <ListItem key={d.id} type="single">
-                    <ListMain>
-                      <ListPrimaryText>
-                        <a href={`/notebooks/${d.id}/`}>{d.title}</a>
-                      </ListPrimaryText>
-                      <ListSecondaryText>
-                        <ListSmallLink href={`/notebooks/${d.id}/`}>
-                            source
-                        </ListSmallLink>
-                        <ListSmallLink href={`/notebooks/${d.id}/?viewMode=report`}>
-                            report
-                        </ListSmallLink>
-                        <ListSmallLink href={`/notebooks/${d.id}/revisions/`}>
-                            revisions
-                        </ListSmallLink>
-                      </ListSecondaryText>
-                    </ListMain>
-                    <ListDate>
-                      <a href={`/notebooks/${d.id}/revisions`}>{monthDayYear(d.latestRevision)}</a>
-                    </ListDate>
-                  </ListItem>
-            )}
+              <UserNotebookList
+                showMenu
+                notebooks={this.props.userInfo.notebooks}
+                isUserAccount={this.props.userInfo}
               />
             </React.Fragment>
           }

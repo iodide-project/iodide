@@ -60,8 +60,8 @@ const PLACEHOLDER_BORDER = '1px solid transparent';
 const LIST_BORDER_RADIUS = '5px';
 
 export const ListSmallLink = styled('a')`
-  margin-left:6px;
-  margin-right: 6px;
+  margin-left:4px;
+  margin-right: 4px;
 `
 
 export const ListItem = styled('div')`
