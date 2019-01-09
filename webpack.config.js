@@ -7,6 +7,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin') 
 const _ = require('lodash')
 
 const reduxLogMode = process.env.REDUX_LOGGING === 'VERBOSE' ? 'VERBOSE' : 'SILENT'
@@ -26,7 +27,7 @@ let CSS_PATH_STRING
 let { EDITOR_ORIGIN } = process.env
 let { EVAL_FRAME_ORIGIN } = process.env
 const { USE_OPENIDC_AUTH } = process.env
-let { IODIDE_PUBLIC_TOS } = process.env || false
+const { IODIDE_PUBLIC_TOS } = process.env || false
 
 const PYODIDE_VERSION = process.env.PYODIDE_VERSION || '0.4.0'
 process.env.PYODIDE_VERSION = PYODIDE_VERSION
@@ -39,7 +40,7 @@ const plugins = []
 
 // const config
 module.exports = (env) => {
-  env = env || ''
+  env = env || '' // eslint-disable-line no-param-reassign
 
   if (!env.startsWith('dev')) {
     plugins.push(new UglifyJSPlugin())
@@ -102,7 +103,13 @@ module.exports = (env) => {
     watchOptions: { poll: true },
     plugins: [
       ...plugins,
-      new LodashModuleReplacementPlugin,
+      new CircularDependencyPlugin({
+        // exclude detection of files based on a RegExp
+        exclude: /a\.js|node_modules/,
+        failOnError: false, // FIXME should be true; we want it to fail
+        cwd: process.cwd(),
+      }),
+      new LodashModuleReplacementPlugin(),
       new webpack.ProvidePlugin({
         React: 'react',
         ReactDOM: 'react-dom',
@@ -142,14 +149,14 @@ module.exports = (env) => {
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
         PYODIDE_VERSION: JSON.stringify(PYODIDE_VERSION),
         USE_OPENIDC_AUTH: JSON.stringify(USE_OPENIDC_AUTH),
-        IODIDE_PUBLIC_TOS: !!IODIDE_PUBLIC_TOS
+        IODIDE_PUBLIC_TOS: !!IODIDE_PUBLIC_TOS,
       }),
       new MiniCssExtractPlugin({ filename: `[name].${APP_VERSION_STRING}.css` }),
       new WriteFilePlugin(),
       // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
       new WebpackShellPlugin({
-        onBuildStart: [`bin/install_pyodide ${BUILD_DIR}/pyodide`]
-      })
+        onBuildStart: [`bin/install_pyodide ${BUILD_DIR}/pyodide`],
+      }),
     ],
     devServer: {
       contentBase: path.join(__dirname, 'build'),
