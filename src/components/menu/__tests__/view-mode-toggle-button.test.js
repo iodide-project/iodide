@@ -24,15 +24,11 @@ describe('ViewModeToggleButtonUnconnected', () => {
     props = {
       isReportView: true,
       textColor: 'a color string',
-      buttonText: 'a ubtton text string',
+      buttonText: 'a button text string',
       setViewModeToExplore: setViewModeToExploreMock,
       setViewModeToReport: setViewModeToReportMock,
     }
     mountedComponent = undefined
-  })
-
-  it('should render all children', () => {
-    expect(wrapper().find(Tooltip)).toHaveLength(1)
   })
 
   it('correct function called when isReportView===true', () => {
@@ -53,7 +49,7 @@ describe('ViewModeToggleButtonUnconnected', () => {
 describe('ViewModeToggleButton mapStateToProps', () => {
   let state
   beforeEach(() => {
-    state = { viewMode: 'REPORT_VIEW'}
+    state = { viewMode: 'REPORT_VIEW' }
   })
 
   it('correct props if REPORT_VIEW', () => {
