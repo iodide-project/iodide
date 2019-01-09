@@ -13,7 +13,7 @@ export class PresentationModeToolbarUnconnected extends React.Component {
       <div className="presentation-menu" style={{ display: (this.props.viewMode === 'REPORT_VIEW' ? 'block' : 'none') }} >
         <div className="presentation-header">
           <div className="view-mode-toggle-from-presentation">
-            <ViewModeToggleButton textColor="black" />
+            <ViewModeToggleButton />
           </div>
         </div>
       </div>

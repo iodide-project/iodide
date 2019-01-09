@@ -2,12 +2,14 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Tooltip from '@material-ui/core/Tooltip'
 import Button from '@material-ui/core/Button'
-import { ViewModeToggleButtonUnconnected } from '../view-mode-toggle-button'
+import { ViewModeToggleButtonUnconnected, mapStateToProps } from '../view-mode-toggle-button'
 
 
 describe('ViewModeToggleButtonUnconnected', () => {
   let mountedComponent
   let props
+  let setViewModeToExploreMock
+  let setViewModeToReportMock
 
   const wrapper = () => {
     if (!mountedComponent) {
@@ -17,8 +19,14 @@ describe('ViewModeToggleButtonUnconnected', () => {
   }
 
   beforeEach(() => {
+    setViewModeToExploreMock = jest.fn()
+    setViewModeToReportMock = jest.fn()
     props = {
-      viewMode: 'REPORT_VIEW',
+      isReportView: true,
+      textColor: 'a color string',
+      buttonText: 'a ubtton text string',
+      setViewModeToExplore: setViewModeToExploreMock,
+      setViewModeToReport: setViewModeToReportMock,
     }
     mountedComponent = undefined
   })
@@ -27,22 +35,43 @@ describe('ViewModeToggleButtonUnconnected', () => {
     expect(wrapper().find(Tooltip)).toHaveLength(1)
   })
 
-  it('when viewMode !== REPORT_VIEW', () => {
-    props.viewMode = 'EXPLORE_VIEW'
-    const mockCallback = jest.fn()
-    const button = shallow(<Button onClick={mockCallback}>Report</Button>)
-    button.find('Button').simulate('click')
-    expect(mockCallback).toHaveBeenCalled();
-    expect(wrapper().find(Tooltip).get(0).props.title).toEqual('Go to Report view')
-    expect(wrapper().find(Button).get(0).props.children).toEqual('Report')
+  it('correct function called when isReportView===true', () => {
+    wrapper().find(Button).simulate('click')
+    expect(setViewModeToExploreMock).toHaveBeenCalled();
+    expect(setViewModeToReportMock).not.toHaveBeenCalled();
   })
 
-  it('when viewMode == REPORT_VIEW', () => {
-    const mockCallback = jest.fn()
-    const button = shallow(<Button onClick={mockCallback}>EXPLORE</Button>)
-    button.find('Button').simulate('click')
-    expect(mockCallback).toHaveBeenCalled();
-    expect(wrapper().find(Tooltip).get(0).props.title).toEqual('Explore this notebook')
-    expect(wrapper().find(Button).get(0).props.children).toEqual('Explore')
+  it('correct function called when isReportView===false', () => {
+    props.isReportView = false
+    wrapper().find(Button).simulate('click')
+    expect(setViewModeToExploreMock).not.toHaveBeenCalled();
+    expect(setViewModeToReportMock).toHaveBeenCalled();
+  })
+})
+
+
+describe('ViewModeToggleButton mapStateToProps', () => {
+  let state
+  beforeEach(() => {
+    state = { viewMode: 'REPORT_VIEW'}
+  })
+
+  it('correct props if REPORT_VIEW', () => {
+    expect(mapStateToProps(state)).toEqual({
+      isReportView: true,
+      textColor: 'black',
+      buttonText: 'Explore',
+      tooltipText: 'Explore this notebook',
+    })
+  })
+
+  it('correct props if not REPORT_VIEW', () => {
+    state.viewMode = 'not_REPORT_VIEW'
+    expect(mapStateToProps(state)).toEqual({
+      isReportView: false,
+      textColor: '#fafafa',
+      buttonText: 'Report',
+      tooltipText: 'Go to Report view',
+    })
   })
 })

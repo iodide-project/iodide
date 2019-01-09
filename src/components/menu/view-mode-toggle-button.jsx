@@ -3,13 +3,15 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Button from '@material-ui/core/Button'
 import Tooltip from '@material-ui/core/Tooltip'
-import tasks from '../../actions/task-definitions'
+import { setViewMode } from '../../actions/actions'
 
 export class ViewModeToggleButtonUnconnected extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.oneOf(['EXPLORE_VIEW', 'REPORT_VIEW']),
-    textColor: PropTypes.string,
-    hoverColor: PropTypes.string,
+    isReportView: PropTypes.bool.isRequired,
+    textColor: PropTypes.string.isRequired,
+    buttonText: PropTypes.string.isRequired,
+    setViewModeToExplore: PropTypes.func.isRequired,
+    setViewModeToReport: PropTypes.func.isRequired,
   }
   constructor(props) {
     super(props)
@@ -17,38 +19,48 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
   }
 
   toggleViewMode() {
-    if (this.props.viewMode === 'REPORT_VIEW') {
-      tasks.setViewModeToEditor.callback()
-    } else if (this.props.viewMode === 'EXPLORE_VIEW') {
-      tasks.setViewModeToPresentation.callback()
+    if (this.props.isReportView) {
+      this.props.setViewModeToExplore()
+    } else {
+      this.props.setViewModeToReport()
     }
   }
 
   render() {
-    const tooltipText = this.props.viewMode === 'REPORT_VIEW' ?
-      'Explore this notebook' : 'Go to Report view'
     return (
       <Tooltip
         classes={{ tooltip: 'iodide-tooltip' }}
-        title={tooltipText}
+        title={this.props.tooltipText}
       >
         <Button
-          style={{ color: this.props.textColor || '#fafafa' }}
+          style={{ color: this.props.textColor }}
           onClick={this.toggleViewMode}
           variant="text"
           mini
         >
-          {this.props.viewMode === 'REPORT_VIEW' ? 'Explore' : 'Report'}
+          {this.props.buttonText}
         </Button>
       </Tooltip>
     )
   }
 }
+
 export function mapStateToProps(state) {
   // get the viewMode from state
+  const isReportView = state.viewMode === 'REPORT_VIEW'
   return {
-    viewMode: state.viewMode,
+    isReportView,
+    textColor: isReportView ? 'black' : '#fafafa',
+    buttonText: isReportView ? 'Explore' : 'Report',
+    tooltipText: isReportView ? 'Explore this notebook' : 'Go to Report view',
   }
 }
 
-export default connect(mapStateToProps)(ViewModeToggleButtonUnconnected)
+function mapDispatchToProps(dispatch) {
+  return {
+    setViewModeToReport: () => dispatch(setViewMode('REPORT_VIEW')),
+    setViewModeToExplore: () => dispatch(setViewMode('EXPLORE_VIEW')),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ViewModeToggleButtonUnconnected)
