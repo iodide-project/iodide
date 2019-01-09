@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import deepEqual from 'deep-equal'
 
-import ReactCodeMirror from '@skidding/react-codemirror'
+import { Controlled as ReactCodeMirror } from 'react-codemirror2'
 
 import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/edit/closebrackets'
@@ -35,19 +35,19 @@ class JsmdEditorUnconnected extends React.Component {
     // explicitly bind "this" for all methods in constructors
     // this.handleFocusChange = this.handleFocusChange.bind(this)
     this.updateJsmdContent = this.updateJsmdContent.bind(this)
-    this.storeEditorElementRef = this.storeEditorElementRef.bind(this)
+    this.storeEditorInstance = this.storeEditorInstance.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps)
   }
 
-  storeEditorElementRef(editorElt) {
-    this.editor = editorElt
-    window.ACTIVE_CODEMIRROR = editorElt.getCodeMirror()
+  storeEditorInstance(editor) {
+    this.editor = editor
+    window.ACTIVE_CODEMIRROR = editor
   }
 
-  updateJsmdContent(content) {
+  updateJsmdContent(editor, data, content) {
     this.props.actions.updateJsmdContent(content)
   }
 
@@ -127,10 +127,10 @@ class JsmdEditorUnconnected extends React.Component {
 
     return (
       <ReactCodeMirror
-        ref={this.storeEditorElementRef}
+        editorDidMount={this.storeEditorInstance}
         value={this.props.content}
         options={this.props.editorOptions}
-        onChange={this.updateJsmdContent}
+        onBeforeChange={this.updateJsmdContent}
         style={{ height: '100%' }}
       />
     )
