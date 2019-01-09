@@ -173,7 +173,7 @@ ${hoverSet('gray')}
 
 export const ListLinkSet = styled('div')`
 margin-left:10px;
-margin-right:30px;
+margin-right:40px;
 color: gray;
 font-size: 13px;
 ${hoverSet('gray')}

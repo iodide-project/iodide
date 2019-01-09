@@ -6,7 +6,6 @@ import MoreHoriz from '@material-ui/icons/MoreHoriz'
 import PageBody from '../components/page-body';
 import Header from '../components/header';
 import BelowFoldContainer from '../components/page-containers/below-fold-container'
-// import Table from '../components/table';
 import { MediumUserName } from '../components/user-name';
 import { fetchWithCSRFTokenAndJSONContent } from '../../shared/fetch-with-csrf-token';
 import NotebookActionsMenu from '../components/notebook-actions-menu';
@@ -15,7 +14,6 @@ import FilesList from '../components/files-list'
 import { monthDayYear } from '../../shared/date-formatters'
 
 import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
-// import { formatServerDate } from '../../shared/date-formatters'
 
 import PaginatedList from '../components/paginated-list'
 import { ListItem, ListMain, ListPrimaryText, ListLinkSet, ListDate, ListMetadata, ListSmallLink } from '../components/list'
