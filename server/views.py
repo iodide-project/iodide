@@ -25,7 +25,7 @@ def index(request):
     notebooks = Notebook.objects \
         .annotate(latest_revision=Max('revisions__created')) \
         .order_by('-latest_revision') \
-        .values_list('id', 'title', 'owner__username', 'owner__avatar', 'latest_revision')
+        .values_list('id', 'title', 'owner__username', 'owner__avatar', 'latest_revision')[:100]
     if not request.user.is_anonymous:
         user_info['notebooks'] = [
             {'id': nb_id, 'title': title, 'latestRevision': latest_revision.isoformat(sep=' ')}
