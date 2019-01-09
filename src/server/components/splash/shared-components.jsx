@@ -15,6 +15,17 @@ sub {
 
 export const HighlightedTitle = styled('span')`
 color: tomato;
+
+a {
+  color: tomato;
+  text-decoration: none;
+}
+
+a:hover {
+  color: tomato;
+  text-decoration: underline;
+}
+
 `
 
 export const SplashCopy = styled('div')`

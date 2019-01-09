@@ -25,7 +25,7 @@ export default class LoggedInSplash extends React.Component {
       <SplashContentContainer>
         <UserNotebooks>
           <SplashTitle>
-            Welcome back, <HighlightedTitle>{this.props.userInfo.name}</HighlightedTitle>.
+            Welcome back, <HighlightedTitle><a href={`/${this.props.userInfo.name}`}>{this.props.userInfo.name}</a></HighlightedTitle>.
           </SplashTitle>
           {
             this.props.userInfo.notebooks.length &&
