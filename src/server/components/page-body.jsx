@@ -7,7 +7,6 @@ const PageBodyContainer = styled('div')`
 margin: auto;
 margin-top: 40px;
 width: ${sharedProperties.pageWidth}px;
-/* width: 700px; */
 display: flex;
 min-height: calc(100vh - 100px);
 flex-direction: column;
