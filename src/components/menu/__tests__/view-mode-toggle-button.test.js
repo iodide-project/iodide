@@ -1,6 +1,5 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import Tooltip from '@material-ui/core/Tooltip'
 import Button from '@material-ui/core/Button'
 import { ViewModeToggleButtonUnconnected, mapStateToProps } from '../view-mode-toggle-button'
 
