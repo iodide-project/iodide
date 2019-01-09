@@ -7,5 +7,5 @@ export function formatServerDate(dateString) {
 }
 
 export function monthDayYear(dateString) {
-  return format(parse(dateString, 'yyyy-MM-dd kk:mm:ss.SSSSSSxxx', new Date()), 'MMM dd, uuuu')
+  return format(parse(dateString, 'yyyy-MM-dd HH:mm:ss.SSSSSSxxx', new Date()), 'MMM dd, uuuu')
 }
