@@ -3,7 +3,8 @@ import styled from 'react-emotion'
 import PropTypes from 'prop-types';
 import PaginatedList from './paginated-list'
 import {
-  ListIcon, ListItem, ListMain, ListPrimaryText, ListSecondaryText, ListDate, ListAuthor,
+  ListIcon, ListItem, ListMain, ListPrimaryText, ListSecondaryText, ListDate,
+  ListAuthor, ListMetadata, ListLinkSet,
 } from './list'
 import UserNotebookMiniLinks from './user-notebook-mini-links'
 import { SmallUserName as UserName } from '../components/user-name'
@@ -98,12 +99,13 @@ export default class TrendingNotebooksList extends React.Component {
                   </ListPrimaryText>
                   <ListSecondaryText>
                     <ListAuthor> <a href={`/${d.owner}`}>{d.owner}</a></ListAuthor>
-
-                  </ListSecondaryText>
-                  <ListSecondaryText>
-                    <UserNotebookMiniLinks id={d.id} />
                   </ListSecondaryText>
                 </ListMain>
+                <ListMetadata>
+                  <ListLinkSet>
+                    <UserNotebookMiniLinks id={d.id} />
+                  </ListLinkSet>
+                </ListMetadata>
                 <ListDate>
                   <a href={`/notebooks/${d.id}/revisions`}>{monthDayYear(d.latestRevision)}</a>
                 </ListDate>

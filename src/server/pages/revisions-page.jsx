@@ -18,7 +18,7 @@ import { BodyIconStyle, ActionsContainer } from '../style/icon-styles'
 // import { formatServerDate } from '../../shared/date-formatters'
 
 import PaginatedList from '../components/paginated-list'
-import { ListItem, ListMain, ListPrimaryText, ListSecondaryText, ListDate, ListMetadata, ListSmallLink } from '../components/list'
+import { ListItem, ListMain, ListPrimaryText, ListLinkSet, ListDate, ListMetadata, ListSmallLink } from '../components/list'
 
 const RevisionsPageHeader = styled('h2')`
 span {
@@ -164,15 +164,17 @@ export default class RevisionsPage extends React.Component {
                     <ListPrimaryText>
                       <a href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}>{revision.title}</a>
                     </ListPrimaryText>
-                    <ListSecondaryText>
+                  </ListMain>
+                  <ListMetadata>
+                    <ListLinkSet>
                       <ListSmallLink href={`/notebooks/${revision.notebookId}/`}>
                         explore
                       </ListSmallLink>
                       <ListSmallLink href={`/notebooks/${revision.notebookId}/?viewMode=report`}>
                         report
                       </ListSmallLink>
-                    </ListSecondaryText>
-                  </ListMain>
+                    </ListLinkSet>
+                  </ListMetadata>
                   <ListDate>
                     <a href={`/notebooks/${revision.notebookId}/revisions/`}>{monthDayYear(revision.date)}</a>
                   </ListDate>

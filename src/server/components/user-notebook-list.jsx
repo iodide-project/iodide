@@ -2,7 +2,7 @@ import React from 'react'
 import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
 import Paginatedlist from './paginated-list'
-import { ListItem, ListMain, ListDate, ListPrimaryText, ListSecondaryText, ListMetadata } from './list'
+import { ListItem, ListMain, ListDate, ListPrimaryText, ListLinkSet, ListMetadata } from './list'
 import UserNotebookMiniLinks from './user-notebook-mini-links'
 import NotebookActionsMenu from './notebook-actions-menu'
 import { ActionsContainer, BodyIconStyle } from '../style/icon-styles'
@@ -32,10 +32,12 @@ export default class UserNotebookList extends React.Component {
             <ListPrimaryText>
               <a href={`/notebooks/${d.id}/`}>{d.title}</a>
             </ListPrimaryText>
-            <ListSecondaryText>
-              <UserNotebookMiniLinks id={d.id} />
-            </ListSecondaryText>
           </ListMain>
+          <ListMetadata>
+            <ListLinkSet>
+              <UserNotebookMiniLinks id={d.id} />
+            </ListLinkSet>
+          </ListMetadata>
           <ListDate>
             <a href={`/notebooks/${d.id}/revisions`}>{monthDayYear(d.latestRevision || d.last_revision)}</a>
           </ListDate>

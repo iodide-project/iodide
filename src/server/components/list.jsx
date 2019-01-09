@@ -62,6 +62,7 @@ const LIST_BORDER_RADIUS = '5px';
 export const ListSmallLink = styled('a')`
   margin-left:4px;
   margin-right: 4px;
+  color: gray;
 `
 
 export const ListItem = styled('div')`
@@ -168,4 +169,14 @@ width: 100px;
 font-size:13px;
 color: gray;
 ${hoverSet('gray')}
+`
+
+export const ListLinkSet = styled('div')`
+margin-left:10px;
+margin-right:30px;
+color: gray;
+font-size: 13px;
+${hoverSet('gray')}
+
+
 `
