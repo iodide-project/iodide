@@ -5,15 +5,15 @@ import ViewModeToggleButton from './view-mode-toggle-button'
 
 export class PresentationModeToolbarUnconnected extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.string,
+    display: PropTypes.string.isRequired,
   }
 
   render() {
     return (
-      <div className="presentation-menu" style={{ display: (this.props.viewMode === 'REPORT_VIEW' ? 'block' : 'none') }} >
+      <div className="presentation-menu" style={{ display: this.props.display }} >
         <div className="presentation-header">
           <div className="view-mode-toggle-from-presentation">
-            <ViewModeToggleButton textColor="black" />
+            <ViewModeToggleButton />
           </div>
         </div>
       </div>
@@ -23,8 +23,9 @@ export class PresentationModeToolbarUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state) {
+  const isReportView = state.viewMode === 'REPORT_VIEW'
   return {
-    viewMode: state.viewMode,
+    display: isReportView ? 'block' : 'none',
   }
 }
 
