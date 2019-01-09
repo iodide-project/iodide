@@ -41,7 +41,7 @@
     "ajv": "6.6.2",
     "codemirror": "5.42.2",
     "codemirror-no-newlines": "1.0.2",
-    "css-element-queries": "1.0.2",
+    "css-element-queries": "1.1.1",
     "date-fns": "2.0.0-alpha.18",
     "deep-equal": "1.0.1",
     "emotion": "9.2.8",
