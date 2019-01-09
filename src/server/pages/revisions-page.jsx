@@ -165,8 +165,12 @@ export default class RevisionsPage extends React.Component {
                       <a href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}>{revision.title}</a>
                     </ListPrimaryText>
                     <ListSecondaryText>
-                      <ListSmallLink href={`/notebooks/${revision.notebookId}/`}>source</ListSmallLink>
-                      <ListSmallLink href={`/notebooks/${revision.notebookId}/?viewMode=report`}>report</ListSmallLink>
+                      <ListSmallLink href={`/notebooks/${revision.notebookId}/`}>
+                        explore
+                      </ListSmallLink>
+                      <ListSmallLink href={`/notebooks/${revision.notebookId}/?viewMode=report`}>
+                        report
+                      </ListSmallLink>
                     </ListSecondaryText>
                   </ListMain>
                   <ListDate>
