@@ -59,6 +59,11 @@ const LIST_BORDER = '1px solid gainsboro';
 const PLACEHOLDER_BORDER = '1px solid transparent';
 const LIST_BORDER_RADIUS = '5px';
 
+export const ListSmallLink = styled('a')`
+  margin-left:6px;
+  margin-right: 6px;
+`
+
 export const ListItem = styled('div')`
 padding: 16px;
 height: ${props => listItemHeight(props.type)};
@@ -69,6 +74,19 @@ color: black;
 
 :hover {
     background-color: #f6f8fa;
+}
+
+
+${ListSmallLink} {
+  visibility: hidden;
+}
+
+&:hover ${ListSmallLink} {
+  visibility: visible;
+}
+
+${ListSmallLink}:first-child {
+  margin-left:0;
 }
 `
 
@@ -104,12 +122,7 @@ export const List = styled('div')`
   border-bottom-left-radius: ${LIST_BORDER_RADIUS};
   border-bottom-right-radius: ${LIST_BORDER_RADIUS};
 }
-`
 
-
-export const ListSmallLink = styled('a')`
-  padding-left:3px;
-  padding-right: 3px;
 `
 
 export const ListIcon = styled('div')``
@@ -123,11 +136,6 @@ color: black;
 ${hoverSet('black')}
 `
 
-export const ListSecondaryText = styled('div')`
-color: gray;
-font-size: 13px;
-${hoverSet('gray')}
-`
 
 export const ListSecondaryTextLink = styled('a')`
 color: gray;
@@ -137,8 +145,15 @@ text-decoration: none;
     text-decoration: none;
     color: purple;
 }
-
 `
+
+
+export const ListSecondaryText = styled('div')`
+color: gray;
+font-size: 13px;
+${hoverSet('gray')}
+`
+
 export const ListMetadata = styled('div')``
 
 export const ListDate = styled('div')`
