@@ -30,6 +30,16 @@ Regarding any UI changes, we are roughly following Google's [Material Design Gui
 
 If you’d like to fix a currently-filed issue, please take a look at the comment thread on the issue to ensure no one is already working on it. If no one has claimed the issue, make a comment stating you’d like to tackle it in a PR. If someone has claimed the issue but has not worked on it in a few weeks, make a comment asking if you can take over, and we’ll figure it out from there.
 
+### Tips for writing and testing React+Redux components
+
+- Put as much logic as possible in your component's mapStateToProps; ideally, we want purely declarative components with ZERO logic.
+    - You only need to test the non-declarative logic within your component -- the declarative stuff actually serves as the _spec_ for the layout you are creating, and it doesn't need to be tested.
+- Pass in all action creators via mapDispatchToProps.
+    - This makes it easy to test action creators by passing in jest mock functions as props.
+- Add proptypes for everything, including the passed-in action creators
+
+For more clarification on these ideas, read the articles linked under "Testing" below.
+
 ### Testing
 
 We use [Jest](https://facebook.github.io/jest/) as our testing framework. Every PR will automatically run through our tests, and our test framework will alert you on Github if your PR doesn’t pass all of them. If your PR fails a test, try to figure out whether or not you can update your code to make the test pass again, or ask for help. As a policy we will not accept a PR that fails any of our tests, and will likely ask you to add tests if your PR adds new functionality. Writing tests can be scary, but they make open-source contributions easier for everyone to assess. Take a moment and look through how we’ve written our tests, and try to make your tests match. If you are having trouble, we can help you get started on your test-writing journey.
