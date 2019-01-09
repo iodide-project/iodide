@@ -33,7 +33,7 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
         title={this.props.tooltipText}
       >
         <Button
-          style={{ color: this.props.textColor }}
+          style={{ color: this.props.textColor, ...this.props.backgroundColor }}
           onClick={this.toggleViewMode}
           variant="text"
           mini
@@ -53,6 +53,7 @@ export function mapStateToProps(state) {
     textColor: isReportView ? 'black' : '#fafafa',
     buttonText: isReportView ? 'Explore' : 'Report',
     tooltipText: isReportView ? 'Explore this notebook' : 'Go to Report view',
+    backgroundColor: isReportView ? { backgroundColor: '#eee', border: '1px solid #ccc' } : '',
   }
 }
 
