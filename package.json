@@ -61,7 +61,7 @@
     "re-resizable": "4.4.8",
     "react": "16.5.2",
     "react-dom": "16.5.2",
-    "react-emotion": "9.2.8",
+    "react-emotion": "9.2.12",
     "react-helmet": "5.2.0",
     "react-inspector": "2.3.0",
     "react-popper": "1.0.2",
