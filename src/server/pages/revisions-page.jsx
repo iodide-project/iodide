@@ -165,10 +165,10 @@ export default class RevisionsPage extends React.Component {
                   </ListMain>
                   <ListMetadata>
                     <ListLinkSet>
-                      <ListSmallLink href={`/notebooks/${revision.notebookId}/`}>
+                      <ListSmallLink href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}>
                         explore
                       </ListSmallLink>
-                      <ListSmallLink href={`/notebooks/${revision.notebookId}/?viewMode=report`}>
+                      <ListSmallLink href={`/notebooks/${revision.notebookId}?revision=${revision.id}&viewMode=report`}>
                         report
                       </ListSmallLink>
                     </ListLinkSet>
