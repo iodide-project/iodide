@@ -305,7 +305,10 @@ export function saveNotebookToServer() {
       const postRequestOptions = getNotebookSaveRequestOptions(state)
       // Update Exisiting Notebook
       fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${notebookId}/revisions/`, postRequestOptions)
-        .then(response => response.json())
+        .then((response) => {
+          if (!response.ok) { throw response }
+          return response.json()
+        })
         .then(() => {
           const message = 'Updated Notebook'
           updateAutosave(state, true)
@@ -313,8 +316,13 @@ export function saveNotebookToServer() {
             message,
             details: `${message} <br />Notebook saved`,
           }))
+          dispatch({ type: 'NOTEBOOK_SAVED' })
         })
-      dispatch({ type: 'NOTEBOOK_SAVED' })
+        .catch(() => {
+          dispatch(updateAppMessages({
+            message: 'Error Saving Notebook',
+          }))
+        })
     } else {
       createNewNotebookOnServer()(dispatch, getState)
     }
@@ -355,4 +363,3 @@ export function saveEnvironment(updateObj, update) {
     update,
   }
 }
-
