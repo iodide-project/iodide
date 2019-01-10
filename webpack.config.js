@@ -7,7 +7,8 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const CircularDependencyPlugin = require('circular-dependency-plugin') 
+const CircularDependencyPlugin = require('circular-dependency-plugin')
+const UnusedWebpackPlugin = require('unused-webpack-plugin')
 const _ = require('lodash')
 
 const reduxLogMode = process.env.REDUX_LOGGING === 'VERBOSE' ? 'VERBOSE' : 'SILENT'
@@ -108,6 +109,14 @@ module.exports = (env) => {
         exclude: /a\.js|node_modules/,
         failOnError: false, // FIXME should be true; we want it to fail
         cwd: process.cwd(),
+      }),
+      new UnusedWebpackPlugin({
+        // Source directories
+        directories: [path.join(__dirname, 'src')],
+        // Exclude patterns
+        exclude: ['*.test.js'],
+        // Root directory (optional)
+        root: __dirname,
       }),
       new LodashModuleReplacementPlugin(),
       new webpack.ProvidePlugin({
