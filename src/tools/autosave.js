@@ -1,3 +1,4 @@
+import db from './autosave-client'
 import { connectionModeIsServer } from './server-tools'
 import { setPreviousAutosave } from '../actions/actions'
 
@@ -10,23 +11,24 @@ function getAutosaveKey(state) {
   return `autosave-${documentId}`
 }
 
-function getAutosaveState(state) {
+async function getAutosaveState(state) {
   const autosaveKey = getAutosaveKey(state)
-  return JSON.parse(localStorage.getItem(autosaveKey))
+  const autosave = await db.autosave.get(autosaveKey)
+  return autosave
 }
 
-function getAutosaveJsmd(state) {
-  const autosaveState = getAutosaveState(state)
+async function getAutosaveJsmd(state) {
+  const autosaveState = await getAutosaveState(state)
   return autosaveState.dirtyCopy
 }
 
 function saveAutosaveState(autosaveKey, autosaveState) {
-  localStorage.setItem(autosaveKey, JSON.stringify(autosaveState))
+  db.autosave.put(autosaveState, autosaveKey)
 }
 
-function checkForAutosave(store) {
+async function checkForAutosave(store) {
   const state = store.getState()
-  const autosaveState = getAutosaveState(state)
+  const autosaveState = await getAutosaveState(state)
   if (autosaveState &&
       autosaveState.dirtyCopy &&
       autosaveState.dirtyCopy !== autosaveState.originalCopy) {
@@ -34,12 +36,12 @@ function checkForAutosave(store) {
   }
 }
 
-function clearAutosave(state) {
-  const autosaveKey = getAutosaveKey(state)
-  localStorage.removeItem(autosaveKey)
+async function clearAutosave(state) {
+  const autosaveKey = await getAutosaveKey(state)
+  await db.autosave.delete(autosaveKey)
 }
 
-function updateAutosave(state, original) {
+async function updateAutosave(state, original) {
   const autosaveKey = getAutosaveKey(state)
   const jsmd = exportJsmd(state)
   if (original) {
@@ -50,7 +52,7 @@ function updateAutosave(state, original) {
       originalSaved: new Date().toISOString(),
     })
   } else {
-    const autosaveState = getAutosaveState(state)
+    const autosaveState = await getAutosaveState(state)
     saveAutosaveState(autosaveKey, Object.assign(autosaveState, {
       dirtyCopy: jsmd,
       dirtySaved: new Date().toISOString(),
@@ -66,7 +68,7 @@ function subscribeToAutoSave(store) {
     // for jsmd changes unless user is actively interacting with the ui
     // also, throttle save events to one per second
     if (!autoSaveTimeout) {
-      autoSaveTimeout = setTimeout(() => {
+      autoSaveTimeout = setTimeout(async () => {
         autoSaveTimeout = undefined
 
         const state = store.getState()
@@ -79,7 +81,7 @@ function subscribeToAutoSave(store) {
           return
         }
 
-        const autosaveState = getAutosaveState(state)
+        const autosaveState = await getAutosaveState(state)
 
         if (!autosaveState || !autosaveState.originalCopy) {
           // original document got lost somehow, save over it

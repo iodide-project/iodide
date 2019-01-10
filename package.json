@@ -26,7 +26,8 @@
       "IODIDE_BUILD_MODE": "test"
     },
     "setupFiles": [
-      "jest-localstorage-mock"
+      "jest-localstorage-mock",
+      "<rootDir>/test/globals-test.js"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
@@ -43,6 +44,7 @@
     "css-element-queries": "^1.0.2",
     "date-fns": "^2.0.0-alpha.18",
     "deep-equal": "^1.0.1",
+    "dexie": "^2.0.4",
     "emotion": "^9.2.8",
     "error-stack-parser": "^2.0.2",
     "font-awesome": "^4.7.0",
@@ -95,6 +97,7 @@
     "eslint-plugin-jest": "22.1.2",
     "eslint-plugin-jsx-a11y": "6.1.2",
     "eslint-plugin-react": "7.11.1",
+    "fake-indexeddb": "^2.0.4",
     "file-loader": "2.0.0",
     "jest": "23.6.0",
     "jest-cli": "23.6.0",

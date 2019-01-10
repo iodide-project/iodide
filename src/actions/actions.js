@@ -96,14 +96,15 @@ export function setPreviousAutosave(hasPreviousAutoSave) {
 export function loadAutosave() {
   return (dispatch, getState) => {
     // jsmd, jsmdChunks
-    const jsmd = getAutosaveJsmd(getState())
-    const jsmdChunks = jsmdParser(jsmd)
-    dispatch({
-      type: 'REPLACE_NOTEBOOK_CONTENT',
-      jsmd,
-      jsmdChunks,
+    getAutosaveJsmd(getState()).then((jsmd) => {
+      const jsmdChunks = jsmdParser(jsmd)
+      dispatch({
+        type: 'REPLACE_NOTEBOOK_CONTENT',
+        jsmd,
+        jsmdChunks,
+      })
+      dispatch(setPreviousAutosave(false))
     })
-    dispatch(setPreviousAutosave(false))
   }
 }
 
