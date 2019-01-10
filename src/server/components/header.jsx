@@ -46,7 +46,7 @@ class Header extends React.Component {
             <div>
               <Toolbar variant="dense">
                 <div className={classes.flex}>
-                  <IodideLogo backLink="/" />
+                  <IodideLogo target="_self" backLink="/" />
                 </div>
                 <UserMenu
                   isAuthenticated={this.props.userInfo && this.props.userInfo.name}
