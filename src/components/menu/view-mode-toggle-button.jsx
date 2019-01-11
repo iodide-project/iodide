@@ -8,10 +8,10 @@ import { setViewMode } from '../../actions/actions'
 export class ViewModeToggleButtonUnconnected extends React.Component {
   static propTypes = {
     isReportView: PropTypes.bool.isRequired,
-    textColor: PropTypes.string.isRequired,
     buttonText: PropTypes.string.isRequired,
     setViewModeToExplore: PropTypes.func.isRequired,
     setViewModeToReport: PropTypes.func.isRequired,
+    style: PropTypes.object.isRequired,
   }
   constructor(props) {
     super(props)
@@ -33,7 +33,7 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
         title={this.props.tooltipText}
       >
         <Button
-          style={{ color: this.props.textColor, ...this.props.backgroundColor }}
+          style={{ ...this.props.style }}
           onClick={this.toggleViewMode}
           variant="text"
           mini
@@ -50,10 +50,9 @@ export function mapStateToProps(state) {
   const isReportView = state.viewMode === 'REPORT_VIEW'
   return {
     isReportView,
-    textColor: isReportView ? 'black' : '#fafafa',
     buttonText: isReportView ? 'Explore' : 'Report',
     tooltipText: isReportView ? 'Explore this notebook' : 'Go to Report view',
-    backgroundColor: isReportView ? { backgroundColor: '#eee', border: '1px solid #ccc' } : '',
+    style: isReportView ? { backgroundColor: '#eee', border: '1px solid #ccc', color: 'black' } : { color: '#fafafa' },
   }
 }
 
