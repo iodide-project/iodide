@@ -22,10 +22,10 @@ describe('ViewModeToggleButtonUnconnected', () => {
     setViewModeToReportMock = jest.fn()
     props = {
       isReportView: true,
-      textColor: 'a color string',
       buttonText: 'a button text string',
       setViewModeToExplore: setViewModeToExploreMock,
       setViewModeToReport: setViewModeToReportMock,
+      style: { button: 'a object for styling button' },
     }
     mountedComponent = undefined
   })
@@ -54,9 +54,9 @@ describe('ViewModeToggleButton mapStateToProps', () => {
   it('correct props if REPORT_VIEW', () => {
     expect(mapStateToProps(state)).toEqual({
       isReportView: true,
-      textColor: 'black',
       buttonText: 'Explore',
       tooltipText: 'Explore this notebook',
+      style: { backgroundColor: '#eee', border: '1px solid #ccc', color: 'black' },
     })
   })
 
@@ -64,9 +64,9 @@ describe('ViewModeToggleButton mapStateToProps', () => {
     state.viewMode = 'not_REPORT_VIEW'
     expect(mapStateToProps(state)).toEqual({
       isReportView: false,
-      textColor: '#fafafa',
       buttonText: 'Report',
       tooltipText: 'Go to Report view',
+      style: { color: '#fafafa' },
     })
   })
 })
