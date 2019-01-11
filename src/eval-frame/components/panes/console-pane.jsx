@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import deepEqual from "deep-equal";
 
-import HistoryItem from "./history-item";
-import ConsoleInput from "./console-input";
-import EmptyPaneContents from "./empty-pane-contents";
+import HistoryItem from './history-item';
+import ConsoleInput from './console-input';
+
+import OnboardingContent from './onboarding-content';
 
 export class ConsolePaneUnconnected extends React.Component {
   static propTypes = {
@@ -45,9 +46,7 @@ export class ConsolePaneUnconnected extends React.Component {
           />
         ));
     } else {
-      histContents.push(
-        <EmptyPaneContents key="no-history">No History</EmptyPaneContents>
-      );
+      histContents.push(<OnboardingContent />);
     }
 
     return (

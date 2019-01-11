@@ -40,7 +40,7 @@ describe("ConsolePaneUnconnected React component", () => {
   });
   // rewrite this test.
 
-  it("always renders one div.no-history inside history-items when history is empty", () => {
+  it('always renders one EmptyPaneContents inside history-items when history is empty', () => {
     props.history = [];
     expect(consolePane().find(EmptyPaneContents)).toHaveLength(1);
   });
