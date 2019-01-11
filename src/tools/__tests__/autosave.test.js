@@ -1,4 +1,4 @@
-import { updateAutosave, getAutosaveState } from '../autosave'
+import { getAutosaveState, updateAutosave } from '../autosave'
 import { newNotebook } from '../../editor-state-prototypes'
 
 let states
@@ -10,7 +10,7 @@ var x = 10
 # the title
 `
 
-describe('updateAutosave', () => {
+describe('updateAutoSave', () => {
   beforeEach(() => {
     const originalState = newNotebook()
     updateAutosave(originalState, true)
@@ -28,22 +28,19 @@ describe('updateAutosave', () => {
     }
   })
 
-  it('saves over original when asked to', () => {
+  it('saves over original when asked to', async () => {
     updateAutosave(states.updatedState, true)
-    const newAutosavedState = getAutosaveState(states.updatedState)
-    expect(Object.keys(newAutosavedState).sort()).toEqual(['originalCopy', 'originalSaved'])
-
+    const newAutosavedState = await getAutosaveState(states.updatedState)
+    expect(Object.keys(newAutosavedState).sort()).toEqual(['originalCopy', 'originalCopyRevision', 'originalSaved'])
     const originalCopyState = newAutosavedState.originalCopy
     expect(originalCopyState).toEqual(states.updatedState.jsmd)
-    // FIXME: deprecating the meta tag where we receive title.
-    // expect(originalCopyState.title).toEqual(states.updatedState.title)
   })
 
-  it('only updates dirty copy when not asked to write over original', () => {
-    updateAutosave(states.updatedState, false)
-    const newAutosavedState = getAutosaveState(states.updatedState)
+  it('only updates dirty copy when not asked to write over original', async () => {
+    await updateAutosave(states.updatedState, false)
+    const newAutosavedState = await getAutosaveState(states.updatedState)
     expect(Object.keys(newAutosavedState).sort())
-      .toEqual(['dirtyCopy', 'dirtySaved', 'originalCopy', 'originalSaved'])
+      .toEqual(['dirtyCopy', 'dirtySaved', 'originalCopy', 'originalCopyRevision', 'originalSaved'])
 
     const originalCopyState = newAutosavedState.originalCopy
     expect(originalCopyState).toEqual(states.originalState.jsmd)
@@ -55,7 +52,4 @@ describe('updateAutosave', () => {
     // FIXME: deprecating the meta tag where we receive title.
     // expect(dirtyCopyState.title).toEqual(states.updatedState.title)
   })
-})
-
-describe('updateAutosave', () => {
 })
