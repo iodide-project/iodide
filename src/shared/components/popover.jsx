@@ -1,20 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import styled from 'react-emotion'
+import React from "react";
+import ReactDOM from "react-dom";
+import styled from "react-emotion";
 
-import { Manager, Reference, Popper } from 'react-popper';
+import { Manager, Reference, Popper } from "react-popper";
 
-import { TextButton } from '../../shared/components/buttons'
+import { TextButton } from "../../shared/components/buttons";
 
+const ClickContainer = styled("div")`
+  border: ${props =>
+    props.isActive ? "1px solid #e0e0e0" : "1px solid rgba(0,0,0,0)"};
+  border-radius: 3px;
 
-const ClickContainer = styled('div')`
-border: ${props => (props.isActive ? '1px solid #e0e0e0' : '1px solid rgba(0,0,0,0)')};
-border-radius: 3px;
-
-:hover {
-  border: 1px solid #e0e0e0;
-}
-`
+  :hover {
+    border: 1px solid #e0e0e0;
+  }
+`;
 
 class OutsideClickBoundary extends React.Component {
   constructor(props) {
@@ -23,17 +23,17 @@ class OutsideClickBoundary extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('click', this.handleClick);
+    document.addEventListener("click", this.handleClick);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.handleClick);
+    document.removeEventListener("click", this.handleClick);
   }
 
   handleClick(event) {
     const { onClickOutside } = this.props;
 
-    if (typeof onClickOutside !== 'function') {
+    if (typeof onClickOutside !== "function") {
       return;
     }
     onClickOutside(event); // clicked outside - fire callback
@@ -43,11 +43,11 @@ class OutsideClickBoundary extends React.Component {
     return (
       <div
         style={{
-          width: '100%',
-          position: 'absolute',
+          width: "100%",
+          position: "absolute",
           zIndex: 1000,
           left: 0,
-          top: 0,
+          top: 0
         }}
       >
         {this.props.children}
@@ -58,34 +58,34 @@ class OutsideClickBoundary extends React.Component {
 
 export default class Popover extends React.Component {
   constructor(props) {
-    super(props)
-    this.setVisibility = this.setVisibility.bind(this)
-    this.closePopoverOnClick = this.closePopoverOnClick.bind(this)
-    this.closePopoverOnKeypress = this.closePopoverOnKeypress.bind(this)
-    this.state = { visible: false }
+    super(props);
+    this.setVisibility = this.setVisibility.bind(this);
+    this.closePopoverOnClick = this.closePopoverOnClick.bind(this);
+    this.closePopoverOnKeypress = this.closePopoverOnKeypress.bind(this);
+    this.state = { visible: false };
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.closePopoverOnKeypress);
+    document.removeEventListener("keydown", this.closePopoverOnKeypress);
   }
 
   setVisibility() {
-    this.setState({ visible: !this.state.visible })
+    this.setState({ visible: !this.state.visible });
   }
 
   closePopoverOnClick() {
-    this.setState({ visible: false })
+    this.setState({ visible: false });
   }
 
   closePopoverOnKeypress(event) {
-    if (event.key === 'Escape') this.closePopoverOnClick();
+    if (event.key === "Escape") this.closePopoverOnClick();
   }
 
   render() {
     if (this.state.visible) {
-      document.addEventListener('keydown', this.closePopoverOnKeypress);
+      document.addEventListener("keydown", this.closePopoverOnKeypress);
     } else {
-      document.removeEventListener('keydown', this.closePopoverOnKeypress);
+      document.removeEventListener("keydown", this.closePopoverOnKeypress);
     }
     return (
       <Manager>
@@ -93,50 +93,62 @@ export default class Popover extends React.Component {
           {({ ref }) => (
             <ClickContainer isActive={this.state.visible}>
               <div ref={ref}>
-                <TextButton buttonColor="black" type="button" onClick={this.setVisibility}>
+                <TextButton
+                  buttonColor="black"
+                  type="button"
+                  onClick={this.setVisibility}
+                >
                   {this.props.title}
                 </TextButton>
               </div>
             </ClickContainer>
-        )}
+          )}
         </Reference>
-        {this.state.visible ?
-        ReactDOM.createPortal(
-          <Popper
-            placement={this.props.placement || 'bottom-start'}
-          >
-            {({
-                  ref, style: { position, transform }, placement, arrowProps,
-                  }) => (
-                    <OutsideClickBoundary onClickOutside={this.closePopoverOnClick}>
-                      <div
-                        ref={ref}
-                        style={{
-                          top: '0px',
-                          left: '0px',
-                          position,
-                          paddingLeft: placement && placement.includes('right') ? '10px' : 0,
-                          paddingRight: placement && placement.includes('left') ? '10px' : 0,
-                          paddingTop: placement && placement.includes('bottom') ? '10px' : 0,
-                          paddingBottom: placement && placement.includes('top') ? '10px' : 0,
-                          transform,
-                          transformOrigin: 'top center',
-}}
-                        data-placement={placement}
-                        onClick={this.closePopoverOnClick}
-                      >
-                        {this.props.children}
-                        <div ref={arrowProps.ref} style={arrowProps.style} />
-                      </div>
-                    </OutsideClickBoundary>
-                    )}
-          </Popper>,
-        document.body,
-) : null
-        }
-
+        {this.state.visible
+          ? ReactDOM.createPortal(
+              <Popper placement={this.props.placement || "bottom-start"}>
+                {({
+                  ref,
+                  style: { position, transform },
+                  placement,
+                  arrowProps
+                }) => (
+                  <OutsideClickBoundary
+                    onClickOutside={this.closePopoverOnClick}
+                  >
+                    <div
+                      ref={ref}
+                      style={{
+                        top: "0px",
+                        left: "0px",
+                        position,
+                        paddingLeft:
+                          placement && placement.includes("right") ? "10px" : 0,
+                        paddingRight:
+                          placement && placement.includes("left") ? "10px" : 0,
+                        paddingTop:
+                          placement && placement.includes("bottom")
+                            ? "10px"
+                            : 0,
+                        paddingBottom:
+                          placement && placement.includes("top") ? "10px" : 0,
+                        transform,
+                        transformOrigin: "top center"
+                      }}
+                      data-placement={placement}
+                      onClick={this.closePopoverOnClick}
+                    >
+                      {this.props.children}
+                      <div ref={arrowProps.ref} style={arrowProps.style} />
+                    </div>
+                  </OutsideClickBoundary>
+                )}
+              </Popper>,
+              document.body
+            )
+          : null}
       </Manager>
-    )
+    );
   }
 }
 

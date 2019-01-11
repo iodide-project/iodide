@@ -1,26 +1,27 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import ReportPane from './panes/report-pane'
-import DeclaredVariablesPane from './panes/declared-variables-pane'
-import ConsolePane from './panes/console-pane'
-import AppInfoPane from './panes/app-info-pane'
+import ReportPane from "./panes/report-pane";
+import DeclaredVariablesPane from "./panes/declared-variables-pane";
+import ConsolePane from "./panes/console-pane";
+import AppInfoPane from "./panes/app-info-pane";
 
-import FixedPositionContainer from '../../components/pane-layout/fixed-position-container'
-
+import FixedPositionContainer from "../../components/pane-layout/fixed-position-container";
 
 export class EvalContainerUnconnected extends React.Component {
   static propTypes = {
-    reportOnly: PropTypes.bool.isRequired,
-  }
+    reportOnly: PropTypes.bool.isRequired
+  };
 
   render() {
-    const { reportOnly } = this.props
+    const { reportOnly } = this.props;
     return (
       <React.Fragment>
-
-        <FixedPositionContainer paneId="ReportPositioner" fullscreen={reportOnly}>
+        <FixedPositionContainer
+          paneId="ReportPositioner"
+          fullscreen={reportOnly}
+        >
           <ReportPane />
         </FixedPositionContainer>
 
@@ -28,23 +29,25 @@ export class EvalContainerUnconnected extends React.Component {
           <ConsolePane />
         </FixedPositionContainer>
 
-        <FixedPositionContainer paneId="WorkspacePositioner" hidden={reportOnly}>
+        <FixedPositionContainer
+          paneId="WorkspacePositioner"
+          hidden={reportOnly}
+        >
           <DeclaredVariablesPane />
         </FixedPositionContainer>
 
         <FixedPositionContainer paneId="AppInfoPositioner" hidden={reportOnly}>
           <AppInfoPane />
         </FixedPositionContainer>
-
       </React.Fragment>
-    )
+    );
   }
 }
 
 function mapStateToProps(state) {
   return {
-    reportOnly: state.viewMode === 'REPORT_VIEW',
-  }
+    reportOnly: state.viewMode === "REPORT_VIEW"
+  };
 }
 
-export default connect(mapStateToProps)(EvalContainerUnconnected)
+export default connect(mapStateToProps)(EvalContainerUnconnected);

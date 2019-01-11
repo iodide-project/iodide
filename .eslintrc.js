@@ -13,9 +13,8 @@ module.exports = {
   "plugins": [
     "jest",
   ],
-  "extends": "airbnb",
+  "extends": ["airbnb", "plugin:prettier/recommended", "prettier/react"],
   "rules": {
-    "semi": ["off"],
     // Restricting for..of seems pretty controversial, let's disable that.
     // See https://github.com/airbnb/javascript/issues/1271
     "no-restricted-syntax": ["off"],

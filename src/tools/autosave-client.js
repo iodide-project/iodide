@@ -1,8 +1,8 @@
-import Dexie from 'dexie'
+import Dexie from "dexie";
 
-const db = new Dexie('autosaveDB');
+const db = new Dexie("autosaveDB");
 db.version(1).stores({
-  autosave: '',
+  autosave: ""
 });
 
 export default db;

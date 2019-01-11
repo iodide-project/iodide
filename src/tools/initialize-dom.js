@@ -19,33 +19,35 @@ as of v3: need to set up the DOM to have
 </body>
 */
 
-const pageElt = document.getElementById('page')
-const panesContainerElt = document.getElementById('panes-container')
-let iframeElt = document.getElementById('eval-frame')
+const pageElt = document.getElementById("page");
+const panesContainerElt = document.getElementById("panes-container");
+let iframeElt = document.getElementById("eval-frame");
 // the following is provided for backward compatibility with old html
 // bundles that have a 'page' element and no 'eval-frame'
 if (iframeElt === null && pageElt !== null) {
   // insert an iframe
-  iframeElt = document.createElement('iframe')
-  iframeElt.id = 'eval-frame'
-  iframeElt.src = `${IODIDE_EVAL_FRAME_ORIGIN}/iodide.eval-frame.${IODIDE_VERSION}.html`
-  iframeElt.setAttribute('sandbox', 'allow-scripts allow-same-origin')
-  iframeElt.setAttribute('allowfullscreen', 'true')
-  iframeElt.setAttribute('allowvr', 'yes')
-  document.body.appendChild(iframeElt)
-} if (iframeElt !== null && panesContainerElt !== null) {
+  iframeElt = document.createElement("iframe");
+  iframeElt.id = "eval-frame";
+  iframeElt.src = `${IODIDE_EVAL_FRAME_ORIGIN}/iodide.eval-frame.${IODIDE_VERSION}.html`;
+  iframeElt.setAttribute("sandbox", "allow-scripts allow-same-origin");
+  iframeElt.setAttribute("allowfullscreen", "true");
+  iframeElt.setAttribute("allowvr", "yes");
+  document.body.appendChild(iframeElt);
+}
+if (iframeElt !== null && panesContainerElt !== null) {
   // in case of html template v2, nothing is required,
   // but note that this will leave a legacy div#panes-container
   // wrapping iframe#eval-frame
-} if (iframeElt !== null && panesContainerElt === null) {
+}
+if (iframeElt !== null && panesContainerElt === null) {
   // in case of html template v3, nothing is required
 }
 
 // insert the divs for the header and editor
-const editorElt = document.createElement('div');
-editorElt.id = 'editor-react-root'
-document.body.prepend(editorElt)
+const editorElt = document.createElement("div");
+editorElt.id = "editor-react-root";
+document.body.prepend(editorElt);
 
-const headerElt = document.createElement('div');
-headerElt.id = 'notebook-header'
-document.body.prepend(headerElt)
+const headerElt = document.createElement("div");
+headerElt.id = "notebook-header";
+document.body.prepend(headerElt);

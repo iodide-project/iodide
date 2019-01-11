@@ -1,13 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 export const defaultStyle = {
-  position: 'fixed',
-  border: '1px solid #cbcbcb',
+  position: "fixed",
+  border: "1px solid #cbcbcb",
   zIndex: 10,
-  overflow: 'hidden',
-}
+  overflow: "hidden"
+};
 
 export class FixedPositionContainerUnconnected extends React.Component {
   static propTypes = {
@@ -15,10 +15,12 @@ export class FixedPositionContainerUnconnected extends React.Component {
       display: PropTypes.string.isRequired,
       top: PropTypes.number.isRequired,
       left: PropTypes.number.isRequired,
-      width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    }).isRequired,
-  }
+      width: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+      height: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired
+    }).isRequired
+  };
 
   render() {
     return (
@@ -28,28 +30,28 @@ export class FixedPositionContainerUnconnected extends React.Component {
       >
         {this.props.children}
       </div>
-    )
+    );
   }
 }
 
 export function mapStateToProps(state, ownProps) {
   // need to assign to new object so that component updates when getting props
-  let style = Object.assign({}, state.panePositions[ownProps.paneId])
+  let style = Object.assign({}, state.panePositions[ownProps.paneId]);
   if (ownProps.hidden) {
-    style.display = 'none'
+    style.display = "none";
   }
   if (ownProps.fullscreen) {
     style = {
-      display: 'block',
+      display: "block",
       top: 0,
       left: 0,
-      width: '100%',
-      height: '100%',
-    }
+      width: "100%",
+      height: "100%"
+    };
   }
   return {
-    style,
-  }
+    style
+  };
 }
 
-export default connect(mapStateToProps)(FixedPositionContainerUnconnected)
+export default connect(mapStateToProps)(FixedPositionContainerUnconnected);

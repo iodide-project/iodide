@@ -1,182 +1,179 @@
-import { css } from 'emotion'
-import styled from 'react-emotion'
+import { css } from "emotion";
+import styled from "react-emotion";
 
 const hoverSet = color => css`
-a {
+  a {
     text-decoration: none;
     color: ${color};
-}
+  }
 
-a:hover {
+  a:hover {
     text-decoration: underline;
     color: purple;
-}
-`
+  }
+`;
 
-const listItemAlign = (pr) => {
-  let h = 'baseline'
+const listItemAlign = pr => {
+  let h = "baseline";
   switch (pr) {
-    case ('single'): {
-      h = 'center'
-      break
+    case "single": {
+      h = "center";
+      break;
     }
-    case ('double'): {
-      h = 'flex-start'
-      break
+    case "double": {
+      h = "flex-start";
+      break;
     }
-    case ('triple'): {
-      h = 'flex-start'
-      break
-    } default: {
-      h = 'flex-start'
+    case "triple": {
+      h = "flex-start";
+      break;
+    }
+    default: {
+      h = "flex-start";
     }
   }
-  return h
-}
+  return h;
+};
 
-const listItemHeight = (pr) => {
-  let h = '32px'
+const listItemHeight = pr => {
+  let h = "32px";
   switch (pr) {
-    case ('single'): {
-      h = '32px'
-      break
+    case "single": {
+      h = "32px";
+      break;
     }
-    case ('double'): {
-      h = '40px'
-      break
+    case "double": {
+      h = "40px";
+      break;
     }
-    case ('triple'): {
-      h = '48px'
-      break
-    } default: {
-      h = '24px'
+    case "triple": {
+      h = "48px";
+      break;
+    }
+    default: {
+      h = "24px";
     }
   }
-  return h
-}
+  return h;
+};
 
-const LIST_BORDER = '1px solid gainsboro';
-const PLACEHOLDER_BORDER = '1px solid transparent';
-const LIST_BORDER_RADIUS = '5px';
+const LIST_BORDER = "1px solid gainsboro";
+const PLACEHOLDER_BORDER = "1px solid transparent";
+const LIST_BORDER_RADIUS = "5px";
 
-export const ListSmallLink = styled('a')`
-  margin-left:4px;
+export const ListSmallLink = styled("a")`
+  margin-left: 4px;
   margin-right: 4px;
   color: gray;
-`
+`;
 
-export const ListItem = styled('div')`
-padding: 16px;
-height: ${props => listItemHeight(props.type)};
-display: flex;
-align-items: ${props => listItemAlign(props.type)};
-text-decoration: none;
-color: black;
+export const ListItem = styled("div")`
+  padding: 16px;
+  height: ${props => listItemHeight(props.type)};
+  display: flex;
+  align-items: ${props => listItemAlign(props.type)};
+  text-decoration: none;
+  color: black;
 
-:hover {
+  :hover {
     background-color: #f6f8fa;
-}
+  }
 
+  ${ListSmallLink} {
+    visibility: hidden;
+  }
 
-${ListSmallLink} {
-  visibility: hidden;
-}
+  &:hover ${ListSmallLink} {
+    visibility: visible;
+  }
 
-&:hover ${ListSmallLink} {
-  visibility: visible;
-}
-
-${ListSmallLink}:first-child {
-  margin-left:0;
-}
-`
+  ${ListSmallLink}:first-child {
+    margin-left: 0;
+  }
+`;
 
 export const Placeholder = styled(ListItem)`
-border-left:   ${PLACEHOLDER_BORDER} !important;
-border-right:  ${PLACEHOLDER_BORDER} !important;
-border-bottom: ${PLACEHOLDER_BORDER} !important;
+  border-left: ${PLACEHOLDER_BORDER} !important;
+  border-right: ${PLACEHOLDER_BORDER} !important;
+  border-bottom: ${PLACEHOLDER_BORDER} !important;
 
-:hover {
-  background-color: white;
-}
-`
+  :hover {
+    background-color: white;
+  }
+`;
 
-export const List = styled('div')`
+export const List = styled("div")`
+  > div {
+    border-bottom: ${LIST_BORDER};
+    border-left: ${LIST_BORDER};
+    border-right: ${LIST_BORDER};
+  }
 
-> div {
-  border-bottom: ${LIST_BORDER};
-  border-left: ${LIST_BORDER};
-  border-right: ${LIST_BORDER};
-}
+  > div.list-placeholder {
+    border-bottom: none;
+  }
 
-> div.list-placeholder {
-  border-bottom: none;
-}
+  > div:first-child {
+    border-top: ${LIST_BORDER};
+    border-top-left-radius: ${LIST_BORDER_RADIUS};
+    border-top-right-radius: ${LIST_BORDER_RADIUS};
+  }
 
-> div:first-child {
-  border-top: ${LIST_BORDER};
-  border-top-left-radius: ${LIST_BORDER_RADIUS};
-  border-top-right-radius: ${LIST_BORDER_RADIUS};
-}
+  > div:last-child {
+    border-bottom-left-radius: ${LIST_BORDER_RADIUS};
+    border-bottom-right-radius: ${LIST_BORDER_RADIUS};
+  }
+`;
 
-> div:last-child {
-  border-bottom-left-radius: ${LIST_BORDER_RADIUS};
-  border-bottom-right-radius: ${LIST_BORDER_RADIUS};
-}
+export const ListIcon = styled("div")``;
 
-`
+export const ListMain = styled("div")`
+  flex-grow: 2;
+`;
 
-export const ListIcon = styled('div')``
+export const ListPrimaryText = styled("div")`
+  color: black;
+  ${hoverSet("black")}
+`;
 
-export const ListMain = styled('div')`
-flex-grow:2;
-`
-
-export const ListPrimaryText = styled('div')`
-color: black;
-${hoverSet('black')}
-`
-
-export const ListAuthor = styled('span')`
-color: gray;
-font-size: 13px;
-padding-right:24px;
-a {
+export const ListAuthor = styled("span")`
   color: gray;
-}
-`
+  font-size: 13px;
+  padding-right: 24px;
+  a {
+    color: gray;
+  }
+`;
 
-export const ListSecondaryTextLink = styled('a')`
-color: gray;
-text-decoration: none;
+export const ListSecondaryTextLink = styled("a")`
+  color: gray;
+  text-decoration: none;
 
-:hover {
+  :hover {
     text-decoration: none;
     color: purple;
-}
-`
+  }
+`;
 
-export const ListSecondaryText = styled('div')`
-color: gray;
-font-size: 13px;
-${hoverSet('gray')}
-`
+export const ListSecondaryText = styled("div")`
+  color: gray;
+  font-size: 13px;
+  ${hoverSet("gray")}
+`;
 
-export const ListMetadata = styled('div')``
+export const ListMetadata = styled("div")``;
 
-export const ListDate = styled('div')`
-width: 100px;
-font-size:13px;
-color: gray;
-${hoverSet('gray')}
-`
+export const ListDate = styled("div")`
+  width: 100px;
+  font-size: 13px;
+  color: gray;
+  ${hoverSet("gray")}
+`;
 
-export const ListLinkSet = styled('div')`
-margin-left:10px;
-margin-right:40px;
-color: gray;
-font-size: 13px;
-${hoverSet('gray')}
-
-
-`
+export const ListLinkSet = styled("div")`
+  margin-left: 10px;
+  margin-right: 40px;
+  color: gray;
+  font-size: 13px;
+  ${hoverSet("gray")}
+`;

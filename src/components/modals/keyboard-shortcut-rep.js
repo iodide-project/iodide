@@ -1,11 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import UserTask from '../../actions/user-task'
+import React from "react";
+import PropTypes from "prop-types";
+import UserTask from "../../actions/user-task";
 
 export default class KeyboardShortcutRep extends React.Component {
   static propTypes = {
-    task: PropTypes.instanceOf(UserTask),
-  }
+    task: PropTypes.instanceOf(UserTask)
+  };
 
   render() {
     return (
@@ -17,6 +17,6 @@ export default class KeyboardShortcutRep extends React.Component {
         </td>
         <td>{this.props.task.title}</td>
       </tr>
-    )
+    );
   }
 }

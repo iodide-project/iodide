@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
-import { ObjectValue } from 'react-inspector'
+import { ObjectValue } from "react-inspector";
 
 export default {
-  shouldHandle: value => (value === null),
+  shouldHandle: value => value === null,
 
-  render: value => <ObjectValue object={value} />,
-}
+  render: value => <ObjectValue object={value} />
+};

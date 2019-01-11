@@ -1,16 +1,16 @@
 import { ValueRenderer } from '../value-renderer' // eslint-disable-line
-import errorHandler, { trimStack } from '../error-handler'
+import errorHandler, { trimStack } from "../error-handler";
 
-describe('errorHandler shouldHandle', () => {
-  it('handles the correct type', () => {
-    expect(errorHandler.shouldHandle(undefined)).toBe(false)
-    expect(errorHandler.shouldHandle(new Error())).toBe(true)
-  })
+describe("errorHandler shouldHandle", () => {
+  it("handles the correct type", () => {
+    expect(errorHandler.shouldHandle(undefined)).toBe(false);
+    expect(errorHandler.shouldHandle(new Error())).toBe(true);
+  });
 
   // FIXME: Add a test against a real throw exception once we have selenium
   // testing available.
 
-  it('trims stack frames', async () => {
+  it("trims stack frames", async () => {
     /* eslint-disable */
     const mockFrames = [
       {
@@ -162,6 +162,6 @@ describe('errorHandler shouldHandle', () => {
     ]
     /* eslint-enable */
 
-    expect(trimStack(mockFrames).split('\n').length).toBe(2)
-  })
-})
+    expect(trimStack(mockFrames).split("\n").length).toBe(2);
+  });
+});

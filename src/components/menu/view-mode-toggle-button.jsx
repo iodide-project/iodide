@@ -1,9 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import Button from '@material-ui/core/Button'
-import Tooltip from '@material-ui/core/Tooltip'
-import { setViewMode } from '../../actions/actions'
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
+import { setViewMode } from "../../actions/actions";
 
 export class ViewModeToggleButtonUnconnected extends React.Component {
   static propTypes = {
@@ -11,25 +11,25 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
     buttonText: PropTypes.string.isRequired,
     setViewModeToExplore: PropTypes.func.isRequired,
     setViewModeToReport: PropTypes.func.isRequired,
-    style: PropTypes.object.isRequired,
-  }
+    style: PropTypes.object.isRequired
+  };
   constructor(props) {
-    super(props)
-    this.toggleViewMode = this.toggleViewMode.bind(this)
+    super(props);
+    this.toggleViewMode = this.toggleViewMode.bind(this);
   }
 
   toggleViewMode() {
     if (this.props.isReportView) {
-      this.props.setViewModeToExplore()
+      this.props.setViewModeToExplore();
     } else {
-      this.props.setViewModeToReport()
+      this.props.setViewModeToReport();
     }
   }
 
   render() {
     return (
       <Tooltip
-        classes={{ tooltip: 'iodide-tooltip' }}
+        classes={{ tooltip: "iodide-tooltip" }}
         title={this.props.tooltipText}
       >
         <Button
@@ -41,26 +41,31 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
           {this.props.buttonText}
         </Button>
       </Tooltip>
-    )
+    );
   }
 }
 
 export function mapStateToProps(state) {
   // get the viewMode from state
-  const isReportView = state.viewMode === 'REPORT_VIEW'
+  const isReportView = state.viewMode === "REPORT_VIEW";
   return {
     isReportView,
-    buttonText: isReportView ? 'Explore' : 'Report',
-    tooltipText: isReportView ? 'Explore this notebook' : 'Go to Report view',
-    style: isReportView ? { backgroundColor: '#eee', border: '1px solid #ccc', color: 'black' } : { color: '#fafafa' },
-  }
+    buttonText: isReportView ? "Explore" : "Report",
+    tooltipText: isReportView ? "Explore this notebook" : "Go to Report view",
+    style: isReportView
+      ? { backgroundColor: "#eee", border: "1px solid #ccc", color: "black" }
+      : { color: "#fafafa" }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    setViewModeToReport: () => dispatch(setViewMode('REPORT_VIEW')),
-    setViewModeToExplore: () => dispatch(setViewMode('EXPLORE_VIEW')),
-  }
+    setViewModeToReport: () => dispatch(setViewMode("REPORT_VIEW")),
+    setViewModeToExplore: () => dispatch(setViewMode("EXPLORE_VIEW"))
+  };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewModeToggleButtonUnconnected)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ViewModeToggleButtonUnconnected);

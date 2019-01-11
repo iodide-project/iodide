@@ -10,6 +10,6 @@ const template = `<!DOCTYPE html>
 <div id='eval-container'></div>
 <script src='<%= EVAL_FRAME_ORIGIN %>iodide.<%= APP_VERSION_STRING %>.js'></script>
 </body>
-</html>`
+</html>`;
 
-module.exports = template
+module.exports = template;

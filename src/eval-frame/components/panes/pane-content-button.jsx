@@ -1,15 +1,15 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Tooltip from '@material-ui/core/Tooltip'
+import React from "react";
+import PropTypes from "prop-types";
+import Tooltip from "@material-ui/core/Tooltip";
 
 export default class PaneContentButton extends React.Component {
   static propTypes = {
     onClick: PropTypes.func.isRequired,
-    text: PropTypes.string.isRequired,
-  }
+    text: PropTypes.string.isRequired
+  };
   render() {
     return (
-      <Tooltip classes={{ tooltip: 'iodide-tooltip' }} title={this.props.text}>
+      <Tooltip classes={{ tooltip: "iodide-tooltip" }} title={this.props.text}>
         <button
           className="pane-button light-pane-button button-content-centered"
           onClick={this.props.onClick}
@@ -17,6 +17,6 @@ export default class PaneContentButton extends React.Component {
           {this.props.children}
         </button>
       </Tooltip>
-    )
+    );
   }
 }
