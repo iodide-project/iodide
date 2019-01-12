@@ -36,9 +36,7 @@ export default class OnboardingContent extends React.Component {
     return (
       <OnboardingContentContainer>
         <OnboardingHeader>Welcome to Iodide!</OnboardingHeader>
-
         Here are three ways to get started.
-
         <ThreeElements>
           <Element>
             <ElementTitle>
