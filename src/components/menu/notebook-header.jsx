@@ -1,26 +1,26 @@
-import React from 'react'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import React from "react";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
-import PresentationModeToolbar from './presentation-mode-toolbar'
-import EditorModeToolbar from './editor-mode-toolbar'
+import PresentationModeToolbar from "./presentation-mode-toolbar";
+import EditorModeToolbar from "./editor-mode-toolbar";
 
-import HeaderMessages from './header-messages'
+import HeaderMessages from "./header-messages";
 
-import AppMessages from '../app-messages/app-messages'
+import AppMessages from "../app-messages/app-messages";
 
-import IodideModalsRoot from '../modals/iodide-modals-root'
+import IodideModalsRoot from "../modals/iodide-modals-root";
 
 const theme = createMuiTheme({
   palette: {
-    type: 'dark',
-  },
-})
+    type: "dark"
+  }
+});
 
 export default class NotebookHeader extends React.Component {
   render() {
     return (
       <div className="notebook-header">
-        <a id="export-anchor" style={{ display: 'none' }} />
+        <a id="export-anchor" style={{ display: "none" }} />
         <MuiThemeProvider theme={theme}>
           <EditorModeToolbar />
         </MuiThemeProvider>
@@ -29,6 +29,6 @@ export default class NotebookHeader extends React.Component {
         <AppMessages />
         <IodideModalsRoot />
       </div>
-    )
+    );
   }
 }

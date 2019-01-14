@@ -1,24 +1,24 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import UserMenu from '../../shared/user-menu'
-import ViewModeToggleButton from './view-mode-toggle-button'
-import LastSavedText from './last-saved-text'
+import UserMenu from "../../shared/user-menu";
+import ViewModeToggleButton from "./view-mode-toggle-button";
+import LastSavedText from "./last-saved-text";
 
-import KernelState from './kernel-state'
+import KernelState from "./kernel-state";
 
-import tasks from '../../actions/task-definitions'
+import tasks from "../../actions/task-definitions";
 
-import { connectionModeIsServer } from '../../tools/server-tools'
+import { connectionModeIsServer } from "../../tools/server-tools";
 
 export class ViewControlsUnconnected extends React.Component {
   static propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,
     name: PropTypes.string,
     avatar: PropTypes.string,
-    isServer: PropTypes.bool.isRequired,
-  }
+    isServer: PropTypes.bool.isRequired
+  };
 
   render() {
     return (
@@ -36,20 +36,19 @@ export class ViewControlsUnconnected extends React.Component {
         )}
 
         <ViewModeToggleButton />
-
       </div>
-    )
+    );
   }
 }
 
 export function mapStateToProps(state) {
-  const isAuthenticated = Boolean(state.userData.name)
+  const isAuthenticated = Boolean(state.userData.name);
   return {
     isAuthenticated,
     name: state.userData.name,
     avatar: state.userData.avatar,
-    isServer: connectionModeIsServer(state),
-  }
+    isServer: connectionModeIsServer(state)
+  };
 }
 
-export default connect(mapStateToProps)(ViewControlsUnconnected)
+export default connect(mapStateToProps)(ViewControlsUnconnected);

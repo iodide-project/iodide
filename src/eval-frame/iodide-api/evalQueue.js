@@ -61,23 +61,22 @@
 // })
 
 const awaitPromises = promises =>
-// FIXME: this needs to get reimpleented. Maybe not.
-  Promise.all(promises)
-  // setRunningCellEvalStatus('ASYNC_PENDING')
-  // incrementAsyncProcessCount()
-  // return Promise.resolve().then(() => Promise.all(promises).catch((err) => {
-  //   resetAsyncProcessCount()
-  //   setRunningCellEvalStatus('ERROR')
-  //   throw Error(err)
-  // }))
-  //   .then((resolutions) => {
-  //     incrementAsyncProcessCount(-1)
-  //     if (getRunningCellAsyncProcessStatus() === 0) {
-  //       setRunningCellEvalStatus('SUCCESS')
-  //     }
-  //     return resolutions
-  //   })
-
+  // FIXME: this needs to get reimpleented. Maybe not.
+  Promise.all(promises);
+// setRunningCellEvalStatus('ASYNC_PENDING')
+// incrementAsyncProcessCount()
+// return Promise.resolve().then(() => Promise.all(promises).catch((err) => {
+//   resetAsyncProcessCount()
+//   setRunningCellEvalStatus('ERROR')
+//   throw Error(err)
+// }))
+//   .then((resolutions) => {
+//     incrementAsyncProcessCount(-1)
+//     if (getRunningCellAsyncProcessStatus() === 0) {
+//       setRunningCellEvalStatus('SUCCESS')
+//     }
+//     return resolutions
+//   })
 
 export const evalQueue = {
   // requireExplicitContinuation: () => {
@@ -87,5 +86,5 @@ export const evalQueue = {
   // continue: () => {
   //   if (getRunningCellAsyncProcessStatus() > 0) incrementAsyncProcessCount(-1)
   // },
-  await: awaitPromises,
-}
+  await: awaitPromises
+};

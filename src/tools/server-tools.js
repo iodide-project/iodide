@@ -1,35 +1,37 @@
 export function getUserDataFromDocument() {
-  const userData = document.getElementById('userData')
+  const userData = document.getElementById("userData");
   if (userData) {
-    return { userData: JSON.parse(userData.textContent) }
+    return { userData: JSON.parse(userData.textContent) };
   }
-  return {}
+  return {};
 }
 
 export function getNotebookInfoFromDocument() {
-  const notebookInfo = document.getElementById('notebookInfo')
+  const notebookInfo = document.getElementById("notebookInfo");
   if (notebookInfo) {
-    return { notebookInfo: JSON.parse(notebookInfo.textContent) }
+    return { notebookInfo: JSON.parse(notebookInfo.textContent) };
   }
-  return {}
+  return {};
 }
 
 export function getConnectionMode(state) {
-  if (!('connectionMode' in state.notebookInfo)) throw Error('state does not have connectionMode')
-  return state.notebookInfo.connectionMode
+  if (!("connectionMode" in state.notebookInfo))
+    throw Error("state does not have connectionMode");
+  return state.notebookInfo.connectionMode;
 }
 
 export function connectionModeIsStandalone(state) {
-  return getConnectionMode(state) === 'STANDALONE'
+  return getConnectionMode(state) === "STANDALONE";
 }
 
 export function connectionModeIsServer(state) {
-  return getConnectionMode(state) === 'SERVER'
+  return getConnectionMode(state) === "SERVER";
 }
 
 export function getNotebookID(state) {
-  if (!connectionModeIsServer(state)) return undefined
-  const notebookID = state.notebookInfo.notebook_id
-  if (!Number.isSafeInteger(notebookID) && notebookID !== undefined) throw Error('notebook_id must be undefined or an integer')
-  return notebookID
+  if (!connectionModeIsServer(state)) return undefined;
+  const notebookID = state.notebookInfo.notebook_id;
+  if (!Number.isSafeInteger(notebookID) && notebookID !== undefined)
+    throw Error("notebook_id must be undefined or an integer");
+  return notebookID;
 }

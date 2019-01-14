@@ -1,170 +1,183 @@
-import MarkdownIt from 'markdown-it'
-import MarkdownItKatex from 'markdown-it-katex'
-import MarkdownItAnchor from 'markdown-it-anchor'
+import MarkdownIt from "markdown-it";
+import MarkdownItKatex from "markdown-it-katex";
+import MarkdownItAnchor from "markdown-it-anchor";
 
-import {
-  NONCODE_EVAL_TYPES,
-} from '../../state-schemas/state-schema'
+import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 
 import {
   // evaluateLanguagePluginCell,
   evaluateLanguagePlugin,
   ensureLanguageAvailable,
-  runCodeWithLanguage,
-} from './language-actions'
+  runCodeWithLanguage
+} from "./language-actions";
 
-import { evaluateFetchText } from './fetch-cell-eval-actions'
-import { postMessageToEditor } from '../port-to-editor';
+import { evaluateFetchText } from "./fetch-cell-eval-actions";
+import { postMessageToEditor } from "../port-to-editor";
 
-const MD = MarkdownIt({ html: true })
-MD.use(MarkdownItKatex).use(MarkdownItAnchor)
+const MD = MarkdownIt({ html: true });
+MD.use(MarkdownItKatex).use(MarkdownItAnchor);
 
 const CodeMirror = require('codemirror') // eslint-disable-line
 
-const initialVariables = new Set(Object.keys(window)) // gives all global variables
-initialVariables.add('__core-js_shared__')
-initialVariables.add('Mousetrap')
-initialVariables.add('CodeMirror')
-initialVariables.add('FETCH_RESOLVERS')
+const initialVariables = new Set(Object.keys(window)); // gives all global variables
+initialVariables.add("__core-js_shared__");
+initialVariables.add("Mousetrap");
+initialVariables.add("CodeMirror");
+initialVariables.add("FETCH_RESOLVERS");
 
 export function sendStatusResponseToEditor(status, evalId) {
-  postMessageToEditor('EVALUATION_RESPONSE', { status, evalId })
+  postMessageToEditor("EVALUATION_RESPONSE", { status, evalId });
 }
 
 export function addToEvaluationQueue(chunk) {
-  postMessageToEditor('ADD_TO_EVALUATION_QUEUE', chunk)
+  postMessageToEditor("ADD_TO_EVALUATION_QUEUE", chunk);
 }
 
 function getUserDefinedVariablesFromWindow() {
-  return Object.keys(window)
-    .filter(g => !initialVariables.has(g))
+  return Object.keys(window).filter(g => !initialVariables.has(g));
 }
 
 function IdFactory() {
-  this.state = 0
+  this.state = 0;
   this.nextId = () => {
-    this.state += 1
-    return this.state
-  }
+    this.state += 1;
+    return this.state;
+  };
 }
 
-export const historyIdGen = new IdFactory()
+export const historyIdGen = new IdFactory();
 
 class Singleton {
   constructor() {
-    this.data = null
+    this.data = null;
   }
   set(data) {
-    this.data = data
+    this.data = data;
   }
   get() {
-    return this.data
+    return this.data;
   }
 }
 
-const MOST_RECENT_CHUNK_ID = new Singleton()
+const MOST_RECENT_CHUNK_ID = new Singleton();
 
-export { MOST_RECENT_CHUNK_ID }
-
+export { MOST_RECENT_CHUNK_ID };
 
 // ////////////// actual actions
 
-export const EVALUATION_RESULTS = {}
+export const EVALUATION_RESULTS = {};
 
-export function appendToEvalHistory(cellId, content, value, historyOptions = {}) {
-  const historyId = historyOptions.historyId === undefined ?
-    historyIdGen.nextId() : historyOptions.historyId
-  const historyType = historyOptions.historyType === undefined ?
-    'CELL_EVAL_VALUE' : historyOptions.historyType
+export function appendToEvalHistory(
+  cellId,
+  content,
+  value,
+  historyOptions = {}
+) {
+  const historyId =
+    historyOptions.historyId === undefined
+      ? historyIdGen.nextId()
+      : historyOptions.historyId;
+  const historyType =
+    historyOptions.historyType === undefined
+      ? "CELL_EVAL_VALUE"
+      : historyOptions.historyType;
 
-  EVALUATION_RESULTS[historyId] = value
+  EVALUATION_RESULTS[historyId] = value;
 
   // returned obj must match history schema
   return {
-    type: 'APPEND_TO_EVAL_HISTORY',
+    type: "APPEND_TO_EVAL_HISTORY",
     cellId,
     content,
     historyId,
     historyType,
-    lastRan: Date.now(),
-  }
+    lastRan: Date.now()
+  };
 }
 
 export function updateValueInHistory(historyId, value) {
-  EVALUATION_RESULTS[historyId] = value
+  EVALUATION_RESULTS[historyId] = value;
   return {
-    type: 'UPDATE_VALUE_IN_HISTORY',
-    historyId,
-  }
+    type: "UPDATE_VALUE_IN_HISTORY",
+    historyId
+  };
 }
 
 export function updateUserVariables() {
   return {
-    type: 'UPDATE_USER_VARIABLES',
-    userDefinedVarNames: getUserDefinedVariablesFromWindow(),
-  }
+    type: "UPDATE_USER_VARIABLES",
+    userDefinedVarNames: getUserDefinedVariablesFromWindow()
+  };
 }
 
 export function updateConsoleText(consoleText) {
   return {
-    type: 'UPDATE_CONSOLE_TEXT',
-    consoleText,
-  }
+    type: "UPDATE_CONSOLE_TEXT",
+    consoleText
+  };
 }
 
 export function consoleHistoryStepBack(consoleCursorDelta) {
   return {
-    type: 'CONSOLE_HISTORY_MOVE',
-    consoleCursorDelta,
-  }
+    type: "CONSOLE_HISTORY_MOVE",
+    consoleCursorDelta
+  };
 }
 
 export function evalConsoleInput(consoleText) {
   return (dispatch, getState) => {
-    const state = getState()
+    const state = getState();
     // const code = state.consoleText
     // exit if there is no code in the console to  eval
-    if (!consoleText) { return undefined }
-    const evalLanguageId = state.languageLastUsed
+    if (!consoleText) {
+      return undefined;
+    }
+    const evalLanguageId = state.languageLastUsed;
 
-    dispatch({ type: 'CLEAR_CONSOLE_TEXT_CACHE' })
-    dispatch({ type: 'RESET_HISTORY_CURSOR' })
+    dispatch({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
+    dispatch({ type: "RESET_HISTORY_CURSOR" });
     addToEvaluationQueue({
       chunkType: evalLanguageId,
       chunkId: undefined,
       chunkContent: consoleText,
-      evalFlags: '',
-    })
-    dispatch(updateConsoleText(''))
-    return Promise.resolve()
-  }
+      evalFlags: ""
+    });
+    dispatch(updateConsoleText(""));
+    return Promise.resolve();
+  };
 }
 
 function evaluateCode(code, language, state, evalId) {
-  return (dispatch) => {
+  return dispatch => {
     const updateCellAfterEvaluation = (output, evalStatus) => {
-      const cellProperties = { rendered: true }
-      if (evalStatus === 'ERROR') {
-        cellProperties.evalStatus = evalStatus
-        sendStatusResponseToEditor('ERROR', evalId)
+      const cellProperties = { rendered: true };
+      if (evalStatus === "ERROR") {
+        cellProperties.evalStatus = evalStatus;
+        sendStatusResponseToEditor("ERROR", evalId);
       } else {
-        sendStatusResponseToEditor('SUCCESS', evalId)
+        sendStatusResponseToEditor("SUCCESS", evalId);
       }
-      dispatch(appendToEvalHistory(null, code, output))
-      dispatch(updateUserVariables())
-    }
+      dispatch(appendToEvalHistory(null, code, output));
+      dispatch(updateUserVariables());
+    };
 
-    const messageCallback = (msg) => {
-      dispatch(appendToEvalHistory(null, msg, undefined, { historyType: 'CELL_EVAL_INFO' }))
-    }
+    const messageCallback = msg => {
+      dispatch(
+        appendToEvalHistory(null, msg, undefined, {
+          historyType: "CELL_EVAL_INFO"
+        })
+      );
+    };
 
     return ensureLanguageAvailable(language, state, dispatch)
-      .then(languageEvaluator => runCodeWithLanguage(languageEvaluator, code, messageCallback))
+      .then(languageEvaluator =>
+        runCodeWithLanguage(languageEvaluator, code, messageCallback)
+      )
       .then(
         output => updateCellAfterEvaluation(output),
-        output => updateCellAfterEvaluation(output, 'ERROR'),
-      )
-  }
+        output => updateCellAfterEvaluation(output, "ERROR")
+      );
+  };
 }
 
 // FIXME use evalFlags for something real
@@ -173,7 +186,7 @@ export function evaluateText(
   evalType,
   evalFlags, // eslint-disable-line
   chunkId = null,
-  evalId,
+  evalId
 ) {
   // allowed types:
   // md
@@ -183,38 +196,46 @@ export function evaluateText(
     // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
     // in the direct jsmd editing paradigm.
 
-    MOST_RECENT_CHUNK_ID.set(chunkId)
-    const sideEffect = document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
+    MOST_RECENT_CHUNK_ID.set(chunkId);
+    const sideEffect = document.getElementById(
+      `side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`
+    );
     if (sideEffect) {
-      sideEffect.innerText = null
+      sideEffect.innerText = null;
     }
-    const state = getState()
-    if (evalType === 'fetch') {
-      return dispatch(evaluateFetchText(evalText, evalId))
-    } else if (evalType === 'plugin') {
-      return dispatch(evaluateLanguagePlugin(evalText, evalId))
-    } else if (Object.keys(state.loadedLanguages).includes(evalType) ||
-      Object.keys(state.languageDefinitions).includes(evalType)) {
-      return dispatch(evaluateCode(evalText, evalType, state, evalId))
-    } else if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === '') {
-      sendStatusResponseToEditor('SUCCESS', evalId)
+    const state = getState();
+    if (evalType === "fetch") {
+      return dispatch(evaluateFetchText(evalText, evalId));
+    } else if (evalType === "plugin") {
+      return dispatch(evaluateLanguagePlugin(evalText, evalId));
+    } else if (
+      Object.keys(state.loadedLanguages).includes(evalType) ||
+      Object.keys(state.languageDefinitions).includes(evalType)
+    ) {
+      return dispatch(evaluateCode(evalText, evalType, state, evalId));
+    } else if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === "") {
+      sendStatusResponseToEditor("SUCCESS", evalId);
     } else {
-      sendStatusResponseToEditor('ERROR', evalId)
-      return dispatch(appendToEvalHistory(
-        null, evalText,
-        new Error(`eval type ${evalType} is not defined`), {
-          historyType: 'CONSOLE_EVAL',
-        },
-      ))
+      sendStatusResponseToEditor("ERROR", evalId);
+      return dispatch(
+        appendToEvalHistory(
+          null,
+          evalText,
+          new Error(`eval type ${evalType} is not defined`),
+          {
+            historyType: "CONSOLE_EVAL"
+          }
+        )
+      );
     }
-    return Promise.resolve()
-  }
+    return Promise.resolve();
+  };
 }
 
 export function saveEnvironment(updateObj, update) {
   return {
-    type: 'SAVE_ENVIRONMENT',
+    type: "SAVE_ENVIRONMENT",
     updateObj,
-    update,
-  }
+    update
+  };
 }

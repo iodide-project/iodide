@@ -1,26 +1,20 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 export class ViewModeStylesHandlerUnconnected extends React.Component {
   static propTypes = {
-    viewModeStyleSheet: PropTypes.string,
-  }
+    viewModeStyleSheet: PropTypes.string
+  };
 
   render() {
-    return (
-      <React.Fragment>
-        {this.props.viewModeStyleSheet}
-      </React.Fragment>
-    )
+    return <React.Fragment>{this.props.viewModeStyleSheet}</React.Fragment>;
   }
 }
 
-
 function mapStateToProps(state) {
-  let viewModeStyleSheet
-  if (state.viewMode === 'EXPLORE_VIEW') {
+  let viewModeStyleSheet;
+  if (state.viewMode === "EXPLORE_VIEW") {
     viewModeStyleSheet = `
 html, body {
   overflow-y: hidden;
@@ -32,8 +26,8 @@ div#eval-container {
   display: flex;
   flex-direction: column;
 }
-`
-  } else if (state.viewMode === 'REPORT_VIEW') {
+`;
+  } else if (state.viewMode === "REPORT_VIEW") {
     viewModeStyleSheet = `
 html, body {
   overflow-y: auto;
@@ -49,12 +43,12 @@ div.eval-frame-panes-container {
 }
 
 .display-none-in-report { display: none; }
-`
+`;
   }
 
   return {
-    viewModeStyleSheet,
-  }
+    viewModeStyleSheet
+  };
 }
 
-export default connect(mapStateToProps)(ViewModeStylesHandlerUnconnected)
+export default connect(mapStateToProps)(ViewModeStylesHandlerUnconnected);

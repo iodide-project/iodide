@@ -1,45 +1,45 @@
 export function isValidVarname(varName) {
-  if (varName !== varName.replace(/;/g, '')) {
-    return false
+  if (varName !== varName.replace(/;/g, "")) {
+    return false;
   }
   try {
-    eval(`var ${varName};`) // eslint-disable-line no-eval
-    return true
+    eval(`var ${varName};`); // eslint-disable-line no-eval
+    return true;
   } catch (err) {
-    return false
+    return false;
   }
 }
 
 export function isRelPath(path) {
   // super dumb check -- just see if it has http or https at the front
   return !(
-    path.toLowerCase().indexOf('http://') === 0
-    || path.toLowerCase().indexOf('https://') === 0
-  )
+    path.toLowerCase().indexOf("http://") === 0 ||
+    path.toLowerCase().indexOf("https://") === 0
+  );
 }
 
 export function parseFileLine(fetchCommand) {
-  return { filePath: fetchCommand, isRelPath: isRelPath(fetchCommand) }
+  return { filePath: fetchCommand, isRelPath: isRelPath(fetchCommand) };
 }
 
 export function parseAssignmentCommand(fetchCommand) {
-  const varName = fetchCommand
-    .substring(0, fetchCommand.indexOf('=')).trim()
-  if (!isValidVarname(varName)) { return { error: 'INVALID_VARIABLE_NAME' } }
-  const filePath = fetchCommand
-    .substring(fetchCommand.indexOf('=') + 1).trim()
-  return { varName, filePath, isRelPath: isRelPath(filePath) }
+  const varName = fetchCommand.substring(0, fetchCommand.indexOf("=")).trim();
+  if (!isValidVarname(varName)) {
+    return { error: "INVALID_VARIABLE_NAME" };
+  }
+  const filePath = fetchCommand.substring(fetchCommand.indexOf("=") + 1).trim();
+  return { varName, filePath, isRelPath: isRelPath(filePath) };
 }
 
 export function commentOnlyLine(line) {
   // if, after trimming the whitespace, the first two
   // chars are '//', then it's a comment line
-  return line.trim().substr(0, 2) === '//'
+  return line.trim().substr(0, 2) === "//";
 }
 
 export function emptyLine(line) {
   // if, after stripping all the whitespace it's empty
-  return line.replace(/\s+/g, '') === ''
+  return line.replace(/\s+/g, "") === "";
 }
 
 export function parseFetchCellLine(line) {
@@ -51,29 +51,36 @@ export function parseFetchCellLine(line) {
   // ...${optional comment: zero or more spaces,
   //     followed by ' //' (which includes a space),
   //     followed by anything}
-  if (emptyLine(line)) return undefined
-  if (commentOnlyLine(line)) return undefined
+  if (emptyLine(line)) return undefined;
+  if (commentOnlyLine(line)) return undefined;
 
-  const [fetchType, fetchContent] = line.trim().split(': ') // .map(s => s.)
+  const [fetchType, fetchContent] = line.trim().split(": "); // .map(s => s.)
   if (fetchContent) {
     // this switch is only entered if the line contains ': ', in which case
     // fetchContent is defined
 
     // first, strip out comment from the end of line (if it exists)
-    const fetchCommand = fetchContent.trim().split(' //')[0].trim()
+    const fetchCommand = fetchContent
+      .trim()
+      .split(" //")[0]
+      .trim();
     switch (fetchType) {
-      case 'text':
-      case 'json':
-      case 'blob':
-        return Object.assign({}, { fetchType }, parseAssignmentCommand(fetchCommand))
-      case 'js':
-      case 'css':
-        return Object.assign({}, { fetchType }, parseFileLine(fetchCommand))
+      case "text":
+      case "json":
+      case "blob":
+        return Object.assign(
+          {},
+          { fetchType },
+          parseAssignmentCommand(fetchCommand)
+        );
+      case "js":
+      case "css":
+        return Object.assign({}, { fetchType }, parseFileLine(fetchCommand));
       default:
-        return { error: 'INVALID_FETCH_TYPE' }
+        return { error: "INVALID_FETCH_TYPE" };
     }
   }
-  return { error: 'MISSING_FETCH_TYPE' }
+  return { error: "MISSING_FETCH_TYPE" };
 }
 
 export default function parseFetchCell(cellText) {
@@ -95,12 +102,12 @@ export default function parseFetchCell(cellText) {
     isRelPath: bool' }
   */
   const fetches = cellText
-    .split('\n')
+    .split("\n")
     .map((line, i) => ({
       line,
       parsed: parseFetchCellLine(line),
-      id: `fetchSpec-${i}`,
+      id: `fetchSpec-${i}`
     }))
-    .filter(l => l.parsed !== undefined)
-  return fetches
+    .filter(l => l.parsed !== undefined);
+  return fetches;
 }

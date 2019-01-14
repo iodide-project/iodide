@@ -1,13 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import EmptyPaneContents from './empty-pane-contents'
+import EmptyPaneContents from "./empty-pane-contents";
 
 export class AppInfoPaneUnconnected extends React.Component {
   static propTypes = {
-    appMessages: PropTypes.array,
-  }
+    appMessages: PropTypes.array
+  };
   render() {
     /* eslint-disable */
     let messageDivs = this.props.appMessages
@@ -24,24 +24,20 @@ export class AppInfoPaneUnconnected extends React.Component {
       messageDivs = <EmptyPaneContents>No Message to Display</EmptyPaneContents>
     }
     /* eslint-enable */
-    return (
-      <div className="pane-content">
-        {messageDivs}
-      </div>
-    )
+    return <div className="pane-content">{messageDivs}</div>;
   }
 }
 
 export function mapStateToProps(state) {
-  const appMessages = state.appMessages.slice()
-  appMessages.reverse()
+  const appMessages = state.appMessages.slice();
+  appMessages.reverse();
   appMessages.sort((a, b) => {
-    if (Date.parse(a.when) > Date.parse(b.when)) return -1
-    return 1
-  })
+    if (Date.parse(a.when) > Date.parse(b.when)) return -1;
+    return 1;
+  });
   return {
-    appMessages,
-  }
+    appMessages
+  };
 }
 
-export default connect(mapStateToProps)(AppInfoPaneUnconnected)
+export default connect(mapStateToProps)(AppInfoPaneUnconnected);

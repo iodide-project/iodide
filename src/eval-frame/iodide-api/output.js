@@ -1,4 +1,4 @@
-import { MOST_RECENT_CHUNK_ID } from '../actions/actions'
+import { MOST_RECENT_CHUNK_ID } from "../actions/actions";
 
 /*
 These functions operate outside of the normal React/redux update cycle
@@ -14,25 +14,29 @@ things out.
 
 function sideEffectDiv(sideEffectClass, reportSideEffect) {
   // appends a side effect div to the side effect area
-  const div = document.createElement('div')
-  div.setAttribute('class', sideEffectClass)
-  if (reportSideEffect === false) { div.setAttribute('style', 'display:') }
-  document.getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`).append(div)
-  return div
+  const div = document.createElement("div");
+  div.setAttribute("class", sideEffectClass);
+  if (reportSideEffect === false) {
+    div.setAttribute("style", "display:");
+  }
+  document
+    .getElementById(`side-effect-target-${MOST_RECENT_CHUNK_ID.get()}`)
+    .append(div);
+  return div;
 }
 
 export const output = {
   text: (s, reportSideEffect = false) => {
     // dumbly puts a string in a side effect div
-    for (const line of s.toString().split('\n')) {
-      const div = sideEffectDiv('side-effect-print', reportSideEffect)
-      div.innerText = line
+    for (const line of s.toString().split("\n")) {
+      const div = sideEffectDiv("side-effect-print", reportSideEffect);
+      div.innerText = line;
     }
   },
   element: (nodeType, reportSideEffect = true) => {
-    const div = sideEffectDiv('side-effect-element', reportSideEffect)
-    const node = document.createElement(nodeType)
-    div.append(node)
-    return node
-  },
-}
+    const div = sideEffectDiv("side-effect-element", reportSideEffect);
+    const node = document.createElement(nodeType);
+    div.append(node);
+    return node;
+  }
+};

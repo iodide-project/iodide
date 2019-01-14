@@ -1,4 +1,4 @@
-import { css, injectGlobal } from 'emotion'
+import { css, injectGlobal } from "emotion";
 
 /*
 This is a baseline css reset, mostly based off
@@ -15,14 +15,15 @@ https://hackernoon.com/all-you-need-to-know-about-css-in-js-984a72d48ebc
 
 export const sharedProperties = {
   textWidth: 700,
-  pageWidth: 900,
-}
+  pageWidth: 900
+};
 
 const baseCSS = css`
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
-`
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+      sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  }
+`;
 
 /*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
 
@@ -204,4 +205,4 @@ template {
 }
 
 ${baseCSS}
-`
+`;

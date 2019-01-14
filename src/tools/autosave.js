@@ -1,66 +1,73 @@
-import db from './autosave-client'
-import { connectionModeIsServer } from './server-tools'
-import { setPreviousAutosave } from '../actions/actions'
+import db from "./autosave-client";
+import { connectionModeIsServer } from "./server-tools";
+import { setPreviousAutosave } from "../actions/actions";
 
 function exportJsmd(state) {
-  return state.jsmd
+  return state.jsmd;
 }
 
 function getAutosaveKey(state) {
-  const documentId = connectionModeIsServer(state) ? state.notebookInfo.notebook_id : `standalone-${window.location.pathname}`
-  return `autosave-${documentId}`
+  const documentId = connectionModeIsServer(state)
+    ? state.notebookInfo.notebook_id
+    : `standalone-${window.location.pathname}`;
+  return `autosave-${documentId}`;
 }
 
 async function getAutosaveState(state) {
-  const autosaveKey = getAutosaveKey(state)
-  const autosave = await db.autosave.get(autosaveKey)
-  return autosave
+  const autosaveKey = getAutosaveKey(state);
+  const autosave = await db.autosave.get(autosaveKey);
+  return autosave;
 }
 
 async function getAutosaveJsmd(state) {
-  const autosaveState = await getAutosaveState(state)
-  return autosaveState.dirtyCopy
+  const autosaveState = await getAutosaveState(state);
+  return autosaveState.dirtyCopy;
 }
 
 function saveAutosaveState(autosaveKey, autosaveState) {
-  db.autosave.put(autosaveState, autosaveKey)
+  db.autosave.put(autosaveState, autosaveKey);
 }
 
 async function checkForAutosave(store) {
-  const state = store.getState()
-  const autosaveState = await getAutosaveState(state)
-  if (autosaveState &&
-      autosaveState.dirtyCopy &&
-      autosaveState.dirtyCopy !== autosaveState.originalCopy) {
-    store.dispatch(setPreviousAutosave(true))
+  const state = store.getState();
+  const autosaveState = await getAutosaveState(state);
+  if (
+    autosaveState &&
+    autosaveState.dirtyCopy &&
+    autosaveState.dirtyCopy !== autosaveState.originalCopy
+  ) {
+    store.dispatch(setPreviousAutosave(true));
   }
 }
 
 async function clearAutosave(state) {
-  const autosaveKey = await getAutosaveKey(state)
-  await db.autosave.delete(autosaveKey)
+  const autosaveKey = await getAutosaveKey(state);
+  await db.autosave.delete(autosaveKey);
 }
 
 async function updateAutosave(state, original) {
-  const autosaveKey = getAutosaveKey(state)
-  const jsmd = exportJsmd(state)
+  const autosaveKey = getAutosaveKey(state);
+  const jsmd = exportJsmd(state);
   if (original) {
     // save (over) original, clear any existing dirty copy
     saveAutosaveState(autosaveKey, {
       originalCopy: jsmd,
       originalCopyRevision: state.notebookInfo.revision_id,
-      originalSaved: new Date().toISOString(),
-    })
+      originalSaved: new Date().toISOString()
+    });
   } else {
-    const autosaveState = await getAutosaveState(state)
-    saveAutosaveState(autosaveKey, Object.assign(autosaveState, {
-      dirtyCopy: jsmd,
-      dirtySaved: new Date().toISOString(),
-    }))
+    const autosaveState = await getAutosaveState(state);
+    saveAutosaveState(
+      autosaveKey,
+      Object.assign(autosaveState, {
+        dirtyCopy: jsmd,
+        dirtySaved: new Date().toISOString()
+      })
+    );
   }
 }
 
-let autoSaveTimeout
+let autoSaveTimeout;
 
 function subscribeToAutoSave(store) {
   store.subscribe(() => {
@@ -69,34 +76,36 @@ function subscribeToAutoSave(store) {
     // also, throttle save events to one per second
     if (!autoSaveTimeout) {
       autoSaveTimeout = setTimeout(async () => {
-        autoSaveTimeout = undefined
+        autoSaveTimeout = undefined;
 
-        const state = store.getState()
+        const state = store.getState();
 
         // if we have a previous autosave, don't overwrite it. also, don't
         // autosave the "new" document, as anything beyond an initial sketch
         // is usually saved at least once
-        if (state.hasPreviousAutoSave ||
-            (connectionModeIsServer(state) && !state.notebookInfo.notebook_id)) {
-          return
+        if (
+          state.hasPreviousAutoSave ||
+          (connectionModeIsServer(state) && !state.notebookInfo.notebook_id)
+        ) {
+          return;
         }
 
-        const autosaveState = await getAutosaveState(state)
+        const autosaveState = await getAutosaveState(state);
 
         if (!autosaveState || !autosaveState.originalCopy) {
           // original document got lost somehow, save over it
-          updateAutosave(state, true)
-          return
+          updateAutosave(state, true);
+          return;
         }
 
-        const currentJsmd = exportJsmd(store.getState())
+        const currentJsmd = exportJsmd(store.getState());
         if (currentJsmd !== autosaveState.dirtyCopy) {
           // dirty copy has been updated, save it
-          updateAutosave(state, false)
+          updateAutosave(state, false);
         }
-      }, 1000)
+      }, 1000);
     }
-  })
+  });
 }
 
 export {
@@ -105,5 +114,5 @@ export {
   getAutosaveState,
   clearAutosave,
   updateAutosave,
-  subscribeToAutoSave,
-}
+  subscribeToAutoSave
+};

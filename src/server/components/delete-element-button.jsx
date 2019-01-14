@@ -1,6 +1,6 @@
-import React from 'react'
-import { OutlineButton } from '../../shared/components/buttons'
-import DeleteModal from './delete-modal'
+import React from "react";
+import { OutlineButton } from "../../shared/components/buttons";
+import DeleteModal from "./delete-modal";
 
 // export class WithDeleteModal extends React.Component {
 //   constructor(props) {
@@ -52,28 +52,31 @@ import DeleteModal from './delete-modal'
 //   }
 // }
 
-
 export default class DeleteObjectButton extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = { visible: false }
-    this.hideModal = this.hideModal.bind(this)
-    this.showModal = this.showModal.bind(this)
+    super(props);
+    this.state = { visible: false };
+    this.hideModal = this.hideModal.bind(this);
+    this.showModal = this.showModal.bind(this);
   }
 
   hideModal() {
-    this.setState({ visible: false })
+    this.setState({ visible: false });
   }
 
   showModal() {
-    this.setState({ visible: true })
+    this.setState({ visible: true });
   }
 
   render() {
     return (
       <React.Fragment>
-        <OutlineButton buttonHoverColor="red" buttonColor="#cc5500" onClick={this.showModal}>
-          {this.props.text || 'delete'}
+        <OutlineButton
+          buttonHoverColor="red"
+          buttonColor="#cc5500"
+          onClick={this.showModal}
+        >
+          {this.props.text || "delete"}
         </OutlineButton>
         <DeleteModal
           visible={this.state.visible}
@@ -86,6 +89,6 @@ export default class DeleteObjectButton extends React.Component {
           url={this.props.url}
         />
       </React.Fragment>
-    )
+    );
   }
 }

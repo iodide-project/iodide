@@ -1,17 +1,19 @@
-import React from 'react'
+import React from "react";
 
-const MAX_CHARS = 1000
+const MAX_CHARS = 1000;
 
 export default {
-  shouldHandle: value => typeof (value) === 'string',
+  shouldHandle: value => typeof value === "string",
   render: (value, inCollection) => {
-    const maxChars = inCollection ? 10 : MAX_CHARS
+    const maxChars = inCollection ? 10 : MAX_CHARS;
     if (value.length <= maxChars) {
       return (
         <React.Fragment>
-          <span className="string-rep string-rep-before-quote string-rep-after-quote">{value}</span>
+          <span className="string-rep string-rep-before-quote string-rep-after-quote">
+            {value}
+          </span>
         </React.Fragment>
-      )
+      );
     }
 
     // In a collection, just truncate and add "…".
@@ -19,15 +21,19 @@ export default {
     if (inCollection) {
       return (
         <React.Fragment>
-          <span className="string-rep string-rep-before-quote">{value.slice(0, maxChars)}</span>
+          <span className="string-rep string-rep-before-quote">
+            {value.slice(0, maxChars)}
+          </span>
           <span className="string-rep-ellipsis string-rep-after-quote">…</span>
         </React.Fragment>
-      )
+      );
     }
 
     return (
       <React.Fragment>
-        <span className="string-rep string-rep-before-quote">{value.slice(0, maxChars / 2)}</span>
+        <span className="string-rep string-rep-before-quote">
+          {value.slice(0, maxChars / 2)}
+        </span>
         <span className="elements-omitted-info-rep">
           {`… ${value.length - maxChars} chars …`}
         </span>
@@ -35,6 +41,6 @@ export default {
           {value.slice(value.length - Math.round(maxChars / 2))}
         </span>
       </React.Fragment>
-    )
-  },
-}
+    );
+  }
+};

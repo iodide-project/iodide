@@ -1,5 +1,5 @@
-import React from 'react'
-import { css } from 'emotion'
+import React from "react";
+import { css } from "emotion";
 
 export default class IodideLogo extends React.Component {
   render() {
@@ -7,17 +7,19 @@ export default class IodideLogo extends React.Component {
       <h2
         className={css`
           margin: 0;
-          font-family: 'Zilla Slab', serif;
+          font-family: "Zilla Slab", serif;
           font-size: 30px;
-          font-weight: 300;`}
+          font-weight: 300;
+        `}
       >
         <a
           href={this.props.backLink}
           rel="noopener noreferrer"
-          target={this.props.target || '_blank'}
+          target={this.props.target || "_blank"}
           className={css`
             color: white;
-            text-decoration: none;`}
+            text-decoration: none;
+          `}
         >
           Iodide
         </a>

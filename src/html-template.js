@@ -19,6 +19,6 @@ const template = `<!DOCTYPE html>
 ></iframe>
 <script src="<%= APP_PATH_STRING %>iodide.<%= APP_VERSION_STRING %>.js"></script>
 </body>
-</html>`
+</html>`;
 
-module.exports = template
+module.exports = template;

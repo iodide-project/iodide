@@ -1,24 +1,24 @@
-import React from 'react'
-import Popover from '../../shared/components/popover'
-import Menu from '../../shared/components/menu'
-import MenuItem from '../../shared/components/menu-item'
-import DeleteModal from './delete-modal'
+import React from "react";
+import Popover from "../../shared/components/popover";
+import Menu from "../../shared/components/menu";
+import MenuItem from "../../shared/components/menu-item";
+import DeleteModal from "./delete-modal";
 
 export default class FileActionsMenu extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = { deleteModalVisible: false }
-    this.deleteFile = this.deleteFile.bind(this)
-    this.showDeleteModal = this.showDeleteModal.bind(this)
-    this.hideDeleteModal = this.hideDeleteModal.bind(this)
+    super(props);
+    this.state = { deleteModalVisible: false };
+    this.deleteFile = this.deleteFile.bind(this);
+    this.showDeleteModal = this.showDeleteModal.bind(this);
+    this.hideDeleteModal = this.hideDeleteModal.bind(this);
   }
 
   hideDeleteModal() {
-    this.setState({ deleteModalVisible: false })
+    this.setState({ deleteModalVisible: false });
   }
 
   showDeleteModal() {
-    this.setState({ deleteModalVisible: true })
+    this.setState({ deleteModalVisible: true });
   }
 
   deleteFile() {
@@ -30,7 +30,7 @@ export default class FileActionsMenu extends React.Component {
       <React.Fragment>
         <Popover
           title={this.props.triggerElement}
-          placement={this.props.placement || 'bottom-start'}
+          placement={this.props.placement || "bottom-start"}
         >
           <Menu>
             <MenuItem onClick={this.deleteFile}>Delete this file...</MenuItem>
@@ -47,6 +47,6 @@ export default class FileActionsMenu extends React.Component {
           url={`/api/v1/files/${this.props.fileID}`}
         />
       </React.Fragment>
-    )
+    );
   }
 }
