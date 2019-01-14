@@ -38,7 +38,7 @@
   "dependencies": {
     "@material-ui/core": "3.0.0",
     "@material-ui/icons": "3.0.0",
-    "ajv": "6.6.2",
+    "ajv": "6.7.0",
     "codemirror": "5.42.2",
     "css-element-queries": "1.1.1",
     "date-fns": "2.0.0-alpha.26",
