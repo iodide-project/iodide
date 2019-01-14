@@ -3,6 +3,12 @@ import ExternalLinkTask from "./external-link-task";
 import { store } from "../store";
 import * as actions from "./actions";
 
+// FIXME: remove requirement to import store in this file by attaching
+// keypress handling to store in initializeDefaultKeybindings() --
+// and change that to initializeDefaultKeybindings(dispatch).
+// Callback should map to a standard action creator that can be passed
+// to dispatch.
+
 const dispatcher = {};
 for (const action in actions) {
   if (Object.prototype.hasOwnProperty.call(actions, action)) {
@@ -66,7 +72,7 @@ tasks.logoutGithub = new UserTask({
 
 tasks.toggleWrapInEditors = new UserTask({
   title: "Toggle wrapping in editors",
-  displayKeybinding: "w", // '\u2193',
+  displayKeybinding: "Alt+w", // '\u2193',
   keybindings: ["alt+w"],
   preventDefaultKeybinding: true,
   callback() {
@@ -124,7 +130,7 @@ tasks.toggleHelpModal = new UserTask({
   title: "Open the Help Pane",
   menuTitle: "Help",
   keybindings: ["alt+h"],
-  displayKeybinding: "h",
+  displayKeybinding: "Alt+h",
   preventDefaultKeybinding: true,
   callback() {
     dispatcher.toggleHelpModal();

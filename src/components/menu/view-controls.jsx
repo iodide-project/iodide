@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import HelpOutline from "@material-ui/icons/HelpOutline";
 
 import UserMenu from "../../shared/user-menu";
 import ViewModeToggleButton from "./view-mode-toggle-button";
 import LastSavedText from "./last-saved-text";
-
+import NotebookTaskButton from "./notebook-task-button";
 import KernelState from "./kernel-state";
 
 import tasks from "../../actions/task-definitions";
@@ -25,6 +26,9 @@ export class ViewControlsUnconnected extends React.Component {
       <div className="view-controls">
         <LastSavedText />
         <KernelState />
+        <NotebookTaskButton task={tasks.toggleHelpModal}>
+          <HelpOutline />
+        </NotebookTaskButton>
         {this.props.isServer && (
           <UserMenu
             isAuthenticated={this.props.isAuthenticated}
