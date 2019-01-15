@@ -23,7 +23,10 @@ if (IODIDE_BUILD_MODE === "production") {
     applyMiddleware(thunk),
     applyMiddleware(
       createLogger({
-        predicate: (getState, action) => action.type !== "UPDATE_INPUT_CONTENT"
+        predicate: (getState, action) =>
+          !["UPDATE_JSMD_CONTENT", "UPDATE_MARKDOWN_CHUNKS"].includes(
+            action.type
+          )
       })
     )
   );
