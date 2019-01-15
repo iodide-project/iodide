@@ -45,9 +45,9 @@ A paragraph introducing the topic.
 A paragraph describing plot-1.
 ```
 
-We can then manipulate `div#plot-1` using standard browser APIs, 
+We can then manipulate `div#plot-1` using standard browser APIs, for example, adding a (d3)[https://d3js.org/] or (plotly)[https://plot.ly/javascript/] plot within that `div`. _Note, however, that any programmatic changes you make to DOM elements placed within a Markdown chunk will be overwritten if you update that Markdown chunk; in such a case you'll need to re-evaluate the code chunk responsible for the DOM manipulation._
 
-Markdown chunks also support LaTeX for displaying nicely typeset mathematics. LaTeX expression may be placed inline when set between single dollar signs (`$...$`), or in their own block when set between double dollar signs (`$$...$$`).
+Markdown chunks also support (LaTeX)[https://en.wikibooks.org/wiki/LaTeX/Mathematics] for typesetting mathematics. LaTeX expression may be placed inline when written between single dollar signs (`$...$`), or in their own block when set between double dollar signs (`$$...$$`).
 
 ```
 # Derivatives
@@ -60,7 +60,13 @@ $$\lim_{h\to 0} \frac{f(x+h)-f(x)}{h}.$$
 
 ### Javascript (`%% js`)
 
+Javascript chunks allow you to input Javascript that is you can execute within your browser. The code runs within the scope of your Report (in a separate (iframe)[https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe] from the code editor), and allows you to use the full set of (Web APIs)[https://developer.mozilla.org/en-US/docs/Web/API] available in your browser.
+
+The last value returned by your code chunk is displayed in the Iodide Console.
+
 ### CSS (`%% css`)
+
+CSS chunks allow you to input (CSS styles)[https://developer.mozilla.org/en-US/docs/Web/CSS] to change the appearance of your report. Like Markdown chunks, these chunks are evaluated while you type, allowing you  get real time feedback as you make changes to your styles.
 
 ### Fetch chunks (`%% fetch`)
 
