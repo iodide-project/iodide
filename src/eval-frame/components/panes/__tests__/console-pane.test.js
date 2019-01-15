@@ -7,9 +7,9 @@ import React from "react";
 import { store } from "../../../store"; /* eslint-disable-line no-unused-vars */
 
 import HistoryItem from "../history-item";
-import EmptyPaneContents from "../empty-pane-contents";
 
 import { ConsolePaneUnconnected, mapStateToProps } from "../console-pane";
+import OnboardingContent from "../onboarding-content";
 
 describe("ConsolePaneUnconnected React component", () => {
   let props;
@@ -40,9 +40,9 @@ describe("ConsolePaneUnconnected React component", () => {
   });
   // rewrite this test.
 
-  it('always renders one EmptyPaneContents inside history-items when history is empty', () => {
+  it("always renders one OnboardingContent inside history-items when history is empty", () => {
     props.history = [];
-    expect(consolePane().find(EmptyPaneContents)).toHaveLength(1);
+    expect(consolePane().find(OnboardingContent)).toHaveLength(1);
   });
 
   it("always renders HistoryItem inside history-items when history is non empty", () => {

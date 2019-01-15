@@ -1,6 +1,6 @@
-import styled from 'react-emotion';
+import styled from "react-emotion";
 
-export default styled('div')`
+export default styled("div")`
   font-size: 20px;
   font-weight: bold;
   color: lightgray;
