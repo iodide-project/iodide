@@ -52,7 +52,7 @@ Markdown chunks also support LaTeX for displaying nicely typeset mathematics. La
 ```
 # Derivatives
 
-Let's begin by discussing $\epsilon$-$\delta$ arguments, before exploring the definition of the derivative in terms of the limit:
+Let's begin by discussing an $\epsilon$-$\delta$ argument, then we'll turn to the limit:
 
 $$\lim_{h\to 0} \frac{f(x+h)-f(x)}{h}.$$
 
