@@ -1,7 +1,9 @@
 import Mousetrap from 'mousetrap'
 import { store } from './store'
-import { addLanguage } from './actions/actions'
+import { addLanguage, setKernelState } from './actions/actions'
 import { genericFetch as fetchFileFromServer } from './tools/fetch-tools'
+import evalQueue from './actions/evaluation-queue';
+import validateActionFromEvalFrame from './actions/eval-frame-action-validator'
 
 let portToEvalFrame
 
@@ -12,20 +14,6 @@ export function postMessageToEvalFrame(messageType, message) {
 export function postActionToEvalFrame(actionObj) {
   postMessageToEvalFrame('REDUX_ACTION', actionObj)
 }
-
-const approvedReduxActionsFromEvalFrame = [
-  'ADD_LANGUAGE_TO_EVAL_FRAME',
-  'APPEND_TO_EVAL_HISTORY',
-  'CLEAR_VARIABLES',
-  'CLEAR_CONSOLE_TEXT_CACHE',
-  'CONSOLE_HISTORY_MOVE',
-  'ENVIRONMENT_UPDATE_FROM_EDITOR',
-  'ENVIRONMENT_UPDATE_FROM_EVAL_FRAME',
-  'SAVE_ENVIRONMENT',
-  'UPDATE_CONSOLE_TEXT',
-  'UPDATE_USER_VARIABLES',
-  'UPDATE_VALUE_IN_HISTORY',
-]
 
 const approvedKeys = [
   'esc',
@@ -43,6 +31,21 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data
     switch (messageType) {
+      case 'ADD_TO_EVALUATION_QUEUE': {
+        evalQueue.evaluate(message, store.dispatch)
+        if (store.getState().kernelState !== 'KERNEL_BUSY') store.dispatch(setKernelState('KERNEL_BUSY'))
+        break
+      }
+      case 'EVALUATION_RESPONSE': {
+        const { evalId, status } = message
+        if (status === 'SUCCESS') evalQueue.continue(evalId)
+        else evalQueue.clear(evalId)
+        const queueSize = evalQueue.getQueueSize()
+        if (!queueSize) {
+          store.dispatch(setKernelState('KERNEL_IDLE'))
+        }
+        break
+      }
       case 'REQUEST_FETCH': {
         fetchFileFromServer(message.path, message.fetchType)
           .then((file) => {
@@ -71,7 +74,7 @@ function receiveMessage(event) {
       }
       case 'REDUX_ACTION':
         // in this case, `message` is a redux action
-        if (approvedReduxActionsFromEvalFrame.includes(message.type)) {
+        if (validateActionFromEvalFrame(message)) {
           store.dispatch(message)
         } else {
           console.error(`got unapproved redux action from eval frame: ${message.type}`)
@@ -96,7 +99,7 @@ function receiveMessage(event) {
 }
 
 export const listenForEvalFramePortReady = (messageEvent) => {
-  console.log('listenForEvalFramePortReady', messageEvent.data, messageEvent.origin)
+  console.info('listenForEvalFramePortReady', messageEvent.data, messageEvent.origin)
   if (messageEvent.data === 'EVAL_FRAME_READY_MESSAGE') {
     portToEvalFrame = messageEvent.ports[0] // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage

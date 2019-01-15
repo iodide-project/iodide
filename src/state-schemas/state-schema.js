@@ -13,7 +13,7 @@ const appMessageSchema = {
   additionalProperties: false,
 }
 
-const historySchema = {
+export const historySchema = {
   type: 'object',
   properties: {
     cellId: { type: ['integer', 'null'] },
@@ -37,7 +37,7 @@ const historySchema = {
   additionalProperties: false,
 }
 
-const languageSchema = {
+export const languageSchema = {
   type: 'object',
   properties: {
     pluginType: { type: 'string', enum: ['language'] },
@@ -166,6 +166,11 @@ export const stateProperties = {
     type: 'string',
     enum: ['HELP_MODAL', 'MODALS_CLOSED'],
     default: 'MODALS_CLOSED',
+  },
+  kernelState: {
+    type: 'string',
+    enum: ['KERNEL_LOADING', 'KERNEL_LOAD_ERROR', 'KERNEL_ERROR', 'KERNEL_IDLE', 'KERNEL_BUSY'],
+    default: 'KERNEL_IDLE',
   },
   notebookInfo: {
     type: 'object',

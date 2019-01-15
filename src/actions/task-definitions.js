@@ -39,7 +39,7 @@ tasks.evaluateNotebook = new UserTask({
 })
 
 tasks.evaluateChunkAndSelectBelow = new UserTask({
-  title: 'Evaluate Cell and Select Below',
+  title: 'Evaluate Code Chunk and Select Below',
   keybindings: ['shift+enter'],
   displayKeybinding: 'Shift+Enter',
   preventDefaultKeybinding: true,

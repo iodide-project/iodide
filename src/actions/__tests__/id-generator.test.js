@@ -1,4 +1,4 @@
-import { historyIdGen } from '../history-id-generator'
+import { historyIdGen } from '../id-generators'
 
 describe('historyIdGen should behave correctly', () => {
   it('first id is 1', () => {

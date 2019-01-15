@@ -1,8 +1,8 @@
 import React from 'react'
-import Popover from './popover'
-import Menu from './menu'
-import MenuItem from './menu-item'
-import MenuDivider from './menu-divider'
+import Popover from '../../shared/components/popover'
+import Menu from '../../shared/components/menu'
+import MenuItem from '../../shared/components/menu-item'
+import MenuDivider from '../../shared/components/menu-divider'
 import DeleteModal from './delete-modal'
 
 export default class RevisionsActionsMenu extends React.Component {

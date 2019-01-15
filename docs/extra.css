@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,500|Zilla+Slab');
+
+body::before {
+  background-image: none;
+  background-color: white;
+}
+
+.navbar {
+  background-image: none;
+  background-color: black;
+  border-bottom: none;
+}
+
+.navbar-brand {
+  font-family: 'Zilla Slab', serif;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}

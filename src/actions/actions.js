@@ -9,6 +9,15 @@ import { fetchWithCSRFTokenAndJSONContent } from './../shared/fetch-with-csrf-to
 import { jsmdParser } from './jsmd-parser'
 import { getAllSelections, selectionToChunks, removeDuplicatePluginChunksInSelectionSet } from './jsmd-selection'
 
+import evalQueue from './evaluation-queue'
+
+export function setKernelState(kernelState) {
+  return {
+    type: 'SET_KERNEL_STATE',
+    kernelState,
+  }
+}
+
 export function updateAppMessages(messageObj) {
   const { message } = messageObj
   let { details, when } = messageObj
@@ -152,37 +161,25 @@ export function getChunkContainingLine(jsmdChunks, line) {
   return activeChunk
 }
 
-function triggerTextInEvalFrame(chunk) {
-  return Object.assign({
-    type: 'TRIGGER_TEXT_EVAL_IN_FRAME',
-    evalText: chunk.chunkContent,
-    evalType: chunk.chunkType,
-    evalFrags: chunk.evalFlags,
-    chunkId: chunk.chunkId,
-  })
-}
-
-
 export function evaluateText() {
   return (dispatch, getState) => {
-    const { jsmdChunks } = getState()
+    const { jsmdChunks, kernelState } = getState()
+    if (kernelState !== 'KERNEL_BUSY') dispatch(setKernelState('KERNEL_BUSY'))
     const cm = window.ACTIVE_CODEMIRROR
     const doc = cm.getDoc()
-    let actionObj
     if (!doc.somethingSelected()) {
       const { line } = doc.getCursor()
       const activeChunk = getChunkContainingLine(jsmdChunks, line)
-      actionObj = triggerTextInEvalFrame(activeChunk)
+      evalQueue.evaluate(activeChunk, dispatch)
     } else {
       const selectionChunkSet = getAllSelections(doc)
         .map(selection =>
           selectionToChunks(selection, jsmdChunks, doc))
         .map(removeDuplicatePluginChunksInSelectionSet())
-      return Promise.all(selectionChunkSet.map(selection => Promise.all(selection.map(chunk =>
-        Promise.resolve(dispatch(triggerTextInEvalFrame(chunk)))))))
+      selectionChunkSet.forEach((selection) => {
+        selection.forEach(chunk => evalQueue.evaluate(chunk, dispatch))
+      })
     }
-    // here's where we'll put: if kernelState === ready
-    return Promise.resolve(dispatch(actionObj))
   }
 }
 
@@ -206,11 +203,11 @@ export function moveCursorToNextChunk() {
 
 export function evaluateNotebook() {
   return (dispatch, getState) => {
-    const { jsmdChunks } = getState()
-    let p = Promise.resolve()
+    const { jsmdChunks, kernelState } = getState()
+    if (kernelState !== 'KERNEL_BUSY') dispatch(setKernelState('KERNEL_BUSY'))
     jsmdChunks.forEach((chunk) => {
-      if (!['md', 'css'].includes(chunk.chunkType)) {
-        p = p.then(() => dispatch(triggerTextInEvalFrame(chunk)))
+      if (!['md', 'css', 'raw', ''].includes(chunk.chunkType)) {
+        evalQueue.evaluate(chunk, dispatch)
       }
     })
   }

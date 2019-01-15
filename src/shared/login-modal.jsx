@@ -11,6 +11,7 @@ export default class LoginModal extends React.Component {
 
   login() {
     this.props.login()
+    this.props.onClose()
   }
 
   render() {

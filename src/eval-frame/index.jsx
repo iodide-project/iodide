@@ -11,7 +11,6 @@ import '../../node_modules/katex/dist/katex.min.css'
 // iodide styles
 import './style/eval-container.css'
 import './style/side-panes.css'
-import './style/cell-styles.css'
 import './style/default-presentation.css'
 
 import { initializeDefaultKeybindings } from './keybindings'

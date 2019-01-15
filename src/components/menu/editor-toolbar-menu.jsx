@@ -18,8 +18,6 @@ export class EditorToolbarMenuUnconnected extends React.Component {
     return (
       <NotebookIconMenu>
         { this.props.isServer && <NotebookMenuItem task={tasks.newNotebook} /> }
-        <NotebookMenuItem task={tasks.exportNotebook} />
-        <NotebookMenuItem task={tasks.exportNotebookAsReport} />
         <NotebookMenuItem task={tasks.clearVariables} />
         {
           this.props.isAuthenticated && <NotebookMenuItem task={tasks.saveNotebook} />
