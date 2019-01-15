@@ -8,11 +8,30 @@ set -euo pipefail
 # Uses the node binaries/packages installed by the nodejs buildpack previously.
 npm install && npm run build
 
+# We compress files in `build/` below so they can be served more quickly
+# but we want to cache the results for pyodide as it changes relatively
+# infrequently and compressing it to brotli is sloooooow
+# see: https://devcenter.heroku.com/articles/buildpack-api#caching
+PYODIDE_CACHE_DIR=$CACHE_DIR/pyodide-$PYODIDE_VERSION
+if [ ! -d $PYODIDE_CACHE_DIR ]; then
+   echo "pyodide cache does not seem to exist yet, downloading and compressing"
+   rm -rf $CACHE_DIR
+   mkdir -p $CACHE_DIR
+   mv build/pyodide-$PYODIDE_VERSION $CACHE_DIR
+   python -m whitenoise.compress $PYODIDE_CACHE_DIR
+else
+   echo "Using cached version of pyodide assets"
+   rm -rf build/pyodide-$PYODIDE_VERSION
+fi
+
 # Generate gzipped versions of files that would benefit from compression, that
 # WhiteNoise can then serve in preference to the originals. This is required
 # since WhiteNoise's Django storage backend only gzips assets handled by
-# collectstatic, and so does not affect files in the `dist/` directory.
+# collectstatic, and so does not affect files in the `build/` directory.
 python -m whitenoise.compress build
+
+# Copy pyodide files from cache dir now that we've finished the compression
+cp -r $PYODIDE_CACHE_DIR build
 
 # Remove nodejs files to reduce slug size (and avoid environment variable
 # pollution from the nodejs profile script), since they are no longer
