@@ -1,3 +1,27 @@
-# Welcome!
+%% md
+# Welcome to Iodide!
+Type `shift+enter` to evaluate a chunk and move to the next, or Press `alt+h` for help.
 
-Welcome to Iodide
+<span id="htmlInMd">To start fresh, delete the text in the editor (`control+a` then `delete`)</span>
+
+%% css
+/* style your report with CSS */
+#htmlInMd {border: 2px solid gray; margin: 8px; padding: 4px;} 
+
+%% fetch
+// load a js library and a csv file with a fetch cell
+js: https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js
+text: csvDataString = https://data.sfgov.org/api/views/5cei-gny5/rows.csv?accessType=DOWNLOAD
+
+%% js
+// parse the data using the d3 library (and show the value in the console)
+parsedData = d3.csvParse(csvDataString)
+
+%% js
+// replace the text in the report element "htmlInMd"
+document.getElementById('htmlInMd').innerText = parsedData[0].Address
+
+%% py
+# use python to select some of the data
+from js import parsedData
+[x['Address'] for x in parsedData if x['Lead Remediation'] == 'true']
