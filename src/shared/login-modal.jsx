@@ -38,6 +38,11 @@ export default class LoginModal extends React.Component {
             your account.
           </p>
           <p>
+            Deleting a notebook permanently deletes its contents. If you wish to
+            delete your account entirely, contact{" "}
+            <a href="mailto:accounts@iodide.io">accounts@iodide.io</a>.
+          </p>
+          <p>
             When you sign in, you agree to our{" "}
             <a href="https://www.mozilla.org/about/legal/terms/mozilla">
               Terms of Service
