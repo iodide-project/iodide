@@ -14,12 +14,10 @@ export default class NotebookHeader extends React.Component {
     return (
       <React.Fragment>
         <a id="export-anchor" style={{ display: "none" }} />
-        <div className="notebook-header">
-          <EditorModeToolbar />
-          <HeaderMessages />
-          <PresentationModeToolbar />
-          <AppMessages />
-        </div>
+        <EditorModeToolbar />
+        <HeaderMessages />
+        <PresentationModeToolbar />
+        <AppMessages />
         <IodideModalsRoot />
       </React.Fragment>
     );

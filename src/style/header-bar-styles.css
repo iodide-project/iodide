@@ -24,15 +24,6 @@
   outline-width: 0;
 }
 
-.notebook-toolbar {
-  height:55px;
-  display: flex;
-  position: relative;
-  min-height: 56px;
-  align-items: center;
-  min-height:55px !important;
-}
-
 div.editor-mode-controls {
   width: 300px;
 }
