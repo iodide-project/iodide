@@ -26,6 +26,7 @@ const MoreResources = () => (
 const Onboarding = () => (
   <HelpModalContent>
     <OnboardingContent />
+    <h2>Try one of these examples</h2>
     <FeaturedNotebooks />
   </HelpModalContent>
 );

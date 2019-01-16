@@ -1,4 +1,5 @@
 import styled from "react-emotion";
+import THEME from "../../theme";
 
 export const ElementTitle = styled("h3")`
   font-weight: 300;
@@ -12,11 +13,11 @@ export const ElementTitle = styled("h3")`
 export default styled("div")`
   border: 1px solid var(--element-border);
   border-radius: 5px;
-  background: linear-gradient(to right, rgb(248, 243, 248), rgb(250, 248, 250));
+  background: ${THEME.elementBackground};
   color: var(--element-color);
   transition: 300ms;
 
-  : hover {
+  :hover {
     box-shadow: 2px 2px 0px rgba(104, 40, 96, 0.1);
   }
 `;

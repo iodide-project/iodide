@@ -66,7 +66,6 @@ const AboutContentHeader = styled("h1")`
 
 const IodideTitle = styled("div")`
   font-family: "Zilla Slab";
-  transform: translateX(4.5px);
   sub {
     font-weight: 100;
     font-size: 0.65em;
