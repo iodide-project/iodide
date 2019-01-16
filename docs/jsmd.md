@@ -105,7 +105,7 @@ Pyodide chunks allow you to execute Python 3 code in your browser by way of (Pyo
 
 _Note: the first time you evaluate a `py` chunk, python must be downloaded and initialized, which will take a few moments. Subsequent evaluations will happen immediately._
 
-Pyodide is the first (language plugins)[language_plugins.md] available for Iodide.
+Pyodide is implemented as an Iodide (language plugins)[language_plugins.md]
 
 ### Plugins (`%% plugin`)
 
