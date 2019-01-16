@@ -3,8 +3,9 @@ import styled from "react-emotion";
 
 import EmptyPaneContents from "./empty-pane-contents";
 
-const color = props => (props.light ? "darkgray" : "black");
-const lighterColor = props => (props.light ? "gainsboro" : "darkgray");
+const color = props => (props.fainter ? "darkgray" : "black");
+const lighterColor = props => (props.fainter ? "gainsboro" : "darkgray");
+
 const ONBOARDING_SETTINGS = {
   gapSize: 15,
   elemGap: 5
@@ -19,6 +20,8 @@ const ThreeElements = styled("div")`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: ${ONBOARDING_SETTINGS.gapSize * 2}px;
+  margin-top: ${ONBOARDING_SETTINGS.gapSize}px;
+  margin-bottom: ${ONBOARDING_SETTINGS.gapSize}px;
 `;
 
 const OnboardingHeader = styled("h1")`
@@ -28,7 +31,6 @@ const OnboardingHeader = styled("h1")`
 const Element = styled("div")`
   border: 1px solid var(--onboarding-lightercolor);
   border-radius: 5px;
-  margin-top: ${ONBOARDING_SETTINGS.gapSize}px;
 `;
 
 const ElementTitle = styled("h2")`
@@ -64,12 +66,19 @@ const OnboardingContentContainer = styled(EmptyPaneContents)`
   color: var(--onboarding-color);
 `;
 
+const AdditionalOnboarding = styled("div")`
+  margin-top: ${ONBOARDING_SETTINGS.gapSize}px;
+  margin-bottom: ${ONBOARDING_SETTINGS.gapSize}px;
+`;
+
 export default class OnboardingContent extends React.Component {
   render() {
     return (
-      <OnboardingContentContainer light>
+      <OnboardingContentContainer fainter={this.props.fainter}>
         <OnboardingHeader>Welcome to Iodide!</OnboardingHeader>
-        <OnboardingLede>Here are three ways to get started.</OnboardingLede>
+        <OnboardingLede>
+          {this.props.lede || "Here are three ways to get started."}
+        </OnboardingLede>
         <ThreeElements>
           <Element key="examples">
             <ElementTitle>Fork an Example</ElementTitle>
@@ -104,6 +113,7 @@ export default class OnboardingContent extends React.Component {
             </ElementBody>
           </Element>
         </ThreeElements>
+        <AdditionalOnboarding>{this.props.children}</AdditionalOnboarding>
       </OnboardingContentContainer>
     );
   }

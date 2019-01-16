@@ -8,7 +8,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 import KeyboardShortcutList from "./keyboard-shortcut-list";
-
+import OnboardingContent from "../../eval-frame/components/panes/onboarding-content";
 import tasks from "../../actions/task-definitions";
 
 function AboutIodide() {
@@ -64,7 +64,6 @@ export default class HelpModal extends React.Component {
   };
 
   render() {
-    // const { classes } = this.props
     const { value } = this.state;
     return (
       <div
@@ -89,14 +88,15 @@ export default class HelpModal extends React.Component {
           }}
         >
           <Tabs value={value} onChange={this.handleChange}>
-            <Tab label="Keyboard shortcuts" />
-            <Tab label="More resources" />
-            <Tab label="About Iodide" />
+            <Tab label="Getting Started" />
+            <Tab label="Keyboard Shortcuts" />
+            <Tab label="More Resources" />
           </Tabs>
         </AppBar>
-        {value === 0 && <KeyboardShortcutList tasks={tasks} />}
-        {value === 1 && <MoreResources />}
-        {value === 2 && <AboutIodide />}
+        {value === 0 && <OnboardingContent />}
+        {value === 1 && <KeyboardShortcutList tasks={tasks} />}
+        {value === 2 && <MoreResources />}
+        {value === 3 && <AboutIodide />}
       </div>
     );
   }

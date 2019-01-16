@@ -46,7 +46,12 @@ export class ConsolePaneUnconnected extends React.Component {
           />
         ));
     } else {
-      histContents.push(<OnboardingContent key="onboarding" />);
+      histContents.push(
+        <OnboardingContent key="onboarding" fainter>
+          You can always get back to this with the little ? icon in the top
+          right.
+        </OnboardingContent>
+      );
     }
 
     return (
