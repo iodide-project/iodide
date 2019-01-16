@@ -66,9 +66,11 @@ const AboutContentHeader = styled("h1")`
 
 const IodideTitle = styled("div")`
   font-family: "Zilla Slab";
+  transform: translateX(4.5px);
   sub {
     font-weight: 100;
-    font-size: 0.7em;
+    font-size: 0.65em;
+    position: relative;
   }
 `;
 const IodideVersion = styled("div")`
@@ -109,6 +111,10 @@ const Channels = styled("div")`
   }
 `;
 
+const MiddleSection = styled("div")`
+  margin-top: 10vh;
+`;
+
 export default () => (
   <HelpModalContent>
     <AboutContentContainer>
@@ -118,21 +124,23 @@ export default () => (
           Iodide<sub>α</sub> <IodideVersion>{IODIDE_VERSION}</IodideVersion>
         </IodideTitle>
       </AboutContentHeader>
-      <AboutThreeElements>
-        <AboutElement href="https://github.com/iodide-project/iodide">
-          <AboutElementTitle>Visit Our Repository</AboutElementTitle>
-        </AboutElement>
-        <AboutElement href="https://github.com/iodide-project/iodide/issues">
-          <AboutElementTitle>File an Issue or Bug</AboutElementTitle>
-        </AboutElement>
-        <AboutElement href="https://github.com/iodide-project/iodide/blob/master/CONTRIBUTING.md">
-          <AboutElementTitle>Learn How to Contribute</AboutElementTitle>
-        </AboutElement>
-      </AboutThreeElements>
-      <Channels>
-        Chat on Gitter:{" "}
-        <a href="https://gitter.im/iodide-project/iodide">#iodide</a>
-      </Channels>
+      <MiddleSection>
+        <AboutThreeElements>
+          <AboutElement href="https://github.com/iodide-project/iodide">
+            <AboutElementTitle>Visit Our Repository</AboutElementTitle>
+          </AboutElement>
+          <AboutElement href="https://github.com/iodide-project/iodide/issues">
+            <AboutElementTitle>File an Issue or Bug</AboutElementTitle>
+          </AboutElement>
+          <AboutElement href="https://github.com/iodide-project/iodide/blob/master/CONTRIBUTING.md">
+            <AboutElementTitle>Learn How to Contribute</AboutElementTitle>
+          </AboutElement>
+        </AboutThreeElements>
+        <Channels>
+          Chat on Gitter:{" "}
+          <a href="https://gitter.im/iodide-project/iodide">#iodide</a>
+        </Channels>
+      </MiddleSection>
     </AboutContentContainer>
   </HelpModalContent>
 );

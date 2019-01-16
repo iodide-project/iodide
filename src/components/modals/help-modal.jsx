@@ -55,7 +55,7 @@ export default class HelpModal extends React.Component {
           transform: "translate(-50%, -50%)",
           height: "80%",
           width: "60%",
-          minWidth: "900px",
+          minWidth: "700px",
           background: "white",
           boxShadow: "0px 3px 20px rgba(0, 0, 0, 0.5)",
           flexDirection: "column",
