@@ -19,16 +19,18 @@ const theme = createMuiTheme({
 export default class NotebookHeader extends React.Component {
   render() {
     return (
-      <div className="notebook-header">
+      <React.Fragment>
         <a id="export-anchor" style={{ display: "none" }} />
-        <MuiThemeProvider theme={theme}>
-          <EditorModeToolbar />
-        </MuiThemeProvider>
-        <HeaderMessages />
-        <PresentationModeToolbar />
-        <AppMessages />
+        <div className="notebook-header">
+          <MuiThemeProvider theme={theme}>
+            <EditorModeToolbar />
+          </MuiThemeProvider>
+          <HeaderMessages />
+          <PresentationModeToolbar />
+          <AppMessages />
+        </div>
         <IodideModalsRoot />
-      </div>
+      </React.Fragment>
     );
   }
 }
