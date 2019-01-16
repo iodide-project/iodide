@@ -2,6 +2,8 @@
 
 ## Loading your language plugin in Iodide
 
+The language plugin is specified by a JSON string with the following format:
+
 ```
 {
   "languageId": "jsx",
@@ -14,3 +16,5 @@
   "pluginType": "language"
 }
 ```
+
+Each of the fields means ...
