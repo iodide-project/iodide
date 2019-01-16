@@ -30,7 +30,7 @@ notebook.
 
 ### Markdown (`%% md`)
 
-Markdown chunks allow you to enter (Markdown)[https://commonmark.org/help/] ((full spec)[https://spec.commonmark.org/]), which is immediately rendered in your report preview.
+Markdown chunks allow you to enter [Markdown](https://commonmark.org/help/) ([full spec](https://spec.commonmark.org/)), which is immediately rendered in your report preview.
 
 Markdown is a superset of HTML, which means that you can enter HTML directly within a Markdown chunk. This is particularly useful for creating DOM elements that you can target with your scripts later on, like in the following example,:
 
@@ -45,9 +45,9 @@ A paragraph introducing the topic.
 A paragraph describing plot-1.
 ```
 
-We can then manipulate `div#plot-1` using standard browser APIs, for example, adding a (d3)[https://d3js.org/] or (plotly)[https://plot.ly/javascript/] plot within that `div`. _Note, however, that any programmatic changes you make to DOM elements placed within a Markdown chunk will be overwritten if you update that Markdown chunk; in such a case you'll need to re-evaluate the code chunk responsible for the DOM manipulation._
+We can then manipulate `div#plot-1` using standard browser APIs, for example, adding a [d3](https://d3js.org/) or [plotly](https://plot.ly/javascript/) plot within that `div`. _Note, however, that any programmatic changes you make to DOM elements placed within a Markdown chunk will be overwritten if you update that Markdown chunk; in such a case you'll need to re-evaluate the code chunk responsible for the DOM manipulation._
 
-Markdown chunks also support (LaTeX)[https://en.wikibooks.org/wiki/LaTeX/Mathematics] for typesetting mathematics. LaTeX expression may be placed inline when written between single dollar signs (`$...$`), or in their own block when set between double dollar signs (`$$...$$`).
+Markdown chunks also support [LaTeX](https://en.wikibooks.org/wiki/LaTeX/Mathematics) for typesetting mathematics. LaTeX expression may be placed inline when written between single dollar signs (`$...$`), or in their own block when set between double dollar signs (`$$...$$`).
 
 ```
 # Derivatives
@@ -60,13 +60,13 @@ $$\lim_{h\to 0} \frac{f(x+h)-f(x)}{h}.$$
 
 ### Javascript (`%% js`)
 
-Javascript chunks allow you to input Javascript that is you can execute within your browser. The code runs within the scope of your Report (in a separate (iframe)[https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe] from the code editor), and allows you to use the full set of (Web APIs)[https://developer.mozilla.org/en-US/docs/Web/API] available in your browser.
+Javascript chunks allow you to input Javascript that is you can execute within your browser. The code runs within the scope of your Report (in a separate [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) from the code editor), and allows you to use the full set of [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) available in your browser.
 
 The last value returned by your code chunk is displayed in the Iodide Console.
 
 ### CSS (`%% css`)
 
-CSS chunks allow you to input (CSS styles)[https://developer.mozilla.org/en-US/docs/Web/CSS] to change the appearance of your report. Like Markdown chunks, these chunks are evaluated while you type, allowing you  get real time feedback as you make changes to your styles.
+CSS chunks allow you to input [CSS styles](https://developer.mozilla.org/en-US/docs/Web/CSS) to change the appearance of your report. Like Markdown chunks, these chunks are evaluated while you type, allowing you  get real time feedback as you make changes to your styles.
 
 ### Fetch chunks (`%% fetch`)
 
@@ -97,19 +97,19 @@ All of the requested resources are downloaded in parallel (asyncronously), but i
 
 In the case of the `js` and `css` fetch types, the scripts and stylesheets are added to the environment as soon as they are available.
 
-In the case of data fetches, which have the syntax `{TYPE}: {VAR_NAME} = {RESOURCE_URL}`, the data is loaded into the variable `VAR_NAME` within your javascript scope. In the case of a `json` fetch, the JSON object retrieved from the URL is parsed into a native javascript object, but in the case of `text` and `blob` fetches, the variable will contain a raw string or (blob object)[https://developer.mozilla.org/en-US/docs/Web/API/Blob], respectively.
+In the case of data fetches, which have the syntax `{TYPE}: {VAR_NAME} = {RESOURCE_URL}`, the data is loaded into the variable `VAR_NAME` within your javascript scope. In the case of a `json` fetch, the JSON object retrieved from the URL is parsed into a native javascript object, but in the case of `text` and `blob` fetches, the variable will contain a raw string or [blob object](https://developer.mozilla.org/en-US/docs/Web/API/Blob), respectively.
 
 ### Pyodide (`%% py`)
 
-Pyodide chunks allow you to execute Python 3 code in your browser by way of (Pyodide)[https://github.com/iodide-project/pyodide], the Python interpreter compiled to WebAssembly.
+Pyodide chunks allow you to execute Python 3 code in your browser by way of [Pyodide](https://github.com/iodide-project/pyodide), the Python interpreter compiled to WebAssembly.
 
 _Note: the first time you evaluate a `py` chunk, python must be downloaded and initialized, which will take a few moments. Subsequent evaluations will happen immediately._
 
-Pyodide is implemented as an Iodide (language plugins)[language_plugins.md]
+Pyodide is implemented as an Iodide [language plugins](language_plugins.md)
 
 ### Plugins (`%% plugin`)
 
-Plugin chunks allow you to extend the functionality of Iodide by loading plugins. At the time being, Iodide only supports (language plugins)[language_plugins.md], which add interpreters for additional languages to your Iodide session.
+Plugin chunks allow you to extend the functionality of Iodide by loading plugins. At the time being, Iodide only supports [language plugins](language_plugins.md), which add interpreters for additional languages to your Iodide session.
 
 Plugin chunks must contain a single JSON string that contains the plugin specification. The JSON must contain a "type" field (which for now must be "language")
 
