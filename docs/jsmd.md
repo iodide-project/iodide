@@ -28,7 +28,7 @@ notebook.
 
 ## JSMD syntax and usage
 
-As we said above, a JSMD file is just a plain text file with text blocks representing various languages and other evaluation directs delimited by lines starting with `%%`.
+As we said above, a JSMD file is just a plain text file with text blocks representing various languages and other evaluation directives, and delimited by lines starting with `%%`.
 
 A few things to note about JSMD:
 - Iodide natively supports the following JSMD chunk types (described in more detail below):
@@ -41,7 +41,6 @@ A few things to note about JSMD:
 - Any chunk not of one of the above chunk types will be ignored by Iodide.
 - Any blank lines above the first chunk specifier will be ignored.
 - Changes to `md` and `css` chunk are immediately applied to your Iodide Report; changes to all other chunk types must be evaluated to take effect (to evaluate, use keyboard shorcuts `ctrl+enter`/`shift+enter` or the play button in the toolbar while your cursor is within the chunk).
-- 
 
 A brief example will help to illustrate a few of the details and nuances.
 
