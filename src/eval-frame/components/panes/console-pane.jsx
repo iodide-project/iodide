@@ -48,8 +48,8 @@ export class ConsolePaneUnconnected extends React.Component {
         ));
     } else {
       histContents.push(
-        <EmptyPaneContents>
-          <OnboardingContent key="onboarding" fainter>
+        <EmptyPaneContents key="onboarding">
+          <OnboardingContent fainter>
             You can always get back to this with the little ? icon in the top
             right.
           </OnboardingContent>
