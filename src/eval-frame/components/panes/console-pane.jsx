@@ -6,6 +6,7 @@ import deepEqual from "deep-equal";
 import HistoryItem from "./history-item";
 import ConsoleInput from "./console-input";
 
+import EmptyPaneContents from "./empty-pane-contents";
 import OnboardingContent from "./onboarding-content";
 
 export class ConsolePaneUnconnected extends React.Component {
@@ -47,10 +48,12 @@ export class ConsolePaneUnconnected extends React.Component {
         ));
     } else {
       histContents.push(
-        <OnboardingContent key="onboarding" fainter>
-          You can always get back to this with the little ? icon in the top
-          right.
-        </OnboardingContent>
+        <EmptyPaneContents>
+          <OnboardingContent key="onboarding" fainter>
+            You can always get back to this with the little ? icon in the top
+            right.
+          </OnboardingContent>
+        </EmptyPaneContents>
       );
     }
 

@@ -1,54 +1,34 @@
-/* global IODIDE_VERSION */
-
 import React from "react";
 import PropTypes from "prop-types";
+// import styled from "react-emotion";
 
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
+import HelpModalContent from "./help-modal-content";
+
 import KeyboardShortcutList from "./keyboard-shortcut-list";
 import OnboardingContent from "../../eval-frame/components/panes/onboarding-content";
+import AboutIodide from "./about-iodide";
+import FeaturedNotebooks from "../../shared/components/featured-notebooks";
 import tasks from "../../actions/task-definitions";
 
-function AboutIodide() {
-  return (
-    <div className="help-modal-contents">
-      <p>Iodide version: {IODIDE_VERSION}</p>
-      <h2>
-        Visit Iodide{"'"}s{" "}
-        <a
-          href="http://github.com/iodide-project/iodide"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          repo on Github
-        </a>
-      </h2>
-      <p>
-        <a
-          href="http://github.com/iodide-project/iodide/issues/new"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          File a bug or feature request
-        </a>
-        .
-      </p>
-    </div>
-  );
-}
+const MoreResources = () => (
+  <HelpModalContent>
+    <h2>Documentation</h2>
+    <p>
+      Visit the <a href="https://iodide.io/docs">Iodide Documentation</a>.
+    </p>
+  </HelpModalContent>
+);
 
-function MoreResources() {
-  return (
-    <div className="help-modal-contents">
-      <h2>Documentation</h2>
-      <p>
-        Visit the <a href="https://iodide.io/docs">Iodide Documentation</a>.
-      </p>
-    </div>
-  );
-}
+const Onboarding = () => (
+  <HelpModalContent>
+    <OnboardingContent />
+    <FeaturedNotebooks />
+  </HelpModalContent>
+);
 
 export default class HelpModal extends React.Component {
   static propTypes = {
@@ -75,8 +55,9 @@ export default class HelpModal extends React.Component {
           transform: "translate(-50%, -50%)",
           height: "80%",
           width: "60%",
+          minWidth: "900px",
           background: "white",
-          boxShadow: "0px 3px 10px 3px rgba(0, 0, 0, 0.7)",
+          boxShadow: "0px 3px 20px rgba(0, 0, 0, 0.5)",
           flexDirection: "column",
           display: "flex"
         }}
@@ -84,16 +65,17 @@ export default class HelpModal extends React.Component {
         <AppBar
           position="static"
           style={{
-            background: "#5d5d5d"
+            background: "linear-gradient(to left, #301934, #563C5C)"
           }}
         >
           <Tabs value={value} onChange={this.handleChange}>
             <Tab label="Getting Started" />
             <Tab label="Keyboard Shortcuts" />
             <Tab label="More Resources" />
+            <Tab label="About Iodide" />
           </Tabs>
         </AppBar>
-        {value === 0 && <OnboardingContent />}
+        {value === 0 && <Onboarding />}
         {value === 1 && <KeyboardShortcutList tasks={tasks} />}
         {value === 2 && <MoreResources />}
         {value === 3 && <AboutIodide />}

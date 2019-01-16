@@ -1,6 +1,6 @@
 
 .notebook-toolbar-container {
-  background-color: black;
+  background: linear-gradient(to right, #3f1b47, #1e0f21);
   height: 50px
 }
 
@@ -102,7 +102,7 @@ input.page-title {
   margin: auto;
   text-align: center;
   color: white;
-  background-color: black;
+  background-color: transparent;
 }
 
 input.page-title:focus {

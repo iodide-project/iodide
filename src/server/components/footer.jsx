@@ -9,8 +9,9 @@ const FooterContainer = styled("footer")`
   margin: auto;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 15px;
   justify-items: center;
-  align-items: center;
+  align-items: top;
   padding-top: 15px;
   padding-bottom: 15px;
   font-size: 0.815rem;
@@ -20,6 +21,7 @@ const FooterContainer = styled("footer")`
 `;
 
 const LogoContainer = styled("div")`
+  align-self: center;
   transform: scale(${props => props.scale || 0.8});
   color: ${props => props.color};
   font-weight: 300;
@@ -37,6 +39,10 @@ const innerLogoStyle = css`
   height: inherit;
   width: inherit;
   text-align: center;
+
+  p {
+    line-height: 11px;
+  }
 
   span {
     font-size: 0.9em;
@@ -58,6 +64,7 @@ const Logo = () => (
 const FooterDiv = styled("div")`
   text-align: left;
   padding: 0px;
+  width: 100%;
   ul {
     padding-inline-start: 0px;
   }
@@ -67,8 +74,8 @@ const FooterDiv = styled("div")`
   }
 `;
 
-export default () => (
-  <FooterContainer>
+export default ({ showIcon = true }) => (
+  <FooterContainer showIcon={showIcon}>
     <FooterDiv>
       <p>
         iodide is brought to you by <a href="https://mozilla.org">Mozilla</a>.
@@ -95,7 +102,7 @@ export default () => (
         <small>© 2018 Mozilla and other contributors</small>.
       </p>
     </FooterDiv>
-    <Logo />
+    {showIcon ? <Logo /> : <div />}
     <FooterDiv>
       {IODIDE_PUBLIC && (
         <p>

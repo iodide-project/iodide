@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "react-emotion";
 
-import EmptyPaneContents from "./empty-pane-contents";
-
 const elementColor = props => (props.fainter ? "gray" : "rgba(0,0,0,.6)");
 const color = props => (props.fainter ? "darkgray" : "rgba(0,0,0,.8)");
 const lighterColor = props => (props.fainter ? "gainsboro" : "darkgray");
@@ -12,7 +10,7 @@ const ONBOARDING_SETTINGS = {
   elemGap: 5
 };
 
-const OnboardingContentContainer = styled(EmptyPaneContents)`
+const OnboardingContentContainer = styled("div")`
   font-size: 14px;
   font-weight: normal;
   --onboarding-color: ${color};
@@ -39,6 +37,7 @@ const OnboardingHeader = styled("h1")`
   font-weight: 300;
   margin-bottom: ${ONBOARDING_SETTINGS.gapSize}px;
 `;
+
 const Element = styled("div")`
   border: 1px solid var(--element-border);
   border-radius: 5px;
@@ -65,7 +64,7 @@ const ElementBody = styled("div")`
   padding-top: ${ONBOARDING_SETTINGS.elemGap}px;
 `;
 
-const OnboardingLink = styled("a")`
+const ElementBlockLink = styled("a")`
   text-decoration: none;
   display: block;
   color: var(--element-color);
@@ -93,33 +92,33 @@ export default class OnboardingContent extends React.Component {
           <Element key="examples">
             <ElementTitle>Fork an Example</ElementTitle>
             <ElementBody>
-              <OnboardingLink>Pyodide starter</OnboardingLink>
-              <OnboardingLink>Dashboard starter</OnboardingLink>
-              <OnboardingLink>Examples Gallery</OnboardingLink>
+              <ElementBlockLink>Pyodide starter</ElementBlockLink>
+              <ElementBlockLink>Dashboard starter</ElementBlockLink>
+              <ElementBlockLink>Examples Gallery</ElementBlockLink>
             </ElementBody>
           </Element>
           <Element key="tutorials">
             <ElementTitle>Read a Tutorial</ElementTitle>
             <ElementBody>
-              <OnboardingLink href="https://extremely-alpha.iodide.io/notebooks/154/">
+              <ElementBlockLink href="https://extremely-alpha.iodide.io/notebooks/154/">
                 A Tour Through Iodide
-              </OnboardingLink>
-              <OnboardingLink>How to use other libraries</OnboardingLink>
-              <OnboardingLink href="https://extremely-alpha.iodide.io/notebooks/151/">
+              </ElementBlockLink>
+              <ElementBlockLink>How to use other libraries</ElementBlockLink>
+              <ElementBlockLink href="https://extremely-alpha.iodide.io/notebooks/151/">
                 Getting Started with Python
-              </OnboardingLink>
+              </ElementBlockLink>
             </ElementBody>
           </Element>
           <Element key="docs">
             <ElementTitle>Check the Docs</ElementTitle>
             <ElementBody>
-              <OnboardingLink href="https://iodide.io/docs/jsmd/">
+              <ElementBlockLink href="https://iodide.io/docs/jsmd/">
                 JSMD format
-              </OnboardingLink>
-              <OnboardingLink href="https://iodide.io/docs/api/">
+              </ElementBlockLink>
+              <ElementBlockLink href="https://iodide.io/docs/api/">
                 Iodide API
-              </OnboardingLink>
-              <OnboardingLink href="">Pyodide API</OnboardingLink>
+              </ElementBlockLink>
+              <ElementBlockLink href="">Pyodide API</ElementBlockLink>
             </ElementBody>
           </Element>
         </ThreeElements>
