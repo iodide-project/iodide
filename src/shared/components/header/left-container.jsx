@@ -5,4 +5,5 @@ export default styled("div")`
   grid-column: left;
   margin-left: ${THEME.header.left.leftMargin};
   display: flex;
+  align-items: center;
 `;

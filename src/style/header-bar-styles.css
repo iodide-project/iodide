@@ -1,7 +1,6 @@
 
 .notebook-toolbar-container {
-  background: linear-gradient(to right, #3f1b47, #1e0f21);
-  height: 50px
+  height: 55px;
 }
 
 .notebook-header-messages-container {
@@ -26,12 +25,12 @@
 }
 
 .notebook-toolbar {
-  height:50px;
+  height:55px;
   display: flex;
   position: relative;
   min-height: 56px;
   align-items: center;
-  min-height:50px !important;
+  min-height:55px !important;
 }
 
 div.editor-mode-controls {

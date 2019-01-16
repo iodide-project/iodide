@@ -6,6 +6,10 @@ THEME.header.middle = {};
 THEME.header.right = {};
 
 THEME.header.height = "55px";
+THEME.header.defaultSpacing = "12px";
+// NB: the slight margin-bottom is there to accomodate the notebook pane margin size,
+// which Golden Layout sets to 5px.
+THEME.header.bottomMargin = "5px";
 
 // THEME.HEADER.left - left container properties.
 THEME.header.left.leftMargin = "20px";

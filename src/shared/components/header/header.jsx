@@ -1,7 +1,8 @@
-// import React from "react";
 import styled from "react-emotion";
 import THEME from "../../theme";
 
+// NB: the slight margin-bottom is there to accomodate the notebook pane margin size,
+// which Golden Layout sets to 5px.
 export default styled("div")`
   height: ${THEME.header.height};
   background: ${THEME.header.background};
@@ -9,4 +10,5 @@ export default styled("div")`
   grid-template-columns: [left-start] auto [left-end middle-start] 1fr [middle-end right-start] auto [right-end];
   justify-content: space-between;
   align-items: center;
+  margin-bottom: ${THEME.header.bottomMargin};
 `;
