@@ -81,7 +81,8 @@ Each line in a fetch cell must specify:
 
 Additionally, data fetches (`json`, `text` or `blob`) must specify the variable name into which the data will be stored.
 
-Here is an the following example:
+This example demonstrates how a fetch chunk is used.
+
 ```
 %% fetch
 // NOTE js style comments are allowed as well
@@ -98,9 +99,20 @@ In the case of the `js` and `css` fetch types, the scripts and stylesheets are a
 
 In the case of data fetches, which have the syntax `{TYPE}: {VAR_NAME} = {RESOURCE_URL}`, the data is loaded into the variable `VAR_NAME` within your javascript scope. In the case of a `json` fetch, the JSON object retrieved from the URL is parsed into a native javascript object, but in the case of `text` and `blob` fetches, the variable will contain a raw string or (blob object)[https://developer.mozilla.org/en-US/docs/Web/API/Blob], respectively.
 
-### Python (`%% py`)
+### Pyodide (`%% py`)
 
-### plugins (`%% plugin`)
+Pyodide chunks allow you to execute Python 3 code in your browser by way of (Pyodide)[https://github.com/iodide-project/pyodide], the Python interpreter compiled to WebAssembly.
+
+_Note: the first time you evaluate a `py` chunk, python must be downloaded and initialized, which will take a few moments. Subsequent evaluations will happen immediately._
+
+Pyodide is the first (language plugins)[language_plugins.md] available for Iodide.
+
+### Plugins (`%% plugin`)
+
+Plugin chunks allow you to extend the functionality of Iodide by loading plugins. At the time being, Iodide only supports (language plugins)[language_plugins.md], which add interpreters for additional languages to your Iodide session.
+
+Plugin chunks must contain a single JSON string that contains the plugin specification. The JSON must contain a "type" field (which for now must be "language")
+
 
 
 
