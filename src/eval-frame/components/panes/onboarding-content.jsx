@@ -3,7 +3,8 @@ import styled from "react-emotion";
 
 import EmptyPaneContents from "./empty-pane-contents";
 
-const color = props => (props.fainter ? "darkgray" : "black");
+const elementColor = props => (props.fainter ? "gray" : "rgba(0,0,0,.6)");
+const color = props => (props.fainter ? "darkgray" : "rgba(0,0,0,.8)");
 const lighterColor = props => (props.fainter ? "gainsboro" : "darkgray");
 
 const ONBOARDING_SETTINGS = {
@@ -11,9 +12,19 @@ const ONBOARDING_SETTINGS = {
   elemGap: 5
 };
 
+const OnboardingContentContainer = styled(EmptyPaneContents)`
+  font-size: 14px;
+  font-weight: normal;
+  --onboarding-color: ${color};
+  --onboarding-lightercolor: ${lighterColor};
+  --element-border: gainsboro;
+  --element-color: ${elementColor};
+  color: var(--onboarding-color);
+`;
+
 const OnboardingLede = styled("div")`
   margin-top: ${ONBOARDING_SETTINGS.gapSize}px;
-  margin-bottom: ${ONBOARDING_SETTINGS.gapSize}px;
+  margin-bottom: ${ONBOARDING_SETTINGS.gapSize * 2}px;
 `;
 
 const ThreeElements = styled("div")`
@@ -21,7 +32,7 @@ const ThreeElements = styled("div")`
   grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: ${ONBOARDING_SETTINGS.gapSize * 2}px;
   margin-top: ${ONBOARDING_SETTINGS.gapSize}px;
-  margin-bottom: ${ONBOARDING_SETTINGS.gapSize}px;
+  margin-bottom: ${ONBOARDING_SETTINGS.gapSize * 2}px;
 `;
 
 const OnboardingHeader = styled("h1")`
@@ -29,8 +40,15 @@ const OnboardingHeader = styled("h1")`
   margin-bottom: ${ONBOARDING_SETTINGS.gapSize}px;
 `;
 const Element = styled("div")`
-  border: 1px solid var(--onboarding-lightercolor);
+  border: 1px solid var(--element-border);
   border-radius: 5px;
+  background: linear-gradient(to right, rgb(248, 243, 248), rgb(250, 248, 250));
+  color: var(--element-color);
+  transition: 300ms;
+
+  : hover {
+    box-shadow: 2px 2px 0px rgba(104, 40, 96, 0.3);
+  }
 `;
 
 const ElementTitle = styled("h2")`
@@ -50,20 +68,12 @@ const ElementBody = styled("div")`
 const OnboardingLink = styled("a")`
   text-decoration: none;
   display: block;
-  color: var(--onboarding-color);
+  color: var(--element-color);
 
   :hover {
     text-decoration: underline;
     cursor: pointer;
   }
-`;
-
-const OnboardingContentContainer = styled(EmptyPaneContents)`
-  font-size: 14px;
-  font-weight: normal;
-  --onboarding-color: ${color};
-  --onboarding-lightercolor: ${lighterColor};
-  color: var(--onboarding-color);
 `;
 
 const AdditionalOnboarding = styled("div")`
