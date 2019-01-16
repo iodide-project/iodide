@@ -28,12 +28,6 @@ div.editor-mode-controls {
   width: 300px;
 }
 
-div.view-controls {
-  width: 375px;
-  display:flex;
-  align-items:center;
-}
-
 .last-saved-text {
   font-size: 11px;
   color: lightgray;
@@ -46,10 +40,6 @@ div.view-controls {
 
 .last-saved-text {
   display:none !important;
-  }
-
-div.view-controls {
-  width:200px;
   }
 
 div.title-field {
