@@ -13,36 +13,29 @@ import MiddleContainer from "../../shared/components/header/middle-container";
 
 export class EditorModeToolbarUnconnected extends React.Component {
   static propTypes = {
-    viewMode: PropTypes.string
+    viewModeDisplay: PropTypes.object
   };
   render() {
     return (
-      <div
-        className="notebook-toolbar-container"
-        style={{
-          display: this.props.viewMode === "EXPLORE_VIEW" ? "block" : "none"
-        }}
-      >
-        <Header>
-          <LeftContainer>
-            <IodideLogo backLink={this.props.backLink} />
-            <EditorModeControls isFirstChild />
-          </LeftContainer>
-          <MiddleContainer>
-            <EditorModeTitle />
-          </MiddleContainer>
-          <RightContainer>
-            <ViewControls />
-          </RightContainer>
-        </Header>
-      </div>
+      <Header style={this.props.viewModeStyle}>
+        <LeftContainer>
+          <IodideLogo backLink={this.props.backLink} />
+          <EditorModeControls />
+        </LeftContainer>
+        <MiddleContainer>
+          <EditorModeTitle />
+        </MiddleContainer>
+        <RightContainer>
+          <ViewControls />
+        </RightContainer>
+      </Header>
     );
   }
 }
 
 export function mapStateToProps(state) {
   return {
-    viewMode: state.viewMode,
+    viewModeStyle: state.viewMode === "EXPLORE_VIEW" ? {} : { display: "none" },
     backLink: connectionModeIsServer(state) && "/"
   };
 }

@@ -6,4 +6,5 @@ export default styled("div")`
   display: flex;
   justify-content: flex-end;
   margin-right: ${THEME.header.right.rightMargin};
+  min-width: ${THEME.header.right.minWidth};
 `;

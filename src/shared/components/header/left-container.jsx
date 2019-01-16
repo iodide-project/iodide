@@ -6,4 +6,6 @@ export default styled("div")`
   margin-left: ${THEME.header.left.leftMargin};
   display: flex;
   align-items: center;
+  min-width: 300px;
+  min-width: ${THEME.header.left.minWidth};
 `;
