@@ -5,6 +5,7 @@ import {
   EditorModeToolbarUnconnected,
   mapStateToProps
 } from "../editor-mode-toolbar";
+import Header from "../../../shared/components/header/header";
 import EditorModeTitle from "../editor-mode-title";
 import ViewControls from "../view-controls";
 import IodideLogo from "../../../shared/iodide-logo";
@@ -21,14 +22,16 @@ describe("EditorModeToolbarUnconnected", () => {
   };
   beforeEach(() => {
     props = {
-      viewMode: "EXPLORE_VIEW"
+      viewModeStyle: {}
     };
     mountedComponent = undefined;
   });
+
   it("should render all child components correctly", () => {
-    const viewMode = ["EXPLORE_VIEW", ""];
+    //                 PRESENTATION        EXPLORE
+    const viewMode = [{ display: "none" }, {}];
     viewMode.forEach(value => {
-      props.viewMode = value;
+      props.viewModeStyle = value;
       expect(wrapper().find(EditorModeTitle)).toHaveLength(1);
       expect(wrapper().find(ViewControls)).toHaveLength(1);
       expect(wrapper().find(IodideLogo)).toHaveLength(1);
@@ -36,15 +39,15 @@ describe("EditorModeToolbarUnconnected", () => {
     });
   });
   it("should have display none when viewMode !== EXPLORE_VIEW", () => {
-    props.viewMode = "";
-    const div = wrapper().find("div");
+    props.viewModeStyle = { display: "none" };
+    const div = wrapper().find(Header);
     const divStyle = div.get(0).props.style;
     expect(divStyle).toHaveProperty("display", "none");
   });
   it("should have display block when viewMode == EXPLORE_VIEW", () => {
-    const div = wrapper().find("div");
+    const div = wrapper().find(Header);
     const divStyle = div.get(0).props.style;
-    expect(divStyle).toHaveProperty("display", "block");
+    expect(divStyle).toEqual({});
   });
 });
 
