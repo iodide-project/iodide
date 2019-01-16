@@ -14,6 +14,8 @@ import AboutIodide from "./about-iodide";
 import FeaturedNotebooks from "../../shared/components/featured-notebooks";
 import tasks from "../../actions/task-definitions";
 
+import THEME from "../../shared/theme";
+
 const MoreResources = () => (
   <HelpModalContent>
     <h2>Documentation</h2>
@@ -66,7 +68,7 @@ export default class HelpModal extends React.Component {
         <AppBar
           position="static"
           style={{
-            background: "linear-gradient(to left, #301934, #563C5C)"
+            background: THEME.clientModal.background
           }}
         >
           <Tabs value={value} onChange={this.handleChange}>

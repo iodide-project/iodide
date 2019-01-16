@@ -32,4 +32,16 @@ THEME.elementBackground = `linear-gradient(to right, ${
   THEME.elementBackgroundLeft
 }, ${THEME.elementBackgroundRight})`;
 
+THEME.clientModal = {};
+THEME.clientModal.backgroundLeft = "#301934";
+THEME.clientModal.backgroundRight = "#563C5C";
+THEME.clientModal.background = `linear-gradient(to left, ${
+  THEME.clientModal.backgroundLeft
+}, ${THEME.clientModal.backgroundRight})`;
+
+// BUTTON COLORS
+THEME.button = {};
+THEME.button.baseColor = THEME.clientModal.backgroundRight;
+THEME.button.hoverColor = THEME.clientModal.backgroundLeft;
+
 export default THEME;
