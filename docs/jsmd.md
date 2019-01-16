@@ -26,6 +26,51 @@ rendered when a page loads, libraries get requested from cdns, data gets pulled,
 and so on. So you don't need to save the kinds of state you do in a Jupyter
 notebook.
 
+## JSMD syntax and usage
+
+As we said above, a JSMD file is just a plain text file with text blocks representing various languages and other evaluation directs delimited by lines starting with `%%`.
+
+A few things to note about JSMD:
+- Iodide natively supports the following JSMD chunk types (described in more detail below):
+    - `%% js` for Javascript source code
+    - `%% md` for Markdown
+    - `%% css` for CSS styles
+    - `%% fetch` for retrieving resources
+    - `%% py` for Python
+    - `%% plugin` for Iodide plugins
+- Any chunk not of one of the above chunk types will be ignored by Iodide.
+- Any blank lines above the first chunk specifier will be ignored.
+- Changes to `md` and `css` chunk are immediately applied to your Iodide Report; changes to all other chunk types must be evaluated to take effect (to evaluate, use keyboard shorcuts `ctrl+enter`/`shift+enter` or the play button in the toolbar while your cursor is within the chunk).
+- 
+
+A brief example will help to illustrate a few of the details and nuances.
+
+```
+this stuff up at the top of your jsmd will be ignored
+
+%% md
+# this is markdown
+_and it will be rendered as such whenever you change it!_
+
+%% js
+function bigSlowFunction(x){ ... }
+
+%% 
+// since the type of this chunk is not specified, it will take type
+// "js" from the chunk above.
+
+// delimiting chunks like this can be useful if you want to control
+// when you run a certain snippet of code (for example if it's very slow)
+let sum = 0
+for (var i = 0; i < 1e10; i++) {
+  sum = sum + bigSlowFunction(x)
+}
+
+%% qwerty
+this chunk type is not known by Iodide, so this content will be ignored
+
+```
+
 ## JSMD chunk types
 
 ### Markdown (`%% md`)
@@ -105,7 +150,7 @@ Pyodide chunks allow you to execute Python 3 code in your browser by way of [Pyo
 
 _Note: the first time you evaluate a `py` chunk, python must be downloaded and initialized, which will take a few moments. Subsequent evaluations will happen immediately._
 
-Pyodide is implemented as an Iodide [language plugins](language_plugins.md)
+Pyodide is implemented as an Iodide [language plugin](language_plugins.md).
 
 ### Plugins (`%% plugin`)
 
