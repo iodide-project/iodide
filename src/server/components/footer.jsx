@@ -33,9 +33,11 @@ const FooterDiv = styled("div")`
   }
 `;
 
-const FooterLogo = styled(LogoMark)`
-  width: 40px;
-  transform: rotate(5deg);
+const FooterLogoContainer = styled("div")`
+  opacity: 0.2;
+  svg {
+    width: 80px;
+  }
 `;
 
 export default ({ showIcon = true }) => (
@@ -66,7 +68,13 @@ export default ({ showIcon = true }) => (
         <small>© 2018 Mozilla and other contributors</small>.
       </p>
     </FooterDiv>
-    {showIcon ? <FooterLogo /> : <div />}
+    {showIcon ? (
+      <FooterLogoContainer>
+        <LogoMark />
+      </FooterLogoContainer>
+    ) : (
+      <div />
+    )}
     <FooterDiv>
       {IODIDE_PUBLIC && (
         <p>

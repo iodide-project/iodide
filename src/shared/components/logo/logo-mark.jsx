@@ -5,7 +5,6 @@ import THEME from "../../theme";
 const IodideLogoMarkContainer = styled("svg")`
   margin: auto;
   display: block;
-  opacity: 0.2;
 `;
 export default () => (
   <IodideLogoMarkContainer
