@@ -43,7 +43,7 @@ export default ({ width }) => (
       title="Eviction Notices By SF Neighborhood, 1999-present"
       description="
                 A small data presentation about one aspect of the SF Housing crisis."
-      href="https://iodide.io/iodide-examples/eviction-notices-sf.html/?viewMode=report"
+      href="https://extremely-alpha.iodide.io/notebooks/144/?viewMode=report"
       imageSource="https://media.giphy.com/media/MohSU55IoyGmAXgEkY/giphy.gif"
     />
   </NotebookDisplay>
