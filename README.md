@@ -7,7 +7,7 @@
    <br />
   The Iodide notebook</h1>
 
-_[Try it in your browser right now](https://extremly-alpha.iodide.io/)!_
+_[Try it in your browser right now](https://extremely-alpha.iodide.io/)!_
 ### Please note: Iodide is in early alpha, and still subject to breakage, changes, and overhauls
 
 ### _View source_ for science
