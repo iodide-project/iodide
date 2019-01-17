@@ -8,7 +8,7 @@ Iodide stands alongside other excellent tools for exploring and prototyping Java
 
 When you open a new Iodide notebook, by default you'll see Iodide's __explore view__, which looks like this:
 
-(need to add screen shot of default new notebook view with annotations)
+___(need to add screen shot of default new notebook view with annotations)___
 
 Here are the key components of what you're seeing:
 
