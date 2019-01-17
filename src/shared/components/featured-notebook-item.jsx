@@ -2,11 +2,6 @@ import React from "react";
 import styled from "react-emotion";
 import Element from "./three-set/element";
 
-// NB: these might move into the theme eventually.
-// for now, it suffices to keep them in here.
-const PADDING = 15;
-const IMG_WIDTH = 250;
-
 const NotebookDisplayContainer = styled(Element.withComponent("a"))`
   color: black;
   border: 1px solid rgba(0, 0, 0, 0.05);
