@@ -1,5 +1,8 @@
 const THEME = {};
 
+THEME.logo = {};
+THEME.logo.darkColor = "#4f3554";
+
 THEME.header = {};
 THEME.header.left = {};
 THEME.header.middle = {};

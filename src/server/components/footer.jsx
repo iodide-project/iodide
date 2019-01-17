@@ -1,7 +1,7 @@
 /* global IODIDE_PUBLIC */
 import React from "react";
 import styled from "react-emotion";
-import { css } from "emotion";
+import LogoMark from "../../shared/components/logo/logo-mark";
 import { sharedProperties } from "../style/base";
 
 const FooterContainer = styled("footer")`
@@ -20,47 +20,6 @@ const FooterContainer = styled("footer")`
   color: gray;
 `;
 
-const LogoContainer = styled("div")`
-  align-self: center;
-  transform: scale(${props => props.scale || 0.8});
-  color: ${props => props.color};
-  font-weight: 300;
-  font-size: 40px;
-  font-family: monospace;
-  border: 2px solid ${props => props.color};
-  border-radius: 5px;
-  padding-left: 14px;
-  padding-top: 4px;
-  padding-bottom: 2px;
-`;
-
-const innerLogoStyle = css`
-  transform: scale(0.75, 1);
-  height: inherit;
-  width: inherit;
-  text-align: center;
-
-  p {
-    line-height: 11px;
-  }
-
-  span {
-    font-size: 0.9em;
-    display: inline-block;
-    position: relative;
-    top: -9px;
-    left: -3px;
-  }
-`;
-
-const Logo = () => (
-  <LogoContainer color="grey">
-    <div className={innerLogoStyle}>
-      I<span>&#x207B;</span>
-    </div>
-  </LogoContainer>
-);
-
 const FooterDiv = styled("div")`
   text-align: left;
   padding: 0px;
@@ -72,6 +31,11 @@ const FooterDiv = styled("div")`
     display: inline-block;
     margin-right: 20px;
   }
+`;
+
+const FooterLogo = styled(LogoMark)`
+  width: 40px;
+  transform: rotate(5deg);
 `;
 
 export default ({ showIcon = true }) => (
@@ -102,7 +66,7 @@ export default ({ showIcon = true }) => (
         <small>© 2018 Mozilla and other contributors</small>.
       </p>
     </FooterDiv>
-    {showIcon ? <Logo /> : <div />}
+    {showIcon ? <FooterLogo /> : <div />}
     <FooterDiv>
       {IODIDE_PUBLIC && (
         <p>
