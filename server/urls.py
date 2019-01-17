@@ -1,10 +1,31 @@
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from django.views.generic.base import RedirectView
 
 import server.views
 
 admin.autodiscover()
+
+
+def parse_redirects(redirects):
+    """
+    Parses a string defining a set of redirects.
+
+    The string is in ;-delimited section, where each section is
+    if the form `$prefix=$dest`.
+
+    Yields Django url configurations to perform the redirect.
+    """
+    redirects = [x.strip() for x in redirects.split(';')]
+    for redirect in redirects:
+        parts = [x.strip() for x in redirect.split('=')]
+        if len(parts) != 2:
+            continue
+        prefix, dest = parts
+        yield url(f'^{prefix}.*', RedirectView.as_view(url=dest))
+
 
 urlpatterns = [
     # notebook stuff
@@ -26,7 +47,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     url(r'^$', server.views.index, name='index'),
+]
 
+urlpatterns += list(parse_redirects(settings.IODIDE_REDIRECTS))
+
+urlpatterns += [
     # user urls
     # based on https://github.com/shinnn/github-username-regex
     url(r'^(?P<name>\w(?:\w|-|@|\.(?=\w)){0,38})/$', server.views.user, name='user'),

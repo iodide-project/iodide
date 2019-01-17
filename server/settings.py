@@ -36,6 +36,11 @@ ALLOWED_HOSTS = [SITE_HOSTNAME]
 APP_VERSION_STRING = env.str('APP_VERSION_STRING', 'dev')
 EVAL_FRAME_ORIGIN = env.str('EVAL_FRAME_ORIGIN', SITE_URL)
 
+# Define URI redirects.
+# Is a ;-delimited list of redirects, where each section is of the form
+# $prefix=$destination
+IODIDE_REDIRECTS = env("IODIDE_REDIRECTS", default="")
+
 # Dockerflow
 DOCKERFLOW_ENABLED = env.bool("DOCKERFLOW_ENABLED", default=False)
 
