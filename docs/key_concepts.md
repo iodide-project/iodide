@@ -17,7 +17,7 @@ Here are the key components of what you're seeing:
     - The _editor pane_ shown on the left side of the window by default. In this pane, you can edit your [jsmd](jsmd.md) code. You can also evaluate a chunk of [jsmd](jsmd.md) code by pressing `ctrl+enter` (or `shift+enter` to evaluate the current chunk and advance to the next`).
     - the _report preview_, shown on the top right, does exactly what it sounds like: it gives you a preview of what your report will look like based on the Markdown you've entered and the code you've evaluated so far. (And remember: you can see the full report by clicking the "REPORT" button in the toolbar at top)
     - the _console pane_ in the bottom right shows you the outputs from the jsmd chunks you've evaluated, allows you to scroll back through your evaluation history, and allows you to enter one-off bits of code without putting them in your jsmd document
-    - the _workspace pane_ (not shown by default) allows you to explore the variables you have created by evaluating cde during your session
+    - the _workspace pane_ (not shown by default) allows you to explore the variables you have created by evaluating code during your session
 
 
 ## Sharing your report
