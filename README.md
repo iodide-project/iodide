@@ -7,8 +7,7 @@
    <br />
   The Iodide notebook</h1>
 
-_Try it in your browser [right now](https://iodide.io/iodide-examples/what-a-web-notebook-looks-like.html)! ([More examples](https://github.com/iodide-project/iodide-examples))_
-
+_[Try it in your browser right now](https://extremly-alpha.iodide.io/)!_
 ### Please note: Iodide is in early alpha, and still subject to breakage, changes, and overhauls
 
 ### _View source_ for science
@@ -44,9 +43,7 @@ Please visit our [documentation](https://iodide.io/docs/).
 
 # Using the notebook
 
-Visit our examples repo at https://github.com/iodide-project/iodide-examples to see demo notebooks
-
-For now, work can be saved to local storage using the "Save Notebook <ctrl-s>" menu item, or exported with "Export Notebook <ctrl-e>", which allows you to download your work as HTML file that will run anywhere (for the time being, we advise periodically exporting any code you care about).
+Visit https://extremly-alpha.iodide.io/ to see example and demo notebooks, and to learn more!
 
 # Contributing
 
@@ -73,14 +70,14 @@ We especially need help with:
 ## Secondary principles
 Flowing from those core principles, we have a number of secondary principles/objectives that revolve around the notion of reduce friction for people that want out the platform.
 
-- Portability is key -- users should be able to get up and running immediately and be able to start doing real work entirely within the browser. 
+- Users should be able to get up and running immediately and be able to start doing real work entirely within the browser. 
 
     - Allowing the notebook to work with other client and/or server-side programs/components/tools (e.g. external editors, external compute kernels (other languages or big data thingies)) might be something cool to work on down the road, but is not an objective at the moment
     - Addons to do things that the browser restricts or can’t do for some reason (file system access, halting hung scripts) could potentially be ok for power users, but cannot be a requirement to get going with a satisfactory experience.
 
-- No magic APIs -- users should (within reason) not have to learn about a ton of idiosyncrasies of the notebook to get up and running.
+- Avoid magic APIs -- users should (within reason) not have to learn about a ton of idiosyncrasies of the notebook to get up and running.
 
-    - Users need to be able to build off of existing work/examples/resources. Users need to be able to pull examples from bl.ocks.org or JSfiddle or Stackoverflow and have them run in the notebook without modification (within reason). This means, among other things, seamless access to all browser APIs is a hard requirement.
+    - Users need to be able to build off of existing work/examples/resources. Users need to be able to pull examples from bl.ocks.org or JSfiddle or Stackoverflow and have them run in the notebook without modification (within reason). This means, among other things, seamless access to all browser APIs is a hard requirement, and things that change the way standard Javascript is executed in the browser are to be avoided.
     - Helper libraries are desirable, but they should just act like regular JS libraries and not require users to contort their mental model of how vanilla JS works, or pollute the regular JS environment. (Ex: it would be preferable to add a single namespaced helper lib than to dump a bunch of utility functions into the global scope).
     - We want to support syntax extensions for mathematics, but we want them to be opt in, not something that a user will have to learn to be able to use a notebook.
 - Don’t innovate too much -- at least initially, we want to follow existing, familiar paradigms that will enable people to dive right in.
