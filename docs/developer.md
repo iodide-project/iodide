@@ -41,7 +41,7 @@ Additionally, if you are working on client code, you can run `npm run start` in 
 
 Sometimes, for debugging purposes, it is useful to have a shell session inside the "app" docker container. You
 can use either the `make shell` command (creates a shell session with the "app" user) or the `make root-shell`
-commands (creates a shell session logged in as root, useful for experimenting with new python packages).
+commands (creates a shell session logged in as root, useful for experimenting with new python packages). Note that the iodide server environment must already be running for this to work.
 
 ### Building the docs
 

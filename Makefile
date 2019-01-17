@@ -6,10 +6,10 @@ build:
 	docker build -t app:build .
 
 root-shell:
-	docker-compose run -u 0 server bash
+	docker-compose exec -u 0 server bash
 
 shell:
-	docker-compose run server bash
+	docker-compose exec server bash
 
 up:
 	docker-compose up
