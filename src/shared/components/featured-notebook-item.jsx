@@ -2,6 +2,11 @@ import React from "react";
 import styled from "react-emotion";
 import Element from "./three-set/element";
 
+// NB: these might move into the theme eventually.
+// for now, it suffices to keep them in here.
+const PADDING = 15;
+const IMG_WIDTH = 250;
+
 const NotebookDisplayContainer = styled(Element.withComponent("a"))`
   color: black;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -26,6 +31,7 @@ const InnerDisplayContainer = styled("div")`
 const NotebookDisplayImg = styled("img")`
   display: block;
   outline: 1px solid rgba(0, 0, 0, 0.05);
+  margin: auto;
   margin-bottom: 15px;
 `;
 
@@ -42,8 +48,7 @@ export default class NotebookDisplayItem extends React.Component {
       <NotebookDisplayContainer href={this.props.href}>
         <InnerDisplayContainer>
           <NotebookDisplayImg
-            width={250}
-            height={250}
+            width="100%"
             src={this.props.imageSource}
             alt={this.props.title}
           />
