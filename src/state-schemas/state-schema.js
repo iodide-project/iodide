@@ -190,7 +190,8 @@ export const stateProperties = {
       connectionMode: {
         type: "string",
         enum: ["SERVER", "STANDALONE"]
-      }
+      },
+      tryItMode: { type: "boolean" }
     },
     default: {
       notebook_id: undefined,

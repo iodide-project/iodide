@@ -111,3 +111,26 @@ def new_notebook_view(request):
             title='Untitled notebook'
         )
     return redirect(notebook)
+
+
+@ensure_csrf_cookie
+def tryit_view(request):
+    '''
+    A way to let new users experiment with iodide without logging in
+
+    If user is logged in, redirect to `/new/`
+    '''
+    if request.user.is_authenticated:
+        return redirect(new_notebook_view)
+    # create a new notebook and redirect to its view
+    new_notebook_content_template = get_template('new_notebook_content.jsmd')
+    return render(request, 'notebook.html', {
+        'user_info': {},
+        'notebook_info': {
+            'connectionMode': 'SERVER',
+            'tryItMode': True,
+            'title': 'Untitled notebook'
+        },
+        'jsmd': new_notebook_content_template.render(),
+        'iframe_src': _get_iframe_src()
+    })

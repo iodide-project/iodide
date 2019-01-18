@@ -1,7 +1,11 @@
 import CodeMirror from "codemirror";
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 
-import { getNotebookID, getUserDataFromDocument } from "../tools/server-tools";
+import {
+  getNotebookID,
+  getUserDataFromDocument,
+  notebookIsATrial
+} from "../tools/server-tools";
 import {
   clearAutosave,
   getAutosaveJsmd,
@@ -230,52 +234,6 @@ export function evaluateNotebook() {
   };
 }
 
-export function loginSuccess(userData) {
-  return dispatch => {
-    dispatch({
-      type: "LOGIN_SUCCESS",
-      userData
-    });
-    dispatch(updateAppMessages({ message: "You are logged in" }));
-  };
-}
-
-export function loginFailure() {
-  return dispatch => {
-    dispatch(updateAppMessages({ message: "Login Failed" }));
-  };
-}
-
-export function login(successCallback, failCallback) {
-  loginToServer();
-  return dispatch => {
-    // Functions to be called by child window set up by loginToServer()
-    window.loginSuccess = userData => {
-      dispatch(loginSuccess(userData));
-      if (successCallback) successCallback(userData);
-    };
-    window.loginFailure = () => {
-      dispatch(loginFailure());
-      if (failCallback) failCallback();
-    };
-  };
-}
-
-function logoutSuccess(dispatch) {
-  dispatch({ type: "LOGOUT" });
-  dispatch(updateAppMessages({ message: "Logged Out" }));
-}
-
-function logoutFailure(dispatch) {
-  dispatch(updateAppMessages({ message: "Logout Failed" }));
-}
-
-export function logout() {
-  return dispatch => {
-    logoutFromServer(logoutSuccess, logoutFailure, dispatch);
-  };
-}
-
 function getNotebookSaveRequestOptions(state, options = undefined) {
   const data = {
     title: state.title,
@@ -358,6 +316,56 @@ export function saveNotebookToServer() {
     } else {
       createNewNotebookOnServer()(dispatch, getState);
     }
+  };
+}
+
+export function loginSuccess(userData) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: "LOGIN_SUCCESS",
+      userData
+    });
+    if (notebookIsATrial(getState())) {
+      createNewNotebookOnServer()(dispatch, getState);
+    } else {
+      dispatch(updateAppMessages({ message: "You are logged in" }));
+    }
+  };
+}
+
+export function loginFailure() {
+  return dispatch => {
+    dispatch(updateAppMessages({ message: "Login Failed" }));
+  };
+}
+
+export function login(successCallback, failCallback) {
+  loginToServer();
+  return dispatch => {
+    // Functions to be called by child window set up by loginToServer()
+    window.loginSuccess = userData => {
+      dispatch(loginSuccess(userData));
+      if (successCallback) successCallback(userData);
+    };
+    window.loginFailure = () => {
+      dispatch(loginFailure());
+      if (failCallback) failCallback();
+    };
+  };
+}
+
+function logoutSuccess(dispatch) {
+  dispatch({ type: "LOGOUT" });
+  dispatch(updateAppMessages({ message: "Logged Out" }));
+}
+
+function logoutFailure(dispatch) {
+  dispatch(updateAppMessages({ message: "Logout Failed" }));
+}
+
+export function logout() {
+  return dispatch => {
+    logoutFromServer(logoutSuccess, logoutFailure, dispatch);
   };
 }
 
