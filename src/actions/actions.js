@@ -291,26 +291,45 @@ function getNotebookSaveRequestOptions(state, options = undefined) {
   return postRequestOptions;
 }
 
+function saveNotebookRequest(url, postRequestOptions, dispatch) {
+  return fetchWithCSRFTokenAndJSONContent(url, postRequestOptions)
+    .then(response => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    })
+    .catch(() => {
+      dispatch(
+        updateAppMessages({
+          message: "Error Saving Notebook"
+        })
+      );
+    });
+}
+
 export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
   return (dispatch, getState) => {
     const state = getState();
     const postRequestOptions = getNotebookSaveRequestOptions(state, {
       forkedFrom: options.forkedFrom
     });
-    fetchWithCSRFTokenAndJSONContent("/api/v1/notebooks/", postRequestOptions)
-      .then(response => response.json())
-      .then(json => {
-        const message = "Notebook saved to server";
-        dispatch(
-          updateAppMessages({
-            message,
-            details: `${message} <br />Notebook saved`
-          })
-        );
-        dispatch({ type: "ADD_NOTEBOOK_ID", id: json.id });
-        window.history.replaceState({}, "", `/notebooks/${json.id}`);
-        dispatch({ type: "NOTEBOOK_SAVED" });
-      });
+    saveNotebookRequest(
+      "/api/v1/notebooks/",
+      postRequestOptions,
+      dispatch
+    ).then(json => {
+      const message = "Notebook saved to server";
+      dispatch(
+        updateAppMessages({
+          message,
+          details: `${message} <br />Notebook saved`
+        })
+      );
+      dispatch({ type: "ADD_NOTEBOOK_ID", id: json.id });
+      window.history.replaceState({}, "", `/notebooks/${json.id}`);
+      dispatch({ type: "NOTEBOOK_SAVED" });
+    });
   };
 }
 
@@ -320,36 +339,22 @@ export function saveNotebookToServer() {
     const notebookId = getNotebookID(state);
     const notebookInServer = Boolean(notebookId);
     if (notebookInServer) {
-      const postRequestOptions = getNotebookSaveRequestOptions(state);
       // Update Exisiting Notebook
-      fetchWithCSRFTokenAndJSONContent(
+      saveNotebookRequest(
         `/api/v1/notebooks/${notebookId}/revisions/`,
-        postRequestOptions
-      )
-        .then(response => {
-          if (!response.ok) {
-            throw response;
-          }
-          return response.json();
-        })
-        .then(() => {
-          const message = "Updated Notebook";
-          updateAutosave(state, true);
-          dispatch(
-            updateAppMessages({
-              message,
-              details: `${message} <br />Notebook saved`
-            })
-          );
-          dispatch({ type: "NOTEBOOK_SAVED" });
-        })
-        .catch(() => {
-          dispatch(
-            updateAppMessages({
-              message: "Error Saving Notebook"
-            })
-          );
-        });
+        getNotebookSaveRequestOptions(state),
+        dispatch
+      ).then(() => {
+        const message = "Updated Notebook";
+        updateAutosave(state, true);
+        dispatch(
+          updateAppMessages({
+            message,
+            details: `${message} <br />Notebook saved`
+          })
+        );
+        dispatch({ type: "NOTEBOOK_SAVED" });
+      });
     } else {
       createNewNotebookOnServer()(dispatch, getState);
     }
