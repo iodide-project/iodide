@@ -9,6 +9,8 @@
 **[API docs](api.md)**: Documents special Javascript functions available to
 Iodide notebooks.
 
+**[Privacy policy, terms, and account management](policies.md)**: Policies governing the use of Iodide.io.
+
 ## Developer documentation
 
 **[Developer docs](developer.md)**: Information about contributing to Iodide.
