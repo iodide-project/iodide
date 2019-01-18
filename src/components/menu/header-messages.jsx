@@ -74,8 +74,8 @@ export class HeaderMessagesUnconnected extends React.Component {
       case "NEED_TO_LOGIN":
         content = (
           <span>
-            To save to this server, you need to&nbsp;
-            <a onClick={this.showLoginModal}>login</a>.
+            You can modify and experiment with this notebook freely. To save to
+            this server, you need to <a onClick={this.showLoginModal}>login</a>.
           </span>
         );
         break;

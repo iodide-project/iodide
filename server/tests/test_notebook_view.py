@@ -29,3 +29,24 @@ def test_new_notebook_view(client, fake_user, logged_in):
         assert NotebookRevision.objects.count() == 0
         assert Notebook.objects.count() == 0
         assert last_url == reverse('login') + '?next=/new'
+
+
+@pytest.mark.parametrize("logged_in", [True, False])
+def test_tryit_view(client, fake_user, logged_in):
+    if logged_in:
+        client.force_login(fake_user)
+    response = client.get(reverse('try-it'), follow=True)
+
+    if logged_in:
+        # if we are logged in, this view should redirect to /new`
+        assert NotebookRevision.objects.count() == 1
+        assert Notebook.objects.count() == 1
+        assert len(response.redirect_chain) == 2
+        (last_url, _) = response.redirect_chain[-1]
+        assert last_url == Notebook.objects.all()[0].get_absolute_url()
+    else:
+        # if we are not logged in, all the action should happen on the
+        # client
+        assert NotebookRevision.objects.count() == 0
+        assert Notebook.objects.count() == 0
+        assert len(response.redirect_chain) == 0

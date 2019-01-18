@@ -75,9 +75,7 @@ export default class MarketingCopySplash extends React.Component {
         </SplashCopy>
         <ButtonGroup>
           <ContainedButton href="/login">Sign Up For Free</ContainedButton>
-          <OutlineButton href="https://extremely-alpha.iodide.io/notebooks/154/">
-            Try It Out
-          </OutlineButton>
+          <OutlineButton href="/tryit/">Try It Out</OutlineButton>
           <DocsButton />
         </ButtonGroup>
         <ThreePointsContainer>

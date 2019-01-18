@@ -28,6 +28,10 @@ export function connectionModeIsServer(state) {
   return getConnectionMode(state) === "SERVER";
 }
 
+export function notebookIsATrial(state) {
+  return state.notebookInfo.tryItMode;
+}
+
 export function getNotebookID(state) {
   if (!connectionModeIsServer(state)) return undefined;
   const notebookID = state.notebookInfo.notebook_id;
