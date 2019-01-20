@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import ErrorStackParser from "error-stack-parser";
 import StackFrame from "stackframe";
 
@@ -122,14 +124,17 @@ export function trimStack(e) {
   return `${e.name}: ${e.message}\n${outputFrames.join("\n")}`;
 }
 
-export default {
-  shouldHandle: value => value instanceof Error,
-  render: e => {
-    const stack = trimStack(e);
+export default class ErrorRenderer extends React.Component {
+  static propTypes = {
+    error: PropTypes.object.isRequired
+  };
+
+  render() {
+    const stack = trimStack(this.props.error);
     return (
       <div className="error-output">
         <pre>{stack}</pre>
       </div>
     );
   }
-};
+}
