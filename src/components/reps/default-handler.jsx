@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 import {
   Inspector,
-  ObjectName,
-  ObjectValue,
-  ObjectRootLabel
+  ObjectName
+  // ObjectValue,
+  // ObjectRootLabel
 } from "react-inspector";
 
 import { ValueRenderer } from "./value-renderer";
@@ -44,23 +44,34 @@ IodideObjectLabel.defaultProps = {
 
 /* This customizes react-inspector's display of object key/value pairs to use
  * Iodide's custom reps */
-const nodeRenderer = ({ depth, name, data, isNonenumerable }) =>
-  depth === 0 ? (
-    <ObjectRootLabel name={name} data={data} />
-  ) : (
-    <IodideObjectLabel
-      name={name}
-      data={data}
-      isNonenumerable={isNonenumerable}
-    />
-  );
+// const nodeRenderer = ({ depth, name, data, isNonenumerable }) =>
+//   depth === 0 ? (
+//     <ObjectRootLabel name={name} data={data} />
+//   ) : (
+//     <IodideObjectLabel
+//       name={name}
+//       data={data}
+//       isNonenumerable={isNonenumerable}
+//     />
+//   );
 
-export default {
-  shouldHandle: () => true,
-  render: (value, inCollection) => {
-    if (!inCollection) {
-      return <Inspector data={value} nodeRenderer={nodeRenderer} />;
-    }
-    return <ObjectValue object={value} />;
+// export default {
+//   shouldHandle: () => true,
+//   render: value => <Inspector object={value} />
+//   // render: value => {
+//   // if (!inCollection) {
+//   //   return <Inspector data={value} nodeRenderer={nodeRenderer} />;
+//   // }
+//   //   return
+//   // }
+// };
+
+export default class DefaultRenderer extends React.Component {
+  static propTypes = {
+    value: PropTypes.any.isRequired
+  };
+
+  render() {
+    return <Inspector data={this.props.value} shouldShowPlaceholder={false} />;
   }
-};
+}
