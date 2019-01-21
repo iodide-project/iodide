@@ -11,11 +11,17 @@ import "codemirror/mode/python/python";
 
 export const delimLineRegex = /^%%\s*(\w*)/;
 
-export const innerModes = {
-  js: CodeMirror.getMode({}, { name: "javascript" }),
-  py: CodeMirror.getMode({}, { name: "python" }),
+const innerModes = {
+  js: CodeMirror.getMode(
+    { indentUnit: 2, statementIndent: 2 },
+    { name: "javascript" }
+  ),
+  py: CodeMirror.getMode(
+    { indentUnit: 4, hangingIndent: 4 },
+    { name: "python" }
+  ),
   md: CodeMirror.getMode({}, { name: "markdown" }),
-  css: CodeMirror.getMode({}, { name: "css" }),
+  css: CodeMirror.getMode({ indentUnit: 2 }, { name: "css" }),
   raw: CodeMirror.getMode({}, { name: "text/plain" }),
   fetch: CodeMirror.getMode({}, { name: "fetch" })
 };
@@ -52,7 +58,7 @@ CodeMirror.defineMode("jsmd", () => ({
         }
       }
       // reset the state of the localmode
-      state.localState = state.localMode.startState();
+      state.localState = state.localMode.startState(0);
     } else {
       thisToken = state.localMode.token(stream, state.localState);
     }
@@ -62,11 +68,24 @@ CodeMirror.defineMode("jsmd", () => ({
   indent: (state, textAfter, line) => {
     if (state.localMode.indent) {
       const indent = state.localMode.indent(state.localState, textAfter, line);
-      console.log("indent:", indent);
       return indent;
     }
     console.log("no local indent available");
     return CodeMirror.Pass;
+  },
+
+  // this copyState method is kind of an incantation...
+  // i don't really know if it does anything, but I _think_ i may
+  // have seen it fix an edge case
+  copyState: state => {
+    let local;
+    if (state.localState) {
+      local = CodeMirror.copyState(state.localMode, state.localState);
+    }
+    return {
+      localMode: state.localMode,
+      localState: local
+    };
   },
 
   innerMode: state => ({ state: state.localState, mode: state.localMode })
