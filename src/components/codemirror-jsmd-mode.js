@@ -70,7 +70,6 @@ CodeMirror.defineMode("jsmd", () => ({
       const indent = state.localMode.indent(state.localState, textAfter, line);
       return indent;
     }
-    console.log("no local indent available");
     return CodeMirror.Pass;
   },
 
