@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import deepEqual from "deep-equal";
 
+import HelpOutline from "@material-ui/icons/HelpOutline";
+
 import HistoryItem from "./history-item";
 import ConsoleInput from "./console-input";
 
@@ -50,8 +52,8 @@ export class ConsolePaneUnconnected extends React.Component {
       histContents.push(
         <EmptyPaneContents key="onboarding">
           <OnboardingContent fainter>
-            You can always get back to this with the little ? icon in the top
-            right.
+            You can always get back to this with the little <HelpOutline /> icon
+            in the top right.
           </OnboardingContent>
         </EmptyPaneContents>
       );

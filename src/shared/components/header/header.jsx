@@ -10,5 +10,6 @@ export default styled("div")`
   grid-template-columns: [left-start] auto [left-end middle-start] 1fr [middle-end right-start] auto [right-end];
   justify-content: space-between;
   align-items: center;
+  margin: 0;
   margin-bottom: ${THEME.header.bottomMargin};
 `;
