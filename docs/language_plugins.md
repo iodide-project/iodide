@@ -6,7 +6,7 @@ language plugins.
 Languages that are mature and well supported automatically load when you create
 and run a JSMD chunk for that language. These are called "built-in" because
 Iodide knows about them, even if support is loaded dynamically only when needed.
-Other langauges require the use of a language plugin chunk, described below.
+Other languages require the use of a language plugin chunk, described below.
 
 Not all language plugins have the same level of interoperability between
 Javascript and the plugin language. We've defined the following approximate
