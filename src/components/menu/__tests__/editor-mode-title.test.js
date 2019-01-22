@@ -7,7 +7,7 @@ describe("editor-mode-title mapStateToProps", () => {
       out: {
         notebookTitle: "test",
         pageTitle: "test - Iodide",
-        isUntitled: false
+        titleColor: "white"
       }
     },
     {
@@ -15,7 +15,7 @@ describe("editor-mode-title mapStateToProps", () => {
       out: {
         notebookTitle: "",
         pageTitle: "New Notebook - Iodide",
-        isUntitled: true
+        titleColor: "lightgray"
       }
     }
   ];

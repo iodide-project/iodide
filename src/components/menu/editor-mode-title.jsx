@@ -17,7 +17,7 @@ const InputElement = styled("input")`
   width: 100%;
   margin: auto;
   text-align: center;
-  color: ${({ isUntitled }) => (isUntitled ? "lightgray" : "white")};
+  color: ${props => props.titleColor};
   background-color: transparent;
 
   :focus {
@@ -29,7 +29,7 @@ export class TitleUnconnected extends React.Component {
   static propTypes = {
     notebookTitle: PropTypes.string,
     pageTitle: PropTypes.string,
-    isUntitled: PropTypes.bool,
+    titleColor: PropTypes.string,
     changePageTitle: PropTypes.func
   };
 
@@ -38,7 +38,7 @@ export class TitleUnconnected extends React.Component {
       <TitleContainer>
         <Helmet title={this.props.pageTitle} />
         <InputElement
-          isUntitled={this.props.isUntitled}
+          titleColor={this.props.titleColor}
           value={this.props.notebookTitle}
           placeholder="new notebook"
           onChange={evt => {
@@ -55,7 +55,7 @@ export function mapStateToProps(state) {
   return {
     notebookTitle: state.title || "",
     pageTitle: `${state.title || "New Notebook"} - Iodide`,
-    isUntitled: state.title === undefined
+    titleColor: state.title === undefined ? "lightgray" : "white"
   };
 }
 
