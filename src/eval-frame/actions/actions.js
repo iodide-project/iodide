@@ -17,6 +17,36 @@ import { postMessageToEditor } from "../port-to-editor";
 const MD = MarkdownIt({ html: true });
 MD.use(MarkdownItKatex).use(MarkdownItAnchor);
 
+/* eslint-disable */
+function takeOverConsole(dispatch) {
+  const console = window.console;
+  if (!console) return;
+  function intercept(method) {
+    const original = console[method];
+    console[method] = function() {
+      dispatch(appendToEvalHistory(
+        null,
+        method,
+        arguments,
+        {
+          historyType: "CONSOLE_EVAL"
+        }
+      ))
+      if (original.apply) {
+        // Do this for normal browsers
+        original.apply(console, arguments);
+      } else {
+        // Do this for IE
+        const message = Array.prototype.slice.apply(arguments).join(" ");
+        original(message);
+      }
+    };
+  }
+  const methods = ["log", "warn", "error"];
+  for (let i = 0; i < methods.length; i++) intercept(methods[i]);
+}
+/* eslint-enable */
+
 const CodeMirror = require('codemirror') // eslint-disable-line
 
 const initialVariables = new Set(Object.keys(window)); // gives all global variables
@@ -149,6 +179,7 @@ export function evalConsoleInput(consoleText) {
 
 function evaluateCode(code, language, state, evalId) {
   return dispatch => {
+    takeOverConsole(dispatch);
     const updateCellAfterEvaluation = (output, evalStatus) => {
       const cellProperties = { rendered: true };
       if (evalStatus === "ERROR") {
