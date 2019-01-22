@@ -39,7 +39,7 @@
     "@material-ui/core": "3.0.0",
     "@material-ui/icons": "3.0.0",
     "ajv": "6.7.0",
-    "codemirror": "5.42.2",
+    "codemirror": "5.43.0",
     "css-element-queries": "1.1.1",
     "date-fns": "2.0.0-alpha.26",
     "deep-equal": "1.0.1",
