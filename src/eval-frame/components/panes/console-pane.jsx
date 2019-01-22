@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import deepEqual from "deep-equal";
+import styled from "react-emotion";
 
 import HelpOutline from "@material-ui/icons/HelpOutline";
 
@@ -10,6 +11,11 @@ import ConsoleInput from "./console-input";
 
 import EmptyPaneContents from "./empty-pane-contents";
 import OnboardingContent from "./onboarding-content";
+
+const HelpIcon = styled(HelpOutline)`
+  display: inline-block;
+  font-size: 18px !important;
+`;
 
 export class ConsolePaneUnconnected extends React.Component {
   static propTypes = {
@@ -52,8 +58,8 @@ export class ConsolePaneUnconnected extends React.Component {
       histContents.push(
         <EmptyPaneContents key="onboarding">
           <OnboardingContent fainter>
-            You can always get back to this with the little <HelpOutline /> icon
-            in the top right.
+            You can always get back to this with the little <HelpIcon /> icon in
+            the top right.
           </OnboardingContent>
         </EmptyPaneContents>
       );
