@@ -46,7 +46,7 @@ export default ({ showIcon = true }) => (
       {// only display terms of service on an official mozilla installation
       IODIDE_PUBLIC && (
         <ul>
-          <li>Extremely alpha software</li>
+          <li>Extremely Alpha Software</li>
           <li>
             <a href="https://github.com/iodide-project/iodide">Contribute</a>
           </li>
