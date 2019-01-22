@@ -90,11 +90,11 @@ export default class OnboardingContent extends React.Component {
         </OnboardingLede>
         <ThreeElements>
           <Element key="examples">
-            <ElementTitle>Fork an Example</ElementTitle>
+            <ElementTitle>Start with a Template</ElementTitle>
             <ElementBody>
+              <ElementBlockLink>Javascript starter</ElementBlockLink>
               <ElementBlockLink>Pyodide starter</ElementBlockLink>
               <ElementBlockLink>Dashboard starter</ElementBlockLink>
-              <ElementBlockLink>Examples Gallery</ElementBlockLink>
             </ElementBody>
           </Element>
           <Element key="tutorials">
@@ -103,7 +103,6 @@ export default class OnboardingContent extends React.Component {
               <ElementBlockLink href="https://extremely-alpha.iodide.io/notebooks/154/">
                 A Tour Through Iodide
               </ElementBlockLink>
-              <ElementBlockLink>How to use other libraries</ElementBlockLink>
               <ElementBlockLink href="https://extremely-alpha.iodide.io/notebooks/151/">
                 Getting Started with Python
               </ElementBlockLink>
@@ -118,7 +117,9 @@ export default class OnboardingContent extends React.Component {
               <ElementBlockLink href="https://iodide.io/docs/api/">
                 Iodide API
               </ElementBlockLink>
-              <ElementBlockLink href="">Pyodide API</ElementBlockLink>
+              <ElementBlockLink href="https://github.com/iodide-project/pyodide/tree/master/docs">
+                Pyodide Docs / API
+              </ElementBlockLink>
             </ElementBody>
           </Element>
         </ThreeElements>
