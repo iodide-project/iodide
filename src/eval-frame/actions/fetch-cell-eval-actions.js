@@ -112,6 +112,7 @@ export function evaluateFetchText(fetchText, evalId) {
           { historyId, historyType: "FETCH_CELL_INFO" }
         )
       );
+      sendStatusResponseToEditor("ERROR", evalId);
       return Promise.resolve();
     }
 
