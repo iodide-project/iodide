@@ -19,6 +19,14 @@ Here are the key components of what you're seeing:
     - the _console pane_ in the bottom right shows you the outputs from the jsmd chunks you've evaluated, allows you to scroll back through your evaluation history, and allows you to enter one-off bits of code without putting them in your jsmd document
     - the _workspace pane_ (not shown by default) allows you to explore the variables you have created by evaluating code during your session
 
+## Writing and experimenting in your notebook
+
+As mentioned above, to create a  notebook, you will edit [JSMD](jsmd.md) code in the editor pane. You can mix code, markdown and few other JSMD chunk types as needed to tell your story the way that you want.
+
+As you go, you can also evaluate a [JSMD](jsmd.md) code chunks pressing `ctrl+enter` (or `shift+enter` to evaluate the current chunk and advance to the next). These chunks of code don’t do anything until you explicitly evaluate them. Behind the scenes, Iodide is just running `eval` on your Javascript code in an iframe with its own Javascript evaluation scope and browser DOM separate from the editor (or, in the case of language plugins, Iodide makes a call to an interpreter compiled to WebAssembly that is contained in the iframe scope).
+
+As you are editing your code, remember to hit `ctrl+s` to save your code to the Iodide server (Note: we’re working on implementing automatic online outsave, which will hopefully be available soon).
+
 
 ## The Iodide Server
 
