@@ -38,7 +38,7 @@ const FooterLogoContainer = styled("div")`
   }
 `;
 
-export default ({ showIcon = true, width = undefined }) => (
+export default ({ showIcon = true }) => (
   <FooterContainer showIcon={showIcon}>
     <FooterDiv>
       <p>
