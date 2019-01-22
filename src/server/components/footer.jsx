@@ -2,10 +2,8 @@
 import React from "react";
 import styled from "react-emotion";
 import LogoMark from "../../shared/components/logo/logo-mark";
-import { sharedProperties } from "../style/base";
 
 const FooterContainer = styled("footer")`
-  width: ${sharedProperties.pageWidth}px;
   margin: auto;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -40,7 +38,7 @@ const FooterLogoContainer = styled("div")`
   }
 `;
 
-export default ({ showIcon = true }) => (
+export default ({ showIcon = true, width = undefined }) => (
   <FooterContainer showIcon={showIcon}>
     <FooterDiv>
       <p>

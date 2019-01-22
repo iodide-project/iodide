@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-// import styled from "react-emotion";
+import styled from "react-emotion";
 
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -15,6 +15,24 @@ import FeaturedNotebooks from "../../shared/components/featured-notebooks";
 import tasks from "../../actions/task-definitions";
 
 import THEME from "../../shared/theme";
+
+const ModalContainer = styled("div")`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80%;
+  width: 60%;
+  min-width: 700px;
+  background: white;
+  box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.5);
+  flex-direction: column;
+  display: flex;
+
+  @media (max-width: 1400px) {
+    width: 80%;
+  }
+`;
 
 const MoreResources = () => (
   <HelpModalContent>
@@ -49,22 +67,7 @@ export default class HelpModal extends React.Component {
   render() {
     const { value } = this.state;
     return (
-      <div
-        className="help-modal"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          height: "80%",
-          width: "60%",
-          minWidth: "700px",
-          background: "white",
-          boxShadow: "0px 3px 20px rgba(0, 0, 0, 0.5)",
-          flexDirection: "column",
-          display: "flex"
-        }}
-      >
+      <ModalContainer className="help-modal">
         <AppBar
           position="static"
           style={{
@@ -82,7 +85,7 @@ export default class HelpModal extends React.Component {
         {value === 1 && <KeyboardShortcutList tasks={tasks} />}
         {value === 2 && <MoreResources />}
         {value === 3 && <AboutIodide />}
-      </div>
+      </ModalContainer>
     );
   }
 }
