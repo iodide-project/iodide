@@ -92,9 +92,12 @@ export default class OnboardingContent extends React.Component {
           <Element key="examples">
             <ElementTitle>Start with a Template</ElementTitle>
             <ElementBody>
-              <ElementBlockLink>Javascript starter</ElementBlockLink>
-              <ElementBlockLink>Pyodide starter</ElementBlockLink>
-              <ElementBlockLink>Dashboard starter</ElementBlockLink>
+              <ElementBlockLink href="/new">
+                Javascript starter
+              </ElementBlockLink>
+              <ElementBlockLink href="https://extremely-alpha.iodide.io/notebooks/222/">
+                Pyodide starter
+              </ElementBlockLink>
             </ElementBody>
           </Element>
           <Element key="tutorials">
