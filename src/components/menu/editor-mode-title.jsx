@@ -5,7 +5,7 @@ import Helmet from "react-helmet";
 
 import { connect } from "react-redux";
 
-import tasks from "../../actions/task-definitions";
+import { changePageTitle } from "../../actions/actions";
 
 const TitleContainer = styled("div")``;
 
@@ -27,29 +27,22 @@ const InputElement = styled("input")`
 
 export class TitleUnconnected extends React.Component {
   static propTypes = {
-    title: PropTypes.string,
-    textColor: PropTypes.string,
-    hoverColor: PropTypes.string
+    notebookTitle: PropTypes.string,
+    pageTitle: PropTypes.string,
+    isUntitled: PropTypes.bool,
+    changePageTitle: PropTypes.func
   };
-  constructor(props) {
-    super(props);
-    this.getTitle = this.getTitle.bind(this);
-  }
-
-  getTitle() {
-    return `${this.props.title || "New Notebook"} - Iodide`;
-  }
 
   render() {
     const elem = (
       <TitleContainer>
-        <Helmet title={this.getTitle()} />
+        <Helmet title={this.props.pageTitle} />
         <InputElement
           isUntitled={this.props.isUntitled}
-          value={this.props.title || ""}
+          value={this.props.notebookTitle}
           placeholder="new notebook"
           onChange={evt => {
-            tasks.changeTitle.callback(evt.target.value);
+            this.props.changePageTitle(evt.target.value);
           }}
         />
       </TitleContainer>
@@ -58,12 +51,20 @@ export class TitleUnconnected extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   return {
-    title: state.title,
-    additionalContainerClasses: "",
+    notebookTitle: state.title || "",
+    pageTitle: `${state.title || "New Notebook"} - Iodide`,
     isUntitled: state.title === undefined
   };
 }
 
-export default connect(mapStateToProps)(TitleUnconnected);
+export function mapDispatchToProps(dispatch) {
+  return {
+    changePageTitle: title => dispatch(changePageTitle(title))
+  };
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TitleUnconnected);
