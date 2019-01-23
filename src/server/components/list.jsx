@@ -129,6 +129,8 @@ export const ListIcon = styled("div")``;
 
 export const ListMain = styled("div")`
   flex-grow: 2;
+  flex-basis: 500px;
+  padding-right: 20px;
 `;
 
 export const ListPrimaryText = styled("div")`

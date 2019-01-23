@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "react-emotion";
+import Element from "./three-set/element";
 
-const NotebookDisplayContainer = styled("a")`
+const NotebookDisplayContainer = styled(Element.withComponent("a"))`
   color: black;
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 3px;
@@ -13,7 +14,6 @@ const NotebookDisplayContainer = styled("a")`
     text-decoration: none;
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 1px 1px 18px rgba(0, 0, 0, 0.15);
-    background: linear-gradient(20deg, rgb(250, 250, 250), rgb(245, 245, 245));
   }
 `;
 
@@ -26,6 +26,7 @@ const InnerDisplayContainer = styled("div")`
 const NotebookDisplayImg = styled("img")`
   display: block;
   outline: 1px solid rgba(0, 0, 0, 0.05);
+  margin: auto;
   margin-bottom: 15px;
 `;
 
@@ -42,8 +43,7 @@ export default class NotebookDisplayItem extends React.Component {
       <NotebookDisplayContainer href={this.props.href}>
         <InnerDisplayContainer>
           <NotebookDisplayImg
-            width={250}
-            height={250}
+            width="100%"
             src={this.props.imageSource}
             alt={this.props.title}
           />

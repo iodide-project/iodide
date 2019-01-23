@@ -11,16 +11,15 @@ import tasks from "../../actions/task-definitions";
 export default class EditorModeControls extends React.Component {
   render() {
     return (
-      <div className="editor-mode-controls">
+      <React.Fragment>
         <EditorToolbarMenu />
-
         <NotebookTaskButton task={tasks.evaluateChunkAndSelectBelow}>
           <PlayButton />
         </NotebookTaskButton>
         <NotebookTaskButton task={tasks.evaluateNotebook}>
           <FastForward />
         </NotebookTaskButton>
-      </div>
+      </React.Fragment>
     );
   }
 }

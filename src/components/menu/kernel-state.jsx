@@ -12,8 +12,6 @@ import ErrorOutline from "@material-ui/icons/ErrorOutline";
 const KernelContainer = styled("div")`
   width: 35px;
   height: 35px;
-  margin-left: 15px;
-  margin-right: 15px;
   display: flex;
   align-items: center;
   justify-content: middle;

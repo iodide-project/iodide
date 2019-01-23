@@ -1,17 +1,24 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import styled from "react-emotion";
+
 import HelpOutline from "@material-ui/icons/HelpOutline";
 
 import UserMenu from "../../shared/user-menu";
 import ViewModeToggleButton from "./view-mode-toggle-button";
-import LastSavedText from "./last-saved-text";
 import NotebookTaskButton from "./notebook-task-button";
 import KernelState from "./kernel-state";
 
 import tasks from "../../actions/task-definitions";
 
 import { connectionModeIsServer } from "../../tools/server-tools";
+
+const ViewControlsContainer = styled("div")`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+`;
 
 export class ViewControlsUnconnected extends React.Component {
   static propTypes = {
@@ -23,8 +30,7 @@ export class ViewControlsUnconnected extends React.Component {
 
   render() {
     return (
-      <div className="view-controls">
-        <LastSavedText />
+      <ViewControlsContainer>
         <KernelState />
         <NotebookTaskButton task={tasks.toggleHelpModal}>
           <HelpOutline />
@@ -40,7 +46,7 @@ export class ViewControlsUnconnected extends React.Component {
         )}
 
         <ViewModeToggleButton />
-      </div>
+      </ViewControlsContainer>
     );
   }
 }

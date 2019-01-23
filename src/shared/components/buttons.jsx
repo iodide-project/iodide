@@ -2,6 +2,7 @@ import React from "react";
 import { css } from "emotion";
 import styled from "react-emotion";
 import PropTypes from "prop-types";
+import THEME from "../theme";
 
 export const ButtonGroup = styled("div")`
   margin: auto;
@@ -32,7 +33,7 @@ const buttonReset = css`
 
 const TextButtonContainer = elementType => styled(elementType)`
 ${buttonReset}
-color: ${props => props.buttonColor || "darkblue"};
+color: ${props => props.buttonColor || THEME.button.baseColor};
 font-size: ${props => props.size || "13px"};
 :hover {
   color: black;
@@ -41,7 +42,7 @@ font-size: ${props => props.size || "13px"};
 
 const OutlineButtonContainer = elementType => styled(elementType)`
 ${buttonReset}
-color: ${props => props.buttonColor || "darkblue"};
+color: ${props => props.buttonColor || THEME.button.baseColor};
 border: 1px solid darkgray;
 font-size: ${props => props.size || "13px"};
 
@@ -53,11 +54,12 @@ font-size: ${props => props.size || "13px"};
 const ContainedButtonContainer = elementType => styled(elementType)`
   ${buttonReset}
   color: white;
-  background-color: ${props => props.buttonColor || "blue"};
+  background-color: ${props => props.buttonColor || THEME.button.baseColor};
   font-size: ${props => props.size || "13px"};
 
   :hover {
-    background-color: ${props => props.buttonHoverColor || "darkblue"};
+    background-color: ${props =>
+      props.buttonHoverColor || THEME.button.hoverColor};
   }
 `;
 

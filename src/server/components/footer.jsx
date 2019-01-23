@@ -1,16 +1,8 @@
 /* global IODIDE_PUBLIC */
 import React from "react";
 import styled from "react-emotion";
-import { css } from "emotion";
-import { sharedProperties } from "../style/base";
 
 const FooterContainer = styled("footer")`
-  width: ${sharedProperties.pageWidth}px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  justify-items: center;
-  align-items: center;
   padding-top: 15px;
   padding-bottom: 15px;
   font-size: 0.815rem;
@@ -19,45 +11,10 @@ const FooterContainer = styled("footer")`
   color: gray;
 `;
 
-const LogoContainer = styled("div")`
-  transform: scale(${props => props.scale || 0.8});
-  color: ${props => props.color};
-  font-weight: 300;
-  font-size: 40px;
-  font-family: monospace;
-  border: 2px solid ${props => props.color};
-  border-radius: 5px;
-  padding-left: 14px;
-  padding-top: 4px;
-  padding-bottom: 2px;
-`;
-
-const innerLogoStyle = css`
-  transform: scale(0.75, 1);
-  height: inherit;
-  width: inherit;
-  text-align: center;
-
-  span {
-    font-size: 0.9em;
-    display: inline-block;
-    position: relative;
-    top: -9px;
-    left: -3px;
-  }
-`;
-
-const Logo = () => (
-  <LogoContainer color="grey">
-    <div className={innerLogoStyle}>
-      I<span>&#x207B;</span>
-    </div>
-  </LogoContainer>
-);
-
 const FooterDiv = styled("div")`
   text-align: left;
   padding: 0px;
+  width: 100%;
   ul {
     padding-inline-start: 0px;
   }
@@ -67,15 +24,32 @@ const FooterDiv = styled("div")`
   }
 `;
 
-export default () => (
-  <FooterContainer>
+export default ({ showIcon = true }) => (
+  <FooterContainer showIcon={showIcon}>
     <FooterDiv>
       <p>
         iodide is brought to you by <a href="https://mozilla.org">Mozilla</a>.
       </p>
+      {IODIDE_PUBLIC && (
+        <p>
+          Content available under the terms of the&nbsp;
+          <a
+            href="https://creativecommons.org/licenses/by-sa/3.0/deed.en"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Creative Commons Attribution-ShareAlike 3.0 Unported license
+          </a>
+          .
+        </p>
+      )}
       {// only display terms of service on an official mozilla installation
       IODIDE_PUBLIC && (
         <ul>
+          <li>Extremely Alpha Software</li>
+          <li>
+            <a href="https://github.com/iodide-project/iodide">Contribute</a>
+          </li>
           <li>
             <a href="https://www.mozilla.org/about/legal/terms/mozilla">
               Terms
@@ -93,26 +67,6 @@ export default () => (
       )}
       <p>
         <small>© 2018 Mozilla and other contributors</small>.
-      </p>
-    </FooterDiv>
-    <Logo />
-    <FooterDiv>
-      {IODIDE_PUBLIC && (
-        <p>
-          Content available under the terms of the&nbsp;
-          <a
-            href="https://creativecommons.org/licenses/by-sa/3.0/deed.en"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Creative Commons Attribution-ShareAlike 3.0 Unported license
-          </a>
-          .
-        </p>
-      )}
-      <p>
-        Extremely alpha software -{" "}
-        <a href="https://github.com/iodide-project/iodide">contribute</a>.
       </p>
     </FooterDiv>
   </FooterContainer>

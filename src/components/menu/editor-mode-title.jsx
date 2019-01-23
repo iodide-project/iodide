@@ -1,57 +1,70 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "react-emotion";
 import Helmet from "react-helmet";
 
 import { connect } from "react-redux";
 
-import tasks from "../../actions/task-definitions";
+import { changePageTitle } from "../../actions/actions";
+
+const TitleContainer = styled("div")``;
+
+const InputElement = styled("input")`
+  font-family: "Open Sans";
+  font-size: 14px;
+  border: none;
+  outline: none;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  color: ${props => props.titleColor};
+  background-color: transparent;
+
+  :focus {
+    font-size: 20px;
+  }
+`;
 
 export class TitleUnconnected extends React.Component {
   static propTypes = {
-    title: PropTypes.string,
-    textColor: PropTypes.string,
-    hoverColor: PropTypes.string
+    notebookTitle: PropTypes.string,
+    pageTitle: PropTypes.string,
+    titleColor: PropTypes.string,
+    changePageTitle: PropTypes.func
   };
-  constructor(props) {
-    super(props);
-    this.getTitle = this.getTitle.bind(this);
-  }
-
-  getTitle() {
-    return `${this.props.title || "New Notebook"} - Iodide`;
-  }
 
   render() {
     const elem = (
-      <div className="title-field">
-        <div
-          className={`title-field-contents ${
-            this.props.additionalContainerClasses
-          }`}
-        >
-          <Helmet title={this.getTitle()} />
-
-          <input
-            className={`page-title ${this.props.titleInputClasses}`}
-            value={this.props.title || ""}
-            placeholder="new notebook"
-            onChange={evt => {
-              tasks.changeTitle.callback(evt.target.value);
-            }}
-          />
-        </div>
-      </div>
+      <TitleContainer>
+        <Helmet title={this.props.pageTitle} />
+        <InputElement
+          titleColor={this.props.titleColor}
+          value={this.props.notebookTitle}
+          placeholder="new notebook"
+          onChange={evt => {
+            this.props.changePageTitle(evt.target.value);
+          }}
+        />
+      </TitleContainer>
     );
     return elem;
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   return {
-    title: state.title,
-    additionalContainerClasses: "",
-    titleInputClasses: state.title === undefined ? "unrendered-title" : ""
+    notebookTitle: state.title || "",
+    pageTitle: `${state.title || "New Notebook"} - Iodide`,
+    titleColor: state.title === undefined ? "lightgray" : "white"
   };
 }
 
-export default connect(mapStateToProps)(TitleUnconnected);
+export function mapDispatchToProps(dispatch) {
+  return {
+    changePageTitle: title => dispatch(changePageTitle(title))
+  };
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TitleUnconnected);

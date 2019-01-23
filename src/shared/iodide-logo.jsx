@@ -1,17 +1,25 @@
 import React from "react";
 import { css } from "emotion";
+import styled from "react-emotion";
+import THEME from "./theme";
+
+const IodideLogoContainer = styled("h2")`
+  margin: 0;
+  margin-right: ${THEME.header.defaultSpacing};
+  font-family: "Zilla Slab", serif;
+  font-size: 30px;
+  font-weight: 300;
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+`;
 
 export default class IodideLogo extends React.Component {
   render() {
     return (
-      <h2
-        className={css`
-          margin: 0;
-          font-family: "Zilla Slab", serif;
-          font-size: 30px;
-          font-weight: 300;
-        `}
-      >
+      <IodideLogoContainer>
         <a
           href={this.props.backLink}
           rel="noopener noreferrer"
@@ -23,7 +31,7 @@ export default class IodideLogo extends React.Component {
         >
           Iodide
         </a>
-      </h2>
+      </IodideLogoContainer>
     );
   }
 }

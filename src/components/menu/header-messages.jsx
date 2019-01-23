@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "react-emotion";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import LoginModal from "../../shared/login-modal";
@@ -13,6 +14,28 @@ import {
   loadAutosave,
   login
 } from "../../actions/actions";
+
+const HeaderMessageContainer = styled("div")`
+  background-color: lightyellow;
+  padding: 5px;
+  border-bottom: darkgrey solid 1px;
+
+  a {
+    color: #0366d6;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  a:active,
+  a:hover {
+    outline-width: 0;
+  }
+`;
 
 export class HeaderMessagesUnconnected extends React.Component {
   static propTypes = {
@@ -51,7 +74,7 @@ export class HeaderMessagesUnconnected extends React.Component {
     switch (this.props.message) {
       case "HAS_PREVIOUS_AUTOSAVE":
         content = (
-          <span>
+          <React.Fragment>
             {this.props.connectionModeIsServer
               ? "You have made changes to this notebook that are only saved locally."
               : "Modifications to notebook detected in browser's local storage."}
@@ -59,35 +82,30 @@ export class HeaderMessagesUnconnected extends React.Component {
             <a onClick={this.props.loadAutosave}>Restore</a>
             &nbsp;or&nbsp;
             <a onClick={this.props.discardAutosave}>discard</a>.
-          </span>
+          </React.Fragment>
         );
         break;
       case "STANDALONE_MODE":
-        content = (
-          <span>
-            {
-              "You're viewing this notebook in standalone mode. Changes will be cached in your browser's local storage, but will not be otherwise persisted."
-            }
-          </span>
-        );
+        content =
+          "You're viewing this notebook in standalone mode. Changes will be cached in your browser's local storage, but will not be otherwise persisted.";
         break;
       case "NEED_TO_LOGIN":
         content = (
-          <span>
+          <React.Fragment>
             You can modify and experiment with this notebook freely. To save to
             this server, you need to <a onClick={this.showLoginModal}>login</a>.
-          </span>
+          </React.Fragment>
         );
         break;
       case "NEED_TO_MAKE_COPY":
         content = (
-          <span>
+          <React.Fragment>
             This notebook is owned by another user. {}
             <a onClick={() => this.props.makeCopy(this.props.revisionId)}>
               Make a copy to your account
             </a>
             .
-          </span>
+          </React.Fragment>
         );
         break;
       default:
@@ -95,14 +113,14 @@ export class HeaderMessagesUnconnected extends React.Component {
     }
 
     return (
-      <div className="notebook-header-messages-container">
+      <HeaderMessageContainer>
         {content}
         <LoginModal
           visible={this.state.showLoginModal}
           onClose={this.hideLoginModal}
           login={this.props.login}
         />
-      </div>
+      </HeaderMessageContainer>
     );
   }
 }

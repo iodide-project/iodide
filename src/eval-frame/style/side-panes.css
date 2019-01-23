@@ -110,14 +110,6 @@ div.history-time-since {
   display: inline-block;
 }
 
-div.no-history {
-  font-size: 20px;
-  font-weight: bold;
-  color: lightgray;
-  margin-top: 60px;
-  margin-left: 30px;
-}
-
 div.side-pane {
   z-index: 200;
   position: fixed;

@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import KeyboardShortcutRep from "./keyboard-shortcut-rep";
+import HelpModalContent from "./help-modal-content";
 
 export default class KeyboardShortcutList extends React.Component {
   static propTypes = {
@@ -19,12 +20,12 @@ export default class KeyboardShortcutList extends React.Component {
       });
 
     return (
-      <div className="help-modal-contents">
+      <HelpModalContent>
         <h2>Keyboard Shortcuts</h2>
         <table className="keyboard-shortcuts-global">
           <tbody>{globalKeys}</tbody>
         </table>
-      </div>
+      </HelpModalContent>
     );
   }
 }
