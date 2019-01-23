@@ -17,44 +17,6 @@ import { postMessageToEditor } from "../port-to-editor";
 const MD = MarkdownIt({ html: true });
 MD.use(MarkdownItKatex).use(MarkdownItAnchor);
 
-// NB: this is a POC, and should be made better than this.
-// takeOverConsole needs a dispatch. This can be done outside of actions,
-// but I guess I'll leave it here for now. Make sure to delete this note
-// if this PR goes somewhere.
-let takeOver = false;
-/* eslint-disable */
-function takeOverConsole(dispatch) {
-  if (takeOver) return
-  if (!takeOver) takeOver = true
-  const console = window.console;
-  if (!console) return;
-  function intercept(method) {
-    const original = console[method];
-    console[method] = function() {
-      dispatch(appendToEvalHistory(
-        null,
-        method,
-        [...arguments],
-        {
-          historyType: "CONSOLE_MESSAGE",
-          level: method
-        }
-      ))
-      if (original.apply) {
-        // Do this for normal browsers
-        original.apply(console, arguments);
-      } else {
-        // Do this for IE
-        const message = Array.prototype.slice.apply(arguments).join(" ");
-        original(message);
-      }
-    };
-  }
-  const methods = ["log", "warn", "error"];
-  for (let i = 0; i < methods.length; i++) intercept(methods[i]);
-}
-/* eslint-enable */
-
 const CodeMirror = require('codemirror') // eslint-disable-line
 
 const initialVariables = new Set(Object.keys(window)); // gives all global variables
@@ -132,6 +94,43 @@ export function appendToEvalHistory(
     lastRan: Date.now()
   };
 }
+
+function consoleMessage(level, args) {
+  return appendToEvalHistory(null, level, args, {
+    historyType: "CONSOLE_MESSAGE",
+    level
+  });
+}
+
+// NB: this is a POC, and should be made better than this.
+// takeOverConsole needs a dispatch. This can be done outside of actions,
+// but I guess I'll leave it here for now. Make sure to delete this note
+// if this PR goes somewhere.
+let takeOver = false;
+/* eslint-disable */
+function takeOverConsole(dispatch) {
+  if (takeOver) return
+  if (!takeOver) takeOver = true
+  const console = window.console;
+  if (!console) return;
+  function intercept(method) {
+    const original = console[method];
+    console[method] = function() {
+      dispatch(consoleMessage(method, [...arguments]))
+      if (original.apply) {
+        // Do this for normal browsers
+        original.apply(console, arguments);
+      } else {
+        // Do this for IE
+        const message = Array.prototype.slice.apply(arguments).join(" ");
+        original(message);
+      }
+    };
+  }
+  const methods = ["log", "warn", "error"];
+  for (let i = 0; i < methods.length; i++) intercept(methods[i]);
+}
+/* eslint-enable */
 
 export function updateValueInHistory(historyId, value) {
   EVALUATION_RESULTS[historyId] = value;
