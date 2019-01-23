@@ -126,7 +126,6 @@ export function mapStateToProps(state, ownProps) {
       }
     }
   }
-  console.info(levelColor);
   return {
     content: ownProps.historyItem.content,
     cellId: ownProps.historyItem.cellId,
