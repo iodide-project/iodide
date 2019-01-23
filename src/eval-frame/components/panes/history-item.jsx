@@ -16,7 +16,14 @@ const ConsoleMessage = styled("div")`
   padding-left: 10px;
   border-bottom: 0.5px solid gainsboro;
   display: flex;
+  align-items: baseline;
   background-color: ${props => props.levelColor};
+
+  div {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
   li div {
     background-color: ${props => props.levelColor};
   }
@@ -59,7 +66,14 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_MESSAGE":
         return (
           <ConsoleMessage levelColor={this.props.levelColor}>
-            <ValueRenderer render valueToRender={this.props.valueToRender} />
+            {/* {this.props.valueToRender} <ValueRenderer render valueToRender={this.props.valueToRender} /> */}
+            {this.props.valueToRender.map(v => (
+              <ValueRenderer
+                key={`out-${Math.random()}-${v.toString()}`}
+                render
+                valueToRender={v}
+              />
+            ))}
           </ConsoleMessage>
         );
       case "CONSOLE_EVAL":
