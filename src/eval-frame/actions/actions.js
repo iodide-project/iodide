@@ -17,6 +17,10 @@ import { postMessageToEditor } from "../port-to-editor";
 const MD = MarkdownIt({ html: true });
 MD.use(MarkdownItKatex).use(MarkdownItAnchor);
 
+// NB: this is a POC, and should be made better than this.
+// takeOverConsole needs a dispatch. This can be done outside of actions,
+// but I guess I'll leave it here for now. Make sure to delete this note
+// if this PR goes somewhere.
 let takeOver = false;
 /* eslint-disable */
 function takeOverConsole(dispatch) {

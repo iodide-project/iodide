@@ -15,6 +15,7 @@ const ConsoleMessage = styled("div")`
   padding: 5px;
   padding-left: 10px;
   border-bottom: 0.5px solid gainsboro;
+  display: flex;
 `;
 
 export class HistoryItemUnconnected extends React.Component {
