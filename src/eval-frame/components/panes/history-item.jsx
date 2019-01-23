@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import styled from "react-emotion";
 
 import Log from "@material-ui/icons/InfoOutlined";
 import Warning from "@material-ui/icons/WarningOutlined";
@@ -10,34 +9,11 @@ import Error from "@material-ui/icons/ErrorOutlined";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import { ValueRenderer } from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
+import ConsoleMessage from "./console-message";
 
 import PaneContentButton from "./pane-content-button";
 import { postMessageToEditor } from "../../port-to-editor";
 import { EVALUATION_RESULTS } from "../../actions/actions";
-
-const ConsoleMessageIcon = styled("div")`
-  display: flex;
-  align-items: center;
-  align-self: center;
-  min-width: 17px;
-`;
-
-const ConsoleMessage = styled("div")`
-  padding: 5px;
-  padding-left: 10px;
-  border-bottom: 0.5px solid gainsboro;
-  display: flex;
-  align-items: baseline;
-  background-color: ${props => props.levelColor};
-
-  div {
-    padding-right: 5px;
-  }
-
-  li div {
-    background-color: ${props => props.levelColor};
-  }
-`;
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
@@ -75,8 +51,10 @@ export class HistoryItemUnconnected extends React.Component {
         break;
       case "CONSOLE_MESSAGE":
         return (
-          <ConsoleMessage levelColor={this.props.levelColor}>
-            <ConsoleMessageIcon>{this.props.levelIcon}</ConsoleMessageIcon>
+          <ConsoleMessage
+            levelColor={this.props.levelColor}
+            icon={this.props.levelIcon}
+          >
             {this.props.valueToRender.map(v => (
               <ValueRenderer
                 key={`out-${Math.random()}-${v.toString()}`}
