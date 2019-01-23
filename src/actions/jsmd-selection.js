@@ -1,5 +1,11 @@
-import { getChunkContainingLine } from "./actions";
 import { jsmdParser } from "./jsmd-parser";
+
+export function getChunkContainingLine(jsmdChunks, line) {
+  const [activeChunk] = jsmdChunks.filter(
+    c => c.startLine <= line && line <= c.endLine
+  );
+  return activeChunk;
+}
 
 export function getAllSelections(doc) {
   const selections = doc.getSelections();

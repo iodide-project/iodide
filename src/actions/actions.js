@@ -18,6 +18,7 @@ import { fetchWithCSRFTokenAndJSONContent } from "./../shared/fetch-with-csrf-to
 import { jsmdParser } from "./jsmd-parser";
 import {
   getAllSelections,
+  getChunkContainingLine,
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet
 } from "./jsmd-selection";
@@ -168,13 +169,6 @@ export function addLanguage(languageDefinition) {
       languageDefinition
     });
   };
-}
-
-export function getChunkContainingLine(jsmdChunks, line) {
-  const [activeChunk] = jsmdChunks.filter(
-    c => c.startLine <= line && line <= c.endLine
-  );
-  return activeChunk;
 }
 
 export function evaluateText() {
