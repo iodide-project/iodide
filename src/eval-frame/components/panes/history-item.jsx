@@ -16,6 +16,10 @@ const ConsoleMessage = styled("div")`
   padding-left: 10px;
   border-bottom: 0.5px solid gainsboro;
   display: flex;
+  background-color: ${props => props.levelColor};
+  li div {
+    background-color: ${props => props.levelColor};
+  }
 `;
 
 export class HistoryItemUnconnected extends React.Component {
@@ -24,7 +28,8 @@ export class HistoryItemUnconnected extends React.Component {
     cellId: PropTypes.number,
     historyId: PropTypes.number.isRequired,
     historyType: PropTypes.string.isRequired,
-    lastRan: PropTypes.number.isRequired
+    lastRan: PropTypes.number.isRequired,
+    levelColor: PropTypes.string
   };
   constructor(props) {
     super(props);
@@ -53,7 +58,7 @@ export class HistoryItemUnconnected extends React.Component {
         break;
       case "CONSOLE_MESSAGE":
         return (
-          <ConsoleMessage level="log">
+          <ConsoleMessage levelColor={this.props.levelColor}>
             <ValueRenderer render valueToRender={this.props.valueToRender} />
           </ConsoleMessage>
         );
@@ -108,13 +113,28 @@ export class HistoryItemUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state, ownProps) {
+  let levelColor;
+  if (ownProps.historyItem) {
+    const level = ownProps.historyItem.content;
+    if (level !== undefined) {
+      if (level === "log") {
+        levelColor = "white";
+      } else if (level === "warn") {
+        levelColor = "rgb(255,251,214)";
+      } else if (level === "error") {
+        levelColor = "rgb(253, 242, 245)";
+      }
+    }
+  }
+  console.info(levelColor);
   return {
     content: ownProps.historyItem.content,
     cellId: ownProps.historyItem.cellId,
     historyId: ownProps.historyItem.historyId,
     historyType: ownProps.historyItem.historyType,
     lastRan: ownProps.historyItem.lastRan,
-    valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId]
+    valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId],
+    levelColor
   };
 }
 

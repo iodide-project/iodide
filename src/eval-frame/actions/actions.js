@@ -34,9 +34,10 @@ function takeOverConsole(dispatch) {
       dispatch(appendToEvalHistory(
         null,
         method,
-        arguments,
+        [...arguments],
         {
-          historyType: "CONSOLE_MESSAGE"
+          historyType: "CONSOLE_MESSAGE",
+          level: method
         }
       ))
       if (original.apply) {
