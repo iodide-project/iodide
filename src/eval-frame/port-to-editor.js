@@ -1,6 +1,6 @@
 /* global IODIDE_EDITOR_ORIGIN  */
 
-import { store } from "./store";
+// import { store } from "./store";
 import {
   evaluateText
   // updateUserVariables
@@ -10,6 +10,7 @@ import {
   onParentContextFileFetchSuccess,
   onParentContextFileFetchError
 } from "./tools/fetch-file-from-parent-context";
+import messagePasser from "./redux-to-port-message-passer";
 
 const mc = new MessageChannel();
 
@@ -18,6 +19,8 @@ window.parent.postMessage("EVAL_FRAME_READY_MESSAGE", IODIDE_EDITOR_ORIGIN, [
 ]);
 
 const portToEditor = mc.port1;
+
+messagePasser.addPostMessage(portToEditor.postMessage);
 
 export function postMessageToEditor(messageType, message) {
   portToEditor.postMessage({ messageType, message });
@@ -29,7 +32,10 @@ function receiveMessage(event) {
     const { messageType, message } = event.data;
     switch (messageType) {
       case "STATE_UPDATE_FROM_EDITOR": {
-        store.dispatch({ type: "REPLACE_STATE", state: message });
+        messagePasser.dispatchToRedux({
+          type: "REPLACE_STATE",
+          state: message
+        });
         break;
       }
       case "REQUESTED_FILE_SUCCESS": {
@@ -51,7 +57,7 @@ function receiveMessage(event) {
       }
       case "REDUX_ACTION":
         if (message.type === "TRIGGER_TEXT_EVAL_IN_FRAME") {
-          store.dispatch(
+          messagePasser.dispatchToRedux(
             evaluateText(
               message.evalText,
               message.evalType,
