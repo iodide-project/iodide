@@ -127,7 +127,7 @@ function takeOverConsole(dispatch) {
       }
     };
   }
-  const methods = ["log", "warn", "error"];
+  const methods = ["info","log", "warn", "error"];
   for (let i = 0; i < methods.length; i++) intercept(methods[i]);
 }
 /* eslint-enable */
