@@ -15,6 +15,13 @@ import PaneContentButton from "./pane-content-button";
 import { postMessageToEditor } from "../../port-to-editor";
 import { EVALUATION_RESULTS } from "../../actions/actions";
 
+const ConsoleMessageIcon = styled("div")`
+  display: flex;
+  align-items: center;
+  align-self: center;
+  min-width: 17px;
+`;
+
 const ConsoleMessage = styled("div")`
   padding: 5px;
   padding-left: 10px;
@@ -24,7 +31,6 @@ const ConsoleMessage = styled("div")`
   background-color: ${props => props.levelColor};
 
   div {
-    padding-left: 5px;
     padding-right: 5px;
   }
 
@@ -70,7 +76,7 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_MESSAGE":
         return (
           <ConsoleMessage levelColor={this.props.levelColor}>
-            {this.props.levelIcon}
+            <ConsoleMessageIcon>{this.props.levelIcon}</ConsoleMessageIcon>
             {this.props.valueToRender.map(v => (
               <ValueRenderer
                 key={`out-${Math.random()}-${v.toString()}`}
@@ -137,6 +143,9 @@ export function mapStateToProps(state, ownProps) {
     const level = ownProps.historyItem.content;
     if (level !== undefined) {
       if (level === "log") {
+        levelColor = "white";
+        levelIcon = undefined;
+      } else if (level === "info") {
         levelColor = "white";
         levelIcon = (
           <Log
