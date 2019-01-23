@@ -17,8 +17,11 @@ import { postMessageToEditor } from "../port-to-editor";
 const MD = MarkdownIt({ html: true });
 MD.use(MarkdownItKatex).use(MarkdownItAnchor);
 
+let takeOver = false;
 /* eslint-disable */
 function takeOverConsole(dispatch) {
+  if (takeOver) return
+  if (!takeOver) takeOver = true
   const console = window.console;
   if (!console) return;
   function intercept(method) {
@@ -29,7 +32,7 @@ function takeOverConsole(dispatch) {
         method,
         arguments,
         {
-          historyType: "CONSOLE_EVAL"
+          historyType: "CONSOLE_MESSAGE"
         }
       ))
       if (original.apply) {

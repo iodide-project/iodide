@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import styled from "react-emotion";
 
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import { ValueRenderer } from "../../../components/reps/value-renderer";
@@ -9,6 +10,12 @@ import PreformattedTextItemsHandler from "../../../components/reps/preformatted-
 import PaneContentButton from "./pane-content-button";
 import { postMessageToEditor } from "../../port-to-editor";
 import { EVALUATION_RESULTS } from "../../actions/actions";
+
+const ConsoleMessage = styled("div")`
+  padding: 5px;
+  padding-left: 10px;
+  border-bottom: 0.5px solid gainsboro;
+`;
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
@@ -43,6 +50,12 @@ export class HistoryItemUnconnected extends React.Component {
       case "CELL_EVAL_INFO":
         output = this.props.valueToRender;
         break;
+      case "CONSOLE_MESSAGE":
+        return (
+          <ConsoleMessage level="log">
+            <ValueRenderer render valueToRender={this.props.valueToRender} />
+          </ConsoleMessage>
+        );
       case "CONSOLE_EVAL":
         output = (
           <ValueRenderer render valueToRender={this.props.valueToRender} />

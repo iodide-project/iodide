@@ -28,7 +28,8 @@ export const historySchema = {
         "SAVED_REP",
         "CONSOLE_EVAL",
         "SNIPPET_EVAL",
-        "FETCH_CELL_INFO"
+        "FETCH_CELL_INFO",
+        "CONSOLE_MESSAGE"
       ]
     },
     lastRan: { type: "integer" },
