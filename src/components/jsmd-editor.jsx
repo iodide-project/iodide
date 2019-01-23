@@ -6,19 +6,29 @@ import deepEqual from "deep-equal";
 
 import { Controlled as ReactCodeMirror } from "react-codemirror2";
 
+import CodeMirror from "codemirror";
+
 import "codemirror/addon/edit/matchbrackets";
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/display/autorefresh";
 import "codemirror/addon/comment/comment";
 import "codemirror/addon/hint/show-hint";
 import "codemirror/addon/hint/javascript-hint";
+import "codemirror/keymap/sublime";
 
-import "../codemirror-keymap-sublime";
 import "./codemirror-fetch-mode";
 import "./codemirror-jsmd-mode";
 
 import * as actions from "../actions/actions";
 import { postMessageToEvalFrame } from "../port-to-eval-frame";
+
+// unmap keys that conflict with our keys
+// mac
+delete CodeMirror.keyMap.sublime["Cmd-Enter"];
+delete CodeMirror.keyMap.sublime["Shift-Cmd-Enter"];
+// pc/linux
+delete CodeMirror.keyMap.sublime["Ctrl-Enter"];
+delete CodeMirror.keyMap.sublime["Shift-Ctrl-Enter"];
 
 class JsmdEditorUnconnected extends React.Component {
   static propTypes = {
