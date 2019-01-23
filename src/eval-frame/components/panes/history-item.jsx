@@ -3,6 +3,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
 
+import Log from "@material-ui/icons/InfoOutlined";
+import Warning from "@material-ui/icons/WarningOutlined";
+import Error from "@material-ui/icons/ErrorOutlined";
+
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import { ValueRenderer } from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
@@ -66,7 +70,7 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_MESSAGE":
         return (
           <ConsoleMessage levelColor={this.props.levelColor}>
-            {/* {this.props.valueToRender} <ValueRenderer render valueToRender={this.props.valueToRender} /> */}
+            {this.props.levelIcon}
             {this.props.valueToRender.map(v => (
               <ValueRenderer
                 key={`out-${Math.random()}-${v.toString()}`}
@@ -128,15 +132,46 @@ export class HistoryItemUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   let levelColor;
+  let levelIcon;
   if (ownProps.historyItem) {
     const level = ownProps.historyItem.content;
     if (level !== undefined) {
       if (level === "log") {
         levelColor = "white";
+        levelIcon = (
+          <Log
+            style={{
+              paddingRight: "3px",
+              alignSelf: "center",
+              color: "rgb(74,74,79)"
+            }}
+            fontSize="inherit"
+          />
+        );
       } else if (level === "warn") {
         levelColor = "rgb(255,251,214)";
+        levelIcon = (
+          <Warning
+            style={{
+              paddingRight: "3px",
+              alignSelf: "center",
+              color: "rgb(190,155,0)"
+            }}
+            fontSize="inherit"
+          />
+        );
       } else if (level === "error") {
         levelColor = "rgb(253, 242, 245)";
+        levelIcon = (
+          <Error
+            style={{
+              paddingRight: "3px",
+              alignSelf: "center",
+              color: "rgb(215,0,34)"
+            }}
+            fontSize="inherit"
+          />
+        );
       }
     }
   }
@@ -147,7 +182,8 @@ export function mapStateToProps(state, ownProps) {
     historyType: ownProps.historyItem.historyType,
     lastRan: ownProps.historyItem.lastRan,
     valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId],
-    levelColor
+    levelColor,
+    levelIcon
   };
 }
 
