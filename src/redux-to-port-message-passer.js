@@ -1,3 +1,7 @@
+// this file is used in both the editor and eval frame
+// IT IS NEVER ALLOWED TO IMPORT ANY OTHER FILES FROM IODIDE
+// or it might break it's singleton-ness on each side of the app
+
 class MessageQueueManager {
   constructor() {
     this.msgFn = null;
@@ -33,7 +37,7 @@ class MessagePasser {
     this.portManager.addMsgFn(postMessage);
   }
   postMessage(msg) {
-    this.postMessage.sendMsg(msg);
+    this.portManager.sendMsg(msg);
   }
 
   addDispatch(dispatch) {
@@ -47,5 +51,5 @@ class MessagePasser {
 
 // export default new MessagePasser();
 const messagePasser = new MessagePasser();
-// window.messagePasser = messagePasser;
+window.messagePasser = messagePasser;
 export default messagePasser;

@@ -1,30 +1,42 @@
 /* global IODIDE_EDITOR_ORIGIN  */
 
-// import { store } from "./store";
-import {
-  evaluateText
-  // updateUserVariables
-} from "./actions/actions";
+import { evaluateText } from "./actions/actions";
 import { getCompletions } from "./tools/notebook-utils";
 import {
   onParentContextFileFetchSuccess,
   onParentContextFileFetchError
 } from "./tools/fetch-file-from-parent-context";
-import messagePasser from "./redux-to-port-message-passer";
+import messagePasser from "../redux-to-port-message-passer";
 
 const mc = new MessageChannel();
-
-window.parent.postMessage("EVAL_FRAME_READY_MESSAGE", IODIDE_EDITOR_ORIGIN, [
-  mc.port2
-]);
-
 const portToEditor = mc.port1;
 
-messagePasser.addPostMessage(portToEditor.postMessage);
+let editorReady = false;
+const listenForEditorReady = messageEvent => {
+  if (messageEvent.data === "EDITOR_READY") {
+    editorReady = true;
+    window.removeEventListener("message", listenForEditorReady, false);
+  }
+};
+window.addEventListener("message", listenForEditorReady, false);
+
+function connectToEditor() {
+  if (!editorReady) {
+    setTimeout(connectToEditor, 50);
+    window.parent.postMessage("EVAL_FRAME_READY", IODIDE_EDITOR_ORIGIN);
+  } else {
+    window.parent.postMessage("EVAL_FRAME_SENDING_PORT", IODIDE_EDITOR_ORIGIN, [
+      mc.port2
+    ]);
+  }
+}
+connectToEditor();
 
 export function postMessageToEditor(messageType, message) {
   portToEditor.postMessage({ messageType, message });
 }
+
+messagePasser.addPostMessage(postMessageToEditor);
 
 function receiveMessage(event) {
   const trustedMessage = true;
