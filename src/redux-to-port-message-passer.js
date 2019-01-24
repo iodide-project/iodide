@@ -11,18 +11,18 @@ class MessageQueueManager {
   addMsgFn(msgFn) {
     this.msgFn = msgFn;
     if (this.msgQueue) {
-      this.msgQueue.forEach(m => this.msgFn(m));
+      this.msgQueue.forEach(m => this.msgFn(...m));
       this.msgQueue = null;
     }
   }
 
-  sendMsg(msg) {
+  sendMsg(...msg) {
     if (this.msgFn) {
-      this.msgFn(msg);
+      this.msgFn(...msg);
     } else if (this.msgQueue) {
-      this.msgQueue.push(msg);
+      this.msgQueue.push([msg]);
     } else {
-      this.msgQueue = [msg];
+      this.msgQueue = [[msg]];
     }
   }
 }
@@ -35,17 +35,17 @@ class MessagePasser {
 
   addPostMessage(postMessage) {
     this.portManager.addMsgFn(postMessage);
+    // this.postMessage =
   }
-  postMessage(msg) {
-    this.portManager.sendMsg(msg);
-  }
-
   addDispatch(dispatch) {
     this.reduxManager.addMsgFn(dispatch);
   }
 
-  dispatchToRedux(action) {
-    this.reduxManager.sendMsg(action);
+  postMessage(...params) {
+    this.portManager.sendMsg(...params);
+  }
+  dispatchToRedux(...params) {
+    this.reduxManager.sendMsg(...params);
   }
 }
 
