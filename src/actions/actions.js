@@ -216,8 +216,10 @@ export function moveCursorToNextChunk() {
   };
 }
 
+export const nonRunnableChunkType = ["md", "css", "raw", ""];
+
 const chunkIsRunnable = chunk =>
-  !["md", "css", "raw", ""].includes(chunk.chunkType);
+  !nonRunnableChunkType.includes(chunk.chunkType);
 
 const chunkNotSkipped = chunk =>
   !(
@@ -225,19 +227,21 @@ const chunkNotSkipped = chunk =>
     chunk.evalFlags.includes("skiprunall")
   );
 
-export function evaluateNotebook() {
-  return (dispatch, getState) => {
+export function evaluateNotebookUsingQueue(evalQueueInstance) {
+  return () => (dispatch, getState) => {
     const { jsmdChunks, kernelState } = getState();
 
     if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
 
     jsmdChunks.forEach(chunk => {
       if (chunkIsRunnable(chunk) && chunkNotSkipped(chunk)) {
-        evalQueue.evaluate(chunk);
+        evalQueueInstance.evaluate(chunk);
       }
     });
   };
 }
+
+export const evaluateNotebook = evaluateNotebookUsingQueue(evalQueue);
 
 function getNotebookSaveRequestOptions(state, options = undefined) {
   const data = {

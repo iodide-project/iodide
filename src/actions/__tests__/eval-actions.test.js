@@ -1,23 +1,28 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { evaluateNotebook } from "../actions";
-import evalQueue from "../evaluation-queue";
+import { evaluateNotebookUsingQueue, nonRunnableChunkType } from "../actions";
 
-export const mockStore = configureMockStore([thunk]);
+const mockStore = configureMockStore([thunk]);
 
 describe("evaluateNotebook - correct evaluations", () => {
+  let evaluateNotebook;
+  let mockEvalQueue;
+
   let store;
   let testState;
+
   beforeEach(() => {
-    evalQueue.connectToRedux(null);
+    mockEvalQueue = { evaluate: jest.fn() };
+    evaluateNotebook = evaluateNotebookUsingQueue(mockEvalQueue);
+
     store = undefined;
     testState = {
       jsmdChunks: [
         {
           chunkContent: "var pi=3",
           chunkType: "anyChunkType",
-          chunkId: "chunkHash123",
+          chunkId: "chunkHashDefault",
           evalFlags: [],
           startLine: 5,
           endLine: 6
@@ -27,82 +32,76 @@ describe("evaluateNotebook - correct evaluations", () => {
     };
   });
 
-  it("does TRIGGER_TEXT_EVAL_IN_FRAME for chunk general chunk types", async () => {
+  it("calls evalQueueInstance.evaluate for general chunk types", async () => {
     store = mockStore(testState);
-    evalQueue.connectToRedux(store.dispatch);
-
     await store.dispatch(evaluateNotebook());
-    const actions = store.getActions();
-
-    expect(
-      actions.map(a => a.type).includes("TRIGGER_TEXT_EVAL_IN_FRAME")
-    ).toBe(true);
+    expect(mockEvalQueue.evaluate.mock.calls.length).toBe(1);
   });
 
-  // FIXME: this test doesn't work b/c the singlton-ness
-  // of the evalQueue causes some kind of problem.
-  // might need to rethink how the eval queue is instantiated
-  // or handed to the evaluateNotebook action creator, or who knows...
-  // but after the first test, TRIGGER_TEXT_EVAL_IN_FRAME never seems
-  // to be dispatched
+  it("calls evalQueueInstance.evaluate correct number of times", async () => {
+    testState.jsmdChunks = [
+      {
+        chunkContent: "var pi=3",
+        chunkType: "anyChunkType",
+        chunkId: "chunkHash-1",
+        evalFlags: [],
+        startLine: 5,
+        endLine: 6
+      },
+      {
+        chunkContent: "var pi=3",
+        chunkType: "anyChunkType",
+        chunkId: "chunkHash-2",
+        evalFlags: [],
+        startLine: 5,
+        endLine: 6
+      },
+      {
+        chunkContent: "var pi=3",
+        chunkType: "md" /* should be skipped */,
+        chunkId: "chunkHash-3",
+        evalFlags: [],
+        startLine: 5,
+        endLine: 6
+      }
+    ];
+    store = mockStore(testState);
 
-  // it("does TRIGGER_TEXT_EVAL_IN_FRAME correct number of times", async () => {
-  //   testState.jsmdChunks = [
-  //     {
-  //       chunkContent: "var pi=3",
-  //       chunkType: "anyChunkType",
-  //       chunkId: "chunkHash123",
-  //       evalFlags: [],
-  //       startLine: 5,
-  //       endLine: 6
-  //     },
-  //     {
-  //       chunkContent: "var pi=3",
-  //       chunkType: "md", // SHOULD BE SKIPPED
-  //       chunkId: "chunkHash123",
-  //       evalFlags: [],
-  //       startLine: 5,
-  //       endLine: 6
-  //     },
-  //     {
-  //       chunkContent: "var pi=3",
-  //       chunkType: "anyChunkType",
-  //       chunkId: "chunkHash123",
-  //       evalFlags: [],
-  //       startLine: 5,
-  //       endLine: 6
-  //     }
-  //   ];
-  //   store = mockStore(testState);
-  //   evalQueue.connectToRedux(store.dispatch);
+    await store.dispatch(evaluateNotebook());
 
-  //   await store.dispatch(evaluateNotebook());
-  //   const actions = store.getActions();
+    expect(mockEvalQueue.evaluate.mock.calls.length).toBe(2);
+  });
 
-  //   expect(
-  //     actions.filter(a => a.type === "TRIGGER_TEXT_EVAL_IN_FRAME").length
-  //   ).toBe(2);
-  // });
+  nonRunnableChunkType.forEach(chunkType => {
+    it(`doesn't call evalQueueInstance.evaluate for chunktype: ${chunkType}`, async () => {
+      testState.jsmdChunks[0].chunkType = chunkType;
+      store = mockStore(testState);
+      await store.dispatch(evaluateNotebook());
+      expect(mockEvalQueue.evaluate.mock.calls.length).toBe(0);
+    });
+  });
 
-  // it("doesn't TRIGGER_TEXT_EVAL_IN_FRAME if chunk has skipRunAll", async () => {
-  //   testState.jsmdChunks.evalFlags = ["skipRunAll"];
-  //   store = mockStore(testState);
-  //   evalQueue.connectToRedux(store.dispatch);
-
-  //   await store.dispatch(evaluateNotebook());
-  //   const actions = store.getActions();
-
-  //   expect(
-  //     actions.map(a => a.type).includes("TRIGGER_TEXT_EVAL_IN_FRAME")
-  //   ).toBe(false);
-  // });
+  ["skipRunAll", "skiprunall"].forEach(skipFlag => {
+    it(`doesn't call evalQueueInstance.evaluate if chunk has ${skipFlag}`, async () => {
+      testState.jsmdChunks[0].evalFlags = [skipFlag];
+      store = mockStore(testState);
+      await store.dispatch(evaluateNotebook());
+      expect(mockEvalQueue.evaluate.mock.calls.length).toBe(0);
+    });
+  });
 });
 
-describe("evaluateNotebook - setKernelState", () => {
+describe("evaluateNotebook - correct evaluations", () => {
+  let evaluateNotebook;
+  let mockEvalQueue;
+
   let store;
   let testState;
+
   beforeEach(() => {
-    evalQueue.connectToRedux(null);
+    mockEvalQueue = { evaluate: jest.fn() };
+    evaluateNotebook = evaluateNotebookUsingQueue(mockEvalQueue);
+
     store = undefined;
     testState = {
       jsmdChunks: [
@@ -121,7 +120,6 @@ describe("evaluateNotebook - setKernelState", () => {
 
   it("sets kernel state to busy if kernel is NOT busy", () => {
     store = mockStore(testState);
-    evalQueue.connectToRedux(store.dispatch);
 
     store.dispatch(evaluateNotebook());
     const actions = store.getActions();
@@ -135,7 +133,6 @@ describe("evaluateNotebook - setKernelState", () => {
   it("doesn't set kernel state if kernel is busy", () => {
     testState.kernelState = "KERNEL_BUSY";
     store = mockStore(testState);
-    evalQueue.connectToRedux(store.dispatch);
 
     store.dispatch(evaluateNotebook());
     const actions = store.getActions();

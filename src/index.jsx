@@ -35,6 +35,8 @@ import "./tools/initialize-dom";
 import { checkForAutosave, subscribeToAutoSave } from "./tools/autosave";
 import evalQueue from "./actions/evaluation-queue";
 
+evalQueue.connectToRedux(store.dispatch);
+
 initializeDefaultKeybindings();
 
 window.addEventListener("message", listenForEvalFramePortReady, false);
@@ -43,7 +45,6 @@ handleServerVariables(store);
 handleInitialJsmd(store);
 handleReportViewModeInitialization(store);
 checkForAutosave(store);
-evalQueue.connectToRedux(store.dispatch);
 
 render(
   <Provider store={store}>
