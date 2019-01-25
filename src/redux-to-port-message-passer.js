@@ -2,7 +2,7 @@
 // IT IS NEVER ALLOWED TO IMPORT ANY OTHER FILES FROM IODIDE
 // or it might break it's singleton-ness on each side of the app
 
-class MessageQueueManager {
+export class MessageQueueManager {
   constructor() {
     this.msgFn = null;
     this.msgQueue = null;
@@ -20,14 +20,14 @@ class MessageQueueManager {
     if (this.msgFn) {
       this.msgFn(...msg);
     } else if (this.msgQueue) {
-      this.msgQueue.push([msg]);
+      this.msgQueue.push(msg);
     } else {
-      this.msgQueue = [[msg]];
+      this.msgQueue = [msg];
     }
   }
 }
 
-class MessagePasser {
+export class MessagePasser {
   constructor() {
     this.reduxManager = new MessageQueueManager();
     this.portManager = new MessageQueueManager();
@@ -49,7 +49,5 @@ class MessagePasser {
   }
 }
 
-// export default new MessagePasser();
 const messagePasser = new MessagePasser();
-window.messagePasser = messagePasser;
 export default messagePasser;
