@@ -1,15 +1,13 @@
-{% extends "base.html" %}
-{% block content %}
-<div id="content">
-  Login Successful!
-</div>
+{% extends "base.html" %} {% block content %}
+<div id="content">Login Successful!</div>
 {{ user_info|json_script:"userData" }}
 <script type="text/javascript">
-  function switchWindow() {
-    window.opener.loginSuccess(JSON.parse(document.getElementById('userData').textContent));
+  window.onload = () => {
+    window.opener.loginSuccess(
+      JSON.parse(document.getElementById("userData").textContent)
+    );
     window.opener.focus();
-    window.close()
-  }
-  window.onload = switchWindow;
+    window.close();
+  };
 </script>
 {% endblock %}
