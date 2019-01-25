@@ -53,6 +53,7 @@
     "lz-string": "1.4.4",
     "markdown-it": "8.4.2",
     "markdown-it-anchor": "5.0.2",
+    "markdown-it-emoji": "1.4.0",
     "markdown-it-katex": "2.0.3",
     "mousetrap": "1.6.2",
     "numeral": "2.0.6",
