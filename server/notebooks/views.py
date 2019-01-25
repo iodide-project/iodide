@@ -1,11 +1,11 @@
 import urllib.parse
 
-from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import (get_object_or_404,
                               redirect,
                               render)
 from django.template.loader import get_template
+from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .models import Notebook, NotebookRevision
@@ -98,9 +98,11 @@ def notebook_revisions(request, pk):
     )
 
 
-@login_required
 @ensure_csrf_cookie
 def new_notebook_view(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('try-it'))
+
     # create a new notebook and redirect to its view
     new_notebook_content_template = get_template('new_notebook_content.jsmd')
     with transaction.atomic():
