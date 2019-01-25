@@ -6,9 +6,17 @@ export class EvaluationQueue {
     this.queueSize = 0;
     this.evaluationResolvers = {};
     this.idGenerator = new IdFactory();
+    this.reduxDispatch = null;
   }
 
-  evaluate(chunk, dispatch) {
+  connectToRedux(dispatch) {
+    this.reduxDispatch = dispatch;
+  }
+
+  evaluate(chunk) {
+    if (!this.reduxDispatch) {
+      throw new Error("must connect to redux before evaluating");
+    }
     const evalId = this.idGenerator.nextId();
     const actionContent = {
       evalText: chunk.chunkContent,
@@ -32,7 +40,7 @@ export class EvaluationQueue {
 
     this.queue = this.queue
       .then(() => {
-        dispatch(evalAction);
+        this.reduxDispatch(evalAction);
       })
       .then(() => evaluationResolver);
     return this;

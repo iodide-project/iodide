@@ -216,13 +216,24 @@ export function moveCursorToNextChunk() {
   };
 }
 
+const chunkIsRunnable = chunk =>
+  !["md", "css", "raw", ""].includes(chunk.chunkType);
+
+const chunkNotSkipped = chunk =>
+  !(
+    chunk.evalFlags.includes("skipRunAll") ||
+    chunk.evalFlags.includes("skiprunall")
+  );
+
 export function evaluateNotebook() {
   return (dispatch, getState) => {
     const { jsmdChunks, kernelState } = getState();
+
     if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
+
     jsmdChunks.forEach(chunk => {
-      if (!["md", "css", "raw", ""].includes(chunk.chunkType)) {
-        evalQueue.evaluate(chunk, dispatch);
+      if (chunkIsRunnable(chunk) && chunkNotSkipped(chunk)) {
+        evalQueue.evaluate(chunk);
       }
     });
   };

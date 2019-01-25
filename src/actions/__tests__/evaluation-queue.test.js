@@ -1,17 +1,23 @@
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
+
 import { EvaluationQueue } from "../evaluation-queue";
 
+export const mockStore = configureMockStore([thunk]);
+
 // small mock for dispatcher.
-const dispatcher = () => {};
+// const dispatcher = () => {};
 
 describe("EvaluationQueue", () => {
   let evalQueue;
   beforeEach(() => {
     evalQueue = new EvaluationQueue();
+    evalQueue.connectToRedux(mockStore);
   });
 
   it("continues chain of evaluations", () => {
-    evalQueue.evaluate({}, dispatcher);
-    evalQueue.evaluate({}, dispatcher);
+    evalQueue.evaluate({});
+    evalQueue.evaluate({});
     expect(evalQueue.getQueueSize()).toBe(2);
 
     evalQueue.continue(1);
@@ -23,10 +29,10 @@ describe("EvaluationQueue", () => {
     expect(Object.keys(evalQueue.evaluationResolvers)).toEqual([]);
   });
   it("stops the evaluationQueue when evalQueue.clear(id) is called", () => {
-    evalQueue.evaluate({}, dispatcher);
-    evalQueue.evaluate({}, dispatcher);
-    evalQueue.evaluate({}, dispatcher); // we will reject this one below (3)
-    evalQueue.evaluate({}, dispatcher); // this will never "run"
+    evalQueue.evaluate({});
+    evalQueue.evaluate({});
+    evalQueue.evaluate({}); // we will reject this one below (3)
+    evalQueue.evaluate({}); // this will never "run"
 
     expect(evalQueue.getQueueSize()).toBe(4);
     expect(Object.keys(evalQueue.evaluationResolvers)).toEqual([
