@@ -81,12 +81,6 @@ def user(request, name=None):
     })
 
 
-def login(request):
-    if request.user.is_authenticated:
-        return redirect('/new')
-    return render(request, 'index.html', {'page_data': {}})
-
-
 def login_success(request):
     if not request.user.is_authenticated:
         raise PermissionDenied

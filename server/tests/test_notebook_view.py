@@ -28,7 +28,7 @@ def test_new_notebook_view(client, fake_user, logged_in):
     else:
         assert NotebookRevision.objects.count() == 0
         assert Notebook.objects.count() == 0
-        assert last_url == reverse('login') + '?next=/new'
+        assert last_url == reverse('try-it')
 
 
 @pytest.mark.parametrize("logged_in", [True, False])
