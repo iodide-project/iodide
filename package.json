@@ -46,7 +46,7 @@
     "dexie": "^2.0.4",
     "emotion": "9.2.12",
     "error-stack-parser": "2.0.2",
-    "eslint-config-prettier": "^3.3.0",
+    "eslint-config-prettier": "^4.0.0",
     "font-awesome": "4.7.0",
     "golden-layout": "1.5.9",
     "lodash": "4.17.11",
