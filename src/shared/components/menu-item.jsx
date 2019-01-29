@@ -15,6 +15,7 @@ const MenuItemContainer = styled("li")`
 
   :hover {
     background-color: ${MAIN_GRAY};
+    cursor: pointer;
   }
 `;
 
