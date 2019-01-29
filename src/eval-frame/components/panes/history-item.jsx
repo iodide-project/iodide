@@ -35,6 +35,19 @@ export class HistoryItemUnconnected extends React.Component {
     let output;
     let showCellReturnButton = true;
     switch (this.props.historyType) {
+      case "CONSOLE_MESSAGE": {
+        return <div>console message</div>;
+      }
+      case "CONSOLE_INPUT": {
+        // returns a code input.
+        return <div>console input</div>;
+      }
+      case "CONSOLE_OUTPUT": {
+        return <div>console output</div>;
+      }
+      case "APP_MESSAGE": {
+        return <div>app message</div>;
+      }
       case "CELL_EVAL_VALUE":
         output = <ValueRenderer valueToRender={this.props.valueToRender} />;
         break;
