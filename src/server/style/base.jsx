@@ -1,4 +1,5 @@
 import { css, injectGlobal } from "emotion";
+import THEME from "../../shared/theme";
 
 /*
 This is a baseline css reset, mostly based off
@@ -20,8 +21,7 @@ export const sharedProperties = {
 
 const baseCSS = css`
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-      sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: ${THEME.mainFontFamily};
   }
 `;
 

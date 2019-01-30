@@ -1,5 +1,8 @@
-html, body {
-  font-family: 'Open Sans', sans-serif;
+import { injectGlobal } from "emotion";
+import THEME from "../shared/theme";
+
+export default injectGlobal`html, body {
+  font-family: ${THEME.mainFontFamily};
   height: 100%;
   margin: 0;
   padding: 0;
@@ -33,3 +36,4 @@ iframe#eval-frame {
     height: 100%;
     z-index: 0;
 }
+`;
