@@ -14,13 +14,7 @@ const InputContainer = styled(ConsoleContainer)`
 const InputBody = styled("pre")`
   padding: 8px;
   font-family: monospace;
-  /* border: 2px solid #d7d4f0; */
-  /* border-left: 1px solid rgba(0, 0, 0, 0.1);
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px; */
+  grid-column: 2 / 4;
   margin: 0;
 
   :before {
@@ -35,7 +29,7 @@ const InputBody = styled("pre")`
     padding-left:5px;
     font-size: 0.8em;
     float: right;
-    transform: translate(9px, -9px);
+    transform: translate(8px, -8px);
   }
 `;
 
@@ -47,7 +41,6 @@ export default class ConsoleInput extends React.Component {
         <InputBody language={this.props.language}>
           {this.props.children.trim()}
         </InputBody>
-        <ConsoleGutter side="right">&nbsp;</ConsoleGutter>
       </InputContainer>
     );
   }

@@ -2,14 +2,13 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import ArrowBack from "@material-ui/icons/ArrowBack";
 import ValueRenderer from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
 
 import ConsoleInput from "./console/console-input";
 import ConsoleOutput from "./console/console-output";
 
-import PaneContentButton from "./pane-content-button";
+// import PaneContentButton from "./pane-content-button";
 import { postMessageToEditor } from "../../port-to-editor";
 import { EVALUATION_RESULTS } from "../../actions/actions";
 
@@ -70,10 +69,13 @@ export class HistoryItemUnconnected extends React.Component {
         showCellReturnButton = false;
         break;
       case "FETCH_CELL_INFO":
-        output = (
-          <PreformattedTextItemsHandler textItems={this.props.valueToRender} />
+        return (
+          <ConsoleOutput>
+            <PreformattedTextItemsHandler
+              textItems={this.props.valueToRender}
+            />
+          </ConsoleOutput>
         );
-        break;
       default:
         // TODO: Use better class for inline error
         output = <div>Unknown history type {this.props.historyType}</div>;
@@ -84,12 +86,12 @@ export class HistoryItemUnconnected extends React.Component {
       <div className="history-metadata-positioner">
         <div className="history-metadata">
           <div className="history-show-actual-cell">
-            <PaneContentButton
+            {/* <PaneContentButton
               text="scroll to cell"
               onClick={this.showEditorCell}
             >
               <ArrowBack style={{ fontSize: "12px" }} />
-            </PaneContentButton>
+            </PaneContentButton> */}
           </div>
           {/* <div className="history-time-since"> {this.state.timeSince} </div> */}
         </div>
