@@ -6,6 +6,7 @@ import ConsoleBody from "./console-body";
 
 const OutputContainer = styled(ConsoleContainer)`
   margin-top: 0px;
+  margin-bottom: 3px;
 `;
 
 const OutputBody = styled(ConsoleBody)`

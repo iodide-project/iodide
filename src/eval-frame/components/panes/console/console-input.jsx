@@ -6,7 +6,7 @@ import ConsoleGutter from "./console-gutter";
 const InputContainer = styled(ConsoleContainer)`
   overflow: auto;
   margin-bottom: 0px;
-  margin-top: 15px;
+  margin-top: 3px;
 `;
 
 const InputBody = styled("pre")`
