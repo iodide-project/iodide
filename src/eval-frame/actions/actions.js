@@ -59,12 +59,36 @@ export { MOST_RECENT_CHUNK_ID };
 
 export const EVALUATION_RESULTS = {};
 
-export function appendToEvalHistory(
-  cellId,
+// need append statement?
+// need update statement?
+
+export function printToConsole() {}
+
+export function addToConsole({
+  historyType,
   content,
-  value,
-  historyOptions = {}
-) {
+  historyId = historyIdGen.nextId(),
+  additionalArguments = {}
+}) {
+  let consoleContent;
+  if (historyType === "CONSOLE_OUTPUT") {
+    EVALUATION_RESULTS[historyId] = content;
+    consoleContent = "";
+  } else {
+    consoleContent = content;
+  }
+
+  return {
+    type: "ADD_TO_CONSOLE",
+    historyType,
+    content: consoleContent,
+    historyId,
+    additionalArguments,
+    lastRan: Date.now()
+  };
+}
+
+export function appendToEvalHistory(content, value, historyOptions = {}) {
   const historyId =
     historyOptions.historyId === undefined
       ? historyIdGen.nextId()
@@ -75,11 +99,9 @@ export function appendToEvalHistory(
       : historyOptions.historyType;
 
   EVALUATION_RESULTS[historyId] = value;
-
   // returned obj must match history schema
   return {
     type: "APPEND_TO_EVAL_HISTORY",
-    cellId,
     content,
     historyId,
     historyType,
@@ -149,22 +171,33 @@ function evaluateCode(code, language, state, evalId) {
       } else {
         sendStatusResponseToEditor("SUCCESS", evalId);
       }
-      dispatch(appendToEvalHistory(null, code, output));
+      // dispatch(appendToEvalHistory(code, output));
+      dispatch(
+        addToConsole({ historyType: "CONSOLE_OUTPUT", content: output })
+      );
       dispatch(updateUserVariables());
     };
 
     const messageCallback = msg => {
       dispatch(
-        appendToEvalHistory(null, msg, undefined, {
+        appendToEvalHistory(msg, undefined, {
           historyType: "CELL_EVAL_INFO"
         })
       );
     };
 
     return ensureLanguageAvailable(language, state, dispatch)
-      .then(languageEvaluator =>
-        runCodeWithLanguage(languageEvaluator, code, messageCallback)
-      )
+      .then(languageEvaluator => {
+        // here let's addToConsole
+        dispatch(
+          addToConsole({
+            historyType: "CONSOLE_INPUT",
+            content: code,
+            additionalArguments: { language }
+          })
+        );
+        return runCodeWithLanguage(languageEvaluator, code, messageCallback);
+      })
       .then(
         output => updateCellAfterEvaluation(output),
         output => updateCellAfterEvaluation(output, "ERROR")
@@ -211,7 +244,6 @@ export function evaluateText(
       sendStatusResponseToEditor("ERROR", evalId);
       return dispatch(
         appendToEvalHistory(
-          null,
           evalText,
           new Error(`eval type ${evalType} is not defined`),
           {

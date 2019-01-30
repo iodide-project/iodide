@@ -16,8 +16,7 @@ const appMessageSchema = {
 export const historySchema = {
   type: "object",
   properties: {
-    cellId: { type: ["integer", "null"] },
-    content: { type: "string" },
+    content: {},
     historyId: { type: "integer" },
     historyType: {
       type: "string",
@@ -28,13 +27,18 @@ export const historySchema = {
         "SAVED_REP",
         "CONSOLE_EVAL",
         "SNIPPET_EVAL",
-        "FETCH_CELL_INFO"
+        "FETCH_CELL_INFO",
+        "CONSOLE_INPUT",
+        "CONSOLE_OUTPUT",
+        "CONSOLE_MESSAGE",
+        "APP_MESSAGE"
       ]
     },
     lastRan: { type: "integer" },
+    additionalArguments: { type: "object" },
     value: {}
   },
-  additionalProperties: false
+  additionalProperties: true
 };
 
 export const languageSchema = {

@@ -106,7 +106,6 @@ export function evaluateFetchText(fetchText, evalId) {
     if (syntaxErrors.length) {
       dispatch(
         appendToEvalHistory(
-          null,
           fetchText,
           syntaxErrors.map(fetchProgressInitialStrings),
           { historyId, historyType: "FETCH_CELL_INFO" }
@@ -119,7 +118,7 @@ export function evaluateFetchText(fetchText, evalId) {
     let progressStrings = fetches.map(fetchProgressInitialStrings);
 
     dispatch(
-      appendToEvalHistory(null, fetchText, progressStrings, {
+      appendToEvalHistory(fetchText, progressStrings, {
         historyId,
         historyType: "FETCH_CELL_INFO"
       })

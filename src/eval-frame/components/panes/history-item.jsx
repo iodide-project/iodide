@@ -6,17 +6,20 @@ import ArrowBack from "@material-ui/icons/ArrowBack";
 import ValueRenderer from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
 
+import ConsoleInput from "./console/console-input";
+import ConsoleOutput from "./console/console-output";
+
 import PaneContentButton from "./pane-content-button";
 import { postMessageToEditor } from "../../port-to-editor";
 import { EVALUATION_RESULTS } from "../../actions/actions";
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
-    content: PropTypes.string.isRequired,
     cellId: PropTypes.number,
     historyId: PropTypes.number.isRequired,
     historyType: PropTypes.string.isRequired,
-    lastRan: PropTypes.number.isRequired
+    lastRan: PropTypes.number.isRequired,
+    additionalArguments: PropTypes.object
   };
   constructor(props) {
     super(props);
@@ -40,10 +43,19 @@ export class HistoryItemUnconnected extends React.Component {
       }
       case "CONSOLE_INPUT": {
         // returns a code input.
-        return <div>console input</div>;
+        return (
+          <ConsoleInput language={this.props.additionalArguments.language}>
+            {this.props.content}
+          </ConsoleInput>
+        );
       }
       case "CONSOLE_OUTPUT": {
-        return <div>console output</div>;
+        console.error(this.props.valueToRender);
+        return (
+          <ConsoleOutput>
+            <ValueRenderer render valueToRender={this.props.valueToRender} />
+          </ConsoleOutput>
+        );
       }
       case "APP_MESSAGE": {
         return <div>app message</div>;
@@ -109,6 +121,7 @@ export function mapStateToProps(state, ownProps) {
     historyId: ownProps.historyItem.historyId,
     historyType: ownProps.historyItem.historyType,
     lastRan: ownProps.historyItem.lastRan,
+    additionalArguments: ownProps.historyItem.additionalArguments,
     valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId]
   };
 }

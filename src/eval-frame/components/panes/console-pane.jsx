@@ -46,10 +46,9 @@ export class ConsolePaneUnconnected extends React.Component {
     let histContents = [];
     if (this.props.history.length) {
       histContents = this.props.history
-        .filter(historyItem => historyItem.content.length)
+        // .filter(historyItem => historyItem.content !== undefined) // || historyItem.content.length
         .map(historyItem => (
           <HistoryItem
-            content={historyItem.content}
             historyItem={historyItem}
             key={`history-${historyItem.lastRan}-${historyItem.historyId}`}
           />
@@ -80,7 +79,8 @@ export class ConsolePaneUnconnected extends React.Component {
             flexGrow: 1,
             maxWidth: "100%",
             height: "100%",
-            overflow: "hidden"
+            overflow: "hidden",
+            marginTop: "10px"
           }}
         >
           <div

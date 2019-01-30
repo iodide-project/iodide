@@ -75,7 +75,7 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
   return dispatch => {
     const historyId = historyIdGen.nextId();
     dispatch(
-      appendToEvalHistory(null, pluginText, undefined, {
+      appendToEvalHistory(pluginText, undefined, {
         historyId,
         historyType: "CELL_EVAL_INFO"
       })
@@ -111,7 +111,6 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
     const historyId = historyIdGen.nextId();
     dispatch(
       appendToEvalHistory(
-        null,
         `Loading ${
           state.languageDefinitions[languageId].displayName
         } language plugin`,
