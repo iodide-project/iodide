@@ -1,7 +1,3 @@
-import MarkdownIt from "markdown-it";
-import MarkdownItKatex from "markdown-it-katex";
-import MarkdownItAnchor from "markdown-it-anchor";
-
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 
 import {
@@ -14,10 +10,7 @@ import {
 import { evaluateFetchText } from "./fetch-cell-eval-actions";
 import { postMessageToEditor } from "../port-to-editor";
 
-const MD = MarkdownIt({ html: true });
-MD.use(MarkdownItKatex).use(MarkdownItAnchor);
-
-const CodeMirror = require('codemirror') // eslint-disable-line
+const CodeMirror = require("codemirror"); // eslint-disable-line
 
 const initialVariables = new Set(Object.keys(window)); // gives all global variables
 initialVariables.add("__core-js_shared__");
