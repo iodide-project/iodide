@@ -6,7 +6,20 @@ import ConsoleBody from "./console-body";
 
 const OutputContainer = styled(ConsoleContainer)`
   margin-top: 0px;
-  padding-left: 8px;
+`;
+
+const OutputBody = styled(ConsoleBody)`
+  min-height: 0px;
+
+  display: block;
+  overflow: auto;
+  word-break: break-all;
+  padding: 8px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 `;
 
 const Carat = styled("span")`
@@ -21,7 +34,7 @@ export default class ConsoleOutput extends React.Component {
         <ConsoleGutter side="left">
           <Carat> {">"}</Carat>
         </ConsoleGutter>
-        <ConsoleBody>{this.props.children}</ConsoleBody>
+        <OutputBody>{this.props.children}</OutputBody>
         <ConsoleGutter side="right">&nbsp;</ConsoleGutter>
       </OutputContainer>
     );

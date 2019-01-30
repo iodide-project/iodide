@@ -37,7 +37,6 @@ div#eval-container.presentation-mode {
   color: #888;
   font-style: italic;
   font-size: 12px;
-  padding-top: 4px;
   padding-bottom: 4px;
 }
 
@@ -152,4 +151,14 @@ button.display-button:focus {
  
 button.display-button:hover {
   background-color: #686868;
+}
+
+.fixed-position-container {
+  border: 1px solid rgba(0,0,0,.15) !important;
+  border-radius:4px;
+}
+.lm_tab {
+border: 1px solid rgba(0,0,0,.15) !important;
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
 }

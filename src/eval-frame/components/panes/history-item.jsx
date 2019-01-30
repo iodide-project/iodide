@@ -50,7 +50,6 @@ export class HistoryItemUnconnected extends React.Component {
         );
       }
       case "CONSOLE_OUTPUT": {
-        console.error(this.props.valueToRender);
         return (
           <ConsoleOutput>
             <ValueRenderer render valueToRender={this.props.valueToRender} />

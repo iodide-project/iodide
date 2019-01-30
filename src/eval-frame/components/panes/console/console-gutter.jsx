@@ -8,6 +8,5 @@ export default styled("div")`
   text-align: center;
   grid-column: ${props =>
     props.side ? `${props.side}-gutter` : "left-gutter"};
-  min-height: 20px;
   min-width: 20px;
 `;

@@ -171,10 +171,11 @@ function evaluateCode(code, language, state, evalId) {
       } else {
         sendStatusResponseToEditor("SUCCESS", evalId);
       }
-      // dispatch(appendToEvalHistory(code, output));
+
       dispatch(
         addToConsole({ historyType: "CONSOLE_OUTPUT", content: output })
       );
+      // dispatch(appendToEvalHistory(code, output));
       dispatch(updateUserVariables());
     };
 
