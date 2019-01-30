@@ -1,5 +1,14 @@
 #!/bin/sh
-if [ ! -d $1-$PYODIDE_VERSION ]; then
-  mkdir -p $1-$PYODIDE_VERSION;
-  curl -L https://github.com/iodide-project/pyodide/releases/download/$PYODIDE_VERSION/pyodide-build-$PYODIDE_VERSION.tar.bz2 | tar jx -C $1-$PYODIDE_VERSION
+PYODIDE_DIR=$1-$PYODIDE_VERSION
+
+# Delete directory if it exists, but is empty
+if [ -d $PYODIDE_DIR ]; then
+  if [ -z "$(ls -A ${PYODIDE_DIR})" ]; then
+    rm -rf $PYODIDE_DIR
+  fi
+fi
+
+if [ ! -d $PYODIDE_DIR ]; then
+  mkdir -p $PYODIDE_DIR;
+  curl -L https://github.com/iodide-project/pyodide/releases/download/$PYODIDE_VERSION/pyodide-build-$PYODIDE_VERSION.tar.bz2 | tar jx -C $PYODIDE_DIR
 fi
