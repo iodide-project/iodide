@@ -46,6 +46,7 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
         // If it is simply evaling a code block, then it returns undefined.
         // But if it returns a Promise, then we can wait for that promise to resolve
         // before we continue execution.
+        console.log(xhrObj.responseText);
         const pr = Promise.resolve(window.eval(xhrObj.responseText)); // eslint-disable-line no-eval
 
         pr.then(() => {

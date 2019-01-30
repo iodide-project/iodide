@@ -6,7 +6,8 @@ import ConsoleBody from "./console-body";
 
 const OutputContainer = styled(ConsoleContainer)`
   margin-top: 0px;
-  margin-bottom: 3px;
+  margin-bottom: 0px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const OutputBody = styled(ConsoleBody)`
@@ -16,11 +17,10 @@ const OutputBody = styled(ConsoleBody)`
   overflow: auto;
   word-break: break-all;
   padding: 8px;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  /* border-left: 1px solid rgba(0, 0, 0, 0.1);
   border-right: 1px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-bottom-right-radius: 3px; */
 `;
 
 const Carat = styled("span")`

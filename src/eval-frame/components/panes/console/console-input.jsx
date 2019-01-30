@@ -6,20 +6,21 @@ import ConsoleGutter from "./console-gutter";
 const InputContainer = styled(ConsoleContainer)`
   overflow: auto;
   margin-bottom: 0px;
-  margin-top: 3px;
+  margin-top: 0px;
+  background-color: #fbfbfd;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const InputBody = styled("pre")`
   padding: 8px;
   font-family: monospace;
-  background-color: #fbfbfd;
   /* border: 2px solid #d7d4f0; */
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  /* border-left: 1px solid rgba(0, 0, 0, 0.1);
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
+  border-top-right-radius: 3px; */
   margin: 0;
 
   :before {
