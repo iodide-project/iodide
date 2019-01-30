@@ -38,7 +38,7 @@ const MoreResources = () => (
   <HelpModalContent>
     <h2>Documentation</h2>
     <p>
-      Visit the <a href="https://iodide.io/docs">Iodide Documentation</a>.
+      Visit the <a href="https://docs.iodide.io/">Iodide Documentation</a>.
     </p>
   </HelpModalContent>
 );
