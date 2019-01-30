@@ -13,7 +13,7 @@ import "golden-layout/src/css/goldenlayout-light-theme.css";
 
 // iodide styles
 import "./shared/style/base";
-import "./style/top-level-container-styles.css";
+import "./style/top-level-container-styles";
 import "./style/side-panes.css";
 import "./style/menu-and-button-and-ui-styles.css";
 import "./style/codemirror-styles.css";
