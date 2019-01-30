@@ -29,23 +29,23 @@ export class MessageQueueManager {
 
 export class MessagePasser {
   constructor() {
-    this.reduxManager = new MessageQueueManager();
-    this.portManager = new MessageQueueManager();
+    this.dispatchQueueManager = new MessageQueueManager();
+    this.postMessageQueueManager = new MessageQueueManager();
   }
 
-  addPostMessage(postMessage) {
-    this.portManager.addMsgFn(postMessage);
+  connectPostMessage(postMessage) {
+    this.postMessageQueueManager.addMsgFn(postMessage);
     // this.postMessage =
   }
-  addDispatch(dispatch) {
-    this.reduxManager.addMsgFn(dispatch);
+  connectDispatch(dispatch) {
+    this.dispatchQueueManager.addMsgFn(dispatch);
   }
 
   postMessage(...params) {
-    this.portManager.sendMsg(...params);
+    this.postMessageQueueManager.sendMsg(...params);
   }
-  dispatchToRedux(...params) {
-    this.reduxManager.sendMsg(...params);
+  dispatch(...params) {
+    this.dispatchQueueManager.sendMsg(...params);
   }
 }
 

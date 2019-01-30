@@ -36,7 +36,7 @@ export function postMessageToEditor(messageType, message) {
   portToEditor.postMessage({ messageType, message });
 }
 
-messagePasser.addPostMessage(postMessageToEditor);
+messagePasser.connectPostMessage(postMessageToEditor);
 
 function receiveMessage(event) {
   const trustedMessage = true;
@@ -44,7 +44,7 @@ function receiveMessage(event) {
     const { messageType, message } = event.data;
     switch (messageType) {
       case "STATE_UPDATE_FROM_EDITOR": {
-        messagePasser.dispatchToRedux({
+        messagePasser.dispatch({
           type: "REPLACE_STATE",
           state: message
         });
@@ -69,7 +69,7 @@ function receiveMessage(event) {
       }
       case "REDUX_ACTION":
         if (message.type === "TRIGGER_TEXT_EVAL_IN_FRAME") {
-          messagePasser.dispatchToRedux(
+          messagePasser.dispatch(
             evaluateText(
               message.evalText,
               message.evalType,

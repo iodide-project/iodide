@@ -24,7 +24,7 @@ import { iodide } from "./iodide-api/api";
 
 import "./port-to-editor";
 
-messagePasser.addDispatch(store.dispatch);
+messagePasser.connectDispatch(store.dispatch);
 window.iodide = iodide;
 
 initializeDefaultKeybindings();
