@@ -9,13 +9,13 @@ export class EvaluationQueue {
     this.reduxDispatch = null;
   }
 
-  connectToRedux(dispatch) {
+  connectDispatch(dispatch) {
     this.reduxDispatch = dispatch;
   }
 
   evaluate(chunk) {
     if (!this.reduxDispatch) {
-      throw new Error("must connect to redux before evaluating");
+      throw new Error("must connect to a Redux store before evaluating");
     }
     const evalId = this.idGenerator.nextId();
     const actionContent = {

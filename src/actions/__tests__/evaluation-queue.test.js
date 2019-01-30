@@ -12,7 +12,7 @@ describe("EvaluationQueue", () => {
   let evalQueue;
   beforeEach(() => {
     evalQueue = new EvaluationQueue();
-    evalQueue.connectToRedux(mockStore);
+    evalQueue.connectDispatch(mockStore);
   });
 
   it("continues chain of evaluations", () => {

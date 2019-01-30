@@ -35,7 +35,7 @@ import "./tools/initialize-dom";
 import { checkForAutosave, subscribeToAutoSave } from "./tools/autosave";
 import evalQueue from "./actions/evaluation-queue";
 
-evalQueue.connectToRedux(store.dispatch);
+evalQueue.connectDispatch(store.dispatch);
 
 initializeDefaultKeybindings();
 

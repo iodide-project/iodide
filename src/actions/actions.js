@@ -227,7 +227,7 @@ const chunkNotSkipped = chunk =>
     chunk.evalFlags.includes("skiprunall")
   );
 
-export function evaluateNotebookUsingQueue(evalQueueInstance) {
+export function evaluateNotebook(evalQueueInstance = evalQueue) {
   return () => (dispatch, getState) => {
     const { jsmdChunks, kernelState } = getState();
 
@@ -240,8 +240,6 @@ export function evaluateNotebookUsingQueue(evalQueueInstance) {
     });
   };
 }
-
-export const evaluateNotebook = evaluateNotebookUsingQueue(evalQueue);
 
 function getNotebookSaveRequestOptions(state, options = undefined) {
   const data = {

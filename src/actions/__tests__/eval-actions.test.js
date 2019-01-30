@@ -1,12 +1,12 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { evaluateNotebookUsingQueue, nonRunnableChunkType } from "../actions";
+import { evaluateNotebook, nonRunnableChunkType } from "../actions";
 
 const mockStore = configureMockStore([thunk]);
 
 describe("evaluateNotebook - correct evaluations", () => {
-  let evaluateNotebook;
+  let evaluateNotebookTest;
   let mockEvalQueue;
 
   let store;
@@ -14,7 +14,7 @@ describe("evaluateNotebook - correct evaluations", () => {
 
   beforeEach(() => {
     mockEvalQueue = { evaluate: jest.fn() };
-    evaluateNotebook = evaluateNotebookUsingQueue(mockEvalQueue);
+    evaluateNotebookTest = evaluateNotebook(mockEvalQueue);
 
     store = undefined;
     testState = {
@@ -34,7 +34,7 @@ describe("evaluateNotebook - correct evaluations", () => {
 
   it("calls evalQueueInstance.evaluate for general chunk types", async () => {
     store = mockStore(testState);
-    await store.dispatch(evaluateNotebook());
+    await store.dispatch(evaluateNotebookTest());
     expect(mockEvalQueue.evaluate.mock.calls.length).toBe(1);
   });
 
@@ -67,7 +67,7 @@ describe("evaluateNotebook - correct evaluations", () => {
     ];
     store = mockStore(testState);
 
-    await store.dispatch(evaluateNotebook());
+    await store.dispatch(evaluateNotebookTest());
 
     expect(mockEvalQueue.evaluate.mock.calls.length).toBe(2);
   });
@@ -76,7 +76,7 @@ describe("evaluateNotebook - correct evaluations", () => {
     it(`doesn't call evalQueueInstance.evaluate for chunktype: ${chunkType}`, async () => {
       testState.jsmdChunks[0].chunkType = chunkType;
       store = mockStore(testState);
-      await store.dispatch(evaluateNotebook());
+      await store.dispatch(evaluateNotebookTest());
       expect(mockEvalQueue.evaluate.mock.calls.length).toBe(0);
     });
   });
@@ -85,14 +85,14 @@ describe("evaluateNotebook - correct evaluations", () => {
     it(`doesn't call evalQueueInstance.evaluate if chunk has ${skipFlag}`, async () => {
       testState.jsmdChunks[0].evalFlags = [skipFlag];
       store = mockStore(testState);
-      await store.dispatch(evaluateNotebook());
+      await store.dispatch(evaluateNotebookTest());
       expect(mockEvalQueue.evaluate.mock.calls.length).toBe(0);
     });
   });
 });
 
 describe("evaluateNotebook - correct evaluations", () => {
-  let evaluateNotebook;
+  let evaluateNotebookTest;
   let mockEvalQueue;
 
   let store;
@@ -100,7 +100,7 @@ describe("evaluateNotebook - correct evaluations", () => {
 
   beforeEach(() => {
     mockEvalQueue = { evaluate: jest.fn() };
-    evaluateNotebook = evaluateNotebookUsingQueue(mockEvalQueue);
+    evaluateNotebookTest = evaluateNotebook(mockEvalQueue);
 
     store = undefined;
     testState = {
@@ -121,7 +121,7 @@ describe("evaluateNotebook - correct evaluations", () => {
   it("sets kernel state to busy if kernel is NOT busy", () => {
     store = mockStore(testState);
 
-    store.dispatch(evaluateNotebook());
+    store.dispatch(evaluateNotebookTest());
     const actions = store.getActions();
 
     expect(actions[0]).toEqual({
@@ -134,7 +134,7 @@ describe("evaluateNotebook - correct evaluations", () => {
     testState.kernelState = "KERNEL_BUSY";
     store = mockStore(testState);
 
-    store.dispatch(evaluateNotebook());
+    store.dispatch(evaluateNotebookTest());
     const actions = store.getActions();
 
     expect(actions.map(a => a.type).includes("SET_KERNEL_STATE")).toBe(false);
