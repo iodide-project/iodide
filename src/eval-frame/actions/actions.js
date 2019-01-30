@@ -1,8 +1,3 @@
-import MarkdownIt from "markdown-it";
-import MarkdownItKatex from "markdown-it-katex";
-import MarkdownItAnchor from "markdown-it-anchor";
-import MarkdownItEmoji from "markdown-it-emoji";
-
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 
 import {
@@ -14,11 +9,6 @@ import {
 
 import { evaluateFetchText } from "./fetch-cell-eval-actions";
 import { postMessageToEditor } from "../port-to-editor";
-
-const MD = MarkdownIt({ html: true });
-MD.use(MarkdownItKatex)
-  .use(MarkdownItAnchor)
-  .use(MarkdownItEmoji);
 
 const CodeMirror = require("codemirror"); // eslint-disable-line
 
