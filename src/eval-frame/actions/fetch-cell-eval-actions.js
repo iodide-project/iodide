@@ -1,9 +1,9 @@
 import parseFetchCell from "./fetch-cell-parser";
 import {
-  appendToEvalHistory,
-  updateValueInHistory,
   historyIdGen,
   updateUserVariables,
+  addToConsole,
+  updateConsoleEntry,
   sendStatusResponseToEditor
 } from "./actions";
 
@@ -100,16 +100,27 @@ export async function handleFetch(fetchInfo) {
 
 export function evaluateFetchText(fetchText, evalId) {
   return dispatch => {
-    const historyId = historyIdGen.nextId();
+    const inputHistoryId = historyIdGen.nextId();
+    dispatch(
+      addToConsole({
+        historyType: "CONSOLE_INPUT",
+        historyId: inputHistoryId,
+        content: fetchText,
+        additionalArguments: {
+          language: "fetch"
+        }
+      })
+    );
+    const outputHistoryId = historyIdGen.nextId();
     const fetches = parseFetchCell(fetchText);
     const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
     if (syntaxErrors.length) {
       dispatch(
-        appendToEvalHistory(
-          fetchText,
-          syntaxErrors.map(fetchProgressInitialStrings),
-          { historyId, historyType: "FETCH_CELL_INFO" }
-        )
+        addToConsole({
+          historyType: "FETCH_CELL_INFO",
+          historyId: outputHistoryId,
+          content: syntaxErrors.map(fetchProgressInitialStrings)
+        })
       );
       sendStatusResponseToEditor("ERROR", evalId);
       return Promise.resolve();
@@ -118,9 +129,10 @@ export function evaluateFetchText(fetchText, evalId) {
     let progressStrings = fetches.map(fetchProgressInitialStrings);
 
     dispatch(
-      appendToEvalHistory(fetchText, progressStrings, {
-        historyId,
-        historyType: "FETCH_CELL_INFO"
+      addToConsole({
+        historyType: "FETCH_CELL_INFO",
+        historyId: outputHistoryId,
+        content: progressStrings
       })
     );
 
@@ -130,7 +142,14 @@ export function evaluateFetchText(fetchText, evalId) {
           Object.assign({}, entry)
         );
         progressStrings[i] = outcome;
-        dispatch(updateValueInHistory(historyId, progressStrings));
+        // dispatch(updateValueInHistory(historyId, progressStrings));
+        dispatch(
+          updateConsoleEntry({
+            historyId: outputHistoryId,
+            content: progressStrings
+          })
+        );
+        console.log(">>>", progressStrings);
         return outcome;
       })
     );

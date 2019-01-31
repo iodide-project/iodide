@@ -18,10 +18,8 @@ export default function evalFrameActionReducer(state, action) {
       delete actionCopy.type;
       const history = [...state.history.slice()]; // state.history.map(e => Object.assign({}, e));
       const i = history.findIndex(h => h.historyId === actionCopy.historyId);
-      console.log(actionCopy.historyId, history);
       const historyEntry = Object.assign({}, history[i], actionCopy);
       history[i] = historyEntry;
-      console.warn(history, i);
       return Object.assign({}, state, { history });
     }
 

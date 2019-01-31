@@ -72,8 +72,9 @@ export function changeConsoleElement({
   actionType = "ADD_TO_CONSOLE"
 }) {
   let consoleContent;
-  if (historyType === "CONSOLE_OUTPUT") {
-    EVALUATION_RESULTS[historyId] = content;
+  EVALUATION_RESULTS[historyId] = content;
+
+  if (historyType === "CONSOLE_OUTPUT" || historyType === "FETCH_CELL_INFO") {
     consoleContent = "";
   } else {
     consoleContent = content;
@@ -87,7 +88,6 @@ export function changeConsoleElement({
     lastRan: Date.now()
   };
   if (actionType === "UPDATE_CONSOLE_ENTRY") delete action.historyType;
-  console.warn(actionType, action);
   return action;
 }
 
