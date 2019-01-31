@@ -58,8 +58,8 @@ tasks.evaluateChunkAndSelectBelow = new UserTask({
 
 tasks.loginGithub = new UserTask({
   title: "Login using GitHub",
-  callback(loginSuccess = undefined, loginFailure = undefined) {
-    dispatcher.login(loginSuccess, loginFailure);
+  callback(loginSuccess = undefined) {
+    dispatcher.login(loginSuccess);
   }
 });
 

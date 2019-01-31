@@ -346,18 +346,13 @@ export function loginFailure() {
   };
 }
 
-export function login(successCallback, failCallback) {
-  loginToServer();
+export function login(successCallback) {
   return dispatch => {
-    // Functions to be called by child window set up by loginToServer()
-    window.loginSuccess = userData => {
+    const loginSuccessWrapper = userData => {
       dispatch(loginSuccess(userData));
       if (successCallback) successCallback(userData);
     };
-    window.loginFailure = () => {
-      dispatch(loginFailure());
-      if (failCallback) failCallback();
-    };
+    loginToServer(loginSuccessWrapper);
   };
 }
 
