@@ -3,7 +3,6 @@ import React from "react";
 import PlayButton from "@material-ui/icons/PlayArrow";
 import FastForward from "@material-ui/icons/FastForward";
 
-import EditorToolbarMenu from "./editor-toolbar-menu";
 import NotebookTaskButton from "./notebook-task-button";
 
 import tasks from "../../actions/task-definitions";
@@ -12,7 +11,6 @@ export default class EditorModeControls extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <EditorToolbarMenu />
         <NotebookTaskButton task={tasks.evaluateChunkAndSelectBelow}>
           <PlayButton />
         </NotebookTaskButton>
