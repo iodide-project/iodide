@@ -47,7 +47,7 @@ export default class UserMenu extends React.Component {
   }
 
   goToDocs() {
-    window.open("https://iodide.io/docs");
+    window.open("https://docs.iodide.io/");
     this.handleMenuClose();
   }
 

@@ -7,7 +7,6 @@ import "../shared/style/base";
 import "./style/base";
 
 import HomePage from "./pages/home-page";
-import LoginPage from "./pages/login-page";
 import UserPage from "./pages/user-page";
 import RevisionsPage from "./pages/revisions-page";
 
@@ -24,7 +23,6 @@ const routes = [
       />
     )
   },
-  { name: "login", path: "/login", action: () => <LoginPage /> },
   {
     name: "user",
     path: "/:username",

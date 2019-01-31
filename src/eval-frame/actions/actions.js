@@ -1,7 +1,3 @@
-import MarkdownIt from "markdown-it";
-import MarkdownItKatex from "markdown-it-katex";
-import MarkdownItAnchor from "markdown-it-anchor";
-
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 
 import {
@@ -12,9 +8,6 @@ import {
 
 import { evaluateFetchText } from "./fetch-cell-eval-actions";
 import messagePasser from "../../redux-to-port-message-passer";
-
-const MD = MarkdownIt({ html: true });
-MD.use(MarkdownItKatex).use(MarkdownItAnchor);
 
 const CodeMirror = require("codemirror"); // eslint-disable-line
 

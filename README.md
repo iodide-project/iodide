@@ -37,7 +37,7 @@ You can also [chat with us on Gitter](https://gitter.im/iodide-project/iodide).
 
 # Learn more about it
 
-Please visit our [documentation](https://iodide.io/docs/).
+Please visit our [documentation](https://docs.iodide.io/).
 
 # Using the notebook
 

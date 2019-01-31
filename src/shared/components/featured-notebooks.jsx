@@ -16,7 +16,7 @@ export default ({ width }) => (
       description="
                    A concise example demonstrating how powerful
                    a web tech-focused notebook environment is for computational presentations."
-      href="https://extremely-alpha.iodide.io/notebo  oks/34/?viewMode=report"
+      href="https://extremely-alpha.iodide.io/notebooks/34/?viewMode=report"
       imageSource="https://media.giphy.com/media/ftdkB78fuQ1Eb3J2o1/giphy.gif"
     />
     <NotebookDisplayItem
