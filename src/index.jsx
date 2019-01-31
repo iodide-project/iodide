@@ -33,6 +33,9 @@ import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 import "./tools/initialize-codemirror-loadmode";
 import "./tools/initialize-dom";
 import { checkForAutosave, subscribeToAutoSave } from "./tools/autosave";
+import evalQueue from "./actions/evaluation-queue";
+
+evalQueue.connectDispatch(store.dispatch);
 
 initializeDefaultKeybindings();
 
