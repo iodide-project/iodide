@@ -1,14 +1,13 @@
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 
 import {
-  // evaluateLanguagePluginCell,
   evaluateLanguagePlugin,
   ensureLanguageAvailable,
   runCodeWithLanguage
 } from "./language-actions";
 
 import { evaluateFetchText } from "./fetch-cell-eval-actions";
-import { postMessageToEditor } from "../port-to-editor";
+import messagePasser from "../../redux-to-port-message-passer";
 
 const CodeMirror = require("codemirror"); // eslint-disable-line
 
@@ -19,11 +18,11 @@ initialVariables.add("CodeMirror");
 initialVariables.add("FETCH_RESOLVERS");
 
 export function sendStatusResponseToEditor(status, evalId) {
-  postMessageToEditor("EVALUATION_RESPONSE", { status, evalId });
+  messagePasser.postMessage("EVALUATION_RESPONSE", { status, evalId });
 }
 
 export function addToEvaluationQueue(chunk) {
-  postMessageToEditor("ADD_TO_EVALUATION_QUEUE", chunk);
+  messagePasser.postMessage("ADD_TO_EVALUATION_QUEUE", chunk);
 }
 
 function getUserDefinedVariablesFromWindow() {
