@@ -228,7 +228,7 @@ const chunkNotSkipped = chunk =>
   );
 
 export function evaluateNotebook(evalQueueInstance = evalQueue) {
-  return () => (dispatch, getState) => {
+  return (dispatch, getState) => {
     const { jsmdChunks, kernelState } = getState();
 
     if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
