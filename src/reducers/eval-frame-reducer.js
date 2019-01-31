@@ -13,8 +13,20 @@ export default function evalFrameActionReducer(state, action) {
       const history = [...state.history, actionCopy];
       return Object.assign({}, state, { history });
     }
+    case "UPDATE_CONSOLE_ENTRY": {
+      const actionCopy = Object.assign({}, action);
+      delete actionCopy.type;
+      const history = [...state.history.slice()]; // state.history.map(e => Object.assign({}, e));
+      const i = history.findIndex(h => h.historyId === actionCopy.historyId);
+      console.log(actionCopy.historyId, history);
+      const historyEntry = Object.assign({}, history[i], actionCopy);
+      history[i] = historyEntry;
+      console.warn(history, i);
+      return Object.assign({}, state, { history });
+    }
 
     case "APPEND_TO_EVAL_HISTORY": {
+      console.log("append");
       const actionCopy = Object.assign({}, action);
       delete actionCopy.type;
       const history = [...state.history, actionCopy];

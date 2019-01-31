@@ -7,6 +7,9 @@ import PreformattedTextItemsHandler from "../../../components/reps/preformatted-
 
 import ConsoleInput from "./console/console-input";
 import ConsoleOutput from "./console/console-output";
+import ConsoleMessage from "./console/console-message";
+
+import PluginLoadingMessage from "./console/plugin-loading-message";
 
 // import PaneContentButton from "./pane-content-button";
 import { postMessageToEditor } from "../../port-to-editor";
@@ -22,7 +25,6 @@ export class HistoryItemUnconnected extends React.Component {
   };
   constructor(props) {
     super(props);
-    // this.state = { timeSince: 'just now' }
     this.showEditorCell = this.showEditorCell.bind(this);
   }
 
@@ -37,8 +39,21 @@ export class HistoryItemUnconnected extends React.Component {
     let output;
     let showCellReturnButton = true;
     switch (this.props.historyType) {
+      case "PLUGIN_STATUS": {
+        return (
+          <PluginLoadingMessage
+            loadStatus={this.props.additionalArguments.status}
+          >
+            {this.props.content}
+          </PluginLoadingMessage>
+        );
+      }
       case "CONSOLE_MESSAGE": {
-        return <div>console message</div>;
+        return (
+          <ConsoleMessage level={this.props.additionalArguments.level}>
+            {this.props.content}
+          </ConsoleMessage>
+        );
       }
       case "CONSOLE_INPUT": {
         // returns a code input.

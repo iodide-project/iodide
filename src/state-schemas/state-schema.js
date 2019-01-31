@@ -31,6 +31,7 @@ export const historySchema = {
         "CONSOLE_INPUT",
         "CONSOLE_OUTPUT",
         "CONSOLE_MESSAGE",
+        "PLUGIN_STATUS",
         "APP_MESSAGE"
       ]
     },

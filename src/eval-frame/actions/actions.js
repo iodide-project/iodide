@@ -64,11 +64,12 @@ export const EVALUATION_RESULTS = {};
 
 export function printToConsole() {}
 
-export function addToConsole({
+export function changeConsoleElement({
   historyType,
   content,
   historyId = historyIdGen.nextId(),
-  additionalArguments = {}
+  additionalArguments = {},
+  actionType = "ADD_TO_CONSOLE"
 }) {
   let consoleContent;
   if (historyType === "CONSOLE_OUTPUT") {
@@ -77,15 +78,45 @@ export function addToConsole({
   } else {
     consoleContent = content;
   }
-
-  return {
-    type: "ADD_TO_CONSOLE",
+  const action = {
+    type: actionType,
     historyType,
     content: consoleContent,
     historyId,
     additionalArguments,
     lastRan: Date.now()
   };
+  if (actionType === "UPDATE_CONSOLE_ENTRY") delete action.historyType;
+  console.warn(actionType, action);
+  return action;
+}
+
+export function addToConsole({
+  historyType,
+  content,
+  historyId,
+  additionalArguments = {}
+}) {
+  return changeConsoleElement({
+    historyType,
+    content,
+    historyId,
+    additionalArguments,
+    actionType: "ADD_TO_CONSOLE"
+  });
+}
+
+export function updateConsoleEntry({
+  content,
+  historyId,
+  additionalArguments
+}) {
+  return changeConsoleElement({
+    content,
+    historyId,
+    additionalArguments,
+    actionType: "UPDATE_CONSOLE_ENTRY"
+  });
 }
 
 export function appendToEvalHistory(content, value, historyOptions = {}) {

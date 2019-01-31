@@ -3,7 +3,9 @@ import {
   appendToEvalHistory,
   historyIdGen,
   updateValueInHistory,
-  sendStatusResponseToEditor
+  sendStatusResponseToEditor,
+  addToConsole,
+  updateConsoleEntry
 } from "./actions";
 
 export function addLanguage(languageDefinition) {
@@ -16,7 +18,7 @@ export function addLanguage(languageDefinition) {
 function loadLanguagePlugin(pluginData, historyId, dispatch) {
   let value;
   let languagePluginPromise;
-
+  console.log("loadLanguagePlugin", historyId);
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
     dispatch(updateValueInHistory(historyId, value));
@@ -36,7 +38,7 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 
       xhrObj.addEventListener("load", () => {
         value = `${displayName} plugin downloaded, initializing`;
-        dispatch(updateValueInHistory(historyId, value));
+        // dispatch(updateValueInHistory(historyId, value));
         // see the following for asynchronous loading of scripts from strings:
         // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
 
@@ -46,7 +48,6 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
         // If it is simply evaling a code block, then it returns undefined.
         // But if it returns a Promise, then we can wait for that promise to resolve
         // before we continue execution.
-        console.log(xhrObj.responseText);
         const pr = Promise.resolve(window.eval(xhrObj.responseText)); // eslint-disable-line no-eval
 
         pr.then(() => {
@@ -55,7 +56,7 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
           postMessageToEditor("POST_LANGUAGE_DEF_TO_EDITOR", pluginData);
           dispatch(updateValueInHistory(historyId, value));
           delete window.languagePluginUrl;
-          resolve();
+          resolve(value);
         });
       });
 
@@ -75,12 +76,12 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 export function evaluateLanguagePlugin(pluginText, evalId) {
   return dispatch => {
     const historyId = historyIdGen.nextId();
-    dispatch(
-      appendToEvalHistory(pluginText, undefined, {
-        historyId,
-        historyType: "CELL_EVAL_INFO"
-      })
-    );
+    // dispatch(
+    //   appendToEvalHistory(pluginText, undefined, {
+    //     historyId,
+    //     historyType: "CELL_EVAL_INFO"
+    //   })
+    // );
 
     let pluginData;
     try {
@@ -111,19 +112,30 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
   ) {
     const historyId = historyIdGen.nextId();
     dispatch(
-      appendToEvalHistory(
-        `Loading ${
+      addToConsole({
+        historyType: "PLUGIN_STATUS",
+        historyId,
+        content: `Loading ${
           state.languageDefinitions[languageId].displayName
         } language plugin`,
-        undefined,
-        { historyId, historyType: "CELL_EVAL_INFO" }
-      )
+        additionalArguments: { level: "log", status: "isLoading" }
+      })
     );
     return loadLanguagePlugin(
       state.languageDefinitions[languageId],
       historyId,
       dispatch
-    ).then(() => state.languageDefinitions[languageId]);
+    )
+      .then(value => {
+        dispatch(
+          updateConsoleEntry({
+            historyId,
+            content: value,
+            additionalArguments: { status: "loadingSuccess" }
+          })
+        );
+      })
+      .then(() => state.languageDefinitions[languageId]);
   }
   // There is neither a loaded language or a predefined definition that matches...
   // FIXME: It would be hard to get here in the UX, but with direct JSMD
