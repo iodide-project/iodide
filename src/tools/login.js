@@ -16,7 +16,6 @@ export function logoutFromServer(successCallback, errorCallback, dispatch) {
   fetch("/logout/").then(response => {
     if (response.ok) {
       successCallback(dispatch);
-      successCallback(dispatch);
     } else {
       errorCallback(response, dispatch);
     }
