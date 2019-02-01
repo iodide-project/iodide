@@ -211,8 +211,7 @@ export const stateProperties = {
       EditorPositioner: Object.assign({}, positionerDefaults),
       ReportPositioner: Object.assign({}, positionerDefaults),
       ConsolePositioner: Object.assign({}, positionerDefaults),
-      WorkspacePositioner: Object.assign({}, positionerDefaults),
-      AppInfoPositioner: Object.assign({}, positionerDefaults)
+      WorkspacePositioner: Object.assign({}, positionerDefaults)
     }
   },
   savedEnvironment: {

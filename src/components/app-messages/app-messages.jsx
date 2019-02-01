@@ -36,11 +36,7 @@ export class appMessagesUnconnected extends React.Component {
     this.setState({ open: false });
   };
 
-  handleMore = () => {
-    // FIXME: should show the AppInfo tab
-    // this.setState({ open: false })
-    // if (this.props.sidePaneMode !== '_APP_INFO') { tasks.toggleAppInfoPane.callback() }
-  };
+  handleMore = () => {};
 
   render() {
     return (
