@@ -41,7 +41,7 @@ Please visit our [documentation](https://docs.iodide.io/).
 
 # Using the notebook
 
-Visit https://extremly-alpha.iodide.io/ to see example and demo notebooks, and to learn more!
+Visit https://extremely-alpha.iodide.io/ to see example and demo notebooks, and to learn more!
 
 # Contributing
 
