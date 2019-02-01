@@ -7,6 +7,8 @@ import Refresh from "@material-ui/icons/Refresh";
 import ConsoleContainer from "./console-container";
 import ConsoleGutter from "./console-gutter";
 
+import BaseIcon from "./base-icon";
+
 const MessageContainer = styled(ConsoleContainer)`
   overflow: auto;
   margin-bottom: 0px;
@@ -37,18 +39,14 @@ const Spin = keyframes`
 }
 `;
 
-const WIDTH = "20px";
-
-const SpinningRefresh = styled(Refresh)`
+const SpinningRefresh = styled(BaseIcon(Refresh))`
   animation: ${Spin} 1s ease infinite;
   opacity: 0.5;
-  width: ${WIDTH};
 `;
 
-const GreenCheck = styled(CheckCircle)`
+const GreenCheck = styled(BaseIcon(CheckCircle))`
   color: green;
   opacity: 0.5;
-  width: ${WIDTH};
 `;
 
 levels.log.backgroundColor = "white";

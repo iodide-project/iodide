@@ -1,8 +1,12 @@
 import React from "react";
 import styled from "react-emotion";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import BaseIcon from "./base-icon";
 import ConsoleContainer from "./console-container";
 import ConsoleGutter from "./console-gutter";
 import ConsoleBody from "./console-body";
+
+const ArrowBack = BaseIcon(ArrowBackIcon);
 
 const OutputContainer = styled(ConsoleContainer)`
   margin-top: 0px;
@@ -28,7 +32,9 @@ export default class ConsoleOutput extends React.Component {
     return (
       <OutputContainer>
         <ConsoleGutter side="left">
-          <Carat> {">"}</Carat>
+          <Carat>
+            <ArrowBack />
+          </Carat>
         </ConsoleGutter>
         <OutputBody>{this.props.children}</OutputBody>
         <ConsoleGutter side="right">&nbsp;</ConsoleGutter>

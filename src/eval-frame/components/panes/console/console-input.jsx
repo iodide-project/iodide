@@ -1,7 +1,11 @@
 import React from "react";
 import styled from "react-emotion";
+import DoubleChevronIcon from "../double-chevron-icon";
+import BaseIcon from "./base-icon";
 import ConsoleContainer from "./console-container";
 import ConsoleGutter from "./console-gutter";
+
+const DoubleChevron = BaseIcon(DoubleChevronIcon);
 
 const InputContainer = styled(ConsoleContainer)`
   overflow: auto;
@@ -37,7 +41,9 @@ export default class ConsoleInput extends React.Component {
   render() {
     return (
       <InputContainer>
-        <ConsoleGutter side="left" />
+        <ConsoleGutter side="left">
+          <DoubleChevron />
+        </ConsoleGutter>
         <InputBody language={this.props.language}>
           {this.props.children.trim()}
         </InputBody>
