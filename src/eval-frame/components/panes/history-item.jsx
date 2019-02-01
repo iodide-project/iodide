@@ -65,7 +65,7 @@ export class HistoryItemUnconnected extends React.Component {
       }
       case "CONSOLE_OUTPUT": {
         return (
-          <ConsoleOutput>
+          <ConsoleOutput level={this.props.level}>
             <ValueRenderer render valueToRender={this.props.valueToRender} />
           </ConsoleOutput>
         );
@@ -137,6 +137,9 @@ export function mapStateToProps(state, ownProps) {
     historyId: ownProps.historyItem.historyId,
     historyType: ownProps.historyItem.historyType,
     lastRan: ownProps.historyItem.lastRan,
+    level: ownProps.historyItem.additionalArguments
+      ? ownProps.historyItem.additionalArguments.level
+      : undefined,
     additionalArguments: ownProps.historyItem.additionalArguments,
     valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId]
   };

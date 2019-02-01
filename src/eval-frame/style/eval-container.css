@@ -42,7 +42,6 @@ div#eval-container.presentation-mode {
 
 div.error-output {
 background: #fff1f4;
-padding: 5px;
 color: #a41c1c;
 overflow-x: auto;
 }

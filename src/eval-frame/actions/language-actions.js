@@ -3,8 +3,8 @@ import {
   historyIdGen,
   updateValueInHistory,
   sendStatusResponseToEditor,
-  addToConsole,
-  updateConsoleEntry
+  addToConsole
+  // updateConsoleEntry
 } from "./actions";
 
 export function addLanguage(languageDefinition) {

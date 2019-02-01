@@ -202,10 +202,23 @@ function evaluateCode(code, language, state, evalId) {
       } else {
         sendStatusResponseToEditor("SUCCESS", evalId);
       }
+      if (output instanceof Error) {
+        dispatch(
+          addToConsole({
+            historyType: "CONSOLE_MESSAGE",
+            content: output.message,
+            additionalArguments: { level: "error" }
+          })
+        );
+      } else {
+        dispatch(
+          addToConsole({
+            historyType: "CONSOLE_OUTPUT",
+            content: output
+          })
+        );
+      }
 
-      dispatch(
-        addToConsole({ historyType: "CONSOLE_OUTPUT", content: output })
-      );
       // dispatch(appendToEvalHistory(code, output));
       dispatch(updateUserVariables());
     };

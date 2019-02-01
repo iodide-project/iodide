@@ -2,6 +2,7 @@ import styled from "react-emotion";
 import THEME from "../../../../shared/theme";
 
 export default styled("div")`
+  font-family: monospace;
   display: grid;
   grid-template-columns:
     [left-gutter] 30px
@@ -13,7 +14,7 @@ export default styled("div")`
   margin: 0;
   margin-top: 10px;
   margin-bottom: 10px;
-  align-items: start;
+  align-items: stretch;
   color: ${props => props.textColor || THEME.client.pane.defaultTextColor};
   background-color: ${props =>
     props.backgroundColor || THEME.client.pane.backgroundColor};

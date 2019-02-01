@@ -5,6 +5,7 @@ import BaseIcon from "./base-icon";
 import ConsoleContainer from "./console-container";
 import ConsoleGutter from "./console-gutter";
 import ConsoleBody from "./console-body";
+import levels from "./log-levels";
 
 const ArrowBack = BaseIcon(ArrowBackIcon);
 
@@ -20,6 +21,8 @@ const OutputBody = styled(ConsoleBody)`
   overflow: auto;
   word-break: break-all;
   padding: 8px;
+  padding-left: 0px;
+  padding-right: 0px;
 `;
 
 const Carat = styled("span")`
@@ -29,8 +32,14 @@ const Carat = styled("span")`
 
 export default class ConsoleOutput extends React.Component {
   render() {
+    const backgroundColor = levels[this.props.level]
+      ? levels[this.props.level].backgroundColor
+      : "white";
+    const textColor = levels[this.props.level]
+      ? levels[this.props.level].textColor
+      : "black";
     return (
-      <OutputContainer>
+      <OutputContainer backgroundColor={backgroundColor} textColor={textColor}>
         <ConsoleGutter side="left">
           <Carat>
             <ArrowBack />

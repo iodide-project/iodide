@@ -1,13 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import DoubleChevronIcon from "./double-chevron-icon";
+import DoubleChevron from "./double-chevron-icon";
+import BaseIcon from "./console/base-icon";
 
 import {
   // updateConsoleText, consoleHistoryStepBack,
   evalConsoleInput
 } from "../../actions/actions";
 import { postActionToEditor } from "../../port-to-editor";
+
+const DoubleChevronIcon = BaseIcon(DoubleChevron);
 
 export function getTextAreaPosition(textArea) {
   return {
