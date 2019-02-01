@@ -1,6 +1,5 @@
 import CodeMirror from "codemirror";
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
-
 import {
   getNotebookID,
   getUserDataFromDocument,
@@ -24,6 +23,7 @@ import {
 } from "./jsmd-selection";
 
 import evalQueue from "./evaluation-queue";
+import { postActionToEvalFrame } from "../port-to-eval-frame";
 
 export function setKernelState(kernelState) {
   return {
@@ -32,11 +32,18 @@ export function setKernelState(kernelState) {
   };
 }
 
-export function updateAppMessages(messageObj) {
+export function updateAppMessages(messageObj, addToConsole = false) {
   const { message } = messageObj;
   let { details, when } = messageObj;
   if (when === undefined) when = new Date().toString();
   if (details === undefined) details = message;
+  if (addToConsole) {
+    postActionToEvalFrame({
+      type: "ADD_TO_CONSOLE",
+      content: details,
+      historyType: "APP_MESSAGE"
+    });
+  }
   return {
     type: "UPDATE_APP_MESSAGES",
     message: { message, details, when }
@@ -266,9 +273,13 @@ function saveNotebookRequest(url, postRequestOptions, dispatch) {
     })
     .catch(() => {
       dispatch(
-        updateAppMessages({
-          message: "Error Saving Notebook"
-        })
+        updateAppMessages(
+          {
+            message: "Error Saving Notebook",
+            details: "ERROR_SAVING_NOTEBOOK"
+          },
+          true
+        )
       );
     });
 }
@@ -286,10 +297,13 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
     ).then(json => {
       const message = "Notebook saved to server";
       dispatch(
-        updateAppMessages({
-          message,
-          details: `${message} <br />Notebook saved`
-        })
+        updateAppMessages(
+          {
+            message,
+            details: "NOTEBOOK_SAVED" // `${message} <br />Notebook saved`
+          },
+          true
+        )
       );
       dispatch({ type: "ADD_NOTEBOOK_ID", id: json.id });
       window.history.replaceState({}, "", `/notebooks/${json.id}`);
@@ -313,10 +327,13 @@ export function saveNotebookToServer() {
         const message = "Updated Notebook";
         updateAutosave(state, true);
         dispatch(
-          updateAppMessages({
-            message,
-            details: `${message} <br />Notebook saved`
-          })
+          updateAppMessages(
+            {
+              message,
+              details: "NOTEBOOK_SAVED" // `${message} <br />Notebook saved`
+            },
+            true
+          )
         );
         dispatch({ type: "NOTEBOOK_SAVED" });
       });

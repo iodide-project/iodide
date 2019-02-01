@@ -8,6 +8,7 @@ import PreformattedTextItemsHandler from "../../../components/reps/preformatted-
 import ConsoleInput from "./console/console-input";
 import ConsoleOutput from "./console/console-output";
 import ConsoleMessage from "./console/console-message";
+import AppMessage from "./console/app-message";
 
 import PluginLoadingMessage from "./console/plugin-loading-message";
 
@@ -71,7 +72,7 @@ export class HistoryItemUnconnected extends React.Component {
         );
       }
       case "APP_MESSAGE": {
-        return <div>app message</div>;
+        return <AppMessage>{this.props.content}</AppMessage>;
       }
       case "CELL_EVAL_VALUE":
         output = <ValueRenderer valueToRender={this.props.valueToRender} />;

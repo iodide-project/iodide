@@ -6,9 +6,9 @@ const IodideLogoMarkContainer = styled("svg")`
   margin: auto;
   display: block;
 `;
-export default () => (
+export default ({ width = 100 }) => (
   <IodideLogoMarkContainer
-    width="100"
+    width={width}
     viewBox="0 0 386 386"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

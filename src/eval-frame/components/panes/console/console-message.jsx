@@ -28,7 +28,9 @@ export default class ConsoleMessage extends React.Component {
         backgroundColor={levelData.backgroundColor}
         textColor={levelData.textColor || "black"}
       >
-        <ConsoleGutter side="left">{levelData.symbol}</ConsoleGutter>
+        <ConsoleGutter side="left">
+          {this.props.symbol || levelData.symbol}
+        </ConsoleGutter>
         <MessageBody>{this.props.children}</MessageBody>
         <ConsoleGutter side="Right">&nbsp;</ConsoleGutter>
       </MessageContainer>

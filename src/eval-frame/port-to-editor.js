@@ -1,6 +1,6 @@
 /* global IODIDE_EDITOR_ORIGIN  */
 
-import { evaluateText } from "./actions/actions";
+import { evaluateText, addToConsole } from "./actions/actions";
 import { getCompletions } from "./tools/notebook-utils";
 import {
   onParentContextFileFetchSuccess,
@@ -78,6 +78,9 @@ function receiveMessage(event) {
               message.evalId
             )
           );
+        }
+        if (message.type === "ADD_TO_CONSOLE") {
+          messagePasser.dispatch(addToConsole(message));
         }
         break;
       default:
