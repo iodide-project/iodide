@@ -149,7 +149,6 @@ export function evaluateFetchText(fetchText, evalId) {
             content: progressStrings
           })
         );
-        console.log(">>>", progressStrings);
         return outcome;
       })
     );

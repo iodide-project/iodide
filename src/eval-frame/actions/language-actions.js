@@ -1,6 +1,5 @@
 import { postMessageToEditor } from "../port-to-editor";
 import {
-  appendToEvalHistory,
   historyIdGen,
   updateValueInHistory,
   sendStatusResponseToEditor,
@@ -18,7 +17,6 @@ export function addLanguage(languageDefinition) {
 function loadLanguagePlugin(pluginData, historyId, dispatch) {
   let value;
   let languagePluginPromise;
-  console.log("loadLanguagePlugin", historyId);
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
     dispatch(updateValueInHistory(historyId, value));
@@ -48,6 +46,13 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
         // If it is simply evaling a code block, then it returns undefined.
         // But if it returns a Promise, then we can wait for that promise to resolve
         // before we continue execution.
+        if (xhrObj.status > 400 && xhrObj.status < 600) {
+          value = `${displayName} failed to load: ${xhrObj.status} ${
+            xhrObj.statusText
+          }`;
+          dispatch(updateValueInHistory(historyId, value));
+          resolve(value);
+        }
         const pr = Promise.resolve(window.eval(xhrObj.responseText)); // eslint-disable-line no-eval
 
         pr.then(() => {
@@ -67,6 +72,10 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
       });
 
       xhrObj.open("GET", url, true);
+      xhrObj.onerror = () => {
+        console.error(xhrObj.status);
+      };
+
       xhrObj.send();
     });
   }
@@ -113,12 +122,12 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
     const historyId = historyIdGen.nextId();
     dispatch(
       addToConsole({
-        historyType: "PLUGIN_STATUS",
+        historyType: "CONSOLE_MESSAGE",
         historyId,
         content: `Loading ${
           state.languageDefinitions[languageId].displayName
         } language plugin`,
-        additionalArguments: { level: "log", status: "isLoading" }
+        additionalArguments: { level: "log" }
       })
     );
     return loadLanguagePlugin(
@@ -128,12 +137,18 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
     )
       .then(value => {
         dispatch(
-          updateConsoleEntry({
-            historyId,
+          addToConsole({
+            historyType: "CONSOLE_MESSAGE",
             content: value,
-            additionalArguments: { status: "loadingSuccess" }
+            additionalArguments: { level: "error" }
           })
         );
+        // dispatch(
+        //   updateConsoleEntry({
+        //     historyId,
+        //     additionalArguments: { level: "loadingSuccess" }
+        //   })
+        // );
       })
       .then(() => state.languageDefinitions[languageId]);
   }
@@ -148,7 +163,14 @@ export function runCodeWithLanguage(language, code, messageCallback) {
   if (asyncEvaluator !== undefined) {
     const messageCb =
       messageCallback === undefined ? () => {} : messageCallback;
-    return window[module][asyncEvaluator](code, messageCb);
+    try {
+      return window[module][asyncEvaluator](code, messageCb);
+    } catch (e) {
+      if (e.message === "window[module] is undefined") {
+        return new Error(`eval type ${module} not not defined`);
+      }
+      return e;
+    }
   }
   return new Promise((resolve, reject) => {
     try {

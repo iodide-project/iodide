@@ -3,7 +3,8 @@ import styled, { keyframes } from "react-emotion";
 
 import CheckCircle from "@material-ui/icons/CheckCircleOutline";
 import Refresh from "@material-ui/icons/Refresh";
-
+import ErrorIcon from "@material-ui/icons/Error";
+import WarningIcon from "@material-ui/icons/Warning";
 import ConsoleContainer from "./console-container";
 import ConsoleGutter from "./console-gutter";
 
@@ -13,12 +14,13 @@ const MessageContainer = styled(ConsoleContainer)`
   overflow: auto;
   margin-bottom: 0px;
   margin-top: 0px;
-  background-color: ${props => props.color || "white"};
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const MessageBody = styled("div")`
   padding: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   margin: 0;
 `;
 
@@ -39,6 +41,8 @@ const Spin = keyframes`
 }
 `;
 
+const Error = BaseIcon(ErrorIcon);
+const Warning = BaseIcon(WarningIcon);
 const SpinningRefresh = styled(BaseIcon(Refresh))`
   animation: ${Spin} 1s ease infinite;
   opacity: 0.5;
@@ -54,9 +58,11 @@ levels.log.symbol = "";
 levels.info.backgroundColor = "white";
 levels.info.symbol = "I";
 levels.warning.backgroundColor = "rgb(255,251,214)";
-levels.warning.symbol = "W";
-levels.error.backgroundColor = "(253,244,245)";
-levels.error.symbol = "E";
+levels.warning.symbol = <Warning style={{ color: "rgb(190,155,0)" }} />;
+levels.warning.textColor = "rgb(131, 81, 15)";
+levels.error.backgroundColor = "rgb(253,244,245)";
+levels.error.textColor = "rgb(164, 0, 15)";
+levels.error.symbol = <Error style={{ color: "rgb(215,0,34)" }} />;
 
 levels.isLoading = {};
 levels.isLoading.symbol = <SpinningRefresh />;
@@ -69,7 +75,10 @@ export default class ConsoleMessage extends React.Component {
   render() {
     const levelData = levels[this.props.level];
     return (
-      <MessageContainer>
+      <MessageContainer
+        backgroundColor={levelData.backgroundColor}
+        textColor={levelData.textColor || "black"}
+      >
         <ConsoleGutter side="left">{levelData.symbol}</ConsoleGutter>
         <MessageBody>{this.props.children}</MessageBody>
         <ConsoleGutter side="Right">&nbsp;</ConsoleGutter>

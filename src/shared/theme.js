@@ -2,6 +2,11 @@ const THEME = {};
 
 THEME.mainFontFamily = `-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";`;
 
+THEME.client = {};
+THEME.client.pane = {};
+THEME.client.pane.backgroundColor = "white";
+THEME.client.pane.defaultTextColor = "black";
+
 THEME.logo = {};
 THEME.logo.darkColor = "#4f3554";
 

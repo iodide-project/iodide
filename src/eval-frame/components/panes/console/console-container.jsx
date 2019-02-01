@@ -1,4 +1,5 @@
 import styled from "react-emotion";
+import THEME from "../../../../shared/theme";
 
 export default styled("div")`
   display: grid;
@@ -13,4 +14,7 @@ export default styled("div")`
   margin-top: 10px;
   margin-bottom: 10px;
   align-items: start;
+  color: ${props => props.textColor || THEME.client.pane.defaultTextColor};
+  background-color: ${props =>
+    props.backgroundColor || THEME.client.pane.backgroundColor};
 `;
