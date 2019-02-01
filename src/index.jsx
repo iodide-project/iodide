@@ -13,12 +13,15 @@ import "golden-layout/src/css/goldenlayout-light-theme.css";
 
 // iodide styles
 import "./shared/style/base";
-import "./style/top-level-container-styles";
+import "./style/top-level-container-styles.css";
 import "./style/side-panes.css";
 import "./style/menu-and-button-and-ui-styles.css";
 import "./style/codemirror-styles.css";
 import "./style/help-modal-styles.css";
 import "./style/golden-layout-style-overrides.css";
+
+// theme settings
+import "./style/client-style-defaults";
 
 import NotebookHeader from "./components/menu/notebook-header";
 import EditorPaneContainer from "./components/editor-pane-container";
