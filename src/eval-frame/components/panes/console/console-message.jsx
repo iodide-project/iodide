@@ -13,9 +13,6 @@ const MessageContainer = styled(ConsoleContainer)`
 `;
 
 const MessageBody = styled("div")`
-  /* padding: 8px;
-  padding-top: 2px;
-  padding-bottom: 2px; */
   margin: auto;
   margin-left: 0;
 `;

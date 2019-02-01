@@ -140,15 +140,9 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
           addToConsole({
             historyType: "CONSOLE_MESSAGE",
             content: value,
-            additionalArguments: { level: "error" }
+            additionalArguments: { level: "log" }
           })
         );
-        // dispatch(
-        //   updateConsoleEntry({
-        //     historyId,
-        //     additionalArguments: { level: "loadingSuccess" }
-        //   })
-        // );
       })
       .then(() => state.languageDefinitions[languageId]);
   }

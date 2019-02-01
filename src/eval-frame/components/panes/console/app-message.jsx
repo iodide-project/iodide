@@ -1,23 +1,14 @@
 import React from "react";
 import styled from "react-emotion";
 import LogoMarkIcon from "../../../../shared/components/logo/logo-mark";
-
-import ConsoleContainer from "./console-container";
 import ConsoleMessage from "./console-message";
 
-// const LogoMark = BaseIcon(LogoMarkIcon);
 const LogoMark = styled(LogoMarkIcon)`
   opacity: 0.5;
 `;
 
 export const NotebookSaved = () => {
-  return (
-    <React.Fragment>
-      Updated Notebook
-      <br />
-      Notebook Saved
-    </React.Fragment>
-  );
+  return <React.Fragment>Notebook saved to server.</React.Fragment>;
 };
 
 export const ErrorSavingNotebook = () => {
