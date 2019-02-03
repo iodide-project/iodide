@@ -1,8 +1,8 @@
 import styled from "react-emotion";
 
 export default icon => styled(icon)`
-  width: 15px;
-  height: 15px;
-  margin: auto;
+  width: 14px;
+  height: 14px;
   text-align: center;
+  display: block;
 `;

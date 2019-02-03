@@ -1,5 +1,11 @@
 import React from "react";
+import styled from "react-emotion";
 import PropTypes from "prop-types";
+
+const TextItems = styled("pre")`
+  padding: 0;
+  margin: 0;
+`;
 
 export default class PreformattedTextItemsHandler extends React.Component {
   static propTypes = {
@@ -13,11 +19,11 @@ export default class PreformattedTextItemsHandler extends React.Component {
 
   render() {
     return (
-      <pre className="fetch-cell-output">
+      <TextItems>
         {this.props.textItems.map(t => (
           <React.Fragment key={t.id}>{t.text}</React.Fragment>
         ))}
-      </pre>
+      </TextItems>
     );
   }
 }

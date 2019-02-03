@@ -8,6 +8,7 @@ import ConsoleGutter from "./console-gutter";
 const DoubleChevron = styled(BaseIcon(DoubleChevronIcon))`
   margin: 0;
   opacity: 0.3;
+  transform: translateY(4px);
 `;
 
 const InputContainer = styled(ConsoleContainer)`

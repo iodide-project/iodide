@@ -14,7 +14,7 @@ export default styled("div")`
   margin: 0;
   margin-top: 10px;
   margin-bottom: 10px;
-  align-items: stretch;
+  align-items: start;
   color: ${props => props.textColor || THEME.client.pane.defaultTextColor};
   background-color: ${props =>
     props.backgroundColor || THEME.client.pane.backgroundColor};

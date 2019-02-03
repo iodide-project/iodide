@@ -86,7 +86,7 @@ export class HistoryItemUnconnected extends React.Component {
         break;
       case "FETCH_CELL_INFO":
         return (
-          <ConsoleOutput>
+          <ConsoleOutput level={this.props.level}>
             <PreformattedTextItemsHandler
               textItems={this.props.valueToRender}
             />

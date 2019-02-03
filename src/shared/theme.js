@@ -7,6 +7,14 @@ THEME.client.pane = {};
 THEME.client.pane.backgroundColor = "white";
 THEME.client.pane.defaultTextColor = "black";
 
+THEME.client.console = {};
+THEME.client.console.fontSizeValue = 14;
+THEME.client.console.fontSize = `${THEME.client.console.fontSizeValue}px`;
+THEME.client.console.lineHeight = 1.42857143;
+THEME.client.console.lineHeightPx =
+  THEME.client.console.lineHeight * THEME.client.console.fontSizeValue;
+THEME.client.console.fontFamily = "monospace";
+
 THEME.logo = {};
 THEME.logo.darkColor = "#4f3554";
 

@@ -119,7 +119,8 @@ export function evaluateFetchText(fetchText, evalId) {
         addToConsole({
           historyType: "FETCH_CELL_INFO",
           historyId: outputHistoryId,
-          content: syntaxErrors.map(fetchProgressInitialStrings)
+          content: syntaxErrors.map(fetchProgressInitialStrings),
+          additionalArguments: { level: "error" }
         })
       );
       sendStatusResponseToEditor("ERROR", evalId);
@@ -127,7 +128,6 @@ export function evaluateFetchText(fetchText, evalId) {
     }
 
     let progressStrings = fetches.map(fetchProgressInitialStrings);
-
     dispatch(
       addToConsole({
         historyType: "FETCH_CELL_INFO",
@@ -142,7 +142,6 @@ export function evaluateFetchText(fetchText, evalId) {
           Object.assign({}, entry)
         );
         progressStrings[i] = outcome;
-        // dispatch(updateValueInHistory(historyId, progressStrings));
         dispatch(
           updateConsoleEntry({
             historyId: outputHistoryId,
@@ -154,6 +153,21 @@ export function evaluateFetchText(fetchText, evalId) {
     );
 
     return Promise.all(fetchCalls)
+      .then(outcomes => {
+        // check for error.
+        const hasError = outcomes.some(f => f.text.startsWith("ERROR"));
+        console.log(outcomes, hasError);
+        if (hasError) {
+          console.log("errored!!!");
+          dispatch(
+            updateConsoleEntry({
+              historyId: outputHistoryId,
+              content: outcomes,
+              additionalArguments: { level: "error" }
+            })
+          );
+        }
+      })
       .finally(() => {
         dispatch(updateUserVariables());
       })
