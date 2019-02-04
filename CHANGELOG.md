@@ -1,7 +1,7 @@
-# 0.0.4, 2019-02-{date tbd}
+# 0.0.4 (Unreleased; add upcoming change notes here)
 
 Release focusing on workflow refinements and object inspection refinements
 
-# 0.0.3, 2019-02-{UPDATE FINAL DEPLOY DATE}
+# 0.0.3 (2019-02-04)
 
-Pre-alpha release
+First pre-alpha tagged release.
