@@ -9,7 +9,6 @@ const MessageContainer = styled(ConsoleContainer)`
   overflow: auto;
   margin-bottom: 0px;
   margin-top: 0px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 `;
 
 const MessageBody = styled("div")`
