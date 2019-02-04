@@ -2,6 +2,7 @@ import React from "react";
 import styled, { keyframes } from "react-emotion";
 
 import CheckCircle from "@material-ui/icons/CheckCircleOutline";
+import InfoIcon from "@material-ui/icons/InfoOutlined";
 import Refresh from "@material-ui/icons/Refresh";
 import ErrorIcon from "@material-ui/icons/Error";
 import WarningIcon from "@material-ui/icons/Warning";
@@ -26,6 +27,7 @@ const Spin = keyframes`
 
 const Error = BaseIcon(ErrorIcon);
 const Warning = BaseIcon(WarningIcon);
+const Info = BaseIcon(InfoIcon);
 const SpinningRefresh = styled(BaseIcon(Refresh))`
   animation: ${Spin} 1s ease infinite;
   opacity: 0.5;
@@ -39,7 +41,7 @@ const GreenCheck = styled(BaseIcon(CheckCircle))`
 levels.log.backgroundColor = "white";
 levels.log.symbol = "";
 levels.info.backgroundColor = "white";
-levels.info.symbol = "I";
+levels.info.symbol = <Info style={{ opacity: 0.5 }} />;
 levels.warning.backgroundColor = "rgb(255,251,214)";
 levels.warning.symbol = <Warning style={{ color: "rgb(190,155,0)" }} />;
 levels.warning.textColor = "rgb(131, 81, 15)";

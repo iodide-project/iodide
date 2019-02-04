@@ -4,11 +4,13 @@ import DoubleChevronIcon from "../double-chevron-icon";
 import BaseIcon from "./base-icon";
 import ConsoleContainer from "./console-container";
 import ConsoleGutter from "./console-gutter";
+import THEME from "../../../../shared/theme";
 
+// we have to offset this icon since it does not
+// follow the material design ones
 const DoubleChevron = styled(BaseIcon(DoubleChevronIcon))`
   margin: 0;
   opacity: 0.3;
-  transform: translateY(4px);
 `;
 
 const InputContainer = styled(ConsoleContainer)`
@@ -20,15 +22,17 @@ const InputContainer = styled(ConsoleContainer)`
 `;
 
 const InputBody = styled("pre")`
-  padding: 8px;
-  padding-left:0px;
-  padding-right:0px;
+  padding:0;
+  margin: 0;
+  padding-top:5px;
+  padding-bottom:5px;
+  font-size: ${THEME.client.console.fontSize};
+  line-height: ${THEME.client.console.lineHeight};
   font-family: monospace;
   grid-column: 2 / 4;
-  margin: 0;
   opacity:.7;
 
-  :before {
+  /* :before {
     font-family: sans-serif;
     content: "${props => props.language || ""}";
     border-left: 1px solid rgba(0, 0, 0, 0.1);
@@ -38,10 +42,9 @@ const InputBody = styled("pre")`
     padding: 3px;
     padding-right:5px;
     padding-left:5px;
-    font-size: 0.8em;
     float: right;
     transform: translate(0px, -8px);
-  }
+  } */
 `;
 
 export default class ConsoleInput extends React.Component {

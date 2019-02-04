@@ -1,8 +1,8 @@
 import styled from "react-emotion";
+import THEME from "../../../../shared/theme";
 
 export default styled("div")`
-  min-height: 20px;
+  min-height: ${THEME.client.console.lineHeightPx}px;
   display: flex;
   align-items: center;
-  outline: 1px solid black;
 `;

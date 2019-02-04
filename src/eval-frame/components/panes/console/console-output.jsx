@@ -16,13 +16,11 @@ const OutputContainer = styled(ConsoleContainer)`
 `;
 
 const OutputBody = styled(ConsoleBody)`
-  min-height: 0px;
-  display: block;
+  min-height: 20px;
+  display: grid;
   overflow: auto;
   word-break: break-all;
-  padding: 8px;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding: 5px 0px 5px 0px;
 `;
 
 const Carat = styled("span")`

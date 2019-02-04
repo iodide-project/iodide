@@ -1,11 +1,5 @@
 import React from "react";
-import styled from "react-emotion";
-import LogoMarkIcon from "../../../../shared/components/logo/logo-mark";
 import ConsoleMessage from "./console-message";
-
-const LogoMark = styled(LogoMarkIcon)`
-  opacity: 0.5;
-`;
 
 export const NotebookSaved = () => {
   return <React.Fragment>Notebook saved to server.</React.Fragment>;
@@ -30,12 +24,8 @@ messages.ERROR_SAVING_NOTEBOOK.useSymbol = false;
 export default class AppMessage extends React.Component {
   render() {
     const Inner = messages[this.props.children].component;
-    const { level, useSymbol } = messages[this.props.children];
     return (
-      <ConsoleMessage
-        level={level}
-        symbol={useSymbol ? <LogoMark width={15} /> : undefined}
-      >
+      <ConsoleMessage level="info">
         <Inner />
       </ConsoleMessage>
     );

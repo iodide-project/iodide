@@ -7,16 +7,17 @@ const GutterContainer = styled("div")`
   text-align: center;
   grid-column: ${props =>
     props.side ? `${props.side}-gutter` : "left-gutter"};
-  width: ${THEME.client.console.lineHeightPx}px;
+  width: 30px;
   height: ${THEME.client.console.lineHeightPx}px;
-  padding-top: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 `;
 
 const GutterAligner = styled("div")`
   height: ${THEME.client.console.lineHeightPx}px;
-  width: ${THEME.client.console.lineHeightPx}px;
+  width: 30px;
   display: flex;
-  align-items: middle;
+  align-items: center;
   justify-content: center;
 `;
 
