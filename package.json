@@ -1,6 +1,6 @@
 {
   "name": "iodide",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A notebook-style interface for literate programming in javascript.",
   "main": "index.jsx",
   "author": "Iodide Project Team",
