@@ -92,7 +92,7 @@ export default () => (
           <AboutElement href="https://github.com/iodide-project/iodide/issues">
             <AboutElementTitle>File an Issue or Bug</AboutElementTitle>
           </AboutElement>
-          <AboutElement href="https://github.com/iodide-project/iodide/blob/master/CONTRIBUTING.md">
+          <AboutElement href="https://iodide-project.github.io/docs/contributing/">
             <AboutElementTitle>Learn How to Contribute</AboutElementTitle>
           </AboutElement>
         </AboutThreeElements>
