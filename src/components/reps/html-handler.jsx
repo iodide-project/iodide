@@ -7,6 +7,11 @@ export default class HTMLRenderer extends React.Component {
   };
 
   render() {
-    return <iframe title="htmlRep" srcDoc={this.props.htmlString} />;
+    return (
+      <dev
+        title="htmlRep"
+        dangerouslySetInnerHTML={{ __html: this.props.htmlString }} // eslint-disable-line react/no-danger
+      />
+    );
   }
 }
