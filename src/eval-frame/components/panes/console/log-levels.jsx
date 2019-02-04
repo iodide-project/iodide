@@ -40,8 +40,10 @@ const GreenCheck = styled(BaseIcon(CheckCircle))`
 
 levels.log.backgroundColor = "white";
 levels.log.symbol = "";
+levels.log.textColor = "rgba(0,0,0,.8)";
 levels.info.backgroundColor = "white";
 levels.info.symbol = <Info style={{ opacity: 0.5 }} />;
+levels.info.textColor = "rgba(0,0,0,.8)";
 levels.warning.backgroundColor = "rgb(255,251,214)";
 levels.warning.symbol = <Warning style={{ color: "rgb(190,155,0)" }} />;
 levels.warning.textColor = "rgb(131, 81, 15)";

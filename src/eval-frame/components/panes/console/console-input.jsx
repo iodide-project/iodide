@@ -19,6 +19,7 @@ const InputContainer = styled(ConsoleContainer)`
   margin-top: 0px;
   background-color: #fbfbfd;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const InputBody = styled("pre")`
