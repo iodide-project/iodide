@@ -205,8 +205,8 @@ function evaluateCode(code, language, state, evalId) {
       if (output instanceof Error) {
         dispatch(
           addToConsole({
-            historyType: "CONSOLE_MESSAGE",
-            content: output.message,
+            historyType: "CONSOLE_OUTPUT",
+            content: output,
             additionalArguments: { level: "error" }
           })
         );

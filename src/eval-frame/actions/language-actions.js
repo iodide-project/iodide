@@ -4,7 +4,6 @@ import {
   updateValueInHistory,
   sendStatusResponseToEditor,
   addToConsole
-  // updateConsoleEntry
 } from "./actions";
 
 export function addLanguage(languageDefinition) {
@@ -19,7 +18,15 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
   let languagePluginPromise;
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
-    dispatch(updateValueInHistory(historyId, value));
+    dispatch(
+      addToConsole({
+        historyId,
+        historyType: "CONSOLE_MESSAGE",
+        content: value,
+        additionalArguments: { level: "error" }
+      })
+    );
+    // dispatch(updateValueInHistory(historyId, value));
   } else {
     const { url, displayName } = pluginData;
 
@@ -31,6 +38,8 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
         if (evt.total > 0) {
           value += `out of ${evt.total} (${evt.loaded / evt.total}%)`;
         }
+        console.error("progress", value);
+
         dispatch(updateValueInHistory(historyId, value));
       });
 
@@ -85,22 +94,23 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 export function evaluateLanguagePlugin(pluginText, evalId) {
   return dispatch => {
     const historyId = historyIdGen.nextId();
-    // dispatch(
-    //   appendToEvalHistory(pluginText, undefined, {
-    //     historyId,
-    //     historyType: "CELL_EVAL_INFO"
-    //   })
-    // );
-
     let pluginData;
     try {
       pluginData = JSON.parse(pluginText);
     } catch (err) {
+      // dispatch(
+      //   updateValueInHistory(
+      //     historyId,
+      //     `plugin definition failed to parse:\n${err.message}`
+      //   )
+      // );
       dispatch(
-        updateValueInHistory(
+        addToConsole({
           historyId,
-          `plugin definition failed to parse:\n${err.message}`
-        )
+          content: `plugin definition failed to parse:\n${err.message}`,
+          historyType: "CONSOLE_MESSAGE",
+          additionalArguments: { level: "error" }
+        })
       );
       sendStatusResponseToEditor("ERROR", evalId);
       return Promise.reject();
