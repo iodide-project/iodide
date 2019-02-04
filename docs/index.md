@@ -1,4 +1,4 @@
-# Iodide Documentation 
+# Iodide Documentation
 
 ## User documentation
 
@@ -16,7 +16,12 @@ Iodide notebooks.
 
 ## Developer documentation
 
-**[Developer docs](developer.md)**: Information about contributing to Iodide.
+**[Contributing](contributing.md)**: Information about contributing to Iodide.
+
+**[Design Principles](design-principles.md)**: Core design principles for Iodide.
+
+**[Developer docs](developer-reference.md)**: Developer reference documentation.
+
 
 ## Policies and terms
 
