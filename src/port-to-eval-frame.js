@@ -1,3 +1,5 @@
+/* global IODIDE_EVAL_FRAME_ORIGIN  */
+
 import Mousetrap from "mousetrap";
 import { store } from "./store";
 import { addLanguage, setKernelState } from "./actions/actions";
@@ -70,7 +72,11 @@ function receiveMessage(event) {
           completeOnSingleClick: false
         };
         // CodeMirror is actually already in the global namespace.
-        CodeMirror.showHint(window.ACTIVE_EDITOR_REF, () => message, hintOptions) // eslint-disable-line
+        window.CodeMirror.showHint(
+          window.ACTIVE_EDITOR_REF,
+          () => message,
+          hintOptions
+        ); // eslint-disable-line
         window.ACTIVE_EDITOR_REF = undefined;
         break;
       }
@@ -105,13 +111,13 @@ function receiveMessage(event) {
 }
 
 export const listenForEvalFramePortReady = messageEvent => {
-  console.info(
-    "listenForEvalFramePortReady",
-    messageEvent.data,
-    messageEvent.origin
-  );
-  if (messageEvent.data === "EVAL_FRAME_READY_MESSAGE") {
-    portToEvalFrame = messageEvent.ports[0] // eslint-disable-line
+  if (messageEvent.data === "EVAL_FRAME_READY") {
+    document
+      .getElementById("eval-frame")
+      .contentWindow.postMessage("EDITOR_READY", IODIDE_EVAL_FRAME_ORIGIN);
+  }
+  if (messageEvent.data === "EVAL_FRAME_SENDING_PORT") {
+    portToEvalFrame = messageEvent.ports[0]; // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage;
     store.dispatch({ type: "EVAL_FRAME_READY" });
     // stop listening for messages once a connection to the eval-frame is made

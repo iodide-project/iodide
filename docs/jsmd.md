@@ -33,14 +33,17 @@ As we said above, a JSMD file is just a plain text file with text blocks represe
 A few things to note about JSMD:
 - Iodide natively supports the following JSMD chunk types (described in more detail below):
     - `%% js` for Javascript source code
+    - `%% py` for Python source code
     - `%% md` for Markdown
     - `%% css` for CSS styles
     - `%% fetch` for retrieving resources
-    - `%% py` for Python
     - `%% plugin` for Iodide plugins
-- Any chunk not of one of the above chunk types will be ignored by Iodide.
+    - `%% raw` for raw text (which Iodide will ignore)
+- A chunk started with just `%%` but no explicit chunk type will inherit its type of the chunk above it.
+- Any chunk with an unknown type will be ignored by Iodide.
 - Any blank lines above the first chunk specifier will be ignored.
 - Changes to `md` and `css` chunk are immediately applied to your Iodide Report; changes to all other chunk types must be evaluated to take effect (to evaluate, use keyboard shorcuts `ctrl+enter`/`shift+enter` or the play button in the toolbar while your cursor is within the chunk).
+- Chunks delimiters can have one or more flags that modify their behavior, for example starting a chunk with `%% js skipRunAll` will prevent that chunk from being run when you press the "Run Full Notebook" button or when the notebook is loaded in report view (which triggers a evaluation of the whole notebook). If a modifier flag is included, the chunk delimiter must include an explicit chunk type. See below for the list of available chunk modifier flags.
 
 A brief example will help to illustrate a few of the details and nuances.
 
@@ -157,7 +160,13 @@ Plugin chunks allow you to extend the functionality of Iodide by loading plugins
 
 Plugin chunks must contain a single JSON string that contains the plugin specification. The JSON must contain a "type" field (which for now must be "language")
 
+## Chunk Modifier flags
 
+Chunks delimiters can have one or more flags that modify their behavior. If a modifier flag is included, the chunk delimiter must include an explicit chunk type.
 
+### `skipRunAll`
 
+For the time being, the only flag available is `skipRunAll`, which will prevent the chunk from being run when you press the "Run Full Notebook" button or when the notebook is loaded in report view (which triggers a evaluation of the whole notebook).
+
+This is useful for workflows in which you write and run a computationally expensive code during your exploratory investigation, but you don't want that code to run automatically when a reader visits your notebook in report view. For example the top portion of your notebook might load and process data, upload a smaller intermediate dataset to the server, and then download only that small dataset to be displayed immediately in the report view. This workflow allows you to create a report that loads quickly for you readers, while preserving your exploratory code in place in your notebook.
 

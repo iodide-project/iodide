@@ -19,7 +19,6 @@ class Header extends React.Component {
             isAuthenticated={this.props.userInfo && this.props.userInfo.name}
             username={this.props.userInfo.name}
             avatar={this.props.userInfo.avatar}
-            refreshOnLoginLogout
           />
         </RightContainer>
       </HeaderContainer>

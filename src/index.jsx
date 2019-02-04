@@ -20,6 +20,9 @@ import "./style/codemirror-styles.css";
 import "./style/help-modal-styles.css";
 import "./style/golden-layout-style-overrides.css";
 
+// theme settings
+import "./style/client-style-defaults";
+
 import NotebookHeader from "./components/menu/notebook-header";
 import EditorPaneContainer from "./components/editor-pane-container";
 import { store } from "./store";
@@ -33,6 +36,9 @@ import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 import "./tools/initialize-codemirror-loadmode";
 import "./tools/initialize-dom";
 import { checkForAutosave, subscribeToAutoSave } from "./tools/autosave";
+import evalQueue from "./actions/evaluation-queue";
+
+evalQueue.connectDispatch(store.dispatch);
 
 initializeDefaultKeybindings();
 

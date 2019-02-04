@@ -26,9 +26,6 @@ export default class UserMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: props.isAuthenticated,
-      name: props.username,
-      avatar: props.avatar,
       loginModalVisible: false
     };
 
@@ -36,18 +33,17 @@ export default class UserMenu extends React.Component {
     this.goToDocs = this.goToDocs.bind(this);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
-    this.logoutSuccess = this.logoutSuccess.bind(this);
     this.showLoginModal = this.showLoginModal.bind(this);
     this.hideLoginModal = this.hideLoginModal.bind(this);
   }
 
   goToProfile() {
-    window.open(`/${this.state.name}`);
+    window.open(`/${this.props.username}`);
     this.handleMenuClose();
   }
 
   goToDocs() {
-    window.open("https://iodide.io/docs");
+    window.open("https://docs.iodide.io/");
     this.handleMenuClose();
   }
 
@@ -59,40 +55,15 @@ export default class UserMenu extends React.Component {
     this.setState({ loginModalVisible: true });
   }
 
-  logoutSuccess() {
-    if (this.props.refreshOnLoginLogout) {
-      window.location.reload();
-    }
-    // else...
-    this.setState({ isLoggedIn: false });
-  }
-
   login() {
-    let authWindow;
-    const loginSuccess = args => {
-      if (this.props.refreshOnLoginLogout) {
-        window.location.reload();
-      }
-      // else...
-      if (args) {
-        const { name, avatar } = args;
-        this.setState({ name, avatar });
-      }
-      this.setState({ isLoggedIn: true });
-      if (authWindow) {
-        authWindow.close();
-      }
-    };
+    // if a login callback is specified, then delegate the log
+    // functionality to that. otherwise handle it ourselves
+    // internally in a simplified way (essentially just reloading
+    // the page on success)
     if (this.props.loginCallback) {
-      this.props.loginCallback(loginSuccess);
+      this.props.loginCallback();
     } else {
-      loginToServer();
-      window.loginSuccess = loginSuccess;
-
-      window.loginFailure = () => {
-        // do something smart here (probably pop up a notification)
-        authWindow.close();
-      };
+      loginToServer(() => window.location.reload());
     }
   }
 
@@ -100,20 +71,20 @@ export default class UserMenu extends React.Component {
   logout() {
     if (this.props.logoutCallback) {
       this.props.logoutCallback();
-      this.setState({ isLoggedIn: false });
     } else {
-      logoutFromServer(this.logoutSuccess, response =>
-        console.error("Logout unsuccessful", response)
+      logoutFromServer(
+        () => window.location.reload(),
+        response => console.error("Logout unsuccessful", response)
       );
     }
   }
 
   render() {
-    const { avatar } = this.state.avatar ? this.state : this.props;
+    const { avatar } = this.props;
     return (
       <Tooltip title="Menu">
         <React.Fragment>
-          {(this.state.isLoggedIn || this.props.isAuthenticated) && (
+          {this.props.isAuthenticated && (
             <div style={{ marginRight: "20px" }}>
               <Popover
                 title={
@@ -135,7 +106,7 @@ export default class UserMenu extends React.Component {
               </Popover>
             </div>
           )}
-          {!(this.state.isLoggedIn || this.props.isAuthenticated) && (
+          {!this.props.isAuthenticated && (
             <div>
               <Button
                 variant="text"
