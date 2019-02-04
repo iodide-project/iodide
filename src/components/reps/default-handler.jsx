@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { Inspector } from "react-inspector";
+import { Inspector } from "iodide-react-inspector";
 
 export default class DefaultRenderer extends React.Component {
   static propTypes = {

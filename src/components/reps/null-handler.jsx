@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ObjectValue } from "react-inspector";
+import { ObjectValue } from "iodide-react-inspector";
 
 export default {
   shouldHandle: value => value === null,
