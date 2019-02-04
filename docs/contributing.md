@@ -8,9 +8,7 @@ Work on Iodide happens on Github. Core members and contributors can make Pull Re
 
 We’ll do our best to keep `master` in a non-breaking state, ideally with tests always passing. The unfortunate reality of software development is sometimes things break. As such, `master` cannot be expected to remain reliable at all times. We recommend using the latest stable version of Iodide.
 
-Iodide follows semantic versioning (http://semver.org/) - major versions for breaking changes (x.0.0), minor versions for new features (0.x.0), and patches for bug fixes (0.0.x).
-
-We keep a file, [CHANGELOG.md](CHANGELOG.md), outlining changes to Iodide in each release. We like to think of the audience for changelogs as non-developers who primarily run the latest stable. So the change log will primarily outline user-visible changes such as new features and deprecations, and will exclude things that might otherwise be inconsequential to the end user experience, such as infrastructure or refactoring.
+We keep a file, [CHANGELOG.md](https://github.com/iodide-project/iodide/blob/master/CHANGELOG.md.md), outlining changes to Iodide in each release. We like to think of the audience for changelogs as non-developers who primarily run the latest stable. So the change log will primarily outline user-visible changes such as new features and deprecations, and will exclude things that might otherwise be inconsequential to the end user experience, such as infrastructure or refactoring.
 
 ## Bugs & Issues
 
