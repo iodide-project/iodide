@@ -271,11 +271,23 @@ function saveNotebookRequest(url, postRequestOptions, dispatch) {
       }
       return response.json();
     })
+    .then(json => {
+      dispatch(
+        updateAppMessages(
+          {
+            message: "Notebook saved to server",
+            details: "NOTEBOOK_SAVED"
+          },
+          true
+        )
+      );
+      return json;
+    })
     .catch(() => {
       dispatch(
         updateAppMessages(
           {
-            message: "Error Saving Notebook",
+            message: "Error saving notebook",
             details: "ERROR_SAVING_NOTEBOOK"
           },
           true
@@ -295,16 +307,6 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
       postRequestOptions,
       dispatch
     ).then(json => {
-      const message = "Notebook saved to server";
-      dispatch(
-        updateAppMessages(
-          {
-            message,
-            details: "NOTEBOOK_SAVED" // `${message} <br />Notebook saved`
-          },
-          true
-        )
-      );
       dispatch({ type: "ADD_NOTEBOOK_ID", id: json.id });
       window.history.replaceState({}, "", `/notebooks/${json.id}`);
       dispatch({ type: "NOTEBOOK_SAVED" });
@@ -324,17 +326,7 @@ export function saveNotebookToServer() {
         getNotebookSaveRequestOptions(state),
         dispatch
       ).then(() => {
-        const message = "Updated Notebook";
         updateAutosave(state, true);
-        dispatch(
-          updateAppMessages(
-            {
-              message,
-              details: "NOTEBOOK_SAVED" // `${message} <br />Notebook saved`
-            },
-            true
-          )
-        );
         dispatch({ type: "NOTEBOOK_SAVED" });
       });
     } else {

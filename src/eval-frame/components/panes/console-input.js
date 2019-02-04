@@ -1,16 +1,22 @@
 import React from "react";
+import styled from "react-emotion";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import DoubleChevron from "./double-chevron-icon";
 import BaseIcon from "./console/base-icon";
-
+import ConsoleGutter from "./console/console-gutter";
 import {
   // updateConsoleText, consoleHistoryStepBack,
   evalConsoleInput
 } from "../../actions/actions";
 import { postActionToEditor } from "../../port-to-editor";
 
-const DoubleChevronIcon = BaseIcon(DoubleChevron);
+import THEME from "../../../shared/theme";
+
+const DoubleChevronIcon = styled(BaseIcon(DoubleChevron))`
+  opacity: 0.5;
+  transform: translateY(-2px);
+`;
 
 export function getTextAreaPosition(textArea) {
   return {
@@ -116,7 +122,9 @@ export class ConsoleInputUnconnected extends React.Component {
           display: "flex"
         }}
       >
-        <DoubleChevronIcon />
+        <ConsoleGutter>
+          <DoubleChevronIcon />
+        </ConsoleGutter>
         <div style={{ flexGrow: 1 }}>
           <textarea
             name="text"
@@ -135,7 +143,8 @@ export class ConsoleInputUnconnected extends React.Component {
               boxSizing: "border-box",
               outline: "none",
               margin: "0px",
-              fontSize: "13px"
+              fontSize: "13px",
+              fontFamily: THEME.client.console.fontFamily
             }}
             value={this.state.consoleText}
           />

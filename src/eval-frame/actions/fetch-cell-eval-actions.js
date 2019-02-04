@@ -156,9 +156,7 @@ export function evaluateFetchText(fetchText, evalId) {
       .then(outcomes => {
         // check for error.
         const hasError = outcomes.some(f => f.text.startsWith("ERROR"));
-        console.log(outcomes, hasError);
         if (hasError) {
-          console.log("errored!!!");
           dispatch(
             updateConsoleEntry({
               historyId: outputHistoryId,
