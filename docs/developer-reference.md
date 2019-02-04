@@ -1,4 +1,4 @@
-# Developer documentation
+# Developer reference documentation
 
 This document describes how to get up and running with Iodide development to
 contribute to the project. Most users of Iodide shouldn't need this information.
@@ -77,5 +77,4 @@ mkdocs build
 ### Testing
 
 Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.
-
 
