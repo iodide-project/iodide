@@ -13,20 +13,13 @@ export function addLanguage(languageDefinition) {
   };
 }
 
-function loadLanguagePlugin(pluginData, historyId, dispatch) {
+function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
   let value;
   let languagePluginPromise;
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
-    dispatch(
-      addToConsole({
-        historyId,
-        historyType: "CONSOLE_MESSAGE",
-        content: value,
-        additionalArguments: { level: "error" }
-      })
-    );
-    // dispatch(updateValueInHistory(historyId, value));
+    sendStatusResponseToEditor("ERROR", evalId);
+    dispatch(updateValueInHistory(historyId, value));
   } else {
     const { url, displayName } = pluginData;
 
@@ -77,6 +70,7 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
       xhrObj.addEventListener("error", () => {
         value = `${displayName} plugin failed to load`;
         dispatch(updateValueInHistory(historyId, value));
+        sendStatusResponseToEditor("ERROR", evalId);
         reject();
       });
 
@@ -93,20 +87,22 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 
 export function evaluateLanguagePlugin(pluginText, evalId) {
   return dispatch => {
-    const historyId = historyIdGen.nextId();
+    const inputHistoryId = historyIdGen.nextId();
+    const outputHistoryId = historyIdGen.nextId();
     let pluginData;
+    dispatch(
+      addToConsole({
+        historyId: inputHistoryId,
+        content: pluginText,
+        historyType: "CONSOLE_INPUT"
+      })
+    );
     try {
       pluginData = JSON.parse(pluginText);
     } catch (err) {
-      // dispatch(
-      //   updateValueInHistory(
-      //     historyId,
-      //     `plugin definition failed to parse:\n${err.message}`
-      //   )
-      // );
       dispatch(
         addToConsole({
-          historyId,
+          historyId: outputHistoryId,
           content: `plugin definition failed to parse:\n${err.message}`,
           historyType: "CONSOLE_MESSAGE",
           additionalArguments: { level: "error" }
@@ -115,13 +111,25 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
       sendStatusResponseToEditor("ERROR", evalId);
       return Promise.reject();
     }
-    return loadLanguagePlugin(pluginData, historyId, dispatch).then(() => {
+    dispatch(
+      addToConsole({
+        historyId: outputHistoryId,
+        content: `loading ${pluginData.displayName}`,
+        historyType: "CONSOLE_OUTPUT"
+      })
+    );
+    return loadLanguagePlugin(
+      pluginData,
+      outputHistoryId,
+      evalId,
+      dispatch
+    ).then(() => {
       sendStatusResponseToEditor("SUCCESS", evalId);
     });
   };
 }
 
-export function ensureLanguageAvailable(languageId, state, dispatch) {
+export function ensureLanguageAvailable(languageId, state, evalId, dispatch) {
   if (Object.prototype.hasOwnProperty.call(state.loadedLanguages, languageId)) {
     return new Promise(resolve => resolve(state.loadedLanguages[languageId]));
   }
@@ -143,6 +151,7 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
     return loadLanguagePlugin(
       state.languageDefinitions[languageId],
       historyId,
+      evalId,
       dispatch
     )
       .then(value => {

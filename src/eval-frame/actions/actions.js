@@ -231,7 +231,7 @@ function evaluateCode(code, language, state, evalId) {
       );
     };
 
-    return ensureLanguageAvailable(language, state, dispatch)
+    return ensureLanguageAvailable(language, state, evalId, dispatch)
       .then(languageEvaluator => {
         // here let's addToConsole
         dispatch(
