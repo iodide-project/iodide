@@ -7,12 +7,17 @@ import { Manager, Reference, Popper } from "react-popper";
 import { TextButton } from "../../shared/components/buttons";
 
 const ClickContainer = styled("div")`
-  border: ${props =>
-    props.isActive ? "1px solid #e0e0e0" : "1px solid rgba(0,0,0,0)"};
+  border: ${props => {
+    if (!props.isValid) return "none";
+    return props.isActive ? "1px solid #e0e0e0" : "1px solid rgba(0,0,0,0)";
+  }};
   border-radius: 3px;
 
   :hover {
-    border: 1px solid #e0e0e0;
+    border: ${props => {
+      if (!props.isValid) return "none";
+      return "1px solid #e0e0e0";
+    }};
   }
 `;
 
@@ -91,15 +96,19 @@ export default class Popover extends React.Component {
       <Manager>
         <Reference>
           {({ ref }) => (
-            <ClickContainer isActive={this.state.visible}>
+            <ClickContainer
+              isValid={this.props.title !== undefined}
+              isActive={this.state.visible}
+              onClick={this.setVisibility}
+            >
               <div ref={ref}>
-                <TextButton
-                  buttonColor="black"
-                  type="button"
-                  onClick={this.setVisibility}
-                >
-                  {this.props.title}
-                </TextButton>
+                {this.props.title ? (
+                  <TextButton buttonColor="black" type="button">
+                    {this.props.title}
+                  </TextButton>
+                ) : (
+                  this.props.ruse
+                )}
               </div>
             </ClickContainer>
           )}

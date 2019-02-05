@@ -62,7 +62,12 @@ export const EVALUATION_RESULTS = {};
 // need append statement?
 // need update statement?
 
-export function printToConsole() {}
+export function setConsoleLanguage(language) {
+  return {
+    type: "SET_CONSOLE_LANGUAGE",
+    language
+  };
+}
 
 export function changeConsoleElement({
   historyType,
@@ -224,11 +229,11 @@ function evaluateCode(code, language, state, evalId) {
     };
 
     const messageCallback = msg => {
-      dispatch(
-        appendToEvalHistory(msg, undefined, {
-          historyType: "CELL_EVAL_INFO"
-        })
-      );
+      addToConsole({
+        historyType: "CONSOLE_MESSAGE",
+        content: msg,
+        additionalArguments: { level: "log" }
+      });
     };
 
     return ensureLanguageAvailable(language, state, evalId, dispatch)

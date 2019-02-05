@@ -12,6 +12,7 @@ import {
 import { postActionToEditor } from "../../port-to-editor";
 
 import THEME from "../../../shared/theme";
+import ConsoleLanguageMenu from "./console-language-menu";
 
 const DoubleChevronIcon = styled(BaseIcon(DoubleChevron))`
   opacity: 0.5;
@@ -149,6 +150,7 @@ export class ConsoleInputUnconnected extends React.Component {
             value={this.state.consoleText}
           />
         </div>
+        <ConsoleLanguageMenu />
       </div>
     );
   }

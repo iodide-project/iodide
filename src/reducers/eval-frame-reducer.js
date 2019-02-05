@@ -23,6 +23,10 @@ export default function evalFrameActionReducer(state, action) {
       return Object.assign({}, state, { history });
     }
 
+    case "SET_CONSOLE_LANGUAGE": {
+      return Object.assign({}, state, { languageLastUsed: action.language });
+    }
+
     case "APPEND_TO_EVAL_HISTORY": {
       const actionCopy = Object.assign({}, action);
       delete actionCopy.type;

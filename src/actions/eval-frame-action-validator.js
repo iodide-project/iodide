@@ -22,6 +22,15 @@ const schemas = {
   ADD_LANGUAGE_TO_EVAL_FRAME: languageActionSchema,
   APPEND_TO_EVAL_HISTORY: historyActionSchema,
   ADD_TO_CONSOLE: historyActionSchema,
+  SET_CONSOLE_LANGUAGE: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      language: { type: "string" },
+      type: { type: "string" }
+    },
+    required: ["language", "type"]
+  },
   UPDATE_CONSOLE_ENTRY: historyActionSchema,
   CLEAR_CONSOLE_TEXT_CACHE: {
     type: "object",
@@ -111,7 +120,9 @@ export default function validateActionFromEvalFrame(action) {
     );
   } else if (!Object.keys(schemas).includes(action.type)) {
     throw new ActionSchemaValidationError(
-      "Invalid action from eval frame: action type not permitted"
+      `Invalid action from eval frame: action type not permitted: ${
+        action.type
+      }`
     );
   } else if (!validator(action.type)(action)) {
     throw new ActionSchemaValidationError(`Invalid action from eval frame: bad schema.
