@@ -14,11 +14,13 @@ const DoubleChevron = styled(BaseIcon(DoubleChevronIcon))`
   opacity: 0.3;
 `;
 
+const backgroundColor = (o = 1) => `rgba(251,251,253, ${o})`;
+
 const InputContainer = styled(ConsoleContainer)`
   overflow: auto;
   margin-bottom: 0px;
   margin-top: 0px;
-  background-color: #fbfbfd;
+  background-color: ${backgroundColor()};
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 `;
@@ -41,6 +43,7 @@ const InputBody = styled("pre")`
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     border-bottom-left-radius: 3px;
     color: rgba(0,0,0,.6);
+    background-color: ${backgroundColor(0.9)};
     padding-right:7px;
     padding-left:7px;
     padding-top:3px;

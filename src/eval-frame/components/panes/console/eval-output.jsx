@@ -13,6 +13,7 @@ const ArrowBack = styled(BaseIcon(ArrowBackIcon))`
 `;
 
 const OutputContainer = styled(ConsoleContainer)`
+  overflow: auto;
   margin-top: 0px;
   margin-bottom: 0px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
@@ -21,7 +22,6 @@ const OutputContainer = styled(ConsoleContainer)`
 const OutputBody = styled(ConsoleBody)`
   min-height: 20px;
   display: grid;
-  overflow: auto;
   word-break: break-all;
   padding: 5px 0px 5px 0px;
 `;
