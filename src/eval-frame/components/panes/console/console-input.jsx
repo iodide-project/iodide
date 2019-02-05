@@ -44,7 +44,7 @@ const InputBody = styled("pre")`
     padding-left:7px;
     padding-top:3px;
     float: right;
-    font-size:12px;
+    font-size:10px;
     transform: translate(0px, -8px);
   }
 `;

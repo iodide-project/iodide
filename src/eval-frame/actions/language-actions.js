@@ -3,7 +3,8 @@ import {
   historyIdGen,
   updateValueInHistory,
   sendStatusResponseToEditor,
-  addToConsole
+  addToConsole,
+  updateConsoleEntry
 } from "./actions";
 
 export function addLanguage(languageDefinition) {
@@ -19,7 +20,14 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
     sendStatusResponseToEditor("ERROR", evalId);
-    dispatch(updateValueInHistory(historyId, value));
+    // dispatch(updateValueInHistory(historyId, value));
+    dispatch(
+      updateConsoleEntry({
+        historyId,
+        content: value,
+        additionalArguments: { level: "error" }
+      })
+    );
   } else {
     const { url, displayName } = pluginData;
 

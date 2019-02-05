@@ -7,7 +7,9 @@ import ConsoleGutter from "./console-gutter";
 import ConsoleBody from "./console-body";
 import levels from "./log-levels";
 
-const ArrowBack = BaseIcon(ArrowBackIcon);
+const ArrowBack = styled(BaseIcon(ArrowBackIcon))`
+  opacity: 0.5;
+`;
 
 const OutputContainer = styled(ConsoleContainer)`
   margin-top: 0px;
@@ -23,13 +25,16 @@ const OutputBody = styled(ConsoleBody)`
   padding: 5px 0px 5px 0px;
 `;
 
-const Carat = styled("span")`
-  font-weight: 100;
-  color: darkgray;
-`;
-
 export default class ConsoleOutput extends React.Component {
   render() {
+    // FIXME: this needs to all move out of the direct logic of this component
+    // or tests need to be written.
+    const GutterIcon =
+      this.props.level && this.props.level === "error" ? (
+        levels.error.symbol
+      ) : (
+        <ArrowBack />
+      );
     const backgroundColor = levels[this.props.level]
       ? levels[this.props.level].backgroundColor
       : "white";
@@ -38,11 +43,7 @@ export default class ConsoleOutput extends React.Component {
       : "black";
     return (
       <OutputContainer backgroundColor={backgroundColor} textColor={textColor}>
-        <ConsoleGutter side="left">
-          <Carat>
-            <ArrowBack />
-          </Carat>
-        </ConsoleGutter>
+        <ConsoleGutter side="left">{GutterIcon}</ConsoleGutter>
         <OutputBody>{this.props.children}</OutputBody>
         <ConsoleGutter side="right">&nbsp;</ConsoleGutter>
       </OutputContainer>
