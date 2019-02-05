@@ -1,6 +1,6 @@
 {
   "extends": [
-    "config:base",
+    "config:js-app",
     ":maintainLockFilesWeekly",
     ":prNotPending"
   ]
