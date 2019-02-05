@@ -160,14 +160,3 @@ export default class Popover extends React.Component {
     );
   }
 }
-
-/* <OutsideClickBoundary onClickOutside={this.closePopoverOnClick}>
-<div
-  ref={ref}
-  style={style}
-  data-placement={placement}
->
-  {this.props.children}
-  <div ref={arrowProps.ref} style={arrowProps.style} />
-</div>
-</OutsideClickBoundary> */
