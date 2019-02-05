@@ -1,7 +1,8 @@
 import styled from "react-emotion";
+import PropTypes from "prop-types";
 import THEME from "../../../../shared/theme";
 
-export default styled("div")`
+const ConsoleContainer = styled("div")`
   display: grid;
   grid-template-columns:
     [left-gutter] 30px
@@ -18,3 +19,10 @@ export default styled("div")`
   background-color: ${props =>
     props.backgroundColor || THEME.client.pane.backgroundColor};
 `;
+
+ConsoleContainer.propTypes = {
+  textColor: PropTypes.string,
+  backgroundColor: PropTypes.string
+};
+
+export default ConsoleContainer;

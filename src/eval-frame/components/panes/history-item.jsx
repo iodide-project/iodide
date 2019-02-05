@@ -12,7 +12,6 @@ import AppMessage from "./console/app-message";
 
 import PluginLoadingMessage from "./console/plugin-loading-message";
 
-// import PaneContentButton from "./pane-content-button";
 import { postMessageToEditor } from "../../port-to-editor";
 import { EVALUATION_RESULTS } from "../../actions/actions";
 
@@ -70,7 +69,7 @@ export class HistoryItemUnconnected extends React.Component {
         );
       }
       case "APP_MESSAGE": {
-        return <AppMessage>{this.props.content}</AppMessage>;
+        return <AppMessage messageType={this.props.content} />;
       }
       case "FETCH_CELL_INFO":
         return (

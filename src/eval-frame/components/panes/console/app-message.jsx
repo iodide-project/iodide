@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ConsoleMessage from "./console-message";
 
 export const NotebookSaved = () => {
@@ -22,9 +23,13 @@ messages.ERROR_SAVING_NOTEBOOK.level = "error";
 messages.ERROR_SAVING_NOTEBOOK.useSymbol = false;
 
 export default class AppMessage extends React.Component {
+  static propTypes = {
+    messageType: PropTypes.string.isRequired
+  };
   render() {
-    const Inner = messages[this.props.children].component;
-    const { level } = messages[this.props.children];
+    const { messageType } = this.props;
+    const Inner = messages[messageType].component;
+    const { level } = messages[messageType];
     return (
       <ConsoleMessage level={level}>
         <Inner />

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import BaseIcon from "./base-icon";
@@ -26,6 +27,9 @@ const OutputBody = styled(ConsoleBody)`
 `;
 
 export default class ConsoleOutput extends React.Component {
+  static propTypes = {
+    level: PropTypes.string
+  };
   render() {
     // FIXME: this needs to all move out of the direct logic of this component
     // or tests need to be written.

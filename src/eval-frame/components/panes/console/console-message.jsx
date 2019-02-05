@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 import ConsoleContainer from "./console-container";
@@ -21,6 +22,9 @@ const MessageBody = styled("div")`
 `;
 
 export default class ConsoleMessage extends React.Component {
+  static propTypes = {
+    level: PropTypes.string
+  };
   render() {
     const levelData = levels[this.props.level];
     return (

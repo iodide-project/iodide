@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 import THEME from "../../../../shared/theme";
 
@@ -13,6 +14,10 @@ const GutterContainer = styled("div")`
   padding-bottom: 5px;
 `;
 
+GutterContainer.propTypes = {
+  side: PropTypes.string
+};
+
 const GutterAligner = styled("div")`
   height: ${THEME.client.console.lineHeightPx}px;
   width: 30px;
@@ -21,7 +26,7 @@ const GutterAligner = styled("div")`
   justify-content: center;
 `;
 
-export default ({ children, side }) => {
+export default ({ children, side = "left" }) => {
   return (
     <GutterContainer side={side}>
       <GutterAligner>{children}</GutterAligner>

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 import DoubleChevronIcon from "../double-chevron-icon";
 import BaseIcon from "./base-icon";
@@ -49,7 +50,14 @@ const InputBody = styled("pre")`
   }
 `;
 
+InputBody.propTypes = {
+  language: PropTypes.string
+};
+
 export default class ConsoleInput extends React.Component {
+  static propTypes = {
+    language: PropTypes.string.isRequired
+  };
   render() {
     return (
       <InputContainer>
