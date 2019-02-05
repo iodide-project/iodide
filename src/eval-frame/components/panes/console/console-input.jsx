@@ -33,19 +33,20 @@ const InputBody = styled("pre")`
   grid-column: 2 / 4;
   opacity:.7;
 
-  /* :before {
+  :before {
     font-family: sans-serif;
     content: "${props => props.language || ""}";
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     border-bottom-left-radius: 3px;
-    color: rgba(0,0,0,.5);
-    padding: 3px;
-    padding-right:5px;
-    padding-left:5px;
+    color: rgba(0,0,0,.6);
+    padding-right:7px;
+    padding-left:7px;
+    padding-top:3px;
     float: right;
+    font-size:12px;
     transform: translate(0px, -8px);
-  } */
+  }
 `;
 
 export default class ConsoleInput extends React.Component {

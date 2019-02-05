@@ -286,16 +286,23 @@ export function evaluateText(
     } else if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === "") {
       sendStatusResponseToEditor("SUCCESS", evalId);
     } else {
-      sendStatusResponseToEditor("ERROR", evalId);
-      return dispatch(
-        appendToEvalHistory(
-          evalText,
-          new Error(`eval type ${evalType} is not defined`),
-          {
-            historyType: "CONSOLE_EVAL"
+      dispatch(
+        addToConsole({
+          content: evalText,
+          historyType: "CONSOLE_INPUT",
+          additionalArguments: {
+            language: evalType
           }
-        )
+        })
       );
+      dispatch(
+        addToConsole({
+          content: new Error(`eval type ${evalType} is not defined`),
+          historyType: "CONSOLE_OUTPUT",
+          additionalArguments: { level: "error" }
+        })
+      );
+      sendStatusResponseToEditor("ERROR", evalId);
     }
     return Promise.resolve();
   };

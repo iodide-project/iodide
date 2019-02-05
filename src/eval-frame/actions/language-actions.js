@@ -52,6 +52,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           value = `${displayName} failed to load: ${xhrObj.status} ${
             xhrObj.statusText
           }`;
+          sendStatusResponseToEditor("ERROR", evalId);
           dispatch(updateValueInHistory(historyId, value));
           resolve(value);
         }
@@ -94,7 +95,8 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
       addToConsole({
         historyId: inputHistoryId,
         content: pluginText,
-        historyType: "CONSOLE_INPUT"
+        historyType: "CONSOLE_INPUT",
+        additionalArguments: { language: "plugin" }
       })
     );
     try {
