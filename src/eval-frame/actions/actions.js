@@ -229,11 +229,13 @@ function evaluateCode(code, language, state, evalId) {
     };
 
     const messageCallback = msg => {
-      addToConsole({
-        historyType: "CONSOLE_MESSAGE",
-        content: msg,
-        additionalArguments: { level: "log" }
-      });
+      dispatch(
+        addToConsole({
+          historyType: "CONSOLE_MESSAGE",
+          content: msg,
+          additionalArguments: { level: "log" }
+        })
+      );
     };
 
     return ensureLanguageAvailable(language, state, evalId, dispatch)
