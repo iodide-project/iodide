@@ -5,10 +5,7 @@ import { connect } from "react-redux";
 import DoubleChevron from "./double-chevron-icon";
 import BaseIcon from "./console/base-icon";
 import ConsoleGutter from "./console/console-gutter";
-import {
-  // updateConsoleText, consoleHistoryStepBack,
-  evalConsoleInput
-} from "../../actions/actions";
+import { evalConsoleInput } from "../../actions/actions";
 import { postActionToEditor } from "../../port-to-editor";
 
 import THEME from "../../../shared/theme";
