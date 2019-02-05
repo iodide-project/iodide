@@ -96,7 +96,7 @@
     "enzyme-adapter-react-16": "1.8.0",
     "eslint": "5.13.0",
     "eslint-config-airbnb": "16.1.0",
-    "eslint-loader": "2.1.1",
+    "eslint-loader": "2.1.2",
     "eslint-plugin-emotion": "9.2.6",
     "eslint-plugin-import": "2.16.0",
     "eslint-plugin-jest": "22.2.2",
