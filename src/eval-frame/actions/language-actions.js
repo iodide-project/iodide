@@ -1,7 +1,6 @@
 import { postMessageToEditor } from "../port-to-editor";
 import {
   historyIdGen,
-  updateValueInHistory,
   sendStatusResponseToEditor,
   addToConsole,
   updateConsoleEntry
@@ -20,7 +19,6 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
     sendStatusResponseToEditor("ERROR", evalId);
-    // dispatch(updateValueInHistory(historyId, value));
     dispatch(
       updateConsoleEntry({
         historyId,
@@ -40,13 +38,17 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           value += `out of ${evt.total} (${evt.loaded / evt.total}%)`;
         }
         console.error("progress", value);
-
-        dispatch(updateValueInHistory(historyId, value));
+        dispatch(
+          updateConsoleEntry({
+            historyId,
+            content: value,
+            additionalArguments: { level: "log" }
+          })
+        );
       });
 
       xhrObj.addEventListener("load", () => {
         value = `${displayName} plugin downloaded, initializing`;
-        // dispatch(updateValueInHistory(historyId, value));
         // see the following for asynchronous loading of scripts from strings:
         // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
 
@@ -61,7 +63,13 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
             xhrObj.statusText
           }`;
           sendStatusResponseToEditor("ERROR", evalId);
-          dispatch(updateValueInHistory(historyId, value));
+          dispatch(
+            updateConsoleEntry({
+              historyId,
+              content: value,
+              additionalArguments: { level: "log" }
+            })
+          );
           resolve({ value, status: "ERROR" });
         }
         const pr = Promise.resolve(window.eval(xhrObj.responseText)); // eslint-disable-line no-eval
@@ -70,7 +78,13 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           value = `${displayName} plugin ready`;
           dispatch(addLanguage(pluginData));
           postMessageToEditor("POST_LANGUAGE_DEF_TO_EDITOR", pluginData);
-          dispatch(updateValueInHistory(historyId, value));
+          dispatch(
+            updateConsoleEntry({
+              historyId,
+              content: value,
+              additionalArguments: { level: "log" }
+            })
+          );
           delete window.languagePluginUrl;
           resolve({ value, status: "SUCCESS" });
         });
@@ -78,7 +92,13 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
 
       xhrObj.addEventListener("error", () => {
         value = `${displayName} plugin failed to load`;
-        dispatch(updateValueInHistory(historyId, value));
+        dispatch(
+          updateConsoleEntry({
+            historyId,
+            content: value,
+            additionalArguments: { level: "error" }
+          })
+        );
         sendStatusResponseToEditor("ERROR", evalId);
         reject();
       });
@@ -148,11 +168,12 @@ export function ensureLanguageAvailable(languageId, state, evalId, dispatch) {
   if (
     Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)
   ) {
-    const historyId = historyIdGen.nextId();
+    const inputHistoryId = historyIdGen.nextId();
+    const outputHistoryId = historyIdGen.nextId();
     dispatch(
       addToConsole({
         historyType: "CONSOLE_MESSAGE",
-        historyId,
+        historyId: inputHistoryId,
         content: `Loading ${
           state.languageDefinitions[languageId].displayName
         } language plugin`,
@@ -161,7 +182,7 @@ export function ensureLanguageAvailable(languageId, state, evalId, dispatch) {
     );
     return loadLanguagePlugin(
       state.languageDefinitions[languageId],
-      historyId,
+      outputHistoryId,
       evalId,
       dispatch
     )

@@ -20,8 +20,8 @@ historyActionSchema.properties.type = { type: "string" };
 
 const schemas = {
   ADD_LANGUAGE_TO_EVAL_FRAME: languageActionSchema,
-  APPEND_TO_EVAL_HISTORY: historyActionSchema,
   ADD_TO_CONSOLE: historyActionSchema,
+  UPDATE_CONSOLE_ENTRY: historyActionSchema,
   SET_CONSOLE_LANGUAGE: {
     type: "object",
     additionalProperties: false,
@@ -31,7 +31,6 @@ const schemas = {
     },
     required: ["language", "type"]
   },
-  UPDATE_CONSOLE_ENTRY: historyActionSchema,
   CLEAR_CONSOLE_TEXT_CACHE: {
     type: "object",
     additionalProperties: false,

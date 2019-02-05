@@ -27,20 +27,6 @@ export default function evalFrameActionReducer(state, action) {
       return Object.assign({}, state, { languageLastUsed: action.language });
     }
 
-    case "APPEND_TO_EVAL_HISTORY": {
-      const actionCopy = Object.assign({}, action);
-      delete actionCopy.type;
-      const history = [...state.history, actionCopy];
-      return Object.assign({}, state, { history });
-    }
-
-    case "UPDATE_VALUE_IN_HISTORY": {
-      const history = [...state.history];
-      // const historyEntry = history.find(h => h.historyId === action.historyId)
-      // if (historyEntry) { historyEntry.value = action.value }
-      return Object.assign({}, state, { history });
-    }
-
     case "UPDATE_CONSOLE_TEXT": {
       return Object.assign({}, state, { consoleText: action.consoleText });
     }

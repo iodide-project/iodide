@@ -107,7 +107,7 @@ export default class Popover extends React.Component {
                     {this.props.title}
                   </TextButton>
                 ) : (
-                  this.props.ruse
+                  this.props.activatingComponent
                 )}
               </div>
             </ClickContainer>

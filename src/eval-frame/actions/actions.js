@@ -124,35 +124,6 @@ export function updateConsoleEntry({
   });
 }
 
-export function appendToEvalHistory(content, value, historyOptions = {}) {
-  const historyId =
-    historyOptions.historyId === undefined
-      ? historyIdGen.nextId()
-      : historyOptions.historyId;
-  const historyType =
-    historyOptions.historyType === undefined
-      ? "CELL_EVAL_VALUE"
-      : historyOptions.historyType;
-
-  EVALUATION_RESULTS[historyId] = value;
-  // returned obj must match history schema
-  return {
-    type: "APPEND_TO_EVAL_HISTORY",
-    content,
-    historyId,
-    historyType,
-    lastRan: Date.now()
-  };
-}
-
-export function updateValueInHistory(historyId, value) {
-  EVALUATION_RESULTS[historyId] = value;
-  return {
-    type: "UPDATE_VALUE_IN_HISTORY",
-    historyId
-  };
-}
-
 export function updateUserVariables() {
   return {
     type: "UPDATE_USER_VARIABLES",
@@ -223,8 +194,6 @@ function evaluateCode(code, language, state, evalId) {
           })
         );
       }
-
-      // dispatch(appendToEvalHistory(code, output));
       dispatch(updateUserVariables());
     };
 

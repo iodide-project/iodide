@@ -10,9 +10,14 @@ import { TextButton } from "../../../shared/components/buttons";
 
 import { setConsoleLanguage } from "../../actions/actions";
 
-const Activator = styled(TextButton)`
+const LanguageSelectButton = styled(TextButton)`
   font-size: 12px;
   padding: 3px;
+  margin-right: 1px;
+  border-radius: 0px;
+  margin-bottom: 0px;
+  padding-bottom: 2px;
+  align-self: center;
   color: rgba(0, 0, 0, 0.4);
   text-transform: lowercase;
 
@@ -47,11 +52,11 @@ export class ConsoleLanguageMenuUnconnected extends React.Component {
       <React.Fragment>
         <Popover
           placement="left-end"
-          ruse={
-            <Activator>
+          activatingComponent={
+            <LanguageSelectButton>
               <ArrowDropUp style={{ fontSize: 14 }} />
               {this.props.label}
-            </Activator>
+            </LanguageSelectButton>
           }
         >
           <Menu>
