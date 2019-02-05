@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 import ValueRenderer from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
 
-import ConsoleInput from "./console/console-input";
-import ConsoleOutput from "./console/console-output";
+import EvalInput from "./console/eval-input";
+import EvalOutput from "./console/eval-output";
 import ConsoleMessage from "./console/console-message";
 import AppMessage from "./console/app-message";
 
@@ -56,16 +56,16 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_INPUT": {
         // returns a code input.
         return (
-          <ConsoleInput language={this.props.additionalArguments.language}>
+          <EvalInput language={this.props.additionalArguments.language}>
             {this.props.content}
-          </ConsoleInput>
+          </EvalInput>
         );
       }
       case "CONSOLE_OUTPUT": {
         return (
-          <ConsoleOutput level={this.props.level}>
+          <EvalOutput level={this.props.level}>
             <ValueRenderer valueToRender={this.props.valueToRender} />
-          </ConsoleOutput>
+          </EvalOutput>
         );
       }
       case "APP_MESSAGE": {
@@ -73,11 +73,11 @@ export class HistoryItemUnconnected extends React.Component {
       }
       case "FETCH_CELL_INFO":
         return (
-          <ConsoleOutput level={this.props.level}>
+          <EvalOutput level={this.props.level}>
             <PreformattedTextItemsHandler
               textItems={this.props.valueToRender}
             />
-          </ConsoleOutput>
+          </EvalOutput>
         );
       default:
         // TODO: Use better class for inline error
