@@ -62,7 +62,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           }`;
           sendStatusResponseToEditor("ERROR", evalId);
           dispatch(updateValueInHistory(historyId, value));
-          resolve(value);
+          resolve({ value, status: "ERROR" });
         }
         const pr = Promise.resolve(window.eval(xhrObj.responseText)); // eslint-disable-line no-eval
 
@@ -72,7 +72,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           postMessageToEditor("POST_LANGUAGE_DEF_TO_EDITOR", pluginData);
           dispatch(updateValueInHistory(historyId, value));
           delete window.languagePluginUrl;
-          resolve(value);
+          resolve({ value, status: "SUCCESS" });
         });
       });
 
@@ -125,7 +125,8 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
       addToConsole({
         historyId: outputHistoryId,
         content: `loading ${pluginData.displayName}`,
-        historyType: "CONSOLE_OUTPUT"
+        historyType: "CONSOLE_OUTPUT",
+        additionalArguments: { level: "log" }
       })
     );
     return loadLanguagePlugin(
@@ -164,12 +165,12 @@ export function ensureLanguageAvailable(languageId, state, evalId, dispatch) {
       evalId,
       dispatch
     )
-      .then(value => {
+      .then(({ value, status }) => {
         dispatch(
           addToConsole({
             historyType: "CONSOLE_MESSAGE",
             content: value,
-            additionalArguments: { level: "log" }
+            additionalArguments: { level: status === "ERROR" ? "error" : "log" }
           })
         );
       })

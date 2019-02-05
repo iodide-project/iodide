@@ -2,7 +2,6 @@ import styled from "react-emotion";
 import THEME from "../../../../shared/theme";
 
 export default styled("div")`
-  font-family: monospace;
   display: grid;
   grid-template-columns:
     [left-gutter] 30px

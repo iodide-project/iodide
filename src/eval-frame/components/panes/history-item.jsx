@@ -37,8 +37,6 @@ export class HistoryItemUnconnected extends React.Component {
   }
 
   render() {
-    let output;
-    let showCellReturnButton = true;
     switch (this.props.historyType) {
       case "PLUGIN_STATUS": {
         return (
@@ -67,23 +65,13 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_OUTPUT": {
         return (
           <ConsoleOutput level={this.props.level}>
-            <ValueRenderer render valueToRender={this.props.valueToRender} />
+            <ValueRenderer valueToRender={this.props.valueToRender} />
           </ConsoleOutput>
         );
       }
       case "APP_MESSAGE": {
         return <AppMessage>{this.props.content}</AppMessage>;
       }
-      case "CELL_EVAL_VALUE":
-        output = <ValueRenderer valueToRender={this.props.valueToRender} />;
-        break;
-      case "CELL_EVAL_INFO":
-        output = this.props.valueToRender;
-        break;
-      case "CONSOLE_EVAL":
-        output = <ValueRenderer valueToRender={this.props.valueToRender} />;
-        showCellReturnButton = false;
-        break;
       case "FETCH_CELL_INFO":
         return (
           <ConsoleOutput level={this.props.level}>
@@ -94,40 +82,12 @@ export class HistoryItemUnconnected extends React.Component {
         );
       default:
         // TODO: Use better class for inline error
-        output = <div>Unknown history type {this.props.historyType}</div>;
-        break;
+        return (
+          <ConsoleMessage level="warn">
+            Unknown history type {this.props.historyType}
+          </ConsoleMessage>
+        );
     }
-
-    const cellReturnButton = showCellReturnButton ? (
-      <div className="history-metadata-positioner">
-        <div className="history-metadata">
-          <div className="history-show-actual-cell">
-            {/* <PaneContentButton
-              text="scroll to cell"
-              onClick={this.showEditorCell}
-            >
-              <ArrowBack style={{ fontSize: "12px" }} />
-            </PaneContentButton> */}
-          </div>
-          {/* <div className="history-time-since"> {this.state.timeSince} </div> */}
-        </div>
-      </div>
-    ) : (
-      ""
-    );
-
-    return (
-      <div
-        id={`history-item-id-${this.props.historyId}`}
-        className="history-cell"
-      >
-        <div className="history-content editor">
-          {cellReturnButton}
-          <pre className="history-item-code">{this.props.content}</pre>
-        </div>
-        <div className="history-item-output">{output}</div>
-      </div>
-    );
   }
 }
 
