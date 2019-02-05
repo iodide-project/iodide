@@ -26,7 +26,6 @@ export function getTextAreaPosition(textArea) {
 
 export class ConsoleInputUnconnected extends React.Component {
   static propTypes = {
-    // historyContents: PropTypes.arrayOf(PropTypes.string).isRequired,
     consoleText: PropTypes.string.isRequired,
     updateConsoleText: PropTypes.func.isRequired,
     consoleHistoryStepBack: PropTypes.func.isRequired,

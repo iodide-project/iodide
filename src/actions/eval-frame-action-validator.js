@@ -19,7 +19,12 @@ const historyActionSchema = Object.assign({}, historySchema);
 historyActionSchema.properties.type = { type: "string" };
 
 const schemas = {
-  ADD_LANGUAGE_TO_EVAL_FRAME: languageActionSchema,
+  ADD_LANGUAGE_TO_EVAL_FRAME: {
+    type: "object",
+    properties: {
+      languageDefinition: languageActionSchema
+    }
+  },
   ADD_TO_CONSOLE: historyActionSchema,
   UPDATE_CONSOLE_ENTRY: historyActionSchema,
   SET_CONSOLE_LANGUAGE: {
