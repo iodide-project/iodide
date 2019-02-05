@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import ArrowBack from "@material-ui/icons/ArrowBack";
-import { ValueRenderer } from "../../../components/reps/value-renderer";
+import ValueRenderer from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
 
 import PaneContentButton from "./pane-content-button";

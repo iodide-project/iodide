@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { ValueRenderer } from "../../../components/reps/value-renderer";
+import ValueRenderer from "../../../components/reps/value-renderer";
 
 export class DeclaredVariable extends React.Component {
   static propTypes = {

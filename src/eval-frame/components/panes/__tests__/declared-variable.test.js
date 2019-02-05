@@ -2,7 +2,7 @@ import { shallow } from "enzyme";
 import React from "react";
 
 import { DeclaredVariable } from "../declared-variable";
-import { ValueRenderer } from "../../../../components/reps/value-renderer";
+import ValueRenderer from "../../../../components/reps/value-renderer";
 
 describe("DeclaredVariable React component", () => {
   let props;
@@ -49,14 +49,6 @@ describe("DeclaredVariable React component", () => {
         .wrap(declaredVariable().find("div.declared-variable-value"))
         .find(ValueRenderer)
     ).toHaveLength(1);
-  });
-
-  it("sets the ValueRenderer's render prop to be true", () => {
-    expect(
-      declaredVariable()
-        .find(ValueRenderer)
-        .props().render
-    ).toBe(true);
   });
 
   it("sets the ValueRenderer's valueToRender prop to be declared variable's value prop", () => {

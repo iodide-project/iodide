@@ -8,7 +8,7 @@ export default class HTMLRenderer extends React.Component {
 
   render() {
     return (
-      <dev
+      <div
         title="htmlRep"
         dangerouslySetInnerHTML={{ __html: this.props.htmlString }} // eslint-disable-line react/no-danger
       />

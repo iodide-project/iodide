@@ -5,7 +5,7 @@ import { Inspector } from "iodide-react-inspector";
 
 export default class DefaultRenderer extends React.Component {
   static propTypes = {
-    value: PropTypes.any.isRequired
+    value: PropTypes.any
   };
 
   render() {
