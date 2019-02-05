@@ -1,5 +1,3 @@
-# Iodide Documentation
-
 ## User documentation
 
 **[Getting started and key concepts](key_concepts.md)**: The central concepts in Iodide, and how to get started.
