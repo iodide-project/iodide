@@ -8,7 +8,7 @@ Work on Iodide happens on Github. Core members and contributors can make Pull Re
 
 We’ll do our best to keep `master` in a non-breaking state, ideally with tests always passing. The unfortunate reality of software development is sometimes things break. As such, `master` cannot be expected to remain reliable at all times. We recommend using the latest stable version of Iodide.
 
-We keep a file, [CHANGELOG.md](https://github.com/iodide-project/iodide/blob/master/CHANGELOG.md.md), outlining changes to Iodide in each release. We like to think of the audience for changelogs as non-developers who primarily run the latest stable. So the change log will primarily outline user-visible changes such as new features and deprecations, and will exclude things that might otherwise be inconsequential to the end user experience, such as infrastructure or refactoring.
+We keep a file, [CHANGELOG.md](https://github.com/iodide-project/iodide/blob/master/CHANGELOG.md), outlining changes to Iodide in each release. We like to think of the audience for changelogs as non-developers who primarily run the latest stable. So the change log will primarily outline user-visible changes such as new features and deprecations, and will exclude things that might otherwise be inconsequential to the end user experience, such as infrastructure or refactoring.
 
 ## Bugs & Issues
 
@@ -56,11 +56,11 @@ Some guidelines that we tend to follow:
 
 ### Linting
 
-We also rely on linting as a way of standardizing low-level style choices in the code. We use [Airbnb's Javascript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react). The use of a linter in your development worflow means you can focus on the higher-level aspects of style. As such we will likely not accept any PRs that fail linting. If this feels like a hassle, we'd recommend roughly following the Development Workflow below so you don't have to sweat this detail!
+We rely on linting as a way of standardizing low-level style choices in the code. We use [Airbnb's Javascript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react), as well as [Prettier](https://pretter.io). The use of a linter in your development worflow means you can focus on the higher-level aspects of style. As such we will likely not accept any PRs that fail linting. If this feels like a hassle, we'd recommend roughly following the Development Workflow below so you don't have to sweat this detail!
 
 ## Contribution Prerequisites
 
-- You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/).
+- You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/). If you want to work on the server, you will also need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
 - You should have some familiarity with React, Redux, modern ECMAScript, or be willing to learn.
 - You should have some familiarity with how Git works, or be willing ot learn.
 
@@ -81,11 +81,13 @@ The files built in prod mode have resource paths set to fixed web addresses, not
 ### Landing a PR!
 
 We're excited to have you land your first PR! Some key guidelines for having a PR accepted:
-1. Your PR should only contain commits pertaining to the change
-2. New code must have tests
-3. All new and existing tests must pass, the linter must pass, and CI must pass
 
+1. Your PR should only contain commits pertaining to the change.
+2. New code must have tests.
+3. All new and existing tests must pass, the linter must pass, and CI must pass.
+4. Commit messages should be descriptive and informative, as should the PR title. Please do not just write something like "Fix issue #123456" as this makes it impossible to skim the changelog on its own. See [this Tim Pope's blog post](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html) on this subject.
 
+It is ok to post an incomplete work-in-progress PR to ask for help or initial feedback, but please only ask for review when the above criteria are met.
 
 ## Style Guide
 
