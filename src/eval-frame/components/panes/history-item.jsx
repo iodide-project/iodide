@@ -6,7 +6,6 @@ import ValueRenderer from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
 
 import EvalInput from "./console/eval-input";
-import EvalOutput from "./console/eval-output";
 import ConsoleMessage from "./console/console-message";
 import AppMessage from "./console/app-message";
 
@@ -45,7 +44,7 @@ export class HistoryItemUnconnected extends React.Component {
       case "FETCH_CELL_INFO": {
         // returns an output associated with an input.
         return (
-          <EvalOutput level={this.props.level}>
+          <ConsoleMessage level={this.props.level || "output"}>
             {this.props.historyType === "FETCH_CELL_INFO" ? (
               <PreformattedTextItemsHandler
                 textItems={this.props.valueToRender}
@@ -53,7 +52,7 @@ export class HistoryItemUnconnected extends React.Component {
             ) : (
               <ValueRenderer valueToRender={this.props.valueToRender} />
             )}
-          </EvalOutput>
+          </ConsoleMessage>
         );
       }
       case "APP_MESSAGE": {

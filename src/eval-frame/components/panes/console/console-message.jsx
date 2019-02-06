@@ -27,13 +27,13 @@ export const mapProps = level => {
 };
 
 const ConsoleMessage = ({ children, level }) => {
-  const { backgroundColor, textColor, symbol } = mapProps(level);
+  const { backgroundColor, textColor, icon } = mapProps(level);
   return (
     <MessageContainer
       backgroundColor={backgroundColor}
       textColor={textColor || "black"}
     >
-      <ConsoleGutter>{symbol}</ConsoleGutter>
+      <ConsoleGutter>{icon}</ConsoleGutter>
       <MessageBody>{children}</MessageBody>
     </MessageContainer>
   );

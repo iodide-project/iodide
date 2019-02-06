@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import DoubleChevron from "./double-chevron-icon";
 import BaseIcon from "./console/base-icon";
 import ConsoleGutter from "./console/console-gutter";
-import { evalConsoleInput } from "../../actions/actions";
+import { evalConsoleInput, setConsoleLanguage } from "../../actions/actions";
 import { postActionToEditor } from "../../port-to-editor";
 
 import THEME from "../../../shared/theme";
@@ -29,7 +29,10 @@ export class ConsoleInputUnconnected extends React.Component {
     consoleText: PropTypes.string.isRequired,
     updateConsoleText: PropTypes.func.isRequired,
     consoleHistoryStepBack: PropTypes.func.isRequired,
-    evalConsoleInput: PropTypes.func.isRequired
+    setConsoleLanguage: PropTypes.func.isRequired,
+    evalConsoleInput: PropTypes.func.isRequired,
+    availableLanguages: PropTypes.object.isRequired,
+    currentLanguage: PropTypes.string.isRequired
   };
 
   constructor(props) {
@@ -146,7 +149,13 @@ export class ConsoleInputUnconnected extends React.Component {
             value={this.state.consoleText}
           />
         </div>
-        <ConsoleLanguageMenu />
+        <ConsoleLanguageMenu
+          availableLanguages={this.props.availableLanguages}
+          currentLanguage={this.props.currentLanguage}
+          onMenuClick={language => {
+            this.props.setConsoleLanguage(language.languageId);
+          }}
+        />
       </div>
     );
   }
@@ -176,8 +185,15 @@ export const ConsoleInputMessagePasser = connectMessagePassers(
 );
 
 export function mapStateToProps(state) {
+  const availableLanguages = Object.assign(
+    {},
+    state.languageDefinitions,
+    state.loadedLanguages
+  );
   return {
-    consoleText: state.consoleText
+    consoleText: state.consoleText,
+    currentLanguage: state.languageLastUsed,
+    availableLanguages
   };
 }
 
@@ -185,9 +201,14 @@ function mapDispatchToProps(dispatch) {
   return {
     evalConsoleInput: consoleText => {
       dispatch(evalConsoleInput(consoleText));
+    },
+    setConsoleLanguage: language => {
+      dispatch(setConsoleLanguage(language));
     }
   };
 }
+
+// /
 
 export default connect(
   mapStateToProps,
