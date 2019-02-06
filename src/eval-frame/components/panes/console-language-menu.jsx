@@ -43,6 +43,8 @@ const LanguageName = styled("div")`
   padding-right: 6px;
 `;
 
+const onMenuClickCreator = (fcn, languageId) => () => fcn(languageId);
+
 const ConsoleLanguageMenu = ({
   availableLanguages,
   currentLanguage,
@@ -63,9 +65,7 @@ const ConsoleLanguageMenu = ({
           {Object.values(availableLanguages).map(language => (
             <MenuItem
               key={language.languageId}
-              onClick={() => {
-                onMenuClick(language);
-              }}
+              onClick={onMenuClickCreator(onMenuClick, language.languageId)}
             >
               <LanguageName>{language.displayName}</LanguageName>
               <LanguageShort>{language.languageId}</LanguageShort>

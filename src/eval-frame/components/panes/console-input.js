@@ -152,9 +152,7 @@ export class ConsoleInputUnconnected extends React.Component {
         <ConsoleLanguageMenu
           availableLanguages={this.props.availableLanguages}
           currentLanguage={this.props.currentLanguage}
-          onMenuClick={language => {
-            this.props.setConsoleLanguage(language.languageId);
-          }}
+          onMenuClick={this.props.setConsoleLanguage}
         />
       </div>
     );
@@ -202,8 +200,8 @@ function mapDispatchToProps(dispatch) {
     evalConsoleInput: consoleText => {
       dispatch(evalConsoleInput(consoleText));
     },
-    setConsoleLanguage: language => {
-      dispatch(setConsoleLanguage(language));
+    setConsoleLanguage: languageId => {
+      dispatch(setConsoleLanguage(languageId));
     }
   };
 }
