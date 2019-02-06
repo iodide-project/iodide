@@ -45,14 +45,12 @@ export class ConsolePaneUnconnected extends React.Component {
   render() {
     let histContents = [];
     if (this.props.history.length) {
-      histContents = this.props.history
-        // .filter(historyItem => historyItem.content !== undefined) // || historyItem.content.length
-        .map(historyItem => (
-          <HistoryItem
-            historyItem={historyItem}
-            key={`history-${historyItem.lastRan}-${historyItem.historyId}`}
-          />
-        ));
+      histContents = this.props.history.map(historyItem => (
+        <HistoryItem
+          historyItem={historyItem}
+          key={`history-${historyItem.lastRan}-${historyItem.historyId}`}
+        />
+      ));
     } else {
       histContents.push(
         <EmptyPaneContents key="onboarding">
