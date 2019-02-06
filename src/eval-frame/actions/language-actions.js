@@ -46,7 +46,6 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           })
         );
       });
-
       xhrObj.addEventListener("load", () => {
         value = `${displayName} plugin downloaded, initializing`;
         // see the following for asynchronous loading of scripts from strings:
@@ -58,6 +57,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
         // If it is simply evaling a code block, then it returns undefined.
         // But if it returns a Promise, then we can wait for that promise to resolve
         // before we continue execution.
+
         if (xhrObj.status > 400 && xhrObj.status < 600) {
           value = `${displayName} failed to load: ${xhrObj.status} ${
             xhrObj.statusText
@@ -72,8 +72,8 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           );
           resolve({ value, status: "ERROR" });
         }
-        const pr = Promise.resolve(window.eval(xhrObj.responseText)); // eslint-disable-line no-eval
 
+        const pr = Promise.resolve(window.eval(xhrObj.responseText)); // eslint-disable-line no-eval
         pr.then(() => {
           value = `${displayName} plugin ready`;
           dispatch(addLanguage(pluginData));
@@ -87,6 +87,16 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           );
           delete window.languagePluginUrl;
           resolve({ value, status: "SUCCESS" });
+        }).catch(err => {
+          sendStatusResponseToEditor("ERROR", evalId);
+          dispatch(
+            updateConsoleEntry({
+              historyId,
+              content: err.message,
+              additionalArguments: { level: "error" }
+            })
+          );
+          reject(err);
         });
       });
 
