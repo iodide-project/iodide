@@ -21,23 +21,26 @@ const MessageBody = styled("div")`
   padding-bottom: 5px;
 `;
 
-export default class ConsoleMessage extends React.Component {
-  static propTypes = {
-    level: PropTypes.string
-  };
-  render() {
-    const levelData = levels[this.props.level];
-    return (
-      <MessageContainer
-        backgroundColor={levelData.backgroundColor}
-        textColor={levelData.textColor || "black"}
-      >
-        <ConsoleGutter side="left">
-          {this.props.symbol || levelData.symbol}
-        </ConsoleGutter>
-        <MessageBody>{this.props.children}</MessageBody>
-        <ConsoleGutter side="Right">&nbsp;</ConsoleGutter>
-      </MessageContainer>
-    );
-  }
-}
+// the test here needs to check that it outputs backgroundColor, textColor, symbol
+export const mapProps = level => {
+  return levels[level];
+};
+
+const ConsoleMessage = ({ children, level }) => {
+  const { backgroundColor, textColor, symbol } = mapProps(level);
+  return (
+    <MessageContainer
+      backgroundColor={backgroundColor}
+      textColor={textColor || "black"}
+    >
+      <ConsoleGutter>{symbol}</ConsoleGutter>
+      <MessageBody>{children}</MessageBody>
+    </MessageContainer>
+  );
+};
+
+ConsoleMessage.propTypes = {
+  level: PropTypes.oneOf(Object.keys(levels)).isRequired
+};
+
+export default ConsoleMessage;

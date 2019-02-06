@@ -1,4 +1,5 @@
 import React from "react";
+
 import PropTypes from "prop-types";
 import styled from "react-emotion";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -16,7 +17,7 @@ const OutputContainer = styled(ConsoleContainer)`
   overflow: auto;
   margin-top: 0px;
   margin-bottom: 0px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const OutputBody = styled(ConsoleBody)`
@@ -26,31 +27,32 @@ const OutputBody = styled(ConsoleBody)`
   padding: 5px 0px 5px 0px;
 `;
 
-export default class ConsoleOutput extends React.Component {
-  static propTypes = {
-    level: PropTypes.string
-  };
-  render() {
-    // FIXME: this needs to all move out of the direct logic of this component
-    // or tests need to be written.
-    const GutterIcon =
-      this.props.level && this.props.level === "error" ? (
-        levels.error.symbol
-      ) : (
-        <ArrowBack />
-      );
-    const backgroundColor = levels[this.props.level]
-      ? levels[this.props.level].backgroundColor
-      : "white";
-    const textColor = levels[this.props.level]
-      ? levels[this.props.level].textColor
-      : "black";
-    return (
-      <OutputContainer backgroundColor={backgroundColor} textColor={textColor}>
-        <ConsoleGutter side="left">{GutterIcon}</ConsoleGutter>
-        <OutputBody>{this.props.children}</OutputBody>
-        <ConsoleGutter side="right">&nbsp;</ConsoleGutter>
-      </OutputContainer>
-    );
-  }
+export function mapProps(level) {
+  const GutterIcon = level !== undefined ? levels[level].symbol : <ArrowBack />;
+  const backgroundColor = levels[level]
+    ? levels[level].backgroundColor
+    : "white";
+  const textColor = levels[level] ? levels[level].textColor : "black";
+  return { icon: GutterIcon, backgroundColor, textColor };
 }
+
+const EvalOutput = ({ level, children }) => {
+  const props = mapProps(level);
+  return (
+    <OutputContainer
+      backgroundColor={props.backgroundColor}
+      textColor={props.textColor}
+    >
+      <ConsoleGutter>{props.icon}</ConsoleGutter>
+      <OutputBody>{children}</OutputBody>
+    </OutputContainer>
+  );
+};
+
+EvalOutput.propTypes = {
+  backgroundColor: PropTypes.string,
+  textColor: PropTypes.string,
+  icon: PropTypes.element
+};
+
+export default EvalOutput;

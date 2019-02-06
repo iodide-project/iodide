@@ -145,7 +145,7 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
       addToConsole({
         historyId: outputHistoryId,
         content: `loading ${pluginData.displayName}`,
-        historyType: "CONSOLE_OUTPUT",
+        historyType: "CONSOLE_MESSAGE",
         additionalArguments: { level: "log" }
       })
     );

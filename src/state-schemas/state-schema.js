@@ -21,17 +21,11 @@ export const historySchema = {
     historyType: {
       type: "string",
       enum: [
-        "CELL_EVAL_VALUE",
-        "CELL_EVAL_INFO",
         "APP_INFO",
-        "SAVED_REP",
-        "CONSOLE_EVAL",
-        "SNIPPET_EVAL",
         "FETCH_CELL_INFO",
         "CONSOLE_INPUT",
         "CONSOLE_OUTPUT",
         "CONSOLE_MESSAGE",
-        "PLUGIN_STATUS",
         "APP_MESSAGE"
       ]
     },

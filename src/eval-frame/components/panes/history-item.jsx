@@ -10,43 +10,23 @@ import EvalOutput from "./console/eval-output";
 import ConsoleMessage from "./console/console-message";
 import AppMessage from "./console/app-message";
 
-import PluginLoadingMessage from "./console/plugin-loading-message";
-
-import { postMessageToEditor } from "../../port-to-editor";
 import { EVALUATION_RESULTS } from "../../actions/actions";
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
-    cellId: PropTypes.number,
+    level: PropTypes.string,
     historyId: PropTypes.number.isRequired,
     historyType: PropTypes.string.isRequired,
     lastRan: PropTypes.number.isRequired,
     additionalArguments: PropTypes.object
   };
-  constructor(props) {
-    super(props);
-    this.showEditorCell = this.showEditorCell.bind(this);
-  }
-
-  showEditorCell() {
-    postMessageToEditor("CLICK_ON_OUTPUT", {
-      id: this.props.cellId,
-      autoScrollToCell: true
-    });
-  }
 
   render() {
     switch (this.props.historyType) {
-      case "PLUGIN_STATUS": {
-        return (
-          <PluginLoadingMessage
-            loadStatus={this.props.additionalArguments.status}
-          >
-            {this.props.content}
-          </PluginLoadingMessage>
-        );
-      }
       case "CONSOLE_MESSAGE": {
+        // console messages are non eval input / output messages.
+        // examples: implicit plugin load statuses / errors, eventually browser console
+        // interception.
         return (
           <ConsoleMessage level={this.props.additionalArguments.level}>
             {this.props.content}
@@ -54,31 +34,31 @@ export class HistoryItemUnconnected extends React.Component {
         );
       }
       case "CONSOLE_INPUT": {
-        // returns a code input.
+        // returns an input.
         return (
           <EvalInput language={this.props.additionalArguments.language}>
             {this.props.content}
           </EvalInput>
         );
       }
-      case "CONSOLE_OUTPUT": {
+      case "CONSOLE_OUTPUT":
+      case "FETCH_CELL_INFO": {
+        // returns an output associated with an input.
         return (
           <EvalOutput level={this.props.level}>
-            <ValueRenderer valueToRender={this.props.valueToRender} />
+            {this.props.historyType === "FETCH_CELL_INFO" ? (
+              <PreformattedTextItemsHandler
+                textItems={this.props.valueToRender}
+              />
+            ) : (
+              <ValueRenderer valueToRender={this.props.valueToRender} />
+            )}
           </EvalOutput>
         );
       }
       case "APP_MESSAGE": {
         return <AppMessage messageType={this.props.content} />;
       }
-      case "FETCH_CELL_INFO":
-        return (
-          <EvalOutput level={this.props.level}>
-            <PreformattedTextItemsHandler
-              textItems={this.props.valueToRender}
-            />
-          </EvalOutput>
-        );
       default:
         // TODO: Use better class for inline error
         return (
@@ -93,7 +73,6 @@ export class HistoryItemUnconnected extends React.Component {
 export function mapStateToProps(state, ownProps) {
   return {
     content: ownProps.historyItem.content,
-    cellId: ownProps.historyItem.cellId,
     historyId: ownProps.historyItem.historyId,
     historyType: ownProps.historyItem.historyType,
     lastRan: ownProps.historyItem.lastRan,

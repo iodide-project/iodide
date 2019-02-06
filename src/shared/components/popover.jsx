@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "react-emotion";
 
@@ -62,6 +63,10 @@ class OutsideClickBoundary extends React.Component {
 }
 
 export default class Popover extends React.Component {
+  static propTypes = {
+    title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+    activatingComponent: PropTypes.element
+  };
   constructor(props) {
     super(props);
     this.setVisibility = this.setVisibility.bind(this);
