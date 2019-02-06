@@ -16,6 +16,8 @@ function getDataSync(url) {
 
 export const iodide = {
   addOutputRenderer: (...params) => UserReps.addRenderer(...params),
+  // FIXME remove addOutputHandler once pyodide updates to stop using it
+  addOutputHandler: (...params) => UserReps.addRenderer(...params),
   clearOutputRenderers: (...params) => UserReps.clearRenderers(...params),
   getDataSync,
   environment,
