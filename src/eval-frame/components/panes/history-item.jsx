@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import ArrowBack from "@material-ui/icons/ArrowBack";
-import { ValueRenderer } from "../../../components/reps/value-renderer";
+import ValueRenderer from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
 
 import PaneContentButton from "./pane-content-button";
@@ -36,17 +36,13 @@ export class HistoryItemUnconnected extends React.Component {
     let showCellReturnButton = true;
     switch (this.props.historyType) {
       case "CELL_EVAL_VALUE":
-        output = (
-          <ValueRenderer render valueToRender={this.props.valueToRender} />
-        );
+        output = <ValueRenderer valueToRender={this.props.valueToRender} />;
         break;
       case "CELL_EVAL_INFO":
         output = this.props.valueToRender;
         break;
       case "CONSOLE_EVAL":
-        output = (
-          <ValueRenderer render valueToRender={this.props.valueToRender} />
-        );
+        output = <ValueRenderer valueToRender={this.props.valueToRender} />;
         showCellReturnButton = false;
         break;
       case "FETCH_CELL_INFO":

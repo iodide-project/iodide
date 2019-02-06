@@ -1,6 +1,7 @@
-# 0.0.4 (Unreleased; add upcoming change notes here)
+# 0.1.0 (Unreleased; add upcoming change notes here)
 
-Release focusing on workflow refinements and object inspection refinements
+- move reps to react inspector
+- change nomenclature around user output reps _including in API_ (**breaking change**)
 
 # 0.0.3 (2019-02-04)
 
