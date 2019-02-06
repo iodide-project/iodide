@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "react-emotion";
-// import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import Popover from "../../../shared/components/popover";
@@ -8,8 +7,6 @@ import Menu from "../../../shared/components/menu";
 import MenuItem from "../../../shared/components/menu-item";
 import { TextButton } from "../../../shared/components/buttons";
 import BaseIcon from "./console/base-icon";
-
-// import { setConsoleLanguage } from "../../actions/actions";
 
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;
