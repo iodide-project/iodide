@@ -107,7 +107,6 @@ ErrorStackParser.parseFFOrSafari = error => {
   }, ErrorStackParser);
 };
 
-const ErrorContainer = styled("div")``;
 const ErrorPrintout = styled("pre")`
   margin: 0;
 `;
@@ -138,9 +137,9 @@ export default class ErrorRenderer extends React.Component {
   render() {
     const stack = trimStack(this.props.error);
     return (
-      <ErrorContainer>
+      <div>
         <ErrorPrintout>{stack}</ErrorPrintout>
-      </ErrorContainer>
+      </div>
     );
   }
 }
