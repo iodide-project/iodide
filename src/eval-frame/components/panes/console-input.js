@@ -31,7 +31,12 @@ export class ConsoleInputUnconnected extends React.Component {
     consoleHistoryStepBack: PropTypes.func.isRequired,
     setConsoleLanguage: PropTypes.func.isRequired,
     evalConsoleInput: PropTypes.func.isRequired,
-    availableLanguages: PropTypes.object.isRequired,
+    availableLanguages: PropTypes.arrayOf(
+      PropTypes.shape({
+        displayName: PropTypes.string.isRequired,
+        languageId: PropTypes.string.isRequired
+      })
+    ).isRequired,
     currentLanguage: PropTypes.string.isRequired
   };
 
@@ -183,10 +188,8 @@ export const ConsoleInputMessagePasser = connectMessagePassers(
 );
 
 export function mapStateToProps(state) {
-  const availableLanguages = Object.assign(
-    {},
-    state.languageDefinitions,
-    state.loadedLanguages
+  const availableLanguages = Object.values(
+    Object.assign({}, state.languageDefinitions, state.loadedLanguages)
   );
   return {
     consoleText: state.consoleText,
@@ -205,8 +208,6 @@ function mapDispatchToProps(dispatch) {
     }
   };
 }
-
-// /
 
 export default connect(
   mapStateToProps,

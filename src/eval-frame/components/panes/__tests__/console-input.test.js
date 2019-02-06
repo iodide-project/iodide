@@ -41,10 +41,10 @@ describe("ConsoleInputUnconnected React component", () => {
       evalConsoleInput,
       setConsoleLanguage,
       currentLanguage: "js",
-      availableLanguages: {
-        js: { languageId: "js", displayName: "Javascript" },
-        py: { languageId: "py", displayName: "Python" }
-      }
+      availableLanguages: [
+        { languageId: "js", displayName: "Javascript" },
+        { languageId: "py", displayName: "Python" }
+      ]
     };
     mountedComponent = undefined;
   });
@@ -142,10 +142,12 @@ describe("ConsoleInput mapStateToProps", () => {
     expect(mapStateToProps(state).currentLanguage).toEqual("js");
   });
   it("loads state.availableLanguages as expected", () => {
-    expect(mapStateToProps(state).availableLanguages).toEqual({
-      js: { languageId: "js", displayName: "Javascript" },
-      py: { languageId: "py", displayName: "Python" },
-      jl: { languageId: "jl", displayName: "Julia" }
-    });
+    const props = mapStateToProps(state);
+    expect(new Set(props.availableLanguages.map(d => d.languageId))).toEqual(
+      new Set(["js", "py", "jl"])
+    );
+    expect(new Set(props.availableLanguages.map(d => d.displayName))).toEqual(
+      new Set(["Javascript", "Python", "Julia"])
+    );
   });
 });

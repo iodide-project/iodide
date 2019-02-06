@@ -62,7 +62,7 @@ const ConsoleLanguageMenu = ({
         }
       >
         <Menu>
-          {Object.values(availableLanguages).map(language => (
+          {availableLanguages.map(language => (
             <MenuItem
               key={language.languageId}
               onClick={onMenuClickCreator(onMenuClick, language.languageId)}
@@ -78,7 +78,12 @@ const ConsoleLanguageMenu = ({
 };
 ConsoleLanguageMenu.propTypes = {
   currentLanguage: PropTypes.string.isRequired,
-  availableLanguages: PropTypes.object.isRequired,
+  availableLanguages: PropTypes.arrayOf(
+    PropTypes.shape({
+      displayName: PropTypes.string.isRequired,
+      languageId: PropTypes.string.isRequired
+    })
+  ).isRequired,
   onMenuClick: PropTypes.func.isRequired
 };
 export default ConsoleLanguageMenu;
