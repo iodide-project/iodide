@@ -23,7 +23,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
       updateConsoleEntry({
         historyId,
         content: value,
-        additionalArguments: { level: "error" }
+        level: "error"
       })
     );
   } else {
@@ -42,7 +42,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           updateConsoleEntry({
             historyId,
             content: value,
-            additionalArguments: { level: "log" }
+            level: "log"
           })
         );
       });
@@ -67,7 +67,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
             updateConsoleEntry({
               historyId,
               content: value,
-              additionalArguments: { level: "log" }
+              level: "log"
             })
           );
           resolve({ value, status: "ERROR" });
@@ -82,7 +82,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
             updateConsoleEntry({
               historyId,
               content: value,
-              additionalArguments: { level: "log" }
+              level: "log"
             })
           );
           delete window.languagePluginUrl;
@@ -93,7 +93,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
             updateConsoleEntry({
               historyId,
               content: err.message,
-              additionalArguments: { level: "error" }
+              level: "error"
             })
           );
           reject(err);
@@ -106,7 +106,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           updateConsoleEntry({
             historyId,
             content: value,
-            additionalArguments: { level: "error" }
+            level: "error"
           })
         );
         sendStatusResponseToEditor("ERROR", evalId);
@@ -134,7 +134,7 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
         historyId: inputHistoryId,
         content: pluginText,
         historyType: "CONSOLE_INPUT",
-        additionalArguments: { language: "plugin" }
+        language: "plugin"
       })
     );
     try {
@@ -145,7 +145,7 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
           historyId: outputHistoryId,
           content: `plugin definition failed to parse:\n${err.message}`,
           historyType: "CONSOLE_MESSAGE",
-          additionalArguments: { level: "error" }
+          level: "error"
         })
       );
       sendStatusResponseToEditor("ERROR", evalId);
@@ -156,7 +156,7 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
         historyId: outputHistoryId,
         content: `loading ${pluginData.displayName}`,
         historyType: "CONSOLE_MESSAGE",
-        additionalArguments: { level: "log" }
+        level: "log"
       })
     );
     return loadLanguagePlugin(
@@ -187,7 +187,7 @@ export function ensureLanguageAvailable(languageId, state, evalId, dispatch) {
         content: `Loading ${
           state.languageDefinitions[languageId].displayName
         } language plugin`,
-        additionalArguments: { level: "log" }
+        level: "log"
       })
     );
     return loadLanguagePlugin(
@@ -201,7 +201,7 @@ export function ensureLanguageAvailable(languageId, state, evalId, dispatch) {
           addToConsole({
             historyType: "CONSOLE_MESSAGE",
             content: value,
-            additionalArguments: { level: status === "ERROR" ? "error" : "log" }
+            level: status === "ERROR" ? "error" : "log"
           })
         );
       })

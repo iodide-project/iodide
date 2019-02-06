@@ -17,7 +17,7 @@ export class HistoryItemUnconnected extends React.Component {
     historyId: PropTypes.number.isRequired,
     historyType: PropTypes.string.isRequired,
     lastRan: PropTypes.number.isRequired,
-    additionalArguments: PropTypes.object
+    language: PropTypes.string
   };
 
   render() {
@@ -27,7 +27,7 @@ export class HistoryItemUnconnected extends React.Component {
         // examples: implicit plugin load statuses / errors, eventually browser console
         // interception.
         return (
-          <ConsoleMessage level={this.props.additionalArguments.level}>
+          <ConsoleMessage level={this.props.level}>
             {this.props.content}
           </ConsoleMessage>
         );
@@ -35,7 +35,7 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_INPUT": {
         // returns an input.
         return (
-          <EvalInput language={this.props.additionalArguments.language}>
+          <EvalInput language={this.props.language}>
             {this.props.content}
           </EvalInput>
         );
@@ -76,10 +76,8 @@ export function mapStateToProps(state, ownProps) {
     historyId: ownProps.historyItem.historyId,
     historyType: ownProps.historyItem.historyType,
     lastRan: ownProps.historyItem.lastRan,
-    level: ownProps.historyItem.additionalArguments
-      ? ownProps.historyItem.additionalArguments.level
-      : undefined,
-    additionalArguments: ownProps.historyItem.additionalArguments,
+    level: ownProps.historyItem.level,
+    language: ownProps.historyItem.language,
     valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId]
   };
 }

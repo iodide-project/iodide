@@ -30,7 +30,8 @@ export const historySchema = {
       ]
     },
     lastRan: { type: "integer" },
-    additionalArguments: { type: "object" },
+    level: { type: "string" },
+    language: { type: "string" },
     value: {}
   },
   additionalProperties: true

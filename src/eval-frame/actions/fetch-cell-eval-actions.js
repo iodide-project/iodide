@@ -106,9 +106,7 @@ export function evaluateFetchText(fetchText, evalId) {
         historyType: "CONSOLE_INPUT",
         historyId: inputHistoryId,
         content: fetchText,
-        additionalArguments: {
-          language: "fetch"
-        }
+        language: "fetch"
       })
     );
     const outputHistoryId = historyIdGen.nextId();
@@ -120,7 +118,7 @@ export function evaluateFetchText(fetchText, evalId) {
           historyType: "FETCH_CELL_INFO",
           historyId: outputHistoryId,
           content: syntaxErrors.map(fetchProgressInitialStrings),
-          additionalArguments: { level: "error" }
+          level: "error"
         })
       );
       sendStatusResponseToEditor("ERROR", evalId);
@@ -161,7 +159,7 @@ export function evaluateFetchText(fetchText, evalId) {
             updateConsoleEntry({
               historyId: outputHistoryId,
               content: outcomes,
-              additionalArguments: { level: "error" }
+              level: "error"
             })
           );
         }

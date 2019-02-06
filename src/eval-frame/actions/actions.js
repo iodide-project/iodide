@@ -70,7 +70,8 @@ export function changeConsoleElement({
   historyType,
   content,
   historyId = historyIdGen.nextId(),
-  additionalArguments = {},
+  level,
+  language,
   actionType = "ADD_TO_CONSOLE"
 }) {
   let consoleContent;
@@ -86,7 +87,8 @@ export function changeConsoleElement({
     historyType,
     content: consoleContent,
     historyId,
-    additionalArguments,
+    level,
+    language,
     lastRan: Date.now()
   };
   if (actionType === "UPDATE_CONSOLE_ENTRY") delete action.historyType;
@@ -97,26 +99,25 @@ export function addToConsole({
   historyType,
   content,
   historyId,
-  additionalArguments = {}
+  level,
+  language
 }) {
   return changeConsoleElement({
     historyType,
     content,
     historyId,
-    additionalArguments,
+    level,
+    language,
     actionType: "ADD_TO_CONSOLE"
   });
 }
 
-export function updateConsoleEntry({
-  content,
-  historyId,
-  additionalArguments
-}) {
+export function updateConsoleEntry({ content, historyId, level, language }) {
   return changeConsoleElement({
     content,
     historyId,
-    additionalArguments,
+    level,
+    language,
     actionType: "UPDATE_CONSOLE_ENTRY"
   });
 }
@@ -180,7 +181,7 @@ function evaluateCode(code, language, state, evalId) {
           addToConsole({
             historyType: "CONSOLE_OUTPUT",
             content: output,
-            additionalArguments: { level: "error" }
+            level: "error"
           })
         );
       } else {
@@ -199,7 +200,7 @@ function evaluateCode(code, language, state, evalId) {
         addToConsole({
           historyType: "CONSOLE_MESSAGE",
           content: msg,
-          additionalArguments: { level: "log" }
+          level: "log"
         })
       );
     };
@@ -211,7 +212,7 @@ function evaluateCode(code, language, state, evalId) {
           addToConsole({
             historyType: "CONSOLE_INPUT",
             content: code,
-            additionalArguments: { language }
+            language
           })
         );
         return runCodeWithLanguage(languageEvaluator, code, messageCallback);
@@ -263,16 +264,14 @@ export function evaluateText(
         addToConsole({
           content: evalText,
           historyType: "CONSOLE_INPUT",
-          additionalArguments: {
-            language: evalType
-          }
+          language: evalType
         })
       );
       dispatch(
         addToConsole({
           content: new Error(`eval type ${evalType} is not defined`),
           historyType: "CONSOLE_OUTPUT",
-          additionalArguments: { level: "error" }
+          level: "error"
         })
       );
       sendStatusResponseToEditor("ERROR", evalId);
