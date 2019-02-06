@@ -6,13 +6,13 @@ import { postActionToEvalFrame } from "../port-to-eval-frame";
 function newAppMessage(
   appMessageId,
   appMessageText,
-  appMessageDetails,
+  appMessageType,
   appMessageWhen
 ) {
   return {
     id: appMessageId,
     message: appMessageText,
-    details: appMessageDetails,
+    messageType: appMessageType,
     when: appMessageWhen
   };
 }
@@ -23,7 +23,7 @@ function addAppMessageToState(state, appMessage) {
     newAppMessage(
       nextAppMessageId,
       appMessage.message,
-      appMessage.details,
+      appMessage.messageType,
       appMessage.when
     )
   );

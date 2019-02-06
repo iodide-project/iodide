@@ -34,19 +34,19 @@ export function setKernelState(kernelState) {
 
 export function updateAppMessages(messageObj, addToConsole = false) {
   const { message } = messageObj;
-  let { details, when } = messageObj;
+  let { messageType, when } = messageObj;
   if (when === undefined) when = new Date().toString();
-  if (details === undefined) details = message;
+  if (messageType === undefined) messageType = message;
   if (addToConsole) {
     postActionToEvalFrame({
       type: "ADD_TO_CONSOLE",
-      content: details,
+      content: messageType,
       historyType: "APP_MESSAGE"
     });
   }
   return {
     type: "UPDATE_APP_MESSAGES",
-    message: { message, details, when }
+    message: { message, messageType, when }
   };
 }
 
@@ -276,7 +276,7 @@ function saveNotebookRequest(url, postRequestOptions, dispatch) {
         updateAppMessages(
           {
             message: "Notebook saved to server",
-            details: "NOTEBOOK_SAVED"
+            messageType: "NOTEBOOK_SAVED"
           },
           true
         )
@@ -288,7 +288,7 @@ function saveNotebookRequest(url, postRequestOptions, dispatch) {
         updateAppMessages(
           {
             message: "Error saving notebook",
-            details: "ERROR_SAVING_NOTEBOOK"
+            messageType: "ERROR_SAVING_NOTEBOOK"
           },
           true
         )

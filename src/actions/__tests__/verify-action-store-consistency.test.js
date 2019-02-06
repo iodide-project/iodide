@@ -42,10 +42,10 @@ describe("make sure action creators leave store in a consitent state", () => {
       store.dispatch(actions.updateAppMessages({ message: "foo" }))
     ).not.toThrow();
   });
-  it("updateAppMessages, with details", () => {
+  it("updateAppMessages, with messageType", () => {
     expect(() =>
       store.dispatch(
-        actions.updateAppMessages({ message: "foo", details: "bat" })
+        actions.updateAppMessages({ message: "foo", messageType: "bat" })
       )
     ).not.toThrow();
   });

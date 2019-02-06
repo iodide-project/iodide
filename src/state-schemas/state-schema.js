@@ -6,7 +6,7 @@ const appMessageSchema = {
   type: "object",
   properties: {
     message: { type: "string" },
-    details: { type: "string" },
+    messageType: { type: "string" },
     when: { type: "string" },
     id: { type: "integer", minimum: 0 }
   },
