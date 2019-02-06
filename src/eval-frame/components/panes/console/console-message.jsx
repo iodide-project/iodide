@@ -22,7 +22,6 @@ const MessageBody = styled("div")`
   padding-bottom: 5px;
 `;
 
-// the test here needs to check that it outputs backgroundColor, textColor, symbol
 export const mapProps = level => {
   return levels[level];
 };
