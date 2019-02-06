@@ -7,7 +7,6 @@ import React from "react";
 import { store } from "../../../store"; /* eslint-disable-line no-unused-vars */
 
 import HistoryItem from "../history-item";
-import PaneContentButton from "../pane-content-button";
 
 describe("HistoryItem React component", () => {
   let props;
@@ -68,9 +67,5 @@ describe("HistoryItem React component", () => {
   });
   it.skip("always renders one pre inside history-content", () => {
     expect(historyItem().find("pre.history-item-code")).toHaveLength(1);
-  });
-
-  it.skip("always contains a pane content button", () => {
-    expect(historyItem().find(PaneContentButton)).toHaveLength(1);
   });
 });
