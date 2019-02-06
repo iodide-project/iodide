@@ -1,4 +1,4 @@
-# 0.0.4 (Unreleased; add upcoming change notes here)
+# 0.1.0 (Unreleased; add upcoming change notes here)
 
 - move reps to react inspector
 - change nomenclature around user output reps _including in API_ (**breaking change**)
