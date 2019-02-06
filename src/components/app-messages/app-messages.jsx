@@ -36,7 +36,10 @@ export class appMessagesUnconnected extends React.Component {
     this.setState({ open: false });
   };
 
-  handleMore = () => {};
+  handleMore = () => {
+    // FIXME: handleMore should set the console to be on the top of its tab
+    // stack so that the user can see the details of the message
+  };
 
   render() {
     return (
@@ -46,11 +49,6 @@ export class appMessagesUnconnected extends React.Component {
         autoHideDuration={5000}
         message={
           <span id="message-id">{this.state.latestMessage.message}</span>
-        }
-        action={
-          <Button onClick={this.handleMore} color="secondary" size="small">
-            More
-          </Button>
         }
       />
     );
