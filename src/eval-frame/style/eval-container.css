@@ -151,13 +151,3 @@ button.display-button:focus {
 button.display-button:hover {
   background-color: #686868;
 }
-
-.fixed-position-container {
-  border: 1px solid rgba(0,0,0,.15) !important;
-  border-radius:4px;
-}
-.lm_tab {
-border: 1px solid rgba(0,0,0,.15) !important;
-border-top-left-radius: 4px;
-border-top-right-radius: 4px;
-}
