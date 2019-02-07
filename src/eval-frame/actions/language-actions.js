@@ -4,7 +4,7 @@ import {
   updateValueInHistory,
   sendStatusResponseToEditor
 } from "./actions";
-import generateNextIdFromHistory from "../../tools/generate-next-id-from-history";
+import generateRandomId from "../../tools/generate-random-id";
 
 export function addLanguage(languageDefinition) {
   return {
@@ -73,7 +73,8 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 
 export function evaluateLanguagePlugin(pluginText, evalId) {
   return (dispatch, getState) => {
-    const historyId = generateNextIdFromHistory(getState().history);
+    const historyId = generateRandomId(getState().history);
+    console.log("evaluateLanguagePlugin", historyId);
     dispatch(
       appendToEvalHistory(null, pluginText, undefined, {
         historyId,
@@ -108,7 +109,8 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
   if (
     Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)
   ) {
-    const historyId = generateNextIdFromHistory(state.history);
+    const historyId = generateRandomId();
+    console.log("ensureLanguageAvailable", historyId);
     dispatch(
       appendToEvalHistory(
         null,

@@ -14,7 +14,7 @@ export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string.isRequired,
     cellId: PropTypes.number,
-    historyId: PropTypes.number.isRequired,
+    historyId: PropTypes.string.isRequired,
     historyType: PropTypes.string.isRequired,
     lastRan: PropTypes.number.isRequired
   };

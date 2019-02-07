@@ -14,7 +14,7 @@ import {
 } from "../../tools/fetch-tools";
 
 import fetchFileFromParentContext from "../tools/fetch-file-from-parent-context";
-import generateNextIdFromHistory from "../../tools/generate-next-id-from-history";
+import generateRandomId from "../../tools/generate-random-id";
 
 export function fetchProgressInitialStrings(fetchInfo) {
   let text;
@@ -99,8 +99,8 @@ export async function handleFetch(fetchInfo) {
 }
 
 export function evaluateFetchText(fetchText, evalId) {
-  return (dispatch, getState) => {
-    const historyId = generateNextIdFromHistory(getState().history);
+  return dispatch => {
+    const historyId = generateRandomId();
     const fetches = parseFetchCell(fetchText);
     const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
     if (syntaxErrors.length) {

@@ -1,6 +1,6 @@
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 
-import generateNextIdFromHistory from "../../tools/generate-next-id-from-history";
+import generateRandomId from "../../tools/generate-random-id";
 
 import {
   evaluateLanguagePlugin,
@@ -129,9 +129,9 @@ export function evalConsoleInput(consoleText) {
 }
 
 function evaluateCode(code, language, state, evalId) {
-  return (dispatch, getState) => {
-    const historyId = generateNextIdFromHistory(getState().history);
-
+  return dispatch => {
+    const historyId = generateRandomId();
+    console.log("evaluateCode", historyId);
     const updateCellAfterEvaluation = (output, evalStatus) => {
       const cellProperties = { rendered: true };
       if (evalStatus === "ERROR") {
@@ -145,10 +145,12 @@ function evaluateCode(code, language, state, evalId) {
     };
 
     const messageCallback = msg => {
+      const messageHistoryId = generateRandomId();
+      console.log("messageCallback", messageHistoryId);
       dispatch(
         appendToEvalHistory(null, msg, undefined, {
           historyType: "CELL_EVAL_INFO",
-          historyId
+          historyId: messageHistoryId
         })
       );
     };
@@ -179,7 +181,7 @@ export function evaluateText(
     // if (!evalText || !evalType) { return undefined }
     // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
     // in the direct jsmd editing paradigm.
-    const historyId = generateNextIdFromHistory(getState().history);
+    const historyId = generateRandomId();
 
     MOST_RECENT_CHUNK_ID.set(chunkId);
     const sideEffect = document.getElementById(
