@@ -27,6 +27,19 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
         'title': revision.title
     } for revision in NotebookRevision.objects.filter(notebook=test_notebook)]
 
+    # verify that the full parameter gives us the content for each revision
+    # as well
+    resp = client.get(
+        reverse('notebook-revisions-list', kwargs={'notebook_id': test_notebook.id}) + '?full=1'
+    )
+    assert resp.status_code == 200
+    assert resp.json() == [{
+        'content': revision.content,
+        'created': get_rest_framework_time_string(revision.created),
+        'id': revision.id,
+        'title': revision.title
+    } for revision in NotebookRevision.objects.filter(notebook=test_notebook)]
+
     # verify that we can get the details of a single revision as well
     test_revision = NotebookRevision.objects.filter(notebook=test_notebook).first()
     resp = client.get(reverse('notebook-revisions-detail', kwargs={
@@ -39,6 +52,30 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
         'id': test_revision.id,
         'title': test_revision.title
     }
+
+
+def test_read_multiple_revisions(fake_user, test_notebook, client):
+    '''
+    tests that reading multiple revisions at the same time (but not all of
+    them) works
+    '''
+    secondary_revisions = [
+        NotebookRevision.objects.create(notebook=test_notebook,
+                                        title="Revision %s" % i,
+                                        content="*fake notebook content %s*" % i)
+        for i in range(2, 4)
+    ]
+    secondary_revisions.reverse()
+    url = (reverse('notebook-revisions-list', kwargs={'notebook_id': test_notebook.id})
+           + '?' + '&'.join(['id=%s' % str(revision.id) for revision in secondary_revisions]))
+
+    resp = client.get(url)
+    assert resp.status_code == 200
+    assert resp.json() == [{
+        'created': get_rest_framework_time_string(revision.created),
+        'id': revision.id,
+        'title': revision.title
+    } for revision in secondary_revisions]
 
 
 def test_read_revisions_non_existent_notebook(fake_user, test_notebook, client):
