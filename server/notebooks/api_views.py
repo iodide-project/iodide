@@ -59,11 +59,17 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
         return {'notebook_id': notebook_id}
 
     def get_queryset(self):
-        return NotebookRevision.objects.filter(
+        base = NotebookRevision.objects.filter(
             notebook_id=self.kwargs['notebook_id'])
+        filter_by_id = self.request.query_params.getlist('id')
+        if filter_by_id:
+            return base.filter(id__in=filter_by_id)
+        return base
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        full = self.request.query_params.get('full') and \
+            self.request.query_params['full'][0]
+        if not full and self.action == 'list':
             return NotebookRevisionSerializer
         return NotebookRevisionDetailSerializer
 
