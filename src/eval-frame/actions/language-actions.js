@@ -72,9 +72,8 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 }
 
 export function evaluateLanguagePlugin(pluginText, evalId) {
-  return (dispatch, getState) => {
-    const historyId = generateRandomId(getState().history);
-    console.log("evaluateLanguagePlugin", historyId);
+  return dispatch => {
+    const historyId = generateRandomId();
     dispatch(
       appendToEvalHistory(null, pluginText, undefined, {
         historyId,
@@ -110,7 +109,6 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
     Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)
   ) {
     const historyId = generateRandomId();
-    console.log("ensureLanguageAvailable", historyId);
     dispatch(
       appendToEvalHistory(
         null,

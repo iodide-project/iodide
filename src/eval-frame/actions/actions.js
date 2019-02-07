@@ -131,7 +131,6 @@ export function evalConsoleInput(consoleText) {
 function evaluateCode(code, language, state, evalId) {
   return dispatch => {
     const historyId = generateRandomId();
-    console.log("evaluateCode", historyId);
     const updateCellAfterEvaluation = (output, evalStatus) => {
       const cellProperties = { rendered: true };
       if (evalStatus === "ERROR") {
@@ -146,7 +145,6 @@ function evaluateCode(code, language, state, evalId) {
 
     const messageCallback = msg => {
       const messageHistoryId = generateRandomId();
-      console.log("messageCallback", messageHistoryId);
       dispatch(
         appendToEvalHistory(null, msg, undefined, {
           historyType: "CELL_EVAL_INFO",
