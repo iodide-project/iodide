@@ -23,7 +23,7 @@ const LanguageSelectButton = styled(TextButton)`
   border-radius: 0px;
   margin: auto;
   display: grid;
-  background-color: ${THEME.elementBackgroundLeft};
+  background-color: gainsboro;
   border-left: 1px solid gainsboro;
   align-self: center;
   color: rgba(0, 0, 0, 0.6);
@@ -39,6 +39,12 @@ const LanguageSelectButton = styled(TextButton)`
   div {
     margin: auto;
     transform: translateY(-1px);
+  }
+
+  div span {
+    font-weight: normal;
+    opacity: 0.7;
+    padding-right: 5px;
   }
 `;
 
@@ -68,6 +74,7 @@ const ConsoleLanguageMenu = ({
           <LanguageSelectButton>
             <div>
               <ArrowDropUp />
+              <span>language:</span>
               {currentLanguage}
             </div>
           </LanguageSelectButton>
