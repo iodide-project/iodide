@@ -13,7 +13,7 @@ export function addLanguage(languageDefinition) {
   };
 }
 
-function loadLanguagePlugin(pluginData, historyId, dispatch) {
+function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
   let value;
   let languagePluginPromise;
 
@@ -42,6 +42,15 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 
         window.languagePluginUrl = url;
 
+        if (xhrObj.status > 400 && xhrObj.status < 600) {
+          value = `${displayName} failed to load: ${xhrObj.status} ${
+            xhrObj.statusText
+          }`;
+          sendStatusResponseToEditor("ERROR", evalId);
+          dispatch(updateValueInHistory(historyId, value));
+          resolve();
+        }
+
         // Here, we wrap whatever the return value of the eval into a promise.
         // If it is simply evaling a code block, then it returns undefined.
         // But if it returns a Promise, then we can wait for that promise to resolve
@@ -55,6 +64,10 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
           dispatch(updateValueInHistory(historyId, value));
           delete window.languagePluginUrl;
           resolve();
+        }).catch(err => {
+          sendStatusResponseToEditor("ERROR", evalId);
+          dispatch(updateValueInHistory(historyId, err));
+          reject(err);
         });
       });
 
@@ -94,13 +107,15 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
       sendStatusResponseToEditor("ERROR", evalId);
       return Promise.reject();
     }
-    return loadLanguagePlugin(pluginData, historyId, dispatch).then(() => {
-      sendStatusResponseToEditor("SUCCESS", evalId);
-    });
+    return loadLanguagePlugin(pluginData, historyId, evalId, dispatch).then(
+      () => {
+        sendStatusResponseToEditor("SUCCESS", evalId);
+      }
+    );
   };
 }
 
-export function ensureLanguageAvailable(languageId, state, dispatch) {
+export function ensureLanguageAvailable(languageId, state, evalId, dispatch) {
   if (Object.prototype.hasOwnProperty.call(state.loadedLanguages, languageId)) {
     return new Promise(resolve => resolve(state.loadedLanguages[languageId]));
   }
@@ -122,6 +137,7 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
     return loadLanguagePlugin(
       state.languageDefinitions[languageId],
       historyId,
+      evalId,
       dispatch
     ).then(() => state.languageDefinitions[languageId]);
   }
@@ -136,7 +152,14 @@ export function runCodeWithLanguage(language, code, messageCallback) {
   if (asyncEvaluator !== undefined) {
     const messageCb =
       messageCallback === undefined ? () => {} : messageCallback;
-    return window[module][asyncEvaluator](code, messageCb);
+    try {
+      return window[module][asyncEvaluator](code, messageCb);
+    } catch (e) {
+      if (e.message === "window[module] is undefined") {
+        return new Error(`eval type ${module} not not defined`);
+      }
+      return e;
+    }
   }
   return new Promise((resolve, reject) => {
     try {
