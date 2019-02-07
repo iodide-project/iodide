@@ -7,26 +7,38 @@ import Menu from "../../../../shared/components/menu";
 import MenuItem from "../../../../shared/components/menu-item";
 import { TextButton } from "../../../../shared/components/buttons";
 import BaseIcon from "./base-icon";
+import THEME from "../../../../shared/theme";
 
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;
+  transform: translateY(3px);
 `;
 
 const LanguageSelectButton = styled(TextButton)`
   font-size: 12px;
-  padding: 3px;
-  margin-right: 1px;
+  padding: 0px;
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 27px;
   border-radius: 0px;
-  margin-bottom: 0px;
-  padding-bottom: 2px;
+  margin: auto;
+  display: grid;
+  background-color: ${THEME.elementBackgroundLeft};
+  border-left: 1px solid gainsboro;
   align-self: center;
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(0, 0, 0, 0.6);
   text-transform: lowercase;
+  transition: 300ms;
   :hover {
-    border: 1px solid gainsboro;
+    background-color: rgb(244, 227, 244);
   }
   :active {
-    border: 1px solid gainsboro;
+    border-left: 1px solid gainsboro;
+  }
+
+  div {
+    margin: auto;
+    transform: translateY(-1px);
   }
 `;
 
@@ -54,8 +66,10 @@ const ConsoleLanguageMenu = ({
         placement="left-end"
         activatingComponent={
           <LanguageSelectButton>
-            <ArrowDropUp />
-            {currentLanguage}
+            <div>
+              <ArrowDropUp />
+              {currentLanguage}
+            </div>
           </LanguageSelectButton>
         }
       >
