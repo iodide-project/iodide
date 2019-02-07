@@ -1,10 +1,10 @@
 import { postMessageToEditor } from "../port-to-editor";
 import {
   appendToEvalHistory,
-  historyIdGen,
   updateValueInHistory,
   sendStatusResponseToEditor
 } from "./actions";
+import generateNextIdFromHistory from "../../tools/generate-next-id-from-history";
 
 export function addLanguage(languageDefinition) {
   return {
@@ -72,8 +72,8 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 }
 
 export function evaluateLanguagePlugin(pluginText, evalId) {
-  return dispatch => {
-    const historyId = historyIdGen.nextId();
+  return (dispatch, getState) => {
+    const historyId = generateNextIdFromHistory(getState().history);
     dispatch(
       appendToEvalHistory(null, pluginText, undefined, {
         historyId,
@@ -108,7 +108,7 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
   if (
     Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)
   ) {
-    const historyId = historyIdGen.nextId();
+    const historyId = generateNextIdFromHistory(state.history);
     dispatch(
       appendToEvalHistory(
         null,
