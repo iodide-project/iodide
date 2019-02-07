@@ -13,6 +13,9 @@ import {
   SplashContentContainer,
   SingleSplash
 } from "./shared-components";
+import { loginToServer } from "../../../tools/login";
+
+import LoginModal from "../../../shared/login-modal";
 
 import DocsButton from "../docs-button";
 
@@ -56,6 +59,33 @@ const BottomDivider = styled("hr")`
 `;
 
 export default class MarketingCopySplash extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showLoginModal: false };
+    this.hideLoginModal = this.hideLoginModal.bind(this);
+    this.showLoginModal = this.showLoginModal.bind(this);
+    this.login = this.login.bind(this);
+  }
+  showLoginModal() {
+    this.setState({ showLoginModal: true });
+  }
+
+  hideLoginModal() {
+    this.setState({ showLoginModal: false });
+  }
+
+  login() {
+    // if a login callback is specified, then delegate the log
+    // functionality to that. otherwise handle it ourselves
+    // internally in a simplified way (essentially just reloading
+    // the page on success)
+    if (this.props.loginCallback) {
+      this.props.loginCallback();
+    } else {
+      loginToServer(() => window.location.reload());
+    }
+  }
+
   render() {
     return (
       <SplashContentContainer>
@@ -74,7 +104,14 @@ export default class MarketingCopySplash extends React.Component {
           }
         </SplashCopy>
         <ButtonGroup>
-          <ContainedButton href="/login">Sign Up For Free</ContainedButton>
+          <ContainedButton onClick={this.showLoginModal}>
+            Sign Up For Free
+          </ContainedButton>
+          <LoginModal
+            visible={this.state.showLoginModal}
+            onClose={this.hideLoginModal}
+            login={this.login}
+          />
           <OutlineButton href="/tryit/">Try It Out</OutlineButton>
           <DocsButton />
         </ButtonGroup>
