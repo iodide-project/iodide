@@ -87,7 +87,7 @@ def test_create_notebook_revision(fake_user, test_notebook, client):
     )
     assert resp.status_code == 201
     assert NotebookRevision.objects.count() == 2
-    notebook_revision = NotebookRevision.objects.last()
+    notebook_revision = NotebookRevision.objects.first()
     assert notebook_revision.title == post_blob['title']
     assert notebook_revision.content == post_blob['content']
 

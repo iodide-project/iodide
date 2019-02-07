@@ -6,7 +6,7 @@ from server.base.models import User
 
 class NotebookLatestRevisionField(serializers.RelatedField):
     def get_attribute(self, obj):
-        return NotebookRevision.objects.filter(notebook_id=obj.id).last()
+        return NotebookRevision.objects.filter(notebook_id=obj.id).first()
 
     def to_representation(self, value):
         if value:

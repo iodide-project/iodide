@@ -81,12 +81,12 @@ def notebook_revisions(request, pk):
          'size': len(file.content)}
         for file in File.objects.filter(notebook_id=pk).order_by('-last_updated')
     ]
-    revisions = list(reversed([{
+    revisions = list([{
         'id': revision.id,
         'notebookId': revision.notebook_id,
         'title': revision.title,
         'date': revision.created.isoformat(sep=' ')}
-        for revision in NotebookRevision.objects.filter(notebook_id=pk)]))
+        for revision in NotebookRevision.objects.filter(notebook_id=pk)])
     return render(request, '../templates/index.html', {
             'page_data': {
                 'userInfo': get_user_info_dict(request.user),

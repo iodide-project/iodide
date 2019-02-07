@@ -57,4 +57,4 @@ class NotebookRevision(models.Model):
     class Meta:
         verbose_name = "Notebook Revision"
         verbose_name_plural = "Notebook Revisions"
-        ordering = ("created",)
+        ordering = ("-created",)
