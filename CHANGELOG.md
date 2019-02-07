@@ -2,6 +2,7 @@
 
 - move reps to react inspector
 - change nomenclature around user output reps _including in API_ (**breaking change**)
+- removed errant "0" in landing page
 
 # 0.0.3 (2019-02-04)
 
