@@ -36,7 +36,7 @@ export default class LoggedInSplash extends React.Component {
             </HighlightedTitle>
             .
           </SplashTitle>
-          {this.props.userInfo.notebooks.length && (
+          {this.props.userInfo.notebooks.length ? (
             <React.Fragment>
               <NewNotebookButton />
               <PageHeader>Your Notebooks</PageHeader>
@@ -46,8 +46,9 @@ export default class LoggedInSplash extends React.Component {
                 isUserAccount={this.props.userInfo}
               />
             </React.Fragment>
+          ) : (
+            <LetsGetStarted />
           )}
-          {!this.props.userInfo.notebooks.length && <LetsGetStarted />}
         </UserNotebooks>
       </SplashContentContainer>
     );
