@@ -46,9 +46,8 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           value = `${displayName} failed to load: ${xhrObj.status} ${
             xhrObj.statusText
           }`;
-          sendStatusResponseToEditor("ERROR", evalId);
           dispatch(updateValueInHistory(historyId, value));
-          resolve();
+          reject(new Error(value));
         }
 
         // Here, we wrap whatever the return value of the eval into a promise.
@@ -65,7 +64,6 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
           delete window.languagePluginUrl;
           resolve();
         }).catch(err => {
-          sendStatusResponseToEditor("ERROR", evalId);
           dispatch(updateValueInHistory(historyId, err));
           reject(err);
         });
@@ -107,11 +105,14 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
       sendStatusResponseToEditor("ERROR", evalId);
       return Promise.reject();
     }
-    return loadLanguagePlugin(pluginData, historyId, evalId, dispatch).then(
-      () => {
+    return loadLanguagePlugin(pluginData, historyId, evalId, dispatch)
+      .then(() => {
         sendStatusResponseToEditor("SUCCESS", evalId);
-      }
-    );
+      })
+      .catch(err => {
+        sendStatusResponseToEditor("ERROR", evalId);
+        return err;
+      });
   };
 }
 
