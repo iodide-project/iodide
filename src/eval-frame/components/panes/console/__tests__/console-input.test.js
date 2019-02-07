@@ -4,11 +4,12 @@ import React from "react";
 // FIXME this is an ugly hack to make tests pass without errors;
 // importing the store initializes it before other files, pre-empting
 // errors that actually result from circular dependencies
-import { store } from "../../../store"; /* eslint-disable-line no-unused-vars */
+import { store } from "../../../../store"; /* eslint-disable-line no-unused-vars */
 
 // import DoubleChevronIcon from '../double-chevron-icon'
 
 import { ConsoleInputUnconnected, mapStateToProps } from "../console-input";
+import ConsoleLanguageMenu from "../console-language-menu";
 
 describe("ConsoleInputUnconnected React component", () => {
   let props;
@@ -16,6 +17,7 @@ describe("ConsoleInputUnconnected React component", () => {
   let updateConsoleText;
   let consoleHistoryStepBack;
   let evalConsoleInput;
+  let setConsoleLanguage;
 
   const consoleInput = () => {
     if (!mountedComponent) {
@@ -30,12 +32,19 @@ describe("ConsoleInputUnconnected React component", () => {
     updateConsoleText = jest.fn();
     consoleHistoryStepBack = jest.fn();
     evalConsoleInput = jest.fn();
+    setConsoleLanguage = jest.fn();
 
     props = {
       consoleText: "foo\nbar\nbat",
       updateConsoleText,
       consoleHistoryStepBack,
-      evalConsoleInput
+      evalConsoleInput,
+      setConsoleLanguage,
+      currentLanguage: "js",
+      availableLanguages: [
+        { languageId: "js", displayName: "Javascript" },
+        { languageId: "py", displayName: "Python" }
+      ]
     };
     mountedComponent = undefined;
   });
@@ -45,7 +54,9 @@ describe("ConsoleInputUnconnected React component", () => {
       consoleInput().find("div.console-text-input-container")
     ).toHaveLength(1);
   });
-
+  it("always renders a ConsoleLanguageMenu", () => {
+    expect(consoleInput().find(ConsoleLanguageMenu)).toHaveLength(1);
+  });
   it("textArea has correct content initially, and it updates correctly", () => {
     expect(textArea().props().value).toBe("foo\nbar\nbat");
     textArea().simulate("change", { target: { value: "123" } });
@@ -112,24 +123,31 @@ describe("ConsoleInput mapStateToProps", () => {
   let state;
   beforeEach(() => {
     state = {
-      consoleText: "TEST_TEXT"
+      consoleText: "TEST_TEXT",
+      languageDefinitions: {
+        js: { languageId: "js", displayName: "Javascript" },
+        py: { languageId: "py", displayName: "Python" }
+      },
+      loadedLanguages: {
+        jl: { languageId: "jl", displayName: "Julia" }
+      },
+      languageLastUsed: "js"
     };
   });
 
   it("loads state.consoleTest as expected", () => {
     expect(mapStateToProps(state).consoleText).toEqual("TEST_TEXT");
   });
-});
-
-describe("ConsoleInput mapStateToProps", () => {
-  let state;
-  beforeEach(() => {
-    state = {
-      consoleText: "TEST_TEXT"
-    };
+  it("loads state.currentLanguage as expected", () => {
+    expect(mapStateToProps(state).currentLanguage).toEqual("js");
   });
-
-  it("loads state.consoleTest as expected", () => {
-    expect(mapStateToProps(state).consoleText).toEqual("TEST_TEXT");
+  it("loads state.availableLanguages as expected", () => {
+    const props = mapStateToProps(state);
+    expect(new Set(props.availableLanguages.map(d => d.languageId))).toEqual(
+      new Set(["js", "py", "jl"])
+    );
+    expect(new Set(props.availableLanguages.map(d => d.displayName))).toEqual(
+      new Set(["Javascript", "Python", "Julia"])
+    );
   });
 });

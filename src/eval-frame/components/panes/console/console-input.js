@@ -1,13 +1,20 @@
 import React from "react";
+import styled from "react-emotion";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import DoubleChevronIcon from "./double-chevron-icon";
+import DoubleChevron from "../double-chevron-icon";
+import BaseIcon from "./base-icon";
+import ConsoleGutter from "./console-gutter";
+import { evalConsoleInput, setConsoleLanguage } from "../../../actions/actions";
+import { postActionToEditor } from "../../../port-to-editor";
 
-import {
-  // updateConsoleText, consoleHistoryStepBack,
-  evalConsoleInput
-} from "../../actions/actions";
-import { postActionToEditor } from "../../port-to-editor";
+import THEME from "../../../../shared/theme";
+import ConsoleLanguageMenu from "./console-language-menu";
+
+const DoubleChevronIcon = styled(BaseIcon(DoubleChevron))`
+  opacity: 0.5;
+  transform: translateY(-2px);
+`;
 
 export function getTextAreaPosition(textArea) {
   return {
@@ -19,11 +26,18 @@ export function getTextAreaPosition(textArea) {
 
 export class ConsoleInputUnconnected extends React.Component {
   static propTypes = {
-    // historyContents: PropTypes.arrayOf(PropTypes.string).isRequired,
     consoleText: PropTypes.string.isRequired,
     updateConsoleText: PropTypes.func.isRequired,
     consoleHistoryStepBack: PropTypes.func.isRequired,
-    evalConsoleInput: PropTypes.func.isRequired
+    setConsoleLanguage: PropTypes.func.isRequired,
+    evalConsoleInput: PropTypes.func.isRequired,
+    availableLanguages: PropTypes.arrayOf(
+      PropTypes.shape({
+        displayName: PropTypes.string.isRequired,
+        languageId: PropTypes.string.isRequired
+      })
+    ).isRequired,
+    currentLanguage: PropTypes.string.isRequired
   };
 
   constructor(props) {
@@ -113,7 +127,9 @@ export class ConsoleInputUnconnected extends React.Component {
           display: "flex"
         }}
       >
-        <DoubleChevronIcon />
+        <ConsoleGutter>
+          <DoubleChevronIcon />
+        </ConsoleGutter>
         <div style={{ flexGrow: 1 }}>
           <textarea
             name="text"
@@ -132,11 +148,17 @@ export class ConsoleInputUnconnected extends React.Component {
               boxSizing: "border-box",
               outline: "none",
               margin: "0px",
-              fontSize: "13px"
+              fontSize: "13px",
+              fontFamily: THEME.client.console.fontFamily
             }}
             value={this.state.consoleText}
           />
         </div>
+        <ConsoleLanguageMenu
+          availableLanguages={this.props.availableLanguages}
+          currentLanguage={this.props.currentLanguage}
+          onMenuClick={this.props.setConsoleLanguage}
+        />
       </div>
     );
   }
@@ -166,8 +188,13 @@ export const ConsoleInputMessagePasser = connectMessagePassers(
 );
 
 export function mapStateToProps(state) {
+  const availableLanguages = Object.values(
+    Object.assign({}, state.languageDefinitions, state.loadedLanguages)
+  );
   return {
-    consoleText: state.consoleText
+    consoleText: state.consoleText,
+    currentLanguage: state.languageLastUsed,
+    availableLanguages
   };
 }
 
@@ -175,6 +202,9 @@ function mapDispatchToProps(dispatch) {
   return {
     evalConsoleInput: consoleText => {
       dispatch(evalConsoleInput(consoleText));
+    },
+    setConsoleLanguage: languageId => {
+      dispatch(setConsoleLanguage(languageId));
     }
   };
 }

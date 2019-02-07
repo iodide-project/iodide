@@ -7,7 +7,7 @@ import styled from "react-emotion";
 import HelpOutline from "@material-ui/icons/HelpOutline";
 
 import HistoryItem from "./history-item";
-import ConsoleInput from "./console-input";
+import ConsoleInput from "./console/console-input";
 
 import EmptyPaneContents from "./empty-pane-contents";
 import OnboardingContent from "./onboarding-content";

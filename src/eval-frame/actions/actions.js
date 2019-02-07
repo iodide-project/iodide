@@ -59,6 +59,13 @@ export { MOST_RECENT_CHUNK_ID };
 
 export const EVALUATION_RESULTS = {};
 
+export function setConsoleLanguage(language) {
+  return {
+    type: "SET_CONSOLE_LANGUAGE",
+    language
+  };
+}
+
 export function appendToEvalHistory(
   cellId,
   content,
