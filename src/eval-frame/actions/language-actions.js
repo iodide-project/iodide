@@ -13,7 +13,7 @@ export function addLanguage(languageDefinition) {
   };
 }
 
-function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
+function loadLanguagePlugin(pluginData, historyId, dispatch) {
   let value;
   let languagePluginPromise;
 
@@ -47,7 +47,7 @@ function loadLanguagePlugin(pluginData, historyId, evalId, dispatch) {
             xhrObj.statusText
           }`;
           dispatch(updateValueInHistory(historyId, value));
-          reject(new Error(value));
+          resolve();
         }
 
         // Here, we wrap whatever the return value of the eval into a promise.
@@ -105,7 +105,7 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
       sendStatusResponseToEditor("ERROR", evalId);
       return Promise.reject();
     }
-    return loadLanguagePlugin(pluginData, historyId, evalId, dispatch)
+    return loadLanguagePlugin(pluginData, historyId, dispatch)
       .then(() => {
         sendStatusResponseToEditor("SUCCESS", evalId);
       })
@@ -138,7 +138,6 @@ export function ensureLanguageAvailable(languageId, state, evalId, dispatch) {
     return loadLanguagePlugin(
       state.languageDefinitions[languageId],
       historyId,
-      evalId,
       dispatch
     ).then(() => state.languageDefinitions[languageId]);
   }
