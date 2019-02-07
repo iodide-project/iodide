@@ -11,6 +11,8 @@ import {
 import { evaluateFetchText } from "./fetch-cell-eval-actions";
 import messagePasser from "../../redux-to-port-message-passer";
 
+import createHistoryItem from "../../tools/create-history-item";
+
 const CodeMirror = require("codemirror"); // eslint-disable-line
 
 const initialVariables = new Set(Object.keys(window)); // gives all global variables
@@ -57,23 +59,23 @@ export function appendToEvalHistory(
   value,
   historyOptions = {}
 ) {
-  const { historyId } = historyOptions;
   const historyType =
     historyOptions.historyType === undefined
       ? "CELL_EVAL_VALUE"
       : historyOptions.historyType;
 
-  EVALUATION_RESULTS[historyId] = value;
-
-  // returned obj must match history schema
-  return {
-    type: "APPEND_TO_EVAL_HISTORY",
-    cellId,
+  const historyAction = createHistoryItem({
     content,
-    historyId,
+    value,
     historyType,
-    lastRan: Date.now()
-  };
+    historyId: historyOptions.historyId,
+    lastRan: historyOptions.lastRan
+  });
+  historyAction.type = "APPEND_TO_EVAL_HISTORY";
+
+  EVALUATION_RESULTS[historyAction.historyId] = value;
+
+  return historyAction;
 }
 
 export function updateValueInHistory(historyId, value) {
