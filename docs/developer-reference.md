@@ -26,9 +26,9 @@ In this mode, resource paths are set to be relative to the `dev/` directory. Thu
 #### Server mode
 
 We have been building an experimental iodide server based on Python and Django. Currently the main features
-it supports are login/identity (via the github API). To test/run it locally, follow this set of steps:
+it supports are login/identity (via the GitHub API). To test/run it locally, follow this set of steps:
 
-* Register a [github oauth token](https://github.com/settings/applications/new). Set the homepage URL to be
+* Register a [GitHub oauth token](https://github.com/settings/applications/new). Set the homepage URL to be
 "http://localhost:8000" and the authentication callback URL to be "http://localhost:8000/oauth/complete/github/".
 * Copy `.env-dist` to `.env` and set the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to the values provided above.
 * Make sure you have [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed and working correctly

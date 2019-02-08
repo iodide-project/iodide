@@ -1,6 +1,6 @@
 # Terms of service and privacy policy
 
-Usage of Iodide is governed by these [terms of service](https://www.mozilla.org/about/legal/terms/mozilla), and follow's [Mozilla's privacy policy](https://www.mozilla.org/privacy/websites/).
+Usage of Iodide is governed by these [terms of service](https://www.mozilla.org/about/legal/terms/mozilla), and follows [Mozilla's privacy policy](https://www.mozilla.org/privacy/websites/).
 
 # Content created within notebooks
 
