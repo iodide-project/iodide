@@ -2,7 +2,7 @@
 
 ## Getting data into an Iodide notebook
 
-Iodide can use Javascript and standard browser APIs to download data from public URLs on the web. As a convenience, we also provide a “fetch cell” in JSMD, which allows you to load data using a shorthand syntax. You can read more about JSMD fetch chunk syntax in the fetch chunk section of the [JSMD docs](jsmd.md).
+Iodide can use JavaScript and standard browser APIs to download data from public URLs on the web. As a convenience, we also provide a “fetch cell” in JSMD, which allows you to load data using a shorthand syntax. You can read more about JSMD fetch chunk syntax in the fetch chunk section of the [JSMD docs](jsmd.md).
 
 ### CORS problems
 
@@ -13,7 +13,7 @@ Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remot
 (Reason: CORS request did not succeed).
 ```
 
-To work around CORS errors, you need to upload your data to a server that does notimpose restrictions on resource sharing. We recommend using [GitHub Gists](https://gist.github.com/), which allows users to upload files that can be downloaded within Iodide. After uploading your data into a gist, you can access the data by copying the URL for the "raw" version of your gist, which can be accessed at `https://gist.githubusercontent.com/{your user name}/{your gist id}/raw`
+To work around CORS errors, you need to upload your data to a server that does not impose restrictions on resource sharing. We recommend using [GitHub Gists](https://gist.github.com/), which allows users to upload files that can be downloaded within Iodide. After uploading your data into a gist, you can access the data by copying the URL for the "raw" version of your gist, which can be accessed at `https://gist.githubusercontent.com/{your user name}/{your gist id}/raw`
 
 ## Manipulating the DOM (for e.g adding plots)
 
