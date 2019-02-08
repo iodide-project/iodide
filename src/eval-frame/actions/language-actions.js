@@ -116,7 +116,7 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
   };
 }
 
-export function ensureLanguageAvailable(languageId, state, evalId, dispatch) {
+export function ensureLanguageAvailable(languageId, state, dispatch) {
   if (Object.prototype.hasOwnProperty.call(state.loadedLanguages, languageId)) {
     return new Promise(resolve => resolve(state.loadedLanguages[languageId]));
   }

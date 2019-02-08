@@ -161,7 +161,7 @@ function evaluateCode(code, language, state, evalId) {
       );
     };
 
-    return ensureLanguageAvailable(language, state, evalId, dispatch)
+    return ensureLanguageAvailable(language, state, dispatch)
       .then(languageEvaluator =>
         runCodeWithLanguage(languageEvaluator, code, messageCallback)
       )
