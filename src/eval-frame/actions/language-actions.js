@@ -156,7 +156,11 @@ export function runCodeWithLanguage(language, code, messageCallback) {
       return window[module][asyncEvaluator](code, messageCb);
     } catch (e) {
       if (e.message === "window[module] is undefined") {
-        return new Error(`eval type ${module} not not defined`);
+        return new Error(
+          `Error evaluating ${
+            language.displayName
+          }; evaluation module "${module}" not not defined`
+        );
       }
       return e;
     }
