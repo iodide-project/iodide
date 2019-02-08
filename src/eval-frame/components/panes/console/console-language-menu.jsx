@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "react-emotion";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import Popover from "../../../../shared/components/popover";
 import Menu from "../../../../shared/components/menu";
@@ -8,20 +10,22 @@ import MenuItem from "../../../../shared/components/menu-item";
 import { TextButton } from "../../../../shared/components/buttons";
 import BaseIcon from "./base-icon";
 
+import { setConsoleLanguage as setConsoleLanguageAction } from "../../../actions/actions";
+
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;
   transform: translateY(3px);
 `;
 
 const LanguageSelectButton = styled(TextButton)`
+  display: block;
   font-size: 12px;
+  height: 30px;
   padding: 0px;
   padding-left: 5px;
   padding-right: 5px;
-  height: 27px;
   border-radius: 0px;
   margin: auto;
-  display: grid;
   background-color: gainsboro;
   border-left: 1px solid gainsboro;
   align-self: center;
@@ -29,7 +33,7 @@ const LanguageSelectButton = styled(TextButton)`
   text-transform: lowercase;
   transition: 300ms;
   :hover {
-    background-color: rgb(244, 227, 244);
+    background-color: #d5b9dd;
   }
   :active {
     border-left: 1px solid gainsboro;
@@ -38,12 +42,6 @@ const LanguageSelectButton = styled(TextButton)`
   div {
     margin: auto;
     transform: translateY(-1px);
-  }
-
-  div span {
-    font-weight: normal;
-    opacity: 0.7;
-    padding-right: 5px;
   }
 `;
 
@@ -58,12 +56,15 @@ const LanguageName = styled("div")`
   padding-right: 6px;
 `;
 
-const onMenuClickCreator = (fcn, languageId) => () => fcn(languageId);
+const onMenuClickCreator = (fcn, languageId) => () => {
+  console.log(fcn, languageId);
+  fcn(languageId);
+};
 
-const ConsoleLanguageMenu = ({
+const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
   currentLanguage,
-  onMenuClick
+  setConsoleLanguage
 }) => {
   return (
     <React.Fragment>
@@ -73,7 +74,6 @@ const ConsoleLanguageMenu = ({
           <LanguageSelectButton>
             <div>
               <ArrowDropUp />
-              <span>language:</span>
               {currentLanguage}
             </div>
           </LanguageSelectButton>
@@ -83,7 +83,10 @@ const ConsoleLanguageMenu = ({
           {availableLanguages.map(language => (
             <MenuItem
               key={language.languageId}
-              onClick={onMenuClickCreator(onMenuClick, language.languageId)}
+              onClick={onMenuClickCreator(
+                setConsoleLanguage,
+                language.languageId
+              )}
             >
               <LanguageName>{language.displayName}</LanguageName>
               <LanguageShort>{language.languageId}</LanguageShort>
@@ -94,14 +97,38 @@ const ConsoleLanguageMenu = ({
     </React.Fragment>
   );
 };
-ConsoleLanguageMenu.propTypes = {
-  currentLanguage: PropTypes.string.isRequired,
+
+ConsoleLanguageMenuUnconnected.propTypes = {
   availableLanguages: PropTypes.arrayOf(
     PropTypes.shape({
       displayName: PropTypes.string.isRequired,
       languageId: PropTypes.string.isRequired
     })
   ).isRequired,
-  onMenuClick: PropTypes.func.isRequired
+  currentLanguage: PropTypes.string.isRequired,
+  setConsoleLanguage: PropTypes.func.isRequired
 };
-export default ConsoleLanguageMenu;
+
+export function mapStateToProps(state) {
+  const availableLanguages = Object.values(
+    Object.assign({}, state.languageDefinitions, state.loadedLanguages)
+  );
+  return {
+    currentLanguage: state.languageLastUsed,
+    availableLanguages
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setConsoleLanguage: languageId => {
+      console.log("hello?");
+      dispatch(setConsoleLanguageAction(languageId));
+    }
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ConsoleLanguageMenuUnconnected);
