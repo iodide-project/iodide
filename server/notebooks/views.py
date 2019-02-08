@@ -1,12 +1,14 @@
 import urllib.parse
+import json
 
 from django.db import transaction
 from django.shortcuts import (get_object_or_404,
                               redirect,
                               render)
-from django.template.loader import get_template
+from django.template import loader
 from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import HttpResponse
 
 from .models import Notebook, NotebookRevision
 from ..files.models import File
@@ -100,19 +102,29 @@ def notebook_revisions(request, pk):
 
 @ensure_csrf_cookie
 def new_notebook_view(request):
-    if not request.user.is_authenticated:
-        return redirect(reverse('try-it'))
 
-    # create a new notebook and redirect to its view
-    new_notebook_content_template = get_template('new_notebook_content.jsmd')
-    with transaction.atomic():
-        notebook = Notebook.objects.create(owner=request.user)
-        NotebookRevision.objects.create(
-            notebook=notebook,
-            content=new_notebook_content_template.render(),
-            title='Untitled notebook'
-        )
-    return redirect(notebook)
+    # If the POST body includes JSMD, use it.
+    try:
+        post_body = json.loads(request.body.decode('utf-8'))
+        notebook_content = post_body['jsmd']
+
+    # If the POST body doesn't include JSMD, use the default template.
+    except (ValueError, KeyError):
+        notebook_content = loader.get_template('new_notebook_content.jsmd').render()
+
+    if request.user.is_authenticated:
+        with transaction.atomic():
+            notebook = Notebook.objects.create(owner=request.user)
+            NotebookRevision.objects.create(
+                notebook=notebook,
+                content=notebook_content,
+                title='Untitled notebook',
+            )
+        return redirect(notebook)
+    else:
+        response = redirect(reverse('try-it'))
+        response.set_cookie('tryit_content', notebook_content)
+        return response
 
 
 @ensure_csrf_cookie
@@ -124,15 +136,22 @@ def tryit_view(request):
     '''
     if request.user.is_authenticated:
         return redirect(new_notebook_view)
-    # create a new notebook and redirect to its view
-    new_notebook_content_template = get_template('new_notebook_content.jsmd')
-    return render(request, 'notebook.html', {
+
+    if 'tryit_content' in request.COOKIES:
+        notebook_content = request.COOKIES.get('tryit_content')
+    else:
+        notebook_content = loader.get_template('new_notebook_content.jsmd').render()
+
+    rendered_content = loader.render_to_string('notebook.html', {
         'user_info': {},
         'notebook_info': {
             'connectionMode': 'SERVER',
             'tryItMode': True,
             'title': 'Untitled notebook'
         },
-        'jsmd': new_notebook_content_template.render(),
+        'jsmd': notebook_content,
         'iframe_src': _get_iframe_src()
-    })
+    }, request)
+    response = HttpResponse(rendered_content)
+    response.delete_cookie('tryit_content')
+    return response
