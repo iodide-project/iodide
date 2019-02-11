@@ -2,7 +2,6 @@ import parseFetchCell from "./fetch-cell-parser";
 import {
   appendToEvalHistory,
   updateValueInHistory,
-  historyIdGen,
   updateUserVariables,
   sendStatusResponseToEditor
 } from "./actions";
@@ -15,6 +14,7 @@ import {
 } from "../../tools/fetch-tools";
 
 import fetchFileFromParentContext from "../tools/fetch-file-from-parent-context";
+import generateRandomId from "../../tools/generate-random-id";
 
 export function fetchProgressInitialStrings(fetchInfo) {
   let text;
@@ -100,7 +100,7 @@ export async function handleFetch(fetchInfo) {
 
 export function evaluateFetchText(fetchText, evalId) {
   return dispatch => {
-    const historyId = historyIdGen.nextId();
+    const historyId = generateRandomId();
     const fetches = parseFetchCell(fetchText);
     const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
     if (syntaxErrors.length) {

@@ -80,7 +80,7 @@ const schemas = {
     additionalProperties: false,
     properties: {
       type: { type: "string" },
-      historyId: { type: "integer" }
+      historyId: { type: "string" }
     },
     required: ["type", "historyId"]
   }
