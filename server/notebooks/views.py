@@ -34,15 +34,15 @@ def _get_iframe_src():
 def notebook_view(request, pk):
     notebook = get_object_or_404(Notebook, pk=pk)
     if 'revision' in request.GET:
-        notebook_content = get_object_or_404(NotebookRevision, pk=int(request.GET['revision']))
+        revision = get_object_or_404(NotebookRevision, pk=int(request.GET['revision']))
     else:
-        notebook_content = notebook.revisions.last()
+        revision = notebook.revisions.first()
     notebook_info = {
         'user_can_save': notebook.owner_id == request.user.id,
         'notebook_id': notebook.id,
-        'revision_id': notebook_content.id,
+        'revision_id': revision.id,
         'connectionMode': 'SERVER',
-        'title': notebook_content.title
+        'title': revision.title
     }
     if notebook.forked_from is not None:
         notebook_info['forked_from'] = notebook.forked_from.id
@@ -51,7 +51,7 @@ def notebook_view(request, pk):
     return render(request, 'notebook.html', {
         'user_info': _get_user_info_json(request.user),
         'notebook_info': notebook_info,
-        'jsmd': notebook_content.content,
+        'jsmd': revision.content,
         'iframe_src': _get_iframe_src()
     })
 
