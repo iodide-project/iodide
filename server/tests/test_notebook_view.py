@@ -13,6 +13,18 @@ def test_notebook_view(client, test_notebook):
         initial_revision.content)
     assert expected_content in str(resp.content)
 
+    # add a new revision, verify that a fresh load gets it
+    new_revision_content = 'My new fun content'
+    NotebookRevision.objects.create(
+        content=new_revision_content,
+        notebook=test_notebook,
+        title='Second revision')
+    resp = client.get(reverse('notebook-view', args=[str(test_notebook.id)]))
+    assert resp.status_code == 200
+    new_expected_content = '<script id="jsmd" type="text/jsmd">{}</script>'.format(
+        new_revision_content)
+    assert new_expected_content in str(resp.content)
+
 
 @pytest.mark.parametrize("logged_in", [True, False])
 def test_new_notebook_view(client, fake_user, logged_in):
