@@ -23,12 +23,4 @@ describe("createHistoryItem", () => {
     expect(h.lastRan).toEqual(lastRan);
     expect(Object.keys(h).length).toBe(4);
   });
-  it("throws an error if no historyType was provided", () => {
-    expect(() => createHistoryItem({ content: "content" })).toThrowError();
-  });
-  it("throws an error if an invalid historyType was provided", () => {
-    expect(() =>
-      createHistoryItem({ content: "content", historyType: "ABCDEFGHIJK" })
-    ).toThrowError();
-  });
 });

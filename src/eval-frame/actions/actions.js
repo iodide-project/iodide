@@ -66,7 +66,6 @@ export function appendToEvalHistory(
 
   const historyAction = createHistoryItem({
     content,
-    value,
     historyType,
     historyId: historyOptions.historyId,
     lastRan: historyOptions.lastRan
