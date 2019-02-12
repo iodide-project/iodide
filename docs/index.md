@@ -5,9 +5,9 @@
 **[JSMD format](jsmd.md)**: The simple file format used to write Iodide notebooks.
 
 **[Language plugins](language_plugins.md)**: Support for programming languages
-other than Javascript.
+other than JavaScript.
 
-**[API docs](api.md)**: Documents special Javascript functions available to
+**[API docs](api.md)**: Documents special JavaScript functions available to
 Iodide notebooks.
 
 **[Common workflows and tips](workflows.md)**: Pointers for accomplishing common tasks in Iodide.

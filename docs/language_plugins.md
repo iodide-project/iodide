@@ -1,6 +1,6 @@
 # Language plugins
 
-Iodide supports programming languages other than Javascript through the use of
+Iodide supports programming languages other than JavaScript through the use of
 language plugins.
 
 Languages that are mature and well supported automatically load when you create
@@ -9,20 +9,20 @@ Iodide knows about them, even if support is loaded dynamically only when needed.
 Other languages require the use of a language plugin chunk, described below.
 
 Not all language plugins have the same level of interoperability between
-Javascript and the plugin language. We've defined the following approximate
+JavaScript and the plugin language. We've defined the following approximate
 levels of support to make it easier to know what to expect.
 
 - Level 1: The plugin just provides string output, so is useful as a basic
   console REPL (read-eval-print-loop).
   
 - Level 2: The plugin converts basic data types (numbers, strings, arrays and
-  objects) to and from Javascript.
+  objects) to and from JavaScript.
   
 - Level 3: The plugin supports sharing of class instances (objects with methods)
-  between the plugin language and Javascript.
+  between the plugin language and JavaScript.
   
 - Level 4: The plugin supports sharing of *n*-dimensional arrays and data frames
-  between the plugin language and Javascript.
+  between the plugin language and JavaScript.
   
 | Project                                                                         | Language       | Level 1 | Level 2 | Level 3 | Level 4 | Built-in |
 |---------------------------------------------------------------------------------|----------------|---------|---------|---------|---------|----------|
@@ -34,7 +34,7 @@ levels of support to make it easier to know what to expect.
 | [Domical](https://github.com/louisabraham/domical)                              | OCaml          | ✓       |         |         |         |          |
 
 (We try to keep the above table up-to-date, but things fall through the cracks.
-Let us know on [Github](http://github.com/iodide-project/iodide/) if you see anything
+Let us know on [GitHub](http://github.com/iodide-project/iodide/) if you see anything
 needs updating).
 
 ## Using a custom language plugin
@@ -67,12 +67,12 @@ The individual fields are described below:
 
 - `keybinding`: The key used to select the language.  (TODO: Is this used anymore following the JSMD editing refactor?)
 
-- `url`: The URL to a Javascript source file that defines the language support.  It is evaluated directly in the scope that runs Iodide user code, therefore it should should be "modularized" such that it only adds a single object to the global namespace.
+- `url`: The URL to a JavaScript source file that defines the language support.  It is evaluated directly in the scope that runs Iodide user code, therefore it should should be "modularized" such that it only adds a single object to the global namespace.
 
-- `module`: The name of the module provided by the Javascript file given by `url`.
+- `module`: The name of the module provided by the JavaScript file given by `url`.
 
-- `evaluator`: The name of the function in the module that evaluates code for the custom language.  For example, if `module` is `jsx` and `evaluator` is `evaluateJSX`, Iodide will call `window.jsx.evaluateJSX()` to run code for the custom language.  This function must take a single string argument containing source code, and return an arbitrary Javascript value for the result.  For the best user experience when displaying values in the UI, this object should be a Javascript representation that mirrors as closely as possibly the representation in the plugin language.  To return a custom HTML representation of the object, return an object with a `iodideRender` method, returning a string of raw HTML.
+- `evaluator`: The name of the function in the module that evaluates code for the custom language.  For example, if `module` is `jsx` and `evaluator` is `evaluateJSX`, Iodide will call `window.jsx.evaluateJSX()` to run code for the custom language.  This function must take a single string argument containing source code, and return an arbitrary JavaScript value for the result.  For the best user experience when displaying values in the UI, this object should be a JavaScript representation that mirrors as closely as possibly the representation in the plugin language.  To return a custom HTML representation of the object, return an object with a `iodideRender` method, returning a string of raw HTML.
 
-- `asyncEvaluator`: (optional) If evaluating code requires making asynchronous calls, for example, to load additional code from a remote location, an `asyncEvaluator` method should be provided.  It will take precendence over `evaluator` if provided.  It takes a string of source code, but returns a `Promise` that resolves to result value rather than returning the result immediately.  Otherwise, it follows the same conventions as `evaluator`.
+- `asyncEvaluator`: (optional) If evaluating code requires making asynchronous calls, for example, to load additional code from a remote location, an `asyncEvaluator` method should be provided.  It will take precedence over `evaluator` if provided.  It takes a string of source code, but returns a `Promise` that resolves to result value rather than returning the result immediately.  Otherwise, it follows the same conventions as `evaluator`.
 
 - `pluginType`: Must always be `language` for language plugins.  Other values are resolved for other plugin types to be defined in the future.

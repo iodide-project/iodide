@@ -1,9 +1,9 @@
 # API docs
 
 These functions, available within any code cell, aim to improve workflows and
-challenges presented by Javascript and web browsers.
+challenges presented by JavaScript and web browsers.
 
-Please direct clarifications or observations of innacuracy to [our issue
+Please direct clarifications or observations of inaccuracy to [our issue
 tracker](https://github.com/iodide-project/docs/issues/new).
 
 ## `iodide.environment`

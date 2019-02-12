@@ -5,7 +5,7 @@
 JSMD, short for **J**ava**S**cript **M**ark**D**own, is the file format that
 Iodide notebooks are written in. It provides a way to interleave the narrative
 parts of your notebook, written in Markdown, with the computational parts, written
-in Javascript, or through the use of language plugins, in other languages such
+in JavaScript, or through the use of language plugins, in other languages such
 as Python or OCaml.
 
 It is simply a collection of contents in different languages,
@@ -15,7 +15,7 @@ below.
 So, why aren't we just exporting big JSON files like Jupyter and calling it a
 day? Importantly, a flat file is easy for both humans and computers to
 understand. For example, it works out of the box with standard software
-development tools like ``diff`` and Github pull requests. The simplicity of this
+development tools like ``diff`` and GitHub pull requests. The simplicity of this
 format is inspired by [`.Rmd`](https://rmarkdown.rstudio.com/r_notebooks.html)
 (RMarkdown notebook) files.
 
@@ -32,7 +32,7 @@ As we said above, a JSMD file is just a plain text file with text blocks represe
 
 A few things to note about JSMD:
 - Iodide natively supports the following JSMD chunk types (described in more detail below):
-    - `%% js` for Javascript source code
+    - `%% js` for JavaScript source code
     - `%% py` for Python source code
     - `%% md` for Markdown
     - `%% css` for CSS styles
@@ -42,7 +42,7 @@ A few things to note about JSMD:
 - A chunk started with just `%%` but no explicit chunk type will inherit its type of the chunk above it.
 - Any chunk with an unknown type will be ignored by Iodide.
 - Any blank lines above the first chunk specifier will be ignored.
-- Changes to `md` and `css` chunk are immediately applied to your Iodide Report; changes to all other chunk types must be evaluated to take effect (to evaluate, use keyboard shorcuts `ctrl+enter`/`shift+enter` or the play button in the toolbar while your cursor is within the chunk).
+- Changes to `md` and `css` chunk are immediately applied to your Iodide Report; changes to all other chunk types must be evaluated to take effect (to evaluate, use keyboard shortcuts `ctrl+enter`/`shift+enter` or the play button in the toolbar while your cursor is within the chunk).
 - Chunks delimiters can have one or more flags that modify their behavior, for example starting a chunk with `%% js skipRunAll` will prevent that chunk from being run when you press the "Run Full Notebook" button or when the notebook is loaded in report view (which triggers a evaluation of the whole notebook). If a modifier flag is included, the chunk delimiter must include an explicit chunk type. See below for the list of available chunk modifier flags.
 
 A brief example will help to illustrate a few of the details and nuances.
@@ -105,9 +105,9 @@ $$\lim_{h\to 0} \frac{f(x+h)-f(x)}{h}.$$
 
 ```
 
-### Javascript (`%% js`)
+### JavaScript (`%% js`)
 
-Javascript chunks allow you to input Javascript that is you can execute within your browser. The code runs within the scope of your Report (in a separate [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) from the code editor), and allows you to use the full set of [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) available in your browser.
+JavaScript chunks allow you to input JavaScript that is you can execute within your browser. The code runs within the scope of your Report (in a separate [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) from the code editor), and allows you to use the full set of [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) available in your browser.
 
 The last value returned by your code chunk is displayed in the Iodide Console.
 
@@ -118,7 +118,7 @@ CSS chunks allow you to input [CSS styles](https://developer.mozilla.org/en-US/d
 ### Fetch chunks (`%% fetch`)
 
 Fetch chunks provide a convenient way to load (i.e. to "fetch") external resources into the Iodide environment. For the time being, we support the loading:
-- Browserified Javascript libraries (npm modules are not supported)
+- Browserified JavaScript libraries (npm modules are not supported)
 - Style sheets
 - Data (from JSON, text, or blobs)
 
@@ -140,11 +140,11 @@ json: jsonData = https://www.exmpl.co/a_json_file.json
 blob: blobData = https://www.exmpl.co/a_binary_blob.arrow
 ```
 
-All of the requested resources are downloaded in parallel (asyncronously), but if several evaluations are queued, following chunks will not be evaluated until all the resources are available. This allows you to manage the retrieval of assets in a more syncronous workflow, without having to deal with the asyncronous nature of Web APIs (of course, you are free to manage that complexity with Javascript code and using those APIs if you need that extra control).
+All of the requested resources are downloaded in parallel (asynchronously), but if several evaluations are queued, following chunks will not be evaluated until all the resources are available. This allows you to manage the retrieval of assets in a more synchronous workflow, without having to deal with the asynchronous nature of Web APIs (of course, you are free to manage that complexity with JavaScript code and using those APIs if you need that extra control).
 
 In the case of the `js` and `css` fetch types, the scripts and stylesheets are added to the environment as soon as they are available.
 
-In the case of data fetches, which have the syntax `{TYPE}: {VAR_NAME} = {RESOURCE_URL}`, the data is loaded into the variable `VAR_NAME` within your javascript scope. In the case of a `json` fetch, the JSON object retrieved from the URL is parsed into a native javascript object, but in the case of `text` and `blob` fetches, the variable will contain a raw string or [blob object](https://developer.mozilla.org/en-US/docs/Web/API/Blob), respectively.
+In the case of data fetches, which have the syntax `{TYPE}: {VAR_NAME} = {RESOURCE_URL}`, the data is loaded into the variable `VAR_NAME` within your JavaScript scope. In the case of a `json` fetch, the JSON object retrieved from the URL is parsed into a native JavaScript object, but in the case of `text` and `blob` fetches, the variable will contain a raw string or [blob object](https://developer.mozilla.org/en-US/docs/Web/API/Blob), respectively.
 
 ### Pyodide (`%% py`)
 

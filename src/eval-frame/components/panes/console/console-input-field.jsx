@@ -1,13 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import DoubleChevronIcon from "./double-chevron-icon";
+import { evalConsoleInput } from "../../../actions/actions";
+import { postActionToEditor } from "../../../port-to-editor";
 
-import {
-  // updateConsoleText, consoleHistoryStepBack,
-  evalConsoleInput
-} from "../../actions/actions";
-import { postActionToEditor } from "../../port-to-editor";
+import THEME from "../../../../shared/theme";
 
 export function getTextAreaPosition(textArea) {
   return {
@@ -19,7 +16,6 @@ export function getTextAreaPosition(textArea) {
 
 export class ConsoleInputUnconnected extends React.Component {
   static propTypes = {
-    // historyContents: PropTypes.arrayOf(PropTypes.string).isRequired,
     consoleText: PropTypes.string.isRequired,
     updateConsoleText: PropTypes.func.isRequired,
     consoleHistoryStepBack: PropTypes.func.isRequired,
@@ -108,35 +104,32 @@ export class ConsoleInputUnconnected extends React.Component {
         ref={this.containerRef}
         className="console-text-input-container"
         style={{
-          borderTop: "1px solid #ddd",
           maxHeight: "27px", // default max-height
-          display: "flex"
+          flexGrow: 2
         }}
       >
-        <DoubleChevronIcon />
-        <div style={{ flexGrow: 1 }}>
-          <textarea
-            name="text"
-            spellCheck={false}
-            ref={this.textAreaRef}
-            onChange={this.handleTextInput}
-            onKeyDown={this.handleKeyDown}
-            rows="1"
-            style={{
-              resize: "none",
-              lineHeight: "20px",
-              padding: "3px 0px 0px 0px",
-              height: "100%",
-              width: "100%",
-              border: "none",
-              boxSizing: "border-box",
-              outline: "none",
-              margin: "0px",
-              fontSize: "13px"
-            }}
-            value={this.state.consoleText}
-          />
-        </div>
+        <textarea
+          name="text"
+          spellCheck={false}
+          ref={this.textAreaRef}
+          onChange={this.handleTextInput}
+          onKeyDown={this.handleKeyDown}
+          rows="1"
+          style={{
+            resize: "none",
+            lineHeight: "20px",
+            padding: "3px 0px 0px 0px",
+            height: "100%",
+            width: "100%",
+            border: "none",
+            boxSizing: "border-box",
+            outline: "none",
+            margin: "0px",
+            fontSize: "13px",
+            fontFamily: THEME.client.console.fontFamily
+          }}
+          value={this.state.consoleText}
+        />
       </div>
     );
   }

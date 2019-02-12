@@ -72,6 +72,10 @@ export default function evalFrameActionReducer(state, action) {
       return Object.assign({}, state, { userDefinedVarNames });
     }
 
+    case "SET_CONSOLE_LANGUAGE": {
+      return Object.assign({}, state, { languageLastUsed: action.language });
+    }
+
     case "SAVE_ENVIRONMENT": {
       let newSavedEnvironment;
       if (action.update) {

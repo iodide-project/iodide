@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "react-emotion";
 
@@ -7,12 +8,16 @@ import { Manager, Reference, Popper } from "react-popper";
 import { TextButton } from "../../shared/components/buttons";
 
 const ClickContainer = styled("div")`
-  border: ${props =>
-    props.isActive ? "1px solid #e0e0e0" : "1px solid rgba(0,0,0,0)"};
+  border: ${props => {
+    if (!props.isValid) return "none";
+    return props.isActive ? "1px solid #e0e0e0" : "1px solid rgba(0,0,0,0)";
+  }};
   border-radius: 3px;
-
   :hover {
-    border: 1px solid #e0e0e0;
+    border: ${props => {
+      if (!props.isValid) return "none";
+      return "1px solid #e0e0e0";
+    }};
   }
 `;
 
@@ -57,6 +62,10 @@ class OutsideClickBoundary extends React.Component {
 }
 
 export default class Popover extends React.Component {
+  static propTypes = {
+    title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+    activatingComponent: PropTypes.element
+  };
   constructor(props) {
     super(props);
     this.setVisibility = this.setVisibility.bind(this);
@@ -91,15 +100,19 @@ export default class Popover extends React.Component {
       <Manager>
         <Reference>
           {({ ref }) => (
-            <ClickContainer isActive={this.state.visible}>
+            <ClickContainer
+              isValid={this.props.title !== undefined}
+              isActive={this.state.visible}
+              onClick={this.setVisibility}
+            >
               <div ref={ref}>
-                <TextButton
-                  buttonColor="black"
-                  type="button"
-                  onClick={this.setVisibility}
-                >
-                  {this.props.title}
-                </TextButton>
+                {this.props.title ? (
+                  <TextButton buttonColor="black" type="button">
+                    {this.props.title}
+                  </TextButton>
+                ) : (
+                  this.props.activatingComponent
+                )}
               </div>
             </ClickContainer>
           )}
@@ -151,14 +164,3 @@ export default class Popover extends React.Component {
     );
   }
 }
-
-/* <OutsideClickBoundary onClickOutside={this.closePopoverOnClick}>
-<div
-  ref={ref}
-  style={style}
-  data-placement={placement}
->
-  {this.props.children}
-  <div ref={arrowProps.ref} style={arrowProps.style} />
-</div>
-</OutsideClickBoundary> */
