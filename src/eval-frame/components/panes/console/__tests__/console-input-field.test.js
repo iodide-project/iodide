@@ -4,11 +4,14 @@ import React from "react";
 // FIXME this is an ugly hack to make tests pass without errors;
 // importing the store initializes it before other files, pre-empting
 // errors that actually result from circular dependencies
-import { store } from "../../../store"; /* eslint-disable-line no-unused-vars */
+import { store } from "../../../../store"; /* eslint-disable-line no-unused-vars */
 
 // import DoubleChevronIcon from '../double-chevron-icon'
 
-import { ConsoleInputUnconnected, mapStateToProps } from "../console-input";
+import {
+  ConsoleInputUnconnected,
+  mapStateToProps
+} from "../console-input-field";
 
 describe("ConsoleInputUnconnected React component", () => {
   let props;
@@ -45,7 +48,6 @@ describe("ConsoleInputUnconnected React component", () => {
       consoleInput().find("div.console-text-input-container")
     ).toHaveLength(1);
   });
-
   it("textArea has correct content initially, and it updates correctly", () => {
     expect(textArea().props().value).toBe("foo\nbar\nbat");
     textArea().simulate("change", { target: { value: "123" } });
@@ -105,19 +107,6 @@ describe("ConsoleInputUnconnected React component", () => {
     textArea().simulate("keyDown", { key: "Enter" });
 
     expect(resizeToFitText).toHaveBeenCalled();
-  });
-});
-
-describe("ConsoleInput mapStateToProps", () => {
-  let state;
-  beforeEach(() => {
-    state = {
-      consoleText: "TEST_TEXT"
-    };
-  });
-
-  it("loads state.consoleTest as expected", () => {
-    expect(mapStateToProps(state).consoleText).toEqual("TEST_TEXT");
   });
 });
 
