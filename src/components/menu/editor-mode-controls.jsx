@@ -2,6 +2,7 @@ import React from "react";
 
 import PlayButton from "@material-ui/icons/PlayArrow";
 import FastForward from "@material-ui/icons/FastForward";
+import History from "@material-ui/icons/History";
 
 import EditorToolbarMenu from "./editor-toolbar-menu";
 import NotebookTaskButton from "./notebook-task-button";
@@ -13,6 +14,9 @@ export default class EditorModeControls extends React.Component {
     return (
       <React.Fragment>
         <EditorToolbarMenu />
+        <NotebookTaskButton task={tasks.toggleHistoryModal}>
+          <History />
+        </NotebookTaskButton>
         <NotebookTaskButton task={tasks.evaluateChunkAndSelectBelow}>
           <PlayButton />
         </NotebookTaskButton>

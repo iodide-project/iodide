@@ -7,6 +7,7 @@ import Modal from "@material-ui/core/Modal";
 import { setModalState } from "../../actions/actions";
 
 import HelpModal from "./help-modal";
+import HistoryModal from "./history-modal";
 
 export class IodideModalRootUnconnected extends React.Component {
   static propTypes = {
@@ -17,6 +18,9 @@ export class IodideModalRootUnconnected extends React.Component {
     const { modalState } = this.props;
     let modalContents;
     switch (modalState) {
+      case "HISTORY_MODAL":
+        modalContents = <HistoryModal />;
+        break;
       case "HELP_MODAL":
         modalContents = <HelpModal />;
         break;

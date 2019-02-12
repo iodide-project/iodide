@@ -10,6 +10,7 @@
 - removed errant "0" in landing page
 - plugins now throw network errors to the iodide console and catch syntax errors within plugin loaders
 - implements a language selector menu on the right side of the console input
+- add a history viewer in notebook
 
 # 0.0.3 (2019-02-04)
 

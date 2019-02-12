@@ -103,6 +103,75 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { jsmd, jsmdChunks });
     }
 
+    case "GETTING_NOTEBOOK_REVISION_LIST": {
+      return Object.assign({}, state, {
+        gettingRevisionList: true
+      });
+    }
+
+    case "GOT_NOTEBOOK_REVISION_LIST": {
+      const { revisionList, selectedRevisionId } = action;
+      return Object.assign({}, state, {
+        gettingRevisionList: false,
+        notebookHistory: {
+          revisionList,
+          selectedRevisionId,
+          revisionContent: {}
+        }
+      });
+    }
+
+    case "ERROR_GETTING_NOTEBOOK_REVISION_LIST": {
+      return Object.assign({}, state, {
+        gettingRevisionList: false,
+        notebookHistory: {},
+        errorGettingRevisionList: true
+      });
+    }
+
+    case "UPDATE_NOTEBOOK_HISTORY_BROWSER_SELECTED_REVISION_ID": {
+      const { selectedRevisionId } = action;
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          selectedRevisionId
+        }
+      });
+    }
+
+    case "GETTING_REVISION_CONTENT": {
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          gettingRevisionContent: true
+        }
+      });
+    }
+
+    case "GOT_REVISION_CONTENT": {
+      const { revisionContent } = action;
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          revisionContent: {
+            ...state.notebookHistory.revisionContent,
+            ...revisionContent
+          },
+          gettingRevisionContent: false
+        }
+      });
+    }
+
+    case "ERROR_GETTING_REVISION_CONTENT": {
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          gettingRevisionContent: false,
+          errorGettingRevisionContent: true
+        }
+      });
+    }
+
     case "NOTEBOOK_SAVED": {
       return Object.assign({}, state, {
         lastSaved: new Date().toISOString(),

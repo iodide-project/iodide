@@ -65,6 +65,7 @@
     "query-string": "6.2.0",
     "react": "16.5.2",
     "react-codemirror2": "5.1.0",
+    "react-diff-viewer": "1.0.4",
     "react-dom": "16.5.2",
     "react-emotion": "9.2.12",
     "react-helmet": "5.2.0",
