@@ -22,6 +22,7 @@ export const historySchema = {
     historyType: {
       type: "string",
       enum: [
+        "APP_MESSAGE",
         "CELL_EVAL_VALUE",
         "CELL_EVAL_INFO",
         "APP_INFO",
@@ -206,8 +207,7 @@ export const stateProperties = {
       EditorPositioner: Object.assign({}, positionerDefaults),
       ReportPositioner: Object.assign({}, positionerDefaults),
       ConsolePositioner: Object.assign({}, positionerDefaults),
-      WorkspacePositioner: Object.assign({}, positionerDefaults),
-      AppInfoPositioner: Object.assign({}, positionerDefaults)
+      WorkspacePositioner: Object.assign({}, positionerDefaults)
     }
   },
   savedEnvironment: {

@@ -25,6 +25,8 @@ import {
 
 import evalQueue from "./evaluation-queue";
 
+import createHistoryItem from "../tools/create-history-item";
+
 export function setKernelState(kernelState) {
   return {
     type: "SET_KERNEL_STATE",
@@ -33,13 +35,23 @@ export function setKernelState(kernelState) {
 }
 
 export function updateAppMessages(messageObj) {
-  const { message } = messageObj;
-  let { details, when } = messageObj;
-  if (when === undefined) when = new Date().toString();
-  if (details === undefined) details = message;
-  return {
-    type: "UPDATE_APP_MESSAGES",
-    message: { message, details, when }
+  return dispatch => {
+    const { message } = messageObj;
+    let { messageType, when } = messageObj;
+    if (when === undefined) when = new Date().toString();
+    if (messageType === undefined) messageType = message;
+    // add to eval history.
+    dispatch({
+      type: "APPEND_TO_EVAL_HISTORY",
+      ...createHistoryItem({
+        historyType: "APP_MESSAGE",
+        content: messageType
+      })
+    });
+    dispatch({
+      type: "UPDATE_APP_MESSAGES",
+      message: { message, messageType, when }
+    });
   };
 }
 
@@ -264,12 +276,14 @@ function saveNotebookRequest(url, postRequestOptions, dispatch) {
       }
       return response.json();
     })
-    .catch(() => {
+    .catch(err => {
       dispatch(
         updateAppMessages({
-          message: "Error Saving Notebook"
+          message: `Error Saving Notebook.`,
+          messageType: "ERROR_SAVING_NOTEBOOK"
         })
       );
+      throw new Error(err);
     });
 }
 
@@ -279,22 +293,22 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
     const postRequestOptions = getNotebookSaveRequestOptions(state, {
       forkedFrom: options.forkedFrom
     });
-    saveNotebookRequest(
-      "/api/v1/notebooks/",
-      postRequestOptions,
-      dispatch
-    ).then(json => {
-      const message = "Notebook saved to server";
-      dispatch(
-        updateAppMessages({
-          message,
-          details: `${message} <br />Notebook saved`
-        })
-      );
-      dispatch({ type: "ADD_NOTEBOOK_ID", id: json.id });
-      window.history.replaceState({}, "", `/notebooks/${json.id}`);
-      dispatch({ type: "NOTEBOOK_SAVED" });
-    });
+    saveNotebookRequest("/api/v1/notebooks/", postRequestOptions, dispatch)
+      .then(json => {
+        const message = "Notebook saved to server";
+        dispatch(
+          updateAppMessages({
+            message,
+            messageType: `NOTEBOOK_SAVED`
+          })
+        );
+        dispatch({ type: "ADD_NOTEBOOK_ID", id: json.id });
+        window.history.replaceState({}, "", `/notebooks/${json.id}`);
+        dispatch({ type: "NOTEBOOK_SAVED" });
+      })
+      .catch(() => {
+        // do nothing here.
+      });
   };
 }
 
@@ -309,17 +323,21 @@ export function saveNotebookToServer() {
         `/api/v1/notebooks/${notebookId}/revisions/`,
         getNotebookSaveRequestOptions(state),
         dispatch
-      ).then(() => {
-        const message = "Updated Notebook";
-        updateAutosave(state, true);
-        dispatch(
-          updateAppMessages({
-            message,
-            details: `${message} <br />Notebook saved`
-          })
-        );
-        dispatch({ type: "NOTEBOOK_SAVED" });
-      });
+      )
+        .then(() => {
+          const message = "Updated Notebook";
+          updateAutosave(state, true);
+          dispatch(
+            updateAppMessages({
+              message,
+              messageType: "NOTEBOOK_SAVED"
+            })
+          );
+          dispatch({ type: "NOTEBOOK_SAVED" });
+        })
+        .catch(() => {
+          // do nothing here.
+        });
     } else {
       createNewNotebookOnServer()(dispatch, getState);
     }
@@ -335,14 +353,24 @@ export function loginSuccess(userData) {
     if (notebookIsATrial(getState())) {
       createNewNotebookOnServer()(dispatch, getState);
     } else {
-      dispatch(updateAppMessages({ message: "You are logged in" }));
+      dispatch(
+        updateAppMessages({
+          message: "You are logged in",
+          messageType: "LOGGED_IN"
+        })
+      );
     }
   };
 }
 
 export function loginFailure() {
   return dispatch => {
-    dispatch(updateAppMessages({ message: "Login Failed" }));
+    dispatch(
+      updateAppMessages({
+        message: "Login Failed",
+        messageType: "LOGIN_FAILED"
+      })
+    );
   };
 }
 
@@ -358,11 +386,18 @@ export function login(successCallback) {
 
 function logoutSuccess(dispatch) {
   dispatch({ type: "LOGOUT" });
-  dispatch(updateAppMessages({ message: "Logged Out" }));
+  dispatch(
+    updateAppMessages({ message: "Logged Out", messageType: "LOGGED_OUT" })
+  );
 }
 
 function logoutFailure(dispatch) {
-  dispatch(updateAppMessages({ message: "Logout Failed" }));
+  dispatch(
+    updateAppMessages({
+      message: "Logout Failed",
+      messageType: "LOGOUT_FAILED"
+    })
+  );
 }
 
 export function logout() {

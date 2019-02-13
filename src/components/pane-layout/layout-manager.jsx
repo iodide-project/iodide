@@ -39,8 +39,7 @@ function updateLayoutPositions(layout) {
     EditorPositioner: Object.assign({}, positionerDefaults),
     ReportPositioner: Object.assign({}, positionerDefaults),
     ConsolePositioner: Object.assign({}, positionerDefaults),
-    WorkspacePositioner: Object.assign({}, positionerDefaults),
-    AppInfoPositioner: Object.assign({}, positionerDefaults)
+    WorkspacePositioner: Object.assign({}, positionerDefaults)
   };
 
   // eslint-disable-next-line no-underscore-dangle
