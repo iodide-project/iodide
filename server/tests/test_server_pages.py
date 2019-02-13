@@ -1,53 +1,75 @@
-import json
-import re
-
 import pytest
 from django.urls import reverse
 
+from helpers import get_script_block
 from server.base.models import User
 from server.notebooks.models import (Notebook,
                                      NotebookRevision)
 
 
-def _get_page_data(page_content_str):
-    m = re.search(r'<script id="pageData" type="application/json">(\{.*\})</script>',
-                  str(page_content_str))
-    return json.loads(m.group(1))
-
-
-def test_index_view(client, two_test_notebooks):
-    resp = client.get(reverse('index'))
-    assert resp.status_code == 200
-    assert set(_get_page_data(str(resp.content)).keys()) == set(['userInfo',
-                                                                 'notebookList'])
-
-
 @pytest.mark.parametrize("logged_in", [True, False])
-def test_index_view_with_gravatar(client, fake_user, logged_in):
+def test_index_view(client, two_test_notebooks, fake_user, logged_in):
     if logged_in:
         client.force_login(fake_user)
     resp = client.get(reverse('index'))
     assert resp.status_code == 200
-    expected_user_info = {
-        'name': fake_user.username,
-        'avatar': 'http://www.gravatar.com/avatar/eaee5961bc7ad96538a4933cb069fda9?d=identicon',
-        'notebooks': []
-    } if logged_in else {}
-    assert _get_page_data(str(resp.content))['userInfo'] == expected_user_info
+
+    # if user logged in, they should have an avatar defined
+    fake_user.refresh_from_db()
+    if logged_in:
+        assert fake_user.avatar.startswith('http://www.gravatar.com/avatar/')
+    else:
+        assert fake_user.avatar is None
+
+    # assert that the pageData element has the expected structure
+    assert get_script_block(resp.content, 'pageData') == {
+        'notebookList': [
+            {
+                'avatar': fake_user.avatar,
+                'id': test_notebook.id,
+                'latestRevision': (NotebookRevision.objects.get(notebook=test_notebook)
+                                   .created.isoformat()),
+                'owner': test_notebook.owner.username,
+                'title': test_notebook.title
+            } for test_notebook in reversed(two_test_notebooks)
+        ],
+        'userInfo': {
+            'name': fake_user.username,
+            'avatar': 'http://www.gravatar.com/avatar/eaee5961bc7ad96538a4933cb069fda9?d=identicon',
+            'notebooks': [
+                {
+                    'id': test_notebook.id,
+                    'latestRevision': (NotebookRevision.objects.get(notebook=test_notebook)
+                                       .created.isoformat()),
+                    'title': test_notebook.title
+                } for test_notebook in reversed(two_test_notebooks)]
+        } if logged_in else {}
+    }
 
 
 @pytest.mark.parametrize("username", ['testuser', 'test-user', 'testuser@foo.com'])
 def test_user_view_with_different_names(transactional_db, client, username):
     test_user = User.objects.create(
         username=username,
+        first_name="User",
+        last_name="McUsertons",
         email="user@foo.com",
         password="123")
     notebook = Notebook.objects.create(owner=test_user,
                                        title='Fake notebook')
-    NotebookRevision.objects.create(notebook=notebook,
-                                    title="First revision",
-                                    content="*fake notebook content*")
+    revision = NotebookRevision.objects.create(notebook=notebook,
+                                               title="First revision",
+                                               content="*fake notebook content*")
     resp = client.get(reverse('user', kwargs={'name': test_user.username}))
     assert resp.status_code == 200
-    assert set(_get_page_data(str(resp.content)).keys()) == set(
-        ['userInfo', 'notebookList', 'thisUser'])
+    assert get_script_block(resp.content, 'pageData') == {
+        'notebookList': [
+            {
+                'id': notebook.id,
+                'last_revision': revision.created.isoformat(),
+                'title': revision.title
+            }
+        ],
+        'thisUser': {'avatar': None, 'full_name': test_user.get_full_name(), 'name': username},
+        'userInfo': {}
+    }

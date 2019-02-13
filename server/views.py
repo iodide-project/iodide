@@ -28,7 +28,7 @@ def index(request):
         .values_list('id', 'title', 'owner__username', 'owner__avatar', 'latest_revision')[:100]
     if not request.user.is_anonymous:
         user_info['notebooks'] = [
-            {'id': nb_id, 'title': title, 'latestRevision': latest_revision.isoformat(sep=' ')}
+            {'id': nb_id, 'title': title, 'latestRevision': latest_revision.isoformat()}
             for (nb_id, title, latest_revision) in get_formatted_notebooks(request.user)]
     return render(
         request, 'index.html', {
@@ -41,7 +41,7 @@ def index(request):
                         'title': title,
                         'owner': owner,
                         'avatar': avatar,
-                        'latestRevision': latest_revision.isoformat(sep=' ')
+                        'latestRevision': latest_revision.isoformat()
                     }
                     for (nb_id, title, owner, avatar, latest_revision) in notebooks
                 ]
@@ -63,7 +63,7 @@ def user(request, name=None):
     user = get_object_or_404(User, username=name)
 
     this_user = {
-        'full_name': '{} {}'.format(user.first_name, user.last_name),
+        'full_name': user.get_full_name(),
         'avatar': user.avatar,
         'name': user.username,
     }
@@ -75,7 +75,7 @@ def user(request, name=None):
             'notebookList': [{
                 'id': nb_id,
                 'title': title,
-                'last_revision': latest_revision.isoformat(sep=' ')
+                'last_revision': latest_revision.isoformat()
             } for (nb_id, title, latest_revision) in notebooks]
         }
     })

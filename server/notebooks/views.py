@@ -77,7 +77,7 @@ def notebook_revisions(request, pk):
     files = [
         {'filename': file.filename,
          'id': file.id,
-         'last_updated': file.last_updated.isoformat(sep=' '),
+         'last_updated': file.last_updated.isoformat(),
          'size': len(file.content)}
         for file in File.objects.filter(notebook_id=pk).order_by('-last_updated')
     ]
@@ -85,7 +85,7 @@ def notebook_revisions(request, pk):
         'id': revision.id,
         'notebookId': revision.notebook_id,
         'title': revision.title,
-        'date': revision.created.isoformat(sep=' ')}
+        'date': revision.created.isoformat()}
         for revision in NotebookRevision.objects.filter(notebook_id=pk)])
     return render(request, '../templates/index.html', {
             'page_data': {
