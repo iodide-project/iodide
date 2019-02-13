@@ -57,7 +57,6 @@ const LanguageName = styled("div")`
 `;
 
 const onMenuClickCreator = (fcn, languageId) => () => {
-  console.log(fcn, languageId);
   fcn(languageId);
 };
 
@@ -122,7 +121,6 @@ export function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     setConsoleLanguage: languageId => {
-      console.log("hello?");
       dispatch(setConsoleLanguageAction(languageId));
     }
   };

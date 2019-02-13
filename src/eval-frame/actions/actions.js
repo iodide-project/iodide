@@ -144,14 +144,11 @@ export function evalConsoleInput(consoleText) {
 
 function evaluateCode(code, language, state, evalId) {
   return dispatch => {
-    // input here.
     const updateCellAfterEvaluation = (output, evalStatus) => {
       const cellProperties = { rendered: true };
-      console.log("eval status", evalStatus);
       if (evalStatus === "ERROR") {
         cellProperties.evalStatus = evalStatus;
         sendStatusResponseToEditor("ERROR", evalId);
-        console.log("is this an error?");
         dispatch(
           appendToEvalHistory({
             historyType: "CONSOLE_OUTPUT",
