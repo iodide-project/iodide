@@ -1,13 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
-import ConsoleContainer from "./console-container";
-
-const AppMessageContainer = styled(ConsoleContainer)``;
+import ConsoleMessage from "./console-message";
 
 const AppMessageBody = styled("div")`
   grid-column: body;
-  padding: 5px;
   color: rgba(0, 0, 0, 0.8);
 `;
 
@@ -23,9 +20,9 @@ const MESSAGES = {
 const AppMessage = ({ messageType }) => {
   const message = MESSAGES[messageType];
   return (
-    <AppMessageContainer>
+    <ConsoleMessage level="log">
       <AppMessageBody>{message}</AppMessageBody>
-    </AppMessageContainer>
+    </ConsoleMessage>
   );
 };
 
