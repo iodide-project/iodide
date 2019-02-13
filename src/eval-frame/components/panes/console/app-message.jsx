@@ -17,7 +17,7 @@ const AppMessageBody = styled("div")`
 const MESSAGES = {};
 MESSAGES.NOTEBOOK_SAVED = <React.Fragment>Notebook saved.</React.Fragment>;
 MESSAGES.ERROR_SAVING_NOTEBOOK = (
-  <React.Fragment>There was an error.</React.Fragment>
+  <React.Fragment>Error saving notebook.</React.Fragment>
 );
 MESSAGES.LOGGED_IN = <React.Fragment>You are now logged in.</React.Fragment>;
 MESSAGES.LOGIN_FAILED = <React.Fragment>Login failed.</React.Fragment>;

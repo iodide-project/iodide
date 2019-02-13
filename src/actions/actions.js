@@ -276,13 +276,14 @@ function saveNotebookRequest(url, postRequestOptions, dispatch) {
       }
       return response.json();
     })
-    .catch(() => {
+    .catch(err => {
       dispatch(
         updateAppMessages({
-          message: "Error Saving Notebook",
+          message: `Error Saving Notebook.`,
           messageType: "ERROR_SAVING_NOTEBOOK"
         })
       );
+      throw new Error(err);
     });
 }
 
@@ -292,22 +293,22 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
     const postRequestOptions = getNotebookSaveRequestOptions(state, {
       forkedFrom: options.forkedFrom
     });
-    saveNotebookRequest(
-      "/api/v1/notebooks/",
-      postRequestOptions,
-      dispatch
-    ).then(json => {
-      const message = "Notebook saved to server";
-      dispatch(
-        updateAppMessages({
-          message,
-          messageType: `NOTEBOOK_SAVED`
-        })
-      );
-      dispatch({ type: "ADD_NOTEBOOK_ID", id: json.id });
-      window.history.replaceState({}, "", `/notebooks/${json.id}`);
-      dispatch({ type: "NOTEBOOK_SAVED" });
-    });
+    saveNotebookRequest("/api/v1/notebooks/", postRequestOptions, dispatch)
+      .then(json => {
+        const message = "Notebook saved to server";
+        dispatch(
+          updateAppMessages({
+            message,
+            messageType: `NOTEBOOK_SAVED`
+          })
+        );
+        dispatch({ type: "ADD_NOTEBOOK_ID", id: json.id });
+        window.history.replaceState({}, "", `/notebooks/${json.id}`);
+        dispatch({ type: "NOTEBOOK_SAVED" });
+      })
+      .catch(() => {
+        // do nothing here.
+      });
   };
 }
 
@@ -322,17 +323,21 @@ export function saveNotebookToServer() {
         `/api/v1/notebooks/${notebookId}/revisions/`,
         getNotebookSaveRequestOptions(state),
         dispatch
-      ).then(() => {
-        const message = "Updated Notebook";
-        updateAutosave(state, true);
-        dispatch(
-          updateAppMessages({
-            message,
-            messageType: "NOTEBOOK_SAVED"
-          })
-        );
-        dispatch({ type: "NOTEBOOK_SAVED" });
-      });
+      )
+        .then(() => {
+          const message = "Updated Notebook";
+          updateAutosave(state, true);
+          dispatch(
+            updateAppMessages({
+              message,
+              messageType: "NOTEBOOK_SAVED"
+            })
+          );
+          dispatch({ type: "NOTEBOOK_SAVED" });
+        })
+        .catch(() => {
+          // do nothing here.
+        });
     } else {
       createNewNotebookOnServer()(dispatch, getState);
     }
