@@ -125,8 +125,10 @@ export function trimStack(e) {
   return `${e.name}: ${e.message}\n${outputFrames.join("\n")}`;
 }
 
-const ErrorPrintout = styled("pre")`
-  margin: 0;
+const ErrorPrintout = styled("div")`
+  pre {
+    margin: 0;
+  }
 `;
 
 export default class ErrorRenderer extends React.Component {

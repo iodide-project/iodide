@@ -1,15 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
+import ConsoleContainer from "./console-container";
 
-// this will get deprecated once the rest of the
-// console styling hits.
-
-const AppMessageContainer = styled("div")`
-  border-bottom: 1px solid gainsboro;
-`;
+const AppMessageContainer = styled(ConsoleContainer)``;
 
 const AppMessageBody = styled("div")`
+  grid-column: body;
   padding: 5px;
   color: rgba(0, 0, 0, 0.8);
 `;

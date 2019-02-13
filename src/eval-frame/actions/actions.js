@@ -60,22 +60,20 @@ export function setConsoleLanguage(language) {
   };
 }
 
-export function appendToEvalHistory(
-  cellId,
+export function appendToEvalHistory({
+  historyType,
   content,
   value,
-  historyOptions = {}
-) {
-  const historyType =
-    historyOptions.historyType === undefined
-      ? "CELL_EVAL_VALUE"
-      : historyOptions.historyType;
-
+  level,
+  language,
+  historyId = generateRandomId()
+}) {
   const historyAction = createHistoryItem({
     content,
     historyType,
-    historyId: historyOptions.historyId,
-    lastRan: historyOptions.lastRan
+    historyId,
+    level,
+    language
   });
   historyAction.type = "APPEND_TO_EVAL_HISTORY";
 
@@ -138,28 +136,51 @@ export function evalConsoleInput(consoleText) {
 
 function evaluateCode(code, language, state, evalId) {
   return dispatch => {
-    const historyId = generateRandomId();
+    // input here.
+    dispatch(
+      appendToEvalHistory({
+        historyType: "CONSOLE_INPUT",
+        content: code,
+        language
+      })
+    );
     const updateCellAfterEvaluation = (output, evalStatus) => {
       const cellProperties = { rendered: true };
       if (evalStatus === "ERROR") {
         cellProperties.evalStatus = evalStatus;
         sendStatusResponseToEditor("ERROR", evalId);
+        dispatch(
+          appendToEvalHistory({
+            historyType: "CONSOLE_OUTPUT",
+            value: output,
+            level: "error"
+          })
+        );
       } else {
+        dispatch(
+          appendToEvalHistory({
+            historyType: "CONSOLE_OUTPUT",
+            value: output
+          })
+        );
         sendStatusResponseToEditor("SUCCESS", evalId);
       }
-      dispatch(appendToEvalHistory(null, code, output, { historyId }));
+      // dispatch(appendToEvalHistory(null, code, output, { historyId }));
+      // output here.
+
       dispatch(updateUserVariables());
     };
 
-    const messageCallback = msg => {
-      const messageHistoryId = generateRandomId();
-      dispatch(
-        appendToEvalHistory(null, msg, undefined, {
-          historyType: "CELL_EVAL_INFO",
-          historyId: messageHistoryId
-        })
-      );
-    };
+    // const messageCallback = msg => {
+    //   const messageHistoryId = generateRandomId();
+    //   dispatch(
+    //     appendToEvalHistory(null, msg, undefined, {
+    //       historyType: "CELL_EVAL_INFO",
+    //       historyId: messageHistoryId
+    //     })
+    //   );
+    // };
+    const messageCallback = () => {};
 
     return ensureLanguageAvailable(language, state, dispatch)
       .then(languageEvaluator =>
@@ -187,7 +208,7 @@ export function evaluateText(
     // if (!evalText || !evalType) { return undefined }
     // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
     // in the direct jsmd editing paradigm.
-    const historyId = generateRandomId();
+    // const historyId = generateRandomId();
 
     MOST_RECENT_CHUNK_ID.set(chunkId);
     const sideEffect = document.getElementById(
@@ -210,16 +231,19 @@ export function evaluateText(
       sendStatusResponseToEditor("SUCCESS", evalId);
     } else {
       sendStatusResponseToEditor("ERROR", evalId);
-      return dispatch(
-        appendToEvalHistory(
-          null,
-          evalText,
-          new Error(`eval type ${evalType} is not defined`),
-          {
-            historyType: "CONSOLE_EVAL",
-            historyId
-          }
-        )
+      dispatch(
+        appendToEvalHistory({
+          historyType: "CONSOLE_INPUT",
+          content: evalText,
+          language: evalType
+        })
+      );
+      dispatch(
+        appendToEvalHistory({
+          historyType: "CONSOLE_OUTPUT",
+          value: new Error(`eval type ${evalType} is not defined`),
+          level: "error"
+        })
       );
     }
     return Promise.resolve();

@@ -14,7 +14,7 @@ import { EVALUATION_RESULTS } from "../../actions/actions";
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
     level: PropTypes.string,
-    historyId: PropTypes.number.isRequired,
+    historyId: PropTypes.string.isRequired,
     historyType: PropTypes.string.isRequired,
     lastRan: PropTypes.number.isRequired,
     language: PropTypes.string
