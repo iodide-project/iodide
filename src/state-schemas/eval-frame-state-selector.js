@@ -10,7 +10,6 @@ const propsToCopy = [
   "languageDefinitions",
   "loadedLanguages",
   "languageLastUsed",
-  "panePositions.AppInfoPositioner",
   "panePositions.ConsolePositioner",
   "panePositions.ReportPositioner",
   "panePositions.WorkspacePositioner",

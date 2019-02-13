@@ -29,11 +29,3 @@ export const WorkspacePositioner = {
   props: { positionerId: "WorkspacePositioner" },
   isClosable: false
 };
-
-export const AppInfoPositioner = {
-  title: "App Info",
-  type: "react-component",
-  component: "Positioner",
-  props: { positionerId: "AppInfoPositioner" },
-  isClosable: false
-};

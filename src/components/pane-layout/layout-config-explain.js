@@ -2,8 +2,7 @@ import {
   EditorPositioner,
   ConsolePositioner,
   ReportPositioner,
-  WorkspacePositioner,
-  AppInfoPositioner
+  WorkspacePositioner
 } from "./layout-config-content-items";
 
 export default {
@@ -26,11 +25,7 @@ export default {
             EditorPositioner,
             {
               type: "stack",
-              content: [
-                ConsolePositioner,
-                WorkspacePositioner,
-                AppInfoPositioner
-              ]
+              content: [ConsolePositioner, WorkspacePositioner]
             }
           ]
         },

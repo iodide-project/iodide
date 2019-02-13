@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Button from "@material-ui/core/Button";
 import SnackBar from "@material-ui/core/Snackbar";
 
 export class appMessagesUnconnected extends React.Component {
@@ -50,11 +49,6 @@ export class appMessagesUnconnected extends React.Component {
         autoHideDuration={5000}
         message={
           <span id="message-id">{this.state.latestMessage.message}</span>
-        }
-        action={
-          <Button onClick={this.handleMore} color="secondary" size="small">
-            More
-          </Button>
         }
       />
     );

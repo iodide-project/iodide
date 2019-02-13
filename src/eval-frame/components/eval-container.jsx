@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import ReportPane from "./panes/report-pane";
 import DeclaredVariablesPane from "./panes/declared-variables-pane";
 import ConsolePane from "./panes/console-pane";
-import AppInfoPane from "./panes/app-info-pane";
 
 import FixedPositionContainer from "../../components/pane-layout/fixed-position-container";
 
@@ -34,10 +33,6 @@ export class EvalContainerUnconnected extends React.Component {
           hidden={reportOnly}
         >
           <DeclaredVariablesPane />
-        </FixedPositionContainer>
-
-        <FixedPositionContainer paneId="AppInfoPositioner" hidden={reportOnly}>
-          <AppInfoPane />
         </FixedPositionContainer>
       </React.Fragment>
     );
