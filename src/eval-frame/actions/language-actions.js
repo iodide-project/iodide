@@ -42,6 +42,14 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 
         window.languagePluginUrl = url;
 
+        if (xhrObj.status > 400 && xhrObj.status < 600) {
+          value = `${displayName} failed to load: ${xhrObj.status} ${
+            xhrObj.statusText
+          }`;
+          dispatch(updateValueInHistory(historyId, value));
+          resolve();
+        }
+
         // Here, we wrap whatever the return value of the eval into a promise.
         // If it is simply evaling a code block, then it returns undefined.
         // But if it returns a Promise, then we can wait for that promise to resolve
@@ -55,6 +63,9 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
           dispatch(updateValueInHistory(historyId, value));
           delete window.languagePluginUrl;
           resolve();
+        }).catch(err => {
+          dispatch(updateValueInHistory(historyId, err));
+          reject(err);
         });
       });
 
@@ -94,9 +105,14 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
       sendStatusResponseToEditor("ERROR", evalId);
       return Promise.reject();
     }
-    return loadLanguagePlugin(pluginData, historyId, dispatch).then(() => {
-      sendStatusResponseToEditor("SUCCESS", evalId);
-    });
+    return loadLanguagePlugin(pluginData, historyId, dispatch)
+      .then(() => {
+        sendStatusResponseToEditor("SUCCESS", evalId);
+      })
+      .catch(err => {
+        sendStatusResponseToEditor("ERROR", evalId);
+        return err;
+      });
   };
 }
 
@@ -136,7 +152,18 @@ export function runCodeWithLanguage(language, code, messageCallback) {
   if (asyncEvaluator !== undefined) {
     const messageCb =
       messageCallback === undefined ? () => {} : messageCallback;
-    return window[module][asyncEvaluator](code, messageCb);
+    try {
+      return window[module][asyncEvaluator](code, messageCb);
+    } catch (e) {
+      if (e.message === "window[module] is undefined") {
+        return new Error(
+          `Error evaluating ${
+            language.displayName
+          }; evaluation module "${module}" not not defined`
+        );
+      }
+      return e;
+    }
   }
   return new Promise((resolve, reject) => {
     try {
