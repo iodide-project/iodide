@@ -41,7 +41,7 @@ def index(request):
                         'title': title,
                         'owner': owner,
                         'avatar': avatar,
-                        'latestRevision': latest_revision.isoformat(sep=' ')
+                        'latestRevision': latest_revision.isoformat()
                     }
                     for (nb_id, title, owner, avatar, latest_revision) in notebooks
                 ]
@@ -63,7 +63,7 @@ def user(request, name=None):
     user = get_object_or_404(User, username=name)
 
     this_user = {
-        'full_name': '{} {}'.format(user.first_name, user.last_name),
+        'full_name': user.get_full_name(),
         'avatar': user.avatar,
         'name': user.username,
     }
