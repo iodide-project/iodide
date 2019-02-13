@@ -93,10 +93,23 @@ const schemas = {
     type: "object",
     additionalProperties: false,
     properties: {
-      type: { type: "string" },
-      historyId: { type: "string" }
-    },
-    required: ["type", "historyId"]
+      type: {
+        type: "string"
+      },
+      historyItem: {
+        type: "object",
+        properties: {
+          historyId: { type: "string" },
+          content: { type: "string" },
+          language: { type: "string" },
+          level: { type: "string" },
+          historyType: { type: "string" },
+          lastRan: { type: "number" }
+        },
+        additionalProperties: false,
+        required: ["historyId"]
+      }
+    }
   }
 };
 

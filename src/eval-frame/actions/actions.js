@@ -82,11 +82,19 @@ export function appendToEvalHistory({
   return historyAction;
 }
 
-export function updateValueInHistory(historyId, value) {
-  EVALUATION_RESULTS[historyId] = value;
+export function updateConsoleEntry(args) {
+  const updatedHistoryItem = Object.assign({}, args);
+  const { value, historyId } = updatedHistoryItem;
+  if (value) {
+    EVALUATION_RESULTS[historyId] = value;
+    delete updatedHistoryItem.value;
+  }
   return {
     type: "UPDATE_VALUE_IN_HISTORY",
-    historyId
+    historyItem: {
+      ...updatedHistoryItem,
+      lastRan: +new Date()
+    }
   };
 }
 
@@ -137,18 +145,13 @@ export function evalConsoleInput(consoleText) {
 function evaluateCode(code, language, state, evalId) {
   return dispatch => {
     // input here.
-    dispatch(
-      appendToEvalHistory({
-        historyType: "CONSOLE_INPUT",
-        content: code,
-        language
-      })
-    );
     const updateCellAfterEvaluation = (output, evalStatus) => {
       const cellProperties = { rendered: true };
+      console.log("eval status", evalStatus);
       if (evalStatus === "ERROR") {
         cellProperties.evalStatus = evalStatus;
         sendStatusResponseToEditor("ERROR", evalId);
+        console.log("is this an error?");
         dispatch(
           appendToEvalHistory({
             historyType: "CONSOLE_OUTPUT",
@@ -183,9 +186,17 @@ function evaluateCode(code, language, state, evalId) {
     const messageCallback = () => {};
 
     return ensureLanguageAvailable(language, state, dispatch)
-      .then(languageEvaluator =>
-        runCodeWithLanguage(languageEvaluator, code, messageCallback)
-      )
+      .then(languageEvaluator => {
+        // add the code input to the console here.
+        dispatch(
+          appendToEvalHistory({
+            historyType: "CONSOLE_INPUT",
+            content: code,
+            language
+          })
+        );
+        return runCodeWithLanguage(languageEvaluator, code, messageCallback);
+      })
       .then(
         output => updateCellAfterEvaluation(output),
         output => updateCellAfterEvaluation(output, "ERROR")

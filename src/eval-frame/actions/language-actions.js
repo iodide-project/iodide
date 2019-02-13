@@ -1,7 +1,7 @@
 import { postMessageToEditor } from "../port-to-editor";
 import {
   appendToEvalHistory,
-  updateValueInHistory,
+  updateConsoleEntry,
   sendStatusResponseToEditor
 } from "./actions";
 import generateRandomId from "../../tools/generate-random-id";
@@ -13,13 +13,22 @@ export function addLanguage(languageDefinition) {
   };
 }
 
-function loadLanguagePlugin(pluginData, historyId, dispatch) {
+function loadLanguagePlugin(pluginData, dispatch) {
   let value;
   let languagePluginPromise;
 
+  const historyId = generateRandomId();
+  dispatch(
+    appendToEvalHistory({
+      historyType: "CONSOLE_MESSAGE",
+      content: "fetching plugin",
+      historyId,
+      level: "log"
+    })
+  );
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
-    dispatch(updateValueInHistory(historyId, value));
+    dispatch(updateConsoleEntry({ historyId, content: value, level: "error" }));
   } else {
     const { url, displayName } = pluginData;
 
@@ -31,12 +40,14 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
         if (evt.total > 0) {
           value += `out of ${evt.total} (${evt.loaded / evt.total}%)`;
         }
-        dispatch(updateValueInHistory(historyId, value));
+        dispatch(updateConsoleEntry({ historyId, content: value }));
       });
 
       xhrObj.addEventListener("load", () => {
         value = `${displayName} plugin downloaded, initializing`;
-        dispatch(updateValueInHistory(historyId, value));
+        dispatch(
+          updateConsoleEntry({ historyId, content: value, level: "log" })
+        );
         // see the following for asynchronous loading of scripts from strings:
         // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
 
@@ -46,7 +57,9 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
           value = `${displayName} failed to load: ${xhrObj.status} ${
             xhrObj.statusText
           }`;
-          dispatch(updateValueInHistory(historyId, value));
+          dispatch(
+            updateConsoleEntry({ historyId, content: value, level: "error" })
+          );
           resolve();
         }
 
@@ -60,18 +73,25 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
           value = `${displayName} plugin ready`;
           dispatch(addLanguage(pluginData));
           postMessageToEditor("POST_LANGUAGE_DEF_TO_EDITOR", pluginData);
-          dispatch(updateValueInHistory(historyId, value));
+          dispatch(
+            updateConsoleEntry({ historyId, content: value, level: "log" })
+          );
           delete window.languagePluginUrl;
           resolve();
         }).catch(err => {
-          dispatch(updateValueInHistory(historyId, err));
+          dispatch(
+            updateConsoleEntry({ historyId, content: value, level: "error" })
+          );
           reject(err);
         });
       });
 
       xhrObj.addEventListener("error", () => {
-        value = `${displayName} plugin failed to load`;
-        dispatch(updateValueInHistory(historyId, value));
+        value = `${displayName} plugin failed to load: ${url} not found
+        `;
+        dispatch(
+          updateConsoleEntry({ historyId, content: value, level: "error" })
+        );
         reject();
       });
 
@@ -84,28 +104,28 @@ function loadLanguagePlugin(pluginData, historyId, dispatch) {
 
 export function evaluateLanguagePlugin(pluginText, evalId) {
   return dispatch => {
-    const historyId = generateRandomId();
     dispatch(
-      appendToEvalHistory(null, pluginText, undefined, {
-        historyId,
-        historyType: "CELL_EVAL_INFO"
+      appendToEvalHistory({
+        historyType: "CONSOLE_INPUT",
+        content: pluginText,
+        language: "plugin"
       })
     );
-
     let pluginData;
     try {
       pluginData = JSON.parse(pluginText);
     } catch (err) {
       dispatch(
-        updateValueInHistory(
-          historyId,
-          `plugin definition failed to parse:\n${err.message}`
-        )
+        appendToEvalHistory({
+          historyType: "CONSOLE_OUTPUT",
+          content: `plugin definition failed to parse:\n${err.message}`,
+          level: "error"
+        })
       );
       sendStatusResponseToEditor("ERROR", evalId);
       return Promise.reject();
     }
-    return loadLanguagePlugin(pluginData, historyId, dispatch)
+    return loadLanguagePlugin(pluginData, dispatch)
       .then(() => {
         sendStatusResponseToEditor("SUCCESS", evalId);
       })
@@ -124,20 +144,17 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
   if (
     Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)
   ) {
-    const historyId = generateRandomId();
     dispatch(
-      appendToEvalHistory(
-        null,
-        `Loading ${
+      appendToEvalHistory({
+        historyType: "CONSOLE_MESSAGE",
+        content: `Loading ${
           state.languageDefinitions[languageId].displayName
         } language plugin`,
-        undefined,
-        { historyId, historyType: "CELL_EVAL_INFO" }
-      )
+        level: "log"
+      })
     );
     return loadLanguagePlugin(
       state.languageDefinitions[languageId],
-      historyId,
       dispatch
     ).then(() => state.languageDefinitions[languageId]);
   }
@@ -147,22 +164,24 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
   return new Promise((resolve, reject) => reject());
 }
 
-export function runCodeWithLanguage(language, code, messageCallback) {
+export function runCodeWithLanguage(
+  language,
+  code,
+  messageCallback = () => {}
+) {
   const { module, evaluator, asyncEvaluator } = language;
   if (asyncEvaluator !== undefined) {
-    const messageCb =
-      messageCallback === undefined ? () => {} : messageCallback;
     try {
-      return window[module][asyncEvaluator](code, messageCb);
+      return window[module][asyncEvaluator](code, messageCallback);
     } catch (e) {
       if (e.message === "window[module] is undefined") {
-        return new Error(
+        throw new Error(
           `Error evaluating ${
             language.displayName
           }; evaluation module "${module}" not not defined`
         );
       }
-      return e;
+      throw e;
     }
   }
   return new Promise((resolve, reject) => {

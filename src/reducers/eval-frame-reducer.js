@@ -15,9 +15,18 @@ export default function evalFrameActionReducer(state, action) {
     }
 
     case "UPDATE_VALUE_IN_HISTORY": {
-      const history = [...state.history];
-      // const historyEntry = history.find(h => h.historyId === action.historyId)
-      // if (historyEntry) { historyEntry.value = action.value }
+      const actionCopy = Object.assign({}, action);
+      const history = [...state.history.slice()];
+      const i = history.findIndex(
+        h => h.historyId === actionCopy.historyItem.historyId
+      );
+      const historyEntry = Object.assign(
+        {},
+        history[i],
+        actionCopy.historyItem
+      );
+      history[i] = historyEntry;
+      console.log(historyEntry);
       return Object.assign({}, state, { history });
     }
 
