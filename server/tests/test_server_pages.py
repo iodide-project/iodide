@@ -13,12 +13,22 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
         client.force_login(fake_user)
     resp = client.get(reverse('index'))
     assert resp.status_code == 200
+
+    # if user logged in, they should have an avatar defined
+    fake_user.refresh_from_db()
+    if logged_in:
+        assert fake_user.avatar.startswith('http://www.gravatar.com/avatar/')
+    else:
+        assert fake_user.avatar is None
+
+    # assert that the pageData element has the expected structure
     assert get_script_block(resp.content, 'pageData') == {
         'notebookList': [
             {
-                'avatar': 'http://www.gravatar.com/avatar/eaee5961bc7ad96538a4933cb069fda9?d=identicon' if logged_in else None,
+                'avatar': fake_user.avatar,
                 'id': test_notebook.id,
-                'latestRevision': NotebookRevision.objects.get(notebook=test_notebook).created.isoformat(),
+                'latestRevision': (NotebookRevision.objects.get(notebook=test_notebook)
+                                   .created.isoformat()),
                 'owner': test_notebook.owner.username,
                 'title': test_notebook.title
             } for test_notebook in reversed(two_test_notebooks)
@@ -29,7 +39,8 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
             'notebooks': [
                 {
                     'id': test_notebook.id,
-                    'latestRevision': NotebookRevision.objects.get(notebook=test_notebook).created.isoformat(),
+                    'latestRevision': (NotebookRevision.objects.get(notebook=test_notebook)
+                                       .created.isoformat()),
                     'title': test_notebook.title
                 } for test_notebook in reversed(two_test_notebooks)]
         } if logged_in else {}
