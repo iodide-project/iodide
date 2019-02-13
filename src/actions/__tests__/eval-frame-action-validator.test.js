@@ -28,7 +28,7 @@ describe("validateActionFromEvalFrame should throw errors as expected", () => {
     expect(() =>
       validateActionFromEvalFrame({
         type: "UPDATE_VALUE_IN_HISTORY",
-        historyId: 12424242
+        historyItem: 10
       })
     ).toThrowError(ActionSchemaValidationError);
   });
@@ -55,7 +55,11 @@ describe("validateActionFromEvalFrame should return true it action is valid", ()
     expect(
       validateActionFromEvalFrame({
         type: "UPDATE_VALUE_IN_HISTORY",
-        historyId: "a92nf9snf9s"
+        historyItem: {
+          historyId: "s03nv9dns",
+          content: "ok",
+          level: "error"
+        }
       })
     ).toEqual(true);
   });

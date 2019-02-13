@@ -92,6 +92,7 @@ const schemas = {
   UPDATE_VALUE_IN_HISTORY: {
     type: "object",
     additionalProperties: false,
+    required: ["type", "historyItem"],
     properties: {
       type: {
         type: "string"
