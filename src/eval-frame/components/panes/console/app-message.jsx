@@ -14,15 +14,14 @@ const AppMessageBody = styled("div")`
   color: rgba(0, 0, 0, 0.8);
 `;
 
-const MESSAGES = {};
-MESSAGES.NOTEBOOK_SAVED = <React.Fragment>Notebook saved.</React.Fragment>;
-MESSAGES.ERROR_SAVING_NOTEBOOK = (
-  <React.Fragment>Error saving notebook.</React.Fragment>
-);
-MESSAGES.LOGGED_IN = <React.Fragment>You are now logged in.</React.Fragment>;
-MESSAGES.LOGIN_FAILED = <React.Fragment>Login failed.</React.Fragment>;
-MESSAGES.LOGGED_OUT = <React.Fragment>You are now logged out.</React.Fragment>;
-MESSAGES.LOGOUT_FAILED = <React.Fragment>Logout failed.</React.Fragment>;
+const MESSAGES = {
+  NOTEBOOK_SAVED: "Notebook saved.",
+  ERROR_SAVING_NOTEBOOK: "Error saving notebook.",
+  LOGGED_IN: "You are now logged in.",
+  LOGGED_OUT: "You are now logged out.",
+  LOGIN_FAILED: "Login failed.",
+  LOGOUT_FAILED: "Logout failed."
+};
 
 const AppMessage = ({ messageType }) => {
   const message = MESSAGES[messageType];
