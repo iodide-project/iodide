@@ -23,16 +23,15 @@ export const historySchema = {
       type: "string",
       enum: [
         "APP_MESSAGE",
-        "CELL_EVAL_VALUE",
-        "CELL_EVAL_INFO",
-        "APP_INFO",
-        "SAVED_REP",
-        "CONSOLE_EVAL",
-        "SNIPPET_EVAL",
-        "FETCH_CELL_INFO"
+        "FETCH_CELL_INFO",
+        "CONSOLE_INPUT",
+        "CONSOLE_OUTPUT",
+        "CONSOLE_MESSAGE"
       ]
     },
     lastRan: { type: "integer" },
+    level: { type: "string" },
+    language: { type: "string" },
     value: {}
   },
   additionalProperties: false

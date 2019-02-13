@@ -2,104 +2,81 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import ArrowBack from "@material-ui/icons/ArrowBack";
-
 import AppMessage from "./console/app-message";
 import ValueRenderer from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
 
-import PaneContentButton from "./pane-content-button";
-import { postMessageToEditor } from "../../port-to-editor";
+import EvalInput from "./console/eval-input";
+import ConsoleMessage from "./console/console-message";
+
 import { EVALUATION_RESULTS } from "../../actions/actions";
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
-    content: PropTypes.string.isRequired,
-    cellId: PropTypes.number,
-    historyId: PropTypes.string.isRequired,
+    level: PropTypes.string,
+    historyId: PropTypes.number.isRequired,
     historyType: PropTypes.string.isRequired,
-    lastRan: PropTypes.number.isRequired
+    lastRan: PropTypes.number.isRequired,
+    language: PropTypes.string
   };
-  constructor(props) {
-    super(props);
-    // this.state = { timeSince: 'just now' }
-    this.showEditorCell = this.showEditorCell.bind(this);
-  }
-
-  showEditorCell() {
-    postMessageToEditor("CLICK_ON_OUTPUT", {
-      id: this.props.cellId,
-      autoScrollToCell: true
-    });
-  }
 
   render() {
-    let output;
-    let showCellReturnButton = true;
     switch (this.props.historyType) {
       case "APP_MESSAGE":
         return <AppMessage messageType={this.props.content} />;
-      case "CELL_EVAL_VALUE":
-        output = <ValueRenderer valueToRender={this.props.valueToRender} />;
-        break;
-      case "CELL_EVAL_INFO":
-        output = this.props.valueToRender;
-        break;
-      case "CONSOLE_EVAL":
-        output = <ValueRenderer valueToRender={this.props.valueToRender} />;
-        showCellReturnButton = false;
-        break;
-      case "FETCH_CELL_INFO":
-        output = (
-          <PreformattedTextItemsHandler textItems={this.props.valueToRender} />
+      case "CONSOLE_MESSAGE": {
+        // CONSOLE_MESSAGEs are non eval input / output messages.
+        // examples: implicit plugin load statuses / errors, eventually browser console
+        // interception.
+        return (
+          <ConsoleMessage level={this.props.level}>
+            {this.props.content}
+          </ConsoleMessage>
         );
-        break;
+      }
+      case "CONSOLE_INPUT": {
+        // returns an input.
+        return (
+          <EvalInput language={this.props.language}>
+            {this.props.content}
+          </EvalInput>
+        );
+      }
+      case "CONSOLE_OUTPUT":
+      case "FETCH_CELL_INFO": {
+        // returns an output associated with an input.
+        // it uses the ConsoleMessage component, since it is stylistically
+        // identical to these.
+        return (
+          <ConsoleMessage level={this.props.level || "output"}>
+            {this.props.historyType === "FETCH_CELL_INFO" ? (
+              <PreformattedTextItemsHandler
+                textItems={this.props.valueToRender}
+              />
+            ) : (
+              <ValueRenderer valueToRender={this.props.valueToRender} />
+            )}
+          </ConsoleMessage>
+        );
+      }
       default:
-        // TODO: Use better class for inline error
-        output = <div>Unknown history type {this.props.historyType}</div>;
-        break;
+        return (
+          <ConsoleMessage level="warn">
+            Unknown history type {this.props.historyType}
+          </ConsoleMessage>
+        );
     }
-
-    const cellReturnButton = showCellReturnButton ? (
-      <div className="history-metadata-positioner">
-        <div className="history-metadata">
-          <div className="history-show-actual-cell">
-            <PaneContentButton
-              text="scroll to cell"
-              onClick={this.showEditorCell}
-            >
-              <ArrowBack style={{ fontSize: "12px" }} />
-            </PaneContentButton>
-          </div>
-          {/* <div className="history-time-since"> {this.state.timeSince} </div> */}
-        </div>
-      </div>
-    ) : (
-      ""
-    );
-
-    return (
-      <div
-        id={`history-item-id-${this.props.historyId}`}
-        className="history-cell"
-      >
-        <div className="history-content editor">
-          {cellReturnButton}
-          <pre className="history-item-code">{this.props.content}</pre>
-        </div>
-        <div className="history-item-output">{output}</div>
-      </div>
-    );
   }
 }
 
 export function mapStateToProps(state, ownProps) {
   return {
     content: ownProps.historyItem.content,
-    cellId: ownProps.historyItem.cellId,
     historyId: ownProps.historyItem.historyId,
     historyType: ownProps.historyItem.historyType,
     lastRan: ownProps.historyItem.lastRan,
+    level: ownProps.historyItem.level,
+    language: ownProps.historyItem.language,
     valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId]
   };
 }
