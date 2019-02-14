@@ -7,7 +7,7 @@ export default function evalFrameActionReducer(state, action) {
       return nextState;
     }
 
-    case "APPEND_TO_EVAL_HISTORY": {
+    case "ADD_TO_CONSOLE": {
       const actionCopy = Object.assign({}, action);
       delete actionCopy.type;
       const history = [...state.history, actionCopy];

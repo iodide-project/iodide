@@ -60,7 +60,7 @@ export function setConsoleLanguage(language) {
   };
 }
 
-export function appendToEvalHistory({
+export function addToConsole({
   historyType,
   content,
   value,
@@ -75,7 +75,7 @@ export function appendToEvalHistory({
     level,
     language
   });
-  historyAction.type = "APPEND_TO_EVAL_HISTORY";
+  historyAction.type = "ADD_TO_CONSOLE";
 
   EVALUATION_RESULTS[historyAction.historyId] = value;
 
@@ -150,7 +150,7 @@ function evaluateCode(code, language, state, evalId) {
         cellProperties.evalStatus = evalStatus;
         sendStatusResponseToEditor("ERROR", evalId);
         dispatch(
-          appendToEvalHistory({
+          addToConsole({
             historyType: "CONSOLE_OUTPUT",
             value: output,
             level: "error"
@@ -158,14 +158,13 @@ function evaluateCode(code, language, state, evalId) {
         );
       } else {
         dispatch(
-          appendToEvalHistory({
+          addToConsole({
             historyType: "CONSOLE_OUTPUT",
             value: output
           })
         );
         sendStatusResponseToEditor("SUCCESS", evalId);
       }
-      // dispatch(appendToEvalHistory(null, code, output, { historyId }));
       // output here.
 
       dispatch(updateUserVariables());
@@ -186,7 +185,7 @@ function evaluateCode(code, language, state, evalId) {
       .then(languageEvaluator => {
         // add the code input to the console here.
         dispatch(
-          appendToEvalHistory({
+          addToConsole({
             historyType: "CONSOLE_INPUT",
             content: code,
             language
@@ -240,14 +239,14 @@ export function evaluateText(
     } else {
       sendStatusResponseToEditor("ERROR", evalId);
       dispatch(
-        appendToEvalHistory({
+        addToConsole({
           historyType: "CONSOLE_INPUT",
           content: evalText,
           language: evalType
         })
       );
       dispatch(
-        appendToEvalHistory({
+        addToConsole({
           historyType: "CONSOLE_OUTPUT",
           value: new Error(`eval type ${evalType} is not defined`),
           level: "error"

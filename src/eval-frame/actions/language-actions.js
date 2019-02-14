@@ -1,6 +1,6 @@
 import { postMessageToEditor } from "../port-to-editor";
 import {
-  appendToEvalHistory,
+  addToConsole,
   updateConsoleEntry,
   sendStatusResponseToEditor
 } from "./actions";
@@ -19,7 +19,7 @@ function loadLanguagePlugin(pluginData, dispatch) {
 
   const historyId = generateRandomId();
   dispatch(
-    appendToEvalHistory({
+    addToConsole({
       historyType: "CONSOLE_MESSAGE",
       content: "fetching plugin",
       historyId,
@@ -105,7 +105,7 @@ function loadLanguagePlugin(pluginData, dispatch) {
 export function evaluateLanguagePlugin(pluginText, evalId) {
   return dispatch => {
     dispatch(
-      appendToEvalHistory({
+      addToConsole({
         historyType: "CONSOLE_INPUT",
         content: pluginText,
         language: "plugin"
@@ -116,7 +116,7 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
       pluginData = JSON.parse(pluginText);
     } catch (err) {
       dispatch(
-        appendToEvalHistory({
+        addToConsole({
           historyType: "CONSOLE_OUTPUT",
           content: `plugin definition failed to parse:\n${err.message}`,
           level: "error"
@@ -145,7 +145,7 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
     Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)
   ) {
     dispatch(
-      appendToEvalHistory({
+      addToConsole({
         historyType: "CONSOLE_MESSAGE",
         content: `Loading ${
           state.languageDefinitions[languageId].displayName

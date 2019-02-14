@@ -1,6 +1,6 @@
 import parseFetchCell from "./fetch-cell-parser";
 import {
-  appendToEvalHistory,
+  addToConsole,
   updateConsoleEntry,
   updateUserVariables,
   sendStatusResponseToEditor
@@ -104,7 +104,7 @@ export function evaluateFetchText(fetchText, evalId) {
     const fetches = parseFetchCell(fetchText);
     const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
     dispatch(
-      appendToEvalHistory({
+      addToConsole({
         historyType: "CONSOLE_INPUT",
         language: "fetch",
         content: fetchText
@@ -112,7 +112,7 @@ export function evaluateFetchText(fetchText, evalId) {
     );
     if (syntaxErrors.length) {
       dispatch(
-        appendToEvalHistory({
+        addToConsole({
           historyType: "FETCH_CELL_INFO",
           value: syntaxErrors.map(fetchProgressInitialStrings),
           historyId: outputHistoryId,
@@ -125,7 +125,7 @@ export function evaluateFetchText(fetchText, evalId) {
 
     let progressStrings = fetches.map(fetchProgressInitialStrings);
     dispatch(
-      appendToEvalHistory({
+      addToConsole({
         historyType: "FETCH_CELL_INFO",
         value: progressStrings,
         historyId: outputHistoryId

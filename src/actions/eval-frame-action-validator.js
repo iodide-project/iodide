@@ -25,7 +25,7 @@ const schemas = {
       languageDefinition: languageActionSchema
     }
   },
-  APPEND_TO_EVAL_HISTORY: historyActionSchema,
+  ADD_TO_CONSOLE: historyActionSchema,
   SET_CONSOLE_LANGUAGE: {
     type: "object",
     additionalProperties: false,
