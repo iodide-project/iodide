@@ -170,16 +170,15 @@ function evaluateCode(code, language, state, evalId) {
       dispatch(updateUserVariables());
     };
 
-    // const messageCallback = msg => {
-    //   const messageHistoryId = generateRandomId();
-    //   dispatch(
-    //     appendToEvalHistory(null, msg, undefined, {
-    //       historyType: "CELL_EVAL_INFO",
-    //       historyId: messageHistoryId
-    //     })
-    //   );
-    // };
-    const messageCallback = () => {};
+    const messageCallback = msg => {
+      dispatch(
+        addToConsole({
+          content: msg,
+          historyType: "CONSOLE_MESSAGE",
+          level: "log"
+        })
+      );
+    };
 
     return ensureLanguageAvailable(language, state, dispatch)
       .then(languageEvaluator => {
@@ -215,7 +214,6 @@ export function evaluateText(
     // if (!evalText || !evalType) { return undefined }
     // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
     // in the direct jsmd editing paradigm.
-    // const historyId = generateRandomId();
 
     MOST_RECENT_CHUNK_ID.set(chunkId);
     const sideEffect = document.getElementById(

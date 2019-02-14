@@ -26,7 +26,6 @@ export default function evalFrameActionReducer(state, action) {
         actionCopy.historyItem
       );
       history[i] = historyEntry;
-      console.log(historyEntry);
       return Object.assign({}, state, { history });
     }
 
