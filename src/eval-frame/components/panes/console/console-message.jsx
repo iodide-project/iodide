@@ -20,6 +20,7 @@ const MessageBody = styled("div")`
   margin-left: 0;
   padding-top: 5px;
   padding-bottom: 5px;
+  min-height: 20px;
 `;
 
 export const mapProps = level => {
