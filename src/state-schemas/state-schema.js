@@ -22,8 +22,6 @@ export const historySchema = {
     historyType: {
       type: "string",
       enum: [
-        "CELL_EVAL_INFO",
-        "CELL_EVAL_VALUE",
         "APP_MESSAGE",
         "FETCH_CELL_INFO",
         "CONSOLE_INPUT",
