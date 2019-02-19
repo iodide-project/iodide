@@ -92,7 +92,7 @@
     "create-file-webpack": "1.0.2",
     "css-loader": "2.1.0",
     "dotenv": "6.2.0",
-    "enzyme": "3.8.0",
+    "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.9.1",
     "eslint": "5.14.1",
     "eslint-config-airbnb": "16.1.0",
