@@ -73,7 +73,7 @@
     "redux-logger": "3.0.6",
     "redux-thunk": "2.3.0",
     "stackframe": "1.0.4",
-    "universal-router": "8.0.0",
+    "universal-router": "8.1.0",
     "webpack-shell-plugin": "0.5.0"
   },
   "devDependencies": {
