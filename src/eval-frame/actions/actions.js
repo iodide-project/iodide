@@ -60,7 +60,7 @@ export function setConsoleLanguage(language) {
   };
 }
 
-export function addToConsole({
+export function addToConsoleHistory({
   historyType,
   content,
   value,
@@ -75,7 +75,7 @@ export function addToConsole({
     level,
     language
   });
-  historyAction.type = "ADD_TO_CONSOLE";
+  historyAction.type = "ADD_TO_CONSOLE_HISTORY";
 
   EVALUATION_RESULTS[historyAction.historyId] = value;
 
@@ -150,7 +150,7 @@ function evaluateCode(code, language, state, evalId) {
         cellProperties.evalStatus = evalStatus;
         sendStatusResponseToEditor("ERROR", evalId);
         dispatch(
-          addToConsole({
+          addToConsoleHistory({
             historyType: "CONSOLE_OUTPUT",
             value: output,
             level: "error"
@@ -158,7 +158,7 @@ function evaluateCode(code, language, state, evalId) {
         );
       } else {
         dispatch(
-          addToConsole({
+          addToConsoleHistory({
             historyType: "CONSOLE_OUTPUT",
             value: output
           })
@@ -172,7 +172,7 @@ function evaluateCode(code, language, state, evalId) {
 
     const messageCallback = msg => {
       dispatch(
-        addToConsole({
+        addToConsoleHistory({
           content: msg,
           historyType: "CONSOLE_MESSAGE",
           level: "log"
@@ -184,7 +184,7 @@ function evaluateCode(code, language, state, evalId) {
       .then(languageEvaluator => {
         // add the code input to the console here.
         dispatch(
-          addToConsole({
+          addToConsoleHistory({
             historyType: "CONSOLE_INPUT",
             content: code,
             language
@@ -237,14 +237,14 @@ export function evaluateText(
     } else {
       sendStatusResponseToEditor("ERROR", evalId);
       dispatch(
-        addToConsole({
+        addToConsoleHistory({
           historyType: "CONSOLE_INPUT",
           content: evalText,
           language: evalType
         })
       );
       dispatch(
-        addToConsole({
+        addToConsoleHistory({
           historyType: "CONSOLE_OUTPUT",
           value: new Error(`eval type ${evalType} is not defined`),
           level: "error"
