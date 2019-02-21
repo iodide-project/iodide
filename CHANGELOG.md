@@ -1,8 +1,8 @@
 # 0.2.0 (Unreleased; add upcoming change notes here)
+
+# 0.1.0
+
 - fixes the production bug where JSS styles (material-ui) come after emotion styles
-
-# 0.1.0 (Unreleased; add upcoming change notes here)
-
 - move reps to react inspector
 - change nomenclature around user output reps _including in API_ (**breaking change**)
 - removed errant "0" in landing page
