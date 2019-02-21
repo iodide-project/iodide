@@ -1,3 +1,6 @@
+# 0.2.0 (Unreleased; add upcoming change notes here)
+- fixes the production bug where JSS styles (material-ui) come after emotion styles
+
 # 0.1.0 (Unreleased; add upcoming change notes here)
 
 - move reps to react inspector

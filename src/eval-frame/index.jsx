@@ -13,6 +13,7 @@ import "./style/eval-container.css";
 import "./style/side-panes.css";
 import "./style/default-presentation.css";
 
+import CSSCascadeProvider from "../shared/css-cascade-provider";
 import { initializeDefaultKeybindings } from "./keybindings";
 import initializeUserVariables from "./initialize-user-variables";
 import EvalContainer from "./components/eval-container";
@@ -33,9 +34,11 @@ initializeDefaultKeybindings();
 initializeUserVariables(store);
 
 render(
-  <Provider store={store}>
-    <EvalContainer />
-  </Provider>,
+  <CSSCascadeProvider>
+    <Provider store={store}>
+      <EvalContainer />
+    </Provider>
+  </CSSCascadeProvider>,
   document.getElementById("eval-container")
 );
 
