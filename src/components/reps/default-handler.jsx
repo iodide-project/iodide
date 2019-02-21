@@ -8,19 +8,7 @@ export default class DefaultRenderer extends React.Component {
     value: PropTypes.any
   };
 
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  componentDidCatch() {
-    this.setState({ hasError: true });
-  }
-
   render() {
-    if (this.state.hasError) {
-      return <pre>{String(this.props.value)}</pre>;
-    }
     return <Inspector data={this.props.value} shouldShowPlaceholder={false} />;
   }
 }
