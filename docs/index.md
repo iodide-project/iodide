@@ -20,6 +20,7 @@ Iodide notebooks.
 
 **[Developer docs](developer-reference.md)**: Developer reference documentation.
 
+**[Making a new release](making-a-new-release.md)**: Step-by-step instructions for making a new Iodide release.
 
 ## Policies and terms
 
