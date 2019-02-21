@@ -6,7 +6,7 @@ import AppMessage from "./console/app-message";
 import ValueRenderer from "../../../components/reps/value-renderer";
 import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
 
-import EvalInput from "./console/eval-input";
+import HistoryInputItem from "./console/history-input-item";
 import ConsoleMessage from "./console/console-message";
 
 import { EVALUATION_RESULTS } from "../../actions/actions";
@@ -37,9 +37,9 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_INPUT": {
         // returns an input.
         return (
-          <EvalInput language={this.props.language}>
+          <HistoryInputItem language={this.props.language}>
             {this.props.content}
-          </EvalInput>
+          </HistoryInputItem>
         );
       }
       case "CONSOLE_OUTPUT":

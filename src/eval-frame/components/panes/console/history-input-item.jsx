@@ -55,7 +55,7 @@ InputBody.propTypes = {
   language: PropTypes.string
 };
 
-const ConsoleInput = ({ language, children }) => {
+const HistoryInputItem = ({ language, children }) => {
   return (
     <InputContainer>
       <ConsoleGutter>
@@ -65,7 +65,7 @@ const ConsoleInput = ({ language, children }) => {
     </InputContainer>
   );
 };
-ConsoleInput.propTypes = {
+HistoryInputItem.propTypes = {
   language: PropTypes.string.isRequired
 };
-export default ConsoleInput;
+export default HistoryInputItem;
