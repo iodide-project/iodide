@@ -1,6 +1,8 @@
 # 0.2.0 (Unreleased; add upcoming change notes here)
 
-# 0.1.0
+- Switch away from pipenv to requirements files
+
+# 0.1.0 (2019-02-21)
 
 - fixes the production bug where JSS styles (material-ui) come after emotion styles
 - move reps to react inspector

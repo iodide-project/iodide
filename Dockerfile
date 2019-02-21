@@ -18,14 +18,14 @@ RUN apk --no-cache add \
     postgresql-dev \
     postgresql-client
 
-RUN pip install pipenv
+# Install Python dependencies
+COPY requirements/*.txt /tmp/requirements/
+# Switch to /tmp to install dependencies outside home dir
+WORKDIR /tmp
+# TODO: Consider a way to install only the "build.txt" deps for production.
+RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
 
 WORKDIR /app
-
-# install python deps globally so we can take advantage of docker caching
-COPY Pipfile Pipfile.lock /app/
-RUN pipenv install --dev --system --deploy
-
 COPY . /app
 RUN chown app:app -R .
 USER app

@@ -1,0 +1,2 @@
+-r build.txt
+-r tests.txt
