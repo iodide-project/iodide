@@ -102,13 +102,11 @@ const schemas = {
         properties: {
           historyId: { type: "string" },
           content: { type: "string" },
-          language: { type: "string" },
           level: {
             type: "string",
             enum: ["INFO", "LOG", "WARN", "ERROR"]
           },
-          historyType: { type: "string" },
-          lastRan: { type: "number" }
+          historyType: { type: "string" }
         },
         additionalProperties: false,
         required: ["historyId"]

@@ -92,8 +92,7 @@ export function updateConsoleEntry(args) {
   return {
     type: "UPDATE_VALUE_IN_HISTORY",
     historyItem: {
-      ...updatedHistoryItem,
-      lastRan: +new Date()
+      ...updatedHistoryItem
     }
   };
 }
