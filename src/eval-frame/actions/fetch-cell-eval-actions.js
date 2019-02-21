@@ -116,7 +116,7 @@ export function evaluateFetchText(fetchText, evalId) {
           historyType: "FETCH_CELL_INFO",
           value: syntaxErrors.map(fetchProgressInitialStrings),
           historyId: outputHistoryId,
-          level: "error"
+          level: "ERROR"
         })
       );
       sendStatusResponseToEditor("ERROR", evalId);
@@ -158,7 +158,7 @@ export function evaluateFetchText(fetchText, evalId) {
           updateConsoleEntry({
             historyId: outputHistoryId,
             value: outcomes,
-            level: hasError ? "error" : undefined
+            level: hasError ? "ERROR" : undefined
           })
         );
       })

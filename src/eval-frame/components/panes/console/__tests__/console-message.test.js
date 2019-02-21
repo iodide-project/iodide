@@ -3,7 +3,7 @@ import { mapProps } from "../console-message";
 describe("mapProps", () => {
   const messageTypes = [
     {
-      in: "info",
+      in: "INFO",
       out: {
         backgroundColorType: "string",
         textColorType: "string",
@@ -11,7 +11,7 @@ describe("mapProps", () => {
       }
     },
     {
-      in: "log",
+      in: "LOG",
       out: {
         backgroundColorType: "string",
         textColorType: "string",
@@ -19,7 +19,7 @@ describe("mapProps", () => {
       }
     },
     {
-      in: "warn",
+      in: "WARN",
       out: {
         backgroundColorType: "string",
         textColorType: "string",
@@ -27,7 +27,7 @@ describe("mapProps", () => {
       }
     },
     {
-      in: "error",
+      in: "ERROR",
       out: {
         backgroundColorType: "string",
         textColorType: "string",
@@ -35,7 +35,7 @@ describe("mapProps", () => {
       }
     },
     {
-      in: "output",
+      in: "OUTPUT",
       out: {
         backgroundColorType: "string",
         textColorType: "string",

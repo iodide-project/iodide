@@ -48,7 +48,7 @@ export class HistoryItemUnconnected extends React.Component {
         // it uses the ConsoleMessage component, since it is stylistically
         // identical to these.
         return (
-          <ConsoleMessage level={this.props.level || "output"}>
+          <ConsoleMessage level={this.props.level || "OUTPUT"}>
             {this.props.historyType === "FETCH_CELL_INFO" ? (
               <PreformattedTextItemsHandler
                 textItems={this.props.valueToRender}

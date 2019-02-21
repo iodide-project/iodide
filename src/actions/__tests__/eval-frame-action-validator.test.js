@@ -58,7 +58,7 @@ describe("validateActionFromEvalFrame should return true it action is valid", ()
         historyItem: {
           historyId: "s03nv9dns",
           content: "ok",
-          level: "error"
+          level: "ERROR"
         }
       })
     ).toEqual(true);

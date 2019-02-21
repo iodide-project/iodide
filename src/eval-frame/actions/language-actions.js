@@ -23,12 +23,12 @@ function loadLanguagePlugin(pluginData, dispatch) {
       historyType: "CONSOLE_MESSAGE",
       content: "fetching plugin",
       historyId,
-      level: "log"
+      level: "LOG"
     })
   );
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
-    dispatch(updateConsoleEntry({ historyId, content: value, level: "error" }));
+    dispatch(updateConsoleEntry({ historyId, content: value, level: "ERROR" }));
   } else {
     const { url, displayName } = pluginData;
 
@@ -46,7 +46,7 @@ function loadLanguagePlugin(pluginData, dispatch) {
       xhrObj.addEventListener("load", () => {
         value = `${displayName} plugin downloaded, initializing`;
         dispatch(
-          updateConsoleEntry({ historyId, content: value, level: "log" })
+          updateConsoleEntry({ historyId, content: value, level: "LOG" })
         );
         // see the following for asynchronous loading of scripts from strings:
         // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
@@ -58,7 +58,7 @@ function loadLanguagePlugin(pluginData, dispatch) {
             xhrObj.statusText
           }`;
           dispatch(
-            updateConsoleEntry({ historyId, content: value, level: "error" })
+            updateConsoleEntry({ historyId, content: value, level: "ERROR" })
           );
           resolve();
         }
@@ -74,13 +74,13 @@ function loadLanguagePlugin(pluginData, dispatch) {
           dispatch(addLanguage(pluginData));
           postMessageToEditor("POST_LANGUAGE_DEF_TO_EDITOR", pluginData);
           dispatch(
-            updateConsoleEntry({ historyId, content: value, level: "log" })
+            updateConsoleEntry({ historyId, content: value, level: "LOG" })
           );
           delete window.languagePluginUrl;
           resolve();
         }).catch(err => {
           dispatch(
-            updateConsoleEntry({ historyId, content: value, level: "error" })
+            updateConsoleEntry({ historyId, content: value, level: "ERROR" })
           );
           reject(err);
         });
@@ -90,7 +90,7 @@ function loadLanguagePlugin(pluginData, dispatch) {
         value = `${displayName} plugin failed to load: ${url} not found
         `;
         dispatch(
-          updateConsoleEntry({ historyId, content: value, level: "error" })
+          updateConsoleEntry({ historyId, content: value, level: "ERROR" })
         );
         reject();
       });
@@ -119,7 +119,7 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
         addToConsoleHistory({
           historyType: "CONSOLE_OUTPUT",
           content: `plugin definition failed to parse:\n${err.message}`,
-          level: "error"
+          level: "ERROR"
         })
       );
       sendStatusResponseToEditor("ERROR", evalId);
@@ -150,7 +150,7 @@ export function ensureLanguageAvailable(languageId, state, dispatch) {
         content: `Loading ${
           state.languageDefinitions[languageId].displayName
         } language plugin`,
-        level: "log"
+        level: "LOG"
       })
     );
     return loadLanguagePlugin(

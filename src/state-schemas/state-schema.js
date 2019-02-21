@@ -30,7 +30,7 @@ export const historySchema = {
       ]
     },
     lastRan: { type: "integer" },
-    level: { type: "string" },
+    level: { type: "string", enum: ["INFO", "LOG", "WARN", "ERROR"] },
     language: { type: "string" },
     value: {}
   },

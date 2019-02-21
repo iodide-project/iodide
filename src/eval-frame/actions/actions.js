@@ -153,7 +153,7 @@ function evaluateCode(code, language, state, evalId) {
           addToConsoleHistory({
             historyType: "CONSOLE_OUTPUT",
             value: output,
-            level: "error"
+            level: "ERROR"
           })
         );
       } else {
@@ -175,7 +175,7 @@ function evaluateCode(code, language, state, evalId) {
         addToConsoleHistory({
           content: msg,
           historyType: "CONSOLE_MESSAGE",
-          level: "log"
+          level: "LOG"
         })
       );
     };
@@ -247,7 +247,7 @@ export function evaluateText(
         addToConsoleHistory({
           historyType: "CONSOLE_OUTPUT",
           value: new Error(`eval type ${evalType} is not defined`),
-          level: "error"
+          level: "ERROR"
         })
       );
     }
