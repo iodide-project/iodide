@@ -21,9 +21,12 @@ export default class ValueRenderer extends React.Component {
   }
 
   render() {
+    const value = this.props.valueToRender;
+
     if (this.state.errorInfo) {
       return (
         <div>
+          <pre>{value.toString()}</pre>
           <h2>A value renderer encountered an error.</h2>
           <pre>
             {this.state.error && this.state.error.toString()}
@@ -37,7 +40,6 @@ export default class ValueRenderer extends React.Component {
       );
     }
 
-    const value = this.props.valueToRender;
     const htmlString = UserReps.getUserRepIfAvailable(value);
     if (htmlString) {
       return <HTMLHandler htmlString={htmlString} />;
