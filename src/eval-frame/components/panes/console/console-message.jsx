@@ -23,12 +23,8 @@ const MessageBody = styled("div")`
   min-height: 20px;
 `;
 
-export const mapProps = level => {
-  return levels[level];
-};
-
 const ConsoleMessage = ({ children, level }) => {
-  const { backgroundColor, textColor, icon } = mapProps(level);
+  const { backgroundColor, textColor, icon } = levels[level];
   return (
     <MessageContainer
       backgroundColor={backgroundColor}
