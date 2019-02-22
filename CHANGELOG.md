@@ -1,6 +1,6 @@
 # 0.2.0 (Unreleased; add upcoming change notes here)
 
-- Switch away from pipenv to requirements files
+- server backend: switch away from pipenv to requirements files
 
 # 0.1.0 (2019-02-21)
 
