@@ -42,7 +42,11 @@ export default function evalFrameActionReducer(state, action) {
     }
 
     case "CONSOLE_HISTORY_MOVE": {
-      const historyLength = state.history.length;
+      // first, let's only scroll through console inputs.
+      const inputHistory = state.history.filter(
+        d => d.historyType === "CONSOLE_INPUT"
+      );
+      const historyLength = inputHistory.length;
       // note that we bound consoleScrollbackPosition between
       // zero (which represents the cursor being in th) and historyLength
       const nextScrollback = Math.min(
@@ -65,9 +69,8 @@ export default function evalFrameActionReducer(state, action) {
         nextConsoleText = consoleTextCache;
       } else {
         // otherwise set the consoleText to the history value
-        nextConsoleText = state.history[historyLength - nextScrollback].content;
+        nextConsoleText = inputHistory[historyLength - nextScrollback].content;
       }
-
       return Object.assign({}, state, {
         consoleText: nextConsoleText,
         consoleTextCache,
