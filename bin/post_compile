@@ -8,6 +8,7 @@ set -euo pipefail
 # but we want to cache the results for pyodide as it changes relatively
 # infrequently and compressing it to brotli is sloooooow
 # see: https://devcenter.heroku.com/articles/buildpack-api#caching
+PYODIDE_VERSION=`ls build | grep "pyodide-" | sed -e 's/pyodide-//'`
 PYODIDE_CACHE_DIR=$CACHE_DIR/pyodide-$PYODIDE_VERSION
 if [ ! -d $PYODIDE_CACHE_DIR ]; then
    echo "pyodide cache does not seem to exist yet, downloading and compressing"
