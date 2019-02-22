@@ -4,10 +4,6 @@
 # Make non-zero exit codes & other errors fatal.
 set -euo pipefail
 
-# Create a `build/` directory containing built/minified versions of the frontend assets.
-# Uses the node binaries/packages installed by the nodejs buildpack previously.
-npm install && npm run build
-
 # We compress files in `build/` below so they can be served more quickly
 # but we want to cache the results for pyodide as it changes relatively
 # infrequently and compressing it to brotli is sloooooow

@@ -1,0 +1,3 @@
+# HEROKU REQUIREMENTS
+
+-r requirements/build.txt
