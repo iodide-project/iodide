@@ -31,7 +31,7 @@ let { EVAL_FRAME_ORIGIN } = process.env;
 const { USE_OPENIDC_AUTH } = process.env;
 const { IODIDE_PUBLIC } = process.env || false;
 
-const PYODIDE_VERSION = process.env.PYODIDE_VERSION || "0.7.0";
+const PYODIDE_VERSION = process.env.PYODIDE_VERSION || "0.8.2";
 process.env.PYODIDE_VERSION = PYODIDE_VERSION;
 
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || "dev";
