@@ -151,7 +151,7 @@ jobs:
               echo "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
               docker tag app:build "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
               docker images
-              docke push "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
+              docker push "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
             fi
 
 workflows:
