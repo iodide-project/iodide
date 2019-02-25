@@ -1,17 +1,12 @@
-# Developer reference documentation
+# Setting up a local development environment
 
-This document describes how to get up and running with Iodide development to
-contribute to the project. Most users of Iodide shouldn't need this information.
-
-## Setting up a local development environment
-
-### Installing dependencies
+## Installing dependencies
 
 Run `npm install` after cloning this repository.
 
-### Running/Building
+## Running/Building
 
-#### Client-only mode
+### Client-only mode
 
 If you're only working on client code and don't need to use/test any of the server functionality described below. You can use `npm run start-and-serve` to write development versions of the Iodide client-side app resources to `dev/` and to serve the files in that folder at `http://localhost:8000`. You can open `http://localhost:8000/iodide.dev.html` in your browser to get started with a blank notebook, or open `http://localhost:8000` to see the list of files saved in `dev/` (in case you have exported other test notebooks in that folder)
 
@@ -19,11 +14,11 @@ The command `npm run start-and-serve` runs in watch mode, so changes to files wi
 
 If you require verbose Redux logging, you can use the command `npm run start-and-serve -- reduxVerbose`
 
-##### Exporting from client-only dev mode
+#### Exporting from client-only dev mode
 
 In this mode, resource paths are set to be relative to the `dev/` directory. Thus, if you export a bundled notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js, css, and font files (and if you want to share a notebook that you created in a dev environment, you'll need to update the paths to point to the web-accessible resources at `iodide.io` and `iodide.app`).
 
-#### Server mode
+### Server mode
 
 We have been building an experimental iodide server based on Python and Django. Currently the main features
 it supports are login/identity (via the GitHub API). To test/run it locally, follow this set of steps:
@@ -43,7 +38,7 @@ Sometimes, for debugging purposes, it is useful to have a shell session inside t
 can use either the `make shell` command (creates a shell session with the "app" user) or the `make root-shell`
 commands (creates a shell session logged in as root, useful for experimenting with new python packages). Note that the iodide server environment must already be running for this to work.
 
-### Building the docs
+## Building the docs
 
 The documentation is written in markdown, and uses
 [mkdocs](https://www.mkdocs.org/) to generate a static website.
@@ -74,7 +69,7 @@ To build a local, static copy of the docs, run:
 mkdocs build
 ```
 
-### Testing
+## Testing
 
 Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.
 

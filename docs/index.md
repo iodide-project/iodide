@@ -16,9 +16,9 @@ Iodide notebooks.
 
 **[Contributing](contributing.md)**: Information about contributing to Iodide.
 
-**[Design Principles](design-principles.md)**: Core design principles for Iodide.
+**[Design principles](design-principles.md)**: Core design principles for Iodide.
 
-**[Developer docs](developer-reference.md)**: Developer reference documentation.
+**[Local development](local-dev.md)**: Setting up a local development environment.
 
 **[Making a new release](making-a-new-release.md)**: Step-by-step instructions for making a new Iodide release.
 
