@@ -122,11 +122,15 @@ export default function validateActionFromEvalFrame(action) {
       "Invalid action from eval frame: No action type"
     );
   } else if (!Object.keys(schemas).includes(action.type)) {
-    throw new ActionSchemaValidationError(
-      `Invalid action from eval frame: action type not permitted: ${
-        action.type
-      }`
-    );
+    if (action.type.startsWith("@@redux/INIT")) {
+      console.info("Redux initiated: ", action.type);
+    } else {
+      throw new ActionSchemaValidationError(
+        `Invalid action from eval frame: action type not permitted: ${
+          action.type
+        }`
+      );
+    }
   } else if (!validator(action.type)(action)) {
     throw new ActionSchemaValidationError(`Invalid action from eval frame: bad schema.
 schema error:
