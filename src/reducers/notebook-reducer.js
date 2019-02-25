@@ -105,27 +105,32 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "GETTING_NOTEBOOK_REVISION_LIST": {
       return Object.assign({}, state, {
-        gettingRevisionList: true
+        notebookHistory: {
+          ...(state.notebookHistory || {}),
+          revisionListFetchStatus: "FETCHING"
+        }
       });
     }
 
     case "GOT_NOTEBOOK_REVISION_LIST": {
       const { revisionList, selectedRevisionId } = action;
       return Object.assign({}, state, {
-        gettingRevisionList: false,
         notebookHistory: {
+          ...(state.notebookHistory || {}),
           revisionList,
-          selectedRevisionId,
-          revisionContent: {}
+          revisionListFetchStatus: "IDLE",
+          selectedRevisionId
         }
       });
     }
 
     case "ERROR_GETTING_NOTEBOOK_REVISION_LIST": {
       return Object.assign({}, state, {
-        gettingRevisionList: false,
-        notebookHistory: {},
-        errorGettingRevisionList: true
+        notebookHistory: {
+          ...state.notebookHistory,
+          revisionListFetchStatus: "ERROR",
+          revisionList: undefined
+        }
       });
     }
 
@@ -143,7 +148,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, {
         notebookHistory: {
           ...state.notebookHistory,
-          gettingRevisionContent: true
+          revisionContentFetchStatus: "FETCHING"
         }
       });
     }
@@ -153,11 +158,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, {
         notebookHistory: {
           ...state.notebookHistory,
+          revisionContentFetchStatus: "IDLE",
           revisionContent: {
-            ...state.notebookHistory.revisionContent,
+            ...(state.notebookHistory.revisionContent || {}),
             ...revisionContent
-          },
-          gettingRevisionContent: false
+          }
         }
       });
     }
@@ -166,8 +171,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, {
         notebookHistory: {
           ...state.notebookHistory,
-          gettingRevisionContent: false,
-          errorGettingRevisionContent: true
+          revisionContentFetchStatus: "ERROR"
         }
       });
     }

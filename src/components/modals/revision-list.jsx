@@ -1,17 +1,20 @@
 import PropTypes from "prop-types";
 import React from "react";
 import styled from "react-emotion";
+import { connect } from "react-redux";
 import format from "date-fns/format";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
+import { updateSelectedRevisionId } from "../../actions/actions";
+
 const RevisionListContainer = styled("div")`
   overflow: auto;
 `;
 
-export class RevisionList extends React.Component {
+class RevisionListUnconnected extends React.Component {
   static propTypes = {
     revisionList: PropTypes.arrayOf(
       PropTypes.shape({
@@ -20,8 +23,21 @@ export class RevisionList extends React.Component {
       })
     ),
     selectedRevisionId: PropTypes.number,
-    revisionClicked: PropTypes.func.isRequired
+    updateSelectedRevisionId: PropTypes.func.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    this.revisionClicked = this.revisionClicked.bind(this);
+  }
+
+  revisionClicked(revisionId) {
+    if (this.props.selectedRevisionId === revisionId) {
+      return;
+    }
+
+    this.props.updateSelectedRevisionId(revisionId);
+  }
 
   render() {
     return (
@@ -30,7 +46,7 @@ export class RevisionList extends React.Component {
           <ListItem
             button
             key="local-changes"
-            onClick={() => this.props.revisionClicked(undefined)}
+            onClick={() => this.revisionClicked(undefined)}
             selected={this.props.selectedRevisionId === undefined}
           >
             <ListItemText primary="Unsaved Changes" />
@@ -40,7 +56,7 @@ export class RevisionList extends React.Component {
               <ListItem
                 button
                 key={`revision-${revision.id}`}
-                onClick={() => this.props.revisionClicked(revision.id)}
+                onClick={() => this.revisionClicked(revision.id)}
                 selected={this.props.selectedRevisionId === revision.id}
               >
                 <ListItemText
@@ -56,3 +72,26 @@ export class RevisionList extends React.Component {
     );
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    updateSelectedRevisionId: revisionId => {
+      dispatch(updateSelectedRevisionId(revisionId));
+    }
+  };
+}
+
+export function mapStateToProps(state) {
+  const notebookHistory = state.notebookHistory || {};
+  const { revisionList, selectedRevisionId } = notebookHistory;
+
+  return {
+    revisionList,
+    selectedRevisionId
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RevisionListUnconnected);

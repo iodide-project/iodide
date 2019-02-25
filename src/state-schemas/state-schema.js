@@ -190,13 +190,15 @@ export const stateProperties = {
   notebookHistory: {
     type: "object",
     properties: {
-      errorGettingRevisionContent: {
-        type: "boolean",
-        default: undefined
+      revisionContentFetchStatus: {
+        type: "string",
+        enum: ["FETCHING", "ERROR", "IDLE"],
+        default: "IDLE"
       },
-      errorGettingRevisionList: {
-        type: "boolean",
-        default: undefined
+      revisionListFetchStatus: {
+        type: "string",
+        enum: ["FETCHING", "ERROR", "IDLE"],
+        default: "IDLE"
       },
       revisionList: {
         type: "array",

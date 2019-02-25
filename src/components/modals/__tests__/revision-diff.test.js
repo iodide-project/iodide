@@ -1,6 +1,6 @@
-import { mapStateToProps } from "../history-modal";
+import { mapStateToProps } from "../revision-diff";
 
-describe("HistoryModal mapStateToProps", () => {
+describe("RevisionDiff mapStateToProps", () => {
   let state;
   let ownProps;
 
