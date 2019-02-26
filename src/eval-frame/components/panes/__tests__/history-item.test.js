@@ -1,76 +1,69 @@
 import { shallow } from "enzyme";
 import React from "react";
 
-// FIXME this is an ugly hack to make tests pass without errors;
-// importing the store initializes it before other files, pre-empting
-// errors that actually result from circular dependencies
-import { store } from "../../../store"; /* eslint-disable-line no-unused-vars */
-
-import HistoryItem from "../history-item";
-import PaneContentButton from "../pane-content-button";
+import { HistoryItemUnconnected } from "../history-item";
+import HistoryInputItem from "../console/history-input-item";
+import AppMessage from "../console/app-message";
+import ConsoleMessage from "../console/console-message";
+import ValueRenderer from "../../../../components/reps/value-renderer";
+import PreformattedTextItemsHandler from "../../../../components/reps/preformatted-text-items-handler";
 
 describe("HistoryItem React component", () => {
-  let props;
-  let mountedItem;
-
-  const historyItem = () => {
-    if (!mountedItem) {
-      mountedItem = shallow(<HistoryItem {...props} />);
-    }
-    return mountedItem;
+  const historyItem = props => {
+    return shallow(<HistoryItemUnconnected {...props} />);
   };
 
-  beforeEach(() => {
-    props = {
-      cell: {
-        cellId: 0,
-        display: true,
-        lastRan: 1533078293981,
-        content: "var a = 3"
-      },
-      display: true
-    };
-    mountedItem = undefined;
+  it("always renders the APP_MESSAGE as an AppMessage component", () => {
+    // generate shallowRender.
+    const hist = historyItem({
+      historyType: "APP_MESSAGE",
+      historyId: "123456asdfg",
+      lastRan: +new Date(),
+      content: "NOTEBOOK_SAVED"
+    });
+    expect(hist.find(AppMessage).length).toBe(1);
+  });
+  it("always renders the CONSOLE_MESSAGE as an ConsoleMessage component", () => {
+    const hist = historyItem({
+      historyType: "CONSOLE_MESSAGE",
+      historyId: "123456asdfg",
+      level: "WARN",
+      lastRan: +new Date(),
+      content: "var x = 10"
+    });
+    expect(hist.find(ConsoleMessage).length).toBe(1);
+  });
+  it("always renders the CONSOLE_INPUT as an HistoryInputItem component", () => {
+    const hist = historyItem({
+      historyType: "CONSOLE_INPUT",
+      historyId: "123456asdfg",
+      lastRan: +new Date(),
+      content: "var x = 10",
+      language: "js"
+    });
+    expect(hist.find(HistoryInputItem).length).toBe(1);
+  });
+  it("always renders the CONSOLE_OUTPUT as an ConsoleMessage component with a ValueRenderer in it", () => {
+    const hist = historyItem({
+      historyType: "CONSOLE_OUTPUT",
+      historyId: "123456asdfg",
+      lastRan: +new Date(),
+      valueToRender: 10403,
+      level: "OUTPUT"
+    });
+    expect(hist.find(ConsoleMessage).length).toBe(1);
+    expect(hist.find(ValueRenderer).length).toBe(1);
   });
 
-  it.skip("always renders one div with correct class", () => {
-    expect(historyItem().find("div.cell-history-container").length).toBe(1);
-  });
-
-  it.skip("always renders div with correct class when display is false", () => {
-    props.display = false;
-    expect(
-      historyItem()
-        .find("div.cell-history-container")
-        .hasClass("hidden-cell")
-    ).toBe(true);
-  });
-
-  it.skip("always renders div with correct class when display is true", () => {
-    props.display = true;
-    expect(
-      historyItem()
-        .find("div.cell-history-container")
-        .hasClass("hidden-cell")
-    ).toBe(false);
-  });
-
-  it.skip("always renders one div with classes cell and history-cell", () => {
-    expect(historyItem().find("div.cell.history-cell").length).toBe(1);
-  });
-
-  it.skip("always renders one div with class history-content inside history-cell", () => {
-    expect(
-      historyItem()
-        .wrap(historyItem().find("div.history-cell"))
-        .find("div.history-content")
-    ).toHaveLength(1);
-  });
-  it.skip("always renders one pre inside history-content", () => {
-    expect(historyItem().find("pre.history-item-code")).toHaveLength(1);
-  });
-
-  it.skip("always contains a pane content button", () => {
-    expect(historyItem().find(PaneContentButton)).toHaveLength(1);
+  it("always renders the FETCH_CELL_INFO as an ConsoleMessage component with a PreformattedTextItem in it", () => {
+    const hist = historyItem({
+      historyType: "FETCH_CELL_INFO",
+      historyId: "123456asdfg",
+      lastRan: +new Date(),
+      valueToRender: [{ text: "a", id: "z" }, { text: "b", id: "y" }],
+      level: "ERROR"
+    });
+    expect(hist.find(ConsoleMessage).length).toBe(1);
+    expect(hist.find(PreformattedTextItemsHandler).length).toBe(1);
   });
 });

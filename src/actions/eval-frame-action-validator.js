@@ -25,7 +25,7 @@ const schemas = {
       languageDefinition: languageActionSchema
     }
   },
-  APPEND_TO_EVAL_HISTORY: historyActionSchema,
+  ADD_TO_CONSOLE_HISTORY: historyActionSchema,
   SET_CONSOLE_LANGUAGE: {
     type: "object",
     additionalProperties: false,
@@ -92,11 +92,26 @@ const schemas = {
   UPDATE_VALUE_IN_HISTORY: {
     type: "object",
     additionalProperties: false,
+    required: ["type", "historyItem"],
     properties: {
-      type: { type: "string" },
-      historyId: { type: "string" }
-    },
-    required: ["type", "historyId"]
+      type: {
+        type: "string"
+      },
+      historyItem: {
+        type: "object",
+        properties: {
+          historyId: { type: "string" },
+          content: { type: "string" },
+          level: {
+            type: "string",
+            enum: ["INFO", "LOG", "WARN", "ERROR"]
+          },
+          historyType: { type: "string" }
+        },
+        additionalProperties: false,
+        required: ["historyId"]
+      }
+    }
   }
 };
 

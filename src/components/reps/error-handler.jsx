@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "react-emotion";
 import PropTypes from "prop-types";
 
 import ErrorStackParser from "error-stack-parser";
@@ -124,6 +125,12 @@ export function trimStack(e) {
   return `${e.name}: ${e.message}\n${outputFrames.join("\n")}`;
 }
 
+const ErrorPrintout = styled("div")`
+  pre {
+    margin: 0;
+  }
+`;
+
 export default class ErrorRenderer extends React.Component {
   static propTypes = {
     error: PropTypes.object.isRequired
@@ -132,9 +139,9 @@ export default class ErrorRenderer extends React.Component {
   render() {
     const stack = trimStack(this.props.error);
     return (
-      <div className="error-output">
+      <ErrorPrintout>
         <pre>{stack}</pre>
-      </div>
+      </ErrorPrintout>
     );
   }
 }

@@ -1,16 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
-
-// this will get deprecated once the rest of the
-// console styling hits.
-
-const AppMessageContainer = styled("div")`
-  border-bottom: 1px solid gainsboro;
-`;
+import ConsoleMessage from "./console-message";
 
 const AppMessageBody = styled("div")`
-  padding: 5px;
+  grid-column: body;
   color: rgba(0, 0, 0, 0.8);
 `;
 
@@ -26,9 +20,9 @@ const MESSAGES = {
 const AppMessage = ({ messageType }) => {
   const message = MESSAGES[messageType];
   return (
-    <AppMessageContainer>
+    <ConsoleMessage level="LOG">
       <AppMessageBody>{message}</AppMessageBody>
-    </AppMessageContainer>
+    </ConsoleMessage>
   );
 };
 

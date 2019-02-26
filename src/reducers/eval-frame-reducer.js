@@ -7,7 +7,7 @@ export default function evalFrameActionReducer(state, action) {
       return nextState;
     }
 
-    case "APPEND_TO_EVAL_HISTORY": {
+    case "ADD_TO_CONSOLE_HISTORY": {
       const actionCopy = Object.assign({}, action);
       delete actionCopy.type;
       const history = [...state.history, actionCopy];
@@ -15,9 +15,17 @@ export default function evalFrameActionReducer(state, action) {
     }
 
     case "UPDATE_VALUE_IN_HISTORY": {
-      const history = [...state.history];
-      // const historyEntry = history.find(h => h.historyId === action.historyId)
-      // if (historyEntry) { historyEntry.value = action.value }
+      const actionCopy = Object.assign({}, action);
+      const history = [...state.history.slice()];
+      const i = history.findIndex(
+        h => h.historyId === actionCopy.historyItem.historyId
+      );
+      const historyEntry = Object.assign(
+        {},
+        history[i],
+        actionCopy.historyItem
+      );
+      history[i] = historyEntry;
       return Object.assign({}, state, { history });
     }
 
@@ -34,7 +42,11 @@ export default function evalFrameActionReducer(state, action) {
     }
 
     case "CONSOLE_HISTORY_MOVE": {
-      const historyLength = state.history.length;
+      // first, let's only scroll through console inputs.
+      const inputHistory = state.history.filter(
+        d => d.historyType === "CONSOLE_INPUT"
+      );
+      const historyLength = inputHistory.length;
       // note that we bound consoleScrollbackPosition between
       // zero (which represents the cursor being in th) and historyLength
       const nextScrollback = Math.min(
@@ -57,9 +69,8 @@ export default function evalFrameActionReducer(state, action) {
         nextConsoleText = consoleTextCache;
       } else {
         // otherwise set the consoleText to the history value
-        nextConsoleText = state.history[historyLength - nextScrollback].content;
+        nextConsoleText = inputHistory[historyLength - nextScrollback].content;
       }
-
       return Object.assign({}, state, {
         consoleText: nextConsoleText,
         consoleTextCache,

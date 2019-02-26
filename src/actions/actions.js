@@ -47,7 +47,7 @@ export function updateAppMessages(messageObj) {
     if (messageType === undefined) messageType = message;
     // add to eval history.
     dispatch({
-      type: "APPEND_TO_EVAL_HISTORY",
+      type: "ADD_TO_CONSOLE_HISTORY",
       ...createHistoryItem({
         historyType: "APP_MESSAGE",
         content: messageType

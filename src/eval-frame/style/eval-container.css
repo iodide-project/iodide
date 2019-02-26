@@ -37,13 +37,11 @@ div#eval-container.presentation-mode {
   color: #888;
   font-style: italic;
   font-size: 12px;
-  padding-top: 4px;
   padding-bottom: 4px;
 }
 
 div.error-output {
 background: #fff1f4;
-padding: 5px;
 color: #a41c1c;
 overflow-x: auto;
 }
