@@ -20,7 +20,7 @@ const MESSAGES = {
 const AppMessage = ({ messageType }) => {
   const message = MESSAGES[messageType];
   return (
-    <ConsoleMessage level="log">
+    <ConsoleMessage level="LOG">
       <AppMessageBody>{message}</AppMessageBody>
     </ConsoleMessage>
   );
