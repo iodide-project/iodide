@@ -217,6 +217,7 @@ export const stateProperties = {
       },
       revisionContent: {
         type: "object",
+        additionalProperties: { type: "string" },
         default: {}
       }
     }
