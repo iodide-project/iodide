@@ -103,6 +103,79 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { jsmd, jsmdChunks });
     }
 
+    case "GETTING_NOTEBOOK_REVISION_LIST": {
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...(state.notebookHistory || {}),
+          revisionListFetchStatus: "FETCHING"
+        }
+      });
+    }
+
+    case "GOT_NOTEBOOK_REVISION_LIST": {
+      const { revisionList, selectedRevisionId } = action;
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...(state.notebookHistory || {}),
+          revisionList,
+          revisionListFetchStatus: "IDLE",
+          selectedRevisionId
+        }
+      });
+    }
+
+    case "ERROR_GETTING_NOTEBOOK_REVISION_LIST": {
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          revisionListFetchStatus: "ERROR",
+          revisionList: undefined
+        }
+      });
+    }
+
+    case "UPDATE_NOTEBOOK_HISTORY_BROWSER_SELECTED_REVISION_ID": {
+      const { selectedRevisionId } = action;
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          selectedRevisionId
+        }
+      });
+    }
+
+    case "GETTING_REVISION_CONTENT": {
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          revisionContentFetchStatus: "FETCHING"
+        }
+      });
+    }
+
+    case "GOT_REVISION_CONTENT": {
+      const { revisionContent } = action;
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          revisionContentFetchStatus: "IDLE",
+          revisionContent: {
+            ...(state.notebookHistory.revisionContent || {}),
+            ...revisionContent
+          }
+        }
+      });
+    }
+
+    case "ERROR_GETTING_REVISION_CONTENT": {
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          revisionContentFetchStatus: "ERROR"
+        }
+      });
+    }
+
     case "NOTEBOOK_SAVED": {
       return Object.assign({}, state, {
         lastSaved: new Date().toISOString(),

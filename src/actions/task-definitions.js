@@ -126,6 +126,14 @@ tasks.clearVariables = new UserTask({
   }
 });
 
+tasks.toggleHistoryModal = new UserTask({
+  title: "View Notebook History",
+  menuTitle: "History",
+  callback() {
+    dispatcher.toggleHistoryModal();
+  }
+});
+
 tasks.toggleHelpModal = new UserTask({
   title: "Open the Help Pane",
   menuTitle: "Help",

@@ -112,6 +112,10 @@ export const stateProperties = {
     type: "boolean",
     default: false
   },
+  gettingRevisionList: {
+    type: "boolean",
+    default: false
+  },
   hasPreviousAutoSave: {
     type: "boolean",
     default: false
@@ -169,7 +173,7 @@ export const stateProperties = {
   },
   modalState: {
     type: "string",
-    enum: ["HELP_MODAL", "MODALS_CLOSED"],
+    enum: ["HELP_MODAL", "HISTORY_MODAL", "MODALS_CLOSED"],
     default: "MODALS_CLOSED"
   },
   kernelState: {
@@ -182,6 +186,41 @@ export const stateProperties = {
       "KERNEL_BUSY"
     ],
     default: "KERNEL_IDLE"
+  },
+  notebookHistory: {
+    type: "object",
+    properties: {
+      revisionContentFetchStatus: {
+        type: "string",
+        enum: ["FETCHING", "ERROR", "IDLE"],
+        default: "IDLE"
+      },
+      revisionListFetchStatus: {
+        type: "string",
+        enum: ["FETCHING", "ERROR", "IDLE"],
+        default: "IDLE"
+      },
+      revisionList: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "integer" },
+            title: { type: "string" },
+            created: { type: "string" }
+          }
+        },
+        default: []
+      },
+      selectedRevision: {
+        type: "number"
+      },
+      revisionContent: {
+        type: "object",
+        additionalProperties: { type: "string" },
+        default: {}
+      }
+    }
   },
   notebookInfo: {
     type: "object",

@@ -1,5 +1,10 @@
 import CodeMirror from "codemirror";
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
+import {
+  getRevisionList,
+  getRevisions,
+  getRevisionIdsNeededForDisplay
+} from "../tools/revision-history";
 
 import {
   getNotebookID,
@@ -344,6 +349,65 @@ export function saveNotebookToServer() {
   };
 }
 
+function getRequiredRevisionContent(state, dispatch) {
+  const contentIdsNeeded = getRevisionIdsNeededForDisplay(
+    state.notebookHistory
+  );
+
+  // if we don't need anything, just return here!!
+  if (!contentIdsNeeded.length) {
+    return;
+  }
+
+  dispatch({
+    type: "GETTING_REVISION_CONTENT"
+  });
+  getRevisions(getNotebookID(state), contentIdsNeeded)
+    .then(revisions => {
+      // reduce the revisions array into an object whose keys
+      // are revision ids, and whose body is the content of
+      // the revisions
+      const revisionContent = revisions.reduce(
+        (acc, r) => Object.assign(acc, { [r.id]: r.content }),
+        {}
+      );
+      dispatch({
+        type: "GOT_REVISION_CONTENT",
+        revisionContent
+      });
+    })
+    .catch(() => {
+      dispatch({ type: "ERROR_GETTING_REVISION_CONTENT" });
+    });
+}
+
+export function updateSelectedRevisionId(selectedRevisionId) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: "UPDATE_NOTEBOOK_HISTORY_BROWSER_SELECTED_REVISION_ID",
+      selectedRevisionId
+    });
+    getRequiredRevisionContent(getState(), dispatch);
+  };
+}
+
+export function getNotebookRevisionList() {
+  return (dispatch, getState) => {
+    dispatch({ type: "GETTING_NOTEBOOK_REVISION_LIST" });
+    getRevisionList(getNotebookID(getState()))
+      .then(revisionList => {
+        dispatch({
+          type: "GOT_NOTEBOOK_REVISION_LIST",
+          revisionList
+        });
+        getRequiredRevisionContent(getState(), dispatch);
+      })
+      .catch(() => {
+        dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
+      });
+  };
+}
+
 export function loginSuccess(userData) {
   return (dispatch, getState) => {
     dispatch({
@@ -417,6 +481,16 @@ export function updateNotebookInfo(notebookInfo) {
   return {
     type: "UPDATE_NOTEBOOK_INFO",
     notebookInfo
+  };
+}
+
+export function toggleHistoryModal() {
+  return (dispatch, getState) => {
+    const modalState =
+      getState().modalState === "HISTORY_MODAL"
+        ? "MODALS_CLOSED"
+        : "HISTORY_MODAL";
+    dispatch(setModalState(modalState));
   };
 }
 
