@@ -30,6 +30,10 @@ const UserInformationContainer = styled("div")`
     font-weight: 300;
     margin-top: 0;
   }
+
+  a {
+    color: black;
+  }
 `;
 
 export const UserPageWithoutNotebooksPlaceholder = ({ isUserAccount }) => (
@@ -62,7 +66,14 @@ export default class UserPage extends React.Component {
                 alt={`${thisUser.name}'s avatar`}
               />
               <h1>{thisUser.full_name}</h1>
-              <h2>{thisUser.name}</h2>
+              <h2>
+                {thisUser.name}{" "}
+                {thisUser.github_url && (
+                  <a href={thisUser.github_url}>
+                    <i className="fa fa-github" />
+                  </a>
+                )}
+              </h2>
             </UserInformationContainer>
             {!notebookList.length && (
               <UserPageWithoutNotebooksPlaceholder
