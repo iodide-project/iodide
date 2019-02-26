@@ -3,5 +3,8 @@
     "config:js-app",
     ":maintainLockFilesWeekly",
     ":prNotPending"
-  ]
+  ],
+  "pip_requirements": {
+    "fileMatch": ["requirements/.*\.txt"]
+  }
 }
