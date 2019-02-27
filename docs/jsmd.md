@@ -27,15 +27,15 @@ A few things to note about JSMD:
     * `%% js` for JavaScript source code
     * `%% py` for Python source code
     * `%% md` for Markdown
-    - `%% css` for CSS styles
-    - `%% fetch` for retrieving resources
-    - `%% plugin` for Iodide plugins
-    - `%% raw` for raw text (which Iodide will ignore)
-- A chunk started with just `%%` but no explicit chunk type will inherit its type of the chunk above it.
-- Any chunk with an unknown type will be ignored by Iodide.
-- Any blank lines above the first chunk specifier will be ignored.
-- Changes to `md` and `css` chunk are immediately applied to your Iodide Report; changes to all other chunk types must be evaluated to take effect (to evaluate, use keyboard shortcuts `ctrl+enter`/`shift+enter` or the play button in the toolbar while your cursor is within the chunk).
-- Chunks delimiters can have one or more flags that modify their behavior, for example starting a chunk with `%% js skipRunAll` will prevent that chunk from being run when you press the "Run Full Notebook" button or when the notebook is loaded in report view (which triggers a evaluation of the whole notebook). If a modifier flag is included, the chunk delimiter must include an explicit chunk type. See below for the list of available chunk modifier flags.
+    * `%% css` for CSS styles
+    * `%% fetch` for retrieving resources
+    * `%% plugin` for Iodide plugins
+    * `%% raw` for raw text (which Iodide will ignore)
+* A chunk started with just `%%` but no explicit chunk type will inherit its type of the chunk above it.
+* Any chunk with an unknown type will be ignored by Iodide.
+* Any blank lines above the first chunk specifier will be ignored.
+* Changes to `md` and `css` chunk are immediately applied to your Iodide Report; changes to all other chunk types must be evaluated to take effect (to evaluate, use keyboard shortcuts `ctrl+enter`/`shift+enter` or the play button in the toolbar while your cursor is within the chunk).
+* Chunks delimiters can have one or more flags that modify their behavior, for example starting a chunk with `%% js skipRunAll` will prevent that chunk from being run when you press the "Run Full Notebook" button or when the notebook is loaded in report view (which triggers a evaluation of the whole notebook). If a modifier flag is included, the chunk delimiter must include an explicit chunk type. See below for the list of available chunk modifier flags.
 
 A brief example will help to illustrate a few of the details and nuances.
 
@@ -110,9 +110,9 @@ CSS chunks allow you to input [CSS styles](https://developer.mozilla.org/en-US/d
 ### Fetch chunks (`%% fetch`)
 
 Fetch chunks provide a convenient way to load (i.e. to "fetch") external resources into the Iodide environment. For the time being, we support the loading:
-- Browserified JavaScript libraries (npm modules are not supported)
-- Style sheets
-- Data (from JSON, text, or blobs)
+* Browserified JavaScript libraries (npm modules are not supported)
+* Style sheets
+* Data (from JSON, text, or blobs)
 
 Each line in a fetch cell must specify:
 1. the "fetch type", one of `js`, `css`, `json`, `text` or `blob`,
