@@ -92,7 +92,7 @@ export default class OnboardingContent extends React.Component {
           <Element key="examples">
             <ElementTitle>Start with a Template</ElementTitle>
             <ElementBody>
-              <ElementBlockLink href="/new">
+              <ElementBlockLink href="https://extremely-alpha.iodide.io/tryit">
                 Javascript starter
               </ElementBlockLink>
               <ElementBlockLink href="https://extremely-alpha.iodide.io/notebooks/222/">
@@ -106,7 +106,7 @@ export default class OnboardingContent extends React.Component {
               <ElementBlockLink href="https://extremely-alpha.iodide.io/notebooks/154/">
                 A Tour Through Iodide
               </ElementBlockLink>
-              <ElementBlockLink href="https://extremely-alpha.iodide.io/notebooks/151/">
+              <ElementBlockLink href="https://extremely-alpha.iodide.io/notebooks/300/">
                 Getting Started with Python
               </ElementBlockLink>
             </ElementBody>
