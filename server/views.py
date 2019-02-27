@@ -1,4 +1,5 @@
 from django.contrib.auth import logout as django_logout
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import (get_object_or_404,
                               redirect,
@@ -60,13 +61,19 @@ def get_formatted_notebooks(user):
 @ensure_csrf_cookie
 def user(request, name=None):
     user_info = get_user_info_dict(request.user)
-    user = get_object_or_404(User, username=name)
 
+    user = get_object_or_404(User, username=name)
     this_user = {
         'full_name': user.get_full_name(),
         'avatar': user.avatar,
         'name': user.username,
     }
+    # if we're using github, also try to get the user's github page
+    if settings.SOCIAL_AUTH_GITHUB_KEY:
+        this_user.update({
+            'github_url': 'https://github.com/{}/'.format(user.username)
+        })
+
     notebooks = get_formatted_notebooks(user)
     return render(request, 'index.html', {
         'page_data': {

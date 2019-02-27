@@ -73,3 +73,19 @@ def test_user_view_with_different_names(transactional_db, client, username):
         'thisUser': {'avatar': None, 'full_name': test_user.get_full_name(), 'name': username},
         'userInfo': {}
     }
+
+
+def test_user_view_github(settings, transactional_db, client, fake_user):
+    settings.SOCIAL_AUTH_GITHUB_KEY = 'yabbadabbadoo'
+    resp = client.get(reverse('user', kwargs={'name': fake_user.username}))
+    assert resp.status_code == 200
+    assert get_script_block(resp.content, 'pageData') == {
+        'notebookList': [],
+        'thisUser': {
+            'avatar': None,
+            'full_name': fake_user.get_full_name(),
+            'name': fake_user.username,
+            'github_url': 'https://github.com/{}/'.format(fake_user.username)
+        },
+        'userInfo': {}
+    }

@@ -28,7 +28,17 @@ const UserInformationContainer = styled("div")`
 
   h2 {
     font-weight: 300;
+    font-size: 1em;
     margin-top: 0;
+  }
+
+  a.github-link {
+    color: black;
+    text-decoration: none;
+  }
+
+  .github-link i {
+    padding-right: 2.5px;
   }
 `;
 
@@ -62,7 +72,20 @@ export default class UserPage extends React.Component {
                 alt={`${thisUser.name}'s avatar`}
               />
               <h1>{thisUser.full_name}</h1>
-              <h2>{thisUser.name}</h2>
+              <h2>
+                {thisUser.github_url ? (
+                  <a
+                    className="github-link"
+                    target="blank_"
+                    href={thisUser.github_url}
+                  >
+                    <i className="fa fa-github" />
+                    {thisUser.name}
+                  </a>
+                ) : (
+                  thisUser.name
+                )}
+              </h2>
             </UserInformationContainer>
             {!notebookList.length && (
               <UserPageWithoutNotebooksPlaceholder
