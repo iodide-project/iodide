@@ -23,10 +23,10 @@ As we said above, a JSMD file is just a plain text file with text blocks represe
 
 A few things to note about JSMD:
 
-- Iodide natively supports the following JSMD chunk types (described in more detail below):
-    - `%% js` for JavaScript source code
-    - `%% py` for Python source code
-    - `%% md` for Markdown
+* Iodide natively supports the following JSMD chunk types (described in more detail below):
+    * `%% js` for JavaScript source code
+    * `%% py` for Python source code
+    * `%% md` for Markdown
     - `%% css` for CSS styles
     - `%% fetch` for retrieving resources
     - `%% plugin` for Iodide plugins
