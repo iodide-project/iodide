@@ -1,7 +1,8 @@
 import pytest
 from django.urls import reverse
 
-from helpers import get_script_block
+from helpers import (get_script_block,
+                     get_title_block)
 from server.notebooks.models import (Notebook,
                                      NotebookRevision)
 
@@ -10,18 +11,20 @@ def test_notebook_view(client, test_notebook):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     resp = client.get(reverse('notebook-view', args=[str(test_notebook.id)]))
     assert resp.status_code == 200
+    assert get_title_block(resp.content) == initial_revision.title
     expected_content = '<script id="jsmd" type="text/jsmd">{}</script>'.format(
         initial_revision.content)
     assert expected_content in str(resp.content)
 
     # add a new revision, verify that a fresh load gets it
     new_revision_content = 'My new fun content'
-    NotebookRevision.objects.create(
+    new_revision = NotebookRevision.objects.create(
         content=new_revision_content,
         notebook=test_notebook,
         title='Second revision')
     resp = client.get(reverse('notebook-view', args=[str(test_notebook.id)]))
     assert resp.status_code == 200
+    assert get_title_block(resp.content) == new_revision.title
     new_expected_content = '<script id="jsmd" type="text/jsmd">{}</script>'.format(
         new_revision_content)
     assert new_expected_content in str(resp.content)
@@ -72,6 +75,7 @@ def test_notebook_revisions_page(fake_user, test_notebook, client):
         title="second revision",
         content="*fake notebook content 2*")
     resp = client.get(reverse('notebook-revisions', args=[str(test_notebook.id)]))
+    assert get_title_block(resp.content) == f'Revisions - {test_notebook.title}'
     assert get_script_block(resp.content, 'pageData') == {
         'files': [],
         'ownerInfo': {

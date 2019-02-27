@@ -50,6 +50,7 @@ def notebook_view(request, pk):
     else:
         notebook_info['forked_from'] = False
     return render(request, 'notebook.html', {
+        'title': revision.title,
         'user_info': _get_user_info_json(request.user),
         'notebook_info': notebook_info,
         'jsmd': revision.content,
@@ -89,6 +90,7 @@ def notebook_revisions(request, pk):
         'date': revision.created.isoformat()}
         for revision in NotebookRevision.objects.filter(notebook_id=pk)])
     return render(request, '../templates/index.html', {
+            'title': f'Revisions - {nb.title}',
             'page_data': {
                 'userInfo': get_user_info_dict(request.user),
                 'ownerInfo': owner_info,

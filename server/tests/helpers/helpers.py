@@ -19,3 +19,11 @@ def get_script_block(page_content, id, mimetype='application/json'):
         return json.loads(m.group(1))
     raise Exception('Script block with id `%s` and mimetype %s not found', id,
                     mimetype)
+
+
+# get the specified title of the page
+def get_title_block(page_content):
+    m = re.search(r'<title>(.*)</title>', str(page_content))
+    if m:
+        return m.group(1)
+    raise Exception("Expected to find title element but didn't!")
