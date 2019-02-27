@@ -6,57 +6,6 @@ challenges presented by JavaScript and web browsers.
 Please direct clarifications or observations of inaccuracy to [our issue
 tracker](https://github.com/iodide-project/docs/issues/new).
 
-## `iodide.environment`
-
-Functions for saving the state of variables and exporting data with your notebook.
-
-### `iodide.environment.freeze(obj)`
-
-Serializes as JSON then compresses the state of an object. `obj` will freeze the
-value under the namespace of the key. Once the notebook is exported, the state
-will be added to the embedded JSMD in the html document. Freezing is
-_additive_ - every call to `iodide.environment.freeze` will either update or add
-a new bit of state, but will not overwrite key-value pairs not explicitly
-updated.
-
-```javascript
-var x = [{ a: 10000, b: 20000 }, { a: 1043, b: 29343 }];
-var y = "iodide";
-iodide.environment.freeze({ x, y });
-```
-
-### `iodide.environment.freezeRawString`
-
-Same as `iodide.environment.freeze`, but will not compress the value.
-
-### `iodide.environment.get(key)`
-
-Retrieves the serialized data.
-
-```javascript
-let xData = iodide.environment.get("x");
-```
-
-### `iodide.environment.list`
-
-Returns an array of keys of the set of currently frozen variables.
-
-```javascript
-var x = [{ a: 10000, b: 20000 }, { a: 1043, b: 29343 }];
-var y = "iodide";
-iodide.environment.freeze({ x, y });
-
-iodide.environment.list() > ["x", "y"];
-```
-
-### `iodide.environment.clear`
-
-Removes all frozen variables from the environment.
-
-```javascript
-iodide.environment.clear();
-iodide.environment.list() > [];
-```
 
 ## `iodide.evalQueue`
 
