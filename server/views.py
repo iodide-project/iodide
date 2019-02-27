@@ -1,4 +1,5 @@
 from django.contrib.auth import logout as django_logout
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import (get_object_or_404,
                               redirect,
@@ -8,7 +9,6 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .notebooks.models import Notebook
 from .base.models import User
-from django.conf import settings
 
 
 def get_user_info_dict(user):
