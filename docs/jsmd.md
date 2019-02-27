@@ -22,6 +22,7 @@ development tools like ``diff`` and GitHub pull requests.
 As we said above, a JSMD file is just a plain text file with text blocks representing various languages and other evaluation directives, and delimited by lines starting with `%%`.
 
 A few things to note about JSMD:
+
 - Iodide natively supports the following JSMD chunk types (described in more detail below):
     - `%% js` for JavaScript source code
     - `%% py` for Python source code
