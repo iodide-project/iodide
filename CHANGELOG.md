@@ -3,6 +3,7 @@
 - server backend: switch away from pipenv to requirements files
 - add a history viewer in notebook
 - redesign / refactor of console entries
+- fix bug where user would be prompted to save a notebook they already own after logging in
 
 # 0.1.0 (2019-02-21)
 
