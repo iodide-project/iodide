@@ -24,7 +24,7 @@ export default ({ width }) => (
       description="
                 A tutorial demonstrating how
                 to use Python, Numpy, Pandas, and Matplotlib entirely within your browser."
-      href="https://extremely-alpha.iodide.io/notebooks/151/"
+      href="https://extremely-alpha.iodide.io/notebooks/300/"
       imageSource="https://media.giphy.com/media/65NKOOH1IQrsLx5aZb/giphy.gif"
     />
     <NotebookDisplayItem
