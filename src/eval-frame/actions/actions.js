@@ -20,6 +20,7 @@ initialVariables.add("__core-js_shared__");
 initialVariables.add("Mousetrap");
 initialVariables.add("CodeMirror");
 initialVariables.add("FETCH_RESOLVERS");
+initialVariables.add("__SECRET_EMOTION__");
 
 export function sendStatusResponseToEditor(status, evalId) {
   messagePasser.postMessage("EVALUATION_RESPONSE", { status, evalId });
