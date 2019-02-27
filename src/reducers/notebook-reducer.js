@@ -209,11 +209,17 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "LOGIN_SUCCESS": {
       const { userData } = action;
-      const { notebookInfo } = state;
-      if (userData.name === state.notebookInfo.username) {
-        notebookInfo.user_can_save = true;
-      }
-      return Object.assign({}, state, { userData }, { notebookInfo });
+      return Object.assign(
+        {},
+        state,
+        { userData },
+        {
+          notebookInfo: {
+            ...state.notebookInfo,
+            user_can_save: userData.name === state.notebookInfo.username
+          }
+        }
+      );
     }
 
     case "LOGOUT": {
