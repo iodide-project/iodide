@@ -38,7 +38,6 @@ initialVariables.add("CodeMirror");
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState;
   let title;
-
   switch (action.type) {
     case "RESET_NOTEBOOK":
       return Object.assign(newNotebook(), action.userData);
@@ -210,7 +209,11 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "LOGIN_SUCCESS": {
       const { userData } = action;
-      return Object.assign({}, state, { userData });
+      const { notebookInfo } = state;
+      if (userData.name === state.notebookInfo.username) {
+        notebookInfo.user_can_save = true;
+      }
+      return Object.assign({}, state, { userData }, { notebookInfo });
     }
 
     case "LOGOUT": {

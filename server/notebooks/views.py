@@ -38,6 +38,7 @@ def notebook_view(request, pk):
     else:
         revision = notebook.revisions.first()
     notebook_info = {
+        'username': notebook.owner.username,
         'user_can_save': notebook.owner_id == request.user.id,
         'notebook_id': notebook.id,
         'revision_id': revision.id,
