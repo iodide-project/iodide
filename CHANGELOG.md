@@ -3,6 +3,7 @@
 - server backend: switch away from pipenv to requirements files
 - add a history viewer in notebook
 - redesign / refactor of console entries
+- fixes bug where if a user is not logged in, then logs on in a notebook they own, the `user_can_save` flag needs to be set to `true`
 
 # 0.1.0 (2019-02-21)
 
