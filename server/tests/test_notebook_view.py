@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 
+from helpers import get_script_block
 from server.notebooks.models import (Notebook,
                                      NotebookRevision)
 
@@ -62,3 +63,32 @@ def test_tryit_view(client, fake_user, logged_in):
         assert NotebookRevision.objects.count() == 0
         assert Notebook.objects.count() == 0
         assert len(response.redirect_chain) == 0
+
+
+def test_notebook_revisions_page(fake_user, test_notebook, client):
+    # create another notebook revision
+    NotebookRevision.objects.create(
+        notebook=test_notebook,
+        title="second revision",
+        content="*fake notebook content 2*")
+    resp = client.get(reverse('notebook-revisions', args=[str(test_notebook.id)]))
+    assert get_script_block(resp.content, 'pageData') == {
+        'files': [],
+        'ownerInfo': {
+            'avatar': None,
+            'full_name': fake_user.get_full_name(),
+            'notebookId': test_notebook.id,
+            'title': test_notebook.title,
+            'username': fake_user.username
+        },
+        'revisions': [
+            {
+                'date': r.created.isoformat(),
+                'id': r.id,
+                'notebookId': test_notebook.id,
+                'title': r.title
+            } for r in NotebookRevision.objects.filter(
+                notebook_id=test_notebook.id)
+        ],
+        'userInfo': {}
+    }
