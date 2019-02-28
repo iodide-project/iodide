@@ -64,7 +64,7 @@ def notebook_revisions(request, pk):
     owner = get_object_or_404(User, pk=nb.owner_id)
     owner_info = {
         'username': owner.username,
-        'full_name': '{} {}'.format(owner.first_name, owner.last_name),
+        'full_name': owner.get_full_name(),
         'avatar': owner.avatar,
         'title': nb.title,
         'notebookId': nb.id,
