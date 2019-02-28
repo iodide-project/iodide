@@ -38,6 +38,7 @@ import "./tools/initialize-dom";
 import { checkForAutosave, subscribeToAutoSave } from "./tools/autosave";
 import evalQueue from "./actions/evaluation-queue";
 import CSSCascadeProvider from "./shared/css-cascade-provider";
+import { checkForServerAutosave } from "./tools/server-autosave";
 
 evalQueue.connectDispatch(store.dispatch);
 
@@ -49,6 +50,7 @@ handleServerVariables(store);
 handleInitialJsmd(store);
 handleReportViewModeInitialization(store);
 checkForAutosave(store);
+checkForServerAutosave(store);
 
 render(
   <Provider store={store}>

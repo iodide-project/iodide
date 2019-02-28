@@ -128,6 +128,10 @@ export const stateProperties = {
     type: "string",
     default: ""
   },
+  previouslySavedJsmd: {
+    type: "string",
+    default: ""
+  },
   jsmdChunks: {
     type: "array",
     items: {

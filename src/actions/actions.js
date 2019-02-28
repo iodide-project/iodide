@@ -332,7 +332,7 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
   };
 }
 
-export function saveNotebookToServer() {
+export function saveNotebookToServer(appMsg = true) {
   return (dispatch, getState) => {
     const state = getState();
     const notebookId = getNotebookID(state);
@@ -347,12 +347,14 @@ export function saveNotebookToServer() {
         .then(() => {
           const message = "Updated Notebook";
           updateAutosave(state, true);
-          dispatch(
-            updateAppMessages({
-              message,
-              messageType: "NOTEBOOK_SAVED"
-            })
-          );
+          if (appMsg) {
+            dispatch(
+              updateAppMessages({
+                message,
+                messageType: "NOTEBOOK_SAVED"
+              })
+            );
+          }
           dispatch({ type: "NOTEBOOK_SAVED" });
         })
         .catch(() => {
@@ -529,4 +531,14 @@ export function saveEnvironment(updateObj, update) {
     updateObj,
     update
   };
+}
+
+export function setPreviouslySavedJsmdToCurrentJsmd() {
+  return {
+    type: "SET_PREVIOUSLY_SAVED_JSMD_TO_CURRENT_JSMD"
+  };
+}
+
+export function changeMadeToJsmd(state) {
+  return state.previouslySavedJsmd !== state.jsmd;
 }

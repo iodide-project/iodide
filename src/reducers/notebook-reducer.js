@@ -277,6 +277,10 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { panePositions: action.panePositions });
     }
 
+    case "SET_PREVIOUSLY_SAVED_JSMD_TO_CURRENT_JSMD": {
+      return Object.assign({}, state, { previouslySavedJsmd: state.jsmd });
+    }
+
     default: {
       return state;
     }
