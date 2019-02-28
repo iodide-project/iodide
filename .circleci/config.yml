@@ -133,11 +133,11 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache:
-          key: v1-{{.Branch}}
+      # We are not using the cached docker file here b/c we want the production
+      # build to use only the required Python files.
       - run:
-          name: Restore Docker image cache
-          command: docker load -i /tmp/docker.tar
+          name: Build Docker image
+          command: docker build -t app:build --build-arg PIP_FILE=build.txt .
       - run:
           name: Push image to Docker Hub
           command: |

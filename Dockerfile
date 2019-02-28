@@ -1,5 +1,9 @@
 FROM python:3.7.2-alpine
 
+# Default to building for local development.
+# Override with `--build-arg PIP_FILE=build.txt` to build for production.
+ARG PIP_FILE=all.txt
+
 EXPOSE 8000
 
 WORKDIR /app
@@ -23,7 +27,7 @@ COPY requirements/*.txt /tmp/requirements/
 # Switch to /tmp to install dependencies outside home dir
 WORKDIR /tmp
 # TODO: Consider a way to install only the "build.txt" deps for production.
-RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
+RUN pip install --require-hashes --no-cache-dir -r requirements/$PIP_FILE
 
 WORKDIR /app
 COPY . /app
