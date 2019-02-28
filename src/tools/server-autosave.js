@@ -14,5 +14,5 @@ export function checkForServerAutosave(store) {
       store.dispatch(saveNotebookToServer(false));
       store.dispatch(setPreviouslySavedJsmdToCurrentJsmd());
     }
-  }, 6000);
+  }, 10000);
 }
