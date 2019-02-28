@@ -1,7 +1,8 @@
 import pytest
 from django.urls import reverse
 
-from helpers import get_script_block
+from helpers import (get_script_block,
+                     get_title_block)
 from server.base.models import User
 from server.notebooks.models import (Notebook,
                                      NotebookRevision)
@@ -22,6 +23,7 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
         assert fake_user.avatar is None
 
     # assert that the pageData element has the expected structure
+    assert get_title_block(resp.content) == 'Iodide'
     assert get_script_block(resp.content, 'pageData') == {
         'notebookList': [
             {
@@ -62,6 +64,7 @@ def test_user_view_with_different_names(transactional_db, client, username):
                                                content="*fake notebook content*")
     resp = client.get(reverse('user', kwargs={'name': test_user.username}))
     assert resp.status_code == 200
+    assert get_title_block(resp.content) == f'{test_user.username} ({test_user.get_full_name()})'
     assert get_script_block(resp.content, 'pageData') == {
         'notebookList': [
             {

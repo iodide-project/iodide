@@ -33,6 +33,7 @@ def index(request):
             for (nb_id, title, latest_revision) in get_formatted_notebooks(request.user)]
     return render(
         request, 'index.html', {
+            'title': 'Iodide',
             'page_data': {
                 'userInfo': user_info,
                 # this is horrible and will not scale
@@ -76,6 +77,7 @@ def user(request, name=None):
 
     notebooks = get_formatted_notebooks(user)
     return render(request, 'index.html', {
+        'title': f"{this_user['name']} ({this_user['full_name']})",
         'page_data': {
             'userInfo': user_info,
             'thisUser': this_user,
