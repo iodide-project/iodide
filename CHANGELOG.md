@@ -1,4 +1,7 @@
-# 0.2.0 (Unreleased; add upcoming change notes here)
+# 0.3.0 (Unreleased; add upcoming change notes here)
+ 
+
+# 0.2.0 (2019-02-28)
 
 - separates out evaluation inputs and outputs in the console and provides a standard set of console elements
 - server backend: switch away from pipenv to requirements files
