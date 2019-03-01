@@ -2,6 +2,7 @@
 
 - don't show "new notebook" button on user pages that don't belong to
   the currently logged in one
+- add docs link to footer on server pages
 
 # 0.2.0 (2019-02-28)
 
