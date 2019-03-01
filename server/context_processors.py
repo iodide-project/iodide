@@ -8,9 +8,9 @@ def google_analytics(request):
     """
     if settings.GA_TRACKING_ID:
         return {
-            'google_analytics': render_to_string(
-                'ga.html',
-                {'GA_TRACKING_ID': settings.GA_TRACKING_ID})
+            "google_analytics": render_to_string(
+                "ga.html", {"GA_TRACKING_ID": settings.GA_TRACKING_ID}
+            )
         }
     else:
-        return {'google_analytics': ''}
+        return {"google_analytics": ""}
