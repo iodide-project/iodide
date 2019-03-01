@@ -1,14 +1,12 @@
-from django.contrib.auth import logout as django_logout
 from django.conf import settings
+from django.contrib.auth import logout as django_logout
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import (get_object_or_404,
-                              redirect,
-                              render)
 from django.db.models import Max
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from .notebooks.models import Notebook
 from .base.models import User
+from .notebooks.models import Notebook
 
 
 def get_user_info_dict(user):

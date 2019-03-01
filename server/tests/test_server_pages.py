@@ -1,11 +1,9 @@
 import pytest
 from django.urls import reverse
 
-from helpers import (get_script_block,
-                     get_title_block)
+from helpers import get_script_block, get_title_block
 from server.base.models import User
-from server.notebooks.models import (Notebook,
-                                     NotebookRevision)
+from server.notebooks.models import Notebook, NotebookRevision
 
 
 @pytest.mark.parametrize("logged_in", [True, False])

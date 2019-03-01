@@ -1,7 +1,7 @@
 from django.urls import reverse
 
-from server.notebooks.models import NotebookRevision
 from helpers import get_rest_framework_time_string
+from server.notebooks.models import NotebookRevision
 
 
 def test_read_notebook_revisions(fake_user, two_test_notebooks, client):

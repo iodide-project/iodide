@@ -1,8 +1,6 @@
 from rest_framework import routers
 
-from .api_views import (NotebookRevisionViewSet,
-                        NotebookViewSet)
-
+from .api_views import NotebookRevisionViewSet, NotebookViewSet
 
 router = routers.SimpleRouter()
 router.register(r'notebooks', NotebookViewSet,

@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
-from .models import (Notebook, NotebookRevision)
 from server.base.models import User
+
+from .models import Notebook, NotebookRevision
 
 
 class NotebookLatestRevisionField(serializers.RelatedField):

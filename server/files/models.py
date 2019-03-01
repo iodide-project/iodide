@@ -1,7 +1,7 @@
 from django.db import models
+
 from ..notebooks.models import Notebook
-from ..settings import (MAX_FILE_SIZE,
-                        MAX_FILENAME_LENGTH)
+from ..settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 
 
 class File(models.Model):

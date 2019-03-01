@@ -1,7 +1,7 @@
-from django.urls import resolve, Resolver404
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
+from django.urls import Resolver404, resolve
 from rest_framework.authentication import SessionAuthentication
 
 
