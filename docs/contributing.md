@@ -56,7 +56,9 @@ Some guidelines that we tend to follow:
 
 ### Linting
 
-We rely on linting as a way of standardizing low-level style choices in the code. We use [Airbnb's Javascript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react), as well as [Prettier](https://pretter.io). The use of a linter in your development worflow means you can focus on the higher-level aspects of style. As such we will likely not accept any PRs that fail linting. If this feels like a hassle, we'd recommend roughly following the Development Workflow below so you don't have to sweat this detail!
+We rely on linting as a way of standardizing low-level style choices in the code. For the front-end, we use [Airbnb's Javascript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react), as well as [Prettier](https://pretter.io). On the back-end, we use [Black](https://black.readthedocs.io/en/stable/) and [isort](https://github.com/timothycrosley/isort). It is recommended to configure your editor to use the above linting tools.
+
+The use of a linter in your development worflow means you can focus on the higher-level aspects of style. As such we will likely not accept any PRs that fail linting. If this feels like a hassle, we'd recommend roughly following the Development Workflow below so you don't have to sweat this detail!
 
 ## Contribution Prerequisites
 
@@ -66,7 +68,7 @@ We rely on linting as a way of standardizing low-level style choices in the code
 
 ## Development Workflow
 
-`npm run lint` will lint everything in `src/`. Please make sure all your contributions pass the linter.
+`npm run lint` will lint everything in `src/`. Please make sure all your contributions pass the linter. Running `make lint` will check for linting errors for code in `server/` and `make lintfix` will fix those errors.
 
 `npm run start` writes development versions of the Iodide app resources to `dev/`. To run your dev notebook, just open the file `dev/iodide.dev.html` in your browser. All changes to the code will be detected and bundled into `dev/`.
 

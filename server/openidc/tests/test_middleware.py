@@ -1,22 +1,18 @@
+import mock
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.urls import Resolver404
 from django.test import TestCase
-
-import mock
+from django.urls import Resolver404
 
 from server.openidc.middleware import OpenIDCAuthMiddleware
 
 
 class OpenIDCAuthMiddlewareTests(TestCase):
-
     def setUp(self):
         self.response = "Response"
         self.middleware = OpenIDCAuthMiddleware(lambda request: self.response)
 
-        mock_resolve_patcher = mock.patch(
-            "server.openidc.middleware.resolve"
-        )
+        mock_resolve_patcher = mock.patch("server.openidc.middleware.resolve")
         self.mock_resolve = mock_resolve_patcher.start()
         self.addCleanup(mock_resolve_patcher.stop)
 

@@ -1,7 +1,7 @@
-from django.urls import resolve, Resolver404
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
+from django.urls import Resolver404, resolve
 from rest_framework.authentication import SessionAuthentication
 
 
@@ -34,9 +34,7 @@ class OpenIDCAuthMiddleware(object):
         if openidc_email is None:
             # If a user has bypassed the OpenIDC flow entirely and no header
             # is set then we reject the request entirely
-            return HttpResponse(
-                "Please login using OpenID Connect", status=401
-            )
+            return HttpResponse("Please login using OpenID Connect", status=401)
 
         try:
             user = self.User.objects.get(username=openidc_email)
@@ -50,7 +48,6 @@ class OpenIDCAuthMiddleware(object):
 
 
 class OpenIDCRestFrameworkAuthenticator(SessionAuthentication):
-
     def authenticate(self, request):
         authenticated_user = getattr(request._request, "user", None)
 
