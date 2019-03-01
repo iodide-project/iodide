@@ -1,4 +1,4 @@
-.PHONY: build shell up flake8 test
+.PHONY: build root-shell shell up flake8 test
 
 build:
 	npm install
