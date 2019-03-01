@@ -14,8 +14,11 @@ shell:
 up:
 	docker-compose up
 
-flake8:
-	docker-compose run server flake8 server/
+lint:
+	docker-compose run server ./bin/lint-check.sh
+
+lintfix:
+	docker-compose run server ./bin/lint-fix.sh
 
 test:
 	docker-compose run server py.test

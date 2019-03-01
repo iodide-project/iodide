@@ -119,12 +119,17 @@ jobs:
             pip install --upgrade docker-compose
 
       - run:
+          name: Lint code
+          command: |
+            cp .env-dist .env
+            make lint
+
+      - run:
           name: Test Code
           command: |
             cp .env-dist .env
             docker-compose up -d
             docker-compose run server bash -c "while ! echo > /dev/tcp/db/5432 > /dev/null 2>&1; do sleep 1 && echo waiting for db; done"
-            make flake8
             make test
 
   deploy:
