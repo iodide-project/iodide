@@ -60,6 +60,8 @@ export const isLoggedIn = userInfo => "name" in userInfo;
 export default class UserPage extends React.Component {
   render() {
     const { thisUser, userInfo, notebookList } = this.props;
+    const isUserAccount =
+      isLoggedIn(userInfo) && thisUser.name === userInfo.name;
     return (
       <div>
         <Header userInfo={userInfo} />
@@ -94,13 +96,11 @@ export default class UserPage extends React.Component {
             )}
             {notebookList.length && (
               <React.Fragment>
-                <NewNotebookButton />
+                {isUserAccount && <NewNotebookButton />}
                 <h2>notebooks</h2>
                 <UserNotebookList
                   showMenu
-                  isUserAccount={
-                    isLoggedIn(userInfo) && thisUser.name === userInfo.name
-                  }
+                  isUserAccount={isUserAccount}
                   notebooks={notebookList}
                 />
               </React.Fragment>

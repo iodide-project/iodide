@@ -1,4 +1,9 @@
-# 0.2.0 (Unreleased; add upcoming change notes here)
+# 0.3.0 (Unreleased; add upcoming change notes here)
+
+- don't show "new notebook" button on user pages that don't belong to
+  the currently logged in one
+
+# 0.2.0 (2019-02-28)
 
 - separates out evaluation inputs and outputs in the console and provides a standard set of console elements
 - server backend: switch away from pipenv to requirements files
