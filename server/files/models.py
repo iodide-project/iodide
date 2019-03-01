@@ -5,9 +5,10 @@ from ..settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 
 
 class File(models.Model):
-    '''
+    """
     Represents a file saved on the server
-    '''
+    """
+
     notebook = models.ForeignKey(Notebook, on_delete=models.CASCADE)
     # FIXME: add a validator for filename (for minimum length and maybe
     # other things)
@@ -19,7 +20,7 @@ class File(models.Model):
         return self.filename
 
     class Meta:
-        unique_together = ('notebook', 'filename')
+        unique_together = ("notebook", "filename")
         verbose_name = "File"
         verbose_name_plural = "Files"
         ordering = ("id",)
