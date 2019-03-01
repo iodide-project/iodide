@@ -1,14 +1,15 @@
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
-from rest_framework import (permissions,
-                            viewsets)
+from rest_framework import permissions, viewsets
 
-from .models import (Notebook, NotebookRevision)
-from .serializers import (NotebookDetailSerializer,
-                          NotebookListSerializer,
-                          NotebookRevisionSerializer,
-                          NotebookRevisionDetailSerializer)
+from .models import Notebook, NotebookRevision
+from .serializers import (
+    NotebookDetailSerializer,
+    NotebookListSerializer,
+    NotebookRevisionDetailSerializer,
+    NotebookRevisionSerializer,
+)
 
 
 class NotebookViewSet(viewsets.ModelViewSet):

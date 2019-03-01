@@ -1,8 +1,7 @@
 import json
 
 from django.core.exceptions import PermissionDenied
-from rest_framework import (permissions,
-                            viewsets)
+from rest_framework import permissions, viewsets
 from rest_framework.response import Response
 
 from .models import File

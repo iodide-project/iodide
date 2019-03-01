@@ -1,20 +1,16 @@
 import urllib.parse
 
 from django.db import transaction
-from django.shortcuts import (get_object_or_404,
-                              redirect,
-                              render)
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
 from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .models import Notebook, NotebookRevision
-from ..files.models import File
 from ..base.models import User
+from ..files.models import File
+from ..settings import APP_VERSION_STRING, EVAL_FRAME_ORIGIN
 from ..views import get_user_info_dict
-
-from ..settings import (APP_VERSION_STRING,
-                        EVAL_FRAME_ORIGIN)
 
 
 def _get_user_info_json(user):

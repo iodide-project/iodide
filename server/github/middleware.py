@@ -3,7 +3,6 @@ import logging
 import requests
 from social_django.models import UserSocialAuth
 
-
 logger = logging.getLogger(__name__)
 
 

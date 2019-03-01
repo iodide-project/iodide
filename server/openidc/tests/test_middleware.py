@@ -1,9 +1,8 @@
+import mock
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.urls import Resolver404
 from django.test import TestCase
-
-import mock
+from django.urls import Resolver404
 
 from server.openidc.middleware import OpenIDCAuthMiddleware
 

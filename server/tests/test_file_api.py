@@ -3,8 +3,8 @@ import tempfile
 
 from django.urls import reverse
 
-from server.files.models import File
 from helpers import get_rest_framework_time_string
+from server.files.models import File
 
 
 def test_post_to_file_api(fake_user, client, test_notebook):

@@ -1,9 +1,8 @@
 import pytest
 from django.urls import reverse
 
-from server.notebooks.models import (Notebook,
-                                     NotebookRevision)
 from helpers import get_rest_framework_time_string
+from server.notebooks.models import Notebook, NotebookRevision
 
 
 def test_notebook_list(client, two_test_notebooks):

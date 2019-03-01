@@ -1,5 +1,5 @@
-import mimetypes
 import io
+import mimetypes
 
 from django.http import FileResponse
 

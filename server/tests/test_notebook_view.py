@@ -1,10 +1,8 @@
 import pytest
 from django.urls import reverse
 
-from helpers import (get_script_block,
-                     get_title_block)
-from server.notebooks.models import (Notebook,
-                                     NotebookRevision)
+from helpers import get_script_block, get_title_block
+from server.notebooks.models import Notebook, NotebookRevision
 
 
 def test_notebook_view(client, test_notebook):
