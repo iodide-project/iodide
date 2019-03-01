@@ -51,6 +51,9 @@ export default ({ showIcon = true }) => (
             <a href="https://github.com/iodide-project/iodide">Contribute</a>
           </li>
           <li>
+            <a href="https://iodide-project.github.io/docs/">Docs</a>
+          </li>
+          <li>
             <a href="https://www.mozilla.org/about/legal/terms/mozilla">
               Terms
             </a>
