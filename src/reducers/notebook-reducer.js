@@ -93,7 +93,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, {
         jsmd: action.jsmd,
         jsmdChunks: action.jsmdChunks,
-        title: action.title
+        title: action.title || state.title
       });
     }
 
