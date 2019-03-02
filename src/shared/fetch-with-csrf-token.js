@@ -23,7 +23,9 @@ export default function fetchWithCSRFToken(url, otherParts, headers = {}) {
   return fetch(
     url,
     Object.assign({}, otherParts, { headers: combinedHeaders })
-  );
+  ).catch(err => {
+    throw Error(err);
+  });
 }
 
 // for POST, DELETE of notebooks and revisions,

@@ -10,11 +10,16 @@ export function notebookChangedSinceSave(state) {
 
 export function checkForServerAutosave(store) {
   store.dispatch(setMostRecentSavedContent());
-  setInterval(() => {
+  setInterval(async () => {
     const state = store.getState();
     if (notebookChangedSinceSave(state)) {
-      store.dispatch(saveNotebookToServer(false));
-      store.dispatch(setMostRecentSavedContent());
+      try {
+        await store.dispatch(saveNotebookToServer(false));
+        store.dispatch(setMostRecentSavedContent());
+      } catch (err) {
+        // FIXME: come up with a compelling error case
+        console.error(Error(err.message));
+      }
     }
   }, 10000);
 }
