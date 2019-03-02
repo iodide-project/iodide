@@ -1,18 +1,20 @@
 import {
-  setPreviouslySavedJsmdToCurrentJsmd,
+  setMostRecentSavedContent,
   saveNotebookToServer
 } from "../actions/actions";
 
-export function changeMadeToJsmd(state) {
-  return state.previouslySavedJsmd !== state.jsmd;
+export function notebookChangedSinceSave(state) {
+  const { previouslySavedContent: previous } = state;
+  return previous.jsmd !== state.jsmd || previous.title !== state.title;
 }
+
 export function checkForServerAutosave(store) {
-  store.dispatch(setPreviouslySavedJsmdToCurrentJsmd());
+  store.dispatch(setMostRecentSavedContent());
   setInterval(() => {
     const state = store.getState();
-    if (changeMadeToJsmd(state)) {
+    if (notebookChangedSinceSave(state)) {
       store.dispatch(saveNotebookToServer(false));
-      store.dispatch(setPreviouslySavedJsmdToCurrentJsmd());
+      store.dispatch(setMostRecentSavedContent());
     }
   }, 10000);
 }

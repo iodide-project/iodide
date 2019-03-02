@@ -128,9 +128,13 @@ export const stateProperties = {
     type: "string",
     default: ""
   },
-  previouslySavedJsmd: {
-    type: "string",
-    default: ""
+  previouslySavedContent: {
+    type: "object",
+    default: { title: "", jsmd: "" },
+    properties: {
+      title: { type: "string" },
+      jsmd: { type: "string" }
+    }
   },
   jsmdChunks: {
     type: "array",

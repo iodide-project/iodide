@@ -273,7 +273,7 @@ function getNotebookSaveRequestOptions(state, options = undefined) {
   return postRequestOptions;
 }
 
-function saveNotebookRequest(url, postRequestOptions, dispatch) {
+export function saveNotebookRequest(url, postRequestOptions, dispatch) {
   return fetchWithCSRFTokenAndJSONContent(url, postRequestOptions).then(
     response => {
       if (!response.ok) {
@@ -533,12 +533,8 @@ export function saveEnvironment(updateObj, update) {
   };
 }
 
-export function setPreviouslySavedJsmdToCurrentJsmd() {
+export function setMostRecentSavedContent() {
   return {
-    type: "SET_PREVIOUSLY_SAVED_JSMD_TO_CURRENT_JSMD"
+    type: "SET_MOST_RECENT_SAVED_CONTENT"
   };
-}
-
-export function changeMadeToJsmd(state) {
-  return state.previouslySavedJsmd !== state.jsmd;
 }
