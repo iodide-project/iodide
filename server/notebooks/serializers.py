@@ -51,6 +51,14 @@ class NotebookRevisionDetailSerializer(serializers.ModelSerializer):
     Details of a revision for a notebook (includes content)
     """
 
+    def validate(self, attrs):
+        last_revision = NotebookRevision.objects.filter(
+            notebook_id=self.context["notebook_id"]
+        ).first()
+        if attrs["title"] == last_revision.title and attrs["content"] == last_revision.content:
+            raise serializers.ValidationError("Revision unchanged from previous")
+        return serializers.ModelSerializer.validate(self, attrs)
+
     class Meta:
         model = NotebookRevision
         fields = ("id", "title", "created", "content")

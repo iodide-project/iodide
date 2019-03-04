@@ -274,22 +274,37 @@ function getNotebookSaveRequestOptions(state, options = undefined) {
 }
 
 function saveNotebookRequest(url, postRequestOptions, dispatch) {
-  return fetchWithCSRFTokenAndJSONContent(url, postRequestOptions)
-    .then(response => {
+  return fetchWithCSRFTokenAndJSONContent(url, postRequestOptions).then(
+    response => {
       if (!response.ok) {
-        throw response;
+        return response
+          .json()
+          .then(json => {
+            // this is a horrible and obvious hack that will go away
+            // when we don't provide an easy interface for the user
+            // to double save a revision (i.e. we have provided
+            // continuous autosave)
+            if (json.non_field_errors && json.non_field_errors.length) {
+              // no changes, not really an error, we'll silently pretend
+              // this didn't happen
+              return {};
+            }
+            // else, some kind of genuine error
+            dispatch(
+              updateAppMessages({
+                message: "Error saving notebook.",
+                messageType: "ERROR_SAVING_NOTEBOOK"
+              })
+            );
+            throw response;
+          })
+          .catch(() => {
+            throw response;
+          });
       }
       return response.json();
-    })
-    .catch(err => {
-      dispatch(
-        updateAppMessages({
-          message: `Error Saving Notebook.`,
-          messageType: "ERROR_SAVING_NOTEBOOK"
-        })
-      );
-      throw new Error(err);
-    });
+    }
+  );
 }
 
 export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {

@@ -144,6 +144,44 @@ def test_create_notebook_revision(fake_user, test_notebook, client):
     test_notebook.refresh_from_db()
     assert test_notebook.title == post_blob["title"]
 
+    # also validate that the response is what we expect
+    assert resp.json() == {
+        "content": post_blob["content"],
+        "created": get_rest_framework_time_string(new_notebook_revision.created),
+        "id": new_notebook_revision.id,
+        "title": post_blob["title"],
+    }
+
+
+def test_dont_create_unmodified_notebook_revision(fake_user, test_notebook, client):
+    client.force_login(user=fake_user)
+
+    # get latest (only) revision for test notebook
+    notebook_revision = NotebookRevision.objects.first()
+    original_creation_time = notebook_revision.created
+    original_id = notebook_revision.id
+
+    # unmodified post
+    unmodified_post_blob = {"title": notebook_revision.title, "content": notebook_revision.content}
+
+    resp = client.post(
+        reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}),
+        unmodified_post_blob,
+    )
+    assert resp.status_code == 400
+
+    # no new notebook revisions should be created, and the existing (only)
+    # revision should be unchanged
+    assert NotebookRevision.objects.count() == 1
+    notebook_revision = NotebookRevision.objects.first()
+    assert notebook_revision.title == unmodified_post_blob["title"]
+    assert notebook_revision.content == unmodified_post_blob["content"]
+    assert notebook_revision.created == original_creation_time
+    assert notebook_revision.id == original_id
+
+    # be sure that we get the expected error
+    assert resp.json() == {"non_field_errors": ["Revision unchanged from previous"]}
+
 
 def test_delete_notebook_revision_not_logged_in(test_notebook, client):
     # should not be able to delete a notebook revision if not logged in
