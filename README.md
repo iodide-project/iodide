@@ -25,13 +25,18 @@ Iodide is a modern, literate, and interactive programming environment that uses 
 
 And thanks to WebAssembly, working in the browser doesn't mean that you're restricted to working in just Javascript. Via the [Pyodide project](https://github.com/iodide-project/pyodide) you can already do data science work in the browser using Python and the core of the Python science stack (Numpy, Pandas, and Matplotlib). And that's just the start. We envision a future workflow that allows you to do your data munging in Python, fit a quick model in R or JAGS, solve some differential equations in Julia, and then display your results with a live interactive d3+Javascript visualization... and all that within within a single, portable, sharable, and hackable file.
 
-Our focus is on delivering frictionless, human-centered tools to scientists. You can read more about our core principles below; if our vision resonates with you, please consider contributing to the project!
-
-_PS: We're working on a few other ways of making this in-browser workflow as ergonomic for scientific tasks as possible. Two of those key efforts will be (1) using modern JS transpilation tools to extend JS syntax just enough for matrix notation, broadcasting, and other basic scientific computing needs; and (2) compiling best-in-class C/C++ science libraries (and runtimes!) to Webassembly and wrapping them in ergonomic JS APIs. If either of those projects appeals to you, please reach out!_
+Our focus is on delivering frictionless, human-centered tools to scientists. You can read more about our core principles below. If this vision resonates with you, please consider contributing to the project!
 
 Visit https://extremely-alpha.iodide.io/ to see example and demo notebooks, and to learn more!
 
 For information on developing and contributing to iodide, please see our [documentation](https://docs.iodide.io/).
+
+PS: We've got a few other ideas about how to make in-browser workflows as ergonomic for scientific tasks as possible, including
+1. using modern JS transpilation tools to [extend JS syntax for numerical computing](https://github.com/iodide-project/iodide-transpiler) -- just enough for matrix operations, operarion broadcasting, n-dimensional slicing, and a few other  basic scientific computing needs;
+2. compiling best-in-class C/C++ science libraries (and runtimes!) to Webassembly and wrapping them in ergonomic JS APIs.
+
+If either of those projects appeals to you, please reach out!
+
 
 # Get in touch
 
