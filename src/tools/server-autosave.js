@@ -35,5 +35,5 @@ export function checkForServerAutosave(store) {
         }
       }
     }
-  }, 2000);
+  }, 10000);
 }
