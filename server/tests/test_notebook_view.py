@@ -1,3 +1,5 @@
+import random
+
 import pytest
 from django.urls import reverse
 
@@ -31,6 +33,7 @@ def test_notebook_view(client, test_notebook):
 
 @pytest.mark.parametrize("logged_in", [True, False])
 def test_new_notebook_view(client, fake_user, logged_in):
+    random.seed(0)
     if logged_in:
         client.force_login(fake_user)
 
@@ -39,6 +42,7 @@ def test_new_notebook_view(client, fake_user, logged_in):
     if logged_in:
         assert NotebookRevision.objects.count() == 1
         assert Notebook.objects.count() == 1
+        Notebook.objects.values_list("title", flat=True).first() == "trioxygen pentaphosphide"
         assert last_url == Notebook.objects.all()[0].get_absolute_url()
     else:
         assert NotebookRevision.objects.count() == 0
