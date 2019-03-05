@@ -2,6 +2,7 @@ import {
   setMostRecentSavedContent,
   saveNotebookToServer
 } from "../actions/actions";
+import { clearAutosave } from "./autosave";
 
 export function notebookChangedSinceSave(state) {
   const { previouslySavedContent: previous } = state;
@@ -16,6 +17,8 @@ export function checkForServerAutosave(store) {
       try {
         await store.dispatch(saveNotebookToServer(false));
         store.dispatch(setMostRecentSavedContent());
+        // remove previous autosave if we've successfully saved.
+        clearAutosave(state);
       } catch (err) {
         // FIXME: come up with a compelling error case
         console.error(Error(err.message));
