@@ -40,12 +40,9 @@ export class HeaderMessagesUnconnected extends React.Component {
       "NEED_TO_MAKE_COPY",
       "CONNECTION_LOST"
     ]),
-<<<<<<< HEAD
     owner: PropTypes.string,
     loadAutosave: PropTypes.func.isRequired,
     discardAutosave: PropTypes.func.isRequired,
-=======
->>>>>>> local autosave now applies by default
     login: PropTypes.func.isRequired,
     makeCopy: PropTypes.func.isRequired,
     revisionId: PropTypes.number

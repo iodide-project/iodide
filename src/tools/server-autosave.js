@@ -17,7 +17,11 @@ export function checkForServerAutosave(store) {
     const { username: notebookOwner } = state.notebookInfo;
     const { name: thisUser } = state.userData;
     let validAutosave = false;
-    if (notebookChangedSinceSave(state) && notebookOwner === thisUser) {
+    if (
+      notebookChangedSinceSave(state) && // has the notebook changed?
+      thisUser !== undefined && // is this a logged-in-user?
+      notebookOwner === thisUser // is this notebook owned by the current user?
+    ) {
       try {
         await store.dispatch(saveNotebookToServer(false));
         validAutosave = true;
