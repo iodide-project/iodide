@@ -273,7 +273,12 @@ export function getNotebookSaveRequestOptions(state, options = undefined) {
   return postRequestOptions;
 }
 
-export function saveNotebookRequest(url, postRequestOptions, dispatch) {
+export function saveNotebookRequest(
+  url,
+  postRequestOptions,
+  dispatch,
+  appMsg = true
+) {
   return fetchWithCSRFTokenAndJSONContent(url, postRequestOptions)
     .then(response => {
       if (!response.ok) {
@@ -305,12 +310,14 @@ export function saveNotebookRequest(url, postRequestOptions, dispatch) {
       return response.json();
     })
     .catch(err => {
-      dispatch(
-        updateAppMessages({
-          message: `Error Saving Notebook.`,
-          messageType: "ERROR_SAVING_NOTEBOOK"
-        })
-      );
+      if (appMsg) {
+        dispatch(
+          updateAppMessages({
+            message: `Error Saving Notebook.`,
+            messageType: "ERROR_SAVING_NOTEBOOK"
+          })
+        );
+      }
       throw new Error(err.message);
     });
 }
@@ -354,7 +361,8 @@ export function saveNotebookToServer(appMsg = true) {
       return saveNotebookRequest(
         `/api/v1/notebooks/${notebookId}/revisions/`,
         getNotebookSaveRequestOptions(state),
-        dispatch
+        dispatch,
+        appMsg
       )
         .then(() => {
           const message = "Updated Notebook";
@@ -547,5 +555,12 @@ export function saveEnvironment(updateObj, update) {
 export function setMostRecentSavedContent() {
   return {
     type: "SET_MOST_RECENT_SAVED_CONTENT"
+  };
+}
+
+export function setConnectionStatus(status) {
+  return {
+    type: "SET_CONNECTION_STATUS",
+    status
   };
 }

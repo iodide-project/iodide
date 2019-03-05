@@ -37,7 +37,8 @@ export class HeaderMessagesUnconnected extends React.Component {
     message: PropTypes.oneOf([
       "STANDALONE_MODE",
       "NEED_TO_LOGIN",
-      "NEED_TO_MAKE_COPY"
+      "NEED_TO_MAKE_COPY",
+      "CONNECTION_LOST"
     ]),
 <<<<<<< HEAD
     owner: PropTypes.string,
@@ -70,6 +71,10 @@ export class HeaderMessagesUnconnected extends React.Component {
   render() {
     let content;
     switch (this.props.message) {
+      case "CONNECTION_LOST":
+        content =
+          "Connection to the server has been lost. We'll keep trying. In the meantime, your changes will be preserved locally.";
+        break;
       case "STANDALONE_MODE":
         content =
           "You're viewing this notebook in standalone mode. Changes will be cached in your browser's local storage, but will not be otherwise persisted.";
@@ -115,6 +120,8 @@ export function mapStateToProps(state) {
   if (state.viewMode === "EXPLORE_VIEW") {
     if (connectionModeIsStandalone(state)) {
       return { message: "STANDALONE_MODE" };
+    } else if (state.notebookInfo.connectionStatus === "CONNECTION_LOST") {
+      return { message: "CONNECTION_LOST" };
     } else if (
       state.userData.name === undefined &&
       connectionModeIsServer(state)

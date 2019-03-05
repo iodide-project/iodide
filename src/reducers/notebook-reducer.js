@@ -70,6 +70,13 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { hasPreviousAutoSave });
     }
 
+    case "SET_CONNECTION_STATUS": {
+      const { status } = action;
+      return Object.assign({}, state, {
+        notebookInfo: { ...state.notebookInfo, connectionStatus: status }
+      });
+    }
+
     case "EVAL_FRAME_READY": {
       state.evalFrameMessageQueue.forEach(actionToPost => {
         postActionToEvalFrame(actionToPost);

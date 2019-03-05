@@ -234,6 +234,10 @@ export const stateProperties = {
     properties: {
       user_can_save: { type: "boolean" },
       notebook_id: { type: "integer" },
+      connectionStatus: {
+        type: "string",
+        enum: ["CONNECTION_ACTIVE", "CONNECTION_LOST"]
+      },
       connectionMode: {
         type: "string",
         enum: ["SERVER", "STANDALONE"]
@@ -243,7 +247,8 @@ export const stateProperties = {
     default: {
       notebook_id: undefined,
       user_can_save: false,
-      connectionMode: "STANDALONE"
+      connectionMode: "STANDALONE",
+      connectionStatus: "CONNECTION_ACTIVE"
     }
   },
   panePositions: {

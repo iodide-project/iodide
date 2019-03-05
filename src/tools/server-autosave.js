@@ -1,6 +1,7 @@
 import {
   setMostRecentSavedContent,
-  saveNotebookToServer
+  saveNotebookToServer,
+  setConnectionStatus
 } from "../actions/actions";
 import { clearAutosave } from "./autosave";
 
@@ -13,16 +14,25 @@ export function checkForServerAutosave(store) {
   store.dispatch(setMostRecentSavedContent());
   setInterval(async () => {
     const state = store.getState();
+    let validAutosave = false;
+
     if (notebookChangedSinceSave(state)) {
       try {
         await store.dispatch(saveNotebookToServer(false));
+        validAutosave = true;
+      } catch (err) {
+        // FIXME: come up with a compelling error case
+        store.dispatch(setConnectionStatus("CONNECTION_LOST"));
+        // console.error(Error(err.message));
+      }
+      if (validAutosave) {
         store.dispatch(setMostRecentSavedContent());
         // remove previous autosave if we've successfully saved.
         clearAutosave(state);
-      } catch (err) {
-        // FIXME: come up with a compelling error case
-        console.error(Error(err.message));
+        if (state.notebookInfo.connectionStatus !== "CONNECTION_ACTIVE") {
+          store.dispatch(setConnectionStatus("CONNECTION_ACTIVE"));
+        }
       }
     }
-  }, 10000);
+  }, 4000);
 }
