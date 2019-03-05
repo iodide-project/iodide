@@ -12,6 +12,6 @@ explanation, imgs, etc.
 
 explanation, imgs. etc.
 
-### (OPTIONAL) notebook that reproduces bug 
+### (if applicable) notebook that reproduces bug 
 
-link to the notebook that reproduces the bug, or just inline it in the issue
+link to the notebook that reproduces the bug. the smaller the better. you may wish to use https://definitely-staging.iodide.io/ (our staging environment, deploys from master) for creating/sharing the notebook.
