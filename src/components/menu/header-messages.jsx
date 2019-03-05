@@ -8,7 +8,12 @@ import {
   connectionModeIsServer,
   connectionModeIsStandalone
 } from "../../tools/server-tools";
-import { createNewNotebookOnServer, login } from "../../actions/actions";
+import {
+  createNewNotebookOnServer,
+  login,
+  discardAutosave,
+  loadAutosave
+} from "../../actions/actions";
 
 const HeaderMessageContainer = styled("div")`
   background-color: lightyellow;
@@ -35,6 +40,7 @@ const HeaderMessageContainer = styled("div")`
 export class HeaderMessagesUnconnected extends React.Component {
   static propTypes = {
     message: PropTypes.oneOf([
+      "HAS_PREVIOUS_AUTOSAVE",
       "STANDALONE_MODE",
       "NEED_TO_LOGIN",
       "NEED_TO_MAKE_COPY",
@@ -44,6 +50,8 @@ export class HeaderMessagesUnconnected extends React.Component {
     loadAutosave: PropTypes.func.isRequired,
     discardAutosave: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
+    loadAutosave: PropTypes.func.isRequired,
+    discardAutosave: PropTypes.func.isRequired,
     makeCopy: PropTypes.func.isRequired,
     revisionId: PropTypes.number
   };
@@ -68,6 +76,19 @@ export class HeaderMessagesUnconnected extends React.Component {
   render() {
     let content;
     switch (this.props.message) {
+      case "HAS_PREVIOUS_AUTOSAVE":
+        content = (
+          <React.Fragment>
+            {this.props.connectionModeIsServer
+              ? "You have made changes to this notebook that are only saved locally."
+              : "Modifications to notebook detected in browser's local storage."}
+            &nbsp;
+            <a onClick={this.props.loadAutosave}>Restore</a>
+            &nbsp;or&nbsp;
+            <a onClick={this.props.discardAutosave}>discard</a>.
+          </React.Fragment>
+        );
+        break;
       case "CONNECTION_LOST":
         content =
           "Connection to the server has been lost. We'll keep trying. In the meantime, your changes will be preserved locally.";
@@ -115,7 +136,18 @@ export class HeaderMessagesUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   if (state.viewMode === "EXPLORE_VIEW") {
-    if (connectionModeIsStandalone(state)) {
+    if (
+      state.hasPreviousAutoSave &&
+      state.userData.name !== undefined &&
+      state.notebookInfo.username !== state.userData.name
+    ) {
+      // this checks if there is a previous autosave,
+      // and if the user matches.
+      return {
+        message: "HAS_PREVIOUS_AUTOSAVE",
+        connectionModeIsServer: connectionModeIsServer(state)
+      };
+    } else if (connectionModeIsStandalone(state)) {
       return { message: "STANDALONE_MODE" };
     } else if (state.notebookInfo.connectionStatus === "CONNECTION_LOST") {
       return { message: "CONNECTION_LOST" };
@@ -143,6 +175,12 @@ function mapDispatchToProps(dispatch) {
   return {
     login: () => {
       dispatch(login());
+    },
+    discardAutosave: () => {
+      dispatch(discardAutosave());
+    },
+    loadAutosave: () => {
+      dispatch(loadAutosave());
     },
     makeCopy: revisionId => {
       dispatch(createNewNotebookOnServer({ forkedFrom: revisionId }));

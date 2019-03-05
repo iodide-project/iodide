@@ -36,7 +36,11 @@ async function checkForAutosave(store) {
     autosaveState.dirtyCopy &&
     autosaveState.dirtyCopy !== autosaveState.originalCopy
   ) {
-    store.dispatch(loadAutosave());
+    const automaticallyApply =
+      state.notebookInfo.username === state.userData.name;
+    if (automaticallyApply) {
+      store.dispatch(loadAutosave());
+    }
     store.dispatch(setPreviousAutosave(true));
   }
 }
