@@ -138,9 +138,11 @@ class JsmdEditorUnconnected extends React.Component {
     //   },
     // )
 
+    // FIXME: should set cursor position in redux store (see: https://github.com/iodide-project/iodide/issues/1568)
     return (
       <ReactCodeMirror
         editorDidMount={this.storeEditorInstance}
+        cursor={{ line: 1, ch: 1 }}
         value={this.props.content}
         options={this.props.editorOptions}
         onBeforeChange={this.updateJsmdContent}
