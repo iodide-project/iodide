@@ -48,9 +48,10 @@ describe("HeaderMessages mapStateToProps", () => {
 
   it("displays make a copy message", () => {
     state.notebookInfo.user_can_save = false;
-    expect(mapStateToProps(state, ownProps).message).toEqual(
-      "NEED_TO_MAKE_COPY"
-    );
+    state.notebookInfo.username = "test";
+    const props = mapStateToProps(state, ownProps);
+    expect(props.message).toEqual("NEED_TO_MAKE_COPY");
+    expect(props.owner).toEqual("test");
   });
 
   it("displays nothing", () => {
