@@ -14,9 +14,10 @@ export function checkForServerAutosave(store) {
   store.dispatch(setMostRecentSavedContent());
   setInterval(async () => {
     const state = store.getState();
+    const { username: notebookOwner } = state.notebookInfo;
+    const { name: thisUser } = state.userData;
     let validAutosave = false;
-
-    if (notebookChangedSinceSave(state)) {
+    if (notebookChangedSinceSave(state) && notebookOwner === thisUser) {
       try {
         await store.dispatch(saveNotebookToServer(false));
         validAutosave = true;
@@ -34,5 +35,5 @@ export function checkForServerAutosave(store) {
         }
       }
     }
-  }, 10000);
+  }, 2000);
 }
