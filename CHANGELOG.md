@@ -3,6 +3,7 @@
 - don't show "new notebook" button on user pages that don't belong to
   the currently logged in one
 - add docs link to footer on server pages
+- set default document position to (row 1, column 1) on startup (#1568)
 
 # 0.2.0 (2019-02-28)
 
