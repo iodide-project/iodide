@@ -70,19 +70,6 @@ export class HeaderMessagesUnconnected extends React.Component {
   render() {
     let content;
     switch (this.props.message) {
-      case "HAS_PREVIOUS_AUTOSAVE":
-        content = (
-          <React.Fragment>
-            {this.props.connectionModeIsServer
-              ? "You have made changes to this notebook that are only saved locally."
-              : "Modifications to notebook detected in browser's local storage."}
-            &nbsp;
-            <a onClick={this.props.loadAutosave}>Restore</a>
-            &nbsp;or&nbsp;
-            <a onClick={this.props.discardAutosave}>discard</a>.
-          </React.Fragment>
-        );
-        break;
       case "STANDALONE_MODE":
         content =
           "You're viewing this notebook in standalone mode. Changes will be cached in your browser's local storage, but will not be otherwise persisted.";
