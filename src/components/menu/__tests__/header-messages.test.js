@@ -30,6 +30,8 @@ describe("HeaderMessages mapStateToProps", () => {
 
   it("displays local save message", () => {
     state.hasPreviousAutoSave = true;
+    state.userData.name = "test1";
+    state.notebookInfo.username = "test2";
     const connectionModes = ["STANDALONE", "SERVER"];
     connectionModes.forEach(connectionMode => {
       state.notebookInfo.connectionMode = connectionMode;

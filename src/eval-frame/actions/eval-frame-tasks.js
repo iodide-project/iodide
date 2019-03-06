@@ -7,9 +7,7 @@ tasks.saveNotebook = new UserTask({
   title: "Save Notebook",
   keybindings: ["ctrl+s", "meta+s"],
   preventDefaultKeybinding: true,
-  callback() {
-    postKeypressToEditor(this.keybindings[0]);
-  }
+  callback() {}
 });
 
 tasks.exportNotebook = new UserTask({

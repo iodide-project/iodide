@@ -1,4 +1,5 @@
 # (Unreleased; add upcoming change notes here)
+- iodide notebooks now automatically save to the server
 
 # 0.3.0 (2019-03-06)
 

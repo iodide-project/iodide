@@ -70,6 +70,13 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { hasPreviousAutoSave });
     }
 
+    case "SET_CONNECTION_STATUS": {
+      const { status } = action;
+      return Object.assign({}, state, {
+        notebookInfo: { ...state.notebookInfo, connectionStatus: status }
+      });
+    }
+
     case "EVAL_FRAME_READY": {
       state.evalFrameMessageQueue.forEach(actionToPost => {
         postActionToEvalFrame(actionToPost);
@@ -275,6 +282,15 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "UPDATE_PANE_POSITIONS": {
       return Object.assign({}, state, { panePositions: action.panePositions });
+    }
+
+    case "SET_MOST_RECENT_SAVED_CONTENT": {
+      return Object.assign({}, state, {
+        previouslySavedContent: {
+          jsmd: state.jsmd,
+          title: state.title
+        }
+      });
     }
 
     default: {

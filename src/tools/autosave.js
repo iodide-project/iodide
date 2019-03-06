@@ -1,6 +1,6 @@
 import db from "./autosave-client";
 import { connectionModeIsServer } from "./server-tools";
-import { setPreviousAutosave } from "../actions/actions";
+import { setPreviousAutosave, loadAutosave } from "../actions/actions";
 
 function exportJsmd(state) {
   return state.jsmd;
@@ -36,6 +36,11 @@ async function checkForAutosave(store) {
     autosaveState.dirtyCopy &&
     autosaveState.dirtyCopy !== autosaveState.originalCopy
   ) {
+    const automaticallyApply =
+      state.notebookInfo.username === state.userData.name;
+    if (automaticallyApply) {
+      store.dispatch(loadAutosave());
+    }
     store.dispatch(setPreviousAutosave(true));
   }
 }

@@ -10,9 +10,9 @@ import {
 } from "../../tools/server-tools";
 import {
   createNewNotebookOnServer,
+  login,
   discardAutosave,
-  loadAutosave,
-  login
+  loadAutosave
 } from "../../actions/actions";
 
 const HeaderMessageContainer = styled("div")`
@@ -43,7 +43,8 @@ export class HeaderMessagesUnconnected extends React.Component {
       "HAS_PREVIOUS_AUTOSAVE",
       "STANDALONE_MODE",
       "NEED_TO_LOGIN",
-      "NEED_TO_MAKE_COPY"
+      "NEED_TO_MAKE_COPY",
+      "CONNECTION_LOST"
     ]),
     owner: PropTypes.string,
     loadAutosave: PropTypes.func.isRequired,
@@ -85,6 +86,10 @@ export class HeaderMessagesUnconnected extends React.Component {
             <a onClick={this.props.discardAutosave}>discard</a>.
           </React.Fragment>
         );
+        break;
+      case "CONNECTION_LOST":
+        content =
+          "Connection to the server has been lost. We'll keep trying. In the meantime, your changes will be preserved locally.";
         break;
       case "STANDALONE_MODE":
         content =
@@ -129,13 +134,21 @@ export class HeaderMessagesUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   if (state.viewMode === "EXPLORE_VIEW") {
-    if (state.hasPreviousAutoSave) {
+    if (
+      state.hasPreviousAutoSave &&
+      state.userData.name !== undefined &&
+      state.notebookInfo.username !== state.userData.name
+    ) {
+      // this checks if there is a previous autosave,
+      // and if the user matches.
       return {
         message: "HAS_PREVIOUS_AUTOSAVE",
         connectionModeIsServer: connectionModeIsServer(state)
       };
     } else if (connectionModeIsStandalone(state)) {
       return { message: "STANDALONE_MODE" };
+    } else if (state.notebookInfo.connectionStatus === "CONNECTION_LOST") {
+      return { message: "CONNECTION_LOST" };
     } else if (
       state.userData.name === undefined &&
       connectionModeIsServer(state)

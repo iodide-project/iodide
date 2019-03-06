@@ -92,14 +92,13 @@ tasks.newNotebook = new ExternalLinkTask({
   url: "/new"
 });
 
+// this overrides the browser default's ctrl+s but otherwise does nothing.
 tasks.saveNotebook = new UserTask({
   title: "Save Notebook",
   keybindings: ["ctrl+s", "meta+s"],
   displayKeybinding: `${commandKey}+s`,
   preventDefaultKeybinding: true,
-  callback() {
-    dispatcher.saveNotebookToServer();
-  }
+  callback() {}
 });
 
 tasks.exportNotebook = new UserTask({
