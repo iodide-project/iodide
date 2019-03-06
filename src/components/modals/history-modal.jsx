@@ -14,7 +14,7 @@ import THEME from "../../shared/theme";
 
 const ModalContentContainer = styled("div")`
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 208px 1fr;
   grid-column-gap: 20px;
   padding: 0px;
   overflow: auto;
