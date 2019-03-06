@@ -45,6 +45,7 @@ export class HeaderMessagesUnconnected extends React.Component {
       "NEED_TO_LOGIN",
       "NEED_TO_MAKE_COPY"
     ]),
+    owner: PropTypes.string,
     loadAutosave: PropTypes.func.isRequired,
     discardAutosave: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
@@ -100,7 +101,8 @@ export class HeaderMessagesUnconnected extends React.Component {
       case "NEED_TO_MAKE_COPY":
         content = (
           <React.Fragment>
-            This notebook is owned by another user. {}
+            This notebook is owned by{" "}
+            <a href={`/${this.props.owner}`}>{this.props.owner}</a>. {}
             <a onClick={() => this.props.makeCopy(this.props.revisionId)}>
               Make a copy to your account
             </a>
@@ -145,7 +147,8 @@ export function mapStateToProps(state) {
     ) {
       return {
         message: "NEED_TO_MAKE_COPY",
-        revisionId: state.notebookInfo.revision_id
+        revisionId: state.notebookInfo.revision_id,
+        owner: state.notebookInfo.username
       };
     }
   }

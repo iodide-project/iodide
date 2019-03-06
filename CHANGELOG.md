@@ -4,6 +4,7 @@
   the currently logged in one
 - add docs link to footer on server pages
 - set default document position to (row 1, column 1) on startup (#1568)
+- displays owner name in header message when viewing a notebook you do not own
 
 # 0.2.0 (2019-02-28)
 
