@@ -5,6 +5,8 @@ import {
 } from "../actions/actions";
 import { clearAutosave } from "./autosave";
 
+const SERVER_AUTOSAVE_INTERVAL = 30000;
+
 export function notebookChangedSinceSave(state) {
   const { previouslySavedContent: previous } = state;
   return previous.jsmd !== state.jsmd || previous.title !== state.title;
@@ -39,5 +41,5 @@ export function checkForServerAutosave(store) {
         }
       }
     }
-  }, 10000);
+  }, SERVER_AUTOSAVE_INTERVAL);
 }

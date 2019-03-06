@@ -1,5 +1,4 @@
 # (Unreleased; add upcoming change notes here)
-# 0.4.0
 - iodide notebooks now automatically save to the server
 - removed `ctrl+s` as a keybinding
 
