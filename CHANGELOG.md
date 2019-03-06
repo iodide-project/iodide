@@ -1,4 +1,6 @@
-# 0.3.0 (Unreleased; add upcoming change notes here)
+# (Unreleased; add upcoming change notes here)
+
+# 0.3.0 (2019-03-06)
 
 - don't show "new notebook" button on user pages that don't belong to
   the currently logged in one
