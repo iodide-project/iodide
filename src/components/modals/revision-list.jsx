@@ -62,7 +62,7 @@ class RevisionListUnconnected extends React.Component {
                 <ListItemText
                   primary={format(
                     new Date(revision.created),
-                    "MMM dd, uuuu HH:MM"
+                    "MMM dd, uuuu HH:mm"
                   )}
                 />
               </ListItem>
