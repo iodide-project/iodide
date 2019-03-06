@@ -50,8 +50,6 @@ export class HeaderMessagesUnconnected extends React.Component {
     loadAutosave: PropTypes.func.isRequired,
     discardAutosave: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
-    loadAutosave: PropTypes.func.isRequired,
-    discardAutosave: PropTypes.func.isRequired,
     makeCopy: PropTypes.func.isRequired,
     revisionId: PropTypes.number
   };
