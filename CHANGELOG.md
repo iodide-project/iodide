@@ -5,6 +5,7 @@
 - add docs link to footer on server pages
 - set default document position to (row 1, column 1) on startup (#1568)
 - displays owner name in header message when viewing a notebook you do not own
+- randomly generate initial notebook names (based on a list of iodide compounds) (#1541)
 
 # 0.2.0 (2019-02-28)
 
