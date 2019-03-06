@@ -42,7 +42,7 @@ def test_new_notebook_view(client, fake_user, logged_in):
     if logged_in:
         assert NotebookRevision.objects.count() == 1
         assert Notebook.objects.count() == 1
-        Notebook.objects.values_list("title", flat=True).first() == "trioxygen pentaphosphide"
+        assert Notebook.objects.values_list("title", flat=True).first() == "neodymium(III) iodide"
         assert last_url == Notebook.objects.all()[0].get_absolute_url()
     else:
         assert NotebookRevision.objects.count() == 0

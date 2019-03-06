@@ -11,7 +11,7 @@ from ..base.models import User
 from ..files.models import File
 from ..settings import APP_VERSION_STRING, EVAL_FRAME_ORIGIN
 from ..views import get_user_info_dict
-from .names import get_random_molecule_name
+from .names import get_random_compound
 
 
 def _get_user_info_json(user):
@@ -123,7 +123,7 @@ def new_notebook_view(request):
         NotebookRevision.objects.create(
             notebook=notebook,
             content=new_notebook_content_template.render(),
-            title=get_random_molecule_name(),
+            title=get_random_compound(),
         )
     return redirect(notebook)
 
