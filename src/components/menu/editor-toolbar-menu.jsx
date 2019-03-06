@@ -21,9 +21,6 @@ export class EditorToolbarMenuUnconnected extends React.Component {
           <NotebookMenuItem task={tasks.toggleHistoryModal} />
         )}
         <NotebookMenuItem task={tasks.clearVariables} />
-        {this.props.isAuthenticated && (
-          <NotebookMenuItem task={tasks.saveNotebook} />
-        )}
         <NotebookMenuItem task={tasks.toggleHelpModal} />
       </NotebookIconMenu>
     );
