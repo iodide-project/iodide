@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 - iodide notebooks now automatically save to the server
-- fix bug where we should incorrect revision save times in history viewer,
+- fix bug where we showed incorrect revision save times in history viewer,
   also show revision save time down to the second level
 
 # 0.3.0 (2019-03-06)
