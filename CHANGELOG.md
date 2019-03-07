@@ -4,6 +4,7 @@
 - fix bug where we showed incorrect revision save times in history viewer,
   also show revision save time down to the second level
 - alpha now less extreme
+- improve title for user page when no first or last name is given
 
 # 0.3.0 (2019-03-06)
 

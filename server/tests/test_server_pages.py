@@ -54,12 +54,20 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
     }
 
 
-@pytest.mark.parametrize("username", ["testuser", "test-user", "testuser@foo.com"])
-def test_user_view_with_different_names(transactional_db, client, username):
+@pytest.mark.parametrize(
+    ("username", "first_name", "last_name"),
+    [
+        ("testuser", "User", "McUserTons"),
+        ("testuser@foo.com", "Test", ""),
+        ("test-user", "", "User"),
+        ("test-user", "", ""),
+    ],
+)
+def test_user_view_with_different_names(transactional_db, client, username, first_name, last_name):
     test_user = User.objects.create(
         username=username,
-        first_name="User",
-        last_name="McUsertons",
+        first_name=first_name,
+        last_name=last_name,
         email="user@foo.com",
         password="123",
     )
@@ -69,7 +77,13 @@ def test_user_view_with_different_names(transactional_db, client, username):
     )
     resp = client.get(reverse("user", kwargs={"name": test_user.username}))
     assert resp.status_code == 200
-    assert get_title_block(resp.content) == f"{test_user.username} ({test_user.get_full_name()})"
+    if test_user.get_full_name():
+        assert (
+            get_title_block(resp.content) == f"{test_user.username} ({test_user.get_full_name()})"
+        )
+    else:
+        assert get_title_block(resp.content) == f"{test_user.username}"
+
     assert get_script_block(resp.content, "pageData") == {
         "notebookList": [
             {
