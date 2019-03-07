@@ -71,11 +71,14 @@ def user(request, name=None):
         this_user.update({"github_url": "https://github.com/{}/".format(user.username)})
 
     notebooks = get_formatted_notebooks(user)
+    title = f"{this_user['name']}"
+    if this_user["full_name"]:
+        title += f" ({this_user['full_name']})"
     return render(
         request,
         "index.html",
         {
-            "title": f"{this_user['name']} ({this_user['full_name']})",
+            "title": title,
             "page_data": {
                 "userInfo": user_info,
                 "thisUser": this_user,
