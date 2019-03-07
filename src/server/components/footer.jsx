@@ -69,7 +69,7 @@ export default ({ showIcon = true }) => (
         </ul>
       )}
       <p>
-        <small>© 2018 Mozilla and other contributors</small>.
+        <small>© 2018-2019 Mozilla and other contributors</small>.
       </p>
     </FooterDiv>
   </FooterContainer>
