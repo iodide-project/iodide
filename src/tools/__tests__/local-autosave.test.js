@@ -1,4 +1,4 @@
-import { getAutosaveState, updateAutosave } from "../autosave";
+import { getLocalAutosaveState, updateLocalAutosave } from "../local-autosave";
 import { newNotebook } from "../../editor-state-prototypes";
 
 let states;
@@ -10,10 +10,10 @@ var x = 10
 # the title
 `;
 
-describe("updateAutoSave", () => {
+describe("updateLocalAutosave", () => {
   beforeEach(() => {
     const originalState = newNotebook();
-    updateAutosave(originalState, true);
+    updateLocalAutosave(originalState, true);
 
     // add some state
     const stateUpdate = {
@@ -29,8 +29,8 @@ describe("updateAutoSave", () => {
   });
 
   it("saves over original when asked to", async () => {
-    updateAutosave(states.updatedState, true);
-    const newAutosavedState = await getAutosaveState(states.updatedState);
+    updateLocalAutosave(states.updatedState, true);
+    const newAutosavedState = await getLocalAutosaveState(states.updatedState);
     expect(Object.keys(newAutosavedState).sort()).toEqual([
       "originalCopy",
       "originalCopyRevision",
@@ -41,8 +41,8 @@ describe("updateAutoSave", () => {
   });
 
   it("only updates dirty copy when not asked to write over original", async () => {
-    await updateAutosave(states.updatedState, false);
-    const newAutosavedState = await getAutosaveState(states.updatedState);
+    await updateLocalAutosave(states.updatedState, false);
+    const newAutosavedState = await getLocalAutosaveState(states.updatedState);
     expect(Object.keys(newAutosavedState).sort()).toEqual([
       "dirtyCopy",
       "dirtySaved",

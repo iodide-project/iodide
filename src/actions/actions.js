@@ -12,10 +12,10 @@ import {
   notebookIsATrial
 } from "../tools/server-tools";
 import {
-  clearAutosave,
-  getAutosaveJsmd,
-  updateAutosave
-} from "../tools/autosave";
+  clearLocalAutosave,
+  getLocalAutosaveJsmd,
+  updateLocalAutosave
+} from "../tools/local-autosave";
 import { loginToServer, logoutFromServer } from "../tools/login";
 
 import { fetchWithCSRFTokenAndJSONContent } from "./../shared/fetch-with-csrf-token";
@@ -92,7 +92,7 @@ export function setPreviousAutosave(hasPreviousAutoSave) {
 export function loadAutosave() {
   return (dispatch, getState) => {
     // jsmd, jsmdChunks
-    getAutosaveJsmd(getState()).then(jsmd => {
+    getLocalAutosaveJsmd(getState()).then(jsmd => {
       const jsmdChunks = jsmdParser(jsmd);
       dispatch({
         type: "REPLACE_NOTEBOOK_CONTENT",
@@ -106,7 +106,7 @@ export function loadAutosave() {
 
 export function discardAutosave() {
   return (dispatch, getState) => {
-    clearAutosave(getState());
+    clearLocalAutosave(getState());
     dispatch(setPreviousAutosave(false));
   };
 }
@@ -317,7 +317,7 @@ export function saveNotebookToServer(appMsg = true) {
       )
         .then(() => {
           const message = "Updated Notebook";
-          updateAutosave(state, true);
+          updateLocalAutosave(state, true);
           if (appMsg) {
             dispatch(
               updateAppMessages({

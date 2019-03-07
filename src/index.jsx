@@ -36,10 +36,10 @@ import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
 import "./tools/initialize-codemirror-loadmode";
 import "./tools/initialize-dom";
-import { checkForAutosave, subscribeToAutoSave } from "./tools/autosave";
 import evalQueue from "./actions/evaluation-queue";
 import CSSCascadeProvider from "./shared/css-cascade-provider";
-import { checkForServerAutosave } from "./tools/server-autosave";
+import { subscribeToAutoSave } from "./tools/autosave";
+import { checkForLocalAutoSave } from "./tools/local-autosave";
 
 evalQueue.connectDispatch(store.dispatch);
 
@@ -50,8 +50,14 @@ window.addEventListener("message", listenForEvalFramePortReady, false);
 handleServerVariables(store);
 handleInitialJsmd(store);
 handleReportViewModeInitialization(store);
-checkForAutosave(store);
-checkForServerAutosave(store);
+
+// re-apply any locally saved changes if applicable
+checkForLocalAutoSave(store);
+// subscribe to an autosave handler for when the content of a
+// document changes (both a local one which updates very frequently
+// and a server-side one which updates slightly less frequently)
+subscribeToAutoSave(store);
+
 messagePasserEditor.connectDispatch(store.dispatch);
 
 render(
@@ -69,5 +75,3 @@ render(
   </CSSCascadeProvider>,
   document.getElementById("editor-react-root")
 );
-
-subscribeToAutoSave(store);
