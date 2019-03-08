@@ -104,6 +104,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
+    case "UPDATE_CURSOR": {
+      const { editorCursorLine, editorCursorChar } = action;
+      return Object.assign({}, state, { editorCursorLine, editorCursorChar });
+    }
+
     case "UPDATE_JSMD_CONTENT": {
       const { jsmd, jsmdChunks } = action;
       return Object.assign({}, state, { jsmd, jsmdChunks });

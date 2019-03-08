@@ -102,6 +102,14 @@ export const stateProperties = {
     type: "integer",
     default: 0
   },
+  editorCursorLine: {
+    type: "integer",
+    default: 0
+  },
+  editorCursorChar: {
+    type: "integer",
+    default: 0
+  },
   evalFrameMessageQueue: {
     type: "array",
     items: { type: "object" },
