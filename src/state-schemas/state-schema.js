@@ -110,6 +110,12 @@ export const stateProperties = {
     type: "integer",
     default: 0
   },
+  editorCursorForceUpdate: {
+    // if this is true when the editor recieves it as props,
+    // then the editor must reposition the cursor using internal editor APIs
+    type: "boolean",
+    default: false
+  },
   evalFrameMessageQueue: {
     type: "array",
     items: { type: "object" },
