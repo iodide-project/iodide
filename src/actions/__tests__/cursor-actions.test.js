@@ -41,11 +41,16 @@ describe("updateEditorCursor - returns correct action", () => {
   });
 });
 
-describe("moveCursorToNextChunk dispatches correct actions", () => {
-  window.ACTIVE_CODEMIRROR = {
-    getDoc: () => ({ somethingSelected: () => false })
-  };
+// /*  eslint-disable no-unused-vars */
+// const window = {
+//   /*  eslint-enable no-unused-vars */
+//   getDoc: () => ({ somethingSelected: () => false })
+// };
+window.ACTIVE_CODEMIRROR = {
+  getDoc: () => ({ somethingSelected: () => false })
+};
 
+describe("moveCursorToNextChunk dispatches correct actions", () => {
   it("no selection, and one chunk", () => {
     const [editorCursorLine, editorCursorChar] = [1, 2];
 
@@ -64,32 +69,10 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       }
     ];
 
-    store.dispatch(moveCursorToNextChunk());
-    expect(store.getActions()).toEqual(expectedActions);
-  });
-
-  it("no selection, multiple chunks", () => {
-    const [editorCursorLine, editorCursorChar] = [12, 25];
-
-    const store = mockStore({
-      editorCursorLine,
-      editorCursorChar,
-      jsmdChunks: [
-        { startLine: 0, endLine: 10 },
-        { startLine: 11, endLine: 15 },
-        { startLine: 16, endLine: 20 }
-      ]
-    });
-
-    const expectedActions = [
-      {
-        type: "UPDATE_CURSOR",
-        editorCursorLine: 16,
-        editorCursorChar: 0,
-        editorCursorForceUpdate: true
-      }
-    ];
-
+    // return store.dispatch(moveCursorToNextChunk()).then(() => {
+    //   // return of async actions
+    //   expect(store.getActions()).toEqual(expectedActions);
+    // });
     store.dispatch(moveCursorToNextChunk());
     expect(store.getActions()).toEqual(expectedActions);
   });
