@@ -4,46 +4,62 @@ import {
   scheduleServerAutoSave
 } from "./server-autosave";
 import { connectionModeIsServer } from "./server-tools";
+import { store } from "../store";
 
 let autoSaveTimeout;
 
-export function subscribeToAutoSave(store) {
-  initializeServerAutoSave(store);
+export async function updateAutoSave(state) {
+  autoSaveTimeout = undefined;
 
-  store.subscribe(() => {
-    // use a subscribe event so we don't pay the penalty of checking
-    // for jsmd changes unless user is actively interacting with the ui
-    // also, throttle save events to one per second
+  // waiting for notebook consistency check to finish, try again later
+  if (state.checkingNotebookConsistency) {
+    autoSaveTimeout = setTimeout(async () => {
+      updateAutoSave(store.getState());
+    }, 1000);
+    return;
+  }
+
+  // notebook revision on display is not latest, don't autosave
+  if (state.notebookInfo && state.notebookInfo.revision_is_latest === false) {
+    return;
+  }
+
+  // if we have a previous autosave, don't overwrite it. also, don't
+  // autosave the "new" document, as anything beyond an initial sketch
+  // is usually saved at least once
+  if (
+    state.hasPreviousAutoSave ||
+    (connectionModeIsServer(state) && !state.notebookInfo.notebook_id)
+  ) {
+    return;
+  }
+
+  const autosaveState = await getLocalAutosaveState(state);
+
+  // original document got lost somehow (or never existed), completely
+  // overwrite the key
+  const newCopy = !autosaveState || !autosaveState.originalCopy;
+
+  if (newCopy || state.jsmd !== autosaveState.dirtyCopy) {
+    // dirty copy has been updated, save it and queue
+    // an update to the server
+    updateLocalAutosave(state, newCopy);
+    scheduleServerAutoSave();
+  }
+}
+
+export function subscribeToAutoSave() {
+  initializeServerAutoSave();
+
+  function scheduleUpdateAutoSave() {
+    // Update autosave on a timeout so repeated keystrokes over
+    // the course of a second don't trigger repeated saves
     if (!autoSaveTimeout) {
       autoSaveTimeout = setTimeout(async () => {
-        autoSaveTimeout = undefined;
-
-        const state = store.getState();
-
-        // if we have a previous autosave, don't overwrite it. also, don't
-        // autosave the "new" document, as anything beyond an initial sketch
-        // is usually saved at least once
-        if (
-          state.hasPreviousAutoSave ||
-          (connectionModeIsServer(state) && !state.notebookInfo.notebook_id)
-        ) {
-          return;
-        }
-
-        const autosaveState = await getLocalAutosaveState(state);
-
-        if (!autosaveState || !autosaveState.originalCopy) {
-          // original document got lost somehow, save over it
-          updateLocalAutosave(state, true);
-          return;
-        }
-
-        if (store.getState().jsmd !== autosaveState.dirtyCopy) {
-          // dirty copy has been updated, save it
-          updateLocalAutosave(state, false);
-          scheduleServerAutoSave(store);
-        }
+        updateAutoSave(store.getState());
       }, 1000);
     }
-  });
+  }
+
+  store.subscribe(scheduleUpdateAutoSave);
 }

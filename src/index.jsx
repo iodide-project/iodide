@@ -37,6 +37,7 @@ import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 import "./tools/initialize-codemirror-loadmode";
 import "./tools/initialize-dom";
 import evalQueue from "./actions/evaluation-queue";
+import { checkNotebookConsistency } from "./actions/actions";
 import CSSCascadeProvider from "./shared/css-cascade-provider";
 import { subscribeToAutoSave } from "./tools/autosave";
 import { checkForLocalAutoSave } from "./tools/local-autosave";
@@ -59,6 +60,16 @@ checkForLocalAutoSave(store);
 subscribeToAutoSave(store);
 
 messagePasserEditor.connectDispatch(store.dispatch);
+document.addEventListener(
+  "visibilitychange",
+  () => {
+    console.log(`Visibility change! ${document.hidden}`);
+    if (!document.hidden) {
+      store.dispatch(checkNotebookConsistency());
+    }
+  },
+  false
+);
 
 render(
   <Provider store={store}>

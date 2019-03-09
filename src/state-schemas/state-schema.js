@@ -274,12 +274,18 @@ export const stateProperties = {
       }
     }
   },
+  checkingRevisionIsLatest: {
+    type: "boolean",
+    default: false
+  },
   notebookInfo: {
     type: "object",
     properties: {
+      files: { type: "array", items: fileSchema },
       user_can_save: { type: "boolean" },
       notebook_id: { type: "integer" },
-      files: { type: "array", items: fileSchema },
+      revision_id: { type: "integer" },
+      revision_is_latest: { type: "boolean" },
       connectionStatus: {
         type: "string",
         enum: ["CONNECTION_ACTIVE", "CONNECTION_LOST"]
@@ -292,6 +298,8 @@ export const stateProperties = {
     },
     default: {
       notebook_id: undefined,
+      revision_id: undefined,
+      revision_is_latest: true,
       user_can_save: false,
       connectionMode: "STANDALONE",
       connectionStatus: "CONNECTION_ACTIVE",

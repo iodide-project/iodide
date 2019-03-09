@@ -31,8 +31,11 @@ def notebook_view(request, pk):
     notebook = get_object_or_404(Notebook, pk=pk)
     if "revision" in request.GET:
         revision = get_object_or_404(NotebookRevision, pk=int(request.GET["revision"]))
+        latest_revision_id = notebook.revisions.values_list("id", flat=True).first()
     else:
         revision = notebook.revisions.first()
+        latest_revision_id = revision.id
+
     files = [
         {"filename": file.filename, "id": file.id, "lastUpdated": file.last_updated.isoformat()}
         for file in File.objects.filter(notebook_id=pk).order_by("-last_updated")
@@ -42,6 +45,7 @@ def notebook_view(request, pk):
         "user_can_save": notebook.owner_id == request.user.id,
         "notebook_id": notebook.id,
         "revision_id": revision.id,
+        "revision_is_latest": revision.id == latest_revision_id,
         "connectionMode": "SERVER",
         "title": revision.title,
         "files": files,

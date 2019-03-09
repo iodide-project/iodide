@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from helpers import get_script_block, get_title_block
+from helpers import get_script_block_json, get_title_block
 from server.base.models import User
 from server.notebooks.models import Notebook, NotebookRevision
 
@@ -22,7 +22,7 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
 
     # assert that the pageData element has the expected structure
     assert get_title_block(resp.content) == "Iodide"
-    assert get_script_block(resp.content, "pageData") == {
+    assert get_script_block_json(resp.content, "pageData") == {
         "notebookList": [
             {
                 "avatar": fake_user.avatar,
@@ -84,7 +84,7 @@ def test_user_view_with_different_names(transactional_db, client, username, firs
     else:
         assert get_title_block(resp.content) == f"{test_user.username}"
 
-    assert get_script_block(resp.content, "pageData") == {
+    assert get_script_block_json(resp.content, "pageData") == {
         "notebookList": [
             {
                 "id": notebook.id,
@@ -101,7 +101,7 @@ def test_user_view_github(settings, transactional_db, client, fake_user):
     settings.SOCIAL_AUTH_GITHUB_KEY = "yabbadabbadoo"
     resp = client.get(reverse("user", kwargs={"name": fake_user.username}))
     assert resp.status_code == 200
-    assert get_script_block(resp.content, "pageData") == {
+    assert get_script_block_json(resp.content, "pageData") == {
         "notebookList": [],
         "thisUser": {
             "avatar": None,

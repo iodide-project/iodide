@@ -8,6 +8,7 @@ import {
 
 import {
   getNotebookID,
+  getRevisionID,
   getUserDataFromDocument,
   notebookIsATrial
 } from "../tools/server-tools";
@@ -315,7 +316,7 @@ export function saveNotebookToServer(appMsg = true) {
         dispatch,
         appMsg
       )
-        .then(() => {
+        .then(newRevision => {
           const message = "Updated Notebook";
           updateLocalAutosave(state, true);
           if (appMsg) {
@@ -326,13 +327,47 @@ export function saveNotebookToServer(appMsg = true) {
               })
             );
           }
-          dispatch({ type: "NOTEBOOK_SAVED" });
+          dispatch({ type: "NOTEBOOK_SAVED", newRevisionId: newRevision.id });
         })
         .catch(err => {
           throw Error(err);
         });
     }
     return createNewNotebookOnServer()(dispatch, getState);
+  };
+}
+
+export function checkNotebookConsistency() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const notebookId = getNotebookID(state);
+    if (!notebookId) {
+      // no notebook id assigned yet, so not possible to be
+      // out of date
+      return;
+    }
+    dispatch({ type: "CHECKING_NOTEBOOK_REVISION_IS_LATEST", state: true });
+    fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${notebookId}/`)
+      .then(response => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json();
+      })
+      .then(notebookData => {
+        dispatch({
+          type: "CHECKING_NOTEBOOK_REVISION_IS_LATEST",
+          state: false
+        });
+        console.log([notebookData.latest_revision.id, getRevisionID(state)]);
+        dispatch({
+          type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
+          state: notebookData.latest_revision.id === getRevisionID(state)
+        });
+      });
+    // currently not doing any error handling here-- if there
+    // are problems here, chances are the user is working offline
+    // which is, effectively, "at their own risk"
   };
 }
 

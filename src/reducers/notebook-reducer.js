@@ -199,8 +199,24 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, {
         lastSaved: new Date().toISOString(),
         notebookInfo: Object.assign({}, state.notebookInfo, {
-          user_can_save: true
+          user_can_save: true,
+          revision_id: action.newRevisionId
         })
+      });
+    }
+
+    case "CHECKING_NOTEBOOK_REVISION_IS_LATEST": {
+      const { state: checkingRevisionIsLatest } = action;
+      return Object.assign({}, state, { checkingRevisionIsLatest });
+    }
+
+    case "UPDATE_NOTEBOOK_REVISION_IS_LATEST": {
+      const { state: revisionIsLatest } = action;
+      return Object.assign({}, state, {
+        notebookInfo: {
+          ...(state.notebookInfo || {}),
+          revision_is_latest: revisionIsLatest
+        }
       });
     }
 
