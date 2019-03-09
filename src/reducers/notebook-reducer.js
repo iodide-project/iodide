@@ -105,8 +105,16 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case "UPDATE_CURSOR": {
-      const { editorCursorLine, editorCursorChar } = action;
-      return Object.assign({}, state, { editorCursorLine, editorCursorChar });
+      const {
+        editorCursorLine,
+        editorCursorChar,
+        editorCursorForceUpdate
+      } = action;
+      return Object.assign({}, state, {
+        editorCursorLine,
+        editorCursorChar,
+        editorCursorForceUpdate
+      });
     }
 
     case "UPDATE_JSMD_CONTENT": {

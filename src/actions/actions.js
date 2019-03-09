@@ -188,8 +188,17 @@ export function addLanguage(languageDefinition) {
   };
 }
 
-export function updateEditorCursor(editorCursorLine, editorCursorChar) {
-  return { type: "UPDATE_CURSOR", editorCursorLine, editorCursorChar };
+export function updateEditorCursor(
+  editorCursorLine,
+  editorCursorChar,
+  editorCursorForceUpdate = false
+) {
+  return {
+    type: "UPDATE_CURSOR",
+    editorCursorLine,
+    editorCursorChar,
+    editorCursorForceUpdate
+  };
 }
 
 export function evaluateText() {
@@ -235,7 +244,7 @@ export function moveCursorToNextChunk() {
       getState().jsmdChunks,
       targetLine
     );
-    dispatch(updateEditorCursor(targetChunk.endLine + 1, 0));
+    dispatch(updateEditorCursor(targetChunk.endLine + 1, 0, true));
   };
 }
 
