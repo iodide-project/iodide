@@ -7,7 +7,7 @@
    <br />
   The Iodide notebook</h1>
 
-_[Try it in your browser right now](https://extremely-alpha.iodide.io/)!_
+_[Try it in your browser right now](https://alpha.iodide.io/)!_
 ### Please note: Iodide is in early alpha, and still subject to breakage, changes, and overhauls
 
 ### _View source_ for science
@@ -27,7 +27,7 @@ And thanks to WebAssembly, working in the browser doesn't mean that you're restr
 
 Our focus is on delivering frictionless, human-centered tools to scientists. You can read more about our core principles below. If this vision resonates with you, please consider contributing to the project!
 
-Visit https://extremely-alpha.iodide.io/ to see example and demo notebooks, and to learn more!
+Visit https://alpha.iodide.io/ to see example and demo notebooks, and to learn more!
 
 For information on developing and contributing to iodide, please see our [documentation](https://docs.iodide.io/).
 
