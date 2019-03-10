@@ -21,6 +21,7 @@ import "./codemirror-jsmd-mode";
 
 import * as actions from "../actions/actions";
 import { postMessageToEvalFrame } from "../port-to-eval-frame";
+import { getAllSelections } from "./codemirror-utils";
 
 // unmap keys that conflict with our keys
 // mac
@@ -37,7 +38,10 @@ class JsmdEditorUnconnected extends React.Component {
       updateJsmdContent: PropTypes.func.isRequired
     }).isRequired,
     containerStyle: PropTypes.object,
-    editorOptions: PropTypes.object
+    editorOptions: PropTypes.object,
+    editorCursorLine: PropTypes.number.isRequired,
+    editorCursorChar: PropTypes.number.isRequired,
+    editorCursorForceUpdate: PropTypes.bool.isRequired
   };
 
   constructor(props) {
@@ -63,7 +67,6 @@ class JsmdEditorUnconnected extends React.Component {
 
   storeEditorInstance(editor) {
     this.editor = editor;
-    window.ACTIVE_CODEMIRROR = editor;
   }
 
   updateJsmdContent(editor, data, content) {
@@ -73,6 +76,10 @@ class JsmdEditorUnconnected extends React.Component {
   updateCursor(editor) {
     const { line, ch } = editor.getCursor();
     this.props.actions.updateEditorCursor(line, ch);
+    const selections = editor.somethingSelected()
+      ? getAllSelections(editor.getDoc())
+      : [];
+    this.props.actions.updateEditorSelections(selections);
   }
 
   autoComplete = cm => {

@@ -7,26 +7,6 @@ export function getChunkContainingLine(jsmdChunks, line) {
   return activeChunk;
 }
 
-export function getAllSelections(doc) {
-  const selections = doc.getSelections();
-  const selectionLines = doc.listSelections();
-  const selectionSet = selections.map((sel, i) => {
-    // head & anchor depends on how you drag, so we have to sort by line+ch.
-    const startEnd = [selectionLines[i].anchor, selectionLines[i].head];
-    startEnd.sort((a, b) => {
-      if (a.line > b.line) return 1;
-      else if (a.line < b.line) return 0;
-      return a.ch > b.ch;
-    });
-    return {
-      start: startEnd[0].line,
-      end: startEnd[1].line,
-      selectedText: sel
-    };
-  });
-  return selectionSet;
-}
-
 export function padOutFetchChunk(
   selectedChunkContent,
   fullChunkContent,
@@ -40,8 +20,9 @@ export function padOutFetchChunk(
 }
 
 export function selectionToChunks(originalSelection, jsmdChunks) {
-  const { start, end } = originalSelection;
-  const { selectedText } = originalSelection;
+  // `start` and `end` are line numbers *only*,
+  //  not full cursor positions { line, col }
+  const { start, end, selectedText } = originalSelection;
   const startingChunk = getChunkContainingLine(jsmdChunks, start);
   const endingChunk = getChunkContainingLine(jsmdChunks, end);
 

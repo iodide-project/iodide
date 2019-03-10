@@ -82,6 +82,15 @@ const positionerDefaults = {
   height: 0
 };
 
+const cursorPositionSchema = {
+  type: "object",
+  properties: {
+    line: { type: "number", default: 0 },
+    col: { type: "number", default: 0 }
+  },
+  additionalProperties: false
+};
+
 export const stateProperties = {
   appMessages: {
     type: "array",
@@ -115,6 +124,20 @@ export const stateProperties = {
     // then the editor must reposition the cursor using internal editor APIs
     type: "boolean",
     default: false
+  },
+  editorSelections: {
+    type: "array",
+    items: {
+      type: "object",
+      properties: {
+        start: cursorPositionSchema,
+        end: cursorPositionSchema,
+        selectedText: { type: "string" }
+      },
+      additionalProperties: false,
+      default: {}
+    },
+    default: []
   },
   evalFrameMessageQueue: {
     type: "array",
