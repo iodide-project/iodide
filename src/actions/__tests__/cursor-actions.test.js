@@ -42,17 +42,14 @@ describe("updateEditorCursor - returns correct action", () => {
 });
 
 describe("moveCursorToNextChunk dispatches correct actions", () => {
-  window.ACTIVE_CODEMIRROR = {
-    getDoc: () => ({ somethingSelected: () => false })
-  };
-
   it("no selection, and one chunk", () => {
     const [editorCursorLine, editorCursorChar] = [1, 2];
 
     const store = mockStore({
       editorCursorLine,
       editorCursorChar,
-      jsmdChunks: [{ startLine: 0, endLine: 10 }]
+      jsmdChunks: [{ startLine: 0, endLine: 10 }],
+      editorSelections: []
     });
 
     const expectedActions = [
@@ -78,7 +75,8 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
         { startLine: 0, endLine: 10 },
         { startLine: 11, endLine: 15 },
         { startLine: 16, endLine: 20 }
-      ]
+      ],
+      editorSelections: []
     });
 
     const expectedActions = [

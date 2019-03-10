@@ -22,7 +22,6 @@ import { fetchWithCSRFTokenAndJSONContent } from "./../shared/fetch-with-csrf-to
 
 import { jsmdParser } from "./jsmd-parser";
 import {
-  getAllSelections,
   getChunkContainingLine,
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet
@@ -201,21 +200,31 @@ export function updateEditorCursor(
   };
 }
 
+export function updateEditorSelections(selections) {
+  return {
+    type: "UPDATE_SELECTIONS",
+    selections
+  };
+}
+
 export function evaluateText() {
   return (dispatch, getState) => {
     const { jsmdChunks, kernelState } = getState();
     if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
-    const cm = window.ACTIVE_CODEMIRROR;
-    const doc = cm.getDoc();
-    if (!doc.somethingSelected()) {
+    if (getState().editorSelections.length === 0) {
       const activeChunk = getChunkContainingLine(
         jsmdChunks,
         getState().editorCursorLine
       );
       evalQueue.evaluate(activeChunk, dispatch);
     } else {
-      const selectionChunkSet = getAllSelections(doc)
-        .map(selection => selectionToChunks(selection, jsmdChunks, doc))
+      const selectionChunkSet = getState()
+        .editorSelections.map(selection => ({
+          start: selection.start.line,
+          end: selection.end.line,
+          selectedText: selection.selectedText
+        }))
+        .map(selection => selectionToChunks(selection, jsmdChunks))
         .map(removeDuplicatePluginChunksInSelectionSet());
       selectionChunkSet.forEach(selection => {
         selection.forEach(chunk => evalQueue.evaluate(chunk, dispatch));
@@ -226,24 +235,13 @@ export function evaluateText() {
 
 export function moveCursorToNextChunk() {
   return (dispatch, getState) => {
-    const cm = window.ACTIVE_CODEMIRROR;
-    const doc = cm.getDoc();
-    let targetLine;
+    const { editorSelections: selections, jsmdChunks } = getState();
+    const targetLine =
+      selections.length === 0
+        ? getState().editorCursorLine
+        : selections[selections.length - 1].end.line;
 
-    if (!doc.somethingSelected()) {
-      targetLine = getState().editorCursorLine;
-    } else {
-      const selections = doc.listSelections();
-      const lastSelection = selections[selections.length - 1];
-      targetLine = Math.max(
-        lastSelection.anchor.line,
-        lastSelection.anchor.line
-      );
-    }
-    const targetChunk = getChunkContainingLine(
-      getState().jsmdChunks,
-      targetLine
-    );
+    const targetChunk = getChunkContainingLine(jsmdChunks, targetLine);
     dispatch(updateEditorCursor(targetChunk.endLine + 1, 0, true));
   };
 }
