@@ -4,7 +4,7 @@ These functions, available within any code cell, aim to improve workflows and
 challenges presented by JavaScript and web browsers.
 
 Please direct clarifications or observations of inaccuracy to [our issue
-tracker](https://github.com/iodide-project/docs/issues/new).
+tracker](https://github.com/iodide-project/iodide/issues/new).
 
 ## `iodide.addOutputRenderer(rendererSpecification)`
 
