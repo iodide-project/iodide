@@ -23,7 +23,7 @@ To work around CORS errors, you need to upload your data to a server that does n
 
 _Note (2019-03-11): we are aware that this workflow is currently quite awkward. It is under active development and will be substantially improved within the next few weeks._
 
-_Note (2019-03-11): during our alpha periosd, file larger than 10MB cannot be uploaded._
+_Note (2019-03-11): during our alpha period, files larger than 10MB cannot be uploaded._
 
 If you want to work with data stored on your local machine, or if you are encountering CORS problems while attempting to use a dataset from a remote serve, you may upload data directly to Iodide.
 
