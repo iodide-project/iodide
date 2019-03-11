@@ -27,7 +27,7 @@ _Note (2019-03-11): during our alpha period, files larger than 10MB cannot be up
 
 If you want to work with data stored on your local machine, or if you are encountering CORS problems while attempting to use a dataset from a remote serve, you may upload data directly to Iodide.
 
-Data is uploaded on a per-notebook basis -- rather than uploading data to your user account, you upload it to a specific notebook. To do so, go to the "revisions" page of you notebook, which is available at `iodide.io/{path to your notebook}/revisions`. On this page, click the gear icon and select "Upload a File". Once you've uploaded the file, it will be listed under the "Files" heading on this page.
+Data is uploaded on a per-notebook basis -- rather than uploading data to your user account, you upload it to a specific notebook. To do so, go to the "revisions" page of your notebook, which is available at `iodide.io/{path to your notebook}/revisions`. On this page, click the gear icon and select "Upload a File". Once you've uploaded the file, it will be listed under the "Files" heading on this page.
 
 To access this file from your notebook, you would use a fetch cell with the syntax --
 ```
