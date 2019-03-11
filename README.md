@@ -19,7 +19,7 @@ If only there was a technology that was great for presenting documents and visua
 
 Luckily, that technology already exists: _the web browser_.
 
-![lorenz-scaled](https://user-images.githubusercontent.com/95735/54164882-a421e000-441b-11e9-8d8e-204517a0dad5.gif)
+![lorenz-scaled-loop](https://user-images.githubusercontent.com/95735/54165090-77ba9380-441c-11e9-88b2-2846bcce338c.gif)
 
 Iodide is a modern, literate, and interactive programming environment that uses the strengths of the browser to let scientists work flexibly and collaboratively with minimal friction. With Iodide you can tell the story of your findings exactly how you want, leveraging the power of HTML+CSS to display your results in whatever way communicates them most effectively -- but still keeping the live, editable code only _one click away_. Because Iodide runs in the browser you already have, you can extend and modify the code without having to install any software, enabling you to collaborate frictionlessly.
 
