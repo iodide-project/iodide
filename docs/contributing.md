@@ -30,7 +30,7 @@ If you’d like to fix a currently-filed issue, please take a look at the commen
 
 ### Tips for writing and testing React+Redux components
 
-- Put as much logic as possible in your component's mapStateToProps; ideally, we want purely declarative components with ZERO logic.
+- Put as much logic as possible in your component's mapStateToProps; ideally, we want purely declarative components with _zero logic_.
     - You only need to test the non-declarative logic within your component -- the declarative stuff actually serves as the _spec_ for the layout you are creating, and it doesn't need to be tested.
 - Pass in all action creators via mapDispatchToProps.
     - This makes it easy to test action creators by passing in jest mock functions as props.
