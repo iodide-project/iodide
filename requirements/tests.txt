@@ -42,9 +42,9 @@ pytest-django==3.4.7 \
     --hash=sha256:87c31e53ad09ca4f061b82a9d71ad1e3e399c7a5ec9d28f7c3c38a9a9afbd027
 pytest-env==0.6.2 \
     --hash=sha256:7e94956aef7f2764f3c147d216ce066bf6c42948bb9e293169b1b1c880a580c2
-pytest==4.3.0 \
-    --hash=sha256:067a1d4bf827ffdd56ad21bd46674703fce77c5957f6c1eef731f6146bfcef1c \
-    --hash=sha256:9687049d53695ad45cf5fdc7bbd51f0c49f1ea3ecfc4b7f3fde7501b541f17f4
+pytest==4.3.1 \
+    --hash=sha256:ad3ad5c450284819ecde191a654c09b0ec72257a2c711b9633d677c71c9850c4 \
+    --hash=sha256:592eaa2c33fae68c7d75aacf042efc9f77b27c08a6224a4f59beab8d9a420523
 black==18.9b0 \
     --hash=sha256:817243426042db1d36617910df579a54f1afd659adb96fc5032fcf4b36209739 \
     --hash=sha256:e030a9a28f542debc08acceb273f228ac422798e5215ba2a791a6ddeaaca22a5
