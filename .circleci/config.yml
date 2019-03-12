@@ -125,7 +125,10 @@ jobs:
 
   deploy:
     docker:
-      - image: docker:18.09.0-ce-tp6
+      - image: circleci/node:8
+    working_directory: ~/iodide
+    environment:
+      npm_config_cache: ~/cache/npm
     steps:
       - checkout
       - run: rm -rf node_modules/*/.git
