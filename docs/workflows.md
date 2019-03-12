@@ -36,23 +36,22 @@ TYPE: VAR_NAME = files/FILE_NAME
 ```
 -- where `TYPE` is the type of the file ("text", "json", or "blob"), `VARNAME` is the variable into which you want to load the data, and `FILE_NAME` is the name of the file you uploaded.
 
-This notebook shows how to load and use an image blob: https://alpha.iodide.io/notebooks/127/
+This notebook [shows how to load and use an image blob](https://alpha.iodide.io/notebooks/127/)
 
 ## Manipulating the DOM (for e.g adding plots)
 
-Some plotting libraries (like d3, or Plotly) require a DOM element to be available before you can plot. The easiest way to do this is to add a `<div>` into a Markdown cell and then select:
+Some plotting libraries (like d3, or Plotly) require a DOM element to be available before you can plot. The easiest way to do this is to add a `<div>` into a Markdown cell and then select the element using browser APIs or functions from your preferred library:
 
 ```plain
-
 %% md
-
 <div id=’plot-target’></div>
 
 %% js
-
-d3.select(‘#plot-target’) ...
-
+elt1 = document.getElementById("plot-target") // browser API, one option...
+elt2 = document.querySelector("#plot-target") // browser API, another option
+$("#plot-target") ... // jQuery
+d3.select("#plot-target") ... // d3
 ```
 
-You can always manipulate the DOM in Markdown cells as if your notebook were a static web page. Anything defined in a Markdown cell is fair game for DOM manipulation, and almost all of the WebAPI is available.
+You can always manipulate the DOM in Markdown cells as if your notebook were a static web page. Anything defined in a Markdown cell is fair game for DOM manipulation using the browser's [document API methods](https://developer.mozilla.org/en-US/docs/Web/API/Document).
 
