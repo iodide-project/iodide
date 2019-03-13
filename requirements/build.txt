@@ -69,9 +69,9 @@ oauthlib==3.0.1 \
 orderedmultidict==1.0 \
     --hash=sha256:24e3b730cf84e4a6a68be5cc760864905cf66abc89851e724bd5b4e849eaa96b \
     --hash=sha256:b89895ba6438038d0bdf88020ceff876cf3eae0d5c66a69b526fab31125db2c5
-pbr==5.1.2 \
-    --hash=sha256:a7953f66e1f82e4b061f43096a4bcc058f7d3d41de9b94ac871770e8bdd831a2 \
-    --hash=sha256:d717573351cfe09f49df61906cd272abaa759b3e91744396b804965ff7bff38b
+pbr==5.1.3 \
+    --hash=sha256:8257baf496c8522437e8a6cfe0f15e00aedc6c0e0e7c9d55eeeeab31e0853843 \
+    --hash=sha256:8c361cc353d988e4f5b998555c88098b9d5964c2e11acf7b0d21925a66bb5824
 psycopg2-binary==2.7.7 \
     --hash=sha256:19a2d1f3567b30f6c2bb3baea23f74f69d51f0c06c2e2082d0d9c28b0733a4c2 \
     --hash=sha256:2b69cf4b0fa2716fd977aa4e1fd39af6110eb47b2bb30b4e5a469d8fbecfc102 \
