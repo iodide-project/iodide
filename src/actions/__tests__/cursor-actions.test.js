@@ -7,47 +7,37 @@ const mockStore = configureMockStore(middlewares);
 
 describe("updateEditorCursor - returns correct action", () => {
   it("should create an action to update the cursor (NO force param)", () => {
-    const [editorCursorLine, editorCursorChar] = [1, 2];
+    const [line, col] = [1, 2];
     const expectedAction = {
       type: "UPDATE_CURSOR",
-      editorCursorLine,
-      editorCursorChar,
-      editorCursorForceUpdate: false
+      line,
+      col,
+      forceUpdate: false
     };
-    expect(updateEditorCursor(editorCursorLine, editorCursorChar)).toEqual(
-      expectedAction
-    );
+    expect(updateEditorCursor(line, col)).toEqual(expectedAction);
   });
 
   it("should create an action to update the cursor (with force param)", () => {
-    const [editorCursorLine, editorCursorChar, editorCursorForceUpdate] = [
-      1,
-      2,
-      true
-    ];
+    const [line, col, forceUpdate] = [1, 2, true];
     const expectedAction = {
       type: "UPDATE_CURSOR",
-      editorCursorLine,
-      editorCursorChar,
-      editorCursorForceUpdate
+      line,
+      col,
+      forceUpdate
     };
-    expect(
-      updateEditorCursor(
-        editorCursorLine,
-        editorCursorChar,
-        editorCursorForceUpdate
-      )
-    ).toEqual(expectedAction);
+    expect(updateEditorCursor(line, col, forceUpdate)).toEqual(expectedAction);
   });
 });
 
 describe("moveCursorToNextChunk dispatches correct actions", () => {
   it("no selection, and one chunk", () => {
-    const [editorCursorLine, editorCursorChar] = [1, 2];
+    const [line, col] = [1, 2];
 
     const store = mockStore({
-      editorCursorLine,
-      editorCursorChar,
+      editorCursor: {
+        line,
+        col
+      },
       jsmdChunks: [{ startLine: 0, endLine: 10 }],
       editorSelections: []
     });
@@ -55,9 +45,9 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
     const expectedActions = [
       {
         type: "UPDATE_CURSOR",
-        editorCursorLine: 11,
-        editorCursorChar: 0,
-        editorCursorForceUpdate: true
+        line: 11,
+        col: 0,
+        forceUpdate: true
       }
     ];
 
@@ -66,11 +56,13 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
   });
 
   it("no selection, multiple chunks", () => {
-    const [editorCursorLine, editorCursorChar] = [12, 25];
+    const [line, col] = [12, 25];
 
     const store = mockStore({
-      editorCursorLine,
-      editorCursorChar,
+      editorCursor: {
+        line,
+        col
+      },
       jsmdChunks: [
         { startLine: 0, endLine: 10 },
         { startLine: 11, endLine: 15 },
@@ -82,9 +74,9 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
     const expectedActions = [
       {
         type: "UPDATE_CURSOR",
-        editorCursorLine: 16,
-        editorCursorChar: 0,
-        editorCursorForceUpdate: true
+        line: 16,
+        col: 0,
+        forceUpdate: true
       }
     ];
 
@@ -93,11 +85,13 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
   });
 
   it("one selection, and one chunk", () => {
-    const [editorCursorLine, editorCursorChar] = [1, 2];
+    const [line, col] = [1, 2];
 
     const store = mockStore({
-      editorCursorLine,
-      editorCursorChar,
+      editorCursor: {
+        line,
+        col
+      },
       jsmdChunks: [{ startLine: 0, endLine: 10 }],
       editorSelections: [
         { start: { line: 3, col: 2 }, end: { line: 5, col: 2 } }
@@ -107,9 +101,9 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
     const expectedActions = [
       {
         type: "UPDATE_CURSOR",
-        editorCursorLine: 11,
-        editorCursorChar: 0,
-        editorCursorForceUpdate: true
+        line: 11,
+        col: 0,
+        forceUpdate: true
       }
     ];
 
@@ -118,11 +112,13 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
   });
 
   it("one selection across multiple chunks", () => {
-    const [editorCursorLine, editorCursorChar] = [12, 25];
+    const [line, col] = [12, 25];
 
     const store = mockStore({
-      editorCursorLine,
-      editorCursorChar,
+      editorCursor: {
+        line,
+        col
+      },
       jsmdChunks: [
         { startLine: 0, endLine: 10 },
         { startLine: 11, endLine: 15 },
@@ -137,9 +133,9 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
     const expectedActions = [
       {
         type: "UPDATE_CURSOR",
-        editorCursorLine: 21,
-        editorCursorChar: 0,
-        editorCursorForceUpdate: true
+        line: 21,
+        col: 0,
+        forceUpdate: true
       }
     ];
 
@@ -148,11 +144,13 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
   });
 
   it("multiple selections in multiple chunks", () => {
-    const [editorCursorLine, editorCursorChar] = [12, 25];
+    const [line, col] = [12, 25];
 
     const store = mockStore({
-      editorCursorLine,
-      editorCursorChar,
+      editorCursor: {
+        line,
+        col
+      },
       jsmdChunks: [
         { startLine: 0, endLine: 10 },
         { startLine: 11, endLine: 15 },
@@ -168,9 +166,9 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
     const expectedActions = [
       {
         type: "UPDATE_CURSOR",
-        editorCursorLine: 21,
-        editorCursorChar: 0,
-        editorCursorForceUpdate: true
+        line: 21,
+        col: 0,
+        forceUpdate: true
       }
     ];
 

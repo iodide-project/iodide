@@ -187,17 +187,8 @@ export function addLanguage(languageDefinition) {
   };
 }
 
-export function updateEditorCursor(
-  editorCursorLine,
-  editorCursorChar,
-  editorCursorForceUpdate = false
-) {
-  return {
-    type: "UPDATE_CURSOR",
-    editorCursorLine,
-    editorCursorChar,
-    editorCursorForceUpdate
-  };
+export function updateEditorCursor(line, col, forceUpdate = false) {
+  return { type: "UPDATE_CURSOR", line, col, forceUpdate };
 }
 
 export function updateEditorSelections(selections) {
@@ -209,17 +200,21 @@ export function updateEditorSelections(selections) {
 
 export function evaluateText() {
   return (dispatch, getState) => {
-    const { jsmdChunks, kernelState } = getState();
+    const {
+      jsmdChunks,
+      kernelState,
+      editorSelections,
+      editorCursor
+    } = getState();
+
     if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
-    if (getState().editorSelections.length === 0) {
-      const activeChunk = getChunkContainingLine(
-        jsmdChunks,
-        getState().editorCursorLine
-      );
+
+    if (editorSelections.length === 0) {
+      const activeChunk = getChunkContainingLine(jsmdChunks, editorCursor.line);
       evalQueue.evaluate(activeChunk, dispatch);
     } else {
-      const selectionChunkSet = getState()
-        .editorSelections.map(selection => ({
+      const selectionChunkSet = editorSelections
+        .map(selection => ({
           start: selection.start.line,
           end: selection.end.line,
           selectedText: selection.selectedText
@@ -235,10 +230,14 @@ export function evaluateText() {
 
 export function moveCursorToNextChunk() {
   return (dispatch, getState) => {
-    const { editorSelections: selections, jsmdChunks } = getState();
+    const {
+      editorSelections: selections,
+      jsmdChunks,
+      editorCursor
+    } = getState();
     const targetLine =
       selections.length === 0
-        ? getState().editorCursorLine
+        ? editorCursor.line
         : selections[selections.length - 1].end.line;
 
     const targetChunk = getChunkContainingLine(jsmdChunks, targetLine);

@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
 import deepEqual from "deep-equal";
 
@@ -19,7 +18,11 @@ import "codemirror/keymap/sublime";
 import "./codemirror-fetch-mode";
 import "./codemirror-jsmd-mode";
 
-import * as actions from "../actions/actions";
+import {
+  updateJsmdContent,
+  updateEditorCursor,
+  updateEditorSelections
+} from "../actions/actions";
 import { postMessageToEvalFrame } from "../port-to-eval-frame";
 import { getAllSelections } from "./codemirror-utils";
 
@@ -34,14 +37,15 @@ delete CodeMirror.keyMap.sublime["Shift-Ctrl-Enter"];
 class JsmdEditorUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
-    actions: PropTypes.shape({
-      updateJsmdContent: PropTypes.func.isRequired
-    }).isRequired,
     containerStyle: PropTypes.object,
     editorOptions: PropTypes.object,
     editorCursorLine: PropTypes.number.isRequired,
-    editorCursorChar: PropTypes.number.isRequired,
-    editorCursorForceUpdate: PropTypes.bool.isRequired
+    editorCursorCol: PropTypes.number.isRequired,
+    editorCursorForceUpdate: PropTypes.bool.isRequired,
+    // action creators
+    updateJsmdContent: PropTypes.func.isRequired,
+    updateEditorCursor: PropTypes.func.isRequired,
+    updateEditorSelections: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -60,7 +64,7 @@ class JsmdEditorUnconnected extends React.Component {
     if (this.props.editorCursorForceUpdate) {
       this.editor.setCursor(
         this.props.editorCursorLine,
-        this.props.editorCursorChar
+        this.props.editorCursorCol
       );
     }
   }
@@ -70,16 +74,16 @@ class JsmdEditorUnconnected extends React.Component {
   }
 
   updateJsmdContent(editor, data, content) {
-    this.props.actions.updateJsmdContent(content);
+    this.props.updateJsmdContent(content);
   }
 
   updateCursor(editor) {
     const { line, ch } = editor.getCursor();
-    this.props.actions.updateEditorCursor(line, ch);
+    this.props.updateEditorCursor(line, ch);
     const selections = editor.somethingSelected()
       ? getAllSelections(editor.getDoc())
       : [];
-    this.props.actions.updateEditorSelections(selections);
+    this.props.updateEditorSelections(selections);
   }
 
   autoComplete = cm => {
@@ -148,6 +152,7 @@ class JsmdEditorUnconnected extends React.Component {
   };
 
   render() {
+    // FIXME: restore autocomplete to working order
     // const editorOptions = Object.assign(
     //   {},
     //   this.props.editorOptions,
@@ -159,11 +164,11 @@ class JsmdEditorUnconnected extends React.Component {
     //   },
     // )
 
-    const { editorCursorLine, editorCursorChar } = this.props;
+    const { editorCursorLine, editorCursorCol } = this.props;
     return (
       <ReactCodeMirror
         editorDidMount={this.storeEditorInstance}
-        cursor={{ line: editorCursorLine, ch: editorCursorChar }}
+        cursor={{ line: editorCursorLine, ch: editorCursorCol }}
         value={this.props.content}
         options={this.props.editorOptions}
         onBeforeChange={this.updateJsmdContent}
@@ -191,19 +196,31 @@ function mapStateToProps(state) {
   if (state.wrapEditors === true) {
     editorOptions.lineWrapping = true;
   }
-  const { editorCursorLine, editorCursorChar, editorCursorForceUpdate } = state;
+  const {
+    line: editorCursorLine,
+    col: editorCursorCol,
+    forceUpdate: editorCursorForceUpdate
+  } = state.editorCursor;
   return {
     content: state.jsmd,
     editorOptions,
     editorCursorLine,
-    editorCursorChar,
+    editorCursorCol,
     editorCursorForceUpdate
   };
 }
 
-function mapDispatchToProps(dispatch) {
+// function mapDispatchToProps(dispatch) {
+//   return {
+//     actions: bindActionCreators(actions, dispatch)
+//   };
+// }
+export function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    updateJsmdContent: content => dispatch(updateJsmdContent(content)),
+    updateEditorCursor: (line, col) => dispatch(updateEditorCursor(line, col)),
+    updateEditorSelections: selections =>
+      dispatch(updateEditorSelections(selections))
   };
 }
 

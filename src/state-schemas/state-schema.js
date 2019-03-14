@@ -111,19 +111,26 @@ export const stateProperties = {
     type: "integer",
     default: 0
   },
-  editorCursorLine: {
-    type: "integer",
-    default: 0
-  },
-  editorCursorChar: {
-    type: "integer",
-    default: 0
-  },
-  editorCursorForceUpdate: {
-    // if this is true when the editor recieves it as props,
-    // then the editor must reposition the cursor using internal editor APIs
-    type: "boolean",
-    default: false
+  editorCursor: {
+    type: "object",
+    properties: {
+      line: {
+        type: "integer"
+        // default: 0
+      },
+      col: {
+        type: "integer"
+        // default: 0
+      },
+      forceUpdate: {
+        // if this is true when the editor recieves it as props,
+        // then the editor must reposition the cursor using internal editor APIs
+        type: "boolean"
+        // default: false
+      }
+    },
+    additionalProperties: false,
+    default: { line: 0, col: 0, forceUpdate: false }
   },
   editorSelections: {
     type: "array",
