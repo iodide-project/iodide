@@ -346,7 +346,10 @@ export function checkNotebookConsistency() {
       // out of date
       return;
     }
-    dispatch({ type: "CHECKING_NOTEBOOK_REVISION_IS_LATEST", state: true });
+    dispatch({
+      type: "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST",
+      checkingRevisionIsLatest: true
+    });
     fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${notebookId}/`)
       .then(response => {
         if (!response.ok) {
@@ -356,13 +359,13 @@ export function checkNotebookConsistency() {
       })
       .then(notebookData => {
         dispatch({
-          type: "CHECKING_NOTEBOOK_REVISION_IS_LATEST",
-          state: false
+          type: "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST",
+          checkingRevisionIsLatest: false
         });
-        console.log([notebookData.latest_revision.id, getRevisionID(state)]);
         dispatch({
           type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
-          state: notebookData.latest_revision.id === getRevisionID(state)
+          revisionIsLatest:
+            notebookData.latest_revision.id === getRevisionID(state)
         });
       });
     // currently not doing any error handling here-- if there

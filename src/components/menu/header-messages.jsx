@@ -52,6 +52,7 @@ export class HeaderMessagesUnconnected extends React.Component {
     discardAutosave: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
     makeCopy: PropTypes.func.isRequired,
+    notebookId: PropTypes.number,
     revisionId: PropTypes.number
   };
 
@@ -91,7 +92,7 @@ export class HeaderMessagesUnconnected extends React.Component {
       case "NOTEBOOK_REVISION_ID_OUT_OF_DATE":
         content = (
           <React.Fragment>
-            You are viewing an old version of this notebook, editing is
+            You are viewing an old version of this notebook. Editing is
             disabled. &nbsp;
             <a href={`/notebooks/${this.props.notebookId}/`}>
               Load latest version

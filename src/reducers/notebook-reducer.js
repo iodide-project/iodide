@@ -205,13 +205,13 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
-    case "CHECKING_NOTEBOOK_REVISION_IS_LATEST": {
-      const { state: checkingRevisionIsLatest } = action;
+    case "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST": {
+      const { checkingRevisionIsLatest } = action;
       return Object.assign({}, state, { checkingRevisionIsLatest });
     }
 
     case "UPDATE_NOTEBOOK_REVISION_IS_LATEST": {
-      const { state: revisionIsLatest } = action;
+      const { revisionIsLatest } = action;
       return Object.assign({}, state, {
         notebookInfo: {
           ...(state.notebookInfo || {}),

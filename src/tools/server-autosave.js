@@ -4,7 +4,6 @@ import {
   setConnectionStatus
 } from "../actions/actions";
 import { clearLocalAutosave } from "./local-autosave";
-import { store } from "../store";
 
 const SERVER_AUTOSAVE_TIMEOUT = 30000;
 
@@ -13,7 +12,7 @@ export function notebookChangedSinceSave(state) {
   return previous.jsmd !== state.jsmd || previous.title !== state.title;
 }
 
-export function initializeServerAutoSave() {
+export function initializeServerAutoSave(store) {
   store.dispatch(setMostRecentSavedContent());
 }
 
@@ -21,7 +20,7 @@ let autoSaveTimeout;
 
 // schedule a sync with the server SERVER_AUTOSAVE_TIMEOUT milliseconds from now
 // (if one hasn't been scheduled yet)
-export function scheduleServerAutoSave() {
+export function scheduleServerAutoSave(store) {
   if (!autoSaveTimeout) {
     autoSaveTimeout = setTimeout(async () => {
       autoSaveTimeout = undefined;
@@ -29,7 +28,6 @@ export function scheduleServerAutoSave() {
       const { username: notebookOwner } = state.notebookInfo;
       const { name: thisUser } = state.userData;
       let validAutosave = false;
-      console.log("Saving notebook");
       if (
         notebookChangedSinceSave(state) && // has the notebook changed?
         thisUser !== undefined && // is this a logged-in-user?
