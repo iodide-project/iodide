@@ -39,8 +39,7 @@ import "./tools/initialize-dom";
 import evalQueue from "./actions/evaluation-queue";
 import { checkNotebookConsistency } from "./actions/actions";
 import CSSCascadeProvider from "./shared/css-cascade-provider";
-import { subscribeToAutoSave } from "./tools/autosave";
-import { checkForLocalAutoSave } from "./tools/local-autosave";
+import { checkForLocalAutosave } from "./tools/local-autosave";
 
 evalQueue.connectDispatch(store.dispatch);
 
@@ -50,20 +49,14 @@ window.addEventListener("message", listenForEvalFramePortReady, false);
 
 handleServerVariables(store);
 handleInitialJsmd(store);
+checkForLocalAutosave(store);
 handleReportViewModeInitialization(store);
 
-// re-apply any locally saved changes if applicable
-checkForLocalAutoSave(store);
-// subscribe to an autosave handler for when the content of a
-// document changes (both a local one which updates very frequently
-// and a server-side one which updates slightly less frequently)
-subscribeToAutoSave(store);
-
 messagePasserEditor.connectDispatch(store.dispatch);
+
 document.addEventListener(
   "visibilitychange",
   () => {
-    console.log(`Visibility change! ${document.hidden}`);
     if (!document.hidden) {
       store.dispatch(checkNotebookConsistency());
     }

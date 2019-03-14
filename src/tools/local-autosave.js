@@ -24,7 +24,7 @@ function saveAutosaveState(autosaveKey, autosaveState) {
   db.autosave.put(autosaveState, autosaveKey);
 }
 
-async function checkForLocalAutoSave(store) {
+async function checkForLocalAutosave(store) {
   const state = store.getState();
   const autosaveState = await getLocalAutosaveState(state);
   if (
@@ -69,7 +69,7 @@ async function updateLocalAutosave(state, original) {
 }
 
 export {
-  checkForLocalAutoSave,
+  checkForLocalAutosave,
   getLocalAutosaveJsmd,
   getLocalAutosaveState,
   clearLocalAutosave,

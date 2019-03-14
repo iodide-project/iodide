@@ -160,7 +160,7 @@ export const stateProperties = {
     type: "boolean",
     default: false
   },
-  hasPreviousAutoSave: {
+  hasPreviousAutosave: {
     type: "boolean",
     default: false
   },

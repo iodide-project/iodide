@@ -149,7 +149,7 @@ export class HeaderMessagesUnconnected extends React.Component {
 export function mapStateToProps(state) {
   if (state.viewMode === "EXPLORE_VIEW") {
     if (
-      state.hasPreviousAutoSave &&
+      state.hasPreviousAutosave &&
       state.userData.name !== undefined &&
       state.notebookInfo.username !== state.userData.name
     ) {

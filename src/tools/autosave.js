@@ -1,13 +1,13 @@
+import _ from "lodash";
 import { getLocalAutosaveState, updateLocalAutosave } from "./local-autosave";
-import {
-  initializeServerAutoSave,
-  scheduleServerAutoSave
-} from "./server-autosave";
+import { updateServerAutosave } from "./server-autosave";
 import { connectionModeIsServer } from "./server-tools";
+
+const AUTOSAVE_TIMEOUT = 1000;
 
 // attempts to update local autosave, if we are in a state to do so
 // returns "RETRY" if we should retry
-export async function checkUpdateAutoSave(state) {
+export async function checkUpdateAutosave(state) {
   // waiting for notebook consistency check to finish, try again later
   if (state.checkingRevisionIsLatest) {
     return "RETRY";
@@ -22,7 +22,7 @@ export async function checkUpdateAutoSave(state) {
   // autosave the "new" document, as anything beyond an initial sketch
   // is usually saved at least once
   if (
-    state.hasPreviousAutoSave ||
+    state.hasPreviousAutosave ||
     (connectionModeIsServer(state) && !state.notebookInfo.notebook_id)
   ) {
     return "NOOP";
@@ -46,45 +46,23 @@ export async function checkUpdateAutoSave(state) {
   return "NOOP";
 }
 
-let autoSaveTimeout;
-
-async function updateAutoSave(store, _scheduleUpdateAutoSave) {
-  autoSaveTimeout = undefined;
-
-  const state = store.getState();
-  const autoSaveStatus = await checkUpdateAutoSave(state);
-  switch (autoSaveStatus) {
+export const updateAutosave = _.debounce(async (dispatch, getState) => {
+  const state = getState();
+  const autosaveStatus = await checkUpdateAutosave(state);
+  switch (autosaveStatus) {
     case "RETRY":
-      _scheduleUpdateAutoSave();
+      // debouncing should ensure we don't spin here
+      updateAutosave(dispatch, getState);
       break;
     case "UPDATE_WITH_NEW_COPY":
       updateLocalAutosave(state, true);
-      scheduleServerAutoSave(store);
+      updateServerAutosave(dispatch, getState);
       break;
     case "UPDATE":
       updateLocalAutosave(state, false);
-      scheduleServerAutoSave(store);
+      updateServerAutosave(dispatch, getState);
       break;
     default:
       break;
   }
-}
-
-export function subscribeToAutoSave(store) {
-  initializeServerAutoSave(store);
-
-  function scheduleUpdateAutoSave() {
-    // Update autosave on a timeout so repeated keystrokes over
-    // the course of a second don't trigger repeated saves
-    if (!autoSaveTimeout) {
-      autoSaveTimeout = setTimeout(
-        updateAutoSave,
-        1000,
-        store,
-        scheduleUpdateAutoSave
-      );
-    }
-  }
-
-  store.subscribe(scheduleUpdateAutoSave);
-}
+}, AUTOSAVE_TIMEOUT);

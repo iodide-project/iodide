@@ -31,30 +31,30 @@ describe("verify that checking for autosave returns appropriate status", () => {
     };
   });
 
-  it("checkAutoSave should return RETRY with no autosave method called if we are checking revision freshness", async () => {
-    const { checkUpdateAutoSave } = jest.requireActual("../autosave");
+  it("checkAutosave should return RETRY with no autosave method called if we are checking revision freshness", async () => {
+    const { checkUpdateAutosave } = jest.requireActual("../autosave");
     const newState = Object.assign({}, states.updatedState, {
       checkingRevisionIsLatest: true
     });
-    expect(await checkUpdateAutoSave(newState)).toEqual("RETRY");
+    expect(await checkUpdateAutosave(newState)).toEqual("RETRY");
   });
 
-  it("checkAutoSave should return undefined if revision is not latest", async () => {
-    const { checkUpdateAutoSave } = jest.requireActual("../autosave");
+  it("checkAutosave should return undefined if revision is not latest", async () => {
+    const { checkUpdateAutosave } = jest.requireActual("../autosave");
     const newState = Object.assign({}, states.updatedState, {
       notebookInfo: {
         ...states.updatedState.notebookInfo,
         revision_is_latest: false
       }
     });
-    expect(await checkUpdateAutoSave(newState)).toEqual("NOOP");
+    expect(await checkUpdateAutosave(newState)).toEqual("NOOP");
   });
 
   [true, false].forEach(originalCopyExists => {
-    it(`checkAutoSave should ask to update as expected if original copy ${
+    it(`checkAutosave should ask to update as expected if original copy ${
       originalCopyExists ? "does" : "does not"
     } exist`, async () => {
-      const { checkUpdateAutoSave } = jest.requireActual("../autosave");
+      const { checkUpdateAutosave } = jest.requireActual("../autosave");
       const newState = Object.assign({}, states.updatedState, {
         originalCopy: originalCopyExists ? states.originalState.jsmd : undefined
       });
@@ -69,7 +69,7 @@ describe("verify that checking for autosave returns appropriate status", () => {
           : undefined
       );
 
-      expect(await checkUpdateAutoSave(newState)).toEqual(
+      expect(await checkUpdateAutosave(newState)).toEqual(
         originalCopyExists ? "UPDATE" : "UPDATE_WITH_NEW_COPY"
       );
     });

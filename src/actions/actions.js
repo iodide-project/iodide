@@ -12,6 +12,7 @@ import {
   getUserDataFromDocument,
   notebookIsATrial
 } from "../tools/server-tools";
+import { updateAutosave } from "../tools/autosave";
 import {
   clearLocalAutosave,
   getLocalAutosaveJsmd,
@@ -54,7 +55,7 @@ export function updateAppMessages(messageObj) {
   };
 }
 
-export function updateJsmdContent(text) {
+export function updateJsmdContent(text, autosaveChanges = true) {
   return (dispatch, getState) => {
     const jsmdChunks = jsmdParser(text);
     const reportChunkTypes = Object.keys(getState().languageDefinitions).concat(
@@ -80,6 +81,11 @@ export function updateJsmdContent(text) {
       jsmd: text,
       jsmdChunks
     });
+
+    // queue an update to autosave if applicable
+    if (autosaveChanges) {
+      updateAutosave(dispatch, getState);
+    }
   };
 }
 
@@ -143,10 +149,15 @@ export function clearVariables() {
   };
 }
 
-export function changePageTitle(title) {
-  return {
-    type: "CHANGE_PAGE_TITLE",
-    title
+export function changePageTitle(title, autosaveChanges = true) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: "CHANGE_PAGE_TITLE",
+      title
+    });
+    if (autosaveChanges) {
+      updateAutosave(dispatch, getState);
+    }
   };
 }
 
