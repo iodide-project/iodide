@@ -188,6 +188,19 @@ export function addLanguage(languageDefinition) {
   };
 }
 
+export function updateEditorCursor(
+  editorCursorLine,
+  editorCursorChar,
+  editorCursorForceUpdate = false
+) {
+  return {
+    type: "UPDATE_CURSOR",
+    editorCursorLine,
+    editorCursorChar,
+    editorCursorForceUpdate
+  };
+}
+
 export function evaluateText() {
   return (dispatch, getState) => {
     const { jsmdChunks, kernelState } = getState();
@@ -195,8 +208,10 @@ export function evaluateText() {
     const cm = window.ACTIVE_CODEMIRROR;
     const doc = cm.getDoc();
     if (!doc.somethingSelected()) {
-      const { line } = doc.getCursor();
-      const activeChunk = getChunkContainingLine(jsmdChunks, line);
+      const activeChunk = getChunkContainingLine(
+        jsmdChunks,
+        getState().editorCursorLine
+      );
       evalQueue.evaluate(activeChunk, dispatch);
     } else {
       const selectionChunkSet = getAllSelections(doc)
@@ -216,7 +231,7 @@ export function moveCursorToNextChunk() {
     let targetLine;
 
     if (!doc.somethingSelected()) {
-      targetLine = doc.getCursor().line;
+      targetLine = getState().editorCursorLine;
     } else {
       const selections = doc.listSelections();
       const lastSelection = selections[selections.length - 1];
@@ -229,7 +244,7 @@ export function moveCursorToNextChunk() {
       getState().jsmdChunks,
       targetLine
     );
-    cm.setCursor(targetChunk.endLine + 1, 0);
+    dispatch(updateEditorCursor(targetChunk.endLine + 1, 0, true));
   };
 }
 

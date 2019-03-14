@@ -43,13 +43,22 @@ class JsmdEditorUnconnected extends React.Component {
   constructor(props) {
     super(props);
     // explicitly bind "this" for all methods in constructors
-    // this.handleFocusChange = this.handleFocusChange.bind(this)
     this.updateJsmdContent = this.updateJsmdContent.bind(this);
+    this.updateCursor = this.updateCursor.bind(this);
     this.storeEditorInstance = this.storeEditorInstance.bind(this);
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps);
+  }
+
+  componentDidUpdate() {
+    if (this.props.editorCursorForceUpdate) {
+      this.editor.setCursor(
+        this.props.editorCursorLine,
+        this.props.editorCursorChar
+      );
+    }
   }
 
   storeEditorInstance(editor) {
@@ -59,6 +68,11 @@ class JsmdEditorUnconnected extends React.Component {
 
   updateJsmdContent(editor, data, content) {
     this.props.actions.updateJsmdContent(content);
+  }
+
+  updateCursor(editor) {
+    const { line, ch } = editor.getCursor();
+    this.props.actions.updateEditorCursor(line, ch);
   }
 
   autoComplete = cm => {
@@ -138,14 +152,15 @@ class JsmdEditorUnconnected extends React.Component {
     //   },
     // )
 
-    // FIXME: should set cursor position in redux store (see: https://github.com/iodide-project/iodide/issues/1568)
+    const { editorCursorLine, editorCursorChar } = this.props;
     return (
       <ReactCodeMirror
         editorDidMount={this.storeEditorInstance}
-        cursor={{ line: 1, ch: 1 }}
+        cursor={{ line: editorCursorLine, ch: editorCursorChar }}
         value={this.props.content}
         options={this.props.editorOptions}
         onBeforeChange={this.updateJsmdContent}
+        onCursorActivity={this.updateCursor}
         style={{ height: "100%" }}
       />
     );
@@ -169,10 +184,13 @@ function mapStateToProps(state) {
   if (state.wrapEditors === true) {
     editorOptions.lineWrapping = true;
   }
-
+  const { editorCursorLine, editorCursorChar, editorCursorForceUpdate } = state;
   return {
     content: state.jsmd,
-    editorOptions
+    editorOptions,
+    editorCursorLine,
+    editorCursorChar,
+    editorCursorForceUpdate
   };
 }
 
