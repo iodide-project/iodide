@@ -82,6 +82,15 @@ const positionerDefaults = {
   height: 0
 };
 
+const cursorPositionSchema = {
+  type: "object",
+  properties: {
+    line: { type: "number", default: 0 },
+    col: { type: "number", default: 0 }
+  },
+  additionalProperties: false
+};
+
 export const stateProperties = {
   appMessages: {
     type: "array",
@@ -102,19 +111,31 @@ export const stateProperties = {
     type: "integer",
     default: 0
   },
-  editorCursorLine: {
-    type: "integer",
-    default: 0
+  editorCursor: {
+    type: "object",
+    properties: {
+      line: { type: "integer" },
+      col: { type: "integer" },
+      // if forceUpdate is true when the editor recieves it as props,
+      // then the editor must reposition the cursor using internal editor APIs
+      forceUpdate: { type: "boolean" }
+    },
+    additionalProperties: false,
+    default: { line: 0, col: 0, forceUpdate: false }
   },
-  editorCursorChar: {
-    type: "integer",
-    default: 0
-  },
-  editorCursorForceUpdate: {
-    // if this is true when the editor recieves it as props,
-    // then the editor must reposition the cursor using internal editor APIs
-    type: "boolean",
-    default: false
+  editorSelections: {
+    type: "array",
+    items: {
+      type: "object",
+      properties: {
+        start: cursorPositionSchema,
+        end: cursorPositionSchema,
+        selectedText: { type: "string" }
+      },
+      additionalProperties: false,
+      default: {}
+    },
+    default: []
   },
   evalFrameMessageQueue: {
     type: "array",
