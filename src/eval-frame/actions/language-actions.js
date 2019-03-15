@@ -1,4 +1,4 @@
-import { postMessageToEditor } from "../port-to-editor";
+import messagePasserEval from "../../redux-to-port-message-passer";
 import {
   addToConsoleHistory,
   updateConsoleEntry,
@@ -72,7 +72,10 @@ function loadLanguagePlugin(pluginData, dispatch) {
         pr.then(() => {
           value = `${displayName} plugin ready`;
           dispatch(addLanguage(pluginData));
-          postMessageToEditor("POST_LANGUAGE_DEF_TO_EDITOR", pluginData);
+          messagePasserEval.postMessage(
+            "POST_LANGUAGE_DEF_TO_EDITOR",
+            pluginData
+          );
           dispatch(
             updateConsoleEntry({ historyId, content: value, level: "LOG" })
           );
