@@ -35,7 +35,7 @@ function receiveMessage(event) {
     const { messageType, message } = event.data;
     switch (messageType) {
       case "ADD_TO_EVALUATION_QUEUE": {
-        evalQueue.evaluate(message, store.dispatch);
+        evalQueue.evaluate(message);
         store.dispatch(setKernelState("KERNEL_BUSY"));
         break;
       }
