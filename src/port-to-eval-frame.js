@@ -5,7 +5,7 @@ import { addLanguage, setKernelState } from "./actions/actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
 import evalQueue from "./actions/evaluation-queue";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
-import messagePasserEd from "./redux-to-port-message-passer";
+import messagePasserEditor from "./redux-to-port-message-passer";
 
 let portToEvalFrame;
 
@@ -35,7 +35,7 @@ function receiveMessage(event) {
     switch (messageType) {
       case "ADD_TO_EVALUATION_QUEUE": {
         evalQueue.evaluate(message);
-        messagePasserEd.dispatch(setKernelState("KERNEL_BUSY"));
+        messagePasserEditor.dispatch(setKernelState("KERNEL_BUSY"));
         break;
       }
       case "EVALUATION_RESPONSE": {
@@ -44,7 +44,7 @@ function receiveMessage(event) {
         else evalQueue.clear(evalId);
         const queueSize = evalQueue.getQueueSize();
         if (!queueSize) {
-          messagePasserEd.dispatch(setKernelState("KERNEL_IDLE"));
+          messagePasserEditor.dispatch(setKernelState("KERNEL_IDLE"));
         }
         break;
       }
@@ -82,7 +82,7 @@ function receiveMessage(event) {
       case "REDUX_ACTION":
         // in this case, `message` is a redux action
         if (validateActionFromEvalFrame(message)) {
-          messagePasserEd.dispatch(message);
+          messagePasserEditor.dispatch(message);
         } else {
           console.error(
             `got unapproved redux action from eval frame: ${message.type}`
@@ -101,7 +101,7 @@ function receiveMessage(event) {
         break;
       case "POST_LANGUAGE_DEF_TO_EDITOR":
         // in this case, message is a languageDefinition
-        messagePasserEd.dispatch(addLanguage(message));
+        messagePasserEditor.dispatch(addLanguage(message));
         break;
       default:
         console.error("unknown messageType", message);
@@ -122,8 +122,8 @@ export const listenForEvalFramePortReady = messageEvent => {
     // editor gets port from eval frame, connection ready
     portToEvalFrame = messageEvent.ports[0]; // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage;
-    messagePasserEd.connectPostMessage(postMessageToEvalFrame);
-    messagePasserEd.dispatch({ type: "EVAL_FRAME_READY" });
+    messagePasserEditor.connectPostMessage(postMessageToEvalFrame);
+    messagePasserEditor.dispatch({ type: "EVAL_FRAME_READY" });
     // stop listening for messages once a connection to the eval-frame is made
     window.removeEventListener("message", listenForEvalFramePortReady, false);
   }

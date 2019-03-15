@@ -26,7 +26,7 @@ import "./style/client-style-defaults";
 import NotebookHeader from "./components/menu/notebook-header";
 import EditorPaneContainer from "./components/editor-pane-container";
 import { store } from "./store";
-import messagePasserEd from "./redux-to-port-message-passer";
+import messagePasserEditor from "./redux-to-port-message-passer";
 import handleInitialJsmd from "./handle-initial-jsmd";
 import handleServerVariables from "./handle-server-variables";
 import handleReportViewModeInitialization from "./handle-report-view-mode-initialization";
@@ -52,7 +52,7 @@ handleInitialJsmd(store);
 handleReportViewModeInitialization(store);
 checkForAutosave(store);
 checkForServerAutosave(store);
-messagePasserEd.connectDispatch(store.dispatch);
+messagePasserEditor.connectDispatch(store.dispatch);
 
 render(
   <Provider store={store}>
