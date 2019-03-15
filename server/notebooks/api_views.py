@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from rest_framework import permissions, viewsets
 
 from .models import Notebook, NotebookRevision
@@ -32,12 +34,26 @@ class NotebookViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         with transaction.atomic():
+            if "owner" in self.request.data:
+                User = get_user_model()
+                if (
+                    not self.request.data["owner"]
+                    or self.request.data["owner"] == self.request.user.username
+                ):
+                    owner = self.request.user
+                elif self.request.user.can_create_on_behalf_of_others:
+                    owner = get_object_or_404(User, username=self.request.data["owner"])
+                else:
+                    raise PermissionDenied
+            else:
+                owner = self.request.user
+
             if "forked_from" in self.request.data:
                 nbr_id = self.request.data["forked_from"]
                 forked_from = NotebookRevision.objects.get(id=nbr_id)
             else:
                 forked_from = None
-            notebook = serializer.save(owner=self.request.user, forked_from=forked_from)
+            notebook = serializer.save(owner=owner, forked_from=forked_from)
             NotebookRevision.objects.create(
                 notebook=notebook,
                 title=self.request.data["title"],
