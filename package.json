@@ -17,7 +17,6 @@
     "build-production": "webpack --env=production",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix"
   },
-  "heroku-run-build-script": true,
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/test/setupTests.js",
     "transformIgnorePatterns": [
