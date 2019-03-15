@@ -6,6 +6,7 @@ import { addLanguage, setKernelState } from "./actions/actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
 import evalQueue from "./actions/evaluation-queue";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
+import messagePasser from "./redux-to-port-message-passer";
 
 let portToEvalFrame;
 
@@ -35,8 +36,7 @@ function receiveMessage(event) {
     switch (messageType) {
       case "ADD_TO_EVALUATION_QUEUE": {
         evalQueue.evaluate(message, store.dispatch);
-        if (store.getState().kernelState !== "KERNEL_BUSY")
-          store.dispatch(setKernelState("KERNEL_BUSY"));
+        store.dispatch(setKernelState("KERNEL_BUSY"));
         break;
       }
       case "EVALUATION_RESPONSE": {
