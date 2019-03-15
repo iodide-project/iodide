@@ -17,8 +17,6 @@ export function postActionToEvalFrame(actionObj) {
   postMessageToEvalFrame("REDUX_ACTION", actionObj);
 }
 
-messagePasserEd.connectPostMessage(postMessageToEvalFrame);
-
 const approvedKeys = [
   "esc",
   "ctrl+s",
@@ -113,13 +111,18 @@ function receiveMessage(event) {
 
 export const listenForEvalFramePortReady = messageEvent => {
   if (messageEvent.data === "EVAL_FRAME_READY") {
+    // IFRAME CONNECT STEP 2:
+    // when editor gets "EVAL_FRAME_READY", it acks "EDITOR_READY"
     document
       .getElementById("eval-frame")
       .contentWindow.postMessage("EDITOR_READY", IODIDE_EVAL_FRAME_ORIGIN);
   }
   if (messageEvent.data === "EVAL_FRAME_SENDING_PORT") {
+    // IFRAME CONNECT STEP 6:
+    // editor gets port from eval frame, connection ready
     portToEvalFrame = messageEvent.ports[0]; // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage;
+    messagePasserEd.connectPostMessage(postMessageToEvalFrame);
     messagePasserEd.dispatch({ type: "EVAL_FRAME_READY" });
     // stop listening for messages once a connection to the eval-frame is made
     window.removeEventListener("message", listenForEvalFramePortReady, false);
