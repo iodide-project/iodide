@@ -52,13 +52,6 @@ def test_notebook_detail(client, test_notebook):
     }
 
 
-@pytest.fixture
-def notebook_post_blob():
-    # this blob should be sufficient to create a new notebook (assuming the user of
-    # the api is authorized to do so)
-    return {"title": "My cool notebook", "content": "Fake notebook content"}
-
-
 def test_create_notebook_not_logged_in(transactional_db, client, notebook_post_blob):
     # should not be able to create a notebook if not logged in
     resp = client.post(reverse("notebooks-list"), notebook_post_blob)

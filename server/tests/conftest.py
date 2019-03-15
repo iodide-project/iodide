@@ -60,3 +60,10 @@ def two_test_notebooks(fake_user):
         )
         notebooks.append(notebook)
     return notebooks
+
+
+@pytest.fixture
+def notebook_post_blob():
+    # this blob should be sufficient to create a new notebook (assuming the user of
+    # the api is authorized to do so)
+    return {"title": "My cool notebook", "content": "Fake notebook content"}
