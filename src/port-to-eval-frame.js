@@ -1,7 +1,6 @@
 /* global IODIDE_EVAL_FRAME_ORIGIN  */
 
 import Mousetrap from "mousetrap";
-import { store } from "./store";
 import { addLanguage, setKernelState } from "./actions/actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
 import evalQueue from "./actions/evaluation-queue";
@@ -38,7 +37,7 @@ function receiveMessage(event) {
     switch (messageType) {
       case "ADD_TO_EVALUATION_QUEUE": {
         evalQueue.evaluate(message);
-        store.dispatch(setKernelState("KERNEL_BUSY"));
+        messagePasserEd.dispatch(setKernelState("KERNEL_BUSY"));
         break;
       }
       case "EVALUATION_RESPONSE": {
@@ -47,7 +46,7 @@ function receiveMessage(event) {
         else evalQueue.clear(evalId);
         const queueSize = evalQueue.getQueueSize();
         if (!queueSize) {
-          store.dispatch(setKernelState("KERNEL_IDLE"));
+          messagePasserEd.dispatch(setKernelState("KERNEL_IDLE"));
         }
         break;
       }
@@ -85,7 +84,7 @@ function receiveMessage(event) {
       case "REDUX_ACTION":
         // in this case, `message` is a redux action
         if (validateActionFromEvalFrame(message)) {
-          store.dispatch(message);
+          messagePasserEd.dispatch(message);
         } else {
           console.error(
             `got unapproved redux action from eval frame: ${message.type}`
@@ -104,7 +103,7 @@ function receiveMessage(event) {
         break;
       case "POST_LANGUAGE_DEF_TO_EDITOR":
         // in this case, message is a languageDefinition
-        store.dispatch(addLanguage(message));
+        messagePasserEd.dispatch(addLanguage(message));
         break;
       default:
         console.error("unknown messageType", message);
@@ -121,7 +120,7 @@ export const listenForEvalFramePortReady = messageEvent => {
   if (messageEvent.data === "EVAL_FRAME_SENDING_PORT") {
     portToEvalFrame = messageEvent.ports[0]; // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage;
-    store.dispatch({ type: "EVAL_FRAME_READY" });
+    messagePasserEd.dispatch({ type: "EVAL_FRAME_READY" });
     // stop listening for messages once a connection to the eval-frame is made
     window.removeEventListener("message", listenForEvalFramePortReady, false);
   }
