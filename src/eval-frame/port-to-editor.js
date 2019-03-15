@@ -6,7 +6,7 @@ import {
   onParentContextFileFetchSuccess,
   onParentContextFileFetchError
 } from "./tools/fetch-file-from-parent-context";
-import messagePasser from "../redux-to-port-message-passer";
+import messagePasserEval from "../redux-to-port-message-passer";
 
 const mc = new MessageChannel();
 const portToEditor = mc.port1;
@@ -36,7 +36,7 @@ export function postMessageToEditor(messageType, message) {
   portToEditor.postMessage({ messageType, message });
 }
 
-messagePasser.connectPostMessage(postMessageToEditor);
+messagePasserEval.connectPostMessage(postMessageToEditor);
 
 function receiveMessage(event) {
   const trustedMessage = true;
@@ -44,7 +44,7 @@ function receiveMessage(event) {
     const { messageType, message } = event.data;
     switch (messageType) {
       case "STATE_UPDATE_FROM_EDITOR": {
-        messagePasser.dispatch({
+        messagePasserEval.dispatch({
           type: "REPLACE_STATE",
           state: message
         });
@@ -69,7 +69,7 @@ function receiveMessage(event) {
       }
       case "REDUX_ACTION":
         if (message.type === "TRIGGER_TEXT_EVAL_IN_FRAME") {
-          messagePasser.dispatch(
+          messagePasserEval.dispatch(
             evaluateText(
               message.evalText,
               message.evalType,
