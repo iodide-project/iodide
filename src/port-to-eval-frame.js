@@ -6,7 +6,7 @@ import { addLanguage, setKernelState } from "./actions/actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
 import evalQueue from "./actions/evaluation-queue";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
-import messagePasser from "./redux-to-port-message-passer";
+import messagePasserEd from "./redux-to-port-message-passer";
 
 let portToEvalFrame;
 
@@ -17,6 +17,8 @@ export function postMessageToEvalFrame(messageType, message) {
 export function postActionToEvalFrame(actionObj) {
   postMessageToEvalFrame("REDUX_ACTION", actionObj);
 }
+
+messagePasserEd.connectPostMessage(postMessageToEvalFrame);
 
 const approvedKeys = [
   "esc",
