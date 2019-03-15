@@ -1,11 +1,11 @@
 /* global IODIDE_EVAL_FRAME_ORIGIN  */
 
 import Mousetrap from "mousetrap";
-import { store } from "./store";
 import { addLanguage, setKernelState } from "./actions/actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
 import evalQueue from "./actions/evaluation-queue";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
+import messagePasserEditor from "./redux-to-port-message-passer";
 
 let portToEvalFrame;
 
@@ -34,9 +34,8 @@ function receiveMessage(event) {
     const { messageType, message } = event.data;
     switch (messageType) {
       case "ADD_TO_EVALUATION_QUEUE": {
-        evalQueue.evaluate(message, store.dispatch);
-        if (store.getState().kernelState !== "KERNEL_BUSY")
-          store.dispatch(setKernelState("KERNEL_BUSY"));
+        evalQueue.evaluate(message);
+        messagePasserEditor.dispatch(setKernelState("KERNEL_BUSY"));
         break;
       }
       case "EVALUATION_RESPONSE": {
@@ -45,7 +44,7 @@ function receiveMessage(event) {
         else evalQueue.clear(evalId);
         const queueSize = evalQueue.getQueueSize();
         if (!queueSize) {
-          store.dispatch(setKernelState("KERNEL_IDLE"));
+          messagePasserEditor.dispatch(setKernelState("KERNEL_IDLE"));
         }
         break;
       }
@@ -83,7 +82,7 @@ function receiveMessage(event) {
       case "REDUX_ACTION":
         // in this case, `message` is a redux action
         if (validateActionFromEvalFrame(message)) {
-          store.dispatch(message);
+          messagePasserEditor.dispatch(message);
         } else {
           console.error(
             `got unapproved redux action from eval frame: ${message.type}`
@@ -102,7 +101,7 @@ function receiveMessage(event) {
         break;
       case "POST_LANGUAGE_DEF_TO_EDITOR":
         // in this case, message is a languageDefinition
-        store.dispatch(addLanguage(message));
+        messagePasserEditor.dispatch(addLanguage(message));
         break;
       default:
         console.error("unknown messageType", message);
@@ -112,14 +111,19 @@ function receiveMessage(event) {
 
 export const listenForEvalFramePortReady = messageEvent => {
   if (messageEvent.data === "EVAL_FRAME_READY") {
+    // IFRAME CONNECT STEP 2:
+    // when editor gets "EVAL_FRAME_READY", it acks "EDITOR_READY"
     document
       .getElementById("eval-frame")
       .contentWindow.postMessage("EDITOR_READY", IODIDE_EVAL_FRAME_ORIGIN);
   }
   if (messageEvent.data === "EVAL_FRAME_SENDING_PORT") {
+    // IFRAME CONNECT STEP 6:
+    // editor gets port from eval frame, connection ready
     portToEvalFrame = messageEvent.ports[0]; // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage;
-    store.dispatch({ type: "EVAL_FRAME_READY" });
+    messagePasserEditor.connectPostMessage(postMessageToEvalFrame);
+    messagePasserEditor.dispatch({ type: "EVAL_FRAME_READY" });
     // stop listening for messages once a connection to the eval-frame is made
     window.removeEventListener("message", listenForEvalFramePortReady, false);
   }

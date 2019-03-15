@@ -19,13 +19,13 @@ import initializeUserVariables from "./initialize-user-variables";
 import EvalContainer from "./components/eval-container";
 import ViewModeStylesHandler from "./components/view-mode-styles-handler";
 import { store } from "./store";
-import messagePasser from "../redux-to-port-message-passer";
+import messagePasserEval from "../redux-to-port-message-passer";
 
 import { iodide } from "./iodide-api/api";
 
 import "./port-to-editor";
 
-messagePasser.connectDispatch(store.dispatch);
+messagePasserEval.connectDispatch(store.dispatch);
 window.iodide = iodide;
 
 initializeDefaultKeybindings();

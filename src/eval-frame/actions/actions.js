@@ -9,7 +9,7 @@ import {
 } from "./language-actions";
 
 import { evaluateFetchText } from "./fetch-cell-eval-actions";
-import messagePasser from "../../redux-to-port-message-passer";
+import messagePasserEval from "../../redux-to-port-message-passer";
 
 import createHistoryItem from "../../tools/create-history-item";
 
@@ -23,11 +23,11 @@ initialVariables.add("FETCH_RESOLVERS");
 initialVariables.add("__SECRET_EMOTION__");
 
 export function sendStatusResponseToEditor(status, evalId) {
-  messagePasser.postMessage("EVALUATION_RESPONSE", { status, evalId });
+  messagePasserEval.postMessage("EVALUATION_RESPONSE", { status, evalId });
 }
 
 export function addToEvaluationQueue(chunk) {
-  messagePasser.postMessage("ADD_TO_EVALUATION_QUEUE", chunk);
+  messagePasserEval.postMessage("ADD_TO_EVALUATION_QUEUE", chunk);
 }
 
 function getUserDefinedVariablesFromWindow() {
