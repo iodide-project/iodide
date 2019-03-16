@@ -1,4 +1,4 @@
-import { postMessageToEditor } from "../port-to-editor";
+import messagePasserEval from "../../redux-to-port-message-passer";
 
 const FETCH_RESOLVERS = {};
 
@@ -30,6 +30,6 @@ export default async function fetchFileFromParentContext(path, fetchType) {
     // resolve and reject are handled in port-to-editor.js when
     // the file is received by the editor.
     addResolvers(path, resolve, reject);
-    postMessageToEditor("REQUEST_FETCH", { path, fetchType });
+    messagePasserEval.postMessage("REQUEST_FETCH", { path, fetchType });
   });
 }
