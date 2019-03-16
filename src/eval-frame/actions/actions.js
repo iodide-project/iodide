@@ -161,12 +161,18 @@ export function evaluateText(
 ) {
   return async (dispatch, getState) => {
     // FIXME: pretty much all of this logic should live on the editor side.
-    //  The editor should send down messages for distinct eval types,
-    //  and in particular, the editor should know if a language (like pyodide)
-    //  is known but not yet loaded, and should kick off and await completion
-    //  of the language loading process before attemping to eval code.
+    // The editor should send down messages for distinct eval types,
+    // and in particular, the editor should know if a language (like pyodide)
+    // is known but not yet loaded, and should kick off and await completion
+    // of the language loading process before attemping to eval code.
     // Eval operations should also not use dispatch at all, they should just
     // send back updates as they go.
+
+    if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === "") {
+      // if this chunk is not of an evaluable type, bail out right away
+      sendStatusResponseToEditor("SUCCESS", evalId);
+      return Promise.resolve();
+    }
 
     MOST_RECENT_CHUNK_ID.set(chunkId);
     const sideEffect = document.getElementById(
@@ -206,8 +212,6 @@ export function evaluateText(
       } catch (error) {
         return Promise.reject();
       }
-    } else if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === "") {
-      sendStatusResponseToEditor("SUCCESS", evalId);
     } else {
       sendStatusResponseToEditor("ERROR", evalId);
       dispatch(
