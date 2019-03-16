@@ -117,13 +117,6 @@ function evaluateCode(code, language, state, evalId, langDef = null) {
     };
 
     try {
-      dispatch(
-        addToConsoleHistory({
-          historyType: "CONSOLE_INPUT",
-          content: code,
-          language
-        })
-      );
       const output = await runCodeWithLanguage(
         langDef || state.loadedLanguages[language],
         code,
@@ -168,8 +161,12 @@ export function evaluateText(
     // Eval operations should also not use dispatch at all, they should just
     // send back updates as they go.
 
-    if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === "") {
-      // if this chunk is not of an evaluable type, bail out right away
+    if (
+      NONCODE_EVAL_TYPES.includes(evalType) ||
+      evalType === "" ||
+      evalText === ""
+    ) {
+      // if this chunk is a no-op, bail out right away
       sendStatusResponseToEditor("SUCCESS", evalId);
       return Promise.resolve();
     }
@@ -185,6 +182,14 @@ export function evaluateText(
     const languageReady = Object.keys(state.loadedLanguages).includes(evalType);
     const languageKnown = Object.keys(state.languageDefinitions).includes(
       evalType
+    );
+
+    dispatch(
+      addToConsoleHistory({
+        historyType: "CONSOLE_INPUT",
+        content: evalText,
+        language: evalType
+      })
     );
 
     if (evalType === "fetch") {
@@ -203,9 +208,7 @@ export function evaluateText(
             level: "LOG"
           })
         );
-        console.log("before loadLanguagePlugin", Date.now() / 1000);
         await loadLanguagePlugin(langDef, dispatch);
-        console.log("after loadLanguagePlugin", Date.now() / 1000);
         return dispatch(
           evaluateCode(evalText, evalType, state, evalId, langDef)
         );
@@ -214,13 +217,6 @@ export function evaluateText(
       }
     } else {
       sendStatusResponseToEditor("ERROR", evalId);
-      dispatch(
-        addToConsoleHistory({
-          historyType: "CONSOLE_INPUT",
-          content: evalText,
-          language: evalType
-        })
-      );
       dispatch(
         addToConsoleHistory({
           historyType: "CONSOLE_OUTPUT",

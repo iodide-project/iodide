@@ -99,13 +99,6 @@ export function loadLanguagePlugin(pluginData, dispatch) {
 
 export function evaluateLanguagePlugin(pluginText, evalId) {
   return dispatch => {
-    dispatch(
-      addToConsoleHistory({
-        historyType: "CONSOLE_INPUT",
-        content: pluginText,
-        language: "plugin"
-      })
-    );
     let pluginData;
     try {
       pluginData = JSON.parse(pluginText);

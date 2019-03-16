@@ -104,13 +104,6 @@ export function evaluateFetchText(fetchText, evalId) {
     const outputHistoryId = generateRandomId();
     const fetches = parseFetchCell(fetchText);
     const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
-    dispatch(
-      addToConsoleHistory({
-        historyType: "CONSOLE_INPUT",
-        language: "fetch",
-        content: fetchText
-      })
-    );
     if (syntaxErrors.length) {
       dispatch(
         addToConsoleHistory({
