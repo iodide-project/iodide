@@ -6,13 +6,6 @@ import {
 } from "./console-history-actions";
 import generateRandomId from "../../tools/generate-random-id";
 
-export function addLanguage(languageDefinition) {
-  return {
-    type: "ADD_LANGUAGE_TO_EVAL_FRAME",
-    languageDefinition
-  };
-}
-
 export function loadLanguagePlugin(pluginData, dispatch) {
   let value;
   let languagePluginPromise;
@@ -71,7 +64,6 @@ export function loadLanguagePlugin(pluginData, dispatch) {
 
         pr.then(() => {
           value = `${displayName} plugin ready`;
-          dispatch(addLanguage(pluginData));
           messagePasserEval.postMessage(
             "POST_LANGUAGE_DEF_TO_EDITOR",
             pluginData
