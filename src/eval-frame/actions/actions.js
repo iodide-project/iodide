@@ -1,17 +1,14 @@
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
-
-import generateRandomId from "../../tools/generate-random-id";
-
+import { addToConsoleHistory } from "./console-history-actions";
 import {
   evaluateLanguagePlugin,
-  ensureLanguageAvailable,
-  runCodeWithLanguage
+  runCodeWithLanguage,
+  loadLanguagePlugin
 } from "./language-actions";
 
 import { evaluateFetchText } from "./fetch-cell-eval-actions";
 import messagePasserEval from "../../redux-to-port-message-passer";
-
-import createHistoryItem from "../../tools/create-history-item";
+import { sendStatusResponseToEditor } from "./editor-message-senders";
 
 const CodeMirror = require("codemirror"); // eslint-disable-line
 
@@ -21,10 +18,6 @@ initialVariables.add("Mousetrap");
 initialVariables.add("CodeMirror");
 initialVariables.add("FETCH_RESOLVERS");
 initialVariables.add("__SECRET_EMOTION__");
-
-export function sendStatusResponseToEditor(status, evalId) {
-  messagePasserEval.postMessage("EVALUATION_RESPONSE", { status, evalId });
-}
 
 export function addToEvaluationQueue(chunk) {
   messagePasserEval.postMessage("ADD_TO_EVALUATION_QUEUE", chunk);
@@ -52,49 +45,10 @@ export { MOST_RECENT_CHUNK_ID };
 
 // ////////////// actual actions
 
-export const EVALUATION_RESULTS = {};
-
 export function setConsoleLanguage(language) {
   return {
     type: "SET_CONSOLE_LANGUAGE",
     language
-  };
-}
-
-export function addToConsoleHistory({
-  historyType,
-  content,
-  value,
-  level,
-  language,
-  historyId = generateRandomId()
-}) {
-  const historyAction = createHistoryItem({
-    content,
-    historyType,
-    historyId,
-    level,
-    language
-  });
-  historyAction.type = "ADD_TO_CONSOLE_HISTORY";
-
-  EVALUATION_RESULTS[historyAction.historyId] = value;
-
-  return historyAction;
-}
-
-export function updateConsoleEntry(args) {
-  const updatedHistoryItem = Object.assign({}, args);
-  const { value, historyId } = updatedHistoryItem;
-  if (value) {
-    EVALUATION_RESULTS[historyId] = value;
-    delete updatedHistoryItem.value;
-  }
-  return {
-    type: "UPDATE_VALUE_IN_HISTORY",
-    historyItem: {
-      ...updatedHistoryItem
-    }
   };
 }
 
@@ -142,34 +96,16 @@ export function evalConsoleInput(consoleText) {
   };
 }
 
-function evaluateCode(code, language, state, evalId) {
-  return dispatch => {
-    const updateCellAfterEvaluation = (output, evalStatus) => {
-      const cellProperties = { rendered: true };
-      if (evalStatus === "ERROR") {
-        cellProperties.evalStatus = evalStatus;
-        sendStatusResponseToEditor("ERROR", evalId);
-        dispatch(
-          addToConsoleHistory({
-            historyType: "CONSOLE_OUTPUT",
-            value: output,
-            level: "ERROR"
-          })
-        );
-      } else {
-        dispatch(
-          addToConsoleHistory({
-            historyType: "CONSOLE_OUTPUT",
-            value: output
-          })
-        );
-        sendStatusResponseToEditor("SUCCESS", evalId);
-      }
-      // output here.
+function evaluateCode(code, language, state, evalId, langDef = null) {
+  // NB: using langDef here lets us immediately pass a reference to
+  // a language definition that has bee loaded in the evalframe,
+  // but for which the messages have not gone to the editor and back
+  // to ensure that the language def is in state.loadedLanguages
+  // in the eval frame.
+  // This is only needed in the case of languages like pyodide that are known
+  // but not loaded at init.
 
-      dispatch(updateUserVariables());
-    };
-
+  return async dispatch => {
     const messageCallback = msg => {
       dispatch(
         addToConsoleHistory({
@@ -180,22 +116,38 @@ function evaluateCode(code, language, state, evalId) {
       );
     };
 
-    return ensureLanguageAvailable(language, state, dispatch)
-      .then(languageEvaluator => {
-        // add the code input to the console here.
-        dispatch(
-          addToConsoleHistory({
-            historyType: "CONSOLE_INPUT",
-            content: code,
-            language
-          })
-        );
-        return runCodeWithLanguage(languageEvaluator, code, messageCallback);
-      })
-      .then(
-        output => updateCellAfterEvaluation(output),
-        output => updateCellAfterEvaluation(output, "ERROR")
+    try {
+      dispatch(
+        addToConsoleHistory({
+          historyType: "CONSOLE_INPUT",
+          content: code,
+          language
+        })
       );
+      const output = await runCodeWithLanguage(
+        langDef || state.loadedLanguages[language],
+        code,
+        messageCallback
+      );
+
+      sendStatusResponseToEditor("SUCCESS", evalId);
+      dispatch(
+        addToConsoleHistory({
+          historyType: "CONSOLE_OUTPUT",
+          value: output
+        })
+      );
+    } catch (error) {
+      sendStatusResponseToEditor("ERROR", evalId);
+      dispatch(
+        addToConsoleHistory({
+          historyType: "CONSOLE_OUTPUT",
+          value: error,
+          level: "ERROR"
+        })
+      );
+    }
+    dispatch(updateUserVariables());
   };
 }
 
@@ -207,13 +159,14 @@ export function evaluateText(
   chunkId = null,
   evalId
 ) {
-  // allowed types:
-  // md
-  return (dispatch, getState) => {
-    // exit if there is no code to eval or no eval type
-    // if (!evalText || !evalType) { return undefined }
-    // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
-    // in the direct jsmd editing paradigm.
+  return async (dispatch, getState) => {
+    // FIXME: pretty much all of this logic should live on the editor side.
+    //  The editor should send down messages for distinct eval types,
+    //  and in particular, the editor should know if a language (like pyodide)
+    //  is known but not yet loaded, and should kick off and await completion
+    //  of the language loading process before attemping to eval code.
+    // Eval operations should also not use dispatch at all, they should just
+    // send back updates as they go.
 
     MOST_RECENT_CHUNK_ID.set(chunkId);
     const sideEffect = document.getElementById(
@@ -223,15 +176,36 @@ export function evaluateText(
       sideEffect.innerText = null;
     }
     const state = getState();
+    const languageReady = Object.keys(state.loadedLanguages).includes(evalType);
+    const languageKnown = Object.keys(state.languageDefinitions).includes(
+      evalType
+    );
+
     if (evalType === "fetch") {
       return dispatch(evaluateFetchText(evalText, evalId));
     } else if (evalType === "plugin") {
       return dispatch(evaluateLanguagePlugin(evalText, evalId));
-    } else if (
-      Object.keys(state.loadedLanguages).includes(evalType) ||
-      Object.keys(state.languageDefinitions).includes(evalType)
-    ) {
+    } else if (languageReady) {
       return dispatch(evaluateCode(evalText, evalType, state, evalId));
+    } else if (languageKnown) {
+      try {
+        const langDef = state.languageDefinitions[evalType];
+        dispatch(
+          addToConsoleHistory({
+            historyType: "CONSOLE_MESSAGE",
+            content: `Loading ${langDef.displayName} language plugin`,
+            level: "LOG"
+          })
+        );
+        console.log("before loadLanguagePlugin", Date.now() / 1000);
+        await loadLanguagePlugin(langDef, dispatch);
+        console.log("after loadLanguagePlugin", Date.now() / 1000);
+        return dispatch(
+          evaluateCode(evalText, evalType, state, evalId, langDef)
+        );
+      } catch (error) {
+        return Promise.reject();
+      }
     } else if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === "") {
       sendStatusResponseToEditor("SUCCESS", evalId);
     } else {

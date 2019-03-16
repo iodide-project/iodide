@@ -1,10 +1,11 @@
 import parseFetchCell from "./fetch-cell-parser";
+import { updateUserVariables } from "./actions";
+import { sendStatusResponseToEditor } from "./editor-message-senders";
+
 import {
   addToConsoleHistory,
-  updateConsoleEntry,
-  updateUserVariables,
-  sendStatusResponseToEditor
-} from "./actions";
+  updateConsoleEntry
+} from "./console-history-actions";
 
 import {
   genericFetch as fetchLocally,

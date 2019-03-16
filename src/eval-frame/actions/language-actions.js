@@ -1,9 +1,9 @@
 import messagePasserEval from "../../redux-to-port-message-passer";
+import { sendStatusResponseToEditor } from "./editor-message-senders";
 import {
   addToConsoleHistory,
-  updateConsoleEntry,
-  sendStatusResponseToEditor
-} from "./actions";
+  updateConsoleEntry
+} from "./console-history-actions";
 import generateRandomId from "../../tools/generate-random-id";
 
 export function addLanguage(languageDefinition) {
@@ -13,7 +13,7 @@ export function addLanguage(languageDefinition) {
   };
 }
 
-function loadLanguagePlugin(pluginData, dispatch) {
+export function loadLanguagePlugin(pluginData, dispatch) {
   let value;
   let languagePluginPromise;
 
@@ -137,34 +137,6 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
         return err;
       });
   };
-}
-
-export function ensureLanguageAvailable(languageId, state, dispatch) {
-  if (Object.prototype.hasOwnProperty.call(state.loadedLanguages, languageId)) {
-    return new Promise(resolve => resolve(state.loadedLanguages[languageId]));
-  }
-
-  if (
-    Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)
-  ) {
-    dispatch(
-      addToConsoleHistory({
-        historyType: "CONSOLE_MESSAGE",
-        content: `Loading ${
-          state.languageDefinitions[languageId].displayName
-        } language plugin`,
-        level: "LOG"
-      })
-    );
-    return loadLanguagePlugin(
-      state.languageDefinitions[languageId],
-      dispatch
-    ).then(() => state.languageDefinitions[languageId]);
-  }
-  // There is neither a loaded language or a predefined definition that matches...
-  // FIXME: It would be hard to get here in the UX, but with direct JSMD
-  // editing you could...
-  return new Promise((resolve, reject) => reject());
 }
 
 export function runCodeWithLanguage(
