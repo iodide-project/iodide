@@ -77,7 +77,7 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
 }
 
 export function evalConsoleInput(consoleText) {
-  return (dispatch, getState) => {
+  return (_, getState) => {
     const state = getState();
     // const code = state.consoleText
     // exit if there is no code in the console to  eval
@@ -99,31 +99,9 @@ export function evalConsoleInput(consoleText) {
   };
 }
 
-async function evaluateCode(code, language, state, evalId, langDef = null) {
-  // NB: using langDef here lets us immediately pass a reference to
-  // a language definition that has bee loaded in the evalframe,
-  // but for which the messages have not gone to the editor and back
-  // to ensure that the language def is in state.loadedLanguages
-  // in the eval frame.
-  // This is only needed in the case of languages like pyodide that are known
-  // but not loaded at init.
-
-  const messageCallback = msg => {
-    sendActionToEditor(
-      addToConsoleHistory({
-        content: msg,
-        historyType: "CONSOLE_MESSAGE",
-        level: "LOG"
-      })
-    );
-  };
-
+async function evaluateCode(code, language, evalId) {
   try {
-    const output = await runCodeWithLanguage(
-      langDef || state.loadedLanguages[language],
-      code,
-      messageCallback
-    );
+    const output = await runCodeWithLanguage(language, code);
 
     sendStatusResponseToEditor("SUCCESS", evalId);
     sendActionToEditor(
@@ -152,14 +130,12 @@ export function evaluateText(
   chunkId = null,
   evalId
 ) {
-  return async (dispatch, getState) => {
+  return async (_, getState) => {
     // FIXME: pretty much all of this logic should live on the editor side.
     // The editor should send down messages for distinct eval types,
     // and in particular, the editor should know if a language (like pyodide)
     // is known but not yet loaded, and should kick off and await completion
     // of the language loading process before attemping to eval code.
-    // Eval operations should also not use dispatch at all, they should just
-    // send back updates as they go.
 
     if (
       NONCODE_EVAL_TYPES.includes(evalType) ||
@@ -194,23 +170,24 @@ export function evaluateText(
 
     let result;
     if (evalType === "fetch") {
-      result = await dispatch(evaluateFetchText(evalText, evalId));
+      result = await evaluateFetchText(evalText, evalId);
     } else if (evalType === "plugin") {
       result = await evaluateLanguagePlugin(evalText, evalId);
     } else if (languageReady) {
-      result = await evaluateCode(evalText, evalType, state, evalId);
+      const language = state.loadedLanguages[evalType];
+      result = await evaluateCode(evalText, language, evalId);
     } else if (languageKnown) {
       try {
-        const langDef = state.languageDefinitions[evalType];
+        const language = state.languageDefinitions[evalType];
         sendActionToEditor(
           addToConsoleHistory({
             historyType: "CONSOLE_MESSAGE",
-            content: `Loading ${langDef.displayName} language plugin`,
+            content: `Loading ${language.displayName} language plugin`,
             level: "LOG"
           })
         );
-        await loadLanguagePlugin(langDef);
-        result = await evaluateCode(evalText, evalType, state, evalId, langDef);
+        await loadLanguagePlugin(language);
+        result = await evaluateCode(evalText, language, evalId);
       } catch (error) {
         result = Promise.reject();
       }

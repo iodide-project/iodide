@@ -1,5 +1,8 @@
 import parseFetchCell from "./fetch-cell-parser";
-import { sendStatusResponseToEditor } from "./editor-message-senders";
+import {
+  sendActionToEditor,
+  sendStatusResponseToEditor
+} from "./editor-message-senders";
 
 import {
   addToConsoleHistory,
@@ -99,61 +102,57 @@ export async function handleFetch(fetchInfo) {
 }
 
 export function evaluateFetchText(fetchText, evalId) {
-  return dispatch => {
-    const outputHistoryId = generateRandomId();
-    const fetches = parseFetchCell(fetchText);
-    const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
-    if (syntaxErrors.length) {
-      dispatch(
-        addToConsoleHistory({
-          historyType: "FETCH_CELL_INFO",
-          value: syntaxErrors.map(fetchProgressInitialStrings),
-          historyId: outputHistoryId,
-          level: "ERROR"
-        })
-      );
-      sendStatusResponseToEditor("ERROR", evalId);
-      return Promise.resolve();
-    }
-
-    let progressStrings = fetches.map(fetchProgressInitialStrings);
-    dispatch(
+  const outputHistoryId = generateRandomId();
+  const fetches = parseFetchCell(fetchText);
+  const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
+  if (syntaxErrors.length) {
+    sendActionToEditor(
       addToConsoleHistory({
         historyType: "FETCH_CELL_INFO",
-        value: progressStrings,
-        historyId: outputHistoryId
+        value: syntaxErrors.map(fetchProgressInitialStrings),
+        historyId: outputHistoryId,
+        level: "ERROR"
       })
     );
-    const fetchCalls = fetches.map((f, i) =>
-      handleFetch(f).then(outcome => {
-        progressStrings = progressStrings.map(entry =>
-          Object.assign({}, entry)
-        );
-        progressStrings[i] = outcome;
-        dispatch(
-          updateConsoleEntry({
-            historyId: outputHistoryId,
-            value: progressStrings
-          })
-        );
-        return outcome;
-      })
-    );
+    sendStatusResponseToEditor("ERROR", evalId);
+    return Promise.resolve();
+  }
 
-    return Promise.all(fetchCalls)
-      .then(outcomes => {
-        // check for error.
-        const hasError = outcomes.some(f => f.text.startsWith("ERROR"));
-        dispatch(
-          updateConsoleEntry({
-            historyId: outputHistoryId,
-            value: outcomes,
-            level: hasError ? "ERROR" : undefined
-          })
-        );
-      })
-      .then(() => {
-        sendStatusResponseToEditor("SUCCESS", evalId);
-      });
-  };
+  let progressStrings = fetches.map(fetchProgressInitialStrings);
+  sendActionToEditor(
+    addToConsoleHistory({
+      historyType: "FETCH_CELL_INFO",
+      value: progressStrings,
+      historyId: outputHistoryId
+    })
+  );
+  const fetchCalls = fetches.map((f, i) =>
+    handleFetch(f).then(outcome => {
+      progressStrings = progressStrings.map(entry => Object.assign({}, entry));
+      progressStrings[i] = outcome;
+      sendActionToEditor(
+        updateConsoleEntry({
+          historyId: outputHistoryId,
+          value: progressStrings
+        })
+      );
+      return outcome;
+    })
+  );
+
+  return Promise.all(fetchCalls)
+    .then(outcomes => {
+      // check for error.
+      const hasError = outcomes.some(f => f.text.startsWith("ERROR"));
+      sendActionToEditor(
+        updateConsoleEntry({
+          historyId: outputHistoryId,
+          value: outcomes,
+          level: hasError ? "ERROR" : undefined
+        })
+      );
+    })
+    .then(() => {
+      sendStatusResponseToEditor("SUCCESS", evalId);
+    });
 }

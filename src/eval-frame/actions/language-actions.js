@@ -127,14 +127,19 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
     });
 }
 
-export function runCodeWithLanguage(
-  language,
-  code,
-  messageCallback = () => {}
-) {
+export function runCodeWithLanguage(language, code) {
   const { module, evaluator, asyncEvaluator } = language;
   if (asyncEvaluator !== undefined) {
     try {
+      const messageCallback = msg => {
+        sendActionToEditor(
+          addToConsoleHistory({
+            content: msg,
+            historyType: "CONSOLE_MESSAGE",
+            level: "LOG"
+          })
+        );
+      };
       return window[module][asyncEvaluator](code, messageCallback);
     } catch (e) {
       if (e.message === "window[module] is undefined") {
