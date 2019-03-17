@@ -1,5 +1,4 @@
 import parseFetchCell from "./fetch-cell-parser";
-import { updateUserVariables } from "./actions";
 import { sendStatusResponseToEditor } from "./editor-message-senders";
 
 import {
@@ -142,9 +141,6 @@ export function evaluateFetchText(fetchText, evalId) {
     );
 
     return Promise.all(fetchCalls)
-      .finally(() => {
-        dispatch(updateUserVariables());
-      })
       .then(outcomes => {
         // check for error.
         const hasError = outcomes.some(f => f.text.startsWith("ERROR"));

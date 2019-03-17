@@ -140,7 +140,6 @@ function evaluateCode(code, language, state, evalId, langDef = null) {
         })
       );
     }
-    dispatch(updateUserVariables());
   };
 }
 
@@ -192,12 +191,13 @@ export function evaluateText(
       })
     );
 
+    let result;
     if (evalType === "fetch") {
-      return dispatch(evaluateFetchText(evalText, evalId));
+      result = await dispatch(evaluateFetchText(evalText, evalId));
     } else if (evalType === "plugin") {
-      return dispatch(evaluateLanguagePlugin(evalText, evalId));
+      result = await dispatch(evaluateLanguagePlugin(evalText, evalId));
     } else if (languageReady) {
-      return dispatch(evaluateCode(evalText, evalType, state, evalId));
+      result = await dispatch(evaluateCode(evalText, evalType, state, evalId));
     } else if (languageKnown) {
       try {
         const langDef = state.languageDefinitions[evalType];
@@ -209,11 +209,11 @@ export function evaluateText(
           })
         );
         await loadLanguagePlugin(langDef, dispatch);
-        return dispatch(
+        result = await dispatch(
           evaluateCode(evalText, evalType, state, evalId, langDef)
         );
       } catch (error) {
-        return Promise.reject();
+        result = Promise.reject();
       }
     } else {
       sendStatusResponseToEditor("ERROR", evalId);
@@ -224,8 +224,10 @@ export function evaluateText(
           level: "ERROR"
         })
       );
+      result = Promise.reject();
     }
-    return Promise.resolve();
+    dispatch(updateUserVariables());
+    return result;
   };
 }
 
