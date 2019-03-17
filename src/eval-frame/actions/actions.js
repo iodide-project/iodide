@@ -8,7 +8,10 @@ import {
 
 import { evaluateFetchText } from "./fetch-cell-eval-actions";
 import messagePasserEval from "../../redux-to-port-message-passer";
-import { sendStatusResponseToEditor } from "./editor-message-senders";
+import {
+  sendActionToEditor,
+  sendStatusResponseToEditor
+} from "./editor-message-senders";
 
 const CodeMirror = require("codemirror"); // eslint-disable-line
 
@@ -83,20 +86,20 @@ export function evalConsoleInput(consoleText) {
     }
     const evalLanguageId = state.languageLastUsed;
 
-    dispatch({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
-    dispatch({ type: "RESET_HISTORY_CURSOR" });
+    sendActionToEditor({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
+    sendActionToEditor({ type: "RESET_HISTORY_CURSOR" });
     addToEvaluationQueue({
       chunkType: evalLanguageId,
       chunkId: undefined,
       chunkContent: consoleText,
       evalFlags: ""
     });
-    dispatch(updateConsoleText(""));
+    sendActionToEditor(updateConsoleText(""));
     return Promise.resolve();
   };
 }
 
-function evaluateCode(code, language, state, evalId, langDef = null) {
+async function evaluateCode(code, language, state, evalId, langDef = null) {
   // NB: using langDef here lets us immediately pass a reference to
   // a language definition that has bee loaded in the evalframe,
   // but for which the messages have not gone to the editor and back
@@ -105,42 +108,40 @@ function evaluateCode(code, language, state, evalId, langDef = null) {
   // This is only needed in the case of languages like pyodide that are known
   // but not loaded at init.
 
-  return async dispatch => {
-    const messageCallback = msg => {
-      dispatch(
-        addToConsoleHistory({
-          content: msg,
-          historyType: "CONSOLE_MESSAGE",
-          level: "LOG"
-        })
-      );
-    };
-
-    try {
-      const output = await runCodeWithLanguage(
-        langDef || state.loadedLanguages[language],
-        code,
-        messageCallback
-      );
-
-      sendStatusResponseToEditor("SUCCESS", evalId);
-      dispatch(
-        addToConsoleHistory({
-          historyType: "CONSOLE_OUTPUT",
-          value: output
-        })
-      );
-    } catch (error) {
-      sendStatusResponseToEditor("ERROR", evalId);
-      dispatch(
-        addToConsoleHistory({
-          historyType: "CONSOLE_OUTPUT",
-          value: error,
-          level: "ERROR"
-        })
-      );
-    }
+  const messageCallback = msg => {
+    sendActionToEditor(
+      addToConsoleHistory({
+        content: msg,
+        historyType: "CONSOLE_MESSAGE",
+        level: "LOG"
+      })
+    );
   };
+
+  try {
+    const output = await runCodeWithLanguage(
+      langDef || state.loadedLanguages[language],
+      code,
+      messageCallback
+    );
+
+    sendStatusResponseToEditor("SUCCESS", evalId);
+    sendActionToEditor(
+      addToConsoleHistory({
+        historyType: "CONSOLE_OUTPUT",
+        value: output
+      })
+    );
+  } catch (error) {
+    sendStatusResponseToEditor("ERROR", evalId);
+    sendActionToEditor(
+      addToConsoleHistory({
+        historyType: "CONSOLE_OUTPUT",
+        value: error,
+        level: "ERROR"
+      })
+    );
+  }
 }
 
 // FIXME use evalFlags for something real
@@ -183,7 +184,7 @@ export function evaluateText(
       evalType
     );
 
-    dispatch(
+    sendActionToEditor(
       addToConsoleHistory({
         historyType: "CONSOLE_INPUT",
         content: evalText,
@@ -195,29 +196,27 @@ export function evaluateText(
     if (evalType === "fetch") {
       result = await dispatch(evaluateFetchText(evalText, evalId));
     } else if (evalType === "plugin") {
-      result = await dispatch(evaluateLanguagePlugin(evalText, evalId));
+      result = await evaluateLanguagePlugin(evalText, evalId);
     } else if (languageReady) {
-      result = await dispatch(evaluateCode(evalText, evalType, state, evalId));
+      result = await evaluateCode(evalText, evalType, state, evalId);
     } else if (languageKnown) {
       try {
         const langDef = state.languageDefinitions[evalType];
-        dispatch(
+        sendActionToEditor(
           addToConsoleHistory({
             historyType: "CONSOLE_MESSAGE",
             content: `Loading ${langDef.displayName} language plugin`,
             level: "LOG"
           })
         );
-        await loadLanguagePlugin(langDef, dispatch);
-        result = await dispatch(
-          evaluateCode(evalText, evalType, state, evalId, langDef)
-        );
+        await loadLanguagePlugin(langDef);
+        result = await evaluateCode(evalText, evalType, state, evalId, langDef);
       } catch (error) {
         result = Promise.reject();
       }
     } else {
       sendStatusResponseToEditor("ERROR", evalId);
-      dispatch(
+      sendActionToEditor(
         addToConsoleHistory({
           historyType: "CONSOLE_OUTPUT",
           value: new Error(`eval type ${evalType} is not defined`),
@@ -226,7 +225,7 @@ export function evaluateText(
       );
       result = Promise.reject();
     }
-    dispatch(updateUserVariables());
+    sendActionToEditor(updateUserVariables());
     return result;
   };
 }

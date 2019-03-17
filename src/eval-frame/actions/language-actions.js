@@ -1,17 +1,20 @@
 import messagePasserEval from "../../redux-to-port-message-passer";
-import { sendStatusResponseToEditor } from "./editor-message-senders";
+import {
+  sendActionToEditor,
+  sendStatusResponseToEditor
+} from "./editor-message-senders";
 import {
   addToConsoleHistory,
   updateConsoleEntry
 } from "./console-history-actions";
 import generateRandomId from "../../tools/generate-random-id";
 
-export function loadLanguagePlugin(pluginData, dispatch) {
+export function loadLanguagePlugin(pluginData) {
   let value;
   let languagePluginPromise;
 
   const historyId = generateRandomId();
-  dispatch(
+  sendActionToEditor(
     addToConsoleHistory({
       historyType: "CONSOLE_MESSAGE",
       content: "fetching plugin",
@@ -21,7 +24,9 @@ export function loadLanguagePlugin(pluginData, dispatch) {
   );
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
-    dispatch(updateConsoleEntry({ historyId, content: value, level: "ERROR" }));
+    sendActionToEditor(
+      updateConsoleEntry({ historyId, content: value, level: "ERROR" })
+    );
   } else {
     const { url, displayName } = pluginData;
 
@@ -33,12 +38,12 @@ export function loadLanguagePlugin(pluginData, dispatch) {
         if (evt.total > 0) {
           value += `out of ${evt.total} (${evt.loaded / evt.total}%)`;
         }
-        dispatch(updateConsoleEntry({ historyId, content: value }));
+        sendActionToEditor(updateConsoleEntry({ historyId, content: value }));
       });
 
       xhrObj.addEventListener("load", () => {
         value = `${displayName} plugin downloaded, initializing`;
-        dispatch(
+        sendActionToEditor(
           updateConsoleEntry({ historyId, content: value, level: "LOG" })
         );
         // see the following for asynchronous loading of scripts from strings:
@@ -50,7 +55,7 @@ export function loadLanguagePlugin(pluginData, dispatch) {
           value = `${displayName} failed to load: ${xhrObj.status} ${
             xhrObj.statusText
           }`;
-          dispatch(
+          sendActionToEditor(
             updateConsoleEntry({ historyId, content: value, level: "ERROR" })
           );
           resolve();
@@ -68,13 +73,13 @@ export function loadLanguagePlugin(pluginData, dispatch) {
             "POST_LANGUAGE_DEF_TO_EDITOR",
             pluginData
           );
-          dispatch(
+          sendActionToEditor(
             updateConsoleEntry({ historyId, content: value, level: "LOG" })
           );
           delete window.languagePluginUrl;
           resolve();
         }).catch(err => {
-          dispatch(
+          sendActionToEditor(
             updateConsoleEntry({ historyId, content: value, level: "ERROR" })
           );
           reject(err);
@@ -84,7 +89,7 @@ export function loadLanguagePlugin(pluginData, dispatch) {
       xhrObj.addEventListener("error", () => {
         value = `${displayName} plugin failed to load: ${url} not found
         `;
-        dispatch(
+        sendActionToEditor(
           updateConsoleEntry({ historyId, content: value, level: "ERROR" })
         );
         reject();
@@ -98,30 +103,28 @@ export function loadLanguagePlugin(pluginData, dispatch) {
 }
 
 export function evaluateLanguagePlugin(pluginText, evalId) {
-  return dispatch => {
-    let pluginData;
-    try {
-      pluginData = JSON.parse(pluginText);
-    } catch (err) {
-      dispatch(
-        addToConsoleHistory({
-          historyType: "CONSOLE_OUTPUT",
-          content: `plugin definition failed to parse:\n${err.message}`,
-          level: "ERROR"
-        })
-      );
-      sendStatusResponseToEditor("ERROR", evalId);
-      return Promise.reject();
-    }
-    return loadLanguagePlugin(pluginData, dispatch)
-      .then(() => {
-        sendStatusResponseToEditor("SUCCESS", evalId);
+  let pluginData;
+  try {
+    pluginData = JSON.parse(pluginText);
+  } catch (err) {
+    sendActionToEditor(
+      addToConsoleHistory({
+        historyType: "CONSOLE_OUTPUT",
+        content: `plugin definition failed to parse:\n${err.message}`,
+        level: "ERROR"
       })
-      .catch(err => {
-        sendStatusResponseToEditor("ERROR", evalId);
-        return err;
-      });
-  };
+    );
+    sendStatusResponseToEditor("ERROR", evalId);
+    return Promise.reject();
+  }
+  return loadLanguagePlugin(pluginData)
+    .then(() => {
+      sendStatusResponseToEditor("SUCCESS", evalId);
+    })
+    .catch(err => {
+      sendStatusResponseToEditor("ERROR", evalId);
+      return err;
+    });
 }
 
 export function runCodeWithLanguage(

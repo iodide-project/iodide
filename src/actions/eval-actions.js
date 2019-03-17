@@ -8,6 +8,14 @@ import evalQueue from "./evaluation-queue";
 
 import { NONCODE_EVAL_TYPES } from "../state-schemas/state-schema";
 
+const chunkIsRunnable = chunk => !NONCODE_EVAL_TYPES.includes(chunk.chunkType);
+
+const chunkNotSkipped = chunk =>
+  !(
+    chunk.evalFlags.includes("skipRunAll") ||
+    chunk.evalFlags.includes("skiprunall")
+  );
+
 export function evaluateText() {
   return (dispatch, getState) => {
     const {
@@ -37,14 +45,6 @@ export function evaluateText() {
     }
   };
 }
-
-const chunkIsRunnable = chunk => !NONCODE_EVAL_TYPES.includes(chunk.chunkType);
-
-const chunkNotSkipped = chunk =>
-  !(
-    chunk.evalFlags.includes("skipRunAll") ||
-    chunk.evalFlags.includes("skiprunall")
-  );
 
 export function evaluateNotebook(evalQueueInstance = evalQueue) {
   return (dispatch, getState) => {
