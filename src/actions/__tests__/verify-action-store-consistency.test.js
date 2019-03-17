@@ -1,6 +1,6 @@
 import { store } from "../../store";
 import * as actions from "../actions";
-import { evaluateText, evaluateNotebook } from "../eval-actions";
+import { evaluateNotebook } from "../eval-actions";
 
 import { stateProperties } from "../../state-schemas/state-schema";
 import { SchemaValidationError } from "../../reducers/create-validated-reducer";
