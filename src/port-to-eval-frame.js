@@ -2,6 +2,7 @@
 
 import Mousetrap from "mousetrap";
 import { addLanguage, setKernelState } from "./actions/actions";
+import { evalConsoleInput } from "./actions/console-actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
 import evalQueue from "./actions/evaluation-queue";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
@@ -36,6 +37,10 @@ function receiveMessage(event) {
       case "ADD_TO_EVALUATION_QUEUE": {
         evalQueue.evaluate(message);
         messagePasserEditor.dispatch(setKernelState("KERNEL_BUSY"));
+        break;
+      }
+      case "CONSOLE_NEEDS_EVALUATION": {
+        messagePasserEditor.dispatch(evalConsoleInput(message));
         break;
       }
       case "EVALUATION_RESPONSE": {

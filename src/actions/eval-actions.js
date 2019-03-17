@@ -29,7 +29,7 @@ export function evaluateText() {
 
     if (editorSelections.length === 0) {
       const activeChunk = getChunkContainingLine(jsmdChunks, editorCursor.line);
-      evalQueue.evaluate(activeChunk, dispatch);
+      evalQueue.evaluate(activeChunk);
     } else {
       const selectionChunkSet = editorSelections
         .map(selection => ({
@@ -40,7 +40,7 @@ export function evaluateText() {
         .map(selection => selectionToChunks(selection, jsmdChunks))
         .map(removeDuplicatePluginChunksInSelectionSet());
       selectionChunkSet.forEach(selection => {
-        selection.forEach(chunk => evalQueue.evaluate(chunk, dispatch));
+        selection.forEach(chunk => evalQueue.evaluate(chunk));
       });
     }
   };

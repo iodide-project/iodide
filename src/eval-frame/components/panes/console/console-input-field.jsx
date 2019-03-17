@@ -1,8 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { evalConsoleInput } from "../../../actions/actions";
-import { postActionToEditor } from "../../../port-to-editor";
+import {
+  postActionToEditor,
+  postMessageToEditor
+} from "../../../port-to-editor";
 
 import THEME from "../../../../shared/theme";
 
@@ -154,7 +156,9 @@ export const ConsoleInputMessagePasser = connectMessagePassers(
       postActionToEditor({
         type: "CONSOLE_HISTORY_MOVE",
         consoleCursorDelta
-      })
+      }),
+    evalConsoleInput: consoleText =>
+      postMessageToEditor("CONSOLE_NEEDS_EVALUATION", consoleText)
   }
 );
 
@@ -164,15 +168,4 @@ export function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    evalConsoleInput: consoleText => {
-      dispatch(evalConsoleInput(consoleText));
-    }
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConsoleInputMessagePasser);
+export default connect(mapStateToProps)(ConsoleInputMessagePasser);

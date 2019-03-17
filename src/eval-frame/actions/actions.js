@@ -76,29 +76,6 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
   };
 }
 
-export function evalConsoleInput(consoleText) {
-  return (_, getState) => {
-    const state = getState();
-    // const code = state.consoleText
-    // exit if there is no code in the console to  eval
-    if (!consoleText) {
-      return undefined;
-    }
-    const evalLanguageId = state.languageLastUsed;
-
-    sendActionToEditor({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
-    sendActionToEditor({ type: "RESET_HISTORY_CURSOR" });
-    addToEvaluationQueue({
-      chunkType: evalLanguageId,
-      chunkId: undefined,
-      chunkContent: consoleText,
-      evalFlags: ""
-    });
-    sendActionToEditor(updateConsoleText(""));
-    return Promise.resolve();
-  };
-}
-
 async function evaluateCode(code, language, evalId) {
   try {
     const output = await runCodeWithLanguage(language, code);
