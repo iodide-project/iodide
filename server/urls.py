@@ -1,12 +1,14 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.models import Group
 from django.urls import path
 from django.views.generic.base import RedirectView
 
 import server.views
 
-admin.autodiscover()
+
+admin.site.unregister(Group)  # Hide the group, not used right now
 
 
 def parse_redirects(redirects):
