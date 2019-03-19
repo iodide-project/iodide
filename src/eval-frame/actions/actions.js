@@ -1,17 +1,17 @@
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
-
-import generateRandomId from "../../tools/generate-random-id";
-
+import { addToConsoleHistory } from "./console-history-actions";
 import {
   evaluateLanguagePlugin,
-  ensureLanguageAvailable,
-  runCodeWithLanguage
+  runCodeWithLanguage,
+  loadLanguagePlugin
 } from "./language-actions";
 
 import { evaluateFetchText } from "./fetch-cell-eval-actions";
 import messagePasserEval from "../../redux-to-port-message-passer";
-
-import createHistoryItem from "../../tools/create-history-item";
+import {
+  sendActionToEditor,
+  sendStatusResponseToEditor
+} from "./editor-message-senders";
 
 const CodeMirror = require("codemirror"); // eslint-disable-line
 
@@ -21,10 +21,6 @@ initialVariables.add("Mousetrap");
 initialVariables.add("CodeMirror");
 initialVariables.add("FETCH_RESOLVERS");
 initialVariables.add("__SECRET_EMOTION__");
-
-export function sendStatusResponseToEditor(status, evalId) {
-  messagePasserEval.postMessage("EVALUATION_RESPONSE", { status, evalId });
-}
 
 export function addToEvaluationQueue(chunk) {
   messagePasserEval.postMessage("ADD_TO_EVALUATION_QUEUE", chunk);
@@ -52,49 +48,10 @@ export { MOST_RECENT_CHUNK_ID };
 
 // ////////////// actual actions
 
-export const EVALUATION_RESULTS = {};
-
 export function setConsoleLanguage(language) {
   return {
     type: "SET_CONSOLE_LANGUAGE",
     language
-  };
-}
-
-export function addToConsoleHistory({
-  historyType,
-  content,
-  value,
-  level,
-  language,
-  historyId = generateRandomId()
-}) {
-  const historyAction = createHistoryItem({
-    content,
-    historyType,
-    historyId,
-    level,
-    language
-  });
-  historyAction.type = "ADD_TO_CONSOLE_HISTORY";
-
-  EVALUATION_RESULTS[historyAction.historyId] = value;
-
-  return historyAction;
-}
-
-export function updateConsoleEntry(args) {
-  const updatedHistoryItem = Object.assign({}, args);
-  const { value, historyId } = updatedHistoryItem;
-  if (value) {
-    EVALUATION_RESULTS[historyId] = value;
-    delete updatedHistoryItem.value;
-  }
-  return {
-    type: "UPDATE_VALUE_IN_HISTORY",
-    historyItem: {
-      ...updatedHistoryItem
-    }
   };
 }
 
@@ -119,84 +76,27 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
   };
 }
 
-export function evalConsoleInput(consoleText) {
-  return (dispatch, getState) => {
-    const state = getState();
-    // const code = state.consoleText
-    // exit if there is no code in the console to  eval
-    if (!consoleText) {
-      return undefined;
-    }
-    const evalLanguageId = state.languageLastUsed;
+async function evaluateCode(code, language, evalId) {
+  try {
+    const output = await runCodeWithLanguage(language, code);
 
-    dispatch({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
-    dispatch({ type: "RESET_HISTORY_CURSOR" });
-    addToEvaluationQueue({
-      chunkType: evalLanguageId,
-      chunkId: undefined,
-      chunkContent: consoleText,
-      evalFlags: ""
-    });
-    dispatch(updateConsoleText(""));
-    return Promise.resolve();
-  };
-}
-
-function evaluateCode(code, language, state, evalId) {
-  return dispatch => {
-    const updateCellAfterEvaluation = (output, evalStatus) => {
-      const cellProperties = { rendered: true };
-      if (evalStatus === "ERROR") {
-        cellProperties.evalStatus = evalStatus;
-        sendStatusResponseToEditor("ERROR", evalId);
-        dispatch(
-          addToConsoleHistory({
-            historyType: "CONSOLE_OUTPUT",
-            value: output,
-            level: "ERROR"
-          })
-        );
-      } else {
-        dispatch(
-          addToConsoleHistory({
-            historyType: "CONSOLE_OUTPUT",
-            value: output
-          })
-        );
-        sendStatusResponseToEditor("SUCCESS", evalId);
-      }
-      // output here.
-
-      dispatch(updateUserVariables());
-    };
-
-    const messageCallback = msg => {
-      dispatch(
-        addToConsoleHistory({
-          content: msg,
-          historyType: "CONSOLE_MESSAGE",
-          level: "LOG"
-        })
-      );
-    };
-
-    return ensureLanguageAvailable(language, state, dispatch)
-      .then(languageEvaluator => {
-        // add the code input to the console here.
-        dispatch(
-          addToConsoleHistory({
-            historyType: "CONSOLE_INPUT",
-            content: code,
-            language
-          })
-        );
-        return runCodeWithLanguage(languageEvaluator, code, messageCallback);
+    sendStatusResponseToEditor("SUCCESS", evalId);
+    sendActionToEditor(
+      addToConsoleHistory({
+        historyType: "CONSOLE_OUTPUT",
+        value: output
       })
-      .then(
-        output => updateCellAfterEvaluation(output),
-        output => updateCellAfterEvaluation(output, "ERROR")
-      );
-  };
+    );
+  } catch (error) {
+    sendStatusResponseToEditor("ERROR", evalId);
+    sendActionToEditor(
+      addToConsoleHistory({
+        historyType: "CONSOLE_OUTPUT",
+        value: error,
+        level: "ERROR"
+      })
+    );
+  }
 }
 
 // FIXME use evalFlags for something real
@@ -207,13 +107,22 @@ export function evaluateText(
   chunkId = null,
   evalId
 ) {
-  // allowed types:
-  // md
-  return (dispatch, getState) => {
-    // exit if there is no code to eval or no eval type
-    // if (!evalText || !evalType) { return undefined }
-    // FIXME: we need to deprecate side effects ASAP. They don't serve a purpose
-    // in the direct jsmd editing paradigm.
+  return async (_, getState) => {
+    // FIXME: pretty much all of this logic should live on the editor side.
+    // The editor should send down messages for distinct eval types,
+    // and in particular, the editor should know if a language (like pyodide)
+    // is known but not yet loaded, and should kick off and await completion
+    // of the language loading process before attemping to eval code.
+
+    if (
+      NONCODE_EVAL_TYPES.includes(evalType) ||
+      evalType === "" ||
+      evalText === ""
+    ) {
+      // if this chunk is a no-op, bail out right away
+      sendStatusResponseToEditor("SUCCESS", evalId);
+      return Promise.resolve();
+    }
 
     MOST_RECENT_CHUNK_ID.set(chunkId);
     const sideEffect = document.getElementById(
@@ -223,35 +132,55 @@ export function evaluateText(
       sideEffect.innerText = null;
     }
     const state = getState();
+    const languageReady = Object.keys(state.loadedLanguages).includes(evalType);
+    const languageKnown = Object.keys(state.languageDefinitions).includes(
+      evalType
+    );
+
+    sendActionToEditor(
+      addToConsoleHistory({
+        historyType: "CONSOLE_INPUT",
+        content: evalText,
+        language: evalType
+      })
+    );
+
+    let result;
     if (evalType === "fetch") {
-      return dispatch(evaluateFetchText(evalText, evalId));
+      result = await evaluateFetchText(evalText, evalId);
     } else if (evalType === "plugin") {
-      return dispatch(evaluateLanguagePlugin(evalText, evalId));
-    } else if (
-      Object.keys(state.loadedLanguages).includes(evalType) ||
-      Object.keys(state.languageDefinitions).includes(evalType)
-    ) {
-      return dispatch(evaluateCode(evalText, evalType, state, evalId));
-    } else if (NONCODE_EVAL_TYPES.includes(evalType) || evalType === "") {
-      sendStatusResponseToEditor("SUCCESS", evalId);
+      result = await evaluateLanguagePlugin(evalText, evalId);
+    } else if (languageReady) {
+      const language = state.loadedLanguages[evalType];
+      result = await evaluateCode(evalText, language, evalId);
+    } else if (languageKnown) {
+      try {
+        const language = state.languageDefinitions[evalType];
+        sendActionToEditor(
+          addToConsoleHistory({
+            historyType: "CONSOLE_MESSAGE",
+            content: `Loading ${language.displayName} language plugin`,
+            level: "LOG"
+          })
+        );
+        await loadLanguagePlugin(language);
+        result = await evaluateCode(evalText, language, evalId);
+      } catch (error) {
+        result = Promise.reject();
+      }
     } else {
       sendStatusResponseToEditor("ERROR", evalId);
-      dispatch(
-        addToConsoleHistory({
-          historyType: "CONSOLE_INPUT",
-          content: evalText,
-          language: evalType
-        })
-      );
-      dispatch(
+      sendActionToEditor(
         addToConsoleHistory({
           historyType: "CONSOLE_OUTPUT",
           value: new Error(`eval type ${evalType} is not defined`),
           level: "ERROR"
         })
       );
+      result = Promise.reject();
     }
-    return Promise.resolve();
+    sendActionToEditor(updateUserVariables());
+    return result;
   };
 }
 

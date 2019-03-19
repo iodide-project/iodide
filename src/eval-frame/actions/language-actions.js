@@ -1,24 +1,20 @@
-import { postMessageToEditor } from "../port-to-editor";
+import messagePasserEval from "../../redux-to-port-message-passer";
+import {
+  sendActionToEditor,
+  sendStatusResponseToEditor
+} from "./editor-message-senders";
 import {
   addToConsoleHistory,
-  updateConsoleEntry,
-  sendStatusResponseToEditor
-} from "./actions";
+  updateConsoleEntry
+} from "./console-history-actions";
 import generateRandomId from "../../tools/generate-random-id";
 
-export function addLanguage(languageDefinition) {
-  return {
-    type: "ADD_LANGUAGE_TO_EVAL_FRAME",
-    languageDefinition
-  };
-}
-
-function loadLanguagePlugin(pluginData, dispatch) {
+export function loadLanguagePlugin(pluginData) {
   let value;
   let languagePluginPromise;
 
   const historyId = generateRandomId();
-  dispatch(
+  sendActionToEditor(
     addToConsoleHistory({
       historyType: "CONSOLE_MESSAGE",
       content: "fetching plugin",
@@ -28,7 +24,9 @@ function loadLanguagePlugin(pluginData, dispatch) {
   );
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
-    dispatch(updateConsoleEntry({ historyId, content: value, level: "ERROR" }));
+    sendActionToEditor(
+      updateConsoleEntry({ historyId, content: value, level: "ERROR" })
+    );
   } else {
     const { url, displayName } = pluginData;
 
@@ -40,12 +38,12 @@ function loadLanguagePlugin(pluginData, dispatch) {
         if (evt.total > 0) {
           value += `out of ${evt.total} (${evt.loaded / evt.total}%)`;
         }
-        dispatch(updateConsoleEntry({ historyId, content: value }));
+        sendActionToEditor(updateConsoleEntry({ historyId, content: value }));
       });
 
       xhrObj.addEventListener("load", () => {
         value = `${displayName} plugin downloaded, initializing`;
-        dispatch(
+        sendActionToEditor(
           updateConsoleEntry({ historyId, content: value, level: "LOG" })
         );
         // see the following for asynchronous loading of scripts from strings:
@@ -57,7 +55,7 @@ function loadLanguagePlugin(pluginData, dispatch) {
           value = `${displayName} failed to load: ${xhrObj.status} ${
             xhrObj.statusText
           }`;
-          dispatch(
+          sendActionToEditor(
             updateConsoleEntry({ historyId, content: value, level: "ERROR" })
           );
           resolve();
@@ -71,15 +69,17 @@ function loadLanguagePlugin(pluginData, dispatch) {
 
         pr.then(() => {
           value = `${displayName} plugin ready`;
-          dispatch(addLanguage(pluginData));
-          postMessageToEditor("POST_LANGUAGE_DEF_TO_EDITOR", pluginData);
-          dispatch(
+          messagePasserEval.postMessage(
+            "POST_LANGUAGE_DEF_TO_EDITOR",
+            pluginData
+          );
+          sendActionToEditor(
             updateConsoleEntry({ historyId, content: value, level: "LOG" })
           );
           delete window.languagePluginUrl;
           resolve();
         }).catch(err => {
-          dispatch(
+          sendActionToEditor(
             updateConsoleEntry({ historyId, content: value, level: "ERROR" })
           );
           reject(err);
@@ -89,7 +89,7 @@ function loadLanguagePlugin(pluginData, dispatch) {
       xhrObj.addEventListener("error", () => {
         value = `${displayName} plugin failed to load: ${url} not found
         `;
-        dispatch(
+        sendActionToEditor(
           updateConsoleEntry({ historyId, content: value, level: "ERROR" })
         );
         reject();
@@ -103,75 +103,43 @@ function loadLanguagePlugin(pluginData, dispatch) {
 }
 
 export function evaluateLanguagePlugin(pluginText, evalId) {
-  return dispatch => {
-    dispatch(
+  let pluginData;
+  try {
+    pluginData = JSON.parse(pluginText);
+  } catch (err) {
+    sendActionToEditor(
       addToConsoleHistory({
-        historyType: "CONSOLE_INPUT",
-        content: pluginText,
-        language: "plugin"
+        historyType: "CONSOLE_OUTPUT",
+        content: `plugin definition failed to parse:\n${err.message}`,
+        level: "ERROR"
       })
     );
-    let pluginData;
-    try {
-      pluginData = JSON.parse(pluginText);
-    } catch (err) {
-      dispatch(
-        addToConsoleHistory({
-          historyType: "CONSOLE_OUTPUT",
-          content: `plugin definition failed to parse:\n${err.message}`,
-          level: "ERROR"
-        })
-      );
+    sendStatusResponseToEditor("ERROR", evalId);
+    return Promise.reject();
+  }
+  return loadLanguagePlugin(pluginData)
+    .then(() => {
+      sendStatusResponseToEditor("SUCCESS", evalId);
+    })
+    .catch(err => {
       sendStatusResponseToEditor("ERROR", evalId);
-      return Promise.reject();
-    }
-    return loadLanguagePlugin(pluginData, dispatch)
-      .then(() => {
-        sendStatusResponseToEditor("SUCCESS", evalId);
-      })
-      .catch(err => {
-        sendStatusResponseToEditor("ERROR", evalId);
-        return err;
-      });
-  };
+      return err;
+    });
 }
 
-export function ensureLanguageAvailable(languageId, state, dispatch) {
-  if (Object.prototype.hasOwnProperty.call(state.loadedLanguages, languageId)) {
-    return new Promise(resolve => resolve(state.loadedLanguages[languageId]));
-  }
-
-  if (
-    Object.prototype.hasOwnProperty.call(state.languageDefinitions, languageId)
-  ) {
-    dispatch(
-      addToConsoleHistory({
-        historyType: "CONSOLE_MESSAGE",
-        content: `Loading ${
-          state.languageDefinitions[languageId].displayName
-        } language plugin`,
-        level: "LOG"
-      })
-    );
-    return loadLanguagePlugin(
-      state.languageDefinitions[languageId],
-      dispatch
-    ).then(() => state.languageDefinitions[languageId]);
-  }
-  // There is neither a loaded language or a predefined definition that matches...
-  // FIXME: It would be hard to get here in the UX, but with direct JSMD
-  // editing you could...
-  return new Promise((resolve, reject) => reject());
-}
-
-export function runCodeWithLanguage(
-  language,
-  code,
-  messageCallback = () => {}
-) {
+export function runCodeWithLanguage(language, code) {
   const { module, evaluator, asyncEvaluator } = language;
   if (asyncEvaluator !== undefined) {
     try {
+      const messageCallback = msg => {
+        sendActionToEditor(
+          addToConsoleHistory({
+            content: msg,
+            historyType: "CONSOLE_MESSAGE",
+            level: "LOG"
+          })
+        );
+      };
       return window[module][asyncEvaluator](code, messageCallback);
     } catch (e) {
       if (e.message === "window[module] is undefined") {

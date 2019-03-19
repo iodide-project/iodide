@@ -31,7 +31,6 @@ window.iodide = iodide;
 initializeDefaultKeybindings();
 // initialize variables available to the user in an empty notebook, such as
 // the iodide API.
-initializeUserVariables(store);
 
 render(
   <CSSCascadeProvider>
@@ -48,3 +47,5 @@ render(
   </Provider>,
   document.getElementById("view-mode-styles")
 );
+
+initializeUserVariables();

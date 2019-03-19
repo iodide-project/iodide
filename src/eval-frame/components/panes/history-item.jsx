@@ -9,7 +9,7 @@ import PreformattedTextItemsHandler from "../../../components/reps/preformatted-
 import HistoryInputItem from "./console/history-input-item";
 import ConsoleMessage from "./console/console-message";
 
-import { EVALUATION_RESULTS } from "../../actions/actions";
+import { EVALUATION_RESULTS } from "../../actions/console-history-actions";
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {

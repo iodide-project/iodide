@@ -1,5 +1,7 @@
 import { store } from "../../store";
 import * as actions from "../actions";
+import { evaluateNotebook } from "../eval-actions";
+
 import { stateProperties } from "../../state-schemas/state-schema";
 import { SchemaValidationError } from "../../reducers/create-validated-reducer";
 import { languageDefinitions } from "../../state-schemas/language-definitions";
@@ -97,7 +99,7 @@ describe("make sure action creators leave store in a consitent state", () => {
   });
 
   it("evaluateNotebook", () => {
-    expect(() => store.dispatch(actions.evaluateNotebook())).not.toThrow();
+    expect(() => store.dispatch(evaluateNotebook())).not.toThrow();
   });
 
   it("loginSuccess", () => {

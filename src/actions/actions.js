@@ -21,13 +21,7 @@ import { loginToServer, logoutFromServer } from "../tools/login";
 import { fetchWithCSRFTokenAndJSONContent } from "./../shared/fetch-with-csrf-token";
 
 import { jsmdParser } from "./jsmd-parser";
-import {
-  getChunkContainingLine,
-  selectionToChunks,
-  removeDuplicatePluginChunksInSelectionSet
-} from "./jsmd-selection";
-
-import evalQueue from "./evaluation-queue";
+import { getChunkContainingLine } from "./jsmd-selection";
 
 import createHistoryItem from "../tools/create-history-item";
 
@@ -198,36 +192,6 @@ export function updateEditorSelections(selections) {
   };
 }
 
-export function evaluateText() {
-  return (dispatch, getState) => {
-    const {
-      jsmdChunks,
-      kernelState,
-      editorSelections,
-      editorCursor
-    } = getState();
-
-    if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
-
-    if (editorSelections.length === 0) {
-      const activeChunk = getChunkContainingLine(jsmdChunks, editorCursor.line);
-      evalQueue.evaluate(activeChunk, dispatch);
-    } else {
-      const selectionChunkSet = editorSelections
-        .map(selection => ({
-          start: selection.start.line,
-          end: selection.end.line,
-          selectedText: selection.selectedText
-        }))
-        .map(selection => selectionToChunks(selection, jsmdChunks))
-        .map(removeDuplicatePluginChunksInSelectionSet());
-      selectionChunkSet.forEach(selection => {
-        selection.forEach(chunk => evalQueue.evaluate(chunk, dispatch));
-      });
-    }
-  };
-}
-
 export function moveCursorToNextChunk() {
   return (dispatch, getState) => {
     const {
@@ -242,31 +206,6 @@ export function moveCursorToNextChunk() {
 
     const targetChunk = getChunkContainingLine(jsmdChunks, targetLine);
     dispatch(updateEditorCursor(targetChunk.endLine + 1, 0, true));
-  };
-}
-
-export const nonRunnableChunkType = ["md", "css", "raw", ""];
-
-const chunkIsRunnable = chunk =>
-  !nonRunnableChunkType.includes(chunk.chunkType);
-
-const chunkNotSkipped = chunk =>
-  !(
-    chunk.evalFlags.includes("skipRunAll") ||
-    chunk.evalFlags.includes("skiprunall")
-  );
-
-export function evaluateNotebook(evalQueueInstance = evalQueue) {
-  return (dispatch, getState) => {
-    const { jsmdChunks, kernelState } = getState();
-
-    if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
-
-    jsmdChunks.forEach(chunk => {
-      if (chunkIsRunnable(chunk) && chunkNotSkipped(chunk)) {
-        evalQueueInstance.evaluate(chunk);
-      }
-    });
   };
 }
 

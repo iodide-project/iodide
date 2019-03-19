@@ -1,5 +1,6 @@
 import { updateUserVariables } from "./actions/actions";
+import { sendActionToEditor } from "./actions/editor-message-senders";
 
-export default store => {
-  store.dispatch(updateUserVariables());
+export default () => {
+  sendActionToEditor(updateUserVariables());
 };

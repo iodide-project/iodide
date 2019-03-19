@@ -1,4 +1,6 @@
-import { setViewMode, evaluateNotebook } from "./actions/actions";
+import { setViewMode } from "./actions/actions";
+import { evaluateNotebook } from "./actions/eval-actions";
+
 import { getStatePropsFromUrlParams } from "./tools/query-param-tools";
 
 export default function handleReportViewModeInitialization(store) {

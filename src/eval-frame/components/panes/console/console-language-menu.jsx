@@ -10,7 +10,8 @@ import MenuItem from "../../../../shared/components/menu-item";
 import { TextButton } from "../../../../shared/components/buttons";
 import BaseIcon from "./base-icon";
 
-import { setConsoleLanguage as setConsoleLanguageAction } from "../../../actions/actions";
+import { setConsoleLanguage } from "../../../actions/actions";
+import { sendActionToEditor } from "../../../actions/editor-message-senders";
 
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;
@@ -62,8 +63,7 @@ const onMenuClickCreator = (fcn, languageId) => () => {
 
 const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
-  currentLanguage,
-  setConsoleLanguage
+  currentLanguage
 }) => {
   return (
     <React.Fragment>
@@ -83,7 +83,8 @@ const ConsoleLanguageMenuUnconnected = ({
             <MenuItem
               key={language.languageId}
               onClick={onMenuClickCreator(
-                setConsoleLanguage,
+                languageId =>
+                  sendActionToEditor(setConsoleLanguage(languageId)),
                 language.languageId
               )}
             >
@@ -104,8 +105,7 @@ ConsoleLanguageMenuUnconnected.propTypes = {
       languageId: PropTypes.string.isRequired
     })
   ).isRequired,
-  currentLanguage: PropTypes.string.isRequired,
-  setConsoleLanguage: PropTypes.func.isRequired
+  currentLanguage: PropTypes.string.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -118,15 +118,4 @@ export function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    setConsoleLanguage: languageId => {
-      dispatch(setConsoleLanguageAction(languageId));
-    }
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConsoleLanguageMenuUnconnected);
+export default connect(mapStateToProps)(ConsoleLanguageMenuUnconnected);

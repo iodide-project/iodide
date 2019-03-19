@@ -2,6 +2,7 @@ import UserTask from "./user-task";
 import ExternalLinkTask from "./external-link-task";
 import { store } from "../store";
 import * as actions from "./actions";
+import { evaluateText, evaluateNotebook } from "./eval-actions";
 
 // FIXME: remove requirement to import store in this file by attaching
 // keypress handling to store in initializeDefaultKeybindings() --
@@ -33,7 +34,7 @@ tasks.evaluateChunk = new UserTask({
   keybindings: ["mod+enter"],
   displayKeybinding: `${commandKey}+Enter`,
   callback() {
-    dispatcher.evaluateText();
+    store.dispatch(evaluateText());
   }
 });
 
@@ -41,7 +42,7 @@ tasks.evaluateNotebook = new UserTask({
   title: "Run Full Notebook",
   menuTitle: "Run Full Notebook",
   callback() {
-    dispatcher.evaluateNotebook();
+    store.dispatch(evaluateNotebook());
   }
 });
 
@@ -51,7 +52,7 @@ tasks.evaluateChunkAndSelectBelow = new UserTask({
   displayKeybinding: "Shift+Enter",
   preventDefaultKeybinding: true,
   callback() {
-    dispatcher.evaluateText();
+    store.dispatch(evaluateText());
     dispatcher.moveCursorToNextChunk();
   }
 });

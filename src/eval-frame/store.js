@@ -29,6 +29,4 @@ const initialState = evalFrameStateSelector(newNotebook());
 
 const store = createStore(reducer, initialState, enhancer);
 
-const { dispatch } = store;
-
-export { store, dispatch };
+export { store };

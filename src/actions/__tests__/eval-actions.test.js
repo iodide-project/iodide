@@ -1,7 +1,8 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { evaluateNotebook, nonRunnableChunkType } from "../actions";
+import { evaluateNotebook } from "../eval-actions";
+import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 
 const mockStore = configureMockStore([thunk]);
 
@@ -72,7 +73,7 @@ describe("evaluateNotebook - correct evaluations", () => {
     expect(mockEvalQueue.evaluate.mock.calls.length).toBe(2);
   });
 
-  nonRunnableChunkType.forEach(chunkType => {
+  NONCODE_EVAL_TYPES.forEach(chunkType => {
     it(`doesn't call evalQueueInstance.evaluate for chunktype: ${chunkType}`, async () => {
       testState.jsmdChunks[0].chunkType = chunkType;
       store = mockStore(testState);
