@@ -133,7 +133,7 @@ if (iodide.file.exists(FILENAME)) {
   iodide.file.load(FILENAME, 'text', 'evictionsData')
     .then(() => {
       evictionsData = d3.parseCsv(evictionsData)
-    }) ...
+    })
 } else {
   // if we don't have the cached file, let's go ahead
   // and download the bigger one, manipulate it with some
@@ -145,7 +145,7 @@ if (iodide.file.exists(FILENAME)) {
     .then(processDataAndReduceItsSize)
     .then((finalData) => {
       evictionsData = finalData
-      iodide.file.save(evictionsData, 'dataset.csv', d3.csvFormat)
+      return iodide.file.save(evictionsData, 'dataset.csv', d3.csvFormat)
     })
 }
 ```
