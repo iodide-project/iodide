@@ -128,7 +128,6 @@ The example below loads cached data if it exists on the server, and otherwise do
 ```javascript
 
 const FILENAME = 'dataset.csv'
-let promise
 if (iodide.file.exists(FILENAME)) {
   // since the cached file already exists, let's load it.
   iodide.file.load(FILENAME, 'text', 'evictionsData')
