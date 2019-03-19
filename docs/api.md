@@ -57,7 +57,7 @@ Returns a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guid
 
 `fileType` is the file type to handle. These are the same as the file types in [fetch chunks](https://iodide-project.github.io/docs/jsmd/#fetch-chunks-fetch): `js` (load this file as javascript, eg a library), `css` (load this file as a stylesheet, applying the styles to the report), `json` (load this file as json and parse into a javascript object), `text` (load this file as text), `blob` (load this file as binary).
 
-`variableName` (required for `json`, `text`, and `blob` file types, otherwise not applicable): the variable name in which to load the data.
+`variableName` (required for `json`, `text`, and `blob` file types, otherwise not applicable): the variable name in which to load the data, available in the browser `window` namespace.
 
 
 #### `iodide.file.load` patterns
