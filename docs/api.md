@@ -115,7 +115,7 @@ iodide.file.list()
 
 ### `iodide.file.exists(fileName)`
 
-Returns `true` if the file has been uploaded to the server, and `false` otherwise.
+Returns `true` if the file `fileName` is available to the notebook, and `false` otherwise.
 
 The below code chunk, for instance, checks to see if a csv file already exists on the server. If it does, then Iodide will load that. Otherwise,
 the notebook will fetch the data, process it using a numb er of steps, and save the output to the server.
