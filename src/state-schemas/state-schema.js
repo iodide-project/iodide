@@ -1,6 +1,7 @@
 import { languageDefinitions } from "./language-definitions";
 
 export const NONCODE_EVAL_TYPES = ["css", "md", "meta", "raw"];
+export const RUNNABLE_CHUNK_TYPES = ["plugin", "fetch"];
 
 const appMessageSchema = {
   type: "object",
