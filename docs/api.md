@@ -145,7 +145,7 @@ if (iodide.file.exists(FILENAME)) {
     .then(processDataAndReduceItsSize)
     .then((finalData) => {
       evictionsData = finalData
-      iodide.file.save(evictionsData, 'dataset.csv', (d) => d3.formatCSV(d))
+      iodide.file.save(evictionsData, 'dataset.csv', d3.csvFormat)
     })
 }
 ```
