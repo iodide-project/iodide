@@ -106,7 +106,7 @@
     "eslint-plugin-jsx-a11y": "6.2.1",
     "eslint-plugin-prettier": "3.0.1",
     "eslint-plugin-react": "7.12.4",
-    "fake-indexeddb": "2.0.6",
+    "fake-indexeddb": "2.1.0",
     "file-loader": "3.0.1",
     "jest": "23.6.0",
     "jest-cli": "23.6.0",
