@@ -7,6 +7,10 @@ import {
   onParentContextFileFetchError
 } from "./tools/fetch-file-from-parent-context";
 import messagePasserEval from "../redux-to-port-message-passer";
+import {
+  onParentContextFileSaveSuccess,
+  onParentContextFileSaveError
+} from "./tools/save-file-in-parent-context";
 
 const mc = new MessageChannel();
 const portToEditor = mc.port1;
@@ -54,6 +58,14 @@ function receiveMessage(event) {
           type: "REPLACE_STATE",
           state: message
         });
+        break;
+      }
+      case "FILE_SAVED_SUCCESS": {
+        onParentContextFileSaveSuccess(message.path);
+        break;
+      }
+      case "FILE_SAVED_ERROR": {
+        onParentContextFileSaveError(message.reason, message.path);
         break;
       }
       case "REQUESTED_FILE_SUCCESS": {

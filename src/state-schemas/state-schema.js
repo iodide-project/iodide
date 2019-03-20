@@ -101,6 +101,15 @@ const cursorPositionSchema = {
   additionalProperties: false
 };
 
+const fileSchema = {
+  type: "object",
+  properties: {
+    name: { type: "string", default: "" },
+    lastUpdated: { type: "string", default: "" }
+  },
+  additionalProperties: false
+};
+
 export const stateProperties = {
   appMessages: {
     type: "array",
@@ -288,7 +297,8 @@ export const stateProperties = {
         type: "string",
         enum: ["SERVER", "STANDALONE"]
       },
-      tryItMode: { type: "boolean" }
+      tryItMode: { type: "boolean" },
+      files: { type: "array", items: fileSchema }
     },
     default: {
       notebook_id: undefined,

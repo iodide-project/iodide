@@ -23,11 +23,34 @@ export function selectFileAndFormatMetadata(notebookID) {
   });
 }
 
+export function valueToFile(data, fileName) {
+  return new File([data], fileName);
+}
+
+export function makeFormData(notebookID, data, fileName) {
+  const file = valueToFile(data, fileName);
+  const formData = new FormData();
+  formData.append(
+    "metadata",
+    JSON.stringify({
+      filename: file.name,
+      notebook_id: notebookID
+    })
+  );
+  formData.append("file", file);
+  return formData;
+}
+
 export function uploadFile(formData) {
   return fetchWithCSRFToken("/api/v1/files/", {
     body: formData,
     method: "POST"
   });
+}
+
+export function saveFileToServer(notebookID, data, fileName) {
+  const formData = makeFormData(notebookID, data, fileName);
+  return uploadFile(formData);
 }
 
 export function updateFile(fileID, formData) {
@@ -45,6 +68,7 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
   filePicker.click();
   filePicker.addEventListener("change", evt => {
     const file = evt.target.files[0];
+    console.log(file);
     const formData = new FormData();
     formData.append(
       "metadata",

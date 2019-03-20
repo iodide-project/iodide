@@ -1,12 +1,17 @@
 /* global IODIDE_EVAL_FRAME_ORIGIN  */
 
 import Mousetrap from "mousetrap";
-import { addLanguage, setKernelState } from "./actions/actions";
+import {
+  addLanguage,
+  setKernelState,
+  updateAppMessages
+} from "./actions/actions";
 import { evalConsoleInput } from "./actions/console-actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
 import evalQueue from "./actions/evaluation-queue";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "./redux-to-port-message-passer";
+import { saveFileToServer } from "./shared/upload-file";
 
 let portToEvalFrame;
 
@@ -51,6 +56,22 @@ function receiveMessage(event) {
         if (!queueSize) {
           messagePasserEditor.dispatch(setKernelState("KERNEL_IDLE"));
         }
+        break;
+      }
+      case "SAVE_FILE": {
+        saveFileToServer(message.notebookID, message.data, message.path).then(
+          () => {
+            postMessageToEvalFrame("FILE_SAVED_SUCCESS", {
+              path: message.path
+            });
+            messagePasserEditor.dispatch(
+              updateAppMessages({
+                message: `file ${message.path} saved`,
+                messageType: `NOTEBOOK_SAVED`
+              })
+            );
+          }
+        );
         break;
       }
       case "REQUEST_FETCH": {

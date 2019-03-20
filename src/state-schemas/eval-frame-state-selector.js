@@ -15,7 +15,8 @@ const propsToCopy = [
   "panePositions.WorkspacePositioner",
   "savedEnvironment",
   "userDefinedVarNames",
-  "viewMode"
+  "viewMode",
+  "notebookInfo"
 ];
 
 export default function evalFrameStateSelector(state) {
