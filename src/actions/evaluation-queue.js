@@ -52,7 +52,7 @@ export class EvaluationQueue {
   }
 
   clear(evalId) {
-    this.evaluationResolvers[evalId].reject();
+    if (evalId) this.evaluationResolvers[evalId].reject();
     this.evaluationResolvers = {};
     this.queue = Promise.resolve();
     return this;

@@ -6,6 +6,10 @@ const VARIABLE_TYPE_FILES = ["text", "json", "blob"];
 
 // custom file saving functionality, needs to work like fetchFromParentContext or whatever?
 
+function getFiles(store) {
+  return store.getState().notebookInfo.files;
+}
+
 export function connectLoad(fetchFunction) {
   return async function load(fileName, fileType, variableName = undefined) {
     return fetchFunction(`files/${fileName}`, fileType).then(file => {
@@ -43,12 +47,23 @@ export function connectSave(store, saveFunction) {
     // first thing first = check to see if exists in store.
     const exists = connectExists(store);
     if (!saveOptions.overwrite && exists(fileName)) {
-      throw new Error("cannot overwrite this file ughhhh!!!!!!");
+      throw new Error(
+        `file ${fileName} already exists. Try setting overwrite: true`
+      );
     }
+
+    const updateFile = saveOptions.overwrite && exists(fileName);
+    const files = getFiles(store);
+    const fileID = exists(fileName)
+      ? files[files.findIndex(f => f.filename === fileName)].id
+      : undefined;
+
     return saveFunction(
       store.getState().notebookInfo.notebook_id,
       data,
-      fileName
+      fileName,
+      updateFile, // this flag tells us if we need to update the file
+      fileID // for updating the file
     );
   };
 }

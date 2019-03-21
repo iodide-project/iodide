@@ -43,14 +43,9 @@ export function makeFormData(notebookID, data, fileName) {
 
 export function uploadFile(formData) {
   return fetchWithCSRFToken("/api/v1/files/", {
-    body: formData,
-    method: "POST"
+    method: "POST",
+    body: formData
   });
-}
-
-export function saveFileToServer(notebookID, data, fileName) {
-  const formData = makeFormData(notebookID, data, fileName);
-  return uploadFile(formData);
 }
 
 export function updateFile(fileID, formData) {
@@ -58,6 +53,20 @@ export function updateFile(fileID, formData) {
     method: "PUT",
     body: formData
   });
+}
+
+export function saveFileToServer(
+  notebookID,
+  data,
+  fileName,
+  updateFileFlag = false,
+  fileID = undefined
+) {
+  const formData = makeFormData(notebookID, data, fileName);
+  const fetchRequest = updateFileFlag
+    ? fd => updateFile(fileID, fd)
+    : fd => uploadFile(fd);
+  return fetchRequest(formData);
 }
 
 export function selectAndUploadFile(notebookID, successCallback = () => {}) {
@@ -68,7 +77,6 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
   filePicker.click();
   filePicker.addEventListener("change", evt => {
     const file = evt.target.files[0];
-    console.log(file);
     const formData = new FormData();
     formData.append(
       "metadata",

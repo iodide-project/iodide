@@ -9,6 +9,7 @@ import {
 } from "./actions/actions";
 import { evalConsoleInput } from "./actions/console-actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
+import createHistoryItem from "./tools/create-history-item";
 import evalQueue from "./actions/evaluation-queue";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "./redux-to-port-message-passer";
@@ -60,8 +61,12 @@ function receiveMessage(event) {
         break;
       }
       case "SAVE_FILE": {
-        saveFileToServer(message.notebookID, message.data, message.path)
-          .then(r => r.json())
+        const { notebookID, data, path, updateFile, fileID } = message;
+        saveFileToServer(notebookID, data, path, updateFile, fileID)
+          .then(r => {
+            if (r.status === 500) throw new Error(r.statusText);
+            return r.json();
+          })
           .then(fileInfo => {
             const { filename, lastUpdated, id } = fileInfo;
             postMessageToEvalFrame("FILE_SAVED_SUCCESS", {
@@ -74,6 +79,18 @@ function receiveMessage(event) {
               })
             );
             messagePasserEditor.dispatch(addFile(filename, lastUpdated, id));
+          })
+          .catch(err => {
+            // we need to error here.
+            evalQueue.clear();
+            const historyAction = createHistoryItem({
+              content: err.message,
+              level: "ERROR",
+              historyType: "CONSOLE_MESSAGE"
+            });
+            historyAction.type = "ADD_TO_CONSOLE_HISTORY";
+            messagePasserEditor.dispatch(historyAction);
+            messagePasserEditor.dispatch(setKernelState("KERNEL_IDLE"));
           });
         break;
       }

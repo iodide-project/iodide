@@ -24,12 +24,24 @@ export function onParentContextFileSaveError(reason, path) {
   deleteResolvers(path);
 }
 
-export default async function saveFileInParentContext(notebookID, data, path) {
+export default async function saveFileInParentContext(
+  notebookID,
+  data,
+  path,
+  updateFile = false,
+  fileID = undefined
+) {
   // used in eval frame.
   return new Promise((resolve, reject) => {
     // resolve and reject are handled in port-to-editor.js when
     // the file is received by the editor.
     addResolvers(path, resolve, reject);
-    postMessageToEditor("SAVE_FILE", { notebookID, path, data });
+    postMessageToEditor("SAVE_FILE", {
+      notebookID,
+      path,
+      data,
+      updateFile,
+      fileID
+    });
   });
 }

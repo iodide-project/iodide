@@ -3,9 +3,9 @@ export const store = {
     return {
       notebookInfo: {
         files: [
-          { name: "file1.csv" },
-          { name: "file2.csv" },
-          { name: "file3.csv" }
+          { filename: "file1.csv", id: 0, lastUpdated: "yesterday" },
+          { filename: "file2.csv", id: 1, lastUpdated: "tomorrow" },
+          { filename: "file3.csv", id: 2, lastUpdated: "never" }
         ]
       }
     };
