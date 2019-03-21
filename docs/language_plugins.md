@@ -32,6 +32,7 @@ levels of support to make it easier to know what to expect.
 | [Opal](https://codepen.io/ds604/pen/6cef7f732750cb2bde469b5ff387a320)           | Ruby           | ✓       | ✓       |         |         |          |
 | [Julide](https://github.com/keno/julia-wasm)                                                                        | Julia           | ✓        |         |         |         |          |
 | [Domical](https://github.com/louisabraham/domical)                              | OCaml          | ✓       |         |         |         |          |
+| [PlantUml](https://github.com/six42/iodide-plantuml-plugin)                              | PlantUml          | ✓       |         |         |         |          |
 
 (We try to keep the above table up-to-date, but things fall through the cracks.
 Let us know on [GitHub](http://github.com/iodide-project/iodide/) if you see anything
