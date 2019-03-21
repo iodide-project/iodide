@@ -54,6 +54,16 @@ export const languageSchema = {
   additionalProperties: false
 };
 
+export const fileSchema = {
+  type: "object",
+  properties: {
+    filename: { type: "string" },
+    id: { type: "integer" },
+    lastUpdated: { type: "string" }
+  },
+  additionalProperties: false
+};
+
 const environmentVariableSchema = {
   type: "array",
   items: [
@@ -269,6 +279,7 @@ export const stateProperties = {
     properties: {
       user_can_save: { type: "boolean" },
       notebook_id: { type: "integer" },
+      files: { type: "array", items: fileSchema },
       connectionStatus: {
         type: "string",
         enum: ["CONNECTION_ACTIVE", "CONNECTION_LOST"]
@@ -283,7 +294,8 @@ export const stateProperties = {
       notebook_id: undefined,
       user_can_save: false,
       connectionMode: "STANDALONE",
-      connectionStatus: "CONNECTION_ACTIVE"
+      connectionStatus: "CONNECTION_ACTIVE",
+      files: []
     }
   },
   panePositions: {

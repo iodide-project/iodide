@@ -33,6 +33,13 @@ def notebook_view(request, pk):
         revision = get_object_or_404(NotebookRevision, pk=int(request.GET["revision"]))
     else:
         revision = notebook.revisions.first()
+    files = [
+        {
+            'filename': file.filename,
+            'id': file.id,
+            'lastUpdated': file.last_updated.isoformat()
+        }
+        for file in File.objects.filter(notebook_id=pk).order_by("-last_updated")]
     notebook_info = {
         "username": notebook.owner.username,
         "user_can_save": notebook.owner_id == request.user.id,
@@ -40,6 +47,7 @@ def notebook_view(request, pk):
         "revision_id": revision.id,
         "connectionMode": "SERVER",
         "title": revision.title,
+        "files": files
     }
     if notebook.forked_from is not None:
         notebook_info["forked_from"] = notebook.forked_from.id

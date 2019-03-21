@@ -31,7 +31,6 @@ window.iodide = iodide;
 initializeDefaultKeybindings();
 // initialize variables available to the user in an empty notebook, such as
 // the iodide API.
-
 render(
   <CSSCascadeProvider>
     <Provider store={store}>
