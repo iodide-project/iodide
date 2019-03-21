@@ -6,12 +6,17 @@ import MarkdownIt from "markdown-it";
 import MarkdownItKatex from "@iktakahiro/markdown-it-katex";
 import MarkdownItAnchor from "markdown-it-anchor";
 import MarkdownItEmoji from "markdown-it-emoji";
+import MarkdownItExternalLink from "markdown-it-external-links";
 
 const mdIt = MarkdownIt({ html: true });
 mdIt
   .use(MarkdownItKatex)
   .use(MarkdownItAnchor)
-  .use(MarkdownItEmoji);
+  .use(MarkdownItEmoji)
+  .use(MarkdownItExternalLink, {
+    internalTarget: "_self",
+    externalTarget: "_blank"
+  });
 
 const mdDiv = html => (
   <div
