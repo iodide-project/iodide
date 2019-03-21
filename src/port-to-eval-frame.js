@@ -4,7 +4,8 @@ import Mousetrap from "mousetrap";
 import {
   addLanguage,
   setKernelState,
-  updateAppMessages
+  updateAppMessages,
+  addFile
 } from "./actions/actions";
 import { evalConsoleInput } from "./actions/console-actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
@@ -59,19 +60,21 @@ function receiveMessage(event) {
         break;
       }
       case "SAVE_FILE": {
-        saveFileToServer(message.notebookID, message.data, message.path).then(
-          () => {
+        saveFileToServer(message.notebookID, message.data, message.path)
+          .then(r => r.json())
+          .then(fileInfo => {
+            const { filename, lastUpdated, id } = fileInfo;
             postMessageToEvalFrame("FILE_SAVED_SUCCESS", {
-              path: message.path
+              path: filename
             });
             messagePasserEditor.dispatch(
               updateAppMessages({
-                message: `file ${message.path} saved`,
+                message: `file ${filename} saved`,
                 messageType: `NOTEBOOK_SAVED`
               })
             );
-          }
-        );
+            messagePasserEditor.dispatch(addFile(filename, lastUpdated, id));
+          });
         break;
       }
       case "REQUEST_FETCH": {

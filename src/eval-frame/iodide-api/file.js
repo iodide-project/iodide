@@ -28,13 +28,13 @@ export function connectExists(store) {
       );
     }
     const { files } = store.getState().notebookInfo;
-    return files.map(f => f.name).includes(fileName);
+    return files.map(f => f.filename).includes(fileName);
   };
 }
 
 export function connectList(store) {
   return function list() {
-    return store.getState().notebookInfo.files.map(f => f.name);
+    return store.getState().notebookInfo.files.map(f => f.filename);
   };
 }
 

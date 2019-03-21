@@ -515,3 +515,12 @@ export function setConnectionStatus(status) {
     status
   };
 }
+
+export function addFile(filename, lastUpdated, fileId) {
+  return {
+    type: "ADD_FILE_TO_NOTEBOOK",
+    filename,
+    lastUpdated,
+    fileId
+  };
+}

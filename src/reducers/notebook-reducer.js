@@ -204,6 +204,25 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
+    case "ADD_FILE_TO_NOTEBOOK": {
+      const { filename, lastUpdated, fileId } = action;
+      const { files } = state.notebookInfo;
+      if (!files.map(f => f.filename).includes(filename))
+        files.push({
+          filename,
+          lastUpdated,
+          id: fileId
+        });
+      else {
+        const i = files.findIndex(f => f.filename === filename);
+        files[i].lastUpdated = lastUpdated;
+      }
+      const notebookInfo = Object.assign({}, state.notebookInfo, {
+        files
+      });
+      return Object.assign({}, state, { notebookInfo });
+    }
+
     case "ADD_NOTEBOOK_ID": {
       const notebookId = action.id;
       const notebookInfo = Object.assign({}, state.notebookInfo);
