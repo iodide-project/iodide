@@ -79,16 +79,14 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
 export async function evaluateCode(code, language, evalId) {
   try {
     const output = await runCodeWithLanguage(language, code);
-
-    sendStatusResponseToEditor("SUCCESS", evalId);
     sendActionToEditor(
       addToConsoleHistory({
         historyType: "CONSOLE_OUTPUT",
         value: output
       })
     );
+    sendStatusResponseToEditor("SUCCESS", evalId);
   } catch (error) {
-    sendStatusResponseToEditor("ERROR", evalId);
     sendActionToEditor(
       addToConsoleHistory({
         historyType: "CONSOLE_OUTPUT",
@@ -96,6 +94,7 @@ export async function evaluateCode(code, language, evalId) {
         level: "ERROR"
       })
     );
+    sendStatusResponseToEditor("ERROR", evalId);
   }
 }
 

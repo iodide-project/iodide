@@ -67,8 +67,6 @@ export function* evaluateByType(evalType, evalText) {
 
 export function* evaluateCurrentQueue() {
   const evalQueue = yield actionChannel("ADD_TO_EVAL_QUEUE");
-  console.log("WITHIN evaluateCurrentQueue SAGA");
-
   while (true) {
     try {
       const { chunk } = yield take(evalQueue);
