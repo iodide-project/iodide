@@ -1,4 +1,4 @@
-.PHONY: build root-shell shell up lint lintfix test
+.PHONY: build root-shell shell dbshell up lint lintfix test
 
 build:
 	npm install
@@ -10,6 +10,9 @@ root-shell:
 
 shell:
 	docker-compose exec server bash
+
+dbshell:
+	docker-compose exec server bash -c "./manage.py dbshell"
 
 up:
 	docker-compose up
