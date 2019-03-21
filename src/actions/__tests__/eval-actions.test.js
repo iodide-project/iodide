@@ -92,7 +92,7 @@ describe("evaluateNotebook - correct evaluations", () => {
   });
 });
 
-describe("evaluateNotebook - correct evaluations", () => {
+describe.skip("evaluateNotebook - correct evaluations", () => {
   // let evaluateNotebookTest;
   let mockEvalQueue;
 

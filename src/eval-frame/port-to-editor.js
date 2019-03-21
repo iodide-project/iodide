@@ -1,6 +1,6 @@
 /* global IODIDE_EDITOR_ORIGIN  */
 
-import { evaluateText } from "./actions/actions";
+import { evaluateText, evaluateCode } from "./actions/actions";
 import { getCompletions } from "./tools/notebook-utils";
 import {
   onParentContextFileFetchSuccess,
@@ -44,7 +44,7 @@ export function postMessageToEditor(messageType, message) {
 
 messagePasserEval.connectPostMessage(postMessageToEditor);
 
-function receiveMessage(event) {
+async function receiveMessage(event) {
   const trustedMessage = true;
   if (trustedMessage) {
     const { messageType, message } = event.data;
@@ -86,6 +86,11 @@ function receiveMessage(event) {
           );
         }
         break;
+      case "EVAL_CODE": {
+        const { code, language, taskId } = message;
+        evaluateCode(code, language, taskId);
+        break;
+      }
       default:
         console.error("unknown messageType", message);
     }

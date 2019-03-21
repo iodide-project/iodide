@@ -9,7 +9,8 @@ import {
   NONCODE_EVAL_TYPES,
   RUNNABLE_CHUNK_TYPES
 } from "../state-schemas/state-schema";
-import createHistoryItem from "../tools/create-history-item";
+
+import { evalTypeConsoleError } from "./console-message-actions";
 
 const chunkNotSkipped = chunk =>
   !(
@@ -17,11 +18,14 @@ const chunkNotSkipped = chunk =>
     chunk.evalFlags.includes("skiprunall")
   );
 
-const languageReady = (state, lang) =>
+export const languageReady = (state, lang) =>
   Object.keys(state.loadedLanguages).includes(lang);
-const languageKnown = (state, lang) =>
+
+export const languageKnown = (state, lang) =>
   Object.keys(state.languageDefinitions).includes(lang);
+
 const chunkNotRunnable = chunk => NONCODE_EVAL_TYPES.includes(chunk.chunkType);
+
 const definedEvalType = (state, lang) =>
   languageReady(state, lang) ||
   languageKnown(state, lang) ||
@@ -32,17 +36,9 @@ function addToEvalQueue(chunk) {
   return (dispatch, getState) => {
     if (chunkNotRunnable(chunk)) return;
     if (!definedEvalType(getState(), chunk.chunkType)) {
-      dispatch({
-        type: "ADD_TO_CONSOLE_HISTORY",
-        ...createHistoryItem({
-          historyType: "CONSOLE_OUTPUT",
-          value: new Error(`eval type ${chunk.evalType} is not defined`),
-          level: "ERROR"
-        })
-      });
+      dispatch(evalTypeConsoleError(chunk.chunkType));
       return;
     }
-
     dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk });
   };
 }

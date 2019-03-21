@@ -76,7 +76,7 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
   };
 }
 
-async function evaluateCode(code, language, evalId) {
+export async function evaluateCode(code, language, evalId) {
   try {
     const output = await runCodeWithLanguage(language, code);
 

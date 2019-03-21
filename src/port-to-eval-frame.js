@@ -45,12 +45,16 @@ function receiveMessage(event) {
       }
       case "EVALUATION_RESPONSE": {
         const { evalId, status } = message;
-        if (status === "SUCCESS") evalQueue.continue(evalId);
-        else evalQueue.clear(evalId);
-        const queueSize = evalQueue.getQueueSize();
-        if (!queueSize) {
-          messagePasserEditor.dispatch(setKernelState("KERNEL_IDLE"));
-        }
+        messagePasserEditor.dispatch({
+          type: `EVAL_FRAME_TASK_RESPONSE-${evalId}`,
+          status
+        });
+        // if (status === "SUCCESS") evalQueue.continue(evalId);
+        // else evalQueue.clear(evalId);
+        // const queueSize = evalQueue.getQueueSize();
+        // if (!queueSize) {
+        //   messagePasserEditor.dispatch(setKernelState("KERNEL_IDLE"));
+        // }
         break;
       }
       case "REQUEST_FETCH": {
