@@ -2,16 +2,17 @@
 
 This document describes the file structure of this project. 
 
-##IODIDE
-#Iodide# is the primary git repository. It incudes a Django server to be
+## IODIDE
+
+**Iodide** is the primary git repository. It incudes a Django server to be
 run on Heroku. It include WebPack and Node to compress the javascript into
 just a few files. When this repository is cloned, it does not
 include any of the Python Wasm
 files, they are downloaded or copied from the Pyodide repositories. 
 
 
-##PYODIDE
-#Pyodide# is the other git repository. PyOdide is used to build the wasm from
+## PYODIDE
+**Pyodide** is the other git repository. PyOdide is used to build the wasm from
 Python.  For beginners the pyodide docker file is a
 great way to do the build.  It
 creates the wasm in the container in /app/src which gets saved to pyodide/src.
@@ -21,7 +22,7 @@ Reportedly the Pyodide versions change more slowly, so they just
 need to be copied occassionally into the iodide directories.
 
 
-##HEROKU
+## HEROKU
 Heroku is a hosting environment, maybe the first cloud hosting service.
 They have a model of a persistent database with disposale heroku containers
 accessing it.    
@@ -29,20 +30,21 @@ Procfile: is the command they execute to start the Django Application.
 Procfile.windows: Procfile for windows hosting.
 
 
-###DJANGO/Python
+## DJANGO/Python
 Iodide supports a Django server running on Heroku. You can read how to run
 Django on Heroku here.
 https://devcenter.heroku.com/articles/deploying-python
 So there is a bunch of Python files to define the Django server.  
+
 server: This contains the python files defining the Django server.  
-manage.py  Called by Heroku before starting the Django server.  
+manage.py:  Called by Heroku before starting the Django server.  
 pyproject.toml: PEP 518 defines pyproject.toml as a configuration file to
 store build system requirements for Python projects.  
 https://black.readthedocs.io/en/stable/pyproject_toml.html  
 setup.cfg: Various Django definitions.  
 pytest.ini: Django testing configuration.
 
-##WebPack/NODE
+## WebPack/NODE
 For web performance
 it is good to merge all of the small javascript
 files into a single downloadable, and elmiinate extra spaces.
@@ -54,6 +56,7 @@ but in development you need to be able to read the code.  Is that the
 key difference??????
 node_modules: Here you have the Node.js software which are downloaded to run
 Webpack on Node.js   
+
 package.json: Defines hich packages need to e loaded to run the Node +
 WebPack.  
 renovate.json: Automatic dependencies update  
@@ -68,11 +71,12 @@ CACHE: A Cache directory is created by the WebPack process.  This holds
 the compressed wasm files, because they take a looong time to generate, and do
 not change often. 
 
-##JAVASCRIPT EXECUTABLES
+## JAVASCRIPT EXECUTABLES
 There are a number of commands which can be run on top of node.
 npn run test: Runs the javascript test suite.    
 npn run start-and-serve: Watches the files for changes.  If anything
 changes reruns the build process.  
+
 npn run start Also watches the files for changes.
 ??? The difference between start and watch-and-serve is not clear????  
 npn run build: This is called by the makefile.  It calls the webpack.  
@@ -80,7 +84,10 @@ npn run build-production: Runs the production build.
 npn run lint: runs lint on the Javascript code.  
 
 
-##Client/Javascript
+## Client/Javascript
+And of course all of the Javascript that runs on the client is managed in this 
+Iodide repository. 
+
 src: Here you have all of the javascrpt (.js) and react (.jsx) files.  
 build: This is where the client side javascritp is put by the make command.  
 build/pyodide-$PYODIDE_VERSION: This is where the pyodide wasm goes.  It
@@ -89,17 +96,18 @@ test: Routines for testing the Javascript Application.  The tests are actually
 run on the server. 
 
 
-##Executales
+## Executales
 There are a number of executables in iodide/bin.  They depend on some
 environment variables.  They are called with arguments. So generally you
 do not call them directly.  You can call them from the Makefile or by
 calling using the npn run command as documented above. 
 
-
 Makefile: is used to run all of different commands.   Unlike the C Makefiles of
 old, this one is easy to read. To build just type make.
-   $make
+   $make  
 This will create the required files in the build directory. 
+You should definitely read the Makefile.  Lots of useful commands in there
+all pretty self-explanatory. 
 
 
 Other than the build command, makefile  just calls commands
@@ -114,16 +122,16 @@ deploy.  Looks like various tests using manage.py. Some switched off.
 bin/run: run is a bash script to start the Django server locally.
 On Heroku the Procfile is used to start the Django server.
 
-##DOCKER
+## DOCKER
 Dockerfile: This is used to create the docker container.  It contains a
 PostgreSQL database for local deployment. 
 docker-compose.yml: This is used to connect the Iodide Django application
 to the local PostgreSQL database container.
 
-#Markdown
+## Markdown
 mkdocs.yml: Used to help markdown rendering include the correct libraries. 
 
-##THE EASY STUFF
+## THE EASY STUFF
 These 5 files are self explanatory.  
 LICENSE  
 CHANGELOG.md  
