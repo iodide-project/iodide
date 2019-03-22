@@ -116,7 +116,6 @@ export const listenForEvalFramePortReady = messageEvent => {
     portToEvalFrame = messageEvent.ports[0]; // eslint-disable-line
     portToEvalFrame.onmessage = receiveMessage;
     messagePasserEditor.connectPostMessage(postMessageToEvalFrame);
-    messagePasserEditor.dispatch({ type: "EVAL_FRAME_READY" });
     // stop listening for messages once a connection to the eval-frame is made
     window.removeEventListener("message", listenForEvalFramePortReady, false);
   }

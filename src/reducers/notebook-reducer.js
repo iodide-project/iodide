@@ -1,7 +1,6 @@
 import { newNotebook } from "../editor-state-prototypes";
 import { historyIdGen } from "../actions/id-generators";
 import { exportJsmdBundle, titleToHtmlFilename } from "../tools/export-tools";
-import { postActionToEvalFrame } from "../port-to-eval-frame";
 
 function newAppMessage(
   appMessageId,
@@ -75,25 +74,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, {
         notebookInfo: { ...state.notebookInfo, connectionStatus: status }
       });
-    }
-
-    case "EVAL_FRAME_READY": {
-      state.evalFrameMessageQueue.forEach(actionToPost => {
-        postActionToEvalFrame(actionToPost);
-      });
-      const { viewMode } = state;
-      // need to send viewMode since iframe defaults to viewMode='REPORT_VIEW'
-      postActionToEvalFrame({ type: "SET_VIEW_MODE", viewMode });
-      return Object.assign({}, state, {
-        evalFrameReady: true,
-        evalFrameMessageQueue: []
-      });
-    }
-
-    case "ADD_TO_EVAL_FRAME_MESSAGE_QUEUE": {
-      const evalFrameMessageQueue = state.evalFrameMessageQueue.slice();
-      evalFrameMessageQueue.push(action.actionToPost);
-      return Object.assign({}, state, { evalFrameMessageQueue });
     }
 
     case "REPLACE_NOTEBOOK_CONTENT": {

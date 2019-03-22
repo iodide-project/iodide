@@ -1,7 +1,7 @@
 /* global IODIDE_BUILD_MODE */
 
 import notebookReducer from "./notebook-reducer";
-import evalFrameActionForwarder from "./eval-frame-action-forwarder";
+
 import evalFrameActionReducer from "./eval-frame-reducer";
 
 import { postMessageToEvalFrame } from "../port-to-eval-frame";
@@ -36,7 +36,6 @@ function sendStateToEvalFrame(state) {
 }
 
 export default reduceReducers(
-  evalFrameActionForwarder,
   notebookReducer,
   evalFrameActionReducer,
   sendStateToEvalFrame

@@ -138,15 +138,7 @@ export const stateProperties = {
     },
     default: []
   },
-  evalFrameMessageQueue: {
-    type: "array",
-    items: { type: "object" },
-    default: []
-  },
-  evalFrameReady: {
-    type: "boolean",
-    default: false
-  },
+
   gettingRevisionList: {
     type: "boolean",
     default: false
