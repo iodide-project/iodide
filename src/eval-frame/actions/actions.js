@@ -79,6 +79,9 @@ export function runCodeWithLanguage(language, code) {
       throw e;
     }
   }
+  // FIXME: i experimented with this, and I think
+  // wrapping this in a promise doesn't do anything.
+  // i think we can simplify this away. -bc
   return new Promise((resolve, reject) => {
     try {
       resolve(window[module][evaluator](code));

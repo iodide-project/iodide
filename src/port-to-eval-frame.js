@@ -1,7 +1,6 @@
 /* global IODIDE_EVAL_FRAME_ORIGIN  */
 
 import Mousetrap from "mousetrap";
-import { addLanguage } from "./actions/actions";
 import { evalConsoleInput } from "./actions/console-actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
@@ -96,10 +95,6 @@ function receiveMessage(event) {
             `got unapproved key press action from eval frame: ${message}`
           );
         }
-        break;
-      case "POST_LANGUAGE_DEF_TO_EDITOR":
-        // in this case, message is a languageDefinition
-        messagePasserEditor.dispatch(addLanguage(message));
         break;
       default:
         console.error("unknown messageType", message);
