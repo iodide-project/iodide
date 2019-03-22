@@ -9,7 +9,6 @@ import {
 } from "./actions/actions";
 import { evalConsoleInput } from "./actions/console-actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
-import createHistoryItem from "./tools/create-history-item";
 import evalQueue from "./actions/evaluation-queue";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "./redux-to-port-message-passer";
