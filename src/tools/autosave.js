@@ -1,9 +1,5 @@
-import _ from "lodash";
-import { getLocalAutosaveState, updateLocalAutosave } from "./local-autosave";
-import { updateServerAutosave } from "./server-autosave";
+import { getLocalAutosaveState } from "./local-autosave";
 import { connectionModeIsServer } from "./server-tools";
-
-const AUTOSAVE_TIMEOUT = 1000;
 
 // attempts to update local autosave, if we are in a state to do so
 // returns "RETRY" if we should retry
@@ -36,33 +32,6 @@ export async function checkUpdateAutosave(state) {
     return "UPDATE_WITH_NEW_COPY";
   }
 
-  if (state.jsmd !== autosaveState.dirtyCopy) {
-    // dirty copy has been updated, save it and queue
-    // an update to the server
-    return "UPDATE";
-  }
-
-  // some case which shouldn't happen
-  return "NOOP";
+  // otherwise we can safely assume that an update is required
+  return "UPDATE";
 }
-
-export const updateAutosave = _.debounce(async (dispatch, getState) => {
-  const state = getState();
-  const autosaveStatus = await checkUpdateAutosave(state);
-  switch (autosaveStatus) {
-    case "RETRY":
-      // debouncing should ensure we don't spin here
-      updateAutosave(dispatch, getState);
-      break;
-    case "UPDATE_WITH_NEW_COPY":
-      updateLocalAutosave(state, true);
-      updateServerAutosave(dispatch, getState);
-      break;
-    case "UPDATE":
-      updateLocalAutosave(state, false);
-      updateServerAutosave(dispatch, getState);
-      break;
-    default:
-      break;
-  }
-}, AUTOSAVE_TIMEOUT);

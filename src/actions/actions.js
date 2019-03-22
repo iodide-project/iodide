@@ -1,4 +1,6 @@
 import CodeMirror from "codemirror";
+import debounceAction from "debounce-action";
+
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 import {
   getRevisionList,
@@ -12,12 +14,13 @@ import {
   getUserDataFromDocument,
   notebookIsATrial
 } from "../tools/server-tools";
-import { updateAutosave } from "../tools/autosave";
+import { checkUpdateAutosave } from "../tools/autosave";
 import {
   clearLocalAutosave,
   getLocalAutosaveJsmd,
   updateLocalAutosave
 } from "../tools/local-autosave";
+import { updateServerAutosave } from "../tools/server-autosave";
 import { loginToServer, logoutFromServer } from "../tools/login";
 
 import { fetchWithCSRFTokenAndJSONContent } from "./../shared/fetch-with-csrf-token";
@@ -55,6 +58,32 @@ export function updateAppMessages(messageObj) {
   };
 }
 
+// we debounce this action thunk so that it runs maximum once per
+// second, so that each small change to the document doesn't hammer indexdb
+export const updateAutosave = debounceAction(() => {
+  return async (dispatch, getState) => {
+    console.log("updateAutoSave");
+    const state = getState();
+    const autosaveStatus = await checkUpdateAutosave(state);
+    switch (autosaveStatus) {
+      case "RETRY":
+        // debouncing should ensure we don't spin here
+        updateAutosave(dispatch, getState);
+        break;
+      case "UPDATE_WITH_NEW_COPY":
+        updateLocalAutosave(state, true);
+        updateServerAutosave(dispatch, getState);
+        break;
+      case "UPDATE":
+        updateLocalAutosave(state, false);
+        updateServerAutosave(dispatch, getState);
+        break;
+      default:
+        break;
+    }
+  };
+}, 1000);
+
 export function updateJsmdContent(text, autosaveChanges = true) {
   return (dispatch, getState) => {
     const jsmdChunks = jsmdParser(text);
@@ -84,7 +113,7 @@ export function updateJsmdContent(text, autosaveChanges = true) {
 
     // queue an update to autosave if applicable
     if (autosaveChanges) {
-      updateAutosave(dispatch, getState);
+      dispatch(updateAutosave());
     }
   };
 }
@@ -150,13 +179,13 @@ export function clearVariables() {
 }
 
 export function changePageTitle(title, autosaveChanges = true) {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch({
       type: "CHANGE_PAGE_TITLE",
       title
     });
     if (autosaveChanges) {
-      updateAutosave(dispatch, getState);
+      dispatch(updateAutosave());
     }
   };
 }

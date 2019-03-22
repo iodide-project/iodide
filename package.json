@@ -42,6 +42,7 @@
     "codemirror": "5.45.0",
     "css-element-queries": "1.1.1",
     "date-fns": "2.0.0-alpha.26",
+    "debounce-action": "0.1.0",
     "deep-equal": "1.0.1",
     "dexie": "2.0.4",
     "emotion": "9.2.12",
