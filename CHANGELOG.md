@@ -3,6 +3,8 @@
 - allow suitably authorized users to create notebooks on behalf of others
 - add optional [token-based authentication](https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication)
   for accessing iodide's API endpoints without a github or openidc session.
+- Pyodide has been upgraded to version 0.10.0. This includes the new packages:
+  `html5lib`, `pygments`, `beautifulsoup4`, `soupseive`, `docutils`, `bleach`
 
 # 0.4.0 (2019-03-09)
 
