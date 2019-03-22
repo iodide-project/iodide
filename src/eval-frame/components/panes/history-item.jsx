@@ -42,20 +42,19 @@ export class HistoryItemUnconnected extends React.Component {
           </HistoryInputItem>
         );
       }
-      case "CONSOLE_OUTPUT":
-      case "FETCH_CELL_INFO": {
-        // returns an output associated with an input.
-        // it uses the ConsoleMessage component, since it is stylistically
-        // identical to these.
+      case "CONSOLE_OUTPUT": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            {this.props.historyType === "FETCH_CELL_INFO" ? (
-              <PreformattedTextItemsHandler
-                textItems={this.props.valueToRender}
-              />
-            ) : (
-              <ValueRenderer valueToRender={this.props.valueToRender} />
-            )}
+            <ValueRenderer valueToRender={this.props.valueToRender} />
+          </ConsoleMessage>
+        );
+      }
+      case "FETCH_CELL_INFO": {
+        return (
+          <ConsoleMessage level={this.props.level || "OUTPUT"}>
+            <PreformattedTextItemsHandler
+              textItems={this.props.valueToRender}
+            />
           </ConsoleMessage>
         );
       }
