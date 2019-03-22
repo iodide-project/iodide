@@ -65,7 +65,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     case "UPDATE_NOTEBOOK_INFO":
       return Object.assign({}, state, { notebookInfo: action.notebookInfo });
 
-    case "SET_PREVIOUS_Autosave": {
+    case "SET_PREVIOUS_AUTOSAVE": {
       const { hasPreviousAutosave } = action;
       return Object.assign({}, state, { hasPreviousAutosave });
     }

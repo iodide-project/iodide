@@ -50,9 +50,6 @@ def test_notebook_view_old_revision(client, test_notebook):
     resp = client.get(
         reverse("notebook-view", args=[str(test_notebook.id)]) + f"?revision={initial_revision.id}"
     )
-    print(
-        reverse("notebook-view", args=[str(test_notebook.id)]) + f"?revision={initial_revision.id}"
-    )
     assert resp.status_code == 200
     assert get_title_block(resp.content) == initial_revision.title
     print(str(resp.content))
