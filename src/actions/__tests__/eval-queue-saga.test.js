@@ -5,10 +5,11 @@ import { throwError } from "redux-saga-test-plan/providers";
 import {
   evaluateCurrentQueue,
   evaluateByType,
+  evaluateLanguagePlugin,
   loadKnownLanguage,
   triggerEvalFrameTask,
   sendTaskToEvalFrame,
-  evaluateLanguagePlugin
+  loadLanguagePlugin
 } from "../eval-queue-saga";
 import {
   loadingLanguageConsoleMsg,
@@ -108,7 +109,7 @@ describe("loadKnownLanguage test", async () => {
         ]
       ])
       .put.like(purifiedMessage(loadingLanguageConsoleMsg(displayName)))
-      .call(triggerEvalFrameTask, "LOAD_KNOWN_LANGUAGE", { languagePlugin })
+      .call(loadLanguagePlugin, languagePlugin)
       .run();
   });
 });
