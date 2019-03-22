@@ -25,13 +25,6 @@ import { getChunkContainingLine } from "./jsmd-selection";
 
 import createHistoryItem from "../tools/create-history-item";
 
-export function setKernelState(kernelState) {
-  return {
-    type: "SET_KERNEL_STATE",
-    kernelState
-  };
-}
-
 export function updateAppMessages(messageObj) {
   return dispatch => {
     const { message } = messageObj;

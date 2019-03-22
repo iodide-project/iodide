@@ -1,10 +1,9 @@
 /* global IODIDE_EVAL_FRAME_ORIGIN  */
 
 import Mousetrap from "mousetrap";
-import { addLanguage, setKernelState } from "./actions/actions";
+import { addLanguage } from "./actions/actions";
 import { evalConsoleInput } from "./actions/console-actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
-import evalQueue from "./actions/evaluation-queue";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "./redux-to-port-message-passer";
 
@@ -34,27 +33,17 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data;
     switch (messageType) {
-      case "ADD_TO_EVALUATION_QUEUE": {
-        evalQueue.evaluate(message);
-        messagePasserEditor.dispatch(setKernelState("KERNEL_BUSY"));
-        break;
-      }
       case "CONSOLE_NEEDS_EVALUATION": {
         messagePasserEditor.dispatch(evalConsoleInput(message));
         break;
       }
-      case "EVALUATION_RESPONSE": {
-        const { evalId, status } = message;
-        messagePasserEditor.dispatch({
-          type: `EVAL_FRAME_TASK_RESPONSE-${evalId}`,
-          status
-        });
-        // if (status === "SUCCESS") evalQueue.continue(evalId);
-        // else evalQueue.clear(evalId);
-        // const queueSize = evalQueue.getQueueSize();
-        // if (!queueSize) {
-        //   messagePasserEditor.dispatch(setKernelState("KERNEL_IDLE"));
-        // }
+      case "EVAL_FRAME_TASK_RESPONSE": {
+        messagePasserEditor.dispatch(
+          Object.assign(
+            { type: `EVAL_FRAME_TASK_RESPONSE-${message.evalId}` },
+            message
+          )
+        );
         break;
       }
       case "REQUEST_FETCH": {

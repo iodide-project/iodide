@@ -3,56 +3,33 @@ import {
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet
 } from "./jsmd-selection";
-import { setKernelState } from "./actions";
 
-import {
-  NONCODE_EVAL_TYPES,
-  RUNNABLE_CHUNK_TYPES
-} from "../state-schemas/state-schema";
-
-import { evalTypeConsoleError } from "./console-message-actions";
+import { NONCODE_EVAL_TYPES } from "../state-schemas/state-schema";
 
 const chunkNotSkipped = chunk =>
   !(
     chunk.evalFlags.includes("skipRunAll") ||
     chunk.evalFlags.includes("skiprunall")
   );
-
-export const languageReady = (state, lang) =>
-  Object.keys(state.loadedLanguages).includes(lang);
-
-export const languageKnown = (state, lang) =>
-  Object.keys(state.languageDefinitions).includes(lang);
-
 const chunkNotRunnable = chunk => NONCODE_EVAL_TYPES.includes(chunk.chunkType);
 
-const definedEvalType = (state, lang) =>
-  languageReady(state, lang) ||
-  languageKnown(state, lang) ||
-  RUNNABLE_CHUNK_TYPES.includes(lang) ||
-  NONCODE_EVAL_TYPES.includes(lang);
+export function setKernelState(kernelState) {
+  return {
+    type: "SET_KERNEL_STATE",
+    kernelState
+  };
+}
 
 function addToEvalQueue(chunk) {
-  return (dispatch, getState) => {
+  return dispatch => {
     if (chunkNotRunnable(chunk)) return;
-    if (!definedEvalType(getState(), chunk.chunkType)) {
-      dispatch(evalTypeConsoleError(chunk.chunkType));
-      return;
-    }
     dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk });
   };
 }
 
 export function evaluateText() {
   return (dispatch, getState) => {
-    const {
-      jsmdChunks,
-      kernelState,
-      editorSelections,
-      editorCursor
-    } = getState();
-
-    if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
+    const { jsmdChunks, editorSelections, editorCursor } = getState();
 
     if (editorSelections.length === 0) {
       const activeChunk = getChunkContainingLine(jsmdChunks, editorCursor.line);
@@ -75,11 +52,8 @@ export function evaluateText() {
 
 export function evaluateNotebook() {
   return (dispatch, getState) => {
-    const { jsmdChunks, kernelState } = getState();
-
-    if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
-    jsmdChunks
-      .filter(chunkNotSkipped)
+    getState()
+      .jsmdChunks.filter(chunkNotSkipped)
       .forEach(chunk => dispatch(addToEvalQueue(chunk)));
   };
 }

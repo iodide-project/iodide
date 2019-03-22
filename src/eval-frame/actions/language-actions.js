@@ -7,13 +7,13 @@ import {
   addToConsoleHistory,
   updateConsoleEntry
 } from "./console-history-actions";
-import generateRandomId from "../../tools/generate-random-id";
+// import generateRandomId from "../../tools/generate-random-id";
 
-export function loadLanguagePlugin(pluginData) {
+export function loadLanguagePlugin(pluginData, historyId) {
   let value;
   let languagePluginPromise;
 
-  const historyId = generateRandomId();
+  // const historyId = generateRandomId();
   sendActionToEditor(
     addToConsoleHistory({
       historyType: "CONSOLE_MESSAGE",
@@ -102,7 +102,7 @@ export function loadLanguagePlugin(pluginData) {
   return languagePluginPromise;
 }
 
-export function evaluateLanguagePlugin(pluginText, evalId) {
+export async function evaluateLanguagePlugin(pluginText, evalId) {
   let pluginData;
   try {
     pluginData = JSON.parse(pluginText);
@@ -110,21 +110,20 @@ export function evaluateLanguagePlugin(pluginText, evalId) {
     sendActionToEditor(
       addToConsoleHistory({
         historyType: "CONSOLE_OUTPUT",
-        content: `plugin definition failed to parse:\n${err.message}`,
+        value: `plugin definition failed to parse:\n${err.message}`,
         level: "ERROR"
       })
     );
     sendStatusResponseToEditor("ERROR", evalId);
     return Promise.reject();
   }
-  return loadLanguagePlugin(pluginData)
-    .then(() => {
-      sendStatusResponseToEditor("SUCCESS", evalId);
-    })
-    .catch(err => {
-      sendStatusResponseToEditor("ERROR", evalId);
-      return err;
-    });
+  try {
+    await loadLanguagePlugin(pluginData, evalId);
+    return sendStatusResponseToEditor("SUCCESS", evalId);
+  } catch (error) {
+    sendStatusResponseToEditor("ERROR", evalId);
+    return error;
+  }
 }
 
 export function runCodeWithLanguage(language, code) {

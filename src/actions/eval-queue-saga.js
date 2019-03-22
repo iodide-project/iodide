@@ -4,22 +4,43 @@ import {
   put,
   call,
   select,
-  flush,
-  delay
+  flush
 } from "redux-saga/effects";
+import {
+  NONCODE_EVAL_TYPES,
+  RUNNABLE_CHUNK_TYPES
+} from "../state-schemas/state-schema";
 
-import { languageReady, languageKnown } from "./eval-actions";
+import { setKernelState } from "./eval-actions";
 
 import {
   loadingLanguageConsoleMsg,
-  addInputToConsole
+  addInputToConsole,
+  evalTypeConsoleError,
+  pluginParseError
 } from "./console-message-actions";
 
 import messagePasserEditor from "../redux-to-port-message-passer";
 import generateRandomId from "../tools/generate-random-id";
 
+// helpers
+
+export const languageReady = (state, lang) =>
+  Object.keys(state.loadedLanguages).includes(lang);
+
+export const languageKnown = (state, lang) =>
+  Object.keys(state.languageDefinitions).includes(lang);
+
+const definedEvalType = (state, lang) =>
+  languageReady(state, lang) ||
+  languageKnown(state, lang) ||
+  RUNNABLE_CHUNK_TYPES.includes(lang) ||
+  NONCODE_EVAL_TYPES.includes(lang);
+
 export const languageNeedsLoading = (state, lang) =>
   languageKnown(state, lang) && !languageReady(state, lang);
+
+// sender
 
 export function sendTaskToEvalFrame(taskType, payload) {
   const taskId = generateRandomId();
@@ -30,39 +51,69 @@ export function sendTaskToEvalFrame(taskType, payload) {
   return taskId;
 }
 
+// sagas
 export function* triggerEvalFrameTask(taskType, payload) {
   const taskId = yield call(sendTaskToEvalFrame, taskType, payload);
   const response = yield take(`EVAL_FRAME_TASK_RESPONSE-${taskId}`);
   if (response.status === "ERROR") {
     throw new Error(`EVAL_FRAME_TASK_RESPONSE-${taskId}-FAILED`);
   }
-  return response.status;
+  return response;
 }
 
-export function* loadKnownLanguage(displayName, languageId) {
-  yield put(loadingLanguageConsoleMsg(displayName));
-  yield call(triggerEvalFrameTask, "LOAD_KNOWN_LANGUAGE", languageId);
+export function* loadKnownLanguage(languagePlugin) {
+  yield put(loadingLanguageConsoleMsg(languagePlugin.displayName));
+  yield call(triggerEvalFrameTask, "LOAD_KNOWN_LANGUAGE", { languagePlugin });
 }
 
-export function* evaluateByType(evalType, evalText) {
+export function* updateUserVariables() {
+  const { userDefinedVarNames } = yield call(
+    triggerEvalFrameTask,
+    "UPDATE_USER_VARIABLES"
+  );
+  yield put({
+    type: "UPDATE_USER_VARIABLES",
+    userDefinedVarNames
+  });
+}
+
+export function* evaluateLanguagePlugin(pluginText) {
+  try {
+    const pluginData = JSON.parse(pluginText);
+    yield call(triggerEvalFrameTask, "EVAL_LANGUAGE_PLUGIN", {
+      pluginData
+    });
+  } catch (error) {
+    yield put(pluginParseError(error.message));
+    throw error;
+  }
+}
+
+export function* evaluateByType(evalType, evalText, chunkId) {
   const state = yield select();
 
+  if (!definedEvalType(state, evalType)) {
+    yield put(evalTypeConsoleError(evalType));
+    throw new Error("unknown evalType");
+  }
+
   if (languageNeedsLoading(state, evalType)) {
-    const { displayName, languageId } = state.languageDefinitions[evalType];
-    yield call(loadKnownLanguage, displayName, languageId);
+    yield call(loadKnownLanguage, state.languageDefinitions[evalType]);
   }
 
   yield put(addInputToConsole(evalText, evalType));
   if (evalType === "plugin") {
-    yield call(triggerEvalFrameTask, "EVAL_LANGUAGE_PLUGIN", evalText);
+    yield call(evaluateLanguagePlugin, evalText);
   } else if (evalType === "fetch") {
-    yield call(triggerEvalFrameTask, "EVAL_FETCH", evalText);
+    yield call(triggerEvalFrameTask, "EVAL_FETCH", { fetchText: evalText });
   } else {
     yield call(triggerEvalFrameTask, "EVAL_CODE", {
       code: evalText,
-      language: state.languageDefinitions[evalType]
+      language: state.languageDefinitions[evalType],
+      chunkId
     });
   }
+  yield call(updateUserVariables);
 }
 
 export function* evaluateCurrentQueue() {
@@ -70,11 +121,13 @@ export function* evaluateCurrentQueue() {
   while (true) {
     try {
       const { chunk } = yield take(evalQueue);
-      const { chunkType, chunkContent } = chunk;
-      yield call(evaluateByType, chunkType, chunkContent);
+      const { chunkType, chunkContent, chunkId } = chunk;
+      yield put(setKernelState("KERNEL_BUSY"));
+      yield call(evaluateByType, chunkType, chunkContent, chunkId);
+      yield put(setKernelState("KERNEL_IDLE"));
     } catch (error) {
       yield flush(evalQueue);
-      yield delay(100);
+      yield put(setKernelState("KERNEL_IDLE"));
     }
   }
 }

@@ -1,12 +1,16 @@
 /* global IODIDE_EDITOR_ORIGIN  */
 
-import { evaluateText, evaluateCode } from "./actions/actions";
+import { evaluateCode } from "./actions/actions";
+import { evaluateFetchText } from "./actions/fetch-cell-eval-actions";
+import { loadLanguagePlugin } from "./actions/language-actions";
+import { getUserDefinedVariablesFromWindow } from "./initialize-user-variables";
 import { getCompletions } from "./tools/notebook-utils";
 import {
   onParentContextFileFetchSuccess,
   onParentContextFileFetchError
 } from "./tools/fetch-file-from-parent-context";
 import messagePasserEval from "../redux-to-port-message-passer";
+import { sendStatusResponseToEditor } from "./actions/editor-message-senders";
 
 const mc = new MessageChannel();
 const portToEditor = mc.port1;
@@ -73,26 +77,48 @@ async function receiveMessage(event) {
         });
         break;
       }
-      case "REDUX_ACTION":
-        if (message.type === "TRIGGER_TEXT_EVAL_IN_FRAME") {
-          messagePasserEval.dispatch(
-            evaluateText(
-              message.evalText,
-              message.evalType,
-              message.evalFlags,
-              message.chunkId,
-              message.evalId
-            )
-          );
+      case "EVAL_CODE": {
+        const { code, language, chunkId, taskId } = message;
+        evaluateCode(code, language, chunkId, taskId);
+        break;
+      }
+      case "EVAL_FETCH": {
+        const { fetchText, taskId } = message;
+        evaluateFetchText(fetchText, taskId);
+        break;
+      }
+      case "EVAL_LANGUAGE_PLUGIN": {
+        const { pluginData, taskId } = message;
+        // FIXME: this can be cleaned up, but loadLanguagePlugin
+        // is a mess and i'm afraid to touch it
+        try {
+          await loadLanguagePlugin(pluginData, taskId);
+          sendStatusResponseToEditor("SUCCESS", message.taskId);
+        } catch {
+          sendStatusResponseToEditor("ERROR", message.taskId);
         }
         break;
-      case "EVAL_CODE": {
-        const { code, language, taskId } = message;
-        evaluateCode(code, language, taskId);
+      }
+      case "LOAD_KNOWN_LANGUAGE": {
+        const { languagePlugin, taskId } = message;
+        // FIXME: this can be cleaned up, but loadLanguagePlugin
+        // is a mess and i'm afraid to touch it
+        try {
+          await loadLanguagePlugin(languagePlugin, taskId);
+          sendStatusResponseToEditor("SUCCESS", message.taskId);
+        } catch {
+          sendStatusResponseToEditor("ERROR", message.taskId);
+        }
+        break;
+      }
+      case "UPDATE_USER_VARIABLES": {
+        sendStatusResponseToEditor("SUCCESS", message.taskId, {
+          userDefinedVarNames: getUserDefinedVariablesFromWindow()
+        });
         break;
       }
       default:
-        console.error("unknown messageType", message);
+        console.error("unknown messageType", messageType, message);
     }
   }
 }

@@ -1,7 +1,11 @@
 import messagePasserEval from "../../redux-to-port-message-passer";
 
-export function sendStatusResponseToEditor(status, evalId) {
-  messagePasserEval.postMessage("EVALUATION_RESPONSE", { status, evalId });
+export function sendStatusResponseToEditor(status, evalId, payload) {
+  messagePasserEval.postMessage("EVAL_FRAME_TASK_RESPONSE", {
+    status,
+    evalId,
+    payload
+  });
 }
 
 export function sendActionToEditor(action) {
