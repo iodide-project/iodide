@@ -29,6 +29,7 @@ export default async function fetchFileFromParentContext(path, fetchType) {
   return new Promise((resolve, reject) => {
     // resolve and reject are handled in port-to-editor.js when
     // the file is received by the editor.
+    console.log(path, fetchType);
     addResolvers(path, resolve, reject);
     messagePasserEval.postMessage("REQUEST_FETCH", { path, fetchType });
   });

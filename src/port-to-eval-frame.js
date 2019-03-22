@@ -79,18 +79,25 @@ function receiveMessage(event) {
               })
             );
             messagePasserEditor.dispatch(addFile(filename, lastUpdated, id));
+            postMessageToEvalFrame("FILE_SAVED_SUCCESS", {
+              path
+            });
           })
           .catch(err => {
-            // we need to error here.
-            evalQueue.clear();
-            const historyAction = createHistoryItem({
-              content: err.message,
-              level: "ERROR",
-              historyType: "CONSOLE_MESSAGE"
+            postMessageToEvalFrame("FILE_SAVED_ERROR", {
+              reason: err.message,
+              path
             });
-            historyAction.type = "ADD_TO_CONSOLE_HISTORY";
-            messagePasserEditor.dispatch(historyAction);
-            messagePasserEditor.dispatch(setKernelState("KERNEL_IDLE"));
+            // we need to error here.
+            // evalQueue.clear();
+            // const historyAction = createHistoryItem({
+            //   content: err.message,
+            //   level: "ERROR",
+            //   historyType: "CONSOLE_MESSAGE"
+            // });
+            // historyAction.type = "ADD_TO_CONSOLE_HISTORY";
+            // messagePasserEditor.dispatch(historyAction);
+            // messagePasserEditor.dispatch(setKernelState("KERNEL_IDLE"));
           });
         break;
       }
