@@ -7,7 +7,6 @@ import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 const mockStore = configureMockStore([thunk]);
 
 describe("evaluateNotebook - correct evaluations", () => {
-  // let evaluateNotebookTest;
   let mockEvalQueue;
 
   let store;
@@ -15,7 +14,6 @@ describe("evaluateNotebook - correct evaluations", () => {
 
   beforeEach(() => {
     mockEvalQueue = { evaluate: jest.fn() };
-    // evaluateNotebookTest = evaluateNotebook(mockEvalQueue);
 
     store = undefined;
     testState = {
@@ -32,46 +30,6 @@ describe("evaluateNotebook - correct evaluations", () => {
       kernelState: "~~NOT~~ KERNEL_BUSY"
     };
   });
-
-  // it("calls evalQueueInstance.evaluate for general chunk types", async () => {
-  //   store = mockStore(testState);
-  //   await store.dispatch(evaluateNotebook(mockEvalQueue));
-  //   expect(mockEvalQueue.evaluate.mock.calls.length).toBe(1);
-  // });
-
-  // it("calls evalQueueInstance.evaluate correct number of times", async () => {
-  //   testState.jsmdChunks = [
-  //     {
-  //       chunkContent: "var pi=3",
-  //       chunkType: "anyChunkType",
-  //       chunkId: "chunkHash-1",
-  //       evalFlags: [],
-  //       startLine: 5,
-  //       endLine: 6
-  //     },
-  //     {
-  //       chunkContent: "var pi=3",
-  //       chunkType: "anyChunkType",
-  //       chunkId: "chunkHash-2",
-  //       evalFlags: [],
-  //       startLine: 5,
-  //       endLine: 6
-  //     },
-  //     {
-  //       chunkContent: "var pi=3",
-  //       chunkType: "md" /* should be skipped */,
-  //       chunkId: "chunkHash-3",
-  //       evalFlags: [],
-  //       startLine: 5,
-  //       endLine: 6
-  //     }
-  //   ];
-  //   store = mockStore(testState);
-
-  //   await store.dispatch(evaluateNotebook(mockEvalQueue));
-
-  //   expect(mockEvalQueue.evaluate.mock.calls.length).toBe(2);
-  // });
 
   NONCODE_EVAL_TYPES.forEach(chunkType => {
     it(`doesn't call evalQueueInstance.evaluate for chunktype: ${chunkType}`, async () => {
@@ -93,7 +51,6 @@ describe("evaluateNotebook - correct evaluations", () => {
 });
 
 describe.skip("evaluateNotebook - correct evaluations", () => {
-  // let evaluateNotebookTest;
   let mockEvalQueue;
 
   let store;
@@ -101,7 +58,6 @@ describe.skip("evaluateNotebook - correct evaluations", () => {
 
   beforeEach(() => {
     mockEvalQueue = { evaluate: jest.fn() };
-    // evaluateNotebookTest = evaluateNotebook(mockEvalQueue);
 
     store = undefined;
     testState = {

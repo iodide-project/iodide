@@ -99,18 +99,6 @@ async function receiveMessage(event) {
         }
         break;
       }
-      case "LOAD_KNOWN_LANGUAGE": {
-        const { languagePlugin, taskId } = message;
-        // FIXME: this can be cleaned up, but loadLanguagePlugin
-        // is a mess and i'm afraid to touch it
-        try {
-          await loadLanguagePlugin(languagePlugin, taskId);
-          sendStatusResponseToEditor("SUCCESS", message.taskId);
-        } catch {
-          sendStatusResponseToEditor("ERROR", message.taskId);
-        }
-        break;
-      }
       case "UPDATE_USER_VARIABLES": {
         sendStatusResponseToEditor("SUCCESS", message.taskId, {
           userDefinedVarNames: getUserDefinedVariablesFromWindow()

@@ -1,3 +1,4 @@
+import CodeMirror from "codemirror";
 import {
   take,
   actionChannel,
@@ -6,6 +7,7 @@ import {
   select,
   flush
 } from "redux-saga/effects";
+
 import {
   NONCODE_EVAL_TYPES,
   RUNNABLE_CHUNK_TYPES
@@ -61,9 +63,20 @@ export function* triggerEvalFrameTask(taskType, payload) {
   return response;
 }
 
-export function* loadKnownLanguage(languagePlugin) {
-  yield put(loadingLanguageConsoleMsg(languagePlugin.displayName));
-  yield call(triggerEvalFrameTask, "LOAD_KNOWN_LANGUAGE", { languagePlugin });
+export function* loadLanguagePlugin(pluginData) {
+  yield call(triggerEvalFrameTask, "EVAL_LANGUAGE_PLUGIN", {
+    pluginData
+  });
+  CodeMirror.requireMode(pluginData.codeMirrorMode, () => {});
+  yield put({
+    type: "ADD_LANGUAGE_TO_EDITOR",
+    languageDefinition: pluginData
+  });
+}
+
+export function* loadKnownLanguage(pluginData) {
+  yield put(loadingLanguageConsoleMsg(pluginData.displayName));
+  yield call(loadLanguagePlugin, pluginData);
 }
 
 export function* updateUserVariables() {
@@ -80,9 +93,7 @@ export function* updateUserVariables() {
 export function* evaluateLanguagePlugin(pluginText) {
   try {
     const pluginData = JSON.parse(pluginText);
-    yield call(triggerEvalFrameTask, "EVAL_LANGUAGE_PLUGIN", {
-      pluginData
-    });
+    yield call(loadLanguagePlugin, pluginData);
   } catch (error) {
     yield put(pluginParseError(error.message));
     throw error;

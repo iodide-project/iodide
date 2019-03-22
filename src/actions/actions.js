@@ -1,4 +1,3 @@
-import CodeMirror from "codemirror";
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 import {
   getRevisionList,
@@ -159,17 +158,6 @@ export function setViewMode(viewMode) {
     dispatch({
       type: "SET_VIEW_MODE",
       viewMode
-    });
-  };
-}
-
-export function addLanguage(languageDefinition) {
-  return dispatch => {
-    const { codeMirrorMode } = languageDefinition;
-    CodeMirror.requireMode(codeMirrorMode, () => {});
-    dispatch({
-      type: "ADD_LANGUAGE_TO_EDITOR",
-      languageDefinition
     });
   };
 }

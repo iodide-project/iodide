@@ -1,9 +1,6 @@
-import { addToConsoleHistory } from "./console-history-actions";
-import { runCodeWithLanguage } from "./language-actions";
-
 import messagePasserEval from "../../redux-to-port-message-passer";
 import {
-  sendActionToEditor,
+  addConsoleEntryInEditor,
   sendStatusResponseToEditor
 } from "./editor-message-senders";
 
@@ -59,25 +56,55 @@ export function consoleHistoryStepBack(consoleCursorDelta) {
   };
 }
 
+export function runCodeWithLanguage(language, code) {
+  const { module, evaluator, asyncEvaluator } = language;
+  if (asyncEvaluator !== undefined) {
+    try {
+      const messageCallback = msg => {
+        addConsoleEntryInEditor({
+          content: msg,
+          historyType: "CONSOLE_MESSAGE",
+          level: "LOG"
+        });
+      };
+      return window[module][asyncEvaluator](code, messageCallback);
+    } catch (e) {
+      if (e.message === "window[module] is undefined") {
+        throw new Error(
+          `Error evaluating ${
+            language.displayName
+          }; evaluation module "${module}" not not defined`
+        );
+      }
+      throw e;
+    }
+  }
+  return new Promise((resolve, reject) => {
+    try {
+      resolve(window[module][evaluator](code));
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
 export async function evaluateCode(code, language, chunkId, evalId) {
   try {
     MOST_RECENT_CHUNK_ID.set(chunkId);
     const output = await runCodeWithLanguage(language, code);
-    sendActionToEditor(
-      addToConsoleHistory({
-        historyType: "CONSOLE_OUTPUT",
-        value: output
-      })
-    );
+    addConsoleEntryInEditor({
+      historyType: "CONSOLE_OUTPUT",
+      value: output
+    });
+
     sendStatusResponseToEditor("SUCCESS", evalId);
   } catch (error) {
-    sendActionToEditor(
-      addToConsoleHistory({
-        historyType: "CONSOLE_OUTPUT",
-        value: error,
-        level: "ERROR"
-      })
-    );
+    addConsoleEntryInEditor({
+      historyType: "CONSOLE_OUTPUT",
+      value: error,
+      level: "ERROR"
+    });
+
     sendStatusResponseToEditor("ERROR", evalId);
   }
 }
