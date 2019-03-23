@@ -5,6 +5,7 @@
   for accessing iodide's API endpoints without a github or openidc session.
 - Pyodide has been upgraded to version 0.10.0. This includes the new packages:
   `html5lib`, `pygments`, `beautifulsoup4`, `soupseive`, `docutils`, `bleach`
+- use latest `katex` version by forking the `markdown-it-katex` package
 
 # 0.4.0 (2019-03-09)
 
