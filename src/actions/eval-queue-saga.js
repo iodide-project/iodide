@@ -67,7 +67,7 @@ export function* loadLanguagePlugin(pluginData) {
   yield call(triggerEvalFrameTask, "EVAL_LANGUAGE_PLUGIN", {
     pluginData
   });
-  CodeMirror.requireMode(pluginData.codeMirrorMode, () => {});
+  yield call([CodeMirror, "requireMode"], pluginData.codeMirrorMode, () => {});
   yield put({
     type: "ADD_LANGUAGE_TO_EDITOR",
     languageDefinition: pluginData
