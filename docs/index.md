@@ -12,6 +12,8 @@ Iodide notebooks.
 
 **[Common workflows and tips](workflows.md)**: Pointers for accomplishing common tasks in Iodide.
 
+**[Server administration](server-admin.md)**: Information on common server administration tasks.
+
 ## Developer documentation
 
 **[Contributing](contributing.md)**: Information about contributing to Iodide.

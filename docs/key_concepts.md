@@ -25,16 +25,11 @@ As mentioned above, to create a  notebook, you will edit [JSMD](jsmd.md) code in
 
 As you go, you can also evaluate a [JSMD](jsmd.md) code chunks pressing `ctrl+enter` (or `shift+enter` to evaluate the current chunk and advance to the next). These chunks of code don’t do anything until you explicitly evaluate them. Behind the scenes, Iodide is just running `eval` on your JavaScript code in an iframe with its own JavaScript evaluation scope and browser DOM separate from the editor (or, in the case of language plugins, Iodide makes a call to an interpreter compiled to WebAssembly that is contained in the iframe scope).
 
-As you are editing your code, remember to hit `ctrl+s` to save your code to the Iodide server (Note: we’re working on implementing automatic online outsave, which will hopefully be available soon).
-
-
 ## The Iodide Server
 
 The Iodide server provides a hosted solution to make edits and save changes to your Iodide notebook on the Web. The server allows for you to create a profile to save your collection of notebooks, track changes made in a central location.
 
-Note, currently the Iodide notebook requires that you explicitly save your progress as you work on your notebook. Please make sure that you periodically save your progress `ctrl+s` or `command+s` as you work through your document. It is on the roadmap to bring autosaving to the notebook.
-
-The server has a collection of all the revisions explicitly saved to the during your session. To access the revisions for a notebook, go to the landing page and hover over a notebook of interest. You will see the option `revisions` that you can click, which will take you the history of revisions for that notebook.
+When editing an iodide notebook, the content of your notebook should be saved at a regular interval (currently 30 seconds) as you type. The server has a collection of all the revisions explicitly saved to the during your session. To access the revisions for a notebook, go to the landing page and hover over a notebook of interest. You will see the option `revisions` that you can click, which will take you the history of revisions for that notebook.
 
 
 ## Sharing your notebook

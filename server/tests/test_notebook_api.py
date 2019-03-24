@@ -52,13 +52,6 @@ def test_notebook_detail(client, test_notebook):
     }
 
 
-@pytest.fixture
-def notebook_post_blob():
-    # this blob should be sufficient to create a new notebook (assuming the user of
-    # the api is authorized to do so)
-    return {"title": "My cool notebook", "content": "Fake notebook content"}
-
-
 def test_create_notebook_not_logged_in(transactional_db, client, notebook_post_blob):
     # should not be able to create a notebook if not logged in
     resp = client.post(reverse("notebooks-list"), notebook_post_blob)
@@ -66,18 +59,43 @@ def test_create_notebook_not_logged_in(transactional_db, client, notebook_post_b
     assert Notebook.objects.count() == 0
 
 
-def test_create_notebook_logged_in(fake_user, client, notebook_post_blob):
+@pytest.mark.parametrize("specify_owner", [True, False])
+def test_create_notebook_logged_in(fake_user, client, notebook_post_blob, specify_owner):
     # should be able to create notebook if logged in
     client.force_login(user=fake_user)
-    resp = client.post(reverse("notebooks-list"), notebook_post_blob)
+    post_blob = {**notebook_post_blob}
+    if specify_owner:
+        post_blob.update({"owner": fake_user.username})
+    resp = client.post(reverse("notebooks-list"), post_blob)
     assert resp.status_code == 201
     assert Notebook.objects.count() == 1
     notebook = Notebook.objects.first()
-    assert notebook.title == notebook_post_blob["title"]
+    assert notebook.title == post_blob["title"]
     assert notebook.owner == fake_user
 
     # should have a first revision to go along with the new notebook
     assert NotebookRevision.objects.count() == 1
+
+
+@pytest.mark.parametrize("authorized", [True, False])
+def test_create_notebook_for_another_user(
+    fake_user, fake_user2, client, notebook_post_blob, authorized
+):
+    post_blob = {**notebook_post_blob, **{"owner": fake_user2.username}}
+    fake_user.can_create_on_behalf_of_others = authorized
+    fake_user.save()
+    client.force_login(user=fake_user)
+    resp = client.post(reverse("notebooks-list"), post_blob)
+    if authorized:
+        assert resp.status_code == 201
+        assert Notebook.objects.count() == 1
+        notebook = Notebook.objects.first()
+        assert notebook.title == post_blob["title"]
+        assert notebook.owner == fake_user2
+    else:
+        assert resp.status_code == 403
+        assert Notebook.objects.count() == 0
+        assert NotebookRevision.objects.count() == 0
 
 
 def test_delete_notebook_not_logged_in(test_notebook, client):
