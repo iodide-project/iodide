@@ -20,7 +20,7 @@ export function setKernelState(kernelState) {
   };
 }
 
-function addToEvalQueue(chunk) {
+export function addToEvalQueue(chunk) {
   return dispatch => {
     if (chunkNotRunnable(chunk)) return;
     dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk });

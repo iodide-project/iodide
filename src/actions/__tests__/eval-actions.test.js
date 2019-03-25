@@ -1,99 +1,60 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { evaluateNotebook } from "../eval-actions";
+import { addToEvalQueue, evaluateNotebook } from "../eval-actions";
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 
 const mockStore = configureMockStore([thunk]);
 
-describe("evaluateNotebook - correct evaluations", () => {
-  let mockEvalQueue;
-
+describe("evaluateNotebook", () => {
   let store;
   let testState;
 
   beforeEach(() => {
-    mockEvalQueue = { evaluate: jest.fn() };
-
     store = undefined;
     testState = {
       jsmdChunks: [
-        {
-          chunkContent: "var pi=3",
-          chunkType: "anyChunkType",
-          chunkId: "chunkHashDefault",
-          evalFlags: [],
-          startLine: 5,
-          endLine: 6
-        }
-      ],
-      kernelState: "~~NOT~~ KERNEL_BUSY"
+        { id: 0, evalFlags: ["skipRunAll"] },
+        { id: 1, evalFlags: [] },
+        { id: 2, evalFlags: ["skipRunAll"] },
+        { id: 3, evalFlags: [] }
+      ]
     };
   });
 
-  NONCODE_EVAL_TYPES.forEach(chunkType => {
-    it(`doesn't call evalQueueInstance.evaluate for chunktype: ${chunkType}`, async () => {
-      testState.jsmdChunks[0].chunkType = chunkType;
-      store = mockStore(testState);
-      await store.dispatch(evaluateNotebook(mockEvalQueue));
-      expect(mockEvalQueue.evaluate.mock.calls.length).toBe(0);
-    });
-  });
+  it("pass correct chunks", () => {
+    const expectedActions = [
+      { type: "ADD_TO_EVAL_QUEUE", chunk: testState.jsmdChunks[1] },
+      { type: "ADD_TO_EVAL_QUEUE", chunk: testState.jsmdChunks[3] }
+    ];
 
-  ["skipRunAll", "skiprunall"].forEach(skipFlag => {
-    it(`doesn't call evalQueueInstance.evaluate if chunk has ${skipFlag}`, async () => {
-      testState.jsmdChunks[0].evalFlags = [skipFlag];
-      store = mockStore(testState);
-      await store.dispatch(evaluateNotebook(mockEvalQueue));
-      expect(mockEvalQueue.evaluate.mock.calls.length).toBe(0);
-    });
+    store = mockStore(testState);
+    store.dispatch(evaluateNotebook());
+    expect(store.getActions()).toEqual(expectedActions);
   });
 });
 
-describe.skip("evaluateNotebook - correct evaluations", () => {
-  let mockEvalQueue;
-
-  let store;
-  let testState;
+describe("addToEvalQueue", () => {
+  let dispatch;
 
   beforeEach(() => {
-    mockEvalQueue = { evaluate: jest.fn() };
-
-    store = undefined;
-    testState = {
-      jsmdChunks: [
-        {
-          chunkContent: "var pi=3",
-          chunkType: "anyChunkType",
-          chunkId: "chunkHash123",
-          evalFlags: [],
-          startLine: 5,
-          endLine: 6
-        }
-      ],
-      kernelState: "~~NOT~~ KERNEL_BUSY"
-    };
+    dispatch = jest.fn();
   });
 
-  it("sets kernel state to busy if kernel is NOT busy", () => {
-    store = mockStore(testState);
-
-    store.dispatch(evaluateNotebook(mockEvalQueue));
-    const actions = store.getActions();
-
-    expect(actions[0]).toEqual({
-      type: "SET_KERNEL_STATE",
-      kernelState: "KERNEL_BUSY"
+  // some random types that SHOULD be enqueued
+  ["js", "py", "jl", "etc"].map(chunkType => {
+    const chunk = { chunkType };
+    it("dispatch if chunk of any type other than NONCODE_EVAL_TYPES", () => {
+      addToEvalQueue(chunk)(dispatch);
+      expect(dispatch).toBeCalledWith({ type: "ADD_TO_EVAL_QUEUE", chunk });
     });
   });
 
-  it("doesn't set kernel state if kernel is busy", () => {
-    testState.kernelState = "KERNEL_BUSY";
-    store = mockStore(testState);
-
-    store.dispatch(evaluateNotebook(mockEvalQueue));
-    const actions = store.getActions();
-
-    expect(actions.map(a => a.type).includes("SET_KERNEL_STATE")).toBe(false);
+  NONCODE_EVAL_TYPES.map(chunkType => {
+    const chunk = { chunkType };
+    it("DO NOT dispatch if chunk of any NONCODE_EVAL_TYPES", () => {
+      addToEvalQueue(chunk)(dispatch);
+      expect(dispatch).not.toBeCalled();
+    });
   });
 });
