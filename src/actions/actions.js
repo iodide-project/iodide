@@ -16,11 +16,11 @@ import {
 } from "../tools/server-tools";
 import { checkUpdateAutosave } from "../tools/autosave";
 import {
+  getLocalAutosaveState,
   clearLocalAutosave,
-  getLocalAutosaveJsmd,
   updateLocalAutosave
 } from "../tools/local-autosave";
-import { updateServerAutosave } from "../tools/server-autosave";
+import { updateServerAutosave } from "./server-actions";
 import { loginToServer, logoutFromServer } from "../tools/login";
 
 import { fetchWithCSRFTokenAndJSONContent } from "./../shared/fetch-with-csrf-token";
@@ -72,11 +72,11 @@ export const updateAutosave = debounceAction(() => {
         break;
       case "UPDATE_WITH_NEW_COPY":
         updateLocalAutosave(state, true);
-        updateServerAutosave(dispatch, getState);
+        dispatch(updateServerAutosave(dispatch, getState));
         break;
       case "UPDATE":
         updateLocalAutosave(state, false);
-        updateServerAutosave(dispatch, getState);
+        dispatch(updateServerAutosave(dispatch, getState));
         break;
       default:
         break;

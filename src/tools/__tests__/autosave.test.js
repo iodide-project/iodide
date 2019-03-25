@@ -1,7 +1,6 @@
 import { getLocalAutosaveState } from "../local-autosave";
 import { newNotebook } from "../../editor-state-prototypes";
 
-jest.mock("../server-autosave");
 jest.mock("../local-autosave");
 
 describe("verify that checking for autosave returns appropriate status", () => {
