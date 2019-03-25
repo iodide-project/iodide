@@ -7,7 +7,6 @@ from django.views.generic.base import RedirectView
 
 import server.views
 
-
 admin.site.unregister(Group)  # Hide the group, not used right now
 
 
