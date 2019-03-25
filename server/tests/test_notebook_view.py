@@ -18,6 +18,7 @@ def test_notebook_view(client, test_notebook):
     assert expected_content in str(resp.content)
     assert get_script_block_json(resp.content, "notebookInfo") == {
         "connectionMode": "SERVER",
+        "files": [],
         "forked_from": False,
         "notebook_id": test_notebook.id,
         "revision_id": initial_revision.id,
@@ -56,6 +57,7 @@ def test_notebook_view_old_revision(client, test_notebook):
     assert get_script_block(resp.content, "jsmd", "text/jsmd") == initial_revision.content
     assert get_script_block_json(resp.content, "notebookInfo") == {
         "connectionMode": "SERVER",
+        "files": [],
         "forked_from": False,
         "notebook_id": test_notebook.id,
         "revision_id": initial_revision.id,
