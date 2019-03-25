@@ -62,7 +62,6 @@ export function updateAppMessages(messageObj) {
 // second, so that each small change to the document doesn't hammer indexdb
 export const updateAutosave = debounceAction(() => {
   return async (dispatch, getState) => {
-    console.log("updateAutoSave");
     const state = getState();
     const autosaveStatus = await checkUpdateAutosave(state);
     switch (autosaveStatus) {
