@@ -126,17 +126,16 @@ export function setPreviousAutosave(hasPreviousAutoSave) {
 }
 
 export function loadAutosave() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     // jsmd, jsmdChunks
-    getLocalAutosaveJsmd(getState()).then(jsmd => {
-      const jsmdChunks = jsmdParser(jsmd);
-      dispatch({
-        type: "REPLACE_NOTEBOOK_CONTENT",
-        jsmd,
-        jsmdChunks
-      });
-      dispatch(setPreviousAutosave(false));
+    const { dirtyCopy: jsmd } = await getLocalAutosaveState(getState());
+    const jsmdChunks = jsmdParser(jsmd);
+    dispatch({
+      type: "REPLACE_NOTEBOOK_CONTENT",
+      jsmd,
+      jsmdChunks
     });
+    dispatch(setPreviousAutosave(false));
   };
 }
 

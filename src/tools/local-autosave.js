@@ -15,15 +15,6 @@ async function getLocalAutosaveState(state) {
   return autosave;
 }
 
-async function getLocalAutosaveJsmd(state) {
-  const autosaveState = await getLocalAutosaveState(state);
-  return autosaveState.dirtyCopy;
-}
-
-function saveAutosaveState(autosaveKey, autosaveState) {
-  db.autosave.put(autosaveState, autosaveKey);
-}
-
 async function checkForLocalAutosave(store) {
   const state = store.getState();
   const autosaveState = await getLocalAutosaveState(state);
@@ -51,26 +42,28 @@ async function updateLocalAutosave(state, original) {
   const { jsmd } = state;
   if (original) {
     // save (over) original, clear any existing dirty copy
-    saveAutosaveState(autosaveKey, {
-      originalCopy: jsmd,
-      originalCopyRevision: state.notebookInfo.revision_id,
-      originalSaved: new Date().toISOString()
-    });
+    db.autosave.put(
+      {
+        originalCopy: jsmd,
+        originalCopyRevision: state.notebookInfo.revision_id,
+        originalSaved: new Date().toISOString()
+      },
+      autosaveKey
+    );
   } else {
     const autosaveState = await getLocalAutosaveState(state);
-    saveAutosaveState(
-      autosaveKey,
+    db.autosave.put(
       Object.assign(autosaveState, {
         dirtyCopy: jsmd,
         dirtySaved: new Date().toISOString()
-      })
+      }),
+      autosaveKey
     );
   }
 }
 
 export {
   checkForLocalAutosave,
-  getLocalAutosaveJsmd,
   getLocalAutosaveState,
   clearLocalAutosave,
   updateLocalAutosave
