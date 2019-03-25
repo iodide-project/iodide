@@ -7,6 +7,7 @@
   `html5lib`, `pygments`, `beautifulsoup4`, `soupseive`, `docutils`, `bleach`
 - disable automatic saving and interactivity if viewing an out of
   date copy of the notebook (#1593)
+- use maintained `markdown-it-katex` package
 
 # 0.4.0 (2019-03-09)
 

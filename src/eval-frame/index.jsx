@@ -6,7 +6,7 @@ import { render } from "react-dom";
 import "font-awesome/css/font-awesome.css";
 import "opensans-npm-webfont/style.css";
 import "react-table/react-table.css";
-import "../../node_modules/katex/dist/katex.min.css";
+import "./../../node_modules/@iktakahiro/markdown-it-katex/node_modules/katex/dist/katex.min.css";
 
 // iodide styles
 import "./style/eval-container.css";
