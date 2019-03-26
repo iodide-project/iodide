@@ -27,7 +27,7 @@ levels of support to make it easier to know what to expect.
 | Project                                                                         | Language       | Level 1 | Level 2 | Level 3 | Level 4 | Built-in |
 |---------------------------------------------------------------------------------|----------------|---------|---------|---------|---------|----------|
 | [Pyodide](http://github.com/iodide-project/pyodide)                             | Python         | ✓       | ✓       | ✓       | partial | ✓        |
-| [AssemblyScript](https://codepen.io/ds604/pen/432d293df115432859f0af62e69d2e64) | AssemblyScript | ✓       | ✓       |         |         |          |
+| [AssemblyScript](https://alpha.iodide.io/notebooks/1234) | AssemblyScript | ✓       | ✓       |         |         |          |
 | [Lua](https://codepen.io/ds604/pen/d9791eed4e1ce19e11fb0f3c71000d72)            | Lua            | ✓       | ✓       |         |         |          |
 | [Opal](https://codepen.io/ds604/pen/6cef7f732750cb2bde469b5ff387a320)           | Ruby           | ✓       | ✓       |         |         |          |
 | [Julide](https://github.com/keno/julia-wasm)                                                                        | Julia           | ✓        |         |         |         |          |
