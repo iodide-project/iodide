@@ -5,6 +5,8 @@
   for accessing iodide's API endpoints without a github or openidc session.
 - Pyodide has been upgraded to version 0.10.0. This includes the new packages:
   `html5lib`, `pygments`, `beautifulsoup4`, `soupseive`, `docutils`, `bleach`
+- disable automatic saving and interactivity if viewing an out of
+  date copy of the notebook (#1593)
 
 # 0.4.0 (2019-03-09)
 

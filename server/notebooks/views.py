@@ -1,6 +1,7 @@
 import urllib.parse
 
 from django.db import transaction
+from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
 from django.urls import reverse
@@ -30,9 +31,16 @@ def _get_iframe_src():
 def notebook_view(request, pk):
     notebook = get_object_or_404(Notebook, pk=pk)
     if "revision" in request.GET:
-        revision = get_object_or_404(NotebookRevision, pk=int(request.GET["revision"]))
+        try:
+            revision_id = int(request.GET["revision"])
+        except ValueError:
+            return HttpResponseBadRequest(content=f'Invalid revision id: {request.GET["revision"]}')
+        revision = get_object_or_404(NotebookRevision, notebook=notebook, pk=revision_id)
+        latest_revision_id = notebook.revisions.latest("created").id
     else:
         revision = notebook.revisions.first()
+        latest_revision_id = revision.id
+
     files = [
         {"filename": file.filename, "id": file.id, "lastUpdated": file.last_updated.isoformat()}
         for file in File.objects.filter(notebook_id=pk).order_by("-last_updated")
@@ -42,6 +50,7 @@ def notebook_view(request, pk):
         "user_can_save": notebook.owner_id == request.user.id,
         "notebook_id": notebook.id,
         "revision_id": revision.id,
+        "revision_is_latest": revision.id == latest_revision_id,
         "connectionMode": "SERVER",
         "title": revision.title,
         "files": files,

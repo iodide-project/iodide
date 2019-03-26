@@ -1,4 +1,6 @@
 import CodeMirror from "codemirror";
+import debounceAction from "debounce-action";
+
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 import {
   getRevisionList,
@@ -8,14 +10,17 @@ import {
 
 import {
   getNotebookID,
+  getRevisionID,
   getUserDataFromDocument,
   notebookIsATrial
 } from "../tools/server-tools";
+import { checkUpdateAutosave } from "../tools/autosave";
 import {
-  clearAutosave,
-  getAutosaveJsmd,
-  updateAutosave
-} from "../tools/autosave";
+  getLocalAutosaveState,
+  clearLocalAutosave,
+  updateLocalAutosave
+} from "../tools/local-autosave";
+import { updateServerAutosave } from "./server-actions";
 import { loginToServer, logoutFromServer } from "../tools/login";
 
 import { fetchWithCSRFTokenAndJSONContent } from "./../shared/fetch-with-csrf-token";
@@ -53,7 +58,32 @@ export function updateAppMessages(messageObj) {
   };
 }
 
-export function updateJsmdContent(text) {
+// we debounce this action thunk so that it runs maximum once per
+// second, so that each small change to the document doesn't hammer indexdb
+export const updateAutosave = debounceAction(() => {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const autosaveStatus = await checkUpdateAutosave(state);
+    switch (autosaveStatus) {
+      case "RETRY":
+        // debouncing should ensure we don't spin here
+        updateAutosave(dispatch, getState);
+        break;
+      case "UPDATE_WITH_NEW_COPY":
+        updateLocalAutosave(state, true);
+        dispatch(updateServerAutosave(dispatch, getState));
+        break;
+      case "UPDATE":
+        updateLocalAutosave(state, false);
+        dispatch(updateServerAutosave(dispatch, getState));
+        break;
+      default:
+        break;
+    }
+  };
+}, 1000);
+
+export function updateJsmdContent(text, autosaveChanges = true) {
   return (dispatch, getState) => {
     const jsmdChunks = jsmdParser(text);
     const reportChunkTypes = Object.keys(getState().languageDefinitions).concat(
@@ -79,6 +109,11 @@ export function updateJsmdContent(text) {
       jsmd: text,
       jsmdChunks
     });
+
+    // queue an update to autosave if applicable
+    if (autosaveChanges) {
+      dispatch(updateAutosave());
+    }
   };
 }
 
@@ -90,23 +125,22 @@ export function setPreviousAutosave(hasPreviousAutoSave) {
 }
 
 export function loadAutosave() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     // jsmd, jsmdChunks
-    getAutosaveJsmd(getState()).then(jsmd => {
-      const jsmdChunks = jsmdParser(jsmd);
-      dispatch({
-        type: "REPLACE_NOTEBOOK_CONTENT",
-        jsmd,
-        jsmdChunks
-      });
-      dispatch(setPreviousAutosave(false));
+    const { dirtyCopy: jsmd } = await getLocalAutosaveState(getState());
+    const jsmdChunks = jsmdParser(jsmd);
+    dispatch({
+      type: "REPLACE_NOTEBOOK_CONTENT",
+      jsmd,
+      jsmdChunks
     });
+    dispatch(setPreviousAutosave(false));
   };
 }
 
 export function discardAutosave() {
   return (dispatch, getState) => {
-    clearAutosave(getState());
+    clearLocalAutosave(getState());
     dispatch(setPreviousAutosave(false));
   };
 }
@@ -142,10 +176,15 @@ export function clearVariables() {
   };
 }
 
-export function changePageTitle(title) {
-  return {
-    type: "CHANGE_PAGE_TITLE",
-    title
+export function changePageTitle(title, autosaveChanges = true) {
+  return dispatch => {
+    dispatch({
+      type: "CHANGE_PAGE_TITLE",
+      title
+    });
+    if (autosaveChanges) {
+      dispatch(updateAutosave());
+    }
   };
 }
 
@@ -315,9 +354,9 @@ export function saveNotebookToServer(appMsg = true) {
         dispatch,
         appMsg
       )
-        .then(() => {
+        .then(newRevision => {
           const message = "Updated Notebook";
-          updateAutosave(state, true);
+          updateLocalAutosave(state, true);
           if (appMsg) {
             dispatch(
               updateAppMessages({
@@ -326,13 +365,50 @@ export function saveNotebookToServer(appMsg = true) {
               })
             );
           }
-          dispatch({ type: "NOTEBOOK_SAVED" });
+          dispatch({ type: "NOTEBOOK_SAVED", newRevisionId: newRevision.id });
         })
         .catch(err => {
           throw Error(err);
         });
     }
     return createNewNotebookOnServer()(dispatch, getState);
+  };
+}
+
+export function checkNotebookConsistency() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const notebookId = getNotebookID(state);
+    if (!notebookId) {
+      // no notebook id assigned yet, so not possible to be
+      // out of date
+      return;
+    }
+    dispatch({
+      type: "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST",
+      checkingRevisionIsLatest: true
+    });
+    fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${notebookId}/`)
+      .then(response => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json();
+      })
+      .then(notebookData => {
+        dispatch({
+          type: "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST",
+          checkingRevisionIsLatest: false
+        });
+        dispatch({
+          type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
+          revisionIsLatest:
+            notebookData.latest_revision.id === getRevisionID(state)
+        });
+      });
+    // currently not doing any error handling here-- if there
+    // are problems here, chances are the user is working offline
+    // which is, effectively, "at their own risk"
   };
 }
 

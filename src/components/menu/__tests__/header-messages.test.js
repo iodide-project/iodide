@@ -29,7 +29,7 @@ describe("HeaderMessages mapStateToProps", () => {
   });
 
   it("displays local save message", () => {
-    state.hasPreviousAutoSave = true;
+    state.hasPreviousAutosave = true;
     state.userData.name = "test1";
     state.notebookInfo.username = "test2";
     const connectionModes = ["STANDALONE", "SERVER"];

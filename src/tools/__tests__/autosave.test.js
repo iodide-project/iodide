@@ -1,24 +1,26 @@
-import { getAutosaveState, updateAutosave } from "../autosave";
+import { getLocalAutosaveState } from "../local-autosave";
 import { newNotebook } from "../../editor-state-prototypes";
 
-let states;
-const jsmdContent = `%% js
-var x = 10
+jest.mock("../local-autosave");
 
-%% md
+describe("verify that checking for autosave returns appropriate status", () => {
+  let states;
 
-# the title
-`;
-
-describe("updateAutoSave", () => {
   beforeEach(() => {
-    const originalState = newNotebook();
-    updateAutosave(originalState, true);
+    const originalState = {
+      ...newNotebook(),
+      jsmd: "original content",
+      notebookInfo: {
+        connectionMode: "SERVER",
+        connectionStatus: "CONNECTION_ACTIVE",
+        notebook_id: 1
+      }
+    };
 
     // add some state
     const stateUpdate = {
-      jsmd: jsmdContent,
-      title: "autosaved title"
+      jsmd: "updated content",
+      title: "updated title"
     };
     const updatedState = Object.assign({}, originalState, stateUpdate);
 
@@ -28,37 +30,47 @@ describe("updateAutoSave", () => {
     };
   });
 
-  it("saves over original when asked to", async () => {
-    updateAutosave(states.updatedState, true);
-    const newAutosavedState = await getAutosaveState(states.updatedState);
-    expect(Object.keys(newAutosavedState).sort()).toEqual([
-      "originalCopy",
-      "originalCopyRevision",
-      "originalSaved"
-    ]);
-    const originalCopyState = newAutosavedState.originalCopy;
-    expect(originalCopyState).toEqual(states.updatedState.jsmd);
+  it("checkAutosave should return RETRY with no autosave method called if we are checking revision freshness", async () => {
+    const { checkUpdateAutosave } = jest.requireActual("../autosave");
+    const newState = Object.assign({}, states.updatedState, {
+      checkingRevisionIsLatest: true
+    });
+    expect(await checkUpdateAutosave(newState)).toEqual("RETRY");
   });
 
-  it("only updates dirty copy when not asked to write over original", async () => {
-    await updateAutosave(states.updatedState, false);
-    const newAutosavedState = await getAutosaveState(states.updatedState);
-    expect(Object.keys(newAutosavedState).sort()).toEqual([
-      "dirtyCopy",
-      "dirtySaved",
-      "originalCopy",
-      "originalCopyRevision",
-      "originalSaved"
-    ]);
+  it("checkAutosave should return undefined if revision is not latest", async () => {
+    const { checkUpdateAutosave } = jest.requireActual("../autosave");
+    const newState = Object.assign({}, states.updatedState, {
+      notebookInfo: {
+        ...states.updatedState.notebookInfo,
+        revision_is_latest: false
+      }
+    });
+    expect(await checkUpdateAutosave(newState)).toEqual("NOOP");
+  });
 
-    const originalCopyState = newAutosavedState.originalCopy;
-    expect(originalCopyState).toEqual(states.originalState.jsmd);
-    // FIXME: deprecating the meta tag where we receive title. Will this test be relevant?
-    // expect(originalCopyState.title).toEqual(states.originalState.title)
+  [true, false].forEach(originalCopyExists => {
+    it(`checkAutosave should ask to update as expected if original copy ${
+      originalCopyExists ? "does" : "does not"
+    } exist`, async () => {
+      const { checkUpdateAutosave } = jest.requireActual("../autosave");
+      const newState = Object.assign({}, states.updatedState, {
+        originalCopy: originalCopyExists ? states.originalState.jsmd : undefined
+      });
+      getLocalAutosaveState.mockReturnValueOnce(
+        originalCopyExists
+          ? {
+              originalCopy: states.originalState.jsmd,
+              originalCopyRevision:
+                states.originalState.notebookInfo.revision_id,
+              originalSaved: new Date().toISOString()
+            }
+          : undefined
+      );
 
-    const dirtyCopyState = newAutosavedState.dirtyCopy;
-    expect(dirtyCopyState).toEqual(states.updatedState.jsmd);
-    // FIXME: deprecating the meta tag where we receive title.
-    // expect(dirtyCopyState.title).toEqual(states.updatedState.title)
+      expect(await checkUpdateAutosave(newState)).toEqual(
+        originalCopyExists ? "UPDATE" : "UPDATE_WITH_NEW_COPY"
+      );
+    });
   });
 });

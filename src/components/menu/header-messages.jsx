@@ -41,6 +41,7 @@ export class HeaderMessagesUnconnected extends React.Component {
   static propTypes = {
     message: PropTypes.oneOf([
       "HAS_PREVIOUS_AUTOSAVE",
+      "NOTEBOOK_REVISION_ID_OUT_OF_DATE",
       "STANDALONE_MODE",
       "NEED_TO_LOGIN",
       "NEED_TO_MAKE_COPY",
@@ -51,6 +52,7 @@ export class HeaderMessagesUnconnected extends React.Component {
     discardAutosave: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
     makeCopy: PropTypes.func.isRequired,
+    notebookId: PropTypes.number,
     revisionId: PropTypes.number
   };
 
@@ -84,6 +86,18 @@ export class HeaderMessagesUnconnected extends React.Component {
             <a onClick={this.props.loadAutosave}>Restore</a>
             &nbsp;or&nbsp;
             <a onClick={this.props.discardAutosave}>discard</a>.
+          </React.Fragment>
+        );
+        break;
+      case "NOTEBOOK_REVISION_ID_OUT_OF_DATE":
+        content = (
+          <React.Fragment>
+            You are viewing an old version of this notebook. Editing is
+            disabled. &nbsp;
+            <a href={`/notebooks/${this.props.notebookId}/`}>
+              Load latest version
+            </a>
+            .
           </React.Fragment>
         );
         break;
@@ -135,7 +149,7 @@ export class HeaderMessagesUnconnected extends React.Component {
 export function mapStateToProps(state) {
   if (state.viewMode === "EXPLORE_VIEW") {
     if (
-      state.hasPreviousAutoSave &&
+      state.hasPreviousAutosave &&
       state.userData.name !== undefined &&
       state.notebookInfo.username !== state.userData.name
     ) {
@@ -147,6 +161,11 @@ export function mapStateToProps(state) {
       };
     } else if (connectionModeIsStandalone(state)) {
       return { message: "STANDALONE_MODE" };
+    } else if (state.notebookInfo.revision_is_latest === false) {
+      return {
+        message: "NOTEBOOK_REVISION_ID_OUT_OF_DATE",
+        notebookId: state.notebookInfo.notebook_id
+      };
     } else if (state.notebookInfo.connectionStatus === "CONNECTION_LOST") {
       return { message: "CONNECTION_LOST" };
     } else if (

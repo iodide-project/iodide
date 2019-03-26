@@ -6,7 +6,7 @@ export default function handleServerVariables(store) {
   if (Object.keys(nbObj).length > 0) {
     store.dispatch(updateNotebookInfo(nbObj.notebookInfo));
     if (nbObj.notebookInfo.title) {
-      store.dispatch(changePageTitle(nbObj.notebookInfo.title));
+      store.dispatch(changePageTitle(nbObj.notebookInfo.title, false));
     }
   }
 }
