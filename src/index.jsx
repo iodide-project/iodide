@@ -38,6 +38,7 @@ import "./tools/initialize-codemirror-loadmode";
 import "./tools/initialize-dom";
 import evalQueue from "./actions/evaluation-queue";
 import { checkNotebookConsistency } from "./actions/actions";
+import { flushServerAutosave } from "./actions/server-actions";
 import CSSCascadeProvider from "./shared/css-cascade-provider";
 import { checkForLocalAutosave } from "./tools/local-autosave";
 
@@ -58,7 +59,14 @@ document.addEventListener(
   "visibilitychange",
   () => {
     if (!document.hidden) {
+      // check notebook consistency if we are returning to this
+      // tab or browser
       store.dispatch(checkNotebookConsistency());
+    } else {
+      // flush any pending server autosave if we're navigating
+      // away (this will help ensure that a notebook shared
+      // with others e.g. with a copypaste link will be up-to-date)
+      flushServerAutosave();
     }
   },
   false
