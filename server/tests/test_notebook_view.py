@@ -3,7 +3,7 @@ import random
 import pytest
 from django.urls import reverse
 
-from helpers import get_script_block, get_title_block
+from helpers import get_script_block, get_script_block_json, get_title_block
 from server.notebooks.models import Notebook, NotebookRevision
 
 
@@ -16,6 +16,17 @@ def test_notebook_view(client, test_notebook):
         initial_revision.content
     )
     assert expected_content in str(resp.content)
+    assert get_script_block_json(resp.content, "notebookInfo") == {
+        "connectionMode": "SERVER",
+        "files": [],
+        "forked_from": False,
+        "notebook_id": test_notebook.id,
+        "revision_id": initial_revision.id,
+        "revision_is_latest": True,
+        "title": "First revision",
+        "user_can_save": False,
+        "username": "testuser1",
+    }
 
     # add a new revision, verify that a fresh load gets it
     new_revision_content = "My new fun content"
@@ -29,6 +40,32 @@ def test_notebook_view(client, test_notebook):
         new_revision_content
     )
     assert new_expected_content in str(resp.content)
+
+
+def test_notebook_view_old_revision(client, test_notebook):
+    initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
+    new_revision_content = "My new fun content"
+    new_revision = NotebookRevision.objects.create(
+        content=new_revision_content, notebook=test_notebook, title="Second revision"
+    )
+    resp = client.get(
+        reverse("notebook-view", args=[str(test_notebook.id)]) + f"?revision={initial_revision.id}"
+    )
+    assert resp.status_code == 200
+    assert get_title_block(resp.content) == initial_revision.title
+    print(str(resp.content))
+    assert get_script_block(resp.content, "jsmd", "text/jsmd") == initial_revision.content
+    assert get_script_block_json(resp.content, "notebookInfo") == {
+        "connectionMode": "SERVER",
+        "files": [],
+        "forked_from": False,
+        "notebook_id": test_notebook.id,
+        "revision_id": initial_revision.id,
+        "revision_is_latest": False,
+        "title": "First revision",
+        "user_can_save": False,
+        "username": "testuser1",
+    }
 
 
 @pytest.mark.parametrize("logged_in", [True, False])
@@ -78,7 +115,7 @@ def test_notebook_revisions_page(fake_user, test_notebook, client):
     )
     resp = client.get(reverse("notebook-revisions", args=[str(test_notebook.id)]))
     assert get_title_block(resp.content) == f"Revisions - {test_notebook.title}"
-    assert get_script_block(resp.content, "pageData") == {
+    assert get_script_block_json(resp.content, "pageData") == {
         "files": [],
         "ownerInfo": {
             "avatar": None,

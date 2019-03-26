@@ -1,13 +1,13 @@
 import {
   getConnectionMode,
   getNotebookID,
+  getRevisionID,
   connectionModeIsStandalone,
   connectionModeIsServer
 } from "../server-tools";
 
-const NOTEBOOK_ID = 100;
 const makeState = connectionMode => ({
-  notebookInfo: { connectionMode, notebook_id: NOTEBOOK_ID }
+  notebookInfo: { connectionMode }
 });
 
 describe("getConnectionMode", () => {
@@ -34,22 +34,34 @@ describe("connectionModeIsStandalone && connectionModeIsServer", () => {
   });
 });
 
-describe("getNotebookID", () => {
-  it("returns a noteobookID if one exists and one is on a server. Otherwise returns undefined.", () => {
-    const nb = makeState("SERVER");
-    expect(getNotebookID(nb)).toBe(NOTEBOOK_ID);
-    nb.notebookInfo.notebook_id = undefined;
-    expect(getNotebookID(nb)).toBe(undefined);
-  });
-  it("returns undefined if the notebook is in standalone mode", () => {
-    const nb = makeState("STANDALONE");
-    // this is an edge case, but here
-    // notebook_id is still 100 in nb.notebookInfo, and we should still return undefined.
-    expect(getNotebookID(nb)).toBe(undefined);
-  });
-  it("throws if state.notebookInfo.notebook_id is not an integer nor undefined", () => {
-    const nb = makeState("SERVER");
-    nb.notebookInfo.notebook_id = "some string";
-    expect(() => getNotebookID(nb)).toThrow();
-  });
+describe("getNotebookID && getRevisionID", () => {
+  [[getNotebookID, "notebook_id"], [getRevisionID, "revision_id"]].forEach(
+    ([fn, nbId]) => {
+      it(`${
+        fn.name
+      } returns ${nbId} if one exists and one is on a server. Otherwise returns undefined.`, () => {
+        const nb = makeState("SERVER");
+        nb.notebookInfo[nbId] = 5;
+        expect(fn(nb)).toBe(5);
+        nb.notebookInfo[nbId] = undefined;
+        expect(fn(nb)).toBe(undefined);
+      });
+      it(`${
+        fn.name
+      } returns undefined if the notebook is in standalone mode`, () => {
+        // this is an edge case, but here
+        // the identifier is still 5 in nb.notebookInfo, and we should still return undefined.
+        const nb = makeState("STANDALONE");
+        nb.notebookInfo[nbId] = 5;
+        expect(fn(nb)).toBe(undefined);
+      });
+      it(`${
+        fn.name
+      } throws if state.notebookInfo.${nbId} is not an integer nor undefined`, () => {
+        const nb = makeState("SERVER");
+        nb.notebookInfo[nbId] = "some string";
+        expect(() => fn(nb)).toThrow();
+      });
+    }
+  );
 });

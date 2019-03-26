@@ -43,6 +43,7 @@
     "codemirror": "5.45.0",
     "css-element-queries": "1.1.1",
     "date-fns": "2.0.0-alpha.26",
+    "debounce-action": "0.1.0",
     "deep-equal": "1.0.1",
     "dexie": "2.0.4",
     "emotion": "9.2.12",
@@ -76,6 +77,7 @@
     "redux-logger": "3.0.6",
     "redux-thunk": "2.3.0",
     "stackframe": "1.0.4",
+    "throttle-action": "0.1.0",
     "universal-router": "8.1.0",
     "webpack-shell-plugin": "0.5.0"
   },

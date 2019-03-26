@@ -32,10 +32,18 @@ export function notebookIsATrial(state) {
   return state.notebookInfo.tryItMode;
 }
 
-export function getNotebookID(state) {
+function getId(state, idKey) {
   if (!connectionModeIsServer(state)) return undefined;
-  const notebookID = state.notebookInfo.notebook_id;
-  if (!Number.isSafeInteger(notebookID) && notebookID !== undefined)
-    throw Error("notebook_id must be undefined or an integer");
-  return notebookID;
+  const value = state.notebookInfo[idKey];
+  if (!Number.isSafeInteger(value) && value !== undefined)
+    throw Error(`${idKey} must be undefined or an integer`);
+  return value;
+}
+
+export function getNotebookID(state) {
+  return getId(state, "notebook_id");
+}
+
+export function getRevisionID(state) {
+  return getId(state, "revision_id");
 }
