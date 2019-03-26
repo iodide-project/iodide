@@ -33,7 +33,7 @@ export const languageReady = (state, lang) =>
 export const languageKnown = (state, lang) =>
   Object.keys(state.languageDefinitions).includes(lang);
 
-const definedEvalType = (state, lang) =>
+const evalTypeIsDefined = (state, lang) =>
   languageReady(state, lang) ||
   languageKnown(state, lang) ||
   RUNNABLE_CHUNK_TYPES.includes(lang) ||
@@ -67,6 +67,7 @@ export function* loadLanguagePlugin(pluginData) {
   yield call(triggerEvalFrameTask, "EVAL_LANGUAGE_PLUGIN", {
     pluginData
   });
+  // FIXME this empty function argument seems sketchy
   yield call([CodeMirror, "requireMode"], pluginData.codeMirrorMode, () => {});
   yield put({
     type: "ADD_LANGUAGE_TO_EDITOR",
@@ -103,7 +104,7 @@ export function* evaluateLanguagePlugin(pluginText) {
 export function* evaluateByType(evalType, evalText, chunkId) {
   const state = yield select();
 
-  if (!definedEvalType(state, evalType)) {
+  if (!evalTypeIsDefined(state, evalType)) {
     yield put(evalTypeConsoleError(evalType));
     throw new Error("unknown evalType");
   }

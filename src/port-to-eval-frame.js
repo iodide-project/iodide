@@ -1,7 +1,7 @@
 /* global IODIDE_EVAL_FRAME_ORIGIN  */
 
 import Mousetrap from "mousetrap";
-import { evalConsoleInput } from "./actions/console-actions";
+import { evalConsoleInput } from "./actions/eval-actions";
 import { genericFetch as fetchFileFromServer } from "./tools/fetch-tools";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "./redux-to-port-message-passer";

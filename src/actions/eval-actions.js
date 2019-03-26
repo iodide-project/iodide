@@ -57,3 +57,24 @@ export function evaluateNotebook() {
       .forEach(chunk => dispatch(addToEvalQueue(chunk)));
   };
 }
+
+export function evalConsoleInput(consoleText) {
+  return (dispatch, getState) => {
+    const state = getState();
+    // exit if there is no code in the console to  eval
+    if (!consoleText) {
+      return undefined;
+    }
+
+    const chunk = {
+      chunkContent: consoleText,
+      chunkType: state.languageLastUsed
+    };
+
+    dispatch({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
+    dispatch({ type: "RESET_HISTORY_CURSOR" });
+    dispatch(addToEvalQueue(chunk));
+    dispatch({ type: "UPDATE_CONSOLE_TEXT", consoleText: "" });
+    return Promise.resolve();
+  };
+}

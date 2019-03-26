@@ -37,11 +37,8 @@ import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 import "./tools/initialize-codemirror-loadmode";
 import "./tools/initialize-dom";
 import { checkForAutosave, subscribeToAutoSave } from "./tools/autosave";
-import evalQueue from "./actions/evaluation-queue";
 import CSSCascadeProvider from "./shared/css-cascade-provider";
 import { checkForServerAutosave } from "./tools/server-autosave";
-
-evalQueue.connectDispatch(store.dispatch);
 
 initializeDefaultKeybindings();
 

@@ -6,13 +6,6 @@ import {
 
 const CodeMirror = require("codemirror"); // eslint-disable-line
 
-const initialVariables = new Set(Object.keys(window)); // gives all global variables
-initialVariables.add("__core-js_shared__");
-initialVariables.add("Mousetrap");
-initialVariables.add("CodeMirror");
-initialVariables.add("FETCH_RESOLVERS");
-initialVariables.add("__SECRET_EMOTION__");
-
 export function addToEvaluationQueue(chunk) {
   messagePasserEval.postMessage("ADD_TO_EVALUATION_QUEUE", chunk);
 }
