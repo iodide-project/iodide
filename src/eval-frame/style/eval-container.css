@@ -116,10 +116,6 @@ div.iodide-tooltip {
   font-size: 0.900rem;
 }
 
-.katex-html {
-  display: none;
-}
-
 code {
   padding: 0.2em 0.4em;
   margin: 0;
