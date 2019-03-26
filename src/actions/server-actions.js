@@ -45,4 +45,8 @@ const updateServerAutosave = throttleAction(
   { leading: false }
 );
 
-export { updateServerAutosave };
+function flushServerAutosave() {
+  updateServerAutosave.flush();
+}
+
+export { updateServerAutosave, flushServerAutosave };
