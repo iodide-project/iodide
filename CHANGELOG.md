@@ -7,9 +7,11 @@
   `html5lib`, `pygments`, `beautifulsoup4`, `soupseive`, `docutils`, `bleach`
 - disable automatic saving and interactivity if viewing an out of
   date copy of the notebook (#1593)
+- use maintained `markdown-it-katex` package
 - automatically flush any pending notebook saves to the server if the
   user is navigating away from the iodide tab
-- use maintained `markdown-it-katex` package
+- Fix an unlikely race condition where a notebook is found to be out
+  of date inside the throttle interval of a server autosave
 
 # 0.4.0 (2019-03-09)
 

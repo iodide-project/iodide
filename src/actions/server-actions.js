@@ -12,10 +12,14 @@ const updateServerAutosave = throttleAction(
   () => {
     return async (dispatch, getState) => {
       const state = getState();
-      const { username: notebookOwner } = state.notebookInfo;
+      const {
+        username: notebookOwner,
+        revision_is_latest: revisionIsLatest
+      } = state.notebookInfo;
       const { name: thisUser } = state.userData;
       let validAutosave = false;
       if (
+        revisionIsLatest !== false &&
         thisUser !== undefined && // is this a logged-in-user?
         notebookOwner === thisUser // is this notebook owned by the current user?
       ) {
