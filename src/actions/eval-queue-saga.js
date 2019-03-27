@@ -128,6 +128,9 @@ export function* evaluateByType(evalType, evalText, chunkId) {
   yield call(updateUserVariables);
 }
 
+// FIXME: there does not seem to be a good way to fully test
+// this particular saga, at least using redux-saga-test-plan
+// https://github.com/jfairbank/redux-saga-test-plan/issues/247
 export function* evaluateCurrentQueue() {
   const evalQueue = yield actionChannel("ADD_TO_EVAL_QUEUE");
   while (true) {

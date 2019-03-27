@@ -1,9 +1,7 @@
 import { call, take } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
-import { throwError } from "redux-saga-test-plan/providers";
 
 import {
-  evaluateCurrentQueue,
   evaluateByType,
   evaluateLanguagePlugin,
   loadKnownLanguage,
@@ -110,7 +108,7 @@ describe("loadKnownLanguage test", async () => {
       ])
       .put.like(purifiedMessage(loadingLanguageConsoleMsg(displayName)))
       .call(loadLanguagePlugin, languagePlugin)
-      .run();
+      .silentRun();
   });
 });
 
@@ -216,137 +214,3 @@ describe("evaluateByType test", () => {
 });
 
 // ====================================
-
-function mockChunk(type, text) {
-  return { chunkType: type, chunkContent: text };
-}
-
-describe.skip("evaluateCurrentQueue test", () => {
-  const evalType = "js";
-
-  it("if no errors, calls evalChunk on all items dispatched", () => {
-    return expectSaga(evaluateCurrentQueue)
-      .provide([
-        [call(evaluateByType, evalType, 1), "ok"],
-        [call(evaluateByType, evalType, 22), "ok"],
-        [call(evaluateByType, evalType, 333), "ok"]
-      ])
-      .call(evaluateByType, evalType, 1)
-      .call(evaluateByType, evalType, 22)
-      .call(evaluateByType, evalType, 333)
-      .dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk: mockChunk(evalType, 1) })
-      .dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk: mockChunk(evalType, 22) })
-      .dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk: mockChunk(evalType, 333) })
-      .dispatch({ type: "BEGIN_EVAL" }) // FIXME remove this
-      .silentRun();
-  });
-
-  it.skip("if an eval errors, evals queued after that one are NOT evaled", async () => {
-    const T0 = Date.now();
-    const T = () => (Date.now() - T0) / 1000;
-    const error = new Error("ERROR DURING CHUNK EVAL");
-
-    const delay = ms => () =>
-      new Promise(resolve => {
-        console.log("inside a delay");
-        setTimeout(resolve, ms);
-      });
-
-    return expectSaga(evaluateCurrentQueue)
-      .provide({
-        async call({ fn, args }, next) {
-          if (fn === evaluateByType) {
-            await delay(500);
-            if (args[1] === 22) {
-              console.log("call ABOUT TO THROW", args[1], T());
-              throw error;
-            }
-            console.log("call returning ok", args[1], T());
-            return args[1];
-          }
-
-          return next();
-        }
-      })
-      .call(evaluateByType, evalType, 1)
-      .call(evaluateByType, evalType, 22)
-      .not.call(evaluateByType, evalType, 333)
-      .not.call(evaluateByType, evalType, 4444)
-      .dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk: mockChunk(evalType, 1) })
-      .dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk: mockChunk(evalType, 22) })
-      .dispatch({
-        type: "ADD_TO_EVAL_QUEUE",
-        chunk: mockChunk(evalType, 333)
-      })
-      .dispatch({
-        type: "ADD_TO_EVAL_QUEUE",
-        chunk: mockChunk(evalType, 4444)
-      })
-      .dispatch({ type: "BEGIN_EVAL" })
-      .run(1000);
-  });
-
-  it.skip("if an eval errors, evals queued after that one are NOT evaled", async () => {
-    const error = new Error("ERROR DURING CHUNK EVAL");
-
-    return (
-      expectSaga(evaluateCurrentQueue)
-        .provide([
-          [call(evaluateByType, evalType, 1), "ok1"],
-          [call(evaluateByType, evalType, 22), throwError(error)],
-          [call(evaluateByType, evalType, 333), "ok33"],
-          [call(evaluateByType, evalType, 4444), "ok4444"]
-        ])
-        .call(evaluateByType, evalType, 1)
-        .call(evaluateByType, evalType, 22)
-        .not.call(evaluateByType, evalType, 333)
-        .not.call(evaluateByType, evalType, 4444)
-        .dispatch({
-          type: "ADD_TO_EVAL_QUEUE",
-          chunk: mockChunk(evalType, 1)
-        })
-        .dispatch({
-          type: "ADD_TO_EVAL_QUEUE",
-          chunk: mockChunk(evalType, 22)
-        })
-        .dispatch({
-          type: "ADD_TO_EVAL_QUEUE",
-          chunk: mockChunk(evalType, 333)
-        })
-        .dispatch({
-          type: "ADD_TO_EVAL_QUEUE",
-          chunk: mockChunk(evalType, 4444)
-        })
-        // .dispatch({ type: "BEGIN_EVAL" })
-        .run(1000)
-    );
-  });
-
-  // it("was PASSING if an eval errors, evals queued after that one are NOT evaled", async () => {
-  //   const error = new Error("ERROR DURING CHUNK EVAL");
-
-  //   return expectSaga(evaluateCurrentQueue)
-  //     .provide([
-  //       [call(evaluateByType, evalType, 1), "ok1"],
-  //       [call(evaluateByType, evalType, 22), throwError(error)],
-  //       [call(evaluateByType, evalType, 333), "ok33"],
-  //       [call(evaluateByType, evalType, 4444), "ok4444"]
-  //     ])
-  //     .call(evaluateByType, evalType, 1)
-  //     .call(evaluateByType, evalType, 22)
-  //     .not.call(evaluateByType, evalType, 333)
-  //     .not.call(evaluateByType, evalType, 4444)
-  //     .dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk: mockChunk(evalType, 1) })
-  //     .dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk: mockChunk(evalType, 22) })
-  //     .dispatch({
-  //       type: "ADD_TO_EVAL_QUEUE",
-  //       chunk: mockChunk(evalType, 333)
-  //     })
-  //     .dispatch({
-  //       type: "ADD_TO_EVAL_QUEUE",
-  //       chunk: mockChunk(evalType, 4444)
-  //     })
-  //     .dispatch({ type: "BEGIN_EVAL" })
-  //     .run(1000);
-  // });
-});
