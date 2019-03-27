@@ -65,8 +65,8 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { notebookInfo: action.notebookInfo });
 
     case "SET_PREVIOUS_AUTOSAVE": {
-      const { hasPreviousAutoSave } = action;
-      return Object.assign({}, state, { hasPreviousAutoSave });
+      const { hasPreviousAutosave } = action;
+      return Object.assign({}, state, { hasPreviousAutosave });
     }
 
     case "SET_CONNECTION_STATUS": {
@@ -179,8 +179,24 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, {
         lastSaved: new Date().toISOString(),
         notebookInfo: Object.assign({}, state.notebookInfo, {
-          user_can_save: true
+          user_can_save: true,
+          revision_id: action.newRevisionId
         })
+      });
+    }
+
+    case "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST": {
+      const { checkingRevisionIsLatest } = action;
+      return Object.assign({}, state, { checkingRevisionIsLatest });
+    }
+
+    case "UPDATE_NOTEBOOK_REVISION_IS_LATEST": {
+      const { revisionIsLatest } = action;
+      return Object.assign({}, state, {
+        notebookInfo: {
+          ...(state.notebookInfo || {}),
+          revision_is_latest: revisionIsLatest
+        }
       });
     }
 

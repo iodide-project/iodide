@@ -36,9 +36,9 @@ import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
 import "./tools/initialize-codemirror-loadmode";
 import "./tools/initialize-dom";
-import { checkForAutosave, subscribeToAutoSave } from "./tools/autosave";
+import { checkNotebookConsistency } from "./actions/actions";
 import CSSCascadeProvider from "./shared/css-cascade-provider";
-import { checkForServerAutosave } from "./tools/server-autosave";
+import { checkForLocalAutosave } from "./tools/local-autosave";
 
 initializeDefaultKeybindings();
 
@@ -46,10 +46,20 @@ window.addEventListener("message", listenForEvalFramePortReady, false);
 
 handleServerVariables(store);
 handleInitialJsmd(store);
+checkForLocalAutosave(store);
 handleReportViewModeInitialization(store);
-checkForAutosave(store);
-checkForServerAutosave(store);
+
 messagePasserEditor.connectDispatch(store.dispatch);
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+    if (!document.hidden) {
+      store.dispatch(checkNotebookConsistency());
+    }
+  },
+  false
+);
 
 render(
   <Provider store={store}>
@@ -66,5 +76,3 @@ render(
   </CSSCascadeProvider>,
   document.getElementById("editor-react-root")
 );
-
-subscribeToAutoSave(store);

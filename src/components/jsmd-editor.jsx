@@ -190,7 +190,9 @@ function mapStateToProps(state) {
     autoRefresh: true,
     lineNumbers: true,
     keyMap: "sublime",
-    comment: true
+    comment: true,
+    readOnly:
+      state.notebookInfo && state.notebookInfo.revision_is_latest === false
   };
 
   if (state.wrapEditors === true) {

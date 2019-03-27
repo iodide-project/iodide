@@ -1,6 +1,5 @@
 import random
 
-
 IODINE_COMPOUNDS = [
     "2-amino-5-iodopyridine",
     "4-iodoaniline",

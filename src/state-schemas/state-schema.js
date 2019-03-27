@@ -55,6 +55,16 @@ export const languageSchema = {
   additionalProperties: false
 };
 
+export const fileSchema = {
+  type: "object",
+  properties: {
+    filename: { type: "string" },
+    id: { type: "integer" },
+    lastUpdated: { type: "string" }
+  },
+  additionalProperties: false
+};
+
 const environmentVariableSchema = {
   type: "array",
   items: [
@@ -143,7 +153,7 @@ export const stateProperties = {
     type: "boolean",
     default: false
   },
-  hasPreviousAutoSave: {
+  hasPreviousAutosave: {
     type: "boolean",
     default: false
   },
@@ -257,11 +267,18 @@ export const stateProperties = {
       }
     }
   },
+  checkingRevisionIsLatest: {
+    type: "boolean",
+    default: false
+  },
   notebookInfo: {
     type: "object",
     properties: {
+      files: { type: "array", items: fileSchema },
       user_can_save: { type: "boolean" },
       notebook_id: { type: "integer" },
+      revision_id: { type: "integer" },
+      revision_is_latest: { type: "boolean" },
       connectionStatus: {
         type: "string",
         enum: ["CONNECTION_ACTIVE", "CONNECTION_LOST"]
@@ -274,9 +291,12 @@ export const stateProperties = {
     },
     default: {
       notebook_id: undefined,
+      revision_id: undefined,
+      revision_is_latest: true,
       user_can_save: false,
       connectionMode: "STANDALONE",
-      connectionStatus: "CONNECTION_ACTIVE"
+      connectionStatus: "CONNECTION_ACTIVE",
+      files: []
     }
   },
   panePositions: {

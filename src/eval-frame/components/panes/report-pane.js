@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import MarkdownIt from "markdown-it";
-import MarkdownItKatex from "markdown-it-katex";
+import MarkdownItKatex from "@iktakahiro/markdown-it-katex";
 import MarkdownItAnchor from "markdown-it-anchor";
 import MarkdownItEmoji from "markdown-it-emoji";
 
