@@ -60,7 +60,6 @@ export function evaluateNotebook() {
 
 export function evalConsoleInput(consoleText) {
   return (dispatch, getState) => {
-    const state = getState();
     // exit if there is no code in the console to  eval
     if (!consoleText) {
       return undefined;
@@ -68,7 +67,7 @@ export function evalConsoleInput(consoleText) {
 
     const chunk = {
       chunkContent: consoleText,
-      chunkType: state.languageLastUsed
+      chunkType: getState().languageLastUsed
     };
 
     dispatch({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
