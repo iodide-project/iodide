@@ -49,7 +49,7 @@ describe("addToEvalQueue", () => {
   });
 
   // some random types that SHOULD be enqueued
-  ["js", "py", "jl", "etc"].map(chunkType => {
+  ["js", "py", "jl", "etc"].forEach(chunkType => {
     const chunk = { chunkType };
     it("dispatch if chunk of any type other than NONCODE_EVAL_TYPES", () => {
       addToEvalQueue(chunk)(dispatch);
@@ -57,7 +57,7 @@ describe("addToEvalQueue", () => {
     });
   });
 
-  NONCODE_EVAL_TYPES.map(chunkType => {
+  NONCODE_EVAL_TYPES.forEach(chunkType => {
     const chunk = { chunkType };
     it("DO NOT dispatch if chunk of any NONCODE_EVAL_TYPES", () => {
       addToEvalQueue(chunk)(dispatch);
