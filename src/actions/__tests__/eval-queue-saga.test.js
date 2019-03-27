@@ -27,7 +27,7 @@ function purifiedMessage(messageAction) {
   return { action };
 }
 
-// =================================
+// ========================================================
 
 describe("triggerEvalFrameTask test", () => {
   const taskType = "A_TASK";
@@ -92,7 +92,7 @@ describe("triggerEvalFrameTask test", () => {
   });
 });
 
-// =================================
+// ========================================================
 
 describe("loadKnownLanguage test", async () => {
   it("dispatches loading message and triggers eval frame task", () => {
@@ -112,7 +112,7 @@ describe("loadKnownLanguage test", async () => {
   });
 });
 
-// =================================
+// ========================================================
 
 describe("evaluateByType test", () => {
   let evalType = "some_language_id";
@@ -212,5 +212,3 @@ describe("evaluateByType test", () => {
     });
   });
 });
-
-// ====================================

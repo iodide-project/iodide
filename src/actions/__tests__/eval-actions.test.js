@@ -39,7 +39,7 @@ describe("evaluateNotebook", () => {
   });
 });
 
-///////////////////////////////////////////////////////////
+// ========================================================
 
 describe("addToEvalQueue", () => {
   let dispatch;
@@ -66,7 +66,7 @@ describe("addToEvalQueue", () => {
   });
 });
 
-///////////////////////////////////////////////////////////
+// ========================================================
 
 describe("evalConsoleInput", () => {
   let store;
@@ -99,10 +99,6 @@ describe("evalConsoleInput", () => {
 
   it("if there is no text in the console, do nothing", () => {
     consoleText = "";
-    const chunk = {
-      chunkContent: consoleText,
-      chunkType: languageLastUsed
-    };
 
     const expectedActions = [];
     store = mockStore(testState);
@@ -111,7 +107,7 @@ describe("evalConsoleInput", () => {
   });
 });
 
-///////////////////////////////////////////////////////////
+// ========================================================
 
 describe("evaluateText", () => {
   let store;

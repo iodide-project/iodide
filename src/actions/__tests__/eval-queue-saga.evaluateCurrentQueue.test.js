@@ -1,5 +1,4 @@
-import { runSaga } from "redux-saga";
-import { call, select, flush } from "redux-saga/effects";
+import { call } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
 import { throwError } from "redux-saga-test-plan/providers";
 
@@ -8,18 +7,9 @@ import { setKernelState } from "../eval-actions";
 import {
   evaluateCurrentQueue,
   evaluateByType,
-  evaluateLanguagePlugin,
-  loadKnownLanguage,
   triggerEvalFrameTask,
-  sendTaskToEvalFrame,
-  loadLanguagePlugin,
   updateUserVariables
 } from "../eval-queue-saga";
-import {
-  loadingLanguageConsoleMsg,
-  addInputToConsole,
-  evalTypeConsoleError
-} from "../console-message-actions";
 
 function mockChunk(type, text, id) {
   return { chunkType: type, chunkContent: text, chunkId: id };
