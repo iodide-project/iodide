@@ -1,4 +1,4 @@
-FROM python:3.7.2-alpine
+FROM python:3.7.3-alpine
 
 # Default to building for local development.
 # Override with `--build-arg PIP_FILE=build.txt` to build for production.
