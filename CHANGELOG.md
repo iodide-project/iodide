@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.5.0 (2019-03-28)
+
 - allow suitably authorized users to create notebooks on behalf of others
 - add optional [token-based authentication](https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication)
   for accessing iodide's API endpoints without a github or openidc session.
