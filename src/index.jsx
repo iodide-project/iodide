@@ -36,13 +36,10 @@ import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
 import "./tools/initialize-codemirror-loadmode";
 import "./tools/initialize-dom";
-import evalQueue from "./actions/evaluation-queue";
 import { checkNotebookConsistency } from "./actions/actions";
 import { flushServerAutosave } from "./actions/server-actions";
 import CSSCascadeProvider from "./shared/css-cascade-provider";
 import { checkForLocalAutosave } from "./tools/local-autosave";
-
-evalQueue.connectDispatch(store.dispatch);
 
 initializeDefaultKeybindings();
 

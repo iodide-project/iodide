@@ -2,25 +2,37 @@
 import { applyMiddleware, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
+import createSagaMiddleware from "redux-saga";
 
 import createValidatedReducer from "./reducers/create-validated-reducer";
 import reducer from "./reducers/reducer";
 import { newNotebook, stateSchema } from "./editor-state-prototypes";
 import { getUserDataFromDocument } from "./tools/server-tools";
 
+import rootSaga from "./actions/root-saga";
+
 let enhancer;
 let finalReducer;
 
+const sagaMiddleware = createSagaMiddleware();
+
 if (IODIDE_BUILD_MODE === "production") {
   finalReducer = reducer;
-  enhancer = applyMiddleware(thunk);
+  enhancer = compose(
+    applyMiddleware(thunk),
+    applyMiddleware(sagaMiddleware)
+  );
 } else if (IODIDE_BUILD_MODE === "test" || IODIDE_REDUX_LOG_MODE === "SILENT") {
   finalReducer = createValidatedReducer(reducer, stateSchema);
-  enhancer = applyMiddleware(thunk);
+  enhancer = compose(
+    applyMiddleware(thunk),
+    applyMiddleware(sagaMiddleware)
+  );
 } else {
   finalReducer = createValidatedReducer(reducer, stateSchema);
   enhancer = compose(
     applyMiddleware(thunk),
+    applyMiddleware(sagaMiddleware),
     applyMiddleware(
       createLogger({
         predicate: (getState, action) =>
@@ -39,6 +51,8 @@ const store = createStore(
   Object.assign(newNotebook(), getUserDataFromDocument()),
   enhancer
 );
+
+sagaMiddleware.run(rootSaga);
 
 const { dispatch } = store;
 export { store, dispatch };

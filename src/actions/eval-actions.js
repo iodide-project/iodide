@@ -3,33 +3,37 @@ import {
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet
 } from "./jsmd-selection";
-import { setKernelState } from "./actions";
-import evalQueue from "./evaluation-queue";
 
 import { NONCODE_EVAL_TYPES } from "../state-schemas/state-schema";
-
-const chunkIsRunnable = chunk => !NONCODE_EVAL_TYPES.includes(chunk.chunkType);
 
 const chunkNotSkipped = chunk =>
   !(
     chunk.evalFlags.includes("skipRunAll") ||
     chunk.evalFlags.includes("skiprunall")
   );
+const chunkNotRunnable = chunk => NONCODE_EVAL_TYPES.includes(chunk.chunkType);
+
+export function setKernelState(kernelState) {
+  return {
+    type: "SET_KERNEL_STATE",
+    kernelState
+  };
+}
+
+export function addToEvalQueue(chunk) {
+  return dispatch => {
+    if (chunkNotRunnable(chunk)) return;
+    dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk });
+  };
+}
 
 export function evaluateText() {
   return (dispatch, getState) => {
-    const {
-      jsmdChunks,
-      kernelState,
-      editorSelections,
-      editorCursor
-    } = getState();
-
-    if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
+    const { jsmdChunks, editorSelections, editorCursor } = getState();
 
     if (editorSelections.length === 0) {
       const activeChunk = getChunkContainingLine(jsmdChunks, editorCursor.line);
-      evalQueue.evaluate(activeChunk);
+      dispatch(addToEvalQueue(activeChunk));
     } else {
       const selectionChunkSet = editorSelections
         .map(selection => ({
@@ -40,22 +44,36 @@ export function evaluateText() {
         .map(selection => selectionToChunks(selection, jsmdChunks))
         .map(removeDuplicatePluginChunksInSelectionSet());
       selectionChunkSet.forEach(selection => {
-        selection.forEach(chunk => evalQueue.evaluate(chunk));
+        selection.forEach(chunk => dispatch(addToEvalQueue(chunk)));
       });
     }
   };
 }
 
-export function evaluateNotebook(evalQueueInstance = evalQueue) {
+export function evaluateNotebook() {
   return (dispatch, getState) => {
-    const { jsmdChunks, kernelState } = getState();
+    getState()
+      .jsmdChunks.filter(chunkNotSkipped)
+      .forEach(chunk => dispatch(addToEvalQueue(chunk)));
+  };
+}
 
-    if (kernelState !== "KERNEL_BUSY") dispatch(setKernelState("KERNEL_BUSY"));
+export function evalConsoleInput(consoleText) {
+  return (dispatch, getState) => {
+    // exit if there is no code in the console to  eval
+    if (!consoleText) {
+      return undefined;
+    }
 
-    jsmdChunks.forEach(chunk => {
-      if (chunkIsRunnable(chunk) && chunkNotSkipped(chunk)) {
-        evalQueueInstance.evaluate(chunk);
-      }
-    });
+    const chunk = {
+      chunkContent: consoleText,
+      chunkType: getState().languageLastUsed
+    };
+
+    dispatch({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
+    dispatch({ type: "RESET_HISTORY_CURSOR" });
+    dispatch(addToEvalQueue(chunk));
+    dispatch({ type: "UPDATE_CONSOLE_TEXT", consoleText: "" });
+    return Promise.resolve();
   };
 }

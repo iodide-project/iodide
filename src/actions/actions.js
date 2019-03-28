@@ -1,6 +1,4 @@
-import CodeMirror from "codemirror";
 import debounceAction from "debounce-action";
-
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 import {
   getRevisionList,
@@ -29,13 +27,6 @@ import { jsmdParser } from "./jsmd-parser";
 import { getChunkContainingLine } from "./jsmd-selection";
 
 import createHistoryItem from "../tools/create-history-item";
-
-export function setKernelState(kernelState) {
-  return {
-    type: "SET_KERNEL_STATE",
-    kernelState
-  };
-}
 
 export function updateAppMessages(messageObj) {
   return dispatch => {
@@ -205,17 +196,6 @@ export function setViewMode(viewMode) {
     dispatch({
       type: "SET_VIEW_MODE",
       viewMode
-    });
-  };
-}
-
-export function addLanguage(languageDefinition) {
-  return dispatch => {
-    const { codeMirrorMode } = languageDefinition;
-    CodeMirror.requireMode(codeMirrorMode, () => {});
-    dispatch({
-      type: "ADD_LANGUAGE_TO_EDITOR",
-      languageDefinition
     });
   };
 }

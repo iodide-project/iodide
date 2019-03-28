@@ -1,32 +1,21 @@
-import messagePasserEval from "../../redux-to-port-message-passer";
 import {
-  sendActionToEditor,
-  sendStatusResponseToEditor
+  addConsoleEntryInEditor,
+  updateConsoleEntryInEditor
 } from "./editor-message-senders";
-import {
-  addToConsoleHistory,
-  updateConsoleEntry
-} from "./console-history-actions";
-import generateRandomId from "../../tools/generate-random-id";
 
-export function loadLanguagePlugin(pluginData) {
+export function loadLanguagePlugin(pluginData, historyId) {
   let value;
   let languagePluginPromise;
 
-  const historyId = generateRandomId();
-  sendActionToEditor(
-    addToConsoleHistory({
-      historyType: "CONSOLE_MESSAGE",
-      content: "fetching plugin",
-      historyId,
-      level: "LOG"
-    })
-  );
+  addConsoleEntryInEditor({
+    historyType: "CONSOLE_MESSAGE",
+    content: "fetching plugin",
+    historyId,
+    level: "LOG"
+  });
   if (pluginData.url === undefined) {
     value = 'plugin definition missing "url"';
-    sendActionToEditor(
-      updateConsoleEntry({ historyId, content: value, level: "ERROR" })
-    );
+    updateConsoleEntryInEditor({ historyId, content: value, level: "ERROR" });
   } else {
     const { url, displayName } = pluginData;
 
@@ -38,14 +27,12 @@ export function loadLanguagePlugin(pluginData) {
         if (evt.total > 0) {
           value += `out of ${evt.total} (${evt.loaded / evt.total}%)`;
         }
-        sendActionToEditor(updateConsoleEntry({ historyId, content: value }));
+        updateConsoleEntryInEditor({ historyId, content: value });
       });
 
       xhrObj.addEventListener("load", () => {
         value = `${displayName} plugin downloaded, initializing`;
-        sendActionToEditor(
-          updateConsoleEntry({ historyId, content: value, level: "LOG" })
-        );
+        updateConsoleEntryInEditor({ historyId, content: value, level: "LOG" });
         // see the following for asynchronous loading of scripts from strings:
         // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
 
@@ -55,9 +42,11 @@ export function loadLanguagePlugin(pluginData) {
           value = `${displayName} failed to load: ${xhrObj.status} ${
             xhrObj.statusText
           }`;
-          sendActionToEditor(
-            updateConsoleEntry({ historyId, content: value, level: "ERROR" })
-          );
+          updateConsoleEntryInEditor({
+            historyId,
+            content: value,
+            level: "ERROR"
+          });
           resolve();
         }
 
@@ -69,19 +58,19 @@ export function loadLanguagePlugin(pluginData) {
 
         pr.then(() => {
           value = `${displayName} plugin ready`;
-          messagePasserEval.postMessage(
-            "POST_LANGUAGE_DEF_TO_EDITOR",
-            pluginData
-          );
-          sendActionToEditor(
-            updateConsoleEntry({ historyId, content: value, level: "LOG" })
-          );
+          updateConsoleEntryInEditor({
+            historyId,
+            content: value,
+            level: "LOG"
+          });
           delete window.languagePluginUrl;
           resolve();
         }).catch(err => {
-          sendActionToEditor(
-            updateConsoleEntry({ historyId, content: value, level: "ERROR" })
-          );
+          updateConsoleEntryInEditor({
+            historyId,
+            content: value,
+            level: "ERROR"
+          });
           reject(err);
         });
       });
@@ -89,9 +78,11 @@ export function loadLanguagePlugin(pluginData) {
       xhrObj.addEventListener("error", () => {
         value = `${displayName} plugin failed to load: ${url} not found
         `;
-        sendActionToEditor(
-          updateConsoleEntry({ historyId, content: value, level: "ERROR" })
-        );
+        updateConsoleEntryInEditor({
+          historyId,
+          content: value,
+          level: "ERROR"
+        });
         reject();
       });
 
@@ -100,63 +91,4 @@ export function loadLanguagePlugin(pluginData) {
     });
   }
   return languagePluginPromise;
-}
-
-export function evaluateLanguagePlugin(pluginText, evalId) {
-  let pluginData;
-  try {
-    pluginData = JSON.parse(pluginText);
-  } catch (err) {
-    sendActionToEditor(
-      addToConsoleHistory({
-        historyType: "CONSOLE_OUTPUT",
-        content: `plugin definition failed to parse:\n${err.message}`,
-        level: "ERROR"
-      })
-    );
-    sendStatusResponseToEditor("ERROR", evalId);
-    return Promise.reject();
-  }
-  return loadLanguagePlugin(pluginData)
-    .then(() => {
-      sendStatusResponseToEditor("SUCCESS", evalId);
-    })
-    .catch(err => {
-      sendStatusResponseToEditor("ERROR", evalId);
-      return err;
-    });
-}
-
-export function runCodeWithLanguage(language, code) {
-  const { module, evaluator, asyncEvaluator } = language;
-  if (asyncEvaluator !== undefined) {
-    try {
-      const messageCallback = msg => {
-        sendActionToEditor(
-          addToConsoleHistory({
-            content: msg,
-            historyType: "CONSOLE_MESSAGE",
-            level: "LOG"
-          })
-        );
-      };
-      return window[module][asyncEvaluator](code, messageCallback);
-    } catch (e) {
-      if (e.message === "window[module] is undefined") {
-        throw new Error(
-          `Error evaluating ${
-            language.displayName
-          }; evaluation module "${module}" not not defined`
-        );
-      }
-      throw e;
-    }
-  }
-  return new Promise((resolve, reject) => {
-    try {
-      resolve(window[module][evaluator](code));
-    } catch (e) {
-      reject(e);
-    }
-  });
 }

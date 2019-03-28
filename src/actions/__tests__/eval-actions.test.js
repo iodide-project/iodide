@@ -1,143 +1,162 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { evaluateNotebook } from "../eval-actions";
+import {
+  addToEvalQueue,
+  evaluateNotebook,
+  evalConsoleInput,
+  evaluateText
+} from "../eval-actions";
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 
 const mockStore = configureMockStore([thunk]);
 
-describe("evaluateNotebook - correct evaluations", () => {
-  // let evaluateNotebookTest;
-  let mockEvalQueue;
-
+describe("evaluateNotebook", () => {
   let store;
   let testState;
 
   beforeEach(() => {
-    mockEvalQueue = { evaluate: jest.fn() };
-    // evaluateNotebookTest = evaluateNotebook(mockEvalQueue);
-
     store = undefined;
     testState = {
       jsmdChunks: [
-        {
-          chunkContent: "var pi=3",
-          chunkType: "anyChunkType",
-          chunkId: "chunkHashDefault",
-          evalFlags: [],
-          startLine: 5,
-          endLine: 6
-        }
-      ],
-      kernelState: "~~NOT~~ KERNEL_BUSY"
+        { id: 0, evalFlags: ["skipRunAll"] },
+        { id: 1, evalFlags: [] },
+        { id: 2, evalFlags: ["skipRunAll"] },
+        { id: 3, evalFlags: [] }
+      ]
     };
   });
 
-  it("calls evalQueueInstance.evaluate for general chunk types", async () => {
-    store = mockStore(testState);
-    await store.dispatch(evaluateNotebook(mockEvalQueue));
-    expect(mockEvalQueue.evaluate.mock.calls.length).toBe(1);
-  });
-
-  it("calls evalQueueInstance.evaluate correct number of times", async () => {
-    testState.jsmdChunks = [
-      {
-        chunkContent: "var pi=3",
-        chunkType: "anyChunkType",
-        chunkId: "chunkHash-1",
-        evalFlags: [],
-        startLine: 5,
-        endLine: 6
-      },
-      {
-        chunkContent: "var pi=3",
-        chunkType: "anyChunkType",
-        chunkId: "chunkHash-2",
-        evalFlags: [],
-        startLine: 5,
-        endLine: 6
-      },
-      {
-        chunkContent: "var pi=3",
-        chunkType: "md" /* should be skipped */,
-        chunkId: "chunkHash-3",
-        evalFlags: [],
-        startLine: 5,
-        endLine: 6
-      }
+  it("pass correct chunks", () => {
+    const expectedActions = [
+      { type: "ADD_TO_EVAL_QUEUE", chunk: testState.jsmdChunks[1] },
+      { type: "ADD_TO_EVAL_QUEUE", chunk: testState.jsmdChunks[3] }
     ];
+
     store = mockStore(testState);
+    store.dispatch(evaluateNotebook());
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+});
 
-    await store.dispatch(evaluateNotebook(mockEvalQueue));
+// ========================================================
 
-    expect(mockEvalQueue.evaluate.mock.calls.length).toBe(2);
+describe("addToEvalQueue", () => {
+  let dispatch;
+
+  beforeEach(() => {
+    dispatch = jest.fn();
   });
 
-  NONCODE_EVAL_TYPES.forEach(chunkType => {
-    it(`doesn't call evalQueueInstance.evaluate for chunktype: ${chunkType}`, async () => {
-      testState.jsmdChunks[0].chunkType = chunkType;
-      store = mockStore(testState);
-      await store.dispatch(evaluateNotebook(mockEvalQueue));
-      expect(mockEvalQueue.evaluate.mock.calls.length).toBe(0);
+  // some random types that SHOULD be enqueued
+  ["js", "py", "jl", "etc"].forEach(chunkType => {
+    const chunk = { chunkType };
+    it("dispatch if chunk of any type other than NONCODE_EVAL_TYPES", () => {
+      addToEvalQueue(chunk)(dispatch);
+      expect(dispatch).toBeCalledWith({ type: "ADD_TO_EVAL_QUEUE", chunk });
     });
   });
 
-  ["skipRunAll", "skiprunall"].forEach(skipFlag => {
-    it(`doesn't call evalQueueInstance.evaluate if chunk has ${skipFlag}`, async () => {
-      testState.jsmdChunks[0].evalFlags = [skipFlag];
-      store = mockStore(testState);
-      await store.dispatch(evaluateNotebook(mockEvalQueue));
-      expect(mockEvalQueue.evaluate.mock.calls.length).toBe(0);
+  NONCODE_EVAL_TYPES.forEach(chunkType => {
+    const chunk = { chunkType };
+    it("DO NOT dispatch if chunk of any NONCODE_EVAL_TYPES", () => {
+      addToEvalQueue(chunk)(dispatch);
+      expect(dispatch).not.toBeCalled();
     });
   });
 });
 
-describe("evaluateNotebook - correct evaluations", () => {
-  // let evaluateNotebookTest;
-  let mockEvalQueue;
+// ========================================================
 
+describe("evalConsoleInput", () => {
   let store;
   let testState;
+  let consoleText;
+  const languageLastUsed = "js";
 
   beforeEach(() => {
-    mockEvalQueue = { evaluate: jest.fn() };
-    // evaluateNotebookTest = evaluateNotebook(mockEvalQueue);
+    store = undefined;
+    testState = { languageLastUsed };
+  });
 
+  it("if there is text in the console, eval", () => {
+    consoleText = "some code";
+    const chunk = {
+      chunkContent: consoleText,
+      chunkType: languageLastUsed
+    };
+
+    const expectedActions = [
+      { type: "CLEAR_CONSOLE_TEXT_CACHE" },
+      { type: "RESET_HISTORY_CURSOR" },
+      { type: "ADD_TO_EVAL_QUEUE", chunk },
+      { type: "UPDATE_CONSOLE_TEXT", consoleText: "" }
+    ];
+    store = mockStore(testState);
+    store.dispatch(evalConsoleInput(consoleText));
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+
+  it("if there is no text in the console, do nothing", () => {
+    consoleText = "";
+
+    const expectedActions = [];
+    store = mockStore(testState);
+    store.dispatch(evalConsoleInput(consoleText));
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+});
+
+// ========================================================
+
+describe("evaluateText", () => {
+  let store;
+  let testState;
+  // let editorSelections;
+  // let editorCursor;
+
+  beforeEach(() => {
     store = undefined;
     testState = {
-      jsmdChunks: [
-        {
-          chunkContent: "var pi=3",
-          chunkType: "anyChunkType",
-          chunkId: "chunkHash123",
-          evalFlags: [],
-          startLine: 5,
-          endLine: 6
-        }
-      ],
-      kernelState: "~~NOT~~ KERNEL_BUSY"
+      jsmdChunks: [0, 1, 2, 3, 4].map(i => {
+        return {
+          startLine: 10 * i,
+          endLine: 10 * (i + 1) - 1,
+          chunkContent: `code ${i}`,
+          chunkType: `codeType-${i}`
+        };
+      }),
+      editorSelections: [],
+      editorCursor: { line: 0, col: 0 }
     };
   });
 
-  it("sets kernel state to busy if kernel is NOT busy", () => {
-    store = mockStore(testState);
+  [0, 1, 2, 3, 4].forEach(i => {
+    it(`if no selection, adds the right chunk to the queue (case ${i})`, () => {
+      testState.editorCursor.line = i * 10 + 5;
+      store = mockStore(testState);
 
-    store.dispatch(evaluateNotebook(mockEvalQueue));
-    const actions = store.getActions();
+      store.dispatch(evaluateText());
 
-    expect(actions[0]).toEqual({
-      type: "SET_KERNEL_STATE",
-      kernelState: "KERNEL_BUSY"
+      const expectedActions = [
+        { type: "ADD_TO_EVAL_QUEUE", chunk: testState.jsmdChunks[i] }
+      ];
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
-  it("doesn't set kernel state if kernel is busy", () => {
-    testState.kernelState = "KERNEL_BUSY";
-    store = mockStore(testState);
-
-    store.dispatch(evaluateNotebook(mockEvalQueue));
-    const actions = store.getActions();
-
-    expect(actions.map(a => a.type).includes("SET_KERNEL_STATE")).toBe(false);
+  // FIXME: this is a pain to test, so i'm punting on it.
+  // it would require an elaborate state set up or mocking
+  // a bunch of inner functions
+  it("if there's a selection, adds the right chunks to the queue", () => {
+    // testState.editorSelections = [
+    //   { start: { line: 3, col: 6 }, end: { line: 5, col: 6 }, selectedText: "sel-text-1"}
+    // ]
+    // store = mockStore(testState);
+    // store.dispatch(evaluateText(consoleText));
+    // const expectedActions = [
+    //   { type: "ADD_TO_EVAL_QUEUE", chunktestState.jsmdChunks[i] },
+    // ];
+    // expect(store.getActions()).toEqual(expectedActions);
   });
 });

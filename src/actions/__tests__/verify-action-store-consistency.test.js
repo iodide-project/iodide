@@ -1,6 +1,6 @@
 import { store } from "../../store";
 import * as actions from "../actions";
-import { evaluateNotebook } from "../eval-actions";
+import { evaluateNotebook, setKernelState } from "../eval-actions";
 
 import { stateProperties } from "../../state-schemas/state-schema";
 import { SchemaValidationError } from "../../reducers/create-validated-reducer";
@@ -34,9 +34,7 @@ describe("make sure action creators leave store in a consitent state", () => {
   });
 
   it("setKernelState", () => {
-    expect(() =>
-      store.dispatch(actions.setKernelState("KERNEL_BUSY"))
-    ).not.toThrow();
+    expect(() => store.dispatch(setKernelState("KERNEL_BUSY"))).not.toThrow();
   });
 
   it("updateAppMessages, no details", () => {
@@ -134,19 +132,17 @@ describe("make sure action creators leave store in a consitent state", () => {
 
 describe("setKernelState", () => {
   it("createValidatedReducer should throw an error if we pass an invalid arg into setKernelState", () => {
-    expect(() =>
-      store.dispatch(actions.setKernelState("fake state"))
-    ).toThrowError(SchemaValidationError);
-    expect(() => store.dispatch(actions.setKernelState(12342323))).toThrowError(
+    expect(() => store.dispatch(setKernelState("fake state"))).toThrowError(
+      SchemaValidationError
+    );
+    expect(() => store.dispatch(setKernelState(12342323))).toThrowError(
       SchemaValidationError
     );
   });
   it("passes on correct set of enums for setKernelState", () => {
     const enums = stateProperties.kernelState.enum;
     enums.forEach(kernelState => {
-      expect(() =>
-        store.dispatch(actions.setKernelState(kernelState))
-      ).not.toThrow();
+      expect(() => store.dispatch(setKernelState(kernelState))).not.toThrow();
     });
   });
 });
