@@ -28,8 +28,8 @@ levels of support to make it easier to know what to expect.
 |---------------------------------------------------------------------------------|----------------|---------|---------|---------|---------|----------|
 | [Pyodide](http://github.com/iodide-project/pyodide)                             | Python         | ✓       | ✓       | ✓       | partial | ✓        |
 | [AssemblyScript](https://alpha.iodide.io/notebooks/1234) | AssemblyScript | ✓       | ✓       |         |         |          |
-| [Lua](https://codepen.io/ds604/pen/d9791eed4e1ce19e11fb0f3c71000d72)            | Lua            | ✓       | ✓       |         |         |          |
-| [Opal](https://codepen.io/ds604/pen/6cef7f732750cb2bde469b5ff387a320)           | Ruby           | ✓       | ✓       |         |         |          |
+| [Lua](https://alpha.iodide.io/notebooks/1416/)            | Lua            | ✓       | ✓       |         |         |          |
+| [Opal](https://alpha.iodide.io/notebooks/1453/)           | Ruby           | ✓       | ✓       |         |         |          |
 | [Julide](https://github.com/keno/julia-wasm)                                                                        | Julia           | ✓        |         |         |         |          |
 | [Domical](https://github.com/louisabraham/domical)                              | OCaml          | ✓       |         |         |         |          |
 | [PlantUml](https://github.com/six42/iodide-plantuml-plugin)                              | PlantUml          | ✓       |         |         |         |          |
