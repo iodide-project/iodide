@@ -1,4 +1,4 @@
-import UserTask from "../../actions/user-task";
+import UserTask from "../../editor/actions/user-task";
 import { postKeypressToEditor } from "../port-to-editor";
 
 const tasks = {};

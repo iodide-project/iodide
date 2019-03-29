@@ -2,7 +2,7 @@ import { shallow } from "enzyme";
 import React from "react";
 
 import { DeclaredVariable } from "../declared-variable";
-import ValueRenderer from "../../../../components/reps/value-renderer";
+import ValueRenderer from "../../reps/value-renderer";
 
 describe("DeclaredVariable React component", () => {
   let props;

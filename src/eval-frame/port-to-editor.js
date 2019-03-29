@@ -9,7 +9,7 @@ import {
   onParentContextFileFetchSuccess,
   onParentContextFileFetchError
 } from "./tools/fetch-file-from-parent-context";
-import messagePasserEval from "../redux-to-port-message-passer";
+import messagePasserEval from "../shared/utils/redux-to-port-message-passer";
 import { sendStatusResponseToEditor } from "./actions/editor-message-senders";
 
 const mc = new MessageChannel();

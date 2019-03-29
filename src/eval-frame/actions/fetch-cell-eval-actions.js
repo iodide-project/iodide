@@ -14,10 +14,10 @@ import {
   syntaxErrorToString,
   successMessage,
   errorMessage
-} from "../../tools/fetch-tools";
+} from "../../shared/utils/fetch-tools";
 
 import fetchFileFromParentContext from "../tools/fetch-file-from-parent-context";
-import generateRandomId from "../../tools/generate-random-id";
+import generateRandomId from "../../shared/utils/generate-random-id";
 
 export function fetchProgressInitialStrings(fetchInfo) {
   let text;

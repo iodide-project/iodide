@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import AppMessage from "./console/app-message";
-import ValueRenderer from "../../../components/reps/value-renderer";
-import PreformattedTextItemsHandler from "../../../components/reps/preformatted-text-items-handler";
+import ValueRenderer from "../reps/value-renderer";
+import PreformattedTextItemsHandler from "../reps/preformatted-text-items-handler";
 
 import HistoryInputItem from "./console/history-input-item";
 import ConsoleMessage from "./console/console-message";

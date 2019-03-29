@@ -14,7 +14,7 @@ const _ = require("lodash");
 const reduxLogMode =
   process.env.REDUX_LOGGING === "VERBOSE" ? "VERBOSE" : "SILENT";
 
-const editorHtmlTemplate = require("./src/html-template.js");
+const editorHtmlTemplate = require("./src/editor/html-template.js");
 const evalFrameHtmlTemplate = require("./src/eval-frame/html-template.js");
 
 const editorHtmlTemplateCompiler = _.template(editorHtmlTemplate);
@@ -60,7 +60,7 @@ module.exports = env => {
 
   return {
     entry: {
-      iodide: `${APP_DIR}/index.jsx`,
+      iodide: `${APP_DIR}/editor/index.jsx`,
       "iodide.eval-frame": `${APP_DIR}/eval-frame/index.jsx`,
       "server.home": `${APP_DIR}/server/index.jsx`
     },

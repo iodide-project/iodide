@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "react-emotion";
-import Footer from "./footer";
+import Footer from "../../shared/components/footer";
 import { sharedProperties } from "../style/base";
 
 const PageBodyContainer = styled("div")`

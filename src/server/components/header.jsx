@@ -2,8 +2,8 @@ import React from "react";
 
 import HeaderContainer from "../../shared/components/header/header";
 
-import IodideLogo from "../../shared/iodide-logo";
-import UserMenu from "../../shared/user-menu";
+import IodideLogo from "../../shared/components/iodide-logo";
+import UserMenu from "../../shared/components/user-menu";
 import LeftContainer from "../../shared/components/header/left-container";
 import RightContainer from "../../shared/components/header/right-container";
 

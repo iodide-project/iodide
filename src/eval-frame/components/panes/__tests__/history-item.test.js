@@ -5,8 +5,8 @@ import { HistoryItemUnconnected } from "../history-item";
 import HistoryInputItem from "../console/history-input-item";
 import AppMessage from "../console/app-message";
 import ConsoleMessage from "../console/console-message";
-import ValueRenderer from "../../../../components/reps/value-renderer";
-import PreformattedTextItemsHandler from "../../../../components/reps/preformatted-text-items-handler";
+import ValueRenderer from "../../reps/value-renderer";
+import PreformattedTextItemsHandler from "../../reps/preformatted-text-items-handler";
 
 describe("HistoryItem React component", () => {
   const historyItem = props => {
