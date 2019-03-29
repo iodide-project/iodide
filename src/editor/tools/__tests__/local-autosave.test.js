@@ -1,5 +1,5 @@
 import { getLocalAutosaveState, updateLocalAutosave } from "../local-autosave";
-import { newNotebook } from "../../editor-state-prototypes";
+import { newNotebook } from "../../state-schemas/editor-state-prototypes";
 
 let states;
 const jsmdContent = `%% js
