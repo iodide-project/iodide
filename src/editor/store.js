@@ -12,7 +12,7 @@ import {
 } from "./state-schemas/editor-state-prototypes";
 import { getUserDataFromDocument } from "./tools/server-tools";
 
-import rootSaga from "./actions/root-saga";
+import rootSaga from "./actions/sagas/root-saga";
 
 let enhancer;
 let finalReducer;

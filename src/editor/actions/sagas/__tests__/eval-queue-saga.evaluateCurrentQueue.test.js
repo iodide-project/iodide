@@ -2,7 +2,7 @@
 import { expectSaga } from "redux-saga-test-plan";
 // import { throwError } from "redux-saga-test-plan/providers";
 
-import { setKernelState } from "../eval-actions";
+import { setKernelState } from "../../eval-actions";
 
 import { evaluateCurrentQueue, evaluateByType } from "../eval-queue-saga";
 

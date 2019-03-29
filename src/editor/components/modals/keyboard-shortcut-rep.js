@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import UserTask from "../../actions/user-task";
+import UserTask from "../../user-tasks/user-task";
 
 export default class KeyboardShortcutRep extends React.Component {
   static propTypes = {

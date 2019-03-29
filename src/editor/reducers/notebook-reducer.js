@@ -1,5 +1,5 @@
 import { newNotebook } from "../state-schemas/editor-state-prototypes";
-import { historyIdGen } from "../actions/id-generators";
+import { historyIdGen } from "../tools/id-generators";
 import { exportJsmdBundle, titleToHtmlFilename } from "../tools/export-tools";
 
 function newAppMessage(

@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import UserTask from "../../actions/user-task";
-import ExternalLinkTask from "../../actions/external-link-task";
+import UserTask from "../../user-tasks/user-task";
+import ExternalLinkTask from "../../user-tasks/external-link-task";
 
 // TODO - implement tooltip again
 export default class NotebookTaskFunction extends React.Component {

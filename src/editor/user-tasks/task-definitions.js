@@ -1,8 +1,8 @@
 import UserTask from "./user-task";
 import ExternalLinkTask from "./external-link-task";
 import { store } from "../store";
-import * as actions from "./actions";
-import { evaluateText, evaluateNotebook } from "./eval-actions";
+import * as actions from "../actions/actions";
+import { evaluateText, evaluateNotebook } from "../actions/eval-actions";
 
 // FIXME: remove requirement to import store in this file by attaching
 // keypress handling to store in initializeDefaultKeybindings() --

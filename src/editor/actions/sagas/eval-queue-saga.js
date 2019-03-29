@@ -11,19 +11,19 @@ import {
 import {
   NONCODE_EVAL_TYPES,
   RUNNABLE_CHUNK_TYPES
-} from "../state-schemas/state-schema";
+} from "../../state-schemas/state-schema";
 
-import { setKernelState } from "./eval-actions";
+import { setKernelState } from "../eval-actions";
 
 import {
   loadingLanguageConsoleMsg,
   addInputToConsole,
   evalTypeConsoleError,
   pluginParseError
-} from "./console-message-actions";
+} from "../console-message-actions";
 
-import messagePasserEditor from "../../shared/utils/redux-to-port-message-passer";
-import generateRandomId from "../../shared/utils/generate-random-id";
+import messagePasserEditor from "../../../shared/utils/redux-to-port-message-passer";
+import generateRandomId from "../../../shared/utils/generate-random-id";
 
 // helpers
 

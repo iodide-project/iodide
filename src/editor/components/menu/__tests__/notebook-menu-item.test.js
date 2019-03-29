@@ -5,7 +5,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import NotebookMenuItem from "../notebook-menu-item";
-import UserTask from "../../../actions/user-task";
+import UserTask from "../../../user-tasks/user-task";
 
 describe("NotebookMenuItem children", () => {
   let props;

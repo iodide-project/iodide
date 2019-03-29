@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "react-emotion";
 
-import DoubleChevron from "../double-chevron-icon";
+import DoubleChevron from "./double-chevron-icon";
 import ConsoleGutter from "./console-gutter";
 import BaseIcon from "./base-icon";
 

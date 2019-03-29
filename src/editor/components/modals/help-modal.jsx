@@ -12,7 +12,7 @@ import KeyboardShortcutList from "./keyboard-shortcut-list";
 import OnboardingContent from "../../../shared/components/onboarding-content";
 import AboutIodide from "./about-iodide";
 import FeaturedNotebooks from "../../../shared/components/featured-notebooks";
-import tasks from "../../actions/task-definitions";
+import tasks from "../../user-tasks/task-definitions";
 
 import THEME from "../../../shared/theme";
 

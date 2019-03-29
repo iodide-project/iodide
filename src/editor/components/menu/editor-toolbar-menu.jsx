@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import NotebookIconMenu from "./icon-menu";
-import tasks from "../../actions/task-definitions";
+import tasks from "../../user-tasks/task-definitions";
 import NotebookMenuItem from "./notebook-menu-item";
 import { connectionModeIsServer } from "../../tools/server-tools";
 

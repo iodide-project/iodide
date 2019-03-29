@@ -10,7 +10,10 @@ import ViewModeToggleButton from "./view-mode-toggle-button";
 import NotebookTaskButton from "./notebook-task-button";
 import KernelState from "./kernel-state";
 
-import tasks from "../../actions/task-definitions";
+// FIXME there is NO REASON to use "tasks" here.
+// we should use map dispatch to props and regular actions like
+// we do in every other component
+import tasks from "../../user-tasks/task-definitions";
 
 import { connectionModeIsServer } from "../../tools/server-tools";
 

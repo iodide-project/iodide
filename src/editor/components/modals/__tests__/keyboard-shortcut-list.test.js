@@ -2,7 +2,7 @@ import React from "react";
 import { shallow } from "enzyme";
 
 import KeyboardShortcutList from "../keyboard-shortcut-list";
-import UserTask from "../../../actions/user-task";
+import UserTask from "../../../user-tasks/user-task";
 
 describe("HelpModalUnconnected React component", () => {
   let props;
