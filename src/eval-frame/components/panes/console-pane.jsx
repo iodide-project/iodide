@@ -10,7 +10,7 @@ import HistoryItem from "./history-item";
 import ConsoleInput from "./console/console-input";
 
 import EmptyPaneContents from "./empty-pane-contents";
-import OnboardingContent from "./onboarding-content";
+import OnboardingContent from "../../../shared/components/onboarding-content";
 
 const HelpIcon = styled(HelpOutline)`
   display: inline-block;

@@ -1,5 +1,5 @@
-import generateRandomId from "../../tools/generate-random-id";
-import createHistoryItem from "../../tools/create-history-item";
+import generateRandomId from "../../shared/utils/generate-random-id";
+import createHistoryItem from "../../shared/utils/create-history-item";
 
 export const EVALUATION_RESULTS = {};
 

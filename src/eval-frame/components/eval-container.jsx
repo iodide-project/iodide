@@ -6,7 +6,7 @@ import ReportPane from "./panes/report-pane";
 import DeclaredVariablesPane from "./panes/declared-variables-pane";
 import ConsolePane from "./panes/console-pane";
 
-import FixedPositionContainer from "../../components/pane-layout/fixed-position-container";
+import FixedPositionContainer from "../../shared/components/fixed-position-container";
 
 export class EvalContainerUnconnected extends React.Component {
   static propTypes = {

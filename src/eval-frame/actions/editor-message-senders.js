@@ -1,4 +1,4 @@
-import messagePasserEval from "../../redux-to-port-message-passer";
+import messagePasserEval from "../../shared/utils/redux-to-port-message-passer";
 import {
   addToConsoleHistory,
   updateConsoleEntry

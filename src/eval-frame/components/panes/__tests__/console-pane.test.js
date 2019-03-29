@@ -9,7 +9,7 @@ import { store } from "../../../store"; /* eslint-disable-line no-unused-vars */
 import HistoryItem from "../history-item";
 
 import { ConsolePaneUnconnected, mapStateToProps } from "../console-pane";
-import OnboardingContent from "../onboarding-content";
+import OnboardingContent from "../../../../shared/components/onboarding-content";
 
 describe("ConsolePaneUnconnected React component", () => {
   let props;

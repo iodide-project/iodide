@@ -4,8 +4,8 @@ import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
 
 import reducer from "./reducers/reducer";
-import { newNotebook } from "../editor-state-prototypes";
-import evalFrameStateSelector from "../state-schemas/eval-frame-state-selector";
+import { newNotebook } from "../editor/state-schemas/editor-state-prototypes";
+import evalFrameStateSelector from "../editor/state-schemas/eval-frame-state-selector";
 
 let enhancer;
 
