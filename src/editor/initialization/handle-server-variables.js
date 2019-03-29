@@ -1,5 +1,5 @@
-import { getNotebookInfoFromDocument } from "./tools/server-tools";
-import { updateNotebookInfo, changePageTitle } from "./actions/actions";
+import { getNotebookInfoFromDocument } from "../tools/server-tools";
+import { updateNotebookInfo, changePageTitle } from "../actions/actions";
 
 export default function handleServerVariables(store) {
   const nbObj = getNotebookInfoFromDocument();

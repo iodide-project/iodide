@@ -1,6 +1,6 @@
 import "../../store";
 import notebookReducer from "../notebook-reducer";
-import { newNotebook } from "../../editor-state-prototypes";
+import { newNotebook } from "../../state-schemas/editor-state-prototypes";
 
 // FIXME: re-implement tests for the notebook reducer
 

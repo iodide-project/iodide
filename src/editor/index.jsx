@@ -28,9 +28,9 @@ import EditorPaneContainer from "./components/editor-pane-container";
 import { store } from "./store";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
 import handleInitialJsmd from "./initialization/handle-initial-jsmd";
-import handleServerVariables from "./handle-server-variables";
+import handleServerVariables from "./initialization/handle-server-variables";
 import handleReportViewModeInitialization from "./initialization/handle-report-view-mode-initialization";
-import { initializeDefaultKeybindings } from "./keybindings";
+import { initializeDefaultKeybindings } from "./initialization/keybindings";
 
 import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 

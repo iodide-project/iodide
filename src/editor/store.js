@@ -6,7 +6,10 @@ import createSagaMiddleware from "redux-saga";
 
 import createValidatedReducer from "./reducers/create-validated-reducer";
 import reducer from "./reducers/reducer";
-import { newNotebook, stateSchema } from "./editor-state-prototypes";
+import {
+  newNotebook,
+  stateSchema
+} from "./state-schemas/editor-state-prototypes";
 import { getUserDataFromDocument } from "./tools/server-tools";
 
 import rootSaga from "./actions/root-saga";

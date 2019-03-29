@@ -1,4 +1,4 @@
-import { newNotebook } from "../editor-state-prototypes";
+import { newNotebook } from "../state-schemas/editor-state-prototypes";
 import { historyIdGen } from "../actions/id-generators";
 import { exportJsmdBundle, titleToHtmlFilename } from "../tools/export-tools";
 
