@@ -60,7 +60,7 @@ export function* triggerEvalFrameTask(taskType, payload) {
   if (response.status === "ERROR") {
     throw new Error(`EVAL_FRAME_TASK_RESPONSE-${taskId}-FAILED`);
   }
-  return response;
+  return response.payload;
 }
 
 export function* loadLanguagePlugin(pluginData) {
@@ -85,6 +85,9 @@ export function* updateUserVariables() {
     triggerEvalFrameTask,
     "UPDATE_USER_VARIABLES"
   );
+  // const { userDefinedVarNames } = response;
+  // console.log("UPDATE_USER_VARIABLES SAGA --------------------");
+  // console.log(response);
   yield put({
     type: "UPDATE_USER_VARIABLES",
     userDefinedVarNames
