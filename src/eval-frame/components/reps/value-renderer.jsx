@@ -6,6 +6,19 @@ import ErrorRenderer from "./error-handler";
 import HTMLHandler from "./html-handler";
 import UserReps from "./user-reps-manager";
 
+function repChooser(value) {
+  if (UserReps.getUserRepIfAvailable(value)) {
+    return "GLOBAL_USER_RENDERER";
+  }
+  if (value && value.iodideRender instanceof Function) {
+    return "OBJECT_USER_RENDER_METHOD";
+  }
+  if (value instanceof Error) {
+    return "ERROR_REP";
+  }
+  return "DEFAULT_REP";
+}
+
 export default class ValueRenderer extends React.Component {
   static propTypes = {
     valueToRender: PropTypes.any
@@ -40,17 +53,19 @@ export default class ValueRenderer extends React.Component {
       );
     }
 
-    const htmlString = UserReps.getUserRepIfAvailable(value);
-    if (htmlString) {
-      return <HTMLHandler htmlString={htmlString} />;
+    switch (repChooser(value)) {
+      case "GLOBAL_USER_RENDERER": {
+        const htmlString = UserReps.getUserRepIfAvailable(value);
+        return <HTMLHandler htmlString={htmlString} />;
+      }
+      case "OBJECT_USER_RENDER_METHOD":
+        return <HTMLHandler htmlString={value.iodideRender()} />;
+      case "ERROR_REP":
+        return <ErrorRenderer error={value} />;
+      case "TABLE_REP":
+        return "asdf";
+      default:
+        return <DefaultRenderer value={value} />;
     }
-    if (value && value.iodideRender instanceof Function) {
-      return <HTMLHandler htmlString={value.iodideRender()} />;
-    }
-    if (value instanceof Error) {
-      return <ErrorRenderer error={value} />;
-    }
-
-    return <DefaultRenderer value={value} />;
   }
 }
