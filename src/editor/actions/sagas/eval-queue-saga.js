@@ -60,7 +60,7 @@ export function* triggerEvalFrameTask(taskType, payload) {
   if (response.status === "ERROR") {
     throw new Error(`EVAL_FRAME_TASK_RESPONSE-${taskId}-FAILED`);
   }
-  return response;
+  return response.payload;
 }
 
 export function* loadLanguagePlugin(pluginData) {

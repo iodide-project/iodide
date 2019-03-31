@@ -33,10 +33,11 @@ describe("triggerEvalFrameTask test", () => {
   const taskType = "A_TASK";
   const payload = "PAYLOAD";
   const taskId = "TASK_ID";
+  const payloadFromEvalFrame = "payloadFromEvalFrame";
   let taskResponse;
 
   beforeEach(() => {
-    taskResponse = { status: "not_ERROR" };
+    taskResponse = { status: "not_ERROR", payload: payloadFromEvalFrame };
   });
 
   it("always sends task to eval frame", async () => {
@@ -69,14 +70,14 @@ describe("triggerEvalFrameTask test", () => {
     expect(console.error).toHaveBeenCalled();
   });
 
-  it("returns status if EVAL_FRAME_TASK_RESPONSE action is not 'ERROR'", async () => {
+  it("returns payload if EVAL_FRAME_TASK_RESPONSE action is not 'ERROR'", async () => {
     await expectSaga(triggerEvalFrameTask, taskType, payload)
       .provide([
         [call(sendTaskToEvalFrame, taskType, payload), taskId],
         [take(`EVAL_FRAME_TASK_RESPONSE-${taskId}`), taskResponse]
       ])
       .dispatch(`EVAL_FRAME_TASK_RESPONSE-${taskId}`)
-      .returns(taskResponse)
+      .returns(payloadFromEvalFrame)
       .run();
   });
 
