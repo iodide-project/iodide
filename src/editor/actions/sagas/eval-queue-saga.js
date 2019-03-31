@@ -85,9 +85,6 @@ export function* updateUserVariables() {
     triggerEvalFrameTask,
     "UPDATE_USER_VARIABLES"
   );
-  // const { userDefinedVarNames } = response;
-  // console.log("UPDATE_USER_VARIABLES SAGA --------------------");
-  // console.log(response);
   yield put({
     type: "UPDATE_USER_VARIABLES",
     userDefinedVarNames
