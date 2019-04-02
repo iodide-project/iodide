@@ -1,5 +1,5 @@
 import { store as reduxStore } from "../store";
-import { makeFileRequestInEditor } from "../tools/iodide-local-file-queue";
+import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
 
 const VALID_FETCH_TYPES = ["text", "json", "blob", "js", "css"];
 const VARIABLE_TYPE_FILES = ["text", "json", "blob"];
@@ -42,7 +42,6 @@ export function connectLoad(store, fetchFunction) {
       }
       return { fetchType };
     };
-
     return fetchFunction(fileName, "LOAD_FILE", validateAndFetchMetadata).then(
       file => {
         if (VARIABLE_TYPE_FILES.includes(fetchType) && variableName) {
@@ -71,8 +70,6 @@ export function connectDeleteFile(store, deleteFunction) {
     return deleteFunction(fileName, "DELETE_FILE", createMetadata);
   };
 }
-
-// export function downloadFile(data, filename) {}
 
 export function connectSave(store, saveFunction) {
   return function save(data, fileName, saveOptions = { overwrite: false }) {
@@ -104,9 +101,9 @@ export function connectSave(store, saveFunction) {
 }
 
 export const file = {
-  save: connectSave(reduxStore, makeFileRequestInEditor),
-  load: connectLoad(reduxStore, makeFileRequestInEditor),
-  delete: connectDeleteFile(reduxStore, makeFileRequestInEditor),
+  save: connectSave(reduxStore, sendFileRequestToEditor),
+  load: connectLoad(reduxStore, sendFileRequestToEditor),
+  delete: connectDeleteFile(reduxStore, sendFileRequestToEditor),
   exists: connectExists(reduxStore),
   list: connectList(reduxStore)
 };

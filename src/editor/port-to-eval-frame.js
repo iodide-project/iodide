@@ -8,8 +8,6 @@ import { saveFileToServer, deleteFileOnServer } from "../shared/upload-file";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
 
-// let's implement saveFileToServer
-
 let portToEvalFrame;
 
 export function postMessageToEvalFrame(messageType, message) {
@@ -31,6 +29,61 @@ const approvedKeys = [
   "ctrl+shift+right"
 ];
 
+function validateRequestType(requestType) {
+  if (!["LOAD_FILE", "SAVE_FILE", "DELETE_FILE"].includes(requestType)) {
+    throw Error(`file operation "${requestType}" not defined`);
+  }
+}
+
+function handleFileRequest(message) {
+  const { path, fileRequestID, requestType } = message;
+  let fileOperation;
+  validateRequestType(requestType);
+  if (requestType === "LOAD_FILE") {
+    fileOperation = fetchFileFromServer(
+      `files/${path}`,
+      message.metadata.fetchType
+    );
+  }
+  if (requestType === "SAVE_FILE") {
+    const { notebookID, data, updateFile, fileID } = message.metadata;
+    fileOperation = saveFileToServer(
+      notebookID,
+      data,
+      path,
+      updateFile,
+      fileID
+    ).then(fileInfo => {
+      const { filename, lastUpdated, id } = fileInfo;
+      messagePasserEditor.dispatch(addFile(filename, lastUpdated, id));
+    });
+  } else if (requestType === "DELETE_FILE") {
+    fileOperation = deleteFileOnServer(message.metadata.fileID)
+      .then(out => {
+        console.log(out);
+        return out;
+      })
+      .then(() => {
+        messagePasserEditor.dispatch(deleteFile(message.metadata.fileID));
+      });
+  }
+  fileOperation
+    .then(file => {
+      postMessageToEvalFrame("REQUESTED_FILE_OPERATION_SUCCESS", {
+        file,
+        fileRequestID,
+        path: message.path
+      });
+    })
+    .catch(err => {
+      postMessageToEvalFrame("REQUESTED_FILE_OPERATION_ERROR", {
+        path: message.path,
+        fileRequestID,
+        reason: err.message
+      });
+    });
+}
+
 function receiveMessage(event) {
   const trustedMessage = true;
   if (trustedMessage) {
@@ -50,57 +103,7 @@ function receiveMessage(event) {
         break;
       }
       case "FILE_REQUEST": {
-        const { path, fileRequestID, requestType } = message;
-        let fileOperation;
-        if (!["LOAD_FILE", "SAVE_FILE", "DELETE_FILE"].includes(requestType)) {
-          throw Error(`file operation ${fileOperation} not defined`);
-        }
-        if (requestType === "LOAD_FILE") {
-          console.log("LOAD_FILE", path);
-          fileOperation = fetchFileFromServer(
-            `files/${path}`,
-            message.metadata.fetchType
-          );
-        }
-        if (requestType === "SAVE_FILE") {
-          console.log("SAVE_FILE", path);
-          const { notebookID, data, updateFile, fileID } = message.metadata;
-          fileOperation = saveFileToServer(
-            notebookID,
-            data,
-            path,
-            updateFile,
-            fileID
-          ).then(fileInfo => {
-            const { filename, lastUpdated, id } = fileInfo;
-            messagePasserEditor.dispatch(addFile(filename, lastUpdated, id));
-          });
-        } else if (requestType === "DELETE_FILE") {
-          console.log("DELETE_FILE", path);
-          fileOperation = deleteFileOnServer(message.metadata.fileID)
-            .then(out => {
-              console.log(out);
-              return out;
-            })
-            .then(() => {
-              messagePasserEditor.dispatch(deleteFile(message.metadata.fileID));
-            });
-        }
-        fileOperation
-          .then(file => {
-            postMessageToEvalFrame("REQUESTED_FILE_OPERATION_SUCCESS", {
-              file,
-              fileRequestID,
-              path: message.path
-            });
-          })
-          .catch(err => {
-            postMessageToEvalFrame("REQUESTED_FILE_OPERATION_ERROR", {
-              path: message.path,
-              fileRequestID,
-              reason: err.message
-            });
-          });
+        handleFileRequest(message);
         break;
       }
       case "AUTOCOMPLETION_SUGGESTIONS": {

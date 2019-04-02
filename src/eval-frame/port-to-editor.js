@@ -5,14 +5,10 @@ import { evaluateFetchText } from "./actions/fetch-cell-eval-actions";
 import { loadLanguagePlugin } from "./actions/language-actions";
 import { getUserDefinedVariablesFromWindow } from "./initialize-user-variables";
 import { getCompletions } from "./tools/notebook-utils";
-// import {
-//   onParentContextFileFetchSuccess,
-//   onParentContextFileFetchError
-// } from "./tools/fetch-file-from-parent-context";
 import {
   onParentContextFileRequestSuccess,
   onParentContextFileRequestError
-} from "./tools/iodide-local-file-queue";
+} from "./tools/send-file-request-to-editor";
 import messagePasserEval from "../shared/utils/redux-to-port-message-passer";
 import { sendStatusResponseToEditor } from "./actions/editor-message-senders";
 
