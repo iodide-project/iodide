@@ -62,18 +62,13 @@ async function receiveMessage(event) {
       }
       case "REQUESTED_FILE_OPERATION_SUCCESS": {
         onParentContextFileRequestSuccess(
-          message.file,
-          message.path,
+          message.response,
           message.fileRequestID
         );
         break;
       }
       case "REQUESTED_FILE_OPERATION_ERROR": {
-        onParentContextFileRequestError(
-          message.reason,
-          message.path,
-          message.fileRequestID
-        );
+        onParentContextFileRequestError(message.reason, message.fileRequestID);
         break;
       }
       case "REQUEST_AUTOCOMPLETE_SUGGESTIONS": {

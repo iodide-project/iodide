@@ -2,12 +2,8 @@
 
 import Mousetrap from "mousetrap";
 import { evalConsoleInput } from "./actions/eval-actions";
-import { addFile, deleteFile } from "./actions/actions";
-import { genericFetch as fetchFileFromServer } from "../shared/utils/fetch-tools";
-import {
-  saveFileToServer,
-  deleteFileOnServer
-} from "../shared/utils/file-operations";
+// import { genericFetch as fetchFileFromServer } from "../shared/utils/fetch-tools";
+import { saveFile, loadFile, deleteFile } from "./actions/file-request-actions";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
 
@@ -39,50 +35,35 @@ function validateRequestType(requestType) {
 }
 
 function handleFileRequest(message) {
-  const { path, fileRequestID, requestType } = message;
-  let fileOperation;
+  const { requestType } = message;
+  // let fileOperation;
   validateRequestType(requestType);
   if (requestType === "LOAD_FILE") {
-    console.log("LOAD_FILE", message.path);
-    fileOperation = fetchFileFromServer(
-      `files/${path}`,
-      message.metadata.fetchType
-    );
+    messagePasserEditor.dispatch(loadFile(message));
   }
   if (requestType === "SAVE_FILE") {
-    console.log("SAVE_FILE", message.path);
-    const { notebookID, data, updateFile, fileID } = message.metadata;
-    fileOperation = saveFileToServer(
-      notebookID,
-      data,
-      path,
-      updateFile,
-      fileID
-    ).then(fileInfo => {
-      const { filename, lastUpdated, id } = fileInfo;
-      messagePasserEditor.dispatch(addFile(filename, lastUpdated, id));
-    });
+    messagePasserEditor.dispatch(saveFile(message));
   } else if (requestType === "DELETE_FILE") {
-    console.log("DELETE_FILE", message.path);
-    fileOperation = deleteFileOnServer(message.metadata.fileID).then(() => {
-      messagePasserEditor.dispatch(deleteFile(message.metadata.fileID));
-    });
+    messagePasserEditor.dispatch(deleteFile(message));
+    // deleteFileOnServer(message.metadata.fileID).then(() => {
+    //   messagePasserEditor.dispatch(deleteFile(message.metadata.fileID));
+    // });
   }
-  fileOperation
-    .then(file => {
-      postMessageToEvalFrame("REQUESTED_FILE_OPERATION_SUCCESS", {
-        file,
-        fileRequestID,
-        path: message.path
-      });
-    })
-    .catch(err => {
-      postMessageToEvalFrame("REQUESTED_FILE_OPERATION_ERROR", {
-        path: message.path,
-        fileRequestID,
-        reason: err.message
-      });
-    });
+  // fileOperation
+  //   .then(file => {
+  //     postMessageToEvalFrame("REQUESTED_FILE_OPERATION_SUCCESS", {
+  //       file,
+  //       fileRequestID,
+  //       path: message.path
+  //     });
+  //   })
+  //   .catch(err => {
+  //     postMessageToEvalFrame("REQUESTED_FILE_OPERATION_ERROR", {
+  //       path: message.path,
+  //       fileRequestID,
+  //       reason: err.message
+  //     });
+  //   });
 }
 
 function receiveMessage(event) {

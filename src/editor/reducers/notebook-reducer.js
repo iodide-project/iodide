@@ -237,7 +237,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     case "DELETE_FILE_FROM_NOTEBOOK": {
       const { fileID } = action;
       const { files } = state.notebookInfo;
-      console.log("in reducer", fileID);
       const notebookInfo = Object.assign({}, state.notebookInfo, {
         files: files.filter(f => f.id !== fileID)
       });
