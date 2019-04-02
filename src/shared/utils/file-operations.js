@@ -74,7 +74,15 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
   });
 }
 
+<<<<<<< HEAD:src/shared/utils/file-operations.js
 function makeFormData(notebookID, data, fileName) {
+=======
+export function valueToFile(data, fileName) {
+  return new File([data], fileName);
+}
+
+export function makeFormData(notebookID, data, fileName) {
+>>>>>>> first draft of full implementation of iodide.file API:src/shared/upload-file.js
   const file = valueToFile(data, fileName);
   const formData = new FormData();
   formData.append(
@@ -92,10 +100,18 @@ export function saveFileToServer(
   notebookID,
   data,
   fileName,
+<<<<<<< HEAD:src/shared/utils/file-operations.js
   fileID = undefined
 ) {
   const formData = makeFormData(notebookID, data, fileName);
   const fetchRequest = fileID // if fileID undefined, upload, otherwise update
+=======
+  updateFileFlag = false,
+  fileID = undefined
+) {
+  const formData = makeFormData(notebookID, data, fileName);
+  const fetchRequest = updateFileFlag
+>>>>>>> first draft of full implementation of iodide.file API:src/shared/upload-file.js
     ? fd => updateFile(fileID, fd)
     : fd => uploadFile(fd);
   return fetchRequest(formData).then(r => {

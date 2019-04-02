@@ -2,9 +2,13 @@
 
 import Mousetrap from "mousetrap";
 import { evalConsoleInput } from "./actions/eval-actions";
+import { addFile, deleteFile } from "./actions/actions";
 import { genericFetch as fetchFileFromServer } from "../shared/utils/fetch-tools";
+import { saveFileToServer, deleteFileOnServer } from "../shared/upload-file";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
+
+// let's implement saveFileToServer
 
 let portToEvalFrame;
 
@@ -45,17 +49,55 @@ function receiveMessage(event) {
         );
         break;
       }
-      case "REQUEST_FETCH": {
-        fetchFileFromServer(message.path, message.fetchType)
+      case "FILE_REQUEST": {
+        const { path, fileRequestID, requestType } = message;
+        let fileOperation;
+        if (!["LOAD_FILE", "SAVE_FILE", "DELETE_FILE"].includes(requestType)) {
+          throw Error(`file operation ${fileOperation} not defined`);
+        }
+        if (requestType === "LOAD_FILE") {
+          console.log("LOAD_FILE", path);
+          fileOperation = fetchFileFromServer(
+            `files/${path}`,
+            message.metadata.fetchType
+          );
+        }
+        if (requestType === "SAVE_FILE") {
+          console.log("SAVE_FILE", path);
+          const { notebookID, data, updateFile, fileID } = message.metadata;
+          fileOperation = saveFileToServer(
+            notebookID,
+            data,
+            path,
+            updateFile,
+            fileID
+          ).then(fileInfo => {
+            const { filename, lastUpdated, id } = fileInfo;
+            messagePasserEditor.dispatch(addFile(filename, lastUpdated, id));
+          });
+        } else if (requestType === "DELETE_FILE") {
+          console.log("DELETE_FILE", path);
+          fileOperation = deleteFileOnServer(message.metadata.fileID)
+            .then(out => {
+              console.log(out);
+              return out;
+            })
+            .then(() => {
+              messagePasserEditor.dispatch(deleteFile(message.metadata.fileID));
+            });
+        }
+        fileOperation
           .then(file => {
-            postMessageToEvalFrame("REQUESTED_FILE_SUCCESS", {
+            postMessageToEvalFrame("REQUESTED_FILE_OPERATION_SUCCESS", {
               file,
+              fileRequestID,
               path: message.path
             });
           })
           .catch(err => {
-            postMessageToEvalFrame("REQUESTED_FILE_ERROR", {
+            postMessageToEvalFrame("REQUESTED_FILE_OPERATION_ERROR", {
               path: message.path,
+              fileRequestID,
               reason: err.message
             });
           });

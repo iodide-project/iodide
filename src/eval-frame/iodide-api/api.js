@@ -6,6 +6,7 @@
 import UserReps from "../components/reps/user-reps-manager";
 import { environment } from "./environment";
 import { output } from "./output";
+import { file } from "./file";
 
 function getDataSync(url) {
   const re = new XMLHttpRequest();
@@ -31,6 +32,7 @@ containing the fields "shouldRender" and "render`);
   getDataSync,
   environment,
   output,
+  file,
   VERSION: IODIDE_VERSION
 };
 

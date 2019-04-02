@@ -5,10 +5,14 @@ import { evaluateFetchText } from "./actions/fetch-cell-eval-actions";
 import { loadLanguagePlugin } from "./actions/language-actions";
 import { getUserDefinedVariablesFromWindow } from "./initialize-user-variables";
 import { getCompletions } from "./tools/notebook-utils";
+// import {
+//   onParentContextFileFetchSuccess,
+//   onParentContextFileFetchError
+// } from "./tools/fetch-file-from-parent-context";
 import {
-  onParentContextFileFetchSuccess,
-  onParentContextFileFetchError
-} from "./tools/fetch-file-from-parent-context";
+  onParentContextFileRequestSuccess,
+  onParentContextFileRequestError
+} from "./tools/iodide-local-file-queue";
 import messagePasserEval from "../shared/utils/redux-to-port-message-passer";
 import { sendStatusResponseToEditor } from "./actions/editor-message-senders";
 
@@ -60,12 +64,20 @@ async function receiveMessage(event) {
         });
         break;
       }
-      case "REQUESTED_FILE_SUCCESS": {
-        onParentContextFileFetchSuccess(message.file, message.path);
+      case "REQUESTED_FILE_OPERATION_SUCCESS": {
+        onParentContextFileRequestSuccess(
+          message.file,
+          message.path,
+          message.fileRequestID
+        );
         break;
       }
-      case "REQUESTED_FILE_ERROR": {
-        onParentContextFileFetchError(message.reason, message.path);
+      case "REQUESTED_FILE_OPERATION_ERROR": {
+        onParentContextFileRequestError(
+          message.reason,
+          message.path,
+          message.fileRequestID
+        );
         break;
       }
       case "REQUEST_AUTOCOMPLETE_SUGGESTIONS": {

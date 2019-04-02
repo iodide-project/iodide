@@ -16,8 +16,9 @@ import {
   errorMessage
 } from "../../shared/utils/fetch-tools";
 
-import fetchFileFromParentContext from "../tools/fetch-file-from-parent-context";
+// import fetchFileFromParentContext from "../tools/fetch-file-from-parent-context";
 import generateRandomId from "../../shared/utils/generate-random-id";
+import { makeFileRequestInEditor } from "../tools/iodide-local-file-queue";
 
 export function fetchProgressInitialStrings(fetchInfo) {
   let text;
@@ -73,7 +74,13 @@ export async function handleFetch(fetchInfo) {
   const { filePath, fetchType, isRelPath } = fetchInfo.parsed;
   // the following for text, json, blob, css
   let fetchedFile;
-  const fileFetcher = isRelPath ? fetchFileFromParentContext : fetchLocally;
+  // const fileFetcher = isRelPath ? fetchFileFromParentContext : fetchLocally;
+  const fileFetcher = isRelPath
+    ? async (filepath, thisFetchType) =>
+        makeFileRequestInEditor(filepath, "LOAD_FILE", {
+          fetchType: thisFetchType
+        })
+    : fetchLocally;
   try {
     fetchedFile = await fileFetcher(filePath, fetchType);
   } catch (err) {

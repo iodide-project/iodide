@@ -571,3 +571,19 @@ export function setConnectionStatus(status) {
     status
   };
 }
+
+export function addFile(filename, lastUpdated, fileID) {
+  return {
+    type: "ADD_FILE_TO_NOTEBOOK",
+    filename,
+    lastUpdated,
+    fileID
+  };
+}
+
+export function deleteFile(fileID) {
+  return {
+    type: "DELETE_FILE_FROM_NOTEBOOK",
+    fileID
+  };
+}
