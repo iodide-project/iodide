@@ -39,12 +39,12 @@ function handleFileRequest(message) {
   // let fileOperation;
   validateRequestType(requestType);
   if (requestType === "LOAD_FILE") {
-    messagePasserEditor.dispatch(loadFile(message));
+    messagePasserEditor.dispatch(loadFile(message, postMessageToEvalFrame));
   }
   if (requestType === "SAVE_FILE") {
-    messagePasserEditor.dispatch(saveFile(message));
+    messagePasserEditor.dispatch(saveFile(message, postMessageToEvalFrame));
   } else if (requestType === "DELETE_FILE") {
-    messagePasserEditor.dispatch(deleteFile(message));
+    messagePasserEditor.dispatch(deleteFile(message, postMessageToEvalFrame));
     // deleteFileOnServer(message.metadata.fileID).then(() => {
     //   messagePasserEditor.dispatch(deleteFile(message.metadata.fileID));
     // });
