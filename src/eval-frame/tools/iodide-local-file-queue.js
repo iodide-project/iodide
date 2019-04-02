@@ -3,6 +3,22 @@ import messagePasserEval from "../../shared/utils/redux-to-port-message-passer";
 
 const fileRequestQueue = {};
 
+export function onParentContextFileRequestSuccess(
+  responseOrFile,
+  path,
+  fileRequestID
+) {
+  fileRequestQueue[path].requests[fileRequestID].resolve(responseOrFile);
+  delete fileRequestQueue[path].requests[fileRequestID];
+}
+
+export function onParentContextFileRequestError(reason, path, fileRequestID) {
+  fileRequestQueue[path].requests[fileRequestID].reject(reason);
+  // we must reset the queue for this path.
+  fileRequestQueue[path].queue = Promise.resolve();
+  delete fileRequestQueue[path].requests[fileRequestID];
+}
+
 function sendRequestToEditor(path, fileRequestID, requestType, metadata) {
   messagePasserEval.postMessage("FILE_REQUEST", {
     path,
@@ -12,52 +28,39 @@ function sendRequestToEditor(path, fileRequestID, requestType, metadata) {
   });
 }
 
+export function instantiateQueueForPath(path) {
+  if (!(path in fileRequestQueue)) {
+    fileRequestQueue[path] = { requests: {}, queue: Promise.resolve() };
+  }
+}
+
 export function makeFileRequestInEditor(
   path,
   requestType,
-  fileRequestPreparer
-  //   path,
-  //   requestType,
-  //   metadata,
-  //   canMakeRequest = () => {}
+  metadataArgumentsOrFunction
 ) {
   const fileRequestID = generateRandomId();
-  if (!(path in fileRequestQueue)) {
-    console.log("adding fileRequestQueue for ", path);
-    fileRequestQueue[path] = { requests: {}, queue: Promise.resolve() };
-  }
+  instantiateQueueForPath(path);
   const nextRequest = () =>
     new Promise((resolve, reject) => {
-      console.log("starting", path, requestType, fileRequestID);
-      // canMakeRequest();
-      let metadata;
-      try {
-        metadata = fileRequestPreparer();
-      } catch (err) {
-        console.log("rejecting", path, fileRequestID);
-        reject(err);
-      }
-
       fileRequestQueue[path].requests[fileRequestID] = { resolve, reject };
-      sendRequestToEditor(path, fileRequestID, requestType, metadata);
-    })
-      .catch(err => {
-        throw Error(err);
-      })
-      .then(() => {
-        console.log("finished", path, requestType, fileRequestID);
-      });
-  console.log("adding to queue", path, requestType, fileRequestID);
+      let metadata;
+      let continueRequest = false;
+      try {
+        metadata =
+          typeof metadataArgumentsOrFunction === "function"
+            ? metadataArgumentsOrFunction()
+            : metadataArgumentsOrFunction;
+        continueRequest = true;
+      } catch (err) {
+        onParentContextFileRequestError(err, path, fileRequestID);
+      }
+      if (continueRequest) {
+        sendRequestToEditor(path, fileRequestID, requestType, metadata);
+      }
+    }).catch(err => {
+      throw Error(err);
+    });
   fileRequestQueue[path].queue = fileRequestQueue[path].queue.then(nextRequest);
   return fileRequestQueue[path].queue;
-}
-
-export function onParentContextFileRequestSuccess(file, path, fileRequestID) {
-  fileRequestQueue[path].requests[fileRequestID].resolve(file);
-  delete fileRequestQueue[path].requests[fileRequestID];
-}
-
-export function onParentContextFileRequestError(reason, path, fileRequestID) {
-  fileRequestQueue[path].requests[fileRequestID].reject(reason);
-  delete fileRequestQueue[path].requests[fileRequestID];
 }

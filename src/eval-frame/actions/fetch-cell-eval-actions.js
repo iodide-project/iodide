@@ -65,6 +65,12 @@ async function addCSS(stylesheet, fetchSpec) {
 }
 
 export async function handleFetch(fetchInfo) {
+  const extractFileNameFromLocalFilePath = filepath => {
+    return filepath
+      .split("files/")
+      .slice(1)
+      .join("");
+  };
   if (fetchInfo.parsed.error !== undefined) {
     return Promise.resolve(
       errorMessage(fetchInfo, syntaxErrorToString(fetchInfo))
@@ -74,12 +80,15 @@ export async function handleFetch(fetchInfo) {
   const { filePath, fetchType, isRelPath } = fetchInfo.parsed;
   // the following for text, json, blob, css
   let fetchedFile;
-  // const fileFetcher = isRelPath ? fetchFileFromParentContext : fetchLocally;
   const fileFetcher = isRelPath
     ? async (filepath, thisFetchType) =>
-        makeFileRequestInEditor(filepath, "LOAD_FILE", {
-          fetchType: thisFetchType
-        })
+        makeFileRequestInEditor(
+          extractFileNameFromLocalFilePath(filepath),
+          "LOAD_FILE",
+          {
+            fetchType: thisFetchType
+          }
+        )
     : fetchLocally;
   try {
     fetchedFile = await fileFetcher(filePath, fetchType);
