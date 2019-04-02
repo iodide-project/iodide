@@ -9,7 +9,7 @@ import {
   selectFileAndFormatMetadata,
   uploadFile,
   updateFile
-} from "../../shared/upload-file";
+} from "../../shared/utils/file-operations";
 
 export default class NotebookActionsMenu extends React.Component {
   constructor(props) {
