@@ -111,33 +111,9 @@ describe("sendFileRequestToEditor integration tests", () => {
     onParentContextFileRequestSuccess(undefined, FIRST_FILE, key1);
     const key2 = Object.keys(fileRequestQueue[SECOND_FILE].requests)[0];
     onParentContextFileRequestSuccess("some-value", SECOND_FILE, key2);
-    return Promise.all(
+    return Promise.all([
       expect(fileRequest1).resolves.toBe(undefined),
-      expect(fileRequest2.resolves.tobe("some-value"))
-    );
-  });
-  it("properly enqueues multiple file requests", async () => {
-    const FIRST_FILE = "tf1";
-    const SECOND_FILE = "tf2";
-    const fileRequest1 = sendFileRequestToEditor(
-      FIRST_FILE,
-      "SAVE_FILE",
-      () => {}
-    );
-    const key1 = Object.keys(fileRequestQueue[FIRST_FILE].requests)[0];
-    expect(Object.keys(fileRequestQueue).length).toBe(1);
-    const fileRequest2 = sendFileRequestToEditor(
-      SECOND_FILE,
-      "SAVE_FILE",
-      () => {}
-    );
-    expect(Object.keys(fileRequestQueue).length).toBe(2);
-    onParentContextFileRequestSuccess(undefined, FIRST_FILE, key1);
-    const key2 = Object.keys(fileRequestQueue[SECOND_FILE].requests)[0];
-    onParentContextFileRequestSuccess("some-value", SECOND_FILE, key2);
-    return Promise.all(
-      expect(fileRequest1).resolves.toBe(undefined),
-      expect(fileRequest2.resolves.tobe("some-value"))
-    );
+      expect(fileRequest2).resolves.toBe("some-value")
+    ]);
   });
 });
