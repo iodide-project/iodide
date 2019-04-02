@@ -88,6 +88,11 @@ describe("sendFileRequestToEditor integration tests", () => {
       () => {}
     );
     // get key
+    setTimeout(() => {
+      const key = Object.keys(fileRequestQueue);
+      console.log(fileRequestQueue, "!!!!!");
+    }, 10);
+    jest.runAllTimers();
     const key = Object.keys(fileRequestQueue[FIRST_FILE].requests)[0];
     onParentContextFileRequestError("error", FIRST_FILE, key);
     return expect(fileRequest).rejects.toThrowError();

@@ -21,10 +21,13 @@ export function onParentContextFileRequestSuccess(
   delete fileRequestQueue[path].requests[fileRequestID];
 }
 
+function instantiateQueueForPath(path) {
+  fileRequestQueue[path] = { requests: {}, queue: undefined };
+}
+
 export function onParentContextFileRequestError(reason, path, fileRequestID) {
   fileRequestQueue[path].requests[fileRequestID].reject(reason);
-  fileRequestQueue[path].queue = Promise.resolve();
-  delete fileRequestQueue[path].requests[fileRequestID];
+  instantiateQueueForPath(path);
 }
 
 function sendRequestToEditor(path, fileRequestID, requestType, metadata) {
@@ -35,12 +38,6 @@ function sendRequestToEditor(path, fileRequestID, requestType, metadata) {
     fileRequestID,
     metadata
   });
-}
-
-function instantiateQueueForPath(path) {
-  if (!(path in fileRequestQueue)) {
-    fileRequestQueue[path] = { requests: {}, queue: undefined };
-  }
 }
 
 export default function sendFileRequestToEditor(
@@ -55,13 +52,13 @@ export default function sendFileRequestToEditor(
     throw new Error("validateAndGenerateMetadata must be a function");
 
   const fileRequestID = generateRandomId();
-  instantiateQueueForPath(path);
 
   const nextRequest = () =>
     new Promise((resolve, reject) => {
       fileRequestQueue[path].requests[fileRequestID] = { resolve, reject };
       let metadata;
       let continueRequest = false;
+      // generate metadata
       try {
         metadata = validateAndGenerateMetadata();
         continueRequest = true;
@@ -75,9 +72,13 @@ export default function sendFileRequestToEditor(
       throw Error(err);
     });
   // enqueue nextRequest
-  const fileRequest = fileRequestQueue[path].queue
-    ? fileRequestQueue[path].queue
-    : nextRequest();
+  let fileRequest;
+  if (!(path in fileRequestQueue)) {
+    instantiateQueueForPath(path);
+    fileRequest = nextRequest();
+  } else {
+    fileRequest = fileRequestQueue[path].queue.then(nextRequest);
+  }
   fileRequestQueue[path].queue = fileRequest;
   return fileRequest;
 }

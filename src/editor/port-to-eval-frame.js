@@ -40,12 +40,14 @@ function handleFileRequest(message) {
   let fileOperation;
   validateRequestType(requestType);
   if (requestType === "LOAD_FILE") {
+    console.log("LOAD_FILE", message.path);
     fileOperation = fetchFileFromServer(
       `files/${path}`,
       message.metadata.fetchType
     );
   }
   if (requestType === "SAVE_FILE") {
+    console.log("SAVE_FILE", message.path);
     const { notebookID, data, updateFile, fileID } = message.metadata;
     fileOperation = saveFileToServer(
       notebookID,
@@ -58,14 +60,10 @@ function handleFileRequest(message) {
       messagePasserEditor.dispatch(addFile(filename, lastUpdated, id));
     });
   } else if (requestType === "DELETE_FILE") {
-    fileOperation = deleteFileOnServer(message.metadata.fileID)
-      .then(out => {
-        console.log(out);
-        return out;
-      })
-      .then(() => {
-        messagePasserEditor.dispatch(deleteFile(message.metadata.fileID));
-      });
+    console.log("DELETE_FILE", message.path);
+    fileOperation = deleteFileOnServer(message.metadata.fileID).then(() => {
+      messagePasserEditor.dispatch(deleteFile(message.metadata.fileID));
+    });
   }
   fileOperation
     .then(file => {
