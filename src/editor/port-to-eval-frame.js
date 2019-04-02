@@ -4,7 +4,10 @@ import Mousetrap from "mousetrap";
 import { evalConsoleInput } from "./actions/eval-actions";
 import { addFile, deleteFile } from "./actions/actions";
 import { genericFetch as fetchFileFromServer } from "../shared/utils/fetch-tools";
-import { saveFileToServer, deleteFileOnServer } from "../shared/upload-file";
+import {
+  saveFileToServer,
+  deleteFileOnServer
+} from "../shared/utils/file-operations";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
 
