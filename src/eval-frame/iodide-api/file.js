@@ -1,72 +1,95 @@
 import { store as reduxStore } from "../store";
+import { getFiles } from "../../editor/tools/server-tools";
 import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
-import {
-  FETCH_TYPES,
-  FETCH_RETURN_TYPES
-} from "../../editor/state-schemas/state-schema";
+import { FETCH_RETURN_TYPES } from "../../editor/state-schemas/state-schema";
 
-function validateFetchType(fetchType) {
-  if (!FETCH_TYPES.includes(fetchType)) {
-    throw new Error(`fetch type ${fetchType} not supported`);
-  }
+const DEFAULT_SAVE_OPTIONS = { overwrite: false };
+
+function isString(argument) {
+  return typeof argument === "string" || argument instanceof String;
 }
 
-function validateFileName(fileName) {
-  if (!(typeof fileName === "string" || fileName instanceof String)) {
+function confirmIsString(key, argument) {
+  if (!isString(argument)) {
     throw new Error(
-      `file name must be a string, instead received ${typeof fileName}`
+      `${key} name must be a string, instead received ${typeof argument}`
     );
   }
 }
 
-function getFiles(store) {
-  return store.getState().notebookInfo.files;
+function confirmIsStringOrUndefined(key, argument) {
+  if (!isString(argument) && argument !== undefined) {
+    throw new Error(`
+    ${key} name must be a string or undefined, instead received ${typeof argument}`);
+  }
 }
 
 export function connectExists(store) {
   return function exists(fileName) {
-    const files = getFiles(store);
-    validateFileName(fileName);
+    try {
+      confirmIsString("fileName", fileName);
+    } catch (err) {
+      throw err;
+    }
+    const files = getFiles(store.getState());
     return files.map(f => f.filename).includes(fileName);
   };
 }
 
 export function connectList(store) {
   return function list() {
-    return getFiles(store);
+    return getFiles(store.getState()).map(f => f.filename);
+  };
+}
+
+export function connectLastUpdated(store) {
+  return function lastUpdated(fileName) {
+    try {
+      confirmIsString("fileName", fileName);
+    } catch (err) {
+      throw err;
+    }
+    const files = getFiles(store.getState());
+    const thisFile = files.filter(f => f.filename === fileName);
+    if (!thisFile.length) throw Error(`fileName ${fileName} does not exist`);
+    return new Date(thisFile[0].lastUpdated);
+  };
+}
+
+export function handleLoadedVariable(fetchType, variableName) {
+  return file => {
+    if (FETCH_RETURN_TYPES.includes(fetchType) && variableName) {
+      window[variableName] = file;
+    }
+    return file;
   };
 }
 
 export function loadFile(fileName, fetchType, variableName = undefined) {
   try {
-    validateFetchType(fetchType);
-    validateFileName(fileName);
+    confirmIsString("fileName", fileName);
+    confirmIsString("fetchType", fetchType);
+    confirmIsStringOrUndefined("variableName", variableName);
   } catch (err) {
     throw err;
   }
-
   return sendFileRequestToEditor(fileName, "LOAD_FILE", {
     fetchType
-  }).request.then(file => {
-    if (FETCH_RETURN_TYPES.includes(fetchType) && variableName) {
-      window[variableName] = file;
-    }
-    return file;
-  });
+  }).request.then(handleLoadedVariable(fetchType, variableName));
 }
 
 export function deleteFile(fileName) {
   try {
-    validateFileName(fileName);
+    confirmIsString("fileName", fileName);
   } catch (err) {
     throw err;
   }
   return sendFileRequestToEditor(fileName, "DELETE_FILE").request;
 }
 
-export function saveFile(data, fileName, saveOptions = { overwrite: false }) {
+export function saveFile(data, fileName, saveOptions = DEFAULT_SAVE_OPTIONS) {
   try {
-    validateFileName(fileName);
+    confirmIsString("fileName", fileName);
   } catch (err) {
     throw err;
   }
@@ -76,39 +99,11 @@ export function saveFile(data, fileName, saveOptions = { overwrite: false }) {
   }).request;
 }
 
-// export function connectSave(store, saveFunction) {
-//   return function save(data, fileName, saveOptions = { overwrite: false }) {
-//     // first thing first = check to see if exists in store.
-
-//     const validateAndFetchMetadata = () => {
-//       const exists = connectExists(store);
-//       if (!saveOptions.overwrite && exists(fileName)) {
-//         throw new Error(
-//           `file ${fileName} already exists. Try setting {overwrite: true}`
-//         );
-//       }
-
-//       const updateFile = saveOptions.overwrite && exists(fileName);
-//       const files = getFiles(store);
-//       const fileID = exists(fileName)
-//         ? files[files.findIndex(f => f.filename === fileName)].id
-//         : undefined;
-//       return {
-//         notebookID: store.getState().notebookInfo.notebook_id,
-//         data,
-//         updateFile, // this flag tells us if we need to update the file
-//         fileID // for updating the file
-//       };
-//     };
-
-//     return saveFunction(fileName, "SAVE_FILE", validateAndFetchMetadata);
-//   };
-// }
-
 export const file = {
-  save: saveFile, // connectSave(reduxStore, sendFileRequestToEditor),
-  load: loadFile, // connectLoad(reduxStore, sendFileRequestToEditor),
-  delete: deleteFile, // connectDeleteFile(reduxStore, sendFileRequestToEditor),
+  save: saveFile,
+  load: loadFile,
+  delete: deleteFile,
   exists: connectExists(reduxStore),
-  list: connectList(reduxStore)
+  list: connectList(reduxStore),
+  lastUpdated: connectLastUpdated(reduxStore)
 };

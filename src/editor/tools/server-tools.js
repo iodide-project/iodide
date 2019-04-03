@@ -1,3 +1,13 @@
+import { FETCH_TYPES } from "../state-schemas/state-schema";
+
+function fileDoesNotExistMessage(operation, fileName) {
+  return `${operation}: file "${fileName}" does not exist`;
+}
+
+function fileAlreadyExistsMessage(operation, fileName) {
+  return `${operation}: file "${fileName}" already exists`;
+}
+
 export function getUserDataFromDocument() {
   const userData = document.getElementById("userData");
   if (userData) {
@@ -62,4 +72,22 @@ export function getFileID(state, fileName) {
   const file = files.filter(f => f.filename === fileName)[0];
   if (file) return file.id;
   return undefined;
+}
+
+export function validateFileExistence(fileName, state) {
+  if (!fileExists(fileName, state)) {
+    throw new Error(fileDoesNotExistMessage("load", fileName));
+  }
+}
+
+export function validateFileAbsence(fileName, state) {
+  if (fileExists(fileName, state)) {
+    throw new Error(fileAlreadyExistsMessage("load", fileName));
+  }
+}
+
+export function validateFetchType(fetchType) {
+  if (!FETCH_TYPES.includes(fetchType)) {
+    throw new Error(`invalid fetch type "${fetchType}"`);
+  }
 }

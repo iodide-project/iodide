@@ -3,34 +3,14 @@ import {
   saveFileToServer,
   deleteFileOnServer
 } from "../../shared/utils/file-operations";
-import { getNotebookID, fileExists, getFileID } from "../tools/server-tools";
-import { FETCH_TYPES } from "../state-schemas/state-schema";
-
-function fileDoesNotExistMessage(operation, fileName) {
-  return `${operation}: file "${fileName}" does not exist`;
-}
-
-function fileAlreadyExistsMessage(operation, fileName) {
-  return `${operation}: file "${fileName}" already exists`;
-}
-
-function validateFileExistence(fileName, state) {
-  if (!fileExists(fileName, state)) {
-    throw new Error(fileDoesNotExistMessage("load", fileName));
-  }
-}
-
-function validateFileAbsence(fileName, state) {
-  if (fileExists(fileName, state)) {
-    throw new Error(fileAlreadyExistsMessage("load", fileName));
-  }
-}
-
-function validateFetchType(fetchType) {
-  if (!FETCH_TYPES.includes(fetchType)) {
-    throw new Error(`invalid fetch type "${fetchType}"`);
-  }
-}
+import {
+  getNotebookID,
+  fileExists,
+  getFileID,
+  validateFileExistence,
+  validateFileAbsence,
+  validateFetchType
+} from "../tools/server-tools";
 
 export function addFileToNotebook(filename, lastUpdated, fileID) {
   return {
