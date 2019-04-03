@@ -105,7 +105,6 @@ describe("loadFile (editor action)", () => {
 
     expect(messagePasserMock).toHaveBeenCalledTimes(1);
 
-    // check to see what message was sent back to the eval-frame.
     expect(messagePasserMock.mock.calls[0]).toEqual([
       "REQUESTED_FILE_OPERATION_ERROR",
       { fileRequestID: "file-request-id-0", reason: "artificial error" }
@@ -113,7 +112,6 @@ describe("loadFile (editor action)", () => {
   });
 
   it("sends message back to eval-frame signaling success when the return value of loadFile resolves (server returns success)", async () => {
-    // set loadFileMock to resolve to mock a successful file upload
     loadFileMock.mockImplementation(() => {
       return Promise.resolve("loaded-file-contents");
     });
@@ -202,9 +200,8 @@ describe("saveFile (editor action)", () => {
 
     expect(saveFileMock).toHaveBeenCalledTimes(1);
 
-    // test the relevant dispatches that occurred: ADD_FILE_TO_NOTEBOOK.
     expect(store.getActions()).toEqual([]);
-    // the message passer was called, and what its value was.
+
     expect(messagePasserMock).toHaveBeenCalledTimes(1);
     expect(messagePasserMock.mock.calls[0]).toEqual([
       "REQUESTED_FILE_OPERATION_ERROR",
@@ -273,7 +270,6 @@ describe("deleteFile (editor action)", () => {
     ).toThrowError();
   });
   it("fails if invalid arguments are passed in", () => {
-    // file file does not exist
     store.dispatch(
       deleteFile(
         "does-not-exist.csv",
@@ -303,9 +299,8 @@ describe("deleteFile (editor action)", () => {
     await expect(request).resolves.toBe(undefined);
     expect(deleteFileMock).toHaveBeenCalledTimes(1);
 
-    // test the relevant dispatches that occurred: DELETE_FILE_FROM_NOTEBOOK.
     expect(store.getActions()).toEqual([]);
-    // the message passer was called, and what its value was.
+
     expect(messagePasserMock).toHaveBeenCalledTimes(1);
     expect(messagePasserMock.mock.calls[0]).toEqual([
       "REQUESTED_FILE_OPERATION_ERROR",
@@ -331,7 +326,7 @@ describe("deleteFile (editor action)", () => {
         type: "DELETE_FILE_FROM_NOTEBOOK"
       }
     ]);
-    // the message passer was called, and what its value was.
+
     expect(messagePasserMock).toHaveBeenCalledTimes(1);
     expect(messagePasserMock.mock.calls[0]).toEqual([
       "REQUESTED_FILE_OPERATION_SUCCESS",
