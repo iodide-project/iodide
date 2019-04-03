@@ -47,3 +47,19 @@ export function getNotebookID(state) {
 export function getRevisionID(state) {
   return getId(state, "revision_id");
 }
+
+export function getFiles(state) {
+  return state.notebookInfo.files;
+}
+
+export function fileExists(fileName, state) {
+  const files = getFiles(state);
+  return files.map(f => f.filename).includes(fileName);
+}
+
+export function getFileID(state, fileName) {
+  const files = getFiles(state);
+  const file = files.filter(f => f.filename === fileName)[0];
+  if (file) return file.id;
+  return undefined;
+}

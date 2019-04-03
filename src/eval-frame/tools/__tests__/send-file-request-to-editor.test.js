@@ -35,7 +35,7 @@ describe("sendFileRequestToEditor integration tests", () => {
       delete fileRequests[k];
     });
   });
-  it("returns a Promise that resolves when resolve is called", async () => {
+  it("returns a Promise that resolves to value when onParentContextFileRequestSuccess is called", async () => {
     const FIRST_FILE = "tf1";
     const { request, fileRequestID } = sendFileRequestToEditor(
       FIRST_FILE,
@@ -46,7 +46,7 @@ describe("sendFileRequestToEditor integration tests", () => {
     onParentContextFileRequestSuccess("test-contents", fileRequestID);
     return expect(request).resolves.toBe("test-contents");
   });
-  it("returns a Promise that rejects when reject is called", async () => {
+  it("returns a Promise that resolves to the error message when onParentContextFileRequestError is called", async () => {
     const FIRST_FILE = "tf1";
     const { request, fileRequestID } = sendFileRequestToEditor(
       FIRST_FILE,
@@ -55,6 +55,6 @@ describe("sendFileRequestToEditor integration tests", () => {
     );
     jest.runAllTicks();
     onParentContextFileRequestError("error-message", fileRequestID);
-    return expect(request).rejects.toBe("error-message");
+    return expect(request).resolves.toBe("error-message");
   });
 });

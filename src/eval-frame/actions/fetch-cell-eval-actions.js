@@ -91,7 +91,7 @@ export async function handleFetch(fetchInfo) {
   try {
     fetchedFile = await fileFetcher(filePath, fetchType);
   } catch (err) {
-    return Promise.resolve(errorMessage(fetchInfo, err.message));
+    return Promise.resolve(errorMessage(fetchInfo, err));
   }
 
   const assignVariable = (params, file) =>

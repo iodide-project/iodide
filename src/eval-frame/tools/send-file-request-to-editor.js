@@ -20,7 +20,7 @@ export default function sendFileRequestToEditor(
         metadata
       });
     }).catch(err => {
-      throw err;
+      return err;
     })
   };
 }

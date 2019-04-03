@@ -3,8 +3,7 @@ import {
   saveFileToServer,
   deleteFileOnServer
 } from "../../shared/utils/file-operations";
-// import { postMessageToEvalFrame } from "../port-to-eval-frame";
-import { getNotebookID } from "../tools/server-tools";
+import { getNotebookID, fileExists, getFileID } from "../tools/server-tools";
 import { FETCH_TYPES } from "../state-schemas/state-schema";
 
 export function addFileToNotebook(filename, lastUpdated, fileID) {
@@ -21,15 +20,6 @@ export function deleteFileFromNotebook(fileID) {
     type: "DELETE_FILE_FROM_NOTEBOOK",
     fileID
   };
-}
-
-function getFiles(state) {
-  return state.notebookInfo.files;
-}
-
-export function exists(fileName, state) {
-  const files = getFiles(state);
-  return files.map(f => f.filename).includes(fileName);
 }
 
 function fileDoesNotExistMessage(operation, fileName) {
@@ -55,7 +45,7 @@ function onFileOperationError(fileRequestID, messagePasser) {
 }
 
 function validateFileExistence(fileName, state) {
-  if (!exists(fileName, state)) {
+  if (!fileExists(fileName, state)) {
     throw new Error(fileDoesNotExistMessage("load", fileName));
   }
 }
@@ -66,13 +56,6 @@ function validateFetchType(fetchType) {
   }
 }
 
-function getFileID(state, fileName) {
-  const files = getFiles(state);
-  const file = files.filter(f => f.filename === fileName)[0];
-  if (file) return file.id;
-  return undefined;
-}
-
 export function saveFile(message, messagePasser) {
   const { fileName, fileRequestID } = message;
   const { data, overwrite } = message.metadata;
@@ -80,8 +63,15 @@ export function saveFile(message, messagePasser) {
     const state = getState();
     const notebookID = getNotebookID(state);
     const fileID = getFileID(state, fileName);
-    if (!overwrite && exists(fileName, state)) {
-      validateFileExistence(fileName, getState());
+    if (!overwrite && fileExists(fileName, state)) {
+      try {
+        validateFileExistence(fileName, getState());
+      } catch (err) {
+        onFileOperationError(fileRequestID, messagePasser)(
+          new Error(err.message)
+        );
+        return undefined;
+      }
     }
     return saveFileToServer(notebookID, data, fileName, fileID)
       .then(fileInfo => {
@@ -98,11 +88,12 @@ export function loadFile(message, messagePasser) {
   const { fileName, fileRequestID } = message;
   const { fetchType } = message.metadata;
   return async (_, getState) => {
+    // validate the load file request
     try {
       validateFileExistence(fileName, getState());
       validateFetchType(fetchType);
     } catch (err) {
-      onFileOperationError(fileRequestID, fileName)(new Error(err.message));
+      onFileOperationError(fileRequestID, messagePasser)(err);
       return undefined;
     }
     return loadFileFromServer(`files/${fileName}`, fetchType)
@@ -114,8 +105,9 @@ export function deleteFile(message, messagePasser) {
   const { fileName, fileRequestID } = message;
   return (dispatch, getState) => {
     const fileID = getFileID(getState(), fileName);
+    // validate the delete file request
     if (fileID === undefined) {
-      onFileOperationError(fileRequestID, fileName)(
+      onFileOperationError(fileRequestID, messagePasser)(
         new Error(`file name ${fileName} does not exist`)
       );
       return undefined;

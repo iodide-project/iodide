@@ -36,34 +36,16 @@ function validateRequestType(requestType) {
 
 function handleFileRequest(message) {
   const { requestType } = message;
-  // let fileOperation;
   validateRequestType(requestType);
   if (requestType === "LOAD_FILE") {
     messagePasserEditor.dispatch(loadFile(message, postMessageToEvalFrame));
-  }
-  if (requestType === "SAVE_FILE") {
+  } else if (requestType === "SAVE_FILE") {
     messagePasserEditor.dispatch(saveFile(message, postMessageToEvalFrame));
   } else if (requestType === "DELETE_FILE") {
     messagePasserEditor.dispatch(deleteFile(message, postMessageToEvalFrame));
-    // deleteFileOnServer(message.metadata.fileID).then(() => {
-    //   messagePasserEditor.dispatch(deleteFile(message.metadata.fileID));
-    // });
+  } else {
+    console.error("unknown file request type", requestType);
   }
-  // fileOperation
-  //   .then(file => {
-  //     postMessageToEvalFrame("REQUESTED_FILE_OPERATION_SUCCESS", {
-  //       file,
-  //       fileRequestID,
-  //       path: message.path
-  //     });
-  //   })
-  //   .catch(err => {
-  //     postMessageToEvalFrame("REQUESTED_FILE_OPERATION_ERROR", {
-  //       path: message.path,
-  //       fileRequestID,
-  //       reason: err.message
-  //     });
-  //   });
 }
 
 function receiveMessage(event) {
