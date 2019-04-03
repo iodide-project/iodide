@@ -1,4 +1,5 @@
 # (Unreleased; add upcoming change notes here)
+- introduces iodide.file API
 
 - restore tabular data viewer for arrays of objects
 - add "TinyRep" components

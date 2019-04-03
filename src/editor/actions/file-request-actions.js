@@ -12,6 +12,16 @@ import {
   validateFetchType
 } from "../tools/server-tools";
 
+function messagePasserIsFunction(passer) {
+  return typeof passer === "function";
+}
+
+function validateMessagePasser(passer) {
+  if (!messagePasserIsFunction(passer)) {
+    throw new Error("message passer must be a function");
+  }
+}
+
 export function addFileToNotebook(filename, lastUpdated, fileID) {
   return {
     type: "ADD_FILE_TO_NOTEBOOK",
@@ -47,6 +57,7 @@ function onFileOperationError(fileRequestID, messagePasser) {
 }
 
 export function saveFile(fileName, fileRequestID, metadata, messagePasser) {
+  validateMessagePasser(messagePasser);
   const { data, overwrite } = metadata;
   return async (dispatch, getState) => {
     const state = getState();
@@ -54,7 +65,7 @@ export function saveFile(fileName, fileRequestID, metadata, messagePasser) {
     const fileID = getFileID(state, fileName);
     if (!overwrite && fileExists(fileName, state)) {
       try {
-        validateFileAbsence(fileName, getState());
+        validateFileAbsence(fileName, "save", getState());
       } catch (err) {
         onFileOperationError(fileRequestID, messagePasser)(
           new Error(err.message)
@@ -75,11 +86,11 @@ export function saveFile(fileName, fileRequestID, metadata, messagePasser) {
 }
 
 export function loadFile(fileName, fileRequestID, metadata, messagePasser) {
+  validateMessagePasser(messagePasser);
   const { fetchType } = metadata;
   return async (_, getState) => {
-    // validate the load file request
     try {
-      validateFileExistence(fileName, getState());
+      validateFileExistence(fileName, "load", getState());
       validateFetchType(fetchType);
     } catch (err) {
       onFileOperationError(fileRequestID, messagePasser)(err);
@@ -93,19 +104,13 @@ export function loadFile(fileName, fileRequestID, metadata, messagePasser) {
 export function deleteFile(fileName, fileRequestID, metadata, messagePasser) {
   return (dispatch, getState) => {
     try {
-      validateFileExistence(fileName, getState());
+      validateFileExistence(fileName, "delete", getState());
+      validateMessagePasser(messagePasser);
     } catch (err) {
       onFileOperationError(fileRequestID, messagePasser)(err);
       return undefined;
     }
     const fileID = getFileID(getState(), fileName);
-    // validate the delete file request
-    if (fileID === undefined) {
-      onFileOperationError(fileRequestID, messagePasser)(
-        new Error(`file name ${fileName} does not exist`)
-      );
-      return undefined;
-    }
     return deleteFileOnServer(fileID)
       .then(output => {
         dispatch(deleteFileFromNotebook(fileID));

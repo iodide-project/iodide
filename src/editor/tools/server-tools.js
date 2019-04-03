@@ -74,15 +74,15 @@ export function getFileID(state, fileName) {
   return undefined;
 }
 
-export function validateFileExistence(fileName, state) {
+export function validateFileExistence(fileName, operation, state) {
   if (!fileExists(fileName, state)) {
-    throw new Error(fileDoesNotExistMessage("load", fileName));
+    throw new Error(fileDoesNotExistMessage(operation, fileName));
   }
 }
 
-export function validateFileAbsence(fileName, state) {
+export function validateFileAbsence(fileName, operation, state) {
   if (fileExists(fileName, state)) {
-    throw new Error(fileAlreadyExistsMessage("load", fileName));
+    throw new Error(fileAlreadyExistsMessage(operation, fileName));
   }
 }
 
