@@ -55,6 +55,6 @@ describe("sendFileRequestToEditor integration tests", () => {
     );
     jest.runAllTicks();
     onParentContextFileRequestError("error-message", fileRequestID);
-    return expect(request).resolves.toBe("error-message");
+    return expect(request).rejects.toBe("error-message");
   });
 });

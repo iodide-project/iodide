@@ -6,6 +6,32 @@ import {
 import { getNotebookID, fileExists, getFileID } from "../tools/server-tools";
 import { FETCH_TYPES } from "../state-schemas/state-schema";
 
+function fileDoesNotExistMessage(operation, fileName) {
+  return `${operation}: file "${fileName}" does not exist`;
+}
+
+function fileAlreadyExistsMessage(operation, fileName) {
+  return `${operation}: file "${fileName}" already exists`;
+}
+
+function validateFileExistence(fileName, state) {
+  if (!fileExists(fileName, state)) {
+    throw new Error(fileDoesNotExistMessage("load", fileName));
+  }
+}
+
+function validateFileAbsence(fileName, state) {
+  if (fileExists(fileName, state)) {
+    throw new Error(fileAlreadyExistsMessage("load", fileName));
+  }
+}
+
+function validateFetchType(fetchType) {
+  if (!FETCH_TYPES.includes(fetchType)) {
+    throw new Error(`invalid fetch type "${fetchType}"`);
+  }
+}
+
 export function addFileToNotebook(filename, lastUpdated, fileID) {
   return {
     type: "ADD_FILE_TO_NOTEBOOK",
@@ -20,10 +46,6 @@ export function deleteFileFromNotebook(fileID) {
     type: "DELETE_FILE_FROM_NOTEBOOK",
     fileID
   };
-}
-
-function fileDoesNotExistMessage(operation, fileName) {
-  return `${operation}: file "${fileName}" does not exist`;
 }
 
 function onFileOperationSuccess(fileRequestID, messagePasser) {
@@ -44,18 +66,6 @@ function onFileOperationError(fileRequestID, messagePasser) {
   };
 }
 
-function validateFileExistence(fileName, state) {
-  if (!fileExists(fileName, state)) {
-    throw new Error(fileDoesNotExistMessage("load", fileName));
-  }
-}
-
-function validateFetchType(fetchType) {
-  if (!FETCH_TYPES.includes(fetchType)) {
-    throw new Error(`invalid fetch type "${fetchType}"`);
-  }
-}
-
 export function saveFile(message, messagePasser) {
   const { fileName, fileRequestID } = message;
   const { data, overwrite } = message.metadata;
@@ -65,7 +75,7 @@ export function saveFile(message, messagePasser) {
     const fileID = getFileID(state, fileName);
     if (!overwrite && fileExists(fileName, state)) {
       try {
-        validateFileExistence(fileName, getState());
+        validateFileAbsence(fileName, getState());
       } catch (err) {
         onFileOperationError(fileRequestID, messagePasser)(
           new Error(err.message)

@@ -36,50 +36,6 @@ export function connectList(store) {
   };
 }
 
-// export function connectLoad(store, fetchFunction) {
-//   return async function load(fileName, fetchType, variableName = undefined) {
-//     const validateAndFetchMetadata = () => {
-//       const exists = connectExists(store)(fileName);
-//       if (!exists) {
-//         throw new Error(fileDoesNotExistMessage("load", fileName));
-//       }
-//       if (!VALID_FETCH_TYPES.includes(fetchType)) {
-//         throw new Error(`invalid fetch type "${fetchType}"`);
-//       }
-//       return { fetchType };
-//     };
-//     return fetchFunction(fileName, "LOAD_FILE", validateAndFetchMetadata).then(
-//       file => {
-//         if (VARIABLE_TYPE_FILES.includes(fetchType) && variableName) {
-//           window[variableName] = file;
-//         }
-//         return file;
-//       }
-//     );
-//   };
-// }
-
-// export function connectLoadFile(fetchFunction) {
-//   return function loadFile(fileName, fetchType, variableName = undefined) {
-//     return fetchFunction(fileName, "LOAD_FILE", { fetchType }).then(file => {
-//       if (VARIABLE_TYPE_FILES.includes(fetchType) && variableName) {
-//         window[variableName] = file;
-//       }
-//       return file;
-//     });
-//   };
-// }
-
-// export function connectDeleteFile(deleteFunction) {
-//   return function deleteFile(fileName) {
-//     return deleteFunction(fileName, "DELETE_FILE");
-//   };
-// }
-
-// export function connectSaveFile(saveFunction) {
-
-// }
-
 export function loadFile(fileName, fetchType, variableName = undefined) {
   try {
     validateFetchType(fetchType);
@@ -106,24 +62,6 @@ export function deleteFile(fileName) {
   }
   return sendFileRequestToEditor(fileName, "DELETE_FILE").request;
 }
-
-// export function connectDeleteFile(store, deleteFunction) {
-//   return function deleteFile(fileName) {
-//     // make request in editor
-//     const createMetadata = () => {
-//       const { files } = store.getState().notebookInfo;
-
-//       const fileIDindex = files.findIndex(file => file.filename === fileName);
-//       if (fileIDindex === -1) {
-//         throw new Error(fileDoesNotExistMessage("delete", fileName));
-//       }
-//       const fileID = files[fileIDindex].id;
-//       return { fileID };
-//     };
-
-//     return deleteFunction(fileName, "DELETE_FILE", createMetadata);
-//   };
-// }
 
 export function saveFile(data, fileName, saveOptions = { overwrite: false }) {
   try {
