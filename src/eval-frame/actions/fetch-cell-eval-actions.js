@@ -81,19 +81,19 @@ export async function handleFetch(fetchInfo) {
   // the following for text, json, blob, css
   let fetchedFile;
   const fileFetcher = isRelPath
-    ? async filepath =>
-        sendFileRequestToEditor(
+    ? filepath => {
+        return sendFileRequestToEditor(
           extractFileNameFromLocalFilePath(filepath),
           "LOAD_FILE",
           { fetchType }
-        ).request
+        ).request;
+      }
     : fetchLocally;
   try {
     fetchedFile = await fileFetcher(filePath, fetchType);
   } catch (err) {
     return Promise.resolve(errorMessage(fetchInfo, err));
   }
-
   const assignVariable = (params, file) =>
     setVariableInWindow(params.parsed.varName, file);
 
