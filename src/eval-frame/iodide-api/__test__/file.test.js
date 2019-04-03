@@ -2,7 +2,7 @@ import {
   saveFile,
   loadFile,
   deleteFile,
-  handleLoadedVariable,
+  handleResourceLoad,
   connectExists,
   connectList,
   connectLastUpdated
@@ -87,7 +87,7 @@ describe("iodide.file.save (saveFile)", () => {
   });
 });
 
-describe("handleLoadedVariable", () => {
+describe("handleResourceLoad", () => {
   const testCases = [
     { input: { fetchType: "css" }, output: undefined },
     { input: { fetchType: "js" }, output: undefined },
@@ -107,7 +107,7 @@ describe("handleLoadedVariable", () => {
 
   it("adds the variable if of the proper fetchType", () => {
     testCases.forEach(testCase => {
-      handleLoadedVariable(testCase.input.fetchType, testCase.input.varName)(
+      handleResourceLoad(testCase.input.fetchType, testCase.input.varName)(
         testCase.input.value
       );
       // NB: window is global in jest tests.

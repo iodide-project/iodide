@@ -37,29 +37,29 @@ function setVariableInWindow(variableName, variableValue) {
   window[variableName] = variableValue;
 }
 
-function loadScriptFromBlob(blob) {
+export function loadScriptFromBlob(blob) {
   // for async script loading from blobs, see:
   // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const url = URL.createObjectURL(blob);
-    script.onload = () => resolve(`scripted loaded from ${blob}`);
+    script.onload = () => resolve(`scripted loaded`);
     script.onerror = err => reject(new Error(err));
     script.src = url;
     document.head.appendChild(script);
   });
 }
 
-async function addCSS(stylesheet, fetchSpec) {
+export async function addCSS(stylesheet, filePath) {
   document
-    .querySelectorAll(`style[data-href='${fetchSpec.parsed.filePath}']`)
+    .querySelectorAll(`style[data-href='${filePath}']`)
     .forEach(linkNode => {
       linkNode.parentNode.removeChild(linkNode);
     });
 
   const style = document.createElement("style");
   style.innerHTML = stylesheet;
-  style.setAttribute("data-href", fetchSpec.parsed.filePath);
+  style.setAttribute("data-href", filePath);
   document.head.appendChild(style);
   return stylesheet;
 }
@@ -108,7 +108,7 @@ export async function handleFetch(fetchInfo) {
     }
     return Promise.resolve(successMessage(fetchInfo, scriptLoaded));
   } else if (fetchType === "css") {
-    addCSS(fetchedFile, fetchInfo);
+    addCSS(fetchedFile, fetchInfo.parsed.filePath);
   } else {
     return Promise.resolve(errorMessage(fetchInfo, "unknown fetch type"));
   }
