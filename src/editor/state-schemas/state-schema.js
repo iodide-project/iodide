@@ -4,6 +4,7 @@ export const NONCODE_EVAL_TYPES = ["css", "md", "meta", "raw"];
 export const RUNNABLE_CHUNK_TYPES = ["plugin", "fetch"];
 export const FETCH_TYPES = ["css", "js", "text", "blob", "json"];
 export const FETCH_RETURN_TYPES = ["text", "blob", "json"];
+export const FILE_REQUEST_TYPES = ["LOAD_FILE", "SAVE_FILE", "DELETE_FILE"];
 
 const appMessageSchema = {
   type: "object",

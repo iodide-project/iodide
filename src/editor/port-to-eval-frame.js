@@ -5,6 +5,7 @@ import { evalConsoleInput } from "./actions/eval-actions";
 import { saveFile, loadFile, deleteFile } from "./actions/file-request-actions";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
+import { FILE_REQUEST_TYPES } from "./state-schemas/state-schema";
 
 let portToEvalFrame;
 
@@ -28,7 +29,7 @@ const approvedKeys = [
 ];
 
 function validateRequestType(requestType) {
-  if (!["LOAD_FILE", "SAVE_FILE", "DELETE_FILE"].includes(requestType)) {
+  if (!FILE_REQUEST_TYPES.includes(requestType)) {
     throw Error(`file operation "${requestType}" not defined`);
   }
 }
