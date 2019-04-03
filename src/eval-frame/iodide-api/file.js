@@ -1,11 +1,12 @@
 import { store as reduxStore } from "../store";
 import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
-
-const VALID_FETCH_TYPES = ["text", "json", "blob", "js", "css"];
-const VARIABLE_TYPE_FILES = ["text", "json", "blob"];
+import {
+  FETCH_TYPES,
+  FETCH_RETURN_TYPES
+} from "../../editor/state-schemas/state-schema";
 
 function validateFetchType(fetchType) {
-  if (!VALID_FETCH_TYPES.includes(fetchType)) {
+  if (!FETCH_TYPES.includes(fetchType)) {
     throw new Error(`fetch type ${fetchType} not supported`);
   }
 }
@@ -47,7 +48,7 @@ export function loadFile(fileName, fetchType, variableName = undefined) {
   return sendFileRequestToEditor(fileName, "LOAD_FILE", {
     fetchType
   }).request.then(file => {
-    if (VARIABLE_TYPE_FILES.includes(fetchType) && variableName) {
+    if (FETCH_RETURN_TYPES.includes(fetchType) && variableName) {
       window[variableName] = file;
     }
     return file;
