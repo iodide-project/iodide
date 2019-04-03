@@ -33,7 +33,7 @@ The optional argument `saveOptions` has the following keys:
   subsequent enqueued evaluation (similar to a syntax error).
 
 
-##### `iodide.file.save` patterns
+#### `iodide.file.save` patterns
 
 ```javascript
 
@@ -43,10 +43,7 @@ The optional argument `saveOptions` has the following keys:
 
 const csvData = [{x1: 10, x2: 'test1'}, {x1: 20, x2: 'test2'}, ...]
 
-iodide.file.save(csvData, 'cached-data.csv' {
-  overwrite: true,
-  serializer: d3.csvFormat
-})
+iodide.file.save(csvData, 'cached-data.csv' { overwrite: true })
 
 // iodide.file.save works with ArrayBuffers as well.
 iodide.file.save(new ArrayBuffer(...), 'model-output.bin')
@@ -104,23 +101,27 @@ iodide.file.load('corporate-report-style.css', 'css')
 
 // load some javascript helpers
 iodide.file.load('analysis-helpers.js', 'js')
-
 ```
 
 
 
-### `iodide.file.delete(fileName[, deleteOptions])`
+### `iodide.file.delete(fileName)`
 
 Deletes the file specified by `fileName`. Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
 that when resolved, denotes that the file was deleted on the server.
 
-`deleteOptions` is an object with the following keys:
+### `iodide.file.delete` patterns
 
-- `throwIfDoesNotExist` (optional, default `true`): will throw an error and halt
-  the evaluation queue if `true`.
+```javascript
+// delete all locally cached pngs
 
-
+function clearLocalPNGCache() {
+  iodide.file.list()
+    .filter(filename => !filename.includes('.png'))
+    .forEach(iodide.file.delete)
+}
+```
 
 ### `iodide.file.list()`
 
@@ -129,12 +130,17 @@ Returns an Array of file names available to the current notebook.
 
 #### `iodide.file.list` patterns
 
-
 ```javascript
-// delete the various pngs originally saved to this notebook
-iodide.file.list()
-  .filter(filename => !filename.includes('.png'))
-  .forEach(iodide.file.delete)
+// load each data set and plot it
+
+const plotRequests = iodide.file.list()
+  .filter(f => f.filename.includes('.csv'))
+  .map(f => iodide.file.load(f, 'text').then((raw) => {
+    const data = d3.csvParse(raw)
+    ...
+    genericPlotFunction(data)
+  }))
+Promise.all(plotRequests)
 ```
 
 
