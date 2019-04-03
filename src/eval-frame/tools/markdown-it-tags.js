@@ -3,16 +3,27 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 
 function tagsPlugin(md, options) {
-  const tagOptions =  options || {};
+  const tagOptions = options || {};
   const tagTarget = tagOptions.tagTarget || "_self";
 
+  // helper function
+  const isTagLink = href => {
+    if (href) {
+      let domain = href.split("//")[1];
+      if (domain) {
+        domain = domain.split("/")[0].toLowerCase();
+      }
+      return domain === null && href.startsWith("#");
+    }
+    return null;
+  };
+  // main evaluation of the postmd-parsing
   function tagLinks(state) {
     function applyFilterToTokenHierarchy(token) {
       if (token.children) {
         token.children.map(applyFilterToTokenHierarchy);
       }
 
-      console.log("token", token);
       const href = token.attrGet("href");
       const tagref = isTagLink(href);
 
@@ -22,25 +33,6 @@ function tagsPlugin(md, options) {
     }
 
     state.tokens.map(applyFilterToTokenHierarchy);
-  }
-
-  const isTagLink = function (href) {
-    const domain = getDomain(href);
-    if (href === null) {
-      return null;
-    }
-    return domain === null && href.startsWith("#");
-  }
-
-  const getDomain = function (href) {
-    if (href) {
-      let domain = href.split("//")[1];
-      if (domain) {
-        domain = domain.split("/")[0].toLowerCase();
-        return domain || null;
-      }
-    }
-    return null;
   }
 
   md.core.ruler.push("tag_links", tagLinks);
