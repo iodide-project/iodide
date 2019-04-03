@@ -2,7 +2,6 @@
 
 import Mousetrap from "mousetrap";
 import { evalConsoleInput } from "./actions/eval-actions";
-// import { genericFetch as fetchFileFromServer } from "../shared/utils/fetch-tools";
 import { saveFile, loadFile, deleteFile } from "./actions/file-request-actions";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
@@ -37,15 +36,30 @@ function validateRequestType(requestType) {
 function handleFileRequest(message) {
   const { requestType } = message;
   validateRequestType(requestType);
-  if (requestType === "LOAD_FILE") {
-    messagePasserEditor.dispatch(loadFile(message, postMessageToEvalFrame));
-  } else if (requestType === "SAVE_FILE") {
-    messagePasserEditor.dispatch(saveFile(message, postMessageToEvalFrame));
-  } else if (requestType === "DELETE_FILE") {
-    messagePasserEditor.dispatch(deleteFile(message, postMessageToEvalFrame));
-  } else {
-    console.error("unknown file request type", requestType);
+  const { fileName, fileRequestID, metadata } = message;
+  let requestAction;
+  switch (requestType) {
+    case "LOAD_FILE": {
+      requestAction = loadFile;
+      break;
+    }
+    case "SAVE_FILE": {
+      requestAction = saveFile;
+      break;
+    }
+    case "DELETE_FILE": {
+      requestAction = deleteFile;
+      break;
+    }
+    default: {
+      console.error(
+        `an unknown request type got through the validation: ${requestType}`
+      );
+    }
   }
+  messagePasserEditor.dispatch(
+    requestAction(fileName, fileRequestID, metadata, postMessageToEvalFrame)
+  );
 }
 
 function receiveMessage(event) {
