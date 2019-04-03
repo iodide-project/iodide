@@ -3,8 +3,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 
 function tagsPlugin(md, options) {
-  options = options || {};
-  const tagTarget = options.tagTarget || "_self";
+  const tagOptions =  options || {};
+  const tagTarget = tagOptions.tagTarget || "_self";
 
   function tagLinks(state) {
     function applyFilterToTokenHierarchy(token) {
@@ -24,7 +24,7 @@ function tagsPlugin(md, options) {
     state.tokens.map(applyFilterToTokenHierarchy);
   }
 
-  function isTagLink(href) {
+  const isTagLink = function (href) {
     const domain = getDomain(href);
     if (href === null) {
       return null;
@@ -32,7 +32,7 @@ function tagsPlugin(md, options) {
     return domain === null && href.startsWith("#");
   }
 
-  function getDomain(href) {
+  const getDomain = function (href) {
     if (href) {
       let domain = href.split("//")[1];
       if (domain) {
