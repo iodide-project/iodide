@@ -15,18 +15,12 @@ function tagsPlugin(md, options) {
       if (token.children) {
         token.children.map(applyFilterToTokenHierarchy);
       }
-
-      const href = token.attrGet("href");
-      const tagref = isTagLink(href);
-
-      if (tagref) {
+      if (isTagLink(token.attrGet("href"))) {
         token.attrSet("target", tagTarget);
       }
     }
-
     state.tokens.map(applyFilterToTokenHierarchy);
   }
-
   md.core.ruler.push("tag_links", tagLinks);
 }
 
