@@ -2,18 +2,24 @@ import _ from "lodash";
 
 const ROWS_TO_CHECK = 100;
 
-// const arraysAreEqual = function (a1, a2) {
-//     if (a1.length != a2.length) { return false }
-//     for (let i = 0, l = a1.length; i < l; i++) {
-//       if (a1[i] != a2[i]) { return false }
-//     }
-//     return true
-//   }
+function sameKeys(a, b) {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) return false;
 
-const sameKeys = (x, y) => _.isEqual(_.sortBy(_.keys(x)), _.sortBy(_.keys(y)));
+  aKeys.sort();
+  bKeys.sort();
+
+  for (let i = 0; i < aKeys.length; ++i) {
+    if (aKeys[i] !== bKeys[i]) return false;
+  }
+  return true;
+}
 
 export function isRowDf(obj) {
-  if (!_.isArray(obj) || obj.length < 2) {
+  if (!_.isArray(obj) || obj.length < 2 || !_.isPlainObject(obj[0])) {
     return false;
   }
   const rowsToCheck = Math.min(ROWS_TO_CHECK, _.size(obj));

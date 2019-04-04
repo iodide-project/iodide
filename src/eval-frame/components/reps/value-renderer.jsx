@@ -4,7 +4,9 @@ import PropTypes from "prop-types";
 import DefaultRenderer from "./default-handler";
 import ErrorRenderer from "./error-handler";
 import HTMLHandler from "./html-handler";
+import TableRenderer from "./data-table-rep";
 import UserReps from "./user-reps-manager";
+import { isRowDf } from "./rep-utils/rep-type-chooser";
 
 function repChooser(value) {
   if (UserReps.getUserRepIfAvailable(value)) {
@@ -15,6 +17,9 @@ function repChooser(value) {
   }
   if (value instanceof Error) {
     return "ERROR_REP";
+  }
+  if (isRowDf(value)) {
+    return "TABLE_REP";
   }
   return "DEFAULT_REP";
 }
@@ -52,8 +57,9 @@ export default class ValueRenderer extends React.Component {
         </div>
       );
     }
-
-    switch (repChooser(value)) {
+    const repType = repChooser(value);
+    console.log("repType ......................", repType);
+    switch (repType) {
       case "GLOBAL_USER_RENDERER": {
         const htmlString = UserReps.getUserRepIfAvailable(value);
         return <HTMLHandler htmlString={htmlString} />;
@@ -63,7 +69,8 @@ export default class ValueRenderer extends React.Component {
       case "ERROR_REP":
         return <ErrorRenderer error={value} />;
       case "TABLE_REP":
-        return "asdf";
+        console.log("-------------------- table rep");
+        return <TableRenderer value={value} />;
       default:
         return <DefaultRenderer value={value} />;
     }
