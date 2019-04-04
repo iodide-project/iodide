@@ -7,16 +7,8 @@ function tagsPlugin(md, options) {
   const tagTarget = tagOptions.tagTarget || "_self";
 
   // helper function
-  const isTagLink = href => {
-    if (href) {
-      let domain = href.split("//")[1];
-      if (domain) {
-        domain = domain.split("/")[0].toLowerCase();
-      }
-      return domain === null && href.startsWith("#");
-    }
-    return null;
-  };
+  const isTagLink = href => href && href.startsWith("#");
+
   // main evaluation of the postmd-parsing
   function tagLinks(state) {
     function applyFilterToTokenHierarchy(token) {
