@@ -189,7 +189,7 @@ if (iodide.file.exists(FILENAME)) {
 
 ### `iodide.file.lastUpdated(fileName)`
 
-returns a `Date` object that represents when the file associated with `fileName`
+Returns a `Date` object that represents when the file associated with `fileName`
 was last updated.
 
 #### `iodide.file.lastUpdated` patterns
