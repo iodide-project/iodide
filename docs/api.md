@@ -62,7 +62,7 @@ uploaded file through the fetch chunk, [following this
 pattern](https://iodide-project.github.io/docs/workflows/#uploading-data-to-an-iodide-notebook).
 For most use cases using [fetch
 chunks](https://iodide-project.github.io/docs/jsmd/#fetch-chunks-fetch) is
-preferable and more straightforward. In more dynamic programmatic cases,
+preferable and more straightforward. In more dynamic cases,
 however, `iodide.file.load` can provide more nuanced workflows.
 
 `fileName` is the name of the file uploaded to the Iodide server. 
