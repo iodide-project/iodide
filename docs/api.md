@@ -55,7 +55,7 @@ iodide.file.save(new ArrayBuffer(...), 'model-output.bin')
 
 Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
-that, when resolved, loads into the notebook the save file `fileName`. For each
+that, when resolved, loads into the notebook the save file `fileName`. Each
 notebook can find a list of uploaded files in the [upload modal](#link-required)
 or on your notebook's [Revisions Page](#needs-link). You can also access any
 uploaded file through the fetch chunk, [following this
