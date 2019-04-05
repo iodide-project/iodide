@@ -43,7 +43,7 @@ The optional argument `saveOptions` has the following keys:
 
 const csvData = [{x1: 10, x2: 'test1'}, {x1: 20, x2: 'test2'}, ...]
 
-iodide.file.save(csvData, 'cached-data.csv' { overwrite: true })
+iodide.file.save(csvData, 'cached-data.csv', { overwrite: true })
 
 // iodide.file.save works with ArrayBuffers as well.
 iodide.file.save(new ArrayBuffer(...), 'model-output.bin')
