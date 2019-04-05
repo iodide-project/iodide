@@ -1,29 +1,30 @@
 export const simpleTypes = {
-  simple_int: 232937,
-  simple_float: 453.12312312,
-  simple_zero: 0,
-  simple_negative: -534.23,
-  simple_exp: 10e55,
-  simple_nan: NaN,
-  simple_inf: Infinity,
-  simple_emptyString: "",
-  simple_string: "asjhdflkdskfhla",
-  simple_boolTrue: true,
-  simple_boolFalse: false,
+  number_int: 232937,
+  number_float: 453.12312312,
+  number_zero: 0,
+  number_negative: -534.23,
+  number_exp: 10e55,
+  number_nan: NaN,
+  number_inf: Infinity,
+  string_empty: "",
+  string_short: "asjhdflkdskfhla",
+  boolean_true: true,
+  boolean_false: false,
   simple_undef: undefined,
   simple_null: null,
-  simple_symbol: Symbol.for("test")
+  symbol: Symbol.for("test_symbol"),
+  symbol_long: Symbol.for("test_symbol_with_a_very_long_symbol_name")
 };
 
 // ==================== longStrings
 
 export const longStrings = {
-  stringWithSpaces_100: "1234 ".repeat(20),
-  stringWithSpaces_1000: "1234 ".repeat(200),
-  stringWithSpaces_100000: "1234 ".repeat(20000),
-  stringNoSpaces_100: "12345".repeat(20),
-  stringNoSpaces_1000: "12345".repeat(200),
-  stringNoSpaces_100000: "12345".repeat(20000)
+  string_withSpaces_100: "1234 ".repeat(20),
+  string_withSpaces_1000: "1234 ".repeat(200),
+  string_withSpaces_100000: "1234 ".repeat(20000),
+  string_noSpaces_100: "12345".repeat(20),
+  string_noSpaces_1000: "12345".repeat(200),
+  string_noSpaces_100000: "12345".repeat(20000)
 };
 
 // ==================== arrays
@@ -63,6 +64,10 @@ function doublerFn(x) {
   return x * 2;
 }
 
+function aFunctionWithAnExcessivelyLongName(a, b, c, d, e, f, g) {
+  return [a, b, c, d, e, f, g];
+}
+
 function nuller() {
   return null;
 }
@@ -87,6 +92,7 @@ export const functions = {
   },
   fn_arrow: x => x * 2,
   fn_named: doublerFn,
+  fn_namedLong: aFunctionWithAnExcessivelyLongName,
   fn_namedNoArgs: nuller,
   fn_namedManyArgs: arrayer,
   fn_namedGenerator: doublerGen,
@@ -109,9 +115,11 @@ export const errors = {
 
 export const baseObjects = {
   array_empty: [],
+  array_emptyWithLength: new Array(100),
   object_empty: {},
   date: new Date("2000-01-01"),
   regex: /^.*$/,
+  regex_long: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   map: new Map([[1, "one"], [2, "two"], [3, "three"]]),
   map_empty: new Map(),
   set: new Set([1, 2, 3, 4, 5]),
@@ -213,6 +221,13 @@ export const customClassCases = {
   class_subclass: new Dog("Fido")
 };
 
+// ==================== built-ins
+
+export const builtInObjectCases = {
+  intrinsic_math: Math,
+  intrinsic_json: JSON
+};
+
 // ==================== tabular
 
 export const rowTableCases = {
@@ -249,6 +264,7 @@ export const allCases = Object.assign(
   baseObjects,
   compositeObjects,
   customClassCases,
+  builtInObjectCases,
   rowTableCases,
   rowTableFails
 );
