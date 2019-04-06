@@ -2,7 +2,12 @@ import React from "react";
 
 import { storiesOf } from "@storybook/react";
 
-import { allCases } from "../__test_helpers__/reps-test-value-cases";
+import "../../../../../node_modules/react-table/react-table.css";
+
+import {
+  allCases,
+  rowTableCases
+} from "../__test_helpers__/reps-test-value-cases";
 import {
   tinyRepSerializer,
   getClass,
@@ -11,6 +16,8 @@ import {
 } from "../rep-utils/tiny-rep-serializer";
 
 import tinyRep from "../tiny-reps";
+
+import TableRenderer from "../data-table-rep";
 
 const allTinyReps = storiesOf("all test cases", module);
 allTinyReps.add("type/class info", () => {
@@ -45,5 +52,22 @@ allTinyReps.add("all the tiny reps", () => {
         );
       })}
     </table>
+  );
+});
+
+const tableRep = storiesOf("rowDf table rep", module);
+tableRep.add("tables", () => {
+  return (
+    <div>
+      {Object.entries(rowTableCases).map(caseNameAndVal => {
+        const [name, value] = caseNameAndVal;
+        return (
+          <div key={name}>
+            <div>{name}</div>
+            <TableRenderer value={value} />
+          </div>
+        );
+      })}
+    </div>
   );
 });

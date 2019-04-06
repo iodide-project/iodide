@@ -58,7 +58,6 @@ export default class ValueRenderer extends React.Component {
       );
     }
     const repType = repChooser(value);
-    console.log("repType ......................", repType);
     switch (repType) {
       case "GLOBAL_USER_RENDERER": {
         const htmlString = UserReps.getUserRepIfAvailable(value);
@@ -69,7 +68,6 @@ export default class ValueRenderer extends React.Component {
       case "ERROR_REP":
         return <ErrorRenderer error={value} />;
       case "TABLE_REP":
-        console.log("-------------------- table rep");
         return <TableRenderer value={value} />;
       default:
         return <DefaultRenderer value={value} />;

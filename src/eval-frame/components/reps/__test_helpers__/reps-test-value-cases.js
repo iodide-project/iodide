@@ -228,12 +228,22 @@ export const builtInObjectCases = {
   intrinsic_json: JSON
 };
 
+// ==================== Promise
+
+export const promiseCases = {
+  promise: new Promise(() => "resolve", () => "reject"),
+  promise_reject: Promise.reject(),
+  promise_resolve: Promise.resolve()
+};
+
 // ==================== tabular
 
 export const rowTableCases = {
-  rowsTable_plainObjects: new Array(100)
-    .fill(0)
-    .map((x, i) => ({ a: i, b: i, c: i })),
+  rowsTable_plainObjects: new Array(100).fill(0).map((x, i) => ({
+    index: i,
+    time: new Date(),
+    id: Math.sin(i)
+  })),
   rowsTable_compositeObjects: new Array(100).fill(compositeObjects),
   rowsTable_objectsContainingSimpleTypes: new Array(100).fill(simpleTypes),
   rowsTable_objectsContainingBaseObjects: new Array(100).fill(baseObjects)
@@ -265,6 +275,7 @@ export const allCases = Object.assign(
   compositeObjects,
   customClassCases,
   builtInObjectCases,
+  promiseCases,
   rowTableCases,
   rowTableFails
 );
