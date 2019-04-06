@@ -20,7 +20,7 @@ import tinyRep from "../tiny-reps";
 import TableRenderer from "../data-table-rep";
 
 const allTinyReps = storiesOf("all test cases", module);
-allTinyReps.add("type/class info", () => {
+allTinyReps.add("table of type/class info", () => {
   return (
     <table>
       {Object.entries(allCases).map(caseNameAndVal => {
@@ -62,8 +62,8 @@ tableRep.add("tables", () => {
       {Object.entries(rowTableCases).map(caseNameAndVal => {
         const [name, value] = caseNameAndVal;
         return (
-          <div key={name}>
-            <div>{name}</div>
+          <div key={name} style={{ padding: "10px" }}>
+            <div style={{ padding: "10px 10px" }}>case: {name}</div>
             <TableRenderer value={value} />
           </div>
         );

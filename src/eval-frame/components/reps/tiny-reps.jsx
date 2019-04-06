@@ -67,8 +67,6 @@ const symbolRep = obj => (
 const FunctionSpan = styled(RepBaseStyledSpan(functionColor))`
   font-style: italic;
 `;
-// FunctionSpan.
-// FunctionSpan.defaultProps({ fontStyle: "italic" });
 const functionRep = obj => (
   <span>
     <FunctionSpan>
