@@ -65,7 +65,7 @@ export default class TableRenderer extends React.Component {
 
     const pageSize = value.length > 10 ? 10 : value.length;
     return (
-      <div>
+      <div style={{ fontFamily: "unset" }}>
         <ReactTable
           data={value}
           columns={columns}

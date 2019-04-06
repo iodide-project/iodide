@@ -16,11 +16,13 @@ const MessageContainer = styled(ConsoleContainer)`
 
 const MessageBody = styled("div")`
   font-family: ${THEME.client.console.fontFamily};
-  // margin: auto;
+  margin: auto;
   margin-left: 0;
   padding-top: 5px;
   padding-bottom: 5px;
   min-height: 20px;
+  max-width: calc(100% - 5px);
+  overflow-x: hidden;
 `;
 
 const ConsoleMessage = ({ children, level }) => {
