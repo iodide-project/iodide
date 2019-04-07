@@ -119,7 +119,7 @@ export const baseObjects = {
   object_empty: {},
   date: new Date("2000-01-01"),
   regex: /^.*$/,
-  regex_long: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+  regex_long: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   map: new Map([[1, "one"], [2, "two"], [3, "three"]]),
   map_empty: new Map(),
   set: new Set([1, 2, 3, 4, 5]),
@@ -141,8 +141,10 @@ export const compositeObjects = {
   object_plainComposite1: {
     id: 2,
     name: "An ice sculpture",
-    // "price": 12.50,
+    price: 12.5,
     tags: ["cold", "ice"],
+    time: new Date("2005-04-03"),
+    description: "a very long description string ... ".repeat(1000),
     dimensions: {
       length: 7.0,
       width: 12.0,
