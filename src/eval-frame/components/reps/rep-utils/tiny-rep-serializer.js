@@ -49,7 +49,7 @@ const truncateString = s =>
     ? [s.slice(0, TRUNCATION_LEN), true]
     : [s, false];
 
-export function tinyValue(obj) {
+export function tinyRepStringify(obj) {
   const type = getType(obj);
   let stringVal;
   if (["Number", "Boolean", "Undefined", "Null", "Symbol"].includes(type)) {
@@ -69,7 +69,7 @@ export function tinyValue(obj) {
 }
 
 export function tinyRepSerializer(obj) {
-  const [stringValue, isTruncated] = tinyValue(obj);
+  const [stringValue, isTruncated] = tinyRepStringify(obj);
   return {
     class: getClass(obj),
     type: getType(obj),
