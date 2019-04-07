@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { get } from "lodash";
 import styled from "react-emotion";
 
+import "./react-table-styles.css";
+
 import { tinyRepSerializer } from "./rep-utils/tiny-rep-serializer";
 
 import DefaultRenderer from "./default-handler";
@@ -17,6 +19,7 @@ const RepDetails = styled.div`
 const RepDetailsMessage = styled.div`
   color: #999;
   font-style: italic;
+  font-family: "Open Sans", sans-serif;
   padding-bottom: ${props => (props.pad ? "3px" : "0px")};
 `;
 
@@ -58,14 +61,13 @@ export default class TableRenderer extends React.Component {
       Header: k,
       accessor: k,
       Cell: cell => {
-        console.log(cell);
         return tinyRep(tinyRepSerializer(cell.value));
       }
     }));
 
     const pageSize = value.length > 10 ? 10 : value.length;
     return (
-      <div style={{ fontFamily: "unset" }}>
+      <div>
         <ReactTable
           data={value}
           columns={columns}
