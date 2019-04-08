@@ -11,12 +11,12 @@ import { tinyRepSerializer } from "./rep-utils/tiny-rep-serializer";
 import DefaultRenderer from "./default-handler";
 import tinyRep from "./tiny-reps";
 
-const RepDetails = styled.div`
+const TableDetails = styled.div`
   border: solid #e5e5e5;
   border-width: 0px 1px 1px 1px;
   padding: 5px;
 `;
-const RepDetailsMessage = styled.div`
+const TableDetailsMessage = styled.div`
   color: #999;
   font-style: italic;
   font-family: "Open Sans", sans-serif;
@@ -26,18 +26,18 @@ const RepDetailsMessage = styled.div`
 const CellDetails = props => {
   if (props.focusedPath) {
     return (
-      <RepDetails>
-        <RepDetailsMessage pad>
+      <TableDetails>
+        <TableDetailsMessage pad>
           {`details for ${props.focusedPath}`}
-        </RepDetailsMessage>
+        </TableDetailsMessage>
         <DefaultRenderer value={get(props.value, props.focusedPath)} />
-      </RepDetails>
+      </TableDetails>
     );
   }
   return (
-    <RepDetails>
-      <RepDetailsMessage>Click a table cell for details</RepDetailsMessage>
-    </RepDetails>
+    <TableDetails>
+      <TableDetailsMessage>Click a table cell for details</TableDetailsMessage>
+    </TableDetails>
   );
 };
 
