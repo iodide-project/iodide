@@ -19,6 +19,8 @@ import {
 
 import tinyRep from "../tiny-reps";
 
+import ValueRenderer from "../value-renderer";
+
 import TableRenderer from "../data-table-rep";
 
 const allTinyReps = storiesOf("all test cases", module);
@@ -72,4 +74,11 @@ tableRep.add("tables", () => {
       })}
     </div>
   );
+});
+
+const valueRendererStories = storiesOf("base ValueRenderer component", module);
+
+Object.entries(allCases).forEach(caseNameAndVal => {
+  const [name, value] = caseNameAndVal;
+  valueRendererStories.add(name, () => <ValueRenderer valueToRender={value} />);
 });
