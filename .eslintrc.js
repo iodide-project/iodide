@@ -43,7 +43,7 @@ module.exports = {
     "import/prefer-default-export": ["off"],
     "import/no-extraneous-dependencies": [
       "error",
-      { devDependencies: ["**/__stories__/*"] }
+      { devDependencies: ["**/__stories__/*", "**/__tests__/*", "/test/*"] }
     ]
   }
 };
