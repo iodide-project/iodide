@@ -1,6 +1,6 @@
 const TASK_ERRORS = {
   noCallback:
-    "you must provide either a callback, a keybindingCalblack, or both (if the callbacks differ)",
+    "you must provide either a callback, a keybindingCallback, or both (if the callbacks differ)",
   noKeybindingsWithCallback:
     "keybindingCallback supplied, but no keybindings were declared",
   argumentMustBeObject: "must provide an object as an argument",

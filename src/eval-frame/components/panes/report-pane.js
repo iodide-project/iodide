@@ -6,12 +6,14 @@ import MarkdownIt from "markdown-it";
 import MarkdownItKatex from "@iktakahiro/markdown-it-katex";
 import MarkdownItAnchor from "markdown-it-anchor";
 import MarkdownItEmoji from "markdown-it-emoji";
+import MarkdownItTag from "../../tools/markdown-it-tags";
 
 const mdIt = MarkdownIt({ html: true });
 mdIt
   .use(MarkdownItKatex)
   .use(MarkdownItAnchor)
-  .use(MarkdownItEmoji);
+  .use(MarkdownItEmoji)
+  .use(MarkdownItTag);
 
 const mdDiv = html => (
   <div
