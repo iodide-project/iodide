@@ -26,7 +26,8 @@ a look at the example in the `iodide.file.save` examples section.
 
 `data` (required) is any object or variable in the eval name space. It can be
 anything, really - an array of data, or a csv, or a binary object – as long it is a 
-[supported structured clone type](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm).
+[supported structured clone type]
+(https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm).
 
 `fileName` (required) is a string that represents the file name.
 

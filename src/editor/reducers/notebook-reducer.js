@@ -225,8 +225,7 @@ const notebookReducer = (state = newNotebook(), action) => {
           id: fileID
         });
       else {
-        const i = files.findIndex(f => f.filename === filename);
-        files[i].lastUpdated = lastUpdated;
+        files.find(f => f.filename === filename).lastUpdated = lastUpdated;
       }
       const notebookInfo = Object.assign({}, state.notebookInfo, {
         files
