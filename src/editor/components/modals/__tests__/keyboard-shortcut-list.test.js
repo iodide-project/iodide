@@ -3,6 +3,11 @@ import { shallow } from "enzyme";
 
 import KeyboardShortcutList from "../keyboard-shortcut-list";
 import UserTask from "../../../user-tasks/user-task";
+import tasks from "../../../user-tasks/task-definitions";
+
+const numTasksWithKeybinding = Object.keys(tasks).filter(
+  k => tasks[k].displayKeybinding
+).length;
 
 describe("HelpModalUnconnected React component", () => {
   let props;
@@ -53,6 +58,6 @@ describe("HelpModalUnconnected React component", () => {
       getTestComponent()
         .find("table.keyboard-shortcuts-global tbody")
         .children().length
-    ).toEqual(5);
+    ).toEqual(numTasksWithKeybinding);
   });
 });

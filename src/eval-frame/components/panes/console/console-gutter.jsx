@@ -29,9 +29,11 @@ const Gutter = ({ children }) => {
     </GutterContainer>
   );
 };
-Gutter.propTypes.children = PropTypes.oneOfType([
-  PropTypes.arrayOf(PropTypes.node),
-  PropTypes.node
-]);
+Gutter.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
+};
 
 export default Gutter;

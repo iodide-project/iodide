@@ -30,8 +30,10 @@ describe("ConsolePaneUnconnected React component", () => {
           lastRan: 1533078293981,
           content: "var a = 3"
         }
-      ]
+      ],
+      paneVisible: true
     };
+
     mountedPane = undefined;
   });
 

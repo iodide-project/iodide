@@ -24,7 +24,7 @@ describe("LayoutManagerUnconnected React component", () => {
   };
 
   beforeEach(() => {
-    props = { zIndex: 10 };
+    props = { zIndex: 10, updateLayoutPositions: jest.fn() };
   });
 
   it("always renders a div", () => {

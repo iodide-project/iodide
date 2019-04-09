@@ -30,9 +30,11 @@ const HelpModalContent = ({ children }) => (
   </HelpModalContentContainer>
 );
 
-HelpModalContent.propTypes.children = PropTypes.oneOfType([
-  PropTypes.arrayOf(PropTypes.node),
-  PropTypes.node
-]);
+HelpModalContent.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
+};
 
 export default HelpModalContent;
