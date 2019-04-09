@@ -88,6 +88,6 @@ export function validateFileAbsence(fileName, operation, state) {
 
 export function validateReturnableFetchType(fetchType) {
   if (!FETCH_RETURN_TYPES.includes(fetchType)) {
-    throw new Error(`invalid returnable fetch type "${fetchType}"`);
+    throw new Error(`invalid fetch type "${fetchType}"`);
   }
 }
