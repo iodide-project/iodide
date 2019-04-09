@@ -5,7 +5,7 @@ import ValueRenderer from "../reps/value-renderer";
 
 export class DeclaredVariable extends React.Component {
   static propTypes = {
-    value: PropTypes.any,
+    value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     varName: PropTypes.string
   };
   render() {

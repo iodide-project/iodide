@@ -24,8 +24,6 @@ module.exports = {
     // TODO: The following lints are probably good to have in the long run,
     // but are disabled for now to get to zero lint
     // All component props should have PropTypes
-    "react/no-unused-prop-types": ["off"],
-    "react/forbid-prop-types": ["off"],
     "react/require-default-props": ["off"],
     // a11y is hard.  We should do it, but it needs to be thought about holistically
     "jsx-a11y/no-static-element-interactions": ["off"],

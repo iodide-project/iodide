@@ -5,7 +5,7 @@ import SnackBar from "@material-ui/core/Snackbar";
 
 export class appMessagesUnconnected extends React.Component {
   static propTypes = {
-    appMessages: PropTypes.array
+    appMessages: PropTypes.arrayOf(PropTypes.object)
   };
 
   constructor(props) {

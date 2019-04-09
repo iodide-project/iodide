@@ -19,7 +19,7 @@ const HelpIcon = styled(HelpOutline)`
 
 export class ConsolePaneUnconnected extends React.Component {
   static propTypes = {
-    history: PropTypes.array,
+    history: PropTypes.arrayOf(PropTypes.object),
     paneVisible: PropTypes.bool.isRequired
   };
 

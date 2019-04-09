@@ -8,7 +8,6 @@ import ExternalLinkTask from "../../user-tasks/external-link-task";
 // TODO - implement tooltip again
 export default class NotebookTaskFunction extends React.Component {
   static propTypes = {
-    title: PropTypes.string,
     task: PropTypes.oneOfType([
       PropTypes.instanceOf(UserTask),
       PropTypes.instanceOf(ExternalLinkTask)

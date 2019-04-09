@@ -133,7 +133,7 @@ const ErrorPrintout = styled("div")`
 
 export default class ErrorRenderer extends React.Component {
   static propTypes = {
-    error: PropTypes.object.isRequired
+    error: PropTypes.object.isRequired // eslint-disable-line react/forbid-prop-types
   };
 
   render() {

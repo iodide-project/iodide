@@ -37,8 +37,7 @@ delete CodeMirror.keyMap.sublime["Shift-Ctrl-Enter"];
 class JsmdEditorUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
-    containerStyle: PropTypes.object,
-    editorOptions: PropTypes.object,
+    editorOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
     editorCursorForceUpdate: PropTypes.bool.isRequired,

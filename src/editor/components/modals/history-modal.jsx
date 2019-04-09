@@ -23,8 +23,6 @@ const ModalContentContainer = styled("div")`
 
 class HistoryModalUnconnected extends React.Component {
   static propTypes = {
-    errorGettingRevisionList: PropTypes.bool,
-    gettingRevisionList: PropTypes.bool,
     getNotebookRevisionList: PropTypes.func.isRequired,
     revisionListFetchStatus: PropTypes.string.isRequired
   };

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -12,7 +11,6 @@ import KeyboardShortcutList from "./keyboard-shortcut-list";
 import OnboardingContent from "../../../shared/components/onboarding-content";
 import AboutIodide from "./about-iodide";
 import FeaturedNotebooks from "../../../shared/components/featured-notebooks";
-import tasks from "../../user-tasks/task-definitions";
 
 import THEME from "../../../shared/theme";
 
@@ -34,10 +32,6 @@ const Onboarding = () => (
 );
 
 export default class HelpModal extends React.Component {
-  static propTypes = {
-    tasks: PropTypes.object
-  };
-
   state = {
     value: 0
   };
@@ -64,7 +58,7 @@ export default class HelpModal extends React.Component {
           </Tabs>
         </AppBar>
         {value === 0 && <Onboarding />}
-        {value === 1 && <KeyboardShortcutList tasks={tasks} />}
+        {value === 1 && <KeyboardShortcutList />}
         {value === 2 && <MoreResources />}
         {value === 3 && <AboutIodide />}
       </ModalContainer>

@@ -15,11 +15,9 @@ export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
     level: PropTypes.string,
-    historyId: PropTypes.string.isRequired,
     historyType: PropTypes.string.isRequired,
-    lastRan: PropTypes.number.isRequired,
     language: PropTypes.string,
-    valueToRender: PropTypes.any
+    valueToRender: PropTypes.any // eslint-disable-line react/forbid-prop-types
   };
 
   render() {

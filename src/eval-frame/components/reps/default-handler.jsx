@@ -16,7 +16,7 @@ const ValueRendererContainer = styled("div")`
 
 export default class DefaultRenderer extends React.Component {
   static propTypes = {
-    value: PropTypes.any
+    value: PropTypes.any // eslint-disable-line react/forbid-prop-types
   };
 
   render() {
