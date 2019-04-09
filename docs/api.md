@@ -9,8 +9,9 @@ tracker](https://github.com/iodide-project/iodide/issues/new).
 
 ## `iodide.file`
 
-The `iodide.file` API provides convenience functions around working with files
+The `iodide.file` API provides convenience functions for working with files
 uploaded to the Iodide server in your notebook.
+
 
 ### `iodide.file.save(data, fileName[, saveOptions])`
 
@@ -46,14 +47,16 @@ The optional argument `saveOptions` has the following keys:
 // representing a columnar dataset. This overwrites whatever is in `cached-data.csv`
 // because overwrite is set to true.
 
-const csvData = [{x1: 10, x2: 'test1'}, {x1: 20, x2: 'test2'}, ...]
+%% js
+
+const csvData = [{x1: 10, x2: 'random string'}, {x1: 20, x2: 'another string'}, ...]
 
 iodide.file.save(csvData, 'cached-data.csv', { overwrite: true })
 
+%% js
+
 // iodide.file.save works with ArrayBuffers as well.
 iodide.file.save(new ArrayBuffer(...), 'model-output.bin')
-
-
 ```
 
 Because `iodide.file.save` is only available to a notebook owner, if you are running another user's
@@ -84,19 +87,20 @@ fetch('https://...').then((r) => {
 
 iodide.file.load('correlations.txt', 'text', 'correlations')
 
+%% js
+// this variable is now available in the namespace
+console.log(correlations)
 ```
-
-
-
 
 
 ### `iodide.file.load(fileName, fileType[, variableName])`
 
 Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
-that, when resolved, loads into the notebook the save file `fileName`. Each
-notebook can find a list of uploaded files in the [upload modal](#link-required)
-or on your notebook's [Revisions Page](#needs-link). You can also access any
+that, when resolved, loads into the notebook the save file `fileName`. 
+If the file does not exist or if you pass in invalid arguments, the Promise will reject. You can 
+find a list of uploaded files on your notebook's revisions page (available at 
+`https://iodide.io/notebooks/<notebook-id>/revisions`). You can also access any
 uploaded file through the fetch chunk, [following this
 pattern](https://iodide-project.github.io/docs/workflows/#uploading-data-to-an-iodide-notebook).
 For most use cases using [fetch
@@ -122,24 +126,37 @@ browser `window` namespace.
 
 ```javascript
 
+%% js
+
 // load a csv
-iodide.file.load('cached-data.csv', 'text', 'cachedData').then(() => {
-  cachedData = d3.csvParsed(cachedData)
+iodide.file.load('cached-data.csv', 'text').then((rawCSV) => {
+  const processedData = d3.csvParse(rawCSV)
+  // use a plotting library of some sort here:  
+  plotGraph(processedData, ...)
 })
 
-// load a video
+%% js 
+
 iodide.file.load('gritty.mp4', 'blob', 'gritty').then(() => {
-  // load this gritty video into a <video /> tag in the report.
+  // load this gritty video into a <video /> tag in the md chunk below this one.
   var urlCreator = window.URL || window.webkitURL;
   var imageUrl = urlCreator.createObjectURL(gritty);
   document.querySelector("#gritty").src = imageUrl;
 })
 
-// load a style sheet and apply the style
-iodide.file.load('corporate-report-style.css', 'css')
+%% md
 
-// load some javascript helpers
-iodide.file.load('analysis-helpers.js', 'js')
+<video id='gritty'></video>
+
+
+%% js
+
+// let's load a json file, then access it in the next chunk.
+iodide.file.load('query-results.json', 'json', 'queryResults')
+
+%% js
+
+var entries = queryResults.rows.map(...)
 ```
 
 
@@ -147,19 +164,33 @@ iodide.file.load('analysis-helpers.js', 'js')
 
 Deletes the file specified by `fileName`. Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
-that when resolved, denotes that the file was deleted on the server.
+that when resolved, denotes that the file was deleted on the server. If the file does not exist,
+the Promise will reject.
+
 
 ### `iodide.file.delete` examples
 
 ```javascript
-// delete all locally cached pngs
 
+%% js
+
+// delete all locally cached pngs
 function clearLocalPNGCache() {
   iodide.file.list()
     .filter(filename => !filename.includes('.png'))
     .forEach(iodide.file.delete)
 }
+
+%% js
+
+// if the file does not exist, we can catch the error and do something instead.
+
+iodide.file.delete('old-dataset.txt')
+  .catch(err => {
+  return `well, that didn't work: ${err.message}`
+})
 ```
+
 
 ### `iodide.file.list()`
 
@@ -169,13 +200,14 @@ Returns an Array of file names available to the current notebook.
 #### `iodide.file.list` examples
 
 ```javascript
-// load each data set and plot it
 
+%% js
+
+// load each data set and plot it
 const plotRequests = iodide.file.list()
   .filter(f => f.filename.includes('.csv'))
   .map(f => iodide.file.load(f, 'text').then((raw) => {
     const data = d3.csvParse(raw)
-    ...
     genericPlotFunction(data)
   }))
 Promise.all(plotRequests)
@@ -187,11 +219,6 @@ Promise.all(plotRequests)
 Returns `true` if the file `fileName` is available to the notebook, and `false`
 otherwise.
 
-The below code chunk, for instance, checks to see if a csv file already exists
-on the server. If it does, then Iodide will load that. Otherwise, the notebook
-will fetch the data, process it using a numb er of steps, and save the output to
-the server.
-
 
 #### `iodide.file.exists` examples
 
@@ -199,6 +226,8 @@ The example below loads cached data if it exists on the server, and otherwise
 downloads the larger dataset remotely, processes it, then caches it.
 
 ```javascript
+
+%% js
 
 const FILENAME = 'dataset.csv'
 if (iodide.file.exists(FILENAME)) {
@@ -228,6 +257,7 @@ if (iodide.file.exists(FILENAME)) {
 
 Returns a `Date` object that represents when the file associated with `fileName`
 was last updated.
+
 
 #### `iodide.file.lastUpdated` examples
 
@@ -273,7 +303,6 @@ const GeoLocationOutputRenderer = {
 
 iodide.addOutputRenderer(GeoLocationOutputRenderer);
 ```
-
 
 
 ## `iodide.clearOutputRenderers()`
