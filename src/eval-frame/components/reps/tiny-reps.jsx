@@ -46,7 +46,7 @@ const quotedStringRep = (lQuote, rQuote) => obj => (
   </span>
 );
 
-const stringRep = quotedStringRep("“", "”");
+const stringRep = quotedStringRep('"', '"');
 const regexRep = quotedStringRep("/", "/");
 
 const SymbolSpan = RepBaseStyledSpan(symbolColor);
