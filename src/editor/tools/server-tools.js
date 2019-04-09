@@ -1,4 +1,4 @@
-import { FETCH_TYPES } from "../state-schemas/state-schema";
+import { FETCH_RETURN_TYPES } from "../state-schemas/state-schema";
 
 function fileDoesNotExistMessage(operation, fileName) {
   return `${operation}: file "${fileName}" does not exist`;
@@ -86,8 +86,8 @@ export function validateFileAbsence(fileName, operation, state) {
   }
 }
 
-export function validateFetchType(fetchType) {
-  if (!FETCH_TYPES.includes(fetchType)) {
-    throw new Error(`invalid fetch type "${fetchType}"`);
+export function validateReturnableFetchType(fetchType) {
+  if (!FETCH_RETURN_TYPES.includes(fetchType)) {
+    throw new Error(`invalid returnable fetch type "${fetchType}"`);
   }
 }

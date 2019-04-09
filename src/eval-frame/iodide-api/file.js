@@ -2,7 +2,6 @@ import { store as reduxStore } from "../store";
 import { getFiles } from "../../editor/tools/server-tools";
 import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
 import { FETCH_RETURN_TYPES } from "../../editor/state-schemas/state-schema";
-import { addCSS, loadScriptFromBlob } from "../actions/fetch-cell-eval-actions";
 
 const DEFAULT_SAVE_OPTIONS = { overwrite: false };
 
@@ -61,10 +60,6 @@ export function handleResourceLoad(fetchType, variableName) {
   return file => {
     if (FETCH_RETURN_TYPES.includes(fetchType) && variableName) {
       window[variableName] = file;
-    } else if (fetchType === "css") {
-      return addCSS(file);
-    } else if (fetchType === "js") {
-      return loadScriptFromBlob(file);
     }
     return file;
   };

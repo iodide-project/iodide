@@ -9,7 +9,7 @@ import {
   getFileID,
   validateFileExistence,
   validateFileAbsence,
-  validateFetchType
+  validateReturnableFetchType
 } from "../tools/server-tools";
 
 function messagePasserIsFunction(passer) {
@@ -102,7 +102,7 @@ export function loadFile(fileName, fileRequestID, metadata, messagePasser) {
   return async (_, getState) => {
     try {
       validateFileExistence(fileName, "load", getState());
-      validateFetchType(fetchType);
+      validateReturnableFetchType(fetchType);
     } catch (err) {
       onFileOperationError(fileRequestID, messagePasser)(err);
       return undefined;
