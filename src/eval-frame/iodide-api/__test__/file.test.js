@@ -36,7 +36,7 @@ const mockStore = () => ({
 
 describe("iodide.file.list (connectList)", () => {
   const store = mockStore();
-  const list = connectList(store);
+  const list = connectList(store.getState);
   it("lists all the files available to the current notebook", () => {
     const files = list();
     expect(files).toEqual(
@@ -47,7 +47,7 @@ describe("iodide.file.list (connectList)", () => {
 
 describe("iodide.file.exists", () => {
   const store = mockStore();
-  const exists = connectExists(store);
+  const exists = connectExists(store.getState);
   it("throws if something other than a string is passed in", () => {
     expect(() => exists()).toThrow();
     expect(() => exists(12345)).toThrow();
@@ -61,7 +61,7 @@ describe("iodide.file.exists", () => {
 
 describe("iodide.file.lastUpdated", () => {
   const store = mockStore();
-  const lastUpdated = connectLastUpdated(store);
+  const lastUpdated = connectLastUpdated(store.getState);
   it("throws if something other than a string is passed in", () => {
     expect(() => lastUpdated()).toThrow();
     expect(() => lastUpdated(12345)).toThrow();

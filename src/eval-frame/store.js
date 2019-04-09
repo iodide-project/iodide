@@ -28,5 +28,5 @@ if (IODIDE_BUILD_MODE === "production") {
 const initialState = evalFrameStateSelector(newNotebook());
 
 const store = createStore(reducer, initialState, enhancer);
-
-export { store };
+const { getState } = store;
+export { store, getState };

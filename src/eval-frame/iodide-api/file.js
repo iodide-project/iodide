@@ -1,4 +1,4 @@
-import { store as reduxStore } from "../store";
+import { getState as reduxStoreGetState } from "../store";
 import { getFiles } from "../../editor/tools/server-tools";
 import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
 import { FETCH_RETURN_TYPES } from "../../editor/state-schemas/state-schema";
@@ -30,24 +30,24 @@ function confirmFetchTypeIsReturnable(fetchType) {
   }
 }
 
-export function connectExists(store) {
+export function connectExists(getState) {
   return function exists(fileName) {
     confirmIsString("fileName", fileName);
-    const files = getFiles(store.getState());
+    const files = getFiles(getState());
     return files.map(f => f.filename).includes(fileName);
   };
 }
 
-export function connectList(store) {
+export function connectList(getState) {
   return function list() {
-    return getFiles(store.getState()).map(f => f.filename);
+    return getFiles(getState()).map(f => f.filename);
   };
 }
 
-export function connectLastUpdated(store) {
+export function connectLastUpdated(getState) {
   return function lastUpdated(fileName) {
     confirmIsString("fileName", fileName);
-    const files = getFiles(store.getState());
+    const files = getFiles(getState());
     const thisFile = files.filter(f => f.filename === fileName);
     if (!thisFile.length) throw Error(`fileName ${fileName} does not exist`);
     return new Date(thisFile[0].lastUpdated);
@@ -90,7 +90,7 @@ export const file = {
   save: saveFile,
   load: loadFile,
   delete: deleteFile,
-  exists: connectExists(reduxStore),
-  list: connectList(reduxStore),
-  lastUpdated: connectLastUpdated(reduxStore)
+  exists: connectExists(reduxStoreGetState),
+  list: connectList(reduxStoreGetState),
+  lastUpdated: connectLastUpdated(reduxStoreGetState)
 };
