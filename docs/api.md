@@ -35,8 +35,7 @@ anything, really - an array of data, or a csv, or a binary object – as long it
 The optional argument `saveOptions` has the following keys:
 
 - `overwrite` (optional, default `false`): if `true`, will overwrite whatever is
-  at `fileName` with `data`. If `false`, will throw an error and halt the
-  subsequent enqueued evaluation (similar to a syntax error).
+  at `fileName` with `data`. If `false`, and the file exists, the Promise will reject.
 
 
 #### `iodide.file.save` examples
