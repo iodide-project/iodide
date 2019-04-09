@@ -9,7 +9,7 @@ import {
   getFileID,
   validateFileExistence,
   validateFileAbsence,
-  validateReturnableFetchType
+  validateFetchType
 } from "../tools/server-tools";
 
 function messagePasserIsFunction(passer) {
@@ -38,25 +38,21 @@ export function deleteFileFromNotebook(fileID) {
   };
 }
 
-function onFileOperationSuccess(fileRequestID, messagePasser) {
-  return fileOrResponse => {
-    messagePasser("REQUESTED_FILE_OPERATION_SUCCESS", {
-      response: fileOrResponse,
-      fileRequestID
-    });
-  };
+function onFileOperationSuccess(fileRequestID, messagePasser, fileOrResponse) {
+  messagePasser("REQUESTED_FILE_OPERATION_SUCCESS", {
+    response: fileOrResponse,
+    fileRequestID
+  });
 }
 
-function onFileOperationError(fileRequestID, messagePasser) {
-  return err => {
-    messagePasser("REQUESTED_FILE_OPERATION_ERROR", {
-      fileRequestID,
-      reason: err.message
-    });
-  };
+function onFileOperationError(fileRequestID, messagePasser, err) {
+  messagePasser("REQUESTED_FILE_OPERATION_ERROR", {
+    fileRequestID,
+    reason: err.message
+  });
 }
 
-export function saveFile(fileName, fileRequestID, metadata, messagePasser) {
+export function saveFile(fileName, fileRequestID, messagePasser, metadata) {
   validateMessagePasser(messagePasser);
   const { data, overwrite } = metadata;
   return async (dispatch, getState) => {
@@ -66,7 +62,9 @@ export function saveFile(fileName, fileRequestID, metadata, messagePasser) {
     const { name: thisUser } = state.userData;
 
     if (notebookOwner !== thisUser) {
-      onFileOperationError(fileRequestID, messagePasser)(
+      onFileOperationError(
+        fileRequestID,
+        messagePasser,
         new Error("only the owner of this notebook can save files")
       );
       return undefined;
@@ -78,56 +76,58 @@ export function saveFile(fileName, fileRequestID, metadata, messagePasser) {
       try {
         validateFileAbsence(fileName, "save", getState());
       } catch (err) {
-        onFileOperationError(fileRequestID, messagePasser)(
-          new Error(err.message)
-        );
+        onFileOperationError(fileRequestID, messagePasser, err);
         return undefined;
       }
     }
-    return saveFileToServer(notebookID, data, fileName, fileID)
-      .then(fileInfo => {
-        const { filename, id } = fileInfo;
-        const lastUpdated = fileInfo.last_updated;
-        dispatch(addFileToNotebook(filename, lastUpdated, id));
-        return undefined;
-      })
-      .then(onFileOperationSuccess(fileRequestID, messagePasser))
-      .catch(onFileOperationError(fileRequestID, messagePasser));
+    try {
+      const fileInfo = await saveFileToServer(
+        notebookID,
+        data,
+        fileName,
+        fileID
+      );
+      const { filename, id } = fileInfo;
+      const lastUpdated = fileInfo.last_updated;
+      dispatch(addFileToNotebook(filename, lastUpdated, id));
+      onFileOperationSuccess(fileRequestID, messagePasser, undefined);
+      return undefined;
+    } catch (err) {
+      onFileOperationError(fileRequestID, messagePasser, err);
+      return undefined;
+    }
   };
 }
 
-export function loadFile(fileName, fileRequestID, metadata, messagePasser) {
+export function loadFile(fileName, fileRequestID, messagePasser, metadata) {
   validateMessagePasser(messagePasser);
   const { fetchType } = metadata;
   return async (_, getState) => {
     try {
       validateFileExistence(fileName, "load", getState());
-      validateReturnableFetchType(fetchType);
+      validateFetchType(fetchType);
+      const file = await loadFileFromServer(`files/${fileName}`, fetchType);
+      onFileOperationSuccess(fileRequestID, messagePasser, file);
+      return undefined;
     } catch (err) {
-      onFileOperationError(fileRequestID, messagePasser)(err);
+      onFileOperationError(fileRequestID, messagePasser, err);
       return undefined;
     }
-    return loadFileFromServer(`files/${fileName}`, fetchType)
-      .then(onFileOperationSuccess(fileRequestID, messagePasser))
-      .catch(onFileOperationError(fileRequestID, messagePasser));
   };
 }
-export function deleteFile(fileName, fileRequestID, metadata, messagePasser) {
-  return (dispatch, getState) => {
+export function deleteFile(fileName, fileRequestID, messagePasser) {
+  return async (dispatch, getState) => {
     try {
+      const fileID = getFileID(getState(), fileName);
       validateFileExistence(fileName, "delete", getState());
       validateMessagePasser(messagePasser);
+      const output = await deleteFileOnServer(fileID);
+      dispatch(deleteFileFromNotebook(fileID));
+      onFileOperationSuccess(fileRequestID, messagePasser, output);
+      return undefined;
     } catch (err) {
-      onFileOperationError(fileRequestID, messagePasser)(err);
+      onFileOperationError(fileRequestID, messagePasser, err);
       return undefined;
     }
-    const fileID = getFileID(getState(), fileName);
-    return deleteFileOnServer(fileID)
-      .then(output => {
-        dispatch(deleteFileFromNotebook(fileID));
-        return output;
-      })
-      .then(onFileOperationSuccess(fileRequestID, messagePasser))
-      .catch(onFileOperationError(fileRequestID, messagePasser));
   };
 }

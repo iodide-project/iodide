@@ -16,7 +16,6 @@ import {
   errorMessage
 } from "../../shared/utils/fetch-tools";
 
-// import fetchFileFromParentContext from "../tools/fetch-file-from-parent-context";
 import generateRandomId from "../../shared/utils/generate-random-id";
 import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
 
@@ -37,7 +36,7 @@ function setVariableInWindow(variableName, variableValue) {
   window[variableName] = variableValue;
 }
 
-export function loadScriptFromBlob(blob) {
+function loadScriptFromBlob(blob) {
   // for async script loading from blobs, see:
   // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
   return new Promise((resolve, reject) => {
@@ -50,7 +49,7 @@ export function loadScriptFromBlob(blob) {
   });
 }
 
-export async function addCSS(stylesheet, filePath) {
+async function addCSS(stylesheet, filePath) {
   document
     .querySelectorAll(`style[data-href='${filePath}']`)
     .forEach(linkNode => {

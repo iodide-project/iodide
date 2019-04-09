@@ -59,7 +59,7 @@ function handleFileRequest(message) {
     }
   }
   messagePasserEditor.dispatch(
-    requestAction(fileName, fileRequestID, metadata, postMessageToEvalFrame)
+    requestAction(fileName, fileRequestID, postMessageToEvalFrame, metadata)
   );
 }
 

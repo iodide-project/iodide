@@ -49,54 +49,14 @@ describe("loadFile (editor action)", () => {
     store = mockStore(initialState());
   });
 
-  it("fails if not enough arguments are passed in", () => {
-    expect(() => store.dispatch(loadFile())).toThrowError();
-    expect(() => store.dispatch(loadFile("file1.csv"))).toThrowError();
-    expect(() =>
-      store.dispatch(loadFile("file1.csv", "some-file-id"))
-    ).toThrowError();
-
-    expect(() =>
-      store.dispatch(
-        loadFile("file1.csv", "some-file-id", {
-          fetchType: "text"
-        })
-      )
-    ).toThrowError();
-  });
-  it("fails on invalid arguments (and messagePasser sends msg. to eval frame)", () => {
-    store.dispatch(
-      loadFile(
-        "file1.csv",
-        "some-file-id",
-        {
-          fetchType: "error"
-        },
-        messagePasserMock
-      )
-    );
-    expect(messagePasserMock).toHaveBeenCalledTimes(1);
-    expect(messagePasserMock.mock.calls[0]).toEqual([
-      "REQUESTED_FILE_OPERATION_ERROR",
-      {
-        fileRequestID: "some-file-id",
-        reason: `invalid fetch type "error"`
-      }
-    ]);
-    messagePasserMock.mockReset();
-  });
-
   it("sends message back to eval-frame signaling success when the return value of loadFile rejects (server returns error)", async () => {
     loadFileMock.mockImplementation(() => {
       return Promise.reject(new Error("artificial error"));
     });
     const request = store.dispatch(
-      loadFile(
-        "file1.csv",
-        "file-request-id-0",
-        { fetchType: "text" },
-        messagePasserMock
-      )
+      loadFile("file1.csv", "file-request-id-0", messagePasserMock, {
+        fetchType: "text"
+      })
     );
 
     await expect(request).resolves.toBe(undefined);
@@ -119,12 +79,9 @@ describe("loadFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      loadFile(
-        "file1.csv",
-        "file-request-id-0",
-        { fetchType: "text" },
-        messagePasserMock
-      )
+      loadFile("file1.csv", "file-request-id-0", messagePasserMock, {
+        fetchType: "text"
+      })
     );
 
     jest.runAllTicks();
@@ -157,45 +114,15 @@ describe("saveFile (editor action)", () => {
     store = mockStore(initialState());
   });
 
-  it("fails if insufficient arguments go in", () => {
-    expect(() => store.dispatch(saveFile())).toThrowError();
-    expect(() => store.dispatch(saveFile("file1.csv"))).toThrowError();
-    expect(() =>
-      store.dispatch(saveFile("file1.csv", "some-file-request-id"))
-    ).toThrowError();
-  });
-  it("fails if invalid arguments are passed (messagePasser sends message to eval frame)", () => {
-    store.dispatch(
-      saveFile(
-        "file1.csv",
-        "some-file-request-id",
-        { overwrite: false },
-        messagePasserMock
-      )
-    );
-    expect(messagePasserMock).toHaveBeenCalledTimes(1);
-    expect(messagePasserMock.mock.calls[0]).toEqual([
-      "REQUESTED_FILE_OPERATION_ERROR",
-      {
-        fileRequestID: "some-file-request-id",
-        reason: `save: file "file1.csv" already exists`
-      }
-    ]);
-    messagePasserMock.mockReset();
-  });
-
   it("returns error if there was a server error, passing the reason down to the eval frame", async () => {
     saveFileMock.mockImplementation(() => {
       return Promise.reject(new Error("artificial-error"));
     });
 
     const request = store.dispatch(
-      saveFile(
-        "new-data.csv",
-        "file-request-id-0",
-        { overwrite: true },
-        messagePasserMock
-      )
+      saveFile("new-data.csv", "file-request-id-0", messagePasserMock, {
+        overwrite: true
+      })
     );
 
     await expect(request).resolves.toBe(undefined);
@@ -221,12 +148,9 @@ describe("saveFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      saveFile(
-        "new-data.csv",
-        "file-request-id-0",
-        { overwrite: true },
-        messagePasserMock
-      )
+      saveFile("new-data.csv", "file-request-id-0", messagePasserMock, {
+        overwrite: true
+      })
     );
 
     await expect(request).resolves.toBe(undefined);
@@ -261,22 +185,11 @@ describe("deleteFile (editor action)", () => {
     store = mockStore(initialState());
   });
 
-  it("fails if insufficent arguments are passed in", () => {
-    expect(() => store.dispatch(deleteFile())).toThrowError();
-    expect(() => store.dispatch(deleteFile("test.csv"))).toThrowError();
-    expect(() =>
-      store.dispatch(deleteFile("test.csv", "some-id"))
-    ).toThrowError();
-    expect(() =>
-      store.dispatch(deleteFile("test.csv", "some-id", undefined))
-    ).toThrowError();
-  });
   it("fails if invalid arguments are passed in", () => {
     store.dispatch(
       deleteFile(
         "does-not-exist.csv",
         "some-file-request-id",
-        undefined,
         messagePasserMock
       )
     );
@@ -295,7 +208,7 @@ describe("deleteFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      deleteFile("file1.csv", "file-request-id-0", undefined, messagePasserMock)
+      deleteFile("file1.csv", "file-request-id-0", messagePasserMock)
     );
 
     await expect(request).resolves.toBe(undefined);
@@ -316,7 +229,7 @@ describe("deleteFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      deleteFile("file1.csv", "file-request-id-0", undefined, messagePasserMock)
+      deleteFile("file1.csv", "file-request-id-0", messagePasserMock)
     );
 
     await expect(request).resolves.toBe(undefined);

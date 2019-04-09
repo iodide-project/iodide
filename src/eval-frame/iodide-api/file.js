@@ -20,17 +20,19 @@ function confirmIsString(key, argument) {
 function confirmIsStringOrUndefined(key, argument) {
   if (!isString(argument) && argument !== undefined) {
     throw new Error(`
-    ${key} name must be a string or undefined, instead received ${typeof argument}`);
+${key} name must be a string or undefined, instead received ${typeof argument}`);
+  }
+}
+
+function confirmFetchTypeIsReturnable(fetchType) {
+  if (!FETCH_RETURN_TYPES.includes(fetchType)) {
+    throw new Error(`${fetchType} not a returnable fetch type`);
   }
 }
 
 export function connectExists(store) {
   return function exists(fileName) {
-    try {
-      confirmIsString("fileName", fileName);
-    } catch (err) {
-      throw err;
-    }
+    confirmIsString("fileName", fileName);
     const files = getFiles(store.getState());
     return files.map(f => f.filename).includes(fileName);
   };
@@ -44,11 +46,7 @@ export function connectList(store) {
 
 export function connectLastUpdated(store) {
   return function lastUpdated(fileName) {
-    try {
-      confirmIsString("fileName", fileName);
-    } catch (err) {
-      throw err;
-    }
+    confirmIsString("fileName", fileName);
     const files = getFiles(store.getState());
     const thisFile = files.filter(f => f.filename === fileName);
     if (!thisFile.length) throw Error(`fileName ${fileName} does not exist`);
@@ -66,33 +64,22 @@ export function handleResourceLoad(fetchType, variableName) {
 }
 
 export function loadFile(fileName, fetchType, variableName = undefined) {
-  try {
-    confirmIsString("fileName", fileName);
-    confirmIsString("fetchType", fetchType);
-    confirmIsStringOrUndefined("variableName", variableName);
-  } catch (err) {
-    throw err;
-  }
+  confirmIsString("fileName", fileName);
+  confirmIsString("fetchType", fetchType);
+  confirmIsStringOrUndefined("variableName", variableName);
+  confirmFetchTypeIsReturnable(fetchType);
   return sendFileRequestToEditor(fileName, "LOAD_FILE", {
     fetchType
   }).request.then(handleResourceLoad(fetchType, variableName));
 }
 
 export function deleteFile(fileName) {
-  try {
-    confirmIsString("fileName", fileName);
-  } catch (err) {
-    throw err;
-  }
+  confirmIsString("fileName", fileName);
   return sendFileRequestToEditor(fileName, "DELETE_FILE").request;
 }
 
 export function saveFile(data, fileName, saveOptions = DEFAULT_SAVE_OPTIONS) {
-  try {
-    confirmIsString("fileName", fileName);
-  } catch (err) {
-    throw err;
-  }
+  confirmIsString("fileName", fileName);
   return sendFileRequestToEditor(fileName, "SAVE_FILE", {
     ...saveOptions,
     data
