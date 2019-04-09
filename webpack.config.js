@@ -107,7 +107,7 @@ module.exports = env => {
         }
       ]
     },
-    watchOptions: { poll: true },
+    watchOptions: { poll: true, ignored: /node_modules/ },
     plugins: [
       ...plugins,
       new CircularDependencyPlugin({
