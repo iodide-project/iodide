@@ -10,8 +10,10 @@ const mockStore = configureMockStore([thunk]);
 
 const initialState = () => {
   return {
+    userData: { name: "this-user" },
     notebookInfo: {
       connectionMode: "SERVER",
+      username: "this-user",
       files: [
         {
           filename: "file1.csv",

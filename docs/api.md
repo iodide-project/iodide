@@ -12,17 +12,21 @@ tracker](https://github.com/iodide-project/iodide/issues/new).
 The `iodide.file` API provides convenience functions around working with files
 uploaded to the Iodide server in your notebook.
 
-
-
 ### `iodide.file.save(data, fileName[, saveOptions])`
 
 Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises),
-which, when resolved, will signal that `data` was uploaded to the server under
-the filename `fileName`.
+which, when resolved, will signal that `data` was uploaded to the server under the filename
+`fileName`. If the file already exists or `data` is not serializable, the Promise will reject. 
+Because you must own the notebook in order to save files to it, if you do not own a
+notebook and run `iodide.file.save` Iodide will throw an error. As such, we suggest including
+the [`skipRunAll` tag](https://iodide-project.github.io/docs/jsmd/#skiprunall) in the JS chunk
+evaluating `iodide.file.save` so that a user viewing your report does not encounter an error. Take
+a look at the example in the `iodide.file.save` examples section.
 
 `data` (required) is any object or variable in the eval name space. It can be
-anything, really - an array of data, or a csv, or a binary blob.
+anything, really - an array of data, or a csv, or a binary object – as long it is a 
+[supported structured clone type](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm).
 
 `fileName` (required) is a string that represents the file name.
 
@@ -33,7 +37,7 @@ The optional argument `saveOptions` has the following keys:
   subsequent enqueued evaluation (similar to a syntax error).
 
 
-#### `iodide.file.save` patterns
+#### `iodide.file.save` examples
 
 ```javascript
 
@@ -47,7 +51,41 @@ iodide.file.save(csvData, 'cached-data.csv', { overwrite: true })
 
 // iodide.file.save works with ArrayBuffers as well.
 iodide.file.save(new ArrayBuffer(...), 'model-output.bin')
+
+
 ```
+
+Because `iodide.file.save` is only available to a notebook owner, if you are running another user's
+notebook, you will encounter an error message. To prevent this for other users, a common pattern is
+to use `iodide.file.save` to cache some computation for others, then mark the chunk that contains
+`iodide.file.save` as `skipRunAll`. Here is an example:
+
+```javascript
+
+%% js skipRunAll
+// if I own this notebook and manually run this chunk, it will save the computed data.
+// This 
+// If I do not own this notebook and manually run this chunk, it will throw an error.
+// If I do not own this notebook but open this notebook as a report (?viewMode=report)
+// this chunk will be skipped.
+
+fetch('https://...').then((r) => {
+  return r.json()
+}).then((data) => {
+  return calculateAllCorrelations(data) // this is expensive.
+}).then((correlations) => {
+  iodide.save(correlations, 'correlations.txt', {overwrite: true})
+})
+
+%% js
+// this chunk will be the one that loads the cached correlations when the notebook 
+// is opened as a report (that is, all code chunks are evaluated).
+
+iodide.file.load('correlations.txt', 'text', 'correlations')
+
+```
+
+
 
 
 
@@ -79,7 +117,7 @@ not applicable): the variable name in which to load the data, available in the
 browser `window` namespace.
 
 
-#### `iodide.file.load` patterns
+#### `iodide.file.load` examples
 
 ```javascript
 
@@ -104,14 +142,13 @@ iodide.file.load('analysis-helpers.js', 'js')
 ```
 
 
-
 ### `iodide.file.delete(fileName)`
 
 Deletes the file specified by `fileName`. Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
 that when resolved, denotes that the file was deleted on the server.
 
-### `iodide.file.delete` patterns
+### `iodide.file.delete` examples
 
 ```javascript
 // delete all locally cached pngs
@@ -128,7 +165,7 @@ function clearLocalPNGCache() {
 Returns an Array of file names available to the current notebook.
 
 
-#### `iodide.file.list` patterns
+#### `iodide.file.list` examples
 
 ```javascript
 // load each data set and plot it
@@ -155,7 +192,7 @@ will fetch the data, process it using a numb er of steps, and save the output to
 the server.
 
 
-#### `iodide.file.exists` patterns
+#### `iodide.file.exists` examples
 
 The example below loads cached data if it exists on the server, and otherwise
 downloads the larger dataset remotely, processes it, then caches it.
@@ -186,13 +223,12 @@ if (iodide.file.exists(FILENAME)) {
 ```
 
 
-
 ### `iodide.file.lastUpdated(fileName)`
 
 Returns a `Date` object that represents when the file associated with `fileName`
 was last updated.
 
-#### `iodide.file.lastUpdated` patterns
+#### `iodide.file.lastUpdated` examples
 
 ```javascript
 

@@ -61,6 +61,17 @@ export function saveFile(fileName, fileRequestID, metadata, messagePasser) {
   const { data, overwrite } = metadata;
   return async (dispatch, getState) => {
     const state = getState();
+
+    const { username: notebookOwner } = state.notebookInfo;
+    const { name: thisUser } = state.userData;
+
+    if (notebookOwner !== thisUser) {
+      onFileOperationError(fileRequestID, messagePasser)(
+        new Error("only the owner of this notebook can save files")
+      );
+      return undefined;
+    }
+
     const notebookID = getNotebookID(state);
     const fileID = getFileID(state, fileName);
     if (!overwrite && fileExists(fileName, state)) {
