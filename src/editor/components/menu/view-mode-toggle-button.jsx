@@ -11,7 +11,8 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
     buttonText: PropTypes.string.isRequired,
     setViewModeToExplore: PropTypes.func.isRequired,
     setViewModeToReport: PropTypes.func.isRequired,
-    style: PropTypes.object.isRequired
+    style: PropTypes.object.isRequired,
+    tooltipText: PropTypes.string.isRequired
   };
   constructor(props) {
     super(props);

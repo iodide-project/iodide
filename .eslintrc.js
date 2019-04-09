@@ -24,7 +24,6 @@ module.exports = {
     // TODO: The following lints are probably good to have in the long run,
     // but are disabled for now to get to zero lint
     // All component props should have PropTypes
-    "react/prop-types": ["off"],
     "react/no-unused-prop-types": ["off"],
     "react/forbid-prop-types": ["off"],
     "react/require-default-props": ["off"],
@@ -40,10 +39,14 @@ module.exports = {
     // Don't use console.log
     "no-console": ["off"],
     // Prefer default exports
+<<<<<<< HEAD
     "import/prefer-default-export": ["off"],
     "import/no-extraneous-dependencies": [
       "error",
       { devDependencies: ["**/__stories__/*", "**/__tests__/*", "/test/*"] }
     ]
+=======
+    "import/prefer-default-export": ["off"]
+>>>>>>> reinsate propTypes rule, and fix all editor and eval-frame files
   }
 };

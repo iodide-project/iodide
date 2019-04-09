@@ -53,7 +53,8 @@ export class HeaderMessagesUnconnected extends React.Component {
     login: PropTypes.func.isRequired,
     makeCopy: PropTypes.func.isRequired,
     notebookId: PropTypes.number,
-    revisionId: PropTypes.number
+    revisionId: PropTypes.number,
+    connectionModeIsServer: PropTypes.bool
   };
 
   constructor(props) {

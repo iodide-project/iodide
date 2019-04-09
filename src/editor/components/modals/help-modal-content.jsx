@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "react-emotion";
+import PropTypes from "prop-types";
+
 import Footer from "../../../shared/components/footer";
 
 const HelpModalContentContainer = styled("div")`
@@ -19,7 +21,7 @@ const HelpModalContentBody = styled("div")`
   min-height: 100%;
 `;
 
-export default ({ children }) => (
+const HelpModalContent = ({ children }) => (
   <HelpModalContentContainer>
     <InnerModalContainer>
       <HelpModalContentBody>{children}</HelpModalContentBody>
@@ -27,3 +29,10 @@ export default ({ children }) => (
     </InnerModalContainer>
   </HelpModalContentContainer>
 );
+
+HelpModalContent.propTypes.children = PropTypes.oneOfType([
+  PropTypes.arrayOf(PropTypes.node),
+  PropTypes.node
+]);
+
+export default HelpModalContent;

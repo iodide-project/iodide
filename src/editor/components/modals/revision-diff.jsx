@@ -12,9 +12,9 @@ const DiffContainer = styled("div")`
 
 class RevisionDiffUnconnected extends React.Component {
   static propTypes = {
-    gettingRevisionContent: PropTypes.bool,
     currentRevisionContent: PropTypes.string,
-    previousRevisionContent: PropTypes.string
+    previousRevisionContent: PropTypes.string,
+    revisionContentFetchStatus: PropTypes.string.isRequired
   };
 
   render() {

@@ -12,6 +12,9 @@ import {
 } from "../../style/z-index-styles";
 
 class Positioner extends React.Component {
+  static propTypes = {
+    positionerId: PropTypes.string.isRequired
+  };
   render() {
     return (
       <div
@@ -65,7 +68,9 @@ function updateLayoutPositions(layout) {
 
 export class LayoutManagerUnconnected extends React.PureComponent {
   static propTypes = {
-    zIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+    zIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
+    updateLayoutPositions: PropTypes.func.isRequired
   };
 
   constructor(props) {

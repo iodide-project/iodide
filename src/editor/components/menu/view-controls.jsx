@@ -39,6 +39,8 @@ export class ViewControlsUnconnected extends React.Component {
           <HelpOutline />
         </NotebookTaskButton>
         {this.props.isServer && (
+          // FIXME: userment should be its own connected component.
+          // this stuff should not be passed down as props
           <UserMenu
             isAuthenticated={this.props.isAuthenticated}
             loginCallback={tasks.loginGithub.callback}

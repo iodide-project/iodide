@@ -11,7 +11,8 @@ import HistoryModal from "./history-modal";
 
 export class IodideModalRootUnconnected extends React.Component {
   static propTypes = {
-    modalState: PropTypes.string.isRequired
+    modalState: PropTypes.string.isRequired,
+    closeModals: PropTypes.func.isRequired
   };
 
   render() {

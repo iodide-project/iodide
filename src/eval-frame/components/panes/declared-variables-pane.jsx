@@ -10,7 +10,8 @@ import EmptyPaneContents from "./empty-pane-contents";
 export class DeclaredVariablesPaneUnconnected extends React.Component {
   static propTypes = {
     userDefinedVarNames: PropTypes.arrayOf(PropTypes.string),
-    environmentVariables: PropTypes.object
+    environmentVariables: PropTypes.object,
+    paneVisible: PropTypes.bool.isRequired
   };
 
   shouldComponentUpdate(nextProps) {
