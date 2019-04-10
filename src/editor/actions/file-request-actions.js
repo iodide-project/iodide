@@ -9,8 +9,7 @@ import {
   getFileID,
   validateFileExistence,
   validateFileAbsence,
-  validateFetchType,
-  validateFileRequestType
+  validateFetchType
 } from "../tools/server-tools";
 
 function messagePasserIsFunction(passer) {
@@ -140,12 +139,6 @@ export function handleFileRequest(
   metadata,
   messagePasser
 ) {
-  try {
-    validateFileRequestType(requestType);
-  } catch (err) {
-    onFileOperationError(fileRequestID, messagePasser, err);
-  }
-
   return dispatch => {
     let requestAction;
     switch (requestType) {
@@ -162,8 +155,12 @@ export function handleFileRequest(
         break;
       }
       default: {
-        console.error(
-          `an unknown request type got through the validation: ${requestType}`
+        onFileOperationError(
+          fileRequestID,
+          messagePasser,
+          Error(
+            `an unknown request type got through the validation: ${requestType}`
+          )
         );
       }
     }
