@@ -2,10 +2,9 @@
 
 import Mousetrap from "mousetrap";
 import { evalConsoleInput } from "./actions/eval-actions";
-import { saveFile, loadFile, deleteFile } from "./actions/file-request-actions";
+import { handleFileRequest } from "./actions/file-request-actions";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
-import { FILE_REQUEST_TYPES } from "./state-schemas/state-schema";
 
 let portToEvalFrame;
 
@@ -28,41 +27,6 @@ const approvedKeys = [
   "ctrl+shift+right"
 ];
 
-function validateRequestType(requestType) {
-  if (!FILE_REQUEST_TYPES.includes(requestType)) {
-    throw Error(`file operation "${requestType}" not defined`);
-  }
-}
-
-function handleFileRequest(message) {
-  const { requestType } = message;
-  validateRequestType(requestType);
-  const { fileName, fileRequestID, metadata } = message;
-  let requestAction;
-  switch (requestType) {
-    case "LOAD_FILE": {
-      requestAction = loadFile;
-      break;
-    }
-    case "SAVE_FILE": {
-      requestAction = saveFile;
-      break;
-    }
-    case "DELETE_FILE": {
-      requestAction = deleteFile;
-      break;
-    }
-    default: {
-      console.error(
-        `an unknown request type got through the validation: ${requestType}`
-      );
-    }
-  }
-  messagePasserEditor.dispatch(
-    requestAction(fileName, fileRequestID, postMessageToEvalFrame, metadata)
-  );
-}
-
 function receiveMessage(event) {
   const trustedMessage = true;
   if (trustedMessage) {
@@ -82,7 +46,16 @@ function receiveMessage(event) {
         break;
       }
       case "FILE_REQUEST": {
-        handleFileRequest(message);
+        const { requestType, fileName, fileRequestID, metadata } = message;
+        messagePasserEditor.dispatch(
+          handleFileRequest(
+            requestType,
+            fileName,
+            fileRequestID,
+            metadata,
+            postMessageToEvalFrame
+          )
+        );
         break;
       }
       case "AUTOCOMPLETION_SUGGESTIONS": {

@@ -9,7 +9,8 @@ import {
   getFileID,
   validateFileExistence,
   validateFileAbsence,
-  validateFetchType
+  validateFetchType,
+  validateFileRequestType
 } from "../tools/server-tools";
 
 function messagePasserIsFunction(passer) {
@@ -129,5 +130,43 @@ export function deleteFile(fileName, fileRequestID, messagePasser) {
       onFileOperationError(fileRequestID, messagePasser, err);
       return undefined;
     }
+  };
+}
+
+export function handleFileRequest(
+  requestType,
+  fileName,
+  fileRequestID,
+  metadata,
+  messagePasser
+) {
+  try {
+    validateFileRequestType(requestType);
+  } catch (err) {
+    onFileOperationError(fileRequestID, messagePasser, err);
+  }
+
+  return dispatch => {
+    let requestAction;
+    switch (requestType) {
+      case "LOAD_FILE": {
+        requestAction = loadFile;
+        break;
+      }
+      case "SAVE_FILE": {
+        requestAction = saveFile;
+        break;
+      }
+      case "DELETE_FILE": {
+        requestAction = deleteFile;
+        break;
+      }
+      default: {
+        console.error(
+          `an unknown request type got through the validation: ${requestType}`
+        );
+      }
+    }
+    dispatch(requestAction(fileName, fileRequestID, messagePasser, metadata));
   };
 }
