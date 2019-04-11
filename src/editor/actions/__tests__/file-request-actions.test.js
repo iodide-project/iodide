@@ -3,6 +3,7 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import * as FILE_OPS from "../../../shared/utils/file-operations";
+import * as CALLBACKS from "../file-request-callbacks";
 
 import { saveFile, loadFile, deleteFile } from "../file-request-actions";
 
@@ -39,13 +40,17 @@ jest.useFakeTimers();
 
 describe("loadFile (editor action)", () => {
   let loadFileMock;
-  let messagePasserMock;
+  let successMock;
+  let errorMock;
   let store;
 
   beforeEach(() => {
-    messagePasserMock = jest.fn();
     loadFileMock = jest.spyOn(FILE_OPS, "loadFileFromServer");
     loadFileMock.mockReset();
+    successMock = jest.spyOn(CALLBACKS, "onFileOperationSuccess");
+    successMock.mockReset();
+    errorMock = jest.spyOn(CALLBACKS, "onFileOperationError");
+    errorMock.mockReset();
     store = mockStore(initialState());
   });
 
@@ -54,23 +59,15 @@ describe("loadFile (editor action)", () => {
       return Promise.reject(new Error("artificial error"));
     });
     const request = store.dispatch(
-      loadFile("file1.csv", "file-request-id-0", messagePasserMock, {
+      loadFile("file1.csv", "file-request-id-0", {
         fetchType: "text"
       })
     );
 
     await expect(request).resolves.toBe(undefined);
-
     expect(loadFileMock).toHaveBeenCalledTimes(1);
-
     expect(store.getActions()).toEqual([]);
-
-    expect(messagePasserMock).toHaveBeenCalledTimes(1);
-
-    expect(messagePasserMock.mock.calls[0]).toEqual([
-      "REQUESTED_FILE_OPERATION_ERROR",
-      { fileRequestID: "file-request-id-0", reason: "artificial error" }
-    ]);
+    expect(errorMock).toHaveBeenCalledTimes(1);
   });
 
   it("sends message back to eval-frame signaling success when the return value of loadFile resolves (server returns success)", async () => {
@@ -79,7 +76,7 @@ describe("loadFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      loadFile("file1.csv", "file-request-id-0", messagePasserMock, {
+      loadFile("file1.csv", "file-request-id-0", {
         fetchType: "text"
       })
     );
@@ -87,55 +84,38 @@ describe("loadFile (editor action)", () => {
     jest.runAllTicks();
 
     await expect(request).resolves.toBe(undefined);
-
     expect(loadFileMock).toHaveBeenCalledTimes(1);
-
-    expect(messagePasserMock).toHaveBeenCalledTimes(1);
-
-    expect(messagePasserMock.mock.calls[0]).toEqual([
-      "REQUESTED_FILE_OPERATION_SUCCESS",
-      {
-        response: "loaded-file-contents",
-        fileRequestID: "file-request-id-0"
-      }
-    ]);
+    expect(successMock).toHaveBeenCalledTimes(1);
   });
 });
 
 describe("saveFile (editor action)", () => {
   let saveFileMock;
-  let messagePasserMock;
+  let successMock;
+  let errorMock;
   let store;
 
   beforeEach(() => {
-    messagePasserMock = jest.fn();
     saveFileMock = jest.spyOn(FILE_OPS, "saveFileToServer");
     saveFileMock.mockReset();
+    successMock = jest.spyOn(CALLBACKS, "onFileOperationSuccess");
+    successMock.mockReset();
+    errorMock = jest.spyOn(CALLBACKS, "onFileOperationError");
+    errorMock.mockReset();
     store = mockStore(initialState());
   });
 
   it("returns error if there was a server error, passing the reason down to the eval frame", async () => {
-    saveFileMock.mockImplementation(() => {
-      return Promise.reject(new Error("artificial-error"));
-    });
-
     const request = store.dispatch(
-      saveFile("new-data.csv", "file-request-id-0", messagePasserMock, {
+      saveFile("new-data.csv", "file-request-id-0", {
         overwrite: true
       })
     );
 
     await expect(request).resolves.toBe(undefined);
-
     expect(saveFileMock).toHaveBeenCalledTimes(1);
-
     expect(store.getActions()).toEqual([]);
-
-    expect(messagePasserMock).toHaveBeenCalledTimes(1);
-    expect(messagePasserMock.mock.calls[0]).toEqual([
-      "REQUESTED_FILE_OPERATION_ERROR",
-      { reason: "artificial-error", fileRequestID: "file-request-id-0" }
-    ]);
+    expect(errorMock).toHaveBeenCalledTimes(1);
   });
 
   it("successfully calls saveFileToServer & dispatches ADD_FILE_TO_NOTEBOOK", async () => {
@@ -148,7 +128,7 @@ describe("saveFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      saveFile("new-data.csv", "file-request-id-0", messagePasserMock, {
+      saveFile("new-data.csv", "file-request-id-0", {
         overwrite: true
       })
     );
@@ -165,41 +145,29 @@ describe("saveFile (editor action)", () => {
         fileID: 0
       }
     ]);
-    expect(messagePasserMock).toHaveBeenCalledTimes(1);
-    expect(messagePasserMock.mock.calls[0]).toEqual([
-      "REQUESTED_FILE_OPERATION_SUCCESS",
-      { response: undefined, fileRequestID: "file-request-id-0" }
-    ]);
+    expect(successMock).toHaveBeenCalledTimes(1);
   });
 });
 
 describe("deleteFile (editor action)", () => {
   let deleteFileMock;
-  let messagePasserMock;
+  let successMock;
+  let errorMock;
   let store;
 
   beforeEach(() => {
-    messagePasserMock = jest.fn();
     deleteFileMock = jest.spyOn(FILE_OPS, "deleteFileOnServer");
     deleteFileMock.mockReset();
+    successMock = jest.spyOn(CALLBACKS, "onFileOperationSuccess");
+    successMock.mockReset();
+    errorMock = jest.spyOn(CALLBACKS, "onFileOperationError");
+    errorMock.mockReset();
     store = mockStore(initialState());
   });
 
   it("fails if invalid arguments are passed in", () => {
-    store.dispatch(
-      deleteFile(
-        "does-not-exist.csv",
-        "some-file-request-id",
-        messagePasserMock
-      )
-    );
-    expect(messagePasserMock.mock.calls[0]).toEqual([
-      "REQUESTED_FILE_OPERATION_ERROR",
-      {
-        fileRequestID: "some-file-request-id",
-        reason: 'delete: file "does-not-exist.csv" does not exist'
-      }
-    ]);
+    store.dispatch(deleteFile("does-not-exist.csv", "some-file-request-id"));
+    expect(errorMock).toHaveBeenCalledTimes(1);
   });
 
   it("successfully handles a server error on deleteFileFromServer and sends the appropriate message back to the eval frame", async () => {
@@ -208,7 +176,7 @@ describe("deleteFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      deleteFile("file1.csv", "file-request-id-0", messagePasserMock)
+      deleteFile("file1.csv", "file-request-id-0")
     );
 
     await expect(request).resolves.toBe(undefined);
@@ -216,11 +184,7 @@ describe("deleteFile (editor action)", () => {
 
     expect(store.getActions()).toEqual([]);
 
-    expect(messagePasserMock).toHaveBeenCalledTimes(1);
-    expect(messagePasserMock.mock.calls[0]).toEqual([
-      "REQUESTED_FILE_OPERATION_ERROR",
-      { reason: "artificial error", fileRequestID: "file-request-id-0" }
-    ]);
+    expect(errorMock).toHaveBeenCalledTimes(1);
   });
 
   it("successfully calls deleteFileFromServer & dispatches DELETE_FILE_FROM_NOTEBOOK", async () => {
@@ -229,7 +193,7 @@ describe("deleteFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      deleteFile("file1.csv", "file-request-id-0", messagePasserMock)
+      deleteFile("file1.csv", "file-request-id-0")
     );
 
     await expect(request).resolves.toBe(undefined);
@@ -242,10 +206,6 @@ describe("deleteFile (editor action)", () => {
       }
     ]);
 
-    expect(messagePasserMock).toHaveBeenCalledTimes(1);
-    expect(messagePasserMock.mock.calls[0]).toEqual([
-      "REQUESTED_FILE_OPERATION_SUCCESS",
-      { response: undefined, fileRequestID: "file-request-id-0" }
-    ]);
+    expect(successMock).toHaveBeenCalledTimes(1);
   });
 });

@@ -35,7 +35,6 @@ export class MessagePasser {
 
   connectPostMessage(postMessage) {
     this.postMessageQueueManager.addMsgFn(postMessage);
-    // this.postMessage =
   }
   connectDispatch(dispatch) {
     this.dispatchQueueManager.addMsgFn(dispatch);
