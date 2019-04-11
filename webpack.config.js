@@ -11,7 +11,7 @@ const CircularDependencyPlugin = require("circular-dependency-plugin");
 const UnusedWebpackPlugin = require("unused-webpack-plugin");
 const _ = require("lodash");
 
-const MAX_CYCLES = 3;
+const MAX_CYCLES = 4;
 let numCyclesDetected = 0;
 
 const reduxLogMode =
