@@ -2,8 +2,8 @@ import { languageDefinitions } from "./language-definitions";
 
 export const NONCODE_EVAL_TYPES = ["css", "md", "meta", "raw"];
 export const RUNNABLE_CHUNK_TYPES = ["plugin", "fetch"];
-export const FETCH_TYPES = ["css", "js", "text", "blob", "json"];
-export const FETCH_RETURN_TYPES = ["text", "blob", "json"];
+export const FETCH_CHUNK_TYPES = ["css", "js", "text", "blob", "json"];
+export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json"];
 
 const appMessageSchema = {
   type: "object",

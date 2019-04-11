@@ -2,7 +2,7 @@ import { getState as reduxStoreGetState } from "../store";
 import { getFiles } from "../../editor/tools/server-tools";
 import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
 import IodideAPIError from "./iodide-api-error";
-import { FETCH_RETURN_TYPES } from "../../editor/state-schemas/state-schema";
+import { IODIDE_API_LOAD_TYPES } from "../../editor/state-schemas/state-schema";
 
 const DEFAULT_SAVE_OPTIONS = { overwrite: false };
 
@@ -25,8 +25,8 @@ ${key} name must be a string or undefined, instead received ${typeof argument}`)
   }
 }
 
-function confirmFetchTypeIsReturnable(fetchType) {
-  if (!FETCH_RETURN_TYPES.includes(fetchType)) {
+function confirmFetchTypeIsValid(fetchType) {
+  if (!IODIDE_API_LOAD_TYPES.includes(fetchType)) {
     throw new IodideAPIError(`${fetchType} not a returnable fetch type`);
   }
 }
@@ -60,7 +60,7 @@ export async function loadFile(fileName, fetchType, variableName = undefined) {
   confirmIsString("fileName", fileName);
   confirmIsString("fetchType", fetchType);
   confirmIsStringOrUndefined("variableName", variableName);
-  confirmFetchTypeIsReturnable(fetchType);
+  confirmFetchTypeIsValid(fetchType);
   const file = await sendFileRequestToEditor(fileName, "LOAD_FILE", {
     fetchType
   });
