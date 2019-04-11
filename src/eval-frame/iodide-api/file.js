@@ -1,6 +1,7 @@
 import { getState as reduxStoreGetState } from "../store";
 import { getFiles } from "../../editor/tools/server-tools";
 import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
+import IodideAPIError from "./iodide-api-error";
 import { FETCH_RETURN_TYPES } from "../../editor/state-schemas/state-schema";
 
 const DEFAULT_SAVE_OPTIONS = { overwrite: false };
@@ -11,7 +12,7 @@ function isString(argument) {
 
 function confirmIsString(key, argument) {
   if (!isString(argument)) {
-    throw new Error(
+    throw new IodideAPIError(
       `${key} name must be a string, instead received ${typeof argument}`
     );
   }
@@ -19,14 +20,14 @@ function confirmIsString(key, argument) {
 
 function confirmIsStringOrUndefined(key, argument) {
   if (!isString(argument) && argument !== undefined) {
-    throw new Error(`
+    throw new IodideAPIError(`
 ${key} name must be a string or undefined, instead received ${typeof argument}`);
   }
 }
 
 function confirmFetchTypeIsReturnable(fetchType) {
   if (!FETCH_RETURN_TYPES.includes(fetchType)) {
-    throw new Error(`${fetchType} not a returnable fetch type`);
+    throw new IodideAPIError(`${fetchType} not a returnable fetch type`);
   }
 }
 
@@ -49,7 +50,8 @@ export function connectLastUpdated(getState) {
     confirmIsString("fileName", fileName);
     const files = getFiles(getState());
     const thisFile = files.filter(f => f.filename === fileName);
-    if (!thisFile.length) throw Error(`fileName ${fileName} does not exist`);
+    if (!thisFile.length)
+      throw new IodideAPIError(`fileName ${fileName} does not exist`);
     return new Date(thisFile[0].lastUpdated);
   };
 }

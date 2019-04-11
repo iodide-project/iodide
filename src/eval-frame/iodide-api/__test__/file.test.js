@@ -7,6 +7,7 @@ import {
   connectList,
   connectLastUpdated
 } from "../file";
+import IodideAPIError from "../iodide-api-error";
 
 const mockStore = () => ({
   getState() {
@@ -63,23 +64,25 @@ describe("iodide.file.lastUpdated", () => {
   const store = mockStore();
   const lastUpdated = connectLastUpdated(store.getState);
   it("throws if something other than a string is passed in", () => {
-    expect(() => lastUpdated()).toThrow();
-    expect(() => lastUpdated(12345)).toThrow();
-    expect(() => lastUpdated(new Date())).toThrow();
+    expect(() => lastUpdated()).toThrowError(IodideAPIError);
+    expect(() => lastUpdated(12345)).toThrowError(IodideAPIError);
+    expect(() => lastUpdated(new Date())).toThrowError(IodideAPIError);
   });
   it("Date object if file exists, throws if the file does not exist", () => {
     expect(lastUpdated("file1.csv")).toEqual(
       new Date(store.getState().notebookInfo.files[0].lastUpdated)
     );
-    expect(() => lastUpdated("nonexistant-file.arrow")).toThrowError();
+    expect(() => lastUpdated("nonexistant-file.arrow")).toThrowError(
+      IodideAPIError
+    );
   });
 });
 
 describe("iodide.file.save (saveFile)", () => {
   it("throws errors if you have the incorrect argument types", () => {
-    expect(() => saveFile()).toThrowError();
-    expect(() => saveFile(12345)).toThrowError();
-    expect(() => saveFile(12345, new Date())).toThrowError();
+    expect(() => saveFile()).toThrowError(IodideAPIError);
+    expect(() => saveFile(12345)).toThrowError(IodideAPIError);
+    expect(() => saveFile(12345, new Date())).toThrowError(IodideAPIError);
   });
   it("returns a Promise", () => {
     const request = saveFile(12345, "test.csv");
@@ -118,9 +121,9 @@ describe("handleResourceLoad", () => {
 
 describe("iodide.file.load (loadFile)", () => {
   it("throws errors if you have the incorrect argument types", () => {
-    expect(() => loadFile()).toThrowError();
-    expect(() => loadFile(12345, 12345)).toThrowError();
-    expect(() => loadFile(12345, 12345, 12345)).toThrowError();
+    expect(() => loadFile()).toThrowError(IodideAPIError);
+    expect(() => loadFile(12345, 12345)).toThrowError(IodideAPIError);
+    expect(() => loadFile(12345, 12345, 12345)).toThrowError(IodideAPIError);
   });
   it("returns a Promise", () => {
     const request = loadFile("test.csv", "text", "variableName");
@@ -130,8 +133,8 @@ describe("iodide.file.load (loadFile)", () => {
 
 describe("iodide.file.delete (deleteFile)", () => {
   it("throws errors if you have the incorrect argument types", () => {
-    expect(() => deleteFile()).toThrowError();
-    expect(() => deleteFile(new Date())).toThrowError();
+    expect(() => deleteFile()).toThrowError(IodideAPIError);
+    expect(() => deleteFile(new Date())).toThrowError(IodideAPIError);
   });
   it("returns a Promise", () => {
     const request = deleteFile("test.csv");
