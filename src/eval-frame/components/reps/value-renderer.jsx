@@ -10,10 +10,10 @@ import { isRowDf } from "./rep-utils/rep-type-chooser";
 
 function repChooser(value) {
   if (UserReps.getUserRepIfAvailable(value)) {
-    return "GLOBAL_USER_RENDERER";
+    return "USER_REGISTERED_RENDERER";
   }
   if (value && value.iodideRender instanceof Function) {
-    return "OBJECT_USER_RENDER_METHOD";
+    return "IODIDERENDER_METHOD_ON_OBJECT";
   }
   if (value instanceof Error) {
     return "ERROR_REP";
@@ -59,11 +59,11 @@ export default class ValueRenderer extends React.Component {
     }
     const repType = repChooser(value);
     switch (repType) {
-      case "GLOBAL_USER_RENDERER": {
+      case "USER_REGISTERED_RENDERER": {
         const htmlString = UserReps.getUserRepIfAvailable(value);
         return <HTMLHandler htmlString={htmlString} />;
       }
-      case "OBJECT_USER_RENDER_METHOD":
+      case "IODIDERENDER_METHOD_ON_OBJECT":
         return <HTMLHandler htmlString={value.iodideRender()} />;
       case "ERROR_REP":
         return <ErrorRenderer error={value} />;

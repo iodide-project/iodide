@@ -6,7 +6,7 @@ import styled from "react-emotion";
 
 import "./react-table-styles.css";
 
-import { tinyRepSerializer } from "./rep-utils/tiny-rep-serializer";
+import { serializeForTinyRep } from "./rep-utils/tiny-rep-serializer";
 
 import DefaultRenderer from "./default-handler";
 import TinyRep from "./tiny-rep";
@@ -42,18 +42,18 @@ const CellDetails = props => {
   );
 };
 CellDetails.propTypes = {
-  value: PropTypes.any.isRequired,
+  value: PropTypes.any,
   focusedRow: PropTypes.number,
   focusedCol: PropTypes.string
 };
 
 class CellRenderer extends React.Component {
   static propTypes = {
-    value: PropTypes.any.isRequired,
+    value: PropTypes.any,
     cellIsFocused: PropTypes.bool.isRequired
   };
   render() {
-    // return <TinyRep serializedObj={tinyRepSerializer(this.props.value)} />;
+    // return <TinyRep serializedObj={serializeForTinyRep(this.props.value)} />;
     return (
       <div
         style={{
@@ -65,7 +65,7 @@ class CellRenderer extends React.Component {
             : "none"
         }}
       >
-        <TinyRep serializedObj={tinyRepSerializer(this.props.value)} />
+        <TinyRep serializedObj={serializeForTinyRep(this.props.value)} />
       </div>
     );
   }

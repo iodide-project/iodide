@@ -37,7 +37,7 @@ const ObjectRep = ({ objClass, size }) => (
 const Sep = RepBaseStyledSpan(separatorColor);
 const Ell = RepBaseStyledSpan(ellipsisColor);
 const StringSpan = RepBaseStyledSpan(stringColor);
-const QuotedStringRep = (lQuote, rQuote) => ({
+const createQuotedStringRep = (lQuote, rQuote) => ({
   size,
   stringValue,
   isTruncated
@@ -51,8 +51,8 @@ const QuotedStringRep = (lQuote, rQuote) => ({
   </span>
 );
 
-const StringRep = QuotedStringRep('"', '"');
-const RegexRep = QuotedStringRep("/", "/");
+const StringRep = createQuotedStringRep('"', '"');
+const RegexRep = createQuotedStringRep("/", "/");
 
 const SymbolSpan = RepBaseStyledSpan(symbolColor);
 const SymbolRep = ({ stringValue, isTruncated }) => (

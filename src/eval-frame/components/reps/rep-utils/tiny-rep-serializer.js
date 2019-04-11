@@ -12,23 +12,28 @@ export const getType = obj =>
 
 const typesWithLength = [
   "Array",
+
   "String",
+
   "Int8Array",
+  "Int16Array",
+  "Int32Array",
+
   "Uint8Array",
   "Uint8ClampedArray",
-  "Int16Array",
   "Uint16Array",
-  "Int32Array",
   "Uint32Array",
+
   "Float32Array",
   "Float64Array",
+
   "Function",
   "GeneratorFunction"
 ];
 
 const typesWithByteLength = ["ArrayBuffer", "DataView"];
 
-const typesWithSize = ["Map", "Set"];
+const typesWithSize = ["Map", "Set", "Blob"];
 
 export function objSize(obj) {
   if (obj === null) return undefined;
@@ -68,7 +73,7 @@ export function tinyRepStringify(obj) {
   return truncateString(stringVal);
 }
 
-export function tinyRepSerializer(obj) {
+export function serializeForTinyRep(obj) {
   const [stringValue, isTruncated] = tinyRepStringify(obj);
   return {
     objClass: getClass(obj),

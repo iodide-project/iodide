@@ -263,6 +263,13 @@ export const rowTableFails = {
     .map((x, i) => ({ [`key_${i % 2}`]: i, b: i, c: i }))
 };
 
+// ==================== blobs
+
+export const blobObjects = {
+  blob_fromJson: new Blob([JSON.stringify({ hello: "world" }, null, 2)], {
+    type: "application/json"
+  })
+};
 // ==================== tests
 
 export const allCases = Object.assign(
@@ -279,5 +286,6 @@ export const allCases = Object.assign(
   builtInObjectCases,
   promiseCases,
   rowTableCases,
-  rowTableFails
+  rowTableFails,
+  blobObjects
 );

@@ -11,7 +11,7 @@ import {
   rowTableCases
 } from "../__test_helpers__/reps-test-value-cases";
 import {
-  tinyRepSerializer,
+  serializeForTinyRep,
   getClass,
   getType,
   objSize
@@ -51,9 +51,9 @@ allTinyReps.add("all the tiny reps", () => {
           <tr key={name}>
             <td>{name}</td>
             <td>
-              <TinyRep serializedObj={tinyRepSerializer(value)} />
+              <TinyRep serializedObj={serializeForTinyRep(value)} />
             </td>
-            <td>{JSON.stringify(tinyRepSerializer(value))}</td>
+            <td>{JSON.stringify(serializeForTinyRep(value))}</td>
           </tr>
         );
       })}

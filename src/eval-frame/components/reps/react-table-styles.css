@@ -47,4 +47,5 @@
 
 .ReactTable .rt-td {
   padding: 0px;
+  cursor: pointer;
 }
