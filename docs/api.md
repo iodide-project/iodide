@@ -42,20 +42,37 @@ The optional argument `saveOptions` has the following keys:
 
 ```javascript
 
-// upload a csv to the server. Assume the object csvData is an array of objects
-// representing a columnar dataset. This overwrites whatever is in `cached-data.csv`
-// because overwrite is set to true.
+// upload a data set as a csv to the server.
+// For now, we'll use d3.csvFormat (from https://github.com/d3/d3-dsv) to serialize
+// the array of objects.
+// This overwrites whatever is in `cached-data.csv` because overwrite is set to true.
+
+%% fetch 
+
+// first, let's import d3-dsv, which has the d3.csvFormat function.
+
+js: https://cdnjs.cloudflare.com/ajax/libs/d3-dsv/1.0.8/d3-dsv.js
 
 %% js
 
-const csvData = [{x1: 10, x2: 'random string'}, {x1: 20, x2: 'another string'}, ...]
+const data = [{x1: 10, x2: 'random string'}, {x1: 20, x2: 'another string'}];
 
-iodide.file.save(csvData, 'cached-data.csv', { overwrite: true })
+iodide.file.save(d3.csvFormat(data), 'cached-data.csv', { overwrite: true });
+
+%% js
+
+// this will get csv data from the previous example back into your iodide notebook.
+
+iodide.file.load('cached-data.csv', 'text').then((raw) => {
+  const data = d3.csvParse(raw);
+  doSomethingWithTheData(data);
+});
 
 %% js
 
 // iodide.file.save works with ArrayBuffers as well.
-iodide.file.save(new ArrayBuffer(...), 'model-output.bin')
+
+iodide.file.save(new ArrayBuffer(...), 'model-output.bin');
 ```
 
 Because `iodide.file.save` is only available to a notebook owner, if you are running another user's
@@ -66,29 +83,30 @@ to use `iodide.file.save` to cache some computation for others, then mark the ch
 ```javascript
 
 %% js skipRunAll
+
 // if I own this notebook and manually run this chunk, it will save the computed data.
-// This 
 // If I do not own this notebook and manually run this chunk, it will throw an error.
 // If I do not own this notebook but open this notebook as a report (?viewMode=report)
 // this chunk will be skipped.
 
-fetch('https://...').then((r) => {
-  return r.json()
-}).then((data) => {
-  return calculateAllCorrelations(data) // this is expensive.
-}).then((correlations) => {
-  iodide.save(correlations, 'correlations.txt', {overwrite: true})
-})
+fetch('https://...').then((r) => r.json())
+  .then((data) => calculateAllCorrelations(data)) // this is expensive.
+  .then((correlations) => {
+    iodide.save(correlations, 'correlations.txt', {overwrite: true});
+  });
 
 %% js
+
 // this chunk will be the one that loads the cached correlations when the notebook 
 // is opened as a report (that is, all code chunks are evaluated).
 
-iodide.file.load('correlations.txt', 'text', 'correlations')
+iodide.file.load('correlations.txt', 'text', 'correlations');
 
 %% js
+
 // this variable is now available in the namespace
-console.log(correlations)
+
+console.log(correlations);
 ```
 
 
@@ -128,11 +146,12 @@ browser `window` namespace.
 %% js
 
 // load a csv
+
 iodide.file.load('cached-data.csv', 'text').then((rawCSV) => {
-  const processedData = d3.csvParse(rawCSV)
+  const processedData = d3.csvParse(rawCSV);
   // use a plotting library of some sort here:  
-  plotGraph(processedData, ...)
-})
+  plotGraph(processedData, ...);
+});
 
 %% js 
 
@@ -141,7 +160,7 @@ iodide.file.load('gritty.mp4', 'blob', 'gritty').then(() => {
   var urlCreator = window.URL || window.webkitURL;
   var imageUrl = urlCreator.createObjectURL(gritty);
   document.querySelector("#gritty").src = imageUrl;
-})
+});
 
 %% md
 
@@ -151,11 +170,14 @@ iodide.file.load('gritty.mp4', 'blob', 'gritty').then(() => {
 %% js
 
 // let's load a json file, then access it in the next chunk.
-iodide.file.load('query-results.json', 'json', 'queryResults')
+
+iodide.file.load('query-results.json', 'json', 'queryResults');
 
 %% js
 
-var entries = queryResults.rows.map(...)
+// the json file should now be available in the object queryResults.
+
+var entries = queryResults.rows.map(...);
 ```
 
 
@@ -174,11 +196,12 @@ the Promise will reject.
 %% js
 
 // delete all locally cached pngs
+
 function clearLocalPNGCache() {
   iodide.file.list()
     .filter(filename => !filename.includes('.png'))
-    .forEach(iodide.file.delete)
-}
+    .forEach(iodide.file.delete);
+};
 
 %% js
 
@@ -187,7 +210,7 @@ function clearLocalPNGCache() {
 iodide.file.delete('old-dataset.txt')
   .catch(err => {
   return `well, that didn't work: ${err.message}`
-})
+});
 ```
 
 
@@ -203,13 +226,15 @@ Returns an Array of file names available to the current notebook.
 %% js
 
 // load each data set and plot it
+
 const plotRequests = iodide.file.list()
   .filter(f => f.filename.includes('.csv'))
   .map(f => iodide.file.load(f, 'text').then((raw) => {
-    const data = d3.csvParse(raw)
-    genericPlotFunction(data)
-  }))
-Promise.all(plotRequests)
+    const data = d3.csvParse(raw);
+    genericPlotFunction(data);
+  }));
+
+Promise.all(plotRequests);
 ```
 
 
@@ -228,13 +253,13 @@ downloads the larger dataset remotely, processes it, then caches it.
 
 %% js
 
-const FILENAME = 'dataset.csv'
+const FILENAME = 'dataset.csv';
 if (iodide.file.exists(FILENAME)) {
   // since the cached file already exists, let's load it.
   iodide.file.load(FILENAME, 'text', 'evictionsData')
     .then(() => {
-      evictionsData = d3.parseCsv(evictionsData)
-    })
+      evictionsData = d3.parseCsv(evictionsData);
+    });
 } else {
   // if we don't have the cached file, let's go ahead
   // and download the bigger one, manipulate it with some
@@ -245,8 +270,8 @@ if (iodide.file.exists(FILENAME)) {
     .then((r) => r.json())
     .then(processDataAndReduceItsSize)
     .then((finalData) => {
-      evictionsData = finalData
-      return iodide.file.save(evictionsData, 'dataset.csv', d3.csvFormat)
+      evictionsData = finalData;
+      return iodide.file.save(evictionsData, 'dataset.csv', d3.csvFormat);
     })
 }
 ```
@@ -268,7 +293,7 @@ const oldestDate = Math.min(
   ...iodide.file.list()
      .filter(f => f.includes('.csv'))
      .map(iodide.file.lastUpdated)
-)
+);
 ```
 
 
