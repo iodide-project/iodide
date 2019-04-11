@@ -17,7 +17,7 @@ import {
   objSize
 } from "../rep-utils/tiny-rep-serializer";
 
-import tinyRep from "../tiny-reps";
+import TinyRep from "../tiny-rep";
 
 import ValueRenderer from "../value-renderer";
 
@@ -50,7 +50,9 @@ allTinyReps.add("all the tiny reps", () => {
         return (
           <tr key={name}>
             <td>{name}</td>
-            <td>{tinyRep(tinyRepSerializer(value))}</td>
+            <td>
+              <TinyRep serializedObj={tinyRepSerializer(value)} />
+            </td>
             <td>{JSON.stringify(tinyRepSerializer(value))}</td>
           </tr>
         );

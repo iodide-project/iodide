@@ -71,8 +71,8 @@ export function tinyRepStringify(obj) {
 export function tinyRepSerializer(obj) {
   const [stringValue, isTruncated] = tinyRepStringify(obj);
   return {
-    class: getClass(obj),
-    type: getType(obj),
+    objClass: getClass(obj),
+    objType: getType(obj),
     size: objSize(obj),
     stringValue,
     isTruncated

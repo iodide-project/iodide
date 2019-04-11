@@ -44,3 +44,7 @@
 .ReactTable .-pagination .-pageJump input[type="number"] {
   -moz-appearance: textfield;
 }
+
+.ReactTable .rt-td {
+  padding: 0px;
+}
