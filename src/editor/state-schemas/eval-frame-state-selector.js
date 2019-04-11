@@ -16,7 +16,7 @@ const propsToCopy = [
   "savedEnvironment",
   "userDefinedVarNames",
   "viewMode",
-  "notebookInfo"
+  "notebookInfo.files"
 ];
 
 export default function evalFrameStateSelector(state) {
