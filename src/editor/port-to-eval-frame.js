@@ -46,9 +46,9 @@ function receiveMessage(event) {
         break;
       }
       case "FILE_REQUEST": {
-        const { requestType, fileName, fileRequestID, metadata } = message;
+        const { requestType, fileName, fileRequestID, options } = message;
         messagePasserEditor.dispatch(
-          handleFileRequest(requestType, fileName, fileRequestID, metadata)
+          handleFileRequest(requestType, fileName, fileRequestID, options)
         );
         break;
       }

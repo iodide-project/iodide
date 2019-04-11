@@ -6,7 +6,7 @@ export const fileRequests = {};
 export default function sendFileRequestToEditor(
   fileName,
   requestType,
-  metadata,
+  options,
   fileRequestID = generateRandomId()
 ) {
   return new Promise((resolve, reject) => {
@@ -15,7 +15,7 @@ export default function sendFileRequestToEditor(
       fileName,
       requestType,
       fileRequestID,
-      metadata
+      options
     });
   });
 }

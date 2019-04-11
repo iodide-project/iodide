@@ -33,8 +33,7 @@ export function deleteFileFromNotebook(fileID) {
   };
 }
 
-export function saveFile(fileName, fileRequestID, metadata) {
-  const { data, overwrite } = metadata;
+export function saveFile(fileName, fileRequestID, data, overwrite) {
   return async (dispatch, getState) => {
     const state = getState();
 
@@ -78,8 +77,7 @@ export function saveFile(fileName, fileRequestID, metadata) {
   };
 }
 
-export function loadFile(fileName, fileRequestID, metadata) {
-  const { fetchType } = metadata;
+export function loadFile(fileName, fileRequestID, fetchType) {
   return async (_, getState) => {
     try {
       validateFileExistence(fileName, "load", getState());
@@ -113,20 +111,22 @@ export function handleFileRequest(
   requestType,
   fileName,
   fileRequestID,
-  metadata
+  options
 ) {
   return dispatch => {
     switch (requestType) {
       case "LOAD_FILE": {
-        dispatch(loadFile(fileName, fileRequestID, metadata));
+        const { fetchType } = options;
+        dispatch(loadFile(fileName, fileRequestID, fetchType));
         break;
       }
       case "SAVE_FILE": {
-        dispatch(saveFile(fileName, fileRequestID, metadata));
+        const { data, overwrite } = options;
+        dispatch(saveFile(fileName, fileRequestID, data, overwrite));
         break;
       }
       case "DELETE_FILE": {
-        dispatch(deleteFile(fileName, fileRequestID, metadata));
+        dispatch(deleteFile(fileName, fileRequestID));
         break;
       }
       default: {

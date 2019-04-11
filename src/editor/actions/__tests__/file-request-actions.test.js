@@ -59,9 +59,7 @@ describe("loadFile (editor action)", () => {
       return Promise.reject(new Error("artificial error"));
     });
     const request = store.dispatch(
-      loadFile("file1.csv", "file-request-id-0", {
-        fetchType: "text"
-      })
+      loadFile("file1.csv", "file-request-id-0", "text")
     );
 
     await expect(request).resolves.toBe(undefined);
@@ -76,9 +74,7 @@ describe("loadFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      loadFile("file1.csv", "file-request-id-0", {
-        fetchType: "text"
-      })
+      loadFile("file1.csv", "file-request-id-0", "text")
     );
 
     jest.runAllTicks();
@@ -107,9 +103,7 @@ describe("saveFile (editor action)", () => {
 
   it("returns error if there was a server error, passing the reason down to the eval frame", async () => {
     const request = store.dispatch(
-      saveFile("new-data.csv", "file-request-id-0", {
-        overwrite: true
-      })
+      saveFile("new-data.csv", "file-request-id-0", "data", true)
     );
 
     await expect(request).resolves.toBe(undefined);
@@ -128,9 +122,7 @@ describe("saveFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      saveFile("new-data.csv", "file-request-id-0", {
-        overwrite: true
-      })
+      saveFile("new-data.csv", "file-request-id-0", "data", true)
     );
 
     await expect(request).resolves.toBe(undefined);
