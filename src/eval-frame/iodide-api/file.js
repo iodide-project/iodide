@@ -56,31 +56,30 @@ export function connectLastUpdated(getState) {
   };
 }
 
-export function handleResourceLoad(fetchType, variableName) {
-  return file => {
-    if (FETCH_RETURN_TYPES.includes(fetchType) && variableName) {
-      window[variableName] = file;
-    }
-    return file;
-  };
-}
-
-export function loadFile(fileName, fetchType, variableName = undefined) {
+export async function loadFile(fileName, fetchType, variableName = undefined) {
   confirmIsString("fileName", fileName);
   confirmIsString("fetchType", fetchType);
   confirmIsStringOrUndefined("variableName", variableName);
   confirmFetchTypeIsReturnable(fetchType);
-  return sendFileRequestToEditor(fileName, "LOAD_FILE", {
+  const file = await sendFileRequestToEditor(fileName, "LOAD_FILE", {
     fetchType
-  }).then(handleResourceLoad(fetchType, variableName));
+  });
+  if (variableName !== undefined) {
+    window[variableName] = file;
+  }
+  return file;
 }
 
-export function deleteFile(fileName) {
+export async function deleteFile(fileName) {
   confirmIsString("fileName", fileName);
   return sendFileRequestToEditor(fileName, "DELETE_FILE");
 }
 
-export function saveFile(data, fileName, saveOptions = DEFAULT_SAVE_OPTIONS) {
+export async function saveFile(
+  data,
+  fileName,
+  saveOptions = DEFAULT_SAVE_OPTIONS
+) {
   confirmIsString("fileName", fileName);
   return sendFileRequestToEditor(fileName, "SAVE_FILE", {
     ...saveOptions,

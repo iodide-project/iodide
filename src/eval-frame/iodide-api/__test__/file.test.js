@@ -2,11 +2,11 @@ import {
   saveFile,
   loadFile,
   deleteFile,
-  handleResourceLoad,
   connectExists,
   connectList,
   connectLastUpdated
 } from "../file";
+import * as SEND_FILE from "../../tools/send-file-request-to-editor";
 import IodideAPIError from "../iodide-api-error";
 
 const mockStore = () => ({
@@ -79,10 +79,12 @@ describe("iodide.file.lastUpdated", () => {
 });
 
 describe("iodide.file.save (saveFile)", () => {
-  it("throws errors if you have the incorrect argument types", () => {
-    expect(() => saveFile()).toThrowError(IodideAPIError);
-    expect(() => saveFile(12345)).toThrowError(IodideAPIError);
-    expect(() => saveFile(12345, new Date())).toThrowError(IodideAPIError);
+  it("throws errors if you have the incorrect argument types", async () => {
+    await expect(saveFile()).rejects.toThrowError(IodideAPIError);
+    await expect(saveFile(12345)).rejects.toThrowError(IodideAPIError);
+    await expect(saveFile(12345, new Date())).rejects.toThrowError(
+      IodideAPIError
+    );
   });
   it("returns a Promise", () => {
     const request = saveFile(12345, "test.csv");
@@ -90,51 +92,77 @@ describe("iodide.file.save (saveFile)", () => {
   });
 });
 
-describe("handleResourceLoad", () => {
-  const testCases = [
-    { input: { fetchType: "css" }, output: undefined },
-    { input: { fetchType: "js" }, output: undefined },
-    {
-      input: { fetchType: "text", varName: "TEXT", value: "text-test" },
-      output: "text-test"
-    },
-    {
-      input: { fetchType: "json", varName: "JSON", value: "json-test" },
-      output: "json-test"
-    },
-    {
-      input: { fetchType: "blob", varName: "BLOB", value: "blob-test" },
-      output: "blob-test"
-    }
-  ];
-
-  it("adds the variable if of the proper fetchType", () => {
-    testCases.forEach(testCase => {
-      handleResourceLoad(testCase.input.fetchType, testCase.input.varName)(
-        testCase.input.value
-      );
-      // NB: window is global in jest tests.
-      expect(global[testCase.input.varName]).toBe(testCase.output);
-    });
-  });
-});
-
 describe("iodide.file.load (loadFile)", () => {
-  it("throws errors if you have the incorrect argument types", () => {
-    expect(() => loadFile()).toThrowError(IodideAPIError);
-    expect(() => loadFile(12345, 12345)).toThrowError(IodideAPIError);
-    expect(() => loadFile(12345, 12345, 12345)).toThrowError(IodideAPIError);
+  it("throws errors if you have the incorrect argument types", async () => {
+    await expect(loadFile()).rejects.toThrowError(IodideAPIError);
+    await expect(loadFile(12345, 12345)).rejects.toThrowError(IodideAPIError);
+    await expect(loadFile(12345, 12345, 12345)).rejects.toThrowError(
+      IodideAPIError
+    );
   });
   it("returns a Promise", () => {
     const request = loadFile("test.csv", "text", "variableName");
     expect(request instanceof Promise).toBeTruthy();
   });
+  it("sets window[variableName] if variableName is declared", async () => {
+    const testCases = [
+      {
+        input: {
+          fetchType: "text",
+          varName: "TEXT",
+          value: "text-test-declared"
+        },
+        output: "text-test-declared"
+      },
+      {
+        input: {
+          fetchType: "json",
+          varName: "JSON",
+          value: "json-test-declared"
+        },
+        output: "json-test-declared"
+      },
+      {
+        input: {
+          fetchType: "blob",
+          varName: "BLOB",
+          value: "blob-test-declared"
+        },
+        output: "blob-test-declared"
+      },
+      {
+        input: { fetchType: "text", value: "text-test" },
+        output: undefined
+      },
+      {
+        input: { fetchType: "json", value: "json-test" },
+        output: "yes"
+      },
+      {
+        input: { fetchType: "blob", value: "blob-test" },
+        output: undefined
+      }
+    ];
+    let sendFileMock;
+    testCases.forEach(async ({ input, output }) => {
+      sendFileMock = jest.spyOn(SEND_FILE, "default");
+      sendFileMock.mockImplementation(() => {
+        return Promise.resolve(input.value);
+      });
+      await loadFile("file1.csv", input.fetchType, input.varName);
+      expect(window[input.varName]).toBe(output);
+      sendFileMock.mockReset();
+      if (input.varName) {
+        delete window[input.varName];
+      }
+    });
+  });
 });
 
 describe("iodide.file.delete (deleteFile)", () => {
-  it("throws errors if you have the incorrect argument types", () => {
-    expect(() => deleteFile()).toThrowError(IodideAPIError);
-    expect(() => deleteFile(new Date())).toThrowError(IodideAPIError);
+  it("throws errors if you have the incorrect argument types", async () => {
+    await expect(deleteFile()).rejects.toThrowError(IodideAPIError);
+    await expect(deleteFile(new Date())).rejects.toThrowError(IodideAPIError);
   });
   it("returns a Promise", () => {
     const request = deleteFile("test.csv");
