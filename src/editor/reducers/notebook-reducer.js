@@ -217,7 +217,7 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "ADD_FILE_TO_NOTEBOOK": {
       const { filename, lastUpdated, fileID } = action;
-      const { files } = state.notebookInfo;
+      const files = state.notebookInfo.files.map(f => Object.assign({}, f));
       if (!files.map(f => f.filename).includes(filename))
         files.push({
           filename,
@@ -237,7 +237,7 @@ const notebookReducer = (state = newNotebook(), action) => {
       const { fileID } = action;
       const { files } = state.notebookInfo;
       const notebookInfo = Object.assign({}, state.notebookInfo, {
-        files: files.filter(f => f.id !== fileID)
+        files: files.filter(f => f.id !== fileID).map(f => Object.assign({}, f))
       });
       return Object.assign({}, state, { notebookInfo });
     }
