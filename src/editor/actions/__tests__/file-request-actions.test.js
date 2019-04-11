@@ -165,7 +165,7 @@ describe("deleteFile (editor action)", () => {
     store = mockStore(initialState());
   });
 
-  it("fails if invalid arguments are passed in", () => {
+  it("fails if attempting to delete a non-existent file", () => {
     store.dispatch(deleteFile("does-not-exist.csv", "some-file-request-id"));
     expect(errorMock).toHaveBeenCalledTimes(1);
   });
