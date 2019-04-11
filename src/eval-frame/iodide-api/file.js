@@ -70,12 +70,12 @@ export function loadFile(fileName, fetchType, variableName = undefined) {
   confirmFetchTypeIsReturnable(fetchType);
   return sendFileRequestToEditor(fileName, "LOAD_FILE", {
     fetchType
-  }).request.then(handleResourceLoad(fetchType, variableName));
+  }).then(handleResourceLoad(fetchType, variableName));
 }
 
 export function deleteFile(fileName) {
   confirmIsString("fileName", fileName);
-  return sendFileRequestToEditor(fileName, "DELETE_FILE").request;
+  return sendFileRequestToEditor(fileName, "DELETE_FILE");
 }
 
 export function saveFile(data, fileName, saveOptions = DEFAULT_SAVE_OPTIONS) {
@@ -83,7 +83,7 @@ export function saveFile(data, fileName, saveOptions = DEFAULT_SAVE_OPTIONS) {
   return sendFileRequestToEditor(fileName, "SAVE_FILE", {
     ...saveOptions,
     data
-  }).request;
+  });
 }
 
 export const file = {

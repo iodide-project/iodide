@@ -85,7 +85,7 @@ export async function handleFetch(fetchInfo) {
           extractFileNameFromLocalFilePath(filepath),
           "LOAD_FILE",
           { fetchType }
-        ).request;
+        );
       }
     : fetchLocally;
   try {

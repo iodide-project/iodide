@@ -37,10 +37,12 @@ describe("sendFileRequestToEditor integration tests", () => {
   });
   it("returns a Promise that resolves to value when onParentContextFileRequestSuccess is called", async () => {
     const FIRST_FILE = "tf1";
-    const { request, fileRequestID } = sendFileRequestToEditor(
+    const fileRequestID = "some-id";
+    const request = sendFileRequestToEditor(
       FIRST_FILE,
       "LOAD_FILE",
-      {}
+      {},
+      fileRequestID
     );
     jest.runAllTicks();
     onParentContextFileRequestSuccess("test-contents", fileRequestID);
@@ -48,10 +50,12 @@ describe("sendFileRequestToEditor integration tests", () => {
   });
   it("returns a Promise that resolves to the error message when onParentContextFileRequestError is called", async () => {
     const FIRST_FILE = "tf1";
-    const { request, fileRequestID } = sendFileRequestToEditor(
+    const fileRequestID = "another-id";
+    const request = sendFileRequestToEditor(
       FIRST_FILE,
       "SAVE_FILE",
-      () => {}
+      {},
+      fileRequestID
     );
     jest.runAllTicks();
     onParentContextFileRequestError("error-message", fileRequestID);

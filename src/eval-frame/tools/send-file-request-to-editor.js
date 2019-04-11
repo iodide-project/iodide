@@ -6,23 +6,18 @@ export const fileRequests = {};
 export default function sendFileRequestToEditor(
   fileName,
   requestType,
-  metadata
+  metadata,
+  fileRequestID = generateRandomId()
 ) {
-  const fileRequestID = generateRandomId();
-  return {
-    fileRequestID,
-    request: new Promise((resolve, reject) => {
-      fileRequests[fileRequestID] = { resolve, reject };
-      messagePasserEval.postMessage("FILE_REQUEST", {
-        fileName,
-        requestType,
-        fileRequestID,
-        metadata
-      });
-    }).catch(err => {
-      throw err;
-    })
-  };
+  return new Promise((resolve, reject) => {
+    fileRequests[fileRequestID] = { resolve, reject };
+    messagePasserEval.postMessage("FILE_REQUEST", {
+      fileName,
+      requestType,
+      fileRequestID,
+      metadata
+    });
+  });
 }
 
 export function onParentContextFileRequestSuccess(
