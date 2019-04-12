@@ -53,13 +53,12 @@ class CellRenderer extends React.Component {
     cellIsFocused: PropTypes.bool.isRequired
   };
   render() {
-    // return <TinyRep serializedObj={serializeForTinyRep(this.props.value)} />;
     return (
       <div
         style={{
           width: "100%",
           height: "100%",
-          padding: "1px",
+          padding: "1px 5px",
           backgroundColor: this.props.cellIsFocused
             ? "rgb(230, 230, 230)"
             : "none"
@@ -70,6 +69,9 @@ class CellRenderer extends React.Component {
     );
   }
 }
+
+const PX_PER_CHAR = 7;
+const MIN_CELL_CHAR_WIDTH = 22;
 
 export default class TableRenderer extends React.Component {
   static propTypes = {
@@ -90,6 +92,7 @@ export default class TableRenderer extends React.Component {
     const columns = Object.keys(value[0]).map(k => ({
       Header: k,
       accessor: k,
+      width: Math.max(k.length, MIN_CELL_CHAR_WIDTH) * PX_PER_CHAR,
       Cell: rowInfo => {
         return (
           <CellRenderer
@@ -111,6 +114,7 @@ export default class TableRenderer extends React.Component {
           columns={columns}
           showPaginationTop
           showPaginationBottom={false}
+          resizable={false}
           pageSizeOptions={[5, 10, 25, 50, 100]}
           minRows={0}
           defaultPageSize={pageSize}
