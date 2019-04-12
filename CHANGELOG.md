@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- only show notebooks with 10 or more edits on the server's index page list
+
 # 0.5.0 (2019-03-28)
 
 - allow suitably authorized users to create notebooks on behalf of others

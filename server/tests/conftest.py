@@ -63,6 +63,31 @@ def two_test_notebooks(fake_user):
 
 
 @pytest.fixture
+def ten_test_notebooks(fake_user):
+    """
+    Half of these notebooks have >= 10 revisions.
+    """
+    notebooks = []
+    for i in range(10):
+        notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook %s" % i)
+        NotebookRevision.objects.create(
+            notebook=notebook,
+            title="First revision of notebook %s" % i,
+            content="*fake notebook content %s*" % i,
+        )
+        # every other notebook gets 10 revisions so it will show up in the index page list
+        if i % 2 == 0:
+            for j in range(1, 10):
+                NotebookRevision.objects.create(
+                    notebook=notebook,
+                    title="Revision %s of notebook %s" % (j, i),
+                    content="*fake notebook content %s revision %s" % (i, j),
+                )
+        notebooks.append(notebook)
+    return notebooks
+
+
+@pytest.fixture
 def notebook_post_blob():
     # this blob should be sufficient to create a new notebook (assuming the user of
     # the api is authorized to do so)

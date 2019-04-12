@@ -7,7 +7,7 @@ from server.notebooks.models import Notebook, NotebookRevision
 
 
 @pytest.mark.parametrize("logged_in", [True, False])
-def test_index_view(client, two_test_notebooks, fake_user, logged_in):
+def test_index_view(client, ten_test_notebooks, fake_user, logged_in):
     if logged_in:
         client.force_login(fake_user)
     resp = client.get(reverse("index"))
@@ -20,6 +20,8 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
     else:
         assert fake_user.avatar is None
 
+    listed_notebooks = ten_test_notebooks[::2]
+    revisions = NotebookRevision.objects
     # assert that the pageData element has the expected structure
     assert get_title_block(resp.content) == "Iodide"
     assert get_script_block_json(resp.content, "pageData") == {
@@ -28,12 +30,12 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
                 "avatar": fake_user.avatar,
                 "id": test_notebook.id,
                 "latestRevision": (
-                    NotebookRevision.objects.get(notebook=test_notebook).created.isoformat()
+                    revisions.filter(notebook=test_notebook)[0].created.isoformat()
                 ),
                 "owner": test_notebook.owner.username,
                 "title": test_notebook.title,
             }
-            for test_notebook in reversed(two_test_notebooks)
+            for test_notebook in reversed(listed_notebooks)
         ],
         "userInfo": {
             "name": fake_user.username,
@@ -42,11 +44,11 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
                 {
                     "id": test_notebook.id,
                     "latestRevision": (
-                        NotebookRevision.objects.get(notebook=test_notebook).created.isoformat()
+                        revisions.filter(notebook=test_notebook)[0].created.isoformat()
                     ),
                     "title": test_notebook.title,
                 }
-                for test_notebook in reversed(two_test_notebooks)
+                for test_notebook in reversed(ten_test_notebooks)
             ],
         }
         if logged_in
