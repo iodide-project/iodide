@@ -29,9 +29,7 @@ def test_index_view(client, ten_test_notebooks, fake_user, logged_in):
             {
                 "avatar": fake_user.avatar,
                 "id": test_notebook.id,
-                "latestRevision": (
-                    revisions.filter(notebook=test_notebook)[0].created.isoformat()
-                ),
+                "latestRevision": (revisions.filter(notebook=test_notebook)[0].created.isoformat()),
                 "owner": test_notebook.owner.username,
                 "title": test_notebook.title,
             }
