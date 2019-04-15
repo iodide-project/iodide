@@ -15,7 +15,7 @@ if [ ! -d $PYODIDE_CACHE_DIR ]; then
    rm -rf $CACHE_DIR
    mkdir -p $CACHE_DIR
    mv build/pyodide-$PYODIDE_VERSION $CACHE_DIR
-   python -m whitenoise.compress $PYODIDE_CACHE_DIR
+   python -m whitenoise.compress $PYODIDE_CACHE_DIR --no-gzip
 else
    echo "Using cached version of pyodide assets"
    rm -rf build/pyodide-$PYODIDE_VERSION
@@ -25,7 +25,7 @@ fi
 # WhiteNoise can then serve in preference to the originals. This is required
 # since WhiteNoise's Django storage backend only gzips assets handled by
 # collectstatic, and so does not affect files in the `build/` directory.
-python -m whitenoise.compress build
+python -m whitenoise.compress build --no-gzip
 
 # Copy pyodide files from cache dir now that we've finished the compression
 cp -r $PYODIDE_CACHE_DIR build
