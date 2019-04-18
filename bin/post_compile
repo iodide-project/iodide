@@ -15,7 +15,9 @@ if [ ! -d $PYODIDE_CACHE_DIR ]; then
    rm -rf $CACHE_DIR
    mkdir -p $CACHE_DIR
    mv build/pyodide-$PYODIDE_VERSION $CACHE_DIR
-   python -m whitenoise.compress $PYODIDE_CACHE_DIR
+   # Don't create gzip-compressed assets (only Brotli-compressed) to save
+   # space, otherwise we go over Heroku's 500MB limit
+   python -m whitenoise.compress $PYODIDE_CACHE_DIR --no-gzip
 else
    echo "Using cached version of pyodide assets"
    rm -rf build/pyodide-$PYODIDE_VERSION
