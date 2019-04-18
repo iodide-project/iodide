@@ -136,9 +136,9 @@
     "webpack-dev-server": "3.3.1",
     "webpack-merge": "4.2.1",
     "write-file-webpack-plugin": "4.5.0",
-    "@storybook/react": "5.0.6",
-    "@storybook/addon-actions": "5.0.6",
-    "@storybook/addon-links": "5.0.6",
-    "@storybook/addons": "5.0.6"
+    "@storybook/react": "5.0.10",
+    "@storybook/addon-actions": "5.0.10",
+    "@storybook/addon-links": "5.0.10",
+    "@storybook/addons": "5.0.10"
   }
 }
