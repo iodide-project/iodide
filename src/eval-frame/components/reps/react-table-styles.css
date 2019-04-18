@@ -10,6 +10,7 @@
   padding: 2px;
   box-shadow: none;
   border: none;
+  justify-content: center;
 }
 
 .ReactTable .-pagination .-pageSizeOptions {
@@ -23,7 +24,7 @@
 }
 
 .ReactTable .-pagination .-btn {
-  padding: 0px;
+  padding: 0px 8px;
 }
 
 /* get rid of the little buttons that look
@@ -47,5 +48,15 @@
 
 .ReactTable .rt-td {
   padding: 0px;
-  cursor: pointer;
+  /* cursor: pointer; */
+}
+
+.ReactTable .-pagination .-center {
+  flex: none;
+}
+
+.ReactTable .-pagination .-previous,
+.ReactTable .-pagination .-next {
+  flex: none;
+  text-align: center;
 }

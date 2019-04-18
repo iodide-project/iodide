@@ -24,7 +24,7 @@ const TableDetailsMessage = styled.div`
 `;
 
 const CellDetails = props => {
-  if (props.focusedRow && props.focusedCol) {
+  if (props.focusedRow !== undefined && props.focusedCol !== undefined) {
     const focusedPath = `[${props.focusedRow}]["${props.focusedCol}"]`;
     return (
       <TableDetails>

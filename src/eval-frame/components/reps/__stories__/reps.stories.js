@@ -68,9 +68,18 @@ tableRep.add("tables", () => {
       {Object.entries(rowTableCases).map(caseNameAndVal => {
         const [name, value] = caseNameAndVal;
         return (
-          <div key={name} style={{ padding: "10px" }}>
+          <div key={name} style={{ padding: "10px", display: "grid" }}>
             <div style={{ padding: "10px 10px" }}>case: {name}</div>
-            <TableRenderer value={value} />
+            <div
+              style={{
+                margin: "auto",
+                marginLeft: "0",
+                maxWidth: "calc(100% - 5px)",
+                overflowX: "auto"
+              }}
+            >
+              <TableRenderer value={value} />
+            </div>
           </div>
         );
       })}

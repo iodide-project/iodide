@@ -14,29 +14,42 @@ const errorColor = "";
 const functionColor = "rgb(28, 30, 207)";
 const ellipsisColor = "#111 ";
 
-const RepBaseStyledSpan = color => styled("span")`
-  color: ${color};
+const RepBaseText = styled("span")`
   font-family: Menlo, monospace;
   font-size: 12px;
   line-height: 14px;
+  cursor: pointer;
 `;
 
 const TinyStringValueWithColor = color => {
-  const ValueSpan = RepBaseStyledSpan(color);
-  return x => <ValueSpan>{x.stringValue}</ValueSpan>;
+  const RepValueText = styled(RepBaseText)`
+    color: ${color};
+  `;
+  return x => <RepValueText>{x.stringValue}</RepValueText>;
 };
 
-const ClassInfoSpan = RepBaseStyledSpan(classInfoColor);
+const ClassInfoText = styled(RepBaseText)`
+  color: ${classInfoColor};
+`;
 
 const ObjectRep = ({ objClass, size }) => (
-  <ClassInfoSpan>
+  <ClassInfoText>
     {objClass}({size})
-  </ClassInfoSpan>
+  </ClassInfoText>
 );
 
-const Sep = RepBaseStyledSpan(separatorColor);
-const Ell = RepBaseStyledSpan(ellipsisColor);
-const StringSpan = RepBaseStyledSpan(stringColor);
+const Ell = styled(RepBaseText)`
+  color: ${ellipsisColor};
+`;
+const Ellipsis = () => <Ell>⋯</Ell>;
+
+const Sep = styled(RepBaseText)`
+  color: ${separatorColor};
+`;
+
+const StringText = styled(RepBaseText)`
+  color: ${stringColor};
+`;
 const createQuotedStringRep = (lQuote, rQuote) => ({
   size,
   stringValue,
@@ -44,24 +57,26 @@ const createQuotedStringRep = (lQuote, rQuote) => ({
 }) => (
   <span>
     <Sep>{lQuote}</Sep>
-    <StringSpan>{stringValue}</StringSpan>
-    {isTruncated ? <Ell>⋯</Ell> : ""}
+    <StringText>{stringValue}</StringText>
+    {isTruncated ? <Ellipsis /> : ""}
     <Sep>{rQuote}</Sep>
-    {isTruncated ? <ClassInfoSpan>({size})</ClassInfoSpan> : ""}
+    {isTruncated ? <ClassInfoText>({size})</ClassInfoText> : ""}
   </span>
 );
 
 const StringRep = createQuotedStringRep('"', '"');
 const RegexRep = createQuotedStringRep("/", "/");
 
-const SymbolSpan = RepBaseStyledSpan(symbolColor);
+const SymbolText = styled(RepBaseText)`
+  color: ${symbolColor};
+`;
 const SymbolRep = ({ stringValue, isTruncated }) => (
   <span>
-    <SymbolSpan>{stringValue}</SymbolSpan>
+    <SymbolText>{stringValue}</SymbolText>
     {isTruncated ? (
       <React.Fragment>
-        <Ell>⋯</Ell>
-        <SymbolSpan>)</SymbolSpan>
+        <Ellipsis />
+        <SymbolText>)</SymbolText>
       </React.Fragment>
     ) : (
       ""
@@ -69,21 +84,24 @@ const SymbolRep = ({ stringValue, isTruncated }) => (
   </span>
 );
 
-const FunctionSpan = styled(RepBaseStyledSpan(functionColor))`
+const FunctionText = styled(RepBaseText)`
+  color: ${functionColor}
   font-style: italic;
 `;
 const FunctionRep = ({ objClass, stringValue, isTruncated }) => (
   <span>
-    <FunctionSpan>
+    <FunctionText>
       ƒ{objClass === "GeneratorFunction" ? "*" : ""} {stringValue}
-    </FunctionSpan>
-    {isTruncated ? <Ell>⋯</Ell> : ""}
-    <FunctionSpan>()</FunctionSpan>
+    </FunctionText>
+    {isTruncated ? <Ellipsis /> : ""}
+    <FunctionText>()</FunctionText>
   </span>
 );
 
-const ErrorSpan = RepBaseStyledSpan(errorColor);
-const ErrorRep = ({ objClass }) => <ErrorSpan>{objClass}</ErrorSpan>;
+const ErrorText = styled(RepBaseText)`
+  color: ${errorColor};
+`;
+const ErrorRep = ({ objClass }) => <ErrorText>{objClass}</ErrorText>;
 
 const typeToTinyRepMapping = {
   Number: TinyStringValueWithColor(numberColor),
@@ -142,9 +160,3 @@ export default class TinyRep extends React.Component {
     return typeToTinyRepMapping[repType](this.props.serializedObj);
   }
 }
-// function tinyRep(serializedObj) {
-//   const type = handledTypes.includes(serializedObj.objType)
-//     ? serializedObj.objType
-//     : "Object";
-//   return typeToTinyRepMapping[type](serializedObj);
-// }
