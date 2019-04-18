@@ -46,7 +46,7 @@ export function objSize(obj) {
   return Object.getOwnPropertyNames(obj).length;
 }
 
-const MAX_TINY_STRING_LEN = 20;
+export const MAX_TINY_STRING_LEN = 20;
 const TRUNCATION_LEN = 12;
 
 const truncateString = s =>
