@@ -1,5 +1,9 @@
 # (Unreleased; add upcoming change notes here)
 
+- restore tabular data viewer for arrays of objects
+- add "TinyRep" components
+- implement `storybook` for visually testing rep components
+
 # 0.5.0 (2019-03-28)
 
 - allow suitably authorized users to create notebooks on behalf of others

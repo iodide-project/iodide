@@ -15,13 +15,19 @@
     "start": "webpack --watch --mode=development --env=dev",
     "build": "webpack",
     "build-production": "webpack --env=production",
-    "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix"
+    "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/test/setupTests.js",
     "transformIgnorePatterns": [
       "/node_modules/(?!test-component).+\\.js$"
     ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/test/styleMock.js"
+    },
     "globals": {
       "window": true,
       "IODIDE_BUILD_MODE": "test"
@@ -129,6 +135,10 @@
     "webpack-cli": "3.3.0",
     "webpack-dev-server": "3.3.1",
     "webpack-merge": "4.2.1",
-    "write-file-webpack-plugin": "4.5.0"
+    "write-file-webpack-plugin": "4.5.0",
+    "@storybook/react": "5.0.6",
+    "@storybook/addon-actions": "5.0.6",
+    "@storybook/addon-links": "5.0.6",
+    "@storybook/addons": "5.0.6"
   }
 }
