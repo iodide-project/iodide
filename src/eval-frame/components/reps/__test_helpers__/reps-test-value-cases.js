@@ -234,7 +234,13 @@ export const builtInObjectCases = {
 
 export const promiseCases = {
   promise: new Promise(() => "resolve", () => "reject"),
-  promise_reject: Promise.reject(),
+  // this cause problems with node that show up in jest when testing
+  // see: https://github.com/facebook/jest/issues/5311
+  // uncomment this for storybook testing, but be sure to comment it
+  // before committing
+  // promise_reject: Promise.reject(
+  //   new Error("REPS_VALUE_TEST_CASE:_PROMISE_REJECT")
+  // ),
   promise_resolve: Promise.resolve()
 };
 

@@ -95,7 +95,7 @@ describe("triggerEvalFrameTask test", () => {
 
 // ========================================================
 
-describe("loadKnownLanguage test", async () => {
+describe("loadKnownLanguage test", () => {
   it("dispatches loading message and triggers eval frame task", () => {
     const displayName = "a_language";
     const languagePlugin = { displayName };
