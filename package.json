@@ -20,7 +20,9 @@
     "build-storybook": "build-storybook"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "<rootDir>/test/setupTests.js",
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setupTests.js"
+    ],
     "transformIgnorePatterns": [
       "/node_modules/(?!test-component).+\\.js$"
     ],

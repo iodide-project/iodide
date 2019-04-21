@@ -1,17 +1,12 @@
 {
   "presets": [
     "@babel/preset-react",
-    "@babel/preset-env"
+    ["@babel/preset-env", { "targets": { "node": "current" } }]
   ],
-  "plugins": [
-    "@babel/plugin-proposal-class-properties",
-    "emotion"
-  ],
+  "plugins": ["@babel/plugin-proposal-class-properties", "emotion"],
   "env": {
     "test": {
-      "plugins": [
-        "@babel/plugin-transform-modules-commonjs"
-      ]
+      "plugins": ["@babel/plugin-transform-modules-commonjs"]
     }
   }
 }
