@@ -22,7 +22,7 @@ def index(request):
         Notebook.objects.annotate(
             latest_revision=Max("revisions__created"), num_revisions=Count("revisions")
         )
-        .filter(num_revisions__gte=10)
+        .filter(num_revisions__gte=settings.MIN_FIREHOSE_REVISIONS)
         .order_by("-latest_revision")
         .values_list("id", "title", "owner__username", "owner__avatar", "latest_revision")[:100]
     )

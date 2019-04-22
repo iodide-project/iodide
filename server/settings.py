@@ -64,6 +64,9 @@ GA_TRACKING_ID = env.str("GA_TRACKING_ID", None)
 MAX_FILENAME_LENGTH = 120
 MAX_FILE_SIZE = 1024 * 1024 * 10  # 10 megabytes is the default
 
+# Minimum # of revisions for a notebook to show up in the index page list
+MIN_FIREHOSE_REVISIONS = 10
+
 # APPEND_SLASH = False
 
 # Application definition

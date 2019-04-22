@@ -1,9 +1,35 @@
 import pytest
+from django.conf import settings
 from django.urls import reverse
 
 from helpers import get_script_block_json, get_title_block
 from server.base.models import User
 from server.notebooks.models import Notebook, NotebookRevision
+
+
+@pytest.fixture
+def ten_test_notebooks(fake_user):
+    """
+    Half of these notebooks have >= MIN_FIREHOSE_REVISIONS revisions.
+    """
+    notebooks = []
+    for i in range(settings.MIN_FIREHOSE_REVISIONS):
+        notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook %s" % i)
+        NotebookRevision.objects.create(
+            notebook=notebook,
+            title="First revision of notebook %s" % i,
+            content="*fake notebook content %s*" % i,
+        )
+        # every other notebook gets min # of revisions to show up in the index page list
+        if i % 2 == 0:
+            for j in range(1, settings.MIN_FIREHOSE_REVISIONS):
+                NotebookRevision.objects.create(
+                    notebook=notebook,
+                    title="Revision %s of notebook %s" % (j, i),
+                    content="*fake notebook content %s revision %s" % (i, j),
+                )
+        notebooks.append(notebook)
+    return notebooks
 
 
 @pytest.mark.parametrize("logged_in", [True, False])
