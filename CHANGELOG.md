@@ -1,5 +1,8 @@
 # (Unreleased; add upcoming change notes here)
 
+- restore tabular data viewer for arrays of objects
+- add "TinyRep" components
+- implement `storybook` for visually testing rep components
 - only show notebooks with 10 or more edits on the server's index page list
 
 # 0.5.0 (2019-03-28)

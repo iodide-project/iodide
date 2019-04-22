@@ -30,12 +30,20 @@ export default class LoginModal extends React.Component {
             .
           </p>
           <p>
-            When you create or fork a notebook, the open source&nbsp;
+            Iodide.io is a coding commons for open data science, and documents
+            created on Iodide.io are publicly visible.{" "}
+            <strong>
+              Please ensure that your projects do not include sensitive data or
+              security secrets.
+            </strong>
+          </p>
+          <p>
+            When you create or fork a notebook, the open source{" "}
             <a href="https://creativecommons.org/licenses/by-sa/3.0/">
               Commons Attribution-Share Alike license
-            </a>
-            &nbsp; applies to your content. Your notebooks are associated with
-            your account.
+            </a>{" "}
+            applies to your content. Your notebooks are associated with your
+            account.
           </p>
           <p>
             When you sign in, you agree to our{" "}

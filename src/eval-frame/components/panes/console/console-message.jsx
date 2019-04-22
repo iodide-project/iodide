@@ -5,7 +5,6 @@ import styled from "react-emotion";
 import ConsoleContainer from "./console-container";
 import ConsoleGutter from "./console-gutter";
 import levels from "./log-levels";
-import THEME from "../../../../shared/theme";
 
 const MessageContainer = styled(ConsoleContainer)`
   overflow: auto;
@@ -15,12 +14,13 @@ const MessageContainer = styled(ConsoleContainer)`
 `;
 
 const MessageBody = styled("div")`
-  font-family: ${THEME.client.console.fontFamily};
   margin: auto;
   margin-left: 0;
   padding-top: 5px;
   padding-bottom: 5px;
   min-height: 20px;
+  max-width: calc(100% - 5px);
+  overflow-x: hidden;
 `;
 
 const ConsoleMessage = ({ children, level }) => {

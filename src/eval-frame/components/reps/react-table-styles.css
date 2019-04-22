@@ -1,0 +1,62 @@
+.ReactTable {
+  font-family: "Open Sans", sans-serif;
+}
+
+.ReactTable .pagination-top {
+  padding: 2px;
+}
+
+.ReactTable .-pagination {
+  padding: 2px;
+  box-shadow: none;
+  border: none;
+  justify-content: center;
+}
+
+.ReactTable .-pagination .-pageSizeOptions {
+  margin: 0px 10px;
+}
+
+.ReactTable .-pagination input,
+.ReactTable .-pagination select {
+  padding: 0px;
+  height: 22px;
+}
+
+.ReactTable .-pagination .-btn {
+  padding: 0px 8px;
+}
+
+/* get rid of the little buttons that look
+  terrible and are inconsistent FF/Chrome
+  */
+.ReactTable
+  .-pagination
+  .-pageJump
+  input[type="number"]::-webkit-outer-spin-button,
+.ReactTable
+  .-pagination
+  .-pageJump
+  input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ReactTable .-pagination .-pageJump input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.ReactTable .rt-td {
+  padding: 0px;
+  /* cursor: pointer; */
+}
+
+.ReactTable .-pagination .-center {
+  flex: none;
+}
+
+.ReactTable .-pagination .-previous,
+.ReactTable .-pagination .-next {
+  flex: none;
+  text-align: center;
+}
