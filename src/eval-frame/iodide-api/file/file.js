@@ -1,13 +1,22 @@
-import { getState as reduxStoreGetState } from "../store";
-import { getFiles } from "../../editor/tools/server-tools";
-import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
+import { getState as reduxStoreGetState } from "../../store";
+import { getFiles } from "../../../editor/tools/server-tools";
+import sendFileRequestToEditor from "../../tools/send-file-request-to-editor";
 import IodideAPIError from "./iodide-api-error";
-import { IODIDE_API_LOAD_TYPES } from "../../editor/state-schemas/state-schema";
+import fileSerializers from "./file-serializers";
+import { IODIDE_API_LOAD_TYPES } from "../../../editor/state-schemas/state-schema";
 
 const DEFAULT_SAVE_OPTIONS = { overwrite: false };
 
 function isString(argument) {
   return typeof argument === "string" || argument instanceof String;
+}
+
+function confirmIsSerializer(serializationType) {
+  if (!Object.keys(fileSerializers).includes(serializationType)) {
+    throw new IodideAPIError(
+      `serialization type ${serializationType} not recognized`
+    );
+  }
 }
 
 function confirmIsString(key, argument) {
@@ -76,14 +85,19 @@ export async function deleteFile(fileName) {
 }
 
 export async function saveFile(
-  data,
   fileName,
+  data,
+  serializationType,
   saveOptions = DEFAULT_SAVE_OPTIONS
 ) {
   confirmIsString("fileName", fileName);
+  confirmIsString("serializationType", serializationType);
+  confirmIsSerializer(serializationType);
+  const serializedData = fileSerializers[serializationType](data);
   return sendFileRequestToEditor(fileName, "SAVE_FILE", {
     ...saveOptions,
-    data
+    data: serializedData,
+    serializationType
   });
 }
 

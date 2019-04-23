@@ -96,7 +96,7 @@ export async function handleFetch(fetchInfo) {
   const assignVariable = (params, file) =>
     setVariableInWindow(params.parsed.varName, file);
 
-  if (["text", "json", "blob"].includes(fetchType)) {
+  if (["text", "json", "blob", "arrayBuffer"].includes(fetchType)) {
     assignVariable(fetchInfo, fetchedFile);
   } else if (fetchType === "js") {
     let scriptLoaded;

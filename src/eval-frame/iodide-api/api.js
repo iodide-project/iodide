@@ -6,7 +6,7 @@
 import UserReps from "../components/reps/user-reps-manager";
 import { environment } from "./environment";
 import { output } from "./output";
-import { file } from "./file";
+import { file } from "./file/file";
 
 function getDataSync(url) {
   const re = new XMLHttpRequest();

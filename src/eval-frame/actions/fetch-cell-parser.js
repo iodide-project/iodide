@@ -67,6 +67,7 @@ export function parseFetchCellLine(line) {
     switch (fetchType) {
       case "text":
       case "json":
+      case "arrayBuffer":
       case "blob":
         return Object.assign(
           {},

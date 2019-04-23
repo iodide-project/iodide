@@ -5,9 +5,9 @@ import {
   connectExists,
   connectList,
   connectLastUpdated
-} from "../file";
+} from "../file/file";
 import * as SEND_FILE from "../../tools/send-file-request-to-editor";
-import IodideAPIError from "../iodide-api-error";
+import IodideAPIError from "../file/iodide-api-error";
 
 const mockStore = () => ({
   getState() {
@@ -81,13 +81,16 @@ describe("iodide.file.lastUpdated", () => {
 describe("iodide.file.save (saveFile)", () => {
   it("throws errors if you have the incorrect argument types", async () => {
     await expect(saveFile()).rejects.toThrowError(IodideAPIError);
-    await expect(saveFile(12345)).rejects.toThrowError(IodideAPIError);
-    await expect(saveFile(12345, new Date())).rejects.toThrowError(
+    await expect(saveFile("a", 12345)).rejects.toThrowError(IodideAPIError);
+    await expect(saveFile("a", 12345, new Date())).rejects.toThrowError(
+      IodideAPIError
+    );
+    await expect(saveFile("a", 12345, "bob")).rejects.toThrowError(
       IodideAPIError
     );
   });
   it("returns a Promise", () => {
-    const request = saveFile(12345, "test.csv");
+    const request = saveFile("test.csv", 12345, "text");
     expect(request instanceof Promise).toBeTruthy();
   });
 });
@@ -136,7 +139,7 @@ describe("iodide.file.load (loadFile)", () => {
       },
       {
         input: { fetchType: "json", value: "json-test" },
-        output: "yes"
+        output: undefined
       },
       {
         input: { fetchType: "blob", value: "blob-test" },
