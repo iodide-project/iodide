@@ -89,6 +89,20 @@ describe("iodide.file.save (saveFile)", () => {
       IodideAPIError
     );
   });
+  it("throws on json stringify errors", async () => {
+    // cyclical issues should cause problems with `json`.
+    const obj = {};
+    obj.a = obj;
+    await expect(saveFile("object", "json", obj)).rejects.toThrowError(
+      IodideAPIError
+    );
+  });
+  it("throws if a non-array buffer is passed into w/ arrayBuffer", async () => {
+    // if not an array buffer when saving _as_ array buffer, throws
+    await expect(
+      saveFile("thing", "arrayBuffer", "well!!")
+    ).rejects.toThrowError(IodideAPIError);
+  });
   it("returns a Promise", () => {
     const request = saveFile("test.txt", "text", 12345);
     expect(request instanceof Promise).toBeTruthy();
