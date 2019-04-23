@@ -95,6 +95,9 @@ export function saveFileToServer(
   fileID = undefined
 ) {
   const formData = makeFormData(notebookID, data, fileName);
+  // FIXME: we should not have update & load be separate files,
+  // from an API standpoint. We should just have one file upload function
+  // that deals with the particulars.
   const fetchRequest = fileID // if fileID undefined, upload, otherwise update
     ? fd => updateFile(fileID, fd)
     : fd => uploadFile(fd);

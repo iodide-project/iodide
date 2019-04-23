@@ -13,7 +13,7 @@ The `iodide.file` API provides convenience functions for working with files
 uploaded to the Iodide server in your notebook.
 
 
-### `iodide.file.save(data, fileName[, saveOptions])`
+### `iodide.file.save(fileName, data, serializerType[, saveOptions])`
 
 Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises),
@@ -25,12 +25,12 @@ the [`skipRunAll` tag](https://iodide-project.github.io/docs/jsmd/#skiprunall) i
 evaluating `iodide.file.save` so that a user viewing your report does not encounter an error. Take
 a look at the example in the `iodide.file.save` examples section.
 
-`data` (required) is any object or variable in the eval name space. It can be
-anything, really - an array of data, or a csv, or a binary object – as long it is a 
-[supported structured clone type]
-(https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm).
-
 `fileName` (required) is a string that represents the file name.
+
+`data` (required) is any object or variable in the eval name space. It will be serialized depending on the `serializerType`.
+
+`serializerType` (required) is one of four options: `text` (applies `.toString()` to `data`), `json` (applies `JSON.serialize(data)`), `arrayBuffer` (saves as a binary array buffer), and `blob` (saves as a `Blob` object).
+
 
 The optional argument `saveOptions` has the following keys:
 
@@ -57,7 +57,7 @@ js: https://cdnjs.cloudflare.com/ajax/libs/d3-dsv/1.0.8/d3-dsv.js
 
 const data = [{x1: 10, x2: 'random string'}, {x1: 20, x2: 'another string'}];
 
-iodide.file.save(d3.csvFormat(data), 'cached-data.csv', { overwrite: true });
+iodide.file.save('cached-data.csv', d3.csvFormat(data), 'text', { overwrite: true });
 
 %% js
 
@@ -92,7 +92,7 @@ to use `iodide.file.save` to cache some computation for others, then mark the ch
 fetch('https://...').then((r) => r.json())
   .then((data) => calculateAllCorrelations(data)) // this is expensive.
   .then((correlations) => {
-    iodide.save(correlations, 'correlations.txt', {overwrite: true});
+    iodide.file.save('correlations.json', correlations, 'json', {overwrite: true});
   });
 
 %% js
@@ -100,13 +100,39 @@ fetch('https://...').then((r) => r.json())
 // this chunk will be the one that loads the cached correlations when the notebook 
 // is opened as a report (that is, all code chunks are evaluated).
 
-iodide.file.load('correlations.txt', 'text', 'correlations');
+iodide.file.load('correlations.json', 'json', 'correlations');
 
 %% js
 
-// this variable is now available in the namespace
+// the variable 'correlations' is now available in the namespace.
 
 console.log(correlations);
+```
+
+The following example shows how to use the `blob` serializer type to save an image from a cat image API, then display it.
+
+```javascript
+%% md
+
+<div><img id='cat'/></div>
+
+%% js
+
+const url = 'https://cataas.com/cat/says/hello%20world!';
+
+async function catchTheCatThenDisplay() {
+  const cat = await fetch(url).then(r => r.blob());
+  // let's save the cat.
+  await iodide.file.save('my-next-cat', cat, 'blob', {overwrite: true});
+  // now, let's load the cached cat we just saved.
+  // we could just use cat from above, but we won't.
+  const cachedCat = await iodide.file.load('my-next-cat', 'blob');
+  var urlCreator = window.URL || window.webkitURL;
+  var imageUrl = urlCreator.createObjectURL(cat);
+  document.querySelector("#cat").src = imageUrl;
+}
+
+catchTheCatThenDisplay();
 ```
 
 
