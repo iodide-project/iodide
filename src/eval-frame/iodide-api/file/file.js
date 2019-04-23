@@ -86,8 +86,8 @@ export async function deleteFile(fileName) {
 
 export async function saveFile(
   fileName,
-  data,
   serializationType,
+  data,
   saveOptions = DEFAULT_SAVE_OPTIONS
 ) {
   confirmIsString("fileName", fileName);

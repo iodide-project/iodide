@@ -85,12 +85,12 @@ describe("iodide.file.save (saveFile)", () => {
     await expect(saveFile("a", 12345, new Date())).rejects.toThrowError(
       IodideAPIError
     );
-    await expect(saveFile("a", 12345, "bob")).rejects.toThrowError(
+    await expect(saveFile("a", "textttt", 12345)).rejects.toThrowError(
       IodideAPIError
     );
   });
   it("returns a Promise", () => {
-    const request = saveFile("test.csv", 12345, "text");
+    const request = saveFile("test.txt", "text", 12345);
     expect(request instanceof Promise).toBeTruthy();
   });
 });
