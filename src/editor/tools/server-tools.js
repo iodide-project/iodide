@@ -1,11 +1,45 @@
 import { FETCH_CHUNK_TYPES } from "../state-schemas/state-schema";
 
-function fileDoesNotExistMessage(operation, fileName) {
-  return `${operation}: file "${fileName}" does not exist`;
+class IodideAPIFileDoesNotExistError extends Error {
+  constructor(...params) {
+    super(...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, IodideAPIFileDoesNotExistError);
+    }
+
+    this.name = "IodideAPIFileDoesNotExistError";
+    const [operation, fileName] = params;
+    this.message = `(${operation}) file "${fileName}" does not exist`;
+  }
 }
 
-function fileAlreadyExistsMessage(operation, fileName) {
-  return `${operation}: file "${fileName}" already exists`;
+class IodideAPIFileAlreadyExistsError extends Error {
+  constructor(...params) {
+    super(...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, IodideAPIFileAlreadyExistsError);
+    }
+
+    this.name = "IodideAPIFileAlreadyExistsError";
+    const [operation, fileName] = params;
+    this.message = `(${operation}) file "${fileName}" already exists`;
+  }
+}
+
+class InvalidFetchChunkError extends Error {
+  constructor(...params) {
+    super(...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, InvalidFetchChunkError);
+    }
+
+    this.name = "InvalidFetchChunkError";
+    const [fetchType] = params;
+    this.message = `invalid fetch type "${fetchType}"`;
+  }
 }
 
 export function getUserDataFromDocument() {
@@ -76,18 +110,18 @@ export function getFileID(state, fileName) {
 
 export function validateFileExistence(fileName, operation, state) {
   if (!fileExists(fileName, state)) {
-    throw new Error(fileDoesNotExistMessage(operation, fileName));
+    throw new IodideAPIFileDoesNotExistError(operation, fileName);
   }
 }
 
 export function validateFileAbsence(fileName, operation, state) {
   if (fileExists(fileName, state)) {
-    throw new Error(fileAlreadyExistsMessage(operation, fileName));
+    throw new IodideAPIFileAlreadyExistsError(operation, fileName);
   }
 }
 
 export function validateFetchType(fetchType) {
   if (!FETCH_CHUNK_TYPES.includes(fetchType)) {
-    throw new Error(`invalid fetch type "${fetchType}"`);
+    throw new InvalidFetchChunkError(fetchType);
   }
 }
