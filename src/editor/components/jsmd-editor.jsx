@@ -3,7 +3,19 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import deepEqual from "deep-equal";
 
-import MonacoEditor from "react-monaco-editor";
+import "./monaco-env-init";
+// eslint-disable-next-line import/first
+// import MonacoEditor from "react-monaco-editor";
+
+// import * as monaco from "monaco-editor";
+/* eslint-disable import/first */
+import "monaco-editor/esm/vs/editor/browser/controller/coreCommands";
+import "monaco-editor/esm/vs/editor/contrib/find/findController";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import "monaco-editor/esm/vs/basic-languages/python/python.contribution";
+import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution";
+import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution";
+/* eslint-enable import/first */
 
 import {
   updateJsmdContent,
@@ -26,10 +38,34 @@ class JsmdEditorUnconnected extends React.Component {
 
   constructor(props) {
     super(props);
+    this.containerDivRef = React.createRef();
+    this.monacoRef = React.createRef();
+    this.editor = null;
+
     // explicitly bind "this" for all methods in constructors
     this.updateJsmdContent = this.updateJsmdContent.bind(this);
     this.updateCursor = this.updateCursor.bind(this);
     this.storeEditorInstance = this.storeEditorInstance.bind(this);
+  }
+
+  componentDidMount() {
+    console.log("this.containerDivRef.current", this.containerDivRef.current);
+    console.log(
+      "monaco ==================\n",
+      monaco,
+      "\n===================="
+    );
+    this.editor = monaco.editor.create(
+      document.getElementById("monacoContainer"),
+      // this.containerDivRef.current,
+      {
+        value: ["function x() {", '\tconsole.log("Hello world!");', "}"].join(
+          "\n"
+        ),
+        language: "javascript"
+      }
+    );
+    this.editor.layout();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -37,6 +73,8 @@ class JsmdEditorUnconnected extends React.Component {
   }
 
   componentDidUpdate() {
+    console.log("JSMD componentDidUpdate", this.editor);
+    this.editor.layout();
     if (this.props.editorCursorForceUpdate) {
       this.editor.setCursor(
         this.props.editorCursorLine,
@@ -45,7 +83,11 @@ class JsmdEditorUnconnected extends React.Component {
     }
   }
 
-  storeEditorInstance(editor) {
+  storeEditorInstance(editor, monacoInstance) {
+    console.log("editorDidMount", editor, monacoInstance);
+    editor.focus();
+    editor.layout();
+    console.log("this.monacoRef", this.monacoRef);
     this.editor = editor;
   }
 
@@ -63,16 +105,25 @@ class JsmdEditorUnconnected extends React.Component {
   }
 
   render() {
-    // const { editorCursorLine, editorCursorCol } = this.props;
     return (
-      <MonacoEditor
-        language="javascript"
-        theme="vs-dark"
-        value={this.props.content}
-        onChange={this.updateJsmdContent}
-        editorDidMount={this.storeEditorInstance}
+      <div
+        id="monacoContainer"
+        ref={this.containerDivRef}
+        style={{ width: "100%", height: "100%" }}
       />
     );
+    // return (
+    //   <MonacoEditor
+    //     width="100%"
+    //     height="100%"
+    //     language="javascript"
+    //     theme="vs-light"
+    //     value={this.props.content}
+    //     // onChange={this.updateJsmdContent}
+    //     ref={this.monacoRef}
+    //     editorDidMount={this.storeEditorInstance}
+    //   />
+    // );
   }
 }
 

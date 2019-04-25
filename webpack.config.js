@@ -9,7 +9,6 @@ const WriteFilePlugin = require("write-file-webpack-plugin");
 const LodashModuleReplacementPlugin = require("lodash-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const UnusedWebpackPlugin = require("unused-webpack-plugin");
-const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const _ = require("lodash");
 
 const reduxLogMode = process.env.REDUX_LOGGING
@@ -33,6 +32,7 @@ const { USE_LOCAL_PYODIDE } = process.env || false;
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || "dev";
 
 const APP_DIR = path.resolve(__dirname, "src/");
+const MONACO_PATH = path.resolve(__dirname, "node_modules/monaco-editor/");
 
 const plugins = [];
 
@@ -58,8 +58,14 @@ module.exports = env => {
       iodide: `${APP_DIR}/editor/index.jsx`,
       "iodide.eval-frame": `${APP_DIR}/eval-frame/index.jsx`,
       "server.home": `${APP_DIR}/server/index.jsx`
+      // "monaco.editor.worker": `${MONACO_PATH}/esm/vs/editor/editor.worker.js`,
+      // "monaco.json.worker": `${MONACO_PATH}/esm/vs/language/json/json.worker`,
+      // "monaco.css.worker": `${MONACO_PATH}/esm/vs/language/css/css.worker`,
+      // "monaco.html.worker": `${MONACO_PATH}/esm/vs/language/html/html.worker`,
+      // "monaco.ts.worker": `${MONACO_PATH}/esm/vs/language/typescript/ts.worker`
     },
     output: {
+      globalObject: "self",
       path: BUILD_DIR,
       filename: `[name].${APP_VERSION_STRING}.js`
     },
@@ -96,6 +102,25 @@ module.exports = env => {
           test: /\.css$/,
           use: [MiniCssExtractPlugin.loader, "css-loader"]
         },
+        // {
+        //   test: /\.css$/,
+        //   include: APP_DIR,
+        //   exclude: MONACO_PATH,
+        //   use: [
+        //     { loader: MiniCssExtractPlugin.loader },
+        //     {
+        //       loader: "css-loader",
+        //       options: {
+        //         modules: false
+        //       }
+        //     }
+        //   ]
+        // },
+        // {
+        //   test: /\.css$/,
+        //   include: MONACO_PATH,
+        //   use: [MiniCssExtractPlugin.loader, "css-loader"]
+        // },
         {
           test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
           loader: `file-loader?name=iodide.${APP_VERSION_STRING}.fonts/[name].[ext]`
@@ -105,6 +130,10 @@ module.exports = env => {
     watchOptions: { poll: true, ignored: /node_modules/ },
     plugins: [
       ...plugins,
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^((fs)|(path)|(os)|(crypto)|(source-map-support))$/,
+        contextRegExp: /vs(\/|\\)language(\/|\\)typescript(\/|\\)lib/
+      }),
       new CircularDependencyPlugin({
         exclude: /a\.js|node_modules/,
         failOnError: true,
@@ -117,18 +146,6 @@ module.exports = env => {
         root: __dirname // Root directory (optional)
       }),
       new LodashModuleReplacementPlugin(),
-      new MonacoWebpackPlugin({
-        output: "monaco-assets",
-        languages: [
-          "css",
-          "html",
-          "javascript",
-          "json",
-          "markdown",
-          "python",
-          "typescript"
-        ]
-      }),
       new webpack.ProvidePlugin({
         React: "react",
         ReactDOM: "react-dom",
