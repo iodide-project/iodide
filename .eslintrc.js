@@ -37,14 +37,10 @@ module.exports = {
     // Don't use console.log
     "no-console": ["off"],
     // Prefer default exports
-<<<<<<< HEAD
     "import/prefer-default-export": ["off"],
     "import/no-extraneous-dependencies": [
       "error",
       { devDependencies: ["**/__stories__/*", "**/__tests__/*", "/test/*"] }
     ]
-=======
-    "import/prefer-default-export": ["off"]
->>>>>>> reinsate propTypes rule, and fix all editor and eval-frame files
   }
 };
