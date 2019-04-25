@@ -2,7 +2,7 @@
 
 import Mousetrap from "mousetrap";
 import { evalConsoleInput } from "./actions/eval-actions";
-import { genericFetch as fetchFileFromServer } from "../shared/utils/fetch-tools";
+import { handleFileRequest } from "./actions/file-request-actions";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
 
@@ -45,20 +45,11 @@ function receiveMessage(event) {
         );
         break;
       }
-      case "REQUEST_FETCH": {
-        fetchFileFromServer(message.path, message.fetchType)
-          .then(file => {
-            postMessageToEvalFrame("REQUESTED_FILE_SUCCESS", {
-              file,
-              path: message.path
-            });
-          })
-          .catch(err => {
-            postMessageToEvalFrame("REQUESTED_FILE_ERROR", {
-              path: message.path,
-              reason: err.message
-            });
-          });
+      case "FILE_REQUEST": {
+        const { requestType, fileName, fileRequestID, options } = message;
+        messagePasserEditor.dispatch(
+          handleFileRequest(requestType, fileName, fileRequestID, options)
+        );
         break;
       }
       case "AUTOCOMPLETION_SUGGESTIONS": {

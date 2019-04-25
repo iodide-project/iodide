@@ -1,3 +1,47 @@
+import { FETCH_CHUNK_TYPES } from "../state-schemas/state-schema";
+
+class IodideAPIFileDoesNotExistError extends Error {
+  constructor(...params) {
+    super(...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, IodideAPIFileDoesNotExistError);
+    }
+
+    this.name = "IodideAPIFileDoesNotExistError";
+    const [operation, fileName] = params;
+    this.message = `(${operation}) file "${fileName}" does not exist`;
+  }
+}
+
+class IodideAPIFileAlreadyExistsError extends Error {
+  constructor(...params) {
+    super(...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, IodideAPIFileAlreadyExistsError);
+    }
+
+    this.name = "IodideAPIFileAlreadyExistsError";
+    const [operation, fileName] = params;
+    this.message = `(${operation}) file "${fileName}" already exists`;
+  }
+}
+
+class InvalidFetchChunkError extends Error {
+  constructor(...params) {
+    super(...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, InvalidFetchChunkError);
+    }
+
+    this.name = "InvalidFetchChunkError";
+    const [fetchType] = params;
+    this.message = `invalid fetch type "${fetchType}"`;
+  }
+}
+
 export function getUserDataFromDocument() {
   const userData = document.getElementById("userData");
   if (userData) {
@@ -46,4 +90,38 @@ export function getNotebookID(state) {
 
 export function getRevisionID(state) {
   return getId(state, "revision_id");
+}
+
+export function getFiles(state) {
+  return state.notebookInfo.files;
+}
+
+export function fileExists(fileName, state) {
+  const files = getFiles(state);
+  return files.map(f => f.filename).includes(fileName);
+}
+
+export function getFileID(state, fileName) {
+  const files = getFiles(state);
+  const file = files.filter(f => f.filename === fileName)[0];
+  if (file) return file.id;
+  return undefined;
+}
+
+export function validateFileExistence(fileName, operation, state) {
+  if (!fileExists(fileName, state)) {
+    throw new IodideAPIFileDoesNotExistError(operation, fileName);
+  }
+}
+
+export function validateFileAbsence(fileName, operation, state) {
+  if (fileExists(fileName, state)) {
+    throw new IodideAPIFileAlreadyExistsError(operation, fileName);
+  }
+}
+
+export function validateFetchType(fetchType) {
+  if (!FETCH_CHUNK_TYPES.includes(fetchType)) {
+    throw new InvalidFetchChunkError(fetchType);
+  }
 }

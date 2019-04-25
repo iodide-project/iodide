@@ -1,4 +1,15 @@
-import fetchWithCSRFToken from "./fetch-with-csrf-token";
+import { genericFetch } from "./fetch-tools";
+import fetchWithCSRFToken, {
+  fetchWithCSRFTokenAndJSONContent
+} from "../fetch-with-csrf-token";
+
+export function loadFileFromServer(path, fetchType) {
+  return genericFetch(path, fetchType);
+}
+
+export function valueToFile(data, fileName) {
+  return new File([data], fileName);
+}
 
 export function selectFileAndFormatMetadata(notebookID) {
   return new Promise(resolve => {
@@ -60,5 +71,47 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
     })
       .then(output => output.json())
       .then(output => successCallback(output));
+  });
+}
+
+export function makeFormData(notebookID, data, fileName) {
+  const file = valueToFile(data, fileName);
+  const formData = new FormData();
+  formData.append(
+    "metadata",
+    JSON.stringify({
+      filename: file.name,
+      notebook_id: notebookID
+    })
+  );
+  formData.append("file", file);
+  return formData;
+}
+
+export function saveFileToServer(
+  notebookID,
+  data,
+  fileName,
+  fileID = undefined
+) {
+  const formData = makeFormData(notebookID, data, fileName);
+  // FIXME: we should not have update & load be separate files,
+  // from an API standpoint. We should just have one file upload function
+  // that deals with the particulars.
+  const fetchRequest = fileID // if fileID undefined, upload, otherwise update
+    ? fd => updateFile(fileID, fd)
+    : fd => uploadFile(fd);
+  return fetchRequest(formData).then(r => {
+    if (r.status === 500) throw new Error(r.statusText);
+    return r.json();
+  });
+}
+
+export function deleteFileOnServer(fileID) {
+  return fetchWithCSRFTokenAndJSONContent(`/api/v1/files/${fileID}/`, {
+    method: "DELETE"
+  }).then(r => {
+    if (r.status === 500) throw new Error(r.statusText);
+    return undefined;
   });
 }

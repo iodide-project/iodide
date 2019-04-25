@@ -215,6 +215,33 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { viewMode });
     }
 
+    case "ADD_FILE_TO_NOTEBOOK": {
+      const { filename, lastUpdated, fileID } = action;
+      const files = state.notebookInfo.files.map(f => Object.assign({}, f));
+      if (!files.map(f => f.filename).includes(filename))
+        files.push({
+          filename,
+          lastUpdated,
+          id: fileID
+        });
+      else {
+        files.find(f => f.filename === filename).lastUpdated = lastUpdated;
+      }
+      const notebookInfo = Object.assign({}, state.notebookInfo, {
+        files
+      });
+      return Object.assign({}, state, { notebookInfo });
+    }
+
+    case "DELETE_FILE_FROM_NOTEBOOK": {
+      const { fileID } = action;
+      const { files } = state.notebookInfo;
+      const notebookInfo = Object.assign({}, state.notebookInfo, {
+        files: files.filter(f => f.id !== fileID).map(f => Object.assign({}, f))
+      });
+      return Object.assign({}, state, { notebookInfo });
+    }
+
     case "SET_MODAL_STATE": {
       return Object.assign({}, state, { modalState: action.modalState });
     }
