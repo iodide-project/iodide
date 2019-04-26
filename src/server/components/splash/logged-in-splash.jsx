@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 import {
   SplashTitle,
@@ -23,6 +24,12 @@ const LetsGetStarted = () => (
 );
 
 export default class LoggedInSplash extends React.Component {
+  static propTypes = {
+    userInfo: PropTypes.shape({
+      name: PropTypes.string,
+      notebooks: PropTypes.arrayOf(PropTypes.object)
+    })
+  };
   render() {
     return (
       <SplashContentContainer>
@@ -43,7 +50,7 @@ export default class LoggedInSplash extends React.Component {
               <UserNotebookList
                 showMenu
                 notebooks={this.props.userInfo.notebooks}
-                isUserAccount={this.props.userInfo}
+                isUserAccount
               />
             </React.Fragment>
           ) : (

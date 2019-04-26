@@ -1,6 +1,7 @@
 /* global USE_OPENIDC_AUTH */
 
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import styled from "react-emotion";
 import Avatar from "@material-ui/core/Avatar";
@@ -23,6 +24,15 @@ const AvatarButtonContainer = styled("div")`
 `;
 
 export default class UserMenu extends React.Component {
+  static propTypes = {
+    username: PropTypes.string,
+    loginCallback: PropTypes.func,
+    logoutCallback: PropTypes.func,
+    avatar: PropTypes.string,
+    isAuthenticated: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    placement: PropTypes.string
+  };
+
   constructor(props) {
     super(props);
     this.state = {

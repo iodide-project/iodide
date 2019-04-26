@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 const MenuContainer = styled("ul")`
@@ -15,6 +16,13 @@ const MenuContainer = styled("ul")`
 `;
 
 export default class Menu extends React.Component {
+  static propTypes = {
+    children: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.string,
+      PropTypes.array
+    ])
+  };
   render() {
     return <MenuContainer>{this.props.children}</MenuContainer>;
   }

@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "react-emotion";
 import PropTypes from "prop-types";
+import styled from "react-emotion";
 
 const UserNameContainer = styled("a")`
   display: flex;
@@ -22,6 +22,10 @@ const UserNameContainer = styled("a")`
 `;
 
 const Avatar = ({ src }) => <img src={src} alt={src} />;
+
+Avatar.propTypes = {
+  src: PropTypes.string.isRequired
+};
 
 // appropriate for inline displays, tables, etc.
 export class SmallUserName extends React.Component {
@@ -67,6 +71,11 @@ const MediumUserNameContainer = styled("a")`
 `;
 
 export class MediumUserName extends React.Component {
+  static propTypes = {
+    username: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
+    fullName: PropTypes.string
+  };
   render() {
     return (
       <MediumUserNameContainer href={`/${this.props.username}`}>
@@ -80,9 +89,3 @@ export class MediumUserName extends React.Component {
     );
   }
 }
-
-MediumUserName.propTypes = {
-  username: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
-  fullname: PropTypes.string
-};

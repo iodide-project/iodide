@@ -19,7 +19,12 @@ export class FixedPositionContainerUnconnected extends React.Component {
         .isRequired,
       height: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         .isRequired
-    }).isRequired
+    }).isRequired,
+    children: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.string,
+      PropTypes.array
+    ])
   };
 
   render() {

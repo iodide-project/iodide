@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 import Settings from "@material-ui/icons/Settings";
 import MoreHoriz from "@material-ui/icons/MoreHoriz";
@@ -69,7 +70,38 @@ const ForkedFromLink = ({ revisionID, notebookID, forkOwner, forkTitle }) => {
   );
 };
 
+ForkedFromLink.propTypes = {
+  revisionID: PropTypes.number,
+  notebookID: PropTypes.number,
+  forkOwner: PropTypes.string,
+  forkTitle: PropTypes.string
+};
+
 export default class RevisionsPage extends React.Component {
+  static propTypes = {
+    userInfo: PropTypes.shape({
+      name: PropTypes.string
+    }),
+    ownerInfo: PropTypes.shape({
+      notebookId: PropTypes.number,
+      forkedFromRevisionID: PropTypes.number,
+      title: PropTypes.string,
+      forkedFromTitle: PropTypes.string,
+      forkedFromUsername: PropTypes.string,
+      forkedFromNotebookID: PropTypes.number,
+      username: PropTypes.string,
+      full_name: PropTypes.string,
+      avatar: PropTypes.string
+    }),
+    revisions: PropTypes.arrayOf(
+      PropTypes.shape({
+        notebookId: PropTypes.number,
+        id: PropTypes.number,
+        title: PropTypes.string
+      })
+    ),
+    files: PropTypes.arrayOf(PropTypes.shape({}))
+  };
   constructor(props) {
     super(props);
     this.state = { revisions: this.props.revisions, files: this.props.files };

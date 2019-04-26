@@ -1,5 +1,6 @@
 /* global IODIDE_PUBLIC */
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 const FooterContainer = styled("footer")`
@@ -24,7 +25,7 @@ const FooterDiv = styled("div")`
   }
 `;
 
-export default ({ showIcon = true }) => (
+const Footer = ({ showIcon = true }) => (
   <FooterContainer showIcon={showIcon}>
     <FooterDiv>
       <p>
@@ -74,3 +75,9 @@ export default ({ showIcon = true }) => (
     </FooterDiv>
   </FooterContainer>
 );
+
+Footer.propTypes = {
+  showIcon: PropTypes.bool
+};
+
+export default Footer;

@@ -21,7 +21,16 @@ const ClickContainer = styled("div")`
   }
 `;
 
+ClickContainer.propTypes = {
+  isValid: PropTypes.bool,
+  isActive: PropTypes.bool
+};
+
 class OutsideClickBoundary extends React.Component {
+  static propTypes = {
+    children: PropTypes.element,
+    onClickOutside: PropTypes.func
+  };
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
@@ -64,7 +73,9 @@ class OutsideClickBoundary extends React.Component {
 export default class Popover extends React.Component {
   static propTypes = {
     title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
-    activatingComponent: PropTypes.element
+    activatingComponent: PropTypes.element,
+    placement: PropTypes.string,
+    children: PropTypes.element
   };
   constructor(props) {
     super(props);

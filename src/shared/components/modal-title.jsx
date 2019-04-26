@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 const ModalTitleContainer = styled("h1")`
@@ -12,6 +13,9 @@ const ModalTitleContainer = styled("h1")`
 `;
 
 export default class ModalTitle extends React.Component {
+  static propTypes = {
+    children: PropTypes.oneOfType([PropTypes.element, PropTypes.string])
+  };
   render() {
     return <ModalTitleContainer>{this.props.children}</ModalTitleContainer>;
   }

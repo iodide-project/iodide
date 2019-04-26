@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 import {
@@ -59,6 +60,9 @@ const BottomDivider = styled("hr")`
 `;
 
 export default class MarketingCopySplash extends React.Component {
+  static propTypes = {
+    loginCallback: PropTypes.func
+  };
   constructor(props) {
     super(props);
     this.state = { showLoginModal: false };

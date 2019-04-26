@@ -1,5 +1,5 @@
 import React from "react";
-
+import PropTypes from "prop-types";
 import HeaderContainer from "../../shared/components/header/header";
 
 import IodideLogo from "../../shared/components/iodide-logo";
@@ -7,7 +7,13 @@ import UserMenu from "../../shared/components/user-menu";
 import LeftContainer from "../../shared/components/header/left-container";
 import RightContainer from "../../shared/components/header/right-container";
 
-class Header extends React.Component {
+export default class Header extends React.Component {
+  static propTypes = {
+    userInfo: PropTypes.shape({
+      name: PropTypes.string,
+      avatar: PropTypes.string
+    })
+  };
   render() {
     return (
       <HeaderContainer>
@@ -25,5 +31,3 @@ class Header extends React.Component {
     );
   }
 }
-
-export default Header;

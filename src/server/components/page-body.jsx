@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 import Footer from "../../shared/components/footer";
 import { sharedProperties } from "../style/base";
@@ -17,6 +18,13 @@ const BodyContent = styled("div")`
 `;
 
 export default class PageBody extends React.Component {
+  static propTypes = {
+    children: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.string,
+      PropTypes.array
+    ])
+  };
   render() {
     return (
       <PageBodyContainer>

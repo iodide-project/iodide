@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Popover from "../../shared/components/popover";
 import Menu from "../../shared/components/menu";
 import MenuItem from "../../shared/components/menu-item";
@@ -6,6 +7,14 @@ import MenuDivider from "../../shared/components/menu-divider";
 import DeleteModal from "./delete-modal";
 
 export default class RevisionsActionsMenu extends React.Component {
+  static propTypes = {
+    revisionID: PropTypes.number,
+    notebookID: PropTypes.number,
+    triggerElement: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    revisionTitle: PropTypes.string,
+    modalBody: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    onDelete: PropTypes.func
+  };
   constructor(props) {
     super(props);
     this.state = { deleteModalVisible: false };

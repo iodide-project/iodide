@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 const PADDING = 6;
@@ -28,6 +29,15 @@ const MenuItemContainer = styled.li(
 );
 
 export default class MenuItem extends React.Component {
+  static propTypes = {
+    children: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.element,
+      PropTypes.array
+    ]),
+    selected: PropTypes.bool,
+    onClick: PropTypes.func
+  };
   render() {
     return (
       <MenuItemContainer

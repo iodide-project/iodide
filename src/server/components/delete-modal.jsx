@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Modal from "../../shared/components/modal";
 import ModalTitle from "../../shared/components/modal-title";
 import ModalContent from "../../shared/components/modal-content";
@@ -7,6 +8,19 @@ import { TextButton } from "../../shared/components/buttons";
 import { deleteFileOnServer } from "../../shared/utils/file-operations";
 
 export default class DeleteModal extends React.Component {
+  static propTypes = {
+    elementID: PropTypes.number,
+    onClose: PropTypes.func,
+    onDelete: PropTypes.func,
+    onCancel: PropTypes.func,
+    visible: PropTypes.bool,
+    title: PropTypes.string,
+    content: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.string,
+      PropTypes.array
+    ])
+  };
   constructor(props) {
     super(props);
     this.deleteObject = this.deleteObject.bind(this);
