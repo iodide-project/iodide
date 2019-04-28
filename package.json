@@ -70,7 +70,7 @@
     "numeral": "2.0.6",
     "opensans-npm-webfont": "1.0.0",
     "prop-types": "15.7.2",
-    "query-string": "6.4.2",
+    "query-string": "6.5.0",
     "react": "16.8.6",
     "react-codemirror2": "5.1.0",
     "react-diff-viewer": "1.0.5",
