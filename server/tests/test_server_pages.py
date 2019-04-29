@@ -1,4 +1,5 @@
 import pytest
+from django.conf import settings
 from django.urls import reverse
 
 from helpers import get_script_block_json, get_title_block
@@ -6,8 +7,33 @@ from server.base.models import User
 from server.notebooks.models import Notebook, NotebookRevision
 
 
+@pytest.fixture
+def ten_test_notebooks(fake_user):
+    """
+    Half of these notebooks have >= MIN_FIREHOSE_REVISIONS revisions.
+    """
+    notebooks = []
+    for i in range(settings.MIN_FIREHOSE_REVISIONS):
+        notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook %s" % i)
+        NotebookRevision.objects.create(
+            notebook=notebook,
+            title="First revision of notebook %s" % i,
+            content="*fake notebook content %s*" % i,
+        )
+        # every other notebook gets min # of revisions to show up in the index page list
+        if i % 2 == 0:
+            for j in range(1, settings.MIN_FIREHOSE_REVISIONS):
+                NotebookRevision.objects.create(
+                    notebook=notebook,
+                    title="Revision %s of notebook %s" % (j, i),
+                    content="*fake notebook content %s revision %s" % (i, j),
+                )
+        notebooks.append(notebook)
+    return notebooks
+
+
 @pytest.mark.parametrize("logged_in", [True, False])
-def test_index_view(client, two_test_notebooks, fake_user, logged_in):
+def test_index_view(client, ten_test_notebooks, fake_user, logged_in):
     if logged_in:
         client.force_login(fake_user)
     resp = client.get(reverse("index"))
@@ -20,6 +46,8 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
     else:
         assert fake_user.avatar is None
 
+    listed_notebooks = ten_test_notebooks[::2]
+    revisions = NotebookRevision.objects
     # assert that the pageData element has the expected structure
     assert get_title_block(resp.content) == "Iodide"
     assert get_script_block_json(resp.content, "pageData") == {
@@ -27,13 +55,11 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
             {
                 "avatar": fake_user.avatar,
                 "id": test_notebook.id,
-                "latestRevision": (
-                    NotebookRevision.objects.get(notebook=test_notebook).created.isoformat()
-                ),
+                "latestRevision": (revisions.filter(notebook=test_notebook)[0].created.isoformat()),
                 "owner": test_notebook.owner.username,
                 "title": test_notebook.title,
             }
-            for test_notebook in reversed(two_test_notebooks)
+            for test_notebook in reversed(listed_notebooks)
         ],
         "userInfo": {
             "name": fake_user.username,
@@ -42,11 +68,11 @@ def test_index_view(client, two_test_notebooks, fake_user, logged_in):
                 {
                     "id": test_notebook.id,
                     "latestRevision": (
-                        NotebookRevision.objects.get(notebook=test_notebook).created.isoformat()
+                        revisions.filter(notebook=test_notebook)[0].created.isoformat()
                     ),
                     "title": test_notebook.title,
                 }
-                for test_notebook in reversed(two_test_notebooks)
+                for test_notebook in reversed(ten_test_notebooks)
             ],
         }
         if logged_in

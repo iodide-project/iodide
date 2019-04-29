@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import logout as django_logout
 from django.core.exceptions import PermissionDenied
-from django.db.models import Max
+from django.db.models import Count, Max
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import ensure_csrf_cookie
 
@@ -19,7 +19,10 @@ def get_user_info_dict(user):
 def index(request):
     user_info = get_user_info_dict(request.user)
     notebooks = (
-        Notebook.objects.annotate(latest_revision=Max("revisions__created"))
+        Notebook.objects.annotate(
+            latest_revision=Max("revisions__created"), num_revisions=Count("revisions")
+        )
+        .filter(num_revisions__gte=settings.MIN_FIREHOSE_REVISIONS)
         .order_by("-latest_revision")
         .values_list("id", "title", "owner__username", "owner__avatar", "latest_revision")[:100]
     )
