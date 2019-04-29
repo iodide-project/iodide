@@ -25,19 +25,16 @@ export default class DeleteModal extends React.Component {
     this.deleteObject = this.deleteObject.bind(this);
   }
 
-  deleteObject() {
+  async deleteObject() {
     // add delete here
-
-    this.props
-      .deleteFunction(this.props.elementID)
-      .then(() => {
-        this.props.onClose();
-        this.props.onDelete(this.props.elementID);
-      })
-      .catch(err => {
-        // FIXME: need a better reporting mechanism for delete failures
-        console.error(err);
-      });
+    try {
+      await this.props.deleteFunction(this.props.elementID);
+      this.props.onClose();
+      this.props.onDelete(this.props.elementID);
+    } catch (err) {
+      // FIXME: need a better reporting mechanism for delete failures
+      console.error(err);
+    }
   }
 
   render() {

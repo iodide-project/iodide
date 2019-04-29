@@ -84,17 +84,16 @@ export function makeFormData(notebookID, data, fileName) {
   return formData;
 }
 
-export function saveFileToServer(
+export async function saveFileToServer(
   notebookID,
   data,
   fileName,
   fileID = undefined
 ) {
   const formData = makeFormData(notebookID, data, fileName);
-  return uploadFile(formData, fileID).then(r => {
-    if (r.status === 500) throw new Error(r.statusText);
-    return r.json();
-  });
+  const r = await uploadFile(formData, fileID);
+  if (r.status === 500) throw new Error(r.statusText);
+  return r.json();
 }
 
 export function makeDeleteRequest(url) {
