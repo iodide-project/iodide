@@ -79,7 +79,7 @@
     "react-helmet": "5.2.0",
     "react-jss": "8.6.1",
     "react-popper": "1.3.3",
-    "react-redux": "7.0.2",
+    "react-redux": "7.0.3",
     "react-table": "6.10.0",
     "redux": "4.0.1",
     "redux-logger": "3.0.6",
