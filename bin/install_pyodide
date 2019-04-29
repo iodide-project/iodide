@@ -1,5 +1,6 @@
 #!/bin/sh
 PYODIDE_DIR=$1-$PYODIDE_VERSION
+PYODIDE_URL=https://github.com/iodide-project/pyodide/releases/download/$PYODIDE_VERSION/pyodide-build-$PYODIDE_VERSION.tar.bz2
 
 # Delete directory if it exists, but is empty
 if [ -d $PYODIDE_DIR ]; then
@@ -10,5 +11,7 @@ fi
 
 if [ ! -d $PYODIDE_DIR ]; then
   mkdir -p $PYODIDE_DIR;
-  curl -L https://github.com/iodide-project/pyodide/releases/download/$PYODIDE_VERSION/pyodide-build-$PYODIDE_VERSION.tar.bz2 | tar jx -C $PYODIDE_DIR
+  echo "Downloading pyodide from $PYODIDE_URL..."
+  curl -L $PYODIDE_URL | tar jx -C $PYODIDE_DIR
+  echo "...done"
 fi
