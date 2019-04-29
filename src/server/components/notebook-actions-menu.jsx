@@ -9,7 +9,8 @@ import UploadModal from "./upload-modal";
 import {
   selectFileAndFormatMetadata,
   uploadFile,
-  updateFile
+  updateFile,
+  deleteNotebookOnServer
 } from "../../shared/utils/file-operations";
 
 export default class NotebookActionsMenu extends React.Component {
@@ -163,7 +164,7 @@ export default class NotebookActionsMenu extends React.Component {
           onCancel={this.hideDeleteModal}
           onDelete={this.props.onDelete}
           elementID={this.props.notebookID}
-          url={`/api/v1/notebooks/${this.props.notebookID}/`}
+          deleteFunction={deleteNotebookOnServer}
         />
         <UploadModal
           visible={this.state.uploadFileConfirmationVisible}
