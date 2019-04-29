@@ -55,7 +55,6 @@ export default class FileActionsMenu extends React.Component {
           onClose={this.hideDeleteModal}
           title={`delete the file  "${this.props.filename}"?`}
           deleteFunction={deleteFileOnServer}
-          // url={`/api/v1/files/${this.props.fileID}`}
           content={this.props.modalBody}
           onCancel={this.hideDeleteModal}
           onDelete={this.props.onDelete}

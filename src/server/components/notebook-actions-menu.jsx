@@ -9,7 +9,6 @@ import UploadModal from "./upload-modal";
 import {
   selectFileAndFormatMetadata,
   uploadFile,
-  updateFile,
   deleteNotebookOnServer
 } from "../../shared/utils/file-operations";
 
@@ -91,7 +90,7 @@ export default class NotebookActionsMenu extends React.Component {
   }
 
   updateFile() {
-    return updateFile(this.state.oldFile.id, this.state.newFile)
+    return uploadFile(this.state.newFile, this.state.oldFile.id)
       .then(response => response.json())
       .then(response => {
         if (this.props.onUploadFile) this.props.onUploadFile(response);
