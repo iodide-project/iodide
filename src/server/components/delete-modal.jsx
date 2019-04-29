@@ -35,6 +35,7 @@ export default class DeleteModal extends React.Component {
         this.props.onDelete(this.props.elementID);
       })
       .catch(err => {
+        // FIXME: need a better reporting mechanism for delete failures
         console.error(err);
       });
   }
