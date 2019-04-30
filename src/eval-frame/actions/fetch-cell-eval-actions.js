@@ -139,19 +139,18 @@ export async function evaluateFetchText(fetchText, evalId) {
       historyId: outputHistoryId
     })
   );
-  const fetchCalls = fetches.map((f, i) =>
-    handleFetch(f).then(outcome => {
-      progressStrings = progressStrings.map(entry => Object.assign({}, entry));
-      progressStrings[i] = outcome;
-      sendActionToEditor(
-        updateConsoleEntry({
-          historyId: outputHistoryId,
-          value: progressStrings
-        })
-      );
-      return outcome;
-    })
-  );
+  const fetchCalls = fetches.map(async (f, i) => {
+    const outcome = await handleFetch(f);
+    progressStrings = progressStrings.map(entry => Object.assign({}, entry));
+    progressStrings[i] = outcome;
+    sendActionToEditor(
+      updateConsoleEntry({
+        historyId: outputHistoryId,
+        value: progressStrings
+      })
+    );
+    return outcome;
+  });
 
   const outcomes = await Promise.all(fetchCalls);
   const errors = outcomes.filter(f => f.text.startsWith("ERROR"));
