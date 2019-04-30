@@ -169,4 +169,5 @@ export async function evaluateFetchText(fetchText, evalId) {
   } else {
     sendStatusResponseToEditor("SUCCESS", evalId);
   }
+  return undefined;
 }
