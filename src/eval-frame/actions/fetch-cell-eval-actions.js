@@ -114,7 +114,7 @@ export async function handleFetch(fetchInfo) {
   return Promise.resolve(successMessage(fetchInfo));
 }
 
-export function evaluateFetchText(fetchText, evalId) {
+export async function evaluateFetchText(fetchText, evalId) {
   const outputHistoryId = generateRandomId();
   const fetches = parseFetchCell(fetchText);
   const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
@@ -153,19 +153,20 @@ export function evaluateFetchText(fetchText, evalId) {
     })
   );
 
-  return Promise.all(fetchCalls)
-    .then(outcomes => {
-      // check for error.
-      const hasError = outcomes.some(f => f.text.startsWith("ERROR"));
-      sendActionToEditor(
-        updateConsoleEntry({
-          historyId: outputHistoryId,
-          value: outcomes,
-          level: hasError ? "ERROR" : undefined
-        })
-      );
+  const outcomes = await Promise.all(fetchCalls);
+  const errors = outcomes.filter(f => f.text.startsWith("ERROR"));
+  const hasError = errors.length > 0;
+
+  sendActionToEditor(
+    updateConsoleEntry({
+      historyId: outputHistoryId,
+      value: outcomes,
+      level: hasError ? "ERROR" : undefined
     })
-    .then(() => {
-      sendStatusResponseToEditor("SUCCESS", evalId);
-    });
+  );
+  if (hasError) {
+    sendStatusResponseToEditor("ERROR", evalId);
+  } else {
+    sendStatusResponseToEditor("SUCCESS", evalId);
+  }
 }
