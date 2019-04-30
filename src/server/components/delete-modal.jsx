@@ -14,6 +14,7 @@ export default class DeleteModal extends React.Component {
     onCancel: PropTypes.func,
     visible: PropTypes.bool,
     title: PropTypes.string,
+    deleteFunction: PropTypes.func,
     content: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,

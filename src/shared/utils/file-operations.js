@@ -38,9 +38,11 @@ export function uploadFile(formData, fileID = undefined) {
   // if fileID not defined, this will upload the file, or return an error if
   // the filename in formData is already in the files table.
   // if fileID is provided, will attempt to update the entry in the files table.
-  return fetchWithCSRFToken(`/api/v1/files/${fileID ? `${fileID}/` : ""}`, {
+  const url = fileID ? `/api/v1/files/${fileID}/` : `/api/v1/files/`;
+  const method = fileID ? "PUT" : "POST";
+  return fetchWithCSRFToken(url, {
     body: formData,
-    method: fileID ? "PUT" : "POST"
+    method
   });
 }
 
@@ -96,7 +98,7 @@ export async function saveFileToServer(
   return r.json();
 }
 
-export function makeDeleteRequest(url) {
+export function makeDeleteRequestPRIVATE(url) {
   return fetchWithCSRFTokenAndJSONContent(url, { method: "DELETE" }).then(r => {
     if (r.status === 500) throw new Error(r.statusText);
     return undefined;
@@ -104,15 +106,15 @@ export function makeDeleteRequest(url) {
 }
 
 export function deleteNotebookOnServer(notebookID) {
-  return makeDeleteRequest(`/api/v1/notebooks/${notebookID}`);
+  return makeDeleteRequestPRIVATE(`/api/v1/notebooks/${notebookID}`);
 }
 
 export function deleteRevisionOnServer(notebookID, revisionID) {
-  return makeDeleteRequest(
+  return makeDeleteRequestPRIVATE(
     `/api/v1/notebooks/${notebookID}/revisions/${revisionID}`
   );
 }
 
 export function deleteFileOnServer(fileID) {
-  return makeDeleteRequest(`/api/v1/files/${fileID}/`);
+  return makeDeleteRequestPRIVATE(`/api/v1/files/${fileID}/`);
 }
