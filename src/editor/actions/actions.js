@@ -204,6 +204,14 @@ export function updateEditorCursor(line, col, forceUpdate = false) {
   return { type: "UPDATE_CURSOR", line, col, forceUpdate };
 }
 
+export function moveToNextChunk() {
+  return { type: "MOVE_TO_NEXT_CHUNK" };
+}
+
+export function moveToPreviousChunk() {
+  return { type: "MOVE_TO_PREVIOUS_CHUNK" };
+}
+
 export function updateEditorSelections(selections) {
   return {
     type: "UPDATE_SELECTIONS",

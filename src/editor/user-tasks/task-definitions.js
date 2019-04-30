@@ -111,6 +111,22 @@ tasks.exportNotebook = new UserTask({
   }
 });
 
+tasks.moveToNextChunk = new UserTask({
+  title: "Move to Next Chunk",
+  keybindings: ["alt+down"],
+  callback() {
+    dispatcher.moveToNextChunk();
+  }
+});
+
+tasks.moveToPreviousChunk = new UserTask({
+  title: "Move to Previous Chunk",
+  keybindings: ["alt+up"],
+  callback() {
+    dispatcher.moveToPreviousChunk();
+  }
+});
+
 tasks.exportNotebookAsReport = new UserTask({
   title: "Export Notebook as Report",
   callback() {
