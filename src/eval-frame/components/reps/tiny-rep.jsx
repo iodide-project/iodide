@@ -69,6 +69,7 @@ const createQuotedStringRep = (lQuote, rQuote) => {
     stringValue: PropTypes.string.isRequired,
     isTruncated: PropTypes.bool.isRequired
   };
+  return InnerQuotedStringRep;
 };
 
 const StringRep = createQuotedStringRep('"', '"');
