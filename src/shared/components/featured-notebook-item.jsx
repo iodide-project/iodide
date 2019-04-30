@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 import Element from "./three-set/element";
 
@@ -38,6 +39,13 @@ const NotebookDisplayTitle = styled("h3")`
 `;
 
 export default class NotebookDisplayItem extends React.Component {
+  static propTypes = {
+    imageSource: PropTypes.string.isRequired,
+    href: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
+      .isRequired
+  };
   render() {
     return (
       <NotebookDisplayContainer href={this.props.href}>

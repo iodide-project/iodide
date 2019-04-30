@@ -13,7 +13,8 @@ import MiddleContainer from "../../../shared/components/header/middle-container"
 
 export class EditorModeToolbarUnconnected extends React.Component {
   static propTypes = {
-    viewModeDisplay: PropTypes.object
+    viewModeStyle: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    backLink: PropTypes.string
   };
   render() {
     return (

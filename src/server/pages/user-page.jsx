@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 // import MoreHoriz from '@material-ui/icons/MoreHoriz'
 
@@ -7,7 +8,6 @@ import PageBody from "../components/page-body";
 import BelowFoldContainer from "../components/page-containers/below-fold-container";
 // import PaginatedList from '../components/paginated-list'
 import AttentionBlock from "../components/attention-block";
-// import NotebookActionsMenu from '../components/notebook-actions-menu'
 import NewNotebookButton from "../components/new-notebook-button";
 // import { ActionsContainer, BodyIconStyle } from '../style/icon-styles'
 // import { monthDayYear } from '../../shared/date-formatters'
@@ -42,7 +42,7 @@ const UserInformationContainer = styled("div")`
   }
 `;
 
-export const UserPageWithoutNotebooksPlaceholder = ({ isUserAccount }) => (
+const UserPageWithoutNotebooksPlaceholder = ({ isUserAccount }) => (
   <AttentionBlock>
     {isUserAccount ? (
       <React.Fragment>
@@ -55,9 +55,29 @@ export const UserPageWithoutNotebooksPlaceholder = ({ isUserAccount }) => (
   </AttentionBlock>
 );
 
+UserPageWithoutNotebooksPlaceholder.propTypes = {
+  isUserAccount: PropTypes.bool
+};
+
 export const isLoggedIn = userInfo => "name" in userInfo;
 
 export default class UserPage extends React.Component {
+  static propTypes = {
+    thisUser: PropTypes.shape({
+      name: PropTypes.string
+    }),
+    userInfo: PropTypes.shape({
+      name: PropTypes.string
+    }),
+    notebookList: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string,
+        latestRevision: PropTypes.string,
+        last_revision: PropTypes.string
+      })
+    )
+  };
   render() {
     const { thisUser, userInfo, notebookList } = this.props;
     const isUserAccount =
@@ -111,3 +131,5 @@ export default class UserPage extends React.Component {
     );
   }
 }
+
+export { UserPageWithoutNotebooksPlaceholder };

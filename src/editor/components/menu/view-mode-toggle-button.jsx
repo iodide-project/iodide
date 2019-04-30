@@ -11,7 +11,8 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
     buttonText: PropTypes.string.isRequired,
     setViewModeToExplore: PropTypes.func.isRequired,
     setViewModeToReport: PropTypes.func.isRequired,
-    style: PropTypes.object.isRequired
+    style: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    tooltipText: PropTypes.string.isRequired
   };
   constructor(props) {
     super(props);
@@ -33,7 +34,7 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
         title={this.props.tooltipText}
       >
         <Button
-          style={{ ...this.props.style }}
+          style={this.props.style}
           onClick={this.toggleViewMode}
           variant="text"
           mini

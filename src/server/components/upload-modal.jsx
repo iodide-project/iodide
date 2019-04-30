@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Modal from "../../shared/components/modal";
 import ModalTitle from "../../shared/components/modal-title";
 import ModalContent from "../../shared/components/modal-content";
@@ -6,6 +7,15 @@ import ModalCall from "../../shared/components/modal-call";
 import { TextButton } from "../../shared/components/buttons";
 
 export default class UploadModal extends React.Component {
+  static propTypes = {
+    visible: PropTypes.bool,
+    onClose: PropTypes.func,
+    onCancel: PropTypes.func,
+    onUpdateFile: PropTypes.func,
+    oldFile: PropTypes.shape({
+      filename: PropTypes.string
+    })
+  };
   render() {
     return (
       <Modal visible={this.props.visible} onClose={this.props.onClose}>

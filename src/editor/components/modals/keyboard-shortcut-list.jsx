@@ -1,21 +1,17 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import KeyboardShortcutRep from "./keyboard-shortcut-rep";
 import HelpModalContent from "./help-modal-content";
 
-export default class KeyboardShortcutList extends React.Component {
-  static propTypes = {
-    helpModalOpen: PropTypes.bool,
-    tasks: PropTypes.object
-  };
+import tasks from "../../user-tasks/task-definitions";
 
+export default class KeyboardShortcutList extends React.Component {
   render() {
     const globalKeys = [];
-    Object.keys(this.props.tasks)
-      .filter(k => this.props.tasks[k].displayKeybinding)
+    Object.keys(tasks)
+      .filter(k => tasks[k].displayKeybinding)
       .forEach(k => {
-        const task = this.props.tasks[k];
+        const task = tasks[k];
         globalKeys.push(<KeyboardShortcutRep key={k} task={task} />);
       });
 

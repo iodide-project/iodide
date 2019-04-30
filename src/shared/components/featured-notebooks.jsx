@@ -1,8 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import NotebookDisplay from "./three-set/three-elements";
 import NotebookDisplayItem from "./featured-notebook-item";
 
-export default ({ width }) => (
+const FeaturedNotebooks = ({ width }) => (
   <NotebookDisplay width={width}>
     <NotebookDisplayItem
       title="A Brief Tour through Iodide"
@@ -48,3 +49,9 @@ export default ({ width }) => (
     />
   </NotebookDisplay>
 );
+
+FeaturedNotebooks.propTypes = {
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+};
+
+export default FeaturedNotebooks;

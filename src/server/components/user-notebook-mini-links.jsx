@@ -1,7 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { ListSmallLink } from "./list";
 
-export default ({ id }) => (
+const MiniLink = ({ id }) => (
   <React.Fragment>
     <ListSmallLink href={`/notebooks/${id}/`}>explore</ListSmallLink>
     <ListSmallLink href={`/notebooks/${id}/?viewMode=report`}>
@@ -12,3 +13,7 @@ export default ({ id }) => (
     </ListSmallLink>
   </React.Fragment>
 );
+MiniLink.propTypes = {
+  id: PropTypes.number
+};
+export default MiniLink;

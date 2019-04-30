@@ -42,14 +42,14 @@ const CellDetails = props => {
   );
 };
 CellDetails.propTypes = {
-  value: PropTypes.any,
+  value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   focusedRow: PropTypes.number,
   focusedCol: PropTypes.string
 };
 
 class CellRenderer extends React.Component {
   static propTypes = {
-    value: PropTypes.any,
+    value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     cellIsFocused: PropTypes.bool.isRequired
   };
   render() {

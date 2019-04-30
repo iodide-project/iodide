@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { css } from "emotion";
 import styled from "react-emotion";
 import THEME from "../theme";
@@ -17,6 +18,10 @@ const IodideLogoContainer = styled("h2")`
 `;
 
 export default class IodideLogo extends React.Component {
+  static propTypes = {
+    target: PropTypes.string,
+    backLink: PropTypes.string
+  };
   render() {
     return (
       <IodideLogoContainer>

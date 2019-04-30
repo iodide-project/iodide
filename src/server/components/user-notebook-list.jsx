@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import MoreHoriz from "@material-ui/icons/MoreHoriz";
 
 import Paginatedlist from "./paginated-list";
@@ -17,6 +18,17 @@ import { ActionsContainer, BodyIconStyle } from "../style/icon-styles";
 import { monthDayYear } from "../../shared/date-formatters";
 
 export default class UserNotebookList extends React.Component {
+  static propTypes = {
+    notebooks: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string
+      })
+    ),
+    showMenu: PropTypes.bool,
+    pageSize: PropTypes.number,
+    isUserAccount: PropTypes.bool
+  };
   constructor(props) {
     super(props);
     this.state = { notebooks: this.props.notebooks };

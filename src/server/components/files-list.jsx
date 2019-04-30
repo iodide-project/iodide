@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 import FileIcon from "@material-ui/icons/Note";
 import MoreHoriz from "@material-ui/icons/MoreHoriz";
@@ -49,6 +50,12 @@ const FileSizeContainer = styled("td")`
 `;
 
 export default class FilesList extends React.Component {
+  static propTypes = {
+    isUserAccount: PropTypes.bool,
+    notebookID: PropTypes.number,
+    files: PropTypes.arrayOf(PropTypes.object),
+    onDelete: PropTypes.func
+  };
   render() {
     const { isUserAccount, notebookID, files } = this.props;
     return files.length ? (

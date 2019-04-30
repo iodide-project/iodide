@@ -8,11 +8,11 @@ import ExternalLinkTask from "../../user-tasks/external-link-task";
 // TODO - implement tooltip again
 export default class NotebookTaskFunction extends React.Component {
   static propTypes = {
-    title: PropTypes.string,
     task: PropTypes.oneOfType([
       PropTypes.instanceOf(UserTask),
       PropTypes.instanceOf(ExternalLinkTask)
-    ])
+    ]),
+    children: PropTypes.node.isRequired
   };
   static muiName = "IconButton";
   render() {
@@ -24,7 +24,7 @@ export default class NotebookTaskFunction extends React.Component {
         <IconButton
           classes={{ root: "menu-button" }}
           className="menu-button"
-          style={this.props.style || { color: "#fafafa" }}
+          style={{ color: "#fafafa" }}
           onClick={this.props.task.callback}
         >
           {this.props.children}

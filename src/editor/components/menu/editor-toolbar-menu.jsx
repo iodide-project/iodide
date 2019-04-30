@@ -9,8 +9,7 @@ import { connectionModeIsServer } from "../../tools/server-tools";
 
 export class EditorToolbarMenuUnconnected extends React.Component {
   static propTypes = {
-    isServer: PropTypes.bool.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired
+    isServer: PropTypes.bool.isRequired
   };
 
   render() {
@@ -28,10 +27,8 @@ export class EditorToolbarMenuUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state) {
-  const isAuthenticated = Boolean(state.userData.name);
   const isServer = connectionModeIsServer(state);
   return {
-    isAuthenticated,
     isServer
   };
 }

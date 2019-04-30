@@ -63,10 +63,18 @@ const ContainedButtonContainer = elementType => styled(elementType)`
   }
 `;
 
-const ButtonFactory = (buttonType, props) => {
-  const buttonTask = props.href ? "a" : "button";
-  return React.createElement(buttonType(buttonTask), props);
+const ButtonFactory = (buttonType, etc) => {
+  const buttonTask = etc.href ? "a" : "button";
+  return React.createElement(buttonType(buttonTask), etc);
 };
+
+const buttonPropTypes = () => ({
+  size: PropTypes.number,
+  buttonColor: PropTypes.string,
+  buttonHoverColor: PropTypes.string,
+  href: PropTypes.string,
+  onClick: PropTypes.func
+});
 
 export class TextButton extends React.Component {
   render() {
@@ -81,19 +89,12 @@ export class OutlineButton extends React.Component {
 }
 
 export class ContainedButton extends React.Component {
+  static propTypes = buttonPropTypes();
   render() {
     return ButtonFactory(ContainedButtonContainer, this.props);
   }
 }
 
-const buttonPropTypes = {
-  size: PropTypes.number,
-  buttonColor: PropTypes.string,
-  buttonHoverColor: PropTypes.string,
-  href: PropTypes.string,
-  onClick: PropTypes.func
-};
-
-TextButton.propTypes = buttonPropTypes;
-OutlineButton.propTypes = buttonPropTypes;
-ContainedButton.propTypes = buttonPropTypes;
+// TextButton.propTypes = buttonPropTypes;
+// OutlineButton.propTypes = buttonPropTypes;
+// ContainedButton.propTypes = buttonPropTypes;

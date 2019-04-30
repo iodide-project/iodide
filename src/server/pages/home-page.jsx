@@ -1,5 +1,6 @@
 /* global IODIDE_PUBLIC */
 import React from "react";
+import PropTypes from "prop-types";
 
 import Header from "../components/header";
 import PageBody from "../components/page-body";
@@ -21,6 +22,10 @@ const TrendingNotebooksPage = ({ notebookList }) => (
   </React.Fragment>
 );
 
+TrendingNotebooksPage.propTypes = {
+  notebookList: PropTypes.arrayOf(PropTypes.object)
+};
+
 const LetsGetStarted = () => (
   <AttentionBlock>
     <div>Welcome to Iodide. Shall we get started?</div>
@@ -28,6 +33,13 @@ const LetsGetStarted = () => (
   </AttentionBlock>
 );
 export default class HomePage extends React.Component {
+  static propTypes = {
+    userInfo: PropTypes.shape({
+      name: PropTypes.string,
+      avatar: PropTypes.string
+    }),
+    notebookList: PropTypes.arrayOf(PropTypes.object)
+  };
   render() {
     const isLoggedIn = "name" in this.props.userInfo;
     const { notebookList } = this.props;

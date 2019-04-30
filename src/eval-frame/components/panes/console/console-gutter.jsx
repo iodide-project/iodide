@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "react-emotion";
+import PropTypes from "prop-types";
+
 import THEME from "../../../../shared/theme";
 
 const GutterContainer = styled("div")`
@@ -20,10 +22,18 @@ const GutterAligner = styled("div")`
   justify-content: center;
 `;
 
-export default ({ children }) => {
+const Gutter = ({ children }) => {
   return (
     <GutterContainer>
       <GutterAligner>{children}</GutterAligner>
     </GutterContainer>
   );
 };
+Gutter.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
+};
+
+export default Gutter;

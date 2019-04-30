@@ -66,6 +66,10 @@ const HistoryInputItem = ({ language, children }) => {
   );
 };
 HistoryInputItem.propTypes = {
-  language: PropTypes.string.isRequired
+  language: PropTypes.string.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
 export default HistoryInputItem;

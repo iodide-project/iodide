@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 const ModalCallContainer = styled("div")`
@@ -9,6 +10,13 @@ const ModalCallContainer = styled("div")`
 `;
 
 export default class ModalCall extends React.Component {
+  static propTypes = {
+    children: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.element,
+      PropTypes.array
+    ])
+  };
   render() {
     return <ModalCallContainer>{this.props.children}</ModalCallContainer>;
   }

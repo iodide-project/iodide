@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "react-emotion";
 import PropTypes from "prop-types";
 import PaginatedList from "./paginated-list";
 import {
@@ -15,45 +14,22 @@ import {
 } from "./list";
 import UserNotebookMiniLinks from "./user-notebook-mini-links";
 import { SmallUserName as UserName } from "../components/user-name";
-import { OutlineButton } from "../../shared/components/buttons";
 import { monthDayYear } from "../../shared/date-formatters";
-
-const PaginationContainer = styled("div")`
-  display: block;
-  margin: auto;
-  text-align: center;
-  margin-top: 20px;
-`;
-
-const Number = styled("span")`
-  display: inline-block;
-  padding: 5px;
-  width: 40px;
-  text-align: center;
-`;
-
-const N = styled("span")``;
-const D = styled("span")`
-  font-weight: 300;
-  color: gray;
-`;
-export class Pagination extends React.Component {
-  render() {
-    return (
-      <PaginationContainer>
-        <OutlineButton onClick={this.props.onPrev}>&larr; prev</OutlineButton>
-        <Number>
-          <N>{this.props.currentPage}</N> / <D>{this.props.pages}</D>
-        </Number>
-        <OutlineButton onClick={this.props.onNext}>next &rarr;</OutlineButton>
-      </PaginationContainer>
-    );
-  }
-}
 
 export const PAGE_SIZE = 15;
 
 export default class TrendingNotebooksList extends React.Component {
+  static propTypes = {
+    notebookList: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string,
+        owner: PropTypes.string,
+        avatar: PropTypes.string,
+        latestRevision: PropTypes.string
+      })
+    )
+  };
   constructor(props) {
     super(props);
     this.state = { currentPage: 0 };

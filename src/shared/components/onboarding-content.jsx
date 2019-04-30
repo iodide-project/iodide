@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 const elementColor = props => (props.fainter ? "gray" : "rgba(0,0,0,.6)");
@@ -81,6 +82,11 @@ const AdditionalOnboarding = styled("div")`
 `;
 
 export default class OnboardingContent extends React.Component {
+  static propTypes = {
+    fainter: PropTypes.bool,
+    lede: PropTypes.element,
+    children: PropTypes.oneOfType([PropTypes.element, PropTypes.array])
+  };
   render() {
     return (
       <OnboardingContentContainer fainter={this.props.fainter}>

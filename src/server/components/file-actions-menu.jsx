@@ -1,10 +1,23 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Popover from "../../shared/components/popover";
 import Menu from "../../shared/components/menu";
 import MenuItem from "../../shared/components/menu-item";
 import DeleteModal from "./delete-modal";
 
 export default class FileActionsMenu extends React.Component {
+  static propTypes = {
+    triggerElement: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    placement: PropTypes.string,
+    filename: PropTypes.string,
+    modalBody: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.string,
+      PropTypes.array
+    ]),
+    onDelete: PropTypes.func,
+    fileID: PropTypes.number
+  };
   constructor(props) {
     super(props);
     this.state = { deleteModalVisible: false };

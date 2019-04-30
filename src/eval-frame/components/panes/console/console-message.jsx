@@ -37,7 +37,11 @@ const ConsoleMessage = ({ children, level }) => {
 };
 
 ConsoleMessage.propTypes = {
-  level: PropTypes.oneOf(Object.keys(levels)).isRequired
+  level: PropTypes.oneOf(Object.keys(levels)).isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
 
 export default ConsoleMessage;

@@ -1,9 +1,15 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Modal from "./modal";
 import ModalContent from "./modal-content";
 import { ContainedButton } from "./buttons";
 
 export default class LoginModal extends React.Component {
+  static propTypes = {
+    login: PropTypes.func,
+    visible: PropTypes.bool,
+    onClose: PropTypes.func
+  };
   constructor(props) {
     super(props);
     this.login = this.login.bind(this);

@@ -99,6 +99,9 @@ const enableScrolling = () => {
 };
 
 export default class Modal extends React.Component {
+  static propTypes = {
+    children: PropTypes.element
+  };
   constructor(props) {
     super(props);
     this.closeModalOnEscapeKeypress = this.closeModalOnEscapeKeypress.bind(

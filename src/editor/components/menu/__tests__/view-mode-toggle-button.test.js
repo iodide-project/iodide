@@ -29,7 +29,8 @@ describe("ViewModeToggleButtonUnconnected", () => {
       buttonText: "a button text string",
       setViewModeToExplore: setViewModeToExploreMock,
       setViewModeToReport: setViewModeToReportMock,
-      style: { button: "a object for styling button" }
+      style: { button: "a object for styling button" },
+      tooltipText: "tooltip_text"
     };
     mountedComponent = undefined;
   });

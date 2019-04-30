@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "react-emotion";
-// import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { List, Placeholder } from "./list";
 import { OutlineButton } from "../../shared/components/buttons";
 
@@ -24,6 +24,12 @@ const D = styled("span")`
   color: gray;
 `;
 export class Pagination extends React.Component {
+  static propTypes = {
+    currentPage: PropTypes.number,
+    onPrev: PropTypes.func,
+    onNext: PropTypes.func,
+    pages: PropTypes.number
+  };
   render() {
     return (
       <PaginationContainer>
@@ -40,6 +46,17 @@ export class Pagination extends React.Component {
 export const PAGE_SIZE = 15;
 
 export default class PaginatedTable extends React.Component {
+  static propTypes = {
+    pageSize: PropTypes.number,
+    rows: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.element,
+        PropTypes.string,
+        PropTypes.object
+      ])
+    ),
+    getRow: PropTypes.func
+  };
   constructor(props) {
     super(props);
     this.state = { currentPage: 0 };

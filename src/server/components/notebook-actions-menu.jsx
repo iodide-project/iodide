@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Popover from "../../shared/components/popover";
 import Menu from "../../shared/components/menu";
 import MenuItem from "../../shared/components/menu-item";
@@ -12,6 +13,22 @@ import {
 } from "../../shared/utils/file-operations";
 
 export default class NotebookActionsMenu extends React.Component {
+  static propTypes = {
+    files: PropTypes.arrayOf(PropTypes.object),
+    onUploadFile: PropTypes.func,
+    notebookID: PropTypes.number,
+    hideRevisions: PropTypes.bool,
+    triggerElement: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    placement: PropTypes.string,
+    onDelete: PropTypes.func,
+    modalBody: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.string,
+      PropTypes.array
+    ]),
+    isUserAccount: PropTypes.bool,
+    notebookTitle: PropTypes.string
+  };
   constructor(props) {
     super(props);
     this.state = {
