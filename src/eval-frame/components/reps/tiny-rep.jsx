@@ -37,6 +37,10 @@ const ObjectRep = ({ objClass, size }) => (
     {objClass}({size})
   </ClassInfoText>
 );
+ObjectRep.propTypes = {
+  objClass: PropTypes.string.isRequired,
+  size: PropTypes.number
+};
 
 const Ell = styled(RepBaseText)`
   color: ${ellipsisColor};
@@ -50,19 +54,22 @@ const Sep = styled(RepBaseText)`
 const StringText = styled(RepBaseText)`
   color: ${stringColor};
 `;
-const createQuotedStringRep = (lQuote, rQuote) => ({
-  size,
-  stringValue,
-  isTruncated
-}) => (
-  <span>
-    <Sep>{lQuote}</Sep>
-    <StringText>{stringValue}</StringText>
-    {isTruncated ? <Ellipsis /> : ""}
-    <Sep>{rQuote}</Sep>
-    {isTruncated ? <ClassInfoText>({size})</ClassInfoText> : ""}
-  </span>
-);
+const createQuotedStringRep = (lQuote, rQuote) => {
+  const InnerQuotedStringRep = ({ size, stringValue, isTruncated }) => (
+    <span>
+      <Sep>{lQuote}</Sep>
+      <StringText>{stringValue}</StringText>
+      {isTruncated ? <Ellipsis /> : ""}
+      <Sep>{rQuote}</Sep>
+      {isTruncated ? <ClassInfoText>({size})</ClassInfoText> : ""}
+    </span>
+  );
+  InnerQuotedStringRep.propTypes = {
+    size: PropTypes.number,
+    stringValue: PropTypes.string.isRequired,
+    isTruncated: PropTypes.bool.isRequired
+  };
+};
 
 const StringRep = createQuotedStringRep('"', '"');
 const RegexRep = createQuotedStringRep("/", "/");
@@ -83,6 +90,10 @@ const SymbolRep = ({ stringValue, isTruncated }) => (
     )}
   </span>
 );
+SymbolRep.propTypes = {
+  stringValue: PropTypes.string.isRequired,
+  isTruncated: PropTypes.bool.isRequired
+};
 
 const FunctionText = styled(RepBaseText)`
   color: ${functionColor}
@@ -97,11 +108,19 @@ const FunctionRep = ({ objClass, stringValue, isTruncated }) => (
     <FunctionText>()</FunctionText>
   </span>
 );
+FunctionRep.propTypes = {
+  objClass: PropTypes.string.isRequired,
+  stringValue: PropTypes.string.isRequired,
+  isTruncated: PropTypes.bool.isRequired
+};
 
 const ErrorText = styled(RepBaseText)`
   color: ${errorColor};
 `;
 const ErrorRep = ({ objClass }) => <ErrorText>{objClass}</ErrorText>;
+ErrorRep.propTypes = {
+  objClass: PropTypes.string.isRequired
+};
 
 const typeToTinyRepMapping = {
   Number: TinyStringValueWithColor(numberColor),
