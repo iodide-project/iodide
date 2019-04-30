@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "react-emotion";
 import Settings from "@material-ui/icons/Settings";
 import MoreHoriz from "@material-ui/icons/MoreHoriz";
+import format from "date-fns/format";
 
 import PageBody from "../components/page-body";
 import Header from "../components/header";
@@ -12,7 +13,6 @@ import { fetchWithCSRFTokenAndJSONContent } from "../../shared/fetch-with-csrf-t
 import NotebookActionsMenu from "../components/notebook-actions-menu";
 import RevisionActionsMenu from "../components/revision-actions-menu";
 import FilesList from "../components/files-list";
-import { monthDayYear } from "../../shared/date-formatters";
 
 import { BodyIconStyle, ActionsContainer } from "../style/icon-styles";
 
@@ -42,6 +42,11 @@ const RevisionsPageHeader = styled("h2")`
   a:hover {
     text-decoration: underline;
   }
+`;
+
+const RevisionDateLink = styled.a`
+  display: block;
+  font-size: ${props => (props.size === "small" ? "12px" : "auto")};
 `;
 
 const ForkedFromLinkContainer = styled("div")`
@@ -235,9 +240,21 @@ export default class RevisionsPage extends React.Component {
                     </ListLinkSet>
                   </ListMetadata>
                   <ListDate>
-                    <a href={`/notebooks/${revision.notebookId}/revisions/`}>
-                      {monthDayYear(revision.date)}
-                    </a>
+                    <RevisionDateLink
+                      href={`/notebooks/${revision.notebookId}?revision=${
+                        revision.id
+                      }`}
+                    >
+                      {format(new Date(revision.date), "MMM dd, uuuu")}
+                    </RevisionDateLink>
+                    <RevisionDateLink
+                      size="small"
+                      href={`/notebooks/${revision.notebookId}?revision=${
+                        revision.id
+                      }`}
+                    >
+                      {format(new Date(revision.date), "HH:mm:ss")}
+                    </RevisionDateLink>
                   </ListDate>
                   <ListMetadata>
                     {isCurrentUsersPage ? (
