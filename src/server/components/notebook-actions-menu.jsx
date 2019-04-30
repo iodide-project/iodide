@@ -9,7 +9,7 @@ import UploadModal from "./upload-modal";
 import {
   selectFileAndFormatMetadata,
   uploadFile,
-  updateFile
+  deleteNotebookOnServer
 } from "../../shared/utils/file-operations";
 
 export default class NotebookActionsMenu extends React.Component {
@@ -81,21 +81,21 @@ export default class NotebookActionsMenu extends React.Component {
     });
   }
 
-  uploadFile(formData) {
-    return uploadFile(formData)
-      .then(response => response.json())
-      .then(response => {
-        if (this.props.onUploadFile) this.props.onUploadFile(response);
-      });
+  async uploadFile(formData) {
+    const response = await uploadFile(formData);
+    // FIXME: uploadFile needs better error handling.
+    const data = await response.json();
+    if (this.props.onUploadFile) this.props.onUploadFile(data);
   }
 
-  updateFile() {
-    return updateFile(this.state.oldFile.id, this.state.newFile)
-      .then(response => response.json())
-      .then(response => {
-        if (this.props.onUploadFile) this.props.onUploadFile(response);
-        this.hideUploadFileConfirmationModal();
-      });
+  async updateFile() {
+    const response = await uploadFile(
+      this.state.newFile,
+      this.state.oldFile.id
+    );
+    const data = await response.json();
+    if (this.props.onUploadFile) this.props.onUploadFile(data);
+    this.hideUploadFileConfirmationModal();
   }
 
   hideDeleteModal() {
@@ -163,7 +163,7 @@ export default class NotebookActionsMenu extends React.Component {
           onCancel={this.hideDeleteModal}
           onDelete={this.props.onDelete}
           elementID={this.props.notebookID}
-          url={`/api/v1/notebooks/${this.props.notebookID}/`}
+          deleteFunction={deleteNotebookOnServer}
         />
         <UploadModal
           visible={this.state.uploadFileConfirmationVisible}

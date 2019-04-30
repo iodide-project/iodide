@@ -5,7 +5,6 @@ import ModalTitle from "../../shared/components/modal-title";
 import ModalContent from "../../shared/components/modal-content";
 import ModalCall from "../../shared/components/modal-call";
 import { TextButton } from "../../shared/components/buttons";
-import { deleteFileOnServer } from "../../shared/utils/file-operations";
 
 export default class DeleteModal extends React.Component {
   static propTypes = {
@@ -15,6 +14,7 @@ export default class DeleteModal extends React.Component {
     onCancel: PropTypes.func,
     visible: PropTypes.bool,
     title: PropTypes.string,
+    deleteFunction: PropTypes.func,
     content: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
@@ -26,17 +26,16 @@ export default class DeleteModal extends React.Component {
     this.deleteObject = this.deleteObject.bind(this);
   }
 
-  deleteObject() {
+  async deleteObject() {
     // add delete here
-
-    deleteFileOnServer(this.props.elementID)
-      .then(() => {
-        this.props.onClose();
-        this.props.onDelete(this.props.elementID);
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    try {
+      await this.props.deleteFunction(this.props.elementID);
+      this.props.onClose();
+      this.props.onDelete(this.props.elementID);
+    } catch (err) {
+      // FIXME: need a better reporting mechanism for delete failures
+      console.error(err);
+    }
   }
 
   render() {
