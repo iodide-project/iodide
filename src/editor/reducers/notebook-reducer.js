@@ -310,6 +310,17 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
+    case "SET_NOTEBOOK_OWNER_IN_SESSION": {
+      const { notebookInfo, userData } = state;
+      const newNotebookInfo = Object.assign({}, notebookInfo);
+      newNotebookInfo.username = userData.name;
+      newNotebookInfo.user_can_save = true;
+      newNotebookInfo.files = newNotebookInfo.files.map(f =>
+        Object.assign({}, f)
+      );
+      return Object.assign({}, state, { notebookInfo: newNotebookInfo });
+    }
+
     default: {
       return state;
     }
