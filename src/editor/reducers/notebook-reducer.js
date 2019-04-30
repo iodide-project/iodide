@@ -1,6 +1,5 @@
 import { newNotebook } from "../state-schemas/editor-state-prototypes";
 import { historyIdGen } from "../tools/id-generators";
-import { exportJsmdBundle, titleToHtmlFilename } from "../tools/export-tools";
 
 function newAppMessage(
   appMessageId,
@@ -36,27 +35,9 @@ initialVariables.add("CodeMirror");
 
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState;
-  let title;
   switch (action.type) {
     case "RESET_NOTEBOOK":
       return Object.assign(newNotebook(), action.userData);
-
-    case "EXPORT_NOTEBOOK": {
-      const exportState = Object.assign({}, state, {
-        viewMode: action.exportAsReport ? "REPORT_VIEW" : "EXPLORE_VIEW"
-      });
-      const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(
-        exportJsmdBundle(exportState.jsmd, exportState.title)
-      )}`;
-      const dlAnchorElem = document.getElementById("export-anchor");
-      dlAnchorElem.setAttribute("href", dataStr);
-      title =
-        exportState.title === undefined ? "new-notebook" : exportState.title;
-      dlAnchorElem.setAttribute("download", titleToHtmlFilename(title));
-      dlAnchorElem.click();
-
-      return state;
-    }
 
     case "TOGGLE_WRAP_IN_EDITORS":
       return Object.assign({}, state, { wrapEditors: !state.wrapEditors });

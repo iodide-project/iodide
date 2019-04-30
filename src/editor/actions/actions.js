@@ -26,6 +26,8 @@ import { fetchWithCSRFTokenAndJSONContent } from "../../shared/fetch-with-csrf-t
 import { jsmdParser } from "../jsmd-tools/jsmd-parser";
 import { getChunkContainingLine } from "../jsmd-tools/jsmd-selection";
 
+import { exportJsmdBundle, titleToHtmlFilename } from "../tools/export-tools";
+
 import createHistoryItem from "../../shared/utils/create-history-item";
 
 export function updateAppMessages(messageObj) {
@@ -141,9 +143,20 @@ export function toggleWrapInEditors() {
 }
 
 export function exportNotebook(exportAsReport = false) {
-  return {
-    type: "EXPORT_NOTEBOOK",
-    exportAsReport
+  return (_, getState) => {
+    const state = getState();
+    const exportState = Object.assign({}, state, {
+      viewMode: exportAsReport ? "REPORT_VIEW" : "EXPLORE_VIEW"
+    });
+    const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(
+      exportJsmdBundle(exportState.jsmd, exportState.title)
+    )}`;
+    const dlAnchorElem = document.getElementById("export-anchor");
+    dlAnchorElem.setAttribute("href", dataStr);
+    const title =
+      exportState.title === undefined ? "new-notebook" : exportState.title;
+    dlAnchorElem.setAttribute("download", titleToHtmlFilename(title));
+    dlAnchorElem.click();
   };
 }
 
