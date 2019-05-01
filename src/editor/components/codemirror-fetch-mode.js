@@ -11,7 +11,7 @@ CodeMirror.defineSimpleMode("fetch", {
     },
     { regex: /(js: |css: )(\S+)/, token: ["fetch-type", "fetch-path"] },
     {
-      regex: /text: |blob: |json: |js: |css |arrayBuffer: /,
+      regex: /text: |blob: |json: |js: |css: |arrayBuffer: /,
       token: "fetch-type"
     }
   ]
