@@ -181,16 +181,6 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
   });
 });
 
-//
-//
-//
-//
-//
-
-//
-
-// /
-
 describe("moveCursorToPreviousChunk dispatches correct actions", () => {
   it("no selection, and one chunk", () => {
     const [line, col] = [1, 2];
@@ -245,13 +235,6 @@ describe("moveCursorToPreviousChunk dispatches correct actions", () => {
     store.dispatch(moveCursorToPreviousChunk());
     expect(store.getActions()).toEqual(expectedActions);
   });
-
-  //
-  //
-  //
-  //
-  //
-  //
 
   it("one selection, and one chunk", () => {
     const [line, col] = [1, 2];
