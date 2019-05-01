@@ -20,8 +20,11 @@ import {
 } from "../tools/local-autosave";
 import { updateServerAutosave } from "./server-actions";
 import { loginToServer, logoutFromServer } from "../../shared/utils/login";
-
-import { fetchWithCSRFTokenAndJSONContent } from "../../shared/fetch-with-csrf-token";
+import {
+  getNotebookRequest,
+  createNotebookRequest,
+  updateNotebookRequest
+} from "../../shared/server-api/notebook";
 
 import { jsmdParser } from "../jsmd-tools/jsmd-parser";
 import { getChunkContainingLine } from "../jsmd-tools/jsmd-selection";
@@ -256,67 +259,11 @@ export function getNotebookSaveRequestOptions(state, options = undefined) {
   return postRequestOptions;
 }
 
-export function saveNotebookRequest(
-  url,
-  postRequestOptions,
-  dispatch,
-  appMsg = true
-) {
-  return fetchWithCSRFTokenAndJSONContent(url, postRequestOptions)
-    .then(response => {
-      if (!response.ok) {
-        return response
-          .json()
-          .then(json => {
-            // this is a horrible and obvious hack that will go away
-            // when we don't provide an easy interface for the user
-            // to double save a revision (i.e. we have provided
-            // continuous autosave)
-            if (json.non_field_errors && json.non_field_errors.length) {
-              // no changes, not really an error, we'll silently pretend
-              // this didn't happen
-              return {};
-            }
-            // else, some kind of genuine error
-            dispatch(
-              updateAppMessages({
-                message: "Error saving notebook.",
-                messageType: "ERROR_SAVING_NOTEBOOK"
-              })
-            );
-            throw response;
-          })
-          .catch(() => {
-            throw response;
-          });
-      }
-      return response.json();
-    })
-    .catch(err => {
-      if (appMsg) {
-        dispatch(
-          updateAppMessages({
-            message: `Error Saving Notebook.`,
-            messageType: "ERROR_SAVING_NOTEBOOK"
-          })
-        );
-      }
-      throw new Error(err.message);
-    });
-}
-
 export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
   return (dispatch, getState) => {
     const state = getState();
-    const postRequestOptions = getNotebookSaveRequestOptions(state, {
-      forkedFrom: options.forkedFrom
-    });
-    return saveNotebookRequest(
-      "/api/v1/notebooks/",
-      postRequestOptions,
-      dispatch
-    )
-      .then(json => {
+    return createNotebookRequest(state.title, state.jsmd, options)
+      .then(notebook => {
         const message = "Notebook saved to server";
         dispatch(
           updateAppMessages({
@@ -324,12 +271,17 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
             messageType: `NOTEBOOK_SAVED`
           })
         );
-        dispatch({ type: "ADD_NOTEBOOK_ID", id: json.id });
-        window.history.replaceState({}, "", `/notebooks/${json.id}`);
+        dispatch({ type: "ADD_NOTEBOOK_ID", id: notebook.id });
+        window.history.replaceState({}, "", `/notebooks/${notebook.id}`);
         dispatch({ type: "NOTEBOOK_SAVED" });
       })
       .catch(() => {
-        // do nothing here.
+        dispatch(
+          updateAppMessages({
+            message: "Error saving notebook.",
+            messageType: "ERROR_SAVING_NOTEBOOK"
+          })
+        );
       });
   };
 }
@@ -341,12 +293,7 @@ export function saveNotebookToServer(appMsg = true) {
     const notebookInServer = Boolean(notebookId);
     if (notebookInServer) {
       // Update Exisiting Notebook
-      return saveNotebookRequest(
-        `/api/v1/notebooks/${notebookId}/revisions/`,
-        getNotebookSaveRequestOptions(state),
-        dispatch,
-        appMsg
-      )
+      return updateNotebookRequest(notebookId, state.title, state.jsmd)
         .then(newRevision => {
           const message = "Updated Notebook";
           updateLocalAutosave(state, true);
@@ -381,24 +328,17 @@ export function checkNotebookConsistency() {
       type: "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST",
       checkingRevisionIsLatest: true
     });
-    fetchWithCSRFTokenAndJSONContent(`/api/v1/notebooks/${notebookId}/`)
-      .then(response => {
-        if (!response.ok) {
-          throw response;
-        }
-        return response.json();
-      })
-      .then(notebookData => {
-        dispatch({
-          type: "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST",
-          checkingRevisionIsLatest: false
-        });
-        dispatch({
-          type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
-          revisionIsLatest:
-            notebookData.latest_revision.id === getRevisionID(state)
-        });
+    getNotebookRequest(notebookId).then(notebookData => {
+      dispatch({
+        type: "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST",
+        checkingRevisionIsLatest: false
       });
+      dispatch({
+        type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
+        revisionIsLatest:
+          notebookData.latest_revision.id === getRevisionID(state)
+      });
+    });
     // currently not doing any error handling here-- if there
     // are problems here, chances are the user is working offline
     // which is, effectively, "at their own risk"
