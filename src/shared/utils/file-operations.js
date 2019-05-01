@@ -34,17 +34,15 @@ export function selectFileAndFormatMetadata(notebookID) {
   });
 }
 
-export function uploadFile(formData) {
-  return fetchWithCSRFToken("/api/v1/files/", {
+export function uploadFile(formData, fileID = undefined) {
+  // if fileID not defined, this will upload the file, or return an error if
+  // the filename in formData is already in the files table.
+  // if fileID is provided, will attempt to update the entry in the files table.
+  const url = fileID ? `/api/v1/files/${fileID}/` : `/api/v1/files/`;
+  const method = fileID ? "PUT" : "POST";
+  return fetchWithCSRFToken(url, {
     body: formData,
-    method: "POST"
-  });
-}
-
-export function updateFile(fileID, formData) {
-  return fetchWithCSRFToken(`/api/v1/files/${fileID}/`, {
-    method: "PUT",
-    body: formData
+    method
   });
 }
 
@@ -88,30 +86,35 @@ export function makeFormData(notebookID, data, fileName) {
   return formData;
 }
 
-export function saveFileToServer(
+export async function saveFileToServer(
   notebookID,
   data,
   fileName,
   fileID = undefined
 ) {
   const formData = makeFormData(notebookID, data, fileName);
-  // FIXME: we should not have update & load be separate files,
-  // from an API standpoint. We should just have one file upload function
-  // that deals with the particulars.
-  const fetchRequest = fileID // if fileID undefined, upload, otherwise update
-    ? fd => updateFile(fileID, fd)
-    : fd => uploadFile(fd);
-  return fetchRequest(formData).then(r => {
-    if (r.status === 500) throw new Error(r.statusText);
-    return r.json();
-  });
+  const r = await uploadFile(formData, fileID);
+  if (r.status === 500) throw new Error(r.statusText);
+  return r.json();
 }
 
-export function deleteFileOnServer(fileID) {
-  return fetchWithCSRFTokenAndJSONContent(`/api/v1/files/${fileID}/`, {
-    method: "DELETE"
-  }).then(r => {
+export function makeDeleteRequestPRIVATE(url) {
+  return fetchWithCSRFTokenAndJSONContent(url, { method: "DELETE" }).then(r => {
     if (r.status === 500) throw new Error(r.statusText);
     return undefined;
   });
+}
+
+export function deleteNotebookOnServer(notebookID) {
+  return makeDeleteRequestPRIVATE(`/api/v1/notebooks/${notebookID}`);
+}
+
+export function deleteRevisionOnServer(notebookID, revisionID) {
+  return makeDeleteRequestPRIVATE(
+    `/api/v1/notebooks/${notebookID}/revisions/${revisionID}`
+  );
+}
+
+export function deleteFileOnServer(fileID) {
+  return makeDeleteRequestPRIVATE(`/api/v1/files/${fileID}/`);
 }

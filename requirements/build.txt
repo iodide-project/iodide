@@ -48,9 +48,9 @@ django-heroku==0.3.1 \
 Django==2.2 \
     --hash=sha256:a2814bffd1f007805b19194eb0b9a331933b82bd5da1c3ba3d7b7ba16e06dc4b \
     --hash=sha256:7c3543e4fb070d14e10926189a7fcf42ba919263b7473dceaefce34d54e8a119
-djangorestframework==3.9.2 \
-    --hash=sha256:8a435df9007c8b7d8e69a21ef06650e3c0cbe0d4b09e55dd1bd74c89a75a9fcd \
-    --hash=sha256:f7a266260d656e1cf4ca54d7a7349609dc8af4fe2590edd0ecd7d7643ea94a17
+djangorestframework==3.9.3 \
+    --hash=sha256:1d22971a5fc98becdbbad9710ca2a9148dd339f6cbea4c3ddbed2cb84bab94e1 \
+    --hash=sha256:2884763160b997073ff1e937bd820a69d23978902a3ccd0ba53a217e196239f0
 dockerflow==2018.4.0 \
     --hash=sha256:2ea52a904abfda3430ff4f1effc164863b30d2b69f7ecbf92dd672860b0ec423 \
     --hash=sha256:388d02c557968e6957140f7b82f669eac70adf5f570bc7705aa749d220a2e535
@@ -149,9 +149,9 @@ sqlparse==0.3.0 \
 text-unidecode==1.2 \
     --hash=sha256:5a1375bb2ba7968740508ae38d92e1f889a0832913cb1c447d5e2046061a396d \
     --hash=sha256:801e38bd550b943563660a91de8d4b6fa5df60a542be9093f7abf819f86050cc
-urllib3==1.25.1 \
-    --hash=sha256:a9645efd62b9fc1c7cad8ed93e162aad4c6bfd90e143966ddd4099b78cd244be \
-    --hash=sha256:904bd981d6371bb95a200c0ec9dba5ba7cc980f2d6b125bd793fefe3293be388
+urllib3==1.25.2 \
+    --hash=sha256:d363e3607d8de0c220d31950a8f38b18d5ba7c0830facd71a1c6b1036b7ce06c \
+    --hash=sha256:a53063d8b9210a7bdec15e7b272776b9d42b2fd6816401a0d43006ad2f9902db
 whitenoise==4.1.2 \
     --hash=sha256:118ab3e5f815d380171b100b05b76de2a07612f422368a201a9ffdeefb2251c1 \
     --hash=sha256:42133ddd5229eeb6a0c9899496bdbe56c292394bf8666da77deeb27454c0456a

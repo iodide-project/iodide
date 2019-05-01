@@ -115,7 +115,7 @@ Fetch chunks provide a convenient way to load (i.e. to "fetch") external resourc
 * Data (from JSON, text, or blobs)
 
 Each line in a fetch cell must specify:
-1. the "fetch type", one of `js`, `css`, `json`, `text` or `blob`,
+1. the "fetch type", one of `js`, `css`, `json`, `text`, `arrayBuffer`, or `blob`,
 2. the url from which the resource will be fetched
 
 Additionally, data fetches (`json`, `text` or `blob`) must specify the variable name into which the data will be stored.
@@ -128,6 +128,7 @@ This example demonstrates how a fetch chunk is used.
 js: https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js
 css: https://www.exmpl.co/a_stylesheet.css  // end of line comments are ok too
 text: csvDataString = https://www.exmpl.co/a_csv_file.csv
+arrayBuffer: bigDataframe = https://www.exmpl.co/a_binary.arrow
 json: jsonData = https://www.exmpl.co/a_json_file.json
 blob: blobData = https://www.exmpl.co/a_binary_blob.arrow
 ```
@@ -136,7 +137,12 @@ All of the requested resources are downloaded in parallel (asynchronously), but 
 
 In the case of the `js` and `css` fetch types, the scripts and stylesheets are added to the environment as soon as they are available.
 
-In the case of data fetches, which have the syntax `{TYPE}: {VAR_NAME} = {RESOURCE_URL}`, the data is loaded into the variable `VAR_NAME` within your JavaScript scope. In the case of a `json` fetch, the JSON object retrieved from the URL is parsed into a native JavaScript object, but in the case of `text` and `blob` fetches, the variable will contain a raw string or [blob object](https://developer.mozilla.org/en-US/docs/Web/API/Blob), respectively.
+In the case of data fetches, which have the syntax `{TYPE}: {VAR_NAME} = {RESOURCE_URL}`, the data is loaded into the variable `VAR_NAME` within your JavaScript scope. The `TYPE` value ensures the following is returned into `VAR_NAME`:
+
+- `json` - returns the JSON object retrieved from the URL, parsed into a native JavaScript object,
+- `text` - returns a raw string,
+- `arrayBuffer` - returns an [Array Buffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) object,
+- `blob` - returns a [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) object
 
 ### Pyodide (`%% py`)
 

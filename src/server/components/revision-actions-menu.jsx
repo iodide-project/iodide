@@ -5,6 +5,7 @@ import Menu from "../../shared/components/menu";
 import MenuItem from "../../shared/components/menu-item";
 import MenuDivider from "../../shared/components/menu-divider";
 import DeleteModal from "./delete-modal";
+import { deleteRevisionOnServer } from "../../shared/utils/file-operations";
 
 export default class RevisionsActionsMenu extends React.Component {
   static propTypes = {
@@ -65,9 +66,9 @@ export default class RevisionsActionsMenu extends React.Component {
           onCancel={this.hideDeleteModal}
           onDelete={this.props.onDelete}
           elementID={this.props.revisionID}
-          url={`/api/v1/notebooks/${this.props.notebookID}/revisions/${
-            this.props.revisionID
-          }`}
+          deleteFunction={revisionID =>
+            deleteRevisionOnServer(this.props.notebookID, revisionID)
+          }
         />
       </React.Fragment>
     );

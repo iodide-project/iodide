@@ -4,6 +4,7 @@ import Popover from "../../shared/components/popover";
 import Menu from "../../shared/components/menu";
 import MenuItem from "../../shared/components/menu-item";
 import DeleteModal from "./delete-modal";
+import { deleteFileOnServer } from "../../shared/utils/file-operations";
 
 export default class FileActionsMenu extends React.Component {
   static propTypes = {
@@ -53,11 +54,11 @@ export default class FileActionsMenu extends React.Component {
           visible={this.state.deleteModalVisible}
           onClose={this.hideDeleteModal}
           title={`delete the file  "${this.props.filename}"?`}
+          deleteFunction={deleteFileOnServer}
           content={this.props.modalBody}
           onCancel={this.hideDeleteModal}
           onDelete={this.props.onDelete}
           elementID={this.props.fileID}
-          url={`/api/v1/files/${this.props.fileID}`}
         />
       </React.Fragment>
     );
