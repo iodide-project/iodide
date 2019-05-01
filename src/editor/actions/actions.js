@@ -218,7 +218,6 @@ export function moveCursorToNextChunk() {
       jsmdChunks,
       editorCursor
     } = getState();
-    // if at end of the doc, return
     const lastChunk = jsmdChunks[jsmdChunks.length - 1];
     if (editorCursor.line === lastChunk.endLine) {
       dispatch(updateEditorCursor(lastChunk.endLine, Infinity, true));
@@ -241,14 +240,13 @@ export function moveCursorToPreviousChunk() {
       editorCursor
     } = getState();
 
-    // set to beginning of doc if there are less than two chunks (could be 0)
+    // set to beginning of doc if there are less than two chunks.
     if (jsmdChunks.length < 2 || editorCursor.line < jsmdChunks[1].startLine) {
       dispatch(updateEditorCursor(0, 0, true));
       return;
     }
-    // look at the last chunk bfore the one containing this.
+    // look at the last chunk before the one containing this.
     const currentChunk = getChunkContainingLine(jsmdChunks, editorCursor.line);
-    // subtract one from targetLine to get the last line of the previous chunk
     const targetLine =
       selections.length === 0
         ? currentChunk.startLine - 1
