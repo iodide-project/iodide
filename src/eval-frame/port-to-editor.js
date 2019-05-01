@@ -87,7 +87,7 @@ async function receiveMessage(event) {
       }
       case "EVAL_FETCH": {
         const { fetchText, taskId } = message;
-        evaluateFetchText(fetchText, taskId);
+        await evaluateFetchText(fetchText, taskId);
         break;
       }
       case "EVAL_LANGUAGE_PLUGIN": {

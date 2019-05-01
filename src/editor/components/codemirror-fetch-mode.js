@@ -14,5 +14,8 @@ CodeMirror.defineSimpleMode("fetch", {
       regex: /text: |blob: |json: |js: |css: |arrayBuffer: /,
       token: "fetch-type"
     }
-  ]
+  ],
+  meta: {
+    lineComment: "//"
+  }
 });

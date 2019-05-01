@@ -114,7 +114,7 @@ export async function handleFetch(fetchInfo) {
   return Promise.resolve(successMessage(fetchInfo));
 }
 
-export function evaluateFetchText(fetchText, evalId) {
+export async function evaluateFetchText(fetchText, evalId) {
   const outputHistoryId = generateRandomId();
   const fetches = parseFetchCell(fetchText);
   const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
@@ -139,33 +139,34 @@ export function evaluateFetchText(fetchText, evalId) {
       historyId: outputHistoryId
     })
   );
-  const fetchCalls = fetches.map((f, i) =>
-    handleFetch(f).then(outcome => {
-      progressStrings = progressStrings.map(entry => Object.assign({}, entry));
-      progressStrings[i] = outcome;
-      sendActionToEditor(
-        updateConsoleEntry({
-          historyId: outputHistoryId,
-          value: progressStrings
-        })
-      );
-      return outcome;
+  const fetchCalls = fetches.map(async (f, i) => {
+    const outcome = await handleFetch(f);
+    progressStrings = progressStrings.map(entry => Object.assign({}, entry));
+    progressStrings[i] = outcome;
+    sendActionToEditor(
+      updateConsoleEntry({
+        historyId: outputHistoryId,
+        value: progressStrings
+      })
+    );
+    return outcome;
+  });
+
+  const outcomes = await Promise.all(fetchCalls);
+  const errors = outcomes.filter(f => f.text.startsWith("ERROR"));
+  const hasError = errors.length > 0;
+
+  sendActionToEditor(
+    updateConsoleEntry({
+      historyId: outputHistoryId,
+      value: outcomes,
+      level: hasError ? "ERROR" : undefined
     })
   );
-
-  return Promise.all(fetchCalls)
-    .then(outcomes => {
-      // check for error.
-      const hasError = outcomes.some(f => f.text.startsWith("ERROR"));
-      sendActionToEditor(
-        updateConsoleEntry({
-          historyId: outputHistoryId,
-          value: outcomes,
-          level: hasError ? "ERROR" : undefined
-        })
-      );
-    })
-    .then(() => {
-      sendStatusResponseToEditor("SUCCESS", evalId);
-    });
+  if (hasError) {
+    sendStatusResponseToEditor("ERROR", evalId);
+  } else {
+    sendStatusResponseToEditor("SUCCESS", evalId);
+  }
+  return undefined;
 }
