@@ -204,14 +204,6 @@ export function updateEditorCursor(line, col, forceUpdate = false) {
   return { type: "UPDATE_CURSOR", line, col, forceUpdate };
 }
 
-export function moveToNextChunk() {
-  return { type: "MOVE_TO_NEXT_CHUNK" };
-}
-
-export function moveToPreviousChunk() {
-  return { type: "MOVE_TO_PREVIOUS_CHUNK" };
-}
-
 export function updateEditorSelections(selections) {
   return {
     type: "UPDATE_SELECTIONS",
@@ -226,13 +218,44 @@ export function moveCursorToNextChunk() {
       jsmdChunks,
       editorCursor
     } = getState();
+    // if at end of the doc, return
+    const lastChunk = jsmdChunks[jsmdChunks.length - 1];
+    if (editorCursor.line === lastChunk.endLine) {
+      dispatch(updateEditorCursor(lastChunk.endLine, Infinity, true));
+      return;
+    }
     const targetLine =
       selections.length === 0
         ? editorCursor.line
         : selections[selections.length - 1].end.line;
-
     const targetChunk = getChunkContainingLine(jsmdChunks, targetLine);
     dispatch(updateEditorCursor(targetChunk.endLine + 1, 0, true));
+  };
+}
+
+export function moveCursorToPreviousChunk() {
+  return (dispatch, getState) => {
+    const {
+      editorSelections: selections,
+      jsmdChunks,
+      editorCursor
+    } = getState();
+
+    // set to beginning of doc if there are less than two chunks (could be 0)
+    if (jsmdChunks.length < 2 || editorCursor.line < jsmdChunks[1].startLine) {
+      dispatch(updateEditorCursor(0, 0, true));
+      return;
+    }
+    // look at the last chunk bfore the one containing this.
+    const currentChunk = getChunkContainingLine(jsmdChunks, editorCursor.line);
+    // subtract one from targetLine to get the last line of the previous chunk
+    const targetLine =
+      selections.length === 0
+        ? currentChunk.startLine - 1
+        : getChunkContainingLine(jsmdChunks, selections[0].start.line)
+            .startLine - 1;
+    const targetChunk = getChunkContainingLine(jsmdChunks, targetLine);
+    dispatch(updateEditorCursor(targetChunk.startLine, 0, true));
   };
 }
 

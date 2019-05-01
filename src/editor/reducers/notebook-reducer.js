@@ -329,38 +329,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
-    case "MOVE_TO_NEXT_CHUNK": {
-      // find current cursor position,
-      // find next chunk above cursor position
-      // if at end do nothing.
-      const { editorCursor, jsmdChunks } = state;
-      const nextCursor = Object.assign({}, editorCursor);
-      const nextChunk = jsmdChunks.filter(
-        ch => ch.startLine > editorCursor.line
-      )[0];
-      if (nextChunk) {
-        nextCursor.line = nextChunk.startLine;
-        nextCursor.col = 0;
-        nextCursor.forceUpdate = true;
-      }
-      return Object.assign({}, state, { editorCursor: nextCursor });
-    }
-    case "MOVE_TO_PREVIOUS_CHUNK": {
-      // find current cursor position,
-      // find next chunk above cursor position
-      // if at end do nothing.
-      const { editorCursor, jsmdChunks } = state;
-      const nextCursor = Object.assign({}, editorCursor);
-      let nextChunk = jsmdChunks.filter(ch => ch.startLine < editorCursor.line);
-      nextChunk = nextChunk[nextChunk.length - 1];
-      if (nextChunk) {
-        nextCursor.line = nextChunk.startLine;
-        nextCursor.col = 0;
-        nextCursor.forceUpdate = true;
-      }
-      return Object.assign({}, state, { editorCursor: nextCursor });
-    }
-
     default: {
       return state;
     }

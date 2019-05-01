@@ -6,6 +6,7 @@
 - only show notebooks with 10 or more edits on the server's index page list
 - fixes bug where fetch chunks with errors don't halt further evaluation
 - adds `arrayBuffer` type to fetch chunks (see docs)
+- adds `alt+up` and `alt+down` keybindings, which moves to the previous / next chunk
 
 # 0.5.0 (2019-03-28)
 

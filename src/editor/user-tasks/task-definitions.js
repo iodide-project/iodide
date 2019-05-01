@@ -111,19 +111,19 @@ tasks.exportNotebook = new UserTask({
   }
 });
 
-tasks.moveToNextChunk = new UserTask({
+tasks.moveCursorToNextChunk = new UserTask({
   title: "Move to Next Chunk",
   keybindings: ["alt+down"],
   callback() {
-    dispatcher.moveToNextChunk();
+    dispatcher.moveCursorToNextChunk();
   }
 });
 
-tasks.moveToPreviousChunk = new UserTask({
+tasks.moveCursorToPreviousChunk = new UserTask({
   title: "Move to Previous Chunk",
   keybindings: ["alt+up"],
   callback() {
-    dispatcher.moveToPreviousChunk();
+    dispatcher.moveCursorToPreviousChunk();
   }
 });
 

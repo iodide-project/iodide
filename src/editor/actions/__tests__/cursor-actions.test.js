@@ -1,6 +1,10 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import { moveCursorToNextChunk, updateEditorCursor } from "../actions";
+import {
+  moveCursorToNextChunk,
+  moveCursorToPreviousChunk,
+  updateEditorCursor
+} from "../actions";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -173,6 +177,171 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
     ];
 
     store.dispatch(moveCursorToNextChunk());
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+});
+
+//
+//
+//
+//
+//
+
+//
+
+// /
+
+describe("moveCursorToPreviousChunk dispatches correct actions", () => {
+  it("no selection, and one chunk", () => {
+    const [line, col] = [1, 2];
+
+    const store = mockStore({
+      editorCursor: {
+        line,
+        col
+      },
+      jsmdChunks: [{ startLine: 0, endLine: 10 }],
+      editorSelections: []
+    });
+
+    const expectedActions = [
+      {
+        type: "UPDATE_CURSOR",
+        line: 0,
+        col: 0,
+        forceUpdate: true
+      }
+    ];
+
+    store.dispatch(moveCursorToPreviousChunk());
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+
+  it("no selection, multiple chunks", () => {
+    const [line, col] = [17, 25];
+
+    const store = mockStore({
+      editorCursor: {
+        line,
+        col
+      },
+      jsmdChunks: [
+        { startLine: 0, endLine: 10 },
+        { startLine: 11, endLine: 15 },
+        { startLine: 16, endLine: 20 }
+      ],
+      editorSelections: []
+    });
+
+    const expectedActions = [
+      {
+        type: "UPDATE_CURSOR",
+        line: 11,
+        col: 0,
+        forceUpdate: true
+      }
+    ];
+
+    store.dispatch(moveCursorToPreviousChunk());
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+
+  //
+  //
+  //
+  //
+  //
+  //
+
+  it("one selection, and one chunk", () => {
+    const [line, col] = [1, 2];
+
+    const store = mockStore({
+      editorCursor: {
+        line,
+        col
+      },
+      jsmdChunks: [{ startLine: 0, endLine: 10 }],
+      editorSelections: [
+        { start: { line: 3, col: 2 }, end: { line: 5, col: 2 } }
+      ]
+    });
+
+    const expectedActions = [
+      {
+        type: "UPDATE_CURSOR",
+        line: 0,
+        col: 0,
+        forceUpdate: true
+      }
+    ];
+
+    store.dispatch(moveCursorToPreviousChunk());
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+
+  it("one selection across multiple chunks", () => {
+    const [line, col] = [12, 25];
+
+    const store = mockStore({
+      editorCursor: {
+        line,
+        col
+      },
+      jsmdChunks: [
+        { startLine: 0, endLine: 10 },
+        { startLine: 11, endLine: 15 },
+        { startLine: 16, endLine: 20 },
+        { startLine: 21, endLine: 100 }
+      ],
+      editorSelections: [
+        { start: { line: 18, col: 2 }, end: { line: 25, col: 2 } }
+      ]
+    });
+
+    const expectedActions = [
+      {
+        type: "UPDATE_CURSOR",
+        line: 11,
+        col: 0,
+        forceUpdate: true
+      }
+    ];
+
+    store.dispatch(moveCursorToPreviousChunk());
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+
+  it("multiple selections in multiple chunks", () => {
+    const [line, col] = [12, 25];
+
+    const store = mockStore({
+      editorCursor: {
+        line,
+        col
+      },
+      jsmdChunks: [
+        { startLine: 0, endLine: 10 },
+        { startLine: 11, endLine: 15 },
+        { startLine: 16, endLine: 20 },
+        { startLine: 21, endLine: 100 }
+      ],
+      editorSelections: [
+        { start: { line: 17, col: 2 }, end: { line: 18, col: 2 } },
+        { start: { line: 22, col: 2 }, end: { line: 32, col: 2 } }
+      ]
+    });
+
+    const expectedActions = [
+      {
+        type: "UPDATE_CURSOR",
+        line: 11,
+        col: 0,
+        forceUpdate: true
+      }
+    ];
+
+    store.dispatch(moveCursorToPreviousChunk());
     expect(store.getActions()).toEqual(expectedActions);
   });
 });
