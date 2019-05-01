@@ -11,6 +11,12 @@ import { serializeForTinyRep } from "./rep-utils/tiny-rep-serializer";
 import DefaultRenderer from "./default-handler";
 import TinyRep from "./tiny-rep";
 
+if (process.env.NODE_ENV !== "production") {
+  // eslint-disable-next-line global-require
+  const whyDidYouRender = require("@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js");
+  whyDidYouRender(React);
+}
+
 const TableDetails = styled.div`
   border: solid #e5e5e5;
   border-width: 0px 1px 1px 1px;
@@ -47,7 +53,7 @@ CellDetails.propTypes = {
   focusedCol: PropTypes.string
 };
 
-class CellRenderer extends React.Component {
+class CellRenderer extends React.PureComponent {
   static propTypes = {
     value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     cellIsFocused: PropTypes.bool.isRequired
@@ -64,19 +70,23 @@ class CellRenderer extends React.Component {
             : "none"
         }}
       >
-        <TinyRep serializedObj={serializeForTinyRep(this.props.value)} />
+        <TinyRep {...serializeForTinyRep(this.props.value)} />
       </div>
     );
   }
 }
+// CellRenderer.whyDidYouRender = true;
 
 const PX_PER_CHAR = 7;
 const MIN_CELL_CHAR_WIDTH = 22;
 
-export default class TableRenderer extends React.Component {
+export default class TableRenderer extends React.PureComponent {
   static propTypes = {
-    value: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired
+    valueContainer: PropTypes.string.isRequired,
+    valueKey: PropTypes.string.isRequired
   };
+  static whyDidYouRender = true;
+
   constructor(props) {
     super(props);
     this.state = { focusedRow: undefined, focusedCol: undefined };
@@ -87,7 +97,9 @@ export default class TableRenderer extends React.Component {
   }
 
   render() {
-    const { value } = this.props;
+    // const { value } = this.props;
+    const { valueContainer, valueKey } = this.props;
+    const value = window[valueContainer][valueKey];
 
     const columns = Object.keys(value[0]).map(k => ({
       Header: k,

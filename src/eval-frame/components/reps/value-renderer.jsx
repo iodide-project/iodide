@@ -26,8 +26,10 @@ function repChooser(value) {
 
 export default class ValueRenderer extends React.Component {
   static propTypes = {
-    valueToRender: PropTypes.any // eslint-disable-line react/forbid-prop-types
+    valueContainer: PropTypes.string.isRequired,
+    valueKey: PropTypes.string.isRequired
   };
+  static whyDidYouRender = true;
 
   constructor(props) {
     super(props);
@@ -39,7 +41,8 @@ export default class ValueRenderer extends React.Component {
   }
 
   render() {
-    const value = this.props.valueToRender;
+    const { valueContainer, valueKey } = this.props;
+    const value = window[valueContainer][valueKey];
 
     if (this.state.errorInfo) {
       return (
@@ -68,7 +71,9 @@ export default class ValueRenderer extends React.Component {
       case "ERROR_REP":
         return <ErrorRenderer error={value} />;
       case "TABLE_REP":
-        return <TableRenderer value={value} />;
+        return (
+          <TableRenderer valueContainer={valueContainer} valueKey={valueKey} />
+        );
       default:
         return <DefaultRenderer value={value} />;
     }

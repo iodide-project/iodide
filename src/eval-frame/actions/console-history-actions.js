@@ -1,7 +1,7 @@
 import generateRandomId from "../../shared/utils/generate-random-id";
 import createHistoryItem from "../../shared/utils/create-history-item";
 
-export const EVALUATION_RESULTS = {};
+window.IODIDE_EVALUATION_RESULTS = {};
 
 export function addToConsoleHistory({
   historyType,
@@ -20,7 +20,7 @@ export function addToConsoleHistory({
   });
   historyAction.type = "ADD_TO_CONSOLE_HISTORY";
 
-  EVALUATION_RESULTS[historyAction.historyId] = value;
+  window.IODIDE_EVALUATION_RESULTS[historyAction.historyId] = value;
 
   return historyAction;
 }
@@ -29,7 +29,7 @@ export function updateConsoleEntry(args) {
   const updatedHistoryItem = Object.assign({}, args);
   const { value, historyId } = updatedHistoryItem;
   if (value) {
-    EVALUATION_RESULTS[historyId] = value;
+    window.IODIDE_EVALUATION_RESULTS[historyId] = value;
     delete updatedHistoryItem.value;
   }
   return {

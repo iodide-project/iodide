@@ -11,6 +11,7 @@ import ConsoleInput from "./console/console-input";
 
 import EmptyPaneContents from "./empty-pane-contents";
 import OnboardingContent from "../../../shared/components/onboarding-content";
+import { getHistoryIdsForConsole } from "../../../shared/state-selectors/history-selectors";
 
 const HelpIcon = styled(HelpOutline)`
   display: inline-block;
@@ -19,9 +20,10 @@ const HelpIcon = styled(HelpOutline)`
 
 export class ConsolePaneUnconnected extends React.Component {
   static propTypes = {
-    history: PropTypes.arrayOf(PropTypes.object),
+    historyIds: PropTypes.arrayOf(PropTypes.string),
     paneVisible: PropTypes.bool.isRequired
   };
+  static whyDidYouRender = true;
 
   constructor(props) {
     super(props);
@@ -45,12 +47,10 @@ export class ConsolePaneUnconnected extends React.Component {
 
   render() {
     let histContents = [];
-    if (this.props.history.length) {
-      histContents = this.props.history.map(historyItem => (
-        <HistoryItem
-          historyItem={historyItem}
-          key={`history-${historyItem.lastRan}-${historyItem.historyId}`}
-        />
+    if (this.props.historyIds.length) {
+      // const historyIds = this.props.historyIdsStringList.split(",");
+      histContents = this.props.historyIds.map(historyId => (
+        <HistoryItem historyId={historyId} key={historyId} />
       ));
     } else {
       histContents.push(
@@ -101,7 +101,7 @@ export class ConsolePaneUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   return {
-    history: state.history,
+    historyIds: getHistoryIdsForConsole(state),
     paneVisible: state.panePositions.ConsolePositioner.display === "block"
   };
 }

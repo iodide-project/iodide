@@ -1,24 +1,31 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import styled from "react-emotion";
 
 import AppMessage from "./console/app-message";
 import ValueRenderer from "../reps/value-renderer";
-import PreformattedTextItemsHandler from "../reps/preformatted-text-items-handler";
 
 import HistoryInputItem from "./console/history-input-item";
 import ConsoleMessage from "./console/console-message";
 
-import { EVALUATION_RESULTS } from "../../actions/console-history-actions";
+import { getHistoryItemById } from "../../../shared/state-selectors/history-selectors";
+
+const PreText = styled("pre")`
+  padding: 0;
+  margin: 0;
+`;
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
     level: PropTypes.string,
+    historyId: PropTypes.string.isRequired,
     historyType: PropTypes.string.isRequired,
-    language: PropTypes.string,
-    valueToRender: PropTypes.any // eslint-disable-line react/forbid-prop-types
+    fetchResultText: PropTypes.string,
+    language: PropTypes.string
   };
+  static whyDidYouRender = true;
 
   render() {
     switch (this.props.historyType) {
@@ -45,16 +52,17 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_OUTPUT": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <ValueRenderer valueToRender={this.props.valueToRender} />
+            <ValueRenderer
+              valueContainer="IODIDE_EVALUATION_RESULTS"
+              valueKey={this.props.historyId}
+            />
           </ConsoleMessage>
         );
       }
       case "FETCH_CELL_INFO": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <PreformattedTextItemsHandler
-              textItems={this.props.valueToRender}
-            />
+            <PreText>{this.props.fetchResultText}</PreText>
           </ConsoleMessage>
         );
       }
@@ -69,15 +77,14 @@ export class HistoryItemUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state, ownProps) {
-  return {
-    content: ownProps.historyItem.content,
-    historyId: ownProps.historyItem.historyId,
-    historyType: ownProps.historyItem.historyType,
-    lastRan: ownProps.historyItem.lastRan,
-    level: ownProps.historyItem.level,
-    language: ownProps.historyItem.language,
-    valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId]
-  };
+  const historyItem = getHistoryItemById(state, ownProps.historyId);
+  let fetchResultText;
+  if (historyItem.historyType === "FETCH_CELL_INFO") {
+    fetchResultText = window.IODIDE_EVALUATION_RESULTS[ownProps.historyId]
+      .map(t => t.text)
+      .join("");
+  }
+  return Object.assign({}, historyItem, { fetchResultText });
 }
 
 export default connect(mapStateToProps)(HistoryItemUnconnected);
