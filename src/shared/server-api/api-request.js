@@ -1,3 +1,8 @@
+// Please do not use any of these methods directly in your code! Instead, create
+// methods that use them, as is done elsewhere in this directory. This will make
+// it easier to switch to different authentication methods or otherwise change
+// the implementation of the API in the future.
+
 function getCookie(name) {
   if (!document.cookie) {
     return null;

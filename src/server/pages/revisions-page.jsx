@@ -134,11 +134,10 @@ export default class RevisionsPage extends React.Component {
     this.setState({ files });
   }
 
-  onDeleteRevision(revisionID) {
+  async onDeleteRevision(revisionID) {
     if (this.state.revisions.length === 1) {
-      deleteNotebookRequest(this.props.ownerInfo.notebookId).then(
-        this.onDeleteNotebook
-      );
+      await deleteNotebookRequest(this.props.ownerInfo.notebookId);
+      this.onDeleteNotebook();
     } else {
       const revisions = this.state.revisions.filter(r => r.id !== revisionID);
       this.setState({ revisions });

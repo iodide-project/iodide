@@ -82,9 +82,8 @@ export default class NotebookActionsMenu extends React.Component {
   }
 
   async uploadFile(formData) {
-    const response = await uploadFile(formData);
+    const data = await uploadFile(formData);
     // FIXME: uploadFile needs better error handling.
-    const data = await response.json();
     if (this.props.onUploadFile) this.props.onUploadFile(data);
   }
 
