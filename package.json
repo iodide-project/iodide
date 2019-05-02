@@ -85,6 +85,7 @@
     "redux-logger": "3.0.6",
     "redux-saga": "1.0.2",
     "redux-thunk": "2.3.0",
+    "reselect": "4.0.0",
     "stackframe": "1.0.4",
     "throttle-action": "0.1.0",
     "universal-router": "8.1.0",

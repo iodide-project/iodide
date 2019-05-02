@@ -23,7 +23,6 @@ export class ConsolePaneUnconnected extends React.Component {
     historyIds: PropTypes.arrayOf(PropTypes.string),
     paneVisible: PropTypes.bool.isRequired
   };
-  static whyDidYouRender = true;
 
   constructor(props) {
     super(props);

@@ -77,7 +77,6 @@ export default class TableRenderer extends React.PureComponent {
   static propTypes = {
     value: PropTypes.any // eslint-disable-line react/forbid-prop-types
   };
-  static whyDidYouRender = true;
 
   constructor(props) {
     super(props);

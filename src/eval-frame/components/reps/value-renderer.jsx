@@ -31,7 +31,6 @@ export default class ValueRenderer extends React.Component {
     windowValue: PropTypes.bool,
     valueKey: PropTypes.string.isRequired
   };
-  static whyDidYouRender = true;
 
   constructor(props) {
     super(props);

@@ -24,7 +24,6 @@ export class HistoryItemUnconnected extends React.Component {
     historyType: PropTypes.string.isRequired,
     language: PropTypes.string
   };
-  static whyDidYouRender = true;
 
   render() {
     switch (this.props.historyType) {
