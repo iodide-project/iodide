@@ -73,7 +73,6 @@ export function mapStateToProps(state, ownProps) {
     content: ownProps.historyItem.content,
     historyId: ownProps.historyItem.historyId,
     historyType: ownProps.historyItem.historyType,
-    lastRan: ownProps.historyItem.lastRan,
     level: ownProps.historyItem.level,
     language: ownProps.historyItem.language,
     valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId]

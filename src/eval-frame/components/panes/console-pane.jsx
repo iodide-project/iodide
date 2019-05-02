@@ -49,7 +49,7 @@ export class ConsolePaneUnconnected extends React.Component {
       histContents = this.props.history.map(historyItem => (
         <HistoryItem
           historyItem={historyItem}
-          key={`history-${historyItem.lastRan}-${historyItem.historyId}`}
+          key={`history-${historyItem.historyId}`}
         />
       ));
     } else {

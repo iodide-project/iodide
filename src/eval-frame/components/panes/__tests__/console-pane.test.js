@@ -27,7 +27,6 @@ describe("ConsolePaneUnconnected React component", () => {
       history: [
         {
           cellId: 0,
-          lastRan: 1533078293981,
           content: "var a = 3"
         }
       ],
@@ -59,12 +58,10 @@ describe("ConsolePaneUnconnected React component", () => {
     props.history = [
       {
         cellId: 0,
-        lastRan: 1533078293981,
         content: "var a = 3"
       },
       {
         cellId: 1,
-        lastRan: 1533078293981,
         content: "var b = 3"
       }
     ];
@@ -85,7 +82,6 @@ describe("HistoryPane mapStateToProps", () => {
       history: [
         {
           cellId: 0,
-          lastRan: 1533078293981,
           content: "var a = 3"
         }
       ],
