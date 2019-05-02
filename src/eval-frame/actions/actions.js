@@ -3,6 +3,9 @@ import {
   addConsoleEntryInEditor,
   sendStatusResponseToEditor
 } from "./editor-message-senders";
+import generateRandomId from "../../shared/utils/generate-random-id";
+
+import { IODIDE_EVALUATION_RESULTS } from "../global-state-extras";
 
 const CodeMirror = require("codemirror"); // eslint-disable-line
 
@@ -87,17 +90,19 @@ export function runCodeWithLanguage(language, code) {
 export async function evaluateCode(code, language, chunkId, evalId) {
   try {
     MOST_RECENT_CHUNK_ID.set(chunkId);
-    const output = await runCodeWithLanguage(language, code);
-    addConsoleEntryInEditor({
-      historyType: "CONSOLE_OUTPUT",
-      value: output
-    });
+    const value = await runCodeWithLanguage(language, code);
+    const historyId = generateRandomId();
+    IODIDE_EVALUATION_RESULTS[historyId] = value;
+
+    addConsoleEntryInEditor({ historyType: "CONSOLE_OUTPUT", historyId });
 
     sendStatusResponseToEditor("SUCCESS", evalId);
   } catch (error) {
+    const historyId = generateRandomId();
+    IODIDE_EVALUATION_RESULTS[historyId] = error;
     addConsoleEntryInEditor({
       historyType: "CONSOLE_OUTPUT",
-      value: error,
+      historyId,
       level: "ERROR"
     });
 

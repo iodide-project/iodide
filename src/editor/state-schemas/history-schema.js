@@ -15,8 +15,7 @@ export const historySchema = {
     },
     lastRan: { type: "integer" },
     level: { type: "string", enum: ["INFO", "LOG", "WARN", "ERROR"] },
-    language: { type: "string" },
-    fetchMessage: { type: "string" }
+    language: { type: "string" }
   },
   additionalProperties: false
 };

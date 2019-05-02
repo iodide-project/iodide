@@ -122,7 +122,7 @@ export async function evaluateFetchText(fetchText, evalId) {
     sendActionToEditor(
       addToConsoleHistory({
         historyType: "FETCH_CELL_INFO",
-        fetchMessage: syntaxErrors
+        content: syntaxErrors
           .map(fetchProgressInitialStrings)
           .map(t => t.text)
           .join(""),
@@ -138,7 +138,7 @@ export async function evaluateFetchText(fetchText, evalId) {
   sendActionToEditor(
     addToConsoleHistory({
       historyType: "FETCH_CELL_INFO",
-      fetchMessage: progressStrings.map(t => t.text).join(""),
+      content: progressStrings.map(t => t.text).join(""),
       historyId: outputHistoryId
     })
   );
@@ -149,7 +149,7 @@ export async function evaluateFetchText(fetchText, evalId) {
     sendActionToEditor(
       updateConsoleEntry({
         historyId: outputHistoryId,
-        fetchMessage: progressStrings.map(t => t.text).join("")
+        content: progressStrings.map(t => t.text).join("")
       })
     );
     return outcome;
@@ -162,7 +162,7 @@ export async function evaluateFetchText(fetchText, evalId) {
   sendActionToEditor(
     updateConsoleEntry({
       historyId: outputHistoryId,
-      fetchMessage: outcomes.map(t => t.text).join(""),
+      content: outcomes.map(t => t.text).join(""),
       level: hasError ? "ERROR" : undefined
     })
   );

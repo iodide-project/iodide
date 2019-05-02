@@ -22,7 +22,6 @@ export class HistoryItemUnconnected extends React.Component {
     level: PropTypes.string,
     historyId: PropTypes.string.isRequired,
     historyType: PropTypes.string.isRequired,
-    fetchMessage: PropTypes.string,
     language: PropTypes.string
   };
   static whyDidYouRender = true;
@@ -59,7 +58,7 @@ export class HistoryItemUnconnected extends React.Component {
       case "FETCH_CELL_INFO": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <PreText>{this.props.fetchMessage}</PreText>
+            <PreText>{this.props.content}</PreText>
           </ConsoleMessage>
         );
       }

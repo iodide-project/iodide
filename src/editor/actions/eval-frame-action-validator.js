@@ -107,8 +107,7 @@ const schemas = {
             type: "string",
             enum: ["INFO", "LOG", "WARN", "ERROR"]
           },
-          historyType: { type: "string" },
-          fetchMessage: { type: "string" }
+          historyType: { type: "string" }
         },
         additionalProperties: false,
         required: ["historyId"]
