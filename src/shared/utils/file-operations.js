@@ -51,7 +51,7 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
   filePicker.id = "file-picker";
   filePicker.name = "files[]";
   filePicker.click();
-  filePicker.addEventListener("change", evt => {
+  filePicker.addEventListener("change", async evt => {
     const file = evt.target.files[0];
     const formData = new FormData();
     formData.append(
@@ -62,7 +62,8 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
       })
     );
     formData.append("file", file);
-    createFileRequest(formData).then(output => successCallback(output));
+    const output = createFileRequest(formData);
+    successCallback(output);
   });
 }
 
