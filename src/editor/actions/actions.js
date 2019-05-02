@@ -244,21 +244,6 @@ export function moveCursorToNextChunk() {
   };
 }
 
-export function getNotebookSaveRequestOptions(state, options = undefined) {
-  const data = {
-    title: state.title,
-    content: state.jsmd
-  };
-  if (options && options.forkedFrom !== undefined)
-    data.forked_from = options.forkedFrom;
-  const postRequestOptions = {
-    body: JSON.stringify(data),
-    method: "POST"
-  };
-
-  return postRequestOptions;
-}
-
 export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
   return (dispatch, getState) => {
     const state = getState();
