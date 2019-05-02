@@ -50,11 +50,10 @@ describe("HistoryItem React component", () => {
       historyType: "CONSOLE_OUTPUT",
       historyId: "123456asdfg",
       lastRan: +new Date(),
-      valueToRender: 10403,
       level: "OUTPUT"
     });
     expect(hist.find(ConsoleMessage).length).toBe(1);
-    expect(hist.find(ConsoleMessage).find(ValueRenderer).length).toBe(1);
+    expect(hist.find(ValueRenderer).length).toBe(1);
   });
 
   it("always renders the FETCH_CELL_INFO as an ConsoleMessage component", () => {

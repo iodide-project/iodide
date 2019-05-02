@@ -12,10 +12,7 @@ export class DeclaredVariable extends React.Component {
       <div className="declared-variable">
         <div className="declared-variable-name">{this.props.varName} = </div>
         <div className="declared-variable-value">
-          <ValueRenderer
-            valueContainer="window"
-            valueKey={this.props.varName}
-          />
+          <ValueRenderer windowValue valueKey={this.props.varName} />
         </div>
       </div>
     );

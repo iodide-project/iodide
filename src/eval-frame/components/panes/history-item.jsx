@@ -52,10 +52,7 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_OUTPUT": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <ValueRenderer
-              valueContainer="IODIDE_EVALUATION_RESULTS"
-              valueKey={this.props.historyId}
-            />
+            <ValueRenderer valueKey={this.props.historyId} />
           </ConsoleMessage>
         );
       }

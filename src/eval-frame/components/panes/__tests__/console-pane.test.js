@@ -54,7 +54,7 @@ describe("ConsolePaneUnconnected React component", () => {
       consolePane()
         .find("div.history-items")
         .find(HistoryItem)
-    ).toHaveLength(2);
+    ).toHaveLength(3);
   });
 });
 

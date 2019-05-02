@@ -8,6 +8,8 @@ import TableRenderer from "./data-table-rep";
 import UserReps from "./user-reps-manager";
 import { isRowDf } from "./rep-utils/rep-type-chooser";
 
+import { IODIDE_EVALUATION_RESULTS } from "../../global-state-extras";
+
 function repChooser(value) {
   if (UserReps.getUserRepIfAvailable(value)) {
     return "USER_REGISTERED_RENDERER";
@@ -26,7 +28,7 @@ function repChooser(value) {
 
 export default class ValueRenderer extends React.Component {
   static propTypes = {
-    valueContainer: PropTypes.string.isRequired,
+    windowValue: PropTypes.bool,
     valueKey: PropTypes.string.isRequired
   };
   static whyDidYouRender = true;
@@ -41,8 +43,11 @@ export default class ValueRenderer extends React.Component {
   }
 
   render() {
-    const { valueContainer, valueKey } = this.props;
-    const value = window[valueContainer][valueKey];
+    const { valueKey } = this.props;
+
+    const value = this.props.windowValue
+      ? window[valueKey]
+      : IODIDE_EVALUATION_RESULTS[valueKey];
 
     if (this.state.errorInfo) {
       return (
@@ -71,9 +76,7 @@ export default class ValueRenderer extends React.Component {
       case "ERROR_REP":
         return <ErrorRenderer error={value} />;
       case "TABLE_REP":
-        return (
-          <TableRenderer valueContainer={valueContainer} valueKey={valueKey} />
-        );
+        return <TableRenderer value={value} />;
       default:
         return <DefaultRenderer value={value} />;
     }

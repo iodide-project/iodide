@@ -11,12 +11,6 @@ import { serializeForTinyRep } from "./rep-utils/tiny-rep-serializer";
 import DefaultRenderer from "./default-handler";
 import TinyRep from "./tiny-rep";
 
-if (process.env.NODE_ENV !== "production") {
-  // eslint-disable-next-line global-require
-  const whyDidYouRender = require("@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js");
-  whyDidYouRender(React);
-}
-
 const TableDetails = styled.div`
   border: solid #e5e5e5;
   border-width: 0px 1px 1px 1px;
@@ -75,15 +69,13 @@ class CellRenderer extends React.PureComponent {
     );
   }
 }
-// CellRenderer.whyDidYouRender = true;
 
 const PX_PER_CHAR = 7;
 const MIN_CELL_CHAR_WIDTH = 22;
 
 export default class TableRenderer extends React.PureComponent {
   static propTypes = {
-    valueContainer: PropTypes.string.isRequired,
-    valueKey: PropTypes.string.isRequired
+    value: PropTypes.any // eslint-disable-line react/forbid-prop-types
   };
   static whyDidYouRender = true;
 
@@ -97,9 +89,7 @@ export default class TableRenderer extends React.PureComponent {
   }
 
   render() {
-    // const { value } = this.props;
-    const { valueContainer, valueKey } = this.props;
-    const value = window[valueContainer][valueKey];
+    const { value } = this.props;
 
     const columns = Object.keys(value[0]).map(k => ({
       Header: k,
