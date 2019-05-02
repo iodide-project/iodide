@@ -245,58 +245,69 @@ export function moveCursorToNextChunk() {
 }
 
 export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState();
-    return createNotebookRequest(state.title, state.jsmd, options)
-      .then(notebook => {
-        const message = "Notebook saved to server";
-        dispatch(
-          updateAppMessages({
-            message,
-            messageType: `NOTEBOOK_SAVED`
-          })
-        );
-        dispatch({ type: "ADD_NOTEBOOK_ID", id: notebook.id });
-        window.history.replaceState({}, "", `/notebooks/${notebook.id}`);
-        dispatch({ type: "NOTEBOOK_SAVED" });
-      })
-      .catch(() => {
-        dispatch(
-          updateAppMessages({
-            message: "Error saving notebook.",
-            messageType: "ERROR_SAVING_NOTEBOOK"
-          })
-        );
-      });
+    try {
+      const notebook = await createNotebookRequest(
+        state.title,
+        state.jsmd,
+        options
+      );
+      const message = "Notebook saved to server";
+      dispatch(
+        updateAppMessages({
+          message,
+          messageType: `NOTEBOOK_SAVED`
+        })
+      );
+      dispatch({ type: "ADD_NOTEBOOK_ID", id: notebook.id });
+      window.history.replaceState({}, "", `/notebooks/${notebook.id}`);
+      dispatch({ type: "NOTEBOOK_SAVED" });
+    } catch (err) {
+      dispatch(
+        updateAppMessages({
+          message: "Error saving notebook.",
+          messageType: "ERROR_SAVING_NOTEBOOK"
+        })
+      );
+    }
+
+    return undefined;
   };
 }
 
 export function saveNotebookToServer(appMsg = true) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState();
     const notebookId = getNotebookID(state);
     const notebookInServer = Boolean(notebookId);
-    if (notebookInServer) {
-      // Update Exisiting Notebook
-      return updateNotebookRequest(notebookId, state.title, state.jsmd)
-        .then(newRevision => {
-          const message = "Updated Notebook";
-          updateLocalAutosave(state, true);
-          if (appMsg) {
-            dispatch(
-              updateAppMessages({
-                message,
-                messageType: "NOTEBOOK_SAVED"
-              })
-            );
-          }
-          dispatch({ type: "NOTEBOOK_SAVED", newRevisionId: newRevision.id });
-        })
-        .catch(err => {
-          throw Error(err);
-        });
+
+    // Create new notebook
+    if (!notebookInServer) {
+      return createNewNotebookOnServer()(dispatch, getState);
     }
-    return createNewNotebookOnServer()(dispatch, getState);
+    // Update Exisiting Notebook
+    try {
+      const newRevision = await updateNotebookRequest(
+        notebookId,
+        state.title,
+        state.jsmd
+      );
+      const message = "Updated Notebook";
+      updateLocalAutosave(state, true);
+      if (appMsg) {
+        dispatch(
+          updateAppMessages({
+            message,
+            messageType: "NOTEBOOK_SAVED"
+          })
+        );
+      }
+      dispatch({ type: "NOTEBOOK_SAVED", newRevisionId: newRevision.id });
+    } catch (err) {
+      throw Error(err);
+    }
+    return undefined;
   };
 }
 
