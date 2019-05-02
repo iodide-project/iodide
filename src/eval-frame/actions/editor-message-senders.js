@@ -1,8 +1,5 @@
 import messagePasserEval from "../../shared/utils/redux-to-port-message-passer";
-import {
-  addToConsoleHistory,
-  updateConsoleEntry
-} from "./console-history-actions";
+import generateRandomId from "../../shared/utils/generate-random-id";
 
 export function sendStatusResponseToEditor(status, evalId, payload) {
   messagePasserEval.postMessage("EVAL_FRAME_TASK_RESPONSE", {
@@ -16,10 +13,19 @@ export function sendActionToEditor(action) {
   messagePasserEval.postMessage("REDUX_ACTION", action);
 }
 
-export function addConsoleEntryInEditor(action) {
-  messagePasserEval.postMessage("REDUX_ACTION", addToConsoleHistory(action));
+export function addConsoleEntryInEditor(historyItemAction) {
+  const historyId = generateRandomId();
+  messagePasserEval.postMessage("REDUX_ACTION", {
+    historyId,
+    type: "ADD_TO_CONSOLE_HISTORY",
+    ...historyItemAction
+  });
+  return historyId;
 }
 
-export function updateConsoleEntryInEditor(action) {
-  messagePasserEval.postMessage("REDUX_ACTION", updateConsoleEntry(action));
+export function updateConsoleEntryInEditor(historyItem) {
+  messagePasserEval.postMessage("REDUX_ACTION", {
+    type: "UPDATE_VALUE_IN_HISTORY",
+    historyItem
+  });
 }

@@ -3,7 +3,6 @@ import {
   addConsoleEntryInEditor,
   sendStatusResponseToEditor
 } from "./editor-message-senders";
-import generateRandomId from "../../shared/utils/generate-random-id";
 
 import { IODIDE_EVALUATION_RESULTS } from "../global-state-extras";
 
@@ -91,20 +90,19 @@ export async function evaluateCode(code, language, chunkId, evalId) {
   try {
     MOST_RECENT_CHUNK_ID.set(chunkId);
     const value = await runCodeWithLanguage(language, code);
-    const historyId = generateRandomId();
-    IODIDE_EVALUATION_RESULTS[historyId] = value;
 
-    addConsoleEntryInEditor({ historyType: "CONSOLE_OUTPUT", historyId });
+    const historyId = addConsoleEntryInEditor({
+      historyType: "CONSOLE_OUTPUT"
+    });
+    IODIDE_EVALUATION_RESULTS[historyId] = value;
 
     sendStatusResponseToEditor("SUCCESS", evalId);
   } catch (error) {
-    const historyId = generateRandomId();
-    IODIDE_EVALUATION_RESULTS[historyId] = error;
-    addConsoleEntryInEditor({
+    const historyId = addConsoleEntryInEditor({
       historyType: "CONSOLE_OUTPUT",
-      historyId,
       level: "ERROR"
     });
+    IODIDE_EVALUATION_RESULTS[historyId] = error;
 
     sendStatusResponseToEditor("ERROR", evalId);
   }
