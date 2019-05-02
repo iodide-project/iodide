@@ -219,8 +219,8 @@ export function moveCursorToNextChunk() {
       editorCursor
     } = getState();
     const lastChunk = jsmdChunks[jsmdChunks.length - 1];
+    // ignore if we are on the last line already
     if (editorCursor.line === lastChunk.endLine) {
-      dispatch(updateEditorCursor(lastChunk.endLine, Infinity, true));
       return;
     }
     const targetLine =

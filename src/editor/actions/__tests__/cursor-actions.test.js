@@ -115,6 +115,32 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
     expect(store.getActions()).toEqual(expectedActions);
   });
 
+  it("defaults to last line if cursor is already in last chunk", () => {
+    const [line, col] = [12, 2];
+    const store = mockStore({
+      editorCursor: {
+        line,
+        col
+      },
+      jsmdChunks: [
+        { startLine: 0, endLine: 10 },
+        { startLine: 11, endLine: 15 }
+      ],
+      editorSelections: []
+    });
+
+    const expectedActions = [
+      {
+        type: "UPDATE_CURSOR",
+        line: 16,
+        col: 0,
+        forceUpdate: true
+      }
+    ];
+    store.dispatch(moveCursorToNextChunk());
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+
   it("one selection across multiple chunks", () => {
     const [line, col] = [12, 25];
 
