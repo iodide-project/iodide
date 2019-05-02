@@ -219,8 +219,9 @@ export function moveCursorToNextChunk() {
       editorCursor
     } = getState();
     const lastChunk = jsmdChunks[jsmdChunks.length - 1];
-    // ignore if we are on the last line already
-    if (editorCursor.line === lastChunk.endLine) {
+    // if there is no selection and the cursor is on the last line,
+    // skip the rest of the thunk.
+    if (editorCursor.line === lastChunk.endLine && !selections.length) {
       return;
     }
     const targetLine =
