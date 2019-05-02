@@ -7,6 +7,8 @@ import ReactDOM from "react-dom";
 
 import "./message-channel-stub";
 
+global.fetch = require("jest-fetch-mock");
+
 global.$ = $;
 global.jQuery = $;
 global.jquery = $;

@@ -8,9 +8,9 @@ import DeleteModal from "./delete-modal";
 import UploadModal from "./upload-modal";
 import {
   selectFileAndFormatMetadata,
-  uploadFile,
-  deleteNotebookOnServer
+  uploadFile
 } from "../../shared/utils/file-operations";
+import { deleteNotebookRequest } from "../../shared/server-api/notebook";
 
 export default class NotebookActionsMenu extends React.Component {
   static propTypes = {
@@ -57,7 +57,7 @@ export default class NotebookActionsMenu extends React.Component {
       let filename;
       try {
         const metadata = JSON.parse(formData.get("metadata"));
-          filename = metadata.filename // eslint-disable-line
+        filename = metadata.filename; // eslint-disable-line
       } catch (err) {
         throw err;
       }
@@ -82,9 +82,8 @@ export default class NotebookActionsMenu extends React.Component {
   }
 
   async uploadFile(formData) {
-    const response = await uploadFile(formData);
+    const data = await uploadFile(formData);
     // FIXME: uploadFile needs better error handling.
-    const data = await response.json();
     if (this.props.onUploadFile) this.props.onUploadFile(data);
   }
 
@@ -163,7 +162,7 @@ export default class NotebookActionsMenu extends React.Component {
           onCancel={this.hideDeleteModal}
           onDelete={this.props.onDelete}
           elementID={this.props.notebookID}
-          deleteFunction={deleteNotebookOnServer}
+          deleteFunction={deleteNotebookRequest}
         />
         <UploadModal
           visible={this.state.uploadFileConfirmationVisible}

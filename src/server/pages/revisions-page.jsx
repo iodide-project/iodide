@@ -9,7 +9,7 @@ import PageBody from "../components/page-body";
 import Header from "../components/header";
 import BelowFoldContainer from "../components/page-containers/below-fold-container";
 import { MediumUserName } from "../components/user-name";
-import { fetchWithCSRFTokenAndJSONContent } from "../../shared/fetch-with-csrf-token";
+import { deleteNotebookRequest } from "../../shared/server-api/notebook";
 import NotebookActionsMenu from "../components/notebook-actions-menu";
 import RevisionActionsMenu from "../components/revision-actions-menu";
 import FilesList from "../components/files-list";
@@ -134,14 +134,10 @@ export default class RevisionsPage extends React.Component {
     this.setState({ files });
   }
 
-  onDeleteRevision(revisionID) {
+  async onDeleteRevision(revisionID) {
     if (this.state.revisions.length === 1) {
-      fetchWithCSRFTokenAndJSONContent(
-        `/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`,
-        {
-          method: "DELETE"
-        }
-      ).then(this.onDeleteNotebook);
+      await deleteNotebookRequest(this.props.ownerInfo.notebookId);
+      this.onDeleteNotebook();
     } else {
       const revisions = this.state.revisions.filter(r => r.id !== revisionID);
       this.setState({ revisions });
