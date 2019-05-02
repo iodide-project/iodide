@@ -47,7 +47,9 @@ const plugins = [];
 module.exports = env => {
   env = env || ""; // eslint-disable-line no-param-reassign
 
-  if (!env.startsWith("dev")) {
+  const isDev = env.startsWith("dev");
+
+  if (!isDev) {
     plugins.push(new UglifyJSPlugin());
   }
 
@@ -84,8 +86,8 @@ module.exports = env => {
           loader: "eslint-loader",
           options: {
             // eslint options (if necessary)
-            emitWarning: true,
-            emitError: true,
+            emitWarning: !isDev,
+            emitError: !isDev,
             extensions: [".jsx", ".js"]
           }
         },
@@ -181,7 +183,7 @@ module.exports = env => {
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
         IODIDE_BUILD_MODE: JSON.stringify(
-          env && env.startsWith("dev") ? "dev" : "production"
+          isDev ? "dev" : "production"
         ),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
         PYODIDE_VERSION: JSON.stringify(PYODIDE_VERSION),
