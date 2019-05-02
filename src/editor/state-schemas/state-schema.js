@@ -39,7 +39,6 @@ export const historySchema = {
         "CONSOLE_MESSAGE"
       ]
     },
-    lastRan: { type: "integer" },
     level: { type: "string", enum: ["INFO", "LOG", "WARN", "ERROR"] },
     language: { type: "string" },
     value: {}

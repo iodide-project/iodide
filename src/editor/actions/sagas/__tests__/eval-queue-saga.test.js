@@ -23,7 +23,6 @@ function purifiedMessage(messageAction) {
   // set up message action template and drop keys that are impure
   const action = Object.assign({}, messageAction);
   delete action.historyId;
-  delete action.lastRan;
   return { action };
 }
 
