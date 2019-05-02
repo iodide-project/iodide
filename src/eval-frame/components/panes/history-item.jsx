@@ -22,7 +22,7 @@ export class HistoryItemUnconnected extends React.Component {
     level: PropTypes.string,
     historyId: PropTypes.string.isRequired,
     historyType: PropTypes.string.isRequired,
-    fetchResultText: PropTypes.string,
+    fetchMessage: PropTypes.string,
     language: PropTypes.string
   };
   static whyDidYouRender = true;
@@ -62,7 +62,7 @@ export class HistoryItemUnconnected extends React.Component {
       case "FETCH_CELL_INFO": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <PreText>{this.props.fetchResultText}</PreText>
+            <PreText>{this.props.fetchMessage}</PreText>
           </ConsoleMessage>
         );
       }
@@ -77,14 +77,7 @@ export class HistoryItemUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state, ownProps) {
-  const historyItem = getHistoryItemById(state, ownProps.historyId);
-  let fetchResultText;
-  if (historyItem.historyType === "FETCH_CELL_INFO") {
-    fetchResultText = window.IODIDE_EVALUATION_RESULTS[ownProps.historyId]
-      .map(t => t.text)
-      .join("");
-  }
-  return Object.assign({}, historyItem, { fetchResultText });
+  return getHistoryItemById(state, ownProps.historyId);
 }
 
 export default connect(mapStateToProps)(HistoryItemUnconnected);

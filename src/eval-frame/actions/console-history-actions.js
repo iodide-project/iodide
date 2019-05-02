@@ -6,9 +6,10 @@ window.IODIDE_EVALUATION_RESULTS = {};
 export function addToConsoleHistory({
   historyType,
   content,
-  value,
+  fetchMessage,
   level,
   language,
+  value,
   historyId = generateRandomId()
 }) {
   const historyAction = createHistoryItem({
@@ -16,12 +17,13 @@ export function addToConsoleHistory({
     historyType,
     historyId,
     level,
-    language
+    language,
+    fetchMessage
   });
   historyAction.type = "ADD_TO_CONSOLE_HISTORY";
-
-  window.IODIDE_EVALUATION_RESULTS[historyAction.historyId] = value;
-
+  if (value !== undefined) {
+    window.IODIDE_EVALUATION_RESULTS[historyAction.historyId] = value;
+  }
   return historyAction;
 }
 
