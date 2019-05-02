@@ -17,7 +17,6 @@ describe("HistoryItem React component", () => {
     const hist = historyItem({
       historyType: "APP_MESSAGE",
       historyId: "123456asdfg",
-      lastRan: +new Date(),
       content: "NOTEBOOK_SAVED"
     });
     expect(hist.find(AppMessage).length).toBe(1);
@@ -28,7 +27,6 @@ describe("HistoryItem React component", () => {
       historyType: "CONSOLE_MESSAGE",
       historyId: "123456asdfg",
       level: "WARN",
-      lastRan: +new Date(),
       content: "var x = 10"
     });
     expect(hist.find(ConsoleMessage).length).toBe(1);
@@ -38,7 +36,6 @@ describe("HistoryItem React component", () => {
     const hist = historyItem({
       historyType: "CONSOLE_INPUT",
       historyId: "123456asdfg",
-      lastRan: +new Date(),
       content: "var x = 10",
       language: "js"
     });
@@ -49,7 +46,6 @@ describe("HistoryItem React component", () => {
     const hist = historyItem({
       historyType: "CONSOLE_OUTPUT",
       historyId: "123456asdfg",
-      lastRan: +new Date(),
       level: "OUTPUT"
     });
     expect(hist.find(ConsoleMessage).length).toBe(1);
@@ -60,7 +56,6 @@ describe("HistoryItem React component", () => {
     const hist = historyItem({
       historyType: "FETCH_CELL_INFO",
       historyId: "123456asdfg",
-      lastRan: +new Date(),
       valueToRender: [{ text: "a", id: "z" }, { text: "b", id: "y" }],
       level: "ERROR"
     });

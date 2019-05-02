@@ -7,20 +7,16 @@ describe("createHistoryItem", () => {
       historyType: "CELL_EVAL_VALUE"
     });
     expect(typeof h.historyId).toBe("string");
-    expect(typeof h.lastRan).toBe("number");
-    expect(Object.keys(h).length).toBe(4);
+    expect(Object.keys(h).length).toBe(3);
   });
-  it("creates a new history item but maintains the passed-in historyId and lastRan", () => {
+  it("creates a new history item but maintains the passed-in historyId", () => {
     const historyId = "a9vndos8";
-    const lastRan = +new Date();
     const h = createHistoryItem({
       content: "content",
       historyType: "CELL_EVAL_VALUE",
-      historyId,
-      lastRan
+      historyId
     });
     expect(h.historyId).toBe(historyId);
-    expect(h.lastRan).toEqual(lastRan);
-    expect(Object.keys(h).length).toBe(4);
+    expect(Object.keys(h).length).toBe(3);
   });
 });
