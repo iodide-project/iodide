@@ -28,6 +28,8 @@ import { getChunkContainingLine } from "../jsmd-tools/jsmd-selection";
 
 import { exportJsmdBundle, titleToHtmlFilename } from "../tools/export-tools";
 
+import { addAppMessageToConsoleHistory } from "./console-message-actions";
+
 export function updateAppMessages(messageObj) {
   return dispatch => {
     const { message } = messageObj;
@@ -35,11 +37,7 @@ export function updateAppMessages(messageObj) {
     if (when === undefined) when = new Date().toString();
     if (messageType === undefined) messageType = message;
     // add to eval history.
-    dispatch({
-      type: "ADD_TO_CONSOLE_HISTORY",
-      historyType: "APP_MESSAGE",
-      content: messageType
-    });
+    dispatch(addAppMessageToConsoleHistory(messageType));
     dispatch({
       type: "UPDATE_APP_MESSAGES",
       message: { message, messageType, when }
