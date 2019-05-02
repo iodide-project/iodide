@@ -1,3 +1,5 @@
+import generateRandomId from "../../shared/utils/generate-random-id";
+
 export default function evalFrameActionReducer(state, action) {
   let nextState;
   switch (action.type) {
@@ -10,6 +12,9 @@ export default function evalFrameActionReducer(state, action) {
     case "ADD_TO_CONSOLE_HISTORY": {
       const actionCopy = Object.assign({}, action);
       delete actionCopy.type;
+      if (actionCopy.historyId === undefined) {
+        actionCopy.historyId = generateRandomId();
+      }
       const history = [...state.history, actionCopy];
       return Object.assign({}, state, { history });
     }

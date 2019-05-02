@@ -28,8 +28,6 @@ import { getChunkContainingLine } from "../jsmd-tools/jsmd-selection";
 
 import { exportJsmdBundle, titleToHtmlFilename } from "../tools/export-tools";
 
-import createHistoryItem from "../../shared/utils/create-history-item";
-
 export function updateAppMessages(messageObj) {
   return dispatch => {
     const { message } = messageObj;
@@ -39,10 +37,8 @@ export function updateAppMessages(messageObj) {
     // add to eval history.
     dispatch({
       type: "ADD_TO_CONSOLE_HISTORY",
-      ...createHistoryItem({
-        historyType: "APP_MESSAGE",
-        content: messageType
-      })
+      historyType: "APP_MESSAGE",
+      content: messageType
     });
     dispatch({
       type: "UPDATE_APP_MESSAGES",
