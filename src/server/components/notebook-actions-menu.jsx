@@ -54,13 +54,8 @@ export default class NotebookActionsMenu extends React.Component {
 
   selectFile(notebookID) {
     selectFileAndFormatMetadata(notebookID).then(formData => {
-      let filename;
-      try {
-        const metadata = JSON.parse(formData.get("metadata"));
-        filename = metadata.filename; // eslint-disable-line
-      } catch (err) {
-        throw err;
-      }
+      const metadata = JSON.parse(formData.get("metadata"));
+      const { filename } = metadata;
       const fileDoesntExistYet = !this.props.files
         .map(f => f.filename)
         .includes(filename);

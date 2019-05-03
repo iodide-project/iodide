@@ -253,10 +253,9 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
         state.jsmd,
         options
       );
-      const message = "Notebook saved to server";
       dispatch(
         updateAppMessages({
-          message,
+          message: "Notebook saved to server",
           messageType: `NOTEBOOK_SAVED`
         })
       );
@@ -293,20 +292,28 @@ export function saveNotebookToServer(appMsg = true) {
         state.title,
         state.jsmd
       );
-      const message = "Updated Notebook";
+
       updateLocalAutosave(state, true);
       if (appMsg) {
         dispatch(
           updateAppMessages({
-            message,
+            message: "Updated Notebook",
             messageType: "NOTEBOOK_SAVED"
           })
         );
       }
       dispatch({ type: "NOTEBOOK_SAVED", newRevisionId: newRevision.id });
     } catch (err) {
-      throw Error(err);
+      if (appMsg) {
+        dispatch(
+          updateAppMessages({
+            message: "Error saving notebook.",
+            messageType: "ERROR_SAVING_NOTEBOOK"
+          })
+        );
+      }
     }
+
     return undefined;
   };
 }
