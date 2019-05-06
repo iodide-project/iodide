@@ -246,6 +246,7 @@ export function moveCursorToNextChunk() {
 
 export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
   return async (dispatch, getState) => {
+    const { forkedFrom } = options;
     const state = getState();
     try {
       const notebook = await createNotebookRequest(
@@ -261,8 +262,16 @@ export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
         })
       );
       dispatch({ type: "ADD_NOTEBOOK_ID", id: notebook.id });
-      window.history.replaceState({}, "", `/notebooks/${notebook.id}`);
+      window.history.replaceState({}, "", `/notebooks/${notebook.id}/`);
       dispatch({ type: "NOTEBOOK_SAVED" });
+      // update owner info, so we know that we can save
+      if (forkedFrom) {
+        dispatch({
+          type: "SET_NOTEBOOK_OWNER_IN_SESSION",
+          owner: state.userData,
+          forkedFrom
+        });
+      }
     } catch (err) {
       dispatch(
         updateAppMessages({
