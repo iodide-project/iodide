@@ -72,7 +72,22 @@ def test_create_notebook_logged_in(fake_user, client, notebook_post_blob, specif
     notebook = Notebook.objects.first()
     assert notebook.title == post_blob["title"]
     assert notebook.owner == fake_user
+    notebook_revision = NotebookRevision.objects.get(notebook=notebook)
 
+    # the response should also contain the revision id and other
+    # data that we want
+    assert resp.json() == {
+        "forked_from": None,
+        "id": notebook.id,
+        "owner": fake_user.username,
+        "title": notebook.title,
+        "latest_revision": {
+            "content": notebook_revision.content,
+            "created": get_rest_framework_time_string(notebook_revision.created),
+            "id": notebook_revision.id,
+            "title": notebook_revision.title,
+        },
+    }
     # should have a first revision to go along with the new notebook
     assert NotebookRevision.objects.count() == 1
 
