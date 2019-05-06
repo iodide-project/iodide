@@ -1,4 +1,4 @@
-# (Unreleased; add upcoming change notes here)
+# 0.6.0 (2019-05-06)
 - introduces iodide.file API (see docs)
 - restore tabular data viewer for arrays of objects
 - add "TinyRep" components
