@@ -9,8 +9,6 @@ import ValueRenderer from "../reps/value-renderer";
 import HistoryInputItem from "./console/history-input-item";
 import ConsoleMessage from "./console/console-message";
 
-// import { getHistoryItemById } from "../../../shared/state-selectors/history-selectors";
-
 const FetchResults = styled("pre")`
   padding: 0;
   margin: 0;
@@ -73,7 +71,6 @@ export class HistoryItemUnconnected extends React.Component {
 
 export function mapStateToProps(state, ownProps) {
   return state.history.filter(h => h.historyId === ownProps.historyId)[0];
-  // getHistoryItemById(state, ownProps.historyId);
 }
 
 export default connect(mapStateToProps)(HistoryItemUnconnected);

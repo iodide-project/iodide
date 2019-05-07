@@ -11,7 +11,6 @@ import ConsoleInput from "./console/console-input";
 
 import EmptyPaneContents from "./empty-pane-contents";
 import OnboardingContent from "../../../shared/components/onboarding-content";
-// import { getHistoryIdsForConsole } from "../../../shared/state-selectors/history-selectors";
 
 const HelpIcon = styled(HelpOutline)`
   display: inline-block;
