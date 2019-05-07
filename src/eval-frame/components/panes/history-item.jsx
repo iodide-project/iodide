@@ -9,9 +9,9 @@ import ValueRenderer from "../reps/value-renderer";
 import HistoryInputItem from "./console/history-input-item";
 import ConsoleMessage from "./console/console-message";
 
-import { getHistoryItemById } from "../../../shared/state-selectors/history-selectors";
+// import { getHistoryItemById } from "../../../shared/state-selectors/history-selectors";
 
-const PreText = styled("pre")`
+const FetchResults = styled("pre")`
   padding: 0;
   margin: 0;
 `;
@@ -57,7 +57,7 @@ export class HistoryItemUnconnected extends React.Component {
       case "FETCH_CELL_INFO": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <PreText>{this.props.content}</PreText>
+            <FetchResults>{this.props.content}</FetchResults>
           </ConsoleMessage>
         );
       }
@@ -72,7 +72,8 @@ export class HistoryItemUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state, ownProps) {
-  return getHistoryItemById(state, ownProps.historyId);
+  return state.history.filter(h => h.historyId === ownProps.historyId)[0];
+  // getHistoryItemById(state, ownProps.historyId);
 }
 
 export default connect(mapStateToProps)(HistoryItemUnconnected);

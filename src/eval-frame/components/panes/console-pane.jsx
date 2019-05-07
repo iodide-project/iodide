@@ -11,7 +11,7 @@ import ConsoleInput from "./console/console-input";
 
 import EmptyPaneContents from "./empty-pane-contents";
 import OnboardingContent from "../../../shared/components/onboarding-content";
-import { getHistoryIdsForConsole } from "../../../shared/state-selectors/history-selectors";
+// import { getHistoryIdsForConsole } from "../../../shared/state-selectors/history-selectors";
 
 const HelpIcon = styled(HelpOutline)`
   display: inline-block;
@@ -47,7 +47,6 @@ export class ConsolePaneUnconnected extends React.Component {
   render() {
     let histContents = [];
     if (this.props.historyIds.length) {
-      // const historyIds = this.props.historyIdsStringList.split(",");
       histContents = this.props.historyIds.map(historyId => (
         <HistoryItem historyId={historyId} key={historyId} />
       ));
@@ -98,11 +97,27 @@ export class ConsolePaneUnconnected extends React.Component {
   }
 }
 
+function areStatesEqual(next, prev) {
+  return (
+    next.panePositions.ConsolePositioner.display ===
+      prev.panePositions.ConsolePositioner.display &&
+    deepEqual(
+      next.history.map(h => h.historyId),
+      prev.history.map(h => h.historyId)
+    )
+  );
+}
+
 export function mapStateToProps(state) {
   return {
-    historyIds: getHistoryIdsForConsole(state),
+    historyIds: state.history.map(h => h.historyId),
     paneVisible: state.panePositions.ConsolePositioner.display === "block"
   };
 }
 
-export default connect(mapStateToProps)(ConsolePaneUnconnected);
+export default connect(
+  mapStateToProps,
+  null,
+  null,
+  { areStatesEqual }
+)(ConsolePaneUnconnected);
