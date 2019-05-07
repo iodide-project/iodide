@@ -37,30 +37,31 @@ export const numericIndexTypes = [
 //   "GeneratorFunction"
 // ];
 
-const MAX_MEDIUM_ARRAY_LEN = 20;
-const MEDIUM_ARRAY_HEAD = 5;
-const MEDIUM_ARRAY_TAIL = 5;
-
-export function serializeArrayPathsSummary(arr) {
+export function serializeArrayPathsSummary(
+  arr,
+  maxLength = 20,
+  headPreview = 5,
+  tailPreview = 5
+) {
   if (arr.length === 0) {
     return [];
   }
 
   // can't use a plain map in this fnc this b/c it doesn't work with typed arrays
-  if (arr.length <= MAX_MEDIUM_ARRAY_LEN) {
+  if (arr.length <= maxLength) {
     return range(arr.length).map(i => serializeForTinyRep(arr[i]));
   }
 
   return [
-    ...range(MEDIUM_ARRAY_HEAD).map(i => serializeForTinyRep(arr[i])),
+    ...range(headPreview).map(i => serializeForTinyRep(arr[i])),
     {
       objType: "REPS_META_ARRAY_MORE",
-      number: arr.length - MEDIUM_ARRAY_HEAD - MEDIUM_ARRAY_TAIL
+      number: arr.length - headPreview - tailPreview
     },
-    ...range(arr.length - MEDIUM_ARRAY_TAIL, arr.length).map(i =>
+    ...range(arr.length - tailPreview, arr.length).map(i =>
       serializeForTinyRep(arr[i])
     )
-    // ...arr.slice(-MEDIUM_ARRAY_TAIL).map(obj => serializeForTinyRep(obj))
+    // ...arr.slice(-tailPreview).map(obj => serializeForTinyRep(obj))
   ];
 }
 
