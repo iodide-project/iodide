@@ -3,6 +3,7 @@ from django.contrib.auth import logout as django_logout
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Max
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .base.models import User
@@ -94,6 +95,18 @@ def user(request, name=None):
     )
 
 
+def login(request):
+    if request.user.is_authenticated:
+        return redirect(reverse("login_success"))
+    elif settings.SOCIAL_AUTH_GITHUB_KEY:
+        return redirect(reverse("social:begin", kwargs={"backend": "github"}))
+
+    # this shouldn't happen in our current deployments (either we're logged
+    # in already or we're using github) but leaving this in for testing and
+    # sanity
+    return redirect(reverse("index"))
+
+
 def login_success(request):
     if not request.user.is_authenticated:
         raise PermissionDenied
@@ -102,4 +115,4 @@ def login_success(request):
 
 def logout(request):
     django_logout(request)
-    return redirect("/")
+    return redirect(reverse("index"))
