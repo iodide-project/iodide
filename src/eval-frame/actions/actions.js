@@ -4,7 +4,7 @@ import {
   sendStatusResponseToEditor
 } from "./editor-message-senders";
 
-import { IODIDE_EVALUATION_RESULTS } from "../global-state-extras";
+import { IODIDE_EVALUATION_RESULTS } from "../iodide-evaluation-results";
 
 const CodeMirror = require("codemirror"); // eslint-disable-line
 

@@ -9,7 +9,7 @@ import ErrorRenderer from "../error-handler";
 import HTMLHandler from "../html-handler";
 import UserReps from "../user-reps-manager";
 
-import { IODIDE_EVALUATION_RESULTS } from "../../../global-state-extras";
+import { IODIDE_EVALUATION_RESULTS } from "../../../iodide-evaluation-results";
 
 const simpleTestCases = [
   { type: "array", val: [1, 2, 3.4] },

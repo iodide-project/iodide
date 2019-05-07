@@ -8,7 +8,7 @@ import TableRenderer from "./data-table-rep";
 import UserReps from "./user-reps-manager";
 import { isRowDf } from "./rep-utils/rep-type-chooser";
 
-import { IODIDE_EVALUATION_RESULTS } from "../../global-state-extras";
+import { IODIDE_EVALUATION_RESULTS } from "../../iodide-evaluation-results";
 
 function repChooser(value) {
   if (UserReps.getUserRepIfAvailable(value)) {
