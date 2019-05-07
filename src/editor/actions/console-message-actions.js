@@ -8,14 +8,14 @@ export const addToConsoleHistory = (
 export const addAppMessageToConsoleHistory = content =>
   addToConsoleHistory({ content, historyType: "APP_MESSAGE" });
 
-export const evalTypeConsoleError = evalType =>
+export const addEvalTypeConsoleErrorToHistory = evalType =>
   addToConsoleHistory({
     historyType: "CONSOLE_MESSAGE",
     content: `No evaluator available for chunks of type "${evalType}"`,
     level: "ERROR"
   });
 
-export const loadingLanguageConsoleMsg = langDisplayName =>
+export const addLoadingLanguageMsgToHistory = langDisplayName =>
   addToConsoleHistory({
     historyType: "CONSOLE_MESSAGE",
     content: `Loading ${langDisplayName} language plugin`,
@@ -29,7 +29,7 @@ export const addInputToConsole = (evalText, evalType) =>
     language: evalType
   });
 
-export const pluginParseError = errorMessage =>
+export const addPluginParseErrorToHistory = errorMessage =>
   addToConsoleHistory({
     historyType: "CONSOLE_MESSAGE",
     content: `plugin definition failed to parse:\n${errorMessage}`,
