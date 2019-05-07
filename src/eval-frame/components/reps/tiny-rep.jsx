@@ -14,14 +14,14 @@ const errorColor = "";
 const functionColor = "rgb(28, 30, 207)";
 const ellipsisColor = "#111 ";
 
-const RepBaseText = styled("span")`
+export const RepBaseText = styled("span")`
   font-family: Menlo, monospace;
   font-size: 12px;
   line-height: 14px;
   cursor: pointer;
 `;
 
-const TinyStringValueWithColor = color => {
+const stringValueWithColor = color => {
   const RepValueText = styled(RepBaseText)`
     color: ${color};
   `;
@@ -44,6 +44,8 @@ ObjectRep.propTypes = {
 
 const Ell = styled(RepBaseText)`
   color: ${ellipsisColor};
+  background: #e7e7e7;
+  border-radius: 3px;
 `;
 const Ellipsis = () => <Ell>⋯</Ell>;
 
@@ -53,6 +55,7 @@ const Sep = styled(RepBaseText)`
 
 const StringText = styled(RepBaseText)`
   color: ${stringColor};
+  overflow-wrap: anywhere;
 `;
 const createQuotedStringRep = (lQuote, rQuote) => {
   const InnerQuotedStringRep = ({ size, stringValue, isTruncated }) => (
@@ -123,14 +126,19 @@ ErrorRep.propTypes = {
   objClass: PropTypes.string.isRequired
 };
 
+const RepsMetaArrayMore = ({ number }) => <Ell>⋯{number}⋯</Ell>;
+RepsMetaArrayMore.propTypes = {
+  number: PropTypes.number.isRequired
+};
+
 const typeToTinyRepMapping = {
-  Number: TinyStringValueWithColor(numberColor),
-  Boolean: TinyStringValueWithColor(boolColor),
-  Undefined: TinyStringValueWithColor(nullUndefinedColor),
-  Null: TinyStringValueWithColor(nullUndefinedColor),
+  Number: stringValueWithColor(numberColor),
+  Boolean: stringValueWithColor(boolColor),
+  Undefined: stringValueWithColor(nullUndefinedColor),
+  Null: stringValueWithColor(nullUndefinedColor),
   Error: ErrorRep,
   Object: ObjectRep,
-  Date: TinyStringValueWithColor(dateColor),
+  Date: stringValueWithColor(dateColor),
   RegExp: RegexRep,
   String: StringRep,
   Symbol: SymbolRep,
@@ -159,12 +167,19 @@ const typeToTinyRepMapping = {
   Set: ObjectRep,
 
   WeakSet: ObjectRep,
-  WeakMap: ObjectRep
+  WeakMap: ObjectRep,
+
+  REPS_META_ARRAY_MORE: RepsMetaArrayMore
 };
 
-const handledTypes = Object.keys(typeToTinyRepMapping);
+const repMappingHandledTypes = Object.keys(typeToTinyRepMapping);
 
-export default class TinyRep extends React.PureComponent {
+export const labelRepForType = (serializedObj, objType) => {
+  const repType = repMappingHandledTypes.includes(objType) ? objType : "Object";
+  return typeToTinyRepMapping[repType](serializedObj);
+};
+
+export default class TinyRep extends React.Component {
   static propTypes = {
     objType: PropTypes.string.isRequired,
     /* eslint-disable react/no-unused-prop-types */
@@ -175,8 +190,7 @@ export default class TinyRep extends React.PureComponent {
     /* eslint-enable react/no-unused-prop-types */
   };
   render() {
-    const { objType } = this.props;
-    const repType = handledTypes.includes(objType) ? objType : "Object";
-    return typeToTinyRepMapping[repType](this.props);
+    const { objType } = this.props.serializedObj;
+    return labelRepForType(this.props.serializedObj, objType);
   }
 }

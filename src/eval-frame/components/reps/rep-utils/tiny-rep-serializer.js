@@ -46,21 +46,16 @@ export function objSize(obj) {
   return Object.getOwnPropertyNames(obj).length;
 }
 
-export const MAX_TINY_STRING_LEN = 20;
-const TRUNCATION_LEN = 12;
+export const truncateString = (s, maxLen, truncationLen) =>
+  s.length > maxLen ? [s.slice(0, truncationLen), true] : [s, false];
 
-const truncateString = s =>
-  s.length > MAX_TINY_STRING_LEN
-    ? [s.slice(0, TRUNCATION_LEN), true]
-    : [s, false];
-
-export function tinyRepStringify(obj) {
+export function repStringVal(obj, tiny = false) {
   const type = getType(obj);
   let stringVal;
   if (["Number", "Boolean", "Undefined", "Null", "Symbol"].includes(type)) {
     stringVal = String(obj);
   } else if (type === "Date") {
-    stringVal = obj.toISOString().slice(0, 19);
+    stringVal = tiny ? obj.toISOString().slice(0, 19) : obj.toString();
   } else if (type === "RegExp") {
     stringVal = obj.source;
   } else if (type === "String") {
@@ -70,8 +65,18 @@ export function tinyRepStringify(obj) {
   } else {
     stringVal = "";
   }
-  return truncateString(stringVal);
+  return stringVal;
 }
+
+export const MAX_TINY_STRING_LEN = 20;
+const TINY_REP_TRUNCATION_LEN = 12;
+
+export const tinyRepStringify = obj =>
+  truncateString(
+    repStringVal(obj, true),
+    MAX_TINY_STRING_LEN,
+    TINY_REP_TRUNCATION_LEN
+  );
 
 export function serializeForTinyRep(obj) {
   const [stringValue, isTruncated] = tinyRepStringify(obj);

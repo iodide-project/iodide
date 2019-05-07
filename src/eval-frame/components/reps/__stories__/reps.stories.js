@@ -17,14 +17,18 @@ import {
   objSize
 } from "../rep-utils/tiny-rep-serializer";
 
+import { serializeForMediumRep } from "../rep-utils/medium-rep-serializer";
+
 import TinyRep from "../tiny-rep";
+
+import MediumRep from "../medium-rep";
 
 import ValueRenderer from "../value-renderer";
 
 import TableRenderer from "../data-table-rep";
 
-const allTinyReps = storiesOf("all test cases", module);
-allTinyReps.add("table of type/class info", () => {
+const allTestCases = storiesOf("all test cases", module);
+allTestCases.add("table of type/class info", () => {
   return (
     <table>
       {Object.entries(allCases).map(caseNameAndVal => {
@@ -42,7 +46,7 @@ allTinyReps.add("table of type/class info", () => {
   );
 });
 
-allTinyReps.add("all the tiny reps", () => {
+allTestCases.add("all the tiny reps", () => {
   return (
     <table>
       {Object.entries(allCases).map(caseNameAndVal => {
@@ -58,6 +62,29 @@ allTinyReps.add("all the tiny reps", () => {
         );
       })}
     </table>
+  );
+});
+
+allTestCases.add("all the medium reps", () => {
+  return (
+    <div style={{ maxWidth: "100%" }}>
+      <table>
+        {Object.entries(allCases).map(caseNameAndVal => {
+          const [name, value] = caseNameAndVal;
+          return (
+            <tr key={name}>
+              <td>{name}</td>
+              <td>
+                {/* {JSON.stringify(serializeForMediumRep(value))} */}
+                <MediumRep {...serializeForMediumRep(value)} />
+                {/* <TinyRep serializedObj={serializeForMediumRep(value)} /> */}
+              </td>
+              {/* <td>{JSON.stringify(serializeForTinyRep(value))}</td> */}
+            </tr>
+          );
+        })}
+      </table>
+    </div>
   );
 });
 

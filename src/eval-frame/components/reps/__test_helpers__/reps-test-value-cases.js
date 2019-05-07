@@ -44,15 +44,15 @@ longValueArrays.array_long_mixed = new Array(1000)
 export const arrayBuffers = {
   buffer_arrayBuffer: new ArrayBuffer(N_ARRAY),
   buffer_dataView: new DataView(new ArrayBuffer(N_ARRAY), 0),
-  typedArray_Int8Array: new Int8Array(N_ARRAY),
-  typedArray_Uint8Array: new Uint8Array(N_ARRAY),
-  typedArray_Uint8ClampedArray: new Uint8ClampedArray(N_ARRAY),
-  typedArray_Int16Array: new Int16Array(N_ARRAY),
-  typedArray_Uint16Array: new Uint16Array(N_ARRAY),
-  typedArray_Int32Array: new Int32Array(N_ARRAY),
-  typedArray_Uint32Array: new Uint32Array(N_ARRAY),
-  typedArray_Float32Array: new Float32Array(N_ARRAY),
-  typedArray_Float64Array: new Float64Array(N_ARRAY)
+  typedArray_Int8Array: new Int8Array(N_ARRAY).map((_, i) => i),
+  typedArray_Uint8Array: new Uint8Array(N_ARRAY).map((_, i) => i),
+  typedArray_Uint8ClampedArray: new Uint8ClampedArray(N_ARRAY).map((_, i) => i),
+  typedArray_Int16Array: new Int16Array(N_ARRAY).map((_, i) => i),
+  typedArray_Uint16Array: new Uint16Array(N_ARRAY).map((_, i) => i),
+  typedArray_Int32Array: new Int32Array(N_ARRAY).map((_, i) => i),
+  typedArray_Uint32Array: new Uint32Array(N_ARRAY).map((_, i) => i),
+  typedArray_Float32Array: new Float32Array(N_ARRAY).map((_, i) => Math.cos(i)),
+  typedArray_Float64Array: new Float64Array(N_ARRAY).map((_, i) => Math.cos(i))
   // spec-ed, not yet implemented
   // BigInt64Array: new BigInt64Array(1000),
   // BigUint64Array: new BigUint64Array(1000)
