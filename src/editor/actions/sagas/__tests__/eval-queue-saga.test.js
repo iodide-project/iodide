@@ -10,9 +10,9 @@ import {
   loadLanguagePlugin
 } from "../eval-queue-saga";
 import {
-  loadingLanguageConsoleMsg,
+  addLoadingLanguageMsgToHistory,
   addInputToConsole,
-  evalTypeConsoleError
+  addEvalTypeConsoleErrorToHistory
 } from "../../console-message-actions";
 
 // this string is the returnValue from a saga was still running when
@@ -106,7 +106,7 @@ describe("loadKnownLanguage test", () => {
           "mock_return_value"
         ]
       ])
-      .put.like(purifiedMessage(loadingLanguageConsoleMsg(displayName)))
+      .put.like(purifiedMessage(addLoadingLanguageMsgToHistory(displayName)))
       .call(loadLanguagePlugin, languagePlugin)
       .silentRun();
   });
@@ -138,7 +138,7 @@ describe("evaluateByType test", () => {
 
     await expectSaga(evaluateByType, evalType, evalText, chunkId)
       .withState(state)
-      .put.like(purifiedMessage(evalTypeConsoleError(evalType)))
+      .put.like(purifiedMessage(addEvalTypeConsoleErrorToHistory(evalType)))
       .silentRun()
       .catch(e => expect(e.message).toBe("unknown evalType"));
   });

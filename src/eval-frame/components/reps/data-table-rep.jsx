@@ -47,7 +47,7 @@ CellDetails.propTypes = {
   focusedCol: PropTypes.string
 };
 
-class CellRenderer extends React.Component {
+class CellRenderer extends React.PureComponent {
   static propTypes = {
     value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     cellIsFocused: PropTypes.bool.isRequired
@@ -64,7 +64,7 @@ class CellRenderer extends React.Component {
             : "none"
         }}
       >
-        <TinyRep serializedObj={serializeForTinyRep(this.props.value)} />
+        <TinyRep {...serializeForTinyRep(this.props.value)} />
       </div>
     );
   }
@@ -73,10 +73,11 @@ class CellRenderer extends React.Component {
 const PX_PER_CHAR = 7;
 const MIN_CELL_CHAR_WIDTH = 22;
 
-export default class TableRenderer extends React.Component {
+export default class TableRenderer extends React.PureComponent {
   static propTypes = {
-    value: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired
+    value: PropTypes.any // eslint-disable-line react/forbid-prop-types
   };
+
   constructor(props) {
     super(props);
     this.state = { focusedRow: undefined, focusedCol: undefined };

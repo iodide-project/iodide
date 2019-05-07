@@ -164,19 +164,19 @@ const typeToTinyRepMapping = {
 
 const handledTypes = Object.keys(typeToTinyRepMapping);
 
-export default class TinyRep extends React.Component {
+export default class TinyRep extends React.PureComponent {
   static propTypes = {
-    serializedObj: PropTypes.shape({
-      objClass: PropTypes.string.isRequired,
-      objType: PropTypes.string.isRequired,
-      size: PropTypes.number,
-      stringValue: PropTypes.string.isRequired,
-      isTruncated: PropTypes.bool.isRequired
-    })
+    objType: PropTypes.string.isRequired,
+    /* eslint-disable react/no-unused-prop-types */
+    isTruncated: PropTypes.bool.isRequired,
+    objClass: PropTypes.string.isRequired,
+    size: PropTypes.number,
+    stringValue: PropTypes.string.isRequired
+    /* eslint-enable react/no-unused-prop-types */
   };
   render() {
-    const { objType } = this.props.serializedObj;
+    const { objType } = this.props;
     const repType = handledTypes.includes(objType) ? objType : "Object";
-    return typeToTinyRepMapping[repType](this.props.serializedObj);
+    return typeToTinyRepMapping[repType](this.props);
   }
 }

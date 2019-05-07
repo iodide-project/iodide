@@ -1,13 +1,9 @@
 import parseFetchCell from "./fetch-cell-parser";
 import {
-  sendActionToEditor,
-  sendStatusResponseToEditor
+  sendStatusResponseToEditor,
+  addConsoleEntryInEditor,
+  updateConsoleEntryInEditor
 } from "./editor-message-senders";
-
-import {
-  addToConsoleHistory,
-  updateConsoleEntry
-} from "./console-history-actions";
 
 import {
   genericFetch as fetchLocally,
@@ -16,7 +12,6 @@ import {
   errorMessage
 } from "../../shared/utils/fetch-tools";
 
-import generateRandomId from "../../shared/utils/generate-random-id";
 import sendFileRequestToEditor from "../tools/send-file-request-to-editor";
 
 export function fetchProgressInitialStrings(fetchInfo) {
@@ -115,40 +110,36 @@ export async function handleFetch(fetchInfo) {
 }
 
 export async function evaluateFetchText(fetchText, evalId) {
-  const outputHistoryId = generateRandomId();
   const fetches = parseFetchCell(fetchText);
   const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
   if (syntaxErrors.length) {
-    sendActionToEditor(
-      addToConsoleHistory({
-        historyType: "FETCH_CELL_INFO",
-        value: syntaxErrors.map(fetchProgressInitialStrings),
-        historyId: outputHistoryId,
-        level: "ERROR"
-      })
-    );
+    addConsoleEntryInEditor({
+      historyType: "FETCH_CELL_INFO",
+      content: syntaxErrors
+        .map(fetchProgressInitialStrings)
+        .map(t => t.text)
+        .join(""),
+      level: "ERROR"
+    });
+
     sendStatusResponseToEditor("ERROR", evalId);
     return Promise.resolve();
   }
 
   let progressStrings = fetches.map(fetchProgressInitialStrings);
-  sendActionToEditor(
-    addToConsoleHistory({
-      historyType: "FETCH_CELL_INFO",
-      value: progressStrings,
-      historyId: outputHistoryId
-    })
-  );
+  const outputHistoryId = addConsoleEntryInEditor({
+    historyType: "FETCH_CELL_INFO",
+    content: progressStrings.map(t => t.text).join("")
+  });
   const fetchCalls = fetches.map(async (f, i) => {
     const outcome = await handleFetch(f);
     progressStrings = progressStrings.map(entry => Object.assign({}, entry));
     progressStrings[i] = outcome;
-    sendActionToEditor(
-      updateConsoleEntry({
-        historyId: outputHistoryId,
-        value: progressStrings
-      })
-    );
+    updateConsoleEntryInEditor({
+      historyId: outputHistoryId,
+      content: progressStrings.map(t => t.text).join("")
+    });
+
     return outcome;
   });
 
@@ -156,13 +147,12 @@ export async function evaluateFetchText(fetchText, evalId) {
   const errors = outcomes.filter(f => f.text.startsWith("ERROR"));
   const hasError = errors.length > 0;
 
-  sendActionToEditor(
-    updateConsoleEntry({
-      historyId: outputHistoryId,
-      value: outcomes,
-      level: hasError ? "ERROR" : undefined
-    })
-  );
+  updateConsoleEntryInEditor({
+    historyId: outputHistoryId,
+    content: outcomes.map(t => t.text).join(""),
+    level: hasError ? "ERROR" : undefined
+  });
+
   if (hasError) {
     sendStatusResponseToEditor("ERROR", evalId);
   } else {

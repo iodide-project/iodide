@@ -24,12 +24,7 @@ describe("ConsolePaneUnconnected React component", () => {
 
   beforeEach(() => {
     props = {
-      history: [
-        {
-          cellId: 0,
-          content: "var a = 3"
-        }
-      ],
+      historyIds: ["a"],
       paneVisible: true
     };
 
@@ -39,10 +34,9 @@ describe("ConsolePaneUnconnected React component", () => {
   it("always renders one div with class history-items", () => {
     expect(consolePane().find("div.history-items")).toHaveLength(1);
   });
-  // rewrite this test.
 
   it("always renders one OnboardingContent inside history-items when history is empty", () => {
-    props.history = [];
+    props.historyIds = [];
     expect(consolePane().find(OnboardingContent)).toHaveLength(1);
   });
 
@@ -55,22 +49,12 @@ describe("ConsolePaneUnconnected React component", () => {
   });
 
   it("always renders correct number of HistoryItem inside history-items", () => {
-    props.history = [
-      {
-        cellId: 0,
-        content: "var a = 3"
-      },
-      {
-        cellId: 1,
-        content: "var b = 3"
-      }
-    ];
-
+    props.historyIds = ["a", "b", "c"];
     expect(
       consolePane()
         .find("div.history-items")
         .find(HistoryItem)
-    ).toHaveLength(2);
+    ).toHaveLength(3);
   });
 });
 
@@ -79,14 +63,13 @@ describe("HistoryPane mapStateToProps", () => {
 
   beforeEach(() => {
     state = {
-      history: [
-        {
-          cellId: 0,
-          content: "var a = 3"
-        }
-      ],
+      history: [{ historyId: "1" }, { historyId: "2" }],
       panePositions: { ConsolePositioner: { display: "block" } }
     };
+  });
+
+  it("correct historyIds", () => {
+    expect(mapStateToProps(state).historyIds).toEqual(["1", "2"]);
   });
 
   it('paneVisible===true if state.panePositions.ConsolePositioner.display==="block"', () => {

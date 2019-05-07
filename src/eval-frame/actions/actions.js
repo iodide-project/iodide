@@ -4,6 +4,8 @@ import {
   sendStatusResponseToEditor
 } from "./editor-message-senders";
 
+import { IODIDE_EVALUATION_RESULTS } from "../iodide-evaluation-results";
+
 const CodeMirror = require("codemirror"); // eslint-disable-line
 
 export function addToEvaluationQueue(chunk) {
@@ -87,19 +89,20 @@ export function runCodeWithLanguage(language, code) {
 export async function evaluateCode(code, language, chunkId, evalId) {
   try {
     MOST_RECENT_CHUNK_ID.set(chunkId);
-    const output = await runCodeWithLanguage(language, code);
-    addConsoleEntryInEditor({
-      historyType: "CONSOLE_OUTPUT",
-      value: output
+    const value = await runCodeWithLanguage(language, code);
+
+    const historyId = addConsoleEntryInEditor({
+      historyType: "CONSOLE_OUTPUT"
     });
+    IODIDE_EVALUATION_RESULTS[historyId] = value;
 
     sendStatusResponseToEditor("SUCCESS", evalId);
   } catch (error) {
-    addConsoleEntryInEditor({
+    const historyId = addConsoleEntryInEditor({
       historyType: "CONSOLE_OUTPUT",
-      value: error,
       level: "ERROR"
     });
+    IODIDE_EVALUATION_RESULTS[historyId] = error;
 
     sendStatusResponseToEditor("ERROR", evalId);
   }

@@ -1,4 +1,5 @@
 import { languageDefinitions } from "./language-definitions";
+import { historySchema } from "./history-schema";
 
 export const NONCODE_EVAL_TYPES = ["css", "md", "meta", "raw"];
 export const RUNNABLE_CHUNK_TYPES = ["plugin", "fetch"];
@@ -19,29 +20,6 @@ const appMessageSchema = {
     details: { type: "string" },
     when: { type: "string" },
     id: { type: "integer", minimum: 0 }
-  },
-  additionalProperties: false
-};
-
-export const historySchema = {
-  type: "object",
-  properties: {
-    cellId: { type: ["integer", "null"] },
-    content: { type: "string" },
-    historyId: { type: "string" },
-    historyType: {
-      type: "string",
-      enum: [
-        "APP_MESSAGE",
-        "FETCH_CELL_INFO",
-        "CONSOLE_INPUT",
-        "CONSOLE_OUTPUT",
-        "CONSOLE_MESSAGE"
-      ]
-    },
-    level: { type: "string", enum: ["INFO", "LOG", "WARN", "ERROR"] },
-    language: { type: "string" },
-    value: {}
   },
   additionalProperties: false
 };

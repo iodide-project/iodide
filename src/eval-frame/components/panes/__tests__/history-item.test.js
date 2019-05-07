@@ -6,7 +6,6 @@ import HistoryInputItem from "../console/history-input-item";
 import AppMessage from "../console/app-message";
 import ConsoleMessage from "../console/console-message";
 import ValueRenderer from "../../reps/value-renderer";
-import PreformattedTextItemsHandler from "../../reps/preformatted-text-items-handler";
 
 describe("HistoryItem React component", () => {
   const historyItem = props => {
@@ -22,6 +21,7 @@ describe("HistoryItem React component", () => {
     });
     expect(hist.find(AppMessage).length).toBe(1);
   });
+
   it("always renders the CONSOLE_MESSAGE as an ConsoleMessage component", () => {
     const hist = historyItem({
       historyType: "CONSOLE_MESSAGE",
@@ -31,6 +31,7 @@ describe("HistoryItem React component", () => {
     });
     expect(hist.find(ConsoleMessage).length).toBe(1);
   });
+
   it("always renders the CONSOLE_INPUT as an HistoryInputItem component", () => {
     const hist = historyItem({
       historyType: "CONSOLE_INPUT",
@@ -40,18 +41,18 @@ describe("HistoryItem React component", () => {
     });
     expect(hist.find(HistoryInputItem).length).toBe(1);
   });
+
   it("always renders the CONSOLE_OUTPUT as an ConsoleMessage component with a ValueRenderer in it", () => {
     const hist = historyItem({
       historyType: "CONSOLE_OUTPUT",
       historyId: "123456asdfg",
-      valueToRender: 10403,
       level: "OUTPUT"
     });
     expect(hist.find(ConsoleMessage).length).toBe(1);
     expect(hist.find(ValueRenderer).length).toBe(1);
   });
 
-  it("always renders the FETCH_CELL_INFO as an ConsoleMessage component with a PreformattedTextItem in it", () => {
+  it("always renders the FETCH_CELL_INFO as an ConsoleMessage component", () => {
     const hist = historyItem({
       historyType: "FETCH_CELL_INFO",
       historyId: "123456asdfg",
@@ -59,6 +60,5 @@ describe("HistoryItem React component", () => {
       level: "ERROR"
     });
     expect(hist.find(ConsoleMessage).length).toBe(1);
-    expect(hist.find(PreformattedTextItemsHandler).length).toBe(1);
   });
 });

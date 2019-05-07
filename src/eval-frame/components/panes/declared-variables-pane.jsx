@@ -53,11 +53,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
       <div className="declared-variables-list">
         <h3>User Defined Variables</h3>
         {this.props.userDefinedVarNames.map(varName => (
-          <DeclaredVariable
-            value={window[varName]}
-            varName={varName}
-            key={varName}
-          />
+          <DeclaredVariable varName={varName} key={varName} />
         ))}
       </div>
     ) : (

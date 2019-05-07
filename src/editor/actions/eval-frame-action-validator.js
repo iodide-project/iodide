@@ -1,6 +1,7 @@
 import Ajv from "ajv";
 
-import { languageSchema, historySchema } from "../state-schemas/state-schema";
+import { historySchema } from "../state-schemas/history-schema";
+import { languageSchema } from "../state-schemas/state-schema";
 // these are the schemas of actions from the eval frame that
 // are ok to pass to the editor
 

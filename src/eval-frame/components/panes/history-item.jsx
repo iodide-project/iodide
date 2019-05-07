@@ -1,23 +1,26 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import styled from "react-emotion";
 
 import AppMessage from "./console/app-message";
 import ValueRenderer from "../reps/value-renderer";
-import PreformattedTextItemsHandler from "../reps/preformatted-text-items-handler";
 
 import HistoryInputItem from "./console/history-input-item";
 import ConsoleMessage from "./console/console-message";
 
-import { EVALUATION_RESULTS } from "../../actions/console-history-actions";
+const FetchResults = styled("pre")`
+  padding: 0;
+  margin: 0;
+`;
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
     level: PropTypes.string,
+    historyId: PropTypes.string.isRequired,
     historyType: PropTypes.string.isRequired,
-    language: PropTypes.string,
-    valueToRender: PropTypes.any // eslint-disable-line react/forbid-prop-types
+    language: PropTypes.string
   };
 
   render() {
@@ -45,16 +48,14 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_OUTPUT": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <ValueRenderer valueToRender={this.props.valueToRender} />
+            <ValueRenderer valueKey={this.props.historyId} />
           </ConsoleMessage>
         );
       }
       case "FETCH_CELL_INFO": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <PreformattedTextItemsHandler
-              textItems={this.props.valueToRender}
-            />
+            <FetchResults>{this.props.content}</FetchResults>
           </ConsoleMessage>
         );
       }
@@ -69,14 +70,7 @@ export class HistoryItemUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state, ownProps) {
-  return {
-    content: ownProps.historyItem.content,
-    historyId: ownProps.historyItem.historyId,
-    historyType: ownProps.historyItem.historyType,
-    level: ownProps.historyItem.level,
-    language: ownProps.historyItem.language,
-    valueToRender: EVALUATION_RESULTS[ownProps.historyItem.historyId]
-  };
+  return state.history.filter(h => h.historyId === ownProps.historyId)[0];
 }
 
 export default connect(mapStateToProps)(HistoryItemUnconnected);

@@ -5,7 +5,6 @@ import ValueRenderer from "../reps/value-renderer";
 
 export class DeclaredVariable extends React.Component {
   static propTypes = {
-    value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     varName: PropTypes.string
   };
   render() {
@@ -13,7 +12,7 @@ export class DeclaredVariable extends React.Component {
       <div className="declared-variable">
         <div className="declared-variable-name">{this.props.varName} = </div>
         <div className="declared-variable-value">
-          <ValueRenderer valueToRender={this.props.value} />
+          <ValueRenderer windowValue valueKey={this.props.varName} />
         </div>
       </div>
     );

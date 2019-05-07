@@ -8,6 +8,8 @@ import TableRenderer from "./data-table-rep";
 import UserReps from "./user-reps-manager";
 import { isRowDf } from "./rep-utils/rep-type-chooser";
 
+import { IODIDE_EVALUATION_RESULTS } from "../../iodide-evaluation-results";
+
 function repChooser(value) {
   if (UserReps.getUserRepIfAvailable(value)) {
     return "USER_REGISTERED_RENDERER";
@@ -26,7 +28,8 @@ function repChooser(value) {
 
 export default class ValueRenderer extends React.Component {
   static propTypes = {
-    valueToRender: PropTypes.any // eslint-disable-line react/forbid-prop-types
+    windowValue: PropTypes.bool,
+    valueKey: PropTypes.string.isRequired
   };
 
   constructor(props) {
@@ -39,7 +42,11 @@ export default class ValueRenderer extends React.Component {
   }
 
   render() {
-    const value = this.props.valueToRender;
+    const { valueKey } = this.props;
+
+    const value = this.props.windowValue
+      ? window[valueKey]
+      : IODIDE_EVALUATION_RESULTS[valueKey];
 
     if (this.state.errorInfo) {
       return (

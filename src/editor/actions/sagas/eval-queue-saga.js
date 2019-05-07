@@ -16,10 +16,10 @@ import {
 import { setKernelState } from "../eval-actions";
 
 import {
-  loadingLanguageConsoleMsg,
+  addLoadingLanguageMsgToHistory,
   addInputToConsole,
-  evalTypeConsoleError,
-  pluginParseError
+  addEvalTypeConsoleErrorToHistory,
+  addPluginParseErrorToHistory
 } from "../console-message-actions";
 
 import messagePasserEditor from "../../../shared/utils/redux-to-port-message-passer";
@@ -76,7 +76,7 @@ export function* loadLanguagePlugin(pluginData) {
 }
 
 export function* loadKnownLanguage(pluginData) {
-  yield put(loadingLanguageConsoleMsg(pluginData.displayName));
+  yield put(addLoadingLanguageMsgToHistory(pluginData.displayName));
   yield call(loadLanguagePlugin, pluginData);
 }
 
@@ -96,7 +96,7 @@ export function* evaluateLanguagePlugin(pluginText) {
     const pluginData = JSON.parse(pluginText);
     yield call(loadLanguagePlugin, pluginData);
   } catch (error) {
-    yield put(pluginParseError(error.message));
+    yield put(addPluginParseErrorToHistory(error.message));
     throw error;
   }
 }
@@ -105,7 +105,7 @@ export function* evaluateByType(evalType, evalText, chunkId) {
   const state = yield select();
 
   if (!evalTypeIsDefined(state, evalType)) {
-    yield put(evalTypeConsoleError(evalType));
+    yield put(addEvalTypeConsoleErrorToHistory(evalType));
     throw new Error("unknown evalType");
   }
 
