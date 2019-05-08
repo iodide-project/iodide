@@ -122,9 +122,15 @@ FunctionRep.propTypes = {
 const ErrorText = styled(RepBaseText)`
   color: ${errorColor};
 `;
-const ErrorRep = ({ objClass }) => <ErrorText>{objClass}</ErrorText>;
+const ErrorRep = ({ stringValue, isTruncated }) => (
+  <ErrorText>
+    {stringValue}
+    {isTruncated ? <Ellipsis /> : ""}
+  </ErrorText>
+);
 ErrorRep.propTypes = {
-  objClass: PropTypes.string.isRequired
+  stringValue: PropTypes.string.isRequired,
+  isTruncated: PropTypes.bool.isRequired
 };
 
 const RepsMetaMore = ({ number }) => <Ell>⋯{number} more⋯</Ell>;

@@ -25,18 +25,13 @@ export const numericIndexTypes = [
   "Float64Array"
 ];
 
-// const atomicTypes = [
-//   "Number",
-//   "Boolean",
-//   "Undefined",
-//   "Null",
-//   "Symbol",
-//   "Date",
-//   "RegExp",
-
-//   "Function",
-//   "GeneratorFunction"
-// ];
+const BrowserTypes = [
+  "HTMLCollection",
+  "Window",
+  "HTMLDocument",
+  "HTMLBodyElement",
+  "Promise"
+];
 
 export function serializeArrayPathsSummary(
   arr,
@@ -118,13 +113,36 @@ function serializeMapPathsSummary(map, previewNum = 5) {
   return summary;
 }
 
+function serializeSetPathsSummary(map, previewNum = 5) {
+  const summary = [];
+  let i = 0;
+  for (const value of map.values()) {
+    if (i >= previewNum) {
+      summary.push({
+        objType: "REPS_META_MORE",
+        number: objSize(map) - previewNum
+      });
+      return summary;
+    }
+    summary.push(serializeForTinyRep(value));
+    i += 1;
+  }
+  return summary;
+}
+
 export function serializePathsSummary(obj) {
   const type = getType(obj);
   if (numericIndexTypes.includes(type)) {
     return [serializeArrayPathsSummary(obj), "ARRAY_PATH_SUMMARY"];
   } else if (type === "Map") {
     return [serializeMapPathsSummary(obj), "MAP_PATH_SUMMARY"];
-  } else if (type === "Object" || getClass(obj) === "Object") {
+  } else if (type === "Set") {
+    return [serializeSetPathsSummary(obj), "SET_PATH_SUMMARY"];
+  } else if (
+    type === "Object" ||
+    getClass(obj) === "Object" ||
+    BrowserTypes.includes(type)
+  ) {
     return [serializeObjectPathsSummary(obj), "OBJECT_PATH_SUMMARY"];
   }
   return [undefined, "NO_SUBPATHS"];

@@ -60,6 +60,8 @@ export function repStringVal(obj, tiny = false) {
     stringVal = obj.source;
   } else if (type === "String") {
     stringVal = obj;
+  } else if (type === "Error") {
+    stringVal = getClass(obj);
   } else if (["Function", "GeneratorFunction"].includes(type)) {
     stringVal = obj.name;
   } else {

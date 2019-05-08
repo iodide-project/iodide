@@ -62,10 +62,14 @@ DelimitedList.propTypes = {
   closeBracket: PropTypes.string
 };
 
-const MediumArraySummary = ({ subpathSummaries }) => {
+const MediumListSummary = ({
+  subpathSummaries,
+  openBracket = "[",
+  closeBracket = "]"
+}) => {
   if (subpathSummaries.length > 0) {
     return (
-      <DelimitedList openBracket="[" closeBracket="]">
+      <DelimitedList {...{ openBracket, closeBracket }}>
         {subpathSummaries.map((obj, i) => (
           <TinyRep {...obj} key={i} />
         ))}
@@ -74,33 +78,11 @@ const MediumArraySummary = ({ subpathSummaries }) => {
   }
   return <RepBaseText>[]</RepBaseText>;
 };
-MediumArraySummary.propTypes = {
-  subpathSummaries: PropTypes.arrayOf(PropTypes.object)
+MediumListSummary.propTypes = {
+  subpathSummaries: PropTypes.arrayOf(PropTypes.object),
+  openBracket: PropTypes.string,
+  closeBracket: PropTypes.string
 };
-
-// const MediumObjectSummary = ({ subpathSummaries }) => {
-//   if (subpathSummaries.length > 0) {
-//     return (
-//       <DelimitedList>
-//         {subpathSummaries.map(obj =>
-//           obj.objType === "REPS_META_MORE" ? (
-//             <TinyRep {...obj} />
-//           ) : (
-//             <>
-//               <TinyRep {...obj.key} />
-//               {": "}
-//               <TinyRep {...obj.value} />
-//             </>
-//           )
-//         )}
-//       </DelimitedList>
-//     );
-//   }
-//   return <RepBaseText>[]</RepBaseText>;
-// };
-// MediumObjectSummary.propTypes = {
-//   subpathSummaries: PropTypes.arrayOf(PropTypes.object)
-// };
 
 const MediumKeyValSummary = ({ subpathSummaries, mappingDelim = ": " }) => {
   // if (subpathSummaries.length > 0) {
@@ -132,7 +114,15 @@ MediumKeyValSummary.propTypes = {
 const MediumSummary = ({ subpathSummaries, subpathSummaryType }) => {
   switch (subpathSummaryType) {
     case "ARRAY_PATH_SUMMARY":
-      return <MediumArraySummary {...{ subpathSummaries }} />;
+      return <MediumListSummary {...{ subpathSummaries }} />;
+    case "SET_PATH_SUMMARY":
+      return (
+        <MediumListSummary
+          openBracket="{"
+          closeBracket="}"
+          {...{ subpathSummaries }}
+        />
+      );
     case "OBJECT_PATH_SUMMARY":
       return <MediumKeyValSummary {...{ subpathSummaries }} />;
     case "MAP_PATH_SUMMARY":

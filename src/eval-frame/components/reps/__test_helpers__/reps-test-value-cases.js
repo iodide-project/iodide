@@ -101,6 +101,9 @@ export const functions = {
 
 // ==================== errors
 
+class UserDefinedError extends Error {}
+class UserDefinedErrorWithANameThatIsCrazyLong extends Error {}
+
 export const errors = {
   error_baseError: new Error("test error message"),
   error_EvalError: new EvalError("test error message"),
@@ -108,7 +111,11 @@ export const errors = {
   error_ReferenceError: new ReferenceError("test error message"),
   error_SyntaxError: new SyntaxError("test error message"),
   error_TypeError: new TypeError("test error message"),
-  error_URIError: new URIError("test error message")
+  error_URIError: new URIError("test error message"),
+  error_custom: new UserDefinedError("test error message"),
+  error_customLong: new UserDefinedErrorWithANameThatIsCrazyLong(
+    "test error message"
+  )
 };
 
 // ==================== base objects
@@ -131,6 +138,7 @@ export const baseObjects = {
   ]),
   map_empty: new Map(),
   set: new Set([1, 2, 3, 4, 5]),
+  set_long: new Set(new Array(1000).fill(0).map((_, i) => Math.sin(i))),
   set_empty: new Set(),
   weakSet_empty: new WeakSet(),
   weakMap_empty: new WeakMap()
