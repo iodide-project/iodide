@@ -35,21 +35,41 @@ import TinyRep, {
 // const ClassInfoText = styled(RepBaseText)`
 //   color: ${classInfoColor};
 // `;
+
+/* eslint-disable react/no-array-index-key */
+const DelimitedList = ({
+  children,
+  delimiter = ", ",
+  openBracket = "{",
+  closeBracket = "}"
+}) => (
+  <RepBaseText>
+    {openBracket}
+    {children[0]}
+    {children.slice(1).map((obj, i) => (
+      <React.Fragment key={i}>
+        {delimiter}
+        {obj}
+      </React.Fragment>
+    ))}
+    {closeBracket}
+  </RepBaseText>
+);
+DelimitedList.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.node),
+  delimiter: PropTypes.string,
+  openBracket: PropTypes.string,
+  closeBracket: PropTypes.string
+};
+
 const MediumArraySummary = ({ subpathSummaries }) => {
-  console.log("MediumArraySummary", subpathSummaries);
   if (subpathSummaries.length > 0) {
     return (
-      <RepBaseText>
-        {"["}
-        <TinyRep serializedObj={subpathSummaries[0]} />
-        {subpathSummaries.slice(1).map(obj => (
-          <React.Fragment>
-            {", "}
-            <TinyRep serializedObj={obj} />
-          </React.Fragment>
+      <DelimitedList openBracket="[" closeBracket="]">
+        {subpathSummaries.map((obj, i) => (
+          <TinyRep {...obj} key={i} />
         ))}
-        {"]"}
-      </RepBaseText>
+      </DelimitedList>
     );
   }
   return <RepBaseText>[]</RepBaseText>;
@@ -58,15 +78,68 @@ MediumArraySummary.propTypes = {
   subpathSummaries: PropTypes.arrayOf(PropTypes.object)
 };
 
-const MediumSummary = ({ subpathSummaries, subpathSummaryType }) => {
-  console.log(
-    "MediumSummary subpathSummaries",
-    subpathSummaries,
-    subpathSummaryType
+// const MediumObjectSummary = ({ subpathSummaries }) => {
+//   if (subpathSummaries.length > 0) {
+//     return (
+//       <DelimitedList>
+//         {subpathSummaries.map(obj =>
+//           obj.objType === "REPS_META_MORE" ? (
+//             <TinyRep {...obj} />
+//           ) : (
+//             <>
+//               <TinyRep {...obj.key} />
+//               {": "}
+//               <TinyRep {...obj.value} />
+//             </>
+//           )
+//         )}
+//       </DelimitedList>
+//     );
+//   }
+//   return <RepBaseText>[]</RepBaseText>;
+// };
+// MediumObjectSummary.propTypes = {
+//   subpathSummaries: PropTypes.arrayOf(PropTypes.object)
+// };
+
+const MediumKeyValSummary = ({ subpathSummaries, mappingDelim = ": " }) => {
+  // if (subpathSummaries.length > 0) {
+  return (
+    <DelimitedList>
+      {subpathSummaries.map((obj, i) =>
+        obj.objType === "REPS_META_MORE" ? (
+          <TinyRep {...obj} key={`more-${i}`} />
+        ) : (
+          <React.Fragment key={`key-val-${i}`}>
+            <TinyRep {...obj.key} />
+            {mappingDelim}
+            <TinyRep {...obj.value} />
+          </React.Fragment>
+        )
+      )}
+    </DelimitedList>
   );
+  // }
+  // return <RepBaseText>[]</RepBaseText>;
+};
+MediumKeyValSummary.propTypes = {
+  subpathSummaries: PropTypes.arrayOf(PropTypes.object),
+  mappingDelim: PropTypes.string
+};
+
+/* eslint-enable react/no-array-index-key */
+
+const MediumSummary = ({ subpathSummaries, subpathSummaryType }) => {
   switch (subpathSummaryType) {
     case "ARRAY_PATH_SUMMARY":
       return <MediumArraySummary {...{ subpathSummaries }} />;
+    case "OBJECT_PATH_SUMMARY":
+      return <MediumKeyValSummary {...{ subpathSummaries }} />;
+    case "MAP_PATH_SUMMARY":
+      return (
+        <MediumKeyValSummary mappingDelim=" → " {...{ subpathSummaries }} />
+      );
+
     default:
       return "";
   }

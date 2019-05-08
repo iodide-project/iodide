@@ -13,6 +13,7 @@ const symbolColor = stringColor;
 const errorColor = "";
 const functionColor = "rgb(28, 30, 207)";
 const ellipsisColor = "#111 ";
+const propLabelColor = "#111 ";
 
 export const RepBaseText = styled("span")`
   font-family: Menlo, monospace;
@@ -53,11 +54,11 @@ const Sep = styled(RepBaseText)`
   color: ${separatorColor};
 `;
 
-const StringText = styled(RepBaseText)`
-  color: ${stringColor};
-  overflow-wrap: anywhere;
-`;
-const createQuotedStringRep = (lQuote, rQuote) => {
+const createQuotedStringRep = (lQuote, rQuote, color = stringColor) => {
+  const StringText = styled(RepBaseText)`
+    color: ${color};
+    overflow-wrap: anywhere;
+  `;
   const InnerQuotedStringRep = ({ size, stringValue, isTruncated }) => (
     <span>
       <Sep>{lQuote}</Sep>
@@ -100,7 +101,7 @@ SymbolRep.propTypes = {
 };
 
 const FunctionText = styled(RepBaseText)`
-  color: ${functionColor}
+  color: ${functionColor};
   font-style: italic;
 `;
 const FunctionRep = ({ objClass, stringValue, isTruncated }) => (
@@ -126,10 +127,26 @@ ErrorRep.propTypes = {
   objClass: PropTypes.string.isRequired
 };
 
-const RepsMetaArrayMore = ({ number }) => <Ell>⋯{number}⋯</Ell>;
-RepsMetaArrayMore.propTypes = {
+const RepsMetaMore = ({ number }) => <Ell>⋯{number} more⋯</Ell>;
+RepsMetaMore.propTypes = {
   number: PropTypes.number.isRequired
 };
+
+const PropLabelText = styled(RepBaseText)`
+  color: ${propLabelColor};
+`;
+const RepsMetaPropLabel = ({ stringValue, isTruncated }) => (
+  <>
+    <PropLabelText>{stringValue}</PropLabelText>
+    {isTruncated ? <Ellipsis /> : ""}
+  </>
+);
+RepsMetaPropLabel.propTypes = {
+  stringValue: PropTypes.string.isRequired,
+  isTruncated: PropTypes.bool.isRequired
+};
+
+const RepsMetaPropStringLabel = createQuotedStringRep('"', '"', propLabelColor);
 
 const typeToTinyRepMapping = {
   Number: stringValueWithColor(numberColor),
@@ -169,7 +186,9 @@ const typeToTinyRepMapping = {
   WeakSet: ObjectRep,
   WeakMap: ObjectRep,
 
-  REPS_META_ARRAY_MORE: RepsMetaArrayMore
+  REPS_META_MORE: RepsMetaMore,
+  REPS_META_PROP_LABEL: RepsMetaPropLabel,
+  REPS_META_PROP_STRING_LABEL: RepsMetaPropStringLabel
 };
 
 const repMappingHandledTypes = Object.keys(typeToTinyRepMapping);
@@ -183,14 +202,14 @@ export default class TinyRep extends React.Component {
   static propTypes = {
     objType: PropTypes.string.isRequired,
     /* eslint-disable react/no-unused-prop-types */
-    isTruncated: PropTypes.bool.isRequired,
-    objClass: PropTypes.string.isRequired,
+    isTruncated: PropTypes.bool,
+    objClass: PropTypes.string,
     size: PropTypes.number,
-    stringValue: PropTypes.string.isRequired
+    stringValue: PropTypes.string
     /* eslint-enable react/no-unused-prop-types */
   };
   render() {
-    const { objType } = this.props.serializedObj;
-    return labelRepForType(this.props.serializedObj, objType);
+    const { objType } = this.props;
+    return labelRepForType(this.props, objType);
   }
 }

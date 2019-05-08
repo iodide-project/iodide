@@ -121,6 +121,14 @@ export const baseObjects = {
   regex: /^.*$/,
   regex_long: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   map: new Map([[1, "one"], [2, "two"], [3, "three"]]),
+  map_big: new Map([
+    [1, "one"],
+    [2, "two"],
+    [Math.random, "three"],
+    [{ a: 1, b: 2 }, 54321],
+    ["6453423", { c: 654, g: 76543 }],
+    ...new Array(1000).fill(0).map((_, i) => [`key ${i}`, Math.sin(i)])
+  ]),
   map_empty: new Map(),
   set: new Set([1, 2, 3, 4, 5]),
   set_empty: new Set(),
@@ -181,6 +189,8 @@ export const compositeObjects = {
   },
 
   object_plainComposite3: {
+    a_super_long_property_name_for_the_smallest_value: -Infinity,
+    "1long :string;= prop name for the biggest value": Infinity,
     a1: 1,
     a2: "A2",
     a3: true,
@@ -193,7 +203,15 @@ export const compositeObjects = {
     a6: () => {
       console.log("hello world");
     },
-    a7: new Date("2005-04-03")
+    a7: new Date("2005-04-03"),
+    [Symbol("a symbol key")]: Symbol("a symbol value"),
+    [Symbol(
+      "a symbol key whose name is longer than is even reasonable"
+    )]: new Array(100).fill(7),
+    1234: "a prop with a numeric key",
+    embbiggenString(s) {
+      return s + s;
+    }
   }
 };
 
@@ -202,6 +220,7 @@ export const compositeObjects = {
 class Animal {
   constructor(name) {
     this.name = name;
+    this.isMortal = true;
   }
   speak() {
     console.log(`${this.name} makes an animal noise.`);
@@ -211,24 +230,34 @@ class Animal {
 class Dog extends Animal {
   constructor(name) {
     super(`${name} the dog`);
+    this.wagging = false;
   }
 
   speak() {
     console.log(`${this.name} makes an animal noise.`);
   }
+
+  toggleWag() {
+    this.wagging = !this.wagging;
+  }
 }
 
 export const customClassCases = {
-  class_1: new Animal("Bob"),
+  class_1: new Animal("Socrates"),
   class_subclass: new Dog("Fido")
 };
 
 // ==================== built-ins
 
 export const builtInObjectCases = {
-  intrinsic_math: Math,
-  intrinsic_json: JSON
+  builtin_math: Math,
+  builtin_json: JSON,
+  builtin_window: window
 };
+if (window.document !== undefined) {
+  builtInObjectCases.builtin_document = window.document;
+  builtInObjectCases.builtin_documentBody = window.document.body;
+}
 
 // ==================== Promise
 

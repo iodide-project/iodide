@@ -27,6 +27,9 @@ import ValueRenderer from "../value-renderer";
 
 import TableRenderer from "../data-table-rep";
 
+// attach the test cases to the window to allow comparing with browser devtools
+window.allCases = allCases;
+
 const allTestCases = storiesOf("all test cases", module);
 allTestCases.add("table of type/class info", () => {
   return (
@@ -55,13 +58,31 @@ allTestCases.add("all the tiny reps", () => {
           <tr key={name}>
             <td>{name}</td>
             <td>
-              <TinyRep serializedObj={serializeForTinyRep(value)} />
+              <TinyRep {...serializeForTinyRep(value)} />
             </td>
             <td>{JSON.stringify(serializeForTinyRep(value))}</td>
           </tr>
         );
       })}
     </table>
+  );
+});
+
+allTestCases.add("medium rep summary serializations", () => {
+  return (
+    <div style={{ maxWidth: "100%" }}>
+      <table>
+        {Object.entries(allCases).map(caseNameAndVal => {
+          const [name, value] = caseNameAndVal;
+          return (
+            <tr key={name}>
+              <td>{name}</td>
+              <td>{JSON.stringify(serializeForMediumRep(value))}</td>
+            </tr>
+          );
+        })}
+      </table>
+    </div>
   );
 });
 
@@ -75,11 +96,8 @@ allTestCases.add("all the medium reps", () => {
             <tr key={name}>
               <td>{name}</td>
               <td>
-                {/* {JSON.stringify(serializeForMediumRep(value))} */}
                 <MediumRep {...serializeForMediumRep(value)} />
-                {/* <TinyRep serializedObj={serializeForMediumRep(value)} /> */}
               </td>
-              {/* <td>{JSON.stringify(serializeForTinyRep(value))}</td> */}
             </tr>
           );
         })}

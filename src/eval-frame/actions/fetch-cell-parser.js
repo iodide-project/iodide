@@ -1,14 +1,4 @@
-export function isValidVarname(varName) {
-  if (varName !== varName.replace(/;/g, "")) {
-    return false;
-  }
-  try {
-    eval(`var ${varName};`); // eslint-disable-line no-eval
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
+import { isValidIdentifier } from "../../shared/utils/is-valid-js-identifier";
 
 export function isRelPath(path) {
   // super dumb check -- just see if it has http or https at the front
@@ -24,7 +14,7 @@ export function parseFileLine(fetchCommand) {
 
 export function parseAssignmentCommand(fetchCommand) {
   const varName = fetchCommand.substring(0, fetchCommand.indexOf("=")).trim();
-  if (!isValidVarname(varName)) {
+  if (!isValidIdentifier(varName)) {
     return { error: "INVALID_VARIABLE_NAME" };
   }
   const filePath = fetchCommand.substring(fetchCommand.indexOf("=") + 1).trim();
