@@ -103,7 +103,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "24.8.0",
-    "babel-loader": "8.0.5",
+    "babel-loader": "8.0.6",
     "babel-plugin-emotion": "9.2.11",
     "babel-plugin-lodash": "3.3.4",
     "circular-dependency-plugin": "5.0.2",
