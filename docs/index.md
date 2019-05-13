@@ -12,7 +12,7 @@ Iodide notebooks.
 
 **[Common workflows and tips](workflows.md)**: Pointers for accomplishing common tasks in Iodide.
 
-**[Server administration](server-admin.md)**: Information on common server administration tasks.
+**[Quirks, gotchas, and workarounds](quirks.md)**: Information about edge cases in the Iodide environment, and how to work around them.
 
 ## Developer documentation
 
@@ -21,6 +21,8 @@ Iodide notebooks.
 **[Design principles](design-principles.md)**: Core design principles for Iodide.
 
 **[Local development](local-dev.md)**: Setting up a local development environment.
+
+**[Server administration](server-admin.md)**: Information on common server administration tasks.
 
 **[Making a new release](making-a-new-release.md)**: Step-by-step instructions for making a new Iodide release.
 
