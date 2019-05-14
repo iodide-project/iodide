@@ -56,7 +56,7 @@ js: https://cdnjs.cloudflare.com/ajax/libs/d3-dsv/1.0.8/d3-dsv.js
 
 const data = [{x1: 10, x2: 'random string'}, {x1: 20, x2: 'another string'}];
 
-iodide.file.save('cached-data.csv', d3.csvFormat(data), 'text', { overwrite: true });
+iodide.file.save('cached-data.csv', 'text', d3.csvFormat(data), { overwrite: true });
 
 %% js
 
