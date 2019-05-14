@@ -169,9 +169,13 @@ however, `iodide.file.load` can provide more nuanced workflows.
 `fileType` is the file type to handle. These are the same as the following data fetch types 
 available to [fetch chunks]
 (https://iodide-project.github.io/docs/jsmd/#fetch-chunks-fetch):
- `json` (load this file as json and parse into a javascript object), 
- `text` (load this file as text), `arrayBuffer` (load this file into an Array Buffer, especially useful when working with typed arrays) and `blob` (load this file as a [Blob]
- (https://developer.mozilla.org/en-US/docs/Web/API/Blob)). These match the `serializerType` in `iodide.file.save` – if you save with a certain `serializerType`, it is recommended to load it with the same `fetchType`.
+
+ - `json` (load this file as json and parse into a javascript object), 
+ - `text` (load this file as text),
+ - `arrayBuffer` (load this file into an Array Buffer, especially useful when working with typed arrays) and
+ - `blob` (load this file as a [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob)).
+ 
+ These match the `serializerType` in `iodide.file.save` – if you save with a certain `serializerType`, it is recommended to load it with the same `fetchType`.
 
 `variableName` (required for `json`, `text`, and `blob` file types, otherwise
 not applicable): the variable name in which to load the data, available in the
