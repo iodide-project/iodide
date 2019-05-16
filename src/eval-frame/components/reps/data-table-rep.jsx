@@ -6,10 +6,10 @@ import styled from "react-emotion";
 
 import "./react-table-styles.css";
 
-import { serializeForTinyRep } from "./rep-utils/tiny-rep-serializer";
+import { serializeForTinyRep } from "./rep-utils/value-summary-serializer";
 
 import DefaultRenderer from "./default-handler";
-import TinyRep from "./tiny-rep";
+import TinyRep from "./value-summary";
 
 const TableDetails = styled.div`
   border: solid #e5e5e5;

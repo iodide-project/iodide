@@ -2,6 +2,8 @@ import React from "react";
 import styled from "react-emotion";
 import PropTypes from "prop-types";
 
+import { truncateString } from "./rep-utils/truncate-string";
+
 const numberColor = "rgb(28, 0, 207)";
 const boolColor = numberColor;
 const nullUndefinedColor = "#808080";
@@ -33,17 +35,8 @@ const ClassInfoText = styled(RepBaseText)`
   color: ${classInfoColor};
 `;
 
-const ObjectRep = ({ objClass, size }) => (
-  <ClassInfoText>
-    {objClass}({size})
-  </ClassInfoText>
-);
-ObjectRep.propTypes = {
-  objClass: PropTypes.string.isRequired,
-  size: PropTypes.number
-};
-
-const Ell = styled(RepBaseText)`
+//
+export const Ell = styled(RepBaseText)`
   color: ${ellipsisColor};
   background: #e7e7e7;
   border-radius: 3px;
@@ -54,6 +47,30 @@ const Sep = styled(RepBaseText)`
   color: ${separatorColor};
 `;
 
+const Truncator = ({ string, isTruncated }) => (
+  <React.Fragment>
+    {string}
+    {isTruncated ? <Ellipsis /> : ""}
+  </React.Fragment>
+);
+Truncator.propTypes = {
+  string: PropTypes.string.isRequired,
+  isTruncated: PropTypes.bool.isRequired
+};
+
+// reps
+
+const ObjectRep = ({ stringValue, size, isTruncated }) => (
+  <ClassInfoText>
+    <Truncator string={stringValue} {...{ isTruncated }} />({size})
+  </ClassInfoText>
+);
+ObjectRep.propTypes = {
+  stringValue: PropTypes.string.isRequired,
+  size: PropTypes.number.isRequired,
+  isTruncated: PropTypes.bool.isRequired
+};
+
 const createQuotedStringRep = (lQuote, rQuote, color = stringColor) => {
   const StringText = styled(RepBaseText)`
     color: ${color};
@@ -62,8 +79,9 @@ const createQuotedStringRep = (lQuote, rQuote, color = stringColor) => {
   const InnerQuotedStringRep = ({ size, stringValue, isTruncated }) => (
     <span>
       <Sep>{lQuote}</Sep>
-      <StringText>{stringValue}</StringText>
-      {isTruncated ? <Ellipsis /> : ""}
+      <StringText>
+        <Truncator string={stringValue} {...{ isTruncated }} />
+      </StringText>
       <Sep>{rQuote}</Sep>
       {isTruncated ? <ClassInfoText>({size})</ClassInfoText> : ""}
     </span>
@@ -84,15 +102,10 @@ const SymbolText = styled(RepBaseText)`
 `;
 const SymbolRep = ({ stringValue, isTruncated }) => (
   <span>
-    <SymbolText>{stringValue}</SymbolText>
-    {isTruncated ? (
-      <React.Fragment>
-        <Ellipsis />
-        <SymbolText>)</SymbolText>
-      </React.Fragment>
-    ) : (
-      ""
-    )}
+    <SymbolText>
+      <Truncator string={stringValue} {...{ isTruncated }} />
+      {isTruncated ? ")" : ""}
+    </SymbolText>
   </span>
 );
 SymbolRep.propTypes = {
@@ -104,17 +117,15 @@ const FunctionText = styled(RepBaseText)`
   color: ${functionColor};
   font-style: italic;
 `;
-const FunctionRep = ({ objClass, stringValue, isTruncated }) => (
+const FunctionRep = ({ stringValue, isTruncated }) => (
   <span>
     <FunctionText>
-      ƒ{objClass === "GeneratorFunction" ? "*" : ""} {stringValue}
+      <Truncator string={stringValue} {...{ isTruncated }} />
+      ()
     </FunctionText>
-    {isTruncated ? <Ellipsis /> : ""}
-    <FunctionText>()</FunctionText>
   </span>
 );
 FunctionRep.propTypes = {
-  objClass: PropTypes.string.isRequired,
   stringValue: PropTypes.string.isRequired,
   isTruncated: PropTypes.bool.isRequired
 };
@@ -124,8 +135,7 @@ const ErrorText = styled(RepBaseText)`
 `;
 const ErrorRep = ({ stringValue, isTruncated }) => (
   <ErrorText>
-    {stringValue}
-    {isTruncated ? <Ellipsis /> : ""}
+    <Truncator string={stringValue} {...{ isTruncated }} />
   </ErrorText>
 );
 ErrorRep.propTypes = {
@@ -143,8 +153,9 @@ const PropLabelText = styled(RepBaseText)`
 `;
 const RepsMetaPropLabel = ({ stringValue, isTruncated }) => (
   <>
-    <PropLabelText>{stringValue}</PropLabelText>
-    {isTruncated ? <Ellipsis /> : ""}
+    <PropLabelText>
+      <Truncator string={stringValue} {...{ isTruncated }} />
+    </PropLabelText>
   </>
 );
 RepsMetaPropLabel.propTypes = {
@@ -199,23 +210,41 @@ const typeToTinyRepMapping = {
 
 const repMappingHandledTypes = Object.keys(typeToTinyRepMapping);
 
-export const labelRepForType = (serializedObj, objType) => {
-  const repType = repMappingHandledTypes.includes(objType) ? objType : "Object";
-  return typeToTinyRepMapping[repType](serializedObj);
+export const getValueSummaryRepForType = objType => {
+  const repTypeToUse = repMappingHandledTypes.includes(objType)
+    ? objType
+    : "Object";
+  return typeToTinyRepMapping[repTypeToUse];
 };
 
-export default class TinyRep extends React.Component {
+const MAX_TINY_STRING_LEN = 20;
+const TINY_REP_TRUNCATION_LEN = 12;
+
+export default class ValueSummary extends React.Component {
   static propTypes = {
     objType: PropTypes.string.isRequired,
-    /* eslint-disable react/no-unused-prop-types */
+    tiny: PropTypes.bool,
     isTruncated: PropTypes.bool,
-    objClass: PropTypes.string,
     size: PropTypes.number,
     stringValue: PropTypes.string
-    /* eslint-enable react/no-unused-prop-types */
   };
   render() {
-    const { objType } = this.props;
-    return labelRepForType(this.props, objType);
+    const { objType, tiny, size } = this.props;
+    const ValueSummaryRepForType = getValueSummaryRepForType(objType);
+
+    // if we want the tiny rep, if needed, shorten the string even further
+    const { stringValue, isTruncated } = truncateString(
+      this.props.stringValue,
+      tiny ? MAX_TINY_STRING_LEN : Infinity,
+      TINY_REP_TRUNCATION_LEN
+    );
+    const finalTruncationStatus = isTruncated || this.props.isTruncated;
+
+    return (
+      <ValueSummaryRepForType
+        isTruncated={finalTruncationStatus}
+        {...{ stringValue, size }}
+      />
+    );
   }
 }

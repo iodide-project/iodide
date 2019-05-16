@@ -242,7 +242,23 @@ class Dog extends Animal {
   }
 
   speak() {
-    console.log(`${this.name} makes an animal noise.`);
+    console.log(`${this.name} makes a "woofing" noise.`);
+  }
+
+  toggleWag() {
+    this.wagging = !this.wagging;
+  }
+}
+
+class AVeryLongKindOfDogLikeADachsundProbably extends Dog {
+  constructor(name, length) {
+    super(`${name} the dog`);
+    this.wagging = false;
+    this.length = length;
+  }
+
+  speak() {
+    console.log(`${this.name} emits a shrill chirp.`);
   }
 
   toggleWag() {
@@ -252,7 +268,11 @@ class Dog extends Animal {
 
 export const customClassCases = {
   class_1: new Animal("Socrates"),
-  class_subclass: new Dog("Fido")
+  class_subclass: new Dog("Fido"),
+  class_longClassName: new AVeryLongKindOfDogLikeADachsundProbably(
+    "Fido",
+    "43cm"
+  )
 };
 
 // ==================== built-ins

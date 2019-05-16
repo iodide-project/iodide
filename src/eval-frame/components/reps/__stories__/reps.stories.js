@@ -7,68 +7,93 @@ import { storiesOf } from "@storybook/react";
 import "../../../../../node_modules/react-table/react-table.css";
 
 import {
-  allCases,
-  rowTableCases
+  allCases
+  // rowTableCases
 } from "../__test_helpers__/reps-test-value-cases";
 import {
-  serializeForTinyRep,
+  serializeForValueSummary,
   getClass,
   getType,
   objSize
-} from "../rep-utils/tiny-rep-serializer";
+} from "../rep-utils/value-summary-serializer";
 
-import { serializeForMediumRep } from "../rep-utils/medium-rep-serializer";
+import { serializeChildSummary } from "../rep-utils/child-summary-serializer";
 
-import TinyRep from "../tiny-rep";
+import ValueSummary from "../value-summary";
+import InlineChildSummary from "../in-line-child-summary";
 
-import MediumRep from "../medium-rep";
+// import MediumRep from "../medium-rep";
 
-import ValueRenderer from "../value-renderer";
+// import ValueRenderer from "../value-renderer";
 
-import TableRenderer from "../data-table-rep";
+// import TableRenderer from "../data-table-rep";
 
 // attach the test cases to the window to allow comparing with browser devtools
 window.allCases = allCases;
+
+const headerStyle = { fontWeight: "bold", background: "#ddd" };
 
 const allTestCases = storiesOf("all test cases", module);
 allTestCases.add("table of type/class info", () => {
   return (
     <table>
-      {Object.entries(allCases).map(caseNameAndVal => {
-        const [name, value] = caseNameAndVal;
-        return (
-          <tr key={name}>
-            <td>{name}</td>
-            <td>{getType(value)}</td>
-            <td>{getClass(value)}</td>
-            <td>{objSize(value)}</td>
-          </tr>
-        );
-      })}
+      <thead style={headerStyle}>
+        <tr key="header">
+          <td>test case</td>
+          <td>objType</td>
+          <td>objClass</td>
+          <td>size</td>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(allCases).map(caseNameAndVal => {
+          const [name, value] = caseNameAndVal;
+          return (
+            <tr key={name}>
+              <td>{name}</td>
+              <td>{getType(value)}</td>
+              <td>{getClass(value)}</td>
+              <td>{objSize(value)}</td>
+            </tr>
+          );
+        })}
+      </tbody>
     </table>
   );
 });
 
-allTestCases.add("all the tiny reps", () => {
+allTestCases.add("value summaries (tiny and full) and serializations", () => {
   return (
     <table>
-      {Object.entries(allCases).map(caseNameAndVal => {
-        const [name, value] = caseNameAndVal;
-        return (
-          <tr key={name}>
-            <td>{name}</td>
-            <td>
-              <TinyRep {...serializeForTinyRep(value)} />
-            </td>
-            <td>{JSON.stringify(serializeForTinyRep(value))}</td>
-          </tr>
-        );
-      })}
+      <tbody>
+        <tr key="header" style={headerStyle}>
+          <td>test case</td>
+          <td>tiny ValueSummary</td>
+          <td>full ValueSummary</td>
+          <td>serialized ValueSummary</td>
+        </tr>
+        {Object.entries(allCases).map(caseNameAndVal => {
+          const [name, value] = caseNameAndVal;
+          const serializedValueSummary = serializeForValueSummary(value);
+          return (
+            <tr key={name}>
+              <td>{name}</td>
+              <td>
+                <ValueSummary tiny {...serializedValueSummary} />
+              </td>
+              <td>
+                <ValueSummary {...serializedValueSummary} />
+              </td>
+              <td>{JSON.stringify(serializedValueSummary)}</td>
+            </tr>
+          );
+        })}
+      </tbody>
     </table>
   );
 });
 
-allTestCases.add("medium rep summary serializations", () => {
+allTestCases.add("child summary serializations", () => {
   return (
     <div style={{ maxWidth: "100%" }}>
       <table>
@@ -77,7 +102,7 @@ allTestCases.add("medium rep summary serializations", () => {
           return (
             <tr key={name}>
               <td>{name}</td>
-              <td>{JSON.stringify(serializeForMediumRep(value))}</td>
+              <td>{JSON.stringify(serializeChildSummary(value))}</td>
             </tr>
           );
         })}
@@ -86,7 +111,7 @@ allTestCases.add("medium rep summary serializations", () => {
   );
 });
 
-allTestCases.add("all the medium reps", () => {
+allTestCases.add("inline child summary reps", () => {
   return (
     <div style={{ maxWidth: "100%" }}>
       <table>
@@ -96,7 +121,7 @@ allTestCases.add("all the medium reps", () => {
             <tr key={name}>
               <td>{name}</td>
               <td>
-                <MediumRep {...serializeForMediumRep(value)} />
+                <InlineChildSummary {...serializeChildSummary(value)} />
               </td>
             </tr>
           );
@@ -106,35 +131,35 @@ allTestCases.add("all the medium reps", () => {
   );
 });
 
-const tableRep = storiesOf("rowDf table rep", module);
-tableRep.add("tables", () => {
-  return (
-    <div>
-      {Object.entries(rowTableCases).map(caseNameAndVal => {
-        const [name, value] = caseNameAndVal;
-        return (
-          <div key={name} style={{ padding: "10px", display: "grid" }}>
-            <div style={{ padding: "10px 10px" }}>case: {name}</div>
-            <div
-              style={{
-                margin: "auto",
-                marginLeft: "0",
-                maxWidth: "calc(100% - 5px)",
-                overflowX: "auto"
-              }}
-            >
-              <TableRenderer value={value} />
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-});
+// const tableRep = storiesOf("rowDf table rep", module);
+// tableRep.add("tables", () => {
+//   return (
+//     <div>
+//       {Object.entries(rowTableCases).map(caseNameAndVal => {
+//         const [name, value] = caseNameAndVal;
+//         return (
+//           <div key={name} style={{ padding: "10px", display: "grid" }}>
+//             <div style={{ padding: "10px 10px" }}>case: {name}</div>
+//             <div
+//               style={{
+//                 margin: "auto",
+//                 marginLeft: "0",
+//                 maxWidth: "calc(100% - 5px)",
+//                 overflowX: "auto"
+//               }}
+//             >
+//               <TableRenderer value={value} />
+//             </div>
+//           </div>
+//         );
+//       })}
+//     </div>
+//   );
+// });
 
-const valueRendererStories = storiesOf("base ValueRenderer component", module);
+// const valueRendererStories = storiesOf("base ValueRenderer component", module);
 
-Object.entries(allCases).forEach(caseNameAndVal => {
-  const [name, value] = caseNameAndVal;
-  valueRendererStories.add(name, () => <ValueRenderer valueToRender={value} />);
-});
+// Object.entries(allCases).forEach(caseNameAndVal => {
+//   const [name, value] = caseNameAndVal;
+//   valueRendererStories.add(name, () => <ValueRenderer valueToRender={value} />);
+// });
