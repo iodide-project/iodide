@@ -8,12 +8,12 @@ import {
   connectionModeIsServer,
   connectionModeIsStandalone
 } from "../../tools/server-tools";
+import { login } from "../../actions/actions";
 import {
   createNewNotebookOnServer,
-  login,
-  discardAutosave,
-  loadAutosave
-} from "../../actions/actions";
+  revertToLatestServerRevision,
+  saveNotebookToServer
+} from "../../actions/server-save-actions";
 
 const HeaderMessageContainer = styled("div")`
   background-color: lightyellow;
@@ -40,21 +40,19 @@ const HeaderMessageContainer = styled("div")`
 export class HeaderMessagesUnconnected extends React.Component {
   static propTypes = {
     message: PropTypes.oneOf([
-      "HAS_PREVIOUS_AUTOSAVE",
       "NOTEBOOK_REVISION_ID_OUT_OF_DATE",
       "STANDALONE_MODE",
       "NEED_TO_LOGIN",
       "NEED_TO_MAKE_COPY",
-      "CONNECTION_LOST"
+      "SERVER_ERROR_GENERAL",
+      "SERVER_ERROR_UNAUTHORIZED",
+      "SERVER_ERROR_OUT_OF_DATE"
     ]),
     owner: PropTypes.string,
-    loadAutosave: PropTypes.func.isRequired,
-    discardAutosave: PropTypes.func.isRequired,
+    saveNotebookToServer: PropTypes.func.isRequired,
+    revertToLatestServerRevision: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
-    makeCopy: PropTypes.func.isRequired,
-    notebookId: PropTypes.number,
-    revisionId: PropTypes.number,
-    connectionModeIsServer: PropTypes.bool
+    createNewNotebookOnServer: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -77,44 +75,41 @@ export class HeaderMessagesUnconnected extends React.Component {
   render() {
     let content;
     switch (this.props.message) {
-      case "HAS_PREVIOUS_AUTOSAVE":
-        content = (
-          <React.Fragment>
-            {this.props.connectionModeIsServer
-              ? "You have made changes to this notebook that are only saved locally."
-              : "Modifications to notebook detected in browser's local storage."}
-            &nbsp;
-            <a onClick={this.props.loadAutosave}>Restore</a>
-            &nbsp;or&nbsp;
-            <a onClick={this.props.discardAutosave}>discard</a>.
-          </React.Fragment>
-        );
-        break;
       case "NOTEBOOK_REVISION_ID_OUT_OF_DATE":
         content = (
           <React.Fragment>
-            You are viewing an old version of this notebook. Editing is
-            disabled. &nbsp;
-            <a href={`/notebooks/${this.props.notebookId}/`}>
-              Load latest version
-            </a>
-            .
+            This notebook is based on an old revision. You can either{" "}
+            <a onClick={this.props.revertToLatestServerRevision}>replace</a> it
+            with the latest version on the server or{" "}
+            <a onClick={() => this.props.saveNotebookToServer(true)}>
+              save over it
+            </a>{" "}
+            with this copy.
           </React.Fragment>
         );
         break;
-      case "CONNECTION_LOST":
+      case "SERVER_ERROR_UNAUTHORIZED":
+        content = (
+          <React.Fragment>
+            Error saving changes to the server: it seems like your session may
+            have expired. You may be able to resolve this issue by{" "}
+            <a onClick={this.showLoginModal}>logging in again</a>.
+          </React.Fragment>
+        );
+        break;
+      case "SERVER_ERROR_GENERAL":
         content =
           "Connection to the server has been lost. We'll keep trying. In the meantime, your changes will be preserved locally.";
         break;
       case "STANDALONE_MODE":
         content =
-          "You're viewing this notebook in standalone mode. Changes will be cached in your browser's local storage, but will not be otherwise persisted.";
+          "You're viewing this notebook in standalone mode. You can modify this notebook freely, but your changes will not be saved.";
         break;
       case "NEED_TO_LOGIN":
         content = (
           <React.Fragment>
-            You can modify and experiment with this notebook freely. To save to
-            this server, you need to <a onClick={this.showLoginModal}>login</a>.
+            You can modify and experiment with this notebook freely. To save
+            your work, you need to <a onClick={this.showLoginModal}>login</a>.
           </React.Fragment>
         );
         break;
@@ -122,11 +117,11 @@ export class HeaderMessagesUnconnected extends React.Component {
         content = (
           <React.Fragment>
             This notebook is owned by{" "}
-            <a href={`/${this.props.owner}`}>{this.props.owner}</a>. {}
-            <a onClick={() => this.props.makeCopy(this.props.revisionId)}>
+            <a href={`/${this.props.owner}`}>{this.props.owner}</a>.{" "}
+            <a onClick={this.props.createNewNotebookOnServer}>
               Make a copy to your account
-            </a>
-            .
+            </a>{" "}
+            if you want to save any modifications.
           </React.Fragment>
         );
         break;
@@ -149,26 +144,8 @@ export class HeaderMessagesUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   if (state.viewMode === "EXPLORE_VIEW") {
-    if (
-      state.hasPreviousAutosave &&
-      state.userData.name !== undefined &&
-      state.notebookInfo.username !== state.userData.name
-    ) {
-      // this checks if there is a previous autosave,
-      // and if the user matches.
-      return {
-        message: "HAS_PREVIOUS_AUTOSAVE",
-        connectionModeIsServer: connectionModeIsServer(state)
-      };
-    } else if (connectionModeIsStandalone(state)) {
+    if (connectionModeIsStandalone(state)) {
       return { message: "STANDALONE_MODE" };
-    } else if (state.notebookInfo.revision_is_latest === false) {
-      return {
-        message: "NOTEBOOK_REVISION_ID_OUT_OF_DATE",
-        notebookId: state.notebookInfo.notebook_id
-      };
-    } else if (state.notebookInfo.connectionStatus === "CONNECTION_LOST") {
-      return { message: "CONNECTION_LOST" };
     } else if (
       state.userData.name === undefined &&
       connectionModeIsServer(state)
@@ -180,8 +157,19 @@ export function mapStateToProps(state) {
     ) {
       return {
         message: "NEED_TO_MAKE_COPY",
-        revisionId: state.notebookInfo.revision_id,
         owner: state.notebookInfo.username
+      };
+    } else if (state.notebookInfo.serverSaveStatus === "ERROR_GENERAL") {
+      return { message: "SERVER_ERROR_GENERAL" };
+    } else if (state.notebookInfo.serverSaveStatus === "ERROR_OUT_OF_DATE") {
+      return {
+        message: "NOTEBOOK_REVISION_ID_OUT_OF_DATE"
+      };
+    } else if (state.notebookInfo.serverSaveStatus === "ERROR_UNAUTHORIZED") {
+      return { message: "SERVER_ERROR_UNAUTHORIZED" };
+    } else if (!state.notebookInfo.revision_is_latest) {
+      return {
+        message: "NOTEBOOK_REVISION_ID_OUT_OF_DATE"
       };
     }
   }
@@ -189,22 +177,12 @@ export function mapStateToProps(state) {
   return {};
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    login: () => {
-      dispatch(login());
-    },
-    discardAutosave: () => {
-      dispatch(discardAutosave());
-    },
-    loadAutosave: () => {
-      dispatch(loadAutosave());
-    },
-    makeCopy: revisionId => {
-      dispatch(createNewNotebookOnServer({ forkedFrom: revisionId }));
-    }
-  };
-}
+const mapDispatchToProps = {
+  login,
+  saveNotebookToServer,
+  createNewNotebookOnServer,
+  revertToLatestServerRevision
+};
 
 export default connect(
   mapStateToProps,

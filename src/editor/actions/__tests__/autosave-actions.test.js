@@ -1,12 +1,12 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import { saveNotebookToServer } from "../actions";
-import { updateServerAutosave, flushServerAutosave } from "../server-actions";
+import { saveNotebookToServer } from "../server-save-actions";
+import { updateServerAutosave, flushServerAutosave } from "../autosave-actions";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-jest.mock("../actions");
+jest.mock("../server-save-actions");
 
 describe("updateServerAutosave expected behaviour", () => {
   [false, true].forEach(revisionIsLatest => {

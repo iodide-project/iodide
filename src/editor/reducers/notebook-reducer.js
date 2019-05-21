@@ -45,15 +45,15 @@ const notebookReducer = (state = newNotebook(), action) => {
     case "UPDATE_NOTEBOOK_INFO":
       return Object.assign({}, state, { notebookInfo: action.notebookInfo });
 
-    case "SET_PREVIOUS_AUTOSAVE": {
+    case "SET_PREVIOUS_LOCAL_AUTOSAVE": {
       const { hasPreviousAutosave } = action;
       return Object.assign({}, state, { hasPreviousAutosave });
     }
 
-    case "SET_CONNECTION_STATUS": {
+    case "SET_SERVER_SAVE_STATUS": {
       const { status } = action;
       return Object.assign({}, state, {
-        notebookInfo: { ...state.notebookInfo, connectionStatus: status }
+        notebookInfo: { ...state.notebookInfo, serverSaveStatus: status }
       });
     }
 
@@ -161,14 +161,10 @@ const notebookReducer = (state = newNotebook(), action) => {
         lastSaved: new Date().toISOString(),
         notebookInfo: Object.assign({}, state.notebookInfo, {
           user_can_save: true,
-          revision_id: action.newRevisionId
+          revision_id: action.newRevisionId,
+          revision_is_latest: true
         })
       });
-    }
-
-    case "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST": {
-      const { checkingRevisionIsLatest } = action;
-      return Object.assign({}, state, { checkingRevisionIsLatest });
     }
 
     case "UPDATE_NOTEBOOK_REVISION_IS_LATEST": {
@@ -188,7 +184,16 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { notebookInfo });
     }
 
-    case "CHANGE_PAGE_TITLE":
+    case "UPDATE_REVISION_ID": {
+      return Object.assign({}, state, {
+        notebookInfo: {
+          ...state.notebookInfo,
+          revision_id: action.id
+        }
+      });
+    }
+
+    case "UPDATE_NOTEBOOK_TITLE":
       return Object.assign({}, state, { title: action.title });
 
     case "SET_VIEW_MODE": {
@@ -299,15 +304,6 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "UPDATE_PANE_POSITIONS": {
       return Object.assign({}, state, { panePositions: action.panePositions });
-    }
-
-    case "SET_MOST_RECENT_SAVED_CONTENT": {
-      return Object.assign({}, state, {
-        previouslySavedContent: {
-          jsmd: state.jsmd,
-          title: state.title
-        }
-      });
     }
 
     case "SET_NOTEBOOK_OWNER_IN_SESSION": {

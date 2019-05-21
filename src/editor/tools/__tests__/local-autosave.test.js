@@ -1,64 +1,26 @@
-import { getLocalAutosaveState, updateLocalAutosave } from "../local-autosave";
+import {
+  getLocalAutosave,
+  writeLocalAutosave,
+  clearLocalAutosave
+} from "../local-autosave";
 import { newNotebook } from "../../state-schemas/editor-state-prototypes";
 
-let states;
-const jsmdContent = `%% js
-var x = 10
+describe("autosave basics", () => {
+  it("saves / restores / clears as expected", async () => {
+    const state = Object.assign(newNotebook, {
+      jsmd: "my exciting notebook content",
+      title: "exciting title",
+      notebookInfo: { connectionMode: "SERVER", notebook_id: 1, revision_id: 2 }
+    });
 
-%% md
-
-# the title
-`;
-
-describe("updateLocalAutosave", () => {
-  beforeEach(() => {
-    const originalState = newNotebook();
-    updateLocalAutosave(originalState, true);
-
-    // add some state
-    const stateUpdate = {
-      jsmd: jsmdContent,
-      title: "autosaved title"
-    };
-    const updatedState = Object.assign({}, originalState, stateUpdate);
-
-    states = {
-      originalState,
-      updatedState
-    };
-  });
-
-  it("saves over original when asked to", async () => {
-    updateLocalAutosave(states.updatedState, true);
-    const newAutosavedState = await getLocalAutosaveState(states.updatedState);
-    expect(Object.keys(newAutosavedState).sort()).toEqual([
-      "originalCopy",
-      "originalCopyRevision",
-      "originalSaved"
-    ]);
-    const originalCopyState = newAutosavedState.originalCopy;
-    expect(originalCopyState).toEqual(states.updatedState.jsmd);
-  });
-
-  it("only updates dirty copy when not asked to write over original", async () => {
-    await updateLocalAutosave(states.updatedState, false);
-    const newAutosavedState = await getLocalAutosaveState(states.updatedState);
-    expect(Object.keys(newAutosavedState).sort()).toEqual([
-      "dirtyCopy",
-      "dirtySaved",
-      "originalCopy",
-      "originalCopyRevision",
-      "originalSaved"
-    ]);
-
-    const originalCopyState = newAutosavedState.originalCopy;
-    expect(originalCopyState).toEqual(states.originalState.jsmd);
-    // FIXME: deprecating the meta tag where we receive title. Will this test be relevant?
-    // expect(originalCopyState.title).toEqual(states.originalState.title)
-
-    const dirtyCopyState = newAutosavedState.dirtyCopy;
-    expect(dirtyCopyState).toEqual(states.updatedState.jsmd);
-    // FIXME: deprecating the meta tag where we receive title.
-    // expect(dirtyCopyState.title).toEqual(states.updatedState.title)
+    expect(await getLocalAutosave(state)).toEqual({});
+    await writeLocalAutosave(state);
+    expect(await getLocalAutosave(state)).toEqual({
+      jsmd: state.jsmd,
+      title: state.title,
+      parentRevisionId: state.notebookInfo.revision_id
+    });
+    await clearLocalAutosave(state);
+    expect(await getLocalAutosave(state)).toEqual({});
   });
 });

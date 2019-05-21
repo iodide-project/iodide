@@ -7,15 +7,13 @@ export function getNotebookRequest(notebookId) {
   return signedAPIRequest(`/api/v1/notebooks/${notebookId}/`);
 }
 
-function createNotebookRequestPayload(title, content, options = undefined) {
-  const data = {
-    title,
-    content
-  };
-  if (options && options.forkedFrom !== undefined)
-    data.forked_from = options.forkedFrom;
+function createNotebookRequestPayload(title, content, options) {
   const postRequestOptions = {
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      title,
+      content,
+      ...options
+    }),
     method: "POST"
   };
 
@@ -29,10 +27,19 @@ export function createNotebookRequest(title, jsmd, options) {
   );
 }
 
-export function updateNotebookRequest(notebookId, newTitle, newJsmd) {
+export function updateNotebookRequest(
+  notebookId,
+  currentRevisionId,
+  newTitle,
+  newJsmd
+) {
   return signedAPIRequestWithJSONContent(
     `/api/v1/notebooks/${notebookId}/revisions/`,
-    createNotebookRequestPayload(newTitle, newJsmd)
+    createNotebookRequestPayload(
+      newTitle,
+      newJsmd,
+      currentRevisionId ? { parent_revision_id: currentRevisionId } : {}
+    )
   );
 }
 
