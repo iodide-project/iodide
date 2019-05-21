@@ -48,7 +48,7 @@
     "@material-ui/core": "3.9.3",
     "@material-ui/icons": "3.0.2",
     "ajv": "6.10.0",
-    "codemirror": "5.46.0",
+    "codemirror": "5.47.0",
     "css-element-queries": "1.2.0",
     "date-fns": "2.0.0-alpha.26",
     "debounce-action": "0.1.0",
