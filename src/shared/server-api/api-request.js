@@ -1,4 +1,15 @@
-// Please do not use any of these methods directly in your code! Instead, create
+// custom exception class which adds some extra fields and detail when
+// returning errors from server -- feel free to use this in your code
+
+export class APIError extends Error {
+  constructor(message, status, detail) {
+    super(message);
+    this.status = status;
+    this.detail = detail;
+  }
+}
+
+// Please do not use any of these methods below directly in your code! Instead, create
 // methods that use them, as is done elsewhere in this directory. This will make
 // it easier to switch to different authentication methods or otherwise change
 // the implementation of the API in the future.
@@ -29,24 +40,42 @@ function fetchWithCSRFToken(url, otherParts, headers = {}) {
   return fetch(
     url,
     Object.assign({}, otherParts, { headers: combinedHeaders })
-  ).catch(err => {
-    throw Error(err);
-  });
+  );
 }
 
-export function signedAPIRequest(
+export async function signedAPIRequest(
   url,
   otherParts,
   headers = {},
   jsonResponseExpected = true
 ) {
-  return fetchWithCSRFToken(url, otherParts, headers).then(r => {
-    if (!r.ok) throw new Error(r.statusText);
-    if (jsonResponseExpected) {
-      return r.json();
+  const result = await fetchWithCSRFToken(url, otherParts, headers);
+  if (!result.ok) {
+    // figure out what type of error it is, then let the client
+    // know
+    const errorObj = await result.json();
+    let status;
+    switch (result.status) {
+      case 400:
+        status = "BAD_REQUEST";
+        break;
+      case 403:
+        status = "FORBIDDEN";
+        break;
+      default:
+        status = "UNKNOWN_ERROR";
+        break;
     }
-    return r.text();
-  });
+    throw new APIError(
+      result.statusText,
+      status,
+      errorObj.detail ? errorObj.detail : errorObj
+    );
+  }
+  if (jsonResponseExpected) {
+    return result.json();
+  }
+  return result.text();
 }
 
 // for POST, DELETE of notebooks and revisions,

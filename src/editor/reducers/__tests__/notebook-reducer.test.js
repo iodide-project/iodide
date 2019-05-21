@@ -11,7 +11,7 @@ function exampleNotebookWithContent(title = EXAMPLE_NOTEBOOK_1) {
   state.jsmd = `%% js
 var x = 10
 
-%% md 
+%% md
 
 # title element
 `;
@@ -24,7 +24,7 @@ describe("misc. notebook operations that don't belong elsewhere", () => {
   const NEW_NAME = "changed notebook name";
   it("should change title", () => {
     expect(
-      notebookReducer(state, { type: "CHANGE_PAGE_TITLE", title: NEW_NAME })
+      notebookReducer(state, { type: "UPDATE_NOTEBOOK_TITLE", title: NEW_NAME })
         .title
     ).toEqual(NEW_NAME);
   });

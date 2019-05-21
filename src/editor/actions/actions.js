@@ -1,30 +1,20 @@
-import debounceAction from "debounce-action";
+import {
+  checkNotebookIsBasedOnLatestServerRevision,
+  createNewNotebookOnServer
+} from "./server-save-actions";
+import { updateAutosave } from "./autosave-actions";
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 import {
   getRevisionList,
   getRevisions,
   getRevisionIdsNeededForDisplay
 } from "../tools/revision-history";
-
 import {
   getNotebookID,
-  getRevisionID,
   getUserDataFromDocument,
   notebookIsATrial
 } from "../tools/server-tools";
-import { checkUpdateAutosave } from "../tools/autosave";
-import {
-  getLocalAutosaveState,
-  clearLocalAutosave,
-  updateLocalAutosave
-} from "../tools/local-autosave";
-import { updateServerAutosave } from "./server-actions";
 import { loginToServer, logoutFromServer } from "../../shared/utils/login";
-import {
-  getNotebookRequest,
-  createNotebookRequest,
-  updateNotebookRequest
-} from "../../shared/server-api/notebook";
 
 import { jsmdParser } from "../jsmd-tools/jsmd-parser";
 import { getChunkContainingLine } from "../jsmd-tools/jsmd-selection";
@@ -48,38 +38,15 @@ export function updateAppMessages(messageObj) {
   };
 }
 
-// we debounce this action thunk so that it runs maximum once per
-// second, so that each small change to the document doesn't hammer indexdb
-export const updateAutosave = debounceAction(() => {
-  return async (dispatch, getState) => {
-    const state = getState();
-    const autosaveStatus = await checkUpdateAutosave(state);
-    switch (autosaveStatus) {
-      case "RETRY":
-        // debouncing should ensure we don't spin here
-        updateAutosave(dispatch, getState);
-        break;
-      case "UPDATE_WITH_NEW_COPY":
-        updateLocalAutosave(state, true);
-        dispatch(updateServerAutosave(dispatch, getState));
-        break;
-      case "UPDATE":
-        updateLocalAutosave(state, false);
-        dispatch(updateServerAutosave(dispatch, getState));
-        break;
-      default:
-        break;
-    }
-  };
-}, 1000);
-
-export function updateJsmdContent(text, autosaveChanges = true) {
+export function updateJsmdContent(text) {
   return (dispatch, getState) => {
     const jsmdChunks = jsmdParser(text);
-    const reportChunkTypes = Object.keys(getState().languageDefinitions).concat(
-      ["md", "html", "css"]
-    );
-
+    const languageDefinitions = getState().languageDefinitions || {};
+    const reportChunkTypes = Object.keys(languageDefinitions).concat([
+      "md",
+      "html",
+      "css"
+    ]);
     const reportChunks = jsmdChunks
       .filter(c => reportChunkTypes.includes(c.chunkType))
       .map(c => ({
@@ -99,39 +66,6 @@ export function updateJsmdContent(text, autosaveChanges = true) {
       jsmd: text,
       jsmdChunks
     });
-
-    // queue an update to autosave if applicable
-    if (autosaveChanges) {
-      dispatch(updateAutosave());
-    }
-  };
-}
-
-export function setPreviousAutosave(hasPreviousAutoSave) {
-  return {
-    type: "SET_PREVIOUS_AUTOSAVE",
-    hasPreviousAutoSave
-  };
-}
-
-export function loadAutosave() {
-  return async (dispatch, getState) => {
-    // jsmd, jsmdChunks
-    const { dirtyCopy: jsmd } = await getLocalAutosaveState(getState());
-    const jsmdChunks = jsmdParser(jsmd);
-    dispatch({
-      type: "REPLACE_NOTEBOOK_CONTENT",
-      jsmd,
-      jsmdChunks
-    });
-    dispatch(setPreviousAutosave(false));
-  };
-}
-
-export function discardAutosave() {
-  return (dispatch, getState) => {
-    clearLocalAutosave(getState());
-    dispatch(setPreviousAutosave(false));
   };
 }
 
@@ -177,15 +111,12 @@ export function clearVariables() {
   };
 }
 
-export function changePageTitle(title, autosaveChanges = true) {
+export function updateTitle(title) {
   return dispatch => {
     dispatch({
-      type: "CHANGE_PAGE_TITLE",
+      type: "UPDATE_NOTEBOOK_TITLE",
       title
     });
-    if (autosaveChanges) {
-      dispatch(updateAutosave());
-    }
   };
 }
 
@@ -235,112 +166,6 @@ export function moveCursorToNextChunk() {
 
     const targetChunk = getChunkContainingLine(jsmdChunks, targetLine);
     dispatch(updateEditorCursor(targetChunk.endLine + 1, 0, true));
-  };
-}
-
-export function createNewNotebookOnServer(options = { forkedFrom: undefined }) {
-  return async (dispatch, getState) => {
-    const { forkedFrom } = options;
-    const state = getState();
-    try {
-      const notebook = await createNotebookRequest(
-        state.title,
-        state.jsmd,
-        options
-      );
-      const message = "Notebook saved to server";
-      dispatch(
-        updateAppMessages({
-          message,
-          messageType: `NOTEBOOK_SAVED`
-        })
-      );
-      dispatch({ type: "ADD_NOTEBOOK_ID", id: notebook.id });
-      window.history.replaceState({}, "", `/notebooks/${notebook.id}/`);
-      dispatch({ type: "NOTEBOOK_SAVED" });
-      // update owner info, so we know that we can save
-      if (forkedFrom) {
-        dispatch({
-          type: "SET_NOTEBOOK_OWNER_IN_SESSION",
-          owner: state.userData,
-          forkedFrom
-        });
-      }
-    } catch (err) {
-      dispatch(
-        updateAppMessages({
-          message: "Error saving notebook.",
-          messageType: "ERROR_SAVING_NOTEBOOK"
-        })
-      );
-    }
-
-    return undefined;
-  };
-}
-
-export function saveNotebookToServer(appMsg = true) {
-  return async (dispatch, getState) => {
-    const state = getState();
-    const notebookId = getNotebookID(state);
-    const notebookInServer = Boolean(notebookId);
-
-    // Create new notebook
-    if (!notebookInServer) {
-      return createNewNotebookOnServer()(dispatch, getState);
-    }
-    // Update Exisiting Notebook
-    try {
-      const newRevision = await updateNotebookRequest(
-        notebookId,
-        state.title,
-        state.jsmd
-      );
-      const message = "Updated Notebook";
-      updateLocalAutosave(state, true);
-      if (appMsg) {
-        dispatch(
-          updateAppMessages({
-            message,
-            messageType: "NOTEBOOK_SAVED"
-          })
-        );
-      }
-      dispatch({ type: "NOTEBOOK_SAVED", newRevisionId: newRevision.id });
-    } catch (err) {
-      throw Error(err);
-    }
-    return undefined;
-  };
-}
-
-export function checkNotebookConsistency() {
-  return (dispatch, getState) => {
-    const state = getState();
-    const notebookId = getNotebookID(state);
-    if (!notebookId) {
-      // no notebook id assigned yet, so not possible to be
-      // out of date
-      return;
-    }
-    dispatch({
-      type: "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST",
-      checkingRevisionIsLatest: true
-    });
-    getNotebookRequest(notebookId).then(notebookData => {
-      dispatch({
-        type: "UPDATE_CHECKING_NOTEBOOK_REVISION_IS_LATEST",
-        checkingRevisionIsLatest: false
-      });
-      dispatch({
-        type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
-        revisionIsLatest:
-          notebookData.latest_revision.id === getRevisionID(state)
-      });
-    });
-    // currently not doing any error handling here-- if there
-    // are problems here, chances are the user is working offline
-    // which is, effectively, "at their own risk"
   };
 }
 
@@ -404,7 +229,7 @@ export function getNotebookRevisionList() {
 }
 
 export function loginSuccess(userData) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch({
       type: "LOGIN_SUCCESS",
       userData
@@ -418,6 +243,10 @@ export function loginSuccess(userData) {
           messageType: "LOGGED_IN"
         })
       );
+      // do a check that we are based on the latest revision immediately
+      await dispatch(checkNotebookIsBasedOnLatestServerRevision());
+      // autosave will be updated only if we are in a consistent state
+      dispatch(updateAutosave());
     }
   };
 }
@@ -508,18 +337,5 @@ export function saveEnvironment(updateObj, update) {
     type: "SAVE_ENVIRONMENT",
     updateObj,
     update
-  };
-}
-
-export function setMostRecentSavedContent() {
-  return {
-    type: "SET_MOST_RECENT_SAVED_CONTENT"
-  };
-}
-
-export function setConnectionStatus(status) {
-  return {
-    type: "SET_CONNECTION_STATUS",
-    status
   };
 }

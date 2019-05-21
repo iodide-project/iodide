@@ -5,7 +5,8 @@ import Helmet from "react-helmet";
 
 import { connect } from "react-redux";
 
-import { changePageTitle } from "../../actions/actions";
+import { updateTitle } from "../../actions/actions";
+import { updateAutosave } from "../../actions/autosave-actions";
 
 const TitleContainer = styled("div")``;
 
@@ -30,7 +31,7 @@ export class TitleUnconnected extends React.Component {
     notebookTitle: PropTypes.string,
     pageTitle: PropTypes.string,
     titleColor: PropTypes.string,
-    changePageTitle: PropTypes.func
+    updateTitle: PropTypes.func
   };
 
   render() {
@@ -42,7 +43,7 @@ export class TitleUnconnected extends React.Component {
           value={this.props.notebookTitle}
           placeholder="new notebook"
           onChange={evt => {
-            this.props.changePageTitle(evt.target.value);
+            this.props.updateTitle(evt.target.value);
           }}
         />
       </TitleContainer>
@@ -61,7 +62,10 @@ export function mapStateToProps(state) {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    changePageTitle: title => dispatch(changePageTitle(title))
+    updateTitle: title => {
+      dispatch(updateTitle(title));
+      dispatch(updateAutosave());
+    }
   };
 }
 export default connect(

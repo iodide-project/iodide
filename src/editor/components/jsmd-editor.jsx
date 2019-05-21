@@ -23,6 +23,7 @@ import {
   updateEditorCursor,
   updateEditorSelections
 } from "../actions/actions";
+import { updateAutosave } from "../actions/autosave-actions";
 import { postMessageToEvalFrame } from "../port-to-eval-frame";
 import { getAllSelections } from "./codemirror-utils";
 
@@ -189,9 +190,7 @@ function mapStateToProps(state) {
     autoRefresh: true,
     lineNumbers: true,
     keyMap: "sublime",
-    comment: true,
-    readOnly:
-      state.notebookInfo && state.notebookInfo.revision_is_latest === false
+    comment: true
   };
 
   if (state.wrapEditors === true) {
@@ -218,7 +217,10 @@ function mapStateToProps(state) {
 // }
 export function mapDispatchToProps(dispatch) {
   return {
-    updateJsmdContent: content => dispatch(updateJsmdContent(content)),
+    updateJsmdContent: content => {
+      dispatch(updateJsmdContent(content));
+      dispatch(updateAutosave());
+    },
     updateEditorCursor: (line, col) => dispatch(updateEditorCursor(line, col)),
     updateEditorSelections: selections =>
       dispatch(updateEditorSelections(selections))

@@ -75,9 +75,9 @@ describe("make sure action creators leave store in a consitent state", () => {
     expect(() => store.dispatch(actions.clearVariables())).not.toThrow();
   });
 
-  it("changePageTitle", () => {
+  it("updateTitle", () => {
     expect(() =>
-      store.dispatch(actions.changePageTitle("test title"))
+      store.dispatch(actions.updateTitle("test title"))
     ).not.toThrow();
   });
 

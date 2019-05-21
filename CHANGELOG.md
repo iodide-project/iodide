@@ -1,4 +1,15 @@
+# (Unreleased; add upcoming change notes here)
+
+- Better behaviour around saving, especially when multiple copies
+  of a notebook are open simultaneously. Note that as part of this
+  work, iodide will no longer save in (unsupported) standalone mode.
+  We may add this back at a future date.
+- Detect case where server logged out either due to user intervention
+  or session expiry, and offer to recover (fixes #1680)
+- Titles are now autosaved locally (fixes #1599)
+
 # 0.6.0 (2019-05-06)
+
 - introduces iodide.file API (see docs)
 - restore tabular data viewer for arrays of objects
 - add "TinyRep" components

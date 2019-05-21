@@ -84,7 +84,7 @@ tasks.toggleWrapInEditors = new UserTask({
 tasks.changeTitle = new UserTask({
   title: "Change Title",
   callback(t) {
-    dispatcher.changePageTitle(t);
+    dispatcher.updateTitle(t);
   }
 });
 
