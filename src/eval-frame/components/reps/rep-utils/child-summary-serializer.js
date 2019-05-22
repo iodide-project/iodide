@@ -58,14 +58,14 @@ export function serializeArrayPathsSummary(
 
   return [
     ...range(headPreview).map(summarizeIndex),
-    {
-      summary: null,
-      path: new RangeDescriptor(
+    new ChildSummaryItem(
+      new RangeDescriptor(
         headPreview,
         arr.length - headPreview - 1,
         "ARRAY_RANGE"
-      )
-    },
+      ),
+      null
+    ),
     ...range(arr.length - tailPreview, arr.length).map(summarizeIndex)
   ];
 }
@@ -83,10 +83,8 @@ export function serializeArrayPathsForRange(arr, min, max) {
 
 function serializeObjectPathsSummary(obj, maxToSerialize = 50) {
   const objectProps = Object.getOwnPropertyNames(obj);
-  const summarizeProp = prop => ({
-    path: prop,
-    summary: serializeForValueSummary(obj[prop])
-  });
+  const summarizeProp = prop =>
+    new ChildSummaryItem(prop, serializeForValueSummary(obj[prop]));
 
   if (objectProps.length === 0) {
     return [];
@@ -98,14 +96,10 @@ function serializeObjectPathsSummary(obj, maxToSerialize = 50) {
 
   return [
     ...objectProps.slice(0, maxToSerialize).map(summarizeProp),
-    {
-      summary: null,
-      path: new RangeDescriptor(
-        maxToSerialize,
-        objectProps.length,
-        "PROPS_RANGE"
-      )
-    }
+    new ChildSummaryItem(
+      new RangeDescriptor(maxToSerialize, objectProps.length, "PROPS_RANGE"),
+      null
+    )
   ];
 }
 

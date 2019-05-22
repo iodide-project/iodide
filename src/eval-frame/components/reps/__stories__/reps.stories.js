@@ -196,6 +196,7 @@ allTestCases.add("full rep", () => {
         <tbody>
           {Object.entries(rowTableCases).map(caseNameAndVal => {
             const [name, value] = caseNameAndVal;
+            window[name] = value;
             const serializedValueSummary = serializeForValueSummary(
               window[name]
             );

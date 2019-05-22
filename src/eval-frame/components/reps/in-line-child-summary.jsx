@@ -9,6 +9,8 @@ import ValueSummary, {
   Ell
 } from "./value-summary";
 
+import { ChildSummaryItem } from "./rep-utils/rep-serialization-core-types";
+
 /* eslint-disable react/no-array-index-key */
 const DelimitedList = ({
   children,
@@ -40,15 +42,15 @@ TinyRangeRep.propTypes = {
   number: PropTypes.number.isRequired
 };
 
-const InlineListSummaryItem = ({ path, summary }) => {
+const InlineListSummaryItem = ({ summaryItem }) => {
+  const { path, summary } = summaryItem;
   if (summary === null) {
     return <TinyRangeRep number={path.max - path.min + 1} />;
   }
   return <ValueSummary tiny {...summary} />;
 };
 InlineListSummaryItem.propTypes = {
-  summary: PropTypes.object, //eslint-disable-line
-  path: PropTypes.string
+  summaryItem: PropTypes.instanceOf(ChildSummaryItem)
 };
 
 const MediumListSummary = ({
@@ -59,10 +61,10 @@ const MediumListSummary = ({
   if (childItems.length > 0) {
     return (
       <DelimitedList {...{ openBracket, closeBracket }}>
-        {childItems.map(({ path, summary }) => (
+        {childItems.map(summaryItem => (
           <InlineListSummaryItem
-            key={JSON.stringify(path)}
-            {...{ path, summary }}
+            key={JSON.stringify(summaryItem.path)}
+            summaryItem={summaryItem}
           />
         ))}
       </DelimitedList>
@@ -114,10 +116,9 @@ const InlineKeyValSummary = ({
     const max =
       lastPath.path.max !== undefined ? lastPath.path.max : childItems.length;
 
-    inlineSubpaths.push({
-      path: { min: childItemsToShow + 1, max },
-      summary: null
-    });
+    inlineSubpaths.push(
+      new ChildSummaryItem({ min: childItemsToShow + 1, max }, null)
+    );
   }
 
   return (

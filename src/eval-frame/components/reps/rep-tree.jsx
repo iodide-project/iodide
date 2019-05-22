@@ -3,7 +3,12 @@ import styled from "react-emotion";
 import PropTypes from "prop-types";
 import InlineChildSummary from "./in-line-child-summary";
 
-import ValueSummary, { RepBaseText } from "./value-summary";
+import {
+  ValueSummary,
+  RangeDescriptor
+} from "./rep-utils/rep-serialization-core-types";
+
+import ValueSummaryRep, { RepBaseText } from "./value-summary";
 
 export const SubPathsContainer = styled("div")`
   border-left: 1px solid red;
@@ -21,25 +26,30 @@ export class PathIdentifierRep extends React.Component {
   };
   render() {
     if (typeof this.props.pathItem === "string") {
-      return <RepBaseText>this.props.pathItem</RepBaseText>;
+      return <RepBaseText>{this.props.pathItem}: </RepBaseText>;
     }
     const { min, max } = this.props.pathItem;
-    return <RepBaseText>{`[${min}⋯${max}`}</RepBaseText>;
+    return <RepBaseText>{`[${min}⋯${max}]`}</RepBaseText>;
   }
 }
 
-const objSummaryShape = PropTypes.shape({
-  objType: PropTypes.string.isRequired,
-  objClass: PropTypes.string.isRequired,
-  size: PropTypes.number,
-  stringValue: PropTypes.string.isRequired,
-  isTruncated: PropTypes.bool.isRequired
-});
+// const objSummaryShape = PropTypes.shape({
+//   objType: PropTypes.string.isRequired,
+//   objClass: PropTypes.string.isRequired,
+//   size: PropTypes.number,
+//   stringValue: PropTypes.string.isRequired,
+//   isTruncated: PropTypes.bool.isRequired
+// });
 
 export default class ExpandableRep extends React.Component {
   static propTypes = {
-    pathToEntity: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-    valueSummary: objSummaryShape,
+    pathToEntity: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.instanceOf(RangeDescriptor)
+      ])
+    ).isRequired,
+    valueSummary: PropTypes.instanceOf(ValueSummary),
     getChildSummaries: PropTypes.func,
     rootObjName: PropTypes.string
   };
@@ -96,47 +106,53 @@ export default class ExpandableRep extends React.Component {
       pathToEntity.length > 1 ? <PathIdentifierRep pathItem={pathItem} /> : "";
 
     // leaf node: no child childItems
-    // if (
-    //   childSummaries === null ||
-    //   childSummaries.summaryType === "NO_SUBPATHS"
-    // ) {
-    //   return (
-    //     <div>
-    //       {/* <PathIdentifierRep pathItem={pathItem} /> */}
-    //       <ValueSummary serializedObj={valueSummary} />
-    //     </div>
-    //   );
-    // }
+    if (
+      childSummaries === null ||
+      childSummaries.summaryType === "NO_SUBPATHS"
+    ) {
+      return (
+        <div>
+          {pathLabel}
+          {/* <ValueSummaryRep {...valueSummary} /> */}
+        </div>
+      );
+    }
 
     const expanderArrow = <ExpanderArrow {...{ expanded }} />;
 
-    // const childItems = expanded ? (
-    //   <SubPathsContainer>
-    //     {childSummaries.childItems.map(({ path, summary }) => {
-    //       return (
-    //         <React.Fragment>
-    //           <ExpandableRep
-    //             valueSummary={summary}
-    //             pathToEntity={[pathToEntity, path]}
-    //             {...{ getChildSummaries, rootObjName }}
-    //           />
-    //         </React.Fragment>
-    //       );
-    //     })}
-    //   </SubPathsContainer>
-    // ) : (
-    //   ""
-    // );
+    console.log("pathToEntity", this.props.pathToEntity);
+    console.log("valueSummary", this.props.valueSummary);
+    // const valueSummaryRep =
+    //   valueSummary !== null ? <ValueSummaryRep {...valueSummary} /> : "";
+
+    const childItems = expanded ? (
+      <SubPathsContainer>
+        {childSummaries.childItems.map(({ path, summary }) => {
+          return (
+            <React.Fragment key={JSON.stringify(path)}>
+              <ExpandableRep
+                valueSummary={summary}
+                pathToEntity={[...pathToEntity, path]}
+                getChildSummaries={getChildSummaries}
+                rootObjName={rootObjName}
+              />
+            </React.Fragment>
+          );
+        })}
+      </SubPathsContainer>
+    ) : (
+      ""
+    );
 
     return (
       <div>
         <div onClick={this.toggleExpand}>
           {expanderArrow}
           {pathLabel}
-          <ValueSummary {...valueSummary} />
+          {/* {valueSummaryRep} */}
           <InlineChildSummary {...childSummaries} />
         </div>
-        {/* {childItems} */}
+        {childItems}
       </div>
     );
   }
