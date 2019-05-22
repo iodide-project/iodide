@@ -9,7 +9,10 @@ import ValueSummary, {
   Ell
 } from "./value-summary";
 
-import { ChildSummaryItem } from "./rep-utils/rep-serialization-core-types";
+import {
+  ChildSummaryItem,
+  RangeDescriptor
+} from "./rep-utils/rep-serialization-core-types";
 
 /* eslint-disable react/no-array-index-key */
 const DelimitedList = ({
@@ -83,7 +86,8 @@ MediumListSummary.propTypes = {
   closeBracket: PropTypes.string
 };
 
-const InlineKeyValSummaryItem = ({ path, summary, mappingDelim }) => {
+const InlineKeyValSummaryItem = ({ summaryItem, mappingDelim }) => {
+  const { path, summary } = summaryItem;
   if (summary === null) {
     return <TinyRangeRep number={path.max - path.min + 1} />;
   }
@@ -96,18 +100,17 @@ const InlineKeyValSummaryItem = ({ path, summary, mappingDelim }) => {
   );
 };
 InlineKeyValSummaryItem.propTypes = {
-  summary: PropTypes.object, //eslint-disable-line
-  path: PropTypes.string,
+  summaryItem: PropTypes.instanceOf(ChildSummaryItem),
   mappingDelim: PropTypes.string
 };
 
 const InlineKeyValSummary = ({
   childItems,
   mappingDelim = ": ",
-  childItemsToShow = 5
+  numChildItemsToShow = 5
 }) => {
-  const inlineSubpaths = childItems.slice(0, childItemsToShow);
-  if (childItems.length > childItemsToShow) {
+  const inlineSubpaths = childItems.slice(0, numChildItemsToShow);
+  if (childItems.length > numChildItemsToShow) {
     // need to add a RangeDescriptor in this case;
     // if the last subpath is a RangeDescriptor,
     // the added RangeDescriptor must account for that
@@ -117,14 +120,20 @@ const InlineKeyValSummary = ({
       lastPath.path.max !== undefined ? lastPath.path.max : childItems.length;
 
     inlineSubpaths.push(
-      new ChildSummaryItem({ min: childItemsToShow + 1, max }, null)
+      new ChildSummaryItem(
+        new RangeDescriptor(numChildItemsToShow + 1, max, "RangeDescriptor"),
+        null
+      )
     );
   }
 
   return (
     <DelimitedList>
-      {inlineSubpaths.map(({ path, summary }) => (
-        <InlineKeyValSummaryItem {...{ path, summary, mappingDelim }} />
+      {inlineSubpaths.map(summaryItem => (
+        <InlineKeyValSummaryItem
+          key={JSON.stringify(summaryItem.path)}
+          {...{ summaryItem, mappingDelim }}
+        />
       ))}
     </DelimitedList>
   );
@@ -132,7 +141,7 @@ const InlineKeyValSummary = ({
 InlineKeyValSummary.propTypes = {
   childItems: PropTypes.arrayOf(PropTypes.object),
   mappingDelim: PropTypes.string,
-  childItemsToShow: PropTypes.number
+  numChildItemsToShow: PropTypes.number
 };
 
 /* eslint-enable react/no-array-index-key */

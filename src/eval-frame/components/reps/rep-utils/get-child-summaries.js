@@ -3,7 +3,7 @@ import {
   serializeChildSummary,
   serializeArrayPathsForRange
 } from "./child-summary-serializer";
-import { ChildSummaryItem } from "./rep-serialization-core-types";
+import { ChildSummary, ChildSummaryItem } from "./rep-serialization-core-types";
 import { splitIndexRange } from "./split-index-range";
 
 const RANGE_SPLIT_THRESHOLD = 50;
@@ -66,12 +66,10 @@ export function getChildSummary(rootObjName, path, compact = true) {
   const rangeSize = max - min;
   if (rangeSize > RANGE_SPLIT_THRESHOLD) {
     // if this range is too big, expand into subranges
-    const tempChildSummariesForExpansion = {
-      childItems: expandRangesInChildSummaries([
-        new ChildSummaryItem(pathEnd, null)
-      ]),
-      summaryType: "RANGE_DESCRIPTOR_SUBRANGES"
-    };
+    const tempChildSummariesForExpansion = new ChildSummary(
+      expandRangesInChildSummaries([new ChildSummaryItem(pathEnd, null)]),
+      "RANGE_DESCRIPTOR_SUBRANGES"
+    );
     return expandRangesInChildSummaries(tempChildSummariesForExpansion);
   }
   // if it's not too big, get the summary for this range

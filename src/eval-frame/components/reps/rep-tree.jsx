@@ -60,6 +60,7 @@ export default class ExpandableRep extends React.Component {
   }
   state = {
     childSummaries: null,
+    compactChildSummaries: null,
     expanded: false
   };
 
@@ -68,7 +69,7 @@ export default class ExpandableRep extends React.Component {
     // in compact form. this array of {path, summary} objs
     // can be used for in-line summaries where applicable.
     const { rootObjName, pathToEntity } = this.props;
-    const childSummaries = await this.props.getChildSummaries(
+    const compactChildSummaries = await this.props.getChildSummaries(
       rootObjName,
       pathToEntity
     );
@@ -77,7 +78,7 @@ export default class ExpandableRep extends React.Component {
     // loading data in compDidMount, and explicitly say calling
     // setState is ok if needed. Disabling lint rule is justified.
     // eslint-disable-next-line react/no-did-mount-set-state
-    this.setState({ childSummaries });
+    this.setState({ compactChildSummaries });
   }
 
   async toggleExpand() {
@@ -99,7 +100,7 @@ export default class ExpandableRep extends React.Component {
       getChildSummaries,
       rootObjName
     } = this.props;
-    const { expanded, childSummaries } = this.state;
+    const { expanded, childSummaries, compactChildSummaries } = this.state;
     const pathItem = pathToEntity[pathToEntity.length - 1];
 
     const pathLabel =
@@ -107,7 +108,7 @@ export default class ExpandableRep extends React.Component {
 
     // leaf node: no child childItems
     if (
-      childSummaries === null ||
+      childSummaries !== null &&
       childSummaries.summaryType === "NO_SUBPATHS"
     ) {
       return (
@@ -150,7 +151,7 @@ export default class ExpandableRep extends React.Component {
           {expanderArrow}
           {pathLabel}
           {/* {valueSummaryRep} */}
-          <InlineChildSummary {...childSummaries} />
+          <InlineChildSummary {...compactChildSummaries} />
         </div>
         {childItems}
       </div>

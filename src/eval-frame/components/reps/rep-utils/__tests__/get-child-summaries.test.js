@@ -2,7 +2,8 @@
 import { isValidChildSumary } from "../child-summary-serializer";
 import {
   RangeDescriptor,
-  ChildSummaryItem
+  ChildSummaryItem,
+  ChildSummary
 } from "../rep-serialization-core-types";
 import {
   getChildSummary,
@@ -23,12 +24,12 @@ const mockObjSummary = ({
 });
 
 function newChildSummaryMock(summaryType = "MOCK_PATH_SUMMARY") {
-  return {
-    childItems: new Array(10)
+  return new ChildSummary(
+    new Array(10)
       .fill(0)
       .map((x, i) => new ChildSummaryItem(String(i), mockObjSummary())),
     summaryType
-  };
+  );
 }
 
 describe("expandRangesInChildSummaries returns identical childItems if no RangeDescriptors exist", () => {
@@ -99,25 +100,25 @@ describe("getChildSummary - walking down tree", () => {
   });
 });
 
-// describe("getChildSummary - walking down tree - middle subpath", () => {
-//   // NB: the middle subpath should walk down RangeDescriptors
-//   Object.keys(allCases).forEach(testCase => {
-//     // for each test case, append to window...
-//     window[testCase] = allCases[testCase];
-//     const lookupPath = [testCase];
-//     let childSummary = getChildSummary("window", lookupPath, false);
+describe("getChildSummary - walking down tree - middle subpath", () => {
+  // NB: the middle subpath should walk down RangeDescriptors
+  Object.keys(allCases).forEach(testCase => {
+    // for each test case, append to window...
+    window[testCase] = allCases[testCase];
+    const lookupPath = [testCase];
+    let childSummary = getChildSummary("window", lookupPath, false);
 
-//     for (let depth = 0; depth < 5; depth++) {
-//       if (childSummary.childItems.length > 0) {
-//         // console.log("childSummary", childSummary);
-//         const subpathIndex = Math.round(childSummary.childItems.length / 2);
-//         lookupPath.push(childSummary.childItems[subpathIndex].path);
-//         // console.log("lookupPath", lookupPath);
-//         childSummary = getChildSummary("window", lookupPath, false);
+    for (let depth = 0; depth < 5; depth++) {
+      if (childSummary.childItems.length > 0) {
+        console.log("childSummary", childSummary);
+        const subpathIndex = Math.round(childSummary.childItems.length / 2);
+        lookupPath.push(childSummary.childItems[subpathIndex].path);
+        console.log("lookupPath", lookupPath);
+        childSummary = getChildSummary("window", lookupPath, false);
 
-//         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
-//           expect(isValidChildSumary(childSummary)).toBe(true));
-//       }
-//     }
-//   });
-// });
+        it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
+          expect(isValidChildSumary(childSummary)).toBe(true));
+      }
+    }
+  });
+});
