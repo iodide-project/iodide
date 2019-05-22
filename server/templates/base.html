@@ -2,11 +2,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-      <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-      <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
-      <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-      <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#5bbad5">
-    {% block head %}{% endblock %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'templates/assets/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'templates/assets/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="% static 'templates/assets/favicon-16x16.png' %}">
+    <link rel="mask-icon" href="% static 'templates/assets/safari-pinned-tab.svg' %}" color="#5bbad5">
     <title>{{ title }}</title>
   </head>
   <body>
