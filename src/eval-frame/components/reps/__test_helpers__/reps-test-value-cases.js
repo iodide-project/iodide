@@ -8,6 +8,7 @@ export const simpleTypes = {
   number_inf: Infinity,
   string_empty: "",
   string_short: "asjhdflkdskfhla",
+  string_medium: "abcd ".repeat(100),
   boolean_true: true,
   boolean_false: false,
   simple_undef: undefined,

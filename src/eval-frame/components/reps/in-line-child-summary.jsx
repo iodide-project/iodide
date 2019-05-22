@@ -41,8 +41,8 @@ TinyRangeRep.propTypes = {
 };
 
 const InlineListSummaryItem = ({ path, summary }) => {
-  if (path === null) {
-    return <TinyRangeRep number={summary.max - summary.min + 1} />;
+  if (summary === null) {
+    return <TinyRangeRep number={path.max - path.min + 1} />;
   }
   return <ValueSummary tiny {...summary} />;
 };
@@ -52,14 +52,14 @@ InlineListSummaryItem.propTypes = {
 };
 
 const MediumListSummary = ({
-  subpaths,
+  childItems,
   openBracket = "[",
   closeBracket = "]"
 }) => {
-  if (subpaths.length > 0) {
+  if (childItems.length > 0) {
     return (
       <DelimitedList {...{ openBracket, closeBracket }}>
-        {subpaths.map(({ path, summary }) => (
+        {childItems.map(({ path, summary }) => (
           <InlineListSummaryItem
             key={JSON.stringify(path)}
             {...{ path, summary }}
@@ -76,14 +76,14 @@ const MediumListSummary = ({
   );
 };
 MediumListSummary.propTypes = {
-  subpaths: PropTypes.arrayOf(PropTypes.object),
+  childItems: PropTypes.arrayOf(PropTypes.object),
   openBracket: PropTypes.string,
   closeBracket: PropTypes.string
 };
 
 const InlineKeyValSummaryItem = ({ path, summary, mappingDelim }) => {
-  if (path === null) {
-    return <TinyRangeRep number={summary.max - summary.min + 1} />;
+  if (summary === null) {
+    return <TinyRangeRep number={path.max - path.min + 1} />;
   }
   return (
     <React.Fragment>
@@ -100,25 +100,23 @@ InlineKeyValSummaryItem.propTypes = {
 };
 
 const InlineKeyValSummary = ({
-  subpaths,
+  childItems,
   mappingDelim = ": ",
-  subpathsToShow = 5
+  childItemsToShow = 5
 }) => {
-  const inlineSubpaths = subpaths.slice(0, subpathsToShow);
-  if (subpaths.length > subpathsToShow) {
-    // need to add a rangeDescriptor in this case;
-    // if the last subpath is a rangeDescriptor,
-    // the added rangeDescriptor must account for that
+  const inlineSubpaths = childItems.slice(0, childItemsToShow);
+  if (childItems.length > childItemsToShow) {
+    // need to add a RangeDescriptor in this case;
+    // if the last subpath is a RangeDescriptor,
+    // the added RangeDescriptor must account for that
 
-    const lastPath = subpaths[subpaths.length - 1];
+    const lastPath = childItems[childItems.length - 1];
     const max =
-      lastPath.summary.max !== undefined
-        ? lastPath.summary.max
-        : subpaths.length;
+      lastPath.path.max !== undefined ? lastPath.path.max : childItems.length;
 
     inlineSubpaths.push({
-      path: null,
-      summary: { min: subpathsToShow + 1, max }
+      path: { min: childItemsToShow + 1, max },
+      summary: null
     });
   }
 
@@ -131,23 +129,23 @@ const InlineKeyValSummary = ({
   );
 };
 InlineKeyValSummary.propTypes = {
-  subpaths: PropTypes.arrayOf(PropTypes.object),
+  childItems: PropTypes.arrayOf(PropTypes.object),
   mappingDelim: PropTypes.string,
-  subpathsToShow: PropTypes.number
+  childItemsToShow: PropTypes.number
 };
 
 /* eslint-enable react/no-array-index-key */
 
-const InlineChildSummary = ({ subpaths, summaryType }) => {
+const InlineChildSummary = ({ childItems, summaryType }) => {
   switch (summaryType) {
     case "ARRAY_PATH_SUMMARY":
-      return <MediumListSummary subpaths={subpaths} />;
+      return <MediumListSummary childItems={childItems} />;
     // case "SET_PATH_SUMMARY":
     //   return (
     //     <MediumListSummary openBracket="{" closeBracket="}" {...{ children }} />
     //   );
     case "OBJECT_PATH_SUMMARY":
-      return <InlineKeyValSummary subpaths={subpaths} />;
+      return <InlineKeyValSummary childItems={childItems} />;
     // case "MAP_PATH_SUMMARY":
     //   return <MediumKeyValSummary mappingDelim=" → " {...{ children }} />;
 
@@ -162,7 +160,7 @@ export default InlineChildSummary;
 //   static propTypes = {
 //     objType: PropTypes.string.isRequired,
 //     subpathSummaryType: PropTypes.string.isRequired,
-//     subpaths: PropTypes.arrayOf(PropTypes.object),
+//     childItems: PropTypes.arrayOf(PropTypes.object),
 //     /* eslint-disable react/no-unused-prop-types */
 //     objClass: PropTypes.string.isRequired,
 //     size: PropTypes.number,
@@ -172,11 +170,11 @@ export default InlineChildSummary;
 //   };
 //   render() {
 //     const { objType } = this.props;
-//     const { subpaths, subpathSummaryType } = this.props;
+//     const { childItems, subpathSummaryType } = this.props;
 //     return (
 //       <React.Fragment>
 //         {labelRepForType(this.props, objType)}
-//         <InLineChildSummary {...{ subpaths, subpathSummaryType }} />
+//         <InLineChildSummary {...{ childItems, subpathSummaryType }} />
 //       </React.Fragment>
 //     );
 //   }

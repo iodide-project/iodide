@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "react-emotion";
 import PropTypes from "prop-types";
-import { MediumSummary } from "./in-line-child-summary";
-import ValueSummary from "./value-summary";
+import InlineChildSummary from "./in-line-child-summary";
+
+import ValueSummary, { RepBaseText } from "./value-summary";
 
 export const SubPathsContainer = styled("div")`
   border-left: 1px solid red;
@@ -10,16 +11,21 @@ export const SubPathsContainer = styled("div")`
 `;
 
 const ExpanderArrow = ({ expanded }) => (expanded ? "-" : "+");
-// RepsMetaMore.propTypes = {
-//   number: PropTypes.number.isRequired
-// };
+ExpanderArrow.propTypes = {
+  expanded: PropTypes.bool.isRequired
+};
 
 export class PathIdentifierRep extends React.Component {
-  /* this handles: 
-  - REPS_META_PROP_LABEL, REPS_META_PROP_STRING_LABEL (need to refactor)
-  - index ranges, including splitting ranges and returning a Fragment with subranges
-  - displaying integer indices correctl
-  */
+  static propTypes = {
+    pathItem: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+  };
+  render() {
+    if (typeof this.props.pathItem === "string") {
+      return <RepBaseText>this.props.pathItem</RepBaseText>;
+    }
+    const { min, max } = this.props.pathItem;
+    return <RepBaseText>{`[${min}⋯${max}`}</RepBaseText>;
+  }
 }
 
 const objSummaryShape = PropTypes.shape({
@@ -30,20 +36,12 @@ const objSummaryShape = PropTypes.shape({
   isTruncated: PropTypes.bool.isRequired
 });
 
-// const childrenSummaryShape = PropTypes.arrayOf(
-//   PropTypes.shape({
-//     key: PropTypes.string.isRequired,
-//     value: objSummaryShape
-//   })
-// );
-
-export class ExpandableRep extends React.Component {
+export default class ExpandableRep extends React.Component {
   static propTypes = {
-    path: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    pathToEntity: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     valueSummary: objSummaryShape,
-    // childSummaries: childrenSummaryShape,
     getChildSummaries: PropTypes.func,
-    lookUpRoot: PropTypes.string
+    rootObjName: PropTypes.string
   };
 
   constructor(props) {
@@ -51,64 +49,95 @@ export class ExpandableRep extends React.Component {
     this.toggleExpand = this.toggleExpand.bind(this);
   }
   state = {
-    /* child summaries is an array of object like:
-    { key: <string or rangeObject>, value: objSummaryShape }
-      */
-    childSummaries: [],
+    childSummaries: null,
     expanded: false
   };
 
   async componentDidMount() {
-    const { lookUpRoot, path } = this.props;
+    // on mount, get the array of childSummaries for this entity
+    // in compact form. this array of {path, summary} objs
+    // can be used for in-line summaries where applicable.
+    const { rootObjName, pathToEntity } = this.props;
     const childSummaries = await this.props.getChildSummaries(
-      lookUpRoot,
-      path,
-      "ALL_SUBPATHS"
+      rootObjName,
+      pathToEntity
     );
 
-    // this lint rule is controversial. the react docs *advise*
+    // this following lint rule is controversial. the react docs *advise*
     // loading data in compDidMount, and explicitly say calling
-    // setState is ok if needed
+    // setState is ok if needed. Disabling lint rule is justified.
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({ childSummaries });
   }
 
-  toggleExpand() {
-    this.setState({ expanded: !this.state.expanded });
+  async toggleExpand() {
+    // on toggleExpand, update the childSummaries in the
+    // compact/non-compact form as needed
+    const { rootObjName, pathToEntity } = this.props;
+    const childSummaries = await this.props.getChildSummaries(
+      rootObjName,
+      pathToEntity,
+      !this.state.expanded
+    );
+    this.setState({ expanded: !this.state.expanded, childSummaries });
   }
 
   render() {
-    const { valueSummary, getChildSummaries, lookUpRoot } = this.props;
+    const {
+      pathToEntity,
+      valueSummary,
+      getChildSummaries,
+      rootObjName
+    } = this.props;
     const { expanded, childSummaries } = this.state;
+    const pathItem = pathToEntity[pathToEntity.length - 1];
 
-    const subpaths = !expanded ? (
-      <SubPathsContainer>
-        {childSummaries.map(({ key, value }) => {
-          const path = [...this.props.path, key];
-          return (
-            <React.Fragment>
-              <PathIdentifierRep path={key} />
-              <ExpandableRep
-                valueSummary={value}
-                {...{ path, getChildSummaries, lookUpRoot }}
-              />
-            </React.Fragment>
-          );
-        })}
-      </SubPathsContainer>
-    ) : (
-      ""
-    );
+    const pathLabel =
+      pathToEntity.length > 1 ? <PathIdentifierRep pathItem={pathItem} /> : "";
+
+    // leaf node: no child childItems
+    // if (
+    //   childSummaries === null ||
+    //   childSummaries.summaryType === "NO_SUBPATHS"
+    // ) {
+    //   return (
+    //     <div>
+    //       {/* <PathIdentifierRep pathItem={pathItem} /> */}
+    //       <ValueSummary serializedObj={valueSummary} />
+    //     </div>
+    //   );
+    // }
+
+    const expanderArrow = <ExpanderArrow {...{ expanded }} />;
+
+    // const childItems = expanded ? (
+    //   <SubPathsContainer>
+    //     {childSummaries.childItems.map(({ path, summary }) => {
+    //       return (
+    //         <React.Fragment>
+    //           <ExpandableRep
+    //             valueSummary={summary}
+    //             pathToEntity={[pathToEntity, path]}
+    //             {...{ getChildSummaries, rootObjName }}
+    //           />
+    //         </React.Fragment>
+    //       );
+    //     })}
+    //   </SubPathsContainer>
+    // ) : (
+    //   ""
+    // );
 
     return (
-      <React.Fragment>
+      <div>
         <div onClick={this.toggleExpand}>
-          <ExpanderArrow collapsed={expanded} />
-          <ValueSummary serializedObj={valueSummary} />
-          <MediumSummary {...{ childSummaries }} />
+          {expanderArrow}
+          {pathLabel}
+          <ValueSummary {...valueSummary} />
+          <InlineChildSummary {...childSummaries} />
         </div>
-        {subpaths}
-      </React.Fragment>
+        {/* {childItems} */}
+      </div>
     );
   }
 }

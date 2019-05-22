@@ -38,8 +38,8 @@ describe("objSize(x) returns a number if x not nulland not undefined", () => {
   Object.keys(allCases).forEach(testCase => {
     const testValue = allCases[testCase];
     if (testValue === null || testValue === undefined) {
-      it(`objSize should be undefined; case: ${testCase}`, () =>
-        expect(objSize(testValue)).toBeUndefined());
+      it(`objSize should be null; case: ${testCase}`, () =>
+        expect(objSize(testValue)).toBe(null));
     } else {
       it(`objSize should be a number; case: ${testCase}`, () =>
         expect(typeof objSize(testValue)).toBe("number"));

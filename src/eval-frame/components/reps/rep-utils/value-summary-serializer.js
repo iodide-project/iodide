@@ -1,4 +1,5 @@
 import { truncateString } from "./truncate-string";
+import { ValueSummary } from "./rep-serialization-core-types";
 
 export function getClass(obj) {
   if (obj === null) return "Null";
@@ -42,8 +43,8 @@ const typesWithByteLength = ["ArrayBuffer", "DataView"];
 const typesWithSize = ["Map", "Set", "Blob"];
 
 export function objSize(obj) {
-  if (obj === null) return undefined;
-  if (obj === undefined) return undefined;
+  if (obj === null) return null;
+  if (obj === undefined) return null;
   const type = getType(obj);
   if (type === "RegExp") return obj.source.length;
   if (typesWithLength.includes(type)) return obj.length;
@@ -75,27 +76,6 @@ export function repStringVal(obj, tiny = false) {
   return stringVal;
 }
 
-// export const MAX_TINY_STRING_LEN = 20;
-// const TINY_REP_TRUNCATION_LEN = 12;
-
-// export const tinyRepStringify = obj =>
-//   truncateString(
-//     repStringVal(obj, true),
-//     MAX_TINY_STRING_LEN,
-//     TINY_REP_TRUNCATION_LEN
-//   );
-
-// export function serializeForTinyRep(obj) {
-//   const { stringValue, isTruncated } = tinyRepStringify(obj);
-//   return {
-//     objClass: getClass(obj),
-//     objType: getType(obj),
-//     size: objSize(obj),
-//     stringValue,
-//     isTruncated
-//   };
-// }
-
 const MAX_SUMMARY_STRING_LEN = 500;
 const SUMMARY_STRING_TRUNCATION_LEN = 300;
 
@@ -105,10 +85,5 @@ export function serializeForValueSummary(obj) {
     MAX_SUMMARY_STRING_LEN,
     SUMMARY_STRING_TRUNCATION_LEN
   );
-  return {
-    objType: getType(obj),
-    size: objSize(obj),
-    stringValue,
-    isTruncated
-  };
+  return new ValueSummary(getType(obj), objSize(obj), stringValue, isTruncated);
 }

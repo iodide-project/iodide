@@ -6,10 +6,10 @@ import styled from "react-emotion";
 
 import "./react-table-styles.css";
 
-import { serializeForTinyRep } from "./rep-utils/value-summary-serializer";
+import { serializeForValueSummary } from "./rep-utils/value-summary-serializer";
 
 import DefaultRenderer from "./default-handler";
-import TinyRep from "./value-summary";
+import ValueSummary from "./value-summary";
 
 const TableDetails = styled.div`
   border: solid #e5e5e5;
@@ -64,7 +64,7 @@ class CellRenderer extends React.PureComponent {
             : "none"
         }}
       >
-        <TinyRep {...serializeForTinyRep(this.props.value)} />
+        <ValueSummary tiny {...serializeForValueSummary(this.props.value)} />
       </div>
     );
   }
