@@ -85,10 +85,6 @@ module.exports = env => {
           }
         },
         {
-          test: /\.png$|\.svg$/,
-          loader: 'file-loader?name=[name].[ext]'  // <-- retain original file name
-        },
-        {
           test: /\.jsx?/,
           include: APP_DIR,
           loader: "babel-loader",
