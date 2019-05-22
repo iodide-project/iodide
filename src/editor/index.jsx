@@ -40,6 +40,12 @@ import { restoreLocalAutosave } from "./actions/local-autosave-actions";
 import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
 
+// import favicon files
+import "./assets/apple-touch-icon.png";
+import "./assets/favicon-32x32.png";
+import "./assets/favicon-16x16.png";
+import "./assets/safari-pinned-tab.svg";
+
 initializeDefaultKeybindings();
 
 window.addEventListener("message", listenForEvalFramePortReady, false);
