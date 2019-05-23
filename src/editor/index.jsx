@@ -36,10 +36,8 @@ import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
 import "./initialization/initialize-codemirror-loadmode";
 import "./initialization/initialize-dom";
-import { checkNotebookIsBasedOnLatestServerRevision } from "./actions/server-save-actions";
-import { flushServerAutosave } from "./actions/autosave-actions";
 import { restoreLocalAutosave } from "./actions/local-autosave-actions";
-import { connectionModeIsServer } from "./tools/server-tools";
+import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
 
 initializeDefaultKeybindings();
@@ -55,25 +53,7 @@ messagePasserEditor.connectDispatch(store.dispatch);
 
 document.addEventListener(
   "visibilitychange",
-  () => {
-    const state = store.getState();
-    if (
-      connectionModeIsServer(state) &&
-      state.userData.name &&
-      state.notebookInfo.user_can_save
-    ) {
-      if (!document.hidden) {
-        // check notebook consistency if we are returning to this
-        // tab or browser
-        store.dispatch(checkNotebookIsBasedOnLatestServerRevision());
-      } else {
-        // flush any pending server autosave if we're navigating
-        // away (this will help ensure that a notebook shared
-        // with others e.g. with a copypaste link will be up-to-date)
-        flushServerAutosave();
-      }
-    }
-  },
+  () => store.dispatch(handleEditorVisibilityChange(document.hidden)),
   false
 );
 
