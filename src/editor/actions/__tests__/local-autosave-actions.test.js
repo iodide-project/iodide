@@ -99,8 +99,10 @@ describe("restoreLocalAutosave", () => {
         ]
       },
       { type: "UPDATE_NOTEBOOK_TITLE", title: "autosaved title" },
-      { type: "UPDATE_REVISION_ID", id: 1 },
-      { type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST", revisionIsLatest: true }
+      {
+        type: "UPDATE_NOTEBOOK_INFO",
+        notebookInfo: { revision_id: 1, revision_is_latest: true }
+      }
     ]);
   });
 });

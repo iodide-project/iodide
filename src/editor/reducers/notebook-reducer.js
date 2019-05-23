@@ -42,21 +42,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     case "TOGGLE_WRAP_IN_EDITORS":
       return Object.assign({}, state, { wrapEditors: !state.wrapEditors });
 
-    case "UPDATE_NOTEBOOK_INFO":
-      return Object.assign({}, state, { notebookInfo: action.notebookInfo });
-
-    case "SET_PREVIOUS_LOCAL_AUTOSAVE": {
-      const { hasPreviousAutosave } = action;
-      return Object.assign({}, state, { hasPreviousAutosave });
-    }
-
-    case "SET_SERVER_SAVE_STATUS": {
-      const { status } = action;
-      return Object.assign({}, state, {
-        notebookInfo: { ...state.notebookInfo, serverSaveStatus: status }
-      });
-    }
-
     case "REPLACE_NOTEBOOK_CONTENT": {
       return Object.assign({}, state, {
         jsmd: action.jsmd,
@@ -156,39 +141,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
-    case "NOTEBOOK_SAVED": {
-      return Object.assign({}, state, {
-        lastSaved: new Date().toISOString(),
-        notebookInfo: Object.assign({}, state.notebookInfo, {
-          user_can_save: true,
-          revision_id: action.newRevisionId,
-          revision_is_latest: true
-        })
-      });
-    }
-
-    case "UPDATE_NOTEBOOK_REVISION_IS_LATEST": {
-      const { revisionIsLatest } = action;
+    case "UPDATE_NOTEBOOK_INFO": {
       return Object.assign({}, state, {
         notebookInfo: {
           ...(state.notebookInfo || {}),
-          revision_is_latest: revisionIsLatest
-        }
-      });
-    }
-
-    case "ADD_NOTEBOOK_ID": {
-      const notebookId = action.id;
-      const notebookInfo = Object.assign({}, state.notebookInfo);
-      notebookInfo.notebook_id = notebookId;
-      return Object.assign({}, state, { notebookInfo });
-    }
-
-    case "UPDATE_REVISION_ID": {
-      return Object.assign({}, state, {
-        notebookInfo: {
-          ...state.notebookInfo,
-          revision_id: action.id
+          ...action.notebookInfo
         }
       });
     }

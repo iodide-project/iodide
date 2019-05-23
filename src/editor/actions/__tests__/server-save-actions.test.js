@@ -69,16 +69,15 @@ describe("saveNotebookToServer", () => {
     );
     expect(store.getActions()).toEqual([
       {
-        id: 1,
-        type: "ADD_NOTEBOOK_ID"
-      },
-      {
-        newRevisionId: 1,
-        type: "NOTEBOOK_SAVED"
-      },
-      {
-        status: "OK",
-        type: "SET_SERVER_SAVE_STATUS"
+        notebookInfo: {
+          notebook_id: 1,
+          revision_id: 1,
+          revision_is_latest: true,
+          serverSaveStatus: "OK",
+          user_can_save: true,
+          username: "this-user"
+        },
+        type: "UPDATE_NOTEBOOK_INFO"
       }
     ]);
   });
@@ -103,12 +102,12 @@ describe("saveNotebookToServer", () => {
     ]);
     expect(store.getActions()).toEqual([
       {
-        newRevisionId: 2,
-        type: "NOTEBOOK_SAVED"
-      },
-      {
-        status: "OK",
-        type: "SET_SERVER_SAVE_STATUS"
+        notebookInfo: {
+          revision_id: 2,
+          revision_is_latest: true,
+          serverSaveStatus: "OK"
+        },
+        type: "UPDATE_NOTEBOOK_INFO"
       }
     ]);
   });
@@ -144,8 +143,8 @@ describe("saveNotebookToServer", () => {
       );
       expect(store.getActions()).toEqual([
         {
-          status: errorCase.expectedStatus,
-          type: "SET_SERVER_SAVE_STATUS"
+          type: "UPDATE_NOTEBOOK_INFO",
+          notebookInfo: { serverSaveStatus: errorCase.expectedStatus }
         }
       ]);
     })
@@ -173,31 +172,19 @@ describe("createNewNotebookOnServer", () => {
           : [[state.title, state.jsmd, {}]]
       );
 
-      expect(store.getActions()).toEqual(
-        [
-          {
-            id: forked ? 2 : 1,
-            type: "ADD_NOTEBOOK_ID"
+      expect(store.getActions()).toEqual([
+        {
+          notebookInfo: {
+            notebook_id: forked ? 2 : 1,
+            revision_id: forked ? 2 : 1,
+            revision_is_latest: true,
+            serverSaveStatus: "OK",
+            user_can_save: true,
+            username: "this-user"
           },
-          {
-            newRevisionId: forked ? 2 : 1,
-            type: "NOTEBOOK_SAVED"
-          },
-          {
-            status: "OK",
-            type: "SET_SERVER_SAVE_STATUS"
-          }
-        ].concat(
-          forked
-            ? [
-                {
-                  type: "SET_NOTEBOOK_OWNER_IN_SESSION",
-                  owner: { name: "this-user" }
-                }
-              ]
-            : []
-        )
-      );
+          type: "UPDATE_NOTEBOOK_INFO"
+        }
+      ]);
     });
   });
 
@@ -212,8 +199,8 @@ describe("createNewNotebookOnServer", () => {
       ).rejects.toThrowError(APIError);
       expect(store.getActions()).toEqual([
         {
-          status: errorCase.expectedStatus,
-          type: "SET_SERVER_SAVE_STATUS"
+          notebookInfo: { serverSaveStatus: errorCase.expectedStatus },
+          type: "UPDATE_NOTEBOOK_INFO"
         }
       ]);
     })
@@ -254,8 +241,13 @@ describe("revertToLatestServerRevision", () => {
         ]
       },
       { title: "newer revision", type: "UPDATE_NOTEBOOK_TITLE" },
-      { revisionIsLatest: true, type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST" },
-      { newRevisionId: 4, type: "NOTEBOOK_SAVED" }
+      {
+        type: "UPDATE_NOTEBOOK_INFO",
+        notebookInfo: {
+          revision_id: 4,
+          revision_is_latest: true
+        }
+      }
     ]);
   });
 });
@@ -288,22 +280,19 @@ describe("checkNotebookIsBasedOnLatestServerRevision", () => {
         await expect(
           store.dispatch(checkNotebookIsBasedOnLatestServerRevision())
         ).resolves.toBe(undefined);
-        expect(store.getActions()).toEqual(
-          (!contentDiffers && !titleDiffers
-            ? [
-                {
-                  type: "UPDATE_REVISION_ID",
-                  id: newRevisionId
-                }
-              ]
-            : []
-          ).concat([
-            {
-              type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
-              revisionIsLatest: !contentDiffers && !titleDiffers
-            }
-          ])
-        );
+        expect(store.getActions()).toEqual([
+          {
+            type: "UPDATE_NOTEBOOK_INFO",
+            notebookInfo: Object.assign(
+              {
+                revision_is_latest: !contentDiffers && !titleDiffers
+              },
+              !contentDiffers && !titleDiffers
+                ? { revision_id: newRevisionId }
+                : {}
+            )
+          }
+        ]);
       });
     });
   });
