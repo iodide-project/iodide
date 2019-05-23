@@ -204,7 +204,6 @@ allTestCases.add("full rep", () => {
             const serializedValueSummary = serializeForValueSummary(
               window[name]
             );
-            console.log("serializedValueSummary", serializedValueSummary);
             return (
               <tr key={name}>
                 <td>{name}</td>
