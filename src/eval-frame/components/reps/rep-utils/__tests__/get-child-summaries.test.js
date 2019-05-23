@@ -110,10 +110,11 @@ describe("getChildSummary - walking down tree - middle subpath", () => {
 
     for (let depth = 0; depth < 5; depth++) {
       if (childSummary.childItems.length > 0) {
-        console.log("childSummary", childSummary);
-        const subpathIndex = Math.round(childSummary.childItems.length / 2);
+        // choose a subpath near the middle; floor in case of only 1 child
+        const subpathIndex = Math.floor(childSummary.childItems.length / 2);
+
         lookupPath.push(childSummary.childItems[subpathIndex].path);
-        console.log("lookupPath", lookupPath);
+
         childSummary = getChildSummary("window", lookupPath, false);
 
         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>

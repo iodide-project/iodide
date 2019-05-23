@@ -1,4 +1,4 @@
-import { get, isString, isFinite } from "lodash";
+import { get, isString } from "lodash";
 import {
   serializeChildSummary,
   serializeArrayPathsForRange
@@ -66,8 +66,8 @@ export function getChildSummary(rootObjName, path, compact = true) {
   const rangeSize = max - min;
   if (rangeSize > RANGE_SPLIT_THRESHOLD) {
     // if this range is too big, expand into subranges
-    const tempChildSummariesForExpansion = new ChildSummary(
-      expandRangesInChildSummaries([new ChildSummaryItem(pathEnd, null)]),
+    const tempChildSummariesForExpansion = expandRangesInChildSummaries(
+      new ChildSummary([new ChildSummaryItem(pathEnd, null)]),
       "RANGE_DESCRIPTOR_SUBRANGES"
     );
     return expandRangesInChildSummaries(tempChildSummariesForExpansion);

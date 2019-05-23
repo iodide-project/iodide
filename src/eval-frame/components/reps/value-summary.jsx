@@ -40,6 +40,7 @@ export const Ell = styled(RepBaseText)`
   color: ${ellipsisColor};
   background: #e7e7e7;
   border-radius: 3px;
+  display: inline-block;
 `;
 const Ellipsis = () => <Ell>⋯</Ell>;
 

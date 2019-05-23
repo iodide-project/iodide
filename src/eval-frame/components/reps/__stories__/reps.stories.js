@@ -102,15 +102,17 @@ allTestCases.add("child summary serializations", () => {
   return (
     <div style={{ maxWidth: "100%" }}>
       <table>
-        {Object.entries(allCases).map(caseNameAndVal => {
-          const [name, value] = caseNameAndVal;
-          return (
-            <tr key={name}>
-              <td>{name}</td>
-              <td>{JSON.stringify(serializeChildSummary(value))}</td>
-            </tr>
-          );
-        })}
+        <tbody>
+          {Object.entries(allCases).map(caseNameAndVal => {
+            const [name, value] = caseNameAndVal;
+            return (
+              <tr key={name}>
+                <td>{name}</td>
+                <td>{JSON.stringify(serializeChildSummary(value))}</td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
     </div>
   );
@@ -120,17 +122,19 @@ allTestCases.add("inline child summary reps", () => {
   return (
     <div style={{ maxWidth: "100%" }}>
       <table>
-        {Object.entries(allCases).map(caseNameAndVal => {
-          const [name, value] = caseNameAndVal;
-          return (
-            <tr key={name}>
-              <td>{name}</td>
-              <td>
-                <InlineChildSummary {...serializeChildSummary(value)} />
-              </td>
-            </tr>
-          );
-        })}
+        <tbody>
+          {Object.entries(allCases).map(caseNameAndVal => {
+            const [name, value] = caseNameAndVal;
+            return (
+              <tr key={name}>
+                <td>{name}</td>
+                <td>
+                  <InlineChildSummary {...serializeChildSummary(value)} />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
     </div>
   );

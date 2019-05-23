@@ -15,21 +15,44 @@ export const SubPathsContainer = styled("div")`
   margin-left: 5px;
 `;
 
-const ExpanderArrow = ({ expanded }) => (expanded ? "-" : "+");
+const ExpanderArrow = ({ expanded }) => (expanded ? "▾" : "▸");
 ExpanderArrow.propTypes = {
   expanded: PropTypes.bool.isRequired
 };
 
-export class PathIdentifierRep extends React.Component {
+export class ExpandablePathLabelRep extends React.Component {
   static propTypes = {
-    pathItem: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+    pathLabel: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.instanceOf(RangeDescriptor)
+    ]),
+    expansion: PropTypes.oneOf(["EXPANDED", "COLLAPSED", "ATOMIC"])
   };
   render() {
-    if (typeof this.props.pathItem === "string") {
-      return <RepBaseText>{this.props.pathItem}: </RepBaseText>;
+    if (!this.props.pathLabel) {
+      return "";
     }
-    const { min, max } = this.props.pathItem;
-    return <RepBaseText>{`[${min}⋯${max}]`}</RepBaseText>;
+
+    let expansionChar = " ";
+    if (this.props.expansion === "EXPANDED") {
+      expansionChar = "▾";
+    } else if (this.props.expansion === "COLLAPSED") {
+      expansionChar = "▸";
+    }
+
+    if (typeof this.props.pathLabel === "string") {
+      return (
+        <RepBaseText>
+          {expansionChar} {this.props.pathLabel}:{" "}
+        </RepBaseText>
+      );
+    }
+    const { min, max } = this.props.pathLabel;
+    return (
+      <RepBaseText>
+        {expansionChar} {`[${min}⋯${max}]`}
+      </RepBaseText>
+    );
   }
 }
 
@@ -101,30 +124,33 @@ export default class ExpandableRep extends React.Component {
       rootObjName
     } = this.props;
     const { expanded, childSummaries, compactChildSummaries } = this.state;
-    const pathItem = pathToEntity[pathToEntity.length - 1];
 
+    // pathLabel is only needed if the we already *within* a nested obj,
+    // ie, only if the path to this entity is > 1 item long
     const pathLabel =
-      pathToEntity.length > 1 ? <PathIdentifierRep pathItem={pathItem} /> : "";
+      pathToEntity.length > 1 ? pathToEntity[pathToEntity.length - 1] : null;
 
     // leaf node: no child childItems
-    if (
-      childSummaries !== null &&
-      childSummaries.summaryType === "NO_SUBPATHS"
-    ) {
+    if (valueSummary !== null && valueSummary.size === 0) {
       return (
         <div>
-          {pathLabel}
-          {/* <ValueSummaryRep {...valueSummary} /> */}
+          <ExpandablePathLabelRep pathLabel={pathLabel} expansion="ATOMIC" />
+          {"  "}
+          <ValueSummaryRep {...valueSummary} />
         </div>
       );
     }
 
-    const expanderArrow = <ExpanderArrow {...{ expanded }} />;
+    //
+    if (pathLabel instanceof RangeDescriptor) {
+    }
+
+    // const expanderArrow = <ExpanderArrow {...{ expanded }} />;
 
     console.log("pathToEntity", this.props.pathToEntity);
     console.log("valueSummary", this.props.valueSummary);
-    // const valueSummaryRep =
-    //   valueSummary !== null ? <ValueSummaryRep {...valueSummary} /> : "";
+    const valueSummaryRep =
+      valueSummary !== null ? <ValueSummaryRep {...valueSummary} /> : "";
 
     const childItems = expanded ? (
       <SubPathsContainer>
@@ -148,9 +174,13 @@ export default class ExpandableRep extends React.Component {
     return (
       <div>
         <div onClick={this.toggleExpand}>
-          {expanderArrow}
-          {pathLabel}
-          {/* {valueSummaryRep} */}
+          {/* {expanderArrow} */}
+          {"  "}
+          <ExpandablePathLabelRep
+            pathLabel={pathLabel}
+            expansion={expanded ? "EXPANDED" : "COLLAPSED"}
+          />
+          {valueSummaryRep}
           <InlineChildSummary {...compactChildSummaries} />
         </div>
         {childItems}
