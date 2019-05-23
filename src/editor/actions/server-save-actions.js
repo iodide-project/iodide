@@ -5,31 +5,24 @@ import {
 } from "../../shared/server-api/notebook";
 import { clearLocalAutosave } from "../tools/local-autosave";
 import { getNotebookID, getRevisionID } from "../tools/server-tools";
-import { updateJsmdContent, updateTitle } from "./actions";
+import { updateJsmdContent, updateTitle, updateNotebookInfo } from "./actions";
 
-function setServerSaveStatus(error) {
-  let status;
-  if (error) {
-    if (error.status && error.status === "FORBIDDEN") {
-      status = "ERROR_UNAUTHORIZED";
-    } else if (
-      error.status &&
-      error.status === "BAD_REQUEST" &&
-      error.detail &&
-      error.detail.length &&
-      error.detail[0].startsWith("Based on non-latest revision")
-    ) {
-      status = "ERROR_OUT_OF_DATE";
-    } else {
-      status = "ERROR_GENERAL";
-    }
+function updateServerSaveStatus(error) {
+  let serverSaveStatus;
+  if (error.status && error.status === "FORBIDDEN") {
+    serverSaveStatus = "ERROR_UNAUTHORIZED";
+  } else if (
+    error.status &&
+    error.status === "BAD_REQUEST" &&
+    error.detail &&
+    error.detail.length &&
+    error.detail[0].startsWith("Based on non-latest revision")
+  ) {
+    serverSaveStatus = "ERROR_OUT_OF_DATE";
   } else {
-    status = "OK";
+    serverSaveStatus = "ERROR_GENERAL";
   }
-  return {
-    type: "SET_SERVER_SAVE_STATUS",
-    status
-  };
+  return updateNotebookInfo({ serverSaveStatus });
 }
 
 export function createNewNotebookOnServer() {
@@ -43,25 +36,21 @@ export function createNewNotebookOnServer() {
         originalNotebookId ? { forked_from: getRevisionID(state) } : {}
       );
       window.history.replaceState({}, "", `/notebooks/${notebook.id}/`);
-      dispatch({ type: "ADD_NOTEBOOK_ID", id: notebook.id });
-      dispatch({
-        type: "NOTEBOOK_SAVED",
-        newRevisionId: notebook.latest_revision.id
-      });
-      dispatch(setServerSaveStatus(undefined));
+      dispatch(
+        updateNotebookInfo({
+          notebook_id: notebook.id,
+          revision_id: notebook.latest_revision.id,
+          revision_is_latest: true,
+          serverSaveStatus: "OK",
+          user_can_save: true,
+          username: state.userData.name // in case this notebook was forked
+        })
+      );
 
       // remove previous autosave if we've successfully saved.
       clearLocalAutosave(state);
-
-      // update owner info, so we know that we can save
-      if (originalNotebookId) {
-        dispatch({
-          type: "SET_NOTEBOOK_OWNER_IN_SESSION",
-          owner: state.userData
-        });
-      }
     } catch (e) {
-      dispatch(setServerSaveStatus(e));
+      dispatch(updateServerSaveStatus(e));
 
       // re-throw so other consumers can handle the error (e.g. to pop up
       // an app message)
@@ -88,13 +77,18 @@ export function saveNotebookToServer(forceSave = false) {
         state.title,
         state.jsmd
       );
-      dispatch({ type: "NOTEBOOK_SAVED", newRevisionId: newRevision.id });
-      dispatch(setServerSaveStatus(undefined));
+      dispatch(
+        updateNotebookInfo({
+          revision_id: newRevision.id,
+          revision_is_latest: true,
+          serverSaveStatus: "OK"
+        })
+      );
 
       // remove previous autosave if we've successfully saved.
       clearLocalAutosave(state);
     } catch (e) {
-      dispatch(setServerSaveStatus(e));
+      dispatch(updateServerSaveStatus(e));
       // re-throw so other consumers can handle the error (e.g. to pop up
       // an app message)
       throw e;
@@ -121,18 +115,21 @@ export function checkNotebookIsBasedOnLatestServerRevision() {
         latestRevision.content === state.jsmd &&
         latestRevision.title === state.title;
       if (sameContent) {
-        dispatch({
-          type: "UPDATE_REVISION_ID",
-          id: latestRevision.id
-        });
+        dispatch(
+          updateNotebookInfo({
+            revision_id: latestRevision.id,
+            revision_is_latest: true
+          })
+        );
+      } else {
+        dispatch(
+          updateNotebookInfo({
+            revision_is_latest: latestRevision.id === getRevisionID(state)
+          })
+        );
       }
-      dispatch({
-        type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
-        revisionIsLatest:
-          sameContent || latestRevision.id === getRevisionID(state)
-      });
     } catch (e) {
-      dispatch(setServerSaveStatus(e));
+      dispatch(updateServerSaveStatus(e));
       // re-throw so other consumers can handle the error (e.g. to pop up
       // an app message)
       throw e;
@@ -150,15 +147,16 @@ export function revertToLatestServerRevision() {
       );
       dispatch(updateJsmdContent(latestRevision.content));
       dispatch(updateTitle(latestRevision.title));
-      dispatch({
-        type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
-        revisionIsLatest: true
-      });
-      dispatch({ type: "NOTEBOOK_SAVED", newRevisionId: latestRevision.id });
+      dispatch(
+        updateNotebookInfo({
+          revision_is_latest: true,
+          revision_id: latestRevision.id
+        })
+      );
       clearLocalAutosave(state);
       window.history.replaceState({}, "", `/notebooks/${notebookId}/`);
     } catch (e) {
-      dispatch(setServerSaveStatus(e));
+      dispatch(updateServerSaveStatus(e));
 
       // re-throw so other consumers can handle the error (e.g. to pop up
       // an app message)

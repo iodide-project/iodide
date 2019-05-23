@@ -1,6 +1,6 @@
 import { getLocalAutosave } from "../tools/local-autosave";
 import { getRevisionID } from "../tools/server-tools";
-import { updateJsmdContent, updateTitle } from "./actions";
+import { updateJsmdContent, updateNotebookInfo, updateTitle } from "./actions";
 
 // Check to see if we have an autosaved revision available, if so
 // replace the notebook content with it
@@ -30,15 +30,13 @@ export function restoreLocalAutosave() {
 
       dispatch(updateJsmdContent(localAutosaveState.jsmd));
       dispatch(updateTitle(localAutosaveState.title));
-      dispatch({
-        type: "UPDATE_REVISION_ID",
-        id: localAutosaveState.parentRevisionId
-      });
-      dispatch({
-        type: "UPDATE_NOTEBOOK_REVISION_IS_LATEST",
-        revisionIsLatest:
-          localAutosaveState.parentRevisionId === originalLoadedRevisionId
-      });
+      dispatch(
+        updateNotebookInfo({
+          revision_id: localAutosaveState.parentRevisionId,
+          revision_is_latest:
+            localAutosaveState.parentRevisionId === originalLoadedRevisionId
+        })
+      );
     }
   };
 }
