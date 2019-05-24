@@ -64,7 +64,7 @@
     "lodash": "4.17.11",
     "lz-string": "1.4.4",
     "markdown-it": "8.4.2",
-    "markdown-it-anchor": "5.0.2",
+    "markdown-it-anchor": "5.1.0",
     "markdown-it-emoji": "1.4.0",
     "mousetrap": "1.6.3",
     "numeral": "2.0.6",
