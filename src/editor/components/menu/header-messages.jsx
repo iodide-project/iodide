@@ -8,7 +8,7 @@ import {
   connectionModeIsServer,
   connectionModeIsStandalone
 } from "../../tools/server-tools";
-import { login } from "../../actions/actions";
+import { login } from "../../actions/server-session-actions";
 import {
   createNewNotebookOnServer,
   revertToLatestServerRevision,
