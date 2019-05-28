@@ -1,7 +1,4 @@
-import {
-  checkNotebookIsBasedOnLatestServerRevision,
-  createNewNotebookOnServer
-} from "./server-save-actions";
+import { createNewNotebookOnServer } from "./server-save-actions";
 import { updateAutosave } from "./autosave-actions";
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 import {
@@ -243,9 +240,7 @@ export function loginSuccess(userData) {
           messageType: "LOGGED_IN"
         })
       );
-      // do a check that we are based on the latest revision immediately
-      await dispatch(checkNotebookIsBasedOnLatestServerRevision());
-      // autosave will be updated only if we are in a consistent state
+      // trigger a save action immediately
       dispatch(updateAutosave());
     }
   };

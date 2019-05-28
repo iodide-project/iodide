@@ -19,6 +19,18 @@ function updateServerSaveStatus(error) {
     error.detail[0].startsWith("Based on non-latest revision")
   ) {
     serverSaveStatus = "ERROR_OUT_OF_DATE";
+  } else if (
+    error.status &&
+    error.status === "BAD_REQUEST" &&
+    error.detail &&
+    error.detail.non_field_errors &&
+    error.detail.non_field_errors[0].startsWith(
+      "Revision unchanged from previous"
+    )
+  ) {
+    // this is actually a harmless error: it means we tried to save
+    // an empty revision
+    serverSaveStatus = "OK";
   } else {
     serverSaveStatus = "ERROR_GENERAL";
   }
