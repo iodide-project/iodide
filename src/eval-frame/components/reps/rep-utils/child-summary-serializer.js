@@ -6,8 +6,6 @@ import {
   repStringVal,
   serializeForValueSummary
 } from "./value-summary-serializer";
-import { truncateString } from "./truncate-string";
-import { isValidIdentifier } from "../../../../shared/utils/is-valid-js-identifier";
 import {
   RangeDescriptor,
   ChildSummary,

@@ -215,9 +215,6 @@ allTestCases.add("full rep", () => {
                     rootObjName="window"
                   />
                 </td>
-                {/* <td>
-                  {JSON.stringify(getChildSummary("window", [name], false))}
-                </td> */}
               </tr>
             );
           })}

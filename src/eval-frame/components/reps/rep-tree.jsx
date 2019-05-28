@@ -8,61 +8,50 @@ import {
   RangeDescriptor
 } from "./rep-utils/rep-serialization-core-types";
 
-import ValueSummaryRep, { RepBaseText } from "./value-summary";
+import ValueSummaryRep from "./value-summary";
+import { PathLabelRep } from "./path-label-rep";
 
-export const SubPathsContainer = styled("div")`
-  border-left: 1px solid red;
-  margin-left: 5px;
+export const ChildSummariesContainer = styled("div")`
+  border-left: 1px solid #ccc;
+  margin-left: 10px;
+  padding-left: 5px;
 `;
 
-const ExpanderArrow = ({ expanded }) => (expanded ? "▾" : "▸");
-ExpanderArrow.propTypes = {
-  expanded: PropTypes.bool.isRequired
+export const LabelAndSummaryContainer = styled("div")`
+  display: flex;
+  justify-content: left;
+`;
+
+export const ExpanderDiv = styled("div")`
+  min-width: 15px;
+  padding-left: 5px;
+`;
+
+const Expander = ({ expansion }) =>
+  ({
+    EXPANDED: <ExpanderDiv>▾</ExpanderDiv>,
+    COLLAPSED: <ExpanderDiv>▸</ExpanderDiv>,
+    NONE: <ExpanderDiv> </ExpanderDiv>
+  }[expansion]);
+Expander.propTypes = {
+  expansion: PropTypes.oneOf(["EXPANDED", "COLLAPSED", "NONE"])
 };
 
-export class ExpandablePathLabelRep extends React.Component {
+export class LeafNodeRep extends React.Component {
   static propTypes = {
-    pathLabel: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.instanceOf(RangeDescriptor)
-    ]),
-    expansion: PropTypes.oneOf(["EXPANDED", "COLLAPSED", "ATOMIC"])
+    pathLabel: PropTypes.string.isRequired,
+    valueSummary: PropTypes.instanceOf(ValueSummary).isRequired
   };
   render() {
-    if (!this.props.pathLabel) {
-      return "";
-    }
-
-    let expansionChar = " ";
-    if (this.props.expansion === "EXPANDED") {
-      expansionChar = "▾";
-    } else if (this.props.expansion === "COLLAPSED") {
-      expansionChar = "▸";
-    }
-
-    if (typeof this.props.pathLabel === "string") {
-      return (
-        <RepBaseText>
-          {expansionChar} {this.props.pathLabel}:{" "}
-        </RepBaseText>
-      );
-    }
-    const { min, max } = this.props.pathLabel;
     return (
-      <RepBaseText>
-        {expansionChar} {`[${min}⋯${max}]`}
-      </RepBaseText>
+      <LabelAndSummaryContainer>
+        <Expander expansion="NONE" />
+        <PathLabelRep pathLabel={this.props.pathLabel} />
+        <ValueSummaryRep {...this.props.valueSummary} />
+      </LabelAndSummaryContainer>
     );
   }
 }
-
-// const objSummaryShape = PropTypes.shape({
-//   objType: PropTypes.string.isRequired,
-//   objClass: PropTypes.string.isRequired,
-//   size: PropTypes.number,
-//   stringValue: PropTypes.string.isRequired,
-//   isTruncated: PropTypes.bool.isRequired
-// });
 
 export default class ExpandableRep extends React.Component {
   static propTypes = {
@@ -73,8 +62,9 @@ export default class ExpandableRep extends React.Component {
       ])
     ).isRequired,
     valueSummary: PropTypes.instanceOf(ValueSummary),
-    getChildSummaries: PropTypes.func,
-    rootObjName: PropTypes.string
+    getChildSummaries: PropTypes.func.isRequired,
+    rootObjName: PropTypes.string,
+    pathLabel: PropTypes.string
   };
 
   constructor(props) {
@@ -121,68 +111,48 @@ export default class ExpandableRep extends React.Component {
       pathToEntity,
       valueSummary,
       getChildSummaries,
-      rootObjName
+      rootObjName,
+      pathLabel
     } = this.props;
     const { expanded, childSummaries, compactChildSummaries } = this.state;
 
-    // pathLabel is only needed if the we already *within* a nested obj,
-    // ie, only if the path to this entity is > 1 item long
-    const pathLabel =
-      pathToEntity.length > 1 ? pathToEntity[pathToEntity.length - 1] : null;
-
-    // leaf node: no child childItems
-    if (valueSummary !== null && valueSummary.size === 0) {
-      return (
-        <div>
-          <ExpandablePathLabelRep pathLabel={pathLabel} expansion="ATOMIC" />
-          {"  "}
-          <ValueSummaryRep {...valueSummary} />
-        </div>
-      );
-    }
-
-    //
-    if (pathLabel instanceof RangeDescriptor) {
-    }
-
-    // const expanderArrow = <ExpanderArrow {...{ expanded }} />;
-
-    console.log("pathToEntity", this.props.pathToEntity);
-    console.log("valueSummary", this.props.valueSummary);
-    const valueSummaryRep =
-      valueSummary !== null ? <ValueSummaryRep {...valueSummary} /> : "";
+    // const valueSummaryRep =
+    //   valueSummary !== null ? <ValueSummaryRep {...valueSummary} /> : "";
 
     const childItems = expanded ? (
-      <SubPathsContainer>
+      <ChildSummariesContainer>
         {childSummaries.childItems.map(({ path, summary }) => {
+          if (summary instanceof ValueSummary && summary.size === 0) {
+            return <LeafNodeRep valueSummary={summary} pathLabel={path} />;
+          }
           return (
-            <React.Fragment key={JSON.stringify(path)}>
-              <ExpandableRep
-                valueSummary={summary}
-                pathToEntity={[...pathToEntity, path]}
-                getChildSummaries={getChildSummaries}
-                rootObjName={rootObjName}
-              />
-            </React.Fragment>
+            <ExpandableRep
+              key={JSON.stringify(path)}
+              pathLabel={path}
+              valueSummary={summary}
+              pathToEntity={[...pathToEntity, path]}
+              getChildSummaries={getChildSummaries}
+              rootObjName={rootObjName}
+            />
           );
         })}
-      </SubPathsContainer>
+      </ChildSummariesContainer>
     ) : (
       ""
     );
 
     return (
       <div>
-        <div onClick={this.toggleExpand}>
-          {/* {expanderArrow} */}
-          {"  "}
-          <ExpandablePathLabelRep
-            pathLabel={pathLabel}
-            expansion={expanded ? "EXPANDED" : "COLLAPSED"}
-          />
-          {valueSummaryRep}
-          <InlineChildSummary {...compactChildSummaries} />
-        </div>
+        <LabelAndSummaryContainer onClick={this.toggleExpand}>
+          {pathLabel && (
+            <Expander expansion={expanded ? "EXPANDED" : "COLLAPSED"} />
+          )}
+          <div>
+            {pathLabel && <PathLabelRep pathLabel={pathLabel} />}
+            {valueSummary && <ValueSummaryRep {...valueSummary} />}
+            {!expanded && <InlineChildSummary {...compactChildSummaries} />}
+          </div>
+        </LabelAndSummaryContainer>
         {childItems}
       </div>
     );

@@ -15,13 +15,14 @@ const symbolColor = stringColor;
 const errorColor = "";
 const functionColor = "rgb(28, 30, 207)";
 const ellipsisColor = "#111 ";
-const propLabelColor = "#111 ";
+export const propLabelColor = "#111 ";
 
 export const RepBaseText = styled("span")`
   font-family: Menlo, monospace;
   font-size: 12px;
   line-height: 14px;
   cursor: pointer;
+  min-height: 20px;
 `;
 
 const stringValueWithColor = color => {
@@ -35,7 +36,6 @@ const ClassInfoText = styled(RepBaseText)`
   color: ${classInfoColor};
 `;
 
-//
 export const Ell = styled(RepBaseText)`
   color: ${ellipsisColor};
   background: #e7e7e7;
@@ -48,7 +48,7 @@ const Sep = styled(RepBaseText)`
   color: ${separatorColor};
 `;
 
-const Truncator = ({ string, isTruncated }) => (
+export const Truncator = ({ string, isTruncated }) => (
   <React.Fragment>
     {string}
     {isTruncated ? <Ellipsis /> : ""}
@@ -144,28 +144,6 @@ ErrorRep.propTypes = {
   isTruncated: PropTypes.bool.isRequired
 };
 
-const RepsMetaMore = ({ number }) => <Ell>⋯{number} more⋯</Ell>;
-RepsMetaMore.propTypes = {
-  number: PropTypes.number.isRequired
-};
-
-const PropLabelText = styled(RepBaseText)`
-  color: ${propLabelColor};
-`;
-const RepsMetaPropLabel = ({ stringValue, isTruncated }) => (
-  <>
-    <PropLabelText>
-      <Truncator string={stringValue} {...{ isTruncated }} />
-    </PropLabelText>
-  </>
-);
-RepsMetaPropLabel.propTypes = {
-  stringValue: PropTypes.string.isRequired,
-  isTruncated: PropTypes.bool.isRequired
-};
-
-const RepsMetaPropStringLabel = createQuotedStringRep('"', '"', propLabelColor);
-
 const typeToTinyRepMapping = {
   Number: stringValueWithColor(numberColor),
   Boolean: stringValueWithColor(boolColor),
@@ -202,11 +180,7 @@ const typeToTinyRepMapping = {
   Set: ObjectRep,
 
   WeakSet: ObjectRep,
-  WeakMap: ObjectRep,
-
-  REPS_META_MORE: RepsMetaMore,
-  REPS_META_PROP_LABEL: RepsMetaPropLabel,
-  REPS_META_PROP_STRING_LABEL: RepsMetaPropStringLabel
+  WeakMap: ObjectRep
 };
 
 const repMappingHandledTypes = Object.keys(typeToTinyRepMapping);

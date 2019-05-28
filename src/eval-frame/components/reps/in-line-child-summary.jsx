@@ -9,6 +9,8 @@ import ValueSummary, {
   Ell
 } from "./value-summary";
 
+import { PathLabelRep } from "./path-label-rep";
+
 import {
   ChildSummaryItem,
   RangeDescriptor
@@ -93,8 +95,7 @@ const InlineKeyValSummaryItem = ({ summaryItem, mappingDelim }) => {
   }
   return (
     <React.Fragment>
-      {path}
-      {mappingDelim}
+      <PathLabelRep pathLabel={path} tiny {...{ mappingDelim }} />
       <ValueSummary tiny {...summary} />
     </React.Fragment>
   );
@@ -106,7 +107,7 @@ InlineKeyValSummaryItem.propTypes = {
 
 const InlineKeyValSummary = ({
   childItems,
-  mappingDelim = ": ",
+  mappingDelim = ":",
   numChildItemsToShow = 5
 }) => {
   const inlineSubpaths = childItems.slice(0, numChildItemsToShow);
