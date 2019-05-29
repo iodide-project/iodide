@@ -27,6 +27,8 @@ Brotli==1.0.7 \
     --hash=sha256:f969ec7f56ba9636679e69ca07fba548312ccaca37412ee823c7f413541ad7e0 \
     --hash=sha256:f9dc52cd70907aafb99a773b66b156f2f995c7a0d284397c487c8b71ddbef2f9 \
     --hash=sha256:fc7212e36ebeb81aebf7949c92897b622490d7c0e333a479c0395591e7994600
+PyJWT==1.7.1 \
+    --hash=sha256:5c6eca3c2940464d106b99ba83b00c6add741c9becaec087fb7ccdefea71350e
 certifi==2019.3.9 \
     --hash=sha256:59b7658e26ca9c7339e00f8f4636cdfe59d34fa37b9b04f6f9e9926b3cece1a5 \
     --hash=sha256:b26104d6835d1f5e49452a26eb2ff87fe7090b89dfcaee5ea2212697e1e1d7ae
@@ -51,6 +53,8 @@ Django==2.2.2 \
 djangorestframework==3.9.4 \
     --hash=sha256:376f4b50340a46c15ae15ddd0c853085f4e66058f97e4dbe7d43ed62f5e60651 \
     --hash=sha256:c12869cfd83c33d579b17b3cb28a2ae7322a53c3ce85580c2a2ebe4e3f56c4fb
+djangorestframework-simplejwt==4.3.0 \
+    --hash=sha256:4cb1a51bf9b098b983e1326a1cfc65fb0b3c5a2aa0fa43effdbf05dd6da5e8cb
 dockerflow==2019.5.0 \
     --hash=sha256:8c4ffdad72732b16409b6a5599ef338c845e28aac902d09008bb8fae17a157a3 \
     --hash=sha256:1beb894ccdb28e022f61086b1117ae0e38790f18abfe90c782f249af1aa2442a

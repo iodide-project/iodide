@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Adds JWT-based authentication to Iodide's API as an option (fixes #1755)
+
 # 0.7.0 (2019-05-30)
 
 - Better behaviour around saving, especially when multiple copies
