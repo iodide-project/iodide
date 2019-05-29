@@ -19,13 +19,19 @@ export const simpleTypes = {
 
 // ==================== longStrings
 
+const stringCountToN = (N, sep = "") =>
+  Array(N)
+    .fill(0)
+    .map((x, i) => String(i))
+    .join(sep);
+
 export const longStrings = {
-  string_withSpaces_100: "1234 ".repeat(20),
-  string_withSpaces_1000: "1234 ".repeat(200),
-  string_withSpaces_100000: "1234 ".repeat(20000),
-  string_noSpaces_100: "12345".repeat(20),
-  string_noSpaces_1000: "12345".repeat(200),
-  string_noSpaces_100000: "12345".repeat(20000)
+  string_withSpaces_countTo100: stringCountToN(100, " "),
+  string_withSpaces_countTo2000: stringCountToN(2000, " "),
+  string_withSpaces_countTo30000: stringCountToN(30000, " "),
+  string_noSpaces_countTo100: stringCountToN(100, "and"),
+  string_noSpaces_countTo2000: stringCountToN(2000, "and"),
+  string_noSpaces_countTo30000: stringCountToN(30000, "and")
 };
 
 // ==================== arrays
@@ -52,8 +58,12 @@ export const arrayBuffers = {
   typedArray_Uint16Array: new Uint16Array(N_ARRAY).map((_, i) => i),
   typedArray_Int32Array: new Int32Array(N_ARRAY).map((_, i) => i),
   typedArray_Uint32Array: new Uint32Array(N_ARRAY).map((_, i) => i),
-  typedArray_Float32Array: new Float32Array(N_ARRAY).map((_, i) => Math.cos(i)),
-  typedArray_Float64Array: new Float64Array(N_ARRAY).map((_, i) => Math.cos(i))
+  typedArray_Float32Array: new Float32Array(N_ARRAY).map(
+    (_, i) => Math.cos(i) ** 2 + i
+  ),
+  typedArray_Float64Array: new Float64Array(N_ARRAY).map(
+    (_, i) => Math.cos(i) ** 2 + i
+  )
   // spec-ed, not yet implemented
   // BigInt64Array: new BigInt64Array(1000),
   // BigUint64Array: new BigUint64Array(1000)
@@ -139,7 +149,9 @@ export const baseObjects = {
   ]),
   map_empty: new Map(),
   set: new Set([1, 2, 3, 4, 5]),
-  set_long: new Set(new Array(1000).fill(0).map((_, i) => Math.sin(i))),
+  set_long: new Set(
+    new Array(1000).fill(0).map((_, i) => i + Math.sin(i) ** 2)
+  ),
   set_empty: new Set(),
   weakSet_empty: new WeakSet(),
   weakMap_empty: new WeakMap()
@@ -312,7 +324,7 @@ export const rowTableCases = {
   })),
   rowsTable_compositeObjects: new Array(100).fill(compositeObjects),
   rowsTable_objectsContainingSimpleTypes: new Array(100).fill(simpleTypes),
-  rowsTable_objectsContainingBaseObjects: new Array(100).fill(baseObjects)
+  rowsTable_objectsContainingBaseObjects: new Array(364).fill(baseObjects)
 };
 
 export const rowTableFails = {

@@ -21,8 +21,6 @@ export const RepBaseText = styled("span")`
   font-family: Menlo, monospace;
   font-size: 12px;
   line-height: 14px;
-  cursor: pointer;
-  min-height: 20px;
 `;
 
 const stringValueWithColor = color => {
@@ -75,6 +73,7 @@ ObjectRep.propTypes = {
 const createQuotedStringRep = (lQuote, rQuote, color = stringColor) => {
   const StringText = styled(RepBaseText)`
     color: ${color};
+    word-break: break-all;
     overflow-wrap: anywhere;
   `;
   const InnerQuotedStringRep = ({ size, stringValue, isTruncated }) => (

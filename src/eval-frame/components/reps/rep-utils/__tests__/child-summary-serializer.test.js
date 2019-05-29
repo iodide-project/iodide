@@ -3,9 +3,9 @@ import {
   numericIndexTypes,
   serializeArrayPathsSummary,
   serializeArrayPathsForRange,
-  serializeChildSummary,
-  isValidChildSumary
+  serializeChildSummary
 } from "../child-summary-serializer";
+import { isValidChildSumary } from "../is-valid-child-sumary";
 import { allCases } from "../../__test_helpers__/reps-test-value-cases";
 
 describe("serializeArrayPathsSummary", () => {

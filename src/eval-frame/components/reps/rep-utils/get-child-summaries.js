@@ -1,20 +1,17 @@
 import { get, isString } from "lodash";
 import {
   serializeChildSummary,
-  serializeArrayPathsForRange
+  serializeArrayPathsForRange,
+  serializeSetIndexPathsForRange,
+  serializeObjectPropsPathsForRange,
+  serializeStringSummaryForRange
 } from "./child-summary-serializer";
+import { MAX_SUMMARY_STRING_LEN } from "./value-summary-serializer";
 import { ChildSummary, ChildSummaryItem } from "./rep-serialization-core-types";
-import { splitIndexRange } from "./split-index-range";
-
-const RANGE_SPLIT_THRESHOLD = 50;
-
-function targetNumSubRanges(rangeSize) {
-  // number of ranges should be min 5 (in the case of a bin with 50 elts)
-  // and max 30 for huge ranges (so as to not overwhelm the screen)
-  return Math.min(5 * Math.round(Math.log10(rangeSize)), 30);
-}
+import { splitIndexRange, RANGE_SPLIT_THRESHOLD } from "./split-index-range";
 
 export function expandRangesInChildSummaries(childSummaries) {
+  // console.log("expandRangesInChildSummaries", childSummaries);
   const { childItems, summaryType } = childSummaries;
   const finalSubpaths = [];
   for (const summaryItem of childItems) {
@@ -23,29 +20,19 @@ export function expandRangesInChildSummaries(childSummaries) {
       finalSubpaths.push(summaryItem);
     } else {
       // summaryItem.path is a RangeDescriptor; may need to be split
-      const { min, max } = summaryItem.path;
-
-      const rangeSize = max - min;
-      if (rangeSize <= RANGE_SPLIT_THRESHOLD) {
-        // range is small, no need to split
-        finalSubpaths.push(summaryItem);
-      } else {
-        // range is big: split it
-        const rangeDescriptors = splitIndexRange(
-          summaryItem.path,
-          targetNumSubRanges(rangeSize)
-        );
-        // append all the resulting sub-ranges
-        for (const rangeSummary of rangeDescriptors) {
-          finalSubpaths.push(new ChildSummaryItem(rangeSummary, null));
-        }
+      const rangeDescriptors = splitIndexRange(summaryItem.path);
+      // append all the resulting sub-ranges
+      for (const rangeSummary of rangeDescriptors) {
+        finalSubpaths.push(new ChildSummaryItem(rangeSummary, null));
       }
     }
   }
+
   return { childItems: finalSubpaths, summaryType };
 }
 
 export function getChildSummary(rootObjName, path, compact = true) {
+  // console.log("getChildSummary(rootObjName, path,", rootObjName, path);
   const pathEnd = path[path.length - 1];
   if (isString(pathEnd)) {
     // if the last item in the path is a string,
@@ -54,31 +41,82 @@ export function getChildSummary(rootObjName, path, compact = true) {
     const childSummaries = serializeChildSummary(
       get(window[rootObjName], path.filter(isString))
     );
-    if (compact !== true) {
-      // in this case, split up long RangeDescriptors
-      return expandRangesInChildSummaries(childSummaries);
-    }
+    // if (compact !== true) {
+    //   // in this case, split up long RangeDescriptors
+    //   return expandRangesInChildSummaries(childSummaries);
+    // }
     return childSummaries;
   }
-  // if the end of the path is not a string, it must be an indexRange.
+  // if the end of the path is not a string, it must be an RangeDescriptor.
   // Either break it up appropriately, or return the data for that range
-  const { min, max } = pathEnd;
+  const { min, max, type } = pathEnd;
   const rangeSize = max - min;
-  if (rangeSize > RANGE_SPLIT_THRESHOLD) {
+  if (type === "STRING_RANGE" && rangeSize > MAX_SUMMARY_STRING_LEN) {
+    console.log("SPLITTING STRING RANGE", pathEnd);
+    return new ChildSummary(
+      splitIndexRange(pathEnd, MAX_SUMMARY_STRING_LEN).map(
+        range => new ChildSummaryItem(range, null)
+      ),
+      "STRING_DESCRIPTOR_SUBRANGES"
+    );
+  } else if (type !== "STRING_RANGE" && rangeSize > RANGE_SPLIT_THRESHOLD) {
+    console.log("SPLITTING other RANGE", pathEnd);
     // if this range is too big, expand into subranges
-    const tempChildSummariesForExpansion = expandRangesInChildSummaries(
-      new ChildSummary([new ChildSummaryItem(pathEnd, null)]),
+
+    const tempChildSummariesForExpansion = new ChildSummary(
+      [new ChildSummaryItem(pathEnd, null)],
       "RANGE_DESCRIPTOR_SUBRANGES"
     );
+
     return expandRangesInChildSummaries(tempChildSummariesForExpansion);
   }
-  // if it's not too big, get the summary for this range
-  return {
-    childItems: serializeArrayPathsForRange(
-      get(window[rootObjName], path.filter(isString)),
-      min,
-      max
-    ),
-    summaryType: "ARRAY_PATHS_FOR_RANGE"
-  };
+
+  // ELSE: if it's not too big, get the summary for this range
+  switch (type) {
+    case "ARRAY_RANGE":
+      return new ChildSummary(
+        serializeArrayPathsForRange(
+          get(window[rootObjName], path.filter(isString)),
+          min,
+          max
+        ),
+        "ARRAY_PATHS_FOR_RANGE"
+      );
+
+    case "PROPS_RANGE":
+      return new ChildSummary(
+        serializeObjectPropsPathsForRange(
+          get(window[rootObjName], path.filter(isString)),
+          min,
+          max
+        ),
+        "OBJ_PROPS_PATHS_FOR_RANGE"
+      );
+    case "SET_INDEX_RANGE":
+      return new ChildSummary(
+        serializeSetIndexPathsForRange(
+          get(window[rootObjName], path.filter(isString)),
+          min,
+          max
+        ),
+        "SET_INDEX_PATHS_FOR_RANGE"
+      );
+    case "STRING_RANGE":
+      return new ChildSummary(
+        serializeStringSummaryForRange(
+          get(window[rootObjName], path.filter(isString)),
+          min,
+          max
+        ),
+        "STRING_SUMMARY_FOR_RANGE"
+      );
+    default:
+      throw new TypeError(
+        `invalid range type: ${JSON.stringify({
+          type
+        })}; pathEnd: ${JSON.stringify({
+          pathEnd
+        })}`
+      );
+  }
 }

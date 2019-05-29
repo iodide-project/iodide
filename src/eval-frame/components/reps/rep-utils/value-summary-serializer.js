@@ -43,8 +43,8 @@ const typesWithByteLength = ["ArrayBuffer", "DataView"];
 const typesWithSize = ["Map", "Set", "Blob"];
 
 export function objSize(obj) {
-  if (obj === null) return null;
-  if (obj === undefined) return null;
+  if (obj === null) return 0;
+  if (obj === undefined) return 0;
   const type = getType(obj);
   if (type === "RegExp") return obj.source.length;
   if (typesWithLength.includes(type)) return obj.length;
@@ -76,8 +76,8 @@ export function repStringVal(obj, tiny = false) {
   return stringVal;
 }
 
-const MAX_SUMMARY_STRING_LEN = 500;
-const SUMMARY_STRING_TRUNCATION_LEN = 300;
+export const MAX_SUMMARY_STRING_LEN = 1000;
+export const SUMMARY_STRING_TRUNCATION_LEN = 500;
 
 export function serializeForValueSummary(obj) {
   const { stringValue, isTruncated } = truncateString(

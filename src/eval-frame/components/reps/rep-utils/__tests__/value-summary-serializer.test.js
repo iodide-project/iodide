@@ -34,15 +34,13 @@ returnsStringForAllTestValues(getType);
 //   });
 // });
 
-describe("objSize(x) returns a number if x not nulland not undefined", () => {
+describe("objSize(x) returns a number >=0", () => {
   Object.keys(allCases).forEach(testCase => {
     const testValue = allCases[testCase];
-    if (testValue === null || testValue === undefined) {
-      it(`objSize should be null; case: ${testCase}`, () =>
-        expect(objSize(testValue)).toBe(null));
-    } else {
-      it(`objSize should be a number; case: ${testCase}`, () =>
-        expect(typeof objSize(testValue)).toBe("number"));
-    }
+    it(`objSize should be a number; case: ${testCase}`, () =>
+      expect(typeof objSize(testValue)).toBe("number"));
+
+    it(`objSize should be a non-negative; case: ${testCase}`, () =>
+      expect(objSize(testValue) >= 0).toBe(true));
   });
 });

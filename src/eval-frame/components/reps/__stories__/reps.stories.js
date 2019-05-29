@@ -198,7 +198,7 @@ allTestCases.add("full rep", () => {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(rowTableCases).map(caseNameAndVal => {
+          {Object.entries(allCases).map(caseNameAndVal => {
             const [name, value] = caseNameAndVal;
             window[name] = value;
             const serializedValueSummary = serializeForValueSummary(

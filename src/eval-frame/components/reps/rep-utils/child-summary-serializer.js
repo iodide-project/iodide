@@ -1,16 +1,20 @@
-import { range, isFinite } from "lodash";
+import { range } from "lodash";
 import {
   getType,
   getClass,
   objSize,
-  repStringVal,
-  serializeForValueSummary
+  serializeForValueSummary,
+  MAX_SUMMARY_STRING_LEN,
+  SUMMARY_STRING_TRUNCATION_LEN
 } from "./value-summary-serializer";
 import {
   RangeDescriptor,
   ChildSummary,
-  ChildSummaryItem
+  ChildSummaryItem,
+  StringRangeSummaryItem,
+  MapPairSummaryItem
 } from "./rep-serialization-core-types";
+import { splitIndexRange } from "./split-index-range";
 
 export const numericIndexTypes = [
   "Array",
@@ -28,13 +32,16 @@ export const numericIndexTypes = [
   "Float64Array"
 ];
 
-const BrowserTypes = [
+const objectLikeTypes = [
   "HTMLCollection",
   "Window",
   "HTMLDocument",
   "HTMLBodyElement",
-  "Promise"
+  "Promise",
+  "Error"
 ];
+
+// ARRAYS
 
 export function serializeArrayPathsSummary(
   arr,
@@ -79,6 +86,8 @@ export function serializeArrayPathsForRange(arr, min, max) {
   return range(min, max + 1).map(i => summarizeIndex(i));
 }
 
+//  OBJECTS
+
 function serializeObjectPathsSummary(obj, maxToSerialize = 50) {
   const objectProps = Object.getOwnPropertyNames(obj);
   const summarizeProp = prop =>
@@ -101,6 +110,87 @@ function serializeObjectPathsSummary(obj, maxToSerialize = 50) {
   ];
 }
 
+export function serializeObjectPropsPathsForRange(obj, min, max) {
+  if (min >= max) {
+    return [];
+  }
+  const summarizeProp = prop =>
+    new ChildSummaryItem(prop, serializeForValueSummary(obj[prop]));
+
+  const objectProps = Object.getOwnPropertyNames(obj);
+  return objectProps.slice(min, max + 1).map(summarizeProp);
+}
+
+//  STRINGS
+
+function serializeStringPathsSummary(strObj) {
+  if (strObj.length <= MAX_SUMMARY_STRING_LEN) return [];
+
+  const initialRange = new RangeDescriptor(
+    SUMMARY_STRING_TRUNCATION_LEN,
+    strObj.length,
+    "STRING_RANGE"
+  );
+
+  console.log("splitting in serializeStringPathsSummary");
+
+  return splitIndexRange(initialRange, MAX_SUMMARY_STRING_LEN).map(
+    rangeDescriptor => new ChildSummaryItem(rangeDescriptor, null)
+  );
+}
+
+export function serializeStringSummaryForRange(strObj, min, max) {
+  return [
+    new StringRangeSummaryItem(
+      new RangeDescriptor(min, max, "STRING_RANGE"),
+      serializeForValueSummary(strObj.slice(min, max + 1))
+    )
+  ];
+}
+
+// SETS
+
+function serializeSetPathsSummary(set, previewNum = 5) {
+  const childItems = [];
+  let i = 0;
+  for (const value of set.values()) {
+    if (i >= previewNum) {
+      childItems.push(
+        new ChildSummaryItem(
+          new RangeDescriptor(i, objSize(set), "SET_INDEX_RANGE"),
+          null
+        )
+      );
+      return childItems;
+    }
+    childItems.push(
+      new ChildSummaryItem(String(i), serializeForValueSummary(value))
+    );
+    i += 1;
+  }
+  return childItems;
+}
+
+export function serializeSetIndexPathsForRange(set, min, max) {
+  const childItems = [];
+  let i = 0;
+  // this is not an efficient way to do this, but in JS
+  // sets only let you loop over the whole enum
+  for (const value of set.values()) {
+    if (i > max) {
+      return childItems;
+    } else if (i >= min) {
+      childItems.push(
+        new ChildSummaryItem(String(i), serializeForValueSummary(value))
+      );
+    }
+    i += 1;
+  }
+  return childItems;
+}
+
+// MAP
+
 function serializeMapPathsSummary(map, previewNum = 5) {
   const summary = [];
   // let i = 0;
@@ -121,23 +211,6 @@ function serializeMapPathsSummary(map, previewNum = 5) {
   return summary;
 }
 
-// function serializeSetPathsSummary(map, previewNum = 5) {
-//   const summary = [];
-//   let i = 0;
-//   for (const value of map.values()) {
-//     if (i >= previewNum) {
-//       summary.push({
-//         objType: "REPS_META_MORE",
-//         number: objSize(map) - previewNum
-//       });
-//       return summary;
-//     }
-//     summary.push(serializeForValueSummary(value));
-//     i += 1;
-//   }
-//   return summary;
-// }
-
 export function serializeChildSummary(obj) {
   const type = getType(obj);
 
@@ -151,15 +224,17 @@ export function serializeChildSummary(obj) {
     //     childItems: serializeMapPathsSummary(obj),
     //     summaryType: "MAP_PATH_SUMMARY"
     //   };
-    // } else if (type === "Set") {
-    //   return {
-    //     childItems: serializeSetPathsSummary(obj),
-    //     summaryType: "SET_PATH_SUMMARY"
-    //   };
+  } else if (type === "Set") {
+    return new ChildSummary(serializeSetPathsSummary(obj), "SET_PATH_SUMMARY");
+  } else if (type === "String") {
+    return new ChildSummary(
+      serializeStringPathsSummary(obj),
+      "STRING_PATH_SUMMARY"
+    );
   } else if (
     type === "Object" ||
     getClass(obj) === "Object" ||
-    BrowserTypes.includes(type)
+    objectLikeTypes.includes(type)
   ) {
     return new ChildSummary(
       serializeObjectPathsSummary(obj),
@@ -168,71 +243,4 @@ export function serializeChildSummary(obj) {
   }
 
   return new ChildSummary([], "ATOMIC_VALUE");
-}
-
-// const MAX_MEDIUM_STRING_LEN = 500;
-// const MEDIUM_REP_TRUNCATION_LEN = 300;
-
-// export function serializeForMediumRep(obj) {
-//   const { stringValue, isTruncated } = truncateString(
-//     repStringVal(obj),
-//     MAX_MEDIUM_STRING_LEN,
-//     MEDIUM_REP_TRUNCATION_LEN
-//   );
-//   const [subpathSummaries, subpathSummaryType] = serializePathsSummary(obj);
-//   // console.log("subpathSummaries", subpathSummaries, subpathSummaryType);
-//   return {
-//     objClass: getClass(obj),
-//     objType: getType(obj),
-//     size: objSize(obj),
-//     stringValue,
-//     isTruncated,
-//     subpathSummaries,
-//     subpathSummaryType
-//   };
-// }
-
-export function isValidChildSumary(maybeSummary) {
-  const { childItems, summaryType } = maybeSummary;
-  if (childItems === undefined)
-    return ["top-level 'childItems' is undefined", maybeSummary];
-  if (summaryType === undefined)
-    return ["top-level 'summaryType' is undefined", maybeSummary];
-
-  if (getType(summaryType) !== "String") return "'summaryType' is not string";
-  if (getType(childItems) !== "Array") return "'childItems' not array";
-  for (const summaryItem of childItems) {
-    const { path, summary } = summaryItem;
-    if (path === undefined)
-      return ["summaryItem'path' is undefined", summaryItem];
-    if (summary === undefined)
-      return ["summaryItem 'summary' is undefined", summaryItem];
-
-    // paths must be strings or path descriptions
-    const pathIsString = getType(path) === "String";
-    const pathIsRangeDesc = path.min !== undefined && path.max !== undefined;
-    if (!(pathIsString || pathIsRangeDesc))
-      return ["invalid 'path' in summaryItem", path, summary];
-
-    // pathIsRangeDesc must have valid max/min numbers
-    if (pathIsRangeDesc && (!isFinite(path.min) || !isFinite(path.max)))
-      return ["invalid RangeDescriptor", path, summary];
-
-    // the summary must be null or a valid summary
-    const summaryIsNull = summary === null;
-    const isValueSummaryObj =
-      summary !== null &&
-      (summary.objType !== undefined &&
-        summary.size !== undefined &&
-        summary.stringValue !== undefined &&
-        summary.isTruncated !== undefined);
-
-    if (!isValueSummaryObj && !summaryIsNull) {
-      return ["invalid value summary", path, summary];
-    }
-    // if summary is null iff pathIsRangeDesc
-    if (pathIsRangeDesc !== summaryIsNull)
-      return ["failed pathIsRangeDesc IFF summaryIsNull", path, summary];
-  }
-  return true;
 }

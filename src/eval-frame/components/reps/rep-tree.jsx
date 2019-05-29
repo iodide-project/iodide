@@ -5,7 +5,9 @@ import InlineChildSummary from "./in-line-child-summary";
 
 import {
   ValueSummary,
-  RangeDescriptor
+  RangeDescriptor,
+  StringRangeSummaryItem,
+  MapPairSummaryItem
 } from "./rep-utils/rep-serialization-core-types";
 
 import ValueSummaryRep from "./value-summary";
@@ -13,13 +15,19 @@ import { PathLabelRep } from "./path-label-rep";
 
 export const ChildSummariesContainer = styled("div")`
   border-left: 1px solid #ccc;
-  margin-left: 10px;
-  padding-left: 5px;
+  margin-left: 9px;
+  padding-left: 7px;
 `;
 
 export const LabelAndSummaryContainer = styled("div")`
   display: flex;
   justify-content: left;
+`;
+
+export const ClickableLabelAndSummaryContainer = styled(
+  LabelAndSummaryContainer
+)`
+  cursor: pointer;
 `;
 
 export const ExpanderDiv = styled("div")`
@@ -46,8 +54,10 @@ export class LeafNodeRep extends React.Component {
     return (
       <LabelAndSummaryContainer>
         <Expander expansion="NONE" />
-        <PathLabelRep pathLabel={this.props.pathLabel} />
-        <ValueSummaryRep {...this.props.valueSummary} />
+        <div>
+          <PathLabelRep pathLabel={this.props.pathLabel} />
+          <ValueSummaryRep {...this.props.valueSummary} />
+        </div>
       </LabelAndSummaryContainer>
     );
   }
@@ -64,7 +74,10 @@ export default class ExpandableRep extends React.Component {
     valueSummary: PropTypes.instanceOf(ValueSummary),
     getChildSummaries: PropTypes.func.isRequired,
     rootObjName: PropTypes.string,
-    pathLabel: PropTypes.string
+    pathLabel: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.instanceOf(RangeDescriptor)
+    ])
   };
 
   constructor(props) {
@@ -116,15 +129,42 @@ export default class ExpandableRep extends React.Component {
     } = this.props;
     const { expanded, childSummaries, compactChildSummaries } = this.state;
 
-    // const valueSummaryRep =
-    //   valueSummary !== null ? <ValueSummaryRep {...valueSummary} /> : "";
+    let expanderState;
+    if (valueSummary instanceof ValueSummary && !valueSummary.isExpandable) {
+      // objects of size 0 and full-length strings cannot be expanded
+      expanderState = "NONE";
+    } else {
+      expanderState = expanded ? "EXPANDED" : "COLLAPSED";
+    }
 
     const childItems = expanded ? (
       <ChildSummariesContainer>
-        {childSummaries.childItems.map(({ path, summary }) => {
-          if (summary instanceof ValueSummary && summary.size === 0) {
-            return <LeafNodeRep valueSummary={summary} pathLabel={path} />;
+        {childSummaries.childItems.map(summaryItem => {
+          if (summaryItem instanceof MapPairSummaryItem) {
+            return (
+              <MapPairFullRep
+                key={JSON.stringify(summaryItem.path)}
+                summaryItem={summaryItem}
+              />
+            );
           }
+
+          const { path, summary } = summaryItem;
+
+          if (summaryItem instanceof StringRangeSummaryItem) {
+            return <ValueSummaryRep key={JSON.stringify(path)} {...summary} />;
+          }
+
+          if (summary instanceof ValueSummary && !summary.isExpandable) {
+            return (
+              <LeafNodeRep
+                key={JSON.stringify(path)}
+                valueSummary={summary}
+                pathLabel={path}
+              />
+            );
+          }
+
           return (
             <ExpandableRep
               key={JSON.stringify(path)}
@@ -143,18 +183,50 @@ export default class ExpandableRep extends React.Component {
 
     return (
       <div>
-        <LabelAndSummaryContainer onClick={this.toggleExpand}>
-          {pathLabel && (
-            <Expander expansion={expanded ? "EXPANDED" : "COLLAPSED"} />
-          )}
+        <ClickableLabelAndSummaryContainer onClick={this.toggleExpand}>
+          <Expander expansion={expanderState} />
           <div>
             {pathLabel && <PathLabelRep pathLabel={pathLabel} />}
             {valueSummary && <ValueSummaryRep {...valueSummary} />}
             {!expanded && <InlineChildSummary {...compactChildSummaries} />}
           </div>
-        </LabelAndSummaryContainer>
+        </ClickableLabelAndSummaryContainer>
         {childItems}
       </div>
     );
   }
 }
+
+// export class MapPairFullRep extends React.Component {
+//   static propTypes = {
+//     summaryItem: PropTypes.instanceOf(MapPairSummaryItem).isRequired
+//   };
+//   render() {
+//     return (
+//       <ExpandableRep
+//         key={JSON.stringify(path)}
+//         pathLabel={"<key>"}
+//         valueSummary={summary}
+//         pathToEntity={[...pathToEntity, path]}
+//         getChildSummaries={getChildSummaries}
+//         rootObjName={rootObjName}
+//       />
+//       <ExpandableRep
+//         key={JSON.stringify(path)}
+//         pathLabel={path}
+//         valueSummary={summary}
+//         pathToEntity={[...pathToEntity, path]}
+//         getChildSummaries={getChildSummaries}
+//         rootObjName={rootObjName}
+//       />
+
+//       // <LabelAndSummaryContainer>
+//       //   <Expander expansion="NONE" />
+//       //   <div>
+//       //     <PathLabelRep pathLabel={this.props.pathLabel} />
+//       //     <ValueSummaryRep {...this.props.valueSummary} />
+//       //   </div>
+//       // </LabelAndSummaryContainer>
+//     );
+//   }
+// }

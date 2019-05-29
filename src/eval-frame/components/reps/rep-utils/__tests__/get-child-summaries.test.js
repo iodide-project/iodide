@@ -1,5 +1,5 @@
 // import { getType } from "../value-summary-serializer";
-import { isValidChildSumary } from "../child-summary-serializer";
+import { isValidChildSumary } from "../is-valid-child-sumary";
 import {
   RangeDescriptor,
   ChildSummaryItem,
@@ -9,6 +9,8 @@ import {
   getChildSummary,
   expandRangesInChildSummaries
 } from "../get-child-summaries";
+import { MAX_NUM_SUBRANGES } from "../split-index-range";
+
 import { allCases } from "../../__test_helpers__/reps-test-value-cases";
 
 const mockObjSummary = ({
@@ -119,6 +121,11 @@ describe("getChildSummary - walking down tree - middle subpath", () => {
 
         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
           expect(isValidChildSumary(childSummary)).toBe(true));
+
+        it(`always returns fewer than MAX_NUM_SUBRANGES children; ${testCase}; depth ${depth}`, () =>
+          expect(childSummary.childItems.length).toBeLessThan(
+            MAX_NUM_SUBRANGES + 1
+          ));
       }
     }
   });
