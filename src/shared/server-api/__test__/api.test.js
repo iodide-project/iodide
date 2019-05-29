@@ -11,8 +11,9 @@ import {
   deleteNotebookRevisionRequest
 } from "../notebook";
 
-describe("file api methods", () => {
+describe("api methods", () => {
   beforeEach(() => {
+    document.cookie = "jwt-access-token=12345;";
     fetch.resetMocks();
   });
 
