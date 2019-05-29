@@ -12,11 +12,6 @@ import { languageDefinitions } from "../../state-schemas/language-definitions";
 // according to the state schema.
 // This relies on the functionality in createValidatedReducer
 
-const mockUserData = {
-  name: "name",
-  avatar: "avatar"
-};
-
 describe("make sure createValidatedReducer is checking correctly", () => {
   beforeEach(() => {
     store.dispatch(actions.resetNotebook());
@@ -98,15 +93,6 @@ describe("make sure action creators leave store in a consitent state", () => {
 
   it("evaluateNotebook", () => {
     expect(() => store.dispatch(evaluateNotebook())).not.toThrow();
-  });
-
-  it("loginSuccess", () => {
-    expect(() =>
-      store.dispatch(actions.loginSuccess(mockUserData))
-    ).not.toThrow();
-  });
-  it("loginFailure", () => {
-    expect(() => store.dispatch(actions.loginFailure())).not.toThrow();
   });
 
   it("toggleHelpModal", () => {
