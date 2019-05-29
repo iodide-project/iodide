@@ -11,9 +11,6 @@ const CircularDependencyPlugin = require("circular-dependency-plugin");
 const UnusedWebpackPlugin = require("unused-webpack-plugin");
 const _ = require("lodash");
 
-const MAX_CYCLES = 4;
-let numCyclesDetected = 0;
-
 const reduxLogMode =
   process.env.REDUX_LOGGING === "VERBOSE" ? "VERBOSE" : "SILENT";
 
@@ -114,26 +111,10 @@ module.exports = env => {
     plugins: [
       ...plugins,
       new CircularDependencyPlugin({
-        // exclude detection of files based on a RegExp
         exclude: /a\.js|node_modules/,
-        failOnError: true, // FIXME should be true; we want it to fail
-        cwd: process.cwd(),
-        onStart() {
-          numCyclesDetected = 0;
-        },
-        onDetected({ paths, compilation }) {
-          numCyclesDetected += 1;
-          compilation.warnings.push(new Error(paths.join(" -> ")));
-        },
-        onEnd({ compilation }) {
-          if (numCyclesDetected > MAX_CYCLES) {
-            compilation.errors.push(
-              new Error(
-                `Detected ${numCyclesDetected} cycles which exceeds configured limit of ${MAX_CYCLES}`
-              )
-            );
-          }
-        }
+        failOnError: true,
+        allowAsyncCycles: false,
+        cwd: process.cwd()
       }),
       new UnusedWebpackPlugin({
         // Source directories
