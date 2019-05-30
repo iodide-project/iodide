@@ -48,20 +48,21 @@ longValueArrays.array_long_mixed = new Array(1000)
   .fill(Object.values(simpleTypes))
   .reduce((a, b) => a.concat(b), []);
 
+// array lengths chosen to show different collpse behavior
 export const arrayBuffers = {
-  buffer_arrayBuffer: new ArrayBuffer(N_ARRAY),
-  buffer_dataView: new DataView(new ArrayBuffer(N_ARRAY), 0),
-  typedArray_Int8Array: new Int8Array(N_ARRAY).map((_, i) => i),
-  typedArray_Uint8Array: new Uint8Array(N_ARRAY).map((_, i) => i),
-  typedArray_Uint8ClampedArray: new Uint8ClampedArray(N_ARRAY).map((_, i) => i),
-  typedArray_Int16Array: new Int16Array(N_ARRAY).map((_, i) => i),
-  typedArray_Uint16Array: new Uint16Array(N_ARRAY).map((_, i) => i),
-  typedArray_Int32Array: new Int32Array(N_ARRAY).map((_, i) => i),
-  typedArray_Uint32Array: new Uint32Array(N_ARRAY).map((_, i) => i),
-  typedArray_Float32Array: new Float32Array(N_ARRAY).map(
+  buffer_arrayBuffer: new ArrayBuffer(18462),
+  buffer_dataView: new DataView(new ArrayBuffer(76172), 0),
+  typedArray_Int8Array: new Int8Array(109472).map((_, i) => i),
+  typedArray_Uint8Array: new Uint8Array(21618).map((_, i) => i),
+  typedArray_Uint8ClampedArray: new Uint8ClampedArray(9321).map((_, i) => i),
+  typedArray_Int16Array: new Int16Array(39123).map((_, i) => i),
+  typedArray_Uint16Array: new Uint16Array(9373).map((_, i) => i),
+  typedArray_Int32Array: new Int32Array(8172).map((_, i) => i),
+  typedArray_Uint32Array: new Uint32Array(13090).map((_, i) => i),
+  typedArray_Float32Array: new Float32Array(27021).map(
     (_, i) => Math.cos(i) ** 2 + i
   ),
-  typedArray_Float64Array: new Float64Array(N_ARRAY).map(
+  typedArray_Float64Array: new Float64Array(8725).map(
     (_, i) => Math.cos(i) ** 2 + i
   )
   // spec-ed, not yet implemented

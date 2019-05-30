@@ -12,10 +12,10 @@ import {
   MapPairSummaryItem
 } from "./rep-utils/rep-serialization-core-types";
 
-import {
-  numericIndexTypes,
-  objectLikeTypes
-} from "./rep-utils/child-summary-serializer";
+// import {
+//   numericIndexTypes,
+//   objectLikeTypes
+// } from "./rep-utils/child-summary-serializer";
 
 /* eslint-disable react/no-array-index-key */
 const DelimitedList = ({

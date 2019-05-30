@@ -228,8 +228,7 @@ export class MapPairFullRep extends React.Component {
       valSummary,
       getChildSummaries,
       rootObjName,
-      pathLabel,
-      path
+      pathLabel
     } = this.props;
     return (
       <LabelAndSummaryContainer>
@@ -238,7 +237,7 @@ export class MapPairFullRep extends React.Component {
         </div>
         <div>
           <ExpandableRep
-            key={`${JSON.stringify(path)}-key`}
+            key={`${JSON.stringify(pathLabel)}-key`}
             pathLabel="key"
             valueSummary={keySummary}
             pathToEntity={[...pathToMapPair, "MAP_KEY"]}
@@ -246,7 +245,7 @@ export class MapPairFullRep extends React.Component {
             rootObjName={rootObjName}
           />
           <ExpandableRep
-            key={`${JSON.stringify(path)}-value`}
+            key={`${JSON.stringify(pathLabel)}-value`}
             pathLabel="value"
             valueSummary={valSummary}
             pathToEntity={[...pathToMapPair, "MAP_VAL"]}
@@ -255,7 +254,6 @@ export class MapPairFullRep extends React.Component {
           />
         </div>
       </LabelAndSummaryContainer>
-
     );
   }
 }

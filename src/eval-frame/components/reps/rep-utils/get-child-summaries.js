@@ -56,12 +56,12 @@ function getObjAtPath(baseObj, repPath) {
     const pathElt = queryPath[index];
     if (obj instanceof Map) {
       // figure out the index of the key/val pair in map.entries()
-      if (!isFinite(pathElt)) {
+      if (Number.isFinite(pathElt)) {
         throw new TypeError(
           "immediate subpaths of a map must be numeric entries index"
         );
       }
-      const mapEntryIndex = pathElt;
+      const mapEntryIndex = Number(pathElt);
       // then immediately advance down the path to see if this key or a value
       index += 1;
       const keyOrVal = queryPath[index];
@@ -72,8 +72,8 @@ function getObjAtPath(baseObj, repPath) {
       }
       obj =
         keyOrVal === "MAP_KEY"
-          ? getIteratorAtIndex(obj.keys(), Number(mapEntryIndex))
-          : getIteratorAtIndex(obj.values(), Number(mapEntryIndex));
+          ? getIteratorAtIndex(obj.keys(), mapEntryIndex)
+          : getIteratorAtIndex(obj.values(), mapEntryIndex);
     } else {
       obj = obj[pathElt];
     }

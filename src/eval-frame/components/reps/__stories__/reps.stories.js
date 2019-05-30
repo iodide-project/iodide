@@ -171,7 +171,7 @@ allTestCases.add("getChildSummary", () => {
 
 window.STORYBOOK_TEST_CASES = {};
 
-allTestCases.add("full rep", () => {
+allTestCases.add("expandable rep", () => {
   return (
     <div style={{ maxWidth: "100%" }}>
       <table style={{ borderSpacing: "0 15px" }}>
