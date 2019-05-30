@@ -1,4 +1,4 @@
-import { get, isString, isFinite } from "lodash";
+import { get, isString } from "lodash";
 import {
   serializeChildSummary,
   serializeArrayPathsForRange,
@@ -35,43 +35,56 @@ export function expandRangesInChildSummaries(childSummaries) {
   return new ChildSummary(finalSubpaths, summaryType);
 }
 
-// function getObjAtPath(baseObj, repPath) {
-//   const queryPath = repPath.filter(p => !(p instanceof RangeDescriptor));
+function getIteratorAtIndex(iterator, index) {
+  // this is inefficient, but required for dealing with maps,
+  // which don't allow lookup by index
+  let i = 0;
+  for (const item of iterator) {
+    if (i === index) return item;
+    i += 1;
+  }
+}
 
-//   let obj = baseObj;
-//   let index = 0;
-//   const { length } = queryPath;
+function getObjAtPath(baseObj, repPath) {
+  const queryPath = repPath.filter(p => !(p instanceof RangeDescriptor));
 
-//   while (obj != null && index < length) {
-//     let pathElt = queryPath[index]
-//     if (obj instanceof Map) {
-//       if (!isFinite(pathElt)) {
-//         throw new TypeError("immediate subpaths of a map must be numeric");
-//       }
-//       const mapEntryIndex = pathElt
-//       index += 1;
-//       const keyOrVal = queryPath[index]
-//       if (keyOrVal!=="MAP_KEY" || keyOrVal!=="MAP_VAL") {
-//         throw new TypeError("immediate subpaths of a map must be numeric");
-//       }
+  let obj = baseObj;
+  let index = 0;
+  const { length } = queryPath;
 
-//     } else {
-//       obj = obj[pathElt];
-//     }
-//       index += 1;
-//   }
-//   return obj;
+  while (obj != null && index < length) {
+    const pathElt = queryPath[index];
+    if (obj instanceof Map) {
+      console.log("GETTING MAP PATH");
+      // figure out the index of the key/val pair in map.entries()
+      if (!isFinite(pathElt)) {
+        throw new TypeError(
+          "immediate subpaths of a map must be numeric entries index"
+        );
+      }
+      const mapEntryIndex = pathElt;
+      // then immediately advance down the path to see if this key or a value
+      index += 1;
+      const keyOrVal = queryPath[index];
+      if (keyOrVal !== "MAP_KEY" && keyOrVal !== "MAP_VAL") {
+        throw new TypeError(
+          "paths into a map object must have MAP_KEY or MAP_VAL after the index into map.entries"
+        );
+      }
+      console.log("GETTING MAP PATH, obj pre lookup:", obj);
 
-//   // while (obj != null && index < length) {
-//   //   if (obj instanceOf Map) {
-
-//   //   } else {
-//   //     obj = obj[queryPath[index]];
-//   //   }
-//   //   index += 1;
-//   // }
-//   // return index && index === length ? obj : undefined;
-// }
+      obj =
+        keyOrVal === "MAP_KEY"
+          ? getIteratorAtIndex(obj.keys(), Number(mapEntryIndex))
+          : getIteratorAtIndex(obj.values(), Number(mapEntryIndex));
+      console.log("GETTING MAP PATH, obj:", obj);
+    } else {
+      obj = obj[pathElt];
+    }
+    index += 1;
+  }
+  return obj;
+}
 
 export function getChildSummary(rootObjName, path, compact = true) {
   // console.log("getChildSummary(rootObjName, path,", rootObjName, path);
@@ -81,7 +94,7 @@ export function getChildSummary(rootObjName, path, compact = true) {
     // serialize the object at the end of the path, dropping
     // non-string path elements (which are indexRanges)
     const childSummaries = serializeChildSummary(
-      get(window[rootObjName], path.filter(isString))
+      getObjAtPath(window[rootObjName], path.filter(isString))
     );
     // if (compact !== true) {
     //   // in this case, split up long RangeDescriptors

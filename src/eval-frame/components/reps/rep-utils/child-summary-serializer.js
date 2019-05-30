@@ -192,10 +192,6 @@ export function serializeSetIndexPathsForRange(set, min, max) {
 
 // MAP
 
-// keeping track of objectIds here
-// could result in a memory leak, this is a good use case for WeakRefs
-export const MAP_OBJECT_IDS = {};
-
 function serializeMapPathsSummary(map, previewNum = 5) {
   const childItems = [];
   let i = 0;

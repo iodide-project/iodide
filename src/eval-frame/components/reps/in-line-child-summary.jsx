@@ -180,10 +180,6 @@ MapKeyValSummaryItem.propTypes = {
   summaryItem: PropTypes.instanceOf(MapPairSummaryItem)
 };
 
-{
-  /* <MediumKeyValSummary mappingDelim=" → " {...{ children }} />; */
-}
-
 // const InlineChildSummary = ({ childItems, parentType }) => {
 // console.log("{ childItems, parentType }", { childItems, parentType });
 // if (numericIndexTypes.includes(parentType)) {

@@ -6,8 +6,8 @@ import InlineChildSummary from "./in-line-child-summary";
 import {
   ValueSummary,
   RangeDescriptor,
-  SubstringRangeSummaryItem
-  // MapPairSummaryItem
+  SubstringRangeSummaryItem,
+  MapPairSummaryItem
 } from "./rep-utils/rep-serialization-core-types";
 
 import ValueSummaryRep from "./value-summary";
@@ -140,15 +140,6 @@ export default class ExpandableRep extends React.Component {
     const childItems = expanded ? (
       <ChildSummariesContainer>
         {childSummaries.childItems.map(summaryItem => {
-          // if (summaryItem instanceof MapPairSummaryItem) {
-          //   return (
-          //     <MapPairFullRep
-          //       key={JSON.stringify(summaryItem.path)}
-          //       summaryItem={summaryItem}
-          //     />
-          //   );
-          // }
-
           const { path, summary } = summaryItem;
 
           if (summaryItem instanceof SubstringRangeSummaryItem) {
@@ -161,6 +152,19 @@ export default class ExpandableRep extends React.Component {
                 key={JSON.stringify(path)}
                 valueSummary={summary}
                 pathLabel={path}
+              />
+            );
+          }
+
+          if (summaryItem instanceof MapPairSummaryItem) {
+            return (
+              <MapPairFullRep
+                key={JSON.stringify(path)}
+                pathLabel={path}
+                {...summaryItem}
+                pathToMapPair={[...pathToEntity, path]}
+                getChildSummaries={getChildSummaries}
+                rootObjName={rootObjName}
               />
             );
           }
@@ -197,36 +201,68 @@ export default class ExpandableRep extends React.Component {
   }
 }
 
-// export class MapPairFullRep extends React.Component {
-//   static propTypes = {
-//     summaryItem: PropTypes.instanceOf(MapPairSummaryItem).isRequired
-//   };
-//   render() {
-//     return (
-//       <ExpandableRep
-//         key={JSON.stringify(path)}
-//         pathLabel={"<key>"}
-//         valueSummary={summary}
-//         pathToEntity={[...pathToEntity, path]}
-//         getChildSummaries={getChildSummaries}
-//         rootObjName={rootObjName}
-//       />
-//       <ExpandableRep
-//         key={JSON.stringify(path)}
-//         pathLabel={path}
-//         valueSummary={summary}
-//         pathToEntity={[...pathToEntity, path]}
-//         getChildSummaries={getChildSummaries}
-//         rootObjName={rootObjName}
-//       />
+export class MapPairFullRep extends React.Component {
+  static propTypes = {
+    keySummary: PropTypes.instanceOf(ValueSummary),
 
-//       // <LabelAndSummaryContainer>
-//       //   <Expander expansion="NONE" />
-//       //   <div>
-//       //     <PathLabelRep pathLabel={this.props.pathLabel} />
-//       //     <ValueSummaryRep {...this.props.valueSummary} />
-//       //   </div>
-//       // </LabelAndSummaryContainer>
-//     );
-//   }
-// }
+    valSummary: PropTypes.instanceOf(ValueSummary),
+
+    pathToMapPair: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.instanceOf(RangeDescriptor)
+      ])
+    ).isRequired,
+
+    getChildSummaries: PropTypes.func.isRequired,
+    rootObjName: PropTypes.string,
+    pathLabel: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.instanceOf(RangeDescriptor)
+    ])
+  };
+  render() {
+    const {
+      pathToMapPair,
+      keySummary,
+      valSummary,
+      getChildSummaries,
+      rootObjName,
+      pathLabel,
+      path
+    } = this.props;
+    return (
+      <LabelAndSummaryContainer>
+        <div>
+          <PathLabelRep pathLabel={pathLabel} />
+        </div>
+        <div>
+          <ExpandableRep
+            key={`${JSON.stringify(path)}-key`}
+            pathLabel="key"
+            valueSummary={keySummary}
+            pathToEntity={[...pathToMapPair, "MAP_KEY"]}
+            getChildSummaries={getChildSummaries}
+            rootObjName={rootObjName}
+          />
+          <ExpandableRep
+            key={`${JSON.stringify(path)}-value`}
+            pathLabel="value"
+            valueSummary={valSummary}
+            pathToEntity={[...pathToMapPair, "MAP_VAL"]}
+            getChildSummaries={getChildSummaries}
+            rootObjName={rootObjName}
+          />
+        </div>
+      </LabelAndSummaryContainer>
+
+      // <LabelAndSummaryContainer>
+      //   <Expander expansion="NONE" />
+      //   <div>
+      //     <PathLabelRep pathLabel={this.props.pathLabel} />
+      //     <ValueSummaryRep {...this.props.valueSummary} />
+      //   </div>
+      // </LabelAndSummaryContainer>
+    );
+  }
+}
