@@ -15,7 +15,6 @@ import {
 import { splitIndexRange, RANGE_SPLIT_THRESHOLD } from "./split-index-range";
 
 export function expandRangesInChildSummaries(childSummaries) {
-  // console.log("expandRangesInChildSummaries", childSummaries);
   const { childItems, summaryType } = childSummaries;
   const finalSubpaths = [];
   for (const summaryItem of childItems) {
@@ -43,6 +42,7 @@ function getIteratorAtIndex(iterator, index) {
     if (i === index) return item;
     i += 1;
   }
+  throw new RangeError("map index not found in iterator");
 }
 
 function getObjAtPath(baseObj, repPath) {
@@ -55,7 +55,6 @@ function getObjAtPath(baseObj, repPath) {
   while (obj != null && index < length) {
     const pathElt = queryPath[index];
     if (obj instanceof Map) {
-      console.log("GETTING MAP PATH");
       // figure out the index of the key/val pair in map.entries()
       if (!isFinite(pathElt)) {
         throw new TypeError(
@@ -71,13 +70,10 @@ function getObjAtPath(baseObj, repPath) {
           "paths into a map object must have MAP_KEY or MAP_VAL after the index into map.entries"
         );
       }
-      console.log("GETTING MAP PATH, obj pre lookup:", obj);
-
       obj =
         keyOrVal === "MAP_KEY"
           ? getIteratorAtIndex(obj.keys(), Number(mapEntryIndex))
           : getIteratorAtIndex(obj.values(), Number(mapEntryIndex));
-      console.log("GETTING MAP PATH, obj:", obj);
     } else {
       obj = obj[pathElt];
     }

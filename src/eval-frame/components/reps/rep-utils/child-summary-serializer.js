@@ -132,8 +132,6 @@ function serializeStringPathsSummary(strObj) {
     "STRING_RANGE"
   );
 
-  console.log("splitting in serializeStringPathsSummary");
-
   return splitIndexRange(initialRange, MAX_SUMMARY_STRING_LEN).map(
     rangeDescriptor => new ChildSummaryItem(rangeDescriptor, null)
   );

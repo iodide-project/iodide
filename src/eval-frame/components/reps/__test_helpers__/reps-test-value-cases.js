@@ -221,9 +221,7 @@ export const compositeObjects = {
       "a5-2": ["a5-2-1", "a5-2-2"],
       "a5-3": {}
     },
-    a6: () => {
-      console.log("hello world");
-    },
+    a6: () => Math.sin(Math.random()),
     a7: new Date("2005-04-03"),
     [Symbol("a symbol key")]: Symbol("a symbol value"),
     [Symbol(
@@ -244,7 +242,7 @@ class Animal {
     this.isMortal = true;
   }
   speak() {
-    console.log(`${this.name} makes an animal noise.`);
+    return `${this.name} makes an animal noise.`;
   }
 }
 
@@ -255,7 +253,7 @@ class Dog extends Animal {
   }
 
   speak() {
-    console.log(`${this.name} makes a "woofing" noise.`);
+    return `${this.name} makes a "woofing" noise.`;
   }
 
   toggleWag() {
@@ -271,7 +269,7 @@ class AVeryLongKindOfDogLikeADachsundProbably extends Dog {
   }
 
   speak() {
-    console.log(`${this.name} emits a shrill chirp.`);
+    return `${this.name} emits a shrill chirp.`;
   }
 
   toggleWag() {

@@ -181,7 +181,6 @@ MapKeyValSummaryItem.propTypes = {
 };
 
 // const InlineChildSummary = ({ childItems, parentType }) => {
-// console.log("{ childItems, parentType }", { childItems, parentType });
 // if (numericIndexTypes.includes(parentType)) {
 //   return <MediumListSummary childItems={childItems} />;
 //   // } else if (parentType === "Map") {

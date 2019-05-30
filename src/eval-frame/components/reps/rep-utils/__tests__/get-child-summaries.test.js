@@ -36,7 +36,6 @@ function newChildSummaryMock(summaryType = "MOCK_PATH_SUMMARY") {
 
 describe("expandRangesInChildSummaries returns identical childItems if no RangeDescriptors exist", () => {
   const childSummary = newChildSummaryMock();
-  // console.log("childSummary", childSummary);
   const expandedSummary = expandRangesInChildSummaries(childSummary);
   it(`no-op if summary has no RangeDescriptors`, () =>
     expect(childSummary).toEqual(expandedSummary));
@@ -51,7 +50,6 @@ describe("expandRangesInChildSummaries replaces ranges correctly in all cases", 
   ].forEach(testRange => {
     const childSummary = newChildSummaryMock();
     childSummary[5] = new ChildSummaryItem(testRange, null);
-    // console.log("childSummary", childSummary);
     it(`always returns a valid child summary; ${JSON.stringify(
       testRange
     )}`, () => expect(isValidChildSumary(childSummary)).toBe(true));
@@ -90,9 +88,7 @@ describe("getChildSummary - walking down tree", () => {
 
     for (let depth = 0; depth < 5; depth++) {
       if (childSummary.childItems.length > 0) {
-        // console.log("childSummary", childSummary);
         lookupPath.push(childSummary.childItems[0].path);
-        // console.log("lookupPath", lookupPath);
         childSummary = getChildSummary("window", lookupPath, false);
 
         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
