@@ -174,7 +174,7 @@ window.STORYBOOK_TEST_CASES = {};
 allTestCases.add("full rep", () => {
   return (
     <div style={{ maxWidth: "100%" }}>
-      <table>
+      <table style={{ borderSpacing: "0 15px" }}>
         <thead style={headerStyle}>
           <tr key="header">
             <td>test case</td>
