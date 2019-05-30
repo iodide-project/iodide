@@ -159,11 +159,15 @@ InlineKeyValSummary.propTypes = {
 
 const MapKeyValSummaryItem = ({ summaryItem }) => {
   const { keySummary, valSummary, path } = summaryItem;
-  console.log("{ keySummary, valSummary, path }", {
-    keySummary,
-    valSummary,
-    path
-  });
+
+  if (path instanceof RangeDescriptor) {
+    return (
+      <TinyRangeRep
+        key={JSON.stringify(summaryItem.path)}
+        number={path.max - path.min + 1}
+      />
+    );
+  }
   return (
     <React.Fragment key={JSON.stringify(path)}>
       <ValueSummary tiny {...keySummary} />
@@ -235,13 +239,13 @@ const InlineChildSummary = ({ childItems, summaryType }) => {
           summaryItemRep={InlineKeyValSummaryItem}
         />
       );
-    // case "MAP_PATH_SUMMARY":
-    //   return (
-    //     <InlineKeyValSummary
-    //       childItems={childItems}
-    //       summaryItemRep={MapKeyValSummaryItem}
-    //     />
-    //   );
+    case "MAP_PATH_SUMMARY":
+      return (
+        <InlineKeyValSummary
+          childItems={childItems}
+          summaryItemRep={MapKeyValSummaryItem}
+        />
+      );
     default:
       return "";
   }
