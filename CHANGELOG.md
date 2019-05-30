@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.7.0 (2019-05-30)
+
 - Better behaviour around saving, especially when multiple copies
   of a notebook are open simultaneously. Note that as part of this
   work, iodide will no longer save in (unsupported) standalone mode.
