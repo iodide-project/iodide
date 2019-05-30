@@ -11,7 +11,7 @@ import {
   RangeDescriptor,
   ChildSummary,
   ChildSummaryItem,
-  StringRangeSummaryItem,
+  SubstringRangeSummaryItem,
   MapPairSummaryItem
 } from "./rep-serialization-core-types";
 import { splitIndexRange } from "./split-index-range";
@@ -32,7 +32,7 @@ export const numericIndexTypes = [
   "Float64Array"
 ];
 
-const objectLikeTypes = [
+export const objectLikeTypes = [
   "HTMLCollection",
   "Window",
   "HTMLDocument",
@@ -141,7 +141,7 @@ function serializeStringPathsSummary(strObj) {
 
 export function serializeStringSummaryForRange(strObj, min, max) {
   return [
-    new StringRangeSummaryItem(
+    new SubstringRangeSummaryItem(
       new RangeDescriptor(min, max, "STRING_RANGE"),
       serializeForValueSummary(strObj.slice(min, max + 1))
     )
@@ -174,8 +174,9 @@ function serializeSetPathsSummary(set, previewNum = 5) {
 export function serializeSetIndexPathsForRange(set, min, max) {
   const childItems = [];
   let i = 0;
-  // this is not an efficient way to do this, but in JS
-  // sets only let you loop over the whole enum
+  // this is not an efficient way to do this, but JS
+  // sets only let you loop over the whole `values` enum,
+  // you can't look up by index
   for (const value of set.values()) {
     if (i > max) {
       return childItems;
@@ -191,25 +192,37 @@ export function serializeSetIndexPathsForRange(set, min, max) {
 
 // MAP
 
+// keeping track of objectIds here
+// could result in a memory leak, this is a good use case for WeakRefs
+export const MAP_OBJECT_IDS = {};
+
 function serializeMapPathsSummary(map, previewNum = 5) {
-  const summary = [];
-  // let i = 0;
-  // for (const [key, value] of map.entries()) {
-  //   if (i >= previewNum) {
-  //     summary.push({
-  //       objType: "REPS_META_MORE",
-  //       number: objSize(map) - previewNum
-  //     });
-  //     return summary;
-  //   }
-  //   summary.push({
-  //     path: serializeForValueSummary(key),
-  //     summary: serializeForValueSummary(value)
-  //   });
-  //   i += 1;
-  // }
-  return summary;
+  const childItems = [];
+  let i = 0;
+  for (const [key, value] of map.entries()) {
+    if (i >= previewNum) {
+      childItems.push(
+        new ChildSummaryItem(
+          new RangeDescriptor(i, objSize(map), "MAP_INDEX_RANGE"),
+          null
+        )
+      );
+      return childItems;
+    }
+
+    childItems.push(
+      new MapPairSummaryItem(
+        String(i),
+        serializeForValueSummary(key),
+        serializeForValueSummary(value)
+      )
+    );
+    i += 1;
+  }
+  return childItems;
 }
+
+// PUBLIC ENTRY POINT
 
 export function serializeChildSummary(obj) {
   const type = getType(obj);
@@ -219,11 +232,8 @@ export function serializeChildSummary(obj) {
       serializeArrayPathsSummary(obj),
       "ARRAY_PATH_SUMMARY"
     );
-    // } else if (type === "Map") {
-    //   return {
-    //     childItems: serializeMapPathsSummary(obj),
-    //     summaryType: "MAP_PATH_SUMMARY"
-    //   };
+  } else if (type === "Map") {
+    return new ChildSummary(serializeMapPathsSummary(obj), "MAP_PATH_SUMMARY");
   } else if (type === "Set") {
     return new ChildSummary(serializeSetPathsSummary(obj), "SET_PATH_SUMMARY");
   } else if (type === "String") {

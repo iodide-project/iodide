@@ -22,7 +22,6 @@ export function splitIndexRange(
   rangeSplitThreshold = RANGE_SPLIT_THRESHOLD
 ) {
   const { min, max, type } = rangeDescriptor;
-  console.log("inside split fn", rangeDescriptor);
 
   const rangeSize = max - min;
   // if (type === "STRING_RANGE" && rangeSize < 1000) return [rangeDescriptor];

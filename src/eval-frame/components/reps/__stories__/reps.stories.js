@@ -186,6 +186,8 @@ allTestCases.add("getChildSummary", () => {
   );
 });
 
+window.STORYBOOK_TEST_CASES = {};
+
 allTestCases.add("full rep", () => {
   return (
     <div style={{ maxWidth: "100%" }}>
@@ -200,9 +202,9 @@ allTestCases.add("full rep", () => {
         <tbody>
           {Object.entries(allCases).map(caseNameAndVal => {
             const [name, value] = caseNameAndVal;
-            window[name] = value;
+            window.STORYBOOK_TEST_CASES[name] = value;
             const serializedValueSummary = serializeForValueSummary(
-              window[name]
+              window.STORYBOOK_TEST_CASES[name]
             );
             return (
               <tr key={name}>
@@ -212,7 +214,7 @@ allTestCases.add("full rep", () => {
                     pathToEntity={[name]}
                     valueSummary={serializedValueSummary}
                     getChildSummaries={getChildSummary}
-                    rootObjName="window"
+                    rootObjName="STORYBOOK_TEST_CASES"
                   />
                 </td>
               </tr>

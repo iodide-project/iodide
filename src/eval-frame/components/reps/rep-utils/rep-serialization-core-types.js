@@ -4,7 +4,8 @@
 // These are just a container classes to clarify semantics and
 // to clarify code by not putting plain objects everywhere.
 // All of these containers need to be serializable, so they
-// should not have methods etc.
+// should not have methods beyond getters -- no internal state
+// or internal state mutation.
 // They are really basically to be used as type definitions,
 // since the rep serialization machinery benefits from precise types.
 
@@ -13,8 +14,8 @@
 const nonExpandableTypes = ["Function", "GeneratorFunction", "Date", "RegExp"];
 
 export class ValueSummary {
-  // Contains a summary info about an object/value (e.g.,
-  // without info about child objects, if any).
+  // Contains top-level summary info about an object/value,
+  // but without info about child objects.
   // This info is sufficient to produce a "tiny rep"
   constructor(objType, size, stringValue, isTruncated) {
     this.objType = objType; // string
@@ -22,19 +23,22 @@ export class ValueSummary {
     this.stringValue = stringValue; // string
     this.isTruncated = isTruncated; // bool
   }
+
   get isExpandable() {
     if (nonExpandableTypes.includes(this.objType)) return false;
 
-    return (this.objType === "String" && this.isTruncated) || this.size > 0;
+    if (this.objType === "String") return this.isTruncated;
+
+    return this.size > 0;
   }
 }
 
 export class RangeDescriptor {
   // Describes a range of indices among the children of an object.
-  // note: these ranges are INCLUSIVE of their endpoints.
-  // this defies lodash convention in some places, but make viz easier
+  // IMPORTANT: these ranges are INCLUSIVE of their endpoints.
   constructor(min, max, type = "ARRAY_RANGE") {
-    if (max <= min) {
+    if (max < min) {
+      // note: can technically be equal since the ranges are inclusive
       throw new TypeError(
         `invalid input to RangeDescriptor ${JSON.stringify({
           max,
@@ -54,7 +58,7 @@ export class ChildSummary {
   // of an object. These can be either values or ranges of indices.
   constructor(childItems, summaryType) {
     this.childItems = childItems; // array of ChildSummaryItems
-    this.summaryType = summaryType; // ValueSummary or null
+    this.summaryType = summaryType; // string
   }
 }
 
@@ -69,11 +73,11 @@ export class ChildSummaryItem {
   }
 }
 
-export class StringRangeSummaryItem extends ChildSummaryItem {
-  // an item in a ChildSummary. Contains
-  // (1) a path, which can be a a key in an object, or a
-  // RangeDescriptor to narrow in on a range
-  // (2) a summary, which is null IFF the path is a RangeDescriptor
+export class SubstringRangeSummaryItem extends ChildSummaryItem {
+  // a SubstringRangeSummaryItem always has `path` of class
+  // RangeDescriptor and `summary` of class ValueSummary.
+  // In this case, the ValueSummary is a substring of the
+  // parent string
   constructor(path, summary) {
     super();
     this.path = path; // RangeDescriptor
@@ -82,14 +86,42 @@ export class StringRangeSummaryItem extends ChildSummaryItem {
 }
 
 export class MapPairSummaryItem extends ChildSummaryItem {
-  // an item in a ChildSummary. Contains
-  // (1) a path, which can be a a key in an object, or a
-  // RangeDescriptor to narrow in on a range
-  // (2) a summary, which is null IFF the path is a RangeDescriptor
-  constructor(path, keySummary, valSummary) {
+  constructor(mapEntryIndex, keySummary, valSummary) {
     super();
-    this.path = path; // RangeDescriptor
+    this.path = mapEntryIndex; // int
     this.keySummary = keySummary; // ValueSummary
     this.valSummary = valSummary; // ValueSummary
   }
 }
+
+// export class MapKeyPathItem {
+//   constructor(mapEntryIndex, summary) {
+//     super();
+//     this.path = mapEntryIndex,
+//       this.summary = summary; // ValueSummary
+//   }
+// }
+
+// export class MapKeyPathItem {
+//   constructor(mapEntryIndex, summary) {
+//     super();
+//     this.path = mapEntryIndex,
+//     this.summary = summary; // ValueSummary
+//   }
+// }
+// export class MapPathItem {
+//   constructor(mapEntryIndex, keyOrVal, summary) {
+//     super();
+//     this.path = mapEntryIndex,
+//     this.keyOrVal = keyOrVal//
+//     this.summary = summary; // ValueSummary
+//   }
+// }
+
+// export class MapKeySummaryItem extends ChildSummaryItem {
+//   constructor(path, summary) {
+//     super();
+//     this.path = path; // MapKeyPathItem
+//     this.summary = summary; // ValueSummary
+//   }
+// }

@@ -6,8 +6,8 @@ import InlineChildSummary from "./in-line-child-summary";
 import {
   ValueSummary,
   RangeDescriptor,
-  StringRangeSummaryItem,
-  MapPairSummaryItem
+  SubstringRangeSummaryItem
+  // MapPairSummaryItem
 } from "./rep-utils/rep-serialization-core-types";
 
 import ValueSummaryRep from "./value-summary";
@@ -140,18 +140,18 @@ export default class ExpandableRep extends React.Component {
     const childItems = expanded ? (
       <ChildSummariesContainer>
         {childSummaries.childItems.map(summaryItem => {
-          if (summaryItem instanceof MapPairSummaryItem) {
-            return (
-              <MapPairFullRep
-                key={JSON.stringify(summaryItem.path)}
-                summaryItem={summaryItem}
-              />
-            );
-          }
+          // if (summaryItem instanceof MapPairSummaryItem) {
+          //   return (
+          //     <MapPairFullRep
+          //       key={JSON.stringify(summaryItem.path)}
+          //       summaryItem={summaryItem}
+          //     />
+          //   );
+          // }
 
           const { path, summary } = summaryItem;
 
-          if (summaryItem instanceof StringRangeSummaryItem) {
+          if (summaryItem instanceof SubstringRangeSummaryItem) {
             return <ValueSummaryRep key={JSON.stringify(path)} {...summary} />;
           }
 
