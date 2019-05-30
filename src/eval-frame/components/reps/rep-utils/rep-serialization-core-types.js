@@ -37,15 +37,17 @@ export class RangeDescriptor {
   // Describes a range of indices among the children of an object.
   // IMPORTANT: these ranges are INCLUSIVE of their endpoints.
   constructor(min, max, type = "ARRAY_RANGE") {
-    if (max < min) {
-      // note: can technically be equal since the ranges are inclusive
-      throw new TypeError(
-        `invalid input to RangeDescriptor ${JSON.stringify({
-          max,
-          min,
-          type
-        })}`
-      );
+    if (process.env.NODE_ENV !== "production") {
+      if (max < min) {
+        // note: can technically be equal since the ranges are inclusive
+        throw new TypeError(
+          `invalid input to RangeDescriptor ${JSON.stringify({
+            max,
+            min,
+            type
+          })}`
+        );
+      }
     }
     this.min = min; // numeric, required
     this.max = max; // numeric, required
@@ -93,35 +95,3 @@ export class MapPairSummaryItem extends ChildSummaryItem {
     this.valSummary = valSummary; // ValueSummary
   }
 }
-
-// export class MapKeyPathItem {
-//   constructor(mapEntryIndex, summary) {
-//     super();
-//     this.path = mapEntryIndex,
-//       this.summary = summary; // ValueSummary
-//   }
-// }
-
-// export class MapKeyPathItem {
-//   constructor(mapEntryIndex, summary) {
-//     super();
-//     this.path = mapEntryIndex,
-//     this.summary = summary; // ValueSummary
-//   }
-// }
-// export class MapPathItem {
-//   constructor(mapEntryIndex, keyOrVal, summary) {
-//     super();
-//     this.path = mapEntryIndex,
-//     this.keyOrVal = keyOrVal//
-//     this.summary = summary; // ValueSummary
-//   }
-// }
-
-// export class MapKeySummaryItem extends ChildSummaryItem {
-//   constructor(path, summary) {
-//     super();
-//     this.path = path; // MapKeyPathItem
-//     this.summary = summary; // ValueSummary
-//   }
-// }

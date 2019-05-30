@@ -256,13 +256,6 @@ export class MapPairFullRep extends React.Component {
         </div>
       </LabelAndSummaryContainer>
 
-      // <LabelAndSummaryContainer>
-      //   <Expander expansion="NONE" />
-      //   <div>
-      //     <PathLabelRep pathLabel={this.props.pathLabel} />
-      //     <ValueSummaryRep {...this.props.valueSummary} />
-      //   </div>
-      // </LabelAndSummaryContainer>
     );
   }
 }

@@ -86,8 +86,7 @@ function getObjAtPath(baseObj, repPath) {
   return obj;
 }
 
-export function getChildSummary(rootObjName, path, compact = true) {
-  // console.log("getChildSummary(rootObjName, path,", rootObjName, path);
+export function getChildSummary(rootObjName, path) {
   const pathEnd = path[path.length - 1];
   if (isString(pathEnd)) {
     // if the last item in the path is a string,
@@ -96,10 +95,6 @@ export function getChildSummary(rootObjName, path, compact = true) {
     const childSummaries = serializeChildSummary(
       getObjAtPath(window[rootObjName], path.filter(isString))
     );
-    // if (compact !== true) {
-    //   // in this case, split up long RangeDescriptors
-    //   return expandRangesInChildSummaries(childSummaries);
-    // }
     return childSummaries;
   }
   // if the end of the path is not a string, it must be an RangeDescriptor.
@@ -107,7 +102,6 @@ export function getChildSummary(rootObjName, path, compact = true) {
   const { min, max, type } = pathEnd;
   const rangeSize = max - min;
   if (type === "STRING_RANGE" && rangeSize > MAX_SUMMARY_STRING_LEN) {
-    // console.log("SPLITTING STRING RANGE", pathEnd);
     return new ChildSummary(
       splitIndexRange(pathEnd, MAX_SUMMARY_STRING_LEN).map(
         range => new ChildSummaryItem(range, null)
@@ -115,9 +109,7 @@ export function getChildSummary(rootObjName, path, compact = true) {
       "STRING_DESCRIPTOR_SUBRANGES"
     );
   } else if (type !== "STRING_RANGE" && rangeSize > RANGE_SPLIT_THRESHOLD) {
-    // console.log("SPLITTING other RANGE", pathEnd);
     // if this range is too big, expand into subranges
-
     const tempChildSummariesForExpansion = new ChildSummary(
       [new ChildSummaryItem(pathEnd, null)],
       "RANGE_DESCRIPTOR_SUBRANGES"

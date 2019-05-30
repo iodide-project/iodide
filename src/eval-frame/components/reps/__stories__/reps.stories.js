@@ -28,8 +28,6 @@ import InlineChildSummary from "../in-line-child-summary";
 
 import ExpandableRep from "../rep-tree";
 
-// import ValueRenderer from "../value-renderer";
-
 import TableRenderer from "../data-table-rep";
 
 // attach the test cases to the window to allow comparing with browser devtools
@@ -155,27 +153,12 @@ allTestCases.add("getChildSummary", () => {
           {Object.entries(allCases).map(caseNameAndVal => {
             const [name, value] = caseNameAndVal;
             window[name] = value;
-            const path0 = [name];
-            const path1 = [name, "0"];
             return (
               <>
                 <tr key={name}>
                   <td>{name}</td>
-                  <td>{JSON.stringify(path0)}</td>
-                  <td>{JSON.stringify(getChildSummary("window", path0))}</td>
-                </tr>
-
-                <tr key={`${name}-not-compact${1}`}>
-                  <td>{name}</td>
-                  <td>{JSON.stringify(path0)} - not compact</td>
-                  <td>
-                    {JSON.stringify(getChildSummary("window", path0, false))}
-                  </td>
-                </tr>
-                <tr key={`${name}-path${1}`}>
-                  <td>{name}</td>
-                  <td>{JSON.stringify(path1)}</td>
-                  <td>{JSON.stringify(getChildSummary("window", path1))}</td>
+                  <td>{JSON.stringify([name])}</td>
+                  <td>{JSON.stringify(getChildSummary("window", [name]))}</td>
                 </tr>
               </>
             );
@@ -196,7 +179,6 @@ allTestCases.add("full rep", () => {
           <tr key="header">
             <td>test case</td>
             <td>rep</td>
-            {/* <td>getChildSummaries summary</td> */}
           </tr>
         </thead>
         <tbody>

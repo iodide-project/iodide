@@ -1,9 +1,6 @@
 import { RangeDescriptor } from "./rep-serialization-core-types";
 
-// these defaults are
-// const DEFAULT_NUM_RANGE_BINS = 10;
 export const RANGE_SPLIT_THRESHOLD = 50;
-
 export const MAX_NUM_SUBRANGES = 30;
 
 function targetNumSubRanges(rangeSize) {
@@ -13,7 +10,7 @@ function targetNumSubRanges(rangeSize) {
 }
 
 function targetNumStringSubRanges(rangeSize) {
-  return 10; //for now
+  return 10; // for now
 }
 
 export function splitIndexRange(
@@ -24,7 +21,6 @@ export function splitIndexRange(
   const { min, max, type } = rangeDescriptor;
 
   const rangeSize = max - min;
-  // if (type === "STRING_RANGE" && rangeSize < 1000) return [rangeDescriptor];
 
   // no need to split bins smaller than a certain size
   if (rangeSize <= rangeSplitThreshold || rangeSize <= minBinSize)
@@ -47,22 +43,18 @@ export function splitIndexRange(
   // this is a bit of footwork to set the lower bound of each bin after the first to be a nice round number
   // const firstBinMax = Math.ceil(min/binSize)*binSize
 
-  try {
-    const ranges = [new RangeDescriptor(min, min + binSize - 1, type)];
-    let binLowBound;
-    for (
-      binLowBound = min + binSize;
-      binLowBound + binSize < max;
-      binLowBound += binSize
-    ) {
-      ranges.push(
-        new RangeDescriptor(binLowBound, binLowBound + binSize - 1, type)
-      );
-    }
-    ranges.push(new RangeDescriptor(binLowBound, max, type));
-
-    return ranges;
-  } catch (e) {
-    throw e;
+  const ranges = [new RangeDescriptor(min, min + binSize - 1, type)];
+  let binLowBound;
+  for (
+    binLowBound = min + binSize;
+    binLowBound + binSize < max;
+    binLowBound += binSize
+  ) {
+    ranges.push(
+      new RangeDescriptor(binLowBound, binLowBound + binSize - 1, type)
+    );
   }
+  ranges.push(new RangeDescriptor(binLowBound, max, type));
+
+  return ranges;
 }
