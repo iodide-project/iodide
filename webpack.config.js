@@ -31,9 +31,6 @@ let { EVAL_FRAME_ORIGIN } = process.env;
 const { USE_OPENIDC_AUTH } = process.env;
 const { IODIDE_PUBLIC } = process.env || false;
 
-const PYODIDE_VERSION = process.env.PYODIDE_VERSION || "0.12.0";
-process.env.PYODIDE_VERSION = PYODIDE_VERSION;
-
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || "dev";
 
 const APP_DIR = path.resolve(__dirname, "src/");
@@ -165,7 +162,6 @@ module.exports = env => {
           env && env.startsWith("dev") ? "dev" : "production"
         ),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
-        PYODIDE_VERSION: JSON.stringify(PYODIDE_VERSION),
         USE_OPENIDC_AUTH: JSON.stringify(USE_OPENIDC_AUTH),
         IODIDE_PUBLIC: !!IODIDE_PUBLIC
       }),
@@ -174,9 +170,6 @@ module.exports = env => {
       }),
       new WriteFilePlugin(),
       // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
-      new WebpackShellPlugin({
-        onBuildStart: [`bin/install_pyodide ${BUILD_DIR}/pyodide`]
-      })
     ],
     devServer: {
       contentBase: path.join(__dirname, "build"),

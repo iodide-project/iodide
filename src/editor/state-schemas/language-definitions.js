@@ -1,5 +1,3 @@
-/* global PYODIDE_VERSION */
-
 // This defines the "built-in" language definitions
 
 export const jsLanguageDefinition = {
@@ -19,7 +17,7 @@ const pyLanguageDefinition = {
   displayName: "Python",
   codeMirrorMode: "python",
   keybinding: "p",
-  url: `/pyodide-${PYODIDE_VERSION}/pyodide.js`,
+  url: `https://pyodide.netlify.com/pyodide.js`,
   module: "pyodide",
   evaluator: "runPython",
   asyncEvaluator: "runPythonAsync",
