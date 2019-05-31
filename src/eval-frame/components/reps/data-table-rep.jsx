@@ -8,8 +8,13 @@ import "./react-table-styles.css";
 
 import { serializeForValueSummary } from "./rep-utils/value-summary-serializer";
 
-import DefaultRenderer from "./default-handler";
-import ValueSummary from "./value-summary";
+// import DefaultRenderer from "./default-handler";
+import ExpandableRep from "./rep-tree";
+
+import { getChildSummary } from "./rep-utils/get-child-summaries";
+import { RangeDescriptor } from "./rep-utils/rep-serialization-core-types";
+
+import ValueSummaryRep from "./value-summary";
 
 const TableDetails = styled.div`
   border: solid #e5e5e5;
@@ -23,15 +28,28 @@ const TableDetailsMessage = styled.div`
   padding-bottom: ${props => (props.pad ? "3px" : "0px")};
 `;
 
-const CellDetails = props => {
-  if (props.focusedRow !== undefined && props.focusedCol !== undefined) {
-    const focusedPath = `[${props.focusedRow}]["${props.focusedCol}"]`;
+const CellDetails = ({
+  focusedRow,
+  focusedCol,
+  value,
+  rootObjName,
+  pathToEntity
+}) => {
+  if (focusedRow !== undefined && focusedCol !== undefined) {
+    const focusedPath = `[${focusedRow}]["${focusedCol}"]`;
+    const valueSummary = serializeForValueSummary(get(value, focusedPath));
     return (
       <TableDetails>
         <TableDetailsMessage pad>
           {`details for ${focusedPath}`}
         </TableDetailsMessage>
-        <DefaultRenderer value={get(props.value, focusedPath)} />
+        {/* <DefaultRenderer value={get(props.value, focusedPath)} /> */}
+        <ExpandableRep
+          pathToEntity={[...pathToEntity, String(focusedRow), focusedCol]}
+          valueSummary={valueSummary}
+          getChildSummaries={getChildSummary}
+          rootObjName={rootObjName}
+        />
       </TableDetails>
     );
   }
@@ -44,7 +62,14 @@ const CellDetails = props => {
 CellDetails.propTypes = {
   value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   focusedRow: PropTypes.number,
-  focusedCol: PropTypes.string
+  focusedCol: PropTypes.string,
+  pathToEntity: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.instanceOf(RangeDescriptor)
+    ])
+  ).isRequired,
+  rootObjName: PropTypes.string
 };
 
 class CellRenderer extends React.PureComponent {
@@ -64,7 +89,7 @@ class CellRenderer extends React.PureComponent {
             : "none"
         }}
       >
-        <ValueSummary tiny {...serializeForValueSummary(this.props.value)} />
+        <ValueSummaryRep tiny {...serializeForValueSummary(this.props.value)} />
       </div>
     );
   }
@@ -75,7 +100,16 @@ const MIN_CELL_CHAR_WIDTH = 22;
 
 export default class TableRenderer extends React.PureComponent {
   static propTypes = {
-    value: PropTypes.any // eslint-disable-line react/forbid-prop-types
+    value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+    pathToEntity: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.instanceOf(RangeDescriptor)
+      ])
+    ).isRequired,
+    // valueSummary: PropTypes.instanceOf(ValueSummary),
+    // getChildSummaries: PropTypes.func.isRequired,
+    rootObjName: PropTypes.string
   };
 
   constructor(props) {
@@ -134,6 +168,8 @@ export default class TableRenderer extends React.PureComponent {
           value={value}
           focusedRow={this.state.focusedRow}
           focusedCol={this.state.focusedCol}
+          rootObjName={this.props.rootObjName}
+          pathToEntity={this.props.pathToEntity}
         />
       </div>
     );

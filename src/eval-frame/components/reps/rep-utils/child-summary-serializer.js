@@ -216,6 +216,30 @@ function serializeMapPathsSummary(map, previewNum = 5) {
   return childItems;
 }
 
+export function serializeMapIndexPathsForRange(map, min, max) {
+  console.log("map, min, max", map, min, max);
+  const childItems = [];
+  let i = 0;
+  // this is not an efficient way to do this, but JS
+  // sets only let you loop over the whole `values` enum,
+  // you can't look up by index
+  for (const [key, value] of map.entries()) {
+    if (i > max) {
+      return childItems;
+    } else if (i >= min) {
+      childItems.push(
+        new MapPairSummaryItem(
+          String(i),
+          serializeForValueSummary(key),
+          serializeForValueSummary(value)
+        )
+      );
+    }
+    i += 1;
+  }
+  return childItems;
+}
+
 // PUBLIC ENTRY POINT
 
 export function serializeChildSummary(obj) {

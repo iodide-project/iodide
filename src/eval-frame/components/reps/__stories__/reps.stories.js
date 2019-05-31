@@ -214,6 +214,7 @@ tableRep.add("tables", () => {
     <div>
       {Object.entries(rowTableCases).map(caseNameAndVal => {
         const [name, value] = caseNameAndVal;
+        window.STORYBOOK_TEST_CASES[name] = value;
         return (
           <div key={name} style={{ padding: "10px", display: "grid" }}>
             <div style={{ padding: "10px 10px" }}>case: {name}</div>
@@ -225,7 +226,11 @@ tableRep.add("tables", () => {
                 overflowX: "auto"
               }}
             >
-              <TableRenderer value={value} />
+              <TableRenderer
+                value={value}
+                pathToEntity={[name]}
+                rootObjName="STORYBOOK_TEST_CASES"
+              />
             </div>
           </div>
         );

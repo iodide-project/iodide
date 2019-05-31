@@ -1,12 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import DefaultRenderer from "./default-handler";
+// import DefaultRenderer from "./default-handler";
+import ExpandableRep from "./rep-tree";
+
 import ErrorRenderer from "./error-handler";
 import HTMLHandler from "./html-handler";
 import TableRenderer from "./data-table-rep";
 import UserReps from "./user-reps-manager";
+
 import { isRowDf } from "./rep-utils/rep-type-chooser";
+import { serializeForValueSummary } from "./rep-utils/value-summary-serializer";
+import { getChildSummary } from "./rep-utils/get-child-summaries";
 
 import { IODIDE_EVALUATION_RESULTS } from "../../iodide-evaluation-results";
 
@@ -42,9 +47,9 @@ export default class ValueRenderer extends React.Component {
   }
 
   render() {
-    const { valueKey } = this.props;
+    const { valueKey, windowValue } = this.props;
 
-    const value = this.props.windowValue
+    const value = windowValue
       ? window[valueKey]
       : IODIDE_EVALUATION_RESULTS[valueKey];
 
@@ -75,9 +80,22 @@ export default class ValueRenderer extends React.Component {
       case "ERROR_REP":
         return <ErrorRenderer error={value} />;
       case "TABLE_REP":
-        return <TableRenderer value={value} />;
+        return (
+          <TableRenderer
+            value={value}
+            pathToEntity={[valueKey]}
+            rootObjName={windowValue ? "window" : "IODIDE_EVALUATION_RESULTS"}
+          />
+        );
       default:
-        return <DefaultRenderer value={value} />;
+        return (
+          <ExpandableRep
+            pathToEntity={[valueKey]}
+            valueSummary={serializeForValueSummary(value)}
+            getChildSummaries={getChildSummary}
+            rootObjName={windowValue ? "window" : "IODIDE_EVALUATION_RESULTS"}
+          />
+        );
     }
   }
 }

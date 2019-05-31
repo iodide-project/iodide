@@ -4,7 +4,8 @@ import {
   serializeArrayPathsForRange,
   serializeSetIndexPathsForRange,
   serializeObjectPropsPathsForRange,
-  serializeStringSummaryForRange
+  serializeStringSummaryForRange,
+  serializeMapIndexPathsForRange
 } from "./child-summary-serializer";
 import { MAX_SUMMARY_STRING_LEN } from "./value-summary-serializer";
 import {
@@ -144,10 +145,19 @@ export function getChildSummary(rootObjName, path) {
         ),
         "SET_INDEX_PATHS_FOR_RANGE"
       );
+    case "MAP_INDEX_RANGE":
+      return new ChildSummary(
+        serializeMapIndexPathsForRange(
+          getObjAtPath(window[rootObjName], path),
+          min,
+          max
+        ),
+        "MAP_INDEX_PATHS_FOR_RANGE"
+      );
     case "STRING_RANGE":
       return new ChildSummary(
         serializeStringSummaryForRange(
-          get(window[rootObjName], path.filter(isString)),
+          getObjAtPath(window[rootObjName], path.filter(isString)),
           min,
           max
         ),

@@ -146,7 +146,9 @@ export const baseObjects = {
     [Math.random, "three"],
     [{ a: 1, b: 2 }, 54321],
     ["6453423", { c: 654, g: 76543 }],
-    ...new Array(1000).fill(0).map((_, i) => [`key ${i}`, Math.sin(i)])
+    ...new Array(1000)
+      .fill(0)
+      .map((_, i) => [{ [i]: `string ${i}` }, { sinPlusI: i + Math.sin(i) }])
   ]),
   map_empty: new Map(),
   set: new Set([1, 2, 3, 4, 5]),
