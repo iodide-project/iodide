@@ -11,7 +11,14 @@
 
 // one day we'll move to type script and replace all this with interfaces or whatever.
 
-const nonExpandableTypes = ["Function", "GeneratorFunction", "Date", "RegExp"];
+const nonExpandableTypes = [
+  "Function",
+  "GeneratorFunction",
+  "Date",
+  "RegExp",
+  "ArrayBuffer",
+  "DataView"
+];
 
 export class ValueSummary {
   // Contains top-level summary info about an object/value,
