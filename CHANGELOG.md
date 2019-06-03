@@ -9,6 +9,8 @@
 - Detect case where server logged out either due to user intervention
   or session expiry, and offer to recover (fixes #1680)
 - Titles are now autosaved locally (fixes #1599)
+- Pyodide is now deployed separately, so will be on a different update
+  cadence than Iodide.
 
 # 0.6.0 (2019-05-06)
 

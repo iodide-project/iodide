@@ -1,6 +1,5 @@
-/* global PYODIDE_VERSION */
-
 // This defines the "built-in" language definitions
+/* global USE_LOCAL_PYODIDE */
 
 export const jsLanguageDefinition = {
   pluginType: "language",
@@ -14,12 +13,16 @@ export const jsLanguageDefinition = {
   url: ""
 };
 
+const PYODIDE_URL = USE_LOCAL_PYODIDE
+  ? "/pyodide/pyodide.js"
+  : "https://pyodide.iodide.io/pyodide.js";
+
 const pyLanguageDefinition = {
   languageId: "py",
   displayName: "Python",
   codeMirrorMode: "python",
   keybinding: "p",
-  url: `/pyodide-${PYODIDE_VERSION}/pyodide.js`,
+  url: PYODIDE_URL,
   module: "pyodide",
   evaluator: "runPython",
   asyncEvaluator: "runPythonAsync",
