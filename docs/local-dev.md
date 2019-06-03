@@ -73,3 +73,6 @@ mkdocs build
 
 Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.
 
+## Running with a local build of Pyodide
+
+If you want to test your local changes to Pyodide with your local build of Iodide, there are [instructions here](https://github.com/iodide-project/pyodide/pull/455).
