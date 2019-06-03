@@ -30,6 +30,7 @@ let { EDITOR_ORIGIN } = process.env;
 let { EVAL_FRAME_ORIGIN } = process.env;
 const { USE_OPENIDC_AUTH } = process.env;
 const { IODIDE_PUBLIC } = process.env || false;
+const { USE_LOCAL_PYODIDE } = process.env || false;
 
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || "dev";
 
@@ -162,6 +163,7 @@ module.exports = env => {
           env && env.startsWith("dev") ? "dev" : "production"
         ),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
+        USE_LOCAL_PYODIDE: JSON.stringify(USE_LOCAL_PYODIDE),
         USE_OPENIDC_AUTH: JSON.stringify(USE_OPENIDC_AUTH),
         IODIDE_PUBLIC: !!IODIDE_PUBLIC
       }),
