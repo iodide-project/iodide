@@ -3,6 +3,11 @@ import ReactDOM from "react-dom";
 import styled, { keyframes } from "react-emotion";
 import PropTypes from "prop-types";
 
+import {
+  MODAL_ZINDEX,
+  NESTED_MODAL_ZINDEX
+} from "../../editor/style/z-index-styles";
+
 const fadeIn = keyframes`
 0% {
   opacity: 0;
@@ -22,7 +27,8 @@ const Backdrop = styled("div")`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1300;
+  z-index: ${props =>
+    props.aboveOtherModals ? NESTED_MODAL_ZINDEX : MODAL_ZINDEX};
   background-color: rgba(0, 0, 0, 0.3);
   padding: 50;
   padding-top: 200px;
@@ -100,8 +106,20 @@ const enableScrolling = () => {
 
 export default class Modal extends React.Component {
   static propTypes = {
-    children: PropTypes.element
+    visible: PropTypes.bool,
+    onCloseOrCancel: PropTypes.func,
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
+    ]),
+    aboveOtherModals: PropTypes.bool // eslint-disable-line react/no-unused-prop-types
   };
+
+  static defaultProps = {
+    aboveOtherModals: false,
+    visible: true
+  };
+
   constructor(props) {
     super(props);
     this.closeModalOnEscapeKeypress = this.closeModalOnEscapeKeypress.bind(
@@ -114,7 +132,7 @@ export default class Modal extends React.Component {
   }
 
   closeModalOnEscapeKeypress(event) {
-    if (event.key === "Escape") this.props.onClose();
+    if (event.key === "Escape") this.props.onCloseOrCancel();
   }
 
   render() {
@@ -129,7 +147,7 @@ export default class Modal extends React.Component {
       <Backdrop
         onClick={e => {
           e.stopPropagation();
-          this.props.onClose();
+          this.props.onCloseOrCancel();
         }}
       >
         <ModalWindow
@@ -144,8 +162,3 @@ export default class Modal extends React.Component {
     );
   }
 }
-
-Modal.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onClose: PropTypes.func
-};

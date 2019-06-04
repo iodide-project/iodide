@@ -96,6 +96,13 @@ tasks.clearVariables = new UserTask({
   }
 });
 
+tasks.toggleFileModal = new UserTask({
+  title: "Manage Files",
+  callback() {
+    dispatcher.toggleFileModal();
+  }
+});
+
 tasks.toggleHistoryModal = new UserTask({
   title: "View Notebook History",
   menuTitle: "History",

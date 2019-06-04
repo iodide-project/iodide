@@ -4,6 +4,8 @@
 - Adds JWT-based authentication to Iodide's API as an option (fixes #1755)
 - Rebrand the "jsmd" file format as "iomd" (fixes #1634)
 - Gravatars are served via https by default (fixes #1930)
+- Add new file management UI (click _Menu > Manage Files_ while logged in and
+  viewing a notebook that you own)
 
 # 0.7.0 (2019-05-30)
 

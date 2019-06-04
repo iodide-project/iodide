@@ -57,9 +57,9 @@ const listItemHeight = pr => {
   return h;
 };
 
-const LIST_BORDER = "1px solid gainsboro";
+export const LIST_BORDER = "1px solid gainsboro";
+export const LIST_BORDER_RADIUS = "5px";
 const PLACEHOLDER_BORDER = "1px solid transparent";
-const LIST_BORDER_RADIUS = "5px";
 
 export const ListSmallLink = styled("a")`
   margin-left: 4px;
