@@ -79,3 +79,4 @@ wallaby.js
 
 # mkdocs
 site
+*.pyc
