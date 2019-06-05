@@ -217,7 +217,6 @@ function serializeMapPathsSummary(map, previewNum = 5) {
 }
 
 export function serializeMapIndexPathsForRange(map, min, max) {
-  console.log("map, min, max", map, min, max);
   const childItems = [];
   let i = 0;
   // this is not an efficient way to do this, but JS

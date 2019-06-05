@@ -63,7 +63,7 @@ export class LeafNodeRep extends React.Component {
   }
 }
 
-export default class ExpandableRep extends React.Component {
+export default class ExpandableRep extends React.PureComponent {
   static propTypes = {
     pathToEntity: PropTypes.arrayOf(
       PropTypes.oneOfType([
@@ -86,7 +86,6 @@ export default class ExpandableRep extends React.Component {
   }
   state = {
     childSummaries: null,
-    compactChildSummaries: null,
     expanded: false
   };
 
@@ -95,7 +94,7 @@ export default class ExpandableRep extends React.Component {
     // in compact form. this array of {path, summary} objs
     // can be used for in-line summaries where applicable.
     const { rootObjName, pathToEntity } = this.props;
-    const compactChildSummaries = await this.props.getChildSummaries(
+    const childSummaries = await this.props.getChildSummaries(
       rootObjName,
       pathToEntity
     );
@@ -104,19 +103,28 @@ export default class ExpandableRep extends React.Component {
     // loading data in compDidMount, and explicitly say calling
     // setState is ok if needed. Disabling lint rule is justified.
     // eslint-disable-next-line react/no-did-mount-set-state
-    this.setState({ compactChildSummaries });
+    this.setState({ childSummaries });
+  }
+
+  async componentDidUpdate(prevProps) {
+    // we always want to reset state if we get new props;
+    // each value should get a fresh collapsed render
+    if (this.props !== prevProps) {
+      const { rootObjName, pathToEntity } = this.props;
+
+      const childSummaries = await this.props.getChildSummaries(
+        rootObjName,
+        pathToEntity
+      );
+      // react docs say it's ok to setstate if you do so within a conditional.
+      // In our case, we always reset the state on any change to props
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ childSummaries, expanded: false });
+    }
   }
 
   async toggleExpand() {
-    // on toggleExpand, update the childSummaries in the
-    // compact/non-compact form as needed
-    const { rootObjName, pathToEntity } = this.props;
-    const childSummaries = await this.props.getChildSummaries(
-      rootObjName,
-      pathToEntity,
-      !this.state.expanded
-    );
-    this.setState({ expanded: !this.state.expanded, childSummaries });
+    this.setState({ expanded: !this.state.expanded });
   }
 
   render() {
@@ -127,7 +135,7 @@ export default class ExpandableRep extends React.Component {
       rootObjName,
       pathLabel
     } = this.props;
-    const { expanded, childSummaries, compactChildSummaries } = this.state;
+    const { expanded, childSummaries } = this.state;
 
     let expanderState;
     if (valueSummary instanceof ValueSummary && !valueSummary.isExpandable) {
@@ -192,7 +200,7 @@ export default class ExpandableRep extends React.Component {
           <div>
             {pathLabel && <PathLabelRep pathLabel={pathLabel} />}
             {valueSummary && <ValueSummaryRep {...valueSummary} />}
-            {!expanded && <InlineChildSummary {...compactChildSummaries} />}
+            {!expanded && <InlineChildSummary {...childSummaries} />}
           </div>
         </ClickableLabelAndSummaryContainer>
         {childItems}

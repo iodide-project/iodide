@@ -36,8 +36,8 @@ export function expandRangesInChildSummaries(childSummaries) {
 }
 
 function getIteratorAtIndex(iterator, index) {
-  // this is inefficient, but required for dealing with maps,
-  // which don't allow lookup by index
+  // this is inefficient, but required for dealing with maps, sets,
+  // and any other object that doesn't allow lookup by index
   let i = 0;
   for (const item of iterator) {
     if (i === index) return item;
