@@ -1,7 +1,6 @@
 const template = `<!DOCTYPE html>
 <html>
 <head>
-<meta name="theme-color" content="#ffffff">
 <meta charset="UTF-8">
 <title><%= NOTEBOOK_TITLE %> - iodide</title>
 <link rel="stylesheet" type="text/css" href="<%= APP_PATH_STRING %>iodide.<%= APP_VERSION_STRING %>.css">
