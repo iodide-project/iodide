@@ -200,6 +200,7 @@ USE_TZ = True
 WHITENOISE_ROOT = os.path.join(ROOT, "build")
 STATIC_ROOT = os.path.join(ROOT, "static")
 STATIC_URL = EVAL_FRAME_ORIGIN
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "server", "static"),)
 
 # Create hashed+gzipped versions of assets during collectstatic,
 # which will then be served by WhiteNoise with a suitable max-age.
