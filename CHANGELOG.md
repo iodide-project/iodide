@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Add favicon to iodide (fixes #826)
+
 # 0.7.0 (2019-05-30)
 
 - Better behaviour around saving, especially when multiple copies
