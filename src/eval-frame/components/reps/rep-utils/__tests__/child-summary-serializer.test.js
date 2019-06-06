@@ -5,7 +5,6 @@ import {
   serializeArrayPathsForRange,
   serializeChildSummary
 } from "../child-summary-serializer";
-import { isValidChildSumary } from "../is-valid-child-sumary";
 import { allCases } from "../../__test_helpers__/reps-test-value-cases";
 
 describe("serializeArrayPathsSummary", () => {
@@ -64,59 +63,10 @@ describe("serializeArrayPathsForRange", () => {
 
 describe("serializeChildSummary", () => {
   Object.keys(allCases).forEach(testCase => {
-    // this test relies on error checking in the class constructors
+    // this test relies on validation in the class constructors
     // when `process.env.NODE_ENV !== "production"`
-    it(`serializes correctly in all cases; ${testCase}`, () => {
-      expect(serializeChildSummary(allCases[testCase])).not.toThrow();
+    it(`serializes a valid childSummary in all cases; ${testCase}`, () => {
+      expect(() => serializeChildSummary(allCases[testCase])).not.toThrow();
     });
-
-    // const summary = serializeChildSummary(allCases[testCase]);
   });
 });
-
-//   it(`summary is passes isValidChildSumary===true; ${testCase}`, () => {
-//     expect(isValidChildSumary(summary)).toBe(true);
-//   });
-
-//   it(`summary always has a "childItems" key that is not ===undefined; ${testCase}`, () => {
-//     expect(summary.childItems === undefined).toBe(false);
-//   });
-
-//   it(`summary.childItems is always an array; ${testCase}`, () => {
-//     expect(getType(summary.childItems)).toBe("Array");
-//   });
-
-//   it(`summary is always has a "summaryType" key that is a string; ${testCase}`, () => {
-//     expect(getType(summary.summaryType) === "String").toBe(true);
-//   });
-
-//   it(`each item in summary.childItems is a {path, summary} object; ${testCase}`, () => {
-//     summary.childItems.forEach(item => {
-//       expect(item.path === undefined).toBe(false);
-//       expect(item.summary === undefined).toBe(false);
-//     });
-//   });
-
-//   summary.childItems.forEach(item => {
-//     it(`each item in summary.childItems has "path" that is String|Number|RangeDescriptor; ${testCase}; ${JSON.stringify(
-//       item.path
-//     )}`, () => {
-//       const isString = getType(item.path) === "String";
-//       const isRangeDesc =
-//         item.path.min !== undefined && item.path.max !== undefined;
-//       expect(isString || isRangeDesc).toBe(true);
-//     });
-//   });
-
-//   summary.childItems.forEach(item => {
-//     it(`for each item in summary.childItems, "path" is RangeDescriptor iff summary===null; ${testCase}; ${JSON.stringify(
-//       item.path
-//     )}`, () => {
-//       const pathIsRangeDesc =
-//         item.path.min !== undefined && item.path.max !== undefined;
-//       const summaryIsNull = item.summary === null;
-//       expect(pathIsRangeDesc === summaryIsNull).toBe(true);
-//     });
-//   });
-// });
-// });

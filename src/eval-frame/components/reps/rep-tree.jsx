@@ -200,7 +200,12 @@ export default class ExpandableRep extends React.PureComponent {
           <div>
             {pathLabel && <PathLabelRep pathLabel={pathLabel} />}
             {valueSummary && <ValueSummaryRep {...valueSummary} />}
-            {!expanded && <InlineChildSummary {...childSummaries} />}
+            {!expanded && (
+              <InlineChildSummary
+                childSummaries={childSummaries}
+                parentType={valueSummary && valueSummary.objType}
+              />
+            )}
           </div>
         </ClickableLabelAndSummaryContainer>
         {childItems}

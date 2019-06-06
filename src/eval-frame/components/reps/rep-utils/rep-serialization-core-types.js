@@ -4,12 +4,12 @@
 // These are just a container classes to clarify semantics and
 // to clarify code by not putting plain objects everywhere.
 // All of these containers need to be serializable, so they
-// should not have methods beyond getters -- no internal state
+// should not have methods, and definitely no internal state
 // or internal state mutation.
 // They are really basically to be used as type definitions,
 // since the rep serialization machinery benefits from precise types.
 
-// one day we'll move to type script and replace all this with interfaces or whatever.
+// one day we'll move to typescript and replace all this with proper types/interfaces/whatever.
 
 const nonExpandableTypes = [
   "Function",
@@ -19,6 +19,7 @@ const nonExpandableTypes = [
   "ArrayBuffer",
   "DataView"
 ];
+
 function checkTypes(keyedArgs, argTypes, fnName) {
   Object.keys(keyedArgs).forEach(key => {
     const arg = keyedArgs[key];
@@ -59,14 +60,16 @@ export class ValueSummary {
     this.size = size; // number
     this.stringValue = stringValue; // string
     this.isTruncated = isTruncated; // bool
-  }
 
-  get isExpandable() {
-    if (nonExpandableTypes.includes(this.objType)) return false;
-
-    if (this.objType === "String") return this.isTruncated;
-
-    return this.size > 0;
+    let isExpandable;
+    if (nonExpandableTypes.includes(this.objType)) {
+      isExpandable = false;
+    } else if (this.objType === "String") {
+      isExpandable = this.isTruncated;
+    } else {
+      isExpandable = this.size > 0;
+    }
+    this.isExpandable = isExpandable;
   }
 }
 

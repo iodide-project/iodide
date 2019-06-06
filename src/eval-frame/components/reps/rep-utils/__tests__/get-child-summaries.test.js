@@ -1,5 +1,3 @@
-// import { getType } from "../value-summary-serializer";
-import { isValidChildSumary } from "../is-valid-child-sumary";
 import {
   RangeDescriptor,
   ChildSummaryItem,
@@ -50,9 +48,12 @@ describe("expandRangesInChildSummaries replaces ranges correctly in all cases", 
   ].forEach(testRange => {
     const childSummary = newChildSummaryMock();
     childSummary[5] = new ChildSummaryItem(testRange, null);
-    it(`always returns a valid child summary; ${JSON.stringify(
-      testRange
-    )}`, () => expect(isValidChildSumary(childSummary)).toBe(true));
+    // this test relies on the input validation in the relevant clases
+    it(`always returns a valid child summary; ${testRange}`, () =>
+      expect(
+        () =>
+          new ChildSummary(childSummary.childItems, childSummary.summaryType)
+      ).not.toThrow());
   });
 });
 
@@ -61,9 +62,12 @@ describe("getChildSummary base cases (compact summaries)", () => {
     // for each test case, append to window...
     window[testCase] = allCases[testCase];
     const childSummary = getChildSummary("window", [testCase], true);
-
+    // this test relies on the input validation in the relevant clases
     it(`always returns a valid child summary; ${testCase}`, () =>
-      expect(isValidChildSumary(childSummary)).toBe(true));
+      expect(
+        () =>
+          new ChildSummary(childSummary.childItems, childSummary.summaryType)
+      ).not.toThrow());
   });
 });
 
@@ -72,9 +76,12 @@ describe("getChildSummary base cases", () => {
     // for each test case, append to window...
     window[testCase] = allCases[testCase];
     const childSummary = getChildSummary("window", [testCase], false);
-
+    // this test relies on the input validation in the relevant clases
     it(`always returns a valid child summary; ${testCase}`, () =>
-      expect(isValidChildSumary(childSummary)).toBe(true));
+      expect(
+        () =>
+          new ChildSummary(childSummary.childItems, childSummary.summaryType)
+      ).not.toThrow());
   });
 });
 
@@ -89,10 +96,23 @@ describe("getChildSummary - walking down tree", () => {
     for (let depth = 0; depth < 5; depth++) {
       if (childSummary.childItems.length > 0) {
         lookupPath.push(childSummary.childItems[0].path);
-        childSummary = getChildSummary("window", lookupPath, false);
+        const childItem = childSummary.childItems[0];
 
+        // handle the special case of a Map
+        if (childItem instanceof MapPairSummaryItem) {
+          lookupPath.push("MAP_VAL");
+        }
+
+        childSummary = getChildSummary("window", lookupPath, false);
+        // this test relies on the input validation in the relevant clases
         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
-          expect(isValidChildSumary(childSummary)).toBe(true));
+          expect(
+            () =>
+              new ChildSummary(
+                childSummary.childItems,
+                childSummary.summaryType
+              )
+          ).not.toThrow());
       }
     }
   });
@@ -113,6 +133,7 @@ describe("getChildSummary - walking down tree - middle subpath", () => {
         const childItem = childSummary.childItems[subpathIndex];
 
         lookupPath.push(childItem.path);
+        // handle the special case of a Map
         if (childItem instanceof MapPairSummaryItem) {
           lookupPath.push("MAP_VAL");
         }

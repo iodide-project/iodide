@@ -9,13 +9,14 @@ import { PathLabelRep } from "./path-label-rep";
 import {
   ChildSummaryItem,
   RangeDescriptor,
-  MapPairSummaryItem
+  MapPairSummaryItem,
+  ChildSummary
 } from "./rep-utils/rep-serialization-core-types";
 
-// import {
-//   numericIndexTypes,
-//   objectLikeTypes
-// } from "./rep-utils/child-summary-serializer";
+import {
+  numericIndexTypes
+  // objectLikeTypes
+} from "./rep-utils/child-summary-serializer";
 
 /* eslint-disable react/no-array-index-key */
 const DelimitedList = ({
@@ -180,70 +181,37 @@ MapKeyValSummaryItem.propTypes = {
   summaryItem: PropTypes.instanceOf(MapPairSummaryItem)
 };
 
-// const InlineChildSummary = ({ childItems, parentType }) => {
-// if (numericIndexTypes.includes(parentType)) {
-//   return <MediumListSummary childItems={childItems} />;
-//   // } else if (parentType === "Map") {
-//   //   return (
-//   //     <InlineKeyValSummary
-//   //       childItems={childItems}
-//   //       summaryItemRep={MapKeyValSummaryItem}
-//   //     />
-//   //   );
-// } else if (parentType === "Set") {
-//   return (
-//     <MediumListSummary
-//       childItems={childItems}
-//       openBracket="{"
-//       closeBracket="}"
-//     />
-//   );
-// } else if (
-//   parentType === "Object" ||
-//   // getClass(obj) === "Object" ||
-//   objectLikeTypes.includes(parentType)
-// ) {
-//   return (
-//     <InlineKeyValSummary
-//       childItems={childItems}
-//       summaryItemRep={InlineKeyValSummaryItem}
-//     />
-//   );
-// }
+const InlineChildSummary = ({ childSummaries, parentType }) => {
+  if (!childSummaries || !parentType) return "";
 
-// return "";
+  const { childItems } = childSummaries;
 
-// return new ChildSummary([], "ATOMIC_VALUE");
-// };
-const InlineChildSummary = ({ childItems, summaryType }) => {
-  switch (summaryType) {
-    case "ARRAY_PATH_SUMMARY":
-      return <MediumListSummary childItems={childItems} />;
-    case "SET_PATH_SUMMARY":
-      return (
-        <MediumListSummary
-          childItems={childItems}
-          openBracket="{"
-          closeBracket="}"
-        />
-      );
-    case "OBJECT_PATH_SUMMARY":
-      return (
-        <InlineKeyValSummary
-          childItems={childItems}
-          summaryItemRep={InlineKeyValSummaryItem}
-        />
-      );
-    case "MAP_PATH_SUMMARY":
-      return (
-        <InlineKeyValSummary
-          childItems={childItems}
-          summaryItemRep={MapKeyValSummaryItem}
-        />
-      );
-    default:
-      return "";
+  if (parentType === "String") return "";
+
+  if (numericIndexTypes.includes(parentType)) {
+    return <MediumListSummary childItems={childItems} />;
+  } else if (parentType === "Set") {
+    return (
+      <MediumListSummary
+        childItems={childItems}
+        openBracket="{"
+        closeBracket="}"
+      />
+    );
   }
+
+  const summaryItemRep =
+    parentType === "Map" ? MapKeyValSummaryItem : InlineKeyValSummaryItem;
+  return (
+    <InlineKeyValSummary
+      childItems={childItems}
+      summaryItemRep={summaryItemRep}
+    />
+  );
+};
+InlineChildSummary.propTypes = {
+  childSummaries: PropTypes.instanceOf(ChildSummary),
+  parentType: PropTypes.string.isRequired
 };
 
 export default InlineChildSummary;
