@@ -51,7 +51,7 @@
     "ajv": "6.10.0",
     "codemirror": "5.47.0",
     "css-element-queries": "1.2.0",
-    "date-fns": "2.0.0-alpha.29",
+    "date-fns": "2.0.0-alpha.31",
     "debounce-action": "0.1.0",
     "deep-equal": "1.0.1",
     "dexie": "2.0.4",
