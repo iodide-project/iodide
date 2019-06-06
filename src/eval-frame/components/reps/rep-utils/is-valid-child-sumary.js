@@ -12,7 +12,7 @@ export function isValidChildSumary(maybeSummary) {
   for (const summaryItem of childItems) {
     const { path, summary } = summaryItem;
     if (path === undefined)
-      return ["summaryItem'path' is undefined", summaryItem];
+      return ["summaryItem 'path' is undefined", summaryItem];
     if (summary === undefined)
       return ["summaryItem 'summary' is undefined", summaryItem];
     // paths must be strings or path descriptions

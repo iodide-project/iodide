@@ -2,11 +2,6 @@ import { splitIndexRange } from "../split-index-range";
 import { RangeDescriptor } from "../rep-serialization-core-types";
 
 describe("split ranges correctly", () => {
-  it("give the correct number of ranges in a very basic case", () => {
-    const ranges = splitIndexRange(new RangeDescriptor(0, 100), 10);
-    expect(ranges.length).toBe(10);
-  });
-
   it("the max of each range is one less than min of the next", () => {
     const ranges = splitIndexRange(new RangeDescriptor(0, 100), 10);
     for (let i = 1; i < ranges.length; i++) {

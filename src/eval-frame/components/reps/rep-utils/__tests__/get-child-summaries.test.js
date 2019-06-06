@@ -3,13 +3,13 @@ import { isValidChildSumary } from "../is-valid-child-sumary";
 import {
   RangeDescriptor,
   ChildSummaryItem,
-  ChildSummary
+  ChildSummary,
+  MapPairSummaryItem
 } from "../rep-serialization-core-types";
 import {
   getChildSummary,
   expandRangesInChildSummaries
 } from "../get-child-summaries";
-import { MAX_NUM_SUBRANGES } from "../split-index-range";
 
 import { allCases } from "../../__test_helpers__/reps-test-value-cases";
 
@@ -110,18 +110,24 @@ describe("getChildSummary - walking down tree - middle subpath", () => {
       if (childSummary.childItems.length > 0) {
         // choose a subpath near the middle; floor in case of only 1 child
         const subpathIndex = Math.floor(childSummary.childItems.length / 2);
+        const childItem = childSummary.childItems[subpathIndex];
 
-        lookupPath.push(childSummary.childItems[subpathIndex].path);
+        lookupPath.push(childItem.path);
+        if (childItem instanceof MapPairSummaryItem) {
+          lookupPath.push("MAP_VAL");
+        }
 
         childSummary = getChildSummary("window", lookupPath, false);
 
+        // this test relies on the input validation in the relevant clases
         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
-          expect(isValidChildSumary(childSummary)).toBe(true));
-
-        it(`always returns fewer than MAX_NUM_SUBRANGES children; ${testCase}; depth ${depth}`, () =>
-          expect(childSummary.childItems.length).toBeLessThan(
-            MAX_NUM_SUBRANGES + 1
-          ));
+          expect(
+            () =>
+              new ChildSummary(
+                childSummary.childItems,
+                childSummary.summaryType
+              )
+          ).not.toThrow());
       }
     }
   });

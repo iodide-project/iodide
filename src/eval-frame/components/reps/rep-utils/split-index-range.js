@@ -2,7 +2,7 @@ import { RangeDescriptor } from "./rep-serialization-core-types";
 import { MAX_SUMMARY_STRING_LEN } from "./value-summary-serializer";
 
 export const RANGE_SPLIT_THRESHOLD = 50;
-export const MAX_NUM_SUBRANGES = 30;
+const TARGET_LEAF_ELTS = 30;
 
 const ln = Math.log;
 
@@ -16,8 +16,8 @@ function targetNumSubRanges(
   // (1) the number of elements in the range
   // (2) the number of subranges desired in case of a range split
   // (3) the number of leaf elements to show in a range that will not be split
-  // To do this, figure out the tree depth that comes closest
-  // to satisfying that objective. Then, given that depth,
+  // To do this, figure out the integer tree depth that comes closest
+  // to satisfying that objective. Then, given that integer depth,
   // return the number of sub ranges that would be needed
   // to build a tree of that depth with the given constraints
   const [N, x, y] = [rangeSize, targetNumSubRangesPerSplit, targetLeafBinSize];
@@ -41,7 +41,7 @@ export function splitIndexRange(
 
   const targetNumRanges =
     type !== "STRING_RANGE"
-      ? targetNumSubRanges(rangeSize, 20, 30)
+      ? targetNumSubRanges(rangeSize, 20, TARGET_LEAF_ELTS)
       : targetNumSubRanges(rangeSize, 20, MAX_SUMMARY_STRING_LEN);
 
   let binSize = Math.round(rangeSize / targetNumRanges);

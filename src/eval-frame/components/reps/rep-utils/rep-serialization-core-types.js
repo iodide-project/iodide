@@ -19,12 +19,42 @@ const nonExpandableTypes = [
   "ArrayBuffer",
   "DataView"
 ];
+function checkTypes(keyedArgs, argTypes, fnName) {
+  Object.keys(keyedArgs).forEach(key => {
+    const arg = keyedArgs[key];
+    const expectedType = argTypes[key];
+
+    // eslint-disable-next-line valid-typeof
+    if (typeof arg !== expectedType) {
+      const actualType = typeof arg;
+      throw new TypeError(
+        `invalid inputs types for ${fnName} ${JSON.stringify({
+          arg,
+          expectedType,
+          actualType
+        })}; (full args${JSON.stringify(keyedArgs)})`
+      );
+    }
+  });
+}
 
 export class ValueSummary {
   // Contains top-level summary info about an object/value,
   // but without info about child objects.
   // This info is sufficient to produce a "tiny rep"
   constructor(objType, size, stringValue, isTruncated) {
+    if (process.env.NODE_ENV !== "production") {
+      checkTypes(
+        { objType, size, stringValue, isTruncated },
+        {
+          objType: "string",
+          size: "number",
+          stringValue: "string",
+          isTruncated: "boolean"
+        },
+        "ValueSummary"
+      );
+    }
     this.objType = objType; // string
     this.size = size; // number
     this.stringValue = stringValue; // string
@@ -45,10 +75,26 @@ export class RangeDescriptor {
   // IMPORTANT: these ranges are INCLUSIVE of their endpoints.
   constructor(min, max, type = "ARRAY_RANGE") {
     if (process.env.NODE_ENV !== "production") {
-      if (max < min) {
+      checkTypes(
+        { min, max, type },
+        {
+          max: "number",
+          min: "number",
+          type: "string"
+        },
+        "RangeDescriptor"
+      );
+
+      if (
+        max < min ||
+        min < 0 ||
+        max < 0 ||
+        !Number.isFinite(min) ||
+        !Number.isFinite(max)
+      ) {
         // note: can technically be equal since the ranges are inclusive
         throw new TypeError(
-          `invalid input to RangeDescriptor ${JSON.stringify({
+          `invalid range endpoints to RangeDescriptor ${JSON.stringify({
             max,
             min,
             type
@@ -59,15 +105,6 @@ export class RangeDescriptor {
     this.min = min; // numeric, required
     this.max = max; // numeric, required
     this.type = type;
-  }
-}
-
-export class ChildSummary {
-  // an instance of this class summarizes information about the children
-  // of an object. These can be either values or ranges of indices.
-  constructor(childItems, summaryType) {
-    this.childItems = childItems; // array of ChildSummaryItems
-    this.summaryType = summaryType; // string
   }
 }
 
@@ -100,5 +137,23 @@ export class MapPairSummaryItem extends ChildSummaryItem {
     this.path = mapEntryIndex; // int
     this.keySummary = keySummary; // ValueSummary
     this.valSummary = valSummary; // ValueSummary
+  }
+}
+
+export class ChildSummary {
+  // an instance of this class summarizes information about the children
+  // of an object. These can be either values or ranges of indices.
+  constructor(childItems, summaryType) {
+    if (process.env.NODE_ENV !== "production") {
+      checkTypes({ summaryType }, { summaryType: "string" }, "ChildSummary");
+      childItems.forEach(item => {
+        if (!(item instanceof ChildSummaryItem)) {
+          // note: can technically be equal since the ranges are inclusive
+          throw new TypeError(`invalid range endpoints to RangeDescriptor`);
+        }
+      });
+    }
+    this.childItems = childItems; // array of ChildSummaryItems
+    this.summaryType = summaryType; // string
   }
 }
