@@ -1,6 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
 - Add favicon to iodide (fixes #826)
+- Adds JWT-based authentication to Iodide's API as an option (fixes #1755)
 
 # 0.7.0 (2019-05-30)
 
