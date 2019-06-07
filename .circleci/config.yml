@@ -119,8 +119,13 @@ jobs:
           name: Test Code
           command: |
             cp .env-dist .env
+            # we need to wait for the db to come up
             docker-compose up -d
             docker-compose run server bash -c "while ! echo > /dev/tcp/db/5432 > /dev/null 2>&1; do sleep 1 && echo waiting for db; done"
+            # we need to re-collect static as docker-compose mounts the checkout directory over what we have in the image
+            chmod 777 . # make sure we have permission to write the files in our volume
+            docker-compose run server ./manage.py collectstatic -c --no-input
+            # run the actual tests
             make test
 
   deploy:
