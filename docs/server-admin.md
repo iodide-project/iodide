@@ -16,7 +16,7 @@ update base_user set is_superuser='t', is_staff='t' where username=MY_USER_NAME;
 
 It may, in some cases, by desirable to create special users which can
 create notebooks on behalf of others (e.g. bots). For this task, we
-have configured the iodide server to allow for the notebook creation API to be accessed using django-rest-framework's [token authentication])(https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication)
+have configured the iodide server to allow for the notebook creation API to be accessed using django-rest-framework's [token authentication](https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication))
 
 To take advantage of this:
 
