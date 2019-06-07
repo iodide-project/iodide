@@ -8,7 +8,7 @@ const FileFooter = styled.footer`
 export default () => (
   <FileFooter>
     These files can be loaded by{" "}
-    <a href="https://github.com/iodide-project/iodide/blob/master/docs/jsmd.md#fetch-chunks--fetch">
+    <a href="https://iodide-project.github.io/docs/jsmd/#fetch-chunks-fetch">
       fetch chunks
     </a>{" "}
     and manipulated via the{" "}

@@ -43,11 +43,11 @@ syntax --
 TYPE: VAR_NAME = files/FILE_NAME
 ```
 
--- where `TYPE` is the type of the file ("text", "json", or "blob"), `VARNAME`
+-- where `TYPE` is the type of the file ("text", "json", "arraybuffer", or "blob"), `VARNAME`
 is the variable into which you want to load the data, and `FILE_NAME` is the
 name of the file you uploaded.
 
-This notebook [shows how to load and use an image blob](https://alpha.iodide.io/notebooks/127/)
+This notebook [shows how to load and use an image blob](https://alpha.iodide.io/notebooks/127/).
 
 ## Manipulating the DOM (for e.g adding plots)
 
