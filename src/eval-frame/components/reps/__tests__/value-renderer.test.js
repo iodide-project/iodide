@@ -45,9 +45,7 @@ describe("ValueRenderer React component, handling normal types without custom re
   });
 
   simpleTestCases.forEach((testCase, i) => {
-    it(`render normal values with the DefaultRender (type: ${
-      testCase.type
-    })`, () => {
+    it(`render normal values with the DefaultRender (type: ${testCase.type})`, () => {
       props.valueKey = `result_${i}`;
       expect(shallowValueRenderer().find(DefaultRenderer)).toHaveLength(1);
     });

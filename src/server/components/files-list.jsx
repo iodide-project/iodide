@@ -70,9 +70,7 @@ export default class FilesList extends React.Component {
                 </FileIconContainer>
                 <FileNameContainer>
                   <a
-                    href={`/notebooks/${this.props.notebookID}/files/${
-                      file.filename
-                    }`}
+                    href={`/notebooks/${this.props.notebookID}/files/${file.filename}`}
                   >
                     {file.filename}
                   </a>

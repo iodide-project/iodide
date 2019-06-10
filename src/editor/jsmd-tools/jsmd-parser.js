@@ -6,8 +6,8 @@ function hashCode(str) {
   if (str.length !== 0) {
     for (let i = 0; i < str.length; i++) {
       chr = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + chr // eslint-disable-line
-      hash |= 0 // eslint-disable-line
+      hash = (hash << 5) - hash + chr; // eslint-disable-line
+      hash |= 0; // eslint-disable-line
     }
   }
   return hash.toString();

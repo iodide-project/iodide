@@ -142,9 +142,7 @@ export default function validateActionFromEvalFrame(action) {
       console.info("Redux initiated: ", action.type);
     } else {
       throw new ActionSchemaValidationError(
-        `Invalid action from eval frame: action type not permitted: ${
-          action.type
-        }`
+        `Invalid action from eval frame: action type not permitted: ${action.type}`
       );
     }
   } else if (!validator(action.type)(action)) {

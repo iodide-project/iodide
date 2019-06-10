@@ -230,9 +230,7 @@ const invalidFetchLines = [
 
 describe("return correct errors for invalid fetch lines", () => {
   invalidFetchLines.forEach(testCase => {
-    it(`invalid fetch lines should return correct error "${
-      testCase.line
-    }"`, () => {
+    it(`invalid fetch lines should return correct error "${testCase.line}"`, () => {
       expect(parseFetchCellLine(testCase.line).error).toEqual(
         testCase.result.error
       );
