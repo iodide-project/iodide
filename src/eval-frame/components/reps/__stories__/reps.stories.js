@@ -28,6 +28,8 @@ import InlineChildSummary from "../in-line-child-summary";
 
 import ExpandableRep from "../rep-tree";
 
+import ValueRenderer from "../value-renderer";
+
 import TableRenderer from "../data-table-rep";
 
 // attach the test cases to the window to allow comparing with browser devtools
@@ -244,9 +246,12 @@ tableRep.add("tables", () => {
   );
 });
 
-// const valueRendererStories = storiesOf("base ValueRenderer component", module);
+const valueRendererStories = storiesOf("base ValueRenderer component", module);
 
-// Object.entries(allCases).forEach(caseNameAndVal => {
-//   const [name, value] = caseNameAndVal;
-//   valueRendererStories.add(name, () => <ValueRenderer valueToRender={value} />);
-// });
+Object.entries(allCases).forEach(caseNameAndVal => {
+  const [name, value] = caseNameAndVal;
+  window[name] = value;
+  valueRendererStories.add(name, () => (
+    <ValueRenderer windowValue valueKey={name} />
+  ));
+});
