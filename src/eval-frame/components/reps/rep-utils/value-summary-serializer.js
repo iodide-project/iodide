@@ -7,7 +7,7 @@ export function getClass(obj) {
   try {
     return obj.constructor.name;
   } catch (error) {
-    return "CLASS CANNOT DETERMINED";
+    return "CLASS CANNOT BE DETERMINED";
   }
 }
 
