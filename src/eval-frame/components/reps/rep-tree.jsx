@@ -86,7 +86,9 @@ export default class ExpandableRep extends React.PureComponent {
   }
   state = {
     childSummaries: null,
-    expanded: false
+    expanded: false,
+    error: null,
+    errorInfo: null
   };
 
   async componentDidMount() {
@@ -123,11 +125,25 @@ export default class ExpandableRep extends React.PureComponent {
     }
   }
 
+  componentDidCatch(error, errorInfo) {
+    // Catch errors in any components below and re-render with error message
+    this.setState({
+      error,
+      errorInfo
+    });
+    // You can also log error messages to an error reporting service here
+  }
+
   async toggleExpand() {
     this.setState({ expanded: !this.state.expanded });
   }
 
   render() {
+    if (this.state.error) {
+      return `RENDER FAILED. errorInfo: ${JSON.stringify(
+        this.state.errorInfo
+      )}`;
+    }
     const {
       pathToEntity,
       valueSummary,
@@ -200,7 +216,7 @@ export default class ExpandableRep extends React.PureComponent {
           <div>
             {pathLabel && <PathLabelRep pathLabel={pathLabel} />}
             {valueSummary && <ValueSummaryRep {...valueSummary} />}
-            {!expanded && (
+            {!expanded && valueSummary && valueSummary.isExpandable && (
               <InlineChildSummary
                 childSummaries={childSummaries}
                 parentType={valueSummary && valueSummary.objType}

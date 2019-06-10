@@ -18,90 +18,35 @@ import {
   // objectLikeTypes
 } from "./rep-utils/child-summary-serializer";
 
-/* eslint-disable react/no-array-index-key */
-const DelimitedList = ({
-  children,
-  delimiter = ", ",
-  openBracket = "{",
-  closeBracket = "}"
-}) => {
-  if (children === undefined || children.length === 0) {
-    return (
-      <RepBaseText>
-        {openBracket}
-        {closeBracket}
-      </RepBaseText>
+function truncateChildItemsForInlineSummary(childItems, maxToShow = 5) {
+  const inlineChildItems = childItems.slice(0, maxToShow);
+  if (childItems.length > maxToShow) {
+    // need to add a RangeDescriptor in this case;
+    // if the last subpath is a RangeDescriptor,
+    // the added RangeDescriptor must account for that
+    const lastItem = childItems[childItems.length - 1];
+    const max =
+      lastItem.path instanceof RangeDescriptor
+        ? lastItem.path.max
+        : childItems.length;
+
+    inlineChildItems.push(
+      new ChildSummaryItem(
+        new RangeDescriptor(maxToShow + 1, max, "INLINE_SUMMARY_RANGE"),
+        null
+      )
     );
   }
-
-  return (
-    <RepBaseText>
-      {openBracket}
-      {children[0]}
-      {children.slice(1).map((obj, i) => (
-        <React.Fragment key={i}>
-          {delimiter}
-          {obj}
-        </React.Fragment>
-      ))}
-      {closeBracket}
-    </RepBaseText>
-  );
-};
-DelimitedList.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.node),
-  delimiter: PropTypes.string,
-  openBracket: PropTypes.string,
-  closeBracket: PropTypes.string
-};
-/* eslint-enable react/no-array-index-key */
+  return inlineChildItems;
+}
 
 const TinyRangeRep = ({ number }) => <Ell>⋯{number} more⋯</Ell>;
 TinyRangeRep.propTypes = {
   number: PropTypes.number.isRequired
 };
 
-const InlineListSummaryItem = ({ summaryItem }) => {
-  const { path, summary } = summaryItem;
-  if (summary === null) {
-    return <TinyRangeRep number={path.max - path.min + 1} />;
-  }
-  return <ValueSummary tiny {...summary} />;
-};
-InlineListSummaryItem.propTypes = {
-  summaryItem: PropTypes.instanceOf(ChildSummaryItem)
-};
-
-const MediumListSummary = ({
-  childItems,
-  openBracket = "[",
-  closeBracket = "]"
-}) => (
-  <DelimitedList {...{ openBracket, closeBracket }}>
-    {childItems.map(summaryItem => (
-      <InlineListSummaryItem
-        key={JSON.stringify(summaryItem.path)}
-        summaryItem={summaryItem}
-      />
-    ))}
-  </DelimitedList>
-);
-MediumListSummary.propTypes = {
-  childItems: PropTypes.arrayOf(PropTypes.object),
-  openBracket: PropTypes.string,
-  closeBracket: PropTypes.string
-};
-
 const InlineKeyValSummaryItem = ({ summaryItem, mappingDelim }) => {
   const { path, summary } = summaryItem;
-  if (path instanceof RangeDescriptor) {
-    return (
-      <TinyRangeRep
-        key={JSON.stringify(summaryItem.path)}
-        number={path.max - path.min + 1}
-      />
-    );
-  }
   return (
     <React.Fragment key={JSON.stringify(summaryItem.path)}>
       <PathLabelRep pathLabel={path} tiny {...{ mappingDelim }} />
@@ -114,61 +59,9 @@ InlineKeyValSummaryItem.propTypes = {
   mappingDelim: PropTypes.string
 };
 
-const InlineKeyValSummary = ({
-  childItems,
-  mappingDelim = ":",
-  summaryItemRep,
-  numChildItemsToShow = 5
-}) => {
-  const inlineSubpaths = childItems.slice(0, numChildItemsToShow);
-  if (childItems.length > numChildItemsToShow) {
-    // need to add a RangeDescriptor in this case;
-    // if the last subpath is a RangeDescriptor,
-    // the added RangeDescriptor must account for that
-    const lastItem = childItems[childItems.length - 1];
-    const max =
-      lastItem.path instanceof RangeDescriptor
-        ? lastItem.path.max
-        : childItems.length;
-
-    inlineSubpaths.push(
-      new ChildSummaryItem(
-        new RangeDescriptor(
-          numChildItemsToShow + 1,
-          max,
-          "INLINE_SUMMARY_RANGE"
-        ),
-        null
-      )
-    );
-  }
-
-  return (
-    <DelimitedList>
-      {inlineSubpaths.map(summaryItem =>
-        summaryItemRep({ summaryItem, mappingDelim })
-      )}
-    </DelimitedList>
-  );
-};
-InlineKeyValSummary.propTypes = {
-  childItems: PropTypes.arrayOf(PropTypes.object),
-  mappingDelim: PropTypes.string,
-  numChildItemsToShow: PropTypes.number,
-  summaryItemRep: PropTypes.func.isRequired
-};
-
 const MapKeyValSummaryItem = ({ summaryItem }) => {
   const { keySummary, valSummary, path } = summaryItem;
 
-  if (path instanceof RangeDescriptor) {
-    return (
-      <TinyRangeRep
-        key={JSON.stringify(summaryItem.path)}
-        number={path.max - path.min + 1}
-      />
-    );
-  }
   return (
     <React.Fragment key={JSON.stringify(path)}>
       <ValueSummary tiny {...keySummary} />
@@ -181,37 +74,77 @@ MapKeyValSummaryItem.propTypes = {
   summaryItem: PropTypes.instanceOf(MapPairSummaryItem)
 };
 
-const InlineChildSummary = ({ childSummaries, parentType }) => {
-  if (!childSummaries || !parentType) return "";
+const UnlabeledSummaryItem = ({ summaryItem }) => {
+  return <ValueSummary tiny {...summaryItem.summary} />;
+};
+UnlabeledSummaryItem.propTypes = {
+  summaryItem: PropTypes.instanceOf(ChildSummaryItem)
+};
+
+const SummaryItemWithRangeHandling = (summaryItem, summaryItemRep) => {
+  const { path } = summaryItem;
+  if (path instanceof RangeDescriptor) {
+    return <TinyRangeRep number={path.max - path.min + 1} />;
+  }
+  return summaryItemRep({ summaryItem });
+};
+SummaryItemWithRangeHandling.propTypes = {
+  summaryItem: PropTypes.instanceOf(ChildSummaryItem),
+  summaryItemRep: PropTypes.func.isRequired
+};
+
+export const InlineChildSummary = ({ childSummaries, parentType }) => {
+  if (!childSummaries || !parentType || parentType === "String") return "";
 
   const { childItems } = childSummaries;
 
-  if (parentType === "String") return "";
+  let summaryItemRep = InlineKeyValSummaryItem;
+  let openBracket = "{";
+  let closeBracket = "}";
+  let truncateChildList = true;
 
   if (numericIndexTypes.includes(parentType)) {
-    return <MediumListSummary childItems={childItems} />;
+    summaryItemRep = UnlabeledSummaryItem;
+    openBracket = "[";
+    closeBracket = "]";
+    // for arrays, we want the head/tail preview
+    // generated upstream
+    truncateChildList = false;
   } else if (parentType === "Set") {
+    summaryItemRep = UnlabeledSummaryItem;
+  } else if (parentType === "Map") {
+    summaryItemRep = MapKeyValSummaryItem;
+  }
+
+  const finalChildItems = truncateChildList
+    ? truncateChildItemsForInlineSummary(childItems)
+    : childItems;
+
+  if (finalChildItems.length === 0) {
     return (
-      <MediumListSummary
-        childItems={childItems}
-        openBracket="{"
-        closeBracket="}"
-      />
+      <RepBaseText>
+        {openBracket}
+        {closeBracket}
+      </RepBaseText>
     );
   }
 
-  const summaryItemRep =
-    parentType === "Map" ? MapKeyValSummaryItem : InlineKeyValSummaryItem;
   return (
-    <InlineKeyValSummary
-      childItems={childItems}
-      summaryItemRep={summaryItemRep}
-    />
+    <RepBaseText>
+      {openBracket}
+      {SummaryItemWithRangeHandling(finalChildItems[0], summaryItemRep)}
+      {finalChildItems.slice(1).map(summaryItem => (
+        <React.Fragment key={JSON.stringify(summaryItem.path)}>
+          , {SummaryItemWithRangeHandling(summaryItem, summaryItemRep)}
+        </React.Fragment>
+      ))}
+      {closeBracket}
+    </RepBaseText>
   );
 };
 InlineChildSummary.propTypes = {
   childSummaries: PropTypes.instanceOf(ChildSummary),
-  parentType: PropTypes.string.isRequired
+  parentType: PropTypes.string
 };
 
 export default InlineChildSummary;
