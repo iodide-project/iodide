@@ -2,7 +2,7 @@
 import _ from "lodash";
 import htmlTemplate from "../html-template";
 
-export function exportJsmdBundle(jsmd, title) {
+export function exportIomdBundle(iomd, title) {
   const htmlTemplateCompiler = _.template(htmlTemplate);
   return htmlTemplateCompiler({
     NOTEBOOK_TITLE: title,
@@ -10,7 +10,7 @@ export function exportJsmdBundle(jsmd, title) {
     CSS_PATH_STRING: IODIDE_CSS_PATH,
     APP_VERSION_STRING: IODIDE_VERSION,
     EVAL_FRAME_ORIGIN: IODIDE_EVAL_FRAME_ORIGIN,
-    JSMD: jsmd
+    IOMD: iomd
   });
 }
 

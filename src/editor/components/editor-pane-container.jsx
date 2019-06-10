@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import deepEqual from "deep-equal";
 
-import JsmdEditor from "./jsmd-editor";
+import IomdEditor from "./iomd-editor";
 import FixedPositionContainer from "../../shared/components/fixed-position-container";
 
 import LayoutManager from "./pane-layout/layout-manager";
@@ -25,7 +25,7 @@ class EditorPaneContainer extends React.Component {
           paneId="EditorPositioner"
           hidden={this.props.hideEditor}
         >
-          <JsmdEditor />
+          <IomdEditor />
         </FixedPositionContainer>
       </React.Fragment>
     );

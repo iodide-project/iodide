@@ -120,8 +120,8 @@ export default class OnboardingContent extends React.Component {
           <Element key="docs">
             <ElementTitle>Check the Docs</ElementTitle>
             <ElementBody>
-              <ElementBlockLink href="https://docs.iodide.io/jsmd/">
-                JSMD format
+              <ElementBlockLink href="https://docs.iodide.io/iomd/">
+                IOMD format
               </ElementBlockLink>
               <ElementBlockLink href="https://docs.iodide.io/api/">
                 Iodide API

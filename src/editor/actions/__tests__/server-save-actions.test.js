@@ -21,7 +21,7 @@ const mockStore = configureMockStore(middlewares);
 
 const initialState = notebookCreated => {
   return {
-    jsmd: "initial content",
+    iomd: "initial content",
     title: "initial title",
     userData: { name: "this-user" },
     notebookInfo: Object.assign(
@@ -97,7 +97,7 @@ describe("saveNotebookToServer", () => {
         1,
         1, // parent revision id should be 1
         state.title,
-        state.jsmd
+        state.iomd
       ]
     ]);
     expect(store.getActions()).toEqual([
@@ -127,7 +127,7 @@ describe("saveNotebookToServer", () => {
         1,
         undefined, // parent revision id should be undefined
         state.title,
-        state.jsmd
+        state.iomd
       ]
     ]);
   });
@@ -168,8 +168,8 @@ describe("createNewNotebookOnServer", () => {
       );
       expect(createNotebookRequest.mock.calls).toEqual(
         forked
-          ? [[state.title, state.jsmd, { forked_from: 1 }]]
-          : [[state.title, state.jsmd, {}]]
+          ? [[state.title, state.iomd, { forked_from: 1 }]]
+          : [[state.title, state.iomd, {}]]
       );
 
       expect(store.getActions()).toEqual([
@@ -227,9 +227,9 @@ describe("revertToLatestServerRevision", () => {
     expect(store.getActions()).toEqual([
       { type: "UPDATE_MARKDOWN_CHUNKS", reportChunks: [] },
       {
-        type: "UPDATE_JSMD_CONTENT",
-        jsmd: "newer content",
-        jsmdChunks: [
+        type: "UPDATE_IOMD_CONTENT",
+        iomd: "newer content",
+        iomdChunks: [
           {
             chunkContent: "newer content",
             chunkId: "1476526502_0",
@@ -273,7 +273,7 @@ describe("checkNotebookIsBasedOnLatestServerRevision", () => {
             created: "2018-09-13T21:37:04.353408Z",
             content: contentDiffers
               ? "exciting new content"
-              : store.getState().jsmd
+              : store.getState().iomd
           }
         });
 

@@ -148,19 +148,19 @@ export const stateProperties = {
     items: historySchema,
     default: []
   },
-  jsmd: {
+  iomd: {
     type: "string",
     default: ""
   },
   previouslySavedContent: {
     type: "object",
-    default: { title: "", jsmd: "" },
+    default: { title: "", iomd: "" },
     properties: {
       title: { type: "string" },
-      jsmd: { type: "string" }
+      iomd: { type: "string" }
     }
   },
-  jsmdChunks: {
+  iomdChunks: {
     type: "array",
     items: {
       type: "object",

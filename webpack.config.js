@@ -139,7 +139,7 @@ module.exports = env => {
           EVAL_FRAME_ORIGIN,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: "new notebook",
-          JSMD: ""
+          IOMD: ""
         })
       }),
       new CreateFileWebpack({
@@ -150,7 +150,7 @@ module.exports = env => {
           EVAL_FRAME_ORIGIN,
           CSS_PATH_STRING,
           NOTEBOOK_TITLE: "new notebook",
-          JSMD: ""
+          IOMD: ""
         })
       }),
       new webpack.DefinePlugin({

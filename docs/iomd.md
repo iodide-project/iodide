@@ -1,8 +1,8 @@
-# JSMD format 
+# IOMD format 
 
-## What is JSMD?
+## What is IOMD?
 
-JSMD, short for JavaScript MarkDown, is the file format that
+IOMD, short for Iodide MarkDown, is the file format that
 Iodide notebooks are written in. It provides a way to interleave the narrative
 parts of your notebook, written in Markdown, with the computational parts, written
 in JavaScript, or through the use of language plugins, in other languages such
@@ -17,13 +17,13 @@ Representing Iodide notebooks with a flat text file makes them easy for both hum
 understand. For example, it works out of the box with standard software
 development tools like ``diff`` and GitHub pull requests.
 
-## JSMD syntax and usage
+## IOMD syntax and usage
 
-As we said above, a JSMD file is just a plain text file with text blocks representing various languages and other evaluation directives, and delimited by lines starting with `%%`.
+As we said above, a IOMD file is just a plain text file with text blocks representing various languages and other evaluation directives, and delimited by lines starting with `%%`.
 
-A few things to note about JSMD:
+A few things to note about IOMD:
 
-* Iodide natively supports the following JSMD chunk types (described in more detail below):
+* Iodide natively supports the following IOMD chunk types (described in more detail below):
     * `%% js` for JavaScript source code
     * `%% py` for Python source code
     * `%% md` for Markdown
@@ -40,7 +40,7 @@ A few things to note about JSMD:
 A brief example will help to illustrate a few of the details and nuances.
 
 ```
-this stuff up at the top of your jsmd will be ignored
+this stuff up at the top of your iomd will be ignored
 
 %% md
 # this is markdown
@@ -65,7 +65,7 @@ this chunk type is not known by Iodide, so this content will be ignored
 
 ```
 
-## JSMD chunk types
+## IOMD chunk types
 
 ### Markdown (`%% md`)
 

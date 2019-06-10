@@ -38,7 +38,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
         line,
         col
       },
-      jsmdChunks: [{ startLine: 0, endLine: 10 }],
+      iomdChunks: [{ startLine: 0, endLine: 10 }],
       editorSelections: []
     });
 
@@ -63,7 +63,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
         line,
         col
       },
-      jsmdChunks: [
+      iomdChunks: [
         { startLine: 0, endLine: 10 },
         { startLine: 11, endLine: 15 },
         { startLine: 16, endLine: 20 }
@@ -92,7 +92,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
         line,
         col
       },
-      jsmdChunks: [{ startLine: 0, endLine: 10 }],
+      iomdChunks: [{ startLine: 0, endLine: 10 }],
       editorSelections: [
         { start: { line: 3, col: 2 }, end: { line: 5, col: 2 } }
       ]
@@ -119,7 +119,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
         line,
         col
       },
-      jsmdChunks: [
+      iomdChunks: [
         { startLine: 0, endLine: 10 },
         { startLine: 11, endLine: 15 },
         { startLine: 16, endLine: 20 },
@@ -151,7 +151,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
         line,
         col
       },
-      jsmdChunks: [
+      iomdChunks: [
         { startLine: 0, endLine: 10 },
         { startLine: 11, endLine: 15 },
         { startLine: 16, endLine: 20 },

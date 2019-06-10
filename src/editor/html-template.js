@@ -7,8 +7,8 @@ const template = `<!DOCTYPE html>
 <base target="_blank" rel="noopener noreferrer">
 </head>
 <body>
-<script id="jsmd" type="text/jsmd">
-<%= JSMD %>
+<script id="iomd" type="text/iomd">
+<%= IOMD %>
 </script>
 <iframe
   id="eval-frame"

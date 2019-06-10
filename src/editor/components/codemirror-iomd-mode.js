@@ -27,7 +27,7 @@ const innerModes = {
 };
 innerModes.raw.startState = () => null;
 
-CodeMirror.defineMode("jsmd", () => ({
+CodeMirror.defineMode("iomd", () => ({
   startState: () => ({
     localMode: innerModes.raw,
     localState: null
@@ -44,7 +44,7 @@ CodeMirror.defineMode("jsmd", () => ({
     }
     if (delimLineMatch) {
       // if this is a delim line, set the token and advance the stream
-      thisToken = "line-background-cm-jsmd-delim-line";
+      thisToken = "line-background-cm-iomd-delim-line";
       stream.skipToEnd();
       // handle the chunkType
       if (chunkType !== "") {

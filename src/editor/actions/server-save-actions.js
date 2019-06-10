@@ -5,7 +5,7 @@ import {
 } from "../../shared/server-api/notebook";
 import { clearLocalAutosave } from "../tools/local-autosave";
 import { getNotebookID, getRevisionID } from "../tools/server-tools";
-import { updateJsmdContent, updateTitle, updateNotebookInfo } from "./actions";
+import { updateIomdContent, updateTitle, updateNotebookInfo } from "./actions";
 
 function updateServerSaveStatus(error) {
   let serverSaveStatus;
@@ -44,7 +44,7 @@ export function createNewNotebookOnServer() {
     try {
       const notebook = await createNotebookRequest(
         state.title,
-        state.jsmd,
+        state.iomd,
         originalNotebookId ? { forked_from: getRevisionID(state) } : {}
       );
       window.history.replaceState({}, "", `/notebooks/${notebook.id}/`);
@@ -87,7 +87,7 @@ export function saveNotebookToServer(forceSave = false) {
         notebookId,
         forceSave ? undefined : getRevisionID(state),
         state.title,
-        state.jsmd
+        state.iomd
       );
       dispatch(
         updateNotebookInfo({
@@ -124,7 +124,7 @@ export function checkNotebookIsBasedOnLatestServerRevision() {
       // if the notebook on the server has the same content as locally,
       // just update the revision id (and update the revision is latest property in the unlikely event it got set to false)
       const sameContent =
-        latestRevision.content === state.jsmd &&
+        latestRevision.content === state.iomd &&
         latestRevision.title === state.title;
       if (sameContent) {
         dispatch(
@@ -157,7 +157,7 @@ export function revertToLatestServerRevision() {
       const { latest_revision: latestRevision } = await getNotebookRequest(
         notebookId
       );
-      dispatch(updateJsmdContent(latestRevision.content));
+      dispatch(updateIomdContent(latestRevision.content));
       dispatch(updateTitle(latestRevision.title));
       dispatch(
         updateNotebookInfo({

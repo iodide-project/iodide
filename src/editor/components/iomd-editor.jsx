@@ -16,10 +16,10 @@ import "codemirror/addon/hint/javascript-hint";
 import "codemirror/keymap/sublime";
 
 import "./codemirror-fetch-mode";
-import "./codemirror-jsmd-mode";
+import "./codemirror-iomd-mode";
 
 import {
-  updateJsmdContent,
+  updateIomdContent,
   updateEditorCursor,
   updateEditorSelections
 } from "../actions/actions";
@@ -35,7 +35,7 @@ delete CodeMirror.keyMap.sublime["Shift-Cmd-Enter"];
 delete CodeMirror.keyMap.sublime["Ctrl-Enter"];
 delete CodeMirror.keyMap.sublime["Shift-Ctrl-Enter"];
 
-class JsmdEditorUnconnected extends React.Component {
+class IomdEditorUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
     editorOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -43,7 +43,7 @@ class JsmdEditorUnconnected extends React.Component {
     editorCursorCol: PropTypes.number.isRequired,
     editorCursorForceUpdate: PropTypes.bool.isRequired,
     // action creators
-    updateJsmdContent: PropTypes.func.isRequired,
+    updateIomdContent: PropTypes.func.isRequired,
     updateEditorCursor: PropTypes.func.isRequired,
     updateEditorSelections: PropTypes.func.isRequired
   };
@@ -51,7 +51,7 @@ class JsmdEditorUnconnected extends React.Component {
   constructor(props) {
     super(props);
     // explicitly bind "this" for all methods in constructors
-    this.updateJsmdContent = this.updateJsmdContent.bind(this);
+    this.updateIomdContent = this.updateIomdContent.bind(this);
     this.updateCursor = this.updateCursor.bind(this);
     this.storeEditorInstance = this.storeEditorInstance.bind(this);
   }
@@ -73,8 +73,8 @@ class JsmdEditorUnconnected extends React.Component {
     this.editor = editor;
   }
 
-  updateJsmdContent(editor, data, content) {
-    this.props.updateJsmdContent(content);
+  updateIomdContent(editor, data, content) {
+    this.props.updateIomdContent(content);
   }
 
   updateCursor(editor) {
@@ -171,7 +171,7 @@ class JsmdEditorUnconnected extends React.Component {
         cursor={{ line: editorCursorLine, ch: editorCursorCol }}
         value={this.props.content}
         options={this.props.editorOptions}
-        onBeforeChange={this.updateJsmdContent}
+        onBeforeChange={this.updateIomdContent}
         onCursorActivity={this.updateCursor}
         style={{ height: "100%" }}
       />
@@ -180,7 +180,7 @@ class JsmdEditorUnconnected extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const codeMirrorMode = "jsmd";
+  const codeMirrorMode = "iomd";
   const editorOptions = {
     mode: codeMirrorMode,
     lineWrapping: false,
@@ -202,7 +202,7 @@ function mapStateToProps(state) {
     forceUpdate: editorCursorForceUpdate
   } = state.editorCursor;
   return {
-    content: state.jsmd,
+    content: state.iomd,
     editorOptions,
     editorCursorLine,
     editorCursorCol,
@@ -217,8 +217,8 @@ function mapStateToProps(state) {
 // }
 export function mapDispatchToProps(dispatch) {
   return {
-    updateJsmdContent: content => {
-      dispatch(updateJsmdContent(content));
+    updateIomdContent: content => {
+      dispatch(updateIomdContent(content));
       dispatch(updateAutosave());
     },
     updateEditorCursor: (line, col) => dispatch(updateEditorCursor(line, col)),
@@ -230,4 +230,4 @@ export function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(JsmdEditorUnconnected);
+)(IomdEditorUnconnected);

@@ -2,7 +2,7 @@ import {
   getChunkContainingLine,
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet
-} from "../jsmd-tools/jsmd-selection";
+} from "../iomd-tools/iomd-selection";
 
 import { NONCODE_EVAL_TYPES } from "../state-schemas/state-schema";
 
@@ -29,10 +29,10 @@ export function addToEvalQueue(chunk) {
 
 export function evaluateText() {
   return (dispatch, getState) => {
-    const { jsmdChunks, editorSelections, editorCursor } = getState();
+    const { iomdChunks, editorSelections, editorCursor } = getState();
 
     if (editorSelections.length === 0) {
-      const activeChunk = getChunkContainingLine(jsmdChunks, editorCursor.line);
+      const activeChunk = getChunkContainingLine(iomdChunks, editorCursor.line);
       dispatch(addToEvalQueue(activeChunk));
     } else {
       const selectionChunkSet = editorSelections
@@ -41,7 +41,7 @@ export function evaluateText() {
           end: selection.end.line,
           selectedText: selection.selectedText
         }))
-        .map(selection => selectionToChunks(selection, jsmdChunks))
+        .map(selection => selectionToChunks(selection, iomdChunks))
         .map(removeDuplicatePluginChunksInSelectionSet());
       selectionChunkSet.forEach(selection => {
         selection.forEach(chunk => dispatch(addToEvalQueue(chunk)));
@@ -53,7 +53,7 @@ export function evaluateText() {
 export function evaluateNotebook() {
   return (dispatch, getState) => {
     getState()
-      .jsmdChunks.filter(chunkNotSkipped)
+      .iomdChunks.filter(chunkNotSkipped)
       .forEach(chunk => dispatch(addToEvalQueue(chunk)));
   };
 }

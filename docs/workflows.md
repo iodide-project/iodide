@@ -2,11 +2,11 @@
 
 ## Getting data into an Iodide notebook
 
-Iodide can use JavaScript and standard browser APIs to download data from public URLs on the web. As a convenience, we also provide a “fetch chunk” in JSMD, which allows you to load data using a shorthand syntax. You can read more about JSMD fetch chunk syntax in the fetch chunk section of the [JSMD docs](jsmd.md).
+Iodide can use JavaScript and standard browser APIs to download data from public URLs on the web. As a convenience, we also provide a “fetch chunk” in IOMD, which allows you to load data using a shorthand syntax. You can read more about IOMD fetch chunk syntax in the fetch chunk section of the [IOMD docs](iomd.md).
 
 ### From a remote server
 
-It's possible to download data from a remote server using a browser APIs or a fetch cell. Examples are given in the fetch chunk section of the [JSMD docs](jsmd.md).
+It's possible to download data from a remote server using a browser APIs or a fetch cell. Examples are given in the fetch chunk section of the [IOMD docs](iomd.md).
 
 #### CORS problems
 

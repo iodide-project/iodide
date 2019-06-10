@@ -1,7 +1,7 @@
-import { jsmdParser } from "./jsmd-parser";
+import { iomdParser } from "./iomd-parser";
 
-export function getChunkContainingLine(jsmdChunks, line) {
-  const [activeChunk] = jsmdChunks.filter(
+export function getChunkContainingLine(iomdChunks, line) {
+  const [activeChunk] = iomdChunks.filter(
     c => c.startLine <= line && line <= c.endLine
   );
   return activeChunk;
@@ -19,14 +19,14 @@ export function padOutFetchChunk(
   return content.join("\n");
 }
 
-export function selectionToChunks(originalSelection, jsmdChunks) {
+export function selectionToChunks(originalSelection, iomdChunks) {
   // `start` and `end` are line numbers *only*,
   //  not full cursor positions { line, col }
   const { start, end, selectedText } = originalSelection;
-  const startingChunk = getChunkContainingLine(jsmdChunks, start);
-  const endingChunk = getChunkContainingLine(jsmdChunks, end);
+  const startingChunk = getChunkContainingLine(iomdChunks, start);
+  const endingChunk = getChunkContainingLine(iomdChunks, end);
 
-  const selection = jsmdParser(selectedText);
+  const selection = iomdParser(selectedText);
 
   if (selection[0].chunkType === "") {
     selection[0].chunkType = startingChunk.chunkType;
