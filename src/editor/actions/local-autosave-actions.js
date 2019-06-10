@@ -1,6 +1,6 @@
 import { getLocalAutosave } from "../tools/local-autosave";
 import { getRevisionID } from "../tools/server-tools";
-import { updateJsmdContent, updateNotebookInfo, updateTitle } from "./actions";
+import { updateIomdContent, updateNotebookInfo, updateTitle } from "./actions";
 
 // Check to see if we have an autosaved revision available, if so
 // replace the notebook content with it
@@ -20,15 +20,15 @@ export function restoreLocalAutosave() {
 
     const localAutosaveState = await getLocalAutosave(state);
     if (
-      localAutosaveState.jsmd &&
+      localAutosaveState.iomd &&
       localAutosaveState.title &&
       localAutosaveState.parentRevisionId &&
-      (localAutosaveState.jsmd !== state.jsmd ||
+      (localAutosaveState.iomd !== state.iomd ||
         localAutosaveState.title !== state.title)
     ) {
       const originalLoadedRevisionId = getRevisionID(state);
 
-      dispatch(updateJsmdContent(localAutosaveState.jsmd));
+      dispatch(updateIomdContent(localAutosaveState.iomd));
       dispatch(updateTitle(localAutosaveState.title));
       dispatch(
         updateNotebookInfo({

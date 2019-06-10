@@ -1,4 +1,4 @@
-import { delimLineRegex } from "../codemirror-jsmd-mode";
+import { delimLineRegex } from "../codemirror-iomd-mode";
 
 describe("delimLineRegex returns expected match", () => {
   const linesAndResults = [

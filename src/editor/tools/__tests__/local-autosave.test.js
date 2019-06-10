@@ -8,7 +8,7 @@ import { newNotebook } from "../../state-schemas/editor-state-prototypes";
 describe("autosave basics", () => {
   it("saves / restores / clears as expected", async () => {
     const state = Object.assign(newNotebook, {
-      jsmd: "my exciting notebook content",
+      iomd: "my exciting notebook content",
       title: "exciting title",
       notebookInfo: { connectionMode: "SERVER", notebook_id: 1, revision_id: 2 }
     });
@@ -16,7 +16,7 @@ describe("autosave basics", () => {
     expect(await getLocalAutosave(state)).toEqual({});
     await writeLocalAutosave(state);
     expect(await getLocalAutosave(state)).toEqual({
-      jsmd: state.jsmd,
+      iomd: state.iomd,
       title: state.title,
       parentRevisionId: state.notebookInfo.revision_id
     });

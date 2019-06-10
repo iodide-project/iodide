@@ -6,10 +6,10 @@ import {
 } from "../tools/revision-history";
 import { getNotebookID, getUserDataFromDocument } from "../tools/server-tools";
 
-import { jsmdParser } from "../jsmd-tools/jsmd-parser";
-import { getChunkContainingLine } from "../jsmd-tools/jsmd-selection";
+import { iomdParser } from "../iomd-tools/iomd-parser";
+import { getChunkContainingLine } from "../iomd-tools/iomd-selection";
 
-import { exportJsmdBundle, titleToHtmlFilename } from "../tools/export-tools";
+import { exportIomdBundle, titleToHtmlFilename } from "../tools/export-tools";
 
 import { addAppMessageToConsoleHistory } from "./console-message-actions";
 
@@ -28,16 +28,16 @@ export function updateAppMessages(messageObj) {
   };
 }
 
-export function updateJsmdContent(text) {
+export function updateIomdContent(text) {
   return (dispatch, getState) => {
-    const jsmdChunks = jsmdParser(text);
+    const iomdChunks = iomdParser(text);
     const languageDefinitions = getState().languageDefinitions || {};
     const reportChunkTypes = Object.keys(languageDefinitions).concat([
       "md",
       "html",
       "css"
     ]);
-    const reportChunks = jsmdChunks
+    const reportChunks = iomdChunks
       .filter(c => reportChunkTypes.includes(c.chunkType))
       .map(c => ({
         chunkContent: c.chunkContent,
@@ -52,9 +52,9 @@ export function updateJsmdContent(text) {
       reportChunks
     });
     dispatch({
-      type: "UPDATE_JSMD_CONTENT",
-      jsmd: text,
-      jsmdChunks
+      type: "UPDATE_IOMD_CONTENT",
+      iomd: text,
+      iomdChunks
     });
   };
 }
@@ -70,7 +70,7 @@ export function exportNotebook(exportAsReport = false) {
       viewMode: exportAsReport ? "REPORT_VIEW" : "EXPLORE_VIEW"
     });
     const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(
-      exportJsmdBundle(exportState.jsmd, exportState.title)
+      exportIomdBundle(exportState.iomd, exportState.title)
     )}`;
     const dlAnchorElem = document.getElementById("export-anchor");
     dlAnchorElem.setAttribute("href", dataStr);
@@ -146,7 +146,7 @@ export function moveCursorToNextChunk() {
   return (dispatch, getState) => {
     const {
       editorSelections: selections,
-      jsmdChunks,
+      iomdChunks,
       editorCursor
     } = getState();
     const targetLine =
@@ -154,7 +154,7 @@ export function moveCursorToNextChunk() {
         ? editorCursor.line
         : selections[selections.length - 1].end.line;
 
-    const targetChunk = getChunkContainingLine(jsmdChunks, targetLine);
+    const targetChunk = getChunkContainingLine(iomdChunks, targetLine);
     dispatch(updateEditorCursor(targetChunk.endLine + 1, 0, true));
   };
 }

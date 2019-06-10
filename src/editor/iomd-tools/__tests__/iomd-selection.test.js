@@ -4,9 +4,9 @@ import {
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet,
   padOutFetchChunk
-} from "../jsmd-selection";
+} from "../iomd-selection";
 
-import { jsmdParser } from "../jsmd-parser";
+import { iomdParser } from "../iomd-parser";
 
 document.body.innerHTML = "";
 
@@ -158,12 +158,12 @@ const partialPluginSelections = [
   }
 ];
 
-const jsmdChunks = jsmdParser(NOTEBOOK);
+const iomdChunks = iomdParser(NOTEBOOK);
 
 describe("selectionToChunks", () => {
   it("correctly backs out various fetch selections and plugin chunks", () => {
     [...fetchSelections, ...partialPluginSelections].forEach(line => {
-      const [chunk] = selectionToChunks(line, jsmdChunks);
+      const [chunk] = selectionToChunks(line, iomdChunks);
       expect(chunk.chunkContent).toBe(line.expectedValue);
     });
   });
@@ -174,7 +174,7 @@ describe("selectionToChunks", () => {
     selectedText: SELECTION_A
   };
 
-  const selectedChunksA = selectionToChunks(selectionParamsA, jsmdChunks);
+  const selectedChunksA = selectionToChunks(selectionParamsA, iomdChunks);
   const [firstChunkA, secondChunkA] = selectedChunksA;
   it("partial %% fetch ... %% py selection, properly backs out first chunk type + full content", () => {
     expect(firstChunkA.chunkType).toBe("fetch");
@@ -193,7 +193,7 @@ describe("selectionToChunks", () => {
     selectedText: SELECTION_B
   };
 
-  const selectedChunksB = selectionToChunks(selectionParamsB, jsmdChunks);
+  const selectedChunksB = selectionToChunks(selectionParamsB, iomdChunks);
   const [firstChunkB, secondChunkB] = selectedChunksB;
   it("%%js  ... %% fetch ... selection, properly backs out first chunk type + full content", () => {
     expect(firstChunkB.chunkType).toBe("js");
@@ -209,7 +209,7 @@ describe("selectionToChunks", () => {
     end: 24,
     selectedText: SELECTION_C
   };
-  const selectedChunksC = selectionToChunks(selectionParamsC, jsmdChunks);
+  const selectedChunksC = selectionToChunks(selectionParamsC, iomdChunks);
   const [firstChunkC, secondChunkC] = selectedChunksC;
   it("correctly infers the first chunk type from the partial selection", () => {
     expect(firstChunkC.chunkType).toBe("py");
@@ -225,7 +225,7 @@ describe("selectionToChunks", () => {
     end: 34,
     selectedText: SELECTION_D
   };
-  const selectedChunksD = selectionToChunks(selectionParamsD, jsmdChunks);
+  const selectedChunksD = selectionToChunks(selectionParamsD, iomdChunks);
   const [firstChunkD, secondChunkD] = selectedChunksD;
   it("correctly infers the first chunk type from the partial selection", () => {
     expect(firstChunkD.chunkType).toBe("plugin");
@@ -270,7 +270,7 @@ var z = 30
 describe("removeDuplicatePluginChunksInSelectionSet", () => {
   it("removes duplicates in selection set", () => {
     const [chunk1, chunk2] = [pluginChunkA, pluginChunkB]
-      .map(selection => selectionToChunks(selection, jsmdChunks))
+      .map(selection => selectionToChunks(selection, iomdChunks))
       .map(removeDuplicatePluginChunksInSelectionSet());
     expect(chunk1.length).toBe(1);
     expect(
@@ -307,7 +307,7 @@ file: /files/gritty-data.csv`,
 ];
 
 describe("padOutFetchChunk", () => {
-  const fullText = jsmdChunks[2].chunkContent;
+  const fullText = iomdChunks[2].chunkContent;
   it("pads out the selection area of a fetch chunk selection to go to start / end of line", () => {
     moreFetchSelections.forEach(selection => {
       const { selectedText, side, start } = selection;

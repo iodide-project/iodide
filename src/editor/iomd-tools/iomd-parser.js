@@ -13,8 +13,8 @@ function hashCode(str) {
   return hash.toString();
 }
 
-export function jsmdParser(fullJsmd) {
-  const jsmdLines = fullJsmd.split("\n");
+export function iomdParser(fullIomd) {
+  const iomdLines = fullIomd.split("\n");
   const chunks = [];
   let currentChunkLines = [];
   let currentEvalType = "";
@@ -45,7 +45,7 @@ export function jsmdParser(fullJsmd) {
     });
   };
 
-  for (const [i, line] of jsmdLines.entries()) {
+  for (const [i, line] of iomdLines.entries()) {
     if (line.slice(0, 2) === "%%") {
       // if line start with '%%', a new chunk has started
       // push the current chunk (unless it's on line 0), then reset
@@ -77,6 +77,6 @@ export function jsmdParser(fullJsmd) {
     }
   }
   // this is what's left over in the final chunk
-  pushChunk(jsmdLines.length - 1);
+  pushChunk(iomdLines.length - 1);
   return chunks;
 }

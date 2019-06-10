@@ -2,7 +2,7 @@
 
 **[Getting started and key concepts](key_concepts.md)**: The central concepts in Iodide, and how to get started.
 
-**[JSMD format](jsmd.md)**: The simple file format used to write Iodide notebooks.
+**[IOMD format](iomd.md)**: The simple file format used to write Iodide notebooks.
 
 **[Language plugins](language_plugins.md)**: Support for programming languages
 other than JavaScript.

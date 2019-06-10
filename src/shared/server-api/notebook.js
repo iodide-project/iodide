@@ -20,10 +20,10 @@ function createNotebookRequestPayload(title, content, options) {
   return postRequestOptions;
 }
 
-export function createNotebookRequest(title, jsmd, options) {
+export function createNotebookRequest(title, iomd, options) {
   return signedAPIRequestWithJSONContent(
     "/api/v1/notebooks/",
-    createNotebookRequestPayload(title, jsmd, options)
+    createNotebookRequestPayload(title, iomd, options)
   );
 }
 
@@ -31,13 +31,13 @@ export function updateNotebookRequest(
   notebookId,
   currentRevisionId,
   newTitle,
-  newJsmd
+  newIomd
 ) {
   return signedAPIRequestWithJSONContent(
     `/api/v1/notebooks/${notebookId}/revisions/`,
     createNotebookRequestPayload(
       newTitle,
-      newJsmd,
+      newIomd,
       currentRevisionId ? { parent_revision_id: currentRevisionId } : {}
     )
   );

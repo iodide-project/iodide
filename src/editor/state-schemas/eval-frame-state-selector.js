@@ -29,7 +29,7 @@ export default function evalFrameStateSelector(state) {
   ]);
 
   // add propertiess that need special handling
-  evalFrameState.reportChunks = state.jsmdChunks
+  evalFrameState.reportChunks = state.iomdChunks
     .filter(c => reportChunkTypes.includes(c.chunkType))
     .map(c => _.pick(c, ["chunkContent", "chunkType", "chunkId", "evalFlags"]));
 

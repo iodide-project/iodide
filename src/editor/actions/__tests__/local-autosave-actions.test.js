@@ -26,7 +26,7 @@ describe("restoreLocalAutosave", () => {
   beforeEach(() => {
     writeLocalAutosave({
       ...initialState,
-      jsmd: "autosaved",
+      iomd: "autosaved",
       title: "autosaved title"
     });
   });
@@ -83,9 +83,9 @@ describe("restoreLocalAutosave", () => {
     expect(store.getActions()).toEqual([
       { type: "UPDATE_MARKDOWN_CHUNKS", reportChunks: [] },
       {
-        type: "UPDATE_JSMD_CONTENT",
-        jsmd: "autosaved",
-        jsmdChunks: [
+        type: "UPDATE_IOMD_CONTENT",
+        iomd: "autosaved",
+        iomdChunks: [
           {
             chunkContent: "autosaved",
             chunkId: "1679214136_0",

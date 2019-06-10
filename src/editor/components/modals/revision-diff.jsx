@@ -61,7 +61,7 @@ export function mapStateToProps(state) {
       : "";
   } else if (revisionList && revisionContent) {
     // looking at changes (if any) since last save
-    currentRevisionContent = state.jsmd;
+    currentRevisionContent = state.iomd;
     previousRevisionContent =
       revisionList.length > 0 ? revisionContent[revisionList[0].id] : "";
   }

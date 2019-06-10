@@ -40,7 +40,7 @@ if (IODIDE_BUILD_MODE === "production") {
       createLogger({
         predicate: (getState, action) =>
           ![
-            "UPDATE_JSMD_CONTENT",
+            "UPDATE_IOMD_CONTENT",
             "UPDATE_MARKDOWN_CHUNKS",
             "UPDATE_CURSOR",
             "UPDATE_SELECTIONS"

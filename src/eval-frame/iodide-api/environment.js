@@ -47,7 +47,7 @@ function decodeEnvObj(encoding, str) {
       return LZString.decompressFromBase64(str);
     default:
       throw new TypeError(
-        'JSMD env variables must have encoding "object", "string" or "rawString"'
+        'IOMD env variables must have encoding "object", "string" or "rawString"'
       );
   }
 }

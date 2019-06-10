@@ -12,7 +12,7 @@ def test_notebook_view(client, test_notebook):
     resp = client.get(reverse("notebook-view", args=[str(test_notebook.id)]))
     assert resp.status_code == 200
     assert get_title_block(resp.content) == initial_revision.title
-    expected_content = '<script id="jsmd" type="text/jsmd">{}</script>'.format(
+    expected_content = '<script id="iomd" type="text/iomd">{}</script>'.format(
         initial_revision.content
     )
     assert expected_content in str(resp.content)
@@ -36,7 +36,7 @@ def test_notebook_view(client, test_notebook):
     resp = client.get(reverse("notebook-view", args=[str(test_notebook.id)]))
     assert resp.status_code == 200
     assert get_title_block(resp.content) == new_revision.title
-    new_expected_content = '<script id="jsmd" type="text/jsmd">{}</script>'.format(
+    new_expected_content = '<script id="iomd" type="text/iomd">{}</script>'.format(
         new_revision_content
     )
     assert new_expected_content in str(resp.content)
@@ -54,7 +54,7 @@ def test_notebook_view_old_revision(client, test_notebook):
     assert resp.status_code == 200
     assert get_title_block(resp.content) == initial_revision.title
     print(str(resp.content))
-    assert get_script_block(resp.content, "jsmd", "text/jsmd") == initial_revision.content
+    assert get_script_block(resp.content, "iomd", "text/iomd") == initial_revision.content
     assert get_script_block_json(resp.content, "notebookInfo") == {
         "connectionMode": "SERVER",
         "files": [],

@@ -21,7 +21,7 @@ which, when resolved, will signal that `data` was uploaded to the server under t
 `fileName`. If the file already exists or `data` is not serializable, the Promise will reject. 
 Because you must own the notebook in order to save files to it, if you do not own a
 notebook and run `iodide.file.save` Iodide will throw an error. As such, we suggest including
-the [`skipRunAll` tag](https://iodide-project.github.io/docs/jsmd/#skiprunall) in the JS chunk
+the [`skipRunAll` tag](https://iodide-project.github.io/docs/iomd/#skiprunall) in the JS chunk
 evaluating `iodide.file.save` so that a user viewing your report does not encounter an error. Take
 a look at the example in the `iodide.file.save` examples section.
 
@@ -160,7 +160,7 @@ find a list of uploaded files on your notebook's revisions page (available at
 uploaded file through the fetch chunk, [following this
 pattern](https://iodide-project.github.io/docs/workflows/#uploading-data-to-an-iodide-notebook).
 For most use cases using [fetch
-chunks](https://iodide-project.github.io/docs/jsmd/#fetch-chunks-fetch) is
+chunks](https://iodide-project.github.io/docs/iomd/#fetch-chunks-fetch) is
 preferable and more straightforward. In more dynamic cases,
 however, `iodide.file.load` can provide more nuanced workflows.
 
@@ -168,7 +168,7 @@ however, `iodide.file.load` can provide more nuanced workflows.
 
 `fileType` is the file type to handle. These are the same as the following data fetch types 
 available to [fetch chunks]
-(https://iodide-project.github.io/docs/jsmd/#fetch-chunks-fetch):
+(https://iodide-project.github.io/docs/iomd/#fetch-chunks-fetch):
 
  - `json` (load this file as json and parse into a javascript object), 
  - `text` (load this file as text),
@@ -381,7 +381,7 @@ using `iodide.addOutputRenderer(rendererSpecification)`
 
 The `iodide.output` API provides convenience functions for programmatically adding DOM elements to your report without having to explicitly include them in a Markdown chunk.
 
-The DOM elements created using these functions are inserted into your report in the order in which they appear in your JSMD code. Importantly, the code chunk that created the element provides a key that allows Iodide to track the location of the element. Because of this, if you evaluate a code chunk that produces a DOM element using these functions, changing that code chunk will cause the element to be removed from your report and you will have to evaluate the code chunk again to refresh the element. (This is ensures that obsolete DOM elements are never left behind when you make code changes)
+The DOM elements created using these functions are inserted into your report in the order in which they appear in your IOMD code. Importantly, the code chunk that created the element provides a key that allows Iodide to track the location of the element. Because of this, if you evaluate a code chunk that produces a DOM element using these functions, changing that code chunk will cause the element to be removed from your report and you will have to evaluate the code chunk again to refresh the element. (This is ensures that obsolete DOM elements are never left behind when you make code changes)
 
 These convenience functions are only intended to be used for synchronous rendering. If you use them within an asynchronous callback, the DOM elements may be placed in unexpected positions within your report. To ensure that you have full control over the placement of DOM elements that you wish to target within asynchronous operations, it is recommended that you explicitly place a target DOM element within a Markdown chunk.
 

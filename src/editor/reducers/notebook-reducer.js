@@ -44,8 +44,8 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "REPLACE_NOTEBOOK_CONTENT": {
       return Object.assign({}, state, {
-        jsmd: action.jsmd,
-        jsmdChunks: action.jsmdChunks,
+        iomd: action.iomd,
+        iomdChunks: action.iomdChunks,
         title: action.title || state.title
       });
     }
@@ -63,9 +63,9 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
-    case "UPDATE_JSMD_CONTENT": {
-      const { jsmd, jsmdChunks } = action;
-      return Object.assign({}, state, { jsmd, jsmdChunks });
+    case "UPDATE_IOMD_CONTENT": {
+      const { iomd, iomdChunks } = action;
+      return Object.assign({}, state, { iomd, iomdChunks });
     }
 
     case "GETTING_NOTEBOOK_REVISION_LIST": {

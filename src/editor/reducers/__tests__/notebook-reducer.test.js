@@ -8,7 +8,7 @@ const EXAMPLE_NOTEBOOK_1 = "example notebook with content";
 
 function exampleNotebookWithContent(title = EXAMPLE_NOTEBOOK_1) {
   const state = newNotebook();
-  state.jsmd = `%% js
+  state.iomd = `%% js
 var x = 10
 
 %% md

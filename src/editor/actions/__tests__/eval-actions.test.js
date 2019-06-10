@@ -18,7 +18,7 @@ describe("evaluateNotebook", () => {
   beforeEach(() => {
     store = undefined;
     testState = {
-      jsmdChunks: [
+      iomdChunks: [
         { id: 0, evalFlags: ["skipRunAll"] },
         { id: 1, evalFlags: [] },
         { id: 2, evalFlags: ["skipRunAll"] },
@@ -29,8 +29,8 @@ describe("evaluateNotebook", () => {
 
   it("pass correct chunks", () => {
     const expectedActions = [
-      { type: "ADD_TO_EVAL_QUEUE", chunk: testState.jsmdChunks[1] },
-      { type: "ADD_TO_EVAL_QUEUE", chunk: testState.jsmdChunks[3] }
+      { type: "ADD_TO_EVAL_QUEUE", chunk: testState.iomdChunks[1] },
+      { type: "ADD_TO_EVAL_QUEUE", chunk: testState.iomdChunks[3] }
     ];
 
     store = mockStore(testState);
@@ -118,7 +118,7 @@ describe("evaluateText", () => {
   beforeEach(() => {
     store = undefined;
     testState = {
-      jsmdChunks: [0, 1, 2, 3, 4].map(i => {
+      iomdChunks: [0, 1, 2, 3, 4].map(i => {
         return {
           startLine: 10 * i,
           endLine: 10 * (i + 1) - 1,
@@ -139,7 +139,7 @@ describe("evaluateText", () => {
       store.dispatch(evaluateText());
 
       const expectedActions = [
-        { type: "ADD_TO_EVAL_QUEUE", chunk: testState.jsmdChunks[i] }
+        { type: "ADD_TO_EVAL_QUEUE", chunk: testState.iomdChunks[i] }
       ];
       expect(store.getActions()).toEqual(expectedActions);
     });
@@ -155,7 +155,7 @@ describe("evaluateText", () => {
     // store = mockStore(testState);
     // store.dispatch(evaluateText(consoleText));
     // const expectedActions = [
-    //   { type: "ADD_TO_EVAL_QUEUE", chunktestState.jsmdChunks[i] },
+    //   { type: "ADD_TO_EVAL_QUEUE", chunktestState.iomdChunks[i] },
     // ];
     // expect(store.getActions()).toEqual(expectedActions);
   });

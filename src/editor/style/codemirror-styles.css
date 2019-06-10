@@ -19,7 +19,7 @@ div.main-component.SCROLL div.CodeMirror div.CodeMirror-scroll {
   outline: 1px dotted #000;
 }
 
-.cm-jsmd-delim-line {
+.cm-iomd-delim-line {
   border-top: 1px solid #e6e6e6;
 }
 

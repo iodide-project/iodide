@@ -66,7 +66,7 @@ def notebook_view(request, pk):
             "title": revision.title,
             "user_info": _get_user_info_json(request.user),
             "notebook_info": notebook_info,
-            "jsmd": revision.content,
+            "iomd": revision.content,
             "iframe_src": _get_iframe_src(),
         },
     )
@@ -131,7 +131,7 @@ def new_notebook_view(request):
         return redirect(reverse("try-it"))
 
     # create a new notebook and redirect to its view
-    new_notebook_content_template = get_template("new_notebook_content.jsmd")
+    new_notebook_content_template = get_template("new_notebook_content.iomd")
     with transaction.atomic():
         notebook = Notebook.objects.create(owner=request.user)
         NotebookRevision.objects.create(
@@ -152,7 +152,7 @@ def tryit_view(request):
     if request.user.is_authenticated:
         return redirect(new_notebook_view)
     # create a new notebook and redirect to its view
-    new_notebook_content_template = get_template("new_notebook_content.jsmd")
+    new_notebook_content_template = get_template("new_notebook_content.iomd")
     return render(
         request,
         "notebook.html",
@@ -163,7 +163,7 @@ def tryit_view(request):
                 "tryItMode": True,
                 "title": "Untitled notebook",
             },
-            "jsmd": new_notebook_content_template.render(),
+            "iomd": new_notebook_content_template.render(),
             "iframe_src": _get_iframe_src(),
         },
     )

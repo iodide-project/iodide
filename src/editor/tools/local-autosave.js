@@ -23,7 +23,7 @@ async function writeLocalAutosave(state) {
   const autosaveKey = getAutosaveKey(state);
   db.autosave.put(
     {
-      jsmd: state.jsmd,
+      iomd: state.iomd,
       title: state.title,
       parentRevisionId: state.notebookInfo.revision_id
     },

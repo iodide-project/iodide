@@ -27,7 +27,7 @@ import NotebookHeader from "./components/menu/notebook-header";
 import EditorPaneContainer from "./components/editor-pane-container";
 import { store } from "./store";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
-import handleInitialJsmd from "./initialization/handle-initial-jsmd";
+import handleInitialIomd from "./initialization/handle-initial-iomd";
 import handleServerVariables from "./initialization/handle-server-variables";
 import handleReportViewModeInitialization from "./initialization/handle-report-view-mode-initialization";
 import { initializeDefaultKeybindings } from "./initialization/keybindings";
@@ -45,7 +45,7 @@ initializeDefaultKeybindings();
 window.addEventListener("message", listenForEvalFramePortReady, false);
 
 handleServerVariables(store);
-handleInitialJsmd(store);
+handleInitialIomd(store);
 store.dispatch(restoreLocalAutosave());
 handleReportViewModeInitialization(store);
 
