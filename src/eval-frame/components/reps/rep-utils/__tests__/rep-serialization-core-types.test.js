@@ -2,9 +2,9 @@ import {
   ValueSummary,
   RangeDescriptor,
   ChildSummary,
-  ChildSummaryItem,
-  SubstringRangeSummaryItem,
-  MapPairSummaryItem
+  ChildSummaryItem
+  // SubstringRangeSummaryItem,
+  // MapPairSummaryItem
 } from "../rep-serialization-core-types";
 
 function replaceArg(args, index, newArg) {
