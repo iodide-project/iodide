@@ -93,7 +93,7 @@ SummaryItemWithRangeHandling.propTypes = {
   summaryItemRep: PropTypes.func.isRequired
 };
 
-export const InlineChildSummary = ({ childSummaries, parentType }) => {
+const InlineChildSummary = ({ childSummaries, parentType }) => {
   if (!childSummaries || !parentType || parentType === "String") return "";
 
   const { childItems } = childSummaries;

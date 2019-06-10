@@ -124,13 +124,14 @@ allTestCases.add("inline child summary reps", () => {
           {Object.entries(allCases).map(caseNameAndVal => {
             const [name, value] = caseNameAndVal;
             const parentType = serializeForValueSummary(value).objType;
+            console.log("parentType", parentType);
             return (
               <tr key={name}>
                 <td>{name}</td>
                 <td>
                   <InlineChildSummary
                     parentType={parentType}
-                    {...serializeChildSummary(value)}
+                    childSummaries={serializeChildSummary(value)}
                   />
                 </td>
               </tr>
