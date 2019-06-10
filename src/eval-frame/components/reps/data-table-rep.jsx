@@ -8,7 +8,6 @@ import "./react-table-styles.css";
 
 import { serializeForValueSummary } from "./rep-utils/value-summary-serializer";
 
-// import DefaultRenderer from "./default-handler";
 import ExpandableRep from "./rep-tree";
 
 import { getChildSummary } from "./rep-utils/get-child-summaries";

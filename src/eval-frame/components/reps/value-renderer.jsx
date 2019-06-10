@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-// import DefaultRenderer from "./default-handler";
 import ExpandableRep from "./rep-tree";
 
 import ErrorRenderer from "./error-handler";
