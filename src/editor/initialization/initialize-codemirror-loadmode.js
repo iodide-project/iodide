@@ -2,9 +2,7 @@ import CodeMirror from "codemirror";
 import { dispatch } from "../store";
 // This block is from CodeMirror's loadmode.js, modified to work in this environment
 
-CodeMirror.modeUrl = `https://cdnjs.cloudflare.com/ajax/libs/codemirror/${
-  CodeMirror.version
-}/mode/%N/%N.js`;
+CodeMirror.modeUrl = `https://cdnjs.cloudflare.com/ajax/libs/codemirror/${CodeMirror.version}/mode/%N/%N.js`;
 window.CodeMirror = CodeMirror;
 
 const modeLoading = {};

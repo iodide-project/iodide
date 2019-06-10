@@ -209,9 +209,7 @@ export default class RevisionsPage extends React.Component {
                   <ListMain>
                     <ListPrimaryText>
                       <a
-                        href={`/notebooks/${revision.notebookId}?revision=${
-                          revision.id
-                        }`}
+                        href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}
                       >
                         {revision.title}
                       </a>
@@ -220,16 +218,12 @@ export default class RevisionsPage extends React.Component {
                   <ListMetadata>
                     <ListLinkSet>
                       <ListSmallLink
-                        href={`/notebooks/${revision.notebookId}?revision=${
-                          revision.id
-                        }`}
+                        href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}
                       >
                         explore
                       </ListSmallLink>
                       <ListSmallLink
-                        href={`/notebooks/${revision.notebookId}?revision=${
-                          revision.id
-                        }&viewMode=report`}
+                        href={`/notebooks/${revision.notebookId}?revision=${revision.id}&viewMode=report`}
                       >
                         report
                       </ListSmallLink>
@@ -237,17 +231,13 @@ export default class RevisionsPage extends React.Component {
                   </ListMetadata>
                   <ListDate>
                     <RevisionDateLink
-                      href={`/notebooks/${revision.notebookId}?revision=${
-                        revision.id
-                      }`}
+                      href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}
                     >
                       {format(new Date(revision.date), "MMM dd, uuuu")}
                     </RevisionDateLink>
                     <RevisionDateLink
                       size="small"
-                      href={`/notebooks/${revision.notebookId}?revision=${
-                        revision.id
-                      }`}
+                      href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}
                     >
                       {format(new Date(revision.date), "HH:mm:ss")}
                     </RevisionDateLink>

@@ -66,9 +66,7 @@ export function runCodeWithLanguage(language, code) {
     } catch (e) {
       if (e.message === "window[module] is undefined") {
         throw new Error(
-          `Error evaluating ${
-            language.displayName
-          }; evaluation module "${module}" not not defined`
+          `Error evaluating ${language.displayName}; evaluation module "${module}" not not defined`
         );
       }
       throw e;

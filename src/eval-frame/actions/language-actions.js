@@ -39,9 +39,7 @@ export function loadLanguagePlugin(pluginData, historyId) {
         window.languagePluginUrl = url;
 
         if (xhrObj.status > 400 && xhrObj.status < 600) {
-          value = `${displayName} failed to load: ${xhrObj.status} ${
-            xhrObj.statusText
-          }`;
+          value = `${displayName} failed to load: ${xhrObj.status} ${xhrObj.statusText}`;
           updateConsoleEntryInEditor({
             historyId,
             content: value,

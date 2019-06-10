@@ -20,7 +20,7 @@ function getCompletions(token, context) {
 
   function forAllProps(obj, callback) {
     if (!Object.getOwnPropertyNames || !Object.getPrototypeOf) {
-      for (const name in obj) callback(name) // eslint-disable-line
+      for (const name in obj) callback(name); // eslint-disable-line
     } else {
       for (let o = obj; o; o = Object.getPrototypeOf(o)) {
         Object.getOwnPropertyNames(o).forEach(callback);

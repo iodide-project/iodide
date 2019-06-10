@@ -38,9 +38,7 @@ export default class RevisionsActionsMenu extends React.Component {
   }
 
   viewRevision() {
-    window.location = `/notebooks/${this.props.notebookID}?revision=${
-      this.props.revisionID
-    }`;
+    window.location = `/notebooks/${this.props.notebookID}?revision=${this.props.revisionID}`;
   }
 
   render() {

@@ -8,9 +8,7 @@ import {
 import { allCases } from "../../__test_helpers__/reps-test-value-cases";
 
 function returnsStringForAllTestValues(testFn) {
-  describe(`tiny-rep-serializer function "${
-    testFn.name
-  }" returns a string for all test values`, () => {
+  describe(`tiny-rep-serializer function "${testFn.name}" returns a string for all test values`, () => {
     Object.keys(allCases).forEach(testCase => {
       it(`${testFn.name} should return a string; case: ${testCase}`, () =>
         expect(typeof testFn(allCases[testCase])).toBe("string"));

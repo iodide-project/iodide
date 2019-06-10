@@ -5,9 +5,7 @@ import {
 } from "../../__test_helpers__/reps-test-value-cases";
 
 function typeIdentifierTest(chooserFn, typesAccepted) {
-  describe(`type identifier function "${
-    chooserFn.name
-  }" only accepts correct types`, () => {
+  describe(`type identifier function "${chooserFn.name}" only accepts correct types`, () => {
     Object.keys(allCases).forEach(testCase => {
       const accept = typesAccepted.includes(testCase);
       it(`${chooserFn.name} should ${
