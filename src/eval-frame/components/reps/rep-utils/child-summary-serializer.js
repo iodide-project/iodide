@@ -245,29 +245,20 @@ export function serializeChildSummary(obj) {
   const type = getType(obj);
 
   if (numericIndexTypes.includes(type)) {
-    return new ChildSummary(
-      serializeArrayPathsSummary(obj),
-      "ARRAY_PATH_SUMMARY"
-    );
+    return new ChildSummary(serializeArrayPathsSummary(obj));
   } else if (type === "Map") {
-    return new ChildSummary(serializeMapPathsSummary(obj), "MAP_PATH_SUMMARY");
+    return new ChildSummary(serializeMapPathsSummary(obj));
   } else if (type === "Set") {
-    return new ChildSummary(serializeSetPathsSummary(obj), "SET_PATH_SUMMARY");
+    return new ChildSummary(serializeSetPathsSummary(obj));
   } else if (type === "String") {
-    return new ChildSummary(
-      serializeStringPathsSummary(obj),
-      "STRING_PATH_SUMMARY"
-    );
+    return new ChildSummary(serializeStringPathsSummary(obj));
   } else if (
     type === "Object" ||
     getClass(obj) === "Object" ||
     objectLikeTypes.includes(type)
   ) {
-    return new ChildSummary(
-      serializeObjectPathsSummary(obj),
-      "OBJECT_PATH_SUMMARY"
-    );
+    return new ChildSummary(serializeObjectPathsSummary(obj));
   }
 
-  return new ChildSummary([], "ATOMIC_VALUE");
+  return new ChildSummary([]);
 }

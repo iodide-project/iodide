@@ -54,7 +54,7 @@ class CellDetails extends React.Component {
       const focusedPath = `[${focusedRow}]["${focusedCol}"]`;
       const valueSummary = serializeForValueSummary(get(value, focusedPath));
       return (
-        <TableDetails /* key={JSON.stringify(focusedPath)} */>
+        <TableDetails>
           <TableDetailsMessage pad>
             {`details for ${focusedPath}`}
           </TableDetailsMessage>
@@ -112,8 +112,6 @@ export default class TableRenderer extends React.Component {
         PropTypes.instanceOf(RangeDescriptor)
       ])
     ).isRequired,
-    // valueSummary: PropTypes.instanceOf(ValueSummary),
-    // getChildSummaries: PropTypes.func.isRequired,
     rootObjName: PropTypes.string
   };
 

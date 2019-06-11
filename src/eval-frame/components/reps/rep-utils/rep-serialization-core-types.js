@@ -1,5 +1,7 @@
-// THIS FILE MUST NOT IMPORT ANYTHING.
-// (We don't want it to get caught in import circularities)
+// THIS FILE SHOULD NOT IMPORT ANYTHING.
+// It acts as top-level type definitions, and shouldn't rely on
+// other code for functionality... because it shouldn't really have
+// "functionality" per se
 
 // These are just a container classes to clarify semantics and
 // to clarify code by not putting plain objects everywhere.
@@ -146,9 +148,8 @@ export class MapPairSummaryItem extends ChildSummaryItem {
 export class ChildSummary {
   // an instance of this class summarizes information about the children
   // of an object. These can be either values or ranges of indices.
-  constructor(childItems, summaryType) {
+  constructor(childItems) {
     if (process.env.NODE_ENV !== "production") {
-      checkTypes({ summaryType }, { summaryType: "string" }, "ChildSummary");
       childItems.forEach(item => {
         if (!(item instanceof ChildSummaryItem)) {
           // note: can technically be equal since the ranges are inclusive
@@ -156,7 +157,6 @@ export class ChildSummary {
         }
       });
     }
-    this.childItems = childItems; // array of ChildSummaryItems
-    this.summaryType = summaryType; // string
+    this.childItems = childItems;
   }
 }

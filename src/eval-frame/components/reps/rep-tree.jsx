@@ -93,8 +93,6 @@ export default class ExpandableRep extends React.PureComponent {
 
   async componentDidMount() {
     // on mount, get the array of childSummaries for this entity
-    // in compact form. this array of {path, summary} objs
-    // can be used for in-line summaries where applicable.
     const { rootObjName, pathToEntity } = this.props;
     const childSummaries = await this.props.getChildSummaries(
       rootObjName,
@@ -131,7 +129,6 @@ export default class ExpandableRep extends React.PureComponent {
       error,
       errorInfo
     });
-    // You can also log error messages to an error reporting service here
   }
 
   async toggleExpand() {
@@ -155,7 +152,6 @@ export default class ExpandableRep extends React.PureComponent {
 
     let expanderState;
     if (valueSummary instanceof ValueSummary && !valueSummary.isExpandable) {
-      // objects of size 0 and full-length strings cannot be expanded
       expanderState = "NONE";
     } else {
       expanderState = expanded ? "EXPANDED" : "COLLAPSED";

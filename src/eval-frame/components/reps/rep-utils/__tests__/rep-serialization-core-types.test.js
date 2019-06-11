@@ -57,15 +57,16 @@ const okValueSummary = new ValueSummary("string1", 6453, "string2", true);
 const okChildSummaryItem = () => new ChildSummaryItem("path", okValueSummary);
 
 describe("ChildSummary", () => {
-  const okArgs = [[okChildSummaryItem()], "a string"];
+  const okArgs = [
+    [okChildSummaryItem(), okChildSummaryItem(), okChildSummaryItem()]
+  ];
   it(`should not throw in case of valid construction arg`, () => {
     expect(() => new ChildSummary(...okArgs)).not.toThrow();
   });
 
   [
     replaceArg(okArgs, 0, "not an array"),
-    replaceArg(okArgs, 0, [{ path: "asdf", summary: null }]),
-    replaceArg(okArgs, 1, 312) // not a string
+    replaceArg(okArgs, 0, [{ path: "asdf", summary: null }])
   ].forEach((args, i) => {
     it(`should throw in case of invalid construction-- case ${i}, args: ${args}`, () => {
       expect(() => new ChildSummary(...args)).toThrow();

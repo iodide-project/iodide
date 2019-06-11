@@ -16,7 +16,7 @@ import {
 import { splitIndexRange, RANGE_SPLIT_THRESHOLD } from "./split-index-range";
 
 export function expandRangesInChildSummaries(childSummaries) {
-  const { childItems, summaryType } = childSummaries;
+  const { childItems } = childSummaries;
   const finalSubpaths = [];
   for (const summaryItem of childItems) {
     if (summaryItem.summary !== null) {
@@ -32,7 +32,7 @@ export function expandRangesInChildSummaries(childSummaries) {
     }
   }
 
-  return new ChildSummary(finalSubpaths, summaryType);
+  return new ChildSummary(finalSubpaths);
 }
 
 function getIteratorAtIndex(iterator, index) {
@@ -102,15 +102,13 @@ export function getChildSummary(rootObjName, path) {
     return new ChildSummary(
       splitIndexRange(pathEnd, MAX_SUMMARY_STRING_LEN).map(
         range => new ChildSummaryItem(range, null)
-      ),
-      "STRING_DESCRIPTOR_SUBRANGES"
+      )
     );
   } else if (type !== "STRING_RANGE" && rangeSize > RANGE_SPLIT_THRESHOLD) {
     // if this range is too big, expand into subranges
-    const tempChildSummariesForExpansion = new ChildSummary(
-      [new ChildSummaryItem(pathEnd, null)],
-      "RANGE_DESCRIPTOR_SUBRANGES"
-    );
+    const tempChildSummariesForExpansion = new ChildSummary([
+      new ChildSummaryItem(pathEnd, null)
+    ]);
 
     return expandRangesInChildSummaries(tempChildSummariesForExpansion);
   }
@@ -123,8 +121,7 @@ export function getChildSummary(rootObjName, path) {
           get(window[rootObjName], path.filter(isString)),
           min,
           max
-        ),
-        "ARRAY_PATHS_FOR_RANGE"
+        )
       );
 
     case "PROPS_RANGE":
@@ -133,8 +130,7 @@ export function getChildSummary(rootObjName, path) {
           get(window[rootObjName], path.filter(isString)),
           min,
           max
-        ),
-        "OBJ_PROPS_PATHS_FOR_RANGE"
+        )
       );
     case "SET_INDEX_RANGE":
       return new ChildSummary(
@@ -142,8 +138,7 @@ export function getChildSummary(rootObjName, path) {
           get(window[rootObjName], path.filter(isString)),
           min,
           max
-        ),
-        "SET_INDEX_PATHS_FOR_RANGE"
+        )
       );
     case "MAP_INDEX_RANGE":
       return new ChildSummary(
@@ -151,8 +146,7 @@ export function getChildSummary(rootObjName, path) {
           getObjAtPath(window[rootObjName], path),
           min,
           max
-        ),
-        "MAP_INDEX_PATHS_FOR_RANGE"
+        )
       );
     case "STRING_RANGE":
       return new ChildSummary(
@@ -160,8 +154,7 @@ export function getChildSummary(rootObjName, path) {
           getObjAtPath(window[rootObjName], path.filter(isString)),
           min,
           max
-        ),
-        "STRING_SUMMARY_FOR_RANGE"
+        )
       );
     default:
       throw new TypeError(

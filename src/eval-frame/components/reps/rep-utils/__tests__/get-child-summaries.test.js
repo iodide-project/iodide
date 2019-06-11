@@ -23,12 +23,11 @@ const mockObjSummary = ({
   isTruncated
 });
 
-function newChildSummaryMock(summaryType = "MOCK_PATH_SUMMARY") {
+function newChildSummaryMock() {
   return new ChildSummary(
     new Array(10)
       .fill(0)
-      .map((x, i) => new ChildSummaryItem(String(i), mockObjSummary())),
-    summaryType
+      .map((x, i) => new ChildSummaryItem(String(i), mockObjSummary()))
   );
 }
 
@@ -50,10 +49,7 @@ describe("expandRangesInChildSummaries replaces ranges correctly in all cases", 
     childSummary[5] = new ChildSummaryItem(testRange, null);
     // this test relies on the input validation in the relevant clases
     it(`always returns a valid child summary; ${testRange}`, () =>
-      expect(
-        () =>
-          new ChildSummary(childSummary.childItems, childSummary.summaryType)
-      ).not.toThrow());
+      expect(() => new ChildSummary(childSummary.childItems)).not.toThrow());
   });
 });
 
@@ -64,10 +60,7 @@ describe("getChildSummary base cases (compact summaries)", () => {
     const childSummary = getChildSummary("window", [testCase], true);
     // this test relies on the input validation in the relevant clases
     it(`always returns a valid child summary; ${testCase}`, () =>
-      expect(
-        () =>
-          new ChildSummary(childSummary.childItems, childSummary.summaryType)
-      ).not.toThrow());
+      expect(() => new ChildSummary(childSummary.childItems)).not.toThrow());
   });
 });
 
@@ -78,10 +71,7 @@ describe("getChildSummary base cases", () => {
     const childSummary = getChildSummary("window", [testCase], false);
     // this test relies on the input validation in the relevant clases
     it(`always returns a valid child summary; ${testCase}`, () =>
-      expect(
-        () =>
-          new ChildSummary(childSummary.childItems, childSummary.summaryType)
-      ).not.toThrow());
+      expect(() => new ChildSummary(childSummary.childItems)).not.toThrow());
   });
 });
 
@@ -107,11 +97,7 @@ describe("getChildSummary - walking down tree", () => {
         // this test relies on the input validation in the relevant clases
         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
           expect(
-            () =>
-              new ChildSummary(
-                childSummary.childItems,
-                childSummary.summaryType
-              )
+            () => new ChildSummary(childSummary.childItems)
           ).not.toThrow());
       }
     }
@@ -143,11 +129,7 @@ describe("getChildSummary - walking down tree - middle subpath", () => {
         // this test relies on the input validation in the relevant clases
         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
           expect(
-            () =>
-              new ChildSummary(
-                childSummary.childItems,
-                childSummary.summaryType
-              )
+            () => new ChildSummary(childSummary.childItems)
           ).not.toThrow());
       }
     }

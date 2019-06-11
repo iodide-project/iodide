@@ -1,5 +1,4 @@
 import React from "react";
-// import styled from "react-emotion";
 import PropTypes from "prop-types";
 
 import ValueSummary, { RepBaseText, Ell } from "./value-summary";
@@ -13,10 +12,7 @@ import {
   ChildSummary
 } from "./rep-utils/rep-serialization-core-types";
 
-import {
-  numericIndexTypes
-  // objectLikeTypes
-} from "./rep-utils/child-summary-serializer";
+import { numericIndexTypes } from "./rep-utils/child-summary-serializer";
 
 function truncateChildItemsForInlineSummary(childItems, maxToShow = 5) {
   const inlineChildItems = childItems.slice(0, maxToShow);
@@ -107,8 +103,7 @@ const InlineChildSummary = ({ childSummaries, parentType }) => {
     summaryItemRep = UnlabeledSummaryItem;
     openBracket = "[";
     closeBracket = "]";
-    // for arrays, we want the head/tail preview
-    // generated upstream
+    // for arrays, we use the head/tail preview generated upstream
     truncateChildList = false;
   } else if (parentType === "Set") {
     summaryItemRep = UnlabeledSummaryItem;
