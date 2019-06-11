@@ -66,6 +66,7 @@ export function parseFetchCellLine(line) {
         );
       case "js":
       case "css":
+      case "plugin":
         return Object.assign({}, { fetchType }, parseFileLine(fetchCommand));
       default:
         return { error: "INVALID_FETCH_TYPE" };

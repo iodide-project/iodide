@@ -115,7 +115,7 @@ Fetch chunks provide a convenient way to load (i.e. to "fetch") external resourc
 * Data (from JSON, text, or blobs)
 
 Each line in a fetch cell must specify:
-1. the "fetch type", one of `js`, `css`, `json`, `text`, `arrayBuffer`, or `blob`,
+1. the "fetch type", one of `js`, `css`, `json`, `text`, `arrayBuffer`, `blob`, or `plugin`
 2. the url from which the resource will be fetched
 
 Additionally, data fetches (`json`, `text` or `blob`) must specify the variable name into which the data will be stored.
@@ -136,6 +136,8 @@ blob: blobData = https://www.exmpl.co/a_binary_blob.arrow
 All of the requested resources are downloaded in parallel (asynchronously), but if several evaluations are queued, following chunks will not be evaluated until all the resources are available. This allows you to manage the retrieval of assets in a more synchronous workflow, without having to deal with the asynchronous nature of Web APIs (of course, you are free to manage that complexity with JavaScript code and using those APIs if you need that extra control).
 
 In the case of the `js` and `css` fetch types, the scripts and stylesheets are added to the environment as soon as they are available.
+
+The `plugin` type must point to a JSON file containing the same content a [plugin specification](language_plugins.md).  It is a shorthand for placing that JSON content directly in a `%% plugin` cell.
 
 In the case of data fetches, which have the syntax `{TYPE}: {VAR_NAME} = {RESOURCE_URL}`, the data is loaded into the variable `VAR_NAME` within your JavaScript scope. The `TYPE` value ensures the following is returned into `VAR_NAME`:
 

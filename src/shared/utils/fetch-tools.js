@@ -16,6 +16,7 @@ function handleErrors(err) {
 export const getResponseTypeFromFetchType = fetchEntry => {
   if (fetchEntry === "css") return "text";
   if (fetchEntry === "js") return "blob";
+  if (fetchEntry === "plugin") return "text";
   return fetchEntry;
 };
 
