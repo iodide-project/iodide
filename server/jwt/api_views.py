@@ -1,6 +1,7 @@
-from . import serializers
-from rest_framework_simplejwt.views import TokenViewBase
 from rest_framework.authentication import SessionAuthentication
+from rest_framework_simplejwt.views import TokenViewBase
+
+from . import serializers
 
 
 class TokenObtainPairView(TokenViewBase):
