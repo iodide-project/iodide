@@ -88,22 +88,6 @@ tasks.saveNotebook = new UserTask({
   callback() {}
 });
 
-tasks.exportNotebook = new UserTask({
-  title: "Export Notebook",
-  keybindings: ["ctrl+shift+e", "meta+shift+e"],
-  displayKeybinding: `Shift+${commandKey}+e`,
-  callback() {
-    dispatcher.exportNotebook();
-  }
-});
-
-tasks.exportNotebookAsReport = new UserTask({
-  title: "Export Notebook as Report",
-  callback() {
-    dispatcher.exportNotebook(true, false);
-  }
-});
-
 tasks.clearVariables = new UserTask({
   title: "Clear Variables",
   preventDefaultKeybinding: true,

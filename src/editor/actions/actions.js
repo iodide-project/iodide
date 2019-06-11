@@ -9,8 +9,6 @@ import { getNotebookID, getUserDataFromDocument } from "../tools/server-tools";
 import { iomdParser } from "../iomd-tools/iomd-parser";
 import { getChunkContainingLine } from "../iomd-tools/iomd-selection";
 
-import { exportIomdBundle, titleToHtmlFilename } from "../tools/export-tools";
-
 import { addAppMessageToConsoleHistory } from "./console-message-actions";
 
 export function updateAppMessages(messageObj) {
@@ -61,24 +59,6 @@ export function updateIomdContent(text) {
 
 export function toggleWrapInEditors() {
   return { type: "TOGGLE_WRAP_IN_EDITORS" };
-}
-
-export function exportNotebook(exportAsReport = false) {
-  return (_, getState) => {
-    const state = getState();
-    const exportState = Object.assign({}, state, {
-      viewMode: exportAsReport ? "REPORT_VIEW" : "EXPLORE_VIEW"
-    });
-    const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(
-      exportIomdBundle(exportState.iomd, exportState.title)
-    )}`;
-    const dlAnchorElem = document.getElementById("export-anchor");
-    dlAnchorElem.setAttribute("href", dataStr);
-    const title =
-      exportState.title === undefined ? "new-notebook" : exportState.title;
-    dlAnchorElem.setAttribute("download", titleToHtmlFilename(title));
-    dlAnchorElem.click();
-  };
 }
 
 export function saveNotebook() {
