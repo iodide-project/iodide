@@ -1,12 +1,5 @@
-import { get, isString } from "lodash";
-import {
-  serializeChildSummary,
-  serializeArrayPathsForRange,
-  serializeSetIndexPathsForRange,
-  serializeObjectPropsPathsForRange,
-  serializeStringSummaryForRange,
-  serializeMapIndexPathsForRange
-} from "./child-summary-serializer";
+import { isString } from "lodash";
+import { serializeChildSummary } from "./child-summary-serializer";
 import { MAX_SUMMARY_STRING_LEN } from "./value-summary-serializer";
 import {
   ChildSummary,
@@ -114,55 +107,8 @@ export function getChildSummary(rootObjName, path) {
   }
 
   // ELSE: if it's not too big, get the summary for this range
-  switch (type) {
-    case "ARRAY_RANGE":
-      return new ChildSummary(
-        serializeArrayPathsForRange(
-          get(window[rootObjName], path.filter(isString)),
-          min,
-          max
-        )
-      );
-
-    case "PROPS_RANGE":
-      return new ChildSummary(
-        serializeObjectPropsPathsForRange(
-          get(window[rootObjName], path.filter(isString)),
-          min,
-          max
-        )
-      );
-    case "SET_INDEX_RANGE":
-      return new ChildSummary(
-        serializeSetIndexPathsForRange(
-          get(window[rootObjName], path.filter(isString)),
-          min,
-          max
-        )
-      );
-    case "MAP_INDEX_RANGE":
-      return new ChildSummary(
-        serializeMapIndexPathsForRange(
-          getObjAtPath(window[rootObjName], path),
-          min,
-          max
-        )
-      );
-    case "STRING_RANGE":
-      return new ChildSummary(
-        serializeStringSummaryForRange(
-          getObjAtPath(window[rootObjName], path.filter(isString)),
-          min,
-          max
-        )
-      );
-    default:
-      throw new TypeError(
-        `invalid range type: ${JSON.stringify({
-          type
-        })}; pathEnd: ${JSON.stringify({
-          pathEnd
-        })}`
-      );
-  }
+  return serializeChildSummary(
+    getObjAtPath(window[rootObjName], path),
+    pathEnd
+  );
 }

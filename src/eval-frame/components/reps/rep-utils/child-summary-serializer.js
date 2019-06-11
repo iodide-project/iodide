@@ -188,35 +188,13 @@ export function serializeSetIndexPathsForRange(set, min, max) {
   return childItems;
 }
 
+// FIXME the functions above can be refactored and consolidated following
+// the patterrn of serializeMapPathsSummary. Maybe possible to simplify
+// down two path summary fncs, one for iterables and another for
+// indexables/slicables?
+
 // MAP
-
-function serializeMapPathsSummary(map, previewNum = 5) {
-  const childItems = [];
-  let i = 0;
-  for (const [key, value] of map.entries()) {
-    if (i >= previewNum) {
-      childItems.push(
-        new ChildSummaryItem(
-          new RangeDescriptor(i, objSize(map), "MAP_INDEX_RANGE"),
-          null
-        )
-      );
-      return childItems;
-    }
-
-    childItems.push(
-      new MapPairSummaryItem(
-        String(i),
-        serializeForValueSummary(key),
-        serializeForValueSummary(value)
-      )
-    );
-    i += 1;
-  }
-  return childItems;
-}
-
-export function serializeMapIndexPathsForRange(map, min, max) {
+export function serializeMapPathsSummary(map, min, max, addTailRange) {
   const childItems = [];
   let i = 0;
   // this is not an efficient way to do this, but JS
@@ -224,6 +202,14 @@ export function serializeMapIndexPathsForRange(map, min, max) {
   // you can't look up by index
   for (const [key, value] of map.entries()) {
     if (i > max) {
+      if (addTailRange) {
+        childItems.push(
+          new ChildSummaryItem(
+            new RangeDescriptor(i, objSize(map), "MAP_INDEX_RANGE"),
+            null
+          )
+        );
+      }
       return childItems;
     } else if (i >= min) {
       childItems.push(
@@ -241,24 +227,39 @@ export function serializeMapIndexPathsForRange(map, min, max) {
 
 // PUBLIC ENTRY POINT
 
-export function serializeChildSummary(obj) {
+export function serializeChildSummary(obj, rangeDescriptor) {
+  const rangeSummary =
+    rangeDescriptor && rangeDescriptor instanceof RangeDescriptor;
+
+  const { min, max } = rangeSummary ? rangeDescriptor : { min: 0, max: 5 };
+
   const type = getType(obj);
+  let childItems;
 
   if (numericIndexTypes.includes(type)) {
-    return new ChildSummary(serializeArrayPathsSummary(obj));
+    childItems = rangeSummary
+      ? serializeArrayPathsForRange(obj, min, max)
+      : serializeArrayPathsSummary(obj);
   } else if (type === "Map") {
-    return new ChildSummary(serializeMapPathsSummary(obj));
+    childItems = serializeMapPathsSummary(obj, min, max, !rangeSummary);
   } else if (type === "Set") {
-    return new ChildSummary(serializeSetPathsSummary(obj));
+    childItems = rangeSummary
+      ? serializeSetIndexPathsForRange(obj, min, max)
+      : serializeSetPathsSummary(obj);
   } else if (type === "String") {
-    return new ChildSummary(serializeStringPathsSummary(obj));
+    childItems = rangeSummary
+      ? serializeStringSummaryForRange(obj, min, max)
+      : serializeStringPathsSummary(obj);
   } else if (
     type === "Object" ||
     getClass(obj) === "Object" ||
     objectLikeTypes.includes(type)
   ) {
-    return new ChildSummary(serializeObjectPathsSummary(obj));
+    childItems = rangeSummary
+      ? serializeObjectPropsPathsForRange(obj, min, max)
+      : serializeObjectPathsSummary(obj);
+  } else {
+    childItems = [];
   }
-
-  return new ChildSummary([]);
+  return new ChildSummary(childItems);
 }
