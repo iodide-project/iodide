@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
-from ..settings import MAX_FILENAME_LENGTH
 from .views import file_view
+from ..settings import MAX_FILENAME_LENGTH
 
 urlpatterns = [
     url(

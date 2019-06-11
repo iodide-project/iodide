@@ -7,12 +7,12 @@ from django.template.loader import get_template
 from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
+from .models import Notebook, NotebookRevision
+from .names import get_random_compound
 from ..base.models import User
 from ..files.models import File
 from ..settings import APP_VERSION_STRING, EVAL_FRAME_ORIGIN
 from ..views import get_user_info_dict
-from .models import Notebook, NotebookRevision
-from .names import get_random_compound
 
 
 def _get_user_info_json(user):
