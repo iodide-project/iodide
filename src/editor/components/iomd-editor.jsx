@@ -25,8 +25,8 @@ import {
 
 class IomdEditorUnconnected extends React.Component {
   static propTypes = {
-    content: PropTypes.string,
-    editorOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    // content: PropTypes.string,
+    // editorOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
     editorCursorForceUpdate: PropTypes.bool.isRequired,

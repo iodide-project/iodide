@@ -16,7 +16,7 @@ const PYODIDE_URL = process.env.USE_LOCAL_PYODIDE
 const pyLanguageDefinition = {
   languageId: "py",
   displayName: "Python",
-  url: `/pyodide-${PYODIDE_VERSION}/pyodide.js`,
+  url: PYODIDE_URL,
   codeMirrorMode: "python",
   keybinding: "p",
   module: "pyodide",
