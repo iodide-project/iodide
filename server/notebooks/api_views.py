@@ -29,7 +29,7 @@ class NotebookViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         if instance.owner != self.request.user:
             raise PermissionDenied
-        viewsets.ModelViewSet.perform_destroy(self, instance)
+        super().perform_destroy(instance)
 
     def perform_create(self, serializer):
         with transaction.atomic():
@@ -89,7 +89,7 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         if instance.notebook.owner != self.request.user:
             raise PermissionDenied
-        viewsets.ModelViewSet.perform_destroy(self, instance)
+        super().perform_destroy(instance)
 
     def perform_create(self, serializer):
         ctx = self.get_serializer_context()

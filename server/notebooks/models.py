@@ -44,7 +44,7 @@ class NotebookRevision(models.Model):
     content = models.TextField()
 
     def save(self, *args, **kwargs):
-        super(NotebookRevision, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
         # update notebook's title to be that of this new revision's
         self.notebook.title = self.title

@@ -17,7 +17,7 @@ class FileViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         if instance.notebook.owner != self.request.user:
             raise PermissionDenied
-        viewsets.ModelViewSet.perform_destroy(self, instance)
+        super().perform_destroy(instance)
 
     def create(self, request):
         (metadata, file) = (json.loads(self.request.data["metadata"]), self.request.data["file"])
