@@ -89,6 +89,8 @@ INSTALLED_APPS = [
     "server.files",
 ]
 
+RESTRICT_API = env.bool("RESTRICT_API", default=False)
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
@@ -96,6 +98,14 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ]
 }
+
+if RESTRICT_API:
+    REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = ("rest_framework.permissions.IsAuthenticated",)
+else:
+    REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    )
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

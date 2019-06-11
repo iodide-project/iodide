@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 
 from .models import Notebook, NotebookRevision
@@ -16,8 +16,6 @@ from .serializers import (
 
 
 class NotebookViewSet(viewsets.ModelViewSet):
-
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     # modifying a notebook doesn't make sense once created (if you want to
     # change the title, add a revision doing just that)
@@ -65,8 +63,6 @@ class NotebookViewSet(viewsets.ModelViewSet):
 
 
 class NotebookRevisionViewSet(viewsets.ModelViewSet):
-
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     # revisions should be considered immutable once created
     http_method_names = ["get", "post", "head", "delete"]

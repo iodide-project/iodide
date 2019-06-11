@@ -1,7 +1,7 @@
 import json
 
 from django.core.exceptions import PermissionDenied
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 from rest_framework.response import Response
 
 from .models import File
@@ -10,7 +10,6 @@ from .serializers import FilesSerializer
 
 class FileViewSet(viewsets.ModelViewSet):
 
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = FilesSerializer
 
     http_method_names = ["post", "put", "delete"]
