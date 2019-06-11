@@ -17,8 +17,6 @@ const pyLanguageDefinition = {
   languageId: "py",
   displayName: "Python",
   url: PYODIDE_URL,
-  codeMirrorMode: "python",
-  keybinding: "p",
   module: "pyodide",
   evaluator: "runPython",
   asyncEvaluator: "runPythonAsync",
