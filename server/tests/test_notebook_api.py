@@ -14,6 +14,11 @@ def test_notebook_list(client, two_test_notebooks):
     ]
 
 
+def test_notebook_list_restricted(client, restricted_api, two_test_notebooks):
+    resp = client.get(reverse("notebooks-list"))
+    assert resp.status_code == 403
+
+
 def test_notebook_detail(client, test_notebook):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     resp = client.get(reverse("notebooks-detail", kwargs={"pk": test_notebook.id}))
