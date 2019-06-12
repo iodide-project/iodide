@@ -11,6 +11,7 @@ import deepEqual from "deep-equal";
 /* eslint-disable import/first */
 import "monaco-editor/esm/vs/editor/browser/controller/coreCommands";
 import "monaco-editor/esm/vs/editor/contrib/find/findController";
+import "monaco-editor/esm/vs/editor/contrib/multicursor/multicursor";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import "monaco-editor/esm/vs/basic-languages/python/python.contribution";
 import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution";
@@ -48,6 +49,14 @@ self.MonacoEnvironment = {
   }
 };
 
+function unpackMonacoSelection(s, monacoModel) {
+  return {
+    start: { line: s.endLineNumber, col: s.endColumn },
+    end: { line: s.startLineNumber, col: s.startColumn },
+    selectedText: monacoModel.getValueInRange(s)
+  };
+}
+
 class IomdEditorUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
@@ -71,7 +80,7 @@ class IomdEditorUnconnected extends React.Component {
 
     // explicitly bind "this" for all methods in constructors
     // this.updateIomdContent = this.updateIomdContent.bind(this);
-    this.updateCursor = this.updateCursor.bind(this);
+    // this.updateCursor = this.updateCursor.bind(this);
     this.storeEditorInstance = this.storeEditorInstance.bind(this);
     this.handleEditorUpdate = this.handleEditorUpdate.bind(this);
   }
@@ -84,8 +93,8 @@ class IomdEditorUnconnected extends React.Component {
       "\n===================="
     );
     this.editor = monaco.editor.create(
-      document.getElementById("monacoContainer"),
-      // this.containerDivRef.current,
+      // document.getElementById("monacoContainer"),
+      this.containerDivRef.current,
       {
         value: this.props.content,
         language: "javascript"
@@ -93,15 +102,27 @@ class IomdEditorUnconnected extends React.Component {
     );
     window.EDITOR = this.editor;
 
-    // this.editor.layout();
-    // console.log("updated monaco layout -- this.editor.layout();");
     this.editor.onDidChangeModelContent(() => {
-      console.log(this.editor.getValue());
       this.handleEditorUpdate(this.editor.getValue());
     });
     this.editor.onDidChangeCursorPosition(() => {
       const { lineNumber, column } = this.editor.getPosition();
       this.props.updateEditorCursor(lineNumber, column);
+    });
+    this.editor.onDidChangeCursorSelection(event => {
+      const { selection, secondarySelections } = event;
+
+      if (selection.isEmpty()) {
+        this.props.updateEditorSelections([]);
+      } else {
+        const model = this.editor.getModel();
+
+        const selections = [
+          unpackMonacoSelection(selection, model),
+          ...secondarySelections.map(s => unpackMonacoSelection(s, model))
+        ];
+        this.props.updateEditorSelections(selections);
+      }
     });
   }
 
@@ -140,19 +161,19 @@ class IomdEditorUnconnected extends React.Component {
     this.props.updateAutosave();
   }
 
-  updateCursor(editor) {
-    const { line, ch } = editor.getCursor();
-    this.props.updateEditorCursor(line, ch);
-    const selections = editor.somethingSelected();
-    // ? getAllSelections(editor.getDoc())
-    // : [];
-    this.props.updateEditorSelections(selections);
-  }
+  // updateCursor(editor) {
+  //   const { line, ch } = editor.getCursor();
+  //   this.props.updateEditorCursor(line, ch);
+  //   const selections = editor.somethingSelected();
+  //   // ? getAllSelections(editor.getDoc())
+  //   // : [];
+  //   this.props.updateEditorSelections(selections);
+  // }
 
   render() {
     return (
       <div
-        id="monacoContainer"
+        // id="monacoContainer"
         ref={this.containerDivRef}
         style={{ width: "100%", height: "100%" }}
       />
