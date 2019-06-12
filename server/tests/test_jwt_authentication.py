@@ -1,6 +1,3 @@
-from datetime import timedelta
-from time import sleep
-
 import pytest
 from django.urls import reverse
 from freezegun import freeze_time

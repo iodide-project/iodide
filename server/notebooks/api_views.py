@@ -112,7 +112,8 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
                 assert int(parent_revision_id) == last_revision.id
             except (ValueError, AssertionError):
                 raise ValidationError(
-                    f"Based on non-latest revision {parent_revision_id} (expected: {last_revision.id})"
+                    f"Based on non-latest revision {parent_revision_id} "
+                    f"(expected: {last_revision.id})"
                 )
 
         serializer.save(**ctx)

@@ -24,7 +24,7 @@ def test_login(client, fake_user, logged_in):
 def test_logout(client, fake_user, logged_in):
     if logged_in:
         client.force_login(fake_user)
-    resp = client.get(reverse("logout"))
+    client.get(reverse("logout"))
     # in neither case should the user be logged in after this endpoint
     # is accessed
     user = auth.get_user(client)
