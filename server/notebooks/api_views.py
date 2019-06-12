@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 
 from .models import Notebook, NotebookRevision
@@ -17,8 +17,6 @@ from .serializers import (
 
 class NotebookViewSet(viewsets.ModelViewSet):
 
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
     # modifying a notebook doesn't make sense once created (if you want to
     # change the title, add a revision doing just that)
     http_method_names = ["get", "post", "head", "delete"]
@@ -31,7 +29,7 @@ class NotebookViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         if instance.owner != self.request.user:
             raise PermissionDenied
-        viewsets.ModelViewSet.perform_destroy(self, instance)
+        super().perform_destroy(instance)
 
     def perform_create(self, serializer):
         with transaction.atomic():
@@ -66,8 +64,6 @@ class NotebookViewSet(viewsets.ModelViewSet):
 
 class NotebookRevisionViewSet(viewsets.ModelViewSet):
 
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
     # revisions should be considered immutable once created
     http_method_names = ["get", "post", "head", "delete"]
 
@@ -93,7 +89,7 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         if instance.notebook.owner != self.request.user:
             raise PermissionDenied
-        viewsets.ModelViewSet.perform_destroy(self, instance)
+        super().perform_destroy(instance)
 
     def perform_create(self, serializer):
         ctx = self.get_serializer_context()

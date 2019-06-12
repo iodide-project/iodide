@@ -1,8 +1,10 @@
 # (Unreleased; add upcoming change notes here)
 
-- Add favicon to iodide (fixes #826)
+- Adds favicon to iodide (fixes #826)
 - Adds JWT-based authentication to Iodide's API as an option (fixes #1755)
 - Rebrand the "jsmd" file format as "iomd" (fixes #1634)
+- Adds ability to restrict server API to authenticated users only
+  (disallowing read-only API access; fixes #1879)
 - Gravatars are served via https by default (fixes #1930)
 
 # 0.7.0 (2019-05-30)

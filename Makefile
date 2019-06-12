@@ -24,4 +24,5 @@ lintfix:
 	docker-compose run --rm server ./bin/lint-fix.sh
 
 test:
+	docker-compose run server ./manage.py collectstatic -c --no-input
 	docker-compose run server py.test

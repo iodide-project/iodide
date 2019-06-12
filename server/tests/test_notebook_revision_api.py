@@ -5,7 +5,8 @@ from helpers import get_rest_framework_time_string
 from server.notebooks.models import NotebookRevision
 
 
-def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
+@pytest.fixture
+def two_test_notebooks_and_revisions(two_test_notebooks):
     test_notebook = two_test_notebooks[0]
 
     # add another revision to the main notebook that we are testing
@@ -19,6 +20,11 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
         title="Revision for another notebook",
         content="*fake notebook 2 content 2*",
     )
+    return two_test_notebooks
+
+
+def test_read_notebook_revisions(fake_user, two_test_notebooks_and_revisions, client):
+    test_notebook = two_test_notebooks_and_revisions[0]
 
     # verify that we can list notebook revisions and that we only get what we
     # expect in the expected order (latest first)
@@ -63,6 +69,18 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
         "id": test_revision.id,
         "title": test_revision.title,
     }
+
+
+def test_read_notebook_revisions_restricted(
+    fake_user, two_test_notebooks_and_revisions, client, restricted_api
+):
+    """
+    tests that in restricted API mode listing of revisions returns a permission
+    denied response
+    """
+    test_notebook = two_test_notebooks_and_revisions[0]
+    resp = client.get(reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}))
+    assert resp.status_code == 403
 
 
 def test_read_multiple_revisions(fake_user, test_notebook, client):
