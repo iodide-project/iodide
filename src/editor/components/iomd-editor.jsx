@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import deepEqual from "deep-equal";
 
-// import "./monaco-env-init";
 // eslint-disable-next-line import/first
 // import MonacoEditor from "react-monaco-editor";
 
@@ -13,10 +12,18 @@ import "monaco-editor/esm/vs/editor/browser/controller/coreCommands";
 import "monaco-editor/esm/vs/editor/contrib/find/findController";
 import "monaco-editor/esm/vs/editor/contrib/multicursor/multicursor";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import "monaco-editor/esm/vs/basic-languages/python/python.contribution";
-import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution";
-import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution";
-/* eslint-enable import/first */
+import "./monaco-language-init";
+// import "monaco-editor/esm/vs/language/typescript/monaco.contribution";
+// import "monaco-editor/esm/vs/language/css/monaco.contribution";
+// import "monaco-editor/esm/vs/language/json/monaco.contribution";
+// import "monaco-editor/esm/vs/language/html/monaco.contribution";
+// import "monaco-editor/esm/vs/basic-languages/python/python.contribution";
+// import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution";
+// import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution";
+// import "monaco-editor/esm/vs/basic-languages/css/css.contribution";
+// import { language as cssDef } from "monaco-editor/esm/vs/basic-languages/css/css";
+
+// console.log({ cssDef });
 
 import {
   updateIomdContent,
@@ -24,30 +31,35 @@ import {
   updateEditorSelections
 } from "../actions/actions";
 import { updateAutosave } from "../actions/autosave-actions";
+/* eslint-enable import/first */
 
 // eslint-disable-next-line no-restricted-globals
-self.MonacoEnvironment = {
-  baseUrl: "http://www.mycdn.com/monaco-editor/min/",
-  getWorker(moduleId, label) {
-    console.log("getWorker ####", { moduleId, label });
-  },
-  getWorkerUrl(moduleId, label) {
-    console.log("getWorkerUrl ####", { moduleId, label });
-    if (label === "json") {
-      return "monaco.json.worker.dev.js";
-    }
-    if (label === "css") {
-      return "monaco.css.worker.dev.js";
-    }
-    if (label === "html") {
-      return "monaco.html.worker.dev.js";
-    }
-    if (label === "typescript" || label === "javascript") {
-      return "monaco.ts.worker.dev.js";
-    }
-    return "monaco.editor.worker.dev.js";
-  }
-};
+
+// window.MonacoEnvironment = {
+//   baseUrl: "",
+//   getWorker(moduleId, label) {
+//     console.log("getWorker ####", { moduleId, label });
+//   },
+//   getWorkerUrl(moduleId, label) {
+//     console.log("getWorkerUrl ####", { moduleId, label });
+//     if (label === "json") {
+//       return "monaco.json.worker.dev.js";
+//     }
+//     if (label === "css") {
+//       return "monaco.css.worker.dev.js";
+//     }
+//     if (label === "html") {
+//       return "monaco.html.worker.dev.js";
+//     }
+//     if (label === "typescript" || label === "javascript") {
+//       return "monaco.ts.worker.dev.js";
+//     }
+//     return "smonaco.editor.worker.dev.js";
+//   }
+// };
+
+// monaco.languages.register({ id: "iomd" });
+// monaco.languages.setMonarchTokensProvider("iomd", iomdDefinition);
 
 function unpackMonacoSelection(s, monacoModel) {
   return {
@@ -75,32 +87,18 @@ class IomdEditorUnconnected extends React.Component {
   constructor(props) {
     super(props);
     this.containerDivRef = React.createRef();
-    this.monacoRef = React.createRef();
     this.editor = null;
 
     // explicitly bind "this" for all methods in constructors
-    // this.updateIomdContent = this.updateIomdContent.bind(this);
-    // this.updateCursor = this.updateCursor.bind(this);
-    this.storeEditorInstance = this.storeEditorInstance.bind(this);
     this.handleEditorUpdate = this.handleEditorUpdate.bind(this);
   }
 
   componentDidMount() {
-    console.log("this.containerDivRef.current", this.containerDivRef.current);
-    console.log(
-      "monaco ==================\n",
-      monaco,
-      "\n===================="
-    );
-    this.editor = monaco.editor.create(
-      // document.getElementById("monacoContainer"),
-      this.containerDivRef.current,
-      {
-        value: this.props.content,
-        language: "javascript"
-      }
-    );
-    window.EDITOR = this.editor;
+    this.editor = monaco.editor.create(this.containerDivRef.current, {
+      value: this.props.content,
+      language: "iomd"
+    });
+    window.MONACO_EDITOR = this.editor;
 
     this.editor.onDidChangeModelContent(() => {
       this.handleEditorUpdate(this.editor.getValue());
@@ -131,8 +129,6 @@ class IomdEditorUnconnected extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("IOMD componentDidUpdate", this.editor);
-
     if (this.props.editorCursorForceUpdate) {
       this.editor.setPosition(
         new monaco.Position(
@@ -143,17 +139,7 @@ class IomdEditorUnconnected extends React.Component {
     }
     if (this.props.editorPositionString !== prevProps.editorPositionString) {
       this.editor.layout();
-      console.log("IOMD componentDidUpdate -- editor.layout()", this.editor);
     }
-  }
-
-  storeEditorInstance(editor, monacoInstance) {
-    console.log("editorDidMount", editor, monacoInstance);
-    editor.focus();
-    editor.layout();
-    console.log("updated monaco layout -- this.editor.layout();");
-    console.log("this.monacoRef", this.monacoRef);
-    this.editor = editor;
   }
 
   handleEditorUpdate(content) {
@@ -161,35 +147,13 @@ class IomdEditorUnconnected extends React.Component {
     this.props.updateAutosave();
   }
 
-  // updateCursor(editor) {
-  //   const { line, ch } = editor.getCursor();
-  //   this.props.updateEditorCursor(line, ch);
-  //   const selections = editor.somethingSelected();
-  //   // ? getAllSelections(editor.getDoc())
-  //   // : [];
-  //   this.props.updateEditorSelections(selections);
-  // }
-
   render() {
     return (
       <div
-        // id="monacoContainer"
         ref={this.containerDivRef}
         style={{ width: "100%", height: "100%" }}
       />
     );
-    // return (
-    //   <MonacoEditor
-    //     width="100%"
-    //     height="100%"
-    //     language="javascript"
-    //     theme="vs-light"
-    //     value={this.props.content}
-    //     // onChange={this.updateIomdContent}
-    //     ref={this.monacoRef}
-    //     editorDidMount={this.storeEditorInstance}
-    //   />
-    // );
   }
 }
 
@@ -234,14 +198,6 @@ function mapStateToProps(state) {
   };
 }
 
-// export function mapDispatchToProps(dispatch) {
-//   return {
-//     updateIomdContent: content => dispatch(updateIomdContent(content)),
-//     updateEditorCursor: (line, col) => dispatch(updateEditorCursor(line, col)),
-//     updateEditorSelections: selections =>
-//       dispatch(updateEditorSelections(selections))
-//   };
-// }
 const mapDispatchToProps = {
   updateIomdContent,
   updateEditorCursor,
