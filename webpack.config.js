@@ -14,6 +14,9 @@ const _ = require("lodash");
 const reduxLogMode =
   process.env.REDUX_LOGGING === "VERBOSE" ? "VERBOSE" : "SILENT";
 
+const evalFrameHtmlTemplate = require("./src/eval-frame/html-template.js");
+const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate);
+
 const DEV_SERVER_PORT = 8000;
 
 const BUILD_DIR = path.resolve(__dirname, "build/");
@@ -122,6 +125,17 @@ module.exports = env => {
         ReactDOM: "react-dom",
         $: "jquery",
         jQuery: "jquery"
+      }),
+      new CreateFileWebpack({
+        path: BUILD_DIR,
+        fileName: `iodide.eval-frame.${APP_VERSION_STRING}.html`,
+        content: evalFrameHtmlTemplateCompiler({
+          APP_VERSION_STRING: `eval-frame.${APP_VERSION_STRING}`,
+          EVAL_FRAME_ORIGIN,
+          CSS_PATH_STRING,
+          NOTEBOOK_TITLE: "new notebook",
+          IOMD: ""
+        })
       }),
       new webpack.DefinePlugin({
         IODIDE_VERSION: JSON.stringify(APP_VERSION_STRING),
