@@ -3,5 +3,4 @@
 set -e
 
 isort --check-only --recursive server/
-black --check server/
-
+flake8 server/

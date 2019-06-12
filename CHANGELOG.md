@@ -5,6 +5,7 @@
 - Rebrand the "jsmd" file format as "iomd" (fixes #1634)
 - Adds ability to restrict server API to authenticated users only
   (disallowing read-only API access; fixes #1879)
+- Gravatars are served via https by default (fixes #1930)
 
 # 0.7.0 (2019-05-30)
 

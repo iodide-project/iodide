@@ -14,12 +14,6 @@ const _ = require("lodash");
 const reduxLogMode =
   process.env.REDUX_LOGGING === "VERBOSE" ? "VERBOSE" : "SILENT";
 
-const editorHtmlTemplate = require("./src/editor/html-template.js");
-const evalFrameHtmlTemplate = require("./src/eval-frame/html-template.js");
-
-const editorHtmlTemplateCompiler = _.template(editorHtmlTemplate);
-const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate);
-
 const DEV_SERVER_PORT = 8000;
 
 const BUILD_DIR = path.resolve(__dirname, "build/");
@@ -129,30 +123,6 @@ module.exports = env => {
         $: "jquery",
         jQuery: "jquery"
       }),
-      new CreateFileWebpack({
-        path: BUILD_DIR,
-        fileName:
-          env === "server" ? "index.html" : `iodide.${APP_VERSION_STRING}.html`,
-        content: editorHtmlTemplateCompiler({
-          APP_VERSION_STRING,
-          APP_PATH_STRING,
-          EVAL_FRAME_ORIGIN,
-          CSS_PATH_STRING,
-          NOTEBOOK_TITLE: "new notebook",
-          IOMD: ""
-        })
-      }),
-      new CreateFileWebpack({
-        path: BUILD_DIR,
-        fileName: `iodide.eval-frame.${APP_VERSION_STRING}.html`,
-        content: evalFrameHtmlTemplateCompiler({
-          APP_VERSION_STRING: `eval-frame.${APP_VERSION_STRING}`,
-          EVAL_FRAME_ORIGIN,
-          CSS_PATH_STRING,
-          NOTEBOOK_TITLE: "new notebook",
-          IOMD: ""
-        })
-      }),
       new webpack.DefinePlugin({
         IODIDE_VERSION: JSON.stringify(APP_VERSION_STRING),
         IODIDE_EVAL_FRAME_ORIGIN: JSON.stringify(EVAL_FRAME_ORIGIN),
@@ -170,7 +140,7 @@ module.exports = env => {
       new MiniCssExtractPlugin({
         filename: `[name].${APP_VERSION_STRING}.css`
       }),
-      new WriteFilePlugin(),
+      new WriteFilePlugin()
       // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
     ],
     devServer: {

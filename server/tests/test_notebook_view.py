@@ -45,7 +45,7 @@ def test_notebook_view(client, test_notebook):
 def test_notebook_view_old_revision(client, test_notebook):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     new_revision_content = "My new fun content"
-    new_revision = NotebookRevision.objects.create(
+    NotebookRevision.objects.create(
         content=new_revision_content, notebook=test_notebook, title="Second revision"
     )
     resp = client.get(
