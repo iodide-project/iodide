@@ -48,7 +48,9 @@ describe("restoreLocalAutosave", () => {
       }
     }
   ].forEach(preconditionFail => {
-    it(`does nothing if precondition "${preconditionFail.name}" is not met`, async () => {
+    it(`does nothing if precondition "${
+      preconditionFail.name
+    }" is not met`, async () => {
       const store = mockStore({
         userData: {
           ...initialState.userData,
@@ -90,9 +92,9 @@ describe("restoreLocalAutosave", () => {
             chunkContent: "autosaved",
             chunkId: "1679214136_0",
             chunkType: "",
-            endLine: 0,
+            endLine: 1,
             evalFlags: [],
-            startLine: 0
+            startLine: 1
           }
         ]
       },

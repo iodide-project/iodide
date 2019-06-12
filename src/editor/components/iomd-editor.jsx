@@ -22,6 +22,7 @@ import {
   updateEditorCursor,
   updateEditorSelections
 } from "../actions/actions";
+import { updateAutosave } from "../actions/autosave-actions";
 
 // eslint-disable-next-line no-restricted-globals
 self.MonacoEnvironment = {
@@ -54,10 +55,12 @@ class IomdEditorUnconnected extends React.Component {
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
     editorCursorForceUpdate: PropTypes.bool.isRequired,
+    editorPositionString: PropTypes.string.isRequired,
     // action creators
     updateIomdContent: PropTypes.func.isRequired,
     updateEditorCursor: PropTypes.func.isRequired,
-    updateEditorSelections: PropTypes.func.isRequired
+    updateEditorSelections: PropTypes.func.isRequired,
+    updateAutosave: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -67,9 +70,10 @@ class IomdEditorUnconnected extends React.Component {
     this.editor = null;
 
     // explicitly bind "this" for all methods in constructors
-    this.updateIomdContent = this.updateIomdContent.bind(this);
+    // this.updateIomdContent = this.updateIomdContent.bind(this);
     this.updateCursor = this.updateCursor.bind(this);
     this.storeEditorInstance = this.storeEditorInstance.bind(this);
+    this.handleEditorUpdate = this.handleEditorUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -89,22 +93,36 @@ class IomdEditorUnconnected extends React.Component {
     );
     window.EDITOR = this.editor;
 
-    this.editor.layout();
-    console.log("updated monaco layout -- this.editor.layout();");
+    // this.editor.layout();
+    // console.log("updated monaco layout -- this.editor.layout();");
+    this.editor.onDidChangeModelContent(() => {
+      console.log(this.editor.getValue());
+      this.handleEditorUpdate(this.editor.getValue());
+    });
+    this.editor.onDidChangeCursorPosition(() => {
+      const { lineNumber, column } = this.editor.getPosition();
+      this.props.updateEditorCursor(lineNumber, column);
+    });
   }
 
   shouldComponentUpdate(nextProps) {
     return !deepEqual(this.props, nextProps);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     console.log("IOMD componentDidUpdate", this.editor);
-    this.editor.layout();
+
     if (this.props.editorCursorForceUpdate) {
-      this.editor.setCursor(
-        this.props.editorCursorLine,
-        this.props.editorCursorCol
+      this.editor.setPosition(
+        new monaco.Position(
+          this.props.editorCursorLine,
+          this.props.editorCursorCol
+        )
       );
+    }
+    if (this.props.editorPositionString !== prevProps.editorPositionString) {
+      this.editor.layout();
+      console.log("IOMD componentDidUpdate -- editor.layout()", this.editor);
     }
   }
 
@@ -117,8 +135,9 @@ class IomdEditorUnconnected extends React.Component {
     this.editor = editor;
   }
 
-  updateIomdContent(editor, data, content) {
+  handleEditorUpdate(content) {
     this.props.updateIomdContent(content);
+    this.props.updateAutosave();
   }
 
   updateCursor(editor) {
@@ -194,14 +213,20 @@ function mapStateToProps(state) {
   };
 }
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    updateIomdContent: content => dispatch(updateIomdContent(content)),
-    updateEditorCursor: (line, col) => dispatch(updateEditorCursor(line, col)),
-    updateEditorSelections: selections =>
-      dispatch(updateEditorSelections(selections))
-  };
-}
+// export function mapDispatchToProps(dispatch) {
+//   return {
+//     updateIomdContent: content => dispatch(updateIomdContent(content)),
+//     updateEditorCursor: (line, col) => dispatch(updateEditorCursor(line, col)),
+//     updateEditorSelections: selections =>
+//       dispatch(updateEditorSelections(selections))
+//   };
+// }
+const mapDispatchToProps = {
+  updateIomdContent,
+  updateEditorCursor,
+  updateEditorSelections,
+  updateAutosave
+};
 
 export default connect(
   mapStateToProps,

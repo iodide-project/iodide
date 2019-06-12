@@ -115,7 +115,7 @@ export const stateProperties = {
       forceUpdate: { type: "boolean" }
     },
     additionalProperties: false,
-    default: { line: 0, col: 0, forceUpdate: false }
+    default: { line: 1, col: 1, forceUpdate: false }
   },
   editorSelections: {
     type: "array",

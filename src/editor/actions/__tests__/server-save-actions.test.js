@@ -234,9 +234,9 @@ describe("revertToLatestServerRevision", () => {
             chunkContent: "newer content",
             chunkId: "1476526502_0",
             chunkType: "",
-            endLine: 0,
+            endLine: 1,
             evalFlags: [],
-            startLine: 0
+            startLine: 1
           }
         ]
       },

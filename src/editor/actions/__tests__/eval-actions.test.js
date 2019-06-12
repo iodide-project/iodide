@@ -148,7 +148,7 @@ describe("evaluateText", () => {
         };
       }),
       editorSelections: [],
-      editorCursor: { line: 0, col: 0 }
+      editorCursor: { line: 1, col: 1 }
     };
   });
 
