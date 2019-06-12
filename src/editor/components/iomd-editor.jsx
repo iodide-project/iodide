@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import deepEqual from "deep-equal";
 
-import "./monaco-env-init";
+// import "./monaco-env-init";
 // eslint-disable-next-line import/first
 // import MonacoEditor from "react-monaco-editor";
 
@@ -23,9 +23,33 @@ import {
   updateEditorSelections
 } from "../actions/actions";
 
+// eslint-disable-next-line no-restricted-globals
+self.MonacoEnvironment = {
+  baseUrl: "http://www.mycdn.com/monaco-editor/min/",
+  getWorker(moduleId, label) {
+    console.log("getWorker ####", { moduleId, label });
+  },
+  getWorkerUrl(moduleId, label) {
+    console.log("getWorkerUrl ####", { moduleId, label });
+    if (label === "json") {
+      return "monaco.json.worker.dev.js";
+    }
+    if (label === "css") {
+      return "monaco.css.worker.dev.js";
+    }
+    if (label === "html") {
+      return "monaco.html.worker.dev.js";
+    }
+    if (label === "typescript" || label === "javascript") {
+      return "monaco.ts.worker.dev.js";
+    }
+    return "monaco.editor.worker.dev.js";
+  }
+};
+
 class IomdEditorUnconnected extends React.Component {
   static propTypes = {
-    // content: PropTypes.string,
+    content: PropTypes.string,
     // editorOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
@@ -59,13 +83,14 @@ class IomdEditorUnconnected extends React.Component {
       document.getElementById("monacoContainer"),
       // this.containerDivRef.current,
       {
-        value: ["function x() {", '\tconsole.log("Hello world!");', "}"].join(
-          "\n"
-        ),
+        value: this.props.content,
         language: "javascript"
       }
     );
+    window.EDITOR = this.editor;
+
     this.editor.layout();
+    console.log("updated monaco layout -- this.editor.layout();");
   }
 
   shouldComponentUpdate(nextProps) {
@@ -87,6 +112,7 @@ class IomdEditorUnconnected extends React.Component {
     console.log("editorDidMount", editor, monacoInstance);
     editor.focus();
     editor.layout();
+    console.log("updated monaco layout -- this.editor.layout();");
     console.log("this.monacoRef", this.monacoRef);
     this.editor = editor;
   }
@@ -151,20 +177,23 @@ function mapStateToProps(state) {
     col: editorCursorCol,
     forceUpdate: editorCursorForceUpdate
   } = state.editorCursor;
+
+  // by passing in the following prop, we can ensure that the
+  // Monaco instance does a fresh layout when the position
+  // of it's containing pane changes
+  const editorPositionString = Object.values(
+    state.panePositions.EditorPositioner
+  ).join(",");
   return {
     content: state.iomd,
     editorOptions,
     editorCursorLine,
     editorCursorCol,
-    editorCursorForceUpdate
+    editorCursorForceUpdate,
+    editorPositionString
   };
 }
 
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     actions: bindActionCreators(actions, dispatch)
-//   };
-// }
 export function mapDispatchToProps(dispatch) {
   return {
     updateIomdContent: content => dispatch(updateIomdContent(content)),

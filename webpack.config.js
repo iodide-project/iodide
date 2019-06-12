@@ -57,12 +57,13 @@ module.exports = env => {
     entry: {
       iodide: `${APP_DIR}/editor/index.jsx`,
       "iodide.eval-frame": `${APP_DIR}/eval-frame/index.jsx`,
-      "server.home": `${APP_DIR}/server/index.jsx`
-      // "monaco.editor.worker": `${MONACO_PATH}/esm/vs/editor/editor.worker.js`,
-      // "monaco.json.worker": `${MONACO_PATH}/esm/vs/language/json/json.worker`,
-      // "monaco.css.worker": `${MONACO_PATH}/esm/vs/language/css/css.worker`,
-      // "monaco.html.worker": `${MONACO_PATH}/esm/vs/language/html/html.worker`,
-      // "monaco.ts.worker": `${MONACO_PATH}/esm/vs/language/typescript/ts.worker`
+      "server.home": `${APP_DIR}/server/index.jsx`,
+      // "editor.worker": 'monaco-editor/esm/vs/editor/editor.worker.js'
+      "monaco.editor.worker": `${MONACO_PATH}/esm/vs/editor/editor.worker.js`,
+      "monaco.json.worker": `${MONACO_PATH}/esm/vs/language/json/json.worker`,
+      "monaco.css.worker": `${MONACO_PATH}/esm/vs/language/css/css.worker`,
+      "monaco.html.worker": `${MONACO_PATH}/esm/vs/language/html/html.worker`,
+      "monaco.ts.worker": `${MONACO_PATH}/esm/vs/language/typescript/ts.worker`
     },
     output: {
       globalObject: "self",
