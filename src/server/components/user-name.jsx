@@ -21,7 +21,7 @@ const UserNameContainer = styled("a")`
   }
 `;
 
-const Avatar = ({ src }) => <img src={src} alt={src} />;
+const Avatar = ({ src }) => <img src={`${src}&s=30`} alt={src} />;
 
 Avatar.propTypes = {
   src: PropTypes.string.isRequired
