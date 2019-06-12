@@ -1,9 +1,5 @@
 from django.conf import settings
-from rest_framework.permissions import (
-    BasePermission,
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-)
+from rest_framework.permissions import BasePermission, IsAuthenticated, IsAuthenticatedOrReadOnly
 
 
 class RestrictedOrNot(BasePermission):
