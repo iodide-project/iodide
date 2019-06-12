@@ -162,7 +162,7 @@ export class FileModalUnconnected extends React.Component {
           fileKey,
           fileReader.result,
           options.overwrite
-        );
+        )();
         this.setState(state => this.fileSavedUpdater(state, fileKey));
       } catch (err) {
         this.setState(state => this.fileErroredUpdater(state, fileKey));
@@ -205,7 +205,7 @@ export class FileModalUnconnected extends React.Component {
       this.props.deleteFile(
         this.state.pendingDelete.name,
         this.state.pendingDelete.fileKey
-      );
+      )();
     } catch (err) {
       this.setState(state =>
         this.fileErroredUpdater(state, state.pendingDelete.fileKey)

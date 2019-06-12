@@ -35,7 +35,7 @@ export function mapStateToProps(state) {
 
   return {
     isServer,
-    canUpload: isServer && Boolean(state.userData.name)
+    canUpload: isServer && Boolean(state.notebookInfo.user_can_save)
   };
 }
 

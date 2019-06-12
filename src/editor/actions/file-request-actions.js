@@ -47,13 +47,12 @@ export function saveFile(
     const { name: thisUser } = state.userData;
 
     if (notebookOwner !== thisUser) {
+      const err = new Error("only the owner of this notebook can save files");
       if (options.pendingRequest) {
-        onFileOperationError(
-          fileRequestID,
-          new Error("only the owner of this notebook can save files")
-        );
+        onFileOperationError(fileRequestID, err);
+        return undefined;
       }
-      return undefined;
+      throw err;
     }
 
     const notebookID = getNotebookID(state);
@@ -64,8 +63,9 @@ export function saveFile(
       } catch (err) {
         if (options.pendingRequest) {
           onFileOperationError(fileRequestID, err);
+          return undefined;
         }
-        return undefined;
+        throw err;
       }
     }
     try {
@@ -85,8 +85,9 @@ export function saveFile(
     } catch (err) {
       if (options.pendingRequest) {
         onFileOperationError(fileRequestID, err);
+        return undefined;
       }
-      return undefined;
+      throw err;
     }
   };
 }
@@ -109,8 +110,9 @@ export function loadFile(
     } catch (err) {
       if (options.pendingRequest) {
         onFileOperationError(fileRequestID, err);
+        return undefined;
       }
-      return undefined;
+      throw err;
     }
   };
 }
@@ -132,8 +134,9 @@ export function deleteFile(
     } catch (err) {
       if (options.pendingRequest) {
         onFileOperationError(fileRequestID, err);
+        return undefined;
       }
-      return undefined;
+      throw err;
     }
   };
 }
