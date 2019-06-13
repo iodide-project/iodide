@@ -230,6 +230,14 @@ export function toggleHelpModal() {
   };
 }
 
+export function toggleFileModal() {
+  return (dispatch, getState) => {
+    const modalState =
+      getState().modalState === "FILE_MODAL" ? "MODALS_CLOSED" : "FILE_MODAL";
+    dispatch(setModalState(modalState));
+  };
+}
+
 export function toggleEditorLink() {
   return {
     type: "TOGGLE_EDITOR_LINK"

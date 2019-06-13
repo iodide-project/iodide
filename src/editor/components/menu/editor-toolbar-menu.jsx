@@ -9,7 +9,8 @@ import { connectionModeIsServer } from "../../tools/server-tools";
 
 export class EditorToolbarMenuUnconnected extends React.Component {
   static propTypes = {
-    isServer: PropTypes.bool.isRequired
+    isServer: PropTypes.bool.isRequired,
+    canUpload: PropTypes.bool
   };
 
   render() {
@@ -18,6 +19,9 @@ export class EditorToolbarMenuUnconnected extends React.Component {
         {this.props.isServer && <NotebookMenuItem task={tasks.newNotebook} />}
         {this.props.isServer && (
           <NotebookMenuItem task={tasks.toggleHistoryModal} />
+        )}
+        {this.props.canUpload && (
+          <NotebookMenuItem task={tasks.toggleFileModal} />
         )}
         <NotebookMenuItem task={tasks.clearVariables} />
         <NotebookMenuItem task={tasks.toggleHelpModal} />
@@ -28,8 +32,10 @@ export class EditorToolbarMenuUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   const isServer = connectionModeIsServer(state);
+
   return {
-    isServer
+    isServer,
+    canUpload: isServer && Boolean(state.notebookInfo.user_can_save)
   };
 }
 

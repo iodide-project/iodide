@@ -9,16 +9,20 @@ import { TextButton } from "../../shared/components/buttons";
 export default class UploadModal extends React.Component {
   static propTypes = {
     visible: PropTypes.bool,
-    onClose: PropTypes.func,
-    onCancel: PropTypes.func,
+    onCloseOrCancel: PropTypes.func,
     onUpdateFile: PropTypes.func,
     oldFile: PropTypes.shape({
       filename: PropTypes.string
-    })
+    }),
+    aboveOtherModals: PropTypes.bool
   };
   render() {
     return (
-      <Modal visible={this.props.visible} onClose={this.props.onClose}>
+      <Modal
+        visible={this.props.visible}
+        onCloseOrCancel={this.props.onCloseOrCancel}
+        aboveOtherModals={this.props.aboveOtherModals}
+      >
         <ModalTitle>{`replace notebook file  "${(this.props.oldFile &&
           this.props.oldFile.filename) ||
           ""}"?`}</ModalTitle>
@@ -28,9 +32,7 @@ export default class UploadModal extends React.Component {
           other notebooks will not be affected.
         </ModalContent>
         <ModalCall>
-          <TextButton onClick={this.props.onCancel || this.props.onClose}>
-            Cancel
-          </TextButton>
+          <TextButton onClick={this.props.onCloseOrCancel}>Cancel</TextButton>
           <TextButton onClick={this.props.onUpdateFile}>
             Replace File
           </TextButton>

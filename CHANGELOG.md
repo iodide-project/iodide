@@ -6,6 +6,8 @@
 - Adds ability to restrict server API to authenticated users only
   (disallowing read-only API access; fixes #1879)
 - Gravatars are served via https by default (fixes #1930)
+- Add new file management UI (click _Menu > Manage Files_ while logged in and
+  viewing a notebook that you own)
 
 # 0.7.0 (2019-05-30)
 

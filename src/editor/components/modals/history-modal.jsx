@@ -2,15 +2,12 @@ import PropTypes from "prop-types";
 import React from "react";
 import styled from "react-emotion";
 import { connect } from "react-redux";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 
 import { ModalContainer } from "./modal-container";
+import TitleBar from "./title-bar";
 import RevisionDiff from "./revision-diff";
 import RevisionList from "./revision-list";
 import { getNotebookRevisionList } from "../../actions/actions";
-import THEME from "../../../shared/theme";
 
 const ModalContentContainer = styled("div")`
   display: grid;
@@ -34,18 +31,7 @@ class HistoryModalUnconnected extends React.Component {
   render() {
     return (
       <ModalContainer style={{ width: "90%" }}>
-        <AppBar
-          position="static"
-          style={{
-            background: THEME.clientModal.background
-          }}
-        >
-          <Toolbar>
-            <Typography variant="title" style={{ color: "#fff" }}>
-              Notebook History
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <TitleBar title="Notebook History" />
         {(() => {
           switch (this.props.revisionListFetchStatus) {
             case "FETCHING":

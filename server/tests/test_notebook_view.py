@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from helpers import get_script_block, get_script_block_json, get_title_block
 from server.notebooks.models import Notebook, NotebookRevision
+from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 
 
 def test_notebook_view(client, test_notebook):
@@ -26,6 +27,8 @@ def test_notebook_view(client, test_notebook):
         "title": "First revision",
         "user_can_save": False,
         "username": "testuser1",
+        "max_filename_length": MAX_FILENAME_LENGTH,
+        "max_file_size": MAX_FILE_SIZE,
     }
 
     # add a new revision, verify that a fresh load gets it
@@ -65,6 +68,8 @@ def test_notebook_view_old_revision(client, test_notebook):
         "title": "First revision",
         "user_can_save": False,
         "username": "testuser1",
+        "max_filename_length": MAX_FILENAME_LENGTH,
+        "max_file_size": MAX_FILE_SIZE,
     }
 
 

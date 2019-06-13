@@ -8,6 +8,7 @@ import { setModalState } from "../../actions/actions";
 
 import HelpModal from "./help-modal";
 import HistoryModal from "./history-modal";
+import FileModal from "./file-modal";
 
 export class IodideModalRootUnconnected extends React.Component {
   static propTypes = {
@@ -24,6 +25,9 @@ export class IodideModalRootUnconnected extends React.Component {
         break;
       case "HELP_MODAL":
         modalContents = <HelpModal />;
+        break;
+      case "FILE_MODAL":
+        modalContents = <FileModal />;
         break;
       default:
         modalContents = <div>(empty modal placeholder)</div>;

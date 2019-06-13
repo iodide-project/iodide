@@ -204,7 +204,7 @@ export const stateProperties = {
   },
   modalState: {
     type: "string",
-    enum: ["HELP_MODAL", "HISTORY_MODAL", "MODALS_CLOSED"],
+    enum: ["HELP_MODAL", "HISTORY_MODAL", "FILE_MODAL", "MODALS_CLOSED"],
     default: "MODALS_CLOSED"
   },
   kernelState: {

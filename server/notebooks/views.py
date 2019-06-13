@@ -9,7 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from ..base.models import User
 from ..files.models import File
-from ..settings import APP_VERSION_STRING, EVAL_FRAME_ORIGIN
+from ..settings import APP_VERSION_STRING, EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 from ..views import get_user_info_dict
 from .models import Notebook, NotebookRevision
 from .names import get_random_compound
@@ -54,6 +54,8 @@ def notebook_view(request, pk):
         "connectionMode": "SERVER",
         "title": revision.title,
         "files": files,
+        "max_filename_length": MAX_FILENAME_LENGTH,
+        "max_file_size": MAX_FILE_SIZE,
     }
     if notebook.forked_from is not None:
         notebook_info["forked_from"] = notebook.forked_from.id
