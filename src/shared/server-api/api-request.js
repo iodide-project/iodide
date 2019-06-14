@@ -78,7 +78,7 @@ function fetchWithCSRFToken(url, otherParts, headers = {}) {
 }
 
 async function getJWTAuthToken() {
-  const result = await fetchWithCSRFToken("/api/v1/token/", { method: "POST" });
+  const result = await fetchWithCSRFToken("/token/", { method: "POST" });
   if (!result.ok) {
     throw getResultError(result);
   }

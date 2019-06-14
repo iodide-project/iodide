@@ -46,6 +46,7 @@ urlpatterns = [
     # jwt auth
     url(r"^api/v1/token/$", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     url(r"^api/v1/token/refresh/$", TokenRefreshView.as_view(), name="token_refresh"),
+    url(r"^token/$", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     # admin stuff
     path("admin/", admin.site.urls),
     url(r"^$", server.views.index, name="index"),
