@@ -35,15 +35,18 @@ describe("file-modal/index.jsx", () => {
       files: {
         "0": {
           name: "example1.jpg",
-          status: "saved"
+          status: "saved",
+          id: 215
         },
         "1": {
           name: "example2.jpg",
-          status: "uploading"
+          status: "uploading",
+          id: 321
         },
         "2": {
           name: "example3.jpg",
-          status: "saved"
+          status: "saved",
+          id: 892
         }
       }
     };
@@ -89,15 +92,12 @@ describe("file-modal/index.jsx", () => {
   });
 
   it("getKeyOfSavedOrUploadingFile", () => {
-    expect(fmu.getKeyOfSavedOrUploadingFile({ name: "example1.jpg" })).toEqual(
-      "0"
-    );
-    expect(fmu.getKeyOfSavedOrUploadingFile({ name: "example2.jpg" })).toEqual(
-      "1"
-    );
-    expect(fmu.getKeyOfSavedOrUploadingFile({ name: "example3.jpg" })).toEqual(
-      "2"
-    );
+    const out0 = fmu.getKeyOfSavedOrUploadingFile({ name: "example1.jpg" });
+    expect(out0[0]).toEqual("0");
+    const out1 = fmu.getKeyOfSavedOrUploadingFile({ name: "example2.jpg" });
+    expect(out1[0]).toEqual("1");
+    const out2 = fmu.getKeyOfSavedOrUploadingFile({ name: "example3.jpg" });
+    expect(out2[0]).toEqual("2");
   });
 
   describe("deleteUpdater", () => {
