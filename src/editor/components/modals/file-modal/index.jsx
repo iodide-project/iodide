@@ -7,13 +7,21 @@ import DeleteModal from "../../../../server/components/delete-modal";
 import OverwriteModal from "../../../../server/components/upload-modal";
 import TitleBar from "../title-bar";
 import Body from "./body";
-import { saveFile, deleteFile } from "../../../actions/file-request-actions";
+import {
+  saveFileToServer,
+  deleteFileOnServer
+} from "../../../../shared/utils/file-operations";
+import {
+  addFileToNotebook,
+  deleteFileFromNotebook
+} from "../../../actions/file-request-actions";
 
 export class FileModalUnconnected extends React.Component {
   static propTypes = {
     // Required
     deleteFile: PropTypes.func.isRequired,
     saveFile: PropTypes.func.isRequired,
+    notebookID: PropTypes.number.isRequired,
 
     // Not required
     maxFileSize: PropTypes.number,
@@ -40,10 +48,10 @@ export class FileModalUnconnected extends React.Component {
 
   onFileSelection = e => {
     Array.from(e.target.files).forEach(unsavedFile => {
-      const existingFileKey = this.getKeyOfSavedOrUploadingFile(unsavedFile);
-
+      const [existingFileKey, fileInfo] =
+        this.getKeyOfSavedOrUploadingFile(unsavedFile) || [];
       if (existingFileKey !== undefined) {
-        this.confirmOverwrite(unsavedFile, existingFileKey);
+        this.confirmOverwrite(unsavedFile, existingFileKey, fileInfo.id);
       } else if (this.fileTooBig(unsavedFile)) {
         this.setState(state => this.fileTooBigUpdater(state, unsavedFile));
       } else if (this.filenameTooLong(unsavedFile)) {
@@ -88,6 +96,7 @@ export class FileModalUnconnected extends React.Component {
     return this.props.savedFiles.reduce((acc, current) => {
       acc[this.getNewFileKey()] = {
         name: current.filename,
+        id: current.id,
         status: "saved"
       };
       return acc;
@@ -101,7 +110,7 @@ export class FileModalUnconnected extends React.Component {
       }
       return false;
     });
-    return file ? file[0] : undefined;
+    return file;
   };
 
   fileTooBig = ({ size }) => {
@@ -135,7 +144,9 @@ export class FileModalUnconnected extends React.Component {
     files[this.getNewFileKey()] = {
       name,
       status: "error",
-      errorMessage: `Filename exceeds maximum length of ${this.props.maxFilenameLength} characters`
+      errorMessage: `Filename exceeds maximum length of ${
+        this.props.maxFilenameLength
+      } characters`
     };
     return { files };
   };
@@ -145,7 +156,7 @@ export class FileModalUnconnected extends React.Component {
     this.saveFileWithKey(unsavedFile, fileKey);
   };
 
-  saveFileWithKey = (unsavedFile, fileKey, options = { overwrite: false }) => {
+  saveFileWithKey = (unsavedFile, fileKey, fileID = undefined) => {
     // Update state immediately to reflect that this file has begun
     // uploading. This allows us to show a spinner in its row for the
     // duration of the upload.
@@ -158,11 +169,11 @@ export class FileModalUnconnected extends React.Component {
     fileReader.onload = async () => {
       try {
         await this.props.saveFile(
-          unsavedFile.name,
-          fileKey,
+          this.props.notebookID,
           fileReader.result,
-          options.overwrite
-        )();
+          unsavedFile.name,
+          fileID
+        );
         this.setState(state => this.fileSavedUpdater(state, fileKey));
       } catch (err) {
         this.setState(state => this.fileErroredUpdater(state, fileKey));
@@ -192,8 +203,8 @@ export class FileModalUnconnected extends React.Component {
     return { files };
   };
 
-  confirmDelete = (name, fileKey) => {
-    this.setState({ pendingDelete: { name, fileKey } });
+  confirmDelete = (name, fileID, fileKey) => {
+    this.setState({ pendingDelete: { name, fileKey, fileID } });
   };
 
   hideDeleteModal = () => {
@@ -202,10 +213,7 @@ export class FileModalUnconnected extends React.Component {
 
   executePendingDelete = () => {
     try {
-      this.props.deleteFile(
-        this.state.pendingDelete.name,
-        this.state.pendingDelete.fileKey
-      )();
+      this.props.deleteFile(this.state.pendingDelete.fileID);
     } catch (err) {
       this.setState(state =>
         this.fileErroredUpdater(state, state.pendingDelete.fileKey)
@@ -216,18 +224,19 @@ export class FileModalUnconnected extends React.Component {
     // component will call it for us
   };
 
-  confirmOverwrite = (unsavedFile, existingFileKey) => {
+  confirmOverwrite = (unsavedFile, existingFileKey, fileID) => {
     this.setState(state =>
-      this.confirmOverwriteUpdater(state, unsavedFile, existingFileKey)
+      this.confirmOverwriteUpdater(state, unsavedFile, existingFileKey, fileID)
     );
   };
 
-  confirmOverwriteUpdater = (state, unsavedFile, existingFileKey) => {
+  confirmOverwriteUpdater = (state, unsavedFile, existingFileKey, fileID) => {
     const pendingOverwritesCopy = Array.from(state.pendingOverwrites);
     pendingOverwritesCopy.push({
       newFile: unsavedFile,
       name: unsavedFile.name,
-      existingFileKey
+      existingFileKey,
+      fileID
     });
     return { pendingOverwrites: pendingOverwritesCopy };
   };
@@ -242,18 +251,18 @@ export class FileModalUnconnected extends React.Component {
     };
   };
 
-  executePendingOverwrite = name => {
+  executePendingOverwrite = fileInfo => {
     const pendingOverwrite = this.state.pendingOverwrites.find(po => {
-      return po.name === name;
+      return po.name === fileInfo.name;
     });
 
     this.saveFileWithKey(
       pendingOverwrite.newFile,
       pendingOverwrite.existingFileKey,
-      { overwrite: true }
+      fileInfo.fileID // { overwrite: true, fileID: fileInfo.fileID }
     );
 
-    this.hideOverwriteModal(name);
+    this.hideOverwriteModal(fileInfo.name);
   };
 
   render = () => (
@@ -272,7 +281,7 @@ export class FileModalUnconnected extends React.Component {
             this.hideOverwriteModal(this.state.pendingOverwrites[0].name);
           }}
           onUpdateFile={() => {
-            this.executePendingOverwrite(this.state.pendingOverwrites[0].name);
+            this.executePendingOverwrite(this.state.pendingOverwrites[0]);
           }}
           oldFile={{ filename: this.state.pendingOverwrites[0].name }}
           aboveOtherModals
@@ -292,11 +301,20 @@ export class FileModalUnconnected extends React.Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    saveFile: (name, id, data, overwrite) => {
-      dispatch(saveFile(name, id, data, overwrite, { pendingRequest: false }));
+    saveFile: async (notebookID, data, fileName, fileID = undefined) => {
+      const response = await saveFileToServer(
+        notebookID,
+        data,
+        fileName,
+        fileID
+      );
+      const { filename, id } = response;
+      const lastUpdated = response.last_updated;
+      dispatch(addFileToNotebook(filename, lastUpdated, id));
     },
-    deleteFile: (name, id) => {
-      dispatch(deleteFile(name, id, { pendingRequest: false }));
+    deleteFile: async fileID => {
+      await deleteFileOnServer(fileID);
+      dispatch(deleteFileFromNotebook(fileID));
     }
   };
 }
@@ -306,7 +324,8 @@ export function mapStateToProps(state) {
     maxFileSize: state.notebookInfo.max_file_size,
     maxFileSizeMB: state.notebookInfo.max_file_size / 1024 / 1024,
     maxFilenameLength: state.notebookInfo.max_filename_length,
-    savedFiles: state.notebookInfo.files
+    savedFiles: state.notebookInfo.files,
+    notebookID: state.notebookInfo.notebook_id
   };
 }
 
