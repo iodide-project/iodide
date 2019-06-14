@@ -155,8 +155,8 @@ class SavedOrDeletedContent extends React.Component {
           onClick={() => {
             this.props.confirmDelete(
               this.props.file.name,
-              this.props.file.id,
-              this.props.fileKey
+              this.props.fileKey,
+              this.props.file.id
             );
           }}
         >

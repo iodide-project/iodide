@@ -33,13 +33,7 @@ export function deleteFileFromNotebook(fileID) {
   };
 }
 
-export function saveFile(
-  fileName,
-  fileRequestID,
-  data,
-  overwrite,
-  options = { pendingRequest: true }
-) {
+export function saveFile(fileName, fileRequestID, data, overwrite) {
   return async (dispatch, getState) => {
     const state = getState();
 
@@ -47,12 +41,11 @@ export function saveFile(
     const { name: thisUser } = state.userData;
 
     if (notebookOwner !== thisUser) {
-      const err = new Error("only the owner of this notebook can save files");
-      if (options.pendingRequest) {
-        onFileOperationError(fileRequestID, err);
-        return undefined;
-      }
-      throw err;
+      onFileOperationError(
+        fileRequestID,
+        new Error("only the owner of this notebook can save files")
+      );
+      return undefined;
     }
 
     const notebookID = getNotebookID(state);
@@ -61,11 +54,8 @@ export function saveFile(
       try {
         validateFileAbsence(fileName, "save", getState());
       } catch (err) {
-        if (options.pendingRequest) {
-          onFileOperationError(fileRequestID, err);
-          return undefined;
-        }
-        throw err;
+        onFileOperationError(fileRequestID, err);
+        return undefined;
       }
     }
     try {
@@ -78,65 +68,41 @@ export function saveFile(
       const { filename, id } = fileInfo;
       const lastUpdated = fileInfo.last_updated;
       dispatch(addFileToNotebook(filename, lastUpdated, id));
-      if (options.pendingRequest) {
-        onFileOperationSuccess(fileRequestID, undefined);
-      }
+      onFileOperationSuccess(fileRequestID, undefined);
       return undefined;
     } catch (err) {
-      if (options.pendingRequest) {
-        onFileOperationError(fileRequestID, err);
-        return undefined;
-      }
-      throw err;
+      onFileOperationError(fileRequestID, err);
+      return undefined;
     }
   };
 }
 
-export function loadFile(
-  fileName,
-  fileRequestID,
-  fetchType,
-  options = { pendingRequest: true }
-) {
+export function loadFile(fileName, fileRequestID, fetchType) {
   return async (_, getState) => {
     try {
       validateFileExistence(fileName, "load", getState());
       validateFetchType(fetchType);
       const file = await loadFileFromServer(`files/${fileName}`, fetchType);
-      if (options.pendingRequest) {
-        onFileOperationSuccess(fileRequestID, file);
-      }
+      onFileOperationSuccess(fileRequestID, file);
       return undefined;
     } catch (err) {
-      if (options.pendingRequest) {
-        onFileOperationError(fileRequestID, err);
-        return undefined;
-      }
-      throw err;
+      onFileOperationError(fileRequestID, err);
+      return undefined;
     }
   };
 }
-export function deleteFile(
-  fileName,
-  fileRequestID,
-  options = { pendingRequest: true }
-) {
+export function deleteFile(fileName, fileRequestID) {
   return async (dispatch, getState) => {
     try {
       const fileID = getFileID(getState(), fileName);
       validateFileExistence(fileName, "delete", getState());
       const output = await deleteFileOnServer(fileID);
       dispatch(deleteFileFromNotebook(fileID));
-      if (options.pendingRequest) {
-        onFileOperationSuccess(fileRequestID, output);
-      }
+      onFileOperationSuccess(fileRequestID, output);
       return undefined;
     } catch (err) {
-      if (options.pendingRequest) {
-        onFileOperationError(fileRequestID, err);
-        return undefined;
-      }
-      throw err;
+      onFileOperationError(fileRequestID, err);
+      return undefined;
     }
   };
 }
