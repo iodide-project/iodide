@@ -17,7 +17,8 @@
     "build-production": "webpack -p",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "postinstall": "patch-package"
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -132,6 +133,7 @@
     "lodash-webpack-plugin": "0.11.5",
     "mini-css-extract-plugin": "0.7.0",
     "monaco-editor-webpack-plugin": "1.7.0",
+    "patch-package": "^6.1.2",
     "prettier": "1.18.2",
     "raw-loader": "3.0.0",
     "react-test-renderer": "16.8.6",
