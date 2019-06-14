@@ -11,8 +11,9 @@ class OpenIDCAuthMiddleware(object):
     request. This header will be populated by nginx configured to authenticate
     with OpenIDC.
 
-    We will automatically create a user object and attach it to the
-    experimenters group.
+    If no header is set, we will silently bypass this authentication layer (relying
+    on either other layers of middleware or the web server itself to enforce access
+    restrictions).
     """
 
     def __init__(self, get_response):
@@ -20,21 +21,12 @@ class OpenIDCAuthMiddleware(object):
         self.User = get_user_model()
 
     def __call__(self, request):
-        try:
-            resolved = resolve(request.path)
-            if resolved.url_name in settings.OPENIDC_AUTH_WHITELIST:
-                # If the requested path is in our auth whitelist,
-                # skip authentication entirely
-                return self.get_response(request)
-        except Resolver404:
-            pass
-
         openidc_email = request.META.get(settings.OPENIDC_EMAIL_HEADER, None)
 
         if openidc_email is None:
             # If a user has bypassed the OpenIDC flow entirely and no header
             # is set then we reject the request entirely
-            return HttpResponse("Please login using OpenID Connect", status=401)
+            return self.get_response(request)
 
         try:
             user = self.User.objects.get(username=openidc_email)
