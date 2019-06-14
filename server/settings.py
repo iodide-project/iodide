@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import re
 
 import dj_database_url
 import environ
@@ -117,6 +118,11 @@ if DOCKERFLOW_ENABLED:
     MIDDLEWARE.append("dockerflow.django.middleware.DockerflowMiddleware")
 
 if USE_OPENIDC_AUTH:
+    OPENIDC_AUTH_WHITELIST = [
+        re.compile(whitelist_re)
+        for whitelist_re in env.str("OPENIDC_AUTH_WHITELIST", "").split(",")
+        if whitelist_re
+    ]
     INSTALLED_APPS.append("server.openidc")
     MIDDLEWARE.append("server.openidc.middleware.OpenIDCAuthMiddleware")
 elif SOCIAL_AUTH_GITHUB_KEY:

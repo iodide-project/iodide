@@ -11,8 +11,7 @@ class OpenIDCAuthMiddleware(object):
     request. This header will be populated by nginx configured to authenticate
     with OpenIDC.
 
-    We will automatically create a user object and attach it to the
-    experimenters group.
+    If the URL matches a whitelist regular expression, we will bypass it
     """
 
     def __init__(self, get_response):
@@ -22,12 +21,18 @@ class OpenIDCAuthMiddleware(object):
     def __call__(self, request):
         try:
             resolved = resolve(request.path)
-            if resolved.url_name in settings.OPENIDC_AUTH_WHITELIST:
+            if any(
+                [
+                    whitelist_re.match(resolved.url_name)
+                    for whitelist_re in settings.OPENIDC_AUTH_WHITELIST
+                ]
+            ):
                 # If the requested path is in our auth whitelist,
                 # skip authentication entirely
                 return self.get_response(request)
         except Resolver404:
-            pass
+            # if 404, we should not go any further either
+            return self.get_response(request)
 
         openidc_email = request.META.get(settings.OPENIDC_EMAIL_HEADER, None)
 
