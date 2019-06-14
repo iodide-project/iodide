@@ -144,9 +144,7 @@ export class FileModalUnconnected extends React.Component {
     files[this.getNewFileKey()] = {
       name,
       status: "error",
-      errorMessage: `Filename exceeds maximum length of ${
-        this.props.maxFilenameLength
-      } characters`
+      errorMessage: `Filename exceeds maximum length of ${this.props.maxFilenameLength} characters`
     };
     return { files };
   };
