@@ -11,6 +11,7 @@ describe("file-modal/index.jsx", () => {
       notebookInfo: {
         max_file_size: 10485760,
         max_filename_length: 120,
+        notebook_id: 15,
         files: [
           {
             filename: "example1.jpg",
@@ -34,14 +35,17 @@ describe("file-modal/index.jsx", () => {
       // related to notebookInfo IDs.
       files: {
         "0": {
+          id: 215,
           name: "example1.jpg",
           status: "saved"
         },
         "1": {
+          id: 321,
           name: "example2.jpg",
           status: "uploading"
         },
         "2": {
+          id: 892,
           name: "example3.jpg",
           status: "saved"
         }
@@ -56,6 +60,7 @@ describe("file-modal/index.jsx", () => {
       maxFileSize: state.notebookInfo.max_file_size,
       maxFileSizeMB: 10,
       maxFilenameLength: state.notebookInfo.max_filename_length,
+      notebookID: 15,
       savedFiles: state.notebookInfo.files
     });
   });
@@ -64,7 +69,7 @@ describe("file-modal/index.jsx", () => {
     const newFiles = fmu.getFilesStateCopy(state);
 
     delete newFiles[0];
-    newFiles[3] = { name: "example4.jpg", status: "saved" };
+    newFiles[3] = { name: "example4.jpg", status: "saved", id: 979 };
 
     expect(state.files[0]).not.toBeUndefined();
     expect(state.files[3]).toBeUndefined();
@@ -88,21 +93,25 @@ describe("file-modal/index.jsx", () => {
     });
   });
 
-  it("getKeyOfSavedOrUploadingFile", () => {
-    expect(fmu.getKeyOfSavedOrUploadingFile({ name: "example1.jpg" })).toEqual(
-      "0"
-    );
-    expect(fmu.getKeyOfSavedOrUploadingFile({ name: "example2.jpg" })).toEqual(
-      "1"
-    );
-    expect(fmu.getKeyOfSavedOrUploadingFile({ name: "example3.jpg" })).toEqual(
-      "2"
-    );
+  it("getSavedFileKey", () => {
+    expect(fmu.getSavedFileKey("example1.jpg")).toEqual("0");
+    expect(fmu.getSavedFileKey("example2.jpg")).toEqual("1");
+    expect(fmu.getSavedFileKey("example3.jpg")).toEqual("2");
+    expect(fmu.getSavedFileKey("example9.jpg")).toBeUndefined();
+  });
+
+  it("getSavedFileID", () => {
+    expect(fmu.getSavedFileID("0")).toEqual(215);
+    expect(fmu.getSavedFileID("1")).toEqual(321);
+    expect(fmu.getSavedFileID("2")).toEqual(892);
+    expect(fmu.getSavedFileID("99")).toBeUndefined();
   });
 
   describe("deleteUpdater", () => {
     beforeEach(() => {
       state.pendingDelete = {
+        id: 215,
+        name: "example1.jpg",
         fileKey: 0
       };
     });
@@ -111,14 +120,17 @@ describe("file-modal/index.jsx", () => {
       expect(fmu.deleteUpdater(state)).toMatchObject({
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "deleted"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "uploading"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "saved"
           }
@@ -139,14 +151,17 @@ describe("file-modal/index.jsx", () => {
       ).toMatchObject({
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "saved"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "uploading"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "saved"
           },
@@ -171,14 +186,17 @@ describe("file-modal/index.jsx", () => {
       ).toMatchObject({
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "saved"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "uploading"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "saved"
           },
@@ -203,14 +221,17 @@ describe("file-modal/index.jsx", () => {
       ).toMatchObject({
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "saved"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "uploading"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "saved"
           },
@@ -235,14 +256,17 @@ describe("file-modal/index.jsx", () => {
       ).toMatchObject({
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "saved"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "uploading"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "saved"
           },
@@ -263,25 +287,32 @@ describe("file-modal/index.jsx", () => {
     it('Adds file with "error" status and error message', () => {
       const stateUpdate = fmu.fileUploadBeganUpdater(state, 3, "example4.jpg");
       expect(
-        fmu.fileErroredUpdater(Object.assign({}, state, stateUpdate), 3)
+        fmu.fileErroredUpdater(
+          Object.assign({}, state, stateUpdate),
+          3,
+          "Some funny string in the test file"
+        )
       ).toMatchObject({
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "saved"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "uploading"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "saved"
           },
           "3": {
             name: "example4.jpg",
             status: "error",
-            errorMessage: "Upload error"
+            errorMessage: "Some funny string in the test file"
           }
         }
       });
@@ -297,31 +328,42 @@ describe("file-modal/index.jsx", () => {
       state.pendingOverwrites = [
         {
           name: "example1.jpg",
-          existingFileKey: 0
+          existingFileKey: "0",
+          existingFileID: 215
         },
         {
           name: "example2.jpg",
-          existingFileKey: 1
+          existingFileKey: "1",
+          existingFileID: 321
         }
       ];
     });
 
     it("Adds object to pendingOverwrites state", () => {
       expect(
-        fmu.confirmOverwriteUpdater(state, new File([], "example3.jpg"), 2)
+        fmu.confirmOverwriteUpdater(
+          state,
+          new FormData(),
+          "example3.jpg",
+          "2",
+          892
+        )
       ).toMatchObject({
         pendingOverwrites: [
           {
             name: "example1.jpg",
-            existingFileKey: 0
+            existingFileKey: "0",
+            existingFileID: 215
           },
           {
             name: "example2.jpg",
-            existingFileKey: 1
+            existingFileKey: "1",
+            existingFileID: 321
           },
           {
             name: "example3.jpg",
-            existingFileKey: 2
+            existingFileKey: "2",
+            existingFileID: 892
           }
         ]
       });
@@ -341,10 +383,12 @@ describe("file-modal/index.jsx", () => {
     beforeEach(() => {
       state.pendingOverwrites = [
         {
+          id: 215,
           name: "example1.jpg",
           existingFileKey: 0
         },
         {
+          id: 321,
           name: "example2.jpg",
           existingFileKey: 1
         }
@@ -357,6 +401,7 @@ describe("file-modal/index.jsx", () => {
       ).toMatchObject({
         pendingOverwrites: [
           {
+            id: 215,
             name: "example1.jpg",
             existingFileKey: 0
           }
@@ -380,14 +425,17 @@ describe("file-modal/body.jsx", () => {
       const props = {
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "deleted"
           },
           "1": {
+            id: 321,
             name: "examplej.jpg",
             status: "deleted"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "deleted"
           }
@@ -401,14 +449,17 @@ describe("file-modal/body.jsx", () => {
       const props = {
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "deleted"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "uploading"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "deleted"
           }
@@ -422,14 +473,17 @@ describe("file-modal/body.jsx", () => {
       const props = {
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "deleted"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "error"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "deleted"
           }
@@ -443,14 +497,17 @@ describe("file-modal/body.jsx", () => {
       const props = {
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "deleted"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "saved"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "deleted"
           }
@@ -464,14 +521,17 @@ describe("file-modal/body.jsx", () => {
       const props = {
         files: {
           "0": {
+            id: 215,
             name: "example1.jpg",
             status: "saved"
           },
           "1": {
+            id: 321,
             name: "example2.jpg",
             status: "saved"
           },
           "2": {
+            id: 892,
             name: "example3.jpg",
             status: "saved"
           }
@@ -491,18 +551,22 @@ describe("file-modal/file-list.jsx", () => {
     props = {
       files: {
         "15": {
+          id: 162,
           name: "example3.jpg",
           status: "saved"
         },
         "95": {
+          id: 202,
           name: "example1.jpg",
           status: "deleted"
         },
         "7": {
+          id: 462,
           name: "example10.jpg",
           status: "deleted"
         },
         "32": {
+          id: 920,
           name: "example2.jpg",
           status: "uploading"
         }
@@ -514,10 +578,10 @@ describe("file-modal/file-list.jsx", () => {
 
   it("getSortedFileEntries", () => {
     expect(fileList.getSortedFileEntries()).toEqual([
-      ["95", { name: "example1.jpg", status: "deleted" }],
-      ["32", { name: "example2.jpg", status: "uploading" }],
-      ["15", { name: "example3.jpg", status: "saved" }],
-      ["7", { name: "example10.jpg", status: "deleted" }]
+      ["95", { id: 202, name: "example1.jpg", status: "deleted" }],
+      ["32", { id: 920, name: "example2.jpg", status: "uploading" }],
+      ["15", { id: 162, name: "example3.jpg", status: "saved" }],
+      ["7", { id: 462, name: "example10.jpg", status: "deleted" }]
     ]);
   });
 

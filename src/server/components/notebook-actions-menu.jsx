@@ -7,7 +7,7 @@ import MenuDivider from "../../shared/components/menu-divider";
 import DeleteModal from "./delete-modal";
 import UploadModal from "./upload-modal";
 import {
-  selectFileAndFormatMetadata,
+  selectSingleFileAndFormatMetadata,
   uploadFile
 } from "../../shared/utils/file-operations";
 import { deleteNotebookRequest } from "../../shared/server-api/notebook";
@@ -55,7 +55,7 @@ export default class NotebookActionsMenu extends React.Component {
   // FIXME: Rewrite with async/await
   // https://github.com/iodide-project/iodide/pull/1676/files#r282216780
   selectFile(notebookID) {
-    selectFileAndFormatMetadata(notebookID).then(formData => {
+    selectSingleFileAndFormatMetadata(notebookID).then(formData => {
       let filename;
       try {
         const metadata = JSON.parse(formData.get("metadata"));

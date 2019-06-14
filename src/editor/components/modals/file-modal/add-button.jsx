@@ -9,37 +9,12 @@ const AddButton = styled(ContainedButton)`
   margin: 0;
 `;
 
-const HiddenInput = styled.input`
-  display: none;
-`;
-
 export default class extends React.Component {
   static propTypes = {
-    onFileSelection: PropTypes.func.isRequired
-  };
-
-  constructor(props) {
-    super(props);
-    this.fileInputRef = React.createRef();
-  }
-
-  /**
-   * Click the hidden file <input>, which will cause the browser's file
-   * selection dialog to appear.
-   */
-  openSelectDialog = () => {
-    this.fileInputRef.current.click();
+    onAddButtonClick: PropTypes.func.isRequired
   };
 
   render = () => (
-    <React.Fragment>
-      <AddButton onClick={this.openSelectDialog}>Add files</AddButton>
-      <HiddenInput
-        type="file"
-        onChange={this.props.onFileSelection}
-        innerRef={this.fileInputRef}
-        multiple
-      />
-    </React.Fragment>
+    <AddButton onClick={this.props.onAddButtonClick}>Add files</AddButton>
   );
 }
