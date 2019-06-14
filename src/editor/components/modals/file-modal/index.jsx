@@ -7,13 +7,22 @@ import DeleteModal from "../../../../server/components/delete-modal";
 import OverwriteModal from "../../../../server/components/upload-modal";
 import TitleBar from "../title-bar";
 import Body from "./body";
-import { saveFile, deleteFile } from "../../../actions/file-request-actions";
+import {
+  deleteFileOnServer,
+  selectMultipleFilesAndFormatMetadata,
+  uploadFile
+} from "../../../../shared/utils/file-operations";
+import {
+  addFileToNotebook,
+  deleteFileFromNotebook
+} from "../../../actions/file-request-actions";
 
 export class FileModalUnconnected extends React.Component {
   static propTypes = {
     // Required
-    deleteFile: PropTypes.func.isRequired,
-    saveFile: PropTypes.func.isRequired,
+    addFileToNotebook: PropTypes.func.isRequired,
+    deleteFileFromNotebook: PropTypes.func.isRequired,
+    notebookID: PropTypes.number.isRequired,
 
     // Not required
     maxFileSize: PropTypes.number,
@@ -38,24 +47,34 @@ export class FileModalUnconnected extends React.Component {
     };
   }
 
-  onFileSelection = e => {
-    Array.from(e.target.files).forEach(unsavedFile => {
-      const existingFileKey = this.getKeyOfSavedOrUploadingFile(unsavedFile);
+  onDelete = () => {
+    this.setState(state => this.deleteUpdater(state));
+  };
 
-      if (existingFileKey !== undefined) {
-        this.confirmOverwrite(unsavedFile, existingFileKey);
+  onAddButtonClick = async () => {
+    const formDataArray = await selectMultipleFilesAndFormatMetadata(
+      this.props.notebookID
+    );
+
+    formDataArray.forEach(formData => {
+      const unsavedFile = formData.get("file");
+      const savedFileMetadata = this.getSavedFileMetadata(unsavedFile.name);
+
+      if (savedFileMetadata) {
+        this.confirmOverwrite(
+          formData,
+          savedFileMetadata.name,
+          savedFileMetadata.fileKey,
+          savedFileMetadata.id
+        );
       } else if (this.fileTooBig(unsavedFile)) {
         this.setState(state => this.fileTooBigUpdater(state, unsavedFile));
       } else if (this.filenameTooLong(unsavedFile)) {
         this.setState(state => this.filenameTooLongUpdater(state, unsavedFile));
       } else {
-        this.handleValidFile(unsavedFile);
+        this.handleValidFile(formData);
       }
     });
-  };
-
-  onDelete = () => {
-    this.setState(state => this.deleteUpdater(state));
   };
 
   getFilesStateCopy = state => {
@@ -65,9 +84,36 @@ export class FileModalUnconnected extends React.Component {
     }, {});
   };
 
+  getSavedFileMetadata = name => {
+    const file = Object.entries(this.state.files).find(tuple => {
+      if (tuple[1].status === "saved") {
+        return tuple[1].name === name;
+      }
+      return false;
+    });
+    return file ? { name, fileKey: file[0], id: file[1].id } : undefined;
+  };
+
+  /**
+   * Return an object representing the files that have already been saved to
+   * this notebook. Each file is keyed by a unique identifier so that we can
+   * keep track of it before, during, and after upload. Note that these keys are
+   * in no way related to the file IDs returned from the server.
+   */
+  getInitialFiles = () => {
+    return this.props.savedFiles.reduce((acc, current) => {
+      acc[this.getNewFileKey()] = {
+        id: current.id,
+        name: current.filename,
+        status: "saved"
+      };
+      return acc;
+    }, {});
+  };
+
   /**
    * Return a unique key for keeping track of a file, starting with 0 and
-   * incrementing by one for each additional time this method is called.
+   * incrementing by one each additional time this method is called.
    */
   getNewFileKey = () => {
     if (this.lastFileKey === undefined) {
@@ -76,32 +122,6 @@ export class FileModalUnconnected extends React.Component {
       this.lastFileKey += 1;
     }
     return this.lastFileKey;
-  };
-
-  /**
-   * Return an object representing the files that have already been saved to
-   * this notebook. Each file is keyed by a unique identifier so that we can
-   * keep track of it before, during, and after upload. NB: These keys are in no
-   * way related to the IDs set in notebookInfo.
-   */
-  getInitialFiles = () => {
-    return this.props.savedFiles.reduce((acc, current) => {
-      acc[this.getNewFileKey()] = {
-        name: current.filename,
-        status: "saved"
-      };
-      return acc;
-    }, {});
-  };
-
-  getKeyOfSavedOrUploadingFile = ({ name }) => {
-    const file = Object.entries(this.state.files).find(tuple => {
-      if (tuple[1].status === "saved" || tuple[1].status === "uploading") {
-        return tuple[1].name === name;
-      }
-      return false;
-    });
-    return file ? file[0] : undefined;
   };
 
   fileTooBig = ({ size }) => {
@@ -140,34 +160,46 @@ export class FileModalUnconnected extends React.Component {
     return { files };
   };
 
-  handleValidFile = unsavedFile => {
+  handleValidFile = formData => {
     const fileKey = this.getNewFileKey();
-    this.saveFileWithKey(unsavedFile, fileKey);
+    this.saveFileWithKey(formData, fileKey);
   };
 
-  saveFileWithKey = (unsavedFile, fileKey, options = { overwrite: false }) => {
+  saveFileWithKey = async (formData, fileKey, existingFileID) => {
+    const file = formData.get("file");
+
     // Update state immediately to reflect that this file has begun
     // uploading. This allows us to show a spinner in its row for the
     // duration of the upload.
     this.setState(state =>
-      this.fileUploadBeganUpdater(state, fileKey, unsavedFile.name)
+      this.fileUploadBeganUpdater(state, fileKey, file.name)
     );
 
-    const fileReader = new FileReader();
-    fileReader.readAsArrayBuffer(unsavedFile);
-    fileReader.onload = async () => {
-      try {
-        await this.props.saveFile(
-          unsavedFile.name,
-          fileKey,
-          fileReader.result,
-          options.overwrite
-        )();
-        this.setState(state => this.fileSavedUpdater(state, fileKey));
-      } catch (err) {
-        this.setState(state => this.fileErroredUpdater(state, fileKey));
+    try {
+      let uploadedFile;
+
+      // Testing existingFileID isn't really necessary (the uploadFile function
+      // will behave as expected if it's undefined) but this is more clear.
+      if (existingFileID) {
+        uploadedFile = await uploadFile(formData, existingFileID);
+      } else {
+        uploadedFile = await uploadFile(formData);
       }
-    };
+
+      this.props.addFileToNotebook(
+        uploadedFile.name,
+        uploadedFile.last_updated,
+        uploadedFile.id
+      );
+
+      this.setState(state =>
+        this.fileSavedUpdater(state, fileKey, uploadedFile.id)
+      );
+    } catch (err) {
+      this.setState(state =>
+        this.fileErroredUpdater(state, fileKey, "File could not be uploaded")
+      );
+    }
   };
 
   fileUploadBeganUpdater = (state, fileKey, name) => {
@@ -179,36 +211,39 @@ export class FileModalUnconnected extends React.Component {
     return { files };
   };
 
-  fileSavedUpdater = (state, fileKey) => {
+  fileSavedUpdater = (state, fileKey, id) => {
     const files = this.getFilesStateCopy(state);
     files[fileKey].status = "saved";
+    files[fileKey].id = id;
     return { files };
   };
 
-  fileErroredUpdater = (state, fileKey) => {
+  fileErroredUpdater = (state, fileKey, errorMessage) => {
     const files = this.getFilesStateCopy(state);
     files[fileKey].status = "error";
-    files[fileKey].errorMessage = "Upload error";
+    files[fileKey].errorMessage = errorMessage;
     return { files };
   };
 
-  confirmDelete = (name, fileKey) => {
-    this.setState({ pendingDelete: { name, fileKey } });
+  confirmDelete = (name, fileKey, id) => {
+    this.setState({ pendingDelete: { name, fileKey, id } });
   };
 
   hideDeleteModal = () => {
     this.setState({ pendingDelete: false });
   };
 
-  executePendingDelete = () => {
+  executePendingDelete = async () => {
     try {
-      this.props.deleteFile(
-        this.state.pendingDelete.name,
-        this.state.pendingDelete.fileKey
-      )();
+      await deleteFileOnServer(this.state.pendingDelete.id);
+      this.props.deleteFileFromNotebook(this.state.pendingDelete.id);
     } catch (err) {
       this.setState(state =>
-        this.fileErroredUpdater(state, state.pendingDelete.fileKey)
+        this.fileErroredUpdater(
+          state,
+          state.pendingDelete.fileKey,
+          "File could not be deleted"
+        )
       );
     }
 
@@ -216,18 +251,36 @@ export class FileModalUnconnected extends React.Component {
     // component will call it for us
   };
 
-  confirmOverwrite = (unsavedFile, existingFileKey) => {
+  confirmOverwrite = (
+    formData,
+    existingFileName,
+    existingFileKey,
+    existingFileID
+  ) => {
     this.setState(state =>
-      this.confirmOverwriteUpdater(state, unsavedFile, existingFileKey)
+      this.confirmOverwriteUpdater(
+        state,
+        formData,
+        existingFileName,
+        existingFileKey,
+        existingFileID
+      )
     );
   };
 
-  confirmOverwriteUpdater = (state, unsavedFile, existingFileKey) => {
+  confirmOverwriteUpdater = (
+    state,
+    formData,
+    existingFileName,
+    existingFileKey,
+    existingFileID
+  ) => {
     const pendingOverwritesCopy = Array.from(state.pendingOverwrites);
     pendingOverwritesCopy.push({
-      newFile: unsavedFile,
-      name: unsavedFile.name,
-      existingFileKey
+      newFormData: formData,
+      name: existingFileName,
+      existingFileKey,
+      existingFileID
     });
     return { pendingOverwrites: pendingOverwritesCopy };
   };
@@ -248,9 +301,9 @@ export class FileModalUnconnected extends React.Component {
     });
 
     this.saveFileWithKey(
-      pendingOverwrite.newFile,
+      pendingOverwrite.newFormData,
       pendingOverwrite.existingFileKey,
-      { overwrite: true }
+      pendingOverwrite.existingFileID
     );
 
     this.hideOverwriteModal(name);
@@ -282,7 +335,7 @@ export class FileModalUnconnected extends React.Component {
         <TitleBar title="Manage Files" />
         <Body
           files={this.state.files}
-          onFileSelection={this.onFileSelection}
+          onAddButtonClick={this.onAddButtonClick}
           confirmDelete={this.confirmDelete}
         />
       </ModalContainer>
@@ -290,13 +343,13 @@ export class FileModalUnconnected extends React.Component {
   );
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
   return {
-    saveFile: (name, id, data, overwrite) => {
-      dispatch(saveFile(name, id, data, overwrite, { pendingRequest: false }));
+    addFileToNotebook: (name, lastUpdated, id) => {
+      dispatch(addFileToNotebook(name, lastUpdated, id));
     },
-    deleteFile: (name, id) => {
-      dispatch(deleteFile(name, id, { pendingRequest: false }));
+    deleteFileFromNotebook: id => {
+      dispatch(deleteFileFromNotebook(id));
     }
   };
 }
@@ -306,6 +359,7 @@ export function mapStateToProps(state) {
     maxFileSize: state.notebookInfo.max_file_size,
     maxFileSizeMB: state.notebookInfo.max_file_size / 1024 / 1024,
     maxFilenameLength: state.notebookInfo.max_filename_length,
+    notebookID: state.notebookInfo.notebook_id,
     savedFiles: state.notebookInfo.files
   };
 }

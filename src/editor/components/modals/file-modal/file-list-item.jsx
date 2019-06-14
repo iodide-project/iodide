@@ -153,7 +153,11 @@ class SavedOrDeletedContent extends React.Component {
         <FileAction
           className="file-action file-action-delete"
           onClick={() => {
-            this.props.confirmDelete(this.props.file.name, this.props.fileKey);
+            this.props.confirmDelete(
+              this.props.file.name,
+              this.props.fileKey,
+              this.props.file.id
+            );
           }}
         >
           delete
