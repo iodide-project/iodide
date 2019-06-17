@@ -14,7 +14,7 @@
     "start-and-serve": "webpack-dev-server --watch --mode=development --env.NODE_ENV=dev",
     "start": "webpack --watch --mode=development --env.NODE_ENV=dev",
     "build": "webpack --env.NODE_ENV=dev",
-    "build-production": "webpack -p --env.NODE_ENV=production",
+    "build-production": "webpack -p",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"

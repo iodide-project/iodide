@@ -38,7 +38,7 @@ const plugins = [];
 // const config
 module.exports = env => {
   env = env || ""; // eslint-disable-line no-param-reassign
-  process.env.NODE_ENV = env.NODE_ENV || "test";
+  process.env.NODE_ENV = env.NODE_ENV || "production";
 
   if (!process.env.NODE_ENV.startsWith("dev")) {
     plugins.push(new UglifyJSPlugin());

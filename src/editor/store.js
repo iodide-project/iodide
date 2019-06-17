@@ -18,7 +18,6 @@ let enhancer;
 let finalReducer;
 
 const sagaMiddleware = createSagaMiddleware();
-
 if (process.env.NODE_ENV === "production") {
   finalReducer = reducer;
   enhancer = compose(
