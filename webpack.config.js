@@ -155,7 +155,7 @@ module.exports = env => {
       new MiniCssExtractPlugin({
         filename: `[name].${APP_VERSION_STRING}.css`
       }),
-      new WriteFilePlugin(),
+      new WriteFilePlugin()
       // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
     ],
     devServer: {
