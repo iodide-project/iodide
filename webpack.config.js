@@ -38,7 +38,7 @@ const plugins = [];
 // const config
 module.exports = env => {
   env = env || ""; // eslint-disable-line no-param-reassign
-  process.env.NODE_ENV = process.env.NODE_ENV || "production";
+  process.env.NODE_ENV = env.NODE_ENV || "production";
 
   if (!process.env.NODE_ENV.startsWith("dev")) {
     plugins.push(new UglifyJSPlugin());
@@ -138,9 +138,7 @@ module.exports = env => {
           IOMD: ""
         })
       }),
-      new webpack.EnvironmentPlugin({
-        NODE_ENV: "production"
-      }),
+      new webpack.EnvironmentPlugin(["NODE_ENV"]),
       new webpack.DefinePlugin({
         IODIDE_VERSION: JSON.stringify(APP_VERSION_STRING),
         IODIDE_EVAL_FRAME_ORIGIN: JSON.stringify(EVAL_FRAME_ORIGIN),

@@ -10,9 +10,9 @@
     "node": "8.x"
   },
   "scripts": {
-    "test": "NODE_ENV=test jest --no-cache",
-    "start-and-serve": "NODE_ENV=dev webpack-dev-server --watch --mode=development",
-    "start": "NODE_ENV=dev webpack --watch --mode=development",
+    "test": "jest --no-cache --env.NODE_ENV=test",
+    "start-and-serve": "webpack-dev-server --watch --mode=development --env.NODE_ENV=dev",
+    "start": "webpack --watch --mode=development --env.NODE_ENV=dev",
     "build": "webpack",
     "build-production": "webpack -p",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
