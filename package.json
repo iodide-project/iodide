@@ -10,11 +10,11 @@
     "node": "8.x"
   },
   "scripts": {
-    "test": "jest --no-cache && webpack-dev-server --env.NODE_ENV=test",
+    "test": "jest --no-cache",
     "start-and-serve": "webpack-dev-server --watch --mode=development --env.NODE_ENV=dev",
     "start": "webpack --watch --mode=development --env.NODE_ENV=dev",
-    "build": "webpack",
-    "build-production": "webpack -p",
+    "build": "webpack --env.NODE_ENV=dev",
+    "build-production": "webpack -p --env.NODE_ENV=production",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
