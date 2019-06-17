@@ -10,7 +10,7 @@
     "node": "8.x"
   },
   "scripts": {
-    "test": "jest --no-cache --env.NODE_ENV=test",
+    "test": "jest --no-cache && webpack-dev-server --env.NODE_ENV=test",
     "start-and-serve": "webpack-dev-server --watch --mode=development --env.NODE_ENV=dev",
     "start": "webpack --watch --mode=development --env.NODE_ENV=dev",
     "build": "webpack",
