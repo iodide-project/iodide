@@ -10,11 +10,11 @@
     "node": "8.x"
   },
   "scripts": {
-    "test": "jest --no-cache",
-    "start-and-serve": "webpack-dev-server --watch --mode=development --env=dev",
-    "start": "webpack --watch --mode=development --env=dev",
+    "test": "NODE_ENV=test jest --no-cache",
+    "start-and-serve": "NODE_ENV=dev webpack-dev-server --watch --mode=development",
+    "start": "NODE_ENV=dev webpack --watch --mode=development",
     "build": "webpack",
-    "build-production": "webpack --env=production",
+    "build-production": "webpack -p",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -32,7 +32,6 @@
     },
     "globals": {
       "window": true,
-      "IODIDE_BUILD_MODE": "test",
       "USE_LOCAL_PYODIDE": false
     },
     "setupFiles": [

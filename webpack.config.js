@@ -38,8 +38,9 @@ const plugins = [];
 // const config
 module.exports = env => {
   env = env || ""; // eslint-disable-line no-param-reassign
+  process.env.NODE_ENV = process.env.NODE_ENV || "production";
 
-  if (!env.startsWith("dev")) {
+  if (!process.env.NODE_ENV.startsWith("dev")) {
     plugins.push(new UglifyJSPlugin());
   }
 
@@ -137,15 +138,15 @@ module.exports = env => {
           IOMD: ""
         })
       }),
+      new webpack.EnvironmentPlugin({
+        NODE_ENV: "production"
+      }),
       new webpack.DefinePlugin({
         IODIDE_VERSION: JSON.stringify(APP_VERSION_STRING),
         IODIDE_EVAL_FRAME_ORIGIN: JSON.stringify(EVAL_FRAME_ORIGIN),
         IODIDE_EDITOR_ORIGIN: JSON.stringify(EDITOR_ORIGIN),
         IODIDE_JS_PATH: JSON.stringify(APP_PATH_STRING),
         IODIDE_CSS_PATH: JSON.stringify(CSS_PATH_STRING),
-        IODIDE_BUILD_MODE: JSON.stringify(
-          env && env.startsWith("dev") ? "dev" : "production"
-        ),
         IODIDE_REDUX_LOG_MODE: JSON.stringify(reduxLogMode),
         USE_LOCAL_PYODIDE: JSON.stringify(USE_LOCAL_PYODIDE),
         USE_OPENIDC_AUTH: JSON.stringify(USE_OPENIDC_AUTH),
@@ -154,7 +155,7 @@ module.exports = env => {
       new MiniCssExtractPlugin({
         filename: `[name].${APP_VERSION_STRING}.css`
       }),
-      new WriteFilePlugin()
+      new WriteFilePlugin(),
       // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
     ],
     devServer: {

@@ -1,4 +1,4 @@
-/* global IODIDE_BUILD_MODE IODIDE_REDUX_LOG_MODE */
+/* global IODIDE_REDUX_LOG_MODE */
 import { applyMiddleware, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
@@ -19,13 +19,16 @@ let finalReducer;
 
 const sagaMiddleware = createSagaMiddleware();
 
-if (IODIDE_BUILD_MODE === "production") {
+if (process.env.NODE_ENV === "production") {
   finalReducer = reducer;
   enhancer = compose(
     applyMiddleware(thunk),
     applyMiddleware(sagaMiddleware)
   );
-} else if (IODIDE_BUILD_MODE === "test" || IODIDE_REDUX_LOG_MODE === "SILENT") {
+} else if (
+  process.env.NODE_ENV === "test" ||
+  IODIDE_REDUX_LOG_MODE === "SILENT"
+) {
   finalReducer = createValidatedReducer(reducer, stateSchema);
   enhancer = compose(
     applyMiddleware(thunk),
