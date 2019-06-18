@@ -102,7 +102,7 @@
     "@storybook/addons": "5.0.11",
     "@storybook/react": "5.0.11",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "10.0.1",
+    "babel-eslint": "10.0.2",
     "babel-jest": "24.8.0",
     "babel-loader": "8.0.6",
     "babel-plugin-emotion": "9.2.11",
