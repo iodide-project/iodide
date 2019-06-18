@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.8.0 (2019-06-18)
+
 - Adds favicon to iodide (fixes #826)
 - Adds JWT-based authentication to Iodide's API as an option (fixes #1755)
 - Rebrand the "jsmd" file format as "iomd" (fixes #1634)
