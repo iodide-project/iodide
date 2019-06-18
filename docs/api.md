@@ -27,7 +27,7 @@ a look at the example in the `iodide.file.save` examples section.
 
 `fileName` (required) is a string that represents the file name.
 
-`serializerType` (required) is a string consisting of one of four options: `text` (applies `.toString()` to `data`), `json` (applies `JSON.serialize(data)`), `arrayBuffer` (saves as a binary array buffer), and `blob` (saves as a `Blob` object). These match the `fetchType` in `iodide.file.load` – if you save with a certain `serializerType`, it is recommended to load it with the same `fetchType`.
+`serializerType` (required) is a string consisting of one of four options: `text` (applies `.toString()` to `data`), `json` (applies `JSON.stringify(data)`), `arrayBuffer` (saves as a binary array buffer), and `blob` (saves as a `Blob` object). These match the `fetchType` in `iodide.file.load` – if you save with a certain `serializerType`, it is recommended to load it with the same `fetchType`.
 
 `data` (required) is any object or variable in the eval name space. It will be serialized depending on the `serializerType`.
 
