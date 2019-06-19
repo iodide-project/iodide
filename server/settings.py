@@ -120,7 +120,7 @@ if DOCKERFLOW_ENABLED:
 if USE_OPENIDC_AUTH:
     OPENIDC_AUTH_WHITELIST = [
         re.compile(whitelist_re)
-        for whitelist_re in env.str("OPENIDC_AUTH_WHITELIST", "").split(",")
+        for whitelist_re in env.str("OPENIDC_AUTH_WHITELIST", "^/api").split(",")
         if whitelist_re
     ]
     INSTALLED_APPS.append("server.openidc")
