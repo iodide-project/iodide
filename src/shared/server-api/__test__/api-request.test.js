@@ -30,7 +30,7 @@ describe("signedAPIRequest", () => {
     // succeeded
     expect(fetch.mock.calls).toEqual([
       [
-        "/api/v1/token/",
+        "/token/",
         { headers: { "X-CSRFToken": "myfuncsrftoken" }, method: "POST" }
       ],
       [
@@ -113,7 +113,7 @@ describe("signedAPIRequest", () => {
         }
       ],
       [
-        "/api/v1/token/",
+        "/token/",
         { headers: { "X-CSRFToken": "myfuncsrftoken" }, method: "POST" }
       ],
       [
