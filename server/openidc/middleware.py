@@ -26,7 +26,7 @@ class OpenIDCAuthMiddleware(object):
             # skip authentication entirely
             return self.get_response(request)
         try:
-            resolved = resolve(request.path)
+            resolve(request.path)
         except Resolver404:
             # if 404, we should not go any further either
             return self.get_response(request)
