@@ -19,17 +19,14 @@ class OpenIDCAuthMiddleware(object):
         self.User = get_user_model()
 
     def __call__(self, request):
+        if any(
+            [whitelist_re.match(request.path) for whitelist_re in settings.OPENIDC_AUTH_WHITELIST]
+        ):
+            # If the requested path is in our auth whitelist,
+            # skip authentication entirely
+            return self.get_response(request)
         try:
             resolved = resolve(request.path)
-            if any(
-                [
-                    whitelist_re.match(resolved.url_name)
-                    for whitelist_re in settings.OPENIDC_AUTH_WHITELIST
-                ]
-            ):
-                # If the requested path is in our auth whitelist,
-                # skip authentication entirely
-                return self.get_response(request)
         except Resolver404:
             # if 404, we should not go any further either
             return self.get_response(request)

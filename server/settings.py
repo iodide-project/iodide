@@ -195,7 +195,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 OPENIDC_EMAIL_HEADER = env.str("OPENIDC_HEADER", default="HTTP_X_FORWARDED_USER")
-OPENIDC_AUTH_WHITELIST = []
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
