@@ -118,11 +118,6 @@ if DOCKERFLOW_ENABLED:
     MIDDLEWARE.append("dockerflow.django.middleware.DockerflowMiddleware")
 
 if USE_OPENIDC_AUTH:
-    OPENIDC_AUTH_WHITELIST = [
-        re.compile(whitelist_re)
-        for whitelist_re in env.str("OPENIDC_AUTH_WHITELIST", default="^/api").split(",")
-        if whitelist_re
-    ]
     INSTALLED_APPS.append("server.openidc")
     MIDDLEWARE.append("server.openidc.middleware.OpenIDCAuthMiddleware")
 elif SOCIAL_AUTH_GITHUB_KEY:
@@ -194,7 +189,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# openidc settings
 OPENIDC_EMAIL_HEADER = env.str("OPENIDC_HEADER", default="HTTP_X_FORWARDED_USER")
+OPENIDC_AUTH_WHITELIST = [
+    re.compile(whitelist_re)
+    for whitelist_re in env.str("OPENIDC_AUTH_WHITELIST", default="^/api").split(",")
+    if whitelist_re
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
