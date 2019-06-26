@@ -15,7 +15,7 @@ THEME.client.console.lineHeightPx =
   THEME.client.console.lineHeight * THEME.client.console.fontSizeValue;
 THEME.client.console.fontFamily = "monospace";
 
-THEME.defaultUserIconSize = 30;
+THEME.defaultUserIconSize = 40;
 
 THEME.logo = {};
 THEME.logo.darkColor = "#4f3554";
