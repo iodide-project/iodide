@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-- Reduces the bandwidth in loading user icons (fixes #1711)
+- Reduce the image size for small user icons, to improve loading times (fixes #1711)
 
 # 0.8.0 (2019-06-18)
 
