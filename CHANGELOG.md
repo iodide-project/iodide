@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Reduce the image size for small user icons, to improve loading times (fixes #1711)
+
 # 0.8.0 (2019-06-18)
 
 - Adds favicon to iodide (fixes #826)
