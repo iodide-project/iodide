@@ -40,6 +40,11 @@ import { restoreLocalAutosave } from "./actions/local-autosave-actions";
 import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
 
+// initialize the webextension for external editing
+import extension from "./port-to-extension";
+
+extension();
+
 initializeDefaultKeybindings();
 
 window.addEventListener("message", listenForEvalFramePortReady, false);
