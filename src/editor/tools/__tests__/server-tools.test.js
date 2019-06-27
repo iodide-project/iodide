@@ -3,7 +3,8 @@ import {
   getNotebookID,
   getRevisionID,
   connectionModeIsStandalone,
-  connectionModeIsServer
+  connectionModeIsServer,
+  isLoggedIn
 } from "../server-tools";
 
 const makeState = connectionMode => ({
@@ -58,4 +59,15 @@ describe("getNotebookID && getRevisionID", () => {
       });
     }
   );
+});
+
+describe("isLoggedIn", () => {
+  it("Says it is logged in when there is an identified user", () => {
+    expect(isLoggedIn({ userData: { name: "user" } })).toEqual(true);
+  });
+  it("Says it is not logged in when there is no identified user or no user data", () => {
+    expect(isLoggedIn({})).toEqual(false);
+    expect(isLoggedIn({ userData: {} })).toEqual(false);
+    expect(isLoggedIn({ userData: { name: undefined } })).toEqual(false);
+  });
 });
