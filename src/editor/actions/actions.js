@@ -1,10 +1,14 @@
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
+import { getRevisionIdsNeededForDisplay } from "../tools/revision-history";
 import {
   getRevisionList,
-  getRevisions,
-  getRevisionIdsNeededForDisplay
-} from "../tools/revision-history";
-import { getNotebookID, getUserDataFromDocument } from "../tools/server-tools";
+  getRevisions
+} from "../../shared/server-api/revisions";
+import {
+  getNotebookID,
+  getUserDataFromDocument,
+  isLoggedIn
+} from "../tools/server-tools";
 
 import { iomdParser } from "../iomd-tools/iomd-parser";
 import { getChunkContainingLine } from "../iomd-tools/iomd-selection";
@@ -152,7 +156,7 @@ function getRequiredRevisionContent(state, dispatch) {
   dispatch({
     type: "GETTING_REVISION_CONTENT"
   });
-  getRevisions(getNotebookID(state), contentIdsNeeded)
+  getRevisions(getNotebookID(state), contentIdsNeeded, isLoggedIn(state))
     .then(revisions => {
       // reduce the revisions array into an object whose keys
       // are revision ids, and whose body is the content of
@@ -184,7 +188,7 @@ export function updateSelectedRevisionId(selectedRevisionId) {
 export function getNotebookRevisionList() {
   return (dispatch, getState) => {
     dispatch({ type: "GETTING_NOTEBOOK_REVISION_LIST" });
-    getRevisionList(getNotebookID(getState()))
+    getRevisionList(getNotebookID(getState()), isLoggedIn(getState()))
       .then(revisionList => {
         dispatch({
           type: "GOT_NOTEBOOK_REVISION_LIST",

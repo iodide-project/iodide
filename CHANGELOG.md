@@ -1,6 +1,8 @@
 # (Unreleased; add upcoming change notes here)
 
 - Reduce the image size for small user icons, to improve loading times (fixes #1711)
+- Fix loading revision browser when authentication credentials are required
+  for read-only API endpoints (partially fixes #1965)
 
 # 0.8.0 (2019-06-18)
 

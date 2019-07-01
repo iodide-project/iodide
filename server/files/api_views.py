@@ -4,8 +4,9 @@ from django.core.exceptions import PermissionDenied
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from .models import File
-from .serializers import FilesSerializer
+from ..notebooks.models import Notebook
+from .models import (File, FileSource)
+from .serializers import (FilesSerializer, FileSourceSerializer)
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -39,3 +40,30 @@ class FileViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=201)
 
     queryset = File.objects.all()
+
+
+class FileSourceViewSet(viewsets.ModelViewSet):
+
+    serializer_class = FileSourceSerializer
+
+    http_method_names = ["post", "put", "delete"]
+
+    def perform_destroy(self, instance):
+        if instance.notebook.owner != self.request.user:
+            raise PermissionDenied
+        super().perform_destroy(instance)
+
+    def perform_create(self, serializer):
+        if self.request.user != serializer.validated_data['notebook'].owner:
+            raise PermissionDenied
+
+        serializer.save()
+
+    def perform_update(self, serializer):
+        print(serializer.validated_data['notebook'].owner)
+        if self.request.user != serializer.validated_data['notebook'].owner:
+            raise PermissionDenied
+
+        serializer.save()
+
+    queryset = FileSource.objects.all()

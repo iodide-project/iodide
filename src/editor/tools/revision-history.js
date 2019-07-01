@@ -1,5 +1,3 @@
-import { genericFetch } from "../../shared/utils/fetch-tools";
-
 export function getPreviousRevisionId(revisionList, selectedRevisionId) {
   // selected revision is "unsaved changes"
   if (selectedRevisionId === undefined) {
@@ -24,19 +22,5 @@ export function getRevisionIdsNeededForDisplay(notebookHistory) {
     revisionId =>
       revisionId !== undefined &&
       (!revisionContent || revisionContent[revisionId] === undefined)
-  );
-}
-
-export function getRevisionList(notebookId) {
-  return genericFetch(`/api/v1/notebooks/${notebookId}/revisions/`, "json");
-}
-
-export function getRevisions(notebookId, revisionIdsNeeded) {
-  const revisionParams = revisionIdsNeeded
-    .map(revisionId => `id=${revisionId}`)
-    .join("&");
-  return genericFetch(
-    `/api/v1/notebooks/${notebookId}/revisions/?full=1&${revisionParams}`,
-    "json"
   );
 }
