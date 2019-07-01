@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from rest_framework import viewsets
 from rest_framework.response import Response
 
+from ..notebooks.models import Notebook
 from .models import File
 from .serializers import FilesSerializer
 
@@ -21,14 +22,24 @@ class FileViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         (metadata, file) = (json.loads(self.request.data["metadata"]), self.request.data["file"])
+
+        notebook = Notebook.objects.get(id=metadata["notebook_id"])
+        if notebook.owner != self.request.user:
+            raise PermissionDenied
+
         f = File.objects.create(
-            notebook_id=metadata["notebook_id"], filename=metadata["filename"], content=file.read()
+            notebook_id=notebook.id, filename=metadata["filename"], content=file.read()
         )
         serializer = FilesSerializer(f)
         return Response(serializer.data, status=201)
 
     def update(self, request, pk):
         (metadata, file) = (json.loads(self.request.data["metadata"]), self.request.data["file"])
+
+        notebook = Notebook.objects.get(id=metadata["notebook_id"])
+        if notebook.owner != self.request.user:
+            raise PermissionDenied
+
         file_to_update = File.objects.get(pk=pk)
         updated_filename = metadata["filename"].strip()
         file_to_update.filename = updated_filename
