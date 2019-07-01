@@ -56,7 +56,6 @@ def test_notebook_view_old_revision(client, test_notebook):
     )
     assert resp.status_code == 200
     assert get_title_block(resp.content) == initial_revision.title
-    print(str(resp.content))
     assert get_script_block(resp.content, "iomd", "text/iomd") == initial_revision.content
     assert get_script_block_json(resp.content, "notebookInfo") == {
         "connectionMode": "SERVER",

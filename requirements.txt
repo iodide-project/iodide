@@ -1,3 +1,5 @@
 # HEROKU REQUIREMENTS
 
 -r requirements/build.txt
+billiard==3.6.0.0 \
+    --hash=sha256:756bf323f250db8bf88462cd042c992ba60d8f5e07fc5636c24ba7d6f4261d84

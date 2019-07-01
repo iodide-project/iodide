@@ -13,6 +13,33 @@ export const FETCH_CHUNK_TYPES = [
 ];
 export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json", "arrayBuffer"];
 
+export const FILE_SOURCE_UPDATE_INTERVAL_MAP = {
+  "never updates": null,
+  "updates daily": "1 day, 0:00:00",
+  "updates weekly": "7 days, 0:00:00"
+};
+
+export const FILE_SOURCE_UPDATE_SELECTOR_OPTIONS = [
+  { label: "never", key: "never updates" },
+  { label: "daily", key: "updates daily" },
+  { label: "weekly", key: "updates weekly" }
+];
+
+export const reverseFileSourceUpdateInterval = v => {
+  if (v === null) return "never updates";
+  if (v === "604800.0") return "updates weekly";
+  return "updates daily";
+};
+export const FILE_SOURCE_UPDATE_INTERVALS = Object.keys(
+  FILE_SOURCE_UPDATE_INTERVAL_MAP
+);
+export const FILE_UPDATE_OPERATION_STATUSES = [
+  "pending",
+  "running",
+  "completed",
+  "failed"
+];
+
 const appMessageSchema = {
   type: "object",
   properties: {
@@ -49,6 +76,29 @@ export const fileSchema = {
     lastUpdated: { type: "string" }
   },
   additionalProperties: false
+};
+
+export const fileUpdateOperationSchema = {
+  type: "object",
+  properties: {
+    id: { type: "integer" },
+    scheduled: { type: "string" },
+    started: { type: "string" },
+    ended: { type: "string" },
+    status: { type: "integer" },
+    failure_reason: { type: "string" }
+  }
+};
+
+export const fileSourceSchema = {
+  type: "object",
+  properties: {
+    id: { type: "integer" },
+    url: { type: ["string", "null"] },
+    filename: { type: "string" },
+    update_interval: { type: ["string", "null"] },
+    last_file_update_operation: fileUpdateOperationSchema
+  }
 };
 
 const panePositionSchema = {
@@ -197,7 +247,7 @@ export const stateProperties = {
   modalState: {
     type: "string",
     enum: ["HELP_MODAL", "HISTORY_MODAL", "FILE_MODAL", "MODALS_CLOSED"],
-    default: "MODALS_CLOSED"
+    default: "FILE_MODAL"
   },
   kernelState: {
     type: "string",
@@ -249,6 +299,7 @@ export const stateProperties = {
       }
     }
   },
+  fileSources: { type: "array", items: fileSourceSchema },
   notebookInfo: {
     type: "object",
     properties: {
@@ -274,7 +325,8 @@ export const stateProperties = {
       user_can_save: false,
       connectionMode: "STANDALONE",
       serverSaveStatus: "OK",
-      files: []
+      files: [],
+      fileSources: []
     }
   },
   panePositions: {

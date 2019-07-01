@@ -1,3 +1,4 @@
+import datetime
 import os
 import sys
 
@@ -5,7 +6,7 @@ import pytest
 from rest_framework.test import APIClient
 
 from server.base.models import User
-from server.files.models import File
+from server.files.models import File, FileSource
 from server.notebooks.models import Notebook, NotebookRevision
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "helpers"))
@@ -72,3 +73,13 @@ def notebook_post_blob():
     # this blob should be sufficient to create a new notebook (assuming the user of
     # the api is authorized to do so)
     return {"title": "My cool notebook", "content": "Fake notebook content"}
+
+
+@pytest.fixture
+def test_file_source(test_notebook):
+    return FileSource.objects.create(
+        notebook=test_notebook,
+        filename="foo.csv",
+        url="https://iodide.io/foo",
+        update_interval=datetime.timedelta(days=1),
+    )

@@ -9,7 +9,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from ..base.models import User
-from ..files.models import File
+from ..files.models import File, FileSource, FileUpdateOperation
 from ..settings import EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH, SITE_URL
 from ..views import get_user_info_dict
 from .models import Notebook, NotebookRevision
@@ -49,6 +49,7 @@ def notebook_view(request, pk):
         {"filename": file.filename, "id": file.id, "lastUpdated": file.last_updated.isoformat()}
         for file in File.objects.filter(notebook_id=pk).order_by("-last_updated")
     ]
+
     notebook_info = {
         "username": notebook.owner.username,
         "user_can_save": notebook.owner_id == request.user.id,
