@@ -1,4 +1,3 @@
-import { genericFetch } from "../utils/fetch-tools";
 import {
   deleteFileSourceRequest,
   updateFileSourceRequest,
@@ -24,15 +23,12 @@ export async function saveFileSourceToServer(
   fileSourceID = undefined,
   frequency
 ) {
-  const body = createFileSourceRequestPayload(
+  const body = createFileSourceRequestPayload(fileSourceID ? "PUT" : "POST", {
     notebookID,
-    fileSourceID ? "PUT" : "POST",
-    {
-      frequency,
-      sourceURL,
-      destinationFilename
-    }
-  );
+    frequency,
+    sourceURL,
+    destinationFilename
+  });
   const r = await (fileSourceID
     ? updateFileSourceRequest(body)
     : createFileSourceRequest(body));
