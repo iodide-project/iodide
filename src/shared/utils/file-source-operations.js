@@ -24,10 +24,10 @@ export async function saveFileSourceToServer(
   frequency
 ) {
   const body = createFileSourceRequestPayload(fileSourceID ? "PUT" : "POST", {
-    notebookID,
-    frequency,
-    sourceURL,
-    destinationFilename
+    notebook_id: notebookID,
+    update_interval: frequency,
+    source: sourceURL,
+    filename: destinationFilename
   });
   const r = await (fileSourceID
     ? updateFileSourceRequest(body)
