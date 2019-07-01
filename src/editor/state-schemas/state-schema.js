@@ -51,6 +51,19 @@ export const fileSchema = {
   additionalProperties: false
 };
 
+export const fileSourceSchema = {
+  type: "object",
+  properties: {
+    sourceURL: { type: "string" },
+    destinationFilename: { type: "string" },
+    fileID: { type: "integer" },
+    frequency: { type: "string" },
+    fileSourceID: { type: "integer" },
+    lastRan: { type: "string" }
+  },
+  additionalProperties: false
+};
+
 const environmentVariableSchema = {
   type: "array",
   items: [
@@ -205,7 +218,7 @@ export const stateProperties = {
   modalState: {
     type: "string",
     enum: ["HELP_MODAL", "HISTORY_MODAL", "FILE_MODAL", "MODALS_CLOSED"],
-    default: "MODALS_CLOSED"
+    default: "FILE_MODAL"
   },
   kernelState: {
     type: "string",
@@ -257,6 +270,7 @@ export const stateProperties = {
     type: "object",
     properties: {
       files: { type: "array", items: fileSchema },
+      fileSources: { type: "array", items: fileSourceSchema },
       user_can_save: { type: "boolean" },
       notebook_id: { type: "integer" },
       revision_id: { type: "integer" },
@@ -278,7 +292,8 @@ export const stateProperties = {
       user_can_save: false,
       connectionMode: "STANDALONE",
       serverSaveStatus: "OK",
-      files: []
+      files: [],
+      fileSources: []
     }
   },
   panePositions: {

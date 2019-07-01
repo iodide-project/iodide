@@ -17,6 +17,8 @@ import {
   deleteFileFromNotebook
 } from "../../../actions/file-request-actions";
 
+import OfflineFetcher from "../offline-fetcher/offline-fetcher";
+
 export class FileModalUnconnected extends React.Component {
   static propTypes = {
     // Required
@@ -315,6 +317,7 @@ export class FileModalUnconnected extends React.Component {
       )}
       <ModalContainer tabIndex="-1">
         <TitleBar title="Manage Files" />
+        <OfflineFetcher />
         <Body
           files={this.state.files}
           onAddButtonClick={this.onAddButtonClick}

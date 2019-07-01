@@ -176,6 +176,31 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { notebookInfo });
     }
 
+    case "ADD_FILE_SOURCE_TO_NOTEBOOK": {
+      const {
+        sourceURL,
+        destinationFilename,
+        frequency,
+        fileID,
+        fileSourceID
+      } = action;
+      const fileSources = state.notebookInfo.fileSources.map(f =>
+        Object.assign({}, f)
+      );
+      fileSources.push({
+        sourceURL,
+        destinationFilename,
+        frequency,
+        fileID,
+        fileSourceID,
+        lastRan: undefined
+      });
+      const notebookInfo = Object.assign({}, state.notebookInfo, {
+        fileSources
+      });
+      return Object.assign({}, state, { notebookInfo });
+    }
+
     case "DELETE_FILE_FROM_NOTEBOOK": {
       const { fileID } = action;
       const { files } = state.notebookInfo;
