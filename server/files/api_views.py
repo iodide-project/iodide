@@ -19,7 +19,7 @@ class FileViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.notebook.owner != request.user:
-             raise PermissionDenied
+            raise PermissionDenied
         return super().destroy(request, *args, **kwargs)
 
     def create(self, request):
