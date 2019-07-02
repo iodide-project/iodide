@@ -58,6 +58,7 @@ def test_create_file_source(client, test_notebook, fake_user, file_source_post_b
     client.force_login(user=fake_user)
     resp = client.post(reverse("file-sources-list"), file_source_post_blob)
     assert resp.status_code == 201
+    # fixme: verify return value
     assert FileSource.objects.count() == 1
     file_source = FileSource.objects.first()
     assert file_source.notebook_id == test_notebook.id
@@ -83,6 +84,7 @@ def test_update_file_source(api_client, test_file_source, file_source_update_blo
                                   kwargs={"pk": test_file_source.id}),
                           file_source_update_blob)
     assert resp.status_code == 200
+    # fixme: verify return value
     assert FileSource.objects.count() == 1
     file_source = FileSource.objects.first()
     assert file_source.notebook_id == test_notebook.id

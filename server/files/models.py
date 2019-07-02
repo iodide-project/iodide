@@ -31,21 +31,17 @@ class FileSource(models.Model):
     Represents a source for files (an external URL)
     """
     notebook = models.ForeignKey(Notebook, on_delete=models.CASCADE)
-    file = models.OneToOneField(
-        File,
-        on_delete=models.CASCADE,
-        null=True
-    )
     # FIXME: add a validator for filename (for minimum length and maybe
     # other things)
     filename = models.CharField(max_length=MAX_FILENAME_LENGTH)
-    source = models.URLField()
+    url = models.URLField()
     update_interval = models.DurationField(null=True)
 
     def __str__(self):  # pragma: no cover
         return self.source
 
     class Meta:
+        unique_together = ("notebook", "filename")
         verbose_name = "File Source"
         verbose_name_plural = "File Sources"
         ordering = ("id",)
@@ -59,9 +55,12 @@ class FileUpdateOperation(models.Model):
     PENDING = 0
     RUNNING = 1
     COMPLETED = 2
-    OPERATION_STATUSES = ((PENDING, "pending"),
+    FAILED = 3
+    OPERATION_STATUSES = ((SUBMITTED, "submitted"),
+                          (PENDING, "pending"),
                           (RUNNING, "running"),
-                          (COMPLETED, "completed"))
+                          (COMPLETED, "completed"),
+                          (FAILED, "failed"))
 
     file_source = models.ForeignKey(FileSource, on_delete=models.CASCADE)
     started = models.DateTimeField(auto_now_add=True)
@@ -72,4 +71,7 @@ class FileUpdateOperation(models.Model):
         return '{} update ({})'.format(file_source, OPERATION_STATUSES[self.status][1])
 
     class Meta:
+        verbose_name = "File Update Operation"
+        verbose_name_plural = "File Update Operations"
+        ordering = ("id",)
         db_table = "file_operation"

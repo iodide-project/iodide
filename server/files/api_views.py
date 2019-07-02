@@ -57,12 +57,15 @@ class FileSourceViewSet(viewsets.ModelViewSet):
         if self.request.user != serializer.validated_data['notebook'].owner:
             raise PermissionDenied
 
+        # fixme: validate that interval is > 24 hours (or whatever)
+
         serializer.save()
 
     def perform_update(self, serializer):
-        print(serializer.validated_data['notebook'].owner)
         if self.request.user != serializer.validated_data['notebook'].owner:
             raise PermissionDenied
+
+        # fixme: validate that interval is > 24 hours (or whatever)
 
         serializer.save()
 
