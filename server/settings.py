@@ -219,3 +219,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Add a MIME type for .wasm files (which is not included in WhiteNoise's defaults)
 WHITENOISE_MIMETYPES = {".wasm": "application/wasm"}
+
+REDIS_HOST = env.str("REDIS_HOST", default="redis")
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:6379/1"
