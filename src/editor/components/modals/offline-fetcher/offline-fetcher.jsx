@@ -20,12 +20,11 @@ import {
 
 const FileSourceContainer = styled.div`
   --marg: 20px;
-  padding-top: var(--marg);
-  padding-bottom: var(--marg);
+  padding: var(--marg);
 `;
 
 const FileSourceListContainer = styled.div`
-  width: calc(100% - var(--marg) * 2);
+  width: 100%;
   margin: auto;
 `;
 
