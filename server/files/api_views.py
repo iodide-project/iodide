@@ -21,7 +21,8 @@ class FileViewSet(viewsets.ModelViewSet):
         super().perform_destroy(instance)
 
     def create(self, request):
-        (metadata, file) = (json.loads(self.request.data["metadata"]), self.request.data["file"])
+        metadata = json.loads(self.request.data["metadata"])
+        file =  self.request.data["file"]
 
         notebook = Notebook.objects.get(id=metadata["notebook_id"])
         if notebook.owner != self.request.user:
