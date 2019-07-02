@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from ..base.models import User
-from ..files.models import File
+from ..files.models import File, FileSource
 from ..settings import APP_VERSION_STRING, EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 from ..views import get_user_info_dict
 from .models import Notebook, NotebookRevision
@@ -45,6 +45,10 @@ def notebook_view(request, pk):
         {"filename": file.filename, "id": file.id, "lastUpdated": file.last_updated.isoformat()}
         for file in File.objects.filter(notebook_id=pk).order_by("-last_updated")
     ]
+    file_sources = [
+        {"fileSourceID": file_source.id, 'frequency': file_source.update_interval, "destinationFilename": file_source.filename, 'sourceURL': file_source.source}
+        for file_source in FileSource.objects.filter(notebook_id=pk)
+    ]
     notebook_info = {
         "username": notebook.owner.username,
         "user_can_save": notebook.owner_id == request.user.id,
@@ -54,6 +58,7 @@ def notebook_view(request, pk):
         "connectionMode": "SERVER",
         "title": revision.title,
         "files": files,
+        "fileSources": file_sources,
         "max_filename_length": MAX_FILENAME_LENGTH,
         "max_file_size": MAX_FILE_SIZE,
     }

@@ -1,4 +1,7 @@
-import { saveFileSourceToServer } from "../../shared/utils/file-source-operations";
+import {
+  saveFileSourceToServer,
+  deleteFileSourceFromServer
+} from "../../shared/utils/file-source-operations";
 
 export function addFileSource(
   sourceURL,
@@ -21,6 +24,18 @@ export function addFileSource(
       fileSourceID,
       destinationFilename,
       frequency
+    });
+  };
+}
+
+export function deleteFileSource(fileSourceID) {
+  return async dispatch => {
+    const response = await deleteFileSourceFromServer(fileSourceID);
+    console.log(response, fileSourceID);
+    // remove the listed file source from notebook.
+    dispatch({
+      type: "DELETE_FILE_SOURCE_FROM_NOTEBOOK",
+      fileSourceID
     });
   };
 }

@@ -176,6 +176,15 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { notebookInfo });
     }
 
+    case "DELETE_FILE_FROM_NOTEBOOK": {
+      const { fileID } = action;
+      const { files } = state.notebookInfo;
+      const notebookInfo = Object.assign({}, state.notebookInfo, {
+        files: files.filter(f => f.id !== fileID).map(f => Object.assign({}, f))
+      });
+      return Object.assign({}, state, { notebookInfo });
+    }
+
     case "ADD_FILE_SOURCE_TO_NOTEBOOK": {
       const {
         sourceURL,
@@ -199,11 +208,13 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { notebookInfo });
     }
 
-    case "DELETE_FILE_FROM_NOTEBOOK": {
-      const { fileID } = action;
-      const { files } = state.notebookInfo;
+    case "DELETE_FILE_SOURCE_FROM_NOTEBOOK": {
+      const { fileSourceID } = action;
+      const { fileSources } = state.notebookInfo;
       const notebookInfo = Object.assign({}, state.notebookInfo, {
-        files: files.filter(f => f.id !== fileID).map(f => Object.assign({}, f))
+        fileSources: fileSources
+          .filter(f => f.fileSourceID !== fileSourceID)
+          .map(f => Object.assign({}, f))
       });
       return Object.assign({}, state, { notebookInfo });
     }

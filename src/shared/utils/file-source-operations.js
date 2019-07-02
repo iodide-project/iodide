@@ -30,6 +30,6 @@ export async function saveFileSourceToServer(
   return r;
 }
 
-export async function deleteFileSourceToServer(fileSourceID) {
+export async function deleteFileSourceFromServer(fileSourceID) {
   return deleteFileSourceRequest(fileSourceID);
 }

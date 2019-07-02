@@ -19,7 +19,7 @@ export function updateFileSourceRequest(fileSourceID, body) {
 
 export function deleteFileSourceRequest(fileSourceID) {
   return signedAPIRequestWithJSONContent(
-    `/api/v1/fileSources/${fileSourceID}/`,
+    `/api/v1/file-sources/${fileSourceID}/`,
     {
       method: "DELETE"
     },
