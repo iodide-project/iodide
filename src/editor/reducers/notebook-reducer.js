@@ -181,7 +181,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         sourceURL,
         destinationFilename,
         frequency,
-        fileID,
         fileSourceID
       } = action;
       const fileSources = state.notebookInfo.fileSources.map(f =>
@@ -191,7 +190,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         sourceURL,
         destinationFilename,
         frequency,
-        fileID,
         fileSourceID,
         lastRan: undefined
       });
