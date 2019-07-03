@@ -215,17 +215,16 @@ function mapStateToProps(state) {
 //     actions: bindActionCreators(actions, dispatch)
 //   };
 // }
-export function mapDispatchToProps(dispatch) {
-  return {
-    updateIomdContent: content => {
+const mapDispatchToProps = {
+  updateIomdContent: content => {
+    return dispatch => {
       dispatch(updateIomdContent(content));
       dispatch(updateAutosave());
-    },
-    updateEditorCursor: (line, col) => dispatch(updateEditorCursor(line, col)),
-    updateEditorSelections: selections =>
-      dispatch(updateEditorSelections(selections))
-  };
-}
+    };
+  },
+  updateEditorCursor,
+  updateEditorSelections
+};
 
 export default connect(
   mapStateToProps,

@@ -59,12 +59,10 @@ export function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    setViewModeToReport: () => dispatch(setViewMode("REPORT_VIEW")),
-    setViewModeToExplore: () => dispatch(setViewMode("EXPLORE_VIEW"))
-  };
-}
+const mapDispatchToProps = {
+  setViewModeToReport: () => setViewMode("REPORT_VIEW"),
+  setViewModeToExplore: () => setViewMode("EXPLORE_VIEW")
+};
 
 export default connect(
   mapStateToProps,

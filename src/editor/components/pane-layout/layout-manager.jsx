@@ -144,13 +144,7 @@ export function mapStateToProps(state) {
   };
 }
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    updateLayoutPositions: layout => dispatch(updateLayoutPositions(layout))
-  };
-}
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  { updateLayoutPositions } // mapDispatchToProps shorthand
 )(LayoutManagerUnconnected);
