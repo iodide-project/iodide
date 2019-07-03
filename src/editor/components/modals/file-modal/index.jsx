@@ -317,12 +317,12 @@ export class FileModalUnconnected extends React.Component {
       )}
       <ModalContainer tabIndex="-1">
         <TitleBar title="Manage Files" />
-        <OfflineFetcher />
         <Body
           files={this.state.files}
           onAddButtonClick={this.onAddButtonClick}
           confirmDelete={this.confirmDelete}
         />
+        <OfflineFetcher />
       </ModalContainer>
     </React.Fragment>
   );

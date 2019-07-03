@@ -2,8 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import styled from "react-emotion";
-import AddNewFileSource from "./add-new-file-source";
 
+import { deleteFileSource as deleteFileSourceAction } from "../../../actions/file-source-actions";
+
+import AddNewFileSource from "./add-new-file-source";
 import { TextButton } from "../../../../shared/components/buttons";
 
 import {
@@ -18,44 +20,53 @@ import {
 
 const FileSourceContainer = styled.div`
   --marg: 20px;
-  padding-top: var(--marg);
-  padding-bottom: var(--marg);
+  padding: var(--marg);
 `;
 
-export function OfflineFetcherUnconnected({ fileSources }) {
+const FileSourceListContainer = styled.div`
+  width: 100%;
+  margin: auto;
+`;
+
+export function OfflineFetcherUnconnected({ fileSources, deleteFileSource }) {
   return (
     <FileSourceContainer>
       <AddNewFileSource />
-      <List>
-        {fileSources.map(fileSource => {
-          return (
-            <ListItem type="single">
-              <ListMain>
-                <ListPrimaryText>
-                  {fileSource.destinationFilename}
-                </ListPrimaryText>
-                <ListSecondaryText href={fileSource.sourceURL}>
-                  <ListSecondaryTextLink href={fileSource.sourceURL}>
-                    {fileSource.sourceURL}
-                  </ListSecondaryTextLink>
-                </ListSecondaryText>
-              </ListMain>
-              <ListMetadata>{fileSource.frequency}</ListMetadata>
-              <ListMetadata>
-                <TextButton onClick={() => console.log("delete", fileSource)}>
-                  delete
-                </TextButton>
-              </ListMetadata>
-            </ListItem>
-          );
-        })}
-      </List>
+      <FileSourceListContainer>
+        <List>
+          {fileSources.map(fileSource => {
+            return (
+              <ListItem type="single" key={fileSource.fileSourceID}>
+                <ListMain>
+                  <ListPrimaryText>
+                    {fileSource.destinationFilename}
+                  </ListPrimaryText>
+                  <ListSecondaryText href={fileSource.sourceURL}>
+                    <ListSecondaryTextLink href={fileSource.sourceURL}>
+                      {fileSource.sourceURL}
+                    </ListSecondaryTextLink>
+                  </ListSecondaryText>
+                </ListMain>
+                <ListMetadata>{fileSource.frequency}</ListMetadata>
+                <ListMetadata>
+                  <TextButton
+                    onClick={() => deleteFileSource(fileSource.fileSourceID)}
+                  >
+                    delete
+                  </TextButton>
+                </ListMetadata>
+              </ListItem>
+            );
+          })}
+        </List>
+      </FileSourceListContainer>
     </FileSourceContainer>
   );
 }
 
 OfflineFetcherUnconnected.propTypes = {
-  fileSources: PropTypes.arrayOf(PropTypes.object)
+  fileSources: PropTypes.arrayOf(PropTypes.object),
+  deleteFileSource: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -64,4 +75,14 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(OfflineFetcherUnconnected);
+function mapDispatchToProps(dispatch) {
+  return {
+    deleteFileSource: fileSourceID =>
+      dispatch(deleteFileSourceAction(fileSourceID))
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OfflineFetcherUnconnected);

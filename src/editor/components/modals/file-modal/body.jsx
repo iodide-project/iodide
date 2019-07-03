@@ -15,7 +15,7 @@ const bodyPadding = defaultSpacing;
 // https://stackoverflow.com/a/29987556/4297741
 const BodyWrapper = styled.div`
   display: grid;
-  height: 100%;
+  min-height: 250px;
   overflow: auto;
 `;
 

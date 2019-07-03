@@ -11,7 +11,12 @@ import { addFileSource } from "../../../actions/file-source-actions";
 const AddNewSourceContainer = styled.div`
   display: grid;
   grid-template-columns: auto auto auto auto;
-  justify-content: center;
+  align-items: start;
+`;
+
+const AddNewSourceButton = styled(ContainedButton)`
+  justify-self: start;
+  margin: 0;
 `;
 
 const FileSourceStatus = styled.div`
@@ -68,6 +73,9 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
   return (
     <>
       <AddNewSourceContainer>
+        <AddNewSourceButton onClick={submitInformation}>
+          add file source
+        </AddNewSourceButton>
         <TextInput
           label="Source URL"
           value={sourceState}
@@ -78,9 +86,6 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
           value={filenameState}
           onKey={updateFilenameState}
         />
-        <ContainedButton onClick={submitInformation}>
-          add file source
-        </ContainedButton>
       </AddNewSourceContainer>
       <FileSourceStatus
         className={`${status.type === "NONE" ? "hide" : "show"}`}
