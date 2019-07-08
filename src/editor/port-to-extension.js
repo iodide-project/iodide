@@ -13,7 +13,8 @@ function unpackExtensionMessage(msg) {
       const line = msgObj.cursorPosition[0];
       const col = msgObj.cursorPosition[1];
       const retVal = {
-        type: "UPDATE_CURSOR",
+        type: "EXTENSION_CURSOR_UPDATE",
+        text: msgObj.text,
         line,
         col,
         forceUpdate: true

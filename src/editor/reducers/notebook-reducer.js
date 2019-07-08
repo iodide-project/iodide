@@ -49,6 +49,30 @@ const notebookReducer = (state = newNotebook(), action) => {
         title: action.title || state.title
       });
     }
+    case "EXTENSION_CURSOR_UPDATE": {
+      const { line, col, forceUpdate, text } = action;
+      // insert text in state.iomd at correct position without mutating
+      console.log(line, col, forceUpdate, text);
+      const iomd = state.iomd
+        .split("\n")
+        .map((iomdLine, i) => {
+          // if its the correct line insert the new text in this place
+          if (i === line) {
+            return iomdLine.slice(0, col) + text + iomdLine.slice(col);
+          }
+          return iomdLine;
+        })
+        .join("\n");
+      console.log(iomd);
+      return Object.assign({}, state, {
+        editorCursor: {
+          line,
+          col: col + text.length, // we want the cursor to be at the end of the word just inserted
+          forceUpdate
+        },
+        iomd
+      });
+    }
 
     case "UPDATE_CURSOR": {
       const { line, col, forceUpdate } = action;
