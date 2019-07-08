@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Overhauls Iodide's data formatters to cover more data types, allow folding of long results, and many other enhancements
+
 # 0.9.0 (2019-07-03)
 
 - Reduce the image size for small user icons, to improve loading times (fixes #1711)
