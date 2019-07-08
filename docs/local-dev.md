@@ -70,7 +70,15 @@ mkdocs build
 
 ## Testing
 
+Iodide currently has two test suites, one written with [jest](https://jestjs.io/) to test the editor environment. Another written with [pytest](https://docs.pytest.org/en/latest/) to test the server.
+
+### Editor unit tests (jest)
+
 Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.
+
+### Iodide server unit tests (pytest)
+
+After bringing up the docker-compose environment (see above), run `make shell` then `py.test` to run the full test suite. You can run a small subset of the tests by specifying what you want on the command line. For example `py.test server/tests/test_file_api.py` will only run the tests contained in that file. 
 
 ## Running with a local build of Pyodide
 

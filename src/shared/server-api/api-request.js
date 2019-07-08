@@ -193,3 +193,15 @@ export function signedAPIRequestWithJSONContent(
     jsonResponseExpected
   );
 }
+
+// A request which accesses a read-only json endpoint, will use
+// logged in credentials if available
+export async function readJSONAPIRequest(url, loggedIn) {
+  const result = loggedIn ? await fetchWithJWTToken(url) : await fetch(url);
+  if (!result.ok) {
+    const error = await getResultError(result);
+    console.log(error);
+    throw error;
+  }
+  return result.json();
+}

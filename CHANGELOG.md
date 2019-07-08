@@ -1,6 +1,12 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.9.0 (2019-07-03)
+
 - Reduce the image size for small user icons, to improve loading times (fixes #1711)
+- Fix loading revision browser when authentication credentials are required
+  for read-only API endpoints (partially fixes #1965)
+- Fix authentication hole in files api validation that would allow any logged-in
+  user to modify or create a file on another's behalf.
 
 # 0.8.0 (2019-06-18)
 

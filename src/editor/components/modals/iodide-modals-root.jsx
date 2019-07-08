@@ -51,11 +51,9 @@ export function mapStateToProps(state) {
   };
 }
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    closeModals: () => dispatch(setModalState("MODALS_CLOSED"))
-  };
-}
+const mapDispatchToProps = {
+  closeModals: () => setModalState("MODALS_CLOSED")
+};
 
 export default connect(
   mapStateToProps,

@@ -1,6 +1,7 @@
 import json
 import tempfile
 
+import pytest
 from django.urls import reverse
 
 from helpers import get_rest_framework_time_string
@@ -37,7 +38,11 @@ def test_post_to_file_api(fake_user, client, test_notebook):
         }
 
 
-def test_post_to_file_api_restricted(fake_user, client, test_notebook):
+@pytest.mark.parametrize("logged_in", [True, False])
+def test_post_to_file_api_restricted(fake_user2, client, test_notebook, logged_in):
+    # two cases: logged in as wrong user, not logged in
+    if logged_in:
+        client.force_login(user=fake_user2)
     with tempfile.NamedTemporaryFile(mode="w+") as f:
         resp = post_file(f, client, test_notebook)
         assert resp.status_code == 403
@@ -75,7 +80,11 @@ def test_put_to_file_api(fake_user, api_client, test_notebook, test_file):
         }
 
 
-def test_put_to_file_api_restricted(fake_user, api_client, test_notebook, test_file):
+@pytest.mark.parametrize("logged_in", [True, False])
+def test_put_to_file_api_restricted(fake_user2, api_client, test_notebook, test_file, logged_in):
+    # two cases: logged in as wrong user, not logged in
+    if logged_in:
+        api_client.force_authenticate(user=fake_user2)
     with tempfile.NamedTemporaryFile(mode="w+") as f:
         resp = put_file(f, api_client, test_file, test_notebook)
         assert resp.status_code == 403

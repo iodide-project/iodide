@@ -22,9 +22,9 @@ mccabe==0.6.1 \
 mock==3.0.5 \
     --hash=sha256:d157e52d4e5b938c550f39eb2fd15610db062441a9c2747d3dbfa9298211d0f8 \
     --hash=sha256:83657d894c90d5681d62155c82bda9c1187827525880eda8ff5df4ec813437c3
-more-itertools==7.0.0 \
-    --hash=sha256:2112d2ca570bb7c3e53ea1a35cd5df42bb0fd10c45f0fb97178679c3c03d64c7 \
-    --hash=sha256:c3e4748ba1aad8dba30a4886b0b1a2004f9a863837b8654e7059eebf727afa5a
+more-itertools==7.1.0 \
+    --hash=sha256:3ad685ff8512bf6dc5a8b82ebf73543999b657eded8c11803d9ba6b648986f4d \
+    --hash=sha256:8bb43d1f51ecef60d81854af61a3a880555a14643691cc4b64a6ee269c78f09a
 pluggy==0.11.0 \
     --hash=sha256:964cedd2b27c492fbf0b7f58b3284a09cf7f99b0f715941fb24a439b3af1bd1a \
     --hash=sha256:25a1bc1d148c9a640211872b4ff859878d422bccb59c9965e04eed468a0aa180
@@ -37,9 +37,9 @@ pycodestyle==2.5.0 \
 pyflakes==2.1.1 \
     --hash=sha256:17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0 \
     --hash=sha256:d976835886f8c5b31d47970ed689944a0262b5f3afa00a5a7b4dc81e5449f8a2
-pytest-django==3.5.0 \
-    --hash=sha256:581d699fbe955ba40c2da9c9cd3b49442d95e9d1a3f8c4d13ca5a29332467fea \
-    --hash=sha256:11a9ab9fceb2f819a0e94ba4eab791f998542f4e29eb36500cb9464dd3b4c3b6
+pytest-django==3.5.1 \
+    --hash=sha256:4adfe5fb3ed47f0ba55506dd3daf688b1f74d5e69148c10ad2dd2f79f40c0d62 \
+    --hash=sha256:264fb4c506db5d48a6364c311a0b00b7b48a52715bad8839b2d8bee9b99ed6bb
 pytest-env==0.6.2 \
     --hash=sha256:7e94956aef7f2764f3c147d216ce066bf6c42948bb9e293169b1b1c880a580c2
 pytest==4.5.0 \

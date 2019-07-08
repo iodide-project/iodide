@@ -73,14 +73,6 @@ class RevisionListUnconnected extends React.Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateSelectedRevisionId: revisionId => {
-      dispatch(updateSelectedRevisionId(revisionId));
-    }
-  };
-}
-
 export function mapStateToProps(state) {
   const notebookHistory = state.notebookHistory || {};
   const { revisionList, selectedRevisionId } = notebookHistory;
@@ -93,5 +85,5 @@ export function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  { updateSelectedRevisionId } // mapDispatchToProps shorthand
 )(RevisionListUnconnected);
