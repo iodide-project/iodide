@@ -1,4 +1,3 @@
-/* global IODIDE_PUBLIC */
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
@@ -31,7 +30,7 @@ const Footer = ({ showIcon = true }) => (
       <p>
         iodide is brought to you by <a href="https://mozilla.org">Mozilla</a>.
       </p>
-      {IODIDE_PUBLIC && (
+      {process.env.IODIDE_PUBLIC && (
         <p>
           Content available under the terms of the&nbsp;
           <a
@@ -45,7 +44,7 @@ const Footer = ({ showIcon = true }) => (
         </p>
       )}
       {// only display terms of service on an official mozilla installation
-      IODIDE_PUBLIC && (
+      process.env.IODIDE_PUBLIC && (
         <ul>
           <li>Alpha Software</li>
           <li>

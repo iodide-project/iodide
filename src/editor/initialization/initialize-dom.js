@@ -1,4 +1,4 @@
-/* global IODIDE_EVAL_FRAME_ORIGIN IODIDE_VERSION */
+/* global IODIDE_EVAL_FRAME_ORIGIN */
 
 /* the code in this file initialize a few DOM elements for the react
 elements to mount. There are a few legacy versions of the DOM template
@@ -28,7 +28,7 @@ if (iframeElt === null && pageElt !== null) {
   // insert an iframe
   iframeElt = document.createElement("iframe");
   iframeElt.id = "eval-frame";
-  iframeElt.src = `${IODIDE_EVAL_FRAME_ORIGIN}/iodide.eval-frame.${IODIDE_VERSION}.html`;
+  iframeElt.src = `${IODIDE_EVAL_FRAME_ORIGIN}/iodide.eval-frame.${process.env.IODIDE_VERSION}.html`;
   iframeElt.setAttribute("sandbox", "allow-scripts allow-same-origin");
   iframeElt.setAttribute("allowfullscreen", "true");
   iframeElt.setAttribute("allowvr", "yes");

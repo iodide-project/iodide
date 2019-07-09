@@ -1,5 +1,3 @@
-/* global IODIDE_VERSION */
-
 // The "Public API" for notebooks. This lets notebooks and third-party plugins
 // extend and manipulate the notebook
 
@@ -22,7 +20,7 @@ export const iodide = {
   environment,
   output,
   file,
-  VERSION: IODIDE_VERSION
+  VERSION: process.env.IODIDE_VERSION
 };
 
 export default iodide;

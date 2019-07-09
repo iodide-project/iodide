@@ -1,4 +1,3 @@
-/* global IODIDE_REDUX_LOG_MODE */
 import { applyMiddleware, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
@@ -26,7 +25,7 @@ if (process.env.NODE_ENV === "production") {
   );
 } else if (
   process.env.NODE_ENV === "test" ||
-  IODIDE_REDUX_LOG_MODE === "SILENT"
+  process.env.IODIDE_REDUX_LOG_MODE === "SILENT"
 ) {
   finalReducer = createValidatedReducer(reducer, stateSchema);
   enhancer = compose(
