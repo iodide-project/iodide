@@ -35,6 +35,7 @@ export function OfflineFetcherUnconnected({ fileSources, deleteFileSource }) {
       <FileSourceListContainer>
         <List>
           {fileSources.map(fileSource => {
+            console.log(fileSource.fileSourceID);
             return (
               <ListItem type="single" key={fileSource.fileSourceID}>
                 <ListMain>

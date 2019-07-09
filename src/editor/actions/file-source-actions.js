@@ -16,8 +16,9 @@ export function addFileSource(
       destinationFilename,
       "24:00:00"
     );
+
     const fileSourceID = response.id;
-    //
+
     dispatch({
       type: "ADD_FILE_SOURCE_TO_NOTEBOOK",
       sourceURL,
@@ -25,17 +26,18 @@ export function addFileSource(
       destinationFilename,
       frequency
     });
+    return response;
   };
 }
 
 export function deleteFileSource(fileSourceID) {
   return async dispatch => {
     const response = await deleteFileSourceFromServer(fileSourceID);
-    console.log(response, fileSourceID);
     // remove the listed file source from notebook.
     dispatch({
       type: "DELETE_FILE_SOURCE_FROM_NOTEBOOK",
       fileSourceID
     });
+    return response;
   };
 }

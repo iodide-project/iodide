@@ -33,26 +33,50 @@ const FileSourceStatusText = styled.div`
   color: ${props => (props.statusType === "ERROR" ? "red" : "black")};
 `;
 
+const ALLOWED_PROTOCOLS = ["https", "http"];
+
+const hasAllowedProtocol = url => {
+  return ALLOWED_PROTOCOLS.some(protocol => {
+    return url.startsWith(protocol);
+  });
+};
+
 export function addNewFileSourceUnconnected({ addNewFileSource }) {
   const [sourceState, updateSourceState] = useState("");
   const [filenameState, updateFilenameState] = useState("");
   const [statusVisible, updateStatusVisibility] = useState(false);
   const [status, updateStatus] = useState({ type: "NONE", text: "" });
 
-  const submitInformation = () => {
-    updateStatus({ type: "NONE" });
+  const submitInformation = async () => {
+    updateStatusVisibility(true);
+    updateStatus({ type: "LOADING", text: "adding file source ..." });
+
     if (sourceState === "" || filenameState === "") {
       updateStatus({
         type: "ERROR",
         text: "must include source URL & desired filename"
       });
+    } else if (!hasAllowedProtocol(sourceState)) {
+      updateStatus({
+        type: "ERROR",
+        text: "source URL must include the protocol (e.g. https://)"
+      });
     } else {
-      updateStatus({ type: "SUCCESS", text: "added file source" });
-      addNewFileSource(sourceState, filenameState, "never");
-      updateSourceState("");
-      updateFilenameState("");
+      let request;
+      try {
+        request = await addNewFileSource(sourceState, filenameState, "never");
+      } catch (err) {
+        updateStatus({
+          type: "ERROR",
+          text: err.message
+        });
+      }
+      if (request) {
+        updateStatus({ type: "SUCCESS", text: "added file source" });
+        updateSourceState("");
+        updateFilenameState("");
+      }
     }
-    updateStatusVisibility(true);
   };
 
   useEffect(() => {
@@ -113,8 +137,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addNewFileSource: (sourceURL, destinationFilename, frequency) => {
-      dispatch(addFileSource(sourceURL, destinationFilename, frequency));
+    addNewFileSource: async (sourceURL, destinationFilename, frequency) => {
+      return dispatch(addFileSource(sourceURL, destinationFilename, frequency));
     }
   };
 }

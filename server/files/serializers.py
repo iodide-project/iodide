@@ -26,7 +26,7 @@ class FileSourceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FileSource
-        fields = ("id", "notebook_id", "file_id", "filename", "source", "update_interval")
+        fields = ("id", "notebook_id", "filename", "url", "update_interval")
 
 
 class FileUpdateOperationSerializer(serializers.ModelSerializer):

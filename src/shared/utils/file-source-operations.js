@@ -21,7 +21,7 @@ export async function saveFileSourceToServer(
   const body = createFileSourceRequestPayload({
     notebook_id: notebookID,
     update_interval: frequency,
-    source: sourceURL,
+    url: sourceURL,
     filename: destinationFilename
   });
   const r = await (fileSourceID

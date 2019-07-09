@@ -50,7 +50,7 @@ def notebook_view(request, pk):
             "fileSourceID": file_source.id,
             "frequency": file_source.update_interval,
             "destinationFilename": file_source.filename,
-            "sourceURL": file_source.source,
+            "sourceURL": file_source.url,
         }
         for file_source in FileSource.objects.filter(notebook_id=pk)
     ]
