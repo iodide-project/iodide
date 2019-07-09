@@ -46,7 +46,12 @@ def notebook_view(request, pk):
         for file in File.objects.filter(notebook_id=pk).order_by("-last_updated")
     ]
     file_sources = [
-        {"fileSourceID": file_source.id, 'frequency': file_source.update_interval, "destinationFilename": file_source.filename, 'sourceURL': file_source.source}
+        {
+            "fileSourceID": file_source.id,
+            "frequency": file_source.update_interval,
+            "destinationFilename": file_source.filename,
+            "sourceURL": file_source.source,
+        }
         for file_source in FileSource.objects.filter(notebook_id=pk)
     ]
     notebook_info = {

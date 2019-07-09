@@ -6,8 +6,9 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from ..notebooks.models import Notebook
-from .models import (File, FileSource)
-from .serializers import (FilesSerializer, FileSourceSerializer)
+from .models import File, FileSource
+from .serializers import FileSourceSerializer, FilesSerializer
+from .tasks import execute_file_update_operation
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -66,8 +67,9 @@ class FileSourceViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
         super().perform_destroy(instance)
 
+
     def perform_create(self, serializer):
-        if self.request.user != serializer.validated_data['notebook'].owner:
+        if self.request.user != serializer.validated_data["notebook"].owner:
             raise PermissionDenied
 
         # fixme: validate that interval is > 24 hours (or whatever)
@@ -75,7 +77,7 @@ class FileSourceViewSet(viewsets.ModelViewSet):
         serializer.save()
 
     def perform_update(self, serializer):
-        if self.request.user != serializer.validated_data['notebook'].owner:
+        if self.request.user != serializer.validated_data["notebook"].owner:
             raise PermissionDenied
 
         # fixme: validate that interval is > 24 hours (or whatever)
@@ -83,3 +85,23 @@ class FileSourceViewSet(viewsets.ModelViewSet):
         serializer.save()
 
     queryset = FileSource.objects.all()
+
+
+class FileUpdateOperationViewSet(viewsets.ModelViewSet):
+
+    serializer_class = FileUpdateOperationSerializer
+
+    http_method_names = ["post"]
+
+    def create(self, serializer):
+        data = json.loads(self.request.data)
+        file_source = get_object_or_404(FileSource, id=data['file_source_id'])
+        if self.request.user != file_source.notebook.owner:
+            raise PermissionDenied
+
+        update_operation = FileUpdateOperation.objects.create(
+            file_source=file_source)
+        execute_file_update_operation.apply_async(update_operation.id)
+
+        return Response(FileUpdateOperationSerializer(update_operation).data, status=201)
+

@@ -13,12 +13,7 @@ class FileAdmin(admin.ModelAdmin):
     def has_module_permission(self, request):
         return request.user.is_superuser or request.user.is_staff
 
-    fieldsets = [
-        (
-            None,
-            {"fields": ["notebook", "filename", "last_updated"]},
-        )
-    ]
+    fieldsets = [(None, {"fields": ["notebook", "filename", "last_updated"]})]
 
 
 class FileSourceAdmin(admin.ModelAdmin):
@@ -31,12 +26,7 @@ class FileSourceAdmin(admin.ModelAdmin):
     def has_module_permission(self, request):
         return request.user.is_superuser or request.user.is_staff
 
-    fieldsets = [
-        (
-            None,
-            {"fields": ["notebook", "source", "filename", "update_interval"]},
-        )
-    ]
+    fieldsets = [(None, {"fields": ["notebook", "source", "filename", "update_interval"]})]
 
 
 admin.site.register(File, FileAdmin)
