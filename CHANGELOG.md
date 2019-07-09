@@ -20,8 +20,6 @@
 - Gravatars are served via https by default (fixes #1930)
 - Add new file management UI (click _Menu > Manage Files_ while logged in and
   viewing a notebook that you own)
-- Migrate from parsing environment variable with global IODIDE_BUILD_MODE to
-  using webpack's process.env.NODE_ENV and the environmentPlugin code quality (#1899)
 
 # 0.7.0 (2019-05-30)
 
