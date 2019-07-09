@@ -1,5 +1,4 @@
 // This defines the "built-in" language definitions
-/* global USE_LOCAL_PYODIDE */
 
 export const jsLanguageDefinition = {
   pluginType: "language",
@@ -13,7 +12,7 @@ export const jsLanguageDefinition = {
   url: ""
 };
 
-const PYODIDE_URL = USE_LOCAL_PYODIDE
+const PYODIDE_URL = process.env.USE_LOCAL_PYODIDE
   ? "/pyodide/pyodide.js"
   : "https://pyodide.cdn.iodide.io/pyodide.js";
 

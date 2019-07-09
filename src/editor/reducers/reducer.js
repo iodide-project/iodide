@@ -1,5 +1,3 @@
-/* global IODIDE_BUILD_MODE */
-
 import notebookReducer from "./notebook-reducer";
 
 import evalFrameActionReducer from "./eval-frame-reducer";
@@ -22,7 +20,7 @@ function reduceReducers(...reducers) {
 function sendStateToEvalFrame(state) {
   // FIXME: this is a terrible hack to make the tests work.
   // it must be stamped out.
-  if (IODIDE_BUILD_MODE !== "test") {
+  if (process.env.NODE_ENV !== "test") {
     try {
       postMessageToEvalFrame(
         "STATE_UPDATE_FROM_EDITOR",
