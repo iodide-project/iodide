@@ -29,7 +29,7 @@ class FileSourceSerializer(serializers.ModelSerializer):
         fields = ("id", "notebook_id", "file_id", "filename", "source", "update_interval")
 
 
-class FileUpdateOperationSerializer(serializeres.ModelSerializer):
+class FileUpdateOperationSerializer(serializers.ModelSerializer):
     """
     Used for creating an operation to update a file source
     """

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from ..notebooks.models import Notebook
 from .models import File, FileSource
-from .serializers import FileSourceSerializer, FilesSerializer
+from .serializers import FileSourceSerializer, FilesSerializer, FileUpdateOperationSerializer
 from .tasks import execute_file_update_operation
 
 
