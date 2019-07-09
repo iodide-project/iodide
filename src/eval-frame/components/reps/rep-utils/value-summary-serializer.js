@@ -1,7 +1,14 @@
+import { truncateString } from "./truncate-string";
+import { ValueSummary } from "./rep-serialization-core-types";
+
 export function getClass(obj) {
   if (obj === null) return "Null";
   if (obj === undefined) return "Undefined";
-  return obj.constructor.name;
+  try {
+    return obj.constructor.name;
+  } catch (error) {
+    return "CLASS CANNOT BE DETERMINED";
+  }
 }
 
 export const getType = obj =>
@@ -36,8 +43,8 @@ const typesWithByteLength = ["ArrayBuffer", "DataView"];
 const typesWithSize = ["Map", "Set", "Blob"];
 
 export function objSize(obj) {
-  if (obj === null) return undefined;
-  if (obj === undefined) return undefined;
+  if (obj === null) return 0;
+  if (obj === undefined) return 0;
   const type = getType(obj);
   if (type === "RegExp") return obj.source.length;
   if (typesWithLength.includes(type)) return obj.length;
@@ -46,40 +53,37 @@ export function objSize(obj) {
   return Object.getOwnPropertyNames(obj).length;
 }
 
-export const MAX_TINY_STRING_LEN = 20;
-const TRUNCATION_LEN = 12;
-
-const truncateString = s =>
-  s.length > MAX_TINY_STRING_LEN
-    ? [s.slice(0, TRUNCATION_LEN), true]
-    : [s, false];
-
-export function tinyRepStringify(obj) {
+export function repStringVal(obj, tiny = false) {
   const type = getType(obj);
   let stringVal;
   if (["Number", "Boolean", "Undefined", "Null", "Symbol"].includes(type)) {
     stringVal = String(obj);
   } else if (type === "Date") {
-    stringVal = obj.toISOString().slice(0, 19);
+    stringVal = tiny ? obj.toISOString().slice(0, 19) : obj.toISOString();
   } else if (type === "RegExp") {
     stringVal = obj.source;
   } else if (type === "String") {
     stringVal = obj;
-  } else if (["Function", "GeneratorFunction"].includes(type)) {
-    stringVal = obj.name;
+  } else if (type === "Error") {
+    stringVal = getClass(obj);
+  } else if (type === "Function") {
+    stringVal = `ƒ ${obj.name}`;
+  } else if (type === "GeneratorFunction") {
+    stringVal = `ƒ* ${obj.name}`;
   } else {
-    stringVal = "";
+    stringVal = getClass(obj);
   }
-  return truncateString(stringVal);
+  return stringVal;
 }
 
-export function serializeForTinyRep(obj) {
-  const [stringValue, isTruncated] = tinyRepStringify(obj);
-  return {
-    objClass: getClass(obj),
-    objType: getType(obj),
-    size: objSize(obj),
-    stringValue,
-    isTruncated
-  };
+export const MAX_SUMMARY_STRING_LEN = 1000;
+export const SUMMARY_STRING_TRUNCATION_LEN = 500;
+
+export function serializeForValueSummary(obj) {
+  const { stringValue, isTruncated } = truncateString(
+    repStringVal(obj, true),
+    MAX_SUMMARY_STRING_LEN,
+    SUMMARY_STRING_TRUNCATION_LEN
+  );
+  return new ValueSummary(getType(obj), objSize(obj), stringValue, isTruncated);
 }
