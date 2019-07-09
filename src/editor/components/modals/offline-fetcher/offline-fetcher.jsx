@@ -28,39 +28,54 @@ const FileSourceListContainer = styled.div`
   margin: auto;
 `;
 
+const NoFileSourcesNotice = styled.span`
+  align-items: center;
+  color: #666;
+  display: grid;
+  font-size: 1.5em;
+  font-weight: bold;
+  height: 100%;
+  text-align: center;
+`;
+
 export function OfflineFetcherUnconnected({ fileSources, deleteFileSource }) {
   return (
     <FileSourceContainer>
       <AddNewFileSource />
-      <FileSourceListContainer>
-        <List>
-          {fileSources.map(fileSource => {
-            console.log(fileSource.fileSourceID);
-            return (
-              <ListItem type="single" key={fileSource.fileSourceID}>
-                <ListMain>
-                  <ListPrimaryText>
-                    {fileSource.destinationFilename}
-                  </ListPrimaryText>
-                  <ListSecondaryText href={fileSource.sourceURL}>
-                    <ListSecondaryTextLink href={fileSource.sourceURL}>
-                      {fileSource.sourceURL}
-                    </ListSecondaryTextLink>
-                  </ListSecondaryText>
-                </ListMain>
-                <ListMetadata>{fileSource.frequency}</ListMetadata>
-                <ListMetadata>
-                  <TextButton
-                    onClick={() => deleteFileSource(fileSource.fileSourceID)}
-                  >
-                    delete
-                  </TextButton>
-                </ListMetadata>
-              </ListItem>
-            );
-          })}
-        </List>
-      </FileSourceListContainer>
+      {fileSources.length ? (
+        <FileSourceListContainer>
+          <List>
+            {fileSources.map(fileSource => {
+              return (
+                <ListItem type="single" key={fileSource.fileSourceID}>
+                  <ListMain>
+                    <ListPrimaryText>
+                      {fileSource.destinationFilename}
+                    </ListPrimaryText>
+                    <ListSecondaryText href={fileSource.sourceURL}>
+                      <ListSecondaryTextLink href={fileSource.sourceURL}>
+                        {fileSource.sourceURL}
+                      </ListSecondaryTextLink>
+                    </ListSecondaryText>
+                  </ListMain>
+                  <ListMetadata>{fileSource.frequency}</ListMetadata>
+                  <ListMetadata>
+                    <TextButton
+                      onClick={() => deleteFileSource(fileSource.fileSourceID)}
+                    >
+                      delete
+                    </TextButton>
+                  </ListMetadata>
+                </ListItem>
+              );
+            })}
+          </List>
+        </FileSourceListContainer>
+      ) : (
+        <NoFileSourcesNotice>
+          No file sources are associated with this notebook
+        </NoFileSourcesNotice>
+      )}
     </FileSourceContainer>
   );
 }
