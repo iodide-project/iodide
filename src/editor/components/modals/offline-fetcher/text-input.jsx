@@ -4,19 +4,15 @@ import styled from "react-emotion";
 
 const TextInputContainer = styled.div``;
 const InputElement = styled.input`
-  --marg: 10px;
   display: block;
   margin: 0;
   padding: 0;
   padding: 5px;
-  margin-left: var(--marg);
-  margin-right: var(--marg);
-  width: calc(100% - var(--marg) * 2);
+  width: 100%;
 `;
 
 const Label = styled.label`
   display: block;
-  margin-left: 15px;
   font-size: 13px;
 `;
 
