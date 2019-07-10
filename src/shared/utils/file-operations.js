@@ -6,7 +6,7 @@ import {
 } from "../server-api/file";
 
 export function loadFileFromServer(path, fetchType) {
-  return genericFetch(path, fetchType);
+  return genericFetch(`files/${path}`, fetchType);
 }
 
 export function valueToFile(data, fileName) {

@@ -40,7 +40,7 @@ syntax --
 
 ```
 %% fetch
-TYPE: VAR_NAME = files/FILE_NAME
+TYPE: VAR_NAME = FILE_NAME
 ```
 
 -- where `TYPE` is the type of the file ("text", "json", "arraybuffer", or "blob"), `VARNAME`

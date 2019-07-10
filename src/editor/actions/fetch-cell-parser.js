@@ -8,8 +8,16 @@ export function isRelPath(path) {
   );
 }
 
+// this supports the legacy use of the "files/" prefix in fetch cells
+const extractFileNameFromLocalFilePath = filepath =>
+  filepath.slice(0, 6) === "files/" ? filepath.slice(6) : filepath;
+
 export function parseFileLine(fetchCommand) {
-  return { filePath: fetchCommand, isRelPath: isRelPath(fetchCommand) };
+  const isRel = isRelPath(fetchCommand);
+  const filePath = isRel
+    ? extractFileNameFromLocalFilePath(fetchCommand)
+    : fetchCommand;
+  return { filePath, isRelPath: isRel };
 }
 
 export function parseAssignmentCommand(fetchCommand) {
@@ -17,8 +25,10 @@ export function parseAssignmentCommand(fetchCommand) {
   if (!isValidIdentifier(varName)) {
     return { error: "INVALID_VARIABLE_NAME" };
   }
-  const filePath = fetchCommand.substring(fetchCommand.indexOf("=") + 1).trim();
-  return { varName, filePath, isRelPath: isRelPath(filePath) };
+  const filePath = parseFileLine(
+    fetchCommand.substring(fetchCommand.indexOf("=") + 1).trim()
+  );
+  return Object.assign(filePath, { varName });
 }
 
 export function commentOnlyLine(line) {

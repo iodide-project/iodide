@@ -82,7 +82,7 @@ export function loadFile(fileName, fileRequestID, fetchType) {
     try {
       validateFileExistence(fileName, "load", getState());
       validateFetchType(fetchType);
-      const file = await loadFileFromServer(`files/${fileName}`, fetchType);
+      const file = await loadFileFromServer(fileName, fetchType);
       onFileOperationSuccess(fileRequestID, file);
       return undefined;
     } catch (err) {
