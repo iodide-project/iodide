@@ -89,6 +89,10 @@ export function* evaluateCurrentQueue() {
       yield call(evaluateByType, chunkType, chunkContent, chunkId);
       yield put(setKernelState("KERNEL_IDLE"));
     } catch (error) {
+      if (process.env.NODE_ENV === "dev") {
+        console.log("--------- Caught error at eval queue top level ---------");
+        console.log(error);
+      }
       yield flush(evalQueue);
       yield put(setKernelState("KERNEL_IDLE"));
     }

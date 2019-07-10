@@ -32,17 +32,17 @@ export function genericFetch(path, fetchType) {
 
 export function successMessage(fetchInfo) {
   const ifVarSet = fetchInfo.parsed.varName
-    ? `\n\t(var ${fetchInfo.parsed.varName})`
+    ? `\t(var ${fetchInfo.parsed.varName})`
     : "";
-  const text = `SUCCESS: ${fetchInfo.parsed.filePath} loaded${ifVarSet}\n`;
+  const text = `SUCCESS: ${fetchInfo.parsed.filePath} loaded${ifVarSet}`;
   return { text, id: fetchInfo.id };
 }
 
 export function errorMessage(fetchInfo, msg) {
   const firstLine = fetchInfo.parsed.filePath
-    ? `${fetchInfo.parsed.filePath}\n\t`
+    ? `${fetchInfo.parsed.filePath}\t`
     : "";
-  const text = `ERROR: ${firstLine}${msg}\n`;
+  const text = `ERROR: ${firstLine}${msg}`;
   return {
     text,
     id: fetchInfo.id

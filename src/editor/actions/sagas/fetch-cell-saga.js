@@ -17,25 +17,23 @@ import {
 
 function fetchProgressInitialStrings(fetchInfo) {
   let text;
-  if (fetchInfo.parsed.error) text = `${syntaxErrorToString(fetchInfo)}\n`;
-  else
-    text = `fetching ${fetchInfo.parsed.fetchType} from ${fetchInfo.parsed.filePath}\n`;
+  if (fetchInfo.parsed.error) {
+    text = `${syntaxErrorToString(fetchInfo)}`;
+  } else {
+    text = `fetching ${fetchInfo.parsed.fetchType} from ${fetchInfo.parsed.filePath}`;
+  }
   return {
     text,
     id: fetchInfo.id
   };
 }
 
-function* handleFetch(fetchInfo) {
-  const extractFileNameFromLocalFilePath = filepath => {
-    return filepath
+function* handleValidFetch(fetchInfo, historyId, lineIndex) {
+  const extractFileNameFromLocalFilePath = filepath =>
+    filepath
       .split("files/")
       .slice(1)
       .join("");
-  };
-  if (fetchInfo.parsed.error !== undefined) {
-    return errorMessage(fetchInfo, syntaxErrorToString(fetchInfo));
-  }
 
   const { filePath, fetchType, isRelPath } = fetchInfo.parsed;
   const fileFetcher = isRelPath
@@ -52,7 +50,14 @@ function* handleFetch(fetchInfo) {
   try {
     fetchedFile = yield call(fileFetcher, filePath, fetchType);
   } catch (err) {
+    yield put({
+      type: "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT",
+      historyId,
+      lineIndex,
+      lineContent: errorMessage(fetchInfo, err).text
+    });
     return errorMessage(fetchInfo, err);
+    // throw new Error(`File fetch failed; throwing to halt eval queue`);
   }
 
   if (["text", "json", "blob", "arrayBuffer"].includes(fetchType)) {
@@ -71,9 +76,25 @@ function* handleFetch(fetchInfo) {
     });
   } else if (fetchType === "plugin") {
     yield call(evaluateLanguagePlugin, fetchedFile);
-  } else {
-    return errorMessage(fetchInfo, "unknown fetch type");
   }
+
+  yield put({
+    type: "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT",
+    historyId,
+    lineIndex,
+    lineContent: successMessage(fetchInfo).text
+  });
+  // yield put(
+  //   addToConsoleHistory({
+  //     historyType: "FETCH_CELL_INFO",
+  //     content: progressStrings.map(t => t.text).join("")
+  //   })
+  // );
+  // console.log(
+  //   "successMessage(fetchInfo) ----------- ",
+  //   successMessage(fetchInfo),
+  //   fetchInfo
+  // );
   return successMessage(fetchInfo);
 }
 
@@ -84,40 +105,29 @@ export function* evaluateFetch(fetchText) {
     yield put(
       addToConsoleHistory({
         historyType: "FETCH_CELL_INFO",
-        content: syntaxErrors
-          .map(fetchProgressInitialStrings)
-          .map(t => t.text)
-          .join(""),
+        content: syntaxErrors.map(fetchProgressInitialStrings).map(t => t.text),
+        // .join("\n")
         level: "ERROR"
       })
     );
 
-    return;
+    throw new Error(
+      `Fetch cell has syntax errors; throwing to halt eval queue`
+    );
   }
 
-  let progressStrings = fetches.map(fetchProgressInitialStrings);
-  let outputHistoryId = yield put(
+  const progressStrings = fetches.map(fetchProgressInitialStrings);
+  const { historyId } = yield put(
     addToConsoleHistory({
       historyType: "FETCH_CELL_INFO",
-      content: progressStrings.map(t => t.text).join("")
+      content: progressStrings.map(t => t.text) // .join("\n")
     })
   );
-  outputHistoryId = outputHistoryId.historyId;
 
-  /* eslint-disable func-names */
   const outcomes = yield all(
-    fetches.map(function*(f, i) {
-      const outcome = yield call(handleFetch, f);
-      progressStrings = progressStrings.map(entry => Object.assign({}, entry));
-      progressStrings[i] = outcome;
-      yield put({
-        type: "UPDATE_VALUE_IN_HISTORY",
-        historyItem: {
-          historyId: outputHistoryId,
-          content: progressStrings.map(t => t.text).join("")
-        }
-      });
-    })
+    fetches.map((fetchSpec, i) =>
+      call(handleValidFetch, fetchSpec, historyId, i)
+    )
   );
 
   const errors = outcomes.filter(f => f.text.startsWith("ERROR"));
@@ -126,9 +136,14 @@ export function* evaluateFetch(fetchText) {
   yield put({
     type: "UPDATE_VALUE_IN_HISTORY",
     historyItem: {
-      historyId: outputHistoryId,
-      context: outcomes.map(t => t.text).join(""),
+      historyId,
+      // content: outcomes.map(t => t.text),
       level: hasError ? "ERROR" : undefined
     }
   });
+
+  if (hasError) {
+    throw new Error(`Fetch outcome error; throwing to halt eval queue`);
+  }
+  console.log("FETCH completed ok >>>>>>>>>>>>>>>>>>");
 }

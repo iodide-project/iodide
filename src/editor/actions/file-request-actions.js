@@ -91,6 +91,7 @@ export function loadFile(fileName, fileRequestID, fetchType) {
     }
   };
 }
+
 export function deleteFile(fileName, fileRequestID) {
   return async (dispatch, getState) => {
     try {
