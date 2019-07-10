@@ -6,7 +6,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from ..notebooks.models import Notebook
-from .models import File, FileSource
+from .models import File, FileSource, FileUpdateOperation
 from .serializers import FileSourceSerializer, FilesSerializer, FileUpdateOperationSerializer
 from .tasks import execute_file_update_operation
 
@@ -72,8 +72,6 @@ class FileSourceViewSet(viewsets.ModelViewSet):
         if self.request.user != serializer.validated_data["notebook"].owner:
             raise PermissionDenied
 
-        # fixme: validate that interval is > 24 hours (or whatever)
-
         serializer.save()
 
     def perform_update(self, serializer):
@@ -94,14 +92,13 @@ class FileUpdateOperationViewSet(viewsets.ModelViewSet):
     http_method_names = ["post"]
 
     def create(self, serializer):
-        data = json.loads(self.request.data)
-        file_source = get_object_or_404(FileSource, id=data['file_source_id'])
+        file_source = get_object_or_404(FileSource, id=self.request.data['file_source_id'])
         if self.request.user != file_source.notebook.owner:
             raise PermissionDenied
 
         update_operation = FileUpdateOperation.objects.create(
             file_source=file_source)
-        execute_file_update_operation.apply_async(update_operation.id)
+        execute_file_update_operation.apply_async(args=[update_operation.id])
 
         return Response(FileUpdateOperationSerializer(update_operation).data, status=201)
 

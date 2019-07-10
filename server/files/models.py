@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 
 from ..notebooks.models import Notebook
@@ -30,13 +32,19 @@ class FileSource(models.Model):
     """
     Represents a source for files (an external URL)
     """
+    DAILY = timedelta(days=1)
+    WEEKLY = timedelta(weeks=1)
+    UPDATE_INTERVALS = (
+        (DAILY, "daily"),
+        (WEEKLY, "weekly")
+    )
 
     notebook = models.ForeignKey(Notebook, on_delete=models.CASCADE)
     # FIXME: add a validator for filename (for minimum length and maybe
     # other things)
     filename = models.CharField(max_length=MAX_FILENAME_LENGTH)
     url = models.URLField()
-    update_interval = models.DurationField(null=True)
+    update_interval = models.DurationField(null=True, choices=UPDATE_INTERVALS)
 
     def __str__(self):  # pragma: no cover
         return self.url

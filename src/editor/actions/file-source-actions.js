@@ -14,7 +14,7 @@ export function addFileSource(
       notebookID,
       sourceURL,
       destinationFilename,
-      "24:00:00"
+      "1 day, 0:00:00"
     );
 
     const fileSourceID = response.id;
