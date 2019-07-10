@@ -34,11 +34,13 @@ export function* loadKnownLanguage(pluginData) {
 }
 
 export function* evaluateLanguagePlugin(pluginText) {
+  let pluginData;
   try {
-    const pluginData = JSON.parse(pluginText);
-    yield call(loadLanguagePlugin, pluginData);
+    pluginData = JSON.parse(pluginText);
   } catch (error) {
     yield put(addPluginParseErrorToHistory(error.message));
     throw error;
   }
+
+  yield call(loadLanguagePlugin, pluginData);
 }

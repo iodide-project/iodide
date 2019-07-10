@@ -3,6 +3,7 @@
 - Overhauls Iodide's data formatters to cover more data types, allow folding of long results, and many other enhancements
 - Deprecates the need for the `files/` prefix in fetch chunks.
 - Introduces the `plugin` fetch type in fetch chunks.
+- No longer swallowing errors in plugin loader code (fixes #2010)
 
 # 0.9.0 (2019-07-03)
 
