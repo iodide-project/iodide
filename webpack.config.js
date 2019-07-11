@@ -11,8 +11,9 @@ const CircularDependencyPlugin = require("circular-dependency-plugin");
 const UnusedWebpackPlugin = require("unused-webpack-plugin");
 const _ = require("lodash");
 
-const reduxLogMode =
-  process.env.REDUX_LOGGING === "VERBOSE" ? "VERBOSE" : "SILENT";
+const reduxLogMode = process.env.REDUX_LOGGING
+  ? process.env.REDUX_LOGGING
+  : "SILENT";
 
 const evalFrameHtmlTemplate = require("./src/eval-frame/html-template.js");
 
