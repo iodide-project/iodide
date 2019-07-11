@@ -7,30 +7,30 @@ import { evaluateLanguagePlugin } from "./language-plugin-saga";
 import { triggerEvalFrameTask } from "./eval-frame-sender";
 
 import {
-  errorMessage,
-  genericFetch,
-  successMessage,
-  syntaxErrorToString
+  // errorMessage,
+  genericFetch
+  // successMessage,
+  // syntaxErrorToString
 } from "../../../shared/utils/fetch-tools";
 import { loadFileFromServer } from "../../../shared/utils/file-operations";
 
-function fetchProgressInitialStrings(fetchInfo) {
-  let text;
-  if (fetchInfo.parsed.error) {
-    text = `${syntaxErrorToString(fetchInfo)}`;
-  } else {
-    text = `fetching ${fetchInfo.parsed.fetchType} from ${fetchInfo.parsed.filePath}`;
-  }
-  return {
-    text,
-    id: fetchInfo.id
-  };
-}
+export const errorTypeToString = {
+  MISSING_FETCH_TYPE: "fetch type not specified",
+  INVALID_FETCH_TYPE: "invalid fetch type",
+  INVALID_VARIABLE_NAME: "invalid variable name"
+};
+
+const syntaxErrorToString = fetchInfo => `Syntax error, ${
+  errorTypeToString[fetchInfo.parsed.error]
+} in:
+    "${fetchInfo.line}"`;
+
+const fetchProgressInitialStrings = fetchInfo =>
+  `fetching ${fetchInfo.parsed.fetchType} from ${fetchInfo.parsed.filePath}`;
 
 function* handleValidFetch(fetchInfo, historyId, lineIndex) {
   const { filePath, fetchType, isRelPath } = fetchInfo.parsed;
   const fileFetcher = isRelPath ? loadFileFromServer : genericFetch;
-  console.log("FETCH INFO ------------------", filePath, fetchInfo);
 
   let fetchedFile;
   try {
@@ -40,17 +40,16 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
       type: "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT",
       historyId,
       lineIndex,
-      lineContent: errorMessage(fetchInfo, err).text
+      lineContent: `ERROR: ${filePath}\n    ${err}`
     });
     yield put({
       type: "UPDATE_VALUE_IN_HISTORY",
       historyItem: {
         historyId,
-        level: "ERROR" // hasError ? "ERROR" : undefined
+        level: "ERROR"
       }
     });
     throw new Error(`failed to fetch file; halting eval queue`);
-    // return errorMessage(fetchInfo, err);
   }
 
   if (["text", "json", "blob", "arrayBuffer"].includes(fetchType)) {
@@ -71,14 +70,16 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
     yield call(evaluateLanguagePlugin, fetchedFile);
   }
 
+  const ifVarSet = fetchInfo.parsed.varName
+    ? ` (var ${fetchInfo.parsed.varName})`
+    : "";
+
   yield put({
     type: "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT",
     historyId,
     lineIndex,
-    lineContent: successMessage(fetchInfo).text
+    lineContent: `SUCCESS: ${filePath} loaded${ifVarSet}`
   });
-
-  // return successMessage(fetchInfo);
 }
 
 export function* evaluateFetch(fetchText) {
@@ -88,41 +89,23 @@ export function* evaluateFetch(fetchText) {
     yield put(
       addToConsoleHistory({
         historyType: "FETCH_CELL_INFO",
-        content: syntaxErrors.map(fetchProgressInitialStrings).map(t => t.text),
+        content: syntaxErrors.map(syntaxErrorToString),
         level: "ERROR"
       })
     );
-
     throw new Error(`Syntax errors in fetch chunk; halting eval queue`);
   }
 
-  const progressStrings = fetches.map(fetchProgressInitialStrings);
   const { historyId } = yield put(
     addToConsoleHistory({
       historyType: "FETCH_CELL_INFO",
-      content: progressStrings.map(t => t.text)
+      content: fetches.map(fetchProgressInitialStrings)
     })
   );
 
-  // const outcomes =
   yield all(
     fetches.map((fetchSpec, i) =>
       call(handleValidFetch, fetchSpec, historyId, i)
     )
   );
-
-  // const errors = outcomes.filter(f => f.text.startsWith("ERROR"));
-  // const hasError = errors.length > 0;
-
-  // yield put({
-  //   type: "UPDATE_VALUE_IN_HISTORY",
-  //   historyItem: {
-  //     historyId,
-  //     level: hasError ? "ERROR" : undefined
-  //   }
-  // });
-
-  // if (hasError) {
-  //   throw new Error(`Fetch outcome error; halting eval queue`);
-  // }
 }
