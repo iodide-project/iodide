@@ -73,6 +73,7 @@ export function createNewNotebookOnServer() {
 
 export function saveNotebookToServer(forceSave = false) {
   return async (dispatch, getState) => {
+    console.log("saveNotebookToServer - entered");
     const state = getState();
     const notebookId = getNotebookID(state);
     const notebookInServer = Boolean(notebookId);
