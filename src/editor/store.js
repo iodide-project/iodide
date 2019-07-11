@@ -32,6 +32,13 @@ if (process.env.NODE_ENV === "production") {
     applyMiddleware(thunk),
     applyMiddleware(sagaMiddleware)
   );
+} else if (process.env.IODIDE_REDUX_LOG_MODE === "VERY_VERBOSE") {
+  finalReducer = createValidatedReducer(reducer, stateSchema);
+  enhancer = compose(
+    applyMiddleware(thunk),
+    applyMiddleware(sagaMiddleware),
+    applyMiddleware(createLogger({ collapsed: () => true }))
+  );
 } else {
   finalReducer = createValidatedReducer(reducer, stateSchema);
   enhancer = compose(
@@ -45,7 +52,8 @@ if (process.env.NODE_ENV === "production") {
             "UPDATE_MARKDOWN_CHUNKS",
             "UPDATE_CURSOR",
             "UPDATE_SELECTIONS"
-          ].includes(action.type)
+          ].includes(action.type),
+        collapsed: () => true
       })
     )
   );
