@@ -29,6 +29,19 @@ export default function evalFrameActionReducer(state, action) {
       return Object.assign({}, state, { history });
     }
 
+    case "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT": {
+      const i = state.history.findIndex(h => h.historyId === action.historyId);
+      const history = [...state.history.slice()];
+      const contentLines = history[i].content;
+
+      contentLines[action.lineIndex] = action.lineContent;
+
+      history[i] = Object.assign({}, history[i], {
+        content: contentLines
+      });
+      return Object.assign({}, state, { history });
+    }
+
     case "UPDATE_CONSOLE_TEXT": {
       return Object.assign({}, state, { consoleText: action.consoleText });
     }

@@ -70,7 +70,13 @@ export class HistoryItemUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state, ownProps) {
-  return state.history.filter(h => h.historyId === ownProps.historyId)[0];
+  const historyItem = state.history.filter(
+    h => h.historyId === ownProps.historyId
+  )[0];
+  if (historyItem.historyType === "FETCH_CELL_INFO") {
+    historyItem.content = historyItem.content.join("\n");
+  }
+  return historyItem;
 }
 
 export default connect(mapStateToProps)(HistoryItemUnconnected);

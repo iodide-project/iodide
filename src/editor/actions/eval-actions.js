@@ -11,7 +11,8 @@ const chunkNotSkipped = chunk =>
     chunk.evalFlags.includes("skipRunAll") ||
     chunk.evalFlags.includes("skiprunall")
   );
-const chunkNotRunnable = chunk => NONCODE_EVAL_TYPES.includes(chunk.chunkType);
+const chunkNotRunnable = ({ chunkType, chunkContent }) =>
+  NONCODE_EVAL_TYPES.includes(chunkType) || chunkContent.trim() === "";
 
 export function setKernelState(kernelState) {
   return {
