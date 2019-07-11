@@ -29,7 +29,7 @@ const fetchProgressInitialStrings = fetchInfo =>
   `fetching ${fetchInfo.parsed.fetchType} from ${fetchInfo.parsed.filePath}`;
 
 function* handleValidFetch(fetchInfo, historyId, lineIndex) {
-  const { filePath, fetchType, isRelPath } = fetchInfo.parsed;
+  const { filePath, fetchType, isRelPath, varName } = fetchInfo.parsed;
   const fileFetcher = isRelPath ? loadFileFromServer : genericFetch;
 
   let fetchedFile;
@@ -54,7 +54,7 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
 
   if (["text", "json", "blob", "arrayBuffer"].includes(fetchType)) {
     yield call(triggerEvalFrameTask, "ASSIGN_VARIABLE", {
-      name: fetchInfo.parsed.varName,
+      name: varName,
       value: fetchedFile
     });
   } else if (fetchType === "js") {
@@ -64,15 +64,13 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
   } else if (fetchType === "css") {
     yield call(triggerEvalFrameTask, "ADD_CSS", {
       css: fetchedFile,
-      filePath: fetchInfo.parsed.filePath
+      filePath
     });
   } else if (fetchType === "plugin") {
     yield call(evaluateLanguagePlugin, fetchedFile);
   }
 
-  const ifVarSet = fetchInfo.parsed.varName
-    ? ` (var ${fetchInfo.parsed.varName})`
-    : "";
+  const ifVarSet = varName ? ` (var ${varName})` : "";
 
   yield put({
     type: "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT",
