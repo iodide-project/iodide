@@ -9,8 +9,15 @@ export function isRelPath(path) {
 }
 
 // this supports the legacy use of the "files/" prefix in fetch cells
-const extractFileNameFromLocalFilePath = filepath =>
-  filepath.slice(0, 6) === "files/" ? filepath.slice(6) : filepath;
+const extractFileNameFromLocalFilePath = filepath => {
+  if (filepath.slice(0, 6) === "files/") {
+    // FIXME: this warning should be printed to the *Iodide* console when that ability exists
+    console.warn(`The \`files\` prefix is not required when fetching files saved to the Iodide server.
+This prefix will be deprecated in a future version`);
+    return filepath.slice(6);
+  }
+  return filepath;
+};
 
 export function parseFileLine(fetchCommand) {
   const isRel = isRelPath(fetchCommand);
