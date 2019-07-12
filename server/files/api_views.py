@@ -67,7 +67,6 @@ class FileSourceViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
         super().perform_destroy(instance)
 
-
     def perform_create(self, serializer):
         if self.request.user != serializer.validated_data["notebook"].owner:
             raise PermissionDenied
@@ -92,13 +91,11 @@ class FileUpdateOperationViewSet(viewsets.ModelViewSet):
     http_method_names = ["post"]
 
     def create(self, serializer):
-        file_source = get_object_or_404(FileSource, id=self.request.data['file_source_id'])
+        file_source = get_object_or_404(FileSource, id=self.request.data["file_source_id"])
         if self.request.user != file_source.notebook.owner:
             raise PermissionDenied
 
-        update_operation = FileUpdateOperation.objects.create(
-            file_source=file_source)
+        update_operation = FileUpdateOperation.objects.create(file_source=file_source)
         execute_file_update_operation.apply_async(args=[update_operation.id])
 
         return Response(FileUpdateOperationSerializer(update_operation).data, status=201)
-

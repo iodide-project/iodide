@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from ..notebooks.models import Notebook
-from .models import (File, FileSource, FileUpdateOperation)
+from .models import File, FileSource, FileUpdateOperation
 
 
 class FilesSerializer(serializers.ModelSerializer):

@@ -15,6 +15,7 @@ import re
 
 import dj_database_url
 import environ
+from celery.schedules import crontab
 from furl import furl
 
 env = environ.Env()
@@ -222,3 +223,9 @@ WHITENOISE_MIMETYPES = {".wasm": "application/wasm"}
 
 REDIS_HOST = env.str("REDIS_HOST", default="redis")
 CELERY_BROKER_URL = f"redis://{REDIS_HOST}:6379/1"
+CELERY_BEAT_SCHEDULE = {
+    "run_scheduled_file_operations": {
+        "task": "server.files.tasks.execute_scheduled_file_operations",
+        "schedule": crontab(minute=0, hour=0),
+    }
+}

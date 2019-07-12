@@ -32,12 +32,10 @@ class FileSource(models.Model):
     """
     Represents a source for files (an external URL)
     """
+
     DAILY = timedelta(days=1)
     WEEKLY = timedelta(weeks=1)
-    UPDATE_INTERVALS = (
-        (DAILY, "daily"),
-        (WEEKLY, "weekly")
-    )
+    UPDATE_INTERVALS = ((DAILY, "daily"), (WEEKLY, "weekly"))
 
     notebook = models.ForeignKey(Notebook, on_delete=models.CASCADE)
     # FIXME: add a validator for filename (for minimum length and maybe
