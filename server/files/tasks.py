@@ -55,10 +55,6 @@ def execute_scheduled_file_operations():
         "Running scheduled file operations (intervals: %s)",
         ", ".join(str(i) for i in intervals_to_queue),
     )
-    print(
-        "Running scheduled file operations (intervals: %s)" %
-        ", ".join(str(i) for i in intervals_to_queue),
-    )
     file_sources = FileSource.objects.filter(update_interval__in=intervals_to_queue)
     for file_source in file_sources:
         update_operation = FileUpdateOperation.objects.create(file_source=file_source)

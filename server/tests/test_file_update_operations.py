@@ -102,7 +102,6 @@ def test_run_scheduled_file_operations(fake_user, test_notebook, date):
                 update_interval=interval,
             )
         )
-        print(file_sources[i].id)
     weekly_ids = set([file_sources[0].id, file_sources[1].id])
     daily_ids = set([file_sources[0].id])
 
