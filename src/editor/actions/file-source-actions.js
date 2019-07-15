@@ -3,18 +3,25 @@ import {
   deleteFileSourceFromServer
 } from "../../shared/utils/file-source-operations";
 
+const FREQUENCY_OPTIONS = {
+  never: undefined,
+  daily: "1 day, 0:00:00",
+  weekly: "7 days, 0:00:00"
+};
+
 export function addFileSource(
   sourceURL,
   destinationFilename,
-  frequency = "never"
+  frequency = undefined
 ) {
   return async (dispatch, getState) => {
     const notebookID = getState().notebookInfo.notebook_id;
+    const convertedFrequency = FREQUENCY_OPTIONS[frequency];
     const response = await saveFileSourceToServer(
       notebookID,
       sourceURL,
       destinationFilename,
-      "1 day, 0:00:00"
+      convertedFrequency
     );
 
     const fileSourceID = response.id;

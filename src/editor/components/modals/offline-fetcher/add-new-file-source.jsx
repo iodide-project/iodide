@@ -74,11 +74,7 @@ const FrequencySelector = styled.select`
 `;
 
 const ALLOWED_PROTOCOLS = ["https", "http"];
-const FREQUENCY_OPTIONS = [
-  { label: "never", value: "00 00:00:00" },
-  { label: "daily", value: "01 00:00:00" },
-  { label: "weekly", value: "07 00:00:00" }
-];
+const FREQUENCY_OPTIONS = ["never", "daily", "weekly"];
 
 const hasAllowedProtocol = url => {
   return ALLOWED_PROTOCOLS.some(protocol => {
@@ -91,11 +87,12 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
   const [filenameState, updateFilenameState] = useState("");
   const [statusVisible, updateStatusVisibility] = useState(false);
   const [status, updateStatus] = useState({ type: "NONE", text: "" });
-  const [frequencyState, updateFrequencyState] = useState("never");
+  // use only the accepted FREQUENCY_OPTIONS here.
+  const [frequencyState, updateFrequencyState] = useState(FREQUENCY_OPTIONS[0]);
 
-  const handleFrequencyChange = event =>
+  const handleFrequencyChange = event => {
     updateFrequencyState(event.target.value);
-
+  };
   const submitInformation = async () => {
     updateStatusVisibility(true);
     updateStatus({ type: "LOADING", text: "adding file source ..." });
@@ -113,6 +110,7 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
     } else {
       let request;
       try {
+        console.log(frequencyState, "<<<<<");
         request = await addNewFileSource(
           sourceState,
           filenameState,
@@ -168,10 +166,10 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
             value={frequencyState}
             onChange={handleFrequencyChange}
           >
-            {FREQUENCY_OPTIONS.map(({ label, value }) => {
+            {FREQUENCY_OPTIONS.map(value => {
               return (
                 <option key={value} value={value}>
-                  {label}
+                  {value}
                 </option>
               );
             })}
