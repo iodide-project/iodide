@@ -7,7 +7,21 @@ function unpackExtensionMessage(msg) {
   // parse the data json string, msg parameter is actually e.data
   const msgObj = JSON.parse(msg);
   // perform a conversion of message type to action type
+  console.log(msgObj, "is the msgob");
   switch (msgObj.exMessageType) {
+    case "DELETE_TEXT": {
+      console.log("iodide receive delete command");
+      const line = msgObj.cursorPosition[0];
+      const col = msgObj.cursorPosition[1];
+      const retVal = {
+        type: "EXTENSION_DELETE_TEXT",
+        line,
+        col,
+        forceUpdate: true,
+        numCharsToDelete: msgObj.numCharsToDelete
+      };
+      return retVal;
+    }
     case "INSERT_TEXT": {
       console.log("moving cursor");
       const line = msgObj.cursorPosition[0];
