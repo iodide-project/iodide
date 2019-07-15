@@ -1,5 +1,6 @@
 import { newNotebook } from "../state-schemas/editor-state-prototypes";
 import { historyIdGen } from "../tools/id-generators";
+import { iomdParser } from "../iomd-tools/iomd-parser";
 
 function newAppMessage(
   appMessageId,
@@ -64,8 +65,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case "UPDATE_IOMD_CONTENT": {
-      const { iomd, iomdChunks } = action;
-      return Object.assign({}, state, { iomd, iomdChunks });
+      const { iomd } = action;
+      return Object.assign({}, state, { iomd, iomdChunks: iomdParser(iomd) });
     }
 
     case "GETTING_NOTEBOOK_REVISION_LIST": {
