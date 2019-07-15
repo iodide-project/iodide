@@ -49,6 +49,31 @@ const notebookReducer = (state = newNotebook(), action) => {
         title: action.title || state.title
       });
     }
+    case "EXTENSION_DELETE_TEXT": {
+      // perform similar update to the cursor updae to the state of the notebook object
+      console.log("reducer evaluating deletion");
+      const { line, forceUpdate, col, numCharsToDelete } = action;
+      const iomd = state.iomd
+        .split("\n")
+        .map((iomdLine, i) => {
+          if (i === line) {
+            // by subtracting from the col count we drop a certain number of characters
+            return (
+              iomdLine.slice(0, col - numCharsToDelete) + iomdLine.slice(col)
+            );
+          }
+          return iomdLine;
+        })
+        .join("\n");
+      return Object.assign({}, state, {
+        editorCursor: {
+          line,
+          col: col - numCharsToDelete,
+          forceUpdate
+        },
+        iomd
+      });
+    }
     case "EXTENSION_CURSOR_UPDATE": {
       const { line, col, forceUpdate, text } = action;
       // insert text in state.iomd at correct position without mutating
