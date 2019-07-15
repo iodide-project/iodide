@@ -61,7 +61,7 @@ def notebook_view(request, pk):
         }
         for file_source in FileSource.objects.filter(notebook_id=pk)
     ]
-    print(file_sources)
+    
     notebook_info = {
         "username": notebook.owner.username,
         "user_can_save": notebook.owner_id == request.user.id,
