@@ -8,14 +8,12 @@ function unpackExtensionMessage(msg) {
   // parse the data json string, msg parameter is actually e.data
   const msgObj = JSON.parse(msg);
   // perform a conversion of message type to action type
-  console.log(msgObj, "is the msgob");
   switch (msgObj.exMessageType) {
     case "EVAL_CHUNK": {
       // piggy back on the existing evaluateText action
       return evaluateText();
     }
     case "DELETE_TEXT": {
-      console.log("iodide receive delete command");
       const line = msgObj.cursorPosition[0];
       const col = msgObj.cursorPosition[1];
       const retVal = {
@@ -28,7 +26,6 @@ function unpackExtensionMessage(msg) {
       return retVal;
     }
     case "INSERT_TEXT": {
-      console.log("moving cursor");
       const line = msgObj.cursorPosition[0];
       const col = msgObj.cursorPosition[1];
       const retVal = {
@@ -62,7 +59,6 @@ function initWebExtPort() {
   const { port2 } = extensionChannel;
 
   setTimeout(() => {
-    console.log("posting message");
     window.postMessage(
       { direction: "iodide-to-extension", message: "startup" },
       "*",
@@ -71,8 +67,6 @@ function initWebExtPort() {
   }, 3000);
 
   function handleExtensionMessage(e) {
-    console.log("extension says", e);
-    console.log("updating");
     // parse the json object that is included in the e.data
     const dispatchObject = unpackExtensionMessage(e.data); // this object will have info that can be transformed into the action type to dispatch
     // recreating the dispatch at end of updateJSMD
