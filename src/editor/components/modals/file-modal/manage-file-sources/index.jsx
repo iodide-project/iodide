@@ -9,7 +9,7 @@ const FileSourceContainer = styled.div`
   overflow: auto;
 `;
 
-function OfflineFetcher() {
+function ManageFileSources() {
   return (
     <FileSourceContainer>
       <AddNewFileSource />
@@ -18,4 +18,4 @@ function OfflineFetcher() {
   );
 }
 
-export default OfflineFetcher;
+export default ManageFileSources;

@@ -3,9 +3,9 @@ import styled from "react-emotion";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import DeleteModal from "../../../../server/components/delete-modal";
-import { deleteFileSource as deleteFileSourceAction } from "../../../actions/file-source-actions";
-import { TextButton } from "../../../../shared/components/buttons";
+import DeleteModal from "../../../../../server/components/delete-modal";
+import { deleteFileSource as deleteFileSourceAction } from "../../../../actions/file-source-actions";
+import { TextButton } from "../../../../../shared/components/buttons";
 
 import {
   List,
@@ -15,7 +15,7 @@ import {
   ListSecondaryText,
   ListSecondaryTextLink,
   ListMetadata
-} from "../../../../server/components/list";
+} from "../../../../../server/components/list";
 
 const FileSourceListContainer = styled.div`
   width: 100%;

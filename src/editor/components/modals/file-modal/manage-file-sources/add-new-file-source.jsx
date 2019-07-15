@@ -4,9 +4,9 @@ import { connect } from "react-redux";
 import styled from "react-emotion";
 
 import TextInput from "./text-input";
-import { ContainedButton } from "../../../../shared/components/buttons";
+import { ContainedButton } from "../../../../../shared/components/buttons";
 
-import { addFileSource } from "../../../actions/file-source-actions";
+import { addFileSource } from "../../../../actions/file-source-actions";
 
 const AddNewSourceContainer = styled.div`
   display: grid;
