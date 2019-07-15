@@ -1,5 +1,6 @@
 import { store } from "./store";
 import messagePasser from "../shared/utils/redux-to-port-message-passer";
+import { evaluateText } from "./actions/eval-actions";
 
 import { iomdParser } from "./iomd-tools/iomd-parser";
 
@@ -9,6 +10,10 @@ function unpackExtensionMessage(msg) {
   // perform a conversion of message type to action type
   console.log(msgObj, "is the msgob");
   switch (msgObj.exMessageType) {
+    case "EVAL_CHUNK": {
+      // piggy back on the existing evaluateText action
+      return evaluateText();
+    }
     case "DELETE_TEXT": {
       console.log("iodide receive delete command");
       const line = msgObj.cursorPosition[0];
