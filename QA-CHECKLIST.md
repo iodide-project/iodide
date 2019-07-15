@@ -11,7 +11,7 @@
 When going through the following checklist, keep the browser console open. There should not be any errors in the console!
 
 a rigourous check will verify that the items listed below work as expected in:
-1. localhost in client only mode (`npm start-and-serve`)
+1. localhost in client only mode (`npm run simple-serve`)
 2. localhost in server mode (`npm start` or `npm build` and also `make up`)
 3. standalone archive mode (opening an html file directly from the filesystem)
 
