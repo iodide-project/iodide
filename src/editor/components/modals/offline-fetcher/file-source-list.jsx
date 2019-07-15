@@ -37,8 +37,19 @@ const NoFileSourcesNotice = styled.span`
   text-align: center;
 `;
 
+const FileSourceURLContainer = styled(ListSecondaryText)`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+`;
+
+const FileSourceURL = styled(ListSecondaryTextLink)`
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
 const FileSourceListUnconnected = ({ fileSources, deleteFileSource }) => {
-  // Delete modal requirements
+  // delete modal state
   const [sourceToDelete, setSourceToDelete] = useState(undefined);
 
   return fileSources.length ? (
@@ -60,11 +71,11 @@ const FileSourceListUnconnected = ({ fileSources, deleteFileSource }) => {
                   <ListPrimaryText>
                     {fileSource.destinationFilename}
                   </ListPrimaryText>
-                  <ListSecondaryText href={fileSource.sourceURL}>
-                    <ListSecondaryTextLink href={fileSource.sourceURL}>
+                  <FileSourceURLContainer href={fileSource.sourceURL}>
+                    <FileSourceURL href={fileSource.sourceURL}>
                       {fileSource.sourceURL}
-                    </ListSecondaryTextLink>
-                  </ListSecondaryText>
+                    </FileSourceURL>
+                  </FileSourceURLContainer>
                 </ListMain>
                 <FileSourceInterval>
                   {fileSource.updateInterval}
