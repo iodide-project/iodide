@@ -4,7 +4,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import DeleteModal from "../../../../../server/components/delete-modal";
-import { deleteFileSource as deleteFileSourceAction } from "../../../../actions/file-source-actions";
+import {
+  deleteFileSource as deleteFileSourceAction,
+  createFileUpdateOperation as createFileUpdateOperationAction
+} from "../../../../actions/file-source-actions";
 import { TextButton } from "../../../../../shared/components/buttons";
 
 import {
@@ -47,7 +50,11 @@ const FileSourceURL = styled(ListSecondaryTextLink)`
   white-space: nowrap;
 `;
 
-const FileSourceListUnconnected = ({ fileSources, deleteFileSource }) => {
+const FileSourceListUnconnected = ({
+  fileSources,
+  deleteFileSource,
+  createFileUpdateOperation
+}) => {
   // delete modal state
   const [sourceToDelete, setSourceToDelete] = useState(undefined);
 
@@ -79,6 +86,13 @@ const FileSourceListUnconnected = ({ fileSources, deleteFileSource }) => {
                 <FileSourceInterval>
                   {fileSource.updateInterval}
                 </FileSourceInterval>
+                <ListMetadata
+                  onClick={() =>
+                    createFileUpdateOperation(fileSource.fileSourceID)
+                  }
+                >
+                  <TextButton>run now</TextButton>
+                </ListMetadata>
                 <ListMetadata>
                   <TextButton onClick={() => setSourceToDelete(fileSource)}>
                     delete
@@ -99,7 +113,8 @@ const FileSourceListUnconnected = ({ fileSources, deleteFileSource }) => {
 
 FileSourceListUnconnected.propTypes = {
   fileSources: PropTypes.arrayOf(PropTypes.object),
-  deleteFileSource: PropTypes.func
+  deleteFileSource: PropTypes.func,
+  createFileUpdateOperation: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -111,7 +126,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     deleteFileSource: fileSourceID =>
-      dispatch(deleteFileSourceAction(fileSourceID))
+      dispatch(deleteFileSourceAction(fileSourceID)),
+    createFileUpdateOperation: fileSourceID =>
+      dispatch(createFileUpdateOperationAction(fileSourceID))
   };
 }
 

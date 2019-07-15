@@ -3,6 +3,8 @@ import {
   deleteFileSourceFromServer
 } from "../../shared/utils/file-source-operations";
 
+import { saveFileUpdateOperationToServer } from "../../shared/utils/file-update-operation-operations";
+
 const UPDATE_INTERVAL_OPTIONS = {
   never: undefined,
   daily: "1 day, 0:00:00",
@@ -34,6 +36,19 @@ export function addFileSource(
       updateInterval
     });
     return response;
+  };
+}
+
+export function createFileUpdateOperation(fileSourceID) {
+  // thing
+  return async () => {
+    let response;
+    try {
+      response = await saveFileUpdateOperationToServer(fileSourceID);
+    } catch (err) {
+      console.error(err);
+    }
+    console.log(response);
   };
 }
 

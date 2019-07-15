@@ -5,8 +5,8 @@ import styled from "react-emotion";
 
 import TextInput from "./text-input";
 import { ContainedButton } from "../../../../../shared/components/buttons";
-
 import { addFileSource } from "../../../../actions/file-source-actions";
+import { FILE_SOURCE_UPDATE_INTERVALS } from "../../../../state-schemas/state-schema";
 
 const AddNewSourceContainer = styled.div`
   display: grid;
@@ -74,7 +74,6 @@ const UpdateIntervalSelector = styled.select`
 `;
 
 const ALLOWED_PROTOCOLS = ["https", "http"];
-const UPDATE_INTERVAL_OPTIONS = ["never", "daily", "weekly"];
 
 const hasAllowedProtocol = url => {
   return ALLOWED_PROTOCOLS.some(protocol => {
@@ -88,7 +87,7 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
   const [statusVisible, updateStatusVisibility] = useState(false);
   const [status, updateStatus] = useState({ type: "NONE", text: "" });
   const [updateIntervalState, setUpdateIntervalState] = useState(
-    UPDATE_INTERVAL_OPTIONS[0]
+    FILE_SOURCE_UPDATE_INTERVALS[0]
   );
 
   const handleUpdateIntervalChange = event => {
@@ -166,7 +165,7 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
             value={updateIntervalState}
             onChange={handleUpdateIntervalChange}
           >
-            {UPDATE_INTERVAL_OPTIONS.map(value => {
+            {FILE_SOURCE_UPDATE_INTERVALS.map(value => {
               return (
                 <option key={value} value={value}>
                   {value}
