@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "jest --no-cache",
-    "start-and-serve": "webpack-dev-server --watch --mode=development --env.NODE_ENV=dev",
+    "simple-serve": "webpack-dev-server --watch --mode=development --env.NODE_ENV=dev",
     "start": "webpack --watch --mode=development --env.NODE_ENV=dev",
     "build": "webpack --env.NODE_ENV=dev",
     "build-production": "webpack -p",
