@@ -33,7 +33,6 @@ const NoFileSourcesNotice = styled.span`
   display: grid;
   font-size: 1.5em;
   font-weight: bold;
-  height: 100%;
   text-align: center;
 `;
 

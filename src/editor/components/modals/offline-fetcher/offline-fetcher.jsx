@@ -6,7 +6,7 @@ import FileSourceList from "./file-source-list";
 const FileSourceContainer = styled.div`
   --marg: 20px;
   padding: var(--marg);
-  overflow-y: auto;
+  overflow: auto;
 `;
 
 function OfflineFetcher() {
