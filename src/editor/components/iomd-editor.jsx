@@ -167,9 +167,7 @@ class IomdEditorUnconnected extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const codeMirrorMode = "iomd";
   const editorOptions = {
-    mode: codeMirrorMode,
     lineWrapping: false,
     matchBrackets: true,
     autoCloseBrackets: true,

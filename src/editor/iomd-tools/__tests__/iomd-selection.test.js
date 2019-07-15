@@ -1,5 +1,3 @@
-// import CodeMirror from 'codemirror'
-
 import {
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet,
@@ -32,8 +30,6 @@ x = [1,2,3,4,5]
 {
   "languageId": "jsx",
   "displayName": "jsx",
-  "codeMirrorMode": "jsx",
-  "keybinding": "x",
   "url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
   "module": "jsx",
   "evaluator": "evaluateJSX",
@@ -51,8 +47,6 @@ var z = 30
 {
   "languageId": "blahblah",
   "displayName": "blahblah",
-  "codeMirrorMode": "blahblah",
-  "keybinding": "b",
   "url": "blah.com/language.json",
   "module": "bla",
   "evaluator": "evaluateBlahBlah",
@@ -121,7 +115,6 @@ const SELECTION_C = `[1,2,3,4,5]
 {
   "languageId": "jsx",
   "displayName": "jsx",
-  "codeMirrorMode": "jsx",
   "key`;
 
 // lines 27-36. end of plugin chunk
@@ -140,8 +133,6 @@ const FULL_PLUGIN_CHUNK = `
 {
   "languageId": "jsx",
   "displayName": "jsx",
-  "codeMirrorMode": "jsx",
-  "keybinding": "x",
   "url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
   "module": "jsx",
   "evaluator": "evaluateJSX",
@@ -162,9 +153,7 @@ const iomdChunks = iomdParser(NOTEBOOK);
 
 describe("selectionToChunks", () => {
   [...fetchSelections, ...partialPluginSelections].forEach((line, i) => {
-    it(`correctly backs out various fetch selections and plugin chunks; case ${i}; expectedValue: ${
-      line.expectedValue
-    }`, () => {
+    it(`correctly backs out various fetch selections and plugin chunks; case ${i}; expectedValue: ${line.expectedValue}`, () => {
       const [chunk] = selectionToChunks(line, iomdChunks);
       expect(chunk.chunkContent).toBe(line.expectedValue);
     });
@@ -249,8 +238,6 @@ const pluginChunkB = {
   start: 22,
   end: 40,
   selectedText: `Name": "jsx",
-  "codeMirrorMode": "jsx",
-  "keybinding": "x",
   "url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
   "module": "jsx",
   "evaluator": "evaluateJSX",
