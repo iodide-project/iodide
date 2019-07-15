@@ -94,8 +94,6 @@ const getNotebookLines = (a, b) =>
     .slice(a - 1, b) // NOTE: monaco does 1-based line indexing
     .join("\n");
 
-console.log("getNotebookLines", getNotebookLines(1, 5));
-console.log("getNotebookLines", getNotebookLines(23, 32));
 // line 11.
 const SELECTION_A = `https://another-domain.biz
 file: /files/gritty-data.csv
@@ -123,18 +121,6 @@ const SELECTION_C = `[1,2,3,4,5]
   "languageId": "jsx",
   "displayName": "jsx",
   "key`;
-
-// lines 27-36. end of plugin chunk
-const SELECTION_D = `"url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
-"module": "jsx",
-"evaluator": "evaluateJSX",
-"pluginType": "language"
-}
-
-%% js
-
-var x = 10
-var y = 20`;
 
 const FULL_PLUGIN_CHUNK = `
 {

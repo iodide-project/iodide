@@ -8,7 +8,6 @@ const SERVER_AUTOSAVE_TIMEOUT = 30000;
 export const updateServerAutosave = throttleAction(
   () => {
     return async (dispatch, getState) => {
-      console.log("updateServerAutosave - entered");
       const state = getState();
       const {
         username: notebookOwner,
@@ -22,9 +21,6 @@ export const updateServerAutosave = throttleAction(
       ) {
         try {
           await dispatch(saveNotebookToServer());
-          console.log(
-            "updateServerAutosave - just did dispatch(saveNotebookToServer())"
-          );
         } catch (err) {
           // schedule another save to the server, in case the connection
           // comes back up
@@ -51,22 +47,11 @@ export const updateAutosave = debounceAction(() => {
     // only save if:
     // * The user is logged in and owns the notebook
     // * This is the latest revision
-    console.log("updateAutosave - entered");
     if (
       !state.userData.name ||
       !state.notebookInfo.user_can_save ||
       !state.notebookInfo.revision_is_latest
     ) {
-      console.log("updateAutosave --- skipping");
-      console.log("state.userData.name", state.userData.name);
-      console.log(
-        "state.notebookInfo.user_can_save",
-        state.notebookInfo.user_can_save
-      );
-      console.log(
-        "state.notebookInfo.revision_is_latest",
-        state.notebookInfo.revision_is_latest
-      );
       return;
     }
     // save a cache of the current notebook state to indexdb,
