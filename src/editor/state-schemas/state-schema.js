@@ -109,13 +109,10 @@ export const stateProperties = {
     type: "object",
     properties: {
       line: { type: "integer" },
-      col: { type: "integer" },
-      // if forceUpdate is true when the editor recieves it as props,
-      // then the editor must reposition the cursor using internal editor APIs
-      forceUpdate: { type: "boolean" }
+      col: { type: "integer" }
     },
     additionalProperties: false,
-    default: { line: 1, col: 1, forceUpdate: false }
+    default: { line: 1, col: 1 }
   },
   editorSelections: {
     type: "array",

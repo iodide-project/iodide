@@ -75,7 +75,6 @@ class IomdEditorUnconnected extends React.Component {
     // editorOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
-    editorCursorForceUpdate: PropTypes.bool.isRequired,
     editorPositionString: PropTypes.string.isRequired,
     // action creators
     updateIomdContent: PropTypes.func.isRequired,
@@ -129,15 +128,25 @@ class IomdEditorUnconnected extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.editorCursorForceUpdate) {
+    const {
+      editorCursorLine,
+      editorCursorCol,
+      content,
+      editorPositionString
+    } = this.props;
+    const { lineNumber, column } = this.editor.getPosition();
+
+    if (lineNumber !== editorCursorLine || column !== editorCursorCol) {
       this.editor.setPosition(
-        new monaco.Position(
-          this.props.editorCursorLine,
-          this.props.editorCursorCol
-        )
+        new monaco.Position(editorCursorLine, editorCursorCol)
       );
     }
-    if (this.props.editorPositionString !== prevProps.editorPositionString) {
+
+    if (content !== this.editor.getValue()) {
+      this.editor.setValue(content);
+    }
+
+    if (editorPositionString !== prevProps.editorPositionString) {
       this.editor.layout();
     }
   }
@@ -176,11 +185,7 @@ function mapStateToProps(state) {
   if (state.wrapEditors === true) {
     editorOptions.lineWrapping = true;
   }
-  const {
-    line: editorCursorLine,
-    col: editorCursorCol,
-    forceUpdate: editorCursorForceUpdate
-  } = state.editorCursor;
+  const { line: editorCursorLine, col: editorCursorCol } = state.editorCursor;
 
   // by passing in the following prop, we can ensure that the
   // Monaco instance does a fresh layout when the position
@@ -193,7 +198,6 @@ function mapStateToProps(state) {
     editorOptions,
     editorCursorLine,
     editorCursorCol,
-    editorCursorForceUpdate,
     editorPositionString
   };
 }

@@ -11,21 +11,19 @@ describe("updateEditorCursor - returns correct action", () => {
     const expectedAction = {
       type: "UPDATE_CURSOR",
       line,
-      col,
-      forceUpdate: false
+      col
     };
     expect(updateEditorCursor(line, col)).toEqual(expectedAction);
   });
 
   it("should create an action to update the cursor (with force param)", () => {
-    const [line, col, forceUpdate] = [1, 2, true];
+    const [line, col] = [1, 2];
     const expectedAction = {
       type: "UPDATE_CURSOR",
       line,
-      col,
-      forceUpdate
+      col
     };
-    expect(updateEditorCursor(line, col, forceUpdate)).toEqual(expectedAction);
+    expect(updateEditorCursor(line, col)).toEqual(expectedAction);
   });
 });
 
@@ -46,8 +44,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 11,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 
@@ -75,8 +72,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 16,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 
@@ -102,8 +98,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 11,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 
@@ -134,8 +129,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 21,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 
@@ -167,8 +161,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 21,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 

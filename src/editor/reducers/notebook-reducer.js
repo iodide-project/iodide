@@ -50,9 +50,9 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case "UPDATE_CURSOR": {
-      const { line, col, forceUpdate } = action;
+      const { line, col } = action;
       return Object.assign({}, state, {
-        editorCursor: { line, col, forceUpdate }
+        editorCursor: { line, col }
       });
     }
 
