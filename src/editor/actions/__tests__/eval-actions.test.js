@@ -8,6 +8,7 @@ import {
   evaluateText
 } from "../eval-actions";
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
+import { jsLanguageDefinition } from "../../state-schemas/language-definitions";
 
 const mockStore = configureMockStore([thunk]);
 
@@ -19,10 +20,10 @@ describe("evaluateNotebook", () => {
     store = undefined;
     testState = {
       iomdChunks: [
-        { id: 0, evalFlags: ["skipRunAll"] },
-        { id: 1, evalFlags: [] },
-        { id: 2, evalFlags: ["skipRunAll"] },
-        { id: 3, evalFlags: [] }
+        { id: 0, evalFlags: ["skipRunAll"], chunkContent: "foo" },
+        { id: 1, evalFlags: [], chunkContent: "foo" },
+        { id: 2, evalFlags: ["skipRunAll"], chunkContent: "foo" },
+        { id: 3, evalFlags: [], chunkContent: "foo" }
       ]
     };
   });
@@ -50,7 +51,7 @@ describe("addToEvalQueue", () => {
 
   // some random types that SHOULD be enqueued
   ["js", "py", "jl", "etc"].forEach(chunkType => {
-    const chunk = { chunkType };
+    const chunk = { chunkType, chunkContent: "foo" };
     it("dispatch if chunk of any type other than NONCODE_EVAL_TYPES", () => {
       addToEvalQueue(chunk)(dispatch);
       expect(dispatch).toBeCalledWith({ type: "ADD_TO_EVAL_QUEUE", chunk });
@@ -58,8 +59,28 @@ describe("addToEvalQueue", () => {
   });
 
   NONCODE_EVAL_TYPES.forEach(chunkType => {
-    const chunk = { chunkType };
+    const chunk = { chunkType, chunkContent: "foo" };
     it("DO NOT dispatch if chunk of any NONCODE_EVAL_TYPES", () => {
+      addToEvalQueue(chunk)(dispatch);
+      expect(dispatch).not.toBeCalled();
+    });
+  });
+
+  [
+    "",
+    `
+`,
+    "      ",
+    `  
+   
+`,
+    `
+
+
+`
+  ].forEach(chunkContent => {
+    const chunk = { chunkType: jsLanguageDefinition, chunkContent };
+    it("DO NOT dispatch if chunkContent is empty", () => {
       addToEvalQueue(chunk)(dispatch);
       expect(dispatch).not.toBeCalled();
     });

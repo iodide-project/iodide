@@ -1,7 +1,6 @@
 /* global IODIDE_EDITOR_ORIGIN  */
 
 import { evaluateCode } from "./actions/actions";
-import { evaluateFetchText } from "./actions/fetch-cell-eval-actions";
 import { loadLanguagePlugin } from "./actions/language-actions";
 import { getUserDefinedVariablesFromWindow } from "./initialize-user-variables";
 import { getCompletions } from "./tools/notebook-utils";
@@ -11,6 +10,11 @@ import {
 } from "./tools/send-file-request-to-editor";
 import messagePasserEval from "../shared/utils/redux-to-port-message-passer";
 import { sendStatusResponseToEditor } from "./actions/editor-message-senders";
+import {
+  addCSS,
+  loadScriptFromBlob,
+  setVariableInWindow
+} from "./actions/fetch-cell-eval-actions";
 
 const mc = new MessageChannel();
 const portToEditor = mc.port1;
@@ -85,11 +89,6 @@ async function receiveMessage(event) {
         evaluateCode(code, language, chunkId, taskId);
         break;
       }
-      case "EVAL_FETCH": {
-        const { fetchText, taskId } = message;
-        await evaluateFetchText(fetchText, taskId);
-        break;
-      }
       case "EVAL_LANGUAGE_PLUGIN": {
         const { pluginData, taskId } = message;
         // FIXME: this can be cleaned up, but loadLanguagePlugin
@@ -106,6 +105,36 @@ async function receiveMessage(event) {
         sendStatusResponseToEditor("SUCCESS", message.taskId, {
           userDefinedVarNames: getUserDefinedVariablesFromWindow()
         });
+        break;
+      }
+      case "ASSIGN_VARIABLE": {
+        const { name, value } = message;
+        try {
+          setVariableInWindow(name, value);
+          sendStatusResponseToEditor("SUCCESS", message.taskId);
+        } catch {
+          sendStatusResponseToEditor("ERROR", message.taskId);
+        }
+        break;
+      }
+      case "LOAD_SCRIPT": {
+        const { script } = message;
+        try {
+          loadScriptFromBlob(script);
+          sendStatusResponseToEditor("SUCCESS", message.taskId);
+        } catch {
+          sendStatusResponseToEditor("ERROR", message.taskId);
+        }
+        break;
+      }
+      case "ADD_CSS": {
+        const { css, filePath } = message;
+        try {
+          addCSS(css, filePath);
+          sendStatusResponseToEditor("SUCCESS", message.taskId);
+        } catch {
+          sendStatusResponseToEditor("ERROR", message.taskId);
+        }
         break;
       }
       default:

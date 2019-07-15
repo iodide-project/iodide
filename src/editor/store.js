@@ -1,4 +1,3 @@
-/* global IODIDE_BUILD_MODE IODIDE_REDUX_LOG_MODE */
 import { applyMiddleware, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
@@ -18,18 +17,27 @@ let enhancer;
 let finalReducer;
 
 const sagaMiddleware = createSagaMiddleware();
-
-if (IODIDE_BUILD_MODE === "production") {
+if (process.env.NODE_ENV === "production") {
   finalReducer = reducer;
   enhancer = compose(
     applyMiddleware(thunk),
     applyMiddleware(sagaMiddleware)
   );
-} else if (IODIDE_BUILD_MODE === "test" || IODIDE_REDUX_LOG_MODE === "SILENT") {
+} else if (
+  process.env.NODE_ENV === "test" ||
+  process.env.IODIDE_REDUX_LOG_MODE === "SILENT"
+) {
   finalReducer = createValidatedReducer(reducer, stateSchema);
   enhancer = compose(
     applyMiddleware(thunk),
     applyMiddleware(sagaMiddleware)
+  );
+} else if (process.env.IODIDE_REDUX_LOG_MODE === "VERY_VERBOSE") {
+  finalReducer = createValidatedReducer(reducer, stateSchema);
+  enhancer = compose(
+    applyMiddleware(thunk),
+    applyMiddleware(sagaMiddleware),
+    applyMiddleware(createLogger({ collapsed: () => true }))
   );
 } else {
   finalReducer = createValidatedReducer(reducer, stateSchema);
@@ -44,7 +52,8 @@ if (IODIDE_BUILD_MODE === "production") {
             "UPDATE_MARKDOWN_CHUNKS",
             "UPDATE_CURSOR",
             "UPDATE_SELECTIONS"
-          ].includes(action.type)
+          ].includes(action.type),
+        collapsed: () => true
       })
     )
   );

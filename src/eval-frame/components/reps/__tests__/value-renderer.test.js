@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 
 import ValueRenderer from "../value-renderer";
 
-import DefaultRenderer from "../default-handler";
+import ExpandableRep from "../rep-tree";
 import ErrorRenderer from "../error-handler";
 import HTMLHandler from "../html-handler";
 import UserReps from "../user-reps-manager";
@@ -47,7 +47,7 @@ describe("ValueRenderer React component, handling normal types without custom re
   simpleTestCases.forEach((testCase, i) => {
     it(`render normal values with the DefaultRender (type: ${testCase.type})`, () => {
       props.valueKey = `result_${i}`;
-      expect(shallowValueRenderer().find(DefaultRenderer)).toHaveLength(1);
+      expect(shallowValueRenderer().find(ExpandableRep)).toHaveLength(1);
     });
   });
 
