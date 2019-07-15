@@ -7,7 +7,7 @@ import {
 import { iomdParser } from "../iomd-parser";
 
 document.body.innerHTML = "";
-
+// make sure NOTEBOOK starts on line 11 -- then you can just subtract 10 to get Monaco line numbers
 const NOTEBOOK = `
 %% js
 
@@ -89,6 +89,13 @@ const fetchSelections = [
   }
 ];
 
+const getNotebookLines = (a, b) =>
+  NOTEBOOK.split("\n")
+    .slice(a - 1, b) // NOTE: monaco does 1-based line indexing
+    .join("\n");
+
+console.log("getNotebookLines", getNotebookLines(1, 5));
+console.log("getNotebookLines", getNotebookLines(23, 32));
 // line 11.
 const SELECTION_A = `https://another-domain.biz
 file: /files/gritty-data.csv
@@ -212,9 +219,9 @@ describe("selectionToChunks", () => {
   });
 
   const selectionParamsD = {
-    start: 26,
-    end: 35,
-    selectedText: SELECTION_D
+    start: 23,
+    end: 33,
+    selectedText: getNotebookLines(23, 32)
   };
   const selectedChunksD = selectionToChunks(selectionParamsD, iomdChunks);
   const [firstChunkD, secondChunkD] = selectedChunksD;
