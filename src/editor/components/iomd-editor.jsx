@@ -72,6 +72,7 @@ function unpackMonacoSelection(s, monacoModel) {
 class IomdEditorUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
+    wordWrap: PropTypes.string.isRequired,
     // editorOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
@@ -95,7 +96,8 @@ class IomdEditorUnconnected extends React.Component {
   componentDidMount() {
     this.editor = monaco.editor.create(this.containerDivRef.current, {
       value: this.props.content,
-      language: "iomd"
+      language: "iomd",
+      wordWrap: this.props.wordWrap
     });
     window.MONACO_EDITOR = this.editor;
 
@@ -132,6 +134,7 @@ class IomdEditorUnconnected extends React.Component {
       editorCursorLine,
       editorCursorCol,
       content,
+      wordWrap,
       editorPositionString
     } = this.props;
     const { lineNumber, column } = this.editor.getPosition();
@@ -149,6 +152,8 @@ class IomdEditorUnconnected extends React.Component {
     if (editorPositionString !== prevProps.editorPositionString) {
       this.editor.layout();
     }
+
+    this.editor.updateOptions({ wordWrap });
   }
 
   handleEditorUpdate(content) {
@@ -167,22 +172,23 @@ class IomdEditorUnconnected extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const editorOptions = {
-    lineWrapping: false,
-    matchBrackets: true,
-    autoCloseBrackets: true,
-    theme: "eclipse",
-    autoRefresh: true,
-    lineNumbers: true,
-    keyMap: "sublime",
-    comment: true,
-    readOnly:
-      state.notebookInfo && state.notebookInfo.revision_is_latest === false
-  };
+  // const editorOptions = {
+  //   lineWrapping: false,
+  //   matchBrackets: true,
+  //   autoCloseBrackets: true,
+  //   theme: "eclipse",
+  //   autoRefresh: true,
+  //   lineNumbers: true,
+  //   keyMap: "sublime",
+  //   comment: true,
+  //   readOnly:
+  //     state.notebookInfo && state.notebookInfo.revision_is_latest === false
+  // };
 
-  if (state.wrapEditors === true) {
-    editorOptions.lineWrapping = true;
-  }
+  // if (state.wrapEditors === true) {
+  //   editorOptions.lineWrapping = true;
+  // }
+  const wordWrap = state.wrapEditors ? "on" : "off";
   const { line: editorCursorLine, col: editorCursorCol } = state.editorCursor;
 
   // by passing in the following prop, we can ensure that the
@@ -193,7 +199,8 @@ function mapStateToProps(state) {
   ).join(",");
   return {
     content: state.iomd,
-    editorOptions,
+    wordWrap,
+    // editorOptions,
     editorCursorLine,
     editorCursorCol,
     editorPositionString

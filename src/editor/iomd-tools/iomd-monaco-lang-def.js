@@ -7,9 +7,9 @@ export const language = {
   ignoreCase: true,
 
   tokenizer: {
-    root: [[/^%%\s*/, "comment", "@jsmdDelimLine"]],
+    root: [[/^%%\s*/, "comment", "@iomdDelimLine"]],
 
-    jsmdDelimLine: [
+    iomdDelimLine: [
       [/py/, { token: "attribute.name", next: "@embed", nextEmbedded: "py" }],
       [/js/, { token: "attribute.name", next: "@embed", nextEmbedded: "js" }],
       [/css/, { token: "attribute.name", next: "@embed", nextEmbedded: "css" }],
