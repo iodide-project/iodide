@@ -55,7 +55,7 @@ def notebook_view(request, pk):
     file_sources = [
         {
             "fileSourceID": file_source.id,
-            "frequency": FILE_SOURCE_INTERVALS[str(file_source.update_interval)],
+            "updateInterval": FILE_SOURCE_INTERVALS[str(file_source.update_interval)],
             "destinationFilename": file_source.filename,
             "sourceURL": file_source.url,
         }

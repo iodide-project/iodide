@@ -34,7 +34,7 @@ const FileSourceStatusText = styled.div`
   color: ${props => (props.statusType === "ERROR" ? "red" : "black")};
 `;
 
-const FrequencySelector = styled.select`
+const UpdateIntervalSelector = styled.select`
   display: block;
   font-weight: 700;
   color: #444;
@@ -74,7 +74,7 @@ const FrequencySelector = styled.select`
 `;
 
 const ALLOWED_PROTOCOLS = ["https", "http"];
-const FREQUENCY_OPTIONS = ["never", "daily", "weekly"];
+const UPDATE_INTERVAL_OPTIONS = ["never", "daily", "weekly"];
 
 const hasAllowedProtocol = url => {
   return ALLOWED_PROTOCOLS.some(protocol => {
@@ -87,11 +87,12 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
   const [filenameState, updateFilenameState] = useState("");
   const [statusVisible, updateStatusVisibility] = useState(false);
   const [status, updateStatus] = useState({ type: "NONE", text: "" });
-  // use only the accepted FREQUENCY_OPTIONS here.
-  const [frequencyState, updateFrequencyState] = useState(FREQUENCY_OPTIONS[0]);
+  const [updateIntervalState, setUpdateIntervalState] = useState(
+    UPDATE_INTERVAL_OPTIONS[0]
+  );
 
-  const handleFrequencyChange = event => {
-    updateFrequencyState(event.target.value);
+  const handleUpdateIntervalChange = event => {
+    setUpdateIntervalState(event.target.value);
   };
   const submitInformation = async () => {
     updateStatusVisibility(true);
@@ -110,11 +111,10 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
     } else {
       let request;
       try {
-        console.log(frequencyState, "<<<<<");
         request = await addNewFileSource(
           sourceState,
           filenameState,
-          frequencyState
+          updateIntervalState
         );
       } catch (err) {
         updateStatus({
@@ -162,19 +162,19 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
           onKey={updateFilenameState}
         />
         <div>
-          <FrequencySelector
-            value={frequencyState}
-            onChange={handleFrequencyChange}
+          <UpdateIntervalSelector
+            value={updateIntervalState}
+            onChange={handleUpdateIntervalChange}
           >
-            {FREQUENCY_OPTIONS.map(value => {
+            {UPDATE_INTERVAL_OPTIONS.map(value => {
               return (
                 <option key={value} value={value}>
                   {value}
                 </option>
               );
             })}
-          </FrequencySelector>
-          frequency
+          </UpdateIntervalSelector>
+          update interval
         </div>
       </AddNewSourceContainer>
       <FileSourceStatus
@@ -203,8 +203,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addNewFileSource: async (sourceURL, destinationFilename, frequency) => {
-      return dispatch(addFileSource(sourceURL, destinationFilename, frequency));
+    addNewFileSource: async (
+      sourceURL,
+      destinationFilename,
+      updateInterval
+    ) => {
+      return dispatch(
+        addFileSource(sourceURL, destinationFilename, updateInterval)
+      );
     }
   };
 }

@@ -57,7 +57,7 @@ export const fileSourceSchema = {
     sourceURL: { type: "string" },
     destinationFilename: { type: "string" },
     fileID: { type: "integer" },
-    frequency: { type: "string" },
+    updateInterval: { type: "string" },
     fileSourceID: { type: "integer" },
     lastRan: { type: "string" }
   },
