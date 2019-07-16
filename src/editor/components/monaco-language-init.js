@@ -16,3 +16,13 @@ Object.entries({ iomd, js, md, css, py }).forEach(entry => {
   monaco.languages.register({ id: langId });
   monaco.languages.setMonarchTokensProvider(langId, langDef);
 });
+
+monaco.languages.setLanguageConfiguration("js", {
+  indentationRules: {
+    // ^(.*\*/)?\s*\}.*$
+    // eslint-disable-next-line no-useless-escape
+    decreaseIndentPattern: /^((?!.*?\/\*).*\*\/)?\s*[\}\]\)].*$/,
+    // ^.*\{[^}"']*$
+    increaseIndentPattern: /^((?!\/\/).)*(\{[^}"'`]*|\([^)"'`]*|\[[^\]"'`]*)$/
+  }
+});

@@ -11,19 +11,25 @@ import deepEqual from "deep-equal";
 import "monaco-editor/esm/vs/editor/browser/controller/coreCommands";
 import "monaco-editor/esm/vs/editor/contrib/find/findController";
 import "monaco-editor/esm/vs/editor/contrib/multicursor/multicursor";
+import "monaco-editor/esm/vs/editor/contrib/indentation/indentUtils";
+import "monaco-editor/esm/vs/editor/contrib/bracketMatching/bracketMatching";
+import "monaco-editor/esm/vs/editor/contrib/comment/comment";
+
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import "./monaco-language-init";
 // import "monaco-editor/esm/vs/language/typescript/monaco.contribution";
-// import "monaco-editor/esm/vs/language/css/monaco.contribution";
+//
+import "monaco-editor/esm/vs/language/css/monaco.contribution";
 // import "monaco-editor/esm/vs/language/json/monaco.contribution";
 // import "monaco-editor/esm/vs/language/html/monaco.contribution";
 // import "monaco-editor/esm/vs/basic-languages/python/python.contribution";
 // import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution";
 // import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution";
 // import "monaco-editor/esm/vs/basic-languages/css/css.contribution";
-// import { language as cssDef } from "monaco-editor/esm/vs/basic-languages/css/css";
 
 // console.log({ cssDef });
+
+import { iomdTheme } from "../iomd-tools/iomd-monaco-theme";
 
 import {
   updateIomdContent,
@@ -58,9 +64,6 @@ import { updateAutosave } from "../actions/autosave-actions";
 //   }
 // };
 
-// monaco.languages.register({ id: "iomd" });
-// monaco.languages.setMonarchTokensProvider("iomd", iomdDefinition);
-
 function unpackMonacoSelection(s, monacoModel) {
   return {
     start: { line: s.endLineNumber, col: s.endColumn },
@@ -73,7 +76,6 @@ class IomdEditorUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
     wordWrap: PropTypes.string.isRequired,
-    // editorOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
     editorPositionString: PropTypes.string.isRequired,
@@ -94,10 +96,15 @@ class IomdEditorUnconnected extends React.Component {
   }
 
   componentDidMount() {
+    monaco.editor.defineTheme("iomdTheme", iomdTheme);
+
     this.editor = monaco.editor.create(this.containerDivRef.current, {
       value: this.props.content,
       language: "iomd",
-      wordWrap: this.props.wordWrap
+      wordWrap: this.props.wordWrap,
+      theme: "iomdTheme",
+      autoIndent: true
+      // autoSurround: "languageDefined"
     });
     window.MONACO_EDITOR = this.editor;
 
@@ -172,22 +179,6 @@ class IomdEditorUnconnected extends React.Component {
 }
 
 function mapStateToProps(state) {
-  // const editorOptions = {
-  //   lineWrapping: false,
-  //   matchBrackets: true,
-  //   autoCloseBrackets: true,
-  //   theme: "eclipse",
-  //   autoRefresh: true,
-  //   lineNumbers: true,
-  //   keyMap: "sublime",
-  //   comment: true,
-  //   readOnly:
-  //     state.notebookInfo && state.notebookInfo.revision_is_latest === false
-  // };
-
-  // if (state.wrapEditors === true) {
-  //   editorOptions.lineWrapping = true;
-  // }
   const wordWrap = state.wrapEditors ? "on" : "off";
   const { line: editorCursorLine, col: editorCursorCol } = state.editorCursor;
 
