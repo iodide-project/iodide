@@ -105,11 +105,3 @@ export async function evaluateCode(code, language, chunkId, evalId) {
     sendStatusResponseToEditor("ERROR", evalId);
   }
 }
-
-export function saveEnvironment(updateObj, update) {
-  return {
-    type: "SAVE_ENVIRONMENT",
-    updateObj,
-    update
-  };
-}

@@ -100,28 +100,6 @@ export default function evalFrameActionReducer(state, action) {
       return Object.assign({}, state, { languageLastUsed: action.language });
     }
 
-    case "SAVE_ENVIRONMENT": {
-      let newSavedEnvironment;
-      if (action.update) {
-        newSavedEnvironment = Object.assign(
-          {},
-          state.savedEnvironment,
-          action.updateObj
-        );
-      } else {
-        newSavedEnvironment = action.updateObj;
-      }
-      return Object.assign({}, state, {
-        savedEnvironment: newSavedEnvironment
-      });
-    }
-
-    case "ENVIRONMENT_UPDATE_FROM_EDITOR": {
-      return Object.assign({}, state, {
-        savedEnvironment: action.savedEnvironment
-      });
-    }
-
     case "ADD_LANGUAGE_TO_EVAL_FRAME": {
       const loadedLanguages = Object.assign({}, state.loadedLanguages, {
         [action.languageDefinition.languageId]: action.languageDefinition
