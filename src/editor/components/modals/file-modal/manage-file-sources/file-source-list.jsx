@@ -28,6 +28,10 @@ const FileSourceListContainer = styled.div`
 const FileSourceInterval = styled(ListMetadata)`
   font-size: 12px;
   color: gray;
+  padding-left: 6px;
+  padding-right: 6px;
+  margin-left: 4px;
+  margin-right: 4px;
 `;
 
 const NoFileSourcesNotice = styled.span`
