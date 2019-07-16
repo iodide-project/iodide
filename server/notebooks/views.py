@@ -29,7 +29,10 @@ def _get_iframe_src():
 
 @ensure_csrf_cookie
 def notebook_view(request, pk):
+    
     notebook = get_object_or_404(Notebook, pk=pk)
+    owner = get_object_or_404(User, pk=notebook.owner_id)
+    
     if "revision" in request.GET:
         try:
             revision_id = int(request.GET["revision"])
@@ -45,15 +48,26 @@ def notebook_view(request, pk):
         {"filename": file.filename, "id": file.id, "lastUpdated": file.last_updated.isoformat()}
         for file in File.objects.filter(notebook_id=pk).order_by("-last_updated")
     ]
-    file_sources = [
-        {
-            "fileSourceID": file_source.id,
-            "frequency": file_source.update_interval,
-            "destinationFilename": file_source.filename,
-            "sourceURL": file_source.url,
-        }
-        for file_source in FileSource.objects.filter(notebook_id=pk)
-    ]
+
+    FILE_SOURCE_INTERVALS = {
+        'None': 'never',
+        "1 day, 0:00:00": 'daily',
+        "7 days, 0:00:00": 'weekly'
+    }
+
+    if owner.id == request.user.id:
+        file_sources = [
+            {
+                "fileSourceID": file_source.id,
+                "updateInterval": FILE_SOURCE_INTERVALS[str(file_source.update_interval)],
+                "destinationFilename": file_source.filename,
+                "sourceURL": file_source.url,
+            }
+            for file_source in FileSource.objects.filter(notebook_id=pk)
+        ]
+    else:
+        file_sources = []
+    
     notebook_info = {
         "username": notebook.owner.username,
         "user_can_save": notebook.owner_id == request.user.id,

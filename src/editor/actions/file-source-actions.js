@@ -3,18 +3,27 @@ import {
   deleteFileSourceFromServer
 } from "../../shared/utils/file-source-operations";
 
+import { saveFileUpdateOperationToServer } from "../../shared/utils/file-update-operation-operations";
+
+const UPDATE_INTERVAL_OPTIONS = {
+  never: undefined,
+  daily: "1 day, 0:00:00",
+  weekly: "7 days, 0:00:00"
+};
+
 export function addFileSource(
   sourceURL,
   destinationFilename,
-  frequency = "never"
+  updateInterval = undefined
 ) {
   return async (dispatch, getState) => {
     const notebookID = getState().notebookInfo.notebook_id;
+    const convertedUpdateInterval = UPDATE_INTERVAL_OPTIONS[updateInterval];
     const response = await saveFileSourceToServer(
       notebookID,
       sourceURL,
       destinationFilename,
-      "1 day, 0:00:00"
+      convertedUpdateInterval
     );
 
     const fileSourceID = response.id;
@@ -24,9 +33,22 @@ export function addFileSource(
       sourceURL,
       fileSourceID,
       destinationFilename,
-      frequency
+      updateInterval
     });
     return response;
+  };
+}
+
+export function createFileUpdateOperation(fileSourceID) {
+  // thing
+  return async () => {
+    let response;
+    try {
+      response = await saveFileUpdateOperationToServer(fileSourceID);
+    } catch (err) {
+      console.error(err);
+    }
+    console.log(response);
   };
 }
 

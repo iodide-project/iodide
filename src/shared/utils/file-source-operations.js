@@ -15,12 +15,12 @@ export async function saveFileSourceToServer(
   notebookID,
   sourceURL,
   destinationFilename,
-  frequency = "24:00:00",
+  updateInterval = undefined,
   fileSourceID = undefined
 ) {
   const body = createFileSourceRequestPayload({
     notebook_id: notebookID,
-    update_interval: frequency,
+    update_interval: updateInterval,
     url: sourceURL,
     filename: destinationFilename
   });

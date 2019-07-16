@@ -4,9 +4,9 @@ import { connect } from "react-redux";
 import styled from "react-emotion";
 
 import TextInput from "./text-input";
-import { ContainedButton } from "../../../../shared/components/buttons";
-
-import { addFileSource } from "../../../actions/file-source-actions";
+import { ContainedButton } from "../../../../../shared/components/buttons";
+import { addFileSource } from "../../../../actions/file-source-actions";
+import { FILE_SOURCE_UPDATE_INTERVALS } from "../../../../state-schemas/state-schema";
 
 const AddNewSourceContainer = styled.div`
   display: grid;
@@ -34,7 +34,7 @@ const FileSourceStatusText = styled.div`
   color: ${props => (props.statusType === "ERROR" ? "red" : "black")};
 `;
 
-const FrequencySelector = styled.select`
+const UpdateIntervalSelector = styled.select`
   display: block;
   font-weight: 700;
   color: #444;
@@ -74,11 +74,6 @@ const FrequencySelector = styled.select`
 `;
 
 const ALLOWED_PROTOCOLS = ["https", "http"];
-const FREQUENCY_OPTIONS = [
-  { label: "never", value: "00 00:00:00" },
-  { label: "daily", value: "01 00:00:00" },
-  { label: "weekly", value: "07 00:00:00" }
-];
 
 const hasAllowedProtocol = url => {
   return ALLOWED_PROTOCOLS.some(protocol => {
@@ -91,11 +86,13 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
   const [filenameState, updateFilenameState] = useState("");
   const [statusVisible, updateStatusVisibility] = useState(false);
   const [status, updateStatus] = useState({ type: "NONE", text: "" });
-  const [frequencyState, updateFrequencyState] = useState("never");
+  const [updateIntervalState, setUpdateIntervalState] = useState(
+    FILE_SOURCE_UPDATE_INTERVALS[0]
+  );
 
-  const handleFrequencyChange = event =>
-    updateFrequencyState(event.target.value);
-
+  const handleUpdateIntervalChange = event => {
+    setUpdateIntervalState(event.target.value);
+  };
   const submitInformation = async () => {
     updateStatusVisibility(true);
     updateStatus({ type: "LOADING", text: "adding file source ..." });
@@ -116,7 +113,7 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
         request = await addNewFileSource(
           sourceState,
           filenameState,
-          frequencyState
+          updateIntervalState
         );
       } catch (err) {
         updateStatus({
@@ -164,19 +161,19 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
           onKey={updateFilenameState}
         />
         <div>
-          <FrequencySelector
-            value={frequencyState}
-            onChange={handleFrequencyChange}
+          <UpdateIntervalSelector
+            value={updateIntervalState}
+            onChange={handleUpdateIntervalChange}
           >
-            {FREQUENCY_OPTIONS.map(({ label, value }) => {
+            {FILE_SOURCE_UPDATE_INTERVALS.map(value => {
               return (
                 <option key={value} value={value}>
-                  {label}
+                  {value}
                 </option>
               );
             })}
-          </FrequencySelector>
-          frequency
+          </UpdateIntervalSelector>
+          update interval
         </div>
       </AddNewSourceContainer>
       <FileSourceStatus
@@ -205,8 +202,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addNewFileSource: async (sourceURL, destinationFilename, frequency) => {
-      return dispatch(addFileSource(sourceURL, destinationFilename, frequency));
+    addNewFileSource: async (
+      sourceURL,
+      destinationFilename,
+      updateInterval
+    ) => {
+      return dispatch(
+        addFileSource(sourceURL, destinationFilename, updateInterval)
+      );
     }
   };
 }

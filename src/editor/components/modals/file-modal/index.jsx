@@ -6,7 +6,7 @@ import Tab from "@material-ui/core/Tab";
 
 import { ModalContainer } from "../modal-container";
 import ManageFiles from "./manage-files";
-import OfflineFetcher from "../offline-fetcher/offline-fetcher";
+import ManageFileSources from "./manage-file-sources";
 import THEME from "../../../../shared/theme";
 
 export default () => {
@@ -26,7 +26,7 @@ export default () => {
         </Tabs>
       </AppBar>
       {tab === 0 && <ManageFiles />}
-      {tab === 1 && <OfflineFetcher />}
+      {tab === 1 && <ManageFileSources />}
     </ModalContainer>
   );
 };
