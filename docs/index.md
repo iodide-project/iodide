@@ -22,9 +22,14 @@ Iodide notebooks.
 
 **[Local development](local-dev.md)**: Setting up a local development environment.
 
-**[Server administration](server-admin.md)**: Information on common server administration tasks.
-
 **[Making a new release](making-a-new-release.md)**: Step-by-step instructions for making a new Iodide release.
+
+## Server administration
+
+**[Overview](server-admin-overview.md)**: Overview of what is required to set up an Iodide server instance.
+
+**[Common tasks](common-server-tasks.md)**: Information on common server administration tasks.
+
 
 ## Policies and terms
 
