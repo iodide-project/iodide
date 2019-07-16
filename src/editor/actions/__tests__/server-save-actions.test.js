@@ -225,22 +225,8 @@ describe("revertToLatestServerRevision", () => {
       undefined
     );
     expect(store.getActions()).toEqual([
-      { type: "UPDATE_MARKDOWN_CHUNKS", reportChunks: [] },
-      {
-        type: "UPDATE_IOMD_CONTENT",
-        iomd: "newer content",
-        iomdChunks: [
-          {
-            chunkContent: "newer content",
-            chunkId: "1476526502_0",
-            chunkType: "",
-            endLine: 0,
-            evalFlags: [],
-            startLine: 0
-          }
-        ]
-      },
-      { title: "newer revision", type: "UPDATE_NOTEBOOK_TITLE" },
+      { type: "UPDATE_IOMD_CONTENT", iomd: "newer content" },
+      { type: "UPDATE_NOTEBOOK_TITLE", title: "newer revision" },
       {
         type: "UPDATE_NOTEBOOK_INFO",
         notebookInfo: {
