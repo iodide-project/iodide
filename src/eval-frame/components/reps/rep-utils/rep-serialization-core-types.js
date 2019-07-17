@@ -19,7 +19,8 @@ const nonExpandableTypes = [
   "Date",
   "RegExp",
   "ArrayBuffer",
-  "DataView"
+  "DataView",
+  "Blob"
 ];
 
 function checkTypes(keyedArgs, argTypes, fnName) {
@@ -62,6 +63,7 @@ export class ValueSummary {
     this.size = size; // number
     this.stringValue = stringValue; // string
     this.isTruncated = isTruncated; // bool
+    this.REP_CLASS = "ValueSummary";
 
     let isExpandable;
     if (nonExpandableTypes.includes(this.objType)) {
@@ -110,6 +112,7 @@ export class RangeDescriptor {
     this.min = min; // numeric, required
     this.max = max; // numeric, required
     this.type = type;
+    this.REP_CLASS = "RangeDescriptor";
   }
 }
 
@@ -121,6 +124,7 @@ export class ChildSummaryItem {
   constructor(path, summary) {
     this.path = path; // String or RangeDescriptor
     this.summary = summary; // ValueSummary or null
+    this.REP_CLASS = "ChildSummaryItem";
   }
 }
 
@@ -133,6 +137,7 @@ export class SubstringRangeSummaryItem extends ChildSummaryItem {
     super();
     this.path = path; // RangeDescriptor
     this.summary = summary; // ValueSummary
+    this.REP_CLASS = "SubstringRangeSummaryItem";
   }
 }
 
@@ -142,6 +147,7 @@ export class MapPairSummaryItem extends ChildSummaryItem {
     this.path = mapEntryIndex; // int
     this.keySummary = keySummary; // ValueSummary
     this.valSummary = valSummary; // ValueSummary
+    this.REP_CLASS = "MapPairSummaryItem";
   }
 }
 
@@ -158,5 +164,6 @@ export class ChildSummary {
       });
     }
     this.childItems = childItems;
+    this.REP_CLASS = "ChildSummary";
   }
 }

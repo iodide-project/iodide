@@ -234,7 +234,6 @@ tableRep.add("tables", () => {
               }}
             >
               <TableRenderer
-                value={value}
                 pathToEntity={[name]}
                 rootObjName="STORYBOOK_TEST_CASES"
               />

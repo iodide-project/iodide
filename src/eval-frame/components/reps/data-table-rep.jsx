@@ -1,16 +1,19 @@
 import React from "react";
 import ReactTable from "react-table";
 import PropTypes from "prop-types";
-import { get } from "lodash";
+
 import styled from "react-emotion";
 
 import "./react-table-styles.css";
 
-import { serializeForValueSummary } from "./rep-utils/value-summary-serializer";
+// import { serializeForValueSummary } from "./rep-utils/value-summary-serializer";
 
 import ExpandableRep from "./rep-tree";
 
 import { getChildSummary } from "./rep-utils/get-child-summaries";
+import { getDataTableSummary } from "./rep-utils/get-data-table-summary";
+import { getValueSummary } from "./rep-utils/get-value-summary";
+
 import { RangeDescriptor } from "./rep-utils/rep-serialization-core-types";
 
 import ValueSummaryRep from "./value-summary";
@@ -29,10 +32,10 @@ const TableDetailsMessage = styled.div`
 
 class CellDetails extends React.Component {
   static propTypes = {
-    value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+    // value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     focusedRow: PropTypes.number,
     focusedCol: PropTypes.string,
-    pathToEntity: PropTypes.arrayOf(
+    pathToDataFrame: PropTypes.arrayOf(
       PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.instanceOf(RangeDescriptor)
@@ -42,24 +45,23 @@ class CellDetails extends React.Component {
   };
 
   render() {
-    const {
-      focusedRow,
-      focusedCol,
-      value,
-      rootObjName,
-      pathToEntity
-    } = this.props;
+    const { focusedRow, focusedCol, rootObjName, pathToDataFrame } = this.props;
 
     if (focusedRow !== undefined && focusedCol !== undefined) {
       const focusedPath = `[${focusedRow}]["${focusedCol}"]`;
-      const valueSummary = serializeForValueSummary(get(value, focusedPath));
+      const pathToDataFrameCell = [
+        ...pathToDataFrame,
+        String(focusedRow),
+        focusedCol
+      ];
+      const valueSummary = getValueSummary(rootObjName, pathToDataFrameCell);
       return (
         <TableDetails>
           <TableDetailsMessage pad>
             {`details for ${focusedPath}`}
           </TableDetailsMessage>
           <ExpandableRep
-            pathToEntity={[...pathToEntity, String(focusedRow), focusedCol]}
+            pathToEntity={pathToDataFrameCell}
             valueSummary={valueSummary}
             getChildSummaries={getChildSummary}
             rootObjName={rootObjName}
@@ -79,7 +81,7 @@ class CellDetails extends React.Component {
 
 class CellRenderer extends React.PureComponent {
   static propTypes = {
-    value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+    valueSummary: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     cellIsFocused: PropTypes.bool.isRequired
   };
   render() {
@@ -94,7 +96,7 @@ class CellRenderer extends React.PureComponent {
             : "none"
         }}
       >
-        <ValueSummaryRep tiny {...serializeForValueSummary(this.props.value)} />
+        <ValueSummaryRep tiny {...this.props.valueSummary} />
       </div>
     );
   }
@@ -103,10 +105,14 @@ class CellRenderer extends React.PureComponent {
 const PX_PER_CHAR = 7;
 const MIN_CELL_CHAR_WIDTH = 22;
 
+const requestData = (rootObjName, path, pageSize, page) =>
+  getDataTableSummary(rootObjName, path, pageSize, page);
+
 export default class TableRenderer extends React.Component {
   static propTypes = {
-    value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
-    pathToEntity: PropTypes.arrayOf(
+    initialDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
+    pages: PropTypes.number.isRequired,
+    pathToDataFrame: PropTypes.arrayOf(
       PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.instanceOf(RangeDescriptor)
@@ -117,7 +123,33 @@ export default class TableRenderer extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { focusedRow: undefined, focusedCol: undefined };
+    this.state = {
+      focusedRow: undefined,
+      focusedCol: undefined,
+      data: this.props.initialDataRows,
+      pages: this.props.pages,
+      loading: false
+    };
+    this.fetchData = this.fetchData.bind(this);
+  }
+
+  async fetchData(state) {
+    // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
+    // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
+    this.setState({ loading: true });
+
+    const { rows, pages } = await requestData(
+      this.props.rootObjName,
+      this.props.pathToDataFrame,
+      state.pageSize,
+      state.page
+    );
+
+    this.setState({
+      data: rows,
+      pages,
+      loading: false
+    });
   }
 
   handleCellClick(rowInfo, column) {
@@ -125,9 +157,9 @@ export default class TableRenderer extends React.Component {
   }
 
   render() {
-    const { value } = this.props;
+    const { data, pages, loading } = this.state;
 
-    const columns = Object.keys(value[0]).map(k => ({
+    const columns = Object.keys(data[0]).map(k => ({
       Header: k,
       accessor: k,
       width: Math.max(k.length, MIN_CELL_CHAR_WIDTH) * PX_PER_CHAR,
@@ -138,24 +170,28 @@ export default class TableRenderer extends React.Component {
               this.state.focusedCol === k &&
               this.state.focusedRow === rowInfo.index
             }
-            value={rowInfo.value}
+            valueSummary={rowInfo.value}
           />
         );
       }
     }));
 
-    const pageSize = value.length > 10 ? 10 : value.length;
     return (
       <div>
         <ReactTable
-          data={value}
+          manual
+          data={data}
+          pages={pages}
+          loading={loading}
+          onFetchData={this.fetchData}
           columns={columns}
           showPaginationTop
           showPaginationBottom={false}
           resizable={false}
-          pageSizeOptions={[5, 10, 25, 50, 100]}
+          sortable={false}
+          pageSizeOptions={[10, 25, 50, 100]}
+          defaultPageSize={10}
           minRows={0}
-          defaultPageSize={pageSize}
           getTdProps={(state, rowInfo, column) => {
             return {
               onClick: (e, handleOriginal) => {
@@ -168,11 +204,11 @@ export default class TableRenderer extends React.Component {
           }}
         />
         <CellDetails
-          value={value}
+          // value={value}
           focusedRow={this.state.focusedRow}
           focusedCol={this.state.focusedCol}
           rootObjName={this.props.rootObjName}
-          pathToEntity={this.props.pathToEntity}
+          pathToDataFrame={this.props.pathToDataFrame}
         />
       </div>
     );
