@@ -111,6 +111,9 @@ class CellRenderer extends React.PureComponent {
 const PX_PER_CHAR = 7;
 const MIN_CELL_CHAR_WIDTH = 22;
 
+const requestData = (rootObjName, path, pageSize, page) =>
+  getDataTableSummary(rootObjName, path, pageSize, page);
+
 export default class TableRenderer extends React.Component {
   static propTypes = {
     initialDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
