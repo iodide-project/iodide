@@ -48,6 +48,13 @@ const Footer = ({ showIcon = true }) => (
         <ul>
           <li>Alpha Software</li>
           <li>
+            <a
+              href={`"https://github.com/iodide-project/iodide/tree/"${process.env.COMMIT_HASH}`}
+            >
+              revision - {process.env.COMMIT_HASH.substring(1, 11)}
+            </a>
+          </li>
+          <li>
             <a href="https://github.com/iodide-project/iodide">Contribute</a>
           </li>
           <li>

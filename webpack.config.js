@@ -5,6 +5,7 @@ const CreateFileWebpack = require("create-file-webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 const WebpackShellPlugin = require("webpack-shell-plugin");
+const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
 const LodashModuleReplacementPlugin = require("lodash-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
@@ -130,11 +131,15 @@ module.exports = env => {
           EVAL_FRAME_ORIGIN
         })
       }),
+      new GitRevisionPlugin(),
       new webpack.EnvironmentPlugin(["NODE_ENV"]),
       new webpack.DefinePlugin({
         "process.env.IODIDE_VERSION": JSON.stringify(APP_VERSION_STRING),
         IODIDE_EVAL_FRAME_ORIGIN: JSON.stringify(EVAL_FRAME_ORIGIN),
         IODIDE_EDITOR_ORIGIN: JSON.stringify(EDITOR_ORIGIN),
+        "process.env.COMMIT_HASH": JSON.stringify(
+          new GitRevisionPlugin().commithash()
+        ),
         "process.env.IODIDE_REDUX_LOG_MODE": JSON.stringify(reduxLogMode),
         "process.env.USE_LOCAL_PYODIDE": JSON.stringify(USE_LOCAL_PYODIDE),
         "process.env.USE_OPENIDC_AUTH": JSON.stringify(USE_OPENIDC_AUTH),
