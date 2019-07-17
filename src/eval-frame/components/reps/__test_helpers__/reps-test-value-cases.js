@@ -323,6 +323,14 @@ export const rowTableCases = {
     time: new Date(),
     id: Math.sin(i)
   })),
+
+  rowsTable_augmentedObjects: new Array(100).fill(0).map((x, i) => ({
+    index: i,
+    time: new Date(),
+    id: Math.sin(i),
+    subObj: { subInd: i, subSubArray: [i, 2, 3, 4, 5, "asdf", [i, 2, 3]] },
+    subArray: new Array(i).fill(1).map((y, j) => i * j)
+  })),
   rowsTable_compositeObjects: new Array(100).fill(compositeObjects),
   rowsTable_objectsContainingSimpleTypes: new Array(100).fill(simpleTypes),
   rowsTable_objectsContainingBaseObjects: new Array(364).fill(baseObjects)

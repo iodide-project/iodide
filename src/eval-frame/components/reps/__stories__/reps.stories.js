@@ -6,10 +6,7 @@ import { storiesOf } from "@storybook/react";
 // but even with this some styles seem to be missing
 import "../../../../../node_modules/react-table/react-table.css";
 
-import {
-  allCases,
-  rowTableCases
-} from "../__test_helpers__/reps-test-value-cases";
+import { allCases } from "../__test_helpers__/reps-test-value-cases";
 
 // serializers
 import {
@@ -27,10 +24,6 @@ import ValueSummary from "../value-summary";
 import InlineChildSummary from "../in-line-child-summary";
 
 import ExpandableRep from "../rep-tree";
-
-import ValueRenderer from "../value-renderer";
-
-import TableRenderer from "../data-table-rep";
 
 // attach the test cases to the window to allow comparing with browser devtools
 window.allCases = allCases;
@@ -126,7 +119,6 @@ allTestCases.add("inline child summary reps", () => {
           {Object.entries(allCases).map(caseNameAndVal => {
             const [name, value] = caseNameAndVal;
             const parentType = serializeForValueSummary(value).objType;
-            console.log("parentType", parentType);
             return (
               <tr key={name}>
                 <td>{name}</td>
@@ -213,44 +205,4 @@ allTestCases.add("expandable rep", () => {
       </table>
     </div>
   );
-});
-
-const tableRep = storiesOf("rowDf table rep", module);
-tableRep.add("tables", () => {
-  return (
-    <div>
-      {Object.entries(rowTableCases).map(caseNameAndVal => {
-        const [name, value] = caseNameAndVal;
-        window.STORYBOOK_TEST_CASES[name] = value;
-        return (
-          <div key={name} style={{ padding: "10px", display: "grid" }}>
-            <div style={{ padding: "10px 10px" }}>case: {name}</div>
-            <div
-              style={{
-                margin: "auto",
-                marginLeft: "0",
-                maxWidth: "calc(100% - 5px)",
-                overflowX: "auto"
-              }}
-            >
-              <TableRenderer
-                pathToEntity={[name]}
-                rootObjName="STORYBOOK_TEST_CASES"
-              />
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-});
-
-const valueRendererStories = storiesOf("base ValueRenderer component", module);
-
-Object.entries(allCases).forEach(caseNameAndVal => {
-  const [name, value] = caseNameAndVal;
-  window[name] = value;
-  valueRendererStories.add(name, () => (
-    <ValueRenderer windowValue valueKey={name} />
-  ));
 });

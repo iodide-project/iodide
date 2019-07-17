@@ -6,13 +6,9 @@ import styled from "react-emotion";
 
 import "./react-table-styles.css";
 
-// import { serializeForValueSummary } from "./rep-utils/value-summary-serializer";
-
 import ExpandableRep from "./rep-tree";
 
-import { getChildSummary } from "./rep-utils/get-child-summaries";
-import { getDataTableSummary } from "./rep-utils/get-data-table-summary";
-import { getValueSummary } from "./rep-utils/get-value-summary";
+import { requestRepInfo } from "./request-rep-info";
 
 import { RangeDescriptor } from "./rep-utils/rep-serialization-core-types";
 
@@ -32,8 +28,7 @@ const TableDetailsMessage = styled.div`
 
 class CellDetails extends React.Component {
   static propTypes = {
-    // value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
-    focusedRow: PropTypes.number,
+    focusedRowInData: PropTypes.number,
     focusedCol: PropTypes.string,
     pathToDataFrame: PropTypes.arrayOf(
       PropTypes.oneOfType([
@@ -41,20 +36,36 @@ class CellDetails extends React.Component {
         PropTypes.instanceOf(RangeDescriptor)
       ])
     ).isRequired,
-    rootObjName: PropTypes.string
+    valueSummary: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    rootObjName: PropTypes.string,
+    getChildSummary: PropTypes.func
+  };
+
+  static defaultProps = {
+    getChildSummary: (rootObjName, pathToEntity) =>
+      requestRepInfo({
+        rootObjName,
+        pathToEntity,
+        requestType: "CHILD_SUMMARY"
+      })
   };
 
   render() {
-    const { focusedRow, focusedCol, rootObjName, pathToDataFrame } = this.props;
+    const {
+      focusedRowInData,
+      focusedCol,
+      rootObjName,
+      pathToDataFrame
+    } = this.props;
 
-    if (focusedRow !== undefined && focusedCol !== undefined) {
-      const focusedPath = `[${focusedRow}]["${focusedCol}"]`;
+    if (focusedRowInData !== undefined && focusedCol !== undefined) {
+      const focusedPath = `[${focusedRowInData}]["${focusedCol}"]`;
       const pathToDataFrameCell = [
         ...pathToDataFrame,
-        String(focusedRow),
+        String(focusedRowInData),
         focusedCol
       ];
-      const valueSummary = getValueSummary(rootObjName, pathToDataFrameCell);
+
       return (
         <TableDetails>
           <TableDetailsMessage pad>
@@ -62,8 +73,8 @@ class CellDetails extends React.Component {
           </TableDetailsMessage>
           <ExpandableRep
             pathToEntity={pathToDataFrameCell}
-            valueSummary={valueSummary}
-            getChildSummaries={getChildSummary}
+            valueSummary={this.props.valueSummary}
+            getChildSummaries={this.props.getChildSummary}
             rootObjName={rootObjName}
           />
         </TableDetails>
@@ -105,9 +116,6 @@ class CellRenderer extends React.PureComponent {
 const PX_PER_CHAR = 7;
 const MIN_CELL_CHAR_WIDTH = 22;
 
-const requestData = (rootObjName, path, pageSize, page) =>
-  getDataTableSummary(rootObjName, path, pageSize, page);
-
 export default class TableRenderer extends React.Component {
   static propTypes = {
     initialDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -118,46 +126,76 @@ export default class TableRenderer extends React.Component {
         PropTypes.instanceOf(RangeDescriptor)
       ])
     ).isRequired,
-    rootObjName: PropTypes.string
+    rootObjName: PropTypes.string,
+    getDataTableSummary: PropTypes.func
+  };
+
+  static defaultProps = {
+    getDataTableSummary: (rootObjName, pathToEntity, pageSize, page) =>
+      requestRepInfo({
+        rootObjName,
+        pathToEntity,
+        pageSize,
+        page,
+        requestType: "ROW_TABLE_PAGE_SUMMARY"
+      })
   };
 
   constructor(props) {
     super(props);
     this.state = {
       focusedRow: undefined,
+      focusedRowInData: undefined,
       focusedCol: undefined,
       data: this.props.initialDataRows,
       pages: this.props.pages,
-      loading: false
+      loading: false,
+      currentPage: 0,
+      pageSize: 10
     };
     this.fetchData = this.fetchData.bind(this);
   }
 
-  async fetchData(state) {
-    // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
-    // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
+  async fetchData(fetchParams) {
     this.setState({ loading: true });
 
-    const { rows, pages } = await requestData(
+    const { rows, pages } = await this.props.getDataTableSummary(
       this.props.rootObjName,
       this.props.pathToDataFrame,
-      state.pageSize,
-      state.page
+      fetchParams.pageSize,
+      fetchParams.page
     );
 
     this.setState({
       data: rows,
       pages,
-      loading: false
+      loading: false,
+      pageSize: fetchParams.pageSize,
+      currentPage: fetchParams.page,
+      focusedRow: undefined,
+      focusedRowInData: undefined,
+      focusedCol: undefined
     });
   }
 
   handleCellClick(rowInfo, column) {
-    this.setState({ focusedRow: rowInfo.index, focusedCol: column.id });
+    const indexOffset = this.state.currentPage * this.state.pageSize;
+    this.setState({
+      focusedRow: rowInfo.index,
+      focusedRowInData: rowInfo.index + indexOffset,
+      focusedCol: column.id
+    });
   }
 
   render() {
-    const { data, pages, loading } = this.state;
+    const {
+      data,
+      pages,
+      loading,
+      focusedRow,
+      focusedRowInData,
+      focusedCol
+    } = this.state;
 
     const columns = Object.keys(data[0]).map(k => ({
       Header: k,
@@ -166,15 +204,15 @@ export default class TableRenderer extends React.Component {
       Cell: rowInfo => {
         return (
           <CellRenderer
-            cellIsFocused={
-              this.state.focusedCol === k &&
-              this.state.focusedRow === rowInfo.index
-            }
+            cellIsFocused={focusedCol === k && focusedRow === rowInfo.index}
             valueSummary={rowInfo.value}
           />
         );
       }
     }));
+
+    const focusedValue =
+      focusedCol && focusedRow ? data[focusedRow][focusedCol] : undefined;
 
     return (
       <div>
@@ -204,9 +242,9 @@ export default class TableRenderer extends React.Component {
           }}
         />
         <CellDetails
-          // value={value}
-          focusedRow={this.state.focusedRow}
-          focusedCol={this.state.focusedCol}
+          focusedRowInData={focusedRowInData}
+          focusedCol={focusedCol}
+          valueSummary={focusedValue}
           rootObjName={this.props.rootObjName}
           pathToDataFrame={this.props.pathToDataFrame}
         />
