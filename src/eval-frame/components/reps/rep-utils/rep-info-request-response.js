@@ -8,7 +8,7 @@ import { getValueSummary } from "./get-value-summary";
 export async function repInfoRequestResponse(payload) {
   const { rootObjName, pathToEntity, requestType } = payload;
   switch (requestType) {
-    case "TOP_LEVEL":
+    case "TOP_LEVEL_SUMMARY":
       return getTopLevelRepSummary(rootObjName, pathToEntity);
     case "ROW_TABLE_PAGE_SUMMARY":
       return getDataTableSummary(

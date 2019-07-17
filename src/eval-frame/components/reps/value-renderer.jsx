@@ -7,9 +7,7 @@ import ErrorRenderer from "./error-handler";
 import HTMLHandler from "./html-handler";
 import TableRenderer from "./data-table-rep";
 
-// import { serializeForValueSummary } from "./rep-utils/value-summary-serializer";
-import { getChildSummary } from "./rep-utils/get-child-summaries";
-import { getTopLevelRepSummary } from "./rep-utils/get-top-level-rep-summary";
+import { requestRepInfo } from "./request-rep-info";
 
 export default class ValueRenderer extends React.Component {
   static propTypes = {
@@ -19,7 +17,12 @@ export default class ValueRenderer extends React.Component {
   };
 
   static defaultProps = {
-    getTopLevelRepSummary
+    getTopLevelRepSummary: (rootObjName, pathToEntity) =>
+      requestRepInfo({
+        rootObjName,
+        pathToEntity,
+        requestType: "TOP_LEVEL_SUMMARY"
+      })
   };
 
   constructor(props) {
@@ -95,7 +98,13 @@ export default class ValueRenderer extends React.Component {
           <ExpandableRep
             pathToEntity={pathToEntity}
             valueSummary={topLevelRepSummary.valueSummary}
-            getChildSummaries={getChildSummary}
+            getChildSummaries={(rootObjName, pathToEntity) =>
+              requestRepInfo({
+                rootObjName,
+                pathToEntity,
+                requestType: "CHILD_SUMMARY"
+              })
+            }
             rootObjName={rootObjName}
           />
         );

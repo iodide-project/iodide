@@ -10,8 +10,6 @@ import ExpandableRep from "./rep-tree";
 
 import { requestRepInfo } from "./request-rep-info";
 
-import { RangeDescriptor } from "./rep-utils/rep-serialization-core-types";
-
 import ValueSummaryRep from "./value-summary";
 
 const TableDetails = styled.div`
@@ -31,12 +29,9 @@ class CellDetails extends React.Component {
     focusedRowInData: PropTypes.number,
     focusedCol: PropTypes.string,
     pathToDataFrame: PropTypes.arrayOf(
-      PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.instanceOf(RangeDescriptor)
-      ])
+      PropTypes.oneOfType([PropTypes.string, PropTypes.object])
     ).isRequired,
-    valueSummary: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    valueSummary: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     rootObjName: PropTypes.string,
     getChildSummary: PropTypes.func
   };
@@ -121,10 +116,7 @@ export default class TableRenderer extends React.Component {
     initialDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
     pages: PropTypes.number.isRequired,
     pathToDataFrame: PropTypes.arrayOf(
-      PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.instanceOf(RangeDescriptor)
-      ])
+      PropTypes.oneOfType([PropTypes.string, PropTypes.object])
     ).isRequired,
     rootObjName: PropTypes.string,
     getDataTableSummary: PropTypes.func
