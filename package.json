@@ -114,7 +114,7 @@
     "eslint": "6.0.1",
     "eslint-config-airbnb": "16.1.0",
     "eslint-loader": "2.2.1",
-    "eslint-plugin-emotion": "9.2.6",
+    "eslint-plugin-emotion": "10.0.14",
     "eslint-plugin-import": "2.18.0",
     "eslint-plugin-jest": "22.9.0",
     "eslint-plugin-jsx-a11y": "6.2.3",
