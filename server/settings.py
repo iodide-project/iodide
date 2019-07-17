@@ -223,7 +223,7 @@ WHITENOISE_MIMETYPES = {".wasm": "application/wasm"}
 
 REDIS_HOST = env.str("REDIS_HOST", default="redis")
 REDIS_URL = env.str("REDIS_URL", default=f"redis://{REDIS_HOST}:6379/1")
-BROKER_URL = REDIS_URL
+CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_BEAT_SCHEDULE = {
     "run_scheduled_file_operations": {
