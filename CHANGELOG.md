@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
--
+- removes iodide.environment API
 
 # 0.10.0 (2019-07-15)
 

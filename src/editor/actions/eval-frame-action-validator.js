@@ -53,11 +53,6 @@ const schemas = {
     },
     required: ["type", "consoleCursorDelta"]
   },
-  // FIXME environment actions disabled for now
-  // ENVIRONMENT_UPDATE_FROM_EDITOR: {
-  // },
-  // ENVIRONMENT_UPDATE_FROM_EVAL_FRAME: {
-  // },
   RESET_HISTORY_CURSOR: {
     type: "object",
     additionalProperties: false,
@@ -66,9 +61,6 @@ const schemas = {
     },
     required: ["type"]
   },
-  // FIXME environment actions disabled for now
-  // SAVE_ENVIRONMENT: {
-  // },
   UPDATE_CONSOLE_TEXT: {
     type: "object",
     additionalProperties: false,

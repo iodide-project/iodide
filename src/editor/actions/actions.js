@@ -219,11 +219,3 @@ export function toggleEditorLink() {
     type: "TOGGLE_EDITOR_LINK"
   };
 }
-
-export function saveEnvironment(updateObj, update) {
-  return {
-    type: "SAVE_ENVIRONMENT",
-    updateObj,
-    update
-  };
-}

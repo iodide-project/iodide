@@ -220,22 +220,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return addAppMessageToState(nextState, Object.assign({}, action.message));
     }
 
-    case "ENVIRONMENT_UPDATE_FROM_EVAL_FRAME": {
-      let newSavedEnvironment;
-      if (action.update) {
-        newSavedEnvironment = Object.assign(
-          {},
-          state.savedEnvironment,
-          action.updateObj
-        );
-      } else {
-        newSavedEnvironment = action.updateObj;
-      }
-      return Object.assign({}, state, {
-        savedEnvironment: newSavedEnvironment
-      });
-    }
-
     case "ADD_LANGUAGE_TO_EDITOR": {
       const { languageDefinition } = action;
       languageDefinition.codeMirrorModeLoaded = false;
