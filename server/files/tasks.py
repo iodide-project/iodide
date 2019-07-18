@@ -21,10 +21,10 @@ def execute_file_update_operation(update_operation_id):
     # actually run the query against the URL
     file_source = update_operation.file_source
     try:
-        logger.info("Fetching file resource %s for notebook %s", file_source, notebook)
+        logger.info("Fetching file resource %s for notebook %s", file_source, file_source.notebook)
         request = requests.get(file_source.url, stream=True)
         request.raise_for_status()
-        content = request.raw.read(settings.MAX_FILE_SIZE + 1)
+        content = request.raw.read(settings.MAX_FILE_SIZE + 1, decode_content=True)
         if len(content) > settings.MAX_FILE_SIZE:
             raise ValueError("File too large")
         try:

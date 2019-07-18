@@ -34,9 +34,14 @@ class FileUpdateOperationSerializer(serializers.ModelSerializer):
     Used for creating an operation to update a file source
     """
 
+    class StatusField(serializers.ChoiceField):
+        def to_representation(self, obj):
+            return self._choices[obj]
+
     file_source_id = serializers.PrimaryKeyRelatedField(
         source="file_source", queryset=FileSource.objects.all()
     )
+    status = StatusField(choices=FileUpdateOperation.OPERATION_STATUSES)
 
     class Meta:
         model = FileUpdateOperation

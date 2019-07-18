@@ -86,12 +86,12 @@ class FileSourceViewSet(viewsets.ModelViewSet):
 
 class FileUpdateOperationViewSet(viewsets.ModelViewSet):
 
+    queryset = FileUpdateOperation.objects.all()
     serializer_class = FileUpdateOperationSerializer
 
-    http_method_names = ["post"]
+    http_method_names = ["get", "post"]
 
     def create(self, serializer):
-        print('----', self.request.data)
         file_source = get_object_or_404(FileSource, id=self.request.data["file_source_id"])
         if self.request.user != file_source.notebook.owner:
             raise PermissionDenied
