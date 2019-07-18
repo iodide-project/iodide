@@ -3,12 +3,10 @@ import { getValueSummary } from "./get-value-summary";
 
 import { getObjAtPath } from "./get-child-summaries";
 
-// serializeChildSummary(getObjAtPath(window[rootObjName], path));
-
 export function getDataTableSummary(rootObjName, path, pageSize, page) {
   const tabularObj = getObjAtPath(window[rootObjName], path);
 
-  // // You can also use the sorting in your request, but again, you are responsible for applying it.
+  // // FIXME: we may wish to consider making the tables sortable
   // const sortedData = _.orderBy(
   //   tabularObj,
   //   sorted.map(sort => {
@@ -23,9 +21,6 @@ export function getDataTableSummary(rootObjName, path, pageSize, page) {
   //   }),
   //   sorted.map(d => (d.desc ? "desc" : "asc"))
   // );
-
-  // You must return an object containing the rows of the current page, and optionally the total pages number.
-  // const rows = tabularObj
 
   const colNames = Object.keys(tabularObj[0]);
   const maxIndex = Math.min(pageSize * page + pageSize, tabularObj.length);

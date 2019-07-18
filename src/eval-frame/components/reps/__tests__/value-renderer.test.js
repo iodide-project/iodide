@@ -8,23 +8,6 @@ import ExpandableRep from "../rep-tree";
 import ErrorRenderer from "../error-handler";
 import HTMLHandler from "../html-handler";
 import TableRenderer from "../data-table-rep";
-// import UserReps from "../user-reps-manager";
-
-// import { IODIDE_EVALUATION_RESULTS } from "../../../iodide-evaluation-results";
-
-// const simpleTestCases = [
-//   { type: "array", val: [1, 2, 3.4] },
-//   { type: "object", val: { a: 1, b: 2 } },
-//   { type: "number", val: 12345 },
-//   { type: "string", val: "foo" },
-//   { type: "null", val: null },
-//   { type: "undefined", val: undefined },
-//   { type: "function", val: () => 123 }
-// ];
-
-// simpleTestCases.forEach((testCase, i) => {
-//   IODIDE_EVALUATION_RESULTS[`result_${i}`] = testCase.val;
-// });
 
 // FIXME: refactor ValueRenderer to make testing more tractable.
 // HOCs may be useful here for encapsulating the async fetch.

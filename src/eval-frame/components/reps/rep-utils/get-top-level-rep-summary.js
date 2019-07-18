@@ -16,7 +16,6 @@ export function getTopLevelRepSummary(rootObjName, path) {
     };
   }
   if (value && value.iodideRender instanceof Function) {
-    // return "IODIDERENDER_METHOD_ON_OBJECT";
     return { repType: "HTML_STRING", htmlString: value.iodideRender() };
   }
   if (value instanceof Error) {

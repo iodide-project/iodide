@@ -2,8 +2,6 @@ import { getChildSummary } from "./get-child-summaries";
 import { getTopLevelRepSummary } from "./get-top-level-rep-summary";
 import { getDataTableSummary } from "./get-data-table-summary";
 import { getValueSummary } from "./get-value-summary";
-// import { } from "./get-
-// import { } from "./get-
 
 export async function repInfoRequestResponse(payload) {
   const { rootObjName, pathToEntity, requestType } = payload;

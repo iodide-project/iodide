@@ -220,8 +220,8 @@ export default class TableRenderer extends React.Component {
           resizable={false}
           sortable={false}
           pageSizeOptions={[10, 25, 50, 100]}
-          defaultPageSize={10}
           minRows={0}
+          defaultPageSize={10}
           getTdProps={(state, rowInfo, column) => {
             return {
               onClick: (e, handleOriginal) => {
