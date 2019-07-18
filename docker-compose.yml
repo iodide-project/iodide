@@ -2,18 +2,18 @@ version: '3'
 services:
   server:
     image: app:build
+    env_file: .env
     depends_on:
       - db
+      - redis
+    links:
+      - db
+      - redis
     ports:
       - "8000:8000"
-    user: app
     volumes:
       - .:/app
     command: dev
-    links:
-      - db
-    env_file:
-      - .env
 
   worker:
     image: app:build
