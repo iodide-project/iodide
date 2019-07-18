@@ -83,7 +83,7 @@ export default class ValueRenderer extends React.Component {
         return <HTMLHandler htmlString={topLevelRepSummary.htmlString} />;
       }
       case "ERROR_TRACE":
-        return <ErrorRenderer error={topLevelRepSummary.errorString} />;
+        return <ErrorRenderer errorString={topLevelRepSummary.errorString} />;
       case "ROW_TABLE_REP":
         return (
           <TableRenderer
@@ -98,10 +98,10 @@ export default class ValueRenderer extends React.Component {
           <ExpandableRep
             pathToEntity={pathToEntity}
             valueSummary={topLevelRepSummary.valueSummary}
-            getChildSummaries={(rootObjName, pathToEntity) =>
+            getChildSummaries={(name, path) =>
               requestRepInfo({
-                rootObjName,
-                pathToEntity,
+                rootObjName: name,
+                pathToEntity: path,
                 requestType: "CHILD_SUMMARY"
               })
             }
