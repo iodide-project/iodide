@@ -355,6 +355,24 @@ export const blobObjects = {
     type: "application/json"
   })
 };
+
+// ==================== objects with iodideRender
+
+export const iodideRenderObjects = {
+  iodideRender_1: {
+    a: 1,
+    b: 2,
+    c: 3,
+    iodideRender: () => `
+<ol>
+  <li>a</li>
+  <li>b</li>
+  <li>c</li>
+</ol>
+`
+  }
+};
+
 // ==================== tests
 
 export const allCases = Object.assign(
@@ -372,5 +390,6 @@ export const allCases = Object.assign(
   promiseCases,
   rowTableCases,
   rowTableFails,
-  blobObjects
+  blobObjects,
+  iodideRenderObjects
 );
