@@ -28,8 +28,8 @@ export function getDataTableSummary(rootObjName, path, pageSize, page) {
   // const rows = tabularObj
 
   const colNames = Object.keys(tabularObj[0]);
-
-  const rows = range(pageSize * page, pageSize * page + pageSize).map(row => {
+  const maxIndex = Math.min(pageSize * page + pageSize, tabularObj.length);
+  const rows = range(pageSize * page, maxIndex).map(row => {
     const thisRow = {};
     colNames.forEach(col => {
       const thisPath = [...path, String(row), col];

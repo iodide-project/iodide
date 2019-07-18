@@ -318,32 +318,39 @@ export const promiseCases = {
 // ==================== tabular
 
 export const rowTableCases = {
-  rowsTable_plainObjects: new Array(100).fill(0).map((x, i) => ({
+  rowsTable_plainObjects: new Array(58).fill(0).map((x, i) => ({
     index: i,
     time: new Date(),
     id: Math.sin(i)
   })),
 
-  rowsTable_augmentedObjects: new Array(100).fill(0).map((x, i) => ({
+  rowsTable_augmentedObjects: new Array(113).fill(0).map((x, i) => ({
     index: i,
     time: new Date(),
     id: Math.sin(i),
     subObj: { subInd: i, subSubArray: [i, 2, 3, 4, 5, "asdf", [i, 2, 3]] },
     subArray: new Array(i).fill(1).map((y, j) => i * j)
   })),
-  rowsTable_compositeObjects: new Array(100).fill(compositeObjects),
-  rowsTable_objectsContainingSimpleTypes: new Array(100).fill(simpleTypes),
+  rowsTable_shortTable: new Array(3).fill(0).map((x, i) => ({
+    index: i,
+    time: new Date(),
+    id: Math.sin(i),
+    subObj: { subInd: i, subSubArray: [i, 2, 3, 4, 5, "asdf", [i, 2, 3]] },
+    subArray: new Array(i).fill(1).map((y, j) => i * j)
+  })),
+  rowsTable_compositeObjects: new Array(532).fill(compositeObjects),
+  rowsTable_objectsContainingSimpleTypes: new Array(777).fill(simpleTypes),
   rowsTable_objectsContainingBaseObjects: new Array(364).fill(baseObjects)
 };
 
 export const rowTableFails = {
   array_oneEmptyObject: [{}],
   array_justOneObject: [{ a: 1, b: 2, c: 3 }],
-  array_classInstances: new Array(100).fill(new Dog("Fido")),
-  array_objectsWithAllDifferentKeys: new Array(100)
+  array_classInstances: new Array(456).fill(new Dog("Fido")),
+  array_objectsWithAllDifferentKeys: new Array(813)
     .fill(0)
     .map((x, i) => ({ [`key_${i}`]: i, b: i, c: i })),
-  array_objectsWithSomeDifferentKeys: new Array(100)
+  array_objectsWithSomeDifferentKeys: new Array(234)
     .fill(0)
     .map((x, i) => ({ [`key_${i % 2}`]: i, b: i, c: i }))
 };
