@@ -50,9 +50,9 @@ django-heroku==0.3.1 \
 Django==2.2.3 \
     --hash=sha256:6e974d4b57e3b29e4882b244d40171d6a75202ab8d2402b8e8adbd182e25cf0c \
     --hash=sha256:4d23f61b26892bac785f07401bc38cbf8fa4cec993f400e9cd9ddf28fd51c0ea
-djangorestframework==3.10.0 \
-    --hash=sha256:bd389598d052fb79a68904eff35d34303118b5c2abefa65329b5f1a07b571ce1 \
-    --hash=sha256:1f274ebbb930dfa709751fac31b2332b2e662303f8c66d7eacea534702611e34
+djangorestframework==3.10.1 \
+    --hash=sha256:c3c5edfdbc5dd33f9121bb84305bfd603d2c791f20cff9782772f44a7684a4e4 \
+    --hash=sha256:1ca4a5599a5ec31f3d6238a687fcc1dd4c41b1d90edab9ad398fcbf87872b7ba
 djangorestframework-simplejwt==4.3.0 \
     --hash=sha256:4cb1a51bf9b098b983e1326a1cfc65fb0b3c5a2aa0fa43effdbf05dd6da5e8cb
 dockerflow==2019.6.0 \
