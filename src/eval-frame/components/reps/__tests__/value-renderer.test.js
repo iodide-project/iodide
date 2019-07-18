@@ -68,7 +68,7 @@ describe.skip("ValueRenderer passes through to correct rep depending on getTopLe
       getTopLevelRepSummary: () => ({ repType: "<<type not specified>>" }),
       repComponent: ExpandableRep
     }
-  ].forEach(({ getTopLevelRepSummary, repComponent }, i) => {
+  ].forEach(({ getTopLevelRepSummary, repComponent }) => {
     it(`use correct rep (type: ${getTopLevelRepSummary().repType})`, () => {
       props.getTopLevelRepSummary = getTopLevelRepSummary;
       expect(shallowValueRenderer().find(repComponent)).toHaveLength(1);
