@@ -14,6 +14,10 @@ import NewNotebookButton from "../components/new-notebook-button";
 import FeaturedNotebooks from "../../shared/components/featured-notebooks";
 import { sharedProperties } from "../../server/style/base";
 
+import FileDrop from "../../shared/components/file-drop";
+import { createNotebookRequest } from "../../shared/server-api/notebook";
+import { saveFileToServer } from "../../shared/utils/file-operations";
+
 const TrendingNotebooksPage = ({ notebookList }) => (
   <React.Fragment>
     <PageHeader>The Firehose of Notebooks</PageHeader>
@@ -44,6 +48,26 @@ export default class HomePage extends React.Component {
     const { notebookList } = this.props;
     return (
       <div>
+        <FileDrop
+          shrinkTarget="page"
+          onDrop={async files => {
+            const fetches = Array.from(files).map(
+              (f, i) => `text: file${i}=${f.name}`
+            );
+            const body = `%% fetch\n${fetches.join("\n")}`;
+
+            const response = await createNotebookRequest("New Notebook", body);
+            const notebookID = response.id;
+
+            await Promise.all(
+              Array.from(files).map(f => {
+                return saveFileToServer(notebookID, f, f.name, undefined, true);
+              })
+            );
+
+            window.open(`${window.location}notebooks/${notebookID}`);
+          }}
+        />
         <Header userInfo={this.props.userInfo} />
         <PageBody>
           <TopContainer>
