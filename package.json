@@ -121,7 +121,7 @@
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-react": "7.14.2",
     "fake-indexeddb": "2.1.1",
-    "file-loader": "4.0.0",
+    "file-loader": "4.1.0",
     "jest": "24.8.0",
     "jest-cli": "24.8.0",
     "jest-fetch-mock": "2.1.2",
