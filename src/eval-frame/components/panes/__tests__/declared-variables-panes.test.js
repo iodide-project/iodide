@@ -2,7 +2,6 @@ import { shallow } from "enzyme";
 import React from "react";
 
 import { DeclaredVariable } from "../declared-variable";
-import { FrozenVariable } from "../frozen-variable";
 
 import {
   DeclaredVariablesPaneUnconnected,
@@ -24,19 +23,11 @@ describe("DeclaredVariablesPaneUnconnected React component", () => {
   beforeEach(() => {
     props = {
       userDefinedVarNames: ["iodide", "a", "b"],
-      paneVisible: true,
-      environmentVariables: {
-        x: ["object", "NobwRAhmBcCMAMj4BowCMYCYnwL7PCjngBYBmVDaTATjPNwF0g=="],
-        y: ["string", "JYewJsYKZA=="]
-      }
+      paneVisible: true
     };
     nextProps = {
       userDefinedVarNames: ["iodide", "a", "b"],
-      paneVisible: true,
-      environmentVariables: {
-        x: ["object", "NobwRAhmBcCMAMj4BowCMYCYnwL7PCjngBYBmVDaTATjPNwF0g=="],
-        y: ["string", "JYewJsYKZA=="]
-      }
+      paneVisible: true
     };
     mountedPane = undefined;
   });
@@ -45,23 +36,8 @@ describe("DeclaredVariablesPaneUnconnected React component", () => {
     expect(declaredVariablesPane().find("div.pane-content").length).toBe(1);
   });
 
-  it("always renders two declared-variables-list when both variable types are non empty", () => {
-    expect(
-      declaredVariablesPane().find("div.declared-variables-list")
-    ).toHaveLength(2);
-  });
-
   it("always renders correct number of DeclaredVariable", () => {
     expect(declaredVariablesPane().find(DeclaredVariable)).toHaveLength(3);
-  });
-
-  it("always renders correct number of FrozenVariable", () => {
-    expect(declaredVariablesPane().find(FrozenVariable)).toHaveLength(2);
-  });
-
-  it("never renders FrozenVariable when environmentVariables is empty", () => {
-    props.environmentVariables = {};
-    expect(declaredVariablesPane().find(FrozenVariable)).toHaveLength(0);
   });
 
   it("never renders DeclaredVariable when userDefinedVarNames is empty", () => {
@@ -126,7 +102,6 @@ describe("DeclaredVariablesPane mapStateToProps", () => {
 
   beforeEach(() => {
     state = {
-      savedEnvironment: {},
       userDefinedVarNames: ["iodide", "a"],
       panePositions: { WorkspacePositioner: { display: "block" } }
     };
@@ -134,7 +109,6 @@ describe("DeclaredVariablesPane mapStateToProps", () => {
 
   it("should return the correct basic info", () => {
     expect(mapStateToProps(state)).toEqual({
-      environmentVariables: {},
       userDefinedVarNames: ["iodide", "a"],
       paneVisible: true
     });

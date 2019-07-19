@@ -1,6 +1,7 @@
 require("dotenv").config();
 const webpack = require("webpack");
 const path = require("path");
+const fs = require("fs");
 const CreateFileWebpack = require("create-file-webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
@@ -16,10 +17,6 @@ const { execSync } = require("child_process");
 const reduxLogMode = process.env.REDUX_LOGGING
   ? process.env.REDUX_LOGGING
   : "SILENT";
-
-const evalFrameHtmlTemplate = require("./src/eval-frame/html-template.js");
-
-const evalFrameHtmlTemplateCompiler = _.template(evalFrameHtmlTemplate);
 
 const DEV_SERVER_PORT = 8000;
 
@@ -124,14 +121,6 @@ module.exports = env => {
         $: "jquery",
         jQuery: "jquery"
       }),
-      new CreateFileWebpack({
-        path: BUILD_DIR,
-        fileName: `iodide.eval-frame.${APP_VERSION_STRING}.html`,
-        content: evalFrameHtmlTemplateCompiler({
-          APP_VERSION_STRING: `eval-frame.${APP_VERSION_STRING}`,
-          EVAL_FRAME_ORIGIN
-        })
-      }),
       new webpack.EnvironmentPlugin(["NODE_ENV"]),
       new webpack.DefinePlugin({
         "process.env.IODIDE_VERSION": JSON.stringify(APP_VERSION_STRING),
@@ -152,6 +141,19 @@ module.exports = env => {
       // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
     ],
     devServer: {
+      before: app => {
+        _.forEach(
+          {
+            "/": fs.readFileSync("./src/editor/static.html"),
+            "/eval-frame/": fs.readFileSync("./src/eval-frame/static.html")
+          },
+          (content, path) =>
+            app.get(path, (req, res) => {
+              res.set("Content-Type", "text/html");
+              res.send(content);
+            })
+        );
+      },
       contentBase: path.join(__dirname, "build"),
       port: DEV_SERVER_PORT,
       hot: false,

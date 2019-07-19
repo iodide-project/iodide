@@ -13,7 +13,6 @@ const propsToCopy = [
   "panePositions.ConsolePositioner",
   "panePositions.ReportPositioner",
   "panePositions.WorkspacePositioner",
-  "savedEnvironment",
   "userDefinedVarNames",
   "viewMode",
   "notebookInfo.files"

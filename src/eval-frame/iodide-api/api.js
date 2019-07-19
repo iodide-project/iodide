@@ -2,7 +2,6 @@
 // extend and manipulate the notebook
 
 import UserReps from "../components/reps/user-reps-manager";
-import { environment } from "./environment";
 import { output } from "./output";
 import { file } from "./file/file";
 
@@ -17,7 +16,6 @@ export const iodide = {
   addOutputRenderer: (...params) => UserReps.addRenderer(...params),
   clearOutputRenderers: (...params) => UserReps.clearRenderers(...params),
   getDataSync,
-  environment,
   output,
   file,
   VERSION: process.env.IODIDE_VERSION

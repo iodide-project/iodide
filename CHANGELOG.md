@@ -1,6 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
--
+- removes iodide.environment API
+- Add back local-only dev mode using command "npm run simple-serve"
 
 # 0.10.0 (2019-07-15)
 

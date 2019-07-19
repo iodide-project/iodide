@@ -5,11 +5,12 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
 from django.urls import reverse
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from ..base.models import User
 from ..files.models import File
-from ..settings import APP_VERSION_STRING, EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH
+from ..settings import EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 from ..views import get_user_info_dict
 from .models import Notebook, NotebookRevision
 from .names import get_random_compound
@@ -21,10 +22,13 @@ def _get_user_info_json(user):
     return {}
 
 
+@xframe_options_exempt
+def eval_frame_view(request):
+    return render(request, "notebook_eval_frame.html")
+
+
 def _get_iframe_src():
-    return urllib.parse.urljoin(
-        EVAL_FRAME_ORIGIN, "iodide.eval-frame.{}.html".format(APP_VERSION_STRING)
-    )
+    return urllib.parse.urljoin(EVAL_FRAME_ORIGIN, reverse(eval_frame_view))
 
 
 @ensure_csrf_cookie

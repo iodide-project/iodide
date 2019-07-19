@@ -140,3 +140,10 @@ def test_notebook_revisions_page(fake_user, test_notebook, client):
         ],
         "userInfo": {},
     }
+
+
+def test_eval_frame_view(client):
+    uri = reverse("eval-frame-view")
+    resp = client.get(uri)
+    assert resp.status_code == 200
+    assert '<div id="eval-container"></div>' in str(resp.content)
