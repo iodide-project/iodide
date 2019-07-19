@@ -1,5 +1,3 @@
-/* global IODIDE_EDITOR_ORIGIN  */
-
 import { evaluateCode } from "./actions/actions";
 import { loadLanguagePlugin } from "./actions/language-actions";
 import { getUserDefinedVariablesFromWindow } from "./initialize-user-variables";
@@ -35,11 +33,11 @@ function connectToEditor() {
     // IFRAME CONNECT STEP 1:
     // "EVAL_FRAME_READY" is sent until the editor recieves
     setTimeout(connectToEditor, 50);
-    window.parent.postMessage("EVAL_FRAME_READY", IODIDE_EDITOR_ORIGIN);
+    window.parent.postMessage("EVAL_FRAME_READY", window.editorOrigin);
   } else {
     // IFRAME CONNECT STEP 5:
     // when editorReady===true, eval frame sends actual port
-    window.parent.postMessage("EVAL_FRAME_SENDING_PORT", IODIDE_EDITOR_ORIGIN, [
+    window.parent.postMessage("EVAL_FRAME_SENDING_PORT", window.editorOrigin, [
       mc.port2
     ]);
   }

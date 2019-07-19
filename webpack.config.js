@@ -124,8 +124,6 @@ module.exports = env => {
       new webpack.EnvironmentPlugin(["NODE_ENV"]),
       new webpack.DefinePlugin({
         "process.env.IODIDE_VERSION": JSON.stringify(APP_VERSION_STRING),
-        IODIDE_EVAL_FRAME_ORIGIN: JSON.stringify(EVAL_FRAME_ORIGIN),
-        IODIDE_EDITOR_ORIGIN: JSON.stringify(EDITOR_ORIGIN),
         "process.env.IODIDE_REDUX_LOG_MODE": JSON.stringify(reduxLogMode),
         "process.env.USE_LOCAL_PYODIDE": JSON.stringify(USE_LOCAL_PYODIDE),
         "process.env.USE_OPENIDC_AUTH": JSON.stringify(USE_OPENIDC_AUTH),
@@ -149,8 +147,12 @@ module.exports = env => {
       before: app => {
         _.forEach(
           {
-            "/": fs.readFileSync("./src/editor/static.html"),
-            "/eval-frame/": fs.readFileSync("./src/eval-frame/static.html")
+            "/": _.template(fs.readFileSync("./src/editor/static.html"))({
+              EVAL_FRAME_ORIGIN
+            }),
+            "/eval-frame/": _.template(
+              fs.readFileSync("./src/eval-frame/static.html")
+            )({ EDITOR_ORIGIN })
           },
           (content, path) =>
             app.get(path, (req, res) => {
