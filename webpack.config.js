@@ -6,13 +6,12 @@ const CreateFileWebpack = require("create-file-webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 const WebpackShellPlugin = require("webpack-shell-plugin");
+const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
 const LodashModuleReplacementPlugin = require("lodash-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const UnusedWebpackPlugin = require("unused-webpack-plugin");
 const _ = require("lodash");
-
-const { execSync } = require("child_process");
 
 const reduxLogMode = process.env.REDUX_LOGGING
   ? process.env.REDUX_LOGGING
@@ -131,7 +130,9 @@ module.exports = env => {
         "process.env.USE_OPENIDC_AUTH": JSON.stringify(USE_OPENIDC_AUTH),
         "process.env.IODIDE_PUBLIC": !!IODIDE_PUBLIC,
         "process.env.COMMIT_HASH": JSON.stringify(
-          execSync("./bin/commit-hash-command.sh", { encoding: "utf-8" })
+          new GitRevisionPlugin({
+            commithashCommand: "rev-list master --max-count=1"
+          }).commithash()
         )
       }),
       new MiniCssExtractPlugin({
