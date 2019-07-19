@@ -17,5 +17,8 @@
 ></iframe>
 {{ user_info|json_script:"userData" }}
 {{ notebook_info|json_script:"notebookInfo" }}
+<script>
+  window.evalFrameOrigin = "{{ eval_frame_origin }}";
+</script>
 <script src="/iodide.dev.js"></script>
 {% endblock %}

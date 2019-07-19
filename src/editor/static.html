@@ -20,6 +20,9 @@ This is an environment designed to help you test changes to the Iodide editor. Y
       allowfullscreen="true"
       allowvr="yes"
     ></iframe>
+    <script>
+      window.evalFrameOrigin = "<%= EVAL_FRAME_ORIGIN %>";
+    </script>
     <script src="/iodide.dev.js"></script>
   </body>
 </html>

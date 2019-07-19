@@ -10,7 +10,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from ..base.models import User
 from ..files.models import File
-from ..settings import EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH
+from ..settings import EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH, SITE_URL
 from ..views import get_user_info_dict
 from .models import Notebook, NotebookRevision
 from .names import get_random_compound
@@ -24,7 +24,7 @@ def _get_user_info_json(user):
 
 @xframe_options_exempt
 def eval_frame_view(request):
-    return render(request, "notebook_eval_frame.html")
+    return render(request, "notebook_eval_frame.html", {"editor_origin": SITE_URL})
 
 
 def _get_iframe_src():
@@ -74,6 +74,7 @@ def notebook_view(request, pk):
             "notebook_info": notebook_info,
             "iomd": revision.content,
             "iframe_src": _get_iframe_src(),
+            "eval_frame_origin": EVAL_FRAME_ORIGIN,
         },
     )
 
@@ -171,5 +172,6 @@ def tryit_view(request):
             },
             "iomd": new_notebook_content_template.render(),
             "iframe_src": _get_iframe_src(),
+            "eval_frame_origin": EVAL_FRAME_ORIGIN,
         },
     )
