@@ -1,0 +1,28 @@
+<!-- static copy of editor html intended for use with webpack dev server -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>iodide test notebook</title>
+    <link rel="stylesheet" type="text/css" href="/iodide.dev.css" />
+    <base target="_blank" rel="noopener noreferrer" />
+  </head>
+  <body>
+    <div id="notebook-header"></div>
+    <div id="editor-react-root"></div>
+    <script id="iomd" type="text/iomd">%% md
+This is an environment designed to help you test changes to the Iodide editor. Your changes will not be persisted!
+    </script>
+    <iframe
+      id="eval-frame"
+      src="/eval-frame/"
+      sandbox="allow-scripts allow-same-origin"
+      allowfullscreen="true"
+      allowvr="yes"
+    ></iframe>
+    <script>
+      window.evalFrameOrigin = "<%= EVAL_FRAME_ORIGIN %>";
+    </script>
+    <script src="/iodide.dev.js"></script>
+  </body>
+</html>

@@ -1,5 +1,3 @@
-/* global IODIDE_EVAL_FRAME_ORIGIN  */
-
 import Mousetrap from "mousetrap";
 import { evalConsoleInput } from "./actions/eval-actions";
 import { handleFileRequest } from "./actions/file-request-actions";
@@ -99,7 +97,7 @@ export const listenForEvalFramePortReady = messageEvent => {
     // when editor gets "EVAL_FRAME_READY", it acks "EDITOR_READY"
     document
       .getElementById("eval-frame")
-      .contentWindow.postMessage("EDITOR_READY", IODIDE_EVAL_FRAME_ORIGIN);
+      .contentWindow.postMessage("EDITOR_READY", window.evalFrameOrigin);
   }
   if (messageEvent.data === "EVAL_FRAME_SENDING_PORT") {
     // IFRAME CONNECT STEP 6:

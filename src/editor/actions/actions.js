@@ -10,7 +10,6 @@ import {
   isLoggedIn
 } from "../tools/server-tools";
 
-import { iomdParser } from "../iomd-tools/iomd-parser";
 import { getChunkContainingLine } from "../iomd-tools/iomd-selection";
 
 import { addAppMessageToConsoleHistory } from "./console-message-actions";
@@ -31,34 +30,7 @@ export function updateAppMessages(messageObj) {
 }
 
 export function updateIomdContent(text) {
-  return (dispatch, getState) => {
-    const iomdChunks = iomdParser(text);
-    const languageDefinitions = getState().languageDefinitions || {};
-    const reportChunkTypes = Object.keys(languageDefinitions).concat([
-      "md",
-      "html",
-      "css"
-    ]);
-    const reportChunks = iomdChunks
-      .filter(c => reportChunkTypes.includes(c.chunkType))
-      .map(c => ({
-        chunkContent: c.chunkContent,
-        chunkType: c.chunkType,
-        chunkId: c.chunkId,
-        evalFlags: c.evalFlags
-      }));
-
-    dispatch({
-      // this dispatch really just forwards to the eval frame
-      type: "UPDATE_MARKDOWN_CHUNKS",
-      reportChunks
-    });
-    dispatch({
-      type: "UPDATE_IOMD_CONTENT",
-      iomd: text,
-      iomdChunks
-    });
-  };
+  return { type: "UPDATE_IOMD_CONTENT", iomd: text };
 }
 
 export function toggleWrapInEditors() {
@@ -245,13 +217,5 @@ export function toggleFileModal() {
 export function toggleEditorLink() {
   return {
     type: "TOGGLE_EDITOR_LINK"
-  };
-}
-
-export function saveEnvironment(updateObj, update) {
-  return {
-    type: "SAVE_ENVIRONMENT",
-    updateObj,
-    update
   };
 }

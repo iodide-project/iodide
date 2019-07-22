@@ -1,5 +1,6 @@
 import { newNotebook } from "../state-schemas/editor-state-prototypes";
 import { historyIdGen } from "../tools/id-generators";
+import { iomdParser } from "../iomd-tools/iomd-parser";
 
 function newAppMessage(
   appMessageId,
@@ -121,8 +122,8 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case "UPDATE_IOMD_CONTENT": {
-      const { iomd, iomdChunks } = action;
-      return Object.assign({}, state, { iomd, iomdChunks });
+      const { iomd } = action;
+      return Object.assign({}, state, { iomd, iomdChunks: iomdParser(iomd) });
     }
 
     case "GETTING_NOTEBOOK_REVISION_LIST": {
@@ -274,22 +275,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       nextState = Object.assign({}, state);
       nextState.appMessages = nextState.appMessages.slice();
       return addAppMessageToState(nextState, Object.assign({}, action.message));
-    }
-
-    case "ENVIRONMENT_UPDATE_FROM_EVAL_FRAME": {
-      let newSavedEnvironment;
-      if (action.update) {
-        newSavedEnvironment = Object.assign(
-          {},
-          state.savedEnvironment,
-          action.updateObj
-        );
-      } else {
-        newSavedEnvironment = action.updateObj;
-      }
-      return Object.assign({}, state, {
-        savedEnvironment: newSavedEnvironment
-      });
     }
 
     case "ADD_LANGUAGE_TO_EDITOR": {

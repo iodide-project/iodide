@@ -1,0 +1,17 @@
+<!-- static copy of eval frame html intended for use with webpack dev server -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="/iodide.eval-frame.dev.css" />
+    <base target="_blank" rel="noopener noreferrer" />
+  </head>
+  <body>
+    <style id="view-mode-styles"></style>
+    <div id="eval-container"></div>
+    <script>
+      window.editorOrigin = "<%= EDITOR_ORIGIN %>";
+    </script>
+    <script src="/iodide.eval-frame.dev.js"></script>
+  </body>
+</html>

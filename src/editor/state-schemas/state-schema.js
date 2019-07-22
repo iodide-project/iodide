@@ -51,14 +51,6 @@ export const fileSchema = {
   additionalProperties: false
 };
 
-const environmentVariableSchema = {
-  type: "array",
-  items: [
-    { type: "string", enum: ["object", "string", "rawString"] },
-    { type: "string" }
-  ]
-};
-
 const panePositionSchema = {
   type: "object",
   properties: {
@@ -243,7 +235,7 @@ export const stateProperties = {
         },
         default: []
       },
-      selectedRevision: {
+      selectedRevisionId: {
         type: "number"
       },
       revisionContent: {
@@ -290,11 +282,6 @@ export const stateProperties = {
       ConsolePositioner: Object.assign({}, positionerDefaults),
       WorkspacePositioner: Object.assign({}, positionerDefaults)
     }
-  },
-  savedEnvironment: {
-    type: "object",
-    additionalProperties: environmentVariableSchema,
-    default: {}
   },
   title: {
     type: "string",

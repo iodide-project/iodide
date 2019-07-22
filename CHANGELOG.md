@@ -1,6 +1,9 @@
 # (Unreleased; add upcoming change notes here)
 
--
+- removes iodide.environment API
+- Add back local-only dev mode using command "npm run simple-serve"
+- Iodide docker container no longer hardcodes server hostnames, can
+  reuse in multiple server environments (#1943)
 
 # 0.10.0 (2019-07-15)
 
