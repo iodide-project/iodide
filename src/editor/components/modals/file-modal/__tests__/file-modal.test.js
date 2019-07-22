@@ -1,6 +1,6 @@
 import { FileModalUnconnected, mapStateToProps } from "../index";
-import Body from "../body";
-import FileList from "../file-list";
+import Body from "../manage-files/body";
+import FileList from "../manage-files/file-list";
 
 describe("file-modal/index.jsx", () => {
   let fmu;
