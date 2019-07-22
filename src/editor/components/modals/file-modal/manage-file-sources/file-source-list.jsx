@@ -141,7 +141,7 @@ const FileSourceListUnconnected = ({
   deleteFileSource,
   createFileUpdateOperation
 }) => {
-  // delete modal state
+  // we will handle the delete modal state in a hook.
   const [sourceToDelete, setSourceToDelete] = useState(undefined);
 
   return fileSources.length ? (

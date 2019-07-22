@@ -63,19 +63,16 @@ export function createFileUpdateOperation(fileSourceID) {
       lastFileUpdateOperationID,
       lastFileUpdateOperationStatus
     });
-    // this is probably where we want to poll for the status.
-    // add status, lastRan lastFileUpdateOperationID
     let statusUpdate = lastFileUpdateOperationStatus;
-    while (statusUpdate === "pending") {
+    while (statusUpdate === "pending" || statusUpdate === "running") {
       // this while loop depends on whether the iteration's response
-      // returns status ! == "pending". Thus we will disable
+      // returns status !== "pending". Thus we will disable
       // this eslint rule, as per the documentation for this
-      // rule here, as suggested in https://eslint.org/docs/rules/no-await-in-loop
+      // rule as suggested in https://eslint.org/docs/rules/no-await-in-loop
       /* eslint-disable no-await-in-loop */
       response = await getFileUpdateOperationFromServer(
         lastFileUpdateOperationID
       );
-      // update response here;
       dispatch({
         type: "UPDATE_FILE_SOURCE",
         fileSourceID: response.file_source_id,
