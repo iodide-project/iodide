@@ -1,37 +1,66 @@
-import { range } from "lodash";
-import { getValueSummary } from "./get-value-summary";
+import { serializeForValueSummary } from "./value-summary-serializer";
 
 import { getObjAtPath } from "./get-child-summaries";
 
-export function getDataTableSummary(rootObjName, path, pageSize, page) {
-  const tabularObj = getObjAtPath(window[rootObjName], path);
+function orderUnequalVals(a, b, desc) {
+  let order;
+  // sort undefined after null,
+  // and both undefined and null after anything else
+  if (a === undefined && b === null) {
+    order = -1;
+  } else if (a === null && b === undefined) {
+    order = 1;
+  } else if (a === null || a === undefined) {
+    order = 1;
+  } else if (b === null || b === undefined) {
+    order = -1;
+  } else {
+    const a1 = typeof a === "string" ? a.toLowerCase() : a;
+    const b1 = typeof b === "string" ? b.toLowerCase() : b;
+    order = a1 < b1 ? -1 : 1;
+  }
+  return desc ? -order : order;
+}
 
-  // // FIXME: we may wish to consider making the tables sortable
-  // const sortedData = _.orderBy(
-  //   tabularObj,
-  //   sorted.map(sort => {
-  //     return row => {
-  //       if (row[sort.id] === null || row[sort.id] === undefined) {
-  //         return -Infinity;
-  //       }
-  //       return typeof row[sort.id] === "string"
-  //         ? row[sort.id].toLowerCase()
-  //         : row[sort.id];
-  //     };
-  //   }),
-  //   sorted.map(d => (d.desc ? "desc" : "asc"))
-  // );
+export function getDataTableSummary(rootObjName, path, pageSize, page, sorted) {
+  const tabularObj = getObjAtPath(window[rootObjName], path).map(
+    (row, rowNum) => ({ row, rowNum })
+  );
+  const colNames = Object.keys(tabularObj[0].row);
 
-  const colNames = Object.keys(tabularObj[0]);
-  const maxIndex = Math.min(pageSize * page + pageSize, tabularObj.length);
-  const rows = range(pageSize * page, maxIndex).map(row => {
-    const thisRow = {};
-    colNames.forEach(col => {
-      const thisPath = [...path, String(row), col];
-      thisRow[col] = getValueSummary(rootObjName, thisPath);
+  let sortedData;
+
+  // FIXME: with a little work we could implement a single pass
+  // O(n*k*log(k)) algorithm for extracting k items from the list
+  if (sorted && sorted.length) {
+    sortedData = tabularObj.sort((iRowA, iRowB) => {
+      for (const sort of sorted) {
+        if (iRowA.row[sort.id] !== iRowB.row[sort.id]) {
+          return orderUnequalVals(
+            iRowA.row[sort.id],
+            iRowB.row[sort.id],
+            sort.desc
+          );
+        }
+      }
+      return 0;
     });
-    return thisRow;
-  });
+  } else {
+    sortedData = tabularObj;
+  }
+
+  const maxIndex = Math.min(pageSize * page + pageSize, tabularObj.length);
+
+  const rows = sortedData
+    .slice(pageSize * page, maxIndex)
+    .map(({ row, rowNum }) => {
+      const thisRow = {};
+      thisRow.ORIGINAL_DATA_TABLE_ROW_INDEX = rowNum;
+      colNames.forEach(col => {
+        thisRow[col] = serializeForValueSummary(row[col]);
+      });
+      return thisRow;
+    });
 
   return {
     rows,

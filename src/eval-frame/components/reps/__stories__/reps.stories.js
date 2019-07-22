@@ -6,8 +6,6 @@ import { storiesOf } from "@storybook/react";
 // but even with this some styles seem to be missing
 import "../../../../../node_modules/react-table/react-table.css";
 
-import { allCases } from "../__test_helpers__/reps-test-value-cases";
-
 // serializers
 import {
   serializeForValueSummary,
@@ -24,6 +22,8 @@ import ValueSummary from "../value-summary";
 import InlineChildSummary from "../in-line-child-summary";
 
 import ExpandableRep from "../rep-tree";
+
+import { allCases } from "../__test_helpers__/reps-test-value-cases";
 
 // attach the test cases to the window to allow comparing with browser devtools
 window.allCases = allCases;

@@ -13,7 +13,8 @@ export async function repInfoRequestResponse(payload) {
         rootObjName,
         pathToEntity,
         payload.pageSize,
-        payload.page
+        payload.page,
+        payload.sorted
       );
     case "VALUE_SUMMARY":
       return getValueSummary(rootObjName, pathToEntity);
