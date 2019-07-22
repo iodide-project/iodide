@@ -23,7 +23,7 @@ class RevisionListUnconnected extends React.Component {
       })
     ),
     selectedRevisionId: PropTypes.number,
-    hideLocalChanges: PropTypes.bool,
+    haveLocalChanges: PropTypes.bool,
     updateSelectedRevisionId: PropTypes.func.isRequired
   };
 
@@ -43,7 +43,7 @@ class RevisionListUnconnected extends React.Component {
   render() {
     if (this.props.revisionList !== undefined) {
       if (
-        this.props.hideLocalChanges &&
+        !this.props.haveLocalChanges &&
         this.props.selectedRevisionId === undefined
       ) {
         if (this.props.revisionList.length > 0) {
@@ -55,7 +55,7 @@ class RevisionListUnconnected extends React.Component {
     return (
       <RevisionListContainer>
         <List>
-          {!this.props.hideLocalChanges && (
+          {this.props.haveLocalChanges && (
             <ListItem
               button
               key="local-changes"
@@ -96,19 +96,19 @@ export function mapStateToProps(state) {
     selectedRevisionId
   } = notebookHistory;
 
-  let hideLocalChanges = true;
+  let haveLocalChanges = false;
 
   if (revisionContentFetchStatus === "IDLE") {
     const previousRevisionContent =
       revisionList.length > 0 ? revisionContent[revisionList[0].id] : "";
 
-    hideLocalChanges = state.iomd === previousRevisionContent;
+    haveLocalChanges = state.iomd !== previousRevisionContent;
   }
 
   return {
     revisionList,
     selectedRevisionId,
-    hideLocalChanges
+    haveLocalChanges
   };
 }
 
