@@ -180,7 +180,8 @@ const FileSourceListUnconnected = ({
                         </StatusLabel>
                       ) : (
                         <ClickRunNowToFetch>
-                          click &quot;run now&quot; to fetch
+                          click &quot;run now&quot; to fetch, or wait for
+                          scheduler
                         </ClickRunNowToFetch>
                       )}
                       {fileSource.lastRan && (
