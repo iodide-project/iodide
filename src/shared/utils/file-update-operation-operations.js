@@ -1,4 +1,7 @@
-import { createFileUpdateOperationRequest } from "../server-api/file-update-operation";
+import {
+  createFileUpdateOperationRequest,
+  getFileUpdateOperationRequest
+} from "../server-api/file-update-operation";
 
 /* 
 
@@ -17,5 +20,10 @@ export async function saveFileUpdateOperationToServer(fileSourceID) {
     file_source_id: fileSourceID
   });
   const r = await createFileUpdateOperationRequest(body);
+  return r;
+}
+
+export async function getFileUpdateOperationFromServer(fileUpdateOperationID) {
+  const r = await getFileUpdateOperationRequest(fileUpdateOperationID);
   return r;
 }

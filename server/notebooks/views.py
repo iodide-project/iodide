@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from ..base.models import User
-from ..files.models import File, FileSource
+from ..files.models import File, FileSource, FileUpdateOperation
 from ..settings import APP_VERSION_STRING, EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 from ..views import get_user_info_dict
 from .models import Notebook, NotebookRevision
@@ -54,19 +54,32 @@ def notebook_view(request, pk):
         "1 day, 0:00:00": 'daily',
         "7 days, 0:00:00": 'weekly'
     }
-
+    OPERATION_STATUSES = {
+        0: 'pending',
+        1: 'running',
+        2: 'completed',
+        3: 'failed'
+    }
+    file_sources = []
     if owner.id == request.user.id:
-        file_sources = [
-            {
+        for file_source in FileSource.objects.filter(notebook_id=pk):
+            source = {
                 "fileSourceID": file_source.id,
                 "updateInterval": FILE_SOURCE_INTERVALS[str(file_source.update_interval)],
                 "destinationFilename": file_source.filename,
-                "sourceURL": file_source.url,
+                "sourceURL": file_source.url
             }
-            for file_source in FileSource.objects.filter(notebook_id=pk)
-        ]
-    else:
-        file_sources = []
+            file_update_operation = FileUpdateOperation.objects.filter(file_source_id=file_source.id)
+            if len(file_update_operation) > 0:
+                file_update_operation = file_update_operation.latest('started')
+                last_ran = file_update_operation.started
+                update_status = OPERATION_STATUSES[file_update_operation.status]
+                operation_id = file_update_operation.id
+                source["lastRan"] = last_ran
+                source["lastFileUpdateOperationStatus"] = update_status
+                source["lastFileUpdateOperationID"] = operation_id
+            
+            file_sources.append(source)
     
     notebook_info = {
         "username": notebook.owner.username,

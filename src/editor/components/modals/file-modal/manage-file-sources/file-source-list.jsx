@@ -3,11 +3,15 @@ import styled from "react-emotion";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import format from "date-fns/format";
+
 import DeleteModal from "../../../../../server/components/delete-modal";
 import {
   deleteFileSource as deleteFileSourceAction,
-  createFileUpdateOperation as createFileUpdateOperationAction
+  createFileUpdateOperation as createFileUpdateOperationAction,
+  pollForFileUpdateOperationStatus as pollForFileUpdateOperationStatusAction
 } from "../../../../actions/file-source-actions";
+
 import { TextButton } from "../../../../../shared/components/buttons";
 
 import {
@@ -19,6 +23,8 @@ import {
   ListSecondaryTextLink,
   ListMetadata
 } from "../../../../../server/components/list";
+
+const formatDate = str => format(new Date(str), "MMM dd, uuuu HH:mm:ss");
 
 const FileSourceListContainer = styled.div`
   width: 100%;
@@ -54,13 +60,22 @@ const FileSourceURL = styled(ListSecondaryTextLink)`
   white-space: nowrap;
 `;
 
+const FileInformationContainer = styled.div`
+  display: grid;
+  grid-template-columns: max-content max-content max-content;
+  grid-column-gap: 10px;
+`;
+
 const FileSourceListUnconnected = ({
   fileSources,
   deleteFileSource,
-  createFileUpdateOperation
+  createFileUpdateOperation,
+  pollForFileUpdateOperationStatus
 }) => {
   // delete modal state
   const [sourceToDelete, setSourceToDelete] = useState(undefined);
+  // maintain list of manually-running file operations.
+  const [manuallyRunning, setManuallyRunning] = useState([]);
 
   return fileSources.length ? (
     <React.Fragment>
@@ -75,11 +90,22 @@ const FileSourceListUnconnected = ({
       <FileSourceListContainer>
         <List>
           {fileSources.map(fileSource => {
+            const isManuallyRunning = manuallyRunning.includes(
+              fileSource.fileSourceID
+            );
             return (
               <ListItem type="single" key={fileSource.fileSourceID}>
                 <ListMain>
                   <ListPrimaryText>
-                    {fileSource.destinationFilename}
+                    <FileInformationContainer>
+                      <div>{fileSource.destinationFilename}</div>
+                      {fileSource.lastRan && (
+                        <div>last ran: {fileSource.lastRan}</div>
+                      )}
+                      {fileSource.lastFileUpdateOperationStatus && (
+                        <div>({fileSource.lastFileUpdateOperationStatus})</div>
+                      )}
+                    </FileInformationContainer>
                   </ListPrimaryText>
                   <FileSourceURLContainer href={fileSource.sourceURL}>
                     <FileSourceURL href={fileSource.sourceURL}>
@@ -90,13 +116,21 @@ const FileSourceListUnconnected = ({
                 <FileSourceInterval>
                   {fileSource.updateInterval}
                 </FileSourceInterval>
-                <ListMetadata
-                  onClick={() =>
-                    createFileUpdateOperation(fileSource.fileSourceID)
-                  }
-                >
-                  <TextButton>run now</TextButton>
-                </ListMetadata>
+                {isManuallyRunning ? (
+                  <ListMetadata>RUNNING</ListMetadata>
+                ) : (
+                  <ListMetadata
+                    onClick={() => {
+                      createFileUpdateOperation(fileSource.fileSourceID);
+                      setManuallyRunning([
+                        ...manuallyRunning,
+                        fileSource.fileSourceID
+                      ]);
+                    }}
+                  >
+                    <TextButton>run now</TextButton>
+                  </ListMetadata>
+                )}
                 <ListMetadata>
                   <TextButton onClick={() => setSourceToDelete(fileSource)}>
                     delete
@@ -118,7 +152,8 @@ const FileSourceListUnconnected = ({
 FileSourceListUnconnected.propTypes = {
   fileSources: PropTypes.arrayOf(PropTypes.object),
   deleteFileSource: PropTypes.func,
-  createFileUpdateOperation: PropTypes.func
+  createFileUpdateOperation: PropTypes.func,
+  pollForFileUpdateOperationStatus: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -132,7 +167,9 @@ function mapDispatchToProps(dispatch) {
     deleteFileSource: fileSourceID =>
       dispatch(deleteFileSourceAction(fileSourceID)),
     createFileUpdateOperation: fileSourceID =>
-      dispatch(createFileUpdateOperationAction(fileSourceID))
+      dispatch(createFileUpdateOperationAction(fileSourceID)),
+    pollForFileUpdateOperationStatus: fileUpdateOperationID =>
+      dispatch(pollForFileUpdateOperationStatusAction(fileUpdateOperationID))
   };
 }
 

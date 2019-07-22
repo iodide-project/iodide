@@ -61,7 +61,9 @@ export const fileSourceSchema = {
     fileID: { type: "integer" },
     updateInterval: { type: "string", enum: FILE_SOURCE_UPDATE_INTERVALS },
     fileSourceID: { type: "integer" },
-    lastRan: { type: "string" }
+    lastRan: { type: "string", default: undefined },
+    lastFileUpdateOperationID: { type: "integer", default: undefined },
+    lastFileUpdateOperationStatus: { type: "string", default: undefined } // FIXME: should this be enum?
   },
   additionalProperties: false
 };

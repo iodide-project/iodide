@@ -3,7 +3,10 @@ import {
   deleteFileSourceFromServer
 } from "../../shared/utils/file-source-operations";
 
-import { saveFileUpdateOperationToServer } from "../../shared/utils/file-update-operation-operations";
+import {
+  saveFileUpdateOperationToServer,
+  getFileUpdateOperationFromServer
+} from "../../shared/utils/file-update-operation-operations";
 
 const UPDATE_INTERVAL_OPTIONS = {
   never: undefined,
@@ -40,7 +43,6 @@ export function addFileSource(
 }
 
 export function createFileUpdateOperation(fileSourceID) {
-  // thing
   return async () => {
     let response;
     try {
@@ -48,6 +50,14 @@ export function createFileUpdateOperation(fileSourceID) {
     } catch (err) {
       console.error(err);
     }
+    // add status and latestFileUpdateOperationID
+    console.log(response);
+  };
+}
+
+export function pollForFileUpdateOperationStatus(fileUpdateOperationID) {
+  return async () => {
+    const response = getFileUpdateOperationFromServer(fileUpdateOperationID);
     console.log(response);
   };
 }
