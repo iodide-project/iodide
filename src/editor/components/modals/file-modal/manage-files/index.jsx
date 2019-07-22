@@ -2,18 +2,18 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import DeleteModal from "../../../../server/components/delete-modal";
-import OverwriteModal from "../../../../server/components/upload-modal";
+import DeleteModal from "../../../../../server/components/delete-modal";
+import OverwriteModal from "../../../../../server/components/upload-modal";
 import Body from "./body";
 import {
   deleteFileOnServer,
   selectMultipleFilesAndFormatMetadata,
   uploadFile
-} from "../../../../shared/utils/file-operations";
+} from "../../../../../shared/utils/file-operations";
 import {
   addFileToNotebook,
   deleteFileFromNotebook
-} from "../../../actions/file-request-actions";
+} from "../../../../actions/file-request-actions";
 
 export class FileModalUnconnected extends React.Component {
   static propTypes = {

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
 
-import { ContainedButton } from "../../../../shared/components/buttons";
+import { ContainedButton } from "../../../../../shared/components/buttons";
 
 const AddButton = styled(ContainedButton)`
   justify-self: start;
