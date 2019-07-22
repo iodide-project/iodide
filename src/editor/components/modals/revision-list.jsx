@@ -23,6 +23,7 @@ class RevisionListUnconnected extends React.Component {
       })
     ),
     selectedRevisionId: PropTypes.number,
+    hideLocalChanges: PropTypes.bool,
     updateSelectedRevisionId: PropTypes.func.isRequired
   };
 
@@ -40,17 +41,30 @@ class RevisionListUnconnected extends React.Component {
   }
 
   render() {
+    if (this.props.revisionList !== undefined) {
+      if (
+        this.props.hideLocalChanges &&
+        this.props.selectedRevisionId === undefined
+      ) {
+        if (this.props.revisionList.length > 0) {
+          this.revisionClicked(this.props.revisionList[0].id);
+        }
+      }
+    }
+
     return (
       <RevisionListContainer>
         <List>
-          <ListItem
-            button
-            key="local-changes"
-            onClick={() => this.revisionClicked(undefined)}
-            selected={this.props.selectedRevisionId === undefined}
-          >
-            <ListItemText primary="Unsaved Changes" />
-          </ListItem>
+          {!this.props.hideLocalChanges && (
+            <ListItem
+              button
+              key="local-changes"
+              onClick={() => this.revisionClicked(undefined)}
+              selected={this.props.selectedRevisionId === undefined}
+            >
+              <ListItemText primary="Unsaved Changes" />
+            </ListItem>
+          )}
           {this.props.revisionList &&
             this.props.revisionList.map(revision => (
               <ListItem
@@ -75,11 +89,26 @@ class RevisionListUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   const notebookHistory = state.notebookHistory || {};
-  const { revisionList, selectedRevisionId } = notebookHistory;
+  const {
+    revisionContentFetchStatus,
+    revisionContent,
+    revisionList,
+    selectedRevisionId
+  } = notebookHistory;
+
+  let hideLocalChanges = true;
+
+  if (revisionContentFetchStatus === "IDLE") {
+    const previousRevisionContent =
+      revisionList.length > 0 ? revisionContent[revisionList[0].id] : "";
+
+    hideLocalChanges = state.iomd === previousRevisionContent;
+  }
 
   return {
     revisionList,
-    selectedRevisionId
+    selectedRevisionId,
+    hideLocalChanges
   };
 }
 
