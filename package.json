@@ -58,7 +58,7 @@
     "error-stack-parser": "2.0.2",
     "eslint-config-prettier": "6.0.0",
     "font-awesome": "4.7.0",
-    "git-revision-webpack-plugin": "^3.0.3",
+    "git-revision-webpack-plugin": "3.0.3",
     "golden-layout": "1.5.9",
     "jss": "9.8.7",
     "lodash": "4.17.15",
