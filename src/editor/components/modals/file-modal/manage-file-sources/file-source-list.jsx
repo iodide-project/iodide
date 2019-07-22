@@ -4,15 +4,18 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import format from "date-fns/format";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import DeleteModal from "../../../../../server/components/delete-modal";
 import {
   deleteFileSource as deleteFileSourceAction,
-  createFileUpdateOperation as createFileUpdateOperationAction,
-  pollForFileUpdateOperationStatus as pollForFileUpdateOperationStatusAction
+  createFileUpdateOperation as createFileUpdateOperationAction
 } from "../../../../actions/file-source-actions";
 
-import { TextButton } from "../../../../../shared/components/buttons";
+import {
+  TextButton,
+  OutlineButton
+} from "../../../../../shared/components/buttons";
 
 import {
   List,
@@ -53,6 +56,19 @@ const FileSourceURLContainer = styled(ListSecondaryText)`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 500px;
+  white-space: nowrap;
+`;
+
+const ClickRunNowToFetch = styled.div`
+  color: #999;
+  font-size: 10px;
+  font-style: italic;
+  align-self: end;
+`;
+
+const FileName = styled.div`
+  font-weight: bold;
+  color: ${({ hasBeenRun }) => (hasBeenRun ? "black" : "#888")};
 `;
 
 const FileSourceURL = styled(ListSecondaryTextLink)`
@@ -61,21 +77,72 @@ const FileSourceURL = styled(ListSecondaryTextLink)`
 `;
 
 const FileInformationContainer = styled.div`
+  max-width: 500px;
   display: grid;
   grid-template-columns: max-content max-content max-content;
   grid-column-gap: 10px;
 `;
 
+const ListItemCall = styled(ListMetadata)`
+  min-width: 100px;
+  text-align: center;
+  position: relative;
+  height: 100%;
+  display: grid;
+  margin: auto;
+  align-content: center;
+  overflow: hidden;
+  cursor: pointer;
+`;
+
+const Fader = styled.div`
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  opacity: ${({ active }) => (active ? 1 : 0)};
+  transform: ${({ active }) => (!active ? "translateY(-5px)" : "none")};
+  transition: opacity 200ms, transform 250ms;
+`;
+
+const LastRanLabel = styled.div`
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: 12px;
+  color: gray;
+`;
+
+const operationStatusColors = {
+  pending: "MediumSeaGreen",
+  running: "MediumSeaGreen",
+  completed: "CornflowerBlue",
+  failed: "Salmon"
+};
+
+const StatusLabel = styled.div`
+  margin: auto;
+  font-size: 10px;
+  color: white;
+  padding: 0;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-radius: 3px;
+  background-color: ${({ status }) => operationStatusColors[status]};
+`;
+
 const FileSourceListUnconnected = ({
   fileSources,
   deleteFileSource,
-  createFileUpdateOperation,
-  pollForFileUpdateOperationStatus
+  createFileUpdateOperation
 }) => {
   // delete modal state
   const [sourceToDelete, setSourceToDelete] = useState(undefined);
-  // maintain list of manually-running file operations.
-  const [manuallyRunning, setManuallyRunning] = useState([]);
 
   return fileSources.length ? (
     <React.Fragment>
@@ -90,24 +157,43 @@ const FileSourceListUnconnected = ({
       <FileSourceListContainer>
         <List>
           {fileSources.map(fileSource => {
-            const isManuallyRunning = manuallyRunning.includes(
-              fileSource.fileSourceID
+            const isManuallyRunning = ["pending", "running"].includes(
+              fileSource.lastFileUpdateOperationStatus
             );
             return (
               <ListItem type="single" key={fileSource.fileSourceID}>
                 <ListMain>
                   <ListPrimaryText>
                     <FileInformationContainer>
-                      <div>{fileSource.destinationFilename}</div>
-                      {fileSource.lastRan && (
-                        <div>last ran: {fileSource.lastRan}</div>
+                      <FileName
+                        hasBeenRun={
+                          fileSource.lastFileUpdateOperationID !== undefined
+                        }
+                      >
+                        {fileSource.destinationFilename}
+                      </FileName>
+                      {fileSource.lastFileUpdateOperationID !== undefined ? (
+                        <StatusLabel
+                          status={fileSource.lastFileUpdateOperationStatus}
+                        >
+                          {fileSource.lastFileUpdateOperationStatus}
+                        </StatusLabel>
+                      ) : (
+                        <ClickRunNowToFetch>
+                          click &quot;run now&quot; to fetch
+                        </ClickRunNowToFetch>
                       )}
-                      {fileSource.lastFileUpdateOperationStatus && (
-                        <div>({fileSource.lastFileUpdateOperationStatus})</div>
+                      {fileSource.lastRan && (
+                        <LastRanLabel>
+                          on {formatDate(fileSource.lastRan)}
+                        </LastRanLabel>
                       )}
                     </FileInformationContainer>
                   </ListPrimaryText>
-                  <FileSourceURLContainer href={fileSource.sourceURL}>
+                  <FileSourceURLContainer
+                    length={fileSource.sourceURL.length}
+                    href={fileSource.sourceURL}
+                  >
                     <FileSourceURL href={fileSource.sourceURL}>
                       {fileSource.sourceURL}
                     </FileSourceURL>
@@ -116,21 +202,22 @@ const FileSourceListUnconnected = ({
                 <FileSourceInterval>
                   {fileSource.updateInterval}
                 </FileSourceInterval>
-                {isManuallyRunning ? (
-                  <ListMetadata>RUNNING</ListMetadata>
-                ) : (
-                  <ListMetadata
-                    onClick={() => {
-                      createFileUpdateOperation(fileSource.fileSourceID);
-                      setManuallyRunning([
-                        ...manuallyRunning,
-                        fileSource.fileSourceID
-                      ]);
-                    }}
-                  >
-                    <TextButton>run now</TextButton>
-                  </ListMetadata>
-                )}
+                <ListItemCall>
+                  <Fader active={isManuallyRunning}>
+                    <CircularProgress size={20} />
+                  </Fader>
+                  <Fader active={!isManuallyRunning}>
+                    <OutlineButton
+                      disabled={isManuallyRunning}
+                      onClick={() => {
+                        createFileUpdateOperation(fileSource.fileSourceID);
+                      }}
+                    >
+                      run now
+                    </OutlineButton>
+                  </Fader>
+                </ListItemCall>
+
                 <ListMetadata>
                   <TextButton onClick={() => setSourceToDelete(fileSource)}>
                     delete
@@ -152,8 +239,7 @@ const FileSourceListUnconnected = ({
 FileSourceListUnconnected.propTypes = {
   fileSources: PropTypes.arrayOf(PropTypes.object),
   deleteFileSource: PropTypes.func,
-  createFileUpdateOperation: PropTypes.func,
-  pollForFileUpdateOperationStatus: PropTypes.func
+  createFileUpdateOperation: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -167,9 +253,7 @@ function mapDispatchToProps(dispatch) {
     deleteFileSource: fileSourceID =>
       dispatch(deleteFileSourceAction(fileSourceID)),
     createFileUpdateOperation: fileSourceID =>
-      dispatch(createFileUpdateOperationAction(fileSourceID)),
-    pollForFileUpdateOperationStatus: fileUpdateOperationID =>
-      dispatch(pollForFileUpdateOperationStatusAction(fileUpdateOperationID))
+      dispatch(createFileUpdateOperationAction(fileSourceID))
   };
 }
 

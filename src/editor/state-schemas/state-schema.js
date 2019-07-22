@@ -14,6 +14,12 @@ export const FETCH_CHUNK_TYPES = [
   "arrayBuffer"
 ];
 export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json", "arrayBuffer"];
+export const FILE_UPDATE_OPERATION_STATUSES = [
+  "pending",
+  "running",
+  "completed",
+  "failed"
+];
 
 const appMessageSchema = {
   type: "object",
@@ -63,7 +69,11 @@ export const fileSourceSchema = {
     fileSourceID: { type: "integer" },
     lastRan: { type: "string", default: undefined },
     lastFileUpdateOperationID: { type: "integer", default: undefined },
-    lastFileUpdateOperationStatus: { type: "string", default: undefined } // FIXME: should this be enum?
+    lastFileUpdateOperationStatus: {
+      type: "string",
+      enum: FILE_UPDATE_OPERATION_STATUSES,
+      default: undefined
+    }
   },
   additionalProperties: false
 };

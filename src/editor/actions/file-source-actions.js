@@ -43,22 +43,54 @@ export function addFileSource(
 }
 
 export function createFileUpdateOperation(fileSourceID) {
-  return async () => {
+  return async dispatch => {
     let response;
     try {
       response = await saveFileUpdateOperationToServer(fileSourceID);
     } catch (err) {
       console.error(err);
+      // TODO: do something here if it fails.
+      return;
     }
-    // add status and latestFileUpdateOperationID
-    console.log(response);
-  };
-}
+    const lastRan = response.started;
+    const lastFileUpdateOperationID = response.id;
+    const responseFileSourceID = response.file_source_id;
+    const lastFileUpdateOperationStatus = response.status;
+    dispatch({
+      type: "UPDATE_FILE_SOURCE",
+      fileSourceID: responseFileSourceID,
+      lastRan,
+      lastFileUpdateOperationID,
+      lastFileUpdateOperationStatus
+    });
+    // this is probably where we want to poll for the status.
+    // add status, lastRan lastFileUpdateOperationID
+    let statusUpdate = lastFileUpdateOperationStatus;
+    while (statusUpdate === "pending") {
+      // this while loop depends on whether the iteration's response
+      // returns status ! == "pending". Thus we will disable
+      // this eslint rule, as per the documentation for this
+      // rule here, as suggested in https://eslint.org/docs/rules/no-await-in-loop
+      /* eslint-disable no-await-in-loop */
+      response = await getFileUpdateOperationFromServer(
+        lastFileUpdateOperationID
+      );
+      // update response here;
+      dispatch({
+        type: "UPDATE_FILE_SOURCE",
+        fileSourceID: response.file_source_id,
+        lastRan: response.started,
+        lastFileUpdateOperationID: response.id,
+        lastFileUpdateOperationStatus: response.status
+      });
 
-export function pollForFileUpdateOperationStatus(fileUpdateOperationID) {
-  return async () => {
-    const response = getFileUpdateOperationFromServer(fileUpdateOperationID);
-    console.log(response);
+      if (response.status !== "pending" && response.status !== "running") {
+        statusUpdate = response.status;
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+      /* eslint-enable no-await-in-loop */
+    }
   };
 }
 
