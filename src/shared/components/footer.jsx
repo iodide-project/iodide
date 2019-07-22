@@ -47,7 +47,7 @@ const Footer = ({ showIcon = true }) => (
         // only display terms of service on an official mozilla installation
         <ul>
           <li>
-            Alpha Software - Revision
+            Alpha Software - revision&nbsp;
             <a
               href={`https://github.com/iodide-project/iodide/tree/${process.env.COMMIT_HASH}`}
             >
