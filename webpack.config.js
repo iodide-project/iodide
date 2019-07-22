@@ -26,6 +26,7 @@ let { EVAL_FRAME_ORIGIN } = process.env;
 const { USE_OPENIDC_AUTH } = process.env;
 const { IODIDE_PUBLIC } = process.env || false;
 const { USE_LOCAL_PYODIDE } = process.env || false;
+const { SOURCE_VERSION } = process.env;
 
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || "dev";
 
@@ -129,10 +130,13 @@ module.exports = env => {
         "process.env.USE_LOCAL_PYODIDE": JSON.stringify(USE_LOCAL_PYODIDE),
         "process.env.USE_OPENIDC_AUTH": JSON.stringify(USE_OPENIDC_AUTH),
         "process.env.IODIDE_PUBLIC": !!IODIDE_PUBLIC,
+        // we don't have access to the git checkout on heroku, so use the
+        // environment variable "SOURCE_VERSION" which contains the hash
         "process.env.COMMIT_HASH": JSON.stringify(
-          new GitRevisionPlugin({
-            commithashCommand: "rev-list master --max-count=1"
-          }).commithash()
+          SOURCE_VERSION ||
+            new GitRevisionPlugin({
+              commithashCommand: "rev-list master --max-count=1"
+            }).commithash()
         )
       }),
       new MiniCssExtractPlugin({
