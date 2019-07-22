@@ -6,6 +6,7 @@ const CreateFileWebpack = require("create-file-webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 const WebpackShellPlugin = require("webpack-shell-plugin");
+const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
 const LodashModuleReplacementPlugin = require("lodash-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
@@ -127,7 +128,12 @@ module.exports = env => {
         "process.env.IODIDE_REDUX_LOG_MODE": JSON.stringify(reduxLogMode),
         "process.env.USE_LOCAL_PYODIDE": JSON.stringify(USE_LOCAL_PYODIDE),
         "process.env.USE_OPENIDC_AUTH": JSON.stringify(USE_OPENIDC_AUTH),
-        "process.env.IODIDE_PUBLIC": !!IODIDE_PUBLIC
+        "process.env.IODIDE_PUBLIC": !!IODIDE_PUBLIC,
+        "process.env.COMMIT_HASH": JSON.stringify(
+          new GitRevisionPlugin({
+            commithashCommand: "rev-list master --max-count=1"
+          }).commithash()
+        )
       }),
       new MiniCssExtractPlugin({
         filename: `[name].${APP_VERSION_STRING}.css`
