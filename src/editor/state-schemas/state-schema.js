@@ -235,7 +235,7 @@ export const stateProperties = {
         },
         default: []
       },
-      selectedRevision: {
+      selectedRevisionId: {
         type: "number"
       },
       revisionContent: {
