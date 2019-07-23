@@ -2,58 +2,56 @@ import React from "react";
 
 import { shallow } from "enzyme";
 
-import ValueRenderer from "../value-renderer";
+import { ValueRendererUnwrapped } from "../value-renderer";
 
 import ExpandableRep from "../rep-tree";
 import ErrorRenderer from "../error-handler";
 import HTMLHandler from "../html-handler";
 import TableRenderer from "../data-table-rep";
 
-// FIXME: refactor ValueRenderer to make testing more tractable.
-// HOCs may be useful here for encapsulating the async fetch.
-// May also be able to remove the defaultProp.
-// Also need to do this in data-table-rep and rep-tree
-
-describe.skip("ValueRenderer passes through to correct rep depending on getTopLevelRepSummary result", () => {
+describe("ValueRenderer passes through to correct rep depending on topLevelRepSummary result", () => {
   let props;
   let mountedItem;
 
   const shallowValueRenderer = () => {
     if (!mountedItem) {
-      mountedItem = shallow(<ValueRenderer {...props} />);
+      mountedItem = shallow(<ValueRendererUnwrapped {...props} />);
     }
     return mountedItem;
   };
 
   beforeEach(() => {
     props = {
-      windowValue: true,
-      valueKey: "valueIdentifier",
-      getTopLevelRepSummary: () => undefined
+      rootObjName: "window",
+      pathToEntity: ["foo", "343", "bar"]
     };
     mountedItem = undefined;
   });
 
   [
     {
-      getTopLevelRepSummary: () => ({ repType: "HTML_STRING" }),
+      topLevelRepSummary: { repType: "HTML_STRING", htmlString: "hgdsfasd" },
       repComponent: HTMLHandler
     },
     {
-      getTopLevelRepSummary: () => ({ repType: "ERROR_TRACE" }),
+      topLevelRepSummary: { repType: "ERROR_TRACE", errorString: "asdfaas" },
       repComponent: ErrorRenderer
     },
     {
-      getTopLevelRepSummary: () => ({ repType: "ROW_TABLE_REP" }),
+      topLevelRepSummary: {
+        repType: "ROW_TABLE_REP",
+        initialDataRows: [],
+        pages: 453
+      },
       repComponent: TableRenderer
     },
     {
-      getTopLevelRepSummary: () => ({ repType: "<<type not specified>>" }),
+      topLevelRepSummary: { repType: "<<type not specified>>" },
       repComponent: ExpandableRep
     }
-  ].forEach(({ getTopLevelRepSummary, repComponent }) => {
-    it(`use correct rep (type: ${getTopLevelRepSummary().repType})`, () => {
-      props.getTopLevelRepSummary = getTopLevelRepSummary;
+  ].forEach(({ topLevelRepSummary, repComponent }) => {
+    it(`use correct rep (type: ${topLevelRepSummary.repType})`, () => {
+      props.topLevelRepSummary = topLevelRepSummary;
       expect(shallowValueRenderer().find(repComponent)).toHaveLength(1);
     });
   });

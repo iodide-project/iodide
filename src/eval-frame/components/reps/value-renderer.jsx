@@ -7,75 +7,44 @@ import ErrorRenderer from "./error-handler";
 import HTMLHandler from "./html-handler";
 import TableRenderer from "./data-table-rep";
 
+import { wrapValueRenderer } from "./rep-info-requestor";
+
 import { requestRepInfo } from "./request-rep-info";
 
-export default class ValueRenderer extends React.Component {
+export class ValueRendererUnwrapped extends React.Component {
   static propTypes = {
-    windowValue: PropTypes.bool,
-    valueKey: PropTypes.string.isRequired,
-    getTopLevelRepSummary: PropTypes.func
-  };
-
-  static defaultProps = {
-    getTopLevelRepSummary: (rootObjName, pathToEntity) =>
-      requestRepInfo({
-        rootObjName,
-        pathToEntity,
-        requestType: "TOP_LEVEL_SUMMARY"
-      })
+    topLevelRepSummary: PropTypes.object, // eslint-disable-line
+    rootObjName: PropTypes.string, // eslint-disable-line
+    pathToEntity: PropTypes.array // eslint-disable-line
   };
 
   constructor(props) {
     super(props);
-    this.state = {
-      pathToEntity: [this.props.valueKey],
-      rootObjName: this.props.windowValue
-        ? "window"
-        : "IODIDE_EVALUATION_RESULTS",
-      topLevelRepSummary: undefined
-    };
+    this.state = {};
   }
-  async componentDidMount() {
-    const { rootObjName, pathToEntity } = this.state;
-    const topLevelRepSummary = await this.props.getTopLevelRepSummary(
-      rootObjName,
-      pathToEntity
-    );
-    // this following lint rule is controversial. the react docs *advise*
-    // loading data in compDidMount, and explicitly say calling
-    // setState is ok if needed. Disabling lint rule is justified.
-    // eslint-disable-next-line react/no-did-mount-set-state
-    this.setState({ topLevelRepSummary });
-  }
-
   componentDidCatch(error, errorInfo) {
     this.setState({ error, errorInfo });
   }
 
   render() {
-    const { rootObjName, pathToEntity, topLevelRepSummary } = this.state;
-
+    const { rootObjName, pathToEntity, topLevelRepSummary } = this.props;
     if (this.state.errorInfo) {
       return (
         <div>
-          <pre>
-            {`The value at location "${rootObjName}" with identifier "${this.props.valueKey}" could not be loaded.`}
-          </pre>
           <h2>A value renderer encountered an error.</h2>
           <pre>
             {this.state.error && this.state.error.toString()}
             <br />
             {this.state.errorInfo.componentStack}
           </pre>
+          <h2>Top level rep summary:</h2>
+          <pre>{JSON.stringify(topLevelRepSummary)}</pre>
           <a href="https://github.com/iodide-project/iodide/issues/new">
-            Please file a bug report.
-          </a>
+            Please file a bug report
+          </a>{" "}
+          with the information above.
         </div>
       );
-    }
-
-    if (topLevelRepSummary === undefined) {
-      return "";
     }
 
     switch (topLevelRepSummary.repType) {
@@ -111,3 +80,5 @@ export default class ValueRenderer extends React.Component {
     }
   }
 }
+
+export default wrapValueRenderer(ValueRendererUnwrapped);
