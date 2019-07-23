@@ -50,16 +50,11 @@ def notebook_view(request, pk):
     ]
 
     FILE_SOURCE_INTERVALS = {
-        'None': 'never',
-        "1 day, 0:00:00": 'daily',
-        "7 days, 0:00:00": 'weekly'
+        "None": "never",
+        "1 day, 0:00:00": "daily",
+        "7 days, 0:00:00": "weekly",
     }
-    OPERATION_STATUSES = {
-        0: 'pending',
-        1: 'running',
-        2: 'completed',
-        3: 'failed'
-    }
+    OPERATION_STATUSES = {0: "pending", 1: "running", 2: "completed", 3: "failed"}
     file_sources = []
     if owner.id == request.user.id:
         for file_source in FileSource.objects.filter(notebook_id=pk):
@@ -67,12 +62,13 @@ def notebook_view(request, pk):
                 "fileSourceID": file_source.id,
                 "updateInterval": FILE_SOURCE_INTERVALS[str(file_source.update_interval)],
                 "destinationFilename": file_source.filename,
-                "sourceURL": file_source.url
+                "sourceURL": file_source.url,
             }
             file_update_operation = FileUpdateOperation.objects.filter(
-                file_source_id=file_source.id)
+                file_source_id=file_source.id
+            )
             if len(file_update_operation) > 0:
-                file_update_operation = file_update_operation.latest('started')
+                file_update_operation = file_update_operation.latest("started")
                 last_ran = file_update_operation.started.isoformat()
                 update_status = OPERATION_STATUSES[file_update_operation.status]
                 operation_id = file_update_operation.id

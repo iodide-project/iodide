@@ -111,16 +111,14 @@ def test_run_scheduled_file_operations(fake_user, test_notebook, date):
             update_operations = FileUpdateOperation.objects.all()
             if date == "2019-07-08":
                 # 2019-07-08 is a monday, so the weekly task should have run
-                assert (
-                    set(update_operations.values_list("file_source_id", flat=True)) == weekly_ids
-                )
+                assert set(update_operations.values_list("file_source_id", flat=True)) == weekly_ids
             else:  # 2019-07-10
                 # only the daily task should have run
-                assert (
-                    set(update_operations.values_list("file_source_id", flat=True)) == daily_ids
-                )
+                assert set(update_operations.values_list("file_source_id", flat=True)) == daily_ids
             # also make sure we queued the relevant async tasks
-            mock_task.assert_has_calls([call(args=[id]) for id in update_operations.values_list('id', flat=True)])
+            mock_task.assert_has_calls(
+                [call(args=[id]) for id in update_operations.values_list("id", flat=True)]
+            )
 
 
 def test_post_file_update_operation(fake_user, test_notebook, test_file_source, client):
