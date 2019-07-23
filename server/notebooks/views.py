@@ -69,7 +69,7 @@ def notebook_view(request, pk):
             )
             if len(file_update_operation) > 0:
                 file_update_operation = file_update_operation.latest("started")
-                last_ran = file_update_operation.started.isoformat()
+                last_ran = file_update_operation.started.isoformat() if file_update_operation.started else None
                 update_status = OPERATION_STATUSES[file_update_operation.status]
                 operation_id = file_update_operation.id
                 source["lastRan"] = last_ran
