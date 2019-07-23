@@ -1,8 +1,6 @@
 import { languageDefinitions } from "./language-definitions";
 import { historySchema } from "./history-schema";
 
-export const FILE_SOURCE_UPDATE_INTERVALS = ["never", "daily", "weekly"];
-
 export const NONCODE_EVAL_TYPES = ["css", "md", "meta", "raw"];
 export const RUNNABLE_CHUNK_TYPES = ["plugin", "fetch"];
 export const FETCH_CHUNK_TYPES = [
@@ -14,6 +12,8 @@ export const FETCH_CHUNK_TYPES = [
   "arrayBuffer"
 ];
 export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json", "arrayBuffer"];
+
+export const FILE_SOURCE_UPDATE_INTERVALS = ["never", "daily", "weekly"];
 export const FILE_UPDATE_OPERATION_STATUSES = [
   "pending",
   "running",
@@ -64,7 +64,6 @@ export const fileSourceSchema = {
   properties: {
     sourceURL: { type: "string" },
     destinationFilename: { type: "string" },
-    fileID: { type: "integer" },
     updateInterval: { type: "string", enum: FILE_SOURCE_UPDATE_INTERVALS },
     fileSourceID: { type: "integer" },
     lastRan: { type: "string", default: undefined },

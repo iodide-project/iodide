@@ -42,6 +42,18 @@ export function addFileSource(
   };
 }
 
+export function deleteFileSource(fileSourceID) {
+  return async dispatch => {
+    const response = await deleteFileSourceFromServer(fileSourceID);
+    // remove the listed file source from notebook.
+    dispatch({
+      type: "DELETE_FILE_SOURCE_FROM_NOTEBOOK",
+      fileSourceID
+    });
+    return response;
+  };
+}
+
 export function createFileUpdateOperation(fileSourceID) {
   return async dispatch => {
     let response;
@@ -88,17 +100,5 @@ export function createFileUpdateOperation(fileSourceID) {
       }
       /* eslint-enable no-await-in-loop */
     }
-  };
-}
-
-export function deleteFileSource(fileSourceID) {
-  return async dispatch => {
-    const response = await deleteFileSourceFromServer(fileSourceID);
-    // remove the listed file source from notebook.
-    dispatch({
-      type: "DELETE_FILE_SOURCE_FROM_NOTEBOOK",
-      fileSourceID
-    });
-    return response;
   };
 }
