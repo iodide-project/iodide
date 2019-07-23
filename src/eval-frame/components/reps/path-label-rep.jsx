@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
 
-import { RangeDescriptor } from "./rep-utils/rep-serialization-core-types";
+import { RangeDescriptorPropTypes } from "./rep-utils/rep-serialization-core-types-proptypes";
 import { Ell, RepBaseText, propLabelColor, Truncator } from "./value-summary";
 
 import { truncateString } from "./rep-utils/truncate-string";
@@ -47,10 +47,8 @@ TerminalPathLabelRep.propTypes = {
 
 export class PathLabelRep extends React.Component {
   static propTypes = {
-    pathLabel: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.instanceOf(RangeDescriptor)
-    ]).isRequired,
+    pathLabel: PropTypes.oneOfType([PropTypes.string, RangeDescriptorPropTypes])
+      .isRequired,
     tiny: PropTypes.bool,
     mappingDelim: PropTypes.string
   };

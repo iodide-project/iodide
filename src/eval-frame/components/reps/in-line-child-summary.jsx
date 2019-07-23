@@ -6,11 +6,16 @@ import ValueSummary, { RepBaseText, Ell } from "./value-summary";
 import { PathLabelRep } from "./path-label-rep";
 
 import {
-  ChildSummaryItem,
-  RangeDescriptor,
-  MapPairSummaryItem,
-  ChildSummary
+  newChildSummaryItem,
+  newRangeDescriptor,
+  isRangeDescriptor
 } from "./rep-utils/rep-serialization-core-types";
+
+import {
+  MapPairSummaryItemPropTypes,
+  ChildSummaryPropTypes,
+  ChildSummaryItemPropTypes
+} from "./rep-utils/rep-serialization-core-types-proptypes";
 
 import { numericIndexTypes } from "./rep-utils/child-summary-serializer";
 
@@ -21,14 +26,13 @@ function truncateChildItemsForInlineSummary(childItems, maxToShow = 5) {
     // if the last subpath is a RangeDescriptor,
     // the added RangeDescriptor must account for that
     const lastItem = childItems[childItems.length - 1];
-    const max =
-      lastItem.path instanceof RangeDescriptor
-        ? lastItem.path.max
-        : childItems.length;
+    const max = isRangeDescriptor(lastItem.path)
+      ? lastItem.path.max
+      : childItems.length;
 
     inlineChildItems.push(
-      new ChildSummaryItem(
-        new RangeDescriptor(maxToShow + 1, max, "INLINE_SUMMARY_RANGE"),
+      newChildSummaryItem(
+        newRangeDescriptor(maxToShow + 1, max, "INLINE_SUMMARY_RANGE"),
         null
       )
     );
@@ -51,7 +55,7 @@ const InlineKeyValSummaryItem = ({ summaryItem, mappingDelim }) => {
   );
 };
 InlineKeyValSummaryItem.propTypes = {
-  summaryItem: PropTypes.instanceOf(ChildSummaryItem),
+  summaryItem: ChildSummaryItemPropTypes,
   mappingDelim: PropTypes.string
 };
 
@@ -67,25 +71,25 @@ const MapKeyValSummaryItem = ({ summaryItem }) => {
   );
 };
 MapKeyValSummaryItem.propTypes = {
-  summaryItem: PropTypes.instanceOf(MapPairSummaryItem)
+  summaryItem: MapPairSummaryItemPropTypes
 };
 
 const UnlabeledSummaryItem = ({ summaryItem }) => {
   return <ValueSummary tiny {...summaryItem.summary} />;
 };
 UnlabeledSummaryItem.propTypes = {
-  summaryItem: PropTypes.instanceOf(ChildSummaryItem)
+  summaryItem: ChildSummaryItemPropTypes
 };
 
 const SummaryItemWithRangeHandling = (summaryItem, summaryItemRep) => {
   const { path } = summaryItem;
-  if (path instanceof RangeDescriptor) {
+  if (isRangeDescriptor(path)) {
     return <TinyRangeRep number={path.max - path.min + 1} />;
   }
   return summaryItemRep({ summaryItem });
 };
 SummaryItemWithRangeHandling.propTypes = {
-  summaryItem: PropTypes.instanceOf(ChildSummaryItem),
+  summaryItem: ChildSummaryItemPropTypes,
   summaryItemRep: PropTypes.func.isRequired
 };
 
@@ -138,7 +142,7 @@ const InlineChildSummary = ({ childSummaries, parentType }) => {
   );
 };
 InlineChildSummary.propTypes = {
-  childSummaries: PropTypes.instanceOf(ChildSummary),
+  childSummaries: ChildSummaryPropTypes,
   parentType: PropTypes.string
 };
 

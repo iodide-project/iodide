@@ -4,11 +4,16 @@ import PropTypes from "prop-types";
 import InlineChildSummary from "./in-line-child-summary";
 
 import {
-  ValueSummary,
-  RangeDescriptor,
-  SubstringRangeSummaryItem,
-  MapPairSummaryItem
+  isValueSummary,
+  isSubstringRangeSummaryItem,
+  isMapPairSummaryItem
 } from "./rep-utils/rep-serialization-core-types";
+
+import {
+  ValueSummaryPropTypes,
+  PathLabelPropTypes,
+  PathToEntityPropTypes
+} from "./rep-utils/rep-serialization-core-types-proptypes";
 
 import ValueSummaryRep from "./value-summary";
 import { PathLabelRep } from "./path-label-rep";
@@ -48,7 +53,7 @@ Expander.propTypes = {
 export class LeafNodeRep extends React.Component {
   static propTypes = {
     pathLabel: PropTypes.string.isRequired,
-    valueSummary: PropTypes.instanceOf(ValueSummary).isRequired
+    valueSummary: ValueSummaryPropTypes.isRequired
   };
   render() {
     return (
@@ -65,19 +70,11 @@ export class LeafNodeRep extends React.Component {
 
 export default class ExpandableRep extends React.PureComponent {
   static propTypes = {
-    pathToEntity: PropTypes.arrayOf(
-      PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.instanceOf(RangeDescriptor)
-      ])
-    ).isRequired,
-    valueSummary: PropTypes.instanceOf(ValueSummary),
+    pathToEntity: PathToEntityPropTypes.isRequired,
+    valueSummary: ValueSummaryPropTypes,
     getChildSummaries: PropTypes.func.isRequired,
     rootObjName: PropTypes.string,
-    pathLabel: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.instanceOf(RangeDescriptor)
-    ])
+    pathLabel: PathLabelPropTypes
   };
 
   constructor(props) {
@@ -151,7 +148,7 @@ export default class ExpandableRep extends React.PureComponent {
     const { expanded, childSummaries } = this.state;
 
     let expanderState;
-    if (valueSummary instanceof ValueSummary && !valueSummary.isExpandable) {
+    if (isValueSummary(valueSummary) && !valueSummary.isExpandable) {
       expanderState = "NONE";
     } else {
       expanderState = expanded ? "EXPANDED" : "COLLAPSED";
@@ -162,11 +159,11 @@ export default class ExpandableRep extends React.PureComponent {
         {childSummaries.childItems.map(summaryItem => {
           const { path, summary } = summaryItem;
 
-          if (summaryItem instanceof SubstringRangeSummaryItem) {
+          if (isSubstringRangeSummaryItem(summaryItem)) {
             return <ValueSummaryRep key={JSON.stringify(path)} {...summary} />;
           }
 
-          if (summary instanceof ValueSummary && !summary.isExpandable) {
+          if (isValueSummary(summary) && !summary.isExpandable) {
             return (
               <LeafNodeRep
                 key={JSON.stringify(path)}
@@ -176,7 +173,7 @@ export default class ExpandableRep extends React.PureComponent {
             );
           }
 
-          if (summaryItem instanceof MapPairSummaryItem) {
+          if (isMapPairSummaryItem(summaryItem)) {
             return (
               <MapPairFullRep
                 key={JSON.stringify(path)}
@@ -228,23 +225,12 @@ export default class ExpandableRep extends React.PureComponent {
 
 export class MapPairFullRep extends React.Component {
   static propTypes = {
-    keySummary: PropTypes.instanceOf(ValueSummary),
-
-    valSummary: PropTypes.instanceOf(ValueSummary),
-
-    pathToMapPair: PropTypes.arrayOf(
-      PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.instanceOf(RangeDescriptor)
-      ])
-    ).isRequired,
-
+    keySummary: ValueSummaryPropTypes,
+    valSummary: ValueSummaryPropTypes,
+    pathToMapPair: PathToEntityPropTypes.isRequired,
     getChildSummaries: PropTypes.func.isRequired,
     rootObjName: PropTypes.string,
-    pathLabel: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.instanceOf(RangeDescriptor)
-    ])
+    pathLabel: PathLabelPropTypes
   };
   render() {
     const {
