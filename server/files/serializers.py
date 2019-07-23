@@ -54,3 +54,25 @@ class FileUpdateOperationSerializer(serializers.ModelSerializer):
             "status",
             "failure_reason",
         )
+
+
+class FileUpdateOperationLatestSerializer(serializers.RelatedField):
+    def get_attribute(self, obj):
+        print('obJ!!!', obj)
+        return FileUpdateOperation.objects.filter(file_source_id=obj.id).last()
+
+    def to_representation(self, value):
+        if value:
+            return FileUpdateOperationSerializer(value).data
+
+        return None
+
+
+class FileSourceDetailSerializer(FileSourceSerializer):
+
+    latest_file_update_operation = FileUpdateOperationLatestSerializer(read_only=True)
+
+    class Meta:
+        model = FileSource
+        #fields = ("id", "owner", "title", "latest_revision", "forked_from")
+        fields = ("id", "latest_file_update_operation", "update_interval", "filename", "url")

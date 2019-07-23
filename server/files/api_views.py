@@ -1,13 +1,14 @@
 import json
 
 from django.core.exceptions import PermissionDenied
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 from ..notebooks.models import Notebook
 from .models import File, FileSource, FileUpdateOperation
-from .serializers import FileSourceSerializer, FilesSerializer, FileUpdateOperationSerializer
+from .serializers import FileSourceSerializer, FilesSerializer, FileUpdateOperationSerializer, FileSourceDetailSerializer
 from .tasks import execute_file_update_operation
 
 
@@ -56,9 +57,32 @@ class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
 
 
+class NotebookFileSourceViewSet(viewsets.ModelViewSet):
+
+    serializer_class = FileSourceDetailSerializer
+    http_method_names = ["get"]
+
+    def get_serializer_context(self):
+        notebook_id = int(self.kwargs["notebook_id"])
+        if not Notebook.objects.filter(id=notebook_id).exists():
+            raise Http404("Notebook with id %s does not exist" % notebook_id)
+        return {"notebook_id": notebook_id}
+
+    def get_queryset(self):
+        base = FileSource.objects.filter(notebook_id=self.kwargs["notebook_id"])
+        print(base, self.request.query_params)
+        filter_by_id = self.request.query_params.getlist("id")
+        if filter_by_id:
+            return base.filter(id__in=filter_by_id)
+        return base
+    
+    queryset = FileSource.objects.all()
+
+
 class FileSourceViewSet(viewsets.ModelViewSet):
 
     serializer_class = FileSourceSerializer
+    #serializer_class = FileSourceListSerializer
 
     http_method_names = ["post", "put", "delete"]
 
