@@ -39,7 +39,7 @@ function getIteratorAtIndex(iterator, index) {
   throw new RangeError("map index not found in iterator");
 }
 
-function getObjAtPath(baseObj, repPath) {
+export function getObjAtPath(baseObj, repPath) {
   const queryPath = repPath.filter(p => !(p instanceof RangeDescriptor));
 
   let obj = baseObj;
@@ -83,7 +83,7 @@ export function getChildSummary(rootObjName, path) {
     // serialize the object at the end of the path, dropping
     // non-string path elements (which are indexRanges)
     const childSummaries = serializeChildSummary(
-      getObjAtPath(window[rootObjName], path.filter(isString))
+      getObjAtPath(window[rootObjName], path)
     );
     return childSummaries;
   }

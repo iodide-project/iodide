@@ -305,7 +305,7 @@ if (window.document !== undefined) {
 
 export const promiseCases = {
   promise: new Promise(() => "resolve", () => "reject"),
-  // this cause problems with node that show up in jest when testing
+  // this causes problems with node that show up in jest when testing
   // see: https://github.com/facebook/jest/issues/5311
   // uncomment this for storybook testing, but be sure to comment it
   // before committing
@@ -318,24 +318,56 @@ export const promiseCases = {
 // ==================== tabular
 
 export const rowTableCases = {
-  rowsTable_plainObjects: new Array(100).fill(0).map((x, i) => ({
+  rowsTable_plainObjects: new Array(58).fill(0).map((x, i) => ({
     index: i,
-    time: new Date(),
+    time: new Date(i * 1e10),
     id: Math.sin(i)
   })),
-  rowsTable_compositeObjects: new Array(100).fill(compositeObjects),
-  rowsTable_objectsContainingSimpleTypes: new Array(100).fill(simpleTypes),
+
+  rowsTable_sortCheck: new Array(58).fill(0).map((x, i) => ({
+    i,
+    "2*i": 2 * i,
+    "i^2": 2 ** i,
+    "sin(i)": Math.sin(i),
+    "2*sin(i)": 2 * Math.sin(i),
+    "sin(i)^2": Math.sin(i) ** 2,
+    ties: Math.round(Math.sin(i * 50) * 10),
+    "null and undef": [0, null, undefined][Math.round(Math.sin(i)) + 1],
+    "-i": -i,
+    "array of length i": new Array(i).fill(1).map((y, j) => i * j),
+    "string from i": new Array(i)
+      .fill(1)
+      .map((y, j) => String.fromCharCode((j % 26) + 65))
+      .join("")
+  })),
+
+  rowsTable_augmentedObjects: new Array(113).fill(0).map((x, i) => ({
+    index: i,
+    time: new Date(Math.cos(i) * 1e12),
+    score: Math.sin(i),
+    subObj: { subInd: i, subSubArray: [i, 2, 3, 4, 5, "asdf", [i, 2, 3]] },
+    subArray: new Array(i).fill(1).map((y, j) => i * j)
+  })),
+  rowsTable_shortTable: new Array(3).fill(0).map((x, i) => ({
+    index: i,
+    time: new Date(Math.cos(i) * 1e12),
+    score: Math.sin(i),
+    subObj: { subInd: i, subSubArray: [i, 2, 3, 4, 5, "asdf", [i, 2, 3]] },
+    subArray: new Array(i).fill(1).map((y, j) => i * j)
+  })),
+  rowsTable_compositeObjects: new Array(532).fill(compositeObjects),
+  rowsTable_objectsContainingSimpleTypes: new Array(777).fill(simpleTypes),
   rowsTable_objectsContainingBaseObjects: new Array(364).fill(baseObjects)
 };
 
 export const rowTableFails = {
   array_oneEmptyObject: [{}],
   array_justOneObject: [{ a: 1, b: 2, c: 3 }],
-  array_classInstances: new Array(100).fill(new Dog("Fido")),
-  array_objectsWithAllDifferentKeys: new Array(100)
+  array_classInstances: new Array(456).fill(new Dog("Fido")),
+  array_objectsWithAllDifferentKeys: new Array(813)
     .fill(0)
     .map((x, i) => ({ [`key_${i}`]: i, b: i, c: i })),
-  array_objectsWithSomeDifferentKeys: new Array(100)
+  array_objectsWithSomeDifferentKeys: new Array(234)
     .fill(0)
     .map((x, i) => ({ [`key_${i % 2}`]: i, b: i, c: i }))
 };
@@ -347,6 +379,24 @@ export const blobObjects = {
     type: "application/json"
   })
 };
+
+// ==================== objects with iodideRender
+
+export const iodideRenderObjects = {
+  iodideRender_1: {
+    a: 1,
+    b: 2,
+    c: 3,
+    iodideRender: () => `
+<ol>
+  <li>a</li>
+  <li>b</li>
+  <li>c</li>
+</ol>
+`
+  }
+};
+
 // ==================== tests
 
 export const allCases = Object.assign(
@@ -364,5 +414,6 @@ export const allCases = Object.assign(
   promiseCases,
   rowTableCases,
   rowTableFails,
-  blobObjects
+  blobObjects,
+  iodideRenderObjects
 );

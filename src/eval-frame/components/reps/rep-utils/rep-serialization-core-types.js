@@ -19,7 +19,8 @@ const nonExpandableTypes = [
   "Date",
   "RegExp",
   "ArrayBuffer",
-  "DataView"
+  "DataView",
+  "Blob"
 ];
 
 function checkTypes(keyedArgs, argTypes, fnName) {
@@ -62,6 +63,7 @@ export class ValueSummary {
     this.size = size; // number
     this.stringValue = stringValue; // string
     this.isTruncated = isTruncated; // bool
+    this.DESC_TYPE = "ValueSummary";
 
     let isExpandable;
     if (nonExpandableTypes.includes(this.objType)) {
@@ -74,6 +76,8 @@ export class ValueSummary {
     this.isExpandable = isExpandable;
   }
 }
+
+// export function isDescType
 
 export class RangeDescriptor {
   // Describes a range of indices among the children of an object.
@@ -110,6 +114,7 @@ export class RangeDescriptor {
     this.min = min; // numeric, required
     this.max = max; // numeric, required
     this.type = type;
+    this.DESC_TYPE = "RangeDescriptor";
   }
 }
 
@@ -121,6 +126,7 @@ export class ChildSummaryItem {
   constructor(path, summary) {
     this.path = path; // String or RangeDescriptor
     this.summary = summary; // ValueSummary or null
+    this.DESC_TYPE = "ChildSummaryItem";
   }
 }
 
@@ -133,6 +139,7 @@ export class SubstringRangeSummaryItem extends ChildSummaryItem {
     super();
     this.path = path; // RangeDescriptor
     this.summary = summary; // ValueSummary
+    this.DESC_TYPE = "SubstringRangeSummaryItem";
   }
 }
 
@@ -142,6 +149,7 @@ export class MapPairSummaryItem extends ChildSummaryItem {
     this.path = mapEntryIndex; // int
     this.keySummary = keySummary; // ValueSummary
     this.valSummary = valSummary; // ValueSummary
+    this.DESC_TYPE = "MapPairSummaryItem";
   }
 }
 
@@ -158,5 +166,6 @@ export class ChildSummary {
       });
     }
     this.childItems = childItems;
+    this.DESC_TYPE = "ChildSummary";
   }
 }
