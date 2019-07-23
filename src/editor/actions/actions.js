@@ -166,51 +166,43 @@ export function getNotebookRevisionList() {
     });
     getRevisionList(getNotebookID(getState()), isLoggedIn(getState()))
       .then(revisionList => {
-        if (getState().notebookHistory.selectedRevisionId === undefined) {
-          getRevisions(
-            getNotebookID(getState()),
-            [revisionList[0].id],
-            isLoggedIn(getState())
-          )
-            .then(revisions => {
-              if (revisions.length > 0) {
-                if (getState().iomd.trim() === revisions[0].content.trim()) {
-                  dispatch({
-                    type:
-                      "UPDATE_NOTEBOOK_HISTORY_BROWSER_SELECTED_REVISION_ID",
-                    selectedRevisionId: revisions[0].id
-                  });
-                  dispatch({
-                    type:
-                      "UPDATE_NOTEBOOK_HISTORY_BROWSER_HAS_LOCAL_ONLY_CHANGES",
-                    hasLocalOnlyChanges: false
-                  });
-                  dispatch({
-                    type: "GOT_NOTEBOOK_REVISION_LIST",
-                    selectedRevisionId: revisions[0].id,
-                    revisionList
-                  });
-                  getRequiredRevisionContent(getState(), dispatch);
-                } else {
-                  dispatch({
-                    type: "GOT_NOTEBOOK_REVISION_LIST",
-                    revisionList
-                  });
-                }
+        getRevisions(
+          getNotebookID(getState()),
+          [revisionList[0].id],
+          isLoggedIn(getState())
+        )
+          .then(revisions => {
+            if (revisions.length > 0) {
+              if (getState().iomd.trim() === revisions[0].content.trim()) {
+                dispatch({
+                  type: "UPDATE_NOTEBOOK_HISTORY_BROWSER_SELECTED_REVISION_ID",
+                  selectedRevisionId: revisions[0].id
+                });
+                dispatch({
+                  type:
+                    "UPDATE_NOTEBOOK_HISTORY_BROWSER_HAS_LOCAL_ONLY_CHANGES",
+                  hasLocalOnlyChanges: false
+                });
+                dispatch({
+                  type: "GOT_NOTEBOOK_REVISION_LIST",
+                  selectedRevisionId: revisions[0].id,
+                  revisionList
+                });
+                getRequiredRevisionContent(getState(), dispatch);
               } else {
-                dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
+                dispatch({
+                  type: "GOT_NOTEBOOK_REVISION_LIST",
+                  revisionList
+                });
+                getRequiredRevisionContent(getState(), dispatch);
               }
-            })
-            .catch(() => {
+            } else {
               dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
-            });
-        } else {
-          dispatch({
-            type: "GOT_NOTEBOOK_REVISION_LIST",
-            revisionList
+            }
+          })
+          .catch(() => {
+            dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
           });
-          getRequiredRevisionContent(getState(), dispatch);
-        }
       })
       .catch(() => {
         dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
