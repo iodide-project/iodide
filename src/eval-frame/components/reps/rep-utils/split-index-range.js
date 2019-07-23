@@ -1,4 +1,4 @@
-import { RangeDescriptor } from "./rep-serialization-core-types";
+import { newRangeDescriptor } from "./rep-serialization-core-types";
 import { MAX_SUMMARY_STRING_LEN } from "./value-summary-serializer";
 
 export const RANGE_SPLIT_THRESHOLD = 50;
@@ -56,11 +56,9 @@ export function splitIndexRange(
   // this is a bit of footwork to set the lower bound of each bin after the first to be a nice round number
   const secondBinMin = Math.ceil(min / binSize) * binSize;
   const ranges =
-    min < secondBinMin
-      ? [new RangeDescriptor(min, secondBinMin - 1, type)]
-      : [];
+    min < secondBinMin ? [newRangeDescriptor(min, secondBinMin - 1, type)] : [];
 
-  // const ranges = [new RangeDescriptor(min, min + binSize - 1, type)];
+  // const ranges = [newRangeDescriptor(min, min + binSize - 1, type)];
   let binLowBound;
   for (
     // binLowBound = min + binSize;
@@ -69,10 +67,10 @@ export function splitIndexRange(
     binLowBound += binSize
   ) {
     ranges.push(
-      new RangeDescriptor(binLowBound, binLowBound + binSize - 1, type)
+      newRangeDescriptor(binLowBound, binLowBound + binSize - 1, type)
     );
   }
-  ranges.push(new RangeDescriptor(binLowBound, max, type));
+  ranges.push(newRangeDescriptor(binLowBound, max, type));
 
   return ranges;
 }

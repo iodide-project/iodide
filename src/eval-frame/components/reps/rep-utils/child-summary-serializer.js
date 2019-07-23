@@ -8,11 +8,12 @@ import {
   SUMMARY_STRING_TRUNCATION_LEN
 } from "./value-summary-serializer";
 import {
-  RangeDescriptor,
-  ChildSummary,
-  ChildSummaryItem,
-  SubstringRangeSummaryItem,
-  MapPairSummaryItem
+  newRangeDescriptor,
+  isRangeDescriptor,
+  newChildSummary,
+  newChildSummaryItem,
+  newSubstringRangeSummaryItem,
+  newMapPairSummaryItem
 } from "./rep-serialization-core-types";
 import { splitIndexRange } from "./split-index-range";
 
@@ -54,7 +55,7 @@ export function serializeArrayPathsSummary(
   }
 
   const summarizeIndex = i =>
-    new ChildSummaryItem(String(i), serializeForValueSummary(arr[i]));
+    newChildSummaryItem(String(i), serializeForValueSummary(arr[i]));
 
   // can't use a plain Array.map in this fnc this b/c it doesn't work with typed arrays
   if (arr.length <= maxLength) {
@@ -63,8 +64,8 @@ export function serializeArrayPathsSummary(
 
   return [
     ...range(headPreview).map(summarizeIndex),
-    new ChildSummaryItem(
-      new RangeDescriptor(
+    newChildSummaryItem(
+      newRangeDescriptor(
         headPreview,
         arr.length - headPreview - 1,
         "ARRAY_RANGE"
@@ -81,7 +82,7 @@ export function serializeArrayPathsForRange(arr, min, max) {
   }
 
   const summarizeIndex = i =>
-    new ChildSummaryItem(String(i), serializeForValueSummary(arr[i]));
+    newChildSummaryItem(String(i), serializeForValueSummary(arr[i]));
 
   return range(min, max + 1).map(i => summarizeIndex(i));
 }
@@ -91,7 +92,7 @@ export function serializeArrayPathsForRange(arr, min, max) {
 function serializeObjectPathsSummary(obj, maxToSerialize = 50) {
   const objectProps = Object.getOwnPropertyNames(obj);
   const summarizeProp = prop =>
-    new ChildSummaryItem(prop, serializeForValueSummary(obj[prop]));
+    newChildSummaryItem(prop, serializeForValueSummary(obj[prop]));
 
   if (objectProps.length === 0) {
     return [];
@@ -103,8 +104,8 @@ function serializeObjectPathsSummary(obj, maxToSerialize = 50) {
 
   return [
     ...objectProps.slice(0, maxToSerialize).map(summarizeProp),
-    new ChildSummaryItem(
-      new RangeDescriptor(maxToSerialize, objectProps.length, "PROPS_RANGE"),
+    newChildSummaryItem(
+      newRangeDescriptor(maxToSerialize, objectProps.length, "PROPS_RANGE"),
       null
     )
   ];
@@ -115,7 +116,7 @@ export function serializeObjectPropsPathsForRange(obj, min, max) {
     return [];
   }
   const summarizeProp = prop =>
-    new ChildSummaryItem(prop, serializeForValueSummary(obj[prop]));
+    newChildSummaryItem(prop, serializeForValueSummary(obj[prop]));
 
   const objectProps = Object.getOwnPropertyNames(obj);
   return objectProps.slice(min, max + 1).map(summarizeProp);
@@ -126,21 +127,21 @@ export function serializeObjectPropsPathsForRange(obj, min, max) {
 function serializeStringPathsSummary(strObj) {
   if (strObj.length <= MAX_SUMMARY_STRING_LEN) return [];
 
-  const initialRange = new RangeDescriptor(
+  const initialRange = newRangeDescriptor(
     SUMMARY_STRING_TRUNCATION_LEN,
     strObj.length,
     "STRING_RANGE"
   );
 
   return splitIndexRange(initialRange, MAX_SUMMARY_STRING_LEN).map(
-    rangeDescriptor => new ChildSummaryItem(rangeDescriptor, null)
+    rangeDescriptor => newChildSummaryItem(rangeDescriptor, null)
   );
 }
 
 export function serializeStringSummaryForRange(strObj, min, max) {
   return [
-    new SubstringRangeSummaryItem(
-      new RangeDescriptor(min, max, "STRING_RANGE"),
+    newSubstringRangeSummaryItem(
+      newRangeDescriptor(min, max, "STRING_RANGE"),
       serializeForValueSummary(strObj.slice(min, max + 1))
     )
   ];
@@ -154,15 +155,15 @@ function serializeSetPathsSummary(set, previewNum = 5) {
   for (const value of set.values()) {
     if (i >= previewNum) {
       childItems.push(
-        new ChildSummaryItem(
-          new RangeDescriptor(i, objSize(set), "SET_INDEX_RANGE"),
+        newChildSummaryItem(
+          newRangeDescriptor(i, objSize(set), "SET_INDEX_RANGE"),
           null
         )
       );
       return childItems;
     }
     childItems.push(
-      new ChildSummaryItem(String(i), serializeForValueSummary(value))
+      newChildSummaryItem(String(i), serializeForValueSummary(value))
     );
     i += 1;
   }
@@ -180,7 +181,7 @@ export function serializeSetIndexPathsForRange(set, min, max) {
       return childItems;
     } else if (i >= min) {
       childItems.push(
-        new ChildSummaryItem(String(i), serializeForValueSummary(value))
+        newChildSummaryItem(String(i), serializeForValueSummary(value))
       );
     }
     i += 1;
@@ -204,8 +205,8 @@ export function serializeMapPathsSummary(map, min, max, addTailRange) {
     if (i > max) {
       if (addTailRange) {
         childItems.push(
-          new ChildSummaryItem(
-            new RangeDescriptor(i, objSize(map), "MAP_INDEX_RANGE"),
+          newChildSummaryItem(
+            newRangeDescriptor(i, objSize(map), "MAP_INDEX_RANGE"),
             null
           )
         );
@@ -213,7 +214,7 @@ export function serializeMapPathsSummary(map, min, max, addTailRange) {
       return childItems;
     } else if (i >= min) {
       childItems.push(
-        new MapPairSummaryItem(
+        newMapPairSummaryItem(
           String(i),
           serializeForValueSummary(key),
           serializeForValueSummary(value)
@@ -228,8 +229,7 @@ export function serializeMapPathsSummary(map, min, max, addTailRange) {
 // PUBLIC ENTRY POINT
 
 export function serializeChildSummary(obj, rangeDescriptor) {
-  const rangeSummary =
-    rangeDescriptor && rangeDescriptor instanceof RangeDescriptor;
+  const rangeSummary = rangeDescriptor && isRangeDescriptor(rangeDescriptor);
 
   const { min, max } = rangeSummary ? rangeDescriptor : { min: 0, max: 5 };
 
@@ -261,5 +261,5 @@ export function serializeChildSummary(obj, rangeDescriptor) {
   } else {
     childItems = [];
   }
-  return new ChildSummary(childItems);
+  return newChildSummary(childItems);
 }

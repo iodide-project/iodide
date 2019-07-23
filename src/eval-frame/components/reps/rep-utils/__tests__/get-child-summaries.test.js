@@ -1,8 +1,8 @@
 import {
-  RangeDescriptor,
-  ChildSummaryItem,
-  ChildSummary,
-  MapPairSummaryItem
+  newRangeDescriptor,
+  newChildSummaryItem,
+  newChildSummary,
+  isMapPairSummaryItem
 } from "../rep-serialization-core-types";
 import {
   getChildSummary,
@@ -24,10 +24,10 @@ const mockObjSummary = ({
 });
 
 function newChildSummaryMock() {
-  return new ChildSummary(
+  return newChildSummary(
     new Array(10)
       .fill(0)
-      .map((x, i) => new ChildSummaryItem(String(i), mockObjSummary()))
+      .map((x, i) => newChildSummaryItem(String(i), mockObjSummary()))
   );
 }
 
@@ -40,16 +40,16 @@ describe("expandRangesInChildSummaries returns identical childItems if no RangeD
 
 describe("expandRangesInChildSummaries replaces ranges correctly in all cases", () => {
   [
-    new RangeDescriptor(0, 100000),
-    new RangeDescriptor(0, 10),
-    new RangeDescriptor(90, 100),
-    new RangeDescriptor(900, 10000)
+    newRangeDescriptor(0, 100000),
+    newRangeDescriptor(0, 10),
+    newRangeDescriptor(90, 100),
+    newRangeDescriptor(900, 10000)
   ].forEach(testRange => {
     const childSummary = newChildSummaryMock();
-    childSummary[5] = new ChildSummaryItem(testRange, null);
+    childSummary[5] = newChildSummaryItem(testRange, null);
     // this test relies on the input validation in the relevant clases
     it(`always returns a valid child summary; ${testRange}`, () =>
-      expect(() => new ChildSummary(childSummary.childItems)).not.toThrow());
+      expect(() => newChildSummary(childSummary.childItems)).not.toThrow());
   });
 });
 
@@ -60,7 +60,7 @@ describe("getChildSummary base cases (compact summaries)", () => {
     const childSummary = getChildSummary("window", [testCase], true);
     // this test relies on the input validation in the relevant clases
     it(`always returns a valid child summary; ${testCase}`, () =>
-      expect(() => new ChildSummary(childSummary.childItems)).not.toThrow());
+      expect(() => newChildSummary(childSummary.childItems)).not.toThrow());
   });
 });
 
@@ -71,7 +71,7 @@ describe("getChildSummary base cases", () => {
     const childSummary = getChildSummary("window", [testCase], false);
     // this test relies on the input validation in the relevant clases
     it(`always returns a valid child summary; ${testCase}`, () =>
-      expect(() => new ChildSummary(childSummary.childItems)).not.toThrow());
+      expect(() => newChildSummary(childSummary.childItems)).not.toThrow());
   });
 });
 
@@ -89,16 +89,14 @@ describe("getChildSummary - walking down tree", () => {
         const childItem = childSummary.childItems[0];
 
         // handle the special case of a Map
-        if (childItem instanceof MapPairSummaryItem) {
+        if (isMapPairSummaryItem(childItem)) {
           lookupPath.push("MAP_VAL");
         }
 
         childSummary = getChildSummary("window", lookupPath, false);
         // this test relies on the input validation in the relevant clases
         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
-          expect(
-            () => new ChildSummary(childSummary.childItems)
-          ).not.toThrow());
+          expect(() => newChildSummary(childSummary.childItems)).not.toThrow());
       }
     }
   });
@@ -120,7 +118,7 @@ describe("getChildSummary - walking down tree - middle subpath", () => {
 
         lookupPath.push(childItem.path);
         // handle the special case of a Map
-        if (childItem instanceof MapPairSummaryItem) {
+        if (isMapPairSummaryItem(childItem)) {
           lookupPath.push("MAP_VAL");
         }
 
@@ -128,9 +126,7 @@ describe("getChildSummary - walking down tree - middle subpath", () => {
 
         // this test relies on the input validation in the relevant clases
         it(`always returns a valid child summary; ${testCase}; depth ${depth}`, () =>
-          expect(
-            () => new ChildSummary(childSummary.childItems)
-          ).not.toThrow());
+          expect(() => newChildSummary(childSummary.childItems)).not.toThrow());
       }
     }
   });
