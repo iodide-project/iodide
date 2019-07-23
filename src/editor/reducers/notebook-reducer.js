@@ -79,26 +79,13 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case "GOT_NOTEBOOK_REVISION_LIST": {
-      const { revisionContent, revisionList, selectedRevisionId } = action;
-
-      const previousRevisionContent =
-        revisionList.length > 0 ? revisionContent[revisionList[0].id] : "";
-
-      let passedRevisionId = selectedRevisionId;
-
-      if (
-        selectedRevisionId === undefined &&
-        state.iomd === previousRevisionContent
-      ) {
-        passedRevisionId = revisionList[0].id;
-      }
-
+      const { revisionList, selectedRevisionId } = action;
       return Object.assign({}, state, {
         notebookHistory: {
           ...(state.notebookHistory || {}),
           revisionList,
           revisionListFetchStatus: "IDLE",
-          passedRevisionId
+          selectedRevisionId
         }
       });
     }
@@ -119,6 +106,16 @@ const notebookReducer = (state = newNotebook(), action) => {
         notebookHistory: {
           ...state.notebookHistory,
           selectedRevisionId
+        }
+      });
+    }
+
+    case "UPDATE_NOTEBOOK_HISTORY_BROWSER_HAS_LOCAL_ONLY_CHANGES": {
+      const { hasLocalOnlyChanges } = action;
+      return Object.assign({}, state, {
+        notebookHistory: {
+          ...state.notebookHistory,
+          hasLocalOnlyChanges
         }
       });
     }

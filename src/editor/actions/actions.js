@@ -160,13 +160,57 @@ export function updateSelectedRevisionId(selectedRevisionId) {
 export function getNotebookRevisionList() {
   return (dispatch, getState) => {
     dispatch({ type: "GETTING_NOTEBOOK_REVISION_LIST" });
+    dispatch({
+      type: "UPDATE_NOTEBOOK_HISTORY_BROWSER_HAS_LOCAL_ONLY_CHANGES",
+      hasLocalOnlyChanges: true
+    });
     getRevisionList(getNotebookID(getState()), isLoggedIn(getState()))
       .then(revisionList => {
-        dispatch({
-          type: "GOT_NOTEBOOK_REVISION_LIST",
-          revisionList
-        });
-        getRequiredRevisionContent(getState(), dispatch);
+        if (getState().notebookHistory.selectedRevisionId === undefined) {
+          getRevisions(
+            getNotebookID(getState()),
+            [revisionList[0].id],
+            isLoggedIn(getState())
+          )
+            .then(revisions => {
+              if (revisions.length > 0) {
+                if (getState().iomd.trim() === revisions[0].content.trim()) {
+                  dispatch({
+                    type:
+                      "UPDATE_NOTEBOOK_HISTORY_BROWSER_SELECTED_REVISION_ID",
+                    selectedRevisionId: revisions[0].id
+                  });
+                  dispatch({
+                    type:
+                      "UPDATE_NOTEBOOK_HISTORY_BROWSER_HAS_LOCAL_ONLY_CHANGES",
+                    hasLocalOnlyChanges: false
+                  });
+                  dispatch({
+                    type: "GOT_NOTEBOOK_REVISION_LIST",
+                    selectedRevisionId: revisions[0].id,
+                    revisionList
+                  });
+                  getRequiredRevisionContent(getState(), dispatch);
+                } else {
+                  dispatch({
+                    type: "GOT_NOTEBOOK_REVISION_LIST",
+                    revisionList
+                  });
+                }
+              } else {
+                dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
+              }
+            })
+            .catch(() => {
+              dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
+            });
+        } else {
+          dispatch({
+            type: "GOT_NOTEBOOK_REVISION_LIST",
+            revisionList
+          });
+          getRequiredRevisionContent(getState(), dispatch);
+        }
       })
       .catch(() => {
         dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });

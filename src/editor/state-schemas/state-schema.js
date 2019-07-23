@@ -213,6 +213,10 @@ export const stateProperties = {
   notebookHistory: {
     type: "object",
     properties: {
+      hasLocalOnlyChanges: {
+        type: "boolean",
+        default: true
+      },
       revisionContentFetchStatus: {
         type: "string",
         enum: ["FETCHING", "ERROR", "IDLE"],
@@ -235,7 +239,7 @@ export const stateProperties = {
         },
         default: []
       },
-      selectedRevision: {
+      selectedRevisionId: {
         type: "number"
       },
       revisionContent: {
