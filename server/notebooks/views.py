@@ -29,10 +29,10 @@ def _get_iframe_src():
 
 @ensure_csrf_cookie
 def notebook_view(request, pk):
-    
+
     notebook = get_object_or_404(Notebook, pk=pk)
     owner = get_object_or_404(User, pk=notebook.owner_id)
-    
+
     if "revision" in request.GET:
         try:
             revision_id = int(request.GET["revision"])
@@ -69,7 +69,8 @@ def notebook_view(request, pk):
                 "destinationFilename": file_source.filename,
                 "sourceURL": file_source.url
             }
-            file_update_operation = FileUpdateOperation.objects.filter(file_source_id=file_source.id)
+            file_update_operation = FileUpdateOperation.objects.filter(
+                file_source_id=file_source.id)
             if len(file_update_operation) > 0:
                 file_update_operation = file_update_operation.latest('started')
                 last_ran = file_update_operation.started.isoformat()
@@ -78,9 +79,9 @@ def notebook_view(request, pk):
                 source["lastRan"] = last_ran
                 source["lastFileUpdateOperationStatus"] = update_status
                 source["lastFileUpdateOperationID"] = operation_id
-            
+
             file_sources.append(source)
-    
+
     notebook_info = {
         "username": notebook.owner.username,
         "user_can_save": notebook.owner_id == request.user.id,
