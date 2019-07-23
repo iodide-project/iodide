@@ -41,17 +41,6 @@ class RevisionListUnconnected extends React.Component {
   }
 
   render() {
-    if (this.props.revisionList !== undefined) {
-      if (
-        !this.props.haveLocalChanges &&
-        this.props.selectedRevisionId === undefined
-      ) {
-        if (this.props.revisionList.length > 0) {
-          this.revisionClicked(this.props.revisionList[0].id);
-        }
-      }
-    }
-
     return (
       <RevisionListContainer>
         <List>

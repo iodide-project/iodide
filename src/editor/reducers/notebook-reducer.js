@@ -79,13 +79,26 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case "GOT_NOTEBOOK_REVISION_LIST": {
-      const { revisionList, selectedRevisionId } = action;
+      const { revisionContent, revisionList, selectedRevisionId } = action;
+
+      const previousRevisionContent =
+        revisionList.length > 0 ? revisionContent[revisionList[0].id] : "";
+
+      let passedRevisionId = selectedRevisionId;
+
+      if (
+        selectedRevisionId === undefined &&
+        state.iomd === previousRevisionContent
+      ) {
+        passedRevisionId = revisionList[0].id;
+      }
+
       return Object.assign({}, state, {
         notebookHistory: {
           ...(state.notebookHistory || {}),
           revisionList,
           revisionListFetchStatus: "IDLE",
-          selectedRevisionId
+          passedRevisionId
         }
       });
     }
