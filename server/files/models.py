@@ -72,7 +72,8 @@ class FileUpdateOperation(models.Model):
     )
 
     file_source = models.ForeignKey(FileSource, on_delete=models.CASCADE)
-    started = models.DateTimeField(auto_now_add=True)
+    scheduled = models.DateTimeField(auto_now_add=True)
+    started = models.DateTimeField(null=True)
     ended = models.DateTimeField(null=True)
     status = models.IntegerField(choices=OPERATION_STATUSES, default=PENDING)
     failure_reason = models.CharField(max_length=128, null=True)

@@ -45,4 +45,12 @@ class FileUpdateOperationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FileUpdateOperation
-        fields = ("id", "file_source_id", "started", "ended", "status", "failure_reason")
+        fields = (
+            "id",
+            "file_source_id",
+            "scheduled",
+            "started",
+            "ended",
+            "status",
+            "failure_reason",
+        )

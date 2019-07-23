@@ -40,6 +40,8 @@ def test_execute_file_update_operation(test_notebook, test_file_source, file_exi
 
     update_operation.refresh_from_db()
     assert update_operation.status == FileUpdateOperation.COMPLETED
+    assert update_operation.started and update_operation.ended
+    assert update_operation.ended > update_operation.started
 
     file = File.objects.get(notebook_id=test_notebook.id, filename=test_file_source.filename)
     assert file.content.tobytes().decode("utf-8") == json.dumps(file_content)
@@ -66,6 +68,8 @@ def test_execute_file_update_operation_file_too_big(settings, test_notebook, tes
     # the operation should have failed
     update_operation.refresh_from_db()
     assert update_operation.status == FileUpdateOperation.FAILED
+    assert update_operation.started and update_operation.ended
+    assert update_operation.ended > update_operation.started
     assert update_operation.failure_reason == "File too large"
     assert File.objects.count() == 0
 
@@ -81,6 +85,8 @@ def test_execute_file_update_operation_permission_denied(test_notebook, test_fil
     # the operation should have failed
     update_operation.refresh_from_db()
     assert update_operation.status == FileUpdateOperation.FAILED
+    assert update_operation.started and update_operation.ended
+    assert update_operation.ended > update_operation.started
     assert (
         update_operation.failure_reason
         == f"403 Client Error: Forbidden for url: {test_file_source.url}"
@@ -111,18 +117,17 @@ def test_run_scheduled_file_operations(fake_user, test_notebook, date):
             update_operations = FileUpdateOperation.objects.all()
             if date == "2019-07-08":
                 # 2019-07-08 is a monday, so the weekly task should have run
-                assert (
-                    set(update_operations.values_list("file_source_id", flat=True)) == weekly_ids
-                )
+                assert set(update_operations.values_list("file_source_id", flat=True)) == weekly_ids
             else:  # 2019-07-10
                 # only the daily task should have run
-                assert (
-                    set(update_operations.values_list("file_source_id", flat=True)) == daily_ids
-                )
+                assert set(update_operations.values_list("file_source_id", flat=True)) == daily_ids
             # also make sure we queued the relevant async tasks
-            mock_task.assert_has_calls([call(args=[id]) for id in update_operations.values_list('id', flat=True)])
+            mock_task.assert_has_calls(
+                [call(args=[id]) for id in update_operations.values_list("id", flat=True)]
+            )
 
 
+@pytest.mark.freeze_time("2017-05-21")
 def test_post_file_update_operation(fake_user, test_notebook, test_file_source, client):
     with patch("server.files.tasks.execute_file_update_operation.apply_async") as mock_task:
         client.force_login(user=fake_user)
@@ -136,6 +141,9 @@ def test_post_file_update_operation(fake_user, test_notebook, test_file_source, 
         file_update_operation = FileUpdateOperation.objects.first()
         assert file_update_operation.file_source_id == test_file_source.id
         assert file_update_operation.status == FileUpdateOperation.PENDING
+        assert file_update_operation.scheduled.replace(tzinfo=None) == datetime.datetime.now()
+        assert file_update_operation.started == None
+        assert file_update_operation.ended == None
 
         # verify that the expected task has been queued
         mock_task.assert_has_calls([call(args=[file_update_operation.id])])

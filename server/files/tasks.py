@@ -16,6 +16,7 @@ def execute_file_update_operation(update_operation_id):
 
     # set status to RUNNING
     update_operation.status = FileUpdateOperation.RUNNING
+    update_operation.started = datetime.datetime.now()
     update_operation.save()
 
     # actually run the query against the URL
@@ -36,11 +37,12 @@ def execute_file_update_operation(update_operation_id):
                 notebook=file_source.notebook, filename=file_source.filename, content=content
             )
         update_operation.status = FileUpdateOperation.COMPLETED
-        update_operation.save()
     except (requests.exceptions.RequestException, ValueError) as e:
         update_operation.status = FileUpdateOperation.FAILED
         update_operation.failure_reason = str(e)
-        update_operation.save()
+
+    update_operation.ended = datetime.datetime.now()
+    update_operation.save()
 
 
 @celery.task
