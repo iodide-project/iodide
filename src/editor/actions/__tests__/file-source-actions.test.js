@@ -3,18 +3,12 @@ import thunk from "redux-thunk";
 
 import * as fileSource from "../../../shared/utils/file-source-operations";
 
-import {
-  addFileSource,
-  deleteFileSource,
-  createFileUpdateOperation
-} from "../file-source-actions";
+import { addFileSource, deleteFileSource } from "../file-source-actions";
 
 const mockStore = configureMockStore([thunk]);
 
 /*
-addFileSource
-deleteFileSource
-createFileUpdateOperation
+FIXME: write tests for createFileUpdateOperation (or refactor)
 */
 
 describe("addFileSource", () => {
@@ -64,6 +58,7 @@ describe("addFileSource", () => {
       }
     ]);
     expect(createFileSourceMock).toHaveBeenCalled();
+    console.log(store.getState());
   });
 });
 
