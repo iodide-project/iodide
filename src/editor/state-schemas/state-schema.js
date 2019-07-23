@@ -215,7 +215,7 @@ export const stateProperties = {
     properties: {
       hasLocalOnlyChanges: {
         type: "boolean",
-        default: true
+        default: false
       },
       revisionContentFetchStatus: {
         type: "string",

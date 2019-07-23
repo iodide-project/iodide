@@ -78,11 +78,12 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
-    case "GOT_NOTEBOOK_REVISION_LIST": {
-      const { revisionList, selectedRevisionId } = action;
+    case "UPDATE_NOTEBOOK_HISTORY": {
+      const { hasLocalOnlyChanges, revisionList, selectedRevisionId } = action;
       return Object.assign({}, state, {
         notebookHistory: {
           ...(state.notebookHistory || {}),
+          hasLocalOnlyChanges,
           revisionList,
           revisionListFetchStatus: "IDLE",
           selectedRevisionId
@@ -106,16 +107,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         notebookHistory: {
           ...state.notebookHistory,
           selectedRevisionId
-        }
-      });
-    }
-
-    case "UPDATE_NOTEBOOK_HISTORY_BROWSER_HAS_LOCAL_ONLY_CHANGES": {
-      const { hasLocalOnlyChanges } = action;
-      return Object.assign({}, state, {
-        notebookHistory: {
-          ...state.notebookHistory,
-          hasLocalOnlyChanges
         }
       });
     }
