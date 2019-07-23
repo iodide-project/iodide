@@ -3,7 +3,10 @@ import {
   deleteFileSourceFromServer
 } from "../../shared/utils/file-source-operations";
 
-import { saveFileUpdateOperationToServer } from "../../shared/utils/file-update-operation-operations";
+import {
+  saveFileUpdateOperationToServer,
+  getFileUpdateOperationFromServer
+} from "../../shared/utils/file-update-operation-operations";
 
 const UPDATE_INTERVAL_OPTIONS = {
   never: undefined,
@@ -39,19 +42,6 @@ export function addFileSource(
   };
 }
 
-export function createFileUpdateOperation(fileSourceID) {
-  // thing
-  return async () => {
-    let response;
-    try {
-      response = await saveFileUpdateOperationToServer(fileSourceID);
-    } catch (err) {
-      console.error(err);
-    }
-    console.log(response);
-  };
-}
-
 export function deleteFileSource(fileSourceID) {
   return async dispatch => {
     const response = await deleteFileSourceFromServer(fileSourceID);
@@ -61,5 +51,54 @@ export function deleteFileSource(fileSourceID) {
       fileSourceID
     });
     return response;
+  };
+}
+
+export function createFileUpdateOperation(fileSourceID) {
+  return async dispatch => {
+    let response;
+    try {
+      response = await saveFileUpdateOperationToServer(fileSourceID);
+    } catch (err) {
+      console.error(err);
+      // TODO: do something here if it fails.
+      return;
+    }
+    const lastRan = response.started;
+    const lastFileUpdateOperationID = response.id;
+    const responseFileSourceID = response.file_source_id;
+    const lastFileUpdateOperationStatus = response.status;
+    dispatch({
+      type: "UPDATE_FILE_SOURCE",
+      fileSourceID: responseFileSourceID,
+      lastRan,
+      lastFileUpdateOperationID,
+      lastFileUpdateOperationStatus
+    });
+    let statusUpdate = lastFileUpdateOperationStatus;
+    while (statusUpdate === "pending" || statusUpdate === "running") {
+      // this while loop depends on whether the iteration's response
+      // returns status !== "pending". Thus we will disable
+      // this eslint rule, as per the documentation for this
+      // rule as suggested in https://eslint.org/docs/rules/no-await-in-loop
+      /* eslint-disable no-await-in-loop */
+      response = await getFileUpdateOperationFromServer(
+        lastFileUpdateOperationID
+      );
+      dispatch({
+        type: "UPDATE_FILE_SOURCE",
+        fileSourceID: response.file_source_id,
+        lastRan: response.started,
+        lastFileUpdateOperationID: response.id,
+        lastFileUpdateOperationStatus: response.status
+      });
+
+      if (response.status !== "pending" && response.status !== "running") {
+        statusUpdate = response.status;
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+      /* eslint-enable no-await-in-loop */
+    }
   };
 }

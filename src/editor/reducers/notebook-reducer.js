@@ -219,6 +219,23 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { notebookInfo });
     }
 
+    case "UPDATE_FILE_SOURCE": {
+      const params = Object.assign({}, action);
+      delete params.type;
+      const { fileSources } = state.notebookInfo;
+      const newFileSources = fileSources.map(f => {
+        let newInfo = {};
+        if (f.fileSourceID === params.fileSourceID) {
+          newInfo = params;
+        }
+        return Object.assign({}, f, newInfo);
+      });
+      const notebookInfo = Object.assign({}, state.notebookInfo, {
+        fileSources: newFileSources
+      });
+      return Object.assign({}, state, { notebookInfo });
+    }
+
     case "SET_MODAL_STATE": {
       return Object.assign({}, state, { modalState: action.modalState });
     }

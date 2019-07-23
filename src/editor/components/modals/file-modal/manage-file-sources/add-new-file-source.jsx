@@ -34,6 +34,12 @@ const FileSourceStatusText = styled.div`
   color: ${props => (props.statusType === "ERROR" ? "red" : "black")};
 `;
 
+const UpdateIntervalContainer = styled.div`
+  span {
+    font-size: 13px;
+  }
+`;
+
 const UpdateIntervalSelector = styled.select`
   display: block;
   font-weight: 700;
@@ -160,7 +166,7 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
           value={filenameState}
           onKey={updateFilenameState}
         />
-        <div>
+        <UpdateIntervalContainer>
           <UpdateIntervalSelector
             value={updateIntervalState}
             onChange={handleUpdateIntervalChange}
@@ -173,8 +179,8 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
               );
             })}
           </UpdateIntervalSelector>
-          update interval
-        </div>
+          <span>update interval</span>
+        </UpdateIntervalContainer>
       </AddNewSourceContainer>
       <FileSourceStatus
         className={`${status.type === "NONE" ? "hide" : "show"}`}
