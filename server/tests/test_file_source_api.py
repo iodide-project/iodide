@@ -36,6 +36,45 @@ def file_source_update_blob(test_notebook):
     }
 
 
+def test_list_file_sources_for_notebook(client, test_notebook, test_file_source, fake_user):
+    client.force_login(user=fake_user)
+    resp = client.get(
+        reverse("notebook-file-sources-list", kwargs={"notebook_id": test_notebook.id})
+    )
+    assert resp.status_code == 200
+    assert resp.json() == [
+        {
+            "filename": test_file_source.filename,
+            "id": test_file_source.id,
+            "latest_file_update_operation": None,
+            "update_interval": str(test_file_source.update_interval.total_seconds()),
+            "url": test_file_source.url,
+        }
+    ]
+
+
+@pytest.mark.parametrize("logged_in", [True, False])
+def test_list_file_sources_for_notebook_unauthorized(
+    client, test_notebook, test_file_source, fake_user2, logged_in
+):
+    # two cases: logged in as notebook non-owner, not logged in
+    # in either case, it should *not* reveal the url of the file source
+    if logged_in:
+        client.force_login(user=fake_user2)
+    resp = client.get(
+        reverse("notebook-file-sources-list", kwargs={"notebook_id": test_notebook.id})
+    )
+    assert resp.status_code == 200
+    assert resp.json() == [
+        {
+            "filename": test_file_source.filename,
+            "id": test_file_source.id,
+            "latest_file_update_operation": None,
+            "update_interval": str(test_file_source.update_interval.total_seconds()),
+        }
+    ]
+
+
 def test_delete_file_source(client, test_file_source, fake_user):
     client.force_login(user=fake_user)
     resp = client.delete(reverse("file-sources-detail", kwargs={"pk": test_file_source.id}))
