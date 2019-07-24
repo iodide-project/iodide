@@ -29,12 +29,10 @@ export function getFileSources() {
       );
       return fileSource;
     });
-    // ok, if success
     dispatch({
       type: "UPDATE_FILE_SOURCES",
       fileSources
     });
-    // ok, if failure
   };
 }
 
