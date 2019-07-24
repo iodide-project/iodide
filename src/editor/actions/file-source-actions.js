@@ -9,6 +9,8 @@ import {
   getFileSourcesFromServer
 } from "../../shared/utils/file-source-operations";
 
+import { isLoggedIn } from "../tools/server-tools";
+
 import {
   saveFileUpdateOperationToServer,
   getFileUpdateOperationFromServer
@@ -16,8 +18,10 @@ import {
 
 export function getFileSources() {
   return async (dispatch, getState) => {
+    const state = getState();
+    const loggedIn = isLoggedIn(state);
     const notebookID = getState().notebookInfo.notebook_id;
-    const response = await getFileSourcesFromServer(notebookID);
+    const response = await getFileSourcesFromServer(notebookID, loggedIn);
     const fileSources = response.map(f => {
       const fileSource = Object.assign({}, f);
       fileSource.update_interval = reverseFileSourceUpdateInterval(

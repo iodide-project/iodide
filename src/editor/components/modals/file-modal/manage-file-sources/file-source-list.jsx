@@ -203,10 +203,7 @@ const FileSourceListUnconnected = ({
                         )}
                     </FileInformationContainer>
                   </ListPrimaryText>
-                  <FileSourceURLContainer
-                    length={fileSource.url.length}
-                    href={fileSource.url}
-                  >
+                  <FileSourceURLContainer href={fileSource.url}>
                     <FileSourceURL href={fileSource.url}>
                       {fileSource.url}
                     </FileSourceURL>

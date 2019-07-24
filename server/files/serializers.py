@@ -81,5 +81,13 @@ class FileSourceDetailSerializer(FileSourceSerializer):
 
     class Meta:
         model = FileSource
-        #fields = ("id", "owner", "title", "latest_revision", "forked_from")
         fields = ("id", "latest_file_update_operation", "update_interval", "filename", "url")
+
+
+class FileSourceDetailWithoutURLSerializer(FileSourceSerializer):
+
+    latest_file_update_operation = FileUpdateOperationLatestSerializer(read_only=True)
+
+    class Meta:
+        model = FileSource
+        fields = ("id", "latest_file_update_operation", "update_interval", "filename")

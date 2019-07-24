@@ -1,5 +1,5 @@
 import {
-  signedAPIRequest,
+  readJSONAPIRequest,
   signedAPIRequestWithJSONContent
 } from "./api-request";
 
@@ -30,6 +30,9 @@ export function deleteFileSourceRequest(fileSourceID) {
   );
 }
 
-export function getFileSourcesRequest(notebookID) {
-  return signedAPIRequest(`/api/v1/notebooks/${notebookID}/file-sources/`);
+export function getFileSourcesRequest(notebookID, loggedIn) {
+  return readJSONAPIRequest(
+    `/api/v1/notebooks/${notebookID}/file-sources/`,
+    loggedIn
+  );
 }

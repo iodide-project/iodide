@@ -78,24 +78,6 @@ export const fileSchema = {
   additionalProperties: false
 };
 
-// export const fileSourceSchema = {
-//   type: "object",
-//   properties: {
-//     sourceURL: { type: "string" },
-//     destinationFilename: { type: "string" },
-//     updateInterval: { type: "string", enum: FILE_SOURCE_UPDATE_INTERVALS },
-//     fileSourceID: { type: "integer" },
-//     lastRan: { type: "string", default: undefined },
-//     lastFileUpdateOperationID: { type: "integer", default: undefined },
-//     lastFileUpdateOperationStatus: {
-//       type: "string",
-//       enum: FILE_UPDATE_OPERATION_STATUSES,
-//       default: undefined
-//     }
-//   },
-//   additionalProperties: false
-// };
-
 export const fileUpdateOperationSchema = {
   type: "object",
   properties: {
@@ -112,17 +94,10 @@ export const fileSourceSchema = {
   type: "object",
   properties: {
     id: { type: "integer" },
-    url: { type: "string" },
+    url: { type: ["string", "null"] },
     filename: { type: "string" },
-    update_interval: { type: ["string", "null"] }, // { type: "string", enum: FILE_SOURCE_UPDATE_INTERVALS },
+    update_interval: { type: ["string", "null"] },
     last_file_update_operation: fileUpdateOperationSchema
-    // lastRan: { type: "string", default: undefined },
-    // lastFileUpdateOperationID: { type: "integer", default: undefined },
-    // lastFileUpdateOperationStatus: {
-    //   type: "string",
-    //   enum: FILE_UPDATE_OPERATION_STATUSES,
-    //   default: undefined
-    // }
   }
 };
 

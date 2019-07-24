@@ -6,10 +6,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from ..notebooks.models import Notebook
 from .models import File, FileSource, FileUpdateOperation
-from .serializers import FileSourceSerializer, FilesSerializer, FileUpdateOperationSerializer, FileSourceDetailSerializer
+from .serializers import FileSourceSerializer, FilesSerializer, FileUpdateOperationSerializer, FileSourceDetailSerializer, FileSourceDetailWithoutURLSerializer
 from .tasks import execute_file_update_operation
+from ..notebooks.models import Notebook
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -59,8 +59,19 @@ class FileViewSet(viewsets.ModelViewSet):
 
 class NotebookFileSourceViewSet(viewsets.ModelViewSet):
 
-    serializer_class = FileSourceDetailSerializer
     http_method_names = ["get"]
+
+    def get_serializer_class(self):
+        request = self.request
+        if not request.user.is_authenticated:
+            return FileSourceDetailWithoutURLSerializer
+        notebook_id = int(self.kwargs["notebook_id"])
+        notebook = get_object_or_404(Notebook, id=notebook_id)
+        owner_id = notebook.owner.id
+        requester_id = request.user.id
+        if not owner_id == requester_id:
+            return FileSourceDetailWithoutURLSerializer
+        return FileSourceDetailSerializer
 
     def get_serializer_context(self):
         notebook_id = int(self.kwargs["notebook_id"])
@@ -81,7 +92,6 @@ class NotebookFileSourceViewSet(viewsets.ModelViewSet):
 class FileSourceViewSet(viewsets.ModelViewSet):
 
     serializer_class = FileSourceSerializer
-    #serializer_class = FileSourceListSerializer
 
     http_method_names = ["post", "put", "delete"]
 
