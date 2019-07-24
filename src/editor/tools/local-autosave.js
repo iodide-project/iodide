@@ -14,12 +14,9 @@ async function getLocalAutosave(state) {
   return autosave || {};
 }
 
-async function havePendingAutosavedChanges(state) {
+async function haveLocalAutosave(state) {
   const localAutosave = await getLocalAutosave(state);
-  return (
-    Object.keys(localAutosave).length > 0 &&
-    (localAutosave.iomd !== state.iomd || localAutosave.title !== state.title)
-  );
+  return Object.keys(localAutosave).length > 0;
 }
 
 async function clearLocalAutosave(state) {
@@ -41,7 +38,7 @@ async function writeLocalAutosave(state) {
 
 export {
   getLocalAutosave,
-  havePendingAutosavedChanges,
+  haveLocalAutosave,
   clearLocalAutosave,
   writeLocalAutosave
 };
