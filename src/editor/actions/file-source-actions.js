@@ -1,4 +1,9 @@
 import {
+  FILE_SOURCE_UPDATE_INTERVAL_MAP,
+  reverseFileSourceUpdateInterval
+} from "../state-schemas/state-schema";
+
+import {
   saveFileSourceToServer,
   deleteFileSourceFromServer,
   getFileSourcesFromServer
@@ -9,25 +14,15 @@ import {
   getFileUpdateOperationFromServer
 } from "../../shared/utils/file-update-operation-operations";
 
-const UPDATE_INTERVAL_OPTIONS = {
-  never: null,
-  daily: "1 day, 0:00:00",
-  weekly: "7 days, 0:00:00"
-};
-
-const reverseUpdateInterval = v => {
-  if (v === null) return "never";
-  if (v === "604800.0") return "weekly";
-  return "daily";
-};
-
 export function getFileSources() {
   return async (dispatch, getState) => {
     const notebookID = getState().notebookInfo.notebook_id;
     const response = await getFileSourcesFromServer(notebookID);
     const fileSources = response.map(f => {
       const fileSource = Object.assign({}, f);
-      fileSource.update_interval = reverseUpdateInterval(f.update_interval);
+      fileSource.update_interval = reverseFileSourceUpdateInterval(
+        f.update_interval
+      );
       return fileSource;
     });
     // ok, if success
@@ -46,7 +41,8 @@ export function addFileSource(
 ) {
   return async (dispatch, getState) => {
     const notebookID = getState().notebookInfo.notebook_id;
-    const convertedUpdateInterval = UPDATE_INTERVAL_OPTIONS[updateInterval];
+    const convertedUpdateInterval =
+      FILE_SOURCE_UPDATE_INTERVAL_MAP[updateInterval];
     const response = await saveFileSourceToServer(
       notebookID,
       sourceURL,

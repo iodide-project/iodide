@@ -13,7 +13,26 @@ export const FETCH_CHUNK_TYPES = [
 ];
 export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json", "arrayBuffer"];
 
-export const FILE_SOURCE_UPDATE_INTERVALS = ["never", "daily", "weekly"];
+export const FILE_SOURCE_UPDATE_INTERVAL_MAP = {
+  "never updates": null,
+  "updates daily": "1 day, 0:00:00",
+  "updates weekly": "7 days, 0:00:00"
+};
+
+export const FILE_SOURCE_UPDATE_SELECTOR_OPTIONS = [
+  { label: "never", key: "never updates" },
+  { label: "daily", key: "updates daily" },
+  { label: "weekly", key: "updates weekly" }
+];
+
+export const reverseFileSourceUpdateInterval = v => {
+  if (v === null) return "never updates";
+  if (v === "604800.0") return "updates weekly";
+  return "updates daily";
+};
+export const FILE_SOURCE_UPDATE_INTERVALS = Object.keys(
+  FILE_SOURCE_UPDATE_INTERVAL_MAP
+);
 export const FILE_UPDATE_OPERATION_STATUSES = [
   "pending",
   "running",

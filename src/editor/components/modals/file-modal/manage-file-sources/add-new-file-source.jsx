@@ -6,7 +6,7 @@ import styled from "react-emotion";
 import TextInput from "./text-input";
 import { ContainedButton } from "../../../../../shared/components/buttons";
 import { addFileSource } from "../../../../actions/file-source-actions";
-import { FILE_SOURCE_UPDATE_INTERVALS } from "../../../../state-schemas/state-schema";
+import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/state-schema";
 
 const AddNewSourceContainer = styled.div`
   display: grid;
@@ -93,7 +93,7 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
   const [statusVisible, updateStatusVisibility] = useState(false);
   const [status, updateStatus] = useState({ type: "NONE", text: "" });
   const [updateIntervalState, setUpdateIntervalState] = useState(
-    FILE_SOURCE_UPDATE_INTERVALS[0]
+    FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key
   );
 
   const handleUpdateIntervalChange = event => {
@@ -171,10 +171,10 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
             value={updateIntervalState}
             onChange={handleUpdateIntervalChange}
           >
-            {FILE_SOURCE_UPDATE_INTERVALS.map(value => {
+            {FILE_SOURCE_UPDATE_SELECTOR_OPTIONS.map(opt => {
               return (
-                <option key={value} value={value}>
-                  {value}
+                <option key={opt.key} value={opt.key}>
+                  {opt.label}
                 </option>
               );
             })}
