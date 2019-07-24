@@ -4,7 +4,7 @@ import {
   getRevisionList,
   getRevisions
 } from "../../shared/server-api/revisions";
-import { getLocalAutosave } from "../tools/local-autosave";
+import { havePendingAutosavedChanges } from "../tools/local-autosave";
 import {
   getNotebookID,
   getUserDataFromDocument,
@@ -163,16 +163,15 @@ export function getNotebookRevisionList() {
     dispatch({ type: "GETTING_NOTEBOOK_REVISION_LIST" });
     getRevisionList(getNotebookID(getState()), isLoggedIn(getState()))
       .then(revisionList => {
-        getLocalAutosave(getState())
-          .then(localAutosave => {
+        havePendingAutosavedChanges(getState())
+          .then(havePendingChanges => {
             dispatch({
               type: "UPDATE_NOTEBOOK_HISTORY",
-              hasLocalOnlyChanges: Object.keys(localAutosave).length > 0,
+              hasLocalOnlyChanges: havePendingChanges,
               revisionList,
-              selectedRevisionId:
-                Object.keys(localAutosave).length > 0
-                  ? undefined
-                  : revisionList[0].id
+              selectedRevisionId: havePendingChanges
+                ? undefined
+                : revisionList[0].id
             });
             getRequiredRevisionContent(getState(), dispatch);
           })
