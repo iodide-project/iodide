@@ -72,7 +72,6 @@ export const wrapValueRenderer = (
       }
 
       if (topLevelRepSummary !== null) {
-        console.log({ topLevelRepSummary });
         return (
           <WrappedValueRenderer
             {...{

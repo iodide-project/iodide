@@ -10,8 +10,9 @@ import MenuItem from "../../../../shared/components/menu-item";
 import { TextButton } from "../../../../shared/components/buttons";
 import BaseIcon from "./base-icon";
 
-import { setConsoleLanguage } from "../../../actions/actions";
-import { sendActionToEditor } from "../../../actions/editor-message-senders";
+import { setConsoleLanguage } from "../../../actions/console-actions";
+// import { setConsoleLanguage } from "../../../../eval-frame/actions/actions";
+// import { sendActionToEditor } from "../../../../eval-frame/actions/editor-message-senders";
 
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;
@@ -57,13 +58,14 @@ const LanguageName = styled("div")`
   padding-right: 6px;
 `;
 
-const onMenuClickCreator = (fcn, languageId) => () => {
-  fcn(languageId);
-};
+// const onMenuClickCreator = (fcn, languageId) => () => {
+//   fcn(languageId);
+// };
 
 const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
-  currentLanguage
+  currentLanguage,
+  setConsoleLanguageProp
 }) => {
   return (
     <React.Fragment>
@@ -82,11 +84,7 @@ const ConsoleLanguageMenuUnconnected = ({
           {availableLanguages.map(language => (
             <MenuItem
               key={language.languageId}
-              onClick={onMenuClickCreator(
-                languageId =>
-                  sendActionToEditor(setConsoleLanguage(languageId)),
-                language.languageId
-              )}
+              onClick={setConsoleLanguageProp}
             >
               <LanguageName>{language.displayName}</LanguageName>
               <LanguageShort>{language.languageId}</LanguageShort>
@@ -105,7 +103,8 @@ ConsoleLanguageMenuUnconnected.propTypes = {
       languageId: PropTypes.string.isRequired
     })
   ).isRequired,
-  currentLanguage: PropTypes.string.isRequired
+  currentLanguage: PropTypes.string.isRequired,
+  setConsoleLanguageProp: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -117,5 +116,9 @@ export function mapStateToProps(state) {
     availableLanguages
   };
 }
+const mapDispatchToProps = { setConsoleLanguageProp: setConsoleLanguage };
 
-export default connect(mapStateToProps)(ConsoleLanguageMenuUnconnected);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ConsoleLanguageMenuUnconnected);

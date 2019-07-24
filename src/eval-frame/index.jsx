@@ -9,8 +9,6 @@ import "react-table/react-table.css";
 import "./../../node_modules/katex/dist/katex.min.css";
 
 // iodide styles
-import "./style/eval-container.css";
-import "./style/side-panes.css";
 import "./style/default-presentation.css";
 
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";

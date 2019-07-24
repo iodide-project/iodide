@@ -19,6 +19,7 @@ import "./style/menu-and-button-and-ui-styles.css";
 import "./style/codemirror-styles.css";
 import "./style/help-modal-styles.css";
 import "./style/golden-layout-style-overrides.css";
+import "./style/eval-container.css";
 
 // theme settings
 import "./style/client-style-defaults";

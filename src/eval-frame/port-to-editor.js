@@ -155,7 +155,3 @@ portToEditor.onmessage = receiveMessage;
 export function postActionToEditor(actionObj) {
   postMessageToEditor("REDUX_ACTION", actionObj);
 }
-
-export function postKeypressToEditor(keypressStr) {
-  postMessageToEditor("KEYPRESS", keypressStr);
-}

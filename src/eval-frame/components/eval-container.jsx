@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import ReportPane from "./panes/report-pane";
-// import DeclaredVariablesPane from "./panes/declared-variables-pane";
-import ConsolePane from "./panes/console-pane";
 
 import FixedPositionContainer from "../../shared/components/fixed-position-container";
 
@@ -22,10 +20,6 @@ export class EvalContainerUnconnected extends React.Component {
           fullscreen={reportOnly}
         >
           <ReportPane />
-        </FixedPositionContainer>
-
-        <FixedPositionContainer paneId="ConsolePositioner" hidden={reportOnly}>
-          <ConsolePane />
         </FixedPositionContainer>
       </React.Fragment>
     );

@@ -7,8 +7,6 @@ import ErrorRenderer from "./error-handler";
 import HTMLHandler from "./html-handler";
 import TableRenderer from "./data-table-rep";
 
-import { wrapValueRenderer } from "./rep-info-requestor";
-
 export class ValueRendererUnwrapped extends React.Component {
   static propTypes = {
     // FIXME fix proptypes
@@ -81,5 +79,3 @@ export class ValueRendererUnwrapped extends React.Component {
     }
   }
 }
-
-export default wrapValueRenderer(ValueRendererUnwrapped);

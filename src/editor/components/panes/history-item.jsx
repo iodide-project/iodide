@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 import AppMessage from "./console/app-message";
-import ValueRenderer from "../../../reps/components/value-renderer";
+import ValueRenderer from "../remote-reps/remote-value-renderer";
 
 import HistoryInputItem from "./console/history-input-item";
 import ConsoleMessage from "./console/console-message";

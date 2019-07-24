@@ -10,6 +10,9 @@ export function sendStatusResponseToEditor(status, evalId, payload) {
 }
 
 export function sendResponseMessageToEditor(status, responseId, payload) {
+  if (typeof responseId !== "string") {
+    throw new TypeError("response messages must include a valid messageId");
+  }
   messagePasserEval.postMessage("RESPONSE_MESSAGE", {
     status,
     responseId,

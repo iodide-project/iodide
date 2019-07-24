@@ -5,6 +5,8 @@ import deepEqual from "deep-equal";
 
 import IomdEditor from "./iomd-editor";
 import DeclaredVariablesPane from "./panes/declared-variables-pane";
+import ConsolePane from "./panes/console-pane";
+
 import FixedPositionContainer from "../../shared/components/fixed-position-container";
 
 import LayoutManager from "./pane-layout/layout-manager";
@@ -28,11 +30,19 @@ class EditorPaneContainer extends React.Component {
         >
           <IomdEditor />
         </FixedPositionContainer>
+
         <FixedPositionContainer
           paneId="WorkspacePositioner"
           hidden={this.props.reportOnly}
         >
           <DeclaredVariablesPane />
+        </FixedPositionContainer>
+
+        <FixedPositionContainer
+          paneId="ConsolePositioner"
+          hidden={this.props.reportOnly}
+        >
+          <ConsolePane />
         </FixedPositionContainer>
       </React.Fragment>
     );

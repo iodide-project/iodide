@@ -1,5 +1,5 @@
 import Mousetrap from "mousetrap";
-import { evalConsoleInput } from "./actions/eval-actions";
+// import { evalConsoleInput } from "./actions/evalConsoleInput";
 import { handleFileRequest } from "./actions/file-request-actions";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
@@ -28,22 +28,23 @@ const approvedKeys = [
 function receiveMessage(event) {
   const trustedMessage = true;
   if (trustedMessage) {
-    const { messageType, message, responseId } = event.data;
+    const { messageType, message } = event.data;
     switch (messageType) {
       case "RESPONSE_MESSAGE": {
+        const { status, responseId, payload } = message;
         if (typeof responseId !== "string") {
           console.error(
-            "messages with messageType===RESPONSE_MESSAGE must have responseId",
+            `messages with messageType===RESPONSE_MESSAGE must have string responseId. This type: ${typeof responseId}`,
             message
           );
         }
-        messagePasserEditor.handleMessageResponse(responseId, message);
+        messagePasserEditor.handleMessageResponse(status, responseId, payload);
         break;
       }
-      case "CONSOLE_NEEDS_EVALUATION": {
-        messagePasserEditor.dispatch(evalConsoleInput(message));
-        break;
-      }
+      // case "CONSOLE_NEEDS_EVALUATION": {
+      //   messagePasserEditor.dispatch(evalConsoleInput(message));
+      //   break;
+      // }
       case "EVAL_FRAME_TASK_RESPONSE": {
         messagePasserEditor.dispatch(
           Object.assign(
