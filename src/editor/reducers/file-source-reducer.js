@@ -1,17 +1,30 @@
+const produceFileSource = fs => {
+  return Object.assign({}, fs, {
+    latest_file_update_operation: Object.assign(
+      {},
+      fs.latest_file_update_operation
+    )
+  });
+};
+
+const produceFileSources = fileSources => {
+  return fileSources.map(fs => {
+    return produceFileSource(fs);
+  });
+};
+
 export default (state, action) => {
   // FIXME: remove reduceReducers in reducer.js and have state only reflect
   // the app's fileSources object. This will require refactoring createValidatedReducer
   // but should be considered a high priority.
   switch (action.type) {
     case "UPDATE_FILE_SOURCES": {
-      const fileSources = action.fileSources.map(fs => {
-        const fileSource = Object.assign({}, fs);
-        fileSource.latest_file_update_operation = Object.assign(
-          {},
-          fs.latest_file_update_operation
+      if (!Array.isArray(action.fileSources))
+        throw Error(
+          `UPDATE_FILE_SOURCES: expected fileSources to be of type array, instead got ${typeof action.fileSources}`
         );
-        return fileSource;
-      });
+
+      const fileSources = produceFileSources(action.fileSources);
       return Object.assign({}, state, { fileSources });
     }
 
@@ -22,14 +35,9 @@ export default (state, action) => {
         updateInterval,
         fileSourceID
       } = action;
-      const fileSources = state.fileSources.map(f => {
-        return Object.assign({}, f, {
-          latest_file_update_operation: Object.assign(
-            {},
-            f.latest_file_update_operation
-          )
-        });
-      });
+
+      const fileSources = produceFileSources(state.fileSources);
+
       fileSources.push({
         url: sourceURL,
         filename: destinationFilename,
@@ -42,12 +50,10 @@ export default (state, action) => {
 
     case "DELETE_FILE_SOURCE_FROM_NOTEBOOK": {
       const { fileSourceID } = action;
-      const { fileSources } = state;
-      return Object.assign({}, state, {
-        fileSources: fileSources
-          .filter(f => f.id !== fileSourceID)
-          .map(f => Object.assign({}, f))
-      });
+      const fileSources = produceFileSources(state.fileSources).filter(
+        f => f.id !== fileSourceID
+      );
+      return Object.assign({}, state, { fileSources });
     }
 
     case "UPDATE_FILE_SOURCE_STATUS": {
@@ -59,12 +65,12 @@ export default (state, action) => {
       const { fileSources } = state;
       const newFileSources = fileSources.map(f => {
         let newInfo = {};
-        if (f.id === fileSourceID) {
+        const fi = produceFileSource(f);
+        if (fi.id === fileSourceID) {
           newInfo = Object.assign({}, params.fileUpdateOperation);
-        } else {
-          newInfo = Object.assign({}, f.latest_file_update_operation);
+          fi.latest_file_update_operation = newInfo;
         }
-        return Object.assign({}, f, { latest_file_update_operation: newInfo });
+        return fi;
       });
       return Object.assign({}, state, {
         fileSources: newFileSources

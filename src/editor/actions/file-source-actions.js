@@ -24,9 +24,11 @@ const reverseUpdateInterval = v => {
 export function getFileSources() {
   return async (dispatch, getState) => {
     const notebookID = getState().notebookInfo.notebook_id;
-    const fileSources = await getFileSourcesFromServer(notebookID);
-    fileSources.forEach(f => {
-      f.update_interval = reverseUpdateInterval(f.update_interval);
+    const response = await getFileSourcesFromServer(notebookID);
+    const fileSources = response.map(f => {
+      const fileSource = Object.assign({}, f);
+      fileSource.update_interval = reverseUpdateInterval(f.update_interval);
+      return fileSource;
     });
     // ok, if success
     dispatch({
