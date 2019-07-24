@@ -23,7 +23,8 @@ describe("ValueRenderer passes through to correct rep depending on topLevelRepSu
   beforeEach(() => {
     props = {
       rootObjName: "window",
-      pathToEntity: ["foo", "343", "bar"]
+      pathToEntity: ["foo", "343", "bar"],
+      requestRepInfo: jest.fn()
     };
     mountedItem = undefined;
   });
