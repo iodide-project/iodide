@@ -185,57 +185,6 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { notebookInfo });
     }
 
-    case "ADD_FILE_SOURCE_TO_NOTEBOOK": {
-      const {
-        sourceURL,
-        destinationFilename,
-        updateInterval,
-        fileSourceID
-      } = action;
-      const fileSources = state.notebookInfo.fileSources.map(f =>
-        Object.assign({}, f)
-      );
-      fileSources.push({
-        sourceURL,
-        destinationFilename,
-        updateInterval,
-        fileSourceID,
-        lastRan: undefined
-      });
-      const notebookInfo = Object.assign({}, state.notebookInfo, {
-        fileSources
-      });
-      return Object.assign({}, state, { notebookInfo });
-    }
-
-    case "DELETE_FILE_SOURCE_FROM_NOTEBOOK": {
-      const { fileSourceID } = action;
-      const { fileSources } = state.notebookInfo;
-      const notebookInfo = Object.assign({}, state.notebookInfo, {
-        fileSources: fileSources
-          .filter(f => f.fileSourceID !== fileSourceID)
-          .map(f => Object.assign({}, f))
-      });
-      return Object.assign({}, state, { notebookInfo });
-    }
-
-    case "UPDATE_FILE_SOURCE": {
-      const params = Object.assign({}, action);
-      delete params.type;
-      const { fileSources } = state.notebookInfo;
-      const newFileSources = fileSources.map(f => {
-        let newInfo = {};
-        if (f.fileSourceID === params.fileSourceID) {
-          newInfo = params;
-        }
-        return Object.assign({}, f, newInfo);
-      });
-      const notebookInfo = Object.assign({}, state.notebookInfo, {
-        fileSources: newFileSources
-      });
-      return Object.assign({}, state, { notebookInfo });
-    }
-
     case "SET_MODAL_STATE": {
       return Object.assign({}, state, { modalState: action.modalState });
     }

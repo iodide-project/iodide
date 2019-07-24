@@ -1,4 +1,7 @@
-import { signedAPIRequestWithJSONContent } from "./api-request";
+import {
+  signedAPIRequest,
+  signedAPIRequestWithJSONContent
+} from "./api-request";
 
 export function createFileSourceRequest(body) {
   return signedAPIRequestWithJSONContent("/api/v1/file-sources/", {
@@ -25,4 +28,8 @@ export function deleteFileSourceRequest(fileSourceID) {
     },
     false
   );
+}
+
+export function getFileSourcesRequest(notebookID) {
+  return signedAPIRequest(`/api/v1/notebooks/${notebookID}/file-sources/`);
 }

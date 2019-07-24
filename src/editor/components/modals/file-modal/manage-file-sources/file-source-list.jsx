@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "react-emotion";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -9,7 +9,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteModal from "../../../../../server/components/delete-modal";
 import {
   deleteFileSource as deleteFileSourceAction,
-  createFileUpdateOperation as createFileUpdateOperationAction
+  createFileUpdateOperation as createFileUpdateOperationAction,
+  getFileSources as getFileSourcesAction
 } from "../../../../actions/file-source-actions";
 
 import {
@@ -137,48 +138,53 @@ const StatusLabel = styled.div`
 `;
 
 const FileSourceListUnconnected = ({
-  fileSources,
+  fileSources = [],
   deleteFileSource,
-  createFileUpdateOperation
+  createFileUpdateOperation,
+  getFileSources
 }) => {
   // we will handle the delete modal state in a hook.
   // otherwise, the state for the file sources is managed in the
   // store itself.
   const [sourceToDelete, setSourceToDelete] = useState(undefined);
-
+  useEffect(() => {
+    getFileSources();
+  }, []);
   return fileSources.length ? (
     <React.Fragment>
       <DeleteModal
         visible={sourceToDelete !== undefined}
         title="Delete this file source?"
         onCloseOrCancel={() => setSourceToDelete(undefined)}
-        deleteFunction={() => deleteFileSource(sourceToDelete.fileSourceID)}
+        deleteFunction={() => deleteFileSource(sourceToDelete.id)}
         onDelete={() => setSourceToDelete(undefined)}
         aboveOtherModals
       />
       <FileSourceListContainer>
         <List>
           {fileSources.map(fileSource => {
-            const isManuallyRunning = ["pending", "running"].includes(
-              fileSource.lastFileUpdateOperationStatus
-            );
+            const isManuallyRunning =
+              fileSource.latest_file_update_operation &&
+              ["pending", "running"].includes(
+                fileSource.latest_file_update_operation.status
+              );
             return (
-              <ListItem type="single" key={fileSource.fileSourceID}>
+              <ListItem type="single" key={fileSource.id}>
                 <ListMain>
                   <ListPrimaryText>
                     <FileInformationContainer>
                       <FileName
-                        hasBeenRun={
-                          fileSource.lastFileUpdateOperationID !== undefined
-                        }
+                        hasBeenRun={fileSource.latest_file_update_operation}
                       >
-                        {fileSource.destinationFilename}
+                        {fileSource.filename}
                       </FileName>
-                      {fileSource.lastFileUpdateOperationID !== undefined ? (
+                      {fileSource.latest_file_update_operation ? (
                         <StatusLabel
-                          status={fileSource.lastFileUpdateOperationStatus}
+                          status={
+                            fileSource.latest_file_update_operation.status
+                          }
                         >
-                          {fileSource.lastFileUpdateOperationStatus}
+                          {fileSource.latest_file_update_operation.status}
                         </StatusLabel>
                       ) : (
                         <ClickRunNowToFetch>
@@ -186,24 +192,28 @@ const FileSourceListUnconnected = ({
                           scheduler
                         </ClickRunNowToFetch>
                       )}
-                      {fileSource.lastRan && (
-                        <LastRanLabel>
-                          on {formatDate(fileSource.lastRan)}
-                        </LastRanLabel>
-                      )}
+                      {fileSource.latest_file_update_operation &&
+                        fileSource.latest_file_update_operation.started && (
+                          <LastRanLabel>
+                            on{" "}
+                            {formatDate(
+                              fileSource.latest_file_update_operation.started
+                            )}
+                          </LastRanLabel>
+                        )}
                     </FileInformationContainer>
                   </ListPrimaryText>
                   <FileSourceURLContainer
-                    length={fileSource.sourceURL.length}
-                    href={fileSource.sourceURL}
+                    length={fileSource.url.length}
+                    href={fileSource.url}
                   >
-                    <FileSourceURL href={fileSource.sourceURL}>
-                      {fileSource.sourceURL}
+                    <FileSourceURL href={fileSource.url}>
+                      {fileSource.url}
                     </FileSourceURL>
                   </FileSourceURLContainer>
                 </ListMain>
                 <FileSourceInterval>
-                  {fileSource.updateInterval}
+                  {fileSource.update_interval}
                 </FileSourceInterval>
                 <ListItemCall>
                   <Fader active={isManuallyRunning}>
@@ -213,7 +223,7 @@ const FileSourceListUnconnected = ({
                     <OutlineButton
                       disabled={isManuallyRunning}
                       onClick={() => {
-                        createFileUpdateOperation(fileSource.fileSourceID);
+                        createFileUpdateOperation(fileSource.id);
                       }}
                     >
                       run now
@@ -242,12 +252,13 @@ const FileSourceListUnconnected = ({
 FileSourceListUnconnected.propTypes = {
   fileSources: PropTypes.arrayOf(PropTypes.object),
   deleteFileSource: PropTypes.func,
-  createFileUpdateOperation: PropTypes.func
+  createFileUpdateOperation: PropTypes.func,
+  getFileSources: PropTypes.func
 };
 
 function mapStateToProps(state) {
   return {
-    fileSources: state.notebookInfo.fileSources
+    fileSources: state.fileSources
   };
 }
 
@@ -256,7 +267,11 @@ function mapDispatchToProps(dispatch) {
     deleteFileSource: fileSourceID =>
       dispatch(deleteFileSourceAction(fileSourceID)),
     createFileUpdateOperation: fileSourceID =>
-      dispatch(createFileUpdateOperationAction(fileSourceID))
+      dispatch(createFileUpdateOperationAction(fileSourceID)),
+    getFileSources: () => {
+      // run this every time we open the manage file sources tab specifically.
+      dispatch(getFileSourcesAction());
+    }
   };
 }
 

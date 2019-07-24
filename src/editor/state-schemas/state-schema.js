@@ -59,22 +59,52 @@ export const fileSchema = {
   additionalProperties: false
 };
 
+// export const fileSourceSchema = {
+//   type: "object",
+//   properties: {
+//     sourceURL: { type: "string" },
+//     destinationFilename: { type: "string" },
+//     updateInterval: { type: "string", enum: FILE_SOURCE_UPDATE_INTERVALS },
+//     fileSourceID: { type: "integer" },
+//     lastRan: { type: "string", default: undefined },
+//     lastFileUpdateOperationID: { type: "integer", default: undefined },
+//     lastFileUpdateOperationStatus: {
+//       type: "string",
+//       enum: FILE_UPDATE_OPERATION_STATUSES,
+//       default: undefined
+//     }
+//   },
+//   additionalProperties: false
+// };
+
+export const fileUpdateOperationSchema = {
+  type: "object",
+  properties: {
+    id: { type: "integer" },
+    scheduled: { type: "string" },
+    started: { type: "string" },
+    ended: { type: "string" },
+    status: { type: "integer" },
+    failure_reason: { type: "string" }
+  }
+};
+
 export const fileSourceSchema = {
   type: "object",
   properties: {
-    sourceURL: { type: "string" },
-    destinationFilename: { type: "string" },
-    updateInterval: { type: "string", enum: FILE_SOURCE_UPDATE_INTERVALS },
-    fileSourceID: { type: "integer" },
-    lastRan: { type: "string", default: undefined },
-    lastFileUpdateOperationID: { type: "integer", default: undefined },
-    lastFileUpdateOperationStatus: {
-      type: "string",
-      enum: FILE_UPDATE_OPERATION_STATUSES,
-      default: undefined
-    }
-  },
-  additionalProperties: false
+    id: { type: "integer" },
+    url: { type: "string" },
+    filename: { type: "string" },
+    update_interval: { type: ["string", "null"] }, // { type: "string", enum: FILE_SOURCE_UPDATE_INTERVALS },
+    last_file_update_operation: fileUpdateOperationSchema
+    // lastRan: { type: "string", default: undefined },
+    // lastFileUpdateOperationID: { type: "integer", default: undefined },
+    // lastFileUpdateOperationStatus: {
+    //   type: "string",
+    //   enum: FILE_UPDATE_OPERATION_STATUSES,
+    //   default: undefined
+    // }
+  }
 };
 
 const environmentVariableSchema = {
@@ -279,11 +309,11 @@ export const stateProperties = {
       }
     }
   },
+  fileSources: { type: "array", items: fileSourceSchema },
   notebookInfo: {
     type: "object",
     properties: {
       files: { type: "array", items: fileSchema },
-      fileSources: { type: "array", items: fileSourceSchema },
       user_can_save: { type: "boolean" },
       notebook_id: { type: "integer" },
       revision_id: { type: "integer" },

@@ -58,12 +58,19 @@ class FileUpdateOperationSerializer(serializers.ModelSerializer):
 
 class FileUpdateOperationLatestSerializer(serializers.RelatedField):
     def get_attribute(self, obj):
-        print('obJ!!!', obj)
         return FileUpdateOperation.objects.filter(file_source_id=obj.id).last()
 
     def to_representation(self, value):
         if value:
-            return FileUpdateOperationSerializer(value).data
+            obj = FileUpdateOperationSerializer(value).data
+            return {
+                "id": obj["id"],
+                "scheduled": obj["scheduled"],
+                "started": obj["started"],
+                "ended": obj["ended"],
+                "status": obj["status"],
+                "failure_reason": obj["failure_reason"]
+            }
 
         return None
 

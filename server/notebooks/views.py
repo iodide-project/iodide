@@ -31,7 +31,6 @@ def _get_iframe_src():
 def notebook_view(request, pk):
 
     notebook = get_object_or_404(Notebook, pk=pk)
-    owner = get_object_or_404(User, pk=notebook.owner_id)
 
     if "revision" in request.GET:
         try:
@@ -49,35 +48,6 @@ def notebook_view(request, pk):
         for file in File.objects.filter(notebook_id=pk).order_by("-last_updated")
     ]
 
-    FILE_SOURCE_INTERVALS = {
-        "None": "never",
-        "1 day, 0:00:00": "daily",
-        "7 days, 0:00:00": "weekly",
-    }
-    OPERATION_STATUSES = {0: "pending", 1: "running", 2: "completed", 3: "failed"}
-    file_sources = []
-    if owner.id == request.user.id:
-        for file_source in FileSource.objects.filter(notebook_id=pk):
-            source = {
-                "fileSourceID": file_source.id,
-                "updateInterval": FILE_SOURCE_INTERVALS[str(file_source.update_interval)],
-                "destinationFilename": file_source.filename,
-                "sourceURL": file_source.url,
-            }
-            file_update_operation = FileUpdateOperation.objects.filter(
-                file_source_id=file_source.id
-            )
-            if len(file_update_operation) > 0:
-                file_update_operation = file_update_operation.latest("started")
-                last_ran = file_update_operation.started.isoformat() if file_update_operation.started else None
-                update_status = OPERATION_STATUSES[file_update_operation.status]
-                operation_id = file_update_operation.id
-                source["lastRan"] = last_ran
-                source["lastFileUpdateOperationStatus"] = update_status
-                source["lastFileUpdateOperationID"] = operation_id
-
-            file_sources.append(source)
-
     notebook_info = {
         "username": notebook.owner.username,
         "user_can_save": notebook.owner_id == request.user.id,
@@ -87,7 +57,6 @@ def notebook_view(request, pk):
         "connectionMode": "SERVER",
         "title": revision.title,
         "files": files,
-        "fileSources": file_sources,
         "max_filename_length": MAX_FILENAME_LENGTH,
         "max_file_size": MAX_FILE_SIZE,
     }

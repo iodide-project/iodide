@@ -58,7 +58,6 @@ describe("addFileSource", () => {
       }
     ]);
     expect(createFileSourceMock).toHaveBeenCalled();
-    console.log(store.getState());
   });
 });
 

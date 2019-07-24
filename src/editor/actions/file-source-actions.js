@@ -1,6 +1,7 @@
 import {
   saveFileSourceToServer,
-  deleteFileSourceFromServer
+  deleteFileSourceFromServer,
+  getFileSourcesFromServer
 } from "../../shared/utils/file-source-operations";
 
 import {
@@ -9,10 +10,32 @@ import {
 } from "../../shared/utils/file-update-operation-operations";
 
 const UPDATE_INTERVAL_OPTIONS = {
-  never: undefined,
+  never: null,
   daily: "1 day, 0:00:00",
   weekly: "7 days, 0:00:00"
 };
+
+const reverseUpdateInterval = v => {
+  if (v === null) return "never";
+  if (v === "604800.0") return "weekly";
+  return "daily";
+};
+
+export function getFileSources() {
+  return async (dispatch, getState) => {
+    const notebookID = getState().notebookInfo.notebook_id;
+    const fileSources = await getFileSourcesFromServer(notebookID);
+    fileSources.forEach(f => {
+      f.update_interval = reverseUpdateInterval(f.update_interval);
+    });
+    // ok, if success
+    dispatch({
+      type: "UPDATE_FILE_SOURCES",
+      fileSources
+    });
+    // ok, if failure
+  };
+}
 
 export function addFileSource(
   sourceURL,
@@ -30,7 +53,6 @@ export function addFileSource(
     );
 
     const fileSourceID = response.id;
-
     dispatch({
       type: "ADD_FILE_SOURCE_TO_NOTEBOOK",
       sourceURL,
@@ -45,7 +67,6 @@ export function addFileSource(
 export function deleteFileSource(fileSourceID) {
   return async dispatch => {
     const response = await deleteFileSourceFromServer(fileSourceID);
-    // remove the listed file source from notebook.
     dispatch({
       type: "DELETE_FILE_SOURCE_FROM_NOTEBOOK",
       fileSourceID
@@ -64,18 +85,13 @@ export function createFileUpdateOperation(fileSourceID) {
       // TODO: do something here if it fails.
       return;
     }
-    const lastRan = response.started;
-    const lastFileUpdateOperationID = response.id;
-    const responseFileSourceID = response.file_source_id;
-    const lastFileUpdateOperationStatus = response.status;
     dispatch({
-      type: "UPDATE_FILE_SOURCE",
-      fileSourceID: responseFileSourceID,
-      lastRan,
-      lastFileUpdateOperationID,
-      lastFileUpdateOperationStatus
+      type: "UPDATE_FILE_SOURCE_STATUS",
+      fileSourceID: response.file_source_id,
+      fileUpdateOperation: response
     });
-    let statusUpdate = lastFileUpdateOperationStatus;
+    let statusUpdate = response.status;
+    const lastFileUpdateOperationID = response.id;
     while (statusUpdate === "pending" || statusUpdate === "running") {
       // this while loop depends on whether the iteration's response
       // returns status !== "pending". Thus we will disable
@@ -86,11 +102,9 @@ export function createFileUpdateOperation(fileSourceID) {
         lastFileUpdateOperationID
       );
       dispatch({
-        type: "UPDATE_FILE_SOURCE",
+        type: "UPDATE_FILE_SOURCE_STATUS",
         fileSourceID: response.file_source_id,
-        lastRan: response.started,
-        lastFileUpdateOperationID: response.id,
-        lastFileUpdateOperationStatus: response.status
+        fileUpdateOperation: response
       });
 
       if (response.status !== "pending" && response.status !== "running") {

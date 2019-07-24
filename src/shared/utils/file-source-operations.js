@@ -1,7 +1,8 @@
 import {
   deleteFileSourceRequest,
   updateFileSourceRequest,
-  createFileSourceRequest
+  createFileSourceRequest,
+  getFileSourcesRequest
 } from "../server-api/file-source";
 
 function createFileSourceRequestPayload(options) {
@@ -32,4 +33,8 @@ export async function saveFileSourceToServer(
 
 export async function deleteFileSourceFromServer(fileSourceID) {
   return deleteFileSourceRequest(fileSourceID);
+}
+
+export async function getFileSourcesFromServer(notebookID) {
+  return getFileSourcesRequest(notebookID);
 }

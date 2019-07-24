@@ -70,7 +70,6 @@ class NotebookFileSourceViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         base = FileSource.objects.filter(notebook_id=self.kwargs["notebook_id"])
-        print(base, self.request.query_params)
         filter_by_id = self.request.query_params.getlist("id")
         if filter_by_id:
             return base.filter(id__in=filter_by_id)
