@@ -2,11 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
 
-import { RangeDescriptorPropTypes } from "./rep-utils/rep-serialization-core-types-proptypes";
+import { RangeDescriptorPropTypes } from "../rep-utils/rep-serialization-core-types-proptypes";
 import { Ell, RepBaseText, propLabelColor, Truncator } from "./value-summary";
 
-import { truncateString } from "./rep-utils/truncate-string";
-import { isValidIdentifier } from "../../../shared/utils/is-valid-js-identifier";
+import { truncateString } from "../rep-utils/truncate-string";
+import { isValidIdentifier } from "../../shared/utils/is-valid-js-identifier";
 
 const PathLabelText = styled(RepBaseText)`
   color: ${propLabelColor};

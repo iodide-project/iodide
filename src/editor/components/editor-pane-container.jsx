@@ -4,13 +4,14 @@ import { connect } from "react-redux";
 import deepEqual from "deep-equal";
 
 import IomdEditor from "./iomd-editor";
+import DeclaredVariablesPane from "./panes/declared-variables-pane";
 import FixedPositionContainer from "../../shared/components/fixed-position-container";
 
 import LayoutManager from "./pane-layout/layout-manager";
 
 class EditorPaneContainer extends React.Component {
   static propTypes = {
-    hideEditor: PropTypes.bool.isRequired
+    reportOnly: PropTypes.bool.isRequired
   };
 
   shouldComponentUpdate(nextProps) {
@@ -23,9 +24,15 @@ class EditorPaneContainer extends React.Component {
         <LayoutManager />
         <FixedPositionContainer
           paneId="EditorPositioner"
-          hidden={this.props.hideEditor}
+          hidden={this.props.reportOnly}
         >
           <IomdEditor />
+        </FixedPositionContainer>
+        <FixedPositionContainer
+          paneId="WorkspacePositioner"
+          hidden={this.props.reportOnly}
+        >
+          <DeclaredVariablesPane />
         </FixedPositionContainer>
       </React.Fragment>
     );
@@ -34,7 +41,7 @@ class EditorPaneContainer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    hideEditor: state.viewMode === "REPORT_VIEW"
+    reportOnly: state.viewMode === "REPORT_VIEW"
   };
 }
 

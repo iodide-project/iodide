@@ -1,18 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { requestRepInfo } from "./request-rep-info";
+// import { requestRepInfo } from "../request-rep-info";
 
-const defaultGetTopLevelRepSummary = (rootObjName, pathToEntity) =>
-  requestRepInfo({
-    rootObjName,
-    pathToEntity,
-    requestType: "TOP_LEVEL_SUMMARY"
-  });
+// const defaultGetTopLevelRepSummary = (rootObjName, pathToEntity) =>
+//   requestRepInfo({
+//     rootObjName,
+//     pathToEntity,
+//     requestType: "TOP_LEVEL_SUMMARY"
+//   });
 
 export const wrapValueRenderer = (
   WrappedValueRenderer,
-  getTopLevelRepSummary = defaultGetTopLevelRepSummary,
+  requestRepInfo,
   PlaceholderComponent = null
 ) => {
   return class extends React.Component {
@@ -20,8 +20,6 @@ export const wrapValueRenderer = (
       windowValue: PropTypes.bool,
       valueKey: PropTypes.string.isRequired
     };
-
-    // static defaultProps = { requestRepInfo: null };
 
     constructor(props) {
       super(props);
@@ -35,10 +33,11 @@ export const wrapValueRenderer = (
     }
     async componentDidMount() {
       const { rootObjName, pathToEntity } = this.state;
-      const topLevelRepSummary = await getTopLevelRepSummary(
+      const topLevelRepSummary = await requestRepInfo({
         rootObjName,
-        pathToEntity
-      );
+        pathToEntity,
+        requestType: "TOP_LEVEL_SUMMARY"
+      });
 
       // this following lint rule is controversial. the react docs *advise*
       // loading data in compDidMount, and explicitly say calling
@@ -76,7 +75,12 @@ export const wrapValueRenderer = (
         console.log({ topLevelRepSummary });
         return (
           <WrappedValueRenderer
-            {...{ rootObjName, pathToEntity, topLevelRepSummary }}
+            {...{
+              rootObjName,
+              pathToEntity,
+              topLevelRepSummary,
+              requestRepInfo
+            }}
           />
         );
       }

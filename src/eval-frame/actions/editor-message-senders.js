@@ -9,6 +9,14 @@ export function sendStatusResponseToEditor(status, evalId, payload) {
   });
 }
 
+export function sendResponseMessageToEditor(status, responseId, payload) {
+  messagePasserEval.postMessage("RESPONSE_MESSAGE", {
+    status,
+    responseId,
+    payload
+  });
+}
+
 export function sendActionToEditor(action) {
   messagePasserEval.postMessage("REDUX_ACTION", action);
 }

@@ -9,13 +9,13 @@ import TableRenderer from "./data-table-rep";
 
 import { wrapValueRenderer } from "./rep-info-requestor";
 
-import { requestRepInfo } from "./request-rep-info";
-
 export class ValueRendererUnwrapped extends React.Component {
   static propTypes = {
+    // FIXME fix proptypes
     topLevelRepSummary: PropTypes.object, // eslint-disable-line
     rootObjName: PropTypes.string, // eslint-disable-line
-    pathToEntity: PropTypes.array // eslint-disable-line
+    pathToEntity: PropTypes.array, // eslint-disable-line
+    requestRepInfo: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -60,6 +60,7 @@ export class ValueRendererUnwrapped extends React.Component {
             pages={topLevelRepSummary.pages}
             pathToDataFrame={pathToEntity}
             rootObjName={rootObjName}
+            requestRepInfo={this.props.requestRepInfo}
           />
         );
       default:
@@ -68,7 +69,7 @@ export class ValueRendererUnwrapped extends React.Component {
             pathToEntity={pathToEntity}
             valueSummary={topLevelRepSummary.valueSummary}
             getChildSummaries={(name, path) =>
-              requestRepInfo({
+              this.props.requestRepInfo({
                 rootObjName: name,
                 pathToEntity: path,
                 requestType: "CHILD_SUMMARY"

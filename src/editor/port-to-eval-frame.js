@@ -6,8 +6,8 @@ import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
 
 let portToEvalFrame;
 
-export function postMessageToEvalFrame(messageType, message) {
-  portToEvalFrame.postMessage({ messageType, message });
+export function postMessageToEvalFrame(messageType, message, messageId) {
+  portToEvalFrame.postMessage({ messageType, message, messageId });
 }
 
 export function postActionToEvalFrame(actionObj) {
@@ -28,8 +28,18 @@ const approvedKeys = [
 function receiveMessage(event) {
   const trustedMessage = true;
   if (trustedMessage) {
-    const { messageType, message } = event.data;
+    const { messageType, message, responseId } = event.data;
     switch (messageType) {
+      case "RESPONSE_MESSAGE": {
+        if (typeof responseId !== "string") {
+          console.error(
+            "messages with messageType===RESPONSE_MESSAGE must have responseId",
+            message
+          );
+        }
+        messagePasserEditor.handleMessageResponse(responseId, message);
+        break;
+      }
       case "CONSOLE_NEEDS_EVALUATION": {
         messagePasserEditor.dispatch(evalConsoleInput(message));
         break;

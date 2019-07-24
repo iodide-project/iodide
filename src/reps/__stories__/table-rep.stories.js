@@ -4,13 +4,13 @@ import { storiesOf } from "@storybook/react";
 
 // need to manually load css for react table
 // but even with this some styles seem to be missing
-import "../../../../../node_modules/react-table/react-table.css";
+import "../../../node_modules/react-table/react-table.css";
 
 import { rowTableCases } from "../__test_helpers__/reps-test-value-cases";
 
 import { getInitialDataTableSummary } from "../rep-utils/get-data-table-summary";
 
-import TableRenderer from "../data-table-rep";
+import TableRenderer from "../components/data-table-rep";
 
 const tableRep = storiesOf("rowDf table rep", module);
 

@@ -7,12 +7,16 @@ import {
   onParentContextFileRequestError
 } from "./tools/send-file-request-to-editor";
 import messagePasserEval from "../shared/utils/redux-to-port-message-passer";
-import { sendStatusResponseToEditor } from "./actions/editor-message-senders";
+import {
+  sendStatusResponseToEditor,
+  sendResponseMessageToEditor
+} from "./actions/editor-message-senders";
 import {
   addCSS,
   loadScriptFromBlob,
   setVariableInWindow
 } from "./actions/fetch-cell-eval-actions";
+import { repInfoRequestResponse } from "../reps/rep-utils/rep-info-request-response";
 
 const mc = new MessageChannel();
 const portToEditor = mc.port1;
@@ -44,8 +48,8 @@ function connectToEditor() {
 }
 connectToEditor();
 
-export function postMessageToEditor(messageType, message) {
-  portToEditor.postMessage({ messageType, message });
+export function postMessageToEditor(messageType, message, responseId) {
+  portToEditor.postMessage({ messageType, message, responseId });
 }
 
 messagePasserEval.connectPostMessage(postMessageToEditor);
@@ -53,13 +57,18 @@ messagePasserEval.connectPostMessage(postMessageToEditor);
 async function receiveMessage(event) {
   const trustedMessage = true;
   if (trustedMessage) {
-    const { messageType, message } = event.data;
+    const { messageType, message, messageId } = event.data;
     switch (messageType) {
       case "STATE_UPDATE_FROM_EDITOR": {
         messagePasserEval.dispatch({
           type: "REPLACE_STATE",
           state: message
         });
+        break;
+      }
+      case "REP_INFO_REQUEST": {
+        const repInfo = repInfoRequestResponse(message);
+        sendResponseMessageToEditor("SUCCESS", messageId, repInfo);
         break;
       }
       case "REQUESTED_FILE_OPERATION_SUCCESS": {

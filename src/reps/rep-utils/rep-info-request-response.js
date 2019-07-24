@@ -3,11 +3,15 @@ import { getTopLevelRepSummary } from "./get-top-level-rep-summary";
 import { getDataTableSummary } from "./get-data-table-summary";
 import { getValueSummary } from "./get-value-summary";
 
-export async function repInfoRequestResponse(payload) {
+export async function repInfoRequestResponse(payload, environment) {
   const { rootObjName, pathToEntity, requestType } = payload;
   switch (requestType) {
     case "TOP_LEVEL_SUMMARY":
-      return getTopLevelRepSummary(rootObjName, pathToEntity);
+      return getTopLevelRepSummary(
+        rootObjName,
+        pathToEntity,
+        environment && environment.userRepManager
+      );
     case "ROW_TABLE_PAGE_SUMMARY":
       return getDataTableSummary(
         rootObjName,

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "react-emotion";
 import PropTypes from "prop-types";
 
-import { truncateString } from "./rep-utils/truncate-string";
+import { truncateString } from "../rep-utils/truncate-string";
 
 const numberColor = "rgb(28, 0, 207)";
 const boolColor = numberColor;

@@ -8,8 +8,6 @@ import "./react-table-styles.css";
 
 import ExpandableRep from "./rep-tree";
 
-import { requestRepInfo } from "./request-rep-info";
-
 import ValueSummaryRep from "./value-summary";
 
 const TableDetails = styled.div`
@@ -33,16 +31,7 @@ class CellDetails extends React.Component {
     ).isRequired,
     valueSummary: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     rootObjName: PropTypes.string,
-    getChildSummary: PropTypes.func
-  };
-
-  static defaultProps = {
-    getChildSummary: (rootObjName, pathToEntity) =>
-      requestRepInfo({
-        rootObjName,
-        pathToEntity,
-        requestType: "CHILD_SUMMARY"
-      })
+    requestRepInfo: PropTypes.func
   };
 
   render() {
@@ -60,6 +49,12 @@ class CellDetails extends React.Component {
         String(focusedRowOriginalIndex),
         focusedCol
       ];
+      const getChildSummary = (rootName, pathToEntity) =>
+        this.props.requestRepInfo({
+          rootObjName: rootName,
+          pathToEntity,
+          requestType: "CHILD_SUMMARY"
+        });
 
       return (
         <TableDetails>
@@ -69,7 +64,7 @@ class CellDetails extends React.Component {
           <ExpandableRep
             pathToEntity={pathToDataFrameCell}
             valueSummary={this.props.valueSummary}
-            getChildSummaries={this.props.getChildSummary}
+            getChildSummaries={getChildSummary}
             rootObjName={rootObjName}
           />
         </TableDetails>
@@ -119,19 +114,7 @@ export default class TableRenderer extends React.Component {
       PropTypes.oneOfType([PropTypes.string, PropTypes.object])
     ).isRequired,
     rootObjName: PropTypes.string,
-    getDataTableSummary: PropTypes.func
-  };
-
-  static defaultProps = {
-    getDataTableSummary: (rootObjName, pathToEntity, pageSize, page, sorted) =>
-      requestRepInfo({
-        rootObjName,
-        pathToEntity,
-        pageSize,
-        page,
-        sorted,
-        requestType: "ROW_TABLE_PAGE_SUMMARY"
-      })
+    requestRepInfo: PropTypes.func
   };
 
   constructor(props) {
@@ -150,7 +133,23 @@ export default class TableRenderer extends React.Component {
   async fetchData(fetchParams) {
     this.setState({ loading: true });
 
-    const { rows, pages } = await this.props.getDataTableSummary(
+    const getDataTableSummary = (
+      rootObjName,
+      pathToEntity,
+      pageSize,
+      page,
+      sorted
+    ) =>
+      this.props.requestRepInfo({
+        rootObjName,
+        pathToEntity,
+        pageSize,
+        page,
+        sorted,
+        requestType: "ROW_TABLE_PAGE_SUMMARY"
+      });
+
+    const { rows, pages } = await getDataTableSummary(
       this.props.rootObjName,
       this.props.pathToDataFrame,
       fetchParams.pageSize,
@@ -242,6 +241,7 @@ export default class TableRenderer extends React.Component {
           valueSummary={focusedValue}
           rootObjName={this.props.rootObjName}
           pathToDataFrame={this.props.pathToDataFrame}
+          requestRepInfo={this.props.requestRepInfo}
         />
       </div>
     );

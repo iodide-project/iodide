@@ -7,13 +7,13 @@ import {
   isValueSummary,
   isSubstringRangeSummaryItem,
   isMapPairSummaryItem
-} from "./rep-utils/rep-serialization-core-types";
+} from "../rep-utils/rep-serialization-core-types";
 
 import {
   ValueSummaryPropTypes,
   PathLabelPropTypes,
   PathToEntityPropTypes
-} from "./rep-utils/rep-serialization-core-types-proptypes";
+} from "../rep-utils/rep-serialization-core-types-proptypes";
 
 import ValueSummaryRep from "./value-summary";
 import { PathLabelRep } from "./path-label-rep";

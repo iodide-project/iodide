@@ -4,7 +4,7 @@ import { storiesOf } from "@storybook/react";
 
 // need to manually load css for react table
 // but even with this some styles seem to be missing
-import "../../../../../node_modules/react-table/react-table.css";
+import "../../../node_modules/react-table/react-table.css";
 
 // serializers
 import {
@@ -18,10 +18,10 @@ import { serializeChildSummary } from "../rep-utils/child-summary-serializer";
 import { getChildSummary } from "../rep-utils/get-child-summaries";
 
 // components
-import ValueSummary from "../value-summary";
-import InlineChildSummary from "../in-line-child-summary";
+import ValueSummary from "../components/value-summary";
+import InlineChildSummary from "../components/in-line-child-summary";
 
-import ExpandableRep from "../rep-tree";
+import ExpandableRep from "../components/rep-tree";
 
 import { allCases } from "../__test_helpers__/reps-test-value-cases";
 

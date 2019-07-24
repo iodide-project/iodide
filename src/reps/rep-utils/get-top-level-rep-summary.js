@@ -4,15 +4,13 @@ import { getErrorStackString } from "./get-error-stack-summary";
 import { getInitialDataTableSummary } from "./get-data-table-summary";
 import { isRowDf } from "./rep-type-chooser";
 
-import UserReps from "../user-reps-manager";
-
-export function getTopLevelRepSummary(rootObjName, path) {
+export function getTopLevelRepSummary(rootObjName, path, UserRepsManager) {
   const value = getObjAtPath(window[rootObjName], path);
 
-  if (UserReps.getUserRepIfAvailable(value)) {
+  if (UserRepsManager && UserRepsManager.getUserRepIfAvailable(value)) {
     return {
       repType: "HTML_STRING",
-      htmlString: UserReps.getUserRepIfAvailable(value)
+      htmlString: UserRepsManager.getUserRepIfAvailable(value)
     };
   }
   if (value && value.iodideRender instanceof Function) {
