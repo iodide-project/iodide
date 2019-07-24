@@ -23,6 +23,7 @@ class RevisionListUnconnected extends React.Component {
       })
     ),
     selectedRevisionId: PropTypes.number,
+    hasLocalOnlyChanges: PropTypes.bool,
     updateSelectedRevisionId: PropTypes.func.isRequired
   };
 
@@ -43,14 +44,16 @@ class RevisionListUnconnected extends React.Component {
     return (
       <RevisionListContainer>
         <List>
-          <ListItem
-            button
-            key="local-changes"
-            onClick={() => this.revisionClicked(undefined)}
-            selected={this.props.selectedRevisionId === undefined}
-          >
-            <ListItemText primary="Unsaved Changes" />
-          </ListItem>
+          {this.props.hasLocalOnlyChanges && (
+            <ListItem
+              button
+              key="local-changes"
+              onClick={() => this.revisionClicked(undefined)}
+              selected={this.props.selectedRevisionId === undefined}
+            >
+              <ListItemText primary="Unsaved Changes" />
+            </ListItem>
+          )}
           {this.props.revisionList &&
             this.props.revisionList.map(revision => (
               <ListItem
@@ -75,9 +78,14 @@ class RevisionListUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   const notebookHistory = state.notebookHistory || {};
-  const { revisionList, selectedRevisionId } = notebookHistory;
+  const {
+    hasLocalOnlyChanges,
+    revisionList,
+    selectedRevisionId
+  } = notebookHistory;
 
   return {
+    hasLocalOnlyChanges,
     revisionList,
     selectedRevisionId
   };
