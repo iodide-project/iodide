@@ -29,9 +29,7 @@ def _get_iframe_src():
 
 @ensure_csrf_cookie
 def notebook_view(request, pk):
-
     notebook = get_object_or_404(Notebook, pk=pk)
-
     if "revision" in request.GET:
         try:
             revision_id = int(request.GET["revision"])
