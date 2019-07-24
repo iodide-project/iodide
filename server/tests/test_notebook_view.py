@@ -20,7 +20,6 @@ def test_notebook_view(client, test_notebook):
     assert get_script_block_json(resp.content, "notebookInfo") == {
         "connectionMode": "SERVER",
         "files": [],
-        "fileSources": [],
         "forked_from": False,
         "notebook_id": test_notebook.id,
         "revision_id": initial_revision.id,
