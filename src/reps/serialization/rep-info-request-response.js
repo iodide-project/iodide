@@ -7,6 +7,7 @@ export function repInfoRequestResponse(payload, environment) {
   const { rootObjName, pathToEntity, requestType } = payload;
   switch (requestType) {
     case "TOP_LEVEL_SUMMARY":
+      console.log("TOP_LEVEL_SUMMARY", { environment });
       return getTopLevelRepSummary(
         rootObjName,
         pathToEntity,

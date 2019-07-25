@@ -388,13 +388,15 @@ export const iodideRenderObjects = {
     b: 2,
     c: 3,
     iodideRender: () => `
+<p>this value used an iodideRender function</p>
 <ol>
   <li>a</li>
   <li>b</li>
   <li>c</li>
 </ol>
 `
-  }
+  },
+  mockUserRep_1: { useCustomRep: "do it" }
 };
 
 // ==================== tests

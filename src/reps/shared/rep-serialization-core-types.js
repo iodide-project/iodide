@@ -22,7 +22,11 @@ function checkTypes(keyedArgs, argTypes, fnName) {
           arg,
           expectedType,
           actualType
-        })}; (full args${JSON.stringify(keyedArgs)})`
+        })};
+
+full args:
+${JSON.stringify(keyedArgs)}
+`
       );
     }
   });

@@ -16,7 +16,7 @@ import {
   loadScriptFromBlob,
   setVariableInWindow
 } from "./actions/fetch-cell-eval-actions";
-import { repInfoRequestResponse } from "../reps/serialization/rep-info-request-response";
+import { repInfoRequestResponseFromEvalFrame } from "./eval-frame-rep-info-request-response";
 
 const mc = new MessageChannel();
 const portToEditor = mc.port1;
@@ -67,7 +67,7 @@ async function receiveMessage(event) {
         break;
       }
       case "REP_INFO_REQUEST": {
-        const repInfo = repInfoRequestResponse(message);
+        const repInfo = repInfoRequestResponseFromEvalFrame(message);
         sendResponseMessageToEditor("SUCCESS", messageId, repInfo);
         break;
       }

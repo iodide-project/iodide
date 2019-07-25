@@ -12,9 +12,24 @@ import { ValueRendererUnconnected } from "../components/value-renderer";
 import { makeValueRendererWithRepRequest } from "../components/rep-info-requestor";
 import { repInfoRequestResponse } from "../serialization/rep-info-request-response";
 
+const mockUserRenderManager = {
+  getUserRepIfAvailable: value => {
+    if (value && value.useCustomRep === "do it") {
+      return "<p>this is a custom renderer<p>";
+    }
+    return null;
+  }
+};
+
+export function repInfoRequestResponseWithMockUserReps(payload) {
+  return repInfoRequestResponse(payload, {
+    userRepManager: mockUserRenderManager
+  });
+}
+
 const ValueRenderer = makeValueRendererWithRepRequest(
   ValueRendererUnconnected,
-  repInfoRequestResponse,
+  repInfoRequestResponseWithMockUserReps,
   "window"
 );
 

@@ -20,6 +20,7 @@ import "./style/codemirror-styles.css";
 import "./style/help-modal-styles.css";
 import "./style/golden-layout-style-overrides.css";
 import "./style/eval-container.css";
+import "./style/jupyter-rendered-html-styles.css";
 
 // theme settings
 import "./style/client-style-defaults";
