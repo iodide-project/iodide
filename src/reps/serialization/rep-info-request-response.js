@@ -3,15 +3,14 @@ import { getTopLevelRepSummary } from "./get-top-level-rep-summary";
 import { getDataTableSummary } from "./get-data-table-summary";
 import { getValueSummary } from "./get-value-summary";
 
-// rather than passing down rootObjName
+// FIXME rather than passing down rootObjName
 // we can set the environment to have the correct mapping to
-//  "window" and "IODIDE_EVALUATION_RESULTS", and we can just pass the
-//  _actual_ root object down to the callee functions at this point
+// "window" and "IODIDE_EVALUATION_RESULTS", and we can just pass the
+// _actual_ root object down to the callee functions at this point
 export function repInfoRequestResponse(payload, environment) {
   const { rootObjName, pathToEntity, requestType } = payload;
   switch (requestType) {
     case "TOP_LEVEL_SUMMARY":
-      console.log("TOP_LEVEL_SUMMARY", { environment });
       return getTopLevelRepSummary(
         rootObjName,
         pathToEntity,
