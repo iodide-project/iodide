@@ -11,7 +11,6 @@ import "./../../node_modules/katex/dist/katex.min.css";
 import "./style/default-presentation.css";
 
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
-import { initializeDefaultKeybindings } from "./keybindings";
 import initializeUserVariables from "./initialize-user-variables";
 import EvalContainer from "./components/eval-container";
 import ViewModeStylesHandler from "./components/view-mode-styles-handler";
@@ -25,7 +24,6 @@ import "./port-to-editor";
 messagePasserEval.connectDispatch(store.dispatch);
 window.iodide = iodide;
 
-initializeDefaultKeybindings();
 // initialize variables available to the user in an empty notebook, such as
 // the iodide API.
 render(
