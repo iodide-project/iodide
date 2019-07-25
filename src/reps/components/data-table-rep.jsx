@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 import styled from "react-emotion";
 
+import "react-table/react-table.css";
 import "./react-table-styles.css";
 
 import ExpandableRep from "./rep-tree";
