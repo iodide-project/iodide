@@ -12,7 +12,7 @@ function replaceArg(args, index, newArg) {
 }
 
 describe("ValueSummary", () => {
-  const okArgs = ["string1", 6453, "string2", true];
+  const okArgs = ["string1", 6453, "string2", true, true];
   it(`should not throw in case of valid construction arg`, () => {
     expect(() => newValueSummary(...okArgs)).not.toThrow();
   });
@@ -21,7 +21,8 @@ describe("ValueSummary", () => {
     replaceArg(okArgs, 0, 531),
     replaceArg(okArgs, 1, "not number"),
     replaceArg(okArgs, 2, 531),
-    replaceArg(okArgs, 3, "not bools")
+    replaceArg(okArgs, 3, "not bools"),
+    replaceArg(okArgs, 4, "not bools")
   ].forEach((args, i) => {
     it(`should throw in case of invalid construction-- case ${i}, args: ${args}`, () => {
       expect(() => newValueSummary(...args)).toThrow();
@@ -51,7 +52,7 @@ describe("RangeDescriptor", () => {
   });
 });
 
-const okValueSummary = newValueSummary("string1", 6453, "string2", true);
+const okValueSummary = newValueSummary("string1", 6453, "string2", true, true);
 const okChildSummaryItem = () => newChildSummaryItem("path", okValueSummary);
 
 describe("ChildSummary", () => {

@@ -40,6 +40,16 @@ export const typesWithLength = [
   "GeneratorFunction"
 ];
 
+export const nonExpandableTypes = [
+  "Function",
+  "GeneratorFunction",
+  "Date",
+  "RegExp",
+  "ArrayBuffer",
+  "DataView",
+  "Blob"
+];
+
 export const typesWithByteLength = ["ArrayBuffer", "DataView"];
 
 export const typesWithSize = ["Map", "Set", "Blob"];

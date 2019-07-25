@@ -1,27 +1,13 @@
-// THIS FILE SHOULD NOT IMPORT ANYTHING.
-// It acts as top-level type definitions, and shouldn't rely on
+// this file acts as top-level type definitions, and shouldn't rely on
 // other code for functionality... because it shouldn't really have
 // "functionality" per se
 
-// These are just a container classes to clarify semantics and
+// These are just helper functions meant
 // to clarify code by not putting plain objects everywhere.
-// All of these containers need to be serializable, so they
-// should not have methods, and definitely no internal state
-// or internal state mutation.
 // They are really basically to be used as type definitions,
 // since the rep serialization machinery benefits from precise types.
 
 // one day we'll move to typescript and replace all this with proper types/interfaces/whatever.
-
-const nonExpandableTypes = [
-  "Function",
-  "GeneratorFunction",
-  "Date",
-  "RegExp",
-  "ArrayBuffer",
-  "DataView",
-  "Blob"
-];
 
 function checkTypes(keyedArgs, argTypes, fnName) {
   Object.keys(keyedArgs).forEach(key => {
@@ -42,30 +28,28 @@ function checkTypes(keyedArgs, argTypes, fnName) {
   });
 }
 
-export function newValueSummary(objType, size, stringValue, isTruncated) {
+export function newValueSummary(
+  objType,
+  size,
+  stringValue,
+  isTruncated,
+  isExpandable
+) {
   // Contains top-level summary info about an object/value,
   // but without info about child objects.
   // This info is sufficient to produce a "tiny rep"
   if (process.env.NODE_ENV !== "production") {
     checkTypes(
-      { objType, size, stringValue, isTruncated },
+      { objType, size, stringValue, isTruncated, isExpandable },
       {
         objType: "string",
         size: "number",
         stringValue: "string",
-        isTruncated: "boolean"
+        isTruncated: "boolean",
+        isExpandable: "boolean"
       },
       "ValueSummary"
     );
-  }
-
-  let isExpandable;
-  if (nonExpandableTypes.includes(objType)) {
-    isExpandable = false;
-  } else if (objType === "String") {
-    isExpandable = isTruncated;
-  } else {
-    isExpandable = size > 0;
   }
 
   return {

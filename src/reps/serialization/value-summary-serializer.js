@@ -3,7 +3,8 @@ import { newValueSummary } from "../shared/rep-serialization-core-types";
 import {
   typesWithLength,
   typesWithByteLength,
-  typesWithSize
+  typesWithSize,
+  nonExpandableTypes
 } from "../shared/type-categories";
 
 export function getClass(obj) {
@@ -65,5 +66,16 @@ export function serializeForValueSummary(obj) {
     MAX_SUMMARY_STRING_LEN,
     SUMMARY_STRING_TRUNCATION_LEN
   );
-  return newValueSummary(getType(obj), objSize(obj), stringValue, isTruncated);
+
+  const objType = getType(obj);
+  const size = objSize(obj);
+  let isExpandable;
+  if (nonExpandableTypes.includes(objType)) {
+    isExpandable = false;
+  } else if (objType === "String") {
+    isExpandable = isTruncated;
+  } else {
+    isExpandable = size > 0;
+  }
+  return newValueSummary(objType, size, stringValue, isTruncated, isExpandable);
 }

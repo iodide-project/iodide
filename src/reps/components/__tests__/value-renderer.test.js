@@ -45,7 +45,7 @@ describe("ValueRenderer passes through to correct rep depending on topLevelRepSu
       repComponent: TableRenderer
     },
     {
-      topLevelRepSummary: { repType: "<<type not specified>>" },
+      topLevelRepSummary: { repType: "DEFAULT_REP" },
       repComponent: ExpandableRep
     }
   ].forEach(({ topLevelRepSummary, repComponent }) => {
