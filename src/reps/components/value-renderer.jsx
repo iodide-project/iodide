@@ -14,10 +14,9 @@ export const ErrorPrintout = styled("pre")`
   margin: 0;
 `;
 
-export class ValueRendererUnwrapped extends React.Component {
+export class ValueRendererUnconnected extends React.Component {
   static propTypes = {
     topLevelRepSummary: TopLevelRepSummaryPropTypes,
-    rootObjName: PropTypes.string,
     pathToEntity: PathToEntityPropTypes,
     requestRepInfo: PropTypes.func.isRequired
   };
@@ -31,7 +30,7 @@ export class ValueRendererUnwrapped extends React.Component {
   }
 
   render() {
-    const { rootObjName, pathToEntity, topLevelRepSummary } = this.props;
+    const { pathToEntity, topLevelRepSummary } = this.props;
     if (this.state.errorInfo) {
       return (
         <div>
@@ -68,7 +67,6 @@ export class ValueRendererUnwrapped extends React.Component {
             initialDataRows={topLevelRepSummary.initialDataRows}
             pages={topLevelRepSummary.pages}
             pathToDataFrame={pathToEntity}
-            rootObjName={rootObjName}
             requestRepInfo={this.props.requestRepInfo}
           />
         );
@@ -77,14 +75,12 @@ export class ValueRendererUnwrapped extends React.Component {
           <ExpandableRep
             pathToEntity={pathToEntity}
             valueSummary={topLevelRepSummary.valueSummary}
-            getChildSummaries={(name, path) =>
+            getChildSummaries={path =>
               this.props.requestRepInfo({
-                rootObjName: name,
                 pathToEntity: path,
                 requestType: "CHILD_SUMMARY"
               })
             }
-            rootObjName={rootObjName}
           />
         );
     }

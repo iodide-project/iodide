@@ -5,7 +5,7 @@ import { HistoryItemUnconnected } from "../history-item";
 import HistoryInputItem from "../console/history-input-item";
 import AppMessage from "../console/app-message";
 import ConsoleMessage from "../console/console-message";
-import ValueRenderer from "../../remote-reps/remote-value-renderer";
+import { HistoryValueRenderer } from "../../remote-reps/remote-value-renderer";
 
 describe("HistoryItem React component", () => {
   const historyItem = props => {
@@ -49,7 +49,7 @@ describe("HistoryItem React component", () => {
       level: "OUTPUT"
     });
     expect(hist.find(ConsoleMessage).length).toBe(1);
-    expect(hist.find(ValueRenderer).length).toBe(1);
+    expect(hist.find(HistoryValueRenderer).length).toBe(1);
   });
 
   it("always renders the FETCH_CELL_INFO as an ConsoleMessage component", () => {

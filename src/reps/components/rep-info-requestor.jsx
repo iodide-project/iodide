@@ -1,11 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export const wrapValueRenderer = (
+export const makeValueRendererWithRepRequest = (
   WrappedValueRenderer,
   requestRepInfo,
+  rootObjName,
   PlaceholderComponent = null
 ) => {
+  function requestRepInfoFromRootObj(requestObj) {
+    return requestRepInfo(Object.assign({ rootObjName }, requestObj));
+  }
   return class extends React.Component {
     static propTypes = {
       windowValue: PropTypes.bool,
@@ -16,14 +20,11 @@ export const wrapValueRenderer = (
       super(props);
       this.state = {
         pathToEntity: [this.props.valueKey],
-        rootObjName: this.props.windowValue
-          ? "window"
-          : "IODIDE_EVALUATION_RESULTS",
         topLevelRepSummary: null
       };
     }
     async componentDidMount() {
-      const { rootObjName, pathToEntity } = this.state;
+      const { pathToEntity } = this.state;
       const topLevelRepSummary = await requestRepInfo({
         rootObjName,
         pathToEntity,
@@ -42,7 +43,7 @@ export const wrapValueRenderer = (
     }
 
     render() {
-      const { rootObjName, pathToEntity, topLevelRepSummary } = this.state;
+      const { pathToEntity, topLevelRepSummary } = this.state;
 
       if (this.state.errorInfo) {
         return (
@@ -66,10 +67,9 @@ export const wrapValueRenderer = (
         return (
           <WrappedValueRenderer
             {...{
-              rootObjName,
               pathToEntity,
               topLevelRepSummary,
-              requestRepInfo
+              requestRepInfo: requestRepInfoFromRootObj
             }}
           />
         );

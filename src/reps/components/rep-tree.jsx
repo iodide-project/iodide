@@ -73,7 +73,7 @@ export default class ExpandableRep extends React.PureComponent {
     pathToEntity: PathToEntityPropTypes.isRequired,
     valueSummary: ValueSummaryPropTypes,
     getChildSummaries: PropTypes.func.isRequired,
-    rootObjName: PropTypes.string,
+
     pathLabel: PathLabelPropTypes
   };
 
@@ -90,11 +90,8 @@ export default class ExpandableRep extends React.PureComponent {
 
   async componentDidMount() {
     // on mount, get the array of childSummaries for this entity
-    const { rootObjName, pathToEntity } = this.props;
-    const childSummaries = await this.props.getChildSummaries(
-      rootObjName,
-      pathToEntity
-    );
+    const { pathToEntity } = this.props;
+    const childSummaries = await this.props.getChildSummaries(pathToEntity);
 
     // this following lint rule is controversial. the react docs *advise*
     // loading data in compDidMount, and explicitly say calling
@@ -107,12 +104,9 @@ export default class ExpandableRep extends React.PureComponent {
     // we always want to reset state if we get new props;
     // each value should get a fresh collapsed render
     if (this.props !== prevProps) {
-      const { rootObjName, pathToEntity } = this.props;
+      const { pathToEntity } = this.props;
 
-      const childSummaries = await this.props.getChildSummaries(
-        rootObjName,
-        pathToEntity
-      );
+      const childSummaries = await this.props.getChildSummaries(pathToEntity);
       // react docs say it's ok to setstate if you do so within a conditional.
       // In our case, we always reset the state on any change to props
       // eslint-disable-next-line react/no-did-update-set-state
@@ -142,7 +136,6 @@ export default class ExpandableRep extends React.PureComponent {
       pathToEntity,
       valueSummary,
       getChildSummaries,
-      rootObjName,
       pathLabel
     } = this.props;
     const { expanded, childSummaries } = this.state;
@@ -181,7 +174,6 @@ export default class ExpandableRep extends React.PureComponent {
                 {...summaryItem}
                 pathToMapPair={[...pathToEntity, path]}
                 getChildSummaries={getChildSummaries}
-                rootObjName={rootObjName}
               />
             );
           }
@@ -193,7 +185,6 @@ export default class ExpandableRep extends React.PureComponent {
               valueSummary={summary}
               pathToEntity={[...pathToEntity, path]}
               getChildSummaries={getChildSummaries}
-              rootObjName={rootObjName}
             />
           );
         })}
@@ -229,7 +220,6 @@ export class MapPairFullRep extends React.Component {
     valSummary: ValueSummaryPropTypes,
     pathToMapPair: PathToEntityPropTypes.isRequired,
     getChildSummaries: PropTypes.func.isRequired,
-    rootObjName: PropTypes.string,
     pathLabel: PathLabelPropTypes
   };
   render() {
@@ -238,7 +228,6 @@ export class MapPairFullRep extends React.Component {
       keySummary,
       valSummary,
       getChildSummaries,
-      rootObjName,
       pathLabel
     } = this.props;
     return (
@@ -253,7 +242,6 @@ export class MapPairFullRep extends React.Component {
             valueSummary={keySummary}
             pathToEntity={[...pathToMapPair, "MAP_KEY"]}
             getChildSummaries={getChildSummaries}
-            rootObjName={rootObjName}
           />
           <ExpandableRep
             key={`${JSON.stringify(pathLabel)}-value`}
@@ -261,7 +249,6 @@ export class MapPairFullRep extends React.Component {
             valueSummary={valSummary}
             pathToEntity={[...pathToMapPair, "MAP_VAL"]}
             getChildSummaries={getChildSummaries}
-            rootObjName={rootObjName}
           />
         </div>
       </LabelAndSummaryContainer>

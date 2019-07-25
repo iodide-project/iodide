@@ -8,13 +8,14 @@ import "../../../node_modules/react-table/react-table.css";
 
 import { allCases } from "../__test_helpers__/reps-test-value-cases";
 
-import { ValueRendererUnwrapped } from "../components/value-renderer";
-import { wrapValueRenderer } from "../components/rep-info-requestor";
+import { ValueRendererUnconnected } from "../components/value-renderer";
+import { makeValueRendererWithRepRequest } from "../components/rep-info-requestor";
 import { repInfoRequestResponse } from "../serialization/rep-info-request-response";
 
-const ValueRenderer = wrapValueRenderer(
-  ValueRendererUnwrapped,
-  repInfoRequestResponse
+const ValueRenderer = makeValueRendererWithRepRequest(
+  ValueRendererUnconnected,
+  repInfoRequestResponse,
+  "window"
 );
 
 const valueRendererStories = storiesOf("base ValueRenderer component", module);
@@ -22,7 +23,5 @@ const valueRendererStories = storiesOf("base ValueRenderer component", module);
 Object.entries(allCases).forEach(caseNameAndVal => {
   const [name, value] = caseNameAndVal;
   window[name] = value;
-  valueRendererStories.add(name, () => (
-    <ValueRenderer windowValue valueKey={name} />
-  ));
+  valueRendererStories.add(name, () => <ValueRenderer valueKey={name} />);
 });

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 import AppMessage from "./console/app-message";
-import ValueRenderer from "../remote-reps/remote-value-renderer";
+import { HistoryValueRenderer } from "../remote-reps/remote-value-renderer";
 
 import HistoryInputItem from "./console/history-input-item";
 import ConsoleMessage from "./console/console-message";
@@ -48,7 +48,7 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_OUTPUT": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <ValueRenderer valueKey={this.props.historyId} />
+            <HistoryValueRenderer valueKey={this.props.historyId} />
           </ConsoleMessage>
         );
       }

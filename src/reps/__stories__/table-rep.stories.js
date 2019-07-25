@@ -18,6 +18,12 @@ const tableRep = storiesOf("rowDf table rep", module);
 const storyRootObjName = "ROW_TABLE_TEST_CASES";
 window[storyRootObjName] = {};
 
+function requestRepInfoFromRootObj(requestObj) {
+  return repInfoRequestResponse(
+    Object.assign({ rootObjName: storyRootObjName }, requestObj)
+  );
+}
+
 tableRep.add("tables", () => {
   return (
     <div>
@@ -44,8 +50,7 @@ tableRep.add("tables", () => {
                 initialDataRows={rows}
                 pages={pages}
                 pathToDataFrame={path}
-                rootObjName={storyRootObjName}
-                requestRepInfo={repInfoRequestResponse}
+                requestRepInfo={requestRepInfoFromRootObj}
               />
             </div>
           </div>

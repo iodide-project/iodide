@@ -34,17 +34,11 @@ class CellDetails extends React.Component {
     focusedCol: PropTypes.string,
     pathToDataFrame: PathToEntityPropTypes.isRequired,
     valueSummary: ValueSummaryPropTypes,
-    rootObjName: PropTypes.string,
     requestRepInfo: PropTypes.func
   };
 
   render() {
-    const {
-      focusedRowOriginalIndex,
-      focusedCol,
-      rootObjName,
-      pathToDataFrame
-    } = this.props;
+    const { focusedRowOriginalIndex, focusedCol, pathToDataFrame } = this.props;
 
     if (focusedRowOriginalIndex !== undefined && focusedCol !== undefined) {
       const focusedPath = `[${focusedRowOriginalIndex}]["${focusedCol}"]`;
@@ -55,7 +49,6 @@ class CellDetails extends React.Component {
       ];
       const getChildSummary = (rootName, pathToEntity) =>
         this.props.requestRepInfo({
-          rootObjName: rootName,
           pathToEntity,
           requestType: "CHILD_SUMMARY"
         });
@@ -69,7 +62,6 @@ class CellDetails extends React.Component {
             pathToEntity={pathToDataFrameCell}
             valueSummary={this.props.valueSummary}
             getChildSummaries={getChildSummary}
-            rootObjName={rootObjName}
           />
         </TableDetails>
       );
@@ -115,7 +107,6 @@ export default class TableRenderer extends React.Component {
     initialDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
     pages: PropTypes.number.isRequired,
     pathToDataFrame: PathToEntityPropTypes,
-    rootObjName: PropTypes.string,
     requestRepInfo: PropTypes.func
   };
 
@@ -135,15 +126,8 @@ export default class TableRenderer extends React.Component {
   async fetchData(fetchParams) {
     this.setState({ loading: true });
 
-    const getDataTableSummary = (
-      rootObjName,
-      pathToEntity,
-      pageSize,
-      page,
-      sorted
-    ) =>
+    const getDataTableSummary = (pathToEntity, pageSize, page, sorted) =>
       this.props.requestRepInfo({
-        rootObjName,
         pathToEntity,
         pageSize,
         page,
@@ -152,7 +136,6 @@ export default class TableRenderer extends React.Component {
       });
 
     const { rows, pages } = await getDataTableSummary(
-      this.props.rootObjName,
       this.props.pathToDataFrame,
       fetchParams.pageSize,
       fetchParams.page,
@@ -241,7 +224,6 @@ export default class TableRenderer extends React.Component {
           focusedRowOriginalIndex={focusedRowOriginalIndex}
           focusedCol={focusedCol}
           valueSummary={focusedValue}
-          rootObjName={this.props.rootObjName}
           pathToDataFrame={this.props.pathToDataFrame}
           requestRepInfo={this.props.requestRepInfo}
         />

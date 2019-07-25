@@ -1,5 +1,5 @@
-import { ValueRendererUnwrapped } from "../../../reps/components/value-renderer";
-import { wrapValueRenderer } from "../../../reps/components/rep-info-requestor";
+import { ValueRendererUnconnected } from "../../../reps/components/value-renderer";
+import { makeValueRendererWithRepRequest } from "../../../reps/components/rep-info-requestor";
 import messagePasserEditor from "../../../shared/utils/redux-to-port-message-passer";
 
 const requestTopLevelRepSummary = requestPayload =>
@@ -8,9 +8,14 @@ const requestTopLevelRepSummary = requestPayload =>
     requestPayload
   );
 
-const ValueRenderer = wrapValueRenderer(
-  ValueRendererUnwrapped,
-  requestTopLevelRepSummary
+export const WindowValueRenderer = makeValueRendererWithRepRequest(
+  ValueRendererUnconnected,
+  requestTopLevelRepSummary,
+  "window"
 );
 
-export default ValueRenderer;
+export const HistoryValueRenderer = makeValueRendererWithRepRequest(
+  ValueRendererUnconnected,
+  requestTopLevelRepSummary,
+  "IODIDE_EVALUATION_RESULTS"
+);

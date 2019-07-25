@@ -2,7 +2,7 @@ import React from "react";
 
 import { shallow } from "enzyme";
 
-import { ValueRendererUnwrapped, ErrorPrintout } from "../value-renderer";
+import { ValueRendererUnconnected, ErrorPrintout } from "../value-renderer";
 
 import ExpandableRep from "../rep-tree";
 import TableRenderer from "../data-table-rep";
@@ -13,7 +13,7 @@ describe("ValueRenderer passes through to correct rep depending on topLevelRepSu
 
   const shallowValueRenderer = () => {
     if (!mountedItem) {
-      mountedItem = shallow(<ValueRendererUnwrapped {...props} />);
+      mountedItem = shallow(<ValueRendererUnconnected {...props} />);
     }
     return mountedItem;
   };
