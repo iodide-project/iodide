@@ -31,11 +31,8 @@ const createValidatedReducer = (reducer, schema, options) => {
         }
       });
 
-      throw new SchemaValidationError(`${JSON.stringify(
-        validate.errors,
-        null,
-        " "
-      )}
+      // throw new SchemaValidationError(
+      console.error(`${JSON.stringify(validate.errors, null, " ")}
 bad values:
 ${JSON.stringify(badValues, null, " ")}`);
     }

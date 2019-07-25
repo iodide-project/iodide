@@ -1,15 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-// import { requestRepInfo } from "../request-rep-info";
-
-// const defaultGetTopLevelRepSummary = (rootObjName, pathToEntity) =>
-//   requestRepInfo({
-//     rootObjName,
-//     pathToEntity,
-//     requestType: "TOP_LEVEL_SUMMARY"
-//   });
-
 export const wrapValueRenderer = (
   WrappedValueRenderer,
   requestRepInfo,

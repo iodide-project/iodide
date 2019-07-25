@@ -1,10 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-// import {
-//   postActionToEditor,
-//   postMessageToEditor
-// } from "../../../../eval-frame/port-to-editor";
 
 import {
   updateConsoleText,
@@ -142,31 +138,6 @@ export class ConsoleInputUnconnected extends React.Component {
     );
   }
 }
-
-// const connectMessagePassers = (WrappedComponent, messageFns) =>
-//   class extends React.Component {
-//     render() {
-//       return <WrappedComponent {...this.props} {...messageFns} />;
-//     }
-//   };
-
-// export const ConsoleInputMessagePasser = connectMessagePassers(
-//   ConsoleInputUnconnected,
-//   {
-//     updateConsoleText: consoleText =>
-//       postActionToEditor({
-//         type: "UPDATE_CONSOLE_TEXT",
-//         consoleText
-//       }),
-//     consoleHistoryStepBack: consoleCursorDelta =>
-//       postActionToEditor({
-//         type: "CONSOLE_HISTORY_MOVE",
-//         consoleCursorDelta
-//       }),
-//     evalConsoleInput: consoleText =>
-//       postMessageToEditor("CONSOLE_NEEDS_EVALUATION", consoleText)
-//   }
-// );
 
 const mapDispatchToProps = {
   updateConsoleText,

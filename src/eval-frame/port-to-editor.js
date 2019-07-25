@@ -48,8 +48,8 @@ function connectToEditor() {
 }
 connectToEditor();
 
-export function postMessageToEditor(messageType, message, responseId) {
-  portToEditor.postMessage({ messageType, message, responseId });
+export function postMessageToEditor(messageType, message) {
+  portToEditor.postMessage({ messageType, message });
 }
 
 messagePasserEval.connectPostMessage(postMessageToEditor);

@@ -73,10 +73,16 @@ export function mapStateToProps(state, ownProps) {
   const historyItem = state.history.filter(
     h => h.historyId === ownProps.historyId
   )[0];
-  if (historyItem.historyType === "FETCH_CELL_INFO") {
-    historyItem.content = historyItem.content.join("\n");
-  }
-  return historyItem;
+  const { content, historyId, historyType, level, language } = historyItem;
+  // const displayContent = ;
+
+  return {
+    content: historyType === "FETCH_CELL_INFO" ? content.join("\n") : content,
+    historyId,
+    historyType,
+    level,
+    language
+  };
 }
 
 export default connect(mapStateToProps)(HistoryItemUnconnected);

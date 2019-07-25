@@ -11,8 +11,6 @@ import { TextButton } from "../../../../shared/components/buttons";
 import BaseIcon from "./base-icon";
 
 import { setConsoleLanguage } from "../../../actions/console-actions";
-// import { setConsoleLanguage } from "../../../../eval-frame/actions/actions";
-// import { sendActionToEditor } from "../../../../eval-frame/actions/editor-message-senders";
 
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;
@@ -58,10 +56,6 @@ const LanguageName = styled("div")`
   padding-right: 6px;
 `;
 
-// const onMenuClickCreator = (fcn, languageId) => () => {
-//   fcn(languageId);
-// };
-
 const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
   currentLanguage,
@@ -84,7 +78,7 @@ const ConsoleLanguageMenuUnconnected = ({
           {availableLanguages.map(language => (
             <MenuItem
               key={language.languageId}
-              onClick={setConsoleLanguageProp}
+              onClick={() => setConsoleLanguageProp(language.languageId)}
             >
               <LanguageName>{language.displayName}</LanguageName>
               <LanguageShort>{language.languageId}</LanguageShort>

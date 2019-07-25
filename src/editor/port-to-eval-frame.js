@@ -1,5 +1,4 @@
 import Mousetrap from "mousetrap";
-// import { evalConsoleInput } from "./actions/evalConsoleInput";
 import { handleFileRequest } from "./actions/file-request-actions";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
@@ -41,10 +40,6 @@ function receiveMessage(event) {
         messagePasserEditor.handleMessageResponse(status, responseId, payload);
         break;
       }
-      // case "CONSOLE_NEEDS_EVALUATION": {
-      //   messagePasserEditor.dispatch(evalConsoleInput(message));
-      //   break;
-      // }
       case "EVAL_FRAME_TASK_RESPONSE": {
         messagePasserEditor.dispatch(
           Object.assign(
