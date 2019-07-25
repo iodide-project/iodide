@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
+import DOMPurify from "dompurify";
 
 import ExpandableRep from "./rep-tree";
 import TableRenderer from "./data-table-rep";
@@ -13,6 +14,24 @@ import {
 export const ErrorPrintout = styled("pre")`
   margin: 0;
 `;
+
+const purifyHtml = html =>
+  DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: [
+      "div",
+      "span",
+      "ol",
+      "ul",
+      "li",
+      "table",
+      "thead",
+      "tbody",
+      "th",
+      "tr",
+      "td"
+    ],
+    ALLOWED_ATTR: ["style", "class"]
+  });
 
 export class ValueRendererUnconnected extends React.Component {
   static propTypes = {
@@ -52,10 +71,11 @@ export class ValueRendererUnconnected extends React.Component {
 
     switch (topLevelRepSummary.repType) {
       case "HTML_STRING": {
+        const html = purifyHtml(topLevelRepSummary.htmlString);
         return (
           <div
             title="htmlRep"
-            dangerouslySetInnerHTML={{ __html: topLevelRepSummary.htmlString }} // eslint-disable-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: html }} // eslint-disable-line react/no-danger
           />
         );
       }
