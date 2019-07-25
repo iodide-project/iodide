@@ -128,9 +128,12 @@ export default class ExpandableRep extends React.PureComponent {
 
   render() {
     if (this.state.error) {
-      return `RENDER FAILED. errorInfo: ${JSON.stringify(
-        this.state.errorInfo
-      )}`;
+      return (
+        <pre>
+          ExpandableRep render failed. errorInfo:
+          {JSON.stringify(this.state.errorInfo)}
+        </pre>
+      );
     }
     const {
       pathToEntity,

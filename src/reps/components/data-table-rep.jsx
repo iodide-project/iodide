@@ -47,7 +47,7 @@ class CellDetails extends React.Component {
         String(focusedRowOriginalIndex),
         focusedCol
       ];
-      const getChildSummary = (rootName, pathToEntity) =>
+      const getChildSummary = pathToEntity =>
         this.props.requestRepInfo({
           pathToEntity,
           requestType: "CHILD_SUMMARY"
@@ -202,7 +202,7 @@ export default class TableRenderer extends React.Component {
           columns={columns}
           showPaginationTop
           showPaginationBottom={false}
-          resizable={false}
+          // resizable={false}
           sortable
           pageSizeOptions={[10, 25, 50, 100]}
           minRows={0}
