@@ -12,10 +12,10 @@ import {
   getClass,
   getType,
   objSize
-} from "../rep-utils/value-summary-serializer";
+} from "../serialization/value-summary-serializer";
 
-import { serializeChildSummary } from "../rep-utils/child-summary-serializer";
-import { getChildSummary } from "../rep-utils/get-child-summaries";
+import { serializeChildSummary } from "../serialization/child-summary-serializer";
+import { getChildSummary } from "../serialization/get-child-summaries";
 
 // components
 import ValueSummary from "../components/value-summary";

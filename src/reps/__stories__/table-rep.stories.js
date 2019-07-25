@@ -8,9 +8,9 @@ import "../../../node_modules/react-table/react-table.css";
 
 import { rowTableCases } from "../__test_helpers__/reps-test-value-cases";
 
-import { getInitialDataTableSummary } from "../rep-utils/get-data-table-summary";
+import { getInitialDataTableSummary } from "../serialization/get-data-table-summary";
 
-import { repInfoRequestResponse } from "../rep-utils/rep-info-request-response";
+import { repInfoRequestResponse } from "../serialization/rep-info-request-response";
 import TableRenderer from "../components/data-table-rep";
 
 const tableRep = storiesOf("rowDf table rep", module);

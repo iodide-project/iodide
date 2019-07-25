@@ -1,4 +1,4 @@
-import { newRangeDescriptor } from "./rep-serialization-core-types";
+import { newRangeDescriptor } from "../shared/rep-serialization-core-types";
 import { MAX_SUMMARY_STRING_LEN } from "./value-summary-serializer";
 
 export const RANGE_SPLIT_THRESHOLD = 50;

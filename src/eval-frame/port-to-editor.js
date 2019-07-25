@@ -16,7 +16,7 @@ import {
   loadScriptFromBlob,
   setVariableInWindow
 } from "./actions/fetch-cell-eval-actions";
-import { repInfoRequestResponse } from "../reps/rep-utils/rep-info-request-response";
+import { repInfoRequestResponse } from "../reps/serialization/rep-info-request-response";
 
 const mc = new MessageChannel();
 const portToEditor = mc.port1;

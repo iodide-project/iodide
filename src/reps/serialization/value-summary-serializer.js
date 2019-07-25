@@ -1,5 +1,10 @@
-import { truncateString } from "./truncate-string";
-import { newValueSummary } from "./rep-serialization-core-types";
+import { truncateString } from "../shared/truncate-string";
+import { newValueSummary } from "../shared/rep-serialization-core-types";
+import {
+  typesWithLength,
+  typesWithByteLength,
+  typesWithSize
+} from "../shared/type-categories";
 
 export function getClass(obj) {
   if (obj === null) return "Null";
@@ -16,31 +21,6 @@ export const getType = obj =>
     .toString.call(obj)
     .split(" ")[1]
     .slice(0, -1);
-
-const typesWithLength = [
-  "Array",
-
-  "String",
-
-  "Int8Array",
-  "Int16Array",
-  "Int32Array",
-
-  "Uint8Array",
-  "Uint8ClampedArray",
-  "Uint16Array",
-  "Uint32Array",
-
-  "Float32Array",
-  "Float64Array",
-
-  "Function",
-  "GeneratorFunction"
-];
-
-const typesWithByteLength = ["ArrayBuffer", "DataView"];
-
-const typesWithSize = ["Map", "Set", "Blob"];
 
 export function objSize(obj) {
   if (obj === null) return 0;

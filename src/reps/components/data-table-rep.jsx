@@ -11,6 +11,11 @@ import ExpandableRep from "./rep-tree";
 
 import ValueSummaryRep from "./value-summary";
 
+import {
+  ValueSummaryPropTypes,
+  PathToEntityPropTypes
+} from "./rep-serialization-core-types-proptypes";
+
 const TableDetails = styled.div`
   border: solid #e5e5e5;
   border-width: 0px 1px 1px 1px;
@@ -27,10 +32,8 @@ class CellDetails extends React.Component {
   static propTypes = {
     focusedRowOriginalIndex: PropTypes.number,
     focusedCol: PropTypes.string,
-    pathToDataFrame: PropTypes.arrayOf(
-      PropTypes.oneOfType([PropTypes.string, PropTypes.object])
-    ).isRequired,
-    valueSummary: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    pathToDataFrame: PathToEntityPropTypes.isRequired,
+    valueSummary: ValueSummaryPropTypes,
     rootObjName: PropTypes.string,
     requestRepInfo: PropTypes.func
   };
@@ -83,7 +86,7 @@ class CellDetails extends React.Component {
 
 class CellRenderer extends React.PureComponent {
   static propTypes = {
-    valueSummary: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+    valueSummary: ValueSummaryPropTypes,
     cellIsFocused: PropTypes.bool.isRequired
   };
   render() {
@@ -111,9 +114,7 @@ export default class TableRenderer extends React.Component {
   static propTypes = {
     initialDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
     pages: PropTypes.number.isRequired,
-    pathToDataFrame: PropTypes.arrayOf(
-      PropTypes.oneOfType([PropTypes.string, PropTypes.object])
-    ).isRequired,
+    pathToDataFrame: PathToEntityPropTypes,
     rootObjName: PropTypes.string,
     requestRepInfo: PropTypes.func
   };

@@ -3,7 +3,7 @@ import {
   newChildSummaryItem,
   newChildSummary,
   isMapPairSummaryItem
-} from "../rep-serialization-core-types";
+} from "../../shared/rep-serialization-core-types";
 import {
   getChildSummary,
   expandRangesInChildSummaries

@@ -1,10 +1,10 @@
 import { getType } from "../value-summary-serializer";
 import {
-  numericIndexTypes,
   serializeArrayPathsSummary,
   serializeArrayPathsForRange,
   serializeChildSummary
 } from "../child-summary-serializer";
+import { numericIndexTypes } from "../../shared/type-categories";
 import { allCases } from "../../__test_helpers__/reps-test-value-cases";
 
 describe("serializeArrayPathsSummary", () => {

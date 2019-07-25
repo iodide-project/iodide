@@ -7,6 +7,7 @@ import {
   MAX_SUMMARY_STRING_LEN,
   SUMMARY_STRING_TRUNCATION_LEN
 } from "./value-summary-serializer";
+
 import {
   newRangeDescriptor,
   isRangeDescriptor,
@@ -14,33 +15,10 @@ import {
   newChildSummaryItem,
   newSubstringRangeSummaryItem,
   newMapPairSummaryItem
-} from "./rep-serialization-core-types";
+} from "../shared/rep-serialization-core-types";
+
 import { splitIndexRange } from "./split-index-range";
-
-export const numericIndexTypes = [
-  "Array",
-
-  "Int8Array",
-  "Int16Array",
-  "Int32Array",
-
-  "Uint8Array",
-  "Uint8ClampedArray",
-  "Uint16Array",
-  "Uint32Array",
-
-  "Float32Array",
-  "Float64Array"
-];
-
-export const objectLikeTypes = [
-  "HTMLCollection",
-  "Window",
-  "HTMLDocument",
-  "HTMLBodyElement",
-  "Promise",
-  "Error"
-];
+import { numericIndexTypes, objectLikeTypes } from "../shared/type-categories";
 
 // ARRAYS
 

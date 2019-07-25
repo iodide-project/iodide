@@ -64,3 +64,12 @@ export const PathLabelPropTypes = PropTypes.oneOfType([
 ]);
 
 export const PathToEntityPropTypes = PropTypes.arrayOf(PathLabelPropTypes);
+
+export const TopLevelRepSummaryPropTypes = PropTypes.shape({
+  repType: PropTypes.oneOf([
+    "HTML_STRING",
+    "ERROR_TRACE",
+    "ROW_TABLE_REP",
+    "DEFAULT_REP"
+  ])
+});

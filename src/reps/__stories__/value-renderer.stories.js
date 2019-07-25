@@ -10,7 +10,7 @@ import { allCases } from "../__test_helpers__/reps-test-value-cases";
 
 import { ValueRendererUnwrapped } from "../components/value-renderer";
 import { wrapValueRenderer } from "../components/rep-info-requestor";
-import { repInfoRequestResponse } from "../rep-utils/rep-info-request-response";
+import { repInfoRequestResponse } from "../serialization/rep-info-request-response";
 
 const ValueRenderer = wrapValueRenderer(
   ValueRendererUnwrapped,

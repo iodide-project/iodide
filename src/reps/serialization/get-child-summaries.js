@@ -5,7 +5,7 @@ import {
   newChildSummary,
   newChildSummaryItem,
   isRangeDescriptor
-} from "./rep-serialization-core-types";
+} from "../shared/rep-serialization-core-types";
 import { splitIndexRange, RANGE_SPLIT_THRESHOLD } from "./split-index-range";
 
 export function expandRangesInChildSummaries(childSummaries) {

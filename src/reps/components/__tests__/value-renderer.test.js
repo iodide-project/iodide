@@ -2,11 +2,9 @@ import React from "react";
 
 import { shallow } from "enzyme";
 
-import { ValueRendererUnwrapped } from "../value-renderer";
+import { ValueRendererUnwrapped, ErrorPrintout } from "../value-renderer";
 
 import ExpandableRep from "../rep-tree";
-import ErrorRenderer from "../error-handler";
-import HTMLHandler from "../html-handler";
 import TableRenderer from "../data-table-rep";
 
 describe("ValueRenderer passes through to correct rep depending on topLevelRepSummary result", () => {
@@ -32,11 +30,11 @@ describe("ValueRenderer passes through to correct rep depending on topLevelRepSu
   [
     {
       topLevelRepSummary: { repType: "HTML_STRING", htmlString: "hgdsfasd" },
-      repComponent: HTMLHandler
+      repComponent: "div"
     },
     {
       topLevelRepSummary: { repType: "ERROR_TRACE", errorString: "asdfaas" },
-      repComponent: ErrorRenderer
+      repComponent: ErrorPrintout
     },
     {
       topLevelRepSummary: {

@@ -1,5 +1,5 @@
 import { splitIndexRange } from "../split-index-range";
-import { newRangeDescriptor } from "../rep-serialization-core-types";
+import { newRangeDescriptor } from "../../shared/rep-serialization-core-types";
 
 describe("split ranges correctly", () => {
   it("the max of each range is one less than min of the next", () => {

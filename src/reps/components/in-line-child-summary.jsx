@@ -9,15 +9,15 @@ import {
   newChildSummaryItem,
   newRangeDescriptor,
   isRangeDescriptor
-} from "../rep-utils/rep-serialization-core-types";
+} from "../shared/rep-serialization-core-types";
+
+import { numericIndexTypes } from "../shared/type-categories";
 
 import {
   MapPairSummaryItemPropTypes,
   ChildSummaryPropTypes,
   ChildSummaryItemPropTypes
-} from "../rep-utils/rep-serialization-core-types-proptypes";
-
-import { numericIndexTypes } from "../rep-utils/child-summary-serializer";
+} from "./rep-serialization-core-types-proptypes";
 
 function truncateChildItemsForInlineSummary(childItems, maxToShow = 5) {
   const inlineChildItems = childItems.slice(0, maxToShow);

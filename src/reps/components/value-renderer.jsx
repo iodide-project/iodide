@@ -1,18 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "react-emotion";
 
 import ExpandableRep from "./rep-tree";
-
-import ErrorRenderer from "./error-handler";
-import HTMLHandler from "./html-handler";
 import TableRenderer from "./data-table-rep";
+
+import {
+  TopLevelRepSummaryPropTypes,
+  PathToEntityPropTypes
+} from "./rep-serialization-core-types-proptypes";
+
+export const ErrorPrintout = styled("pre")`
+  margin: 0;
+`;
 
 export class ValueRendererUnwrapped extends React.Component {
   static propTypes = {
-    // FIXME fix proptypes
-    topLevelRepSummary: PropTypes.object, // eslint-disable-line
-    rootObjName: PropTypes.string, // eslint-disable-line
-    pathToEntity: PropTypes.array, // eslint-disable-line
+    topLevelRepSummary: TopLevelRepSummaryPropTypes,
+    rootObjName: PropTypes.string,
+    pathToEntity: PathToEntityPropTypes,
     requestRepInfo: PropTypes.func.isRequired
   };
 
@@ -47,10 +53,15 @@ export class ValueRendererUnwrapped extends React.Component {
 
     switch (topLevelRepSummary.repType) {
       case "HTML_STRING": {
-        return <HTMLHandler htmlString={topLevelRepSummary.htmlString} />;
+        return (
+          <div
+            title="htmlRep"
+            dangerouslySetInnerHTML={{ __html: topLevelRepSummary.htmlString }} // eslint-disable-line react/no-danger
+          />
+        );
       }
       case "ERROR_TRACE":
-        return <ErrorRenderer errorString={topLevelRepSummary.errorString} />;
+        return <ErrorPrintout>{topLevelRepSummary.errorString}</ErrorPrintout>;
       case "ROW_TABLE_REP":
         return (
           <TableRenderer

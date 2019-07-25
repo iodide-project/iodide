@@ -1,5 +1,5 @@
 import UserRepsManagerObj from "./iodide-api/user-reps-manager";
-import { repInfoRequestResponse } from "../reps/rep-utils/rep-info-request-response";
+import { repInfoRequestResponse } from "../reps/serialization/rep-info-request-response";
 
 export function repInfoRequestResponseFromEvalFrame(payload) {
   return repInfoRequestResponse(payload, {
