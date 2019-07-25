@@ -74,7 +74,6 @@ export function mapStateToProps(state, ownProps) {
     h => h.historyId === ownProps.historyId
   )[0];
   const { content, historyId, historyType, level, language } = historyItem;
-  // const displayContent = ;
 
   return {
     content: historyType === "FETCH_CELL_INFO" ? content.join("\n") : content,

@@ -53,11 +53,6 @@ export class MessagePasser {
 
   async postMessageAndAwaitResponse(messageType, message) {
     const messageId = this.nextMessageId();
-    // console.log("postMessageAndAwaitResponse", {
-    //   messageType,
-    //   message,
-    //   messageId
-    // });
     this.postMessageQueueManager.sendMsg(messageType, message, messageId);
     return new Promise((resolve, reject) => {
       this.messagesAwaitingResponse[messageId] = { resolve, reject };

@@ -153,8 +153,6 @@ export default class TableRenderer extends React.Component {
   }
 
   handleCellClick(rowInfo, column) {
-    // const indexOffset = this.state.currentPage * this.state.pageSize;
-    console.log({ rowInfo, column });
     this.setState({
       focusedRow: rowInfo.index,
       focusedRowOriginalIndex: rowInfo.original.ORIGINAL_DATA_TABLE_ROW_INDEX,
