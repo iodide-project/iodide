@@ -41,7 +41,6 @@ def version_content():
 
 @pytest.mark.django_db
 def test_heartbeat(dockerflow_middleware, reset_checks, rf, dockerflow_enabled):
-
     request = rf.get("/__heartbeat__")
     response = dockerflow_middleware.process_request(request)
     assert response.status_code == 200
