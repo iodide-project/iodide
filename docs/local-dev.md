@@ -11,8 +11,7 @@ Run `npm install` after cloning this repository.
 If you're only working on client code and don't need to use/test any of the server functionality described below,
 you can skip setting up a full docker environment and get up and running quickly. Just run
 `npm run simple-serve` after `npm install`: this should start up a web server which will provide a basic
-version of the editing environment you can access at http://localhost:8080/ (note this is distinct from the Django-based
-environment, which uses port 8000).
+version of the editing environment you can access at http://localhost:8000/.
 
 The command runs in watch mode, so changes to files will be detected and bundled automatically, but you will need to refresh the page in your browser manually to see the changes -- we have disabled "hot reloading" because automatically refreshing the browser would cause any active notebooks to lose their evaluation state.
 
