@@ -1,3 +1,7 @@
+import {
+  extensionPortStatus,
+  sendExtensionMessage
+} from "../port-to-extension";
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 import { getRevisionIdsNeededForDisplay } from "../tools/revision-history";
 import {
@@ -31,6 +35,12 @@ export function updateAppMessages(messageObj) {
 }
 
 export function updateIomdContent(text) {
+  if (extensionPortStatus()) {
+    console.log("returning text to editor");
+    sendExtensionMessage(text);
+  } else {
+    console.log("not connected to extension");
+  }
   return { type: "UPDATE_IOMD_CONTENT", iomd: text };
 }
 
