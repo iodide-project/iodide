@@ -28,6 +28,11 @@ const styleTag = css => (
   />
 );
 
+const paneStyle = {
+  height: "100%",
+  overflow: "auto"
+};
+
 export class ReportPaneUnconnected extends React.Component {
   static propTypes = {
     reportChunks: PropTypes.arrayOf(
@@ -69,7 +74,7 @@ export class ReportPaneUnconnected extends React.Component {
       );
     });
 
-    return <div className="pane-content">{mdComponents}</div>;
+    return <div style={paneStyle}>{mdComponents}</div>;
   }
 }
 
