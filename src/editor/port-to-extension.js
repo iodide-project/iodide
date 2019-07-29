@@ -47,7 +47,8 @@ function unpackExtensionMessage(msg) {
       return {};
   }
 }
-
+let extensionConnected = false; // this is for use in the update function
+let iodidePort;
 function initWebExtPort() {
   messagePasser.connectDispatch(store.dispatch);
 
@@ -66,6 +67,7 @@ function initWebExtPort() {
   }, 3000);
 
   function handleExtensionMessage(e) {
+    extensionConnected = true;
     // parse the json object that is included in the e.data
     const dispatchObject = unpackExtensionMessage(e.data); // this object will have info that can be transformed into the action type to dispatch
     // recreating the dispatch at end of updateJSMD
@@ -73,5 +75,12 @@ function initWebExtPort() {
   }
 
   port1.onmessage = handleExtensionMessage;
+  iodidePort = port1;
+}
+export function sendExtensionMessage(msg) {
+  iodidePort.postMessage(msg);
+}
+export function extensionPortStatus() {
+  return extensionConnected;
 }
 export default initWebExtPort;
