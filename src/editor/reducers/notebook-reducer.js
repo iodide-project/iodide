@@ -80,23 +80,12 @@ const notebookReducer = (state = newNotebook(), action) => {
       // insert text in state.iomd at correct position without mutating
       console.log(line, col, forceUpdate, text);
       // first check that the number of lines is the same if not add new lines to bottom of iomd file
-      let lines = state.iomd.split("\n");
-      if (lines.length < line) {
-        lines = lines.concat(Array(line - lines.length + 1).fill("")); // equalize line number
-      }
-      const iomd = lines
-        .map((iomdLine, i) => {
-          // if its the correct line insert the new text in this place
-          if (i === line) {
-            // if this line represents a new line from the editor
-            if (iomdLine === "") {
-              return text;
-            }
-            return iomdLine.slice(0, col) + text + iomdLine.slice(col);
-          }
-          return iomdLine;
-        })
-        .join("\n");
+      const lines = state.iomd.split("\n");
+      // splice in the text
+      console.log(text.length);
+      lines.splice(line, 0, text);
+      // if text is \n create a new entry at that point but if
+      const iomd = lines.join("\n");
       console.log(iomd);
       return Object.assign({}, state, {
         editorCursor: {

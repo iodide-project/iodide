@@ -1,7 +1,6 @@
 import { store } from "./store";
 import messagePasser from "../shared/utils/redux-to-port-message-passer";
 import { evaluateText } from "./actions/eval-actions";
-
 import { iomdParser } from "./iomd-tools/iomd-parser";
 
 function unpackExtensionMessage(msg) {
