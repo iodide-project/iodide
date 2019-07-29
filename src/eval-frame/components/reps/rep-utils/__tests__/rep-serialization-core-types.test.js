@@ -1,10 +1,8 @@
 import {
-  ValueSummary,
-  RangeDescriptor,
-  ChildSummary,
-  ChildSummaryItem
-  // SubstringRangeSummaryItem,
-  // MapPairSummaryItem
+  newValueSummary,
+  newRangeDescriptor,
+  newChildSummary,
+  newChildSummaryItem
 } from "../rep-serialization-core-types";
 
 function replaceArg(args, index, newArg) {
@@ -16,7 +14,7 @@ function replaceArg(args, index, newArg) {
 describe("ValueSummary", () => {
   const okArgs = ["string1", 6453, "string2", true];
   it(`should not throw in case of valid construction arg`, () => {
-    expect(() => new ValueSummary(...okArgs)).not.toThrow();
+    expect(() => newValueSummary(...okArgs)).not.toThrow();
   });
 
   [
@@ -26,7 +24,7 @@ describe("ValueSummary", () => {
     replaceArg(okArgs, 3, "not bools")
   ].forEach((args, i) => {
     it(`should throw in case of invalid construction-- case ${i}, args: ${args}`, () => {
-      expect(() => new ValueSummary(...args)).toThrow();
+      expect(() => newValueSummary(...args)).toThrow();
     });
   });
 });
@@ -34,7 +32,7 @@ describe("ValueSummary", () => {
 describe("RangeDescriptor", () => {
   const okArgs = [34, 6453, "a string"];
   it(`should not throw in case of valid construction arg`, () => {
-    expect(() => new RangeDescriptor(...okArgs)).not.toThrow();
+    expect(() => newRangeDescriptor(...okArgs)).not.toThrow();
   });
 
   [
@@ -48,20 +46,20 @@ describe("RangeDescriptor", () => {
     [10, NaN, "str"]
   ].forEach((args, i) => {
     it(`should throw in case of invalid construction-- case ${i}, args: ${args}`, () => {
-      expect(() => new RangeDescriptor(...args)).toThrow();
+      expect(() => newRangeDescriptor(...args)).toThrow();
     });
   });
 });
 
-const okValueSummary = new ValueSummary("string1", 6453, "string2", true);
-const okChildSummaryItem = () => new ChildSummaryItem("path", okValueSummary);
+const okValueSummary = newValueSummary("string1", 6453, "string2", true);
+const okChildSummaryItem = () => newChildSummaryItem("path", okValueSummary);
 
 describe("ChildSummary", () => {
   const okArgs = [
     [okChildSummaryItem(), okChildSummaryItem(), okChildSummaryItem()]
   ];
   it(`should not throw in case of valid construction arg`, () => {
-    expect(() => new ChildSummary(...okArgs)).not.toThrow();
+    expect(() => newChildSummary(...okArgs)).not.toThrow();
   });
 
   [
@@ -69,7 +67,7 @@ describe("ChildSummary", () => {
     replaceArg(okArgs, 0, [{ path: "asdf", summary: null }])
   ].forEach((args, i) => {
     it(`should throw in case of invalid construction-- case ${i}, args: ${args}`, () => {
-      expect(() => new ChildSummary(...args)).toThrow();
+      expect(() => newChildSummary(...args)).toThrow();
     });
   });
 });

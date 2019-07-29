@@ -213,6 +213,10 @@ export const stateProperties = {
   notebookHistory: {
     type: "object",
     properties: {
+      hasLocalOnlyChanges: {
+        type: "boolean",
+        default: false
+      },
       revisionContentFetchStatus: {
         type: "string",
         enum: ["FETCHING", "ERROR", "IDLE"],

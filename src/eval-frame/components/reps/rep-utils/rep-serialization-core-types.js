@@ -19,7 +19,8 @@ const nonExpandableTypes = [
   "Date",
   "RegExp",
   "ArrayBuffer",
-  "DataView"
+  "DataView",
+  "Blob"
 ];
 
 function checkTypes(keyedArgs, argTypes, fnName) {
@@ -41,122 +42,133 @@ function checkTypes(keyedArgs, argTypes, fnName) {
   });
 }
 
-export class ValueSummary {
+export function newValueSummary(objType, size, stringValue, isTruncated) {
   // Contains top-level summary info about an object/value,
   // but without info about child objects.
   // This info is sufficient to produce a "tiny rep"
-  constructor(objType, size, stringValue, isTruncated) {
-    if (process.env.NODE_ENV !== "production") {
-      checkTypes(
-        { objType, size, stringValue, isTruncated },
-        {
-          objType: "string",
-          size: "number",
-          stringValue: "string",
-          isTruncated: "boolean"
-        },
-        "ValueSummary"
-      );
-    }
-    this.objType = objType; // string
-    this.size = size; // number
-    this.stringValue = stringValue; // string
-    this.isTruncated = isTruncated; // bool
-
-    let isExpandable;
-    if (nonExpandableTypes.includes(this.objType)) {
-      isExpandable = false;
-    } else if (this.objType === "String") {
-      isExpandable = this.isTruncated;
-    } else {
-      isExpandable = this.size > 0;
-    }
-    this.isExpandable = isExpandable;
+  if (process.env.NODE_ENV !== "production") {
+    checkTypes(
+      { objType, size, stringValue, isTruncated },
+      {
+        objType: "string",
+        size: "number",
+        stringValue: "string",
+        isTruncated: "boolean"
+      },
+      "ValueSummary"
+    );
   }
+
+  let isExpandable;
+  if (nonExpandableTypes.includes(objType)) {
+    isExpandable = false;
+  } else if (objType === "String") {
+    isExpandable = isTruncated;
+  } else {
+    isExpandable = size > 0;
+  }
+
+  return {
+    objType,
+    size,
+    stringValue,
+    isTruncated,
+    isExpandable,
+    DESC_TYPE: "ValueSummary"
+  };
 }
 
-export class RangeDescriptor {
-  // Describes a range of indices among the children of an object.
-  // IMPORTANT: these ranges are INCLUSIVE of their endpoints.
-  constructor(min, max, type = "ARRAY_RANGE") {
-    if (process.env.NODE_ENV !== "production") {
-      checkTypes(
-        { min, max, type },
-        {
-          max: "number",
-          min: "number",
-          type: "string"
-        },
-        "RangeDescriptor"
-      );
+export function isValueSummary(obj) {
+  return obj !== null && obj !== undefined && obj.DESC_TYPE === "ValueSummary";
+}
 
-      if (
-        max < min ||
-        min < 0 ||
-        max < 0 ||
-        !Number.isFinite(min) ||
-        !Number.isFinite(max)
-      ) {
+export function newRangeDescriptor(min, max, type = "ARRAY_RANGE") {
+  if (process.env.NODE_ENV !== "production") {
+    checkTypes(
+      { min, max, type },
+      {
+        max: "number",
+        min: "number",
+        type: "string"
+      },
+      "RangeDescriptor"
+    );
+
+    if (
+      max < min ||
+      min < 0 ||
+      max < 0 ||
+      !Number.isFinite(min) ||
+      !Number.isFinite(max)
+    ) {
+      // note: can technically be equal since the ranges are inclusive
+      throw new TypeError(
+        `invalid range endpoints to RangeDescriptor ${JSON.stringify({
+          max,
+          min,
+          type
+        })}`
+      );
+    }
+  }
+  return {
+    min,
+    max,
+    type,
+    DESC_TYPE: "RangeDescriptor"
+  };
+}
+
+export function isRangeDescriptor(obj) {
+  return obj.DESC_TYPE === "RangeDescriptor";
+}
+
+export function newChildSummaryItem(path, summary) {
+  return { path, summary, DESC_TYPE: "ChildSummaryItem" };
+}
+
+export function isChildSummaryItem(obj) {
+  return (
+    obj.DESC_TYPE === "ChildSummaryItem" ||
+    obj.DESC_TYPE === "SubstringRangeSummaryItem" ||
+    obj.DESC_TYPE === "MapPairSummaryItem"
+  );
+}
+
+export function newSubstringRangeSummaryItem(path, summary) {
+  return { path, summary, DESC_TYPE: "SubstringRangeSummaryItem" };
+}
+
+export function isSubstringRangeSummaryItem(obj) {
+  return obj.DESC_TYPE === "SubstringRangeSummaryItem";
+}
+
+export const newMapPairSummaryItem = (
+  mapEntryIndex,
+  keySummary,
+  valSummary
+) => ({
+  path: mapEntryIndex,
+  keySummary,
+  valSummary,
+  DESC_TYPE: "MapPairSummaryItem"
+});
+export function isMapPairSummaryItem(obj) {
+  return obj.DESC_TYPE === "MapPairSummaryItem";
+}
+
+export function newChildSummary(childItems) {
+  if (process.env.NODE_ENV !== "production") {
+    childItems.forEach(item => {
+      if (!isChildSummaryItem(item)) {
         // note: can technically be equal since the ranges are inclusive
-        throw new TypeError(
-          `invalid range endpoints to RangeDescriptor ${JSON.stringify({
-            max,
-            min,
-            type
-          })}`
-        );
+        throw new TypeError(`invalid range endpoints to RangeDescriptor`);
       }
-    }
-    this.min = min; // numeric, required
-    this.max = max; // numeric, required
-    this.type = type;
+    });
   }
+  return { childItems, DESC_TYPE: "ChildSummary" };
 }
 
-export class ChildSummaryItem {
-  // an item in a ChildSummary. Contains
-  // (1) a path, which can be a a key in an object, or a
-  // RangeDescriptor to narrow in on a range
-  // (2) a summary, which is null IFF the path is a RangeDescriptor
-  constructor(path, summary) {
-    this.path = path; // String or RangeDescriptor
-    this.summary = summary; // ValueSummary or null
-  }
-}
-
-export class SubstringRangeSummaryItem extends ChildSummaryItem {
-  // a SubstringRangeSummaryItem always has `path` of class
-  // RangeDescriptor and `summary` of class ValueSummary.
-  // In this case, the ValueSummary is a substring of the
-  // parent string
-  constructor(path, summary) {
-    super();
-    this.path = path; // RangeDescriptor
-    this.summary = summary; // ValueSummary
-  }
-}
-
-export class MapPairSummaryItem extends ChildSummaryItem {
-  constructor(mapEntryIndex, keySummary, valSummary) {
-    super();
-    this.path = mapEntryIndex; // int
-    this.keySummary = keySummary; // ValueSummary
-    this.valSummary = valSummary; // ValueSummary
-  }
-}
-
-export class ChildSummary {
-  // an instance of this class summarizes information about the children
-  // of an object. These can be either values or ranges of indices.
-  constructor(childItems) {
-    if (process.env.NODE_ENV !== "production") {
-      childItems.forEach(item => {
-        if (!(item instanceof ChildSummaryItem)) {
-          // note: can technically be equal since the ranges are inclusive
-          throw new TypeError(`invalid range endpoints to RangeDescriptor`);
-        }
-      });
-    }
-    this.childItems = childItems;
-  }
+export function isChildSummary(obj) {
+  return obj.DESC_TYPE === "ChildSummary";
 }

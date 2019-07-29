@@ -6,95 +6,79 @@ import ExpandableRep from "./rep-tree";
 import ErrorRenderer from "./error-handler";
 import HTMLHandler from "./html-handler";
 import TableRenderer from "./data-table-rep";
-import UserReps from "./user-reps-manager";
 
-import { isRowDf } from "./rep-utils/rep-type-chooser";
-import { serializeForValueSummary } from "./rep-utils/value-summary-serializer";
-import { getChildSummary } from "./rep-utils/get-child-summaries";
+import { wrapValueRenderer } from "./rep-info-requestor";
 
-import { IODIDE_EVALUATION_RESULTS } from "../../iodide-evaluation-results";
+import { requestRepInfo } from "./request-rep-info";
 
-function repChooser(value) {
-  if (UserReps.getUserRepIfAvailable(value)) {
-    return "USER_REGISTERED_RENDERER";
-  }
-  if (value && value.iodideRender instanceof Function) {
-    return "IODIDERENDER_METHOD_ON_OBJECT";
-  }
-  if (value instanceof Error) {
-    return "ERROR_REP";
-  }
-  if (isRowDf(value)) {
-    return "TABLE_REP";
-  }
-  return "DEFAULT_REP";
-}
-
-export default class ValueRenderer extends React.Component {
+export class ValueRendererUnwrapped extends React.Component {
   static propTypes = {
-    windowValue: PropTypes.bool,
-    valueKey: PropTypes.string.isRequired
+    topLevelRepSummary: PropTypes.object, // eslint-disable-line
+    rootObjName: PropTypes.string, // eslint-disable-line
+    pathToEntity: PropTypes.array // eslint-disable-line
   };
 
   constructor(props) {
     super(props);
     this.state = {};
   }
-
   componentDidCatch(error, errorInfo) {
     this.setState({ error, errorInfo });
   }
 
   render() {
-    const { valueKey, windowValue } = this.props;
-
-    const value = windowValue
-      ? window[valueKey]
-      : IODIDE_EVALUATION_RESULTS[valueKey];
-
+    const { rootObjName, pathToEntity, topLevelRepSummary } = this.props;
     if (this.state.errorInfo) {
       return (
         <div>
-          <pre>{value.toString()}</pre>
           <h2>A value renderer encountered an error.</h2>
           <pre>
             {this.state.error && this.state.error.toString()}
             <br />
             {this.state.errorInfo.componentStack}
           </pre>
+          <h2>Top level rep summary:</h2>
+          <pre>{JSON.stringify(topLevelRepSummary)}</pre>
           <a href="https://github.com/iodide-project/iodide/issues/new">
-            Please file a bug report.
-          </a>
+            Please file a bug report
+          </a>{" "}
+          with the information above.
         </div>
       );
     }
-    const repType = repChooser(value);
-    switch (repType) {
-      case "USER_REGISTERED_RENDERER": {
-        const htmlString = UserReps.getUserRepIfAvailable(value);
-        return <HTMLHandler htmlString={htmlString} />;
+
+    switch (topLevelRepSummary.repType) {
+      case "HTML_STRING": {
+        return <HTMLHandler htmlString={topLevelRepSummary.htmlString} />;
       }
-      case "IODIDERENDER_METHOD_ON_OBJECT":
-        return <HTMLHandler htmlString={value.iodideRender()} />;
-      case "ERROR_REP":
-        return <ErrorRenderer error={value} />;
-      case "TABLE_REP":
+      case "ERROR_TRACE":
+        return <ErrorRenderer errorString={topLevelRepSummary.errorString} />;
+      case "ROW_TABLE_REP":
         return (
           <TableRenderer
-            value={value}
-            pathToEntity={[valueKey]}
-            rootObjName={windowValue ? "window" : "IODIDE_EVALUATION_RESULTS"}
+            initialDataRows={topLevelRepSummary.initialDataRows}
+            pages={topLevelRepSummary.pages}
+            pathToDataFrame={pathToEntity}
+            rootObjName={rootObjName}
           />
         );
       default:
         return (
           <ExpandableRep
-            pathToEntity={[valueKey]}
-            valueSummary={serializeForValueSummary(value)}
-            getChildSummaries={getChildSummary}
-            rootObjName={windowValue ? "window" : "IODIDE_EVALUATION_RESULTS"}
+            pathToEntity={pathToEntity}
+            valueSummary={topLevelRepSummary.valueSummary}
+            getChildSummaries={(name, path) =>
+              requestRepInfo({
+                rootObjName: name,
+                pathToEntity: path,
+                requestType: "CHILD_SUMMARY"
+              })
+            }
+            rootObjName={rootObjName}
           />
         );
     }
   }
 }
+
+export default wrapValueRenderer(ValueRendererUnwrapped);

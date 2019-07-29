@@ -1,16 +1,9 @@
-import messagePasserEval from "../../shared/utils/redux-to-port-message-passer";
 import {
   addConsoleEntryInEditor,
   sendStatusResponseToEditor
 } from "./editor-message-senders";
 
 import { IODIDE_EVALUATION_RESULTS } from "../iodide-evaluation-results";
-
-const CodeMirror = require("codemirror"); // eslint-disable-line
-
-export function addToEvaluationQueue(chunk) {
-  messagePasserEval.postMessage("ADD_TO_EVALUATION_QUEUE", chunk);
-}
 
 class Singleton {
   constructor() {

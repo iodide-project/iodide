@@ -1,5 +1,5 @@
 import { truncateString } from "./truncate-string";
-import { ValueSummary } from "./rep-serialization-core-types";
+import { newValueSummary } from "./rep-serialization-core-types";
 
 export function getClass(obj) {
   if (obj === null) return "Null";
@@ -85,5 +85,5 @@ export function serializeForValueSummary(obj) {
     MAX_SUMMARY_STRING_LEN,
     SUMMARY_STRING_TRUNCATION_LEN
   );
-  return new ValueSummary(getType(obj), objSize(obj), stringValue, isTruncated);
+  return newValueSummary(getType(obj), objSize(obj), stringValue, isTruncated);
 }

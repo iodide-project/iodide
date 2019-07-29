@@ -129,4 +129,4 @@ group](https://groups.google.com/forum/#!forum/iodide-dev).
 
 Every week on Tuesday at 9am PST, we have a project meeting on Zoom, which
 anyone is welcome to join. If you have Zoom installed, you should be able to join
-via this URL: https://mozilla.zoom.us/j/368434069
+via this URL: [https://mozilla.zoom.us/j/368434069](https://mozilla.zoom.us/j/368434069).

@@ -2,9 +2,9 @@ import { isString } from "lodash";
 import { serializeChildSummary } from "./child-summary-serializer";
 import { MAX_SUMMARY_STRING_LEN } from "./value-summary-serializer";
 import {
-  ChildSummary,
-  ChildSummaryItem,
-  RangeDescriptor
+  newChildSummary,
+  newChildSummaryItem,
+  isRangeDescriptor
 } from "./rep-serialization-core-types";
 import { splitIndexRange, RANGE_SPLIT_THRESHOLD } from "./split-index-range";
 
@@ -20,12 +20,12 @@ export function expandRangesInChildSummaries(childSummaries) {
       const rangeDescriptors = splitIndexRange(summaryItem.path);
       // append all the resulting sub-ranges
       for (const rangeSummary of rangeDescriptors) {
-        finalSubpaths.push(new ChildSummaryItem(rangeSummary, null));
+        finalSubpaths.push(newChildSummaryItem(rangeSummary, null));
       }
     }
   }
 
-  return new ChildSummary(finalSubpaths);
+  return newChildSummary(finalSubpaths);
 }
 
 function getIteratorAtIndex(iterator, index) {
@@ -39,8 +39,8 @@ function getIteratorAtIndex(iterator, index) {
   throw new RangeError("map index not found in iterator");
 }
 
-function getObjAtPath(baseObj, repPath) {
-  const queryPath = repPath.filter(p => !(p instanceof RangeDescriptor));
+export function getObjAtPath(baseObj, repPath) {
+  const queryPath = repPath.filter(p => !isRangeDescriptor(p));
 
   let obj = baseObj;
   let index = 0;
@@ -83,7 +83,7 @@ export function getChildSummary(rootObjName, path) {
     // serialize the object at the end of the path, dropping
     // non-string path elements (which are indexRanges)
     const childSummaries = serializeChildSummary(
-      getObjAtPath(window[rootObjName], path.filter(isString))
+      getObjAtPath(window[rootObjName], path)
     );
     return childSummaries;
   }
@@ -92,15 +92,15 @@ export function getChildSummary(rootObjName, path) {
   const { min, max, type } = pathEnd;
   const rangeSize = max - min;
   if (type === "STRING_RANGE" && rangeSize > MAX_SUMMARY_STRING_LEN) {
-    return new ChildSummary(
-      splitIndexRange(pathEnd, MAX_SUMMARY_STRING_LEN).map(
-        range => new ChildSummaryItem(range, null)
+    return newChildSummary(
+      splitIndexRange(pathEnd, MAX_SUMMARY_STRING_LEN).map(range =>
+        newChildSummaryItem(range, null)
       )
     );
   } else if (type !== "STRING_RANGE" && rangeSize > RANGE_SPLIT_THRESHOLD) {
     // if this range is too big, expand into subranges
-    const tempChildSummariesForExpansion = new ChildSummary([
-      new ChildSummaryItem(pathEnd, null)
+    const tempChildSummariesForExpansion = newChildSummary([
+      newChildSummaryItem(pathEnd, null)
     ]);
 
     return expandRangesInChildSummaries(tempChildSummariesForExpansion);

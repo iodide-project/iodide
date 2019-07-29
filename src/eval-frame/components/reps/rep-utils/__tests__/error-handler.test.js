@@ -1,6 +1,6 @@
-import { trimStack } from "../error-handler";
+import { getErrorStackString } from "../get-error-stack-summary";
 
-describe("errorHandler trimStack trims stacks as expected", () => {
+describe("errorHandler getErrorStackString trims stacks as expected", () => {
   // FIXME: Add a test against a real throw exception once we have selenium
   // testing available.
   it("trims stack frames", async () => {
@@ -172,6 +172,6 @@ describe("errorHandler trimStack trims stacks as expected", () => {
       }
     ];
 
-    expect(trimStack(mockFrames).split("\n").length).toBe(2);
+    expect(getErrorStackString(mockFrames).split("\n").length).toBe(2);
   });
 });
