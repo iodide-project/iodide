@@ -43,6 +43,7 @@ const notebookReducer = (state = newNotebook(), action) => {
     case "TOGGLE_WRAP_IN_EDITORS":
       return Object.assign({}, state, { wrapEditors: !state.wrapEditors });
 
+    // FIXME this reducer case seem unused
     case "REPLACE_NOTEBOOK_CONTENT": {
       return Object.assign({}, state, {
         iomd: action.iomd,
