@@ -1,26 +1,14 @@
-import _ from "lodash";
+import { pick } from "lodash";
 
 // these state props will be copied over entirely
 const propsToCopy = [
-  "appMessages",
-  "consoleText",
-  "consoleTextCache",
-  "consoleScrollbackPosition",
-  "history",
-  "languageDefinitions",
-  "loadedLanguages",
-  "languageLastUsed",
-  "panePositions.ConsolePositioner",
   "panePositions.ReportPositioner",
-  "panePositions.WorkspacePositioner",
-  "savedEnvironment",
-  "userDefinedVarNames",
   "viewMode",
   "notebookInfo.files"
 ];
 
 export default function evalFrameStateSelector(state) {
-  const evalFrameState = _.pick(state, propsToCopy);
+  const evalFrameState = pick(state, propsToCopy);
 
   const reportChunkTypes = Object.keys(state.languageDefinitions).concat([
     "md",
@@ -31,7 +19,7 @@ export default function evalFrameStateSelector(state) {
   // add propertiess that need special handling
   evalFrameState.reportChunks = state.iomdChunks
     .filter(c => reportChunkTypes.includes(c.chunkType))
-    .map(c => _.pick(c, ["chunkContent", "chunkType", "chunkId", "evalFlags"]));
+    .map(c => pick(c, ["chunkContent", "chunkType", "chunkId"]));
 
   return evalFrameState;
 }

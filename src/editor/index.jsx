@@ -15,6 +15,8 @@ import "./style/side-panes.css";
 import "./style/menu-and-button-and-ui-styles.css";
 import "./style/help-modal-styles.css";
 import "./style/golden-layout-style-overrides.css";
+import "./style/eval-container.css";
+import "./style/jupyter-rendered-html-styles.css";
 
 // theme settings
 import "./style/client-style-defaults";
@@ -30,7 +32,6 @@ import { initializeDefaultKeybindings } from "./initialization/keybindings";
 
 import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
-import "./initialization/initialize-dom";
 import { restoreLocalAutosave } from "./actions/local-autosave-actions";
 import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";

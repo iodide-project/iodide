@@ -4,13 +4,13 @@ import {
   getRevisionList,
   getRevisions
 } from "../../shared/server-api/revisions";
+import { haveLocalAutosave } from "../tools/local-autosave";
 import {
   getNotebookID,
   getUserDataFromDocument,
   isLoggedIn
 } from "../tools/server-tools";
 
-import { iomdParser } from "../iomd-tools/iomd-parser";
 import { getChunkContainingLine } from "../iomd-tools/iomd-selection";
 
 import { addAppMessageToConsoleHistory } from "./console-message-actions";
@@ -31,34 +31,7 @@ export function updateAppMessages(messageObj) {
 }
 
 export function updateIomdContent(text) {
-  return (dispatch, getState) => {
-    const iomdChunks = iomdParser(text);
-    const languageDefinitions = getState().languageDefinitions || {};
-    const reportChunkTypes = Object.keys(languageDefinitions).concat([
-      "md",
-      "html",
-      "css"
-    ]);
-    const reportChunks = iomdChunks
-      .filter(c => reportChunkTypes.includes(c.chunkType))
-      .map(c => ({
-        chunkContent: c.chunkContent,
-        chunkType: c.chunkType,
-        chunkId: c.chunkId,
-        evalFlags: c.evalFlags
-      }));
-
-    dispatch({
-      // this dispatch really just forwards to the eval frame
-      type: "UPDATE_MARKDOWN_CHUNKS",
-      reportChunks
-    });
-    dispatch({
-      type: "UPDATE_IOMD_CONTENT",
-      iomd: text,
-      iomdChunks
-    });
-  };
+  return { type: "UPDATE_IOMD_CONTENT", iomd: text };
 }
 
 export function toggleWrapInEditors() {
@@ -190,11 +163,21 @@ export function getNotebookRevisionList() {
     dispatch({ type: "GETTING_NOTEBOOK_REVISION_LIST" });
     getRevisionList(getNotebookID(getState()), isLoggedIn(getState()))
       .then(revisionList => {
-        dispatch({
-          type: "GOT_NOTEBOOK_REVISION_LIST",
-          revisionList
-        });
-        getRequiredRevisionContent(getState(), dispatch);
+        haveLocalAutosave(getState())
+          .then(havePendingChanges => {
+            dispatch({
+              type: "UPDATE_NOTEBOOK_HISTORY",
+              hasLocalOnlyChanges: havePendingChanges,
+              revisionList,
+              selectedRevisionId: havePendingChanges
+                ? undefined
+                : revisionList[0].id
+            });
+            getRequiredRevisionContent(getState(), dispatch);
+          })
+          .catch(() => {
+            dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
+          });
       })
       .catch(() => {
         dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
@@ -245,13 +228,5 @@ export function toggleFileModal() {
 export function toggleEditorLink() {
   return {
     type: "TOGGLE_EDITOR_LINK"
-  };
-}
-
-export function saveEnvironment(updateObj, update) {
-  return {
-    type: "SAVE_ENVIRONMENT",
-    updateObj,
-    update
   };
 }

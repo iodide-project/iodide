@@ -1,14 +1,9 @@
-import messagePasserEval from "../../shared/utils/redux-to-port-message-passer";
 import {
   addConsoleEntryInEditor,
   sendStatusResponseToEditor
 } from "./editor-message-senders";
 
 import { IODIDE_EVALUATION_RESULTS } from "../iodide-evaluation-results";
-
-export function addToEvaluationQueue(chunk) {
-  messagePasserEval.postMessage("ADD_TO_EVALUATION_QUEUE", chunk);
-}
 
 class Singleton {
   constructor() {
@@ -25,29 +20,6 @@ class Singleton {
 const MOST_RECENT_CHUNK_ID = new Singleton();
 
 export { MOST_RECENT_CHUNK_ID };
-
-// ////////////// actual actions
-
-export function setConsoleLanguage(language) {
-  return {
-    type: "SET_CONSOLE_LANGUAGE",
-    language
-  };
-}
-
-export function updateConsoleText(consoleText) {
-  return {
-    type: "UPDATE_CONSOLE_TEXT",
-    consoleText
-  };
-}
-
-export function consoleHistoryStepBack(consoleCursorDelta) {
-  return {
-    type: "CONSOLE_HISTORY_MOVE",
-    consoleCursorDelta
-  };
-}
 
 export function runCodeWithLanguage(language, code) {
   const { module, evaluator, asyncEvaluator } = language;
@@ -102,12 +74,4 @@ export async function evaluateCode(code, language, chunkId, evalId) {
 
     sendStatusResponseToEditor("ERROR", evalId);
   }
-}
-
-export function saveEnvironment(updateObj, update) {
-  return {
-    type: "SAVE_ENVIRONMENT",
-    updateObj,
-    update
-  };
 }

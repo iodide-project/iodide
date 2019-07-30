@@ -1,5 +1,3 @@
-/* global IODIDE_EDITOR_ORIGIN  */
-
 import { evaluateCode } from "./actions/actions";
 import { loadLanguagePlugin } from "./actions/language-actions";
 import { getUserDefinedVariablesFromWindow } from "./initialize-user-variables";
@@ -8,12 +6,16 @@ import {
   onParentContextFileRequestError
 } from "./tools/send-file-request-to-editor";
 import messagePasserEval from "../shared/utils/redux-to-port-message-passer";
-import { sendStatusResponseToEditor } from "./actions/editor-message-senders";
+import {
+  sendStatusResponseToEditor,
+  sendResponseMessageToEditor
+} from "./actions/editor-message-senders";
 import {
   addCSS,
   loadScriptFromBlob,
   setVariableInWindow
 } from "./actions/fetch-cell-eval-actions";
+import { repInfoRequestResponseFromEvalFrame } from "./eval-frame-rep-info-request-response";
 
 const mc = new MessageChannel();
 const portToEditor = mc.port1;
@@ -34,11 +36,11 @@ function connectToEditor() {
     // IFRAME CONNECT STEP 1:
     // "EVAL_FRAME_READY" is sent until the editor recieves
     setTimeout(connectToEditor, 50);
-    window.parent.postMessage("EVAL_FRAME_READY", IODIDE_EDITOR_ORIGIN);
+    window.parent.postMessage("EVAL_FRAME_READY", window.editorOrigin);
   } else {
     // IFRAME CONNECT STEP 5:
     // when editorReady===true, eval frame sends actual port
-    window.parent.postMessage("EVAL_FRAME_SENDING_PORT", IODIDE_EDITOR_ORIGIN, [
+    window.parent.postMessage("EVAL_FRAME_SENDING_PORT", window.editorOrigin, [
       mc.port2
     ]);
   }
@@ -54,13 +56,18 @@ messagePasserEval.connectPostMessage(postMessageToEditor);
 async function receiveMessage(event) {
   const trustedMessage = true;
   if (trustedMessage) {
-    const { messageType, message } = event.data;
+    const { messageType, message, messageId } = event.data;
     switch (messageType) {
       case "STATE_UPDATE_FROM_EDITOR": {
         messagePasserEval.dispatch({
           type: "REPLACE_STATE",
           state: message
         });
+        break;
+      }
+      case "REP_INFO_REQUEST": {
+        const repInfo = repInfoRequestResponseFromEvalFrame(message);
+        sendResponseMessageToEditor("SUCCESS", messageId, repInfo);
         break;
       }
       case "REQUESTED_FILE_OPERATION_SUCCESS": {
@@ -137,8 +144,4 @@ portToEditor.onmessage = receiveMessage;
 
 export function postActionToEditor(actionObj) {
   postMessageToEditor("REDUX_ACTION", actionObj);
-}
-
-export function postKeypressToEditor(keypressStr) {
-  postMessageToEditor("KEYPRESS", keypressStr);
 }
