@@ -39,8 +39,7 @@ export class ReportPaneUnconnected extends React.Component {
       PropTypes.shape({
         chunkContent: PropTypes.string.isRequired,
         chunkType: PropTypes.string.isRequired,
-        chunkId: PropTypes.string.isRequired,
-        evalFlags: PropTypes.arrayOf(PropTypes.string)
+        chunkId: PropTypes.string.isRequired
       })
     )
   };
