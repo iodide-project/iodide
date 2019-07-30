@@ -67,23 +67,16 @@ tasks.toggleWrapInEditors = new UserTask({
   }
 });
 
-tasks.changeTitle = new UserTask({
-  title: "Change Title",
-  callback(t) {
-    dispatcher.updateTitle(t);
-  }
-});
-
 tasks.newNotebook = new ExternalLinkTask({
   title: "New Notebook",
   url: "/new"
 });
 
 // this overrides the browser default's ctrl+s but otherwise does nothing.
+// displayKeybinding not needed
 tasks.saveNotebook = new UserTask({
   title: "Save Notebook",
   keybindings: ["ctrl+s", "meta+s"],
-  displayKeybinding: `${commandKey}+s`,
   preventDefaultKeybinding: true,
   callback() {}
 });
@@ -119,20 +112,6 @@ tasks.toggleHelpModal = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     dispatcher.toggleHelpModal();
-  }
-});
-
-tasks.setViewModeToEditor = new UserTask({
-  title: "Set View Mode to Editor",
-  callback() {
-    dispatcher.setViewMode("EXPLORE_VIEW");
-  }
-});
-
-tasks.setViewModeToPresentation = new UserTask({
-  title: "Set View Mode to Presentation",
-  callback() {
-    dispatcher.setViewMode("REPORT_VIEW");
   }
 });
 
