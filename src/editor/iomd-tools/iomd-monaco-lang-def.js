@@ -157,10 +157,10 @@ console.log("language", language);
 export const conf = {
   // eslint-disable-next-line
   wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\$\^\&\*\(\)\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\s]+)/g,
-  comments: {
-    blockComment: ["<!--", "-->"]
-  },
-  brackets: [["<!--", "-->"], ["<", ">"], ["{", "}"], ["(", ")"]],
+  // comments: {
+  //   blockComment: ["<!--", "-->"]
+  // },
+  // brackets: [["<!--", "-->"], ["<", ">"], ["{", "}"], ["(", ")"]],
   autoClosingPairs: [
     { open: "{", close: "}" },
     { open: "[", close: "]" },

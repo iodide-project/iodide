@@ -30,10 +30,13 @@ import {
   conf as htmlConf
 } from "../iomd-tools/my-html-def";
 
-import { language as iomdLang } from "../iomd-tools/iomd-monaco-lang-def";
+import {
+  language as iomdLang,
+  conf as iomdConf
+} from "../iomd-tools/iomd-monaco-lang-def";
 
 Object.entries({
-  iomd: [iomdLang, null],
+  iomd: [iomdLang, iomdConf],
   js: [jsLang, jsConf],
   // "text/javascript": [jsLang, jsConf],
   md: [mdLang, mdConf],
