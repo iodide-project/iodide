@@ -100,11 +100,14 @@ class IomdEditorUnconnected extends React.Component {
 
     this.editor = monaco.editor.create(this.containerDivRef.current, {
       value: this.props.content,
-      language: "iomd",
+      // language: "iomd",
+      // language: "js",
+      language: "html",
       wordWrap: this.props.wordWrap,
       theme: "iomdTheme",
-      autoIndent: true
-      // autoSurround: "languageDefined"
+      autoIndent: true,
+      autoSurround: true,
+      formatOnType: true
     });
     window.MONACO_EDITOR = this.editor;
 
