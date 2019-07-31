@@ -116,7 +116,7 @@
   background-color: black;
 }
 .rendered_html pre {
-  margin: 1em 2em;
+  margin: 0px;
   padding: 0px;
   background-color: white;
 }
