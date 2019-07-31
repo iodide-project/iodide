@@ -28,7 +28,8 @@ const purifyHtml = html =>
       "tbody",
       "th",
       "tr",
-      "td"
+      "td",
+      "pre"
     ],
     ALLOWED_ATTR: ["style", "class"]
   });
