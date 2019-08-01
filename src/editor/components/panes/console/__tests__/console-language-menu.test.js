@@ -5,7 +5,7 @@ describe("ConsoleLanguageMenu mapStateToProps", () => {
   beforeEach(() => {
     state = {
       languageDefinitions: {
-        js: { languageId: "js", displayName: "Javascript" },
+        js: { languageId: "js", displayName: "JavaScript" },
         py: { languageId: "py", displayName: "Python" }
       },
       loadedLanguages: {
@@ -23,7 +23,7 @@ describe("ConsoleLanguageMenu mapStateToProps", () => {
       new Set(["js", "py", "jl"])
     );
     expect(new Set(props.availableLanguages.map(d => d.displayName))).toEqual(
-      new Set(["Javascript", "Python", "Julia"])
+      new Set(["JavaScript", "Python", "Julia"])
     );
   });
 });
