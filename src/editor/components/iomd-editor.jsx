@@ -38,6 +38,8 @@ function unpackMonacoSelection(s, monacoModel) {
   };
 }
 
+let iomdDelimLineDecorationIds = [];
+
 class IomdEditorUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
@@ -106,8 +108,11 @@ class IomdEditorUnconnected extends React.Component {
       range: new monaco.Range(line, 1, line, 1),
       options: { isWholeLine: true, className: ".iomd-delim-line" }
     }));
-    console.log({ newDecorations });
-    this.editor.deltaDecorations([], newDecorations);
+    // console.log({ newDecorations });
+    iomdDelimLineDecorationIds = this.editor.deltaDecorations(
+      [],
+      newDecorations
+    );
   }
 
   shouldComponentUpdate(nextProps) {
@@ -144,7 +149,7 @@ class IomdEditorUnconnected extends React.Component {
         range: new monaco.Range(line, 1, line, 1),
         options: { isWholeLine: true, className: ".iomd-delim-line" }
       }));
-      this.editor.deltaDecorations([], newDecorations);
+      this.editor.deltaDecorations(iomdDelimLineDecorationIds, newDecorations);
     }
 
     this.editor.updateOptions({ wordWrap });
