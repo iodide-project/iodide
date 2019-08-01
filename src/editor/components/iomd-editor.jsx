@@ -3,32 +3,24 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import deepEqual from "deep-equal";
 
-// eslint-disable-next-line import/first
-// import MonacoEditor from "react-monaco-editor";
-
-// import * as monaco from "monaco-editor";
 /* eslint-disable import/first */
+
+// for all potential imports, see https://github.com/microsoft/monaco-editor-samples/blob/master/browser-esm-webpack-small/index.js
 import "monaco-editor/esm/vs/editor/browser/controller/coreCommands";
+import "monaco-editor/esm/vs/editor/contrib/wordOperations/wordOperations";
 import "monaco-editor/esm/vs/editor/contrib/find/findController";
 import "monaco-editor/esm/vs/editor/contrib/multicursor/multicursor";
+import "monaco-editor/esm/vs/editor/contrib/folding/folding";
 import "monaco-editor/esm/vs/editor/contrib/indentation/indentUtils";
 import "monaco-editor/esm/vs/editor/contrib/bracketMatching/bracketMatching";
 import "monaco-editor/esm/vs/editor/contrib/comment/comment";
 
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import "./monaco-language-init";
-// import "monaco-editor/esm/vs/language/typescript/monaco.contribution";
 //
 import "monaco-editor/esm/vs/language/css/monaco.contribution";
-// import "monaco-editor/esm/vs/language/json/monaco.contribution";
-// import "monaco-editor/esm/vs/language/html/monaco.contribution";
-// import "monaco-editor/esm/vs/basic-languages/python/python.contribution";
-// import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution";
-// import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution";
-// import "monaco-editor/esm/vs/basic-languages/css/css.contribution";
 
-// console.log({ cssDef });
-
+import "./monaco-custom-styles.css";
 import { iomdTheme } from "../iomd-tools/iomd-monaco-theme";
 
 import {
@@ -37,32 +29,6 @@ import {
   updateEditorSelections
 } from "../actions/actions";
 import { updateAutosave } from "../actions/autosave-actions";
-/* eslint-enable import/first */
-
-// eslint-disable-next-line no-restricted-globals
-
-// window.MonacoEnvironment = {
-//   baseUrl: "",
-//   getWorker(moduleId, label) {
-//     console.log("getWorker ####", { moduleId, label });
-//   },
-//   getWorkerUrl(moduleId, label) {
-//     console.log("getWorkerUrl ####", { moduleId, label });
-//     if (label === "json") {
-//       return "monaco.json.worker.dev.js";
-//     }
-//     if (label === "css") {
-//       return "monaco.css.worker.dev.js";
-//     }
-//     if (label === "html") {
-//       return "monaco.html.worker.dev.js";
-//     }
-//     if (label === "typescript" || label === "javascript") {
-//       return "monaco.ts.worker.dev.js";
-//     }
-//     return "smonaco.editor.worker.dev.js";
-//   }
-// };
 
 function unpackMonacoSelection(s, monacoModel) {
   return {
@@ -79,6 +45,7 @@ class IomdEditorUnconnected extends React.Component {
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
     editorPositionString: PropTypes.string.isRequired,
+    delimLines: PropTypes.arrayOf(PropTypes.number),
     // action creators
     updateIomdContent: PropTypes.func.isRequired,
     updateEditorCursor: PropTypes.func.isRequired,
@@ -101,14 +68,14 @@ class IomdEditorUnconnected extends React.Component {
     this.editor = monaco.editor.create(this.containerDivRef.current, {
       value: this.props.content,
       language: "iomd",
-      // language: "js",
-      // language: "html",
       wordWrap: this.props.wordWrap,
       theme: "iomdTheme",
       autoIndent: true,
       autoSurround: true,
       formatOnType: true,
-      wrappingIndent: "same"
+      wrappingIndent: "same",
+      lineNumbersMinChars: 3,
+      renderLineHighlight: "gutter"
     });
     window.MONACO_EDITOR = this.editor;
 
@@ -134,6 +101,13 @@ class IomdEditorUnconnected extends React.Component {
         this.props.updateEditorSelections(selections);
       }
     });
+
+    const newDecorations = this.props.delimLines.map(line => ({
+      range: new monaco.Range(line, 1, line, 1),
+      options: { isWholeLine: true, className: ".iomd-delim-line" }
+    }));
+    console.log({ newDecorations });
+    this.editor.deltaDecorations([], newDecorations);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -146,7 +120,8 @@ class IomdEditorUnconnected extends React.Component {
       editorCursorCol,
       content,
       wordWrap,
-      editorPositionString
+      editorPositionString,
+      delimLines
     } = this.props;
     const { lineNumber, column } = this.editor.getPosition();
 
@@ -162,6 +137,14 @@ class IomdEditorUnconnected extends React.Component {
 
     if (editorPositionString !== prevProps.editorPositionString) {
       this.editor.layout();
+    }
+
+    if (delimLines.join(",") !== prevProps.delimLines.join(",")) {
+      const newDecorations = delimLines.map(line => ({
+        range: new monaco.Range(line, 1, line, 1),
+        options: { isWholeLine: true, className: ".iomd-delim-line" }
+      }));
+      this.editor.deltaDecorations([], newDecorations);
     }
 
     this.editor.updateOptions({ wordWrap });
@@ -186,19 +169,23 @@ function mapStateToProps(state) {
   const wordWrap = state.wrapEditors ? "on" : "off";
   const { line: editorCursorLine, col: editorCursorCol } = state.editorCursor;
 
-  // by passing in the following prop, we can ensure that the
+  // by passing in the editorPositionString prop, we can ensure that the
   // Monaco instance does a fresh layout when the position
-  // of it's containing pane changes
+  // of it's containing pane changes. Slightly hacky but actually
+  // works great.
   const editorPositionString = Object.values(
     state.panePositions.EditorPositioner
   ).join(",");
+
+  const delimLines = state.iomdChunks.map(chunk => chunk.startLine);
+
   return {
     content: state.iomd,
     wordWrap,
-    // editorOptions,
     editorCursorLine,
     editorCursorCol,
-    editorPositionString
+    editorPositionString,
+    delimLines
   };
 }
 

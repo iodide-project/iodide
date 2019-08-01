@@ -4,5 +4,8 @@ export const iomdTheme = {
   rules: [
     { token: "iomd-type", foreground: "343434", fontStyle: "bold" },
     { token: "iomd-flag", foreground: "787878", fontStyle: "italic" }
-  ]
+  ],
+  colors: {
+    "editor.lineHighlightBackground": "#00000018"
+  }
 };

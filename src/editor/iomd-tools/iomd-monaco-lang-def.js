@@ -1,78 +1,4 @@
-// import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-
-// const validSyntaxes = ["py", "js", "css", "md", "fetch"];
-
-// eslint-disable-next-line no-useless-escape
-// const invalidRegex = new RegExp(`(?!(${validSyntaxes.join("|")}))(\w*)`);
-// console.log({ invalidRegex });
-
-// export const languageLong = {
-//   // export const language = {
-//   ignoreCase: true,
-
-//   tokenizer: {
-//     root: [
-//       // [/^%% */, "comment", "@iomdDelimLine"],
-//       // [/^%% *js/, { token: "attribute.name", next: "@jsDelimLine" }],
-//       [
-//         new RegExp(`^%% *js`),
-//         { token: "attribute.name", next: "@jsDelimLine" }
-//       ],
-//       [
-//         new RegExp(`^%% *fetch`),
-//         { token: "attribute.name", next: "@fetchDelimLine" }
-//       ],
-//       [
-//         new RegExp(`^%% *py`),
-//         { token: "attribute.name", next: "@pyDelimLine" }
-//       ],
-//       [
-//         new RegExp(`^%% *md`),
-//         { token: "attribute.name", next: "@mdDelimLine" }
-//       ],
-//       [
-//         new RegExp(`^%% *css`),
-//         { token: "attribute.name", next: "@cssDelimLine" }
-//       ],
-//       [
-//         new RegExp(`^%% *raw`),
-//         { token: "attribute.name", next: "@rawDelimLine" }
-//       ]
-//     ],
-
-//     jsDelimLine: [
-//       [/["":{}} \w]*$/, { token: "type", next: "@embed", nextEmbedded: "js" }],
-//       [/^%%/, { token: "@rematch", next: "@pop" }]
-//     ],
-//     fetchDelimLine: [
-//       [
-//         /["":{}} \w]*$/,
-//         { token: "type", next: "@embed", nextEmbedded: "fetch" }
-//       ],
-//       [/^%%/, { token: "@rematch", next: "@pop" }]
-//     ],
-//     pyDelimLine: [
-//       [/["":{}} \w]*$/, { token: "type", next: "@embed", nextEmbedded: "py" }],
-//       [/^%%/, { token: "@rematch", next: "@pop" }]
-//     ],
-//     mdDelimLine: [
-//       [/["":{}} \w]*$/, { token: "type", next: "@embed", nextEmbedded: "md" }],
-//       [/^%%/, { token: "@rematch", next: "@pop" }]
-//     ],
-//     cssDelimLine: [
-//       [/["":{}} \w]*$/, { token: "type", next: "@embed", nextEmbedded: "css" }],
-//       [/^%%/, { token: "@rematch", next: "@pop" }]
-//     ],
-//     rawDelimLine: [
-//       [/["":{}} \w]*$/, { token: "type", next: "@embed", nextEmbedded: "raw" }],
-//       [/^%%/, { token: "@rematch", next: "@pop" }]
-//     ],
-
-//     embed: [[/^%%/, { token: "@rematch", next: "@pop", nextEmbedded: "@pop" }]]
-//   }
-// };
-
-export function makeLanguage(embedModes) {
+export function compileIomdLanguageDef(embedModes) {
   const language = {
     ignoreCase: true,
     tokenizer: {
@@ -147,12 +73,7 @@ export function makeLanguage(embedModes) {
 
 const embedModes = { js: {}, md: {}, py: {}, css: {}, fetch: {} };
 
-export const language = makeLanguage(embedModes);
-
-// console.log("lang diff", difference(languageLong, language));
-
-// console.log("languageLong", languageLong);
-console.log("language", language);
+export const language = compileIomdLanguageDef(embedModes);
 
 export const conf = {
   // eslint-disable-next-line
@@ -199,8 +120,8 @@ export const conf = {
   // ],
   // folding: {
   //   markers: {
-  //     start: new RegExp("^\\s*<!--\\s*#region\\b.*-->"),
-  //     end: new RegExp("^\\s*<!--\\s*#endregion\\b.*-->")
+  //     start: new RegExp("^%%"),
+  //     end: new RegExp("^%%")
   //   }
   // }
 };
