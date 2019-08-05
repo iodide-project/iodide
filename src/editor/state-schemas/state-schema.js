@@ -9,8 +9,10 @@ export const FETCH_CHUNK_TYPES = [
   "text",
   "blob",
   "json",
-  "arrayBuffer"
+  "arrayBuffer",
+  "plugin"
 ];
+
 export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json", "arrayBuffer"];
 
 const appMessageSchema = {
