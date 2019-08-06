@@ -115,7 +115,10 @@ class IomdEditorUnconnected extends React.Component {
       formatOnType: true,
       wrappingIndent: "same",
       lineNumbersMinChars: 3,
-      renderLineHighlight: "gutter"
+      renderLineHighlight: "gutter",
+      minimap: {
+        enabled: false
+      }
     });
     window.MONACO_EDITOR = this.editor;
 
