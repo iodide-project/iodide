@@ -1,16 +1,16 @@
-The Iodide authentication system is designed to support a number of
-configurations and scenarios, both as an internal system and as a
-public web site. In either case, it is chiefly designed to delegate
-authentication and identity access for users to trusted third parties --
-Iodide does not hold or manage any credentials itself.
+The Iodide authentication system is designed to support two use cases:
+an internal system for use by organizations (e.g. Mozilla) and a public web
+site. In either case, it is chiefly designed to delegate authentication and
+identity access for users to trusted third parties -- Iodide does not hold or
+manage any credentials itself.
 
 In the case of a public facing system, no permissions or authentication are
 required to *view* any resource provided the API. This currently includes
 lists of notebooks, notebooks themselves (and their revisions), and files.
 Write access is currently limited to the user which created the resource.
 
-On an internal system, read access is also limited to those users authenticated
-and identified by the system.
+On an internal system, read access is also limited to those users with
+an authenticated session and/or authentication token.
 
 There are three ways a user may identify themselves to the Iodide system:
 
@@ -30,8 +30,8 @@ openidc middleware).
 
 GitHub authentication is fairly straightforward, simply using the existing
 facilities provided by [python social auth](https://python-social-auth.readthedocs.io/en/latest/).
-Configuration on the server may be accomplished simply by specifying
-environment variables corresponding to a GitHub key and secret.
+Configuration on the server may be accomplished simply by [specifying
+environment variables](server-admin-overview.md#important-configuration-variables) corresponding to a GitHub key and secret.
 
 ### OpenIDC
 
@@ -39,14 +39,17 @@ If using OpenIDC, it is assumed that a web server fronting the Django
 system will authenticate any request coming in and provide an HTTP
 header to identify the user (`HTTP_X_FORWARDED_USER`).
 
-To allow a peristent connection to API endpoints without triggering expiry, if
+By default, Mozilla's OpenIDC service will expire a user's session after
+a short period of inactivity. To allow an Iodide notebook to continue
+to access the API (e.g. to allow the user to continue saving their changes),
+as well as allowing headless services to access the iodide server, if
 OpenIDC is configured you may specify a set of regular expressions (via the
 `OPENIDC_AUTH_WHITELIST` configuration variable) where this checking is
-skipped, and we fall back to the jwt and/or authtoken middleware. By default
-just `/api/` is included.
+skipped, and we fall back to the jwt and/or authtoken middleware (which has
+its own expiry and renewal policy). By default just `/api/` is included.
 
 It is critical that you do not leave any endpoints open without
-authentication and specification in the OPENIDC_AUTH_WHITELIST, as this will
+authentication and specification in the `OPENIDC_AUTH_WHITELIST`, as this will
 allow any client to arbitrarily create any number of users on the system.
 
 ## JWT-token based authentication
