@@ -2,9 +2,9 @@
 
 ## Variable declarations and scope ("why aren't my variables visible in the global scope?")
 
-If you declare variables in a Javascript code chunk using the `let` or `const` keyword, those variables will not be accesible to code in other `js` chunks, not will those variables be visible in the environment pane. Variables declared using `var`, however, will not suffer this restriction, and neither will variables defined without an explicit declaration keyword.
+If you declare variables in a JavaScript code chunk using the `let` or `const` keyword, those variables will not be accesible to code in other `js` chunks, not will those variables be visible in the environment pane. Variables declared using `var`, however, will not suffer this restriction, and neither will variables defined without an explicit declaration keyword.
 
-This is a result of Javascript's somewhat arcane scoping rules and the way that Iodide executes javascript code, which uses Javascript's `eval` functionality:
+This is a result of JavaScript's somewhat arcane scoping rules and the way that Iodide executes javascript code, which uses JavaScript's `eval` functionality:
 - variables defined _without_ a declaration are available in the _global scope_.
 - variables defined with a `var` declaration are available within the nearest enclosing _function scope_. JS `eval` does not create a function scope, and because Iodide evaluates code in the global scope, variables created at the top level of a code chuck with a `var` declaration are available in the global scope.
 - variables defined with `let` and `const` are avaible within the nearest enclosing _block scope_. JS `eval` _does_ create a block scope, so variables created within a code chunk using these declarations will not be usable outside of the chunk.

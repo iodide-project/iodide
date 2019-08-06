@@ -3,7 +3,7 @@
 export const jsLanguageDefinition = {
   pluginType: "language",
   languageId: "js",
-  displayName: "Javascript",
+  displayName: "JavaScript",
   codeMirrorMode: "javascript",
   codeMirrorModeLoaded: true,
   module: "window",

@@ -56,7 +56,7 @@ Some guidelines that we tend to follow:
 
 ### Linting
 
-We rely on linting as a way of standardizing low-level style choices in the code. For the front-end, we use [Airbnb's Javascript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react), as well as [Prettier](https://pretter.io). On the back-end, we use [Black](https://black.readthedocs.io/en/stable/) and [isort](https://github.com/timothycrosley/isort). It is recommended to configure your editor to use the above linting tools.
+We rely on linting as a way of standardizing low-level style choices in the code. For the front-end, we use [Airbnb's JavaScript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react), as well as [Prettier](https://pretter.io). On the back-end, we use [Black](https://black.readthedocs.io/en/stable/) and [isort](https://github.com/timothycrosley/isort). It is recommended to configure your editor to use the above linting tools.
 
 The use of a linter in your development worflow means you can focus on the higher-level aspects of style. As such we will likely not accept any PRs that fail linting. If this feels like a hassle, we'd recommend roughly following the Development Workflow below so you don't have to sweat this detail!
 
