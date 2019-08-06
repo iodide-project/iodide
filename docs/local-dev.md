@@ -1,5 +1,13 @@
 # Setting up a local development environment
 
+This document covers the nuts and bolts of setting up a development environment, but be sure to review our [main contribution page](contributing.md) for more general information.
+
+## Contribution Prerequisites
+
+- You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/). If you want to work on the server, you will also need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
+- You should have some familiarity with React, Redux, modern ECMAScript, or be willing to learn.
+- You should have some familiarity with how Git works, or be willing ot learn.
+
 ## Installing dependencies
 
 Run `npm install` after cloning this repository.
