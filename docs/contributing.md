@@ -66,20 +66,6 @@ The use of a linter in your development worflow means you can focus on the highe
 - You should have some familiarity with React, Redux, modern ECMAScript, or be willing to learn.
 - You should have some familiarity with how Git works, or be willing ot learn.
 
-## Development Workflow
-
-`npm run lint` will lint everything in `src/`. Please make sure all your contributions pass the linter. Running `make lint` will check for linting errors for code in `server/` and `make lintfix` will fix those errors.
-
-`npm run start` writes development versions of the Iodide app resources to `dev/`. To run your dev notebook, just open the file `dev/iodide.dev.html` in your browser. All changes to the code will be detected and bundled into `dev/`.
-
-In dev mode, resource paths are set to be relative to the `dev/` directory. Thus, when you export a notebook from a dev notebook, you need to be sure to save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js/css/font files.
-
-`npm run build`  will write deployable versions of the Iodide app resources to `prod/`. This builds just once, and does not watch your files for changes.
-
-The files built in prod mode have resource paths set to fixed web addresses, not relative paths (this is a required for exported notebooks to be portable). This means that if you open the file `prod/iodide.${VERSION}.html` in your browser, it will not load the js/css/font resources located in `prod/`, it will load them from the hard-coded web address (if they exist at that location). Once the js/css/fonts are uploaded to the matching URI, the file `prod/iodide.${VERSION}.html` (as well as any notebook exported from it) should run correctly from any local filesystem location or web address.
-
-`npm test` runs the test suite. If you are hoping to submit a PR for your changes, it is vital that the test suite passes.
-
 ### Landing a PR!
 
 We're excited to have you land your first PR! Some key guidelines for having a PR accepted:
