@@ -54,6 +54,7 @@ export function createNewNotebookOnServer() {
           revision_id: notebook.latest_revision.id,
           revision_is_latest: true,
           serverSaveStatus: "OK",
+          tryItMode: false,
           user_can_save: true,
           username: state.userData.name // in case this notebook was forked
         })
