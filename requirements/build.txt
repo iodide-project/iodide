@@ -126,9 +126,9 @@ python-dateutil==2.8.0 \
 python3-openid==3.1.0 \
     --hash=sha256:0086da6b6ef3161cfe50fb1ee5cceaf2cda1700019fda03c2c5c440ca6abe4fa \
     --hash=sha256:628d365d687e12da12d02c6691170f4451db28d6d68d050007e4a40065868502
-pytz==2019.1 \
-    --hash=sha256:303879e36b721603cc54604edcac9d20401bdbe31e1e4fdee5b9f98d5d31dfda \
-    --hash=sha256:d747dd3d23d77ef44c6a3526e274af6efeb0a6f1afd5a69ba4d5be4098c8e141
+pytz==2019.2 \
+    --hash=sha256:c894d57500a4cd2d5c71114aaab77dbab5eabd9022308ce5ac9bb93a60a6f0c7 \
+    --hash=sha256:26c0b32e437e54a18161324a2fca3c4b9846b74a8dccddd843113109e1116b32
 requests-oauthlib==1.2.0 \
     --hash=sha256:bd6533330e8748e94bf0b214775fed487d309b8b8fe823dc45641ebcd9a32f57 \
     --hash=sha256:d3ed0c8f2e3bbc6b344fa63d6f933745ab394469da38db16bdddb461c7e25140 \
