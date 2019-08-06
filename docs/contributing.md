@@ -10,6 +10,10 @@ We do our best to keep `master` in a non-breaking state, with tests always passi
 
 We keep a file, [CHANGELOG.md](https://github.com/iodide-project/iodide/blob/master/CHANGELOG.md), outlining changes to Iodide in each release. We like to think of the audience for changelogs as non-developers who primarily run the latest stable. So the change log will primarily outline user-visible changes such as new features and deprecations, and will exclude things that might otherwise be inconsequential to the end user experience, such as infrastructure or refactoring.
 
+### Setting up a development environment
+
+[Detailed instruction available here.](local-dev.md)
+
 ## Bugs & Issues
 
 We use [Github Issues](https://github.com/iodide-project/iodide/issues) for announcing and discussing bugs and features. Use [this link](https://github.com/iodide-project/iodide/issues/new) to report an bug or issue. We provide a template to give you a guide for how to file optimally. If you have the chance, please search the existing issues before reporting a bug. It's possible that someone else has already reported your error. This doesn't always work, and sometimes it's hard to know what to search for, so consider this extra credit. We won't mind if you accidentally file a duplicate report.
@@ -59,12 +63,6 @@ Some guidelines that we tend to follow:
 We rely on linting as a way of standardizing low-level style choices in the code. For the front-end, we use [Airbnb's JavaScript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react), as well as [Prettier](https://pretter.io). On the back-end, we use [Black](https://black.readthedocs.io/en/stable/) and [isort](https://github.com/timothycrosley/isort). It is recommended to configure your editor to use the above linting tools.
 
 The use of a linter in your development worflow means you can focus on the higher-level aspects of style. As such we will likely not accept any PRs that fail linting. If this feels like a hassle, we'd recommend roughly following the Development Workflow below so you don't have to sweat this detail!
-
-## Contribution Prerequisites
-
-- You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/). If you want to work on the server, you will also need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
-- You should have some familiarity with React, Redux, modern ECMAScript, or be willing to learn.
-- You should have some familiarity with how Git works, or be willing ot learn.
 
 ### Landing a PR!
 
