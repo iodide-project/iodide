@@ -156,7 +156,6 @@ class IomdEditorUnconnected extends React.Component {
         stickiness: decorationsDontGrow
       }
     }));
-    // console.log({ newDecorations });
     iomdDelimLineDecorationIds = this.editor.deltaDecorations(
       [],
       newDecorations
