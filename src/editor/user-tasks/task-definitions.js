@@ -3,6 +3,11 @@ import ExternalLinkTask from "./external-link-task";
 import { store } from "../store";
 import * as actions from "../actions/actions";
 import { evaluateText, evaluateNotebook } from "../actions/eval-actions";
+import {
+  toggleFileModal,
+  toggleHelpModal,
+  toggleHistoryModal
+} from "../actions/modal-actions";
 
 // FIXME: remove requirement to import store in this file by attaching
 // keypress handling to store in initializeDefaultKeybindings() --
@@ -92,7 +97,7 @@ tasks.clearVariables = new UserTask({
 tasks.toggleFileModal = new UserTask({
   title: "Manage Files",
   callback() {
-    dispatcher.toggleFileModal();
+    store.dispatch(toggleFileModal());
   }
 });
 
@@ -100,7 +105,7 @@ tasks.toggleHistoryModal = new UserTask({
   title: "View Notebook History",
   menuTitle: "History",
   callback() {
-    dispatcher.toggleHistoryModal();
+    store.dispatch(toggleHistoryModal());
   }
 });
 
@@ -111,7 +116,7 @@ tasks.toggleHelpModal = new UserTask({
   displayKeybinding: "Alt+h",
   preventDefaultKeybinding: true,
   callback() {
-    dispatcher.toggleHelpModal();
+    store.dispatch(toggleHelpModal());
   }
 });
 

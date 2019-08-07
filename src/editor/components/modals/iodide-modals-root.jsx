@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import Modal from "@material-ui/core/Modal";
 
-import { setModalState } from "../../actions/actions";
+import { closeModals } from "../../actions/modal-actions";
 
 import HelpModal from "./help-modal";
 import HistoryModal from "./history-modal";
@@ -52,7 +52,7 @@ export function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  closeModals: () => setModalState("MODALS_CLOSED")
+  closeModals
 };
 
 export default connect(
