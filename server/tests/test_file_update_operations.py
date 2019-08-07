@@ -142,8 +142,8 @@ def test_post_file_update_operation(fake_user, test_notebook, test_file_source, 
         assert file_update_operation.file_source_id == test_file_source.id
         assert file_update_operation.status == FileUpdateOperation.PENDING
         assert file_update_operation.scheduled.replace(tzinfo=None) == datetime.datetime.now()
-        assert file_update_operation.started == None
-        assert file_update_operation.ended == None
+        assert file_update_operation.started is None
+        assert file_update_operation.ended is None
 
         # verify that the expected task has been queued
         mock_task.assert_has_calls([call(args=[file_update_operation.id])])

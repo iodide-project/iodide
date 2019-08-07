@@ -9,7 +9,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from ..base.models import User
-from ..files.models import File, FileSource, FileUpdateOperation
+from ..files.models import File
 from ..settings import EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH, SITE_URL
 from ..views import get_user_info_dict
 from .models import Notebook, NotebookRevision
