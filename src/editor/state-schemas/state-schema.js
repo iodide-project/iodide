@@ -1,6 +1,7 @@
 import { languageDefinitions } from "./language-definitions";
 import { historySchema } from "./history-schema";
 
+// FIXME: break out enums to be in a separate file.
 export const NONCODE_EVAL_TYPES = ["css", "md", "meta", "raw"];
 export const RUNNABLE_CHUNK_TYPES = ["plugin", "fetch"];
 export const FETCH_CHUNK_TYPES = [
@@ -255,7 +256,7 @@ export const stateProperties = {
   modalState: {
     type: "string",
     enum: ["HELP_MODAL", "HISTORY_MODAL", "FILE_MODAL", "MODALS_CLOSED"],
-    default: "FILE_MODAL"
+    default: "MODALS_CLOSED"
   },
   kernelState: {
     type: "string",

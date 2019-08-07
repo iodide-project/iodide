@@ -9,8 +9,8 @@ import Tab from "@material-ui/core/Tab";
 import { getFileSources as getFileSourcesAction } from "../../../actions/file-source-actions";
 
 import { ModalContainer } from "../modal-container";
-import ManageFiles from "./manage-files";
-import ManageFileSources from "./manage-file-sources";
+import ManageFiles from "./manage-files/manage-files";
+import ManageFileSources from "./manage-file-sources/manage-file-sources";
 import THEME from "../../../../shared/theme";
 
 const FileModalUnconnected = ({ getFileSources }) => {

@@ -19,11 +19,6 @@ export default (state, action) => {
   // but should be considered a high priority.
   switch (action.type) {
     case "UPDATE_FILE_SOURCES": {
-      if (!Array.isArray(action.fileSources))
-        throw Error(
-          `UPDATE_FILE_SOURCES: expected fileSources to be of type array, instead got ${typeof action.fileSources}`
-        );
-
       const fileSources = produceFileSources(action.fileSources);
       return Object.assign({}, state, { fileSources });
     }
