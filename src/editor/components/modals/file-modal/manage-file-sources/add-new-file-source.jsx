@@ -87,7 +87,7 @@ const hasAllowedProtocol = url => {
   });
 };
 
-export function addNewFileSourceUnconnected({ addNewFileSource }) {
+export function addNewFileSourceUnconnected({ addFileSource }) {
   const [sourceState, updateSourceState] = useState("");
   const [filenameState, updateFilenameState] = useState("");
   const [statusVisible, updateStatusVisibility] = useState(false);
@@ -116,7 +116,7 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
     } else {
       let request;
       try {
-        request = await addNewFileSource(
+        request = await addFileSource(
           sourceState,
           filenameState,
           updateIntervalState
@@ -197,23 +197,10 @@ export function addNewFileSourceUnconnected({ addNewFileSource }) {
 }
 
 addNewFileSourceUnconnected.propTypes = {
-  addNewFileSource: PropTypes.func
+  addFileSource: PropTypes.func
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    addNewFileSource: async (
-      sourceURL,
-      destinationFilename,
-      updateInterval
-    ) => {
-      return dispatch(
-        addFileSource(sourceURL, destinationFilename, updateInterval)
-      );
-    }
-  };
-}
 export default connect(
   undefined,
-  mapDispatchToProps
+  { addFileSource }
 )(addNewFileSourceUnconnected);

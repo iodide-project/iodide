@@ -8,9 +8,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import DeleteModal from "../../../../../server/components/delete-modal";
 import {
-  deleteFileSource as deleteFileSourceAction,
-  createFileUpdateOperation as createFileUpdateOperationAction,
-  getFileSources as getFileSourcesAction
+  deleteFileSource,
+  createFileUpdateOperation,
+  getFileSources
 } from "../../../../actions/file-source-actions";
 
 import {
@@ -259,20 +259,7 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    deleteFileSource: fileSourceID =>
-      dispatch(deleteFileSourceAction(fileSourceID)),
-    createFileUpdateOperation: fileSourceID =>
-      dispatch(createFileUpdateOperationAction(fileSourceID)),
-    getFileSources: () => {
-      // run this every time we open the manage file sources tab specifically.
-      dispatch(getFileSourcesAction());
-    }
-  };
-}
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  { deleteFileSource, createFileUpdateOperation, getFileSources }
 )(FileSourceListUnconnected);
