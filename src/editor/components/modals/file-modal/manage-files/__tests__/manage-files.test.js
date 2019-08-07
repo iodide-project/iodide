@@ -1,4 +1,4 @@
-import { FileModalUnconnected, mapStateToProps } from "../";
+import { FileModalUnconnected, mapStateToProps } from "../manage-files";
 import Body from "../body";
 import FileList from "../file-list";
 
