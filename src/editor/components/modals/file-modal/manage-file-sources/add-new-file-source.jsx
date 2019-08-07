@@ -200,12 +200,6 @@ addNewFileSourceUnconnected.propTypes = {
   addNewFileSource: PropTypes.func
 };
 
-function mapStateToProps(state) {
-  return {
-    filesSources: state.notebookInfo.filesSources
-  };
-}
-
 function mapDispatchToProps(dispatch) {
   return {
     addNewFileSource: async (
@@ -220,6 +214,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps
 )(addNewFileSourceUnconnected);

@@ -1,10 +1,5 @@
 import fileSourceReducer from "../file-source-reducer";
 
-// FIXME: we need to begin returning error states for reducers.
-// As of rigiht now, we have no way of declaring that there was an error.
-// for now, I am going to just have the reducer tested here throw
-// an error, and force the app to do something about it.
-
 const initialState = () => ({
   fileSources: [
     {

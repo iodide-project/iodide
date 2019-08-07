@@ -4,6 +4,7 @@ import AddNewFileSource from "./add-new-file-source";
 import FileSourceList from "./file-source-list";
 
 const FileSourceContainer = styled.div`
+  /* this css variable is used in the children of FileSourceContainer */
   --marg: 20px;
   padding: var(--marg);
   overflow: auto;
