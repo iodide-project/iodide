@@ -76,6 +76,9 @@ function unpackMonacoSelection(s, monacoModel) {
   };
 }
 
+const decorationsDontGrow =
+  monaco.editor.TrackedRangeStickiness.NeverGrowsWhenTypingAtEdges;
+
 let iomdDelimLineDecorationIds = [];
 
 class IomdEditorUnconnected extends React.Component {
@@ -145,9 +148,13 @@ class IomdEditorUnconnected extends React.Component {
       }
     });
 
-    const newDecorations = this.props.delimLines.map(line => ({
-      range: new monaco.Range(line, 1, line, 1),
-      options: { isWholeLine: true, className: ".iomd-delim-line" }
+    const newDecorations = this.props.delimLines.map(delimLineNum => ({
+      range: new monaco.Range(delimLineNum, 1, delimLineNum, 1),
+      options: {
+        isWholeLine: true,
+        className: ".iomd-delim-line",
+        stickiness: decorationsDontGrow
+      }
     }));
     // console.log({ newDecorations });
     iomdDelimLineDecorationIds = this.editor.deltaDecorations(
@@ -188,7 +195,11 @@ class IomdEditorUnconnected extends React.Component {
     if (delimLines.join(",") !== prevProps.delimLines.join(",")) {
       const newDecorations = delimLines.map(line => ({
         range: new monaco.Range(line, 1, line, 1),
-        options: { isWholeLine: true, className: ".iomd-delim-line" }
+        options: {
+          isWholeLine: true,
+          className: ".iomd-delim-line",
+          stickiness: decorationsDontGrow
+        }
       }));
       this.editor.deltaDecorations(iomdDelimLineDecorationIds, newDecorations);
     }
