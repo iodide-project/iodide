@@ -141,7 +141,6 @@ def test_update_file_source(
         reverse("file-sources-detail", kwargs={"pk": test_file_source.id}), file_source_update_blob
     )
     assert resp.status_code == 200
-    # fixme: verify return value
     assert FileSource.objects.count() == 1
     file_source = FileSource.objects.first()
     assert file_source.notebook_id == test_notebook.id
