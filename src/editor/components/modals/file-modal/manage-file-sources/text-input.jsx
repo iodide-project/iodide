@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const TextInputContainer = styled.div``;
 const InputElement = styled.input`
@@ -11,10 +12,10 @@ const InputElement = styled.input`
   width: 100%;
 `;
 
-const Label = styled.label`
-  display: block;
-  font-size: 13px;
-`;
+// const Label = styled.label`
+//   display: block;
+//   font-size: 13px;
+// `;
 
 function TextInput({ label, value, onKey }) {
   const handleChange = evt => {
@@ -23,7 +24,7 @@ function TextInput({ label, value, onKey }) {
   return (
     <TextInputContainer>
       <InputElement type="text" value={value} onChange={handleChange} />
-      <Label>{label}</Label>
+      <FormHelperText>{label}</FormHelperText>
     </TextInputContainer>
   );
 }
