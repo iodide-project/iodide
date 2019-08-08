@@ -2,6 +2,7 @@ import {
   addConsoleEntryInEditor,
   updateConsoleEntryInEditor
 } from "./editor-message-senders";
+import { IODIDE_EVALUATION_RESULTS } from "../iodide-evaluation-results";
 
 export function loadLanguagePlugin(pluginData, historyId) {
   let value;
@@ -63,13 +64,21 @@ export function loadLanguagePlugin(pluginData, historyId) {
           });
           delete window.languagePluginUrl;
           resolve();
-        }).catch(err => {
+        }).catch(error => {
           updateConsoleEntryInEditor({
             historyId,
             content: value,
             level: "ERROR"
           });
-          reject(err);
+
+          const historyIdForError = addConsoleEntryInEditor({
+            historyType: "CONSOLE_OUTPUT",
+            level: "ERROR"
+          });
+          IODIDE_EVALUATION_RESULTS[historyIdForError] = error;
+
+          // sendStatusResponseToEditor("ERROR", evalId);
+          reject(error);
         });
       });
 

@@ -132,7 +132,7 @@ const validFetchLines = [
     line: "css: files/company-report-styles.css  // comment",
     result: {
       fetchType: "css",
-      filePath: "files/company-report-styles.css",
+      filePath: "company-report-styles.css",
       isRelPath: true
     }
   },

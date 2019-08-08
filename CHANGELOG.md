@@ -1,5 +1,19 @@
 # (Unreleased; add upcoming change notes here)
 
+- removes iodide.environment API
+- Add back local-only dev mode using command "npm run simple-serve"
+- Iodide docker container no longer hardcodes server hostnames, can
+  reuse in multiple server environments (#1943)
+- Hide "unsaved changes" in revision browser if no unsaved changes (#2046)
+- Show revision, docs, contribute links even on non-public sites
+
+# 0.10.0 (2019-07-15)
+
+- Overhauls Iodide's data formatters to cover more data types, allow folding of long results, and many other enhancements
+- Deprecates the need for the `files/` prefix in fetch chunks.
+- Introduces the `plugin` fetch type in fetch chunks.
+- No longer swallowing errors in plugin loader code (fixes #2010)
+
 # 0.9.0 (2019-07-03)
 
 - Reduce the image size for small user icons, to improve loading times (fixes #1711)

@@ -36,7 +36,7 @@ When editing an iodide notebook, the content of your notebook should be saved at
 
 Your notebook will have a link associated with it - just look in your browser’s url bar. At any time, you can share that link with others, and they’ll be able to view, run, and fork your notebook.
 
-By default, if you share the editor link (which looks like [https://extremely-alpha.iodide.io/notebooks/151/](https://extremely-alpha.iodide.io/notebooks/151/)), anyone who opens it will be brought to the editor. If you append `?viewMode=report` (so it looks like this - [https://extremely-alpha.iodide.io/notebooks/151/?viewMode=report](https://extremely-alpha.iodide.io/notebooks/151/?viewMode=report)) the notebook will open as a report, which automatically runs all the code and renders the Markdown when the page loads. At any time, a reader can click the “EXPLORE” button on the top right to jump back into the editor view and dig deeper.
+By default, if you share the editor link (which looks like [https://alpha.iodide.io/notebooks/151/](https://extremely-alpha.iodide.io/notebooks/151/)), anyone who opens it will be brought to the editor. If you append `?viewMode=report` (so it looks like this - [https://alpha.iodide.io/notebooks/151/?viewMode=report](https://alpha.iodide.io/notebooks/151/?viewMode=report)) the notebook will open as a report, which automatically runs all the code and renders the Markdown when the page loads. At any time, a reader can click the “EXPLORE” button on the top right to jump back into the editor view and dig deeper.
 
 At this time, we don’t have a way of setting viewing permissions on notebooks, but will in the future.
 

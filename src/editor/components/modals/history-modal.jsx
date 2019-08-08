@@ -52,14 +52,6 @@ class HistoryModalUnconnected extends React.Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    getNotebookRevisionList: () => {
-      dispatch(getNotebookRevisionList());
-    }
-  };
-}
-
 export function mapStateToProps(state) {
   const notebookHistory = state.notebookHistory || {};
   const { errorGettingRevisionList, revisionListFetchStatus } = notebookHistory;
@@ -72,5 +64,5 @@ export function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  { getNotebookRevisionList } // mapDispatchToProps shorthand
 )(HistoryModalUnconnected);

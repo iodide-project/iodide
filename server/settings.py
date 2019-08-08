@@ -35,9 +35,10 @@ DEBUG = env.bool("IODIDE_SERVER_DEBUG", default=False)
 
 SITE_URL = env("SERVER_URI", default="http://localhost:8000/")
 SITE_HOSTNAME = furl(SITE_URL).host
-ALLOWED_HOSTS = [SITE_HOSTNAME]
-APP_VERSION_STRING = env.str("APP_VERSION_STRING", "dev")
 EVAL_FRAME_ORIGIN = env.str("EVAL_FRAME_ORIGIN", SITE_URL)
+EVAL_FRAME_HOSTNAME = furl(EVAL_FRAME_ORIGIN).host
+ALLOWED_HOSTS = list(set([SITE_HOSTNAME, EVAL_FRAME_HOSTNAME]))
+APP_VERSION_STRING = env.str("APP_VERSION_STRING", "dev")
 
 # Define URI redirects.
 # Is a ;-delimited list of redirects, where each section is of the form
@@ -113,6 +114,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if EVAL_FRAME_HOSTNAME != SITE_HOSTNAME:
+    MIDDLEWARE.append("server.notebooks.middleware.NotebookEvalFrameMiddleware")
 
 if DOCKERFLOW_ENABLED:
     INSTALLED_APPS.append("dockerflow.django")
@@ -211,7 +215,7 @@ USE_TZ = True
 # Files in this directory will be served by WhiteNoise at the site root.
 WHITENOISE_ROOT = os.path.join(ROOT, "build")
 STATIC_ROOT = os.path.join(ROOT, "static")
-STATIC_URL = EVAL_FRAME_ORIGIN
+STATIC_URL = SITE_URL
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "server", "static"),)
 
 # Create hashed+gzipped versions of assets during collectstatic,

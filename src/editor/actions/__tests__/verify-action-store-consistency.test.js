@@ -92,18 +92,6 @@ describe("make sure action creators leave store in a consitent state", () => {
   it("toggleEditorLink", () => {
     expect(() => store.dispatch(actions.clearVariables())).not.toThrow();
   });
-
-  it("saveEnvironment", () => {
-    expect(() =>
-      store.dispatch(actions.saveEnvironment({ a: ["string", "foo"] }, true))
-    ).not.toThrow();
-  });
-
-  it("saveEnvironment", () => {
-    expect(() =>
-      store.dispatch(actions.saveEnvironment({ a: ["string", "foo"] }, false))
-    ).not.toThrow();
-  });
 });
 
 describe("setKernelState", () => {

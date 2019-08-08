@@ -10,6 +10,15 @@ from .models import File, FileSource, FileUpdateOperation
 from .serializers import FileSourceSerializer, FilesSerializer, FileUpdateOperationSerializer, FileSourceDetailSerializer, FileSourceDetailWithoutURLSerializer
 from .tasks import execute_file_update_operation
 from ..notebooks.models import Notebook
+from .models import File, FileSource, FileUpdateOperation
+from .serializers import (
+    FileSourceDetailSerializer,
+    FileSourceDetailWithoutURLSerializer,
+    FileSourceSerializer,
+    FilesSerializer,
+    FileUpdateOperationSerializer,
+)
+from .tasks import execute_file_update_operation
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -85,7 +94,6 @@ class NotebookFileSourceViewSet(viewsets.ModelViewSet):
         if filter_by_id:
             return base.filter(id__in=filter_by_id)
         return base
-    
     queryset = FileSource.objects.all()
 
 
@@ -109,8 +117,6 @@ class FileSourceViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         if self.request.user != serializer.validated_data["notebook"].owner:
             raise PermissionDenied
-
-        # fixme: validate that interval is > 24 hours (or whatever)
 
         serializer.save()
 

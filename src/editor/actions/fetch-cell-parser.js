@@ -1,14 +1,4 @@
-export function isValidVarname(varName) {
-  if (varName !== varName.replace(/;/g, "")) {
-    return false;
-  }
-  try {
-    eval(`var ${varName};`); // eslint-disable-line no-eval
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
+import { isValidIdentifier } from "../../shared/utils/is-valid-js-identifier";
 
 export function isRelPath(path) {
   // super dumb check -- just see if it has http or https at the front
@@ -18,17 +8,34 @@ export function isRelPath(path) {
   );
 }
 
+// this supports the legacy use of the "files/" prefix in fetch cells
+const extractFileNameFromLocalFilePath = filepath => {
+  if (filepath.slice(0, 6) === "files/") {
+    // FIXME: this warning should be printed to the *Iodide* console when that ability exists
+    console.warn(`The \`files\` prefix is not required when fetching files saved to the Iodide server.
+This prefix will be deprecated in a future version`);
+    return filepath.slice(6);
+  }
+  return filepath;
+};
+
 export function parseFileLine(fetchCommand) {
-  return { filePath: fetchCommand, isRelPath: isRelPath(fetchCommand) };
+  const isRel = isRelPath(fetchCommand);
+  const filePath = isRel
+    ? extractFileNameFromLocalFilePath(fetchCommand)
+    : fetchCommand;
+  return { filePath, isRelPath: isRel };
 }
 
 export function parseAssignmentCommand(fetchCommand) {
   const varName = fetchCommand.substring(0, fetchCommand.indexOf("=")).trim();
-  if (!isValidVarname(varName)) {
+  if (!isValidIdentifier(varName)) {
     return { error: "INVALID_VARIABLE_NAME" };
   }
-  const filePath = fetchCommand.substring(fetchCommand.indexOf("=") + 1).trim();
-  return { varName, filePath, isRelPath: isRelPath(filePath) };
+  const filePath = parseFileLine(
+    fetchCommand.substring(fetchCommand.indexOf("=") + 1).trim()
+  );
+  return Object.assign(filePath, { varName });
 }
 
 export function commentOnlyLine(line) {
@@ -76,6 +83,7 @@ export function parseFetchCellLine(line) {
         );
       case "js":
       case "css":
+      case "plugin":
         return Object.assign({}, { fetchType }, parseFileLine(fetchCommand));
       default:
         return { error: "INVALID_FETCH_TYPE" };

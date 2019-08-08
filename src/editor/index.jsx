@@ -35,7 +35,6 @@ import { initializeDefaultKeybindings } from "./initialization/keybindings";
 import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
 import "./initialization/initialize-codemirror-loadmode";
-import "./initialization/initialize-dom";
 import { restoreLocalAutosave } from "./actions/local-autosave-actions";
 import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";

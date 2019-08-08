@@ -1,4 +1,4 @@
-# IOMD format 
+# IOMD format
 
 ## What is IOMD?
 
@@ -15,7 +15,7 @@ below.
 
 Representing Iodide notebooks with a flat text file makes them easy for both humans and computers to
 understand. For example, it works out of the box with standard software
-development tools like ``diff`` and GitHub pull requests.
+development tools like `diff` and GitHub pull requests.
 
 ## IOMD syntax and usage
 
@@ -23,19 +23,19 @@ As we said above, a IOMD file is just a plain text file with text blocks represe
 
 A few things to note about IOMD:
 
-* Iodide natively supports the following IOMD chunk types (described in more detail below):
-    * `%% js` for JavaScript source code
-    * `%% py` for Python source code
-    * `%% md` for Markdown
-    * `%% css` for CSS styles
-    * `%% fetch` for retrieving resources
-    * `%% plugin` for Iodide plugins
-    * `%% raw` for raw text (which Iodide will ignore)
-* A chunk started with just `%%` but no explicit chunk type will inherit its type of the chunk above it.
-* Any chunk with an unknown type will be ignored by Iodide.
-* Any blank lines above the first chunk specifier will be ignored.
-* Changes to `md` and `css` chunk are immediately applied to your Iodide Report; changes to all other chunk types must be evaluated to take effect (to evaluate, use keyboard shortcuts `ctrl+enter`/`shift+enter` or the play button in the toolbar while your cursor is within the chunk).
-* Chunks delimiters can have one or more flags that modify their behavior, for example starting a chunk with `%% js skipRunAll` will prevent that chunk from being run when you press the "Run Full Notebook" button or when the notebook is loaded in report view (which triggers a evaluation of the whole notebook). If a modifier flag is included, the chunk delimiter must include an explicit chunk type. See below for the list of available chunk modifier flags.
+- Iodide natively supports the following IOMD chunk types (described in more detail below):
+  - `%% js` for JavaScript source code
+  - `%% py` for Python source code
+  - `%% md` for Markdown
+  - `%% css` for CSS styles
+  - `%% fetch` for retrieving resources
+  - `%% plugin` for Iodide plugins
+  - `%% raw` for raw text (which Iodide will ignore)
+- A chunk started with just `%%` but no explicit chunk type will inherit its type of the chunk above it.
+- Any chunk with an unknown type will be ignored by Iodide.
+- Any blank lines above the first chunk specifier will be ignored.
+- Changes to `md` and `css` chunk are immediately applied to your Iodide Report; changes to all other chunk types must be evaluated to take effect (to evaluate, use keyboard shortcuts `ctrl+enter`/`shift+enter` or the play button in the toolbar while your cursor is within the chunk).
+- Chunks delimiters can have one or more flags that modify their behavior, for example starting a chunk with `%% js skipRunAll` will prevent that chunk from being run when you press the "Run Full Notebook" button or when the notebook is loaded in report view (which triggers a evaluation of the whole notebook). If a modifier flag is included, the chunk delimiter must include an explicit chunk type. See below for the list of available chunk modifier flags.
 
 A brief example will help to illustrate a few of the details and nuances.
 
@@ -49,7 +49,7 @@ _and it will be rendered as such whenever you change it!_
 %% js
 function bigSlowFunction(x){ ... }
 
-%% 
+%%
 // since the type of this chunk is not specified, it will take type
 // "js" from the chunk above.
 
@@ -105,17 +105,19 @@ The last value returned by your code chunk is displayed in the Iodide Console.
 
 ### CSS (`%% css`)
 
-CSS chunks allow you to input [CSS styles](https://developer.mozilla.org/en-US/docs/Web/CSS) to change the appearance of your report. Like Markdown chunks, these chunks are evaluated while you type, allowing you  get real time feedback as you make changes to your styles.
+CSS chunks allow you to input [CSS styles](https://developer.mozilla.org/en-US/docs/Web/CSS) to change the appearance of your report. Like Markdown chunks, these chunks are evaluated while you type, allowing you get real time feedback as you make changes to your styles.
 
 ### Fetch chunks (`%% fetch`)
 
 Fetch chunks provide a convenient way to load (i.e. to "fetch") external resources into the Iodide environment. For the time being, we support the loading:
-* Browserified JavaScript libraries (npm modules are not supported)
-* Style sheets
-* Data (from JSON, text, or blobs)
+
+- Browserified JavaScript libraries (npm modules are not supported)
+- Style sheets
+- Data (from JSON, text, or blobs)
 
 Each line in a fetch cell must specify:
-1. the "fetch type", one of `js`, `css`, `json`, `text`, `arrayBuffer`, or `blob`,
+
+1. the "fetch type", one of `js`, `css`, `json`, `text`, `arrayBuffer`, `blob`, or `plugin`
 2. the url from which the resource will be fetched
 
 Additionally, data fetches (`json`, `text` or `blob`) must specify the variable name into which the data will be stored.
@@ -137,12 +139,23 @@ All of the requested resources are downloaded in parallel (asynchronously), but 
 
 In the case of the `js` and `css` fetch types, the scripts and stylesheets are added to the environment as soon as they are available.
 
+The `plugin` type must point to a JSON file containing the same content a [plugin specification](language_plugins.md). It is a shorthand for placing that JSON content directly in a `%% plugin` cell.
+
 In the case of data fetches, which have the syntax `{TYPE}: {VAR_NAME} = {RESOURCE_URL}`, the data is loaded into the variable `VAR_NAME` within your JavaScript scope. The `TYPE` value ensures the following is returned into `VAR_NAME`:
 
 - `json` - returns the JSON object retrieved from the URL, parsed into a native JavaScript object,
 - `text` - returns a raw string,
 - `arrayBuffer` - returns an [Array Buffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) object,
 - `blob` - returns a [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) object
+
+It is also possible to use a fetch chunk to load files that you have saved to your Iodide notebook by way of the the [Iodide Files UI](workflows.md#getting-data-into-an-iodide-notebook) or the `iodide.file.save` function in the [Iodide API](api.md#iodidefile).
+
+To load a file uploaded to a notebook, you simply provide the name of the file you have previously uploaded (you don't need to supply a full URL). For example, if you have uploaded a file called `myData.json`, you could access it with the following fetch chunk:
+
+```
+%% fetch
+json: myData = myData.json
+```
 
 ### Pyodide (`%% py`)
 
@@ -167,4 +180,3 @@ Chunks delimiters can have one or more flags that modify their behavior. If a mo
 For the time being, the only flag available is `skipRunAll`, which will prevent the chunk from being run when you press the "Run Full Notebook" button or when the notebook is loaded in report view (which triggers a evaluation of the whole notebook).
 
 This is useful for workflows in which you write and run a computationally expensive code during your exploratory investigation, but you don't want that code to run automatically when a reader visits your notebook in report view. For example the top portion of your notebook might load and process data, upload a smaller intermediate dataset to the server, and then download only that small dataset to be displayed immediately in the report view. This workflow allows you to create a report that loads quickly for you readers, while preserving your exploratory code in place in your notebook.
-

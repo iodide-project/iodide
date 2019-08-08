@@ -1,4 +1,3 @@
-import CodeMirror from "codemirror";
 import {
   take,
   actionChannel,
@@ -16,22 +15,21 @@ import {
 import { setKernelState } from "../eval-actions";
 
 import {
-  addLoadingLanguageMsgToHistory,
   addInputToConsole,
-  addEvalTypeConsoleErrorToHistory,
-  addPluginParseErrorToHistory
+  addEvalTypeConsoleErrorToHistory
 } from "../console-message-actions";
 
-import messagePasserEditor from "../../../shared/utils/redux-to-port-message-passer";
-import generateRandomId from "../../../shared/utils/generate-random-id";
+import { evaluateFetch } from "./fetch-cell-saga";
+import { triggerEvalFrameTask } from "./eval-frame-sender";
+import {
+  languageReady,
+  languageNeedsLoading,
+  languageKnown,
+  loadKnownLanguage,
+  evaluateLanguagePlugin
+} from "./language-plugin-saga";
 
 // helpers
-
-export const languageReady = (state, lang) =>
-  Object.keys(state.loadedLanguages).includes(lang);
-
-export const languageKnown = (state, lang) =>
-  Object.keys(state.languageDefinitions).includes(lang);
 
 const evalTypeIsDefined = (state, lang) =>
   languageReady(state, lang) ||
@@ -39,47 +37,7 @@ const evalTypeIsDefined = (state, lang) =>
   RUNNABLE_CHUNK_TYPES.includes(lang) ||
   NONCODE_EVAL_TYPES.includes(lang);
 
-export const languageNeedsLoading = (state, lang) =>
-  languageKnown(state, lang) && !languageReady(state, lang);
-
-// sender
-
-export function sendTaskToEvalFrame(taskType, payload) {
-  const taskId = generateRandomId();
-  messagePasserEditor.postMessage(
-    taskType,
-    Object.assign({}, payload, { taskId })
-  );
-  return taskId;
-}
-
 // sagas
-export function* triggerEvalFrameTask(taskType, payload) {
-  const taskId = yield call(sendTaskToEvalFrame, taskType, payload);
-  const response = yield take(`EVAL_FRAME_TASK_RESPONSE-${taskId}`);
-  if (response.status === "ERROR") {
-    throw new Error(`EVAL_FRAME_TASK_RESPONSE-${taskId}-FAILED`);
-  }
-  return response.payload;
-}
-
-export function* loadLanguagePlugin(pluginData) {
-  yield call(triggerEvalFrameTask, "EVAL_LANGUAGE_PLUGIN", {
-    pluginData
-  });
-  // FIXME this empty function argument seems sketchy
-  yield call([CodeMirror, "requireMode"], pluginData.codeMirrorMode, () => {});
-  yield put({
-    type: "ADD_LANGUAGE_TO_EDITOR",
-    languageDefinition: pluginData
-  });
-}
-
-export function* loadKnownLanguage(pluginData) {
-  yield put(addLoadingLanguageMsgToHistory(pluginData.displayName));
-  yield call(loadLanguagePlugin, pluginData);
-}
-
 export function* updateUserVariables() {
   const { userDefinedVarNames } = yield call(
     triggerEvalFrameTask,
@@ -89,16 +47,6 @@ export function* updateUserVariables() {
     type: "UPDATE_USER_VARIABLES",
     userDefinedVarNames
   });
-}
-
-export function* evaluateLanguagePlugin(pluginText) {
-  try {
-    const pluginData = JSON.parse(pluginText);
-    yield call(loadLanguagePlugin, pluginData);
-  } catch (error) {
-    yield put(addPluginParseErrorToHistory(error.message));
-    throw error;
-  }
 }
 
 export function* evaluateByType(evalType, evalText, chunkId) {
@@ -117,7 +65,7 @@ export function* evaluateByType(evalType, evalText, chunkId) {
   if (evalType === "plugin") {
     yield call(evaluateLanguagePlugin, evalText);
   } else if (evalType === "fetch") {
-    yield call(triggerEvalFrameTask, "EVAL_FETCH", { fetchText: evalText });
+    yield call(evaluateFetch, evalText);
   } else {
     yield call(triggerEvalFrameTask, "EVAL_CODE", {
       code: evalText,
@@ -141,6 +89,10 @@ export function* evaluateCurrentQueue() {
       yield call(evaluateByType, chunkType, chunkContent, chunkId);
       yield put(setKernelState("KERNEL_IDLE"));
     } catch (error) {
+      if (process.env.NODE_ENV === "dev") {
+        console.error("------ Caught error at eval queue top level ------");
+        console.error(error);
+      }
       yield flush(evalQueue);
       yield put(setKernelState("KERNEL_IDLE"));
     }

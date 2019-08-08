@@ -16,12 +16,13 @@ global.jquery = $;
 global.React = React;
 global.ReactDOM = ReactDOM;
 
-global.IODIDE_EDITOR_ORIGIN = "http://localhost";
+global.editorOrigin = "http://localhost";
+global.evalFrameOrigin = "testing EVAL_FRAME_ORIGIN";
 
 global.IODIDE_JS_PATH = "testing IODIDE_JS_PATH";
 global.IODIDE_CSS_PATH = "testing IODIDE_CSS_PATH";
 global.IODIDE_VERSION = "testing IODIDE_VERSION";
-global.IODIDE_EVAL_FRAME_ORIGIN = "testing IODIDE_EVAL_FRAME_ORIGIN";
 global.PYODIDE_VERSION = "testing PYODIDE_VERSION";
+process.env.NODE_ENV = "test";
 
 Enzyme.configure({ adapter: new Adapter() });

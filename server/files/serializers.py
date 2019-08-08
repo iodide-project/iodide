@@ -72,14 +72,7 @@ class FileUpdateOperationWithoutReasonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FileUpdateOperation
-        fields = (
-            "id",
-            "file_source_id",
-            "scheduled",
-            "started",
-            "ended",
-            "status",
-        )
+        fields = ("id", "file_source_id", "scheduled", "started", "ended", "status")
 
 
 class FileUpdateOperationLatestSerializer(serializers.RelatedField):
@@ -95,7 +88,7 @@ class FileUpdateOperationLatestSerializer(serializers.RelatedField):
                 "started": obj["started"],
                 "ended": obj["ended"],
                 "status": obj["status"],
-                "failure_reason": obj["failure_reason"]
+                "failure_reason": obj["failure_reason"],
             }
 
         return None

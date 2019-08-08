@@ -1,15 +1,16 @@
 import React from "react";
 import ReactTable from "react-table";
 import PropTypes from "prop-types";
-import { get } from "lodash";
+
 import styled from "react-emotion";
 
 import "./react-table-styles.css";
 
-import { serializeForTinyRep } from "./rep-utils/tiny-rep-serializer";
+import ExpandableRep from "./rep-tree";
 
-import DefaultRenderer from "./default-handler";
-import TinyRep from "./tiny-rep";
+import { requestRepInfo } from "./request-rep-info";
+
+import ValueSummaryRep from "./value-summary";
 
 const TableDetails = styled.div`
   border: solid #e5e5e5;
@@ -23,33 +24,70 @@ const TableDetailsMessage = styled.div`
   padding-bottom: ${props => (props.pad ? "3px" : "0px")};
 `;
 
-const CellDetails = props => {
-  if (props.focusedRow !== undefined && props.focusedCol !== undefined) {
-    const focusedPath = `[${props.focusedRow}]["${props.focusedCol}"]`;
+class CellDetails extends React.Component {
+  static propTypes = {
+    focusedRowOriginalIndex: PropTypes.number,
+    focusedCol: PropTypes.string,
+    pathToDataFrame: PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+    ).isRequired,
+    valueSummary: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    rootObjName: PropTypes.string,
+    getChildSummary: PropTypes.func
+  };
+
+  static defaultProps = {
+    getChildSummary: (rootObjName, pathToEntity) =>
+      requestRepInfo({
+        rootObjName,
+        pathToEntity,
+        requestType: "CHILD_SUMMARY"
+      })
+  };
+
+  render() {
+    const {
+      focusedRowOriginalIndex,
+      focusedCol,
+      rootObjName,
+      pathToDataFrame
+    } = this.props;
+
+    if (focusedRowOriginalIndex !== undefined && focusedCol !== undefined) {
+      const focusedPath = `[${focusedRowOriginalIndex}]["${focusedCol}"]`;
+      const pathToDataFrameCell = [
+        ...pathToDataFrame,
+        String(focusedRowOriginalIndex),
+        focusedCol
+      ];
+
+      return (
+        <TableDetails>
+          <TableDetailsMessage pad>
+            {`details for ${focusedPath}`}
+          </TableDetailsMessage>
+          <ExpandableRep
+            pathToEntity={pathToDataFrameCell}
+            valueSummary={this.props.valueSummary}
+            getChildSummaries={this.props.getChildSummary}
+            rootObjName={rootObjName}
+          />
+        </TableDetails>
+      );
+    }
     return (
       <TableDetails>
-        <TableDetailsMessage pad>
-          {`details for ${focusedPath}`}
+        <TableDetailsMessage>
+          Click a table cell for details
         </TableDetailsMessage>
-        <DefaultRenderer value={get(props.value, focusedPath)} />
       </TableDetails>
     );
   }
-  return (
-    <TableDetails>
-      <TableDetailsMessage>Click a table cell for details</TableDetailsMessage>
-    </TableDetails>
-  );
-};
-CellDetails.propTypes = {
-  value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
-  focusedRow: PropTypes.number,
-  focusedCol: PropTypes.string
-};
+}
 
 class CellRenderer extends React.PureComponent {
   static propTypes = {
-    value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+    valueSummary: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     cellIsFocused: PropTypes.bool.isRequired
   };
   render() {
@@ -64,7 +102,7 @@ class CellRenderer extends React.PureComponent {
             : "none"
         }}
       >
-        <TinyRep {...serializeForTinyRep(this.props.value)} />
+        <ValueSummaryRep tiny {...this.props.valueSummary} />
       </div>
     );
   }
@@ -73,52 +111,120 @@ class CellRenderer extends React.PureComponent {
 const PX_PER_CHAR = 7;
 const MIN_CELL_CHAR_WIDTH = 22;
 
-export default class TableRenderer extends React.PureComponent {
+export default class TableRenderer extends React.Component {
   static propTypes = {
-    value: PropTypes.any // eslint-disable-line react/forbid-prop-types
+    initialDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
+    pages: PropTypes.number.isRequired,
+    pathToDataFrame: PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+    ).isRequired,
+    rootObjName: PropTypes.string,
+    getDataTableSummary: PropTypes.func
+  };
+
+  static defaultProps = {
+    getDataTableSummary: (rootObjName, pathToEntity, pageSize, page, sorted) =>
+      requestRepInfo({
+        rootObjName,
+        pathToEntity,
+        pageSize,
+        page,
+        sorted,
+        requestType: "ROW_TABLE_PAGE_SUMMARY"
+      })
   };
 
   constructor(props) {
     super(props);
-    this.state = { focusedRow: undefined, focusedCol: undefined };
+    this.state = {
+      focusedRow: undefined,
+      focusedRowOriginalIndex: undefined,
+      focusedCol: undefined,
+      data: this.props.initialDataRows,
+      pages: this.props.pages,
+      loading: false
+    };
+    this.fetchData = this.fetchData.bind(this);
+  }
+
+  async fetchData(fetchParams) {
+    this.setState({ loading: true });
+
+    const { rows, pages } = await this.props.getDataTableSummary(
+      this.props.rootObjName,
+      this.props.pathToDataFrame,
+      fetchParams.pageSize,
+      fetchParams.page,
+      fetchParams.sorted
+    );
+
+    this.setState({
+      data: rows,
+      pages,
+      loading: false,
+      focusedRow: undefined,
+      focusedRowOriginalIndex: undefined,
+      focusedCol: undefined
+    });
   }
 
   handleCellClick(rowInfo, column) {
-    this.setState({ focusedRow: rowInfo.index, focusedCol: column.id });
+    // const indexOffset = this.state.currentPage * this.state.pageSize;
+    console.log({ rowInfo, column });
+    this.setState({
+      focusedRow: rowInfo.index,
+      focusedRowOriginalIndex: rowInfo.original.ORIGINAL_DATA_TABLE_ROW_INDEX,
+      focusedCol: column.id
+    });
   }
 
   render() {
-    const { value } = this.props;
+    const {
+      data,
+      pages,
+      loading,
+      focusedRow,
+      focusedRowOriginalIndex,
+      focusedCol
+    } = this.state;
 
-    const columns = Object.keys(value[0]).map(k => ({
-      Header: k,
-      accessor: k,
-      width: Math.max(k.length, MIN_CELL_CHAR_WIDTH) * PX_PER_CHAR,
-      Cell: rowInfo => {
-        return (
-          <CellRenderer
-            cellIsFocused={
-              this.state.focusedCol === k &&
-              this.state.focusedRow === rowInfo.index
-            }
-            value={rowInfo.value}
-          />
-        );
-      }
-    }));
+    const columns = Object.keys(data[0])
+      .filter(k => k !== "ORIGINAL_DATA_TABLE_ROW_INDEX")
+      .map(k => ({
+        Header: k,
+        accessor: k,
+        width: Math.max(k.length, MIN_CELL_CHAR_WIDTH) * PX_PER_CHAR,
+        Cell: rowInfo => {
+          return (
+            <CellRenderer
+              cellIsFocused={focusedCol === k && focusedRow === rowInfo.index}
+              valueSummary={rowInfo.value}
+            />
+          );
+        }
+      }));
 
-    const pageSize = value.length > 10 ? 10 : value.length;
+    const focusedValue =
+      focusedCol !== undefined && focusedRow !== undefined
+        ? data[focusedRow][focusedCol]
+        : undefined;
+
     return (
       <div>
         <ReactTable
-          data={value}
+          manual
+          data={data}
+          pages={pages}
+          loading={loading}
+          onFetchData={this.fetchData}
           columns={columns}
           showPaginationTop
           showPaginationBottom={false}
           resizable={false}
-          pageSizeOptions={[5, 10, 25, 50, 100]}
+          sortable
+          pageSizeOptions={[10, 25, 50, 100]}
           minRows={0}
-          defaultPageSize={pageSize}
+          defaultPageSize={10}
           getTdProps={(state, rowInfo, column) => {
             return {
               onClick: (e, handleOriginal) => {
@@ -131,9 +237,11 @@ export default class TableRenderer extends React.PureComponent {
           }}
         />
         <CellDetails
-          value={value}
-          focusedRow={this.state.focusedRow}
-          focusedCol={this.state.focusedCol}
+          focusedRowOriginalIndex={focusedRowOriginalIndex}
+          focusedCol={focusedCol}
+          valueSummary={focusedValue}
+          rootObjName={this.props.rootObjName}
+          pathToDataFrame={this.props.pathToDataFrame}
         />
       </div>
     );

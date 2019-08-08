@@ -81,21 +81,7 @@ describe("restoreLocalAutosave", () => {
       undefined
     );
     expect(store.getActions()).toEqual([
-      { type: "UPDATE_MARKDOWN_CHUNKS", reportChunks: [] },
-      {
-        type: "UPDATE_IOMD_CONTENT",
-        iomd: "autosaved",
-        iomdChunks: [
-          {
-            chunkContent: "autosaved",
-            chunkId: "1679214136_0",
-            chunkType: "",
-            endLine: 0,
-            evalFlags: [],
-            startLine: 0
-          }
-        ]
-      },
+      { type: "UPDATE_IOMD_CONTENT", iomd: "autosaved" },
       { type: "UPDATE_NOTEBOOK_TITLE", title: "autosaved title" },
       {
         type: "UPDATE_NOTEBOOK_INFO",

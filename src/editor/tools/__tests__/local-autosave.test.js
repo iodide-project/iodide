@@ -1,5 +1,6 @@
 import {
   getLocalAutosave,
+  haveLocalAutosave,
   writeLocalAutosave,
   clearLocalAutosave
 } from "../local-autosave";
@@ -14,13 +15,16 @@ describe("autosave basics", () => {
     });
 
     expect(await getLocalAutosave(state)).toEqual({});
+    expect(await haveLocalAutosave(state)).toEqual(false);
     await writeLocalAutosave(state);
     expect(await getLocalAutosave(state)).toEqual({
       iomd: state.iomd,
       title: state.title,
       parentRevisionId: state.notebookInfo.revision_id
     });
+    expect(await haveLocalAutosave(state)).toEqual(true);
     await clearLocalAutosave(state);
     expect(await getLocalAutosave(state)).toEqual({});
+    expect(await haveLocalAutosave(state)).toEqual(false);
   });
 });

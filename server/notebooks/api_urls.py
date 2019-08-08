@@ -1,5 +1,6 @@
 from rest_framework import routers
 
+from ..files.api_views import NotebookFileSourceViewSet
 from .api_views import NotebookRevisionViewSet, NotebookViewSet
 from ..files.api_views import NotebookFileSourceViewSet
 

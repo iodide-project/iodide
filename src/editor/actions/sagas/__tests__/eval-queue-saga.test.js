@@ -1,14 +1,16 @@
 import { call, take } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
 
+import { evaluateByType } from "../eval-queue-saga";
 import {
-  evaluateByType,
+  triggerEvalFrameTask,
+  sendTaskToEvalFrame
+} from "../eval-frame-sender";
+import {
   evaluateLanguagePlugin,
   loadKnownLanguage,
-  triggerEvalFrameTask,
-  sendTaskToEvalFrame,
   loadLanguagePlugin
-} from "../eval-queue-saga";
+} from "../language-plugin-saga";
 import {
   addLoadingLanguageMsgToHistory,
   addInputToConsole,
@@ -191,14 +193,13 @@ describe("evaluateByType test", () => {
       .silentRun();
   });
 
-  [["fetch", "EVAL_FETCH"], [evalType, "EVAL_CODE"]].forEach(evalTypeCase => {
+  [[evalType, "EVAL_CODE"]].forEach(evalTypeCase => {
     it(`if evalType ok, trigger correct eval frame action for "${
       evalTypeCase[0]
     }"`, async () => {
       [evalType, evalTaskType] = evalTypeCase;
       const taskPayload = {
         EVAL_LANGUAGE_PLUGIN: { pluginText: evalText },
-        EVAL_FETCH: { fetchText: evalText },
         EVAL_CODE: {
           code: evalText,
           language: state.languageDefinitions[evalType],

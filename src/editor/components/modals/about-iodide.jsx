@@ -1,5 +1,3 @@
-/* global IODIDE_VERSION */
-
 import React from "react";
 import styled from "react-emotion";
 import HelpModalContent from "./help-modal-content";
@@ -81,7 +79,8 @@ export default () => (
       <LogoMark />
       <AboutContentHeader>
         <IodideTitle>
-          Iodide<sub>α</sub> <IodideVersion>{IODIDE_VERSION}</IodideVersion>
+          Iodide<sub>α</sub>{" "}
+          <IodideVersion>{process.env.IODIDE_VERSION}</IodideVersion>
         </IodideTitle>
       </AboutContentHeader>
       <MiddleSection>
