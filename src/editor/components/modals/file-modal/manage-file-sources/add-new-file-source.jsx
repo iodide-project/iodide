@@ -5,7 +5,7 @@ import styled from "react-emotion";
 
 import TextInput from "./text-input";
 import { ContainedButton } from "../../../../../shared/components/buttons";
-import { addFileSource } from "../../../../actions/file-source-actions";
+import { addFileSource as addFileSourceAction } from "../../../../actions/file-source-actions";
 import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/state-schema";
 
 const AddNewSourceContainer = styled.div`
@@ -202,5 +202,5 @@ addNewFileSourceUnconnected.propTypes = {
 
 export default connect(
   undefined,
-  { addFileSource }
+  { addFileSource: addFileSourceAction }
 )(addNewFileSourceUnconnected);

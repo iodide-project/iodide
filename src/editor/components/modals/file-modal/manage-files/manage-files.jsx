@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import DeleteModal from "../../../../../server/components/delete-modal";
-import OverwriteModal from "../../../../../server/components/upload-modal";
+import DeleteModal from "../../../../../shared/components/delete-modal";
+import OverwriteModal from "../../../../../shared/components/upload-modal";
 import Body from "./body";
 import {
   deleteFileOnServer,
