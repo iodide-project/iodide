@@ -30,7 +30,7 @@ const ClickRunNowToFetch = styled.div`
   color: #999;
   font-size: 10px;
   font-style: italic;
-  align-self: end;
+  height: 100%;
 `;
 
 const FileName = styled.div`
@@ -48,6 +48,7 @@ const FileInformationContainer = styled.div`
   display: grid;
   grid-template-columns: max-content max-content max-content;
   grid-column-gap: 10px;
+  align-items: baseline;
 `;
 
 const LastRanLabel = styled.div`
@@ -67,6 +68,7 @@ const StatusLabel = styled.div`
   padding-top: 2px;
   padding-bottom: 2px;
   border-radius: 3px;
+  align-self: end;
   background-color: ${({ status }) => operationStatusColors[status]};
 `;
 
