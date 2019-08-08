@@ -6,9 +6,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from .models import File, FileSource, FileUpdateOperation
-from .serializers import FileSourceSerializer, FilesSerializer, FileUpdateOperationSerializer, FileSourceDetailSerializer, FileSourceDetailWithoutURLSerializer
-from .tasks import execute_file_update_operation
 from ..notebooks.models import Notebook
 from .models import File, FileSource, FileUpdateOperation
 from .serializers import (
@@ -94,6 +91,7 @@ class NotebookFileSourceViewSet(viewsets.ModelViewSet):
         if filter_by_id:
             return base.filter(id__in=filter_by_id)
         return base
+
     queryset = FileSource.objects.all()
 
 
