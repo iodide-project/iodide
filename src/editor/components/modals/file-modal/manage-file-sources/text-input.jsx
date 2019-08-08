@@ -12,11 +12,6 @@ const InputElement = styled.input`
   width: 100%;
 `;
 
-// const Label = styled.label`
-//   display: block;
-//   font-size: 13px;
-// `;
-
 function TextInput({ label, value, onKey }) {
   const handleChange = evt => {
     onKey(evt.target.value);
