@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "react-emotion";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
+import Delete from "@material-ui/icons/Delete";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import FileSourceListItemDescription from "./file-source-list-item-description";
@@ -40,6 +40,7 @@ const FileSourceInterval = styled(ListMetadata)`
   margin-right: 4px;
   text-align: center;
   line-height: 1.1;
+  min-width: 100px;
 `;
 
 const NoFileSourcesNotice = styled.span`
@@ -52,15 +53,21 @@ const NoFileSourcesNotice = styled.span`
 `;
 
 const ListItemCall = styled(ListMetadata)`
-  min-width: 100px;
   text-align: center;
   position: relative;
   height: 100%;
+  min-width: 150px;
   display: grid;
   margin: auto;
   align-content: center;
-  overflow: hidden;
+  overflow-y: hidden;
   cursor: pointer;
+`;
+
+const DownloadNowButton = styled(OutlineButton)`
+  min-width: 150px;
+  padding-left: 3px;
+  padding-right: 3px;
 `;
 
 const Fader = styled.div`
@@ -141,14 +148,14 @@ const FileSourceListUnconnected = ({
                     <CircularProgress size={20} />
                   </Fader>
                   <Fader active={!isCurrentlyRunning}>
-                    <OutlineButton
+                    <DownloadNowButton
                       disabled={isCurrentlyRunning}
                       onClick={() => {
                         createFileUpdateOperation(id);
                       }}
                     >
-                      run now
-                    </OutlineButton>
+                      download now
+                    </DownloadNowButton>
                   </Fader>
                 </ListItemCall>
                 <ListMetadata>
@@ -158,7 +165,7 @@ const FileSourceListUnconnected = ({
                       setSourceToDeleteFileName(filename);
                     }}
                   >
-                    delete
+                    <Delete />
                   </TextButton>
                 </ListMetadata>
               </ListItem>

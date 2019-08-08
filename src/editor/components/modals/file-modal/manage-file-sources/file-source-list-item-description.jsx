@@ -19,14 +19,18 @@ const operationStatusColors = {
   failed: "Salmon"
 };
 
+const FileSourceListItemDescriptionContainer = styled(ListMain)`
+  padding-right: 10px;
+`;
+
 const FileSourceURLContainer = styled(ListSecondaryText)`
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 500px;
+  width: 400px;
   white-space: nowrap;
 
-  @media (max-width: 1100px) {
-    max-width: 350px;
+  @media (max-width: 1200px) {
+    width: 300px;
   }
 `;
 
@@ -48,7 +52,6 @@ const ClickRunNowToFetch = styled.div`
 `;
 
 const FileInformationContainer = styled.div`
-  max-width: 400px;
   display: grid;
   grid-template-columns: max-content max-content max-content;
   grid-column-gap: 10px;
@@ -84,7 +87,7 @@ const FileSourceListDescription = ({
   hasBeenRun
 }) => {
   return (
-    <ListMain>
+    <FileSourceListItemDescriptionContainer>
       <ListPrimaryText>
         <FileInformationContainer>
           <FileName hasBeenRun={hasBeenRun}>{filename}</FileName>
@@ -107,7 +110,7 @@ const FileSourceListDescription = ({
       <FileSourceURLContainer href={url}>
         <FileSourceURL href={url}>{url}</FileSourceURL>
       </FileSourceURLContainer>
-    </ListMain>
+    </FileSourceListItemDescriptionContainer>
   );
 };
 
