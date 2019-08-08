@@ -8,7 +8,7 @@ import {
   ListPrimaryText,
   ListSecondaryText,
   ListSecondaryTextLink
-} from "../../../../../server/components/list";
+} from "../../../../../shared/components/list";
 
 const formatDate = str => format(new Date(str), "MMM dd, uuuu HH:mm:ss");
 

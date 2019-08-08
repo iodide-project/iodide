@@ -8,7 +8,7 @@ import {
   ListItem,
   LIST_BORDER,
   LIST_BORDER_RADIUS
-} from "../../../../../server/components/list";
+} from "../../../../../shared/components/list";
 import THEME from "../../../../../shared/theme";
 import { fileShape } from "./propShapes";
 import { defaultSpacing } from "./styles";

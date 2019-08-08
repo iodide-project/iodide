@@ -25,7 +25,7 @@ import {
   ListDate,
   ListMetadata,
   ListSmallLink
-} from "../components/list";
+} from "../../shared/components/list";
 
 const RevisionsPageHeader = styled("h2")`
   span {

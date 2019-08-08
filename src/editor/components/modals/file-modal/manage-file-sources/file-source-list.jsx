@@ -13,7 +13,7 @@ import {
   List,
   ListItem,
   ListMetadata
-} from "../../../../../server/components/list";
+} from "../../../../../shared/components/list";
 
 import {
   TextButton,
