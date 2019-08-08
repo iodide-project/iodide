@@ -38,6 +38,8 @@ const FileSourceInterval = styled(ListMetadata)`
   padding-right: 6px;
   margin-left: 4px;
   margin-right: 4px;
+  text-align: center;
+  line-height: 1.1;
 `;
 
 const NoFileSourcesNotice = styled.span`

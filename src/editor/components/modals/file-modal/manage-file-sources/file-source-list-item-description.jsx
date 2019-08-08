@@ -24,13 +24,10 @@ const FileSourceURLContainer = styled(ListSecondaryText)`
   text-overflow: ellipsis;
   max-width: 500px;
   white-space: nowrap;
-`;
 
-const ClickRunNowToFetch = styled.div`
-  color: #999;
-  font-size: 10px;
-  font-style: italic;
-  height: 100%;
+  @media (max-width: 1100px) {
+    max-width: 350px;
+  }
 `;
 
 const FileName = styled.div`
@@ -41,6 +38,13 @@ const FileName = styled.div`
 const FileSourceURL = styled(ListSecondaryTextLink)`
   text-overflow: ellipsis;
   white-space: nowrap;
+`;
+
+const ClickRunNowToFetch = styled.div`
+  color: #999;
+  font-size: 10px;
+  font-style: italic;
+  height: 100%;
 `;
 
 const FileInformationContainer = styled.div`
