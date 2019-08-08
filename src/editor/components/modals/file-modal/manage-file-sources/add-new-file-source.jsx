@@ -11,6 +11,11 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import TextInput from "./text-input";
 import { ContainedButton } from "../../../../../shared/components/buttons";
 import { addFileSource as addFileSourceAction } from "../../../../actions/file-source-actions";
+import {
+  updateFileSourceInputFilename as updateFileSourceInputFilenameAction,
+  updateFileSourceInputURL as updateFileSourceInputURLAction,
+  updateFileSourceInputUpdateInterval as updateFileSourceInputUpdateIntervalAction
+} from "../../../../actions/file-source-inputs-actions";
 import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/state-schema";
 
 const AddNewSourceContainer = styled.div`
@@ -47,28 +52,31 @@ const hasAllowedProtocol = url => {
   });
 };
 
-export function addNewFileSourceUnconnected({ addFileSource }) {
-  const [sourceState, updateSourceState] = useState("");
-  const [filenameState, updateFilenameState] = useState("");
+export function addNewFileSourceUnconnected({
+  filename,
+  url,
+  updateInterval,
+  updateFileSourceInputFilename,
+  updateFileSourceInputURL,
+  updateFileSourceInputUpdateInterval,
+  addFileSource
+}) {
   const [statusVisible, updateStatusVisibility] = useState(false);
   const [status, updateStatus] = useState({ type: "NONE", text: "" });
-  const [updateIntervalState, setUpdateIntervalState] = useState(
-    FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key
-  );
 
   const handleUpdateIntervalChange = event => {
-    setUpdateIntervalState(event.target.value);
+    updateFileSourceInputUpdateInterval(event.target.value);
   };
   const submitInformation = async () => {
     updateStatusVisibility(true);
     updateStatus({ type: "LOADING", text: "adding file source ..." });
 
-    if (sourceState === "" || filenameState === "") {
+    if (url === "" || filename === "") {
       updateStatus({
         type: "ERROR",
         text: "must include source URL & desired filename"
       });
-    } else if (!hasAllowedProtocol(sourceState)) {
+    } else if (!hasAllowedProtocol(url)) {
       updateStatus({
         type: "ERROR",
         text: "source URL must include the protocol (e.g. https://)"
@@ -76,11 +84,7 @@ export function addNewFileSourceUnconnected({ addFileSource }) {
     } else {
       let request;
       try {
-        request = await addFileSource(
-          sourceState,
-          filenameState,
-          updateIntervalState
-        );
+        request = await addFileSource(url, filename, updateInterval);
       } catch (err) {
         updateStatus({
           type: "ERROR",
@@ -89,8 +93,11 @@ export function addNewFileSourceUnconnected({ addFileSource }) {
       }
       if (request) {
         updateStatus({ type: "SUCCESS", text: "added file source" });
-        updateSourceState("");
-        updateFilenameState("");
+        updateFileSourceInputURL("");
+        updateFileSourceInputFilename("");
+        updateFileSourceInputUpdateInterval(
+          FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key
+        );
       }
     }
   };
@@ -118,17 +125,17 @@ export function addNewFileSourceUnconnected({ addFileSource }) {
         </AddNewSourceButton>
         <TextInput
           label="Source URL"
-          value={sourceState}
-          onKey={updateSourceState}
+          value={url}
+          onKey={updateFileSourceInputURL}
         />
         <TextInput
           label="desired filename"
-          value={filenameState}
-          onKey={updateFilenameState}
+          value={filename}
+          onKey={updateFileSourceInputFilename}
         />
         <FormControl>
           <Select
-            value={updateIntervalState}
+            value={updateInterval}
             onChange={handleUpdateIntervalChange}
             inputProps={{
               name: "update-interval",
@@ -163,10 +170,25 @@ export function addNewFileSourceUnconnected({ addFileSource }) {
 }
 
 addNewFileSourceUnconnected.propTypes = {
-  addFileSource: PropTypes.func
+  filename: PropTypes.string,
+  url: PropTypes.string,
+  updateInterval: PropTypes.string,
+  addFileSource: PropTypes.func,
+  updateFileSourceInputFilename: PropTypes.func,
+  updateFileSourceInputURL: PropTypes.func,
+  updateFileSourceInputUpdateInterval: PropTypes.func
 };
 
+export function mapStateToProps(state) {
+  return Object.assign({}, state.fileSourceInputs);
+}
+
 export default connect(
-  undefined,
-  { addFileSource: addFileSourceAction }
+  mapStateToProps,
+  {
+    updateFileSourceInputUpdateInterval: updateFileSourceInputUpdateIntervalAction,
+    updateFileSourceInputURL: updateFileSourceInputURLAction,
+    updateFileSourceInputFilename: updateFileSourceInputFilenameAction,
+    addFileSource: addFileSourceAction
+  }
 )(addNewFileSourceUnconnected);

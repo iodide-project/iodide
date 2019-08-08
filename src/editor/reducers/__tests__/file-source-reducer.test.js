@@ -62,14 +62,6 @@ describe("UPDATE_FILE_SOURCES", () => {
     expect(FS(nextState).length).toBe(1);
     expect(FS(nextState)[0].id).toBe(1010);
   });
-  it("throws if you do not pass in something of type Array", () => {
-    expect(() =>
-      fileSourceReducer(state, {
-        type: "UPDATE_FILE_SOURCES",
-        fileSources: "ERROR ERROR ERROR ERROR BEEP BEEP BEEP BEEP"
-      }).toThrowError()
-    );
-  });
 });
 
 describe("ADD_FILE_SOURCE_TO_NOTEBOOK", () => {

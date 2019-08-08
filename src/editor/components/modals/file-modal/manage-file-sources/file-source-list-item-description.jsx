@@ -84,6 +84,7 @@ const FileSourceListDescription = ({
       <ListPrimaryText>
         <FileInformationContainer>
           <FileName hasBeenRun={hasBeenRun}>{filename}</FileName>
+
           {hasBeenRun ? (
             <StatusLabel status={latestFileUpdateOperationStatus}>
               {latestFileUpdateOperationStatus}
@@ -93,6 +94,7 @@ const FileSourceListDescription = ({
               click &quot;run now&quot; to fetch, or wait for scheduler
             </ClickRunNowToFetch>
           )}
+
           {lastUpdated && (
             <LastRanLabel>on {formatDate(lastUpdated)}</LastRanLabel>
           )}

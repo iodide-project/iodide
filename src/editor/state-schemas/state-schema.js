@@ -248,7 +248,7 @@ export const stateProperties = {
   modalState: {
     type: "string",
     enum: ["HELP_MODAL", "HISTORY_MODAL", "FILE_MODAL", "MODALS_CLOSED"],
-    default: "FILE_MODAL"
+    default: "MODALS_CLOSED"
   },
   kernelState: {
     type: "string",
@@ -299,6 +299,23 @@ export const stateProperties = {
         default: {}
       }
     }
+  },
+  fileSourceInputs: {
+    type: "object",
+    properties: {
+      url: { type: "string" },
+      filename: { type: "string" },
+      updateInterval: {
+        type: "string",
+        enum: FILE_SOURCE_UPDATE_SELECTOR_OPTIONS.map(f => f.key)
+      }
+    },
+    default: {
+      url: "",
+      filename: "",
+      updateInterval: FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key
+    },
+    additionalProperties: false
   },
   fileSources: { type: "array", items: fileSourceSchema },
   notebookInfo: {
