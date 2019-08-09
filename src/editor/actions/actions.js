@@ -1,8 +1,6 @@
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 import { getNotebookID, getUserDataFromDocument } from "../tools/server-tools";
 
-import { getChunkContainingLine } from "../iomd-tools/iomd-selection";
-
 import { addAppMessageToConsoleHistory } from "./console-message-actions";
 
 export function updateAppMessages(messageObj) {
@@ -18,14 +16,6 @@ export function updateAppMessages(messageObj) {
       message: { message, messageType, when }
     });
   };
-}
-
-export function updateIomdContent(text) {
-  return { type: "UPDATE_IOMD_CONTENT", iomd: text };
-}
-
-export function toggleWrapInEditors() {
-  return { type: "TOGGLE_WRAP_IN_EDITORS" };
 }
 
 export function saveNotebook() {
@@ -75,34 +65,6 @@ export function setViewMode(viewMode) {
       type: "SET_VIEW_MODE",
       viewMode
     });
-  };
-}
-
-export function updateEditorCursor(line, col, forceUpdate = false) {
-  return { type: "UPDATE_CURSOR", line, col, forceUpdate };
-}
-
-export function updateEditorSelections(selections) {
-  return {
-    type: "UPDATE_SELECTIONS",
-    selections
-  };
-}
-
-export function moveCursorToNextChunk() {
-  return (dispatch, getState) => {
-    const {
-      editorSelections: selections,
-      iomdChunks,
-      editorCursor
-    } = getState();
-    const targetLine =
-      selections.length === 0
-        ? editorCursor.line
-        : selections[selections.length - 1].end.line;
-
-    const targetChunk = getChunkContainingLine(iomdChunks, targetLine);
-    dispatch(updateEditorCursor(targetChunk.endLine + 1, 0, true));
   };
 }
 

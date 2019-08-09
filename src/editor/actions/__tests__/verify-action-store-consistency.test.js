@@ -14,9 +14,6 @@ import { languageDefinitions } from "../../state-schemas/language-definitions";
 // This relies on the functionality in createValidatedReducer
 
 describe("make sure createValidatedReducer is checking correctly", () => {
-  beforeEach(() => {
-    store.dispatch(actions.resetNotebook());
-  });
   it("createValidatedReducer should throw an error if we pass an action that inserts an invalid state value", () => {
     expect(() => store.dispatch(toggleModal(100))).toThrowError(
       SchemaValidationError
@@ -44,10 +41,6 @@ describe("make sure action creators leave store in a consitent state", () => {
         actions.updateAppMessages({ message: "foo", details: "bat" })
       )
     ).not.toThrow();
-  });
-
-  it("toggleWrapInEditors", () => {
-    expect(() => store.dispatch(actions.toggleWrapInEditors())).not.toThrow();
   });
 
   it("saveNotebook", () => {
