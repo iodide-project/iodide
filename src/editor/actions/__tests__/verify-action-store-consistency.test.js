@@ -85,10 +85,6 @@ describe("make sure action creators leave store in a consitent state", () => {
   it("evaluateNotebook", () => {
     expect(() => store.dispatch(evaluateNotebook())).not.toThrow();
   });
-
-  it("toggleEditorLink", () => {
-    expect(() => store.dispatch(actions.clearVariables())).not.toThrow();
-  });
 });
 
 describe("setKernelState", () => {
