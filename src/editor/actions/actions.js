@@ -112,9 +112,3 @@ export function updateNotebookInfo(notebookInfo) {
     notebookInfo
   };
 }
-
-export function toggleEditorLink() {
-  return {
-    type: "TOGGLE_EDITOR_LINK"
-  };
-}
