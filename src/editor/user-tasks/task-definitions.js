@@ -120,16 +120,4 @@ tasks.toggleHelpModal = new UserTask({
   }
 });
 
-tasks.fileAnIssue = new ExternalLinkTask({
-  title: "File an Issue",
-  menuTitle: "File an Issue ...",
-  url: "http://github.com/iodide-project/iodide/issues/new"
-});
-
-tasks.seeAllExamples = new ExternalLinkTask({
-  title: "See All Examples",
-  menuTitle: "See All Examples ...",
-  url: "http://github.com/iodide-project/iodide-examples/"
-});
-
 export default tasks;
