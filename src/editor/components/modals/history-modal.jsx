@@ -7,7 +7,7 @@ import { ModalContainer } from "./modal-container";
 import TitleBar from "./title-bar";
 import RevisionDiff from "./revision-diff";
 import RevisionList from "./revision-list";
-import { getNotebookRevisionList } from "../../actions/actions";
+import { getNotebookRevisionList } from "../../actions/history-modal-actions";
 
 const ModalContentContainer = styled("div")`
   display: grid;

@@ -1,6 +1,5 @@
 import Mousetrap from "mousetrap";
 import tasks from "../user-tasks/task-definitions";
-// for now, let's just keep the keybindings here.
 
 Mousetrap.prototype.stopCallback = () => false;
 
@@ -11,9 +10,4 @@ export function initializeDefaultKeybindings() {
       Mousetrap.bind(task.keybindings, task.keybindingCallback);
     }
   });
-}
-
-// FIXME REMOVE DEAD FUNCTION
-export function addLanguageKeybinding(keys, callback) {
-  Mousetrap.bind(keys, callback);
 }

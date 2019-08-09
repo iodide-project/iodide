@@ -43,14 +43,6 @@ const notebookReducer = (state = newNotebook(), action) => {
     case "TOGGLE_WRAP_IN_EDITORS":
       return Object.assign({}, state, { wrapEditors: !state.wrapEditors });
 
-    case "REPLACE_NOTEBOOK_CONTENT": {
-      return Object.assign({}, state, {
-        iomd: action.iomd,
-        iomdChunks: action.iomdChunks,
-        title: action.title || state.title
-      });
-    }
-
     case "UPDATE_CURSOR": {
       const { line, col, forceUpdate } = action;
       return Object.assign({}, state, {

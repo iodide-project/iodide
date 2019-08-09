@@ -1,5 +1,6 @@
 import { store } from "../../store";
 import * as actions from "../actions";
+import { toggleModal } from "../modal-actions";
 import { evaluateNotebook, setKernelState } from "../eval-actions";
 
 import { stateProperties } from "../../state-schemas/state-schema";
@@ -17,7 +18,7 @@ describe("make sure createValidatedReducer is checking correctly", () => {
     store.dispatch(actions.resetNotebook());
   });
   it("createValidatedReducer should throw an error if we pass an action that inserts an invalid state value", () => {
-    expect(() => store.dispatch(actions.setModalState(100))).toThrowError(
+    expect(() => store.dispatch(toggleModal(100))).toThrowError(
       SchemaValidationError
     );
   });
@@ -83,10 +84,6 @@ describe("make sure action creators leave store in a consitent state", () => {
 
   it("evaluateNotebook", () => {
     expect(() => store.dispatch(evaluateNotebook())).not.toThrow();
-  });
-
-  it("toggleHelpModal", () => {
-    expect(() => store.dispatch(actions.clearVariables())).not.toThrow();
   });
 
   it("toggleEditorLink", () => {

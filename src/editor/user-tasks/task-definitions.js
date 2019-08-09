@@ -3,6 +3,11 @@ import ExternalLinkTask from "./external-link-task";
 import { store } from "../store";
 import * as actions from "../actions/actions";
 import { evaluateText, evaluateNotebook } from "../actions/eval-actions";
+import {
+  toggleFileModal,
+  toggleHelpModal,
+  toggleHistoryModal
+} from "../actions/modal-actions";
 
 // FIXME: remove requirement to import store in this file by attaching
 // keypress handling to store in initializeDefaultKeybindings() --
@@ -67,23 +72,16 @@ tasks.toggleWrapInEditors = new UserTask({
   }
 });
 
-tasks.changeTitle = new UserTask({
-  title: "Change Title",
-  callback(t) {
-    dispatcher.updateTitle(t);
-  }
-});
-
 tasks.newNotebook = new ExternalLinkTask({
   title: "New Notebook",
   url: "/new"
 });
 
 // this overrides the browser default's ctrl+s but otherwise does nothing.
+// displayKeybinding not needed
 tasks.saveNotebook = new UserTask({
   title: "Save Notebook",
   keybindings: ["ctrl+s", "meta+s"],
-  displayKeybinding: `${commandKey}+s`,
   preventDefaultKeybinding: true,
   callback() {}
 });
@@ -99,7 +97,7 @@ tasks.clearVariables = new UserTask({
 tasks.toggleFileModal = new UserTask({
   title: "Manage Files",
   callback() {
-    dispatcher.toggleFileModal();
+    store.dispatch(toggleFileModal());
   }
 });
 
@@ -107,7 +105,7 @@ tasks.toggleHistoryModal = new UserTask({
   title: "View Notebook History",
   menuTitle: "History",
   callback() {
-    dispatcher.toggleHistoryModal();
+    store.dispatch(toggleHistoryModal());
   }
 });
 
@@ -118,21 +116,7 @@ tasks.toggleHelpModal = new UserTask({
   displayKeybinding: "Alt+h",
   preventDefaultKeybinding: true,
   callback() {
-    dispatcher.toggleHelpModal();
-  }
-});
-
-tasks.setViewModeToEditor = new UserTask({
-  title: "Set View Mode to Editor",
-  callback() {
-    dispatcher.setViewMode("EXPLORE_VIEW");
-  }
-});
-
-tasks.setViewModeToPresentation = new UserTask({
-  title: "Set View Mode to Presentation",
-  callback() {
-    dispatcher.setViewMode("REPORT_VIEW");
+    store.dispatch(toggleHelpModal());
   }
 });
 
