@@ -22,7 +22,7 @@ import {
   updateIomdContent,
   updateEditorCursor,
   updateEditorSelections
-} from "../actions/actions";
+} from "../actions/editor-actions";
 import { updateAutosave } from "../actions/autosave-actions";
 import { postMessageToEvalFrame } from "../port-to-eval-frame";
 import { getAllSelections } from "./codemirror-utils";
