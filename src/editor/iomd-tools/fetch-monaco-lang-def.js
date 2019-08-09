@@ -7,11 +7,9 @@ export const language = {
   tokenizer: {
     root: [
       [
-        new RegExp(
-          `^ *(${IODIDE_API_LOAD_TYPES.join(
-            "|"
-          )})(: *)([a-zA-Z_$][a-zA-Z0-9_$]*)( *= *)([^ ]+)( +//.*$)`
-        ),
+        `^ *(${IODIDE_API_LOAD_TYPES.join(
+          "|"
+        )})(: *)([a-zA-Z_$][a-zA-Z0-9_$]*)( *= *)([^ ]+)( +//.*$)`,
         [
           "keyword",
           "delimiter",
@@ -22,22 +20,20 @@ export const language = {
         ]
       ],
       [
-        new RegExp(
-          `^ *(${IODIDE_API_LOAD_TYPES.join(
-            "|"
-          )})(: *)([a-zA-Z_$][a-zA-Z0-9_$]*)( *= *)(.+$)`
-        ),
+        `^ *(${IODIDE_API_LOAD_TYPES.join(
+          "|"
+        )})(: *)([a-zA-Z_$][a-zA-Z0-9_$]*)( *= *)(.+$)`,
         ["keyword", "delimiter", "identifier", "delimiter", "string.fetch-url"]
       ],
       [
-        new RegExp(`^ *(${FETCH_CHUNK_TYPES.join("|")})(: *)([^ ]+)( +//.*$)`),
+        `^ *(${FETCH_CHUNK_TYPES.join("|")})(: *)([^ ]+)( +//.*$)`,
         ["keyword", "delimiter", "string.fetch-url", "comment"]
       ],
       [
-        new RegExp(`^ *(${FETCH_CHUNK_TYPES.join("|")})(: *)(.*$)`),
+        `^ *(${FETCH_CHUNK_TYPES.join("|")})(: *)(.*$)`,
         ["keyword", "delimiter", "string.fetch-url"]
       ],
-      [/ *\/\/.*$/, "comment"]
+      [" *//.*$", "comment"]
     ]
   }
 };

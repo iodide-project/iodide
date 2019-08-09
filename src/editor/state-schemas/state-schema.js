@@ -1,7 +1,7 @@
 import { languageDefinitions } from "./language-definitions";
 import { historySchema } from "./history-schema";
 
-export const NONCODE_EVAL_TYPES = ["css", "md", "meta", "raw"];
+export const NONCODE_EVAL_TYPES = ["css", "md", "raw"];
 export const RUNNABLE_CHUNK_TYPES = ["plugin", "fetch"];
 export const FETCH_CHUNK_TYPES = [
   "css",

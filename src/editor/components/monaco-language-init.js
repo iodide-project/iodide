@@ -27,6 +27,8 @@ import {
   conf as fetchConf
 } from "../iomd-tools/fetch-monaco-lang-def";
 
+import { iomdCompletionProvider } from "./monaco-iomd-completion-provider";
+
 Object.entries({
   iomd: [iomdLang, iomdConf],
   fetch: [fetchLang, fetchConf],
@@ -44,51 +46,7 @@ Object.entries({
   }
 });
 
-// function createDependencyProposals() {
-//   // returning a static list of proposals, not even looking at the prefix (filtering is done by the Monaco editor),
-//   // here you could do a server side lookup
-//   return [
-//     {
-//       label: "lodash",
-//       kind: monaco.languages.CompletionItemKind.Function,
-//       documentation: "The Lodash library exported as Node.js modules.",
-//       insertText: '"lodash": "*"'
-//     },
-//     {
-//       label: "loxpress",
-//       kind: monaco.languages.CompletionItemKind.Function,
-//       documentation: "Fast, unopinionated, minimalist web framework",
-//       insertText: '"express": "*"'
-//     },
-//     {
-//       label: "loddirp",
-//       kind: monaco.languages.CompletionItemKind.Function,
-//       documentation: "Recursively mkdir, like <code>mkdir -p</code>",
-//       insertText: '"mkdirp": "*"'
-//     }
-//   ];
-// }
-
-// monaco.languages.registerCompletionItemProvider("iomd", {
-//   // provideCompletionItems: () => {
-
-//   provideCompletionItems: (model, position, ...args) => {
-//     console.log("provideCompletionItems", model, position, args);
-//     // find out if we are completing a property in the 'dependencies' object.
-//     const textUntilPosition = model.getValueInRange({
-//       startLineNumber: 1,
-//       startColumn: 1,
-//       endLineNumber: position.lineNumber,
-//       endColumn: position.column
-//     });
-//     console.log({ textUntilPosition });
-//     // const match = textUntilPosition.match(
-//     //   /"dependencies"\s*:\s*{\s*("[^"]*"\s*:\s*"[^"]*"\s*,\s*)*("[^"]*)?$/
-//     // );
-//     const suggestions = createDependencyProposals();
-//     return { suggestions };
-//   }
-// });
+monaco.languages.registerCompletionItemProvider("iomd", iomdCompletionProvider);
 
 // monaco.languages.registerHoverProvider("iomd", {
 //   provideHover: (model, position) => {

@@ -1,59 +1,43 @@
+const delimEOL = (token, nextEmbedded) => ({
+  cases: {
+    [`${nextEmbedded}@embedModes`]: {
+      token,
+      nextEmbedded,
+      next: `@embed.${nextEmbedded}`
+    },
+    "@default": { token, next: "@popall" }
+  }
+});
+
 export function compileIomdLanguageDef(embedModes) {
-  const delimEOL = (token, nextEmbedded) => ({
-    cases: {
-      [`${nextEmbedded}@embedModes`]: {
-        token,
-        nextEmbedded,
-        next: `@embed.${nextEmbedded}`,
-        log: `delimLine @embedMode-- [$0, $1, $2] in state [$S0, $S1, $S2] \n next: @embed.$2`
-      },
-      "@default": {
-        token,
-        next: "@popall",
-        log: `delimLine default-- [$0, $1, $2] in state [$S0, $S1, $S2]`
-      }
-    }
-  });
   const language = {
     ignoreCase: true,
     embedModes: Object.keys(embedModes),
     tokenizer: {
-      root: [
-        [
-          /^%%.*$/,
-          {
-            token: "@rematch",
-            next: `@delimLine`,
-            log: `(root) @DelimLine -- [$0, $1, $2] in state [$S0, $S1, $S2]`
-          }
-        ]
-      ],
+      root: [[/(^%%.*$)/, { token: "@rematch", next: `@delimLine` }]],
 
       delimLine: [
         // first, check whether this is a delimLine with flags.
         // if so, the
         [
-          /(^%% *)(\w+)( +[\w "{}:=]*)$/,
+          /(^%%+)( *)(\w+)( +[\w "{}:=]*)$/,
           [
             {
               token: "iomd-type",
-              log: `delimLine type+flags-- [$0, $1, $2] in state [$S0, $S1, $S2]`
+              log: "capt groups 1:`$1`, 2:`$2`, 3:`$3`, 4:`$4`, -- state `$S1`"
             },
             "iomd-type",
-            delimEOL("iomd-flag", "$2")
+            "iomd-type",
+            delimEOL("iomd-flag", "$3")
           ]
         ],
         [
-          /(^%% *)(\w+) *$/,
-          [
-            {
-              token: "iomd-type",
-              log: `delimLine just type-- [$0, $1, $2] in state [$S0, $S1, $S2]`
-            },
-            delimEOL("iomd-type", "$2")
-          ]
+          /(^%%+ *)(\w+) *$/,
+          [{ token: "iomd-type" }, delimEOL("iomd-type", "$2")]
         ],
-        [/^%% *$/, delimEOL("iomd-type", "$S2")]
+        // a delim line with only spaces returns to the nextEmbedded
+        // that is in the $S2 position in the current delimLine state
+        [/^%%+ *$/, delimEOL("iomd-type", "$S2")]
       ],
 
       embed: [
@@ -61,16 +45,12 @@ export function compileIomdLanguageDef(embedModes) {
           // NB: something weird about this regex -- it only correctly matches
           // at the start-of-line when wrapped in a capture group. :-/    ????
           /(^%%.*$)/,
-          {
-            token: "@rematch",
-            next: "@delimLine.$S2",
-            nextEmbedded: "@pop",
-            log: "embedded %%-- state [$S0, $S1, $S2], matches '$0'"
-          }
+          { token: "@rematch", next: "@delimLine.$S2", nextEmbedded: "@pop" }
         ]
       ]
     }
   };
+
   return language;
 }
 
