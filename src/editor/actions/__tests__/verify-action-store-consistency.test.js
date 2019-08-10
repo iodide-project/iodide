@@ -30,19 +30,6 @@ describe("make sure action creators leave store in a consitent state", () => {
     expect(() => store.dispatch(setKernelState("KERNEL_BUSY"))).not.toThrow();
   });
 
-  it("updateAppMessages, no details", () => {
-    expect(() =>
-      store.dispatch(actions.updateAppMessages({ message: "foo" }))
-    ).not.toThrow();
-  });
-  it("updateAppMessages, with details", () => {
-    expect(() =>
-      store.dispatch(
-        actions.updateAppMessages({ message: "foo", details: "bat" })
-      )
-    ).not.toThrow();
-  });
-
   it("saveNotebook", () => {
     expect(() => store.dispatch(actions.saveNotebook())).not.toThrow();
   });
