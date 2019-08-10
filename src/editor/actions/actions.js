@@ -1,23 +1,6 @@
 import { getUrlParams, objectToQueryString } from "../tools/query-param-tools";
 import { getNotebookID, getUserDataFromDocument } from "../tools/server-tools";
 
-import { addAppMessageToConsoleHistory } from "./console-message-actions";
-
-export function updateAppMessages(messageObj) {
-  return dispatch => {
-    const { message } = messageObj;
-    let { messageType, when } = messageObj;
-    if (when === undefined) when = new Date().toString();
-    if (messageType === undefined) messageType = message;
-    // add to eval history.
-    dispatch(addAppMessageToConsoleHistory(messageType));
-    dispatch({
-      type: "UPDATE_APP_MESSAGES",
-      message: { message, messageType, when }
-    });
-  };
-}
-
 export function saveNotebook() {
   return {
     type: "SAVE_NOTEBOOK"
