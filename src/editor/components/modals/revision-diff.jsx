@@ -4,7 +4,13 @@ import ReactDiffViewer from "react-diff-viewer";
 import styled from "react-emotion";
 import { connect } from "react-redux";
 
+import Fab from "@material-ui/core/Fab";
+
+import { revertToSelectedRevisionId } from "../../actions/history-modal-actions";
+
 import { getPreviousRevisionId } from "../../tools/revision-history";
+
+import THEME from "../../../shared/theme";
 
 const DiffContainer = styled("div")`
   overflow: auto;
@@ -14,7 +20,9 @@ class RevisionDiffUnconnected extends React.Component {
   static propTypes = {
     currentRevisionContent: PropTypes.string,
     previousRevisionContent: PropTypes.string,
-    revisionContentFetchStatus: PropTypes.string.isRequired
+    revisionContentFetchStatus: PropTypes.string.isRequired,
+    canRevert: PropTypes.bool,
+    revertToSelectedRevisionId: PropTypes.func.isRequired
   };
 
   render() {
@@ -34,6 +42,22 @@ class RevisionDiffUnconnected extends React.Component {
           newValue={this.props.currentRevisionContent}
           splitView={false}
         />
+        {this.props.canRevert && (
+          <Fab
+            onClick={this.props.revertToSelectedRevisionId}
+            variant="extended"
+            style={{
+              right: 32,
+              bottom: 16,
+              position: "fixed",
+              color: "#fff",
+              background: THEME.clientModal.background,
+              borderRadius: 8
+            }}
+          >
+            Revert
+          </Fab>
+        )}
       </DiffContainer>
     );
   }
@@ -69,8 +93,15 @@ export function mapStateToProps(state) {
   return {
     currentRevisionContent,
     revisionContentFetchStatus,
-    previousRevisionContent
+    previousRevisionContent,
+    canRevert:
+      selectedRevisionId !== undefined &&
+      state.iomd !== currentRevisionContent &&
+      revisionContentFetchStatus === "IDLE"
   };
 }
 
-export default connect(mapStateToProps)(RevisionDiffUnconnected);
+export default connect(
+  mapStateToProps,
+  { revertToSelectedRevisionId } // mapDispatchToProps shorthand
+)(RevisionDiffUnconnected);
