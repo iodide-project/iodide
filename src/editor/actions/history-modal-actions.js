@@ -50,9 +50,12 @@ export function updateSelectedRevisionId(selectedRevisionId) {
 }
 
 export function revertToSelectedRevisionId() {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch({
-      type: "REVERT_TO_NOTEBOOK_HISTORY_BROWSER_SELECTED_REVISION_ID"
+      type: "UPDATE_IOMD_CONTENT",
+      iomd: getState().notebookHistory.revisionContent[
+        getState().notebookHistory.selectedRevisionId
+      ]
     });
     dispatch({
       type: "SET_MODAL_STATE",
