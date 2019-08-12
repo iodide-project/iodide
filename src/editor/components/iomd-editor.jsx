@@ -118,6 +118,7 @@ class IomdEditorUnconnected extends React.Component {
       formatOnType: true,
       wrappingIndent: "same",
       lineNumbersMinChars: 3,
+      lineDecorationsWidth: 3,
       renderLineHighlight: "gutter",
       minimap: {
         enabled: false
