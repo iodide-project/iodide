@@ -1,6 +1,12 @@
 import { store } from "../../store";
-import * as actions from "../actions";
 import { toggleModal } from "../modal-actions";
+import {
+  clearVariables,
+  resetNotebook,
+  saveNotebook,
+  setViewMode,
+  updateTitle
+} from "../notebook-actions";
 import { evaluateNotebook, setKernelState } from "../eval-actions";
 
 import { stateProperties } from "../../state-schemas/state-schema";
@@ -23,7 +29,7 @@ describe("make sure createValidatedReducer is checking correctly", () => {
 
 describe("make sure action creators leave store in a consitent state", () => {
   beforeEach(() => {
-    store.dispatch(actions.resetNotebook());
+    store.dispatch(resetNotebook());
   });
 
   it("setKernelState", () => {
@@ -31,26 +37,22 @@ describe("make sure action creators leave store in a consitent state", () => {
   });
 
   it("saveNotebook", () => {
-    expect(() => store.dispatch(actions.saveNotebook())).not.toThrow();
+    expect(() => store.dispatch(saveNotebook())).not.toThrow();
   });
   it("saveNotebook(false)", () => {
-    expect(() => store.dispatch(actions.saveNotebook(false))).not.toThrow();
+    expect(() => store.dispatch(saveNotebook(false))).not.toThrow();
   });
 
   it("clearVariables", () => {
-    expect(() => store.dispatch(actions.clearVariables())).not.toThrow();
+    expect(() => store.dispatch(clearVariables())).not.toThrow();
   });
 
   it("updateTitle", () => {
-    expect(() =>
-      store.dispatch(actions.updateTitle("test title"))
-    ).not.toThrow();
+    expect(() => store.dispatch(updateTitle("test title"))).not.toThrow();
   });
 
   it("setViewMode", () => {
-    expect(() =>
-      store.dispatch(actions.setViewMode("REPORT_VIEW"))
-    ).not.toThrow();
+    expect(() => store.dispatch(setViewMode("REPORT_VIEW"))).not.toThrow();
   });
 
   it("addLanguage", () => {
