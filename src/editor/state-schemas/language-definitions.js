@@ -3,7 +3,7 @@
 export const jsLanguageDefinition = {
   pluginType: "language",
   languageId: "js",
-  displayName: "Javascript",
+  displayName: "JavaScript",
   module: "window",
   evaluator: "eval",
   url: ""

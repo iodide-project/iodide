@@ -8,7 +8,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
-import { updateSelectedRevisionId } from "../../actions/actions";
+import { updateSelectedRevisionId } from "../../actions/history-modal-actions";
 
 const RevisionListContainer = styled("div")`
   overflow: auto;

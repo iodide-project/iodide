@@ -1,5 +1,11 @@
 # Setting up a local development environment
 
+This document covers the nuts and bolts of setting up a development environment, but be sure to review our [main contribution page](contributing.md) for more general information.
+
+## Prerequisites
+
+You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/). If you want to work on the server, you will also need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
+
 ## Installing dependencies
 
 Run `npm install` after cloning this repository.
@@ -11,7 +17,7 @@ Run `npm install` after cloning this repository.
 If you're only working on client code and don't need to use/test any of the server functionality described below,
 you can skip setting up a full docker environment and get up and running quickly. Just run
 `npm run simple-serve` after `npm install`: this should start up a web server which will provide a basic
-version of the editing environment you can access at http://localhost:8000/.
+version of the editing environment you can access at [http://localhost:8000/](http://localhost:8000/).
 
 The command runs in watch mode, so changes to files will be detected and bundled automatically, but you will need to refresh the page in your browser manually to see the changes -- we have disabled "hot reloading" because automatically refreshing the browser would cause any active notebooks to lose their evaluation state.
 

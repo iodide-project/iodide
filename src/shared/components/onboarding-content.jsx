@@ -99,7 +99,7 @@ export default class OnboardingContent extends React.Component {
             <ElementTitle>Start with a Template</ElementTitle>
             <ElementBody>
               <ElementBlockLink href="https://iodide.io/tryit">
-                Javascript starter
+                JavaScript starter
               </ElementBlockLink>
               <ElementBlockLink href="https://iodide.io/notebooks/222/">
                 Pyodide starter

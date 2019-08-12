@@ -47,12 +47,12 @@ django-environ==0.4.5 \
 django-heroku==0.3.1 \
     --hash=sha256:2bc690aab89eedbe01311752320a9a12e7548e3b0ed102681acc5736a41a4762 \
     --hash=sha256:6af4bc3ae4a9b55eaad6dbe5164918982d2762661aebc9f83d9fa49f6009514e
-Django==2.2.3 \
-    --hash=sha256:6e974d4b57e3b29e4882b244d40171d6a75202ab8d2402b8e8adbd182e25cf0c \
-    --hash=sha256:4d23f61b26892bac785f07401bc38cbf8fa4cec993f400e9cd9ddf28fd51c0ea
-djangorestframework==3.10.1 \
-    --hash=sha256:c3c5edfdbc5dd33f9121bb84305bfd603d2c791f20cff9782772f44a7684a4e4 \
-    --hash=sha256:1ca4a5599a5ec31f3d6238a687fcc1dd4c41b1d90edab9ad398fcbf87872b7ba
+Django==2.2.4 \
+    --hash=sha256:9a2f98211ab474c710fcdad29c82f30fc14ce9917c7a70c3682162a624de4035 \
+    --hash=sha256:16a5d54411599780ac9dfe3b9b38f90f785c51259a584e0b24b6f14a7f69aae8
+djangorestframework==3.10.2 \
+    --hash=sha256:42979bd5441bb4d8fd69d0f385024a114c3cae7df0f110600b718751250f6929 \
+    --hash=sha256:aedb48010ebfab9651aaab1df5fd3b4848eb4182afc909852a2110c24f89a359
 djangorestframework-simplejwt==4.3.0 \
     --hash=sha256:4cb1a51bf9b098b983e1326a1cfc65fb0b3c5a2aa0fa43effdbf05dd6da5e8cb
 dockerflow==2019.6.0 \
@@ -67,15 +67,15 @@ gunicorn==19.9.0 \
 idna==2.8 \
     --hash=sha256:c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407 \
     --hash=sha256:ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c
-oauthlib==3.0.2 \
-    --hash=sha256:40a63637707e9163eda62d0f5345120c65e001a790480b8256448543c1f78f66 \
-    --hash=sha256:b4d99ae8ccfb7d33ba9591b59355c64eef5241534aa3da2e4c0435346b84bc8e
+oauthlib==3.1.0 \
+    --hash=sha256:df884cd6cbe20e32633f1db1072e9356f53638e4361bef4e8b03c9127c9328ea \
+    --hash=sha256:bee41cc35fcca6e988463cacc3bcb8a96224f470ca547e697b604cc697b2f889
 orderedmultidict==1.0.1 \
     --hash=sha256:43c839a17ee3cdd62234c47deca1a8508a3f2ca1d0678a3bf791c87cf84adbf3 \
     --hash=sha256:04070bbb5e87291cc9bfa51df413677faf2141c73c61d2a5f7b26bea3cd882ad
-pbr==5.4.1 \
-    --hash=sha256:4aed6c1b1fa5020def0f22aed663d87b81bb3235f112490b07d2643d7a98c5b5 \
-    --hash=sha256:0ca44dc9fd3b04a22297c2a91082d8df2894862e8f4c86a49dac69eae9e85ca0
+pbr==5.4.2 \
+    --hash=sha256:56e52299170b9492513c64be44736d27a512fa7e606f21942160b68ce510b4bc \
+    --hash=sha256:9b321c204a88d8ab5082699469f52cc94c5da45c51f114113d01b3d993c24cdf
 psycopg2-binary==2.8.3 \
     --hash=sha256:2b6d561193f0dc3f50acfb22dd52ea8c8dfbc64bcafe3938b5f209cc17cb6f00 \
     --hash=sha256:2ac0731d2d84b05c7bb39e85b7e123c3a0acd4cda631d8d542802c88deb9e87e \
@@ -126,9 +126,9 @@ python-dateutil==2.8.0 \
 python3-openid==3.1.0 \
     --hash=sha256:0086da6b6ef3161cfe50fb1ee5cceaf2cda1700019fda03c2c5c440ca6abe4fa \
     --hash=sha256:628d365d687e12da12d02c6691170f4451db28d6d68d050007e4a40065868502
-pytz==2019.1 \
-    --hash=sha256:303879e36b721603cc54604edcac9d20401bdbe31e1e4fdee5b9f98d5d31dfda \
-    --hash=sha256:d747dd3d23d77ef44c6a3526e274af6efeb0a6f1afd5a69ba4d5be4098c8e141
+pytz==2019.2 \
+    --hash=sha256:c894d57500a4cd2d5c71114aaab77dbab5eabd9022308ce5ac9bb93a60a6f0c7 \
+    --hash=sha256:26c0b32e437e54a18161324a2fca3c4b9846b74a8dccddd843113109e1116b32
 requests-oauthlib==1.2.0 \
     --hash=sha256:bd6533330e8748e94bf0b214775fed487d309b8b8fe823dc45641ebcd9a32f57 \
     --hash=sha256:d3ed0c8f2e3bbc6b344fa63d6f933745ab394469da38db16bdddb461c7e25140 \

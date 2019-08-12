@@ -5,8 +5,8 @@ import Helmet from "react-helmet";
 
 import { connect } from "react-redux";
 
-import { updateTitle } from "../../actions/actions";
 import { updateAutosave } from "../../actions/autosave-actions";
+import { updateTitle } from "../../actions/notebook-actions";
 
 const TitleContainer = styled("div")``;
 

@@ -1,22 +1,23 @@
 import UserTask from "./user-task";
 import ExternalLinkTask from "./external-link-task";
 import { store } from "../store";
-import * as actions from "../actions/actions";
+import {
+  moveCursorToNextChunk,
+  toggleWrapInEditors
+} from "../actions/editor-actions";
 import { evaluateText, evaluateNotebook } from "../actions/eval-actions";
+import {
+  toggleFileModal,
+  toggleHelpModal,
+  toggleHistoryModal
+} from "../actions/modal-actions";
+import { clearVariables } from "../actions/notebook-actions";
 
 // FIXME: remove requirement to import store in this file by attaching
 // keypress handling to store in initializeDefaultKeybindings() --
 // and change that to initializeDefaultKeybindings(dispatch).
 // Callback should map to a standard action creator that can be passed
 // to dispatch.
-
-const dispatcher = {};
-for (const action in actions) {
-  if (Object.prototype.hasOwnProperty.call(actions, action)) {
-    dispatcher[action] = (...params) =>
-      store.dispatch(actions[action](...params));
-  }
-}
 
 const oscpu = window.navigator.oscpu || window.navigator.platform;
 let OSName = "Unknown OS";
@@ -53,7 +54,7 @@ tasks.evaluateChunkAndSelectBelow = new UserTask({
   preventDefaultKeybinding: true,
   callback() {
     store.dispatch(evaluateText());
-    dispatcher.moveCursorToNextChunk();
+    store.dispatch(moveCursorToNextChunk());
   }
 });
 
@@ -63,7 +64,7 @@ tasks.toggleWrapInEditors = new UserTask({
   keybindings: ["alt+w"],
   preventDefaultKeybinding: true,
   callback() {
-    dispatcher.toggleWrapInEditors();
+    store.dispatch(toggleWrapInEditors());
   }
 });
 
@@ -85,14 +86,14 @@ tasks.clearVariables = new UserTask({
   title: "Clear Variables",
   preventDefaultKeybinding: true,
   callback() {
-    dispatcher.clearVariables();
+    store.dispatch(clearVariables());
   }
 });
 
 tasks.toggleFileModal = new UserTask({
   title: "Manage Files",
   callback() {
-    dispatcher.toggleFileModal();
+    store.dispatch(toggleFileModal());
   }
 });
 
@@ -100,7 +101,7 @@ tasks.toggleHistoryModal = new UserTask({
   title: "View Notebook History",
   menuTitle: "History",
   callback() {
-    dispatcher.toggleHistoryModal();
+    store.dispatch(toggleHistoryModal());
   }
 });
 
@@ -111,20 +112,8 @@ tasks.toggleHelpModal = new UserTask({
   displayKeybinding: "Alt+h",
   preventDefaultKeybinding: true,
   callback() {
-    dispatcher.toggleHelpModal();
+    store.dispatch(toggleHelpModal());
   }
-});
-
-tasks.fileAnIssue = new ExternalLinkTask({
-  title: "File an Issue",
-  menuTitle: "File an Issue ...",
-  url: "http://github.com/iodide-project/iodide/issues/new"
-});
-
-tasks.seeAllExamples = new ExternalLinkTask({
-  title: "See All Examples",
-  menuTitle: "See All Examples ...",
-  url: "http://github.com/iodide-project/iodide-examples/"
 });
 
 export default tasks;
