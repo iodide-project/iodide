@@ -5,7 +5,7 @@ import {
 } from "../../shared/server-api/notebook";
 import { clearLocalAutosave } from "../tools/local-autosave";
 import { getNotebookID, getRevisionID } from "../tools/server-tools";
-import { updateTitle, updateNotebookInfo } from "./actions";
+import { updateTitle, updateNotebookInfo } from "./notebook-actions";
 import { updateIomdContent } from "./editor-actions";
 
 function updateServerSaveStatus(error) {

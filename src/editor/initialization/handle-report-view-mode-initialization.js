@@ -1,5 +1,5 @@
-import { setViewMode } from "../actions/actions";
 import { evaluateNotebook } from "../actions/eval-actions";
+import { setViewMode } from "../actions/notebook-actions";
 
 import { getStatePropsFromUrlParams } from "../tools/query-param-tools";
 
