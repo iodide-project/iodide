@@ -47,7 +47,7 @@ const listItemHeight = pr => {
       break;
     }
     case "triple": {
-      h = "48px";
+      h = "56px";
       break;
     }
     default: {
@@ -74,6 +74,7 @@ export const ListItem = styled("div")`
   align-items: ${props => listItemAlign(props.type)};
   text-decoration: none;
   color: black;
+  transition: height 200ms;
 
   :hover {
     background-color: #f6f8fa;

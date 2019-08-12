@@ -53,7 +53,7 @@ const NoFileSourcesNotice = styled.span`
   text-align: center;
 `;
 
-const ListItemCall = styled(ListMetadata)`
+const DownloadNowButtonContainer = styled(ListMetadata)`
   text-align: center;
   position: relative;
   height: 100%;
@@ -71,6 +71,10 @@ const DownloadNowButton = styled(OutlineButton)`
   padding-right: 0px;
 `;
 
+// FIXME: bring this component into its own file so we can reuse.
+// for now, however, it will be more advantageous to not encourage its use elsewhere
+// until it is needed.
+
 const Fader = styled.div`
   cursor: pointer;
   position: absolute;
@@ -85,6 +89,8 @@ const Fader = styled.div`
   transition: opacity 200ms, transform 250ms;
 `;
 
+// FIXME: bring this button approach to the files modal
+
 const ListDeleteButtonContainer = styled(ListMetadata)`
   align-self: center;
   display: grid;
@@ -93,6 +99,11 @@ const ListDeleteButtonContainer = styled(ListMetadata)`
   button {
     display: grid;
   }
+`;
+
+const ListDeleteButton = styled(TextButton)`
+  padding: 2px;
+  margin-left: 20px;
 `;
 
 const FileSourceListUnconnected = ({
@@ -145,7 +156,10 @@ const FileSourceListUnconnected = ({
               showFailureReason
             } = fileSource;
             return (
-              <ListItem type={showFailureReason ? "triple" : "single"} key={id}>
+              <ListItem
+                type={showFailureReason || !hasBeenRun ? "triple" : "single"}
+                key={id}
+              >
                 <FileSourceListItemDescription
                   url={url}
                   filename={filename}
@@ -158,7 +172,7 @@ const FileSourceListUnconnected = ({
                   showFailureReason={showFailureReason}
                 />
                 <FileSourceInterval>{updateInterval}</FileSourceInterval>
-                <ListItemCall>
+                <DownloadNowButtonContainer>
                   <Fader active={isCurrentlyRunning}>
                     <CircularProgress size={20} />
                   </Fader>
@@ -172,16 +186,16 @@ const FileSourceListUnconnected = ({
                       download now
                     </DownloadNowButton>
                   </Fader>
-                </ListItemCall>
+                </DownloadNowButtonContainer>
                 <ListDeleteButtonContainer>
-                  <TextButton
+                  <ListDeleteButton
                     onClick={() => {
                       setSourceToDelete(id);
                       setSourceToDeleteFileName(filename);
                     }}
                   >
                     <Delete />
-                  </TextButton>
+                  </ListDeleteButton>
                 </ListDeleteButtonContainer>
               </ListItem>
             );

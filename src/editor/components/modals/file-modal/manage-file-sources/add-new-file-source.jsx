@@ -125,7 +125,7 @@ export function addNewFileSourceUnconnected({
           add file source
         </AddNewSourceButton>
         <TextInput
-          label="Source URL"
+          label="source URL"
           value={url}
           onKey={updateFileSourceInputURL}
         />
@@ -152,7 +152,7 @@ export function addNewFileSourceUnconnected({
             })}
           </Select>
           <FormHelperText htmlFor="update-interval">
-            Update Interval
+            update frequency
           </FormHelperText>
         </FormControl>
       </AddNewSourceContainer>

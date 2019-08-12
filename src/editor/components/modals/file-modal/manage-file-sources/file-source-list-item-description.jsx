@@ -79,7 +79,7 @@ const StatusLabel = styled.div`
   background-color: ${({ status }) => operationStatusColors[status]};
 `;
 
-const FileUpdateOperationFailureReason = styled.div`
+const FileUpdateOperationHelperText = styled.div`
   font-size: 11px;
   font-style: italic;
   color: ${operationStatusColors.failed};
@@ -87,6 +87,8 @@ const FileUpdateOperationFailureReason = styled.div`
   width: 400px;
   overflow: hidden;
   white-space: nowrap;
+  height: ${({ collapsed }) => (collapsed ? "0px" : "100%")};
+  transition: height 200s;
 
   @media (max-width: 1200px) {
     width: 300px;
@@ -122,16 +124,12 @@ const FileSourceListDescription = ({
       <FileSourceURLContainer href={url}>
         <FileSourceURL href={url}>{url}</FileSourceURL>
       </FileSourceURLContainer>
-      {showFailureReason && (
-        <FileUpdateOperationFailureReason title={failureReason}>
-          {failureReason}
-        </FileUpdateOperationFailureReason>
-      )}
-      {!hasBeenRun && (
-        <ClickRunNowToFetch>
-          click &quot;run now&quot; to fetch, or wait for scheduler
-        </ClickRunNowToFetch>
-      )}
+      <FileUpdateOperationHelperText
+        collapsed={!(showFailureReason || !hasBeenRun)}
+      >
+        {showFailureReason && failureReason}
+        {!hasBeenRun && `click "download now" or wait for scheduler`}
+      </FileUpdateOperationHelperText>
     </FileSourceListItemDescriptionContainer>
   );
 };
