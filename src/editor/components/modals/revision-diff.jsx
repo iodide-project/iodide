@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 
 import Fab from "@material-ui/core/Fab";
 
+import ReversionModal from "./reversion-modal";
+
 import { revertToSelectedRevisionId } from "../../actions/history-modal-actions";
 
 import { getPreviousRevisionId } from "../../tools/revision-history";
@@ -25,6 +27,13 @@ class RevisionDiffUnconnected extends React.Component {
     revertToSelectedRevisionId: PropTypes.func.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      pendingRevert: false
+    };
+  }
+
   render() {
     if (this.props.revisionContentFetchStatus === "FETCHING") {
       return <p>Getting revisions...</p>;
@@ -37,6 +46,16 @@ class RevisionDiffUnconnected extends React.Component {
     }
     return (
       <DiffContainer>
+        <ReversionModal
+          visible={this.state.pendingRevert !== false}
+          onCloseOrCancel={() => {
+            this.setState({ pendingRevert: false });
+          }}
+          onRevert={() => {
+            this.props.revertToSelectedRevisionId();
+          }}
+          aboveOtherModals
+        />
         <ReactDiffViewer
           oldValue={this.props.previousRevisionContent}
           newValue={this.props.currentRevisionContent}
@@ -44,7 +63,9 @@ class RevisionDiffUnconnected extends React.Component {
         />
         {this.props.canRevert && (
           <Fab
-            onClick={this.props.revertToSelectedRevisionId}
+            onClick={() => {
+              this.setState({ pendingRevert: true });
+            }}
             variant="extended"
             style={{
               right: 32,
