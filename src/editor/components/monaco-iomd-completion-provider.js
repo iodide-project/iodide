@@ -57,6 +57,20 @@ const suggestionListWithInsertText = (wordList, itemKind) =>
     insertText
   }));
 
+const suggestionListWithOpts = (wordList, opts) =>
+  wordList.map(word => ({
+    label: word,
+    insertText: word,
+    ...opts
+  }));
+
+// const suggestionListWithInsertTextAndOpts = (wordList, opts) =>
+//   wordList.map(([label, insertText]) => ({
+//     label,
+//     kind: itemKind,
+//     insertText
+//   }));
+
 // const suggestionListWithSnippets = wordList =>
 //   wordList.map(([label, insertText]) => ({
 //     label,
@@ -76,36 +90,44 @@ const suggestionListWithInsertText = (wordList, itemKind) =>
 //   }))
 // });
 
-const delimLineSuggestion = (lineSoFar, knownChunkTypes) => {
+const delimLineSuggestion = (lineSoFar, knownChunkTypes, lineNumber) => {
   let suggestions;
-  // if (lineSoFar === "%") {
-  //   suggestions = suggestionListWithInsertText(
-  //     knownChunkTypes.map(ct => [`%% ${ct}`, `% ${ct}`]),
-  //     Keyword
-  //   );
-  //   // } else if (lineSoFar === "%%") {
-  // } else
-  if (lineSoFar.match("^%%+$")) {
-    suggestions = suggestionList(
-      knownChunkTypes.map(ct => `${"%".repeat(lineSoFar.length)} ${ct}`),
-      Keyword
+  if (lineSoFar === "%") {
+    // console.log("ONE '%' CASE");
+    suggestions = suggestionListWithOpts(
+      knownChunkTypes.map(ct => `%% ${ct}`),
+      {
+        kind: Keyword,
+        range: new monaco.Range(lineNumber, 1, lineNumber, 2)
+      }
+    );
+  } else if (lineSoFar.match("^%%+$")) {
+    // console.log("'^%%+$' CASE");
+    const numPctSigns = lineSoFar.length;
+    suggestions = suggestionListWithOpts(
+      knownChunkTypes.map(ct => `${"%".repeat(numPctSigns)} ${ct}`),
+      {
+        kind: Keyword,
+        range: new monaco.Range(lineNumber, 1, lineNumber, numPctSigns)
+      }
     );
   } else if (lineSoFar.match(new RegExp(knownChunkTypes.join("|")))) {
     // if the delimLine already includes a valid chunk type
     // then return the valid chunkflags as suggestions...
     suggestions = suggestionList(validChunkFlags, Keyword);
-  } else if (lineSoFar.match(/%% */)) {
-    // if the delimLine already includes "%%"
-    // then return knownChunkTypes
-    suggestions = suggestionList(knownChunkTypes, Keyword);
+    // } else if (lineSoFar.match(/%% */)) {
+    //   // if the delimLine already includes "%%"
+    //   // then return knownChunkTypes
+    //   suggestions = suggestionList(knownChunkTypes, Keyword);
   } else {
     // otherwise, suggest a chunk types with %% prefx
+    // console.log("ELSE CASE");
     suggestions = suggestionList(
       knownChunkTypes.map(ct => `%% ${ct}`),
       Keyword
     );
   }
-  console.log("sugg", suggestions);
+  // console.log("sugg", suggestions);
   return { suggestions };
 };
 
@@ -168,7 +190,7 @@ const fetchLineSuggestion = (lineSoFar, fileNames) => {
       )
     );
   }
-  console.log("sugg", suggestions);
+  // console.log("sugg", suggestions);
   return { suggestions };
 };
 
@@ -190,15 +212,18 @@ function codeChunkIdentifiers(codeChunkContents) {
 }
 
 export const iomdCompletionProvider = {
-  provideCompletionItems: (model, position, ...args) => {
-    console.log("provideCompletionItems", { model, position, args });
+  triggerCharacters: ["%"],
+  provideCompletionItems: (model, position, context, token) => {
+    // console.log("provideCompletionItems", { model, position, args });
+    console.log("provideCompletionItems context", context);
+    console.log("provideCompletionItems token", token);
 
     const { iomdChunks, languageDefinitions, notebookInfo } = store.getState();
     const currentChunk = getChunkContainingLine(
       iomdChunks,
       position.lineNumber
     );
-    console.log({ currentChunk });
+    // console.log({ currentChunk });
 
     const lineSoFar = model.getValueInRange({
       startLineNumber: position.lineNumber,
@@ -211,13 +236,17 @@ export const iomdCompletionProvider = {
       currentChunk.startLine === position.lineNumber || lineSoFar === "%"
         ? "delimLine"
         : currentChunk.chunkType;
-    console.log("lineSoFar", lineSoFar);
+    // console.log("lineSoFar", lineSoFar);
     switch (completionType) {
       case "delimLine": {
         const knownChunkTypes = Object.keys(languageDefinitions)
           .concat(NONCODE_EVAL_TYPES)
           .concat(RUNNABLE_CHUNK_TYPES);
-        return delimLineSuggestion(lineSoFar, knownChunkTypes);
+        return delimLineSuggestion(
+          lineSoFar,
+          knownChunkTypes,
+          position.lineNumber
+        );
       }
       case "fetch": {
         const fileNames = notebookInfo.files.map(f => f.filename);
