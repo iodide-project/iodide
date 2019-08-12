@@ -41,7 +41,7 @@ const validChunkFlags = ["skipRunAll"];
 //   ];
 // }
 
-const { Keyword, Snippet, File } = monaco.languages.CompletionItemKind;
+const { Keyword, Snippet, File, Text } = monaco.languages.CompletionItemKind;
 
 const suggestionList = (wordList, itemKind) =>
   wordList.map(word => ({
@@ -172,6 +172,23 @@ const fetchLineSuggestion = (lineSoFar, fileNames) => {
   return { suggestions };
 };
 
+function codeChunkIdentifiers(codeChunkContents) {
+  // FIXME: this function is super inefficient.
+  // If we move this to the store or a language worker,
+  // we can more intelligently manage the list of words incrementally
+  // rather than rebuilding each time. Or ideally, we can tap into an existing tokenizer
+  const identifiersRE = /[_$a-zA-Z][_$a-zA-Z0-9α]*/g;
+  const identifierSet = new Set();
+  for (const chunkContent of codeChunkContents) {
+    let result = identifiersRE.exec(chunkContent);
+    while (result) {
+      identifierSet.add(result[0]);
+      result = identifiersRE.exec(chunkContent);
+    }
+  }
+  return { suggestions: suggestionList([...identifierSet], Text) };
+}
+
 export const iomdCompletionProvider = {
   provideCompletionItems: (model, position, ...args) => {
     console.log("provideCompletionItems", { model, position, args });
@@ -206,8 +223,23 @@ export const iomdCompletionProvider = {
         const fileNames = notebookInfo.files.map(f => f.filename);
         return fetchLineSuggestion(lineSoFar, fileNames);
       }
-      default:
+      case "md": {
         return {};
+      }
+      default: {
+        // FIXME: this should not be hardcoded here, but this concept of
+        // code-like chunk types that might share identifers does not fit
+        // any existing concept
+        const codeLikeChunkTypes = Object.keys(languageDefinitions).concat([
+          "css",
+          "fetch"
+        ]);
+        return codeChunkIdentifiers(
+          iomdChunks
+            .filter(c => codeLikeChunkTypes.includes(c.chunkType))
+            .map(c => c.chunkContent)
+        );
+      }
     }
   }
 };

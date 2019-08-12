@@ -63,7 +63,11 @@ monaco.languages.registerCompletionItemProvider("iomd", iomdCompletionProvider);
 //         { value: "**SOURCE**" },
 //         {
 //           value: `
-// position: ${JSON.stringify(position)}
+// <div id="hoverDiv">hoverdiv content</div>
+//           position: ${JSON.stringify(position)}
+// # heading
+// some _text_ with **markdown**
+
 //           \`\`\`html
 //   <body>
 //     <div class="test">
