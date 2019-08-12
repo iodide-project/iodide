@@ -46,7 +46,7 @@ const FileSourceURL = styled(ListSecondaryTextLink)`
 
 const ClickRunNowToFetch = styled.div`
   color: #999;
-  font-size: 10px;
+  font-size: 12px;
   font-style: italic;
   height: 100%;
 `;
@@ -79,12 +79,28 @@ const StatusLabel = styled.div`
   background-color: ${({ status }) => operationStatusColors[status]};
 `;
 
+const FileUpdateOperationFailureReason = styled.div`
+  font-size: 11px;
+  font-style: italic;
+  color: ${operationStatusColors.failed};
+  text-overflow: ellipsis;
+  width: 400px;
+  overflow: hidden;
+  white-space: nowrap;
+
+  @media (max-width: 1200px) {
+    width: 300px;
+  }
+`;
+
 const FileSourceListDescription = ({
   url,
   filename,
   latestFileUpdateOperationStatus,
   lastUpdated,
-  hasBeenRun
+  hasBeenRun,
+  failureReason,
+  showFailureReason = false
 }) => {
   return (
     <FileSourceListItemDescriptionContainer>
@@ -92,14 +108,10 @@ const FileSourceListDescription = ({
         <FileInformationContainer>
           <FileName hasBeenRun={hasBeenRun}>{filename}</FileName>
 
-          {hasBeenRun ? (
+          {hasBeenRun && (
             <StatusLabel status={latestFileUpdateOperationStatus}>
               {latestFileUpdateOperationStatus}
             </StatusLabel>
-          ) : (
-            <ClickRunNowToFetch>
-              click &quot;run now&quot; to fetch, or wait for scheduler
-            </ClickRunNowToFetch>
           )}
 
           {lastUpdated && (
@@ -110,6 +122,16 @@ const FileSourceListDescription = ({
       <FileSourceURLContainer href={url}>
         <FileSourceURL href={url}>{url}</FileSourceURL>
       </FileSourceURLContainer>
+      {showFailureReason && (
+        <FileUpdateOperationFailureReason title={failureReason}>
+          {failureReason}
+        </FileUpdateOperationFailureReason>
+      )}
+      {!hasBeenRun && (
+        <ClickRunNowToFetch>
+          click &quot;run now&quot; to fetch, or wait for scheduler
+        </ClickRunNowToFetch>
+      )}
     </FileSourceListItemDescriptionContainer>
   );
 };
@@ -117,6 +139,8 @@ const FileSourceListDescription = ({
 FileSourceListDescription.propTypes = {
   url: PropTypes.string,
   filename: PropTypes.string,
+  failureReason: PropTypes.string,
+  showFailureReason: PropTypes.bool,
   latestFileUpdateOperationStatus: PropTypes.string,
   lastUpdated: PropTypes.string,
   hasBeenRun: PropTypes.bool

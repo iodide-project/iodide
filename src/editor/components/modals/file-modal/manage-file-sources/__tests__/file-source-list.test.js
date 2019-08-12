@@ -32,6 +32,18 @@ const finishedRunning = {
   }
 };
 
+const failed = {
+  filename: "failure",
+  id: 3,
+  url: "https://whatever.com/api",
+  update_interval: "never",
+  latest_file_update_operation: {
+    status: "failed",
+    started: "2019-07-08",
+    failure_reason: "failure reason goes here"
+  }
+};
+
 describe("FileSourceList mapStateToProps", () => {
   it("maps to a currently-running file source", () => {
     const {
@@ -51,6 +63,8 @@ describe("FileSourceList mapStateToProps", () => {
     );
     expect(fs.isCurrentlyRunning).toBe(true);
     expect(fs.hasBeenRun).toBe(true);
+    expect(fs.failureReason).toBeUndefined();
+    expect(fs.showFailureReason).toBe(false);
   });
 
   it("maps to an unrun file source", () => {
@@ -67,6 +81,8 @@ describe("FileSourceList mapStateToProps", () => {
     expect(fs.latestFileUpdateOperationStatus).toBe(undefined);
     expect(fs.isCurrentlyRunning).toBe(false);
     expect(fs.hasBeenRun).toBe(false);
+    expect(fs.failureReason).toBeUndefined();
+    expect(fs.showFailureReason).toBe(false);
   });
 
   it("maps to an finished-running file source", () => {
@@ -87,5 +103,29 @@ describe("FileSourceList mapStateToProps", () => {
     );
     expect(fs.isCurrentlyRunning).toBe(false);
     expect(fs.hasBeenRun).toBe(true);
+    expect(fs.failureReason).toBeUndefined();
+    expect(fs.showFailureReason).toBe(false);
+  });
+
+  it("maps to an finished-running file source", () => {
+    const {
+      fileSources: [fs]
+    } = mapStateToProps({
+      fileSources: [failed]
+    });
+    expect(fs.id).toBe(failed.id);
+    expect(fs.filename).toBe(failed.filename);
+    expect(fs.url).toBe(failed.url);
+    expect(fs.updateInterval).toBe(failed.update_interval);
+    expect(fs.lastUpdated).toBe(failed.latest_file_update_operation.started);
+    expect(fs.latestFileUpdateOperationStatus).toBe(
+      failed.latest_file_update_operation.status
+    );
+    expect(fs.isCurrentlyRunning).toBe(false);
+    expect(fs.hasBeenRun).toBe(true);
+    expect(fs.failureReason).toBe(
+      failed.latest_file_update_operation.failure_reason
+    );
+    expect(fs.showFailureReason).toBe(true);
   });
 });

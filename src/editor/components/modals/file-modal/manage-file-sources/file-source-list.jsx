@@ -41,6 +41,7 @@ const FileSourceInterval = styled(ListMetadata)`
   text-align: center;
   line-height: 1.1;
   min-width: 100px;
+  align-self: center;
 `;
 
 const NoFileSourcesNotice = styled.span`
@@ -67,7 +68,7 @@ const ListItemCall = styled(ListMetadata)`
 const DownloadNowButton = styled(OutlineButton)`
   min-width: 150px;
   padding-left: 3px;
-  padding-right: 3px;
+  padding-right: 0px;
 `;
 
 const Fader = styled.div`
@@ -82,6 +83,16 @@ const Fader = styled.div`
   opacity: ${({ active }) => (active ? 1 : 0)};
   transform: ${({ active }) => (!active ? "translateY(-5px)" : "none")};
   transition: opacity 200ms, transform 250ms;
+`;
+
+const ListDeleteButtonContainer = styled(ListMetadata)`
+  align-self: center;
+  display: grid;
+  align-content: center;
+
+  button {
+    display: grid;
+  }
 `;
 
 const FileSourceListUnconnected = ({
@@ -129,10 +140,12 @@ const FileSourceListUnconnected = ({
               hasBeenRun,
               updateInterval,
               lastUpdated,
-              isCurrentlyRunning
+              isCurrentlyRunning,
+              failureReason,
+              showFailureReason
             } = fileSource;
             return (
-              <ListItem type="single" key={fileSource.id}>
+              <ListItem type={showFailureReason ? "triple" : "single"} key={id}>
                 <FileSourceListItemDescription
                   url={url}
                   filename={filename}
@@ -141,6 +154,8 @@ const FileSourceListUnconnected = ({
                   }
                   lastUpdated={lastUpdated}
                   hasBeenRun={hasBeenRun}
+                  failureReason={failureReason}
+                  showFailureReason={showFailureReason}
                 />
                 <FileSourceInterval>{updateInterval}</FileSourceInterval>
                 <ListItemCall>
@@ -158,7 +173,7 @@ const FileSourceListUnconnected = ({
                     </DownloadNowButton>
                   </Fader>
                 </ListItemCall>
-                <ListMetadata>
+                <ListDeleteButtonContainer>
                   <TextButton
                     onClick={() => {
                       setSourceToDelete(id);
@@ -167,7 +182,7 @@ const FileSourceListUnconnected = ({
                   >
                     <Delete />
                   </TextButton>
-                </ListMetadata>
+                </ListDeleteButtonContainer>
               </ListItem>
             );
           })}
@@ -190,26 +205,46 @@ FileSourceListUnconnected.propTypes = {
 
 export function mapStateToProps(state) {
   const fileSources = state.fileSources.map(fileSource => {
+    const fileUpdateOperation = fileSource.latest_file_update_operation;
+    const hasFileUpdateOperation =
+      fileUpdateOperation !== null &&
+      Object.getOwnPropertyNames(fileUpdateOperation).length > 0;
+
+    const hasBeenRun =
+      hasFileUpdateOperation &&
+      fileUpdateOperation.status !== undefined &&
+      fileUpdateOperation.status !== "pending";
+
+    const isCurrentlyRunning =
+      hasFileUpdateOperation &&
+      ["pending", "running"].includes(fileUpdateOperation.status);
+
+    const latestFileUpdateOperationStatus = hasFileUpdateOperation
+      ? fileUpdateOperation.status
+      : undefined;
+
+    const lastUpdated = hasFileUpdateOperation
+      ? fileUpdateOperation.started
+      : undefined;
+
+    const failureReason =
+      hasFileUpdateOperation && fileUpdateOperation.failure_reason !== null
+        ? fileUpdateOperation.failure_reason
+        : undefined;
+
+    const showFailureReason = failureReason !== undefined;
+
     return {
       id: fileSource.id,
       filename: fileSource.filename,
       url: fileSource.url,
       updateInterval: fileSource.update_interval,
-      isCurrentlyRunning:
-        fileSource.latest_file_update_operation &&
-        ["pending", "running"].includes(
-          fileSource.latest_file_update_operation.status
-        ),
-      latestFileUpdateOperationStatus:
-        fileSource.latest_file_update_operation &&
-        fileSource.latest_file_update_operation.status,
-      lastUpdated:
-        fileSource.latest_file_update_operation &&
-        fileSource.latest_file_update_operation.started,
-      hasBeenRun:
-        fileSource.latest_file_update_operation &&
-        fileSource.latest_file_update_operation.status !== undefined &&
-        fileSource.latest_file_update_operation.status !== "pending"
+      isCurrentlyRunning,
+      latestFileUpdateOperationStatus,
+      lastUpdated,
+      hasBeenRun,
+      failureReason,
+      showFailureReason
     };
   });
   return {
