@@ -5,6 +5,7 @@ import {
 import { haveLocalAutosave } from "../tools/local-autosave";
 import { getRevisionIdsNeededForDisplay } from "../tools/revision-history";
 import { getNotebookID, isLoggedIn } from "../tools/server-tools";
+import { updateAutosave } from "./autosave-actions";
 
 function getRequiredRevisionContent(state, dispatch) {
   const contentIdsNeeded = getRevisionIdsNeededForDisplay(
@@ -45,6 +46,19 @@ export function updateSelectedRevisionId(selectedRevisionId) {
       selectedRevisionId
     });
     getRequiredRevisionContent(getState(), dispatch);
+  };
+}
+
+export function revertToSelectedRevisionId() {
+  return dispatch => {
+    dispatch({
+      type: "REVERT_TO_NOTEBOOK_HISTORY_BROWSER_SELECTED_REVISION_ID"
+    });
+    dispatch({
+      type: "SET_MODAL_STATE",
+      modalState: "MODALS_CLOSED"
+    });
+    dispatch(updateAutosave());
   };
 }
 

@@ -3,11 +3,20 @@ import React from "react";
 import styled from "react-emotion";
 import { connect } from "react-redux";
 
+import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+
 import { ModalContainer } from "./modal-container";
-import TitleBar from "./title-bar";
 import RevisionDiff from "./revision-diff";
 import RevisionList from "./revision-list";
-import { getNotebookRevisionList } from "../../actions/history-modal-actions";
+import {
+  getNotebookRevisionList,
+  revertToSelectedRevisionId
+} from "../../actions/history-modal-actions";
+
+import THEME from "../../../shared/theme";
 
 const ModalContentContainer = styled("div")`
   display: grid;
@@ -21,7 +30,9 @@ const ModalContentContainer = styled("div")`
 class HistoryModalUnconnected extends React.Component {
   static propTypes = {
     getNotebookRevisionList: PropTypes.func.isRequired,
-    revisionListFetchStatus: PropTypes.string.isRequired
+    revisionListFetchStatus: PropTypes.string.isRequired,
+    canRevert: PropTypes.bool,
+    revertToSelectedRevisionId: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -31,7 +42,33 @@ class HistoryModalUnconnected extends React.Component {
   render() {
     return (
       <ModalContainer style={{ width: "90%" }}>
-        <TitleBar title="Notebook History" />
+        <AppBar
+          position="static"
+          style={{
+            background: THEME.clientModal.background
+          }}
+        >
+          <Toolbar>
+            <Typography
+              variant="title"
+              style={{
+                color: "#fff"
+              }}
+            >
+              Notebook History
+            </Typography>
+            {this.props.canRevert && (
+              <Button
+                onClick={this.props.revertToSelectedRevisionId}
+                style={{ color: "white" }}
+                variant="text"
+                mini
+              >
+                Revert
+              </Button>
+            )}
+          </Toolbar>
+        </AppBar>
         {(() => {
           switch (this.props.revisionListFetchStatus) {
             case "FETCHING":
@@ -54,15 +91,21 @@ class HistoryModalUnconnected extends React.Component {
 
 export function mapStateToProps(state) {
   const notebookHistory = state.notebookHistory || {};
-  const { errorGettingRevisionList, revisionListFetchStatus } = notebookHistory;
+  const {
+    errorGettingRevisionList,
+    revisionListFetchStatus,
+    revisionContent,
+    selectedRevisionId
+  } = notebookHistory;
 
   return {
     errorGettingRevisionList,
-    revisionListFetchStatus
+    revisionListFetchStatus,
+    canRevert: selectedRevisionId !== undefined && revisionContent
   };
 }
 
 export default connect(
   mapStateToProps,
-  { getNotebookRevisionList } // mapDispatchToProps shorthand
+  { getNotebookRevisionList, revertToSelectedRevisionId } // mapDispatchToProps shorthand
 )(HistoryModalUnconnected);

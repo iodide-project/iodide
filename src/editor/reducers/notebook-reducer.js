@@ -103,6 +103,15 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
+    case "REVERT_TO_NOTEBOOK_HISTORY_BROWSER_SELECTED_REVISION_ID": {
+      return Object.assign({}, state, {
+        iomd:
+          state.notebookHistory.revisionContent[
+            state.notebookHistory.selectedRevisionId
+          ]
+      });
+    }
+
     case "GETTING_REVISION_CONTENT": {
       return Object.assign({}, state, {
         notebookHistory: {
