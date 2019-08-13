@@ -8,6 +8,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { ListItem, ListMetadata } from "../../../../../shared/components/list";
 
 import FileSourceListItemDescription from "./file-source-list-item-description";
+
 import { DELETE_ANIMATION_LENGTH_MS } from "../shared/constants";
 
 import { createFileUpdateOperation as createFileUpdateOperationAction } from "../../../../actions/file-source-actions";

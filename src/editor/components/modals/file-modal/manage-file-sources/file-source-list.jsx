@@ -112,12 +112,11 @@ FileSourceListUnconnected.propTypes = {
 };
 
 export function mapStateToProps(state) {
-  const fileSources = state.fileSources.map(({ id, filename }) => ({
-    id,
-    filename
-  }));
   return {
-    fileSources
+    fileSources: state.fileSources.map(({ id, filename }) => ({
+      id,
+      filename
+    }))
   };
 }
 
