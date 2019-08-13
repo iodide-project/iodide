@@ -1,4 +1,6 @@
-const delimEOL = (token, nextEmbedded) => ({
+// this function is used to set the nextEmbedded options
+// for the final token of  delimLime
+const delimEolToken = (token, nextEmbedded) => ({
   cases: {
     [`${nextEmbedded}@embedModes`]: {
       token,
@@ -17,27 +19,29 @@ export function compileIomdLanguageDef(embedModes) {
       root: [[/(^%%.*$)/, { token: "@rematch", next: `@delimLine` }]],
 
       delimLine: [
-        // first, check whether this is a delimLine with flags.
-        // if so, the
         [
+          // first, check whether this is a delimLine with flags.
+          // the "$3" capture group is the next embedded type
           /(^%%+)( *)(\w+)( +[\w "{}:=]*)$/,
           [
-            {
-              token: "iomd-type",
-              log: "capt groups 1:`$1`, 2:`$2`, 3:`$3`, 4:`$4`, -- state `$S1`"
-            },
             "iomd-type",
             "iomd-type",
-            delimEOL("iomd-flag", "$3")
+            "iomd-type",
+            delimEolToken("iomd-flag", "$3")
           ]
         ],
         [
+          // next, check for delimLine with only a type and whitespace.
+          // the "$2" capture group is the next embedded type
           /(^%%+ *)(\w+) *$/,
-          [{ token: "iomd-type" }, delimEOL("iomd-type", "$2")]
+          ["iomd-type", delimEolToken("iomd-type", "$2")]
         ],
-        // a delim line with only spaces returns to the nextEmbedded
-        // that is in the $S2 position in the current delimLine state
-        [/^%%+ *$/, delimEOL("iomd-type", "$S2")]
+        [
+          // finally delimLine with only spaces returns to the nextEmbedded
+          // that is in the $S2 position in the current delimLine state
+          /^%%+ *$/,
+          delimEolToken("iomd-type", "$S2")
+        ]
       ],
 
       embed: [
@@ -78,11 +82,4 @@ export const conf = {
     { open: "(", close: ")" },
     { open: "`", close: "`" }
   ]
-
-  // folding: {
-  //   markers: {
-  //     start: new RegExp("^%%"),
-  //     end: new RegExp("^%%")
-  //   }
-  // }
 };

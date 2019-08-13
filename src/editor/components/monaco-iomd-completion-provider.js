@@ -50,7 +50,7 @@ export const iomdCompletionProvider = {
         return {};
       }
       default: {
-        // FIXME: this should not be hardcoded here, but this concept of
+        // FIXME: perhaps this should not be hardcoded here, but this concept of
         // code-like chunk types that might share identifers does not fit
         // any existing concept
         const codeLikeChunkTypes = Object.keys(languageDefinitions).concat([

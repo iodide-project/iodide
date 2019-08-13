@@ -8,8 +8,11 @@ const { Keyword, Snippet, File } = monaco.languages.CompletionItemKind;
 export const fetchLineSuggestion = (lineSoFar, fileNames) => {
   let suggestions;
   if (lineSoFar.match(/\w+: \w+ *= */)) {
+    // if the line matches the patter of an assignment fetch
+    // then offer filename completions
     suggestions = makeSuggestionList(fileNames, File);
   } else {
+    // default: offer fetch type templates
     suggestions = [
       /* eslint-disable no-template-curly-in-string */
       {
