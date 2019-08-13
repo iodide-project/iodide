@@ -3,7 +3,6 @@ import React from "react";
 import ReactDiffViewer from "react-diff-viewer";
 import styled from "react-emotion";
 import { connect } from "react-redux";
-import format from "date-fns/format";
 
 import Fab from "@material-ui/core/Fab";
 
@@ -26,7 +25,7 @@ class RevisionDiffUnconnected extends React.Component {
     revisionContentFetchStatus: PropTypes.string.isRequired,
     canRevert: PropTypes.bool,
     revertToSelectedRevisionId: PropTypes.func.isRequired,
-    date: PropTypes.string
+    selectedRevision: PropTypes.object // eslint-disable-line react/forbid-prop-types
   };
 
   constructor(props) {
@@ -56,7 +55,11 @@ class RevisionDiffUnconnected extends React.Component {
           onRevert={() => {
             this.props.revertToSelectedRevisionId();
           }}
-          date={this.props.date}
+          date={
+            this.props.selectedRevision
+              ? this.props.selectedRevision.created
+              : undefined
+          }
           aboveOtherModals
         />
         <ReactDiffViewer
@@ -98,13 +101,9 @@ export function mapStateToProps(state) {
 
   let currentRevisionContent;
   let previousRevisionContent;
-  let revisionDate;
+  let selectedRevision;
   if (selectedRevisionId !== undefined && revisionContent) {
-    for (const revision of revisionList) {
-      if (revision.id === selectedRevisionId) {
-        revisionDate = revision.created;
-      }
-    }
+    selectedRevision = revisionList.find(r => r.id === selectedRevisionId);
     currentRevisionContent = revisionContent[selectedRevisionId];
     const previousRevisionId = getPreviousRevisionId(
       revisionList,
@@ -128,9 +127,7 @@ export function mapStateToProps(state) {
       selectedRevisionId !== undefined &&
       state.iomd !== currentRevisionContent &&
       revisionContentFetchStatus === "IDLE",
-    date: revisionDate
-      ? format(new Date(revisionDate), "MMM dd, uuuu HH:mm:ss")
-      : ""
+    selectedRevision
   };
 }
 

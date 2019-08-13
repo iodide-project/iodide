@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import format from "date-fns/format";
+
 import Modal from "../../../shared/components/modal";
 import ModalTitle from "../../../shared/components/modal-title";
 import ModalContent from "../../../shared/components/modal-content";
@@ -12,7 +14,7 @@ export default class RevertModal extends React.Component {
     onRevert: PropTypes.func.isRequired,
     visible: PropTypes.bool,
     aboveOtherModals: PropTypes.bool,
-    date: PropTypes.string
+    date: PropTypes.object // eslint-disable-line react/forbid-prop-types
   };
 
   render() {
@@ -24,7 +26,11 @@ export default class RevertModal extends React.Component {
       >
         <ModalTitle>Restore this revision?</ModalTitle>
         <ModalContent>
-          {`This will restore your notebook to version from ${this.props.date}`}
+          {`This will restore your notebook to version from ${
+            this.props.date
+              ? format(new Date(this.props.date), "MMM dd, uuuu HH:mm:ss")
+              : ""
+          }`}
         </ModalContent>
         <ModalCall>
           <TextButton onClick={this.props.onCloseOrCancel}>Cancel</TextButton>
