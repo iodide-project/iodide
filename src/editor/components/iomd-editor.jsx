@@ -66,6 +66,7 @@ import {
   updateEditorCursor,
   updateEditorSelections
 } from "../actions/editor-actions";
+
 import { updateAutosave } from "../actions/autosave-actions";
 
 function unpackMonacoSelection(s, monacoModel) {
