@@ -6,12 +6,13 @@ import ModalContent from "../../../shared/components/modal-content";
 import ModalCall from "../../../shared/components/modal-call";
 import { TextButton } from "../../../shared/components/buttons";
 
-export default class DeleteModal extends React.Component {
+export default class RevertModal extends React.Component {
   static propTypes = {
     onCloseOrCancel: PropTypes.func.isRequired,
     onRevert: PropTypes.func.isRequired,
     visible: PropTypes.bool,
-    aboveOtherModals: PropTypes.bool
+    aboveOtherModals: PropTypes.bool,
+    date: PropTypes.string
   };
 
   render() {
@@ -21,8 +22,10 @@ export default class DeleteModal extends React.Component {
         onCloseOrCancel={this.props.onCloseOrCancel}
         aboveOtherModals={this.props.aboveOtherModals}
       >
-        <ModalTitle>Revert to this revision</ModalTitle>
-        <ModalContent>This action cannot be undone.</ModalContent>
+        <ModalTitle>Restore this revision?</ModalTitle>
+        <ModalContent>
+          {`This will restore your notebook to version from ${this.props.date}`}
+        </ModalContent>
         <ModalCall>
           <TextButton onClick={this.props.onCloseOrCancel}>Cancel</TextButton>
           <TextButton onClick={this.props.onRevert}>Revert</TextButton>

@@ -3,10 +3,11 @@ import React from "react";
 import ReactDiffViewer from "react-diff-viewer";
 import styled from "react-emotion";
 import { connect } from "react-redux";
+import format from "date-fns/format";
 
 import Fab from "@material-ui/core/Fab";
 
-import ReversionModal from "./reversion-modal";
+import RevertModal from "./revert-modal";
 
 import { revertToSelectedRevisionId } from "../../actions/history-modal-actions";
 
@@ -24,7 +25,8 @@ class RevisionDiffUnconnected extends React.Component {
     previousRevisionContent: PropTypes.string,
     revisionContentFetchStatus: PropTypes.string.isRequired,
     canRevert: PropTypes.bool,
-    revertToSelectedRevisionId: PropTypes.func.isRequired
+    revertToSelectedRevisionId: PropTypes.func.isRequired,
+    date: PropTypes.string
   };
 
   constructor(props) {
@@ -46,7 +48,7 @@ class RevisionDiffUnconnected extends React.Component {
     }
     return (
       <DiffContainer>
-        <ReversionModal
+        <RevertModal
           visible={this.state.pendingRevert !== false}
           onCloseOrCancel={() => {
             this.setState({ pendingRevert: false });
@@ -54,6 +56,7 @@ class RevisionDiffUnconnected extends React.Component {
           onRevert={() => {
             this.props.revertToSelectedRevisionId();
           }}
+          date={this.props.date}
           aboveOtherModals
         />
         <ReactDiffViewer
@@ -95,7 +98,13 @@ export function mapStateToProps(state) {
 
   let currentRevisionContent;
   let previousRevisionContent;
+  let revisionDate;
   if (selectedRevisionId !== undefined && revisionContent) {
+    for (const revision of revisionList) {
+      if (revision.id === selectedRevisionId) {
+        revisionDate = revision.created;
+      }
+    }
     currentRevisionContent = revisionContent[selectedRevisionId];
     const previousRevisionId = getPreviousRevisionId(
       revisionList,
@@ -118,7 +127,10 @@ export function mapStateToProps(state) {
     canRevert:
       selectedRevisionId !== undefined &&
       state.iomd !== currentRevisionContent &&
-      revisionContentFetchStatus === "IDLE"
+      revisionContentFetchStatus === "IDLE",
+    date: revisionDate
+      ? format(new Date(revisionDate), "MMM dd, uuuu HH:mm:ss")
+      : ""
   };
 }
 
