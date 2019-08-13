@@ -92,7 +92,6 @@ export function addNewFileSourceUnconnected({
         });
       }
       if (request) {
-        console.log("huh?");
         updateStatus({ type: "SUCCESS", text: "added file source" });
         updateFileSourceInputURL("");
         updateFileSourceInputFilename("");

@@ -44,13 +44,6 @@ const FileSourceURL = styled(ListSecondaryTextLink)`
   white-space: nowrap;
 `;
 
-const ClickRunNowToFetch = styled.div`
-  color: #999;
-  font-size: 12px;
-  font-style: italic;
-  height: 100%;
-`;
-
 const FileInformationContainer = styled.div`
   display: grid;
   grid-template-columns: max-content max-content max-content;
@@ -82,7 +75,7 @@ const StatusLabel = styled.div`
 const FileUpdateOperationHelperText = styled.div`
   font-size: 11px;
   font-style: italic;
-  color: ${operationStatusColors.failed};
+  color: ${({ error }) => (error ? operationStatusColors.failed : "gray")};
   text-overflow: ellipsis;
   width: 400px;
   overflow: hidden;
@@ -125,7 +118,9 @@ const FileSourceListDescription = ({
         <FileSourceURL href={url}>{url}</FileSourceURL>
       </FileSourceURLContainer>
       <FileUpdateOperationHelperText
+        error={showFailureReason}
         collapsed={!(showFailureReason || !hasBeenRun)}
+        title={failureReason}
       >
         {showFailureReason && failureReason}
         {!hasBeenRun && `click "download now" or wait for scheduler`}
