@@ -1,0 +1,1 @@
+export const DELETE_ANIMATION_LENGTH_MS = 10000;
