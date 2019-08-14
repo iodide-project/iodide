@@ -1,33 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "react-emotion";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import { withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 
-const TextInputContainer = styled.div``;
-const InputElement = styled.input`
-  display: block;
-  margin: 0;
-  padding: 0;
-  padding: 5px;
-  width: 100%;
-`;
+import { MUI_INPUT_STYLES } from "../shared/constants";
 
-function TextInput({ label, value, onKey }) {
+function TextInput({ label, value, onKey, classes }) {
   const handleChange = evt => {
     onKey(evt.target.value);
   };
   return (
-    <TextInputContainer>
-      <InputElement type="text" value={value} onChange={handleChange} />
-      <FormHelperText>{label}</FormHelperText>
-    </TextInputContainer>
+    <TextField
+      label={label}
+      type="search"
+      classes={{ root: classes.root, input: classes.input }}
+      value={value}
+      fullWidth
+      onChange={handleChange}
+      margin="dense"
+      variant="outlined"
+    />
   );
 }
 
 TextInput.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
-  onKey: PropTypes.func
+  onKey: PropTypes.func,
+  classes: PropTypes.objectOf(PropTypes.object)
 };
 
-export default TextInput;
+export default withStyles(MUI_INPUT_STYLES)(TextInput);

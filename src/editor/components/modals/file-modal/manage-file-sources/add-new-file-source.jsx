@@ -3,12 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import styled from "react-emotion";
 
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-
 import TextInput from "./text-input";
+import DropdownSelector from "./dropdown-selector";
 import { ContainedButton } from "../../../../../shared/components/buttons";
 
 import { addFileSource as addFileSourceAction } from "../../../../actions/file-source-actions";
@@ -22,8 +18,8 @@ import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/s
 const AddNewSourceContainer = styled.div`
   display: grid;
   grid-template-columns: auto auto auto auto;
+  grid-column-gap: 20px;
   align-items: start;
-  grid-column-gap: 40px;
 `;
 
 const AddNewSourceButtonContainer = styled.div`
@@ -141,27 +137,12 @@ export function AddNewFileSourceUnconnected({
           value={filename}
           onKey={updateFileSourceInputFilename}
         />
-        <FormControl>
-          <Select
-            value={updateInterval}
-            onChange={handleUpdateIntervalChange}
-            inputProps={{
-              name: "update-interval",
-              id: "update-interval"
-            }}
-          >
-            {FILE_SOURCE_UPDATE_SELECTOR_OPTIONS.map(opt => {
-              return (
-                <MenuItem key={opt.key} value={opt.key}>
-                  {opt.label}
-                </MenuItem>
-              );
-            })}
-          </Select>
-          <FormHelperText htmlFor="update-interval">
-            update frequency
-          </FormHelperText>
-        </FormControl>
+        <DropdownSelector
+          value={updateInterval}
+          options={FILE_SOURCE_UPDATE_SELECTOR_OPTIONS}
+          onChange={handleUpdateIntervalChange}
+          inputID="update-interval"
+        />
       </AddNewSourceContainer>
       <FileSourceStatus
         className={`${status.type === "NONE" ? "hide" : "show"}`}
