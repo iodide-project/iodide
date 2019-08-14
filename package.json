@@ -61,7 +61,6 @@
     "error-stack-parser": "2.0.2",
     "eslint-config-prettier": "6.0.0",
     "font-awesome": "4.7.0",
-    "git-revision-webpack-plugin": "3.0.3",
     "golden-layout": "1.5.9",
     "jss": "9.8.7",
     "lodash": "4.17.15",
@@ -91,8 +90,7 @@
     "redux-thunk": "2.3.0",
     "stackframe": "1.0.4",
     "throttle-action": "0.1.0",
-    "universal-router": "8.2.1",
-    "webpack-shell-plugin": "0.5.0"
+    "universal-router": "8.2.1"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",
@@ -111,7 +109,6 @@
     "babel-plugin-emotion": "9.2.11",
     "babel-plugin-lodash": "3.3.4",
     "circular-dependency-plugin": "5.2.0",
-    "create-file-webpack": "1.0.2",
     "css-loader": "3.2.0",
     "dotenv": "8.0.0",
     "enzyme": "3.10.0",
@@ -126,6 +123,7 @@
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-react": "7.14.3",
     "fake-indexeddb": "2.1.1",
+    "git-revision-webpack-plugin": "3.0.3",
     "file-loader": "4.2.0",
     "jest": "24.8.0",
     "jest-cli": "24.8.0",
@@ -134,7 +132,7 @@
     "jquery": "3.4.1",
     "lodash-webpack-plugin": "0.11.5",
     "mini-css-extract-plugin": "0.8.0",
-    "patch-package": "^6.1.2",
+    "patch-package": "6.1.2",
     "prettier": "1.18.2",
     "raw-loader": "3.1.0",
     "react-test-renderer": "16.9.0",
