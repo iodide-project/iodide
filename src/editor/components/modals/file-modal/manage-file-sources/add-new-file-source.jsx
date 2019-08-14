@@ -17,7 +17,7 @@ import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/s
 
 const AddNewSourceContainer = styled.div`
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: auto auto auto 120px;
   grid-column-gap: 20px;
   align-items: start;
 `;

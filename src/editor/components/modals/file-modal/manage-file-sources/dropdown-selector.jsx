@@ -38,7 +38,7 @@ DropdownInput.propTypes = {
   onChange: PropTypes.func,
   value: PropTypes.string,
   inputID: PropTypes.string,
-  classes: PropTypes.objectOf(PropTypes.object)
+  classes: PropTypes.objectOf(PropTypes.string)
 };
 
 export default withStyles(MUI_INPUT_STYLES)(DropdownInput);

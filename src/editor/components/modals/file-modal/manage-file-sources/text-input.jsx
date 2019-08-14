@@ -27,7 +27,7 @@ TextInput.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   onKey: PropTypes.func,
-  classes: PropTypes.objectOf(PropTypes.object)
+  classes: PropTypes.objectOf(PropTypes.string)
 };
 
 export default withStyles(MUI_INPUT_STYLES)(TextInput);
