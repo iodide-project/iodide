@@ -56,7 +56,7 @@
     "dexie": "2.0.4",
     "dompurify": "1.0.11",
     "emotion": "9.2.12",
-    "error-stack-parser": "2.0.2",
+    "error-stack-parser": "2.0.3",
     "eslint-config-prettier": "6.0.0",
     "font-awesome": "4.7.0",
     "git-revision-webpack-plugin": "3.0.3",
