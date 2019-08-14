@@ -54,7 +54,6 @@ blob: blobData = https://www.exmpl.co/a_binary_blob.arrow`
       ["csvDataString", "bigDataframe", "jsonData", "blobData"]
     ]
   ].forEach(([chunkContents, identifiersArray], i) => {
-    // console.log(chunkContents);
     it(`Should give correct results for case ${i}`, () => {
       expect(fetchIdentifiers(chunkContents)).toEqual(
         new Set(identifiersArray)
@@ -108,7 +107,6 @@ div.declared-variables-list {
       ]
     ]
   ].forEach(([chunkContents, identifiersArray], i) => {
-    // console.log(chunkContents);
     it(`Should give correct results for case ${i}`, () => {
       expect(cssIdentifiers(chunkContents)).toEqual(new Set(identifiersArray));
     });
