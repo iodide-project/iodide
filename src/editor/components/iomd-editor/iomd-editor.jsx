@@ -20,18 +20,18 @@ import "monaco-editor/esm/vs/editor/contrib/codelens/codelensController";
 import "monaco-editor/esm/vs/editor/contrib/format/formatActions";
 
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import "./monaco-tools/monaco-language-init";
+import "./monaco-language-init";
 
+import { iomdTheme } from "./iomd-monaco-theme";
 import "./monaco-custom-styles.css";
-import { iomdTheme } from "./monaco-tools/iomd-monaco-theme";
 
 import {
   updateIomdContent,
   updateEditorCursor,
   updateEditorSelections
-} from "../actions/editor-actions";
+} from "../../actions/editor-actions";
 
-import { updateAutosave } from "../actions/autosave-actions";
+import { updateAutosave } from "../../actions/autosave-actions";
 
 function unpackMonacoSelection(s, monacoModel) {
   return {
@@ -64,7 +64,6 @@ class IomdEditorUnconnected extends React.Component {
   constructor(props) {
     super(props);
     this.containerDivRef = React.createRef();
-    this.editor = null;
 
     // explicitly bind "this" for all methods in constructors
     this.handleEditorUpdate = this.handleEditorUpdate.bind(this);
@@ -203,11 +202,11 @@ function mapStateToProps(state) {
 
   return {
     content: state.iomd,
-    wordWrap,
+    delimLines,
     editorCursorLine,
     editorCursorCol,
     editorPositionString,
-    delimLines
+    wordWrap
   };
 }
 

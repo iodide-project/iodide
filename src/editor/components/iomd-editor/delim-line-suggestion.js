@@ -11,18 +11,10 @@ export const validChunkFlags = ["skipRunAll"];
 
 export const delimLineSuggestion = (lineSoFar, knownChunkTypes, lineNumber) => {
   let suggestions;
-  if (lineSoFar === "%") {
-    // if the line is just "%", suggestions should replace the start of the
-    // line with the "%%" and known chunk types
-    suggestions = makeSuggestionList(
-      knownChunkTypes.map(ct => `%% ${ct}`),
-      Keyword,
-      { range: new monaco.Range(lineNumber, 1, lineNumber, 2) }
-    );
-  } else if (lineSoFar.match("^%%+$")) {
-    // if the line is just a bunch of "%" signs, replace the start of the
-    // line with that number of pcts and known chunk types
-    const numPctSigns = lineSoFar.length;
+  if (lineSoFar.match("^%+$")) {
+    // if the lineSoFar is just a bunch of "%" signs, replace the start of the
+    // line with that number of pcts (at least 2) and known chunk types
+    const numPctSigns = Math.max(lineSoFar.length, 2);
     suggestions = makeSuggestionList(
       knownChunkTypes.map(ct => `${"%".repeat(numPctSigns)} ${ct}`),
       Keyword,
