@@ -4,10 +4,5 @@ export const MUI_INPUT_STYLES = {
     marginTop: "0px",
     marginBottom: "0px",
     fontSize: "10px"
-  },
-  input: {
-    root: {
-      fontSize: "10px"
-    }
   }
 };
