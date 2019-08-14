@@ -30,7 +30,7 @@ function InProgress({ spinning, children }) {
 
 InProgress.propTypes = {
   spinning: PropTypes.bool,
-  children: PropTypes.oneOf([PropTypes.element, PropTypes.array])
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array])
 };
 
 export default InProgress;
