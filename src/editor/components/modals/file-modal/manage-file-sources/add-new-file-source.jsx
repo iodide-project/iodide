@@ -55,6 +55,7 @@ export function AddNewFileSourceUnconnected({
   url,
   statusMessage,
   statusType,
+  statusVisibilityClass,
   updateInterval,
   updateFilename,
   updateURL,
@@ -64,7 +65,6 @@ export function AddNewFileSourceUnconnected({
   addFileSource
 }) {
   const [statusVisible, updateStatusVisibility] = useState(false);
-  const [status, updateStatus] = useState({ type: "NONE", text: "" });
 
   const urlIsValidForDisplay = validateUrl(url, true);
   const isValidFilenameForDisplay = validateFilename(filename, true);
@@ -74,30 +74,28 @@ export function AddNewFileSourceUnconnected({
   };
   const submitInformation = async () => {
     updateStatusVisibility(true);
-    updateStatus({ type: "LOADING", text: "adding file source ..." });
+    updateStatusMessage("adding file source ...");
+    updateStatusType("LOADING");
 
     if (url === "" || filename === "") {
-      updateStatus({
-        type: "ERROR",
-        text: "must include source URL & desired filename"
-      });
+      updateStatusType("ERROR");
+      updateStatusMessage("must include source url & desired filename");
     } else if (!validateUrl(url)) {
-      updateStatus({
-        type: "ERROR",
-        text: "source URL must include the protocol (e.g. https://)"
-      });
+      updateStatusType("ERROR");
+      updateStatusMessage(
+        "source URL must include the protocol (e.g. https://)"
+      );
     } else {
       let request;
       try {
         request = await addFileSource(url, filename, updateInterval);
       } catch (err) {
-        updateStatus({
-          type: "ERROR",
-          text: err.message
-        });
+        updateStatusType("ERROR");
+        updateStatusMessage(err.message);
       }
       if (request) {
-        updateStatus({ type: "SUCCESS", text: "added file source" });
+        updateStatusType("SUCCESS");
+        updateStatusMessage("added file source");
         updateURL("");
         updateFilename("");
         updateUpdateInterval(FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key);
@@ -109,13 +107,14 @@ export function AddNewFileSourceUnconnected({
     // clear status.type if not NONE after k seconds.
     if (statusVisible) {
       // change class?
-      if (status.type === "SUCCESS" || status.type === "ERROR") {
+      if (statusType === "SUCCESS" || statusType === "ERROR") {
         setTimeout(() => {
           updateStatusVisibility(false);
         }, 4000);
-        // wait for bridge to be completed.
+        // wait for the status visibility transition to finish.
         setTimeout(() => {
-          updateStatus({ type: "NONE" });
+          updateStatusType("NONE");
+          updateStatusMessage("");
         }, 4500);
       }
     }
@@ -148,14 +147,9 @@ export function AddNewFileSourceUnconnected({
           inputID="update-interval"
         />
       </AddNewSourceContainer>
-      <FileSourceStatus
-        className={`${status.type === "NONE" ? "hide" : "show"}`}
-      >
-        <FileSourceStatusText
-          statusType={status.type}
-          isVisible={statusVisible}
-        >
-          {status.text || "DEFAULT"}
+      <FileSourceStatus className={statusVisibilityClass}>
+        <FileSourceStatusText statusType={statusType} isVisible={statusVisible}>
+          {statusMessage}
         </FileSourceStatusText>
       </FileSourceStatus>
     </>
@@ -171,6 +165,7 @@ AddNewFileSourceUnconnected.propTypes = {
   addFileSource: PropTypes.func,
   updateFilename: PropTypes.func,
   updateURL: PropTypes.func,
+  statusVisibilityClass: PropTypes.string,
   updateUpdateInterval: PropTypes.func,
   updateStatusMessage: PropTypes.func,
   updateStatusType: PropTypes.func
@@ -178,6 +173,8 @@ AddNewFileSourceUnconnected.propTypes = {
 
 export function mapStateToProps(state) {
   const fileSourceInputs = Object.assign({}, state.fileSourceInputs);
+  fileSourceInputs.statusVisibilityClass =
+    fileSourceInputs.statusType === "NONE" ? "hide" : "show";
   return {
     ...fileSourceInputs
   };
@@ -186,11 +183,11 @@ export function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   {
+    addFileSource: addFileSourceAction,
     updateUpdateInterval: updateFileSourceInputUpdateInterval,
     updateURL: updateFileSourceInputURL,
     updateFilename: updateFileSourceInputFilename,
-    addFileSource: addFileSourceAction,
     updateStatusMessage: updateFileSourceInputStatusMessage,
-    updateStatusTYpe: updateFileSourceInputStatusType
+    updateStatusType: updateFileSourceInputStatusType
   }
 )(AddNewFileSourceUnconnected);

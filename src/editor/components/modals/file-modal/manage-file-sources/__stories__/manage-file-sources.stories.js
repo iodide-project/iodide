@@ -13,26 +13,27 @@ const ManageFileSourcesStories = storiesOf("ManageFileSources", module);
 
 const AddNewFileSourceStory = () => {
   const [addedSoFar, updateAddedSoFar] = useState([]);
-  const [filename, setFilename] = useState("");
-  const [URL, setURL] = useState("");
-  const [interval, setInterval] = useState("never updates");
+  const [filename, setFilename] = useState("cool.csv");
+  const [url, setURL] = useState("https://whatever.edu");
+  const [updateInterval, setUpdateInterval] = useState("never updates");
   const [statusMessage, updateStatusMessage] = useState("");
   const [statusType, updateStatusType] = useState("NONE");
-  // const [addFSState, addFileSourceGo] = useState(undefined);
-
-  const addFileSource = async (a, b, c) => {
-    updateAddedSoFar([...addedSoFar, [a, b, c]]);
+  const addFileSource = async (f, u, i) => {
+    updateAddedSoFar([
+      ...addedSoFar,
+      { filename: f, url: u, updateInterval: i }
+    ]);
     return "success";
   };
   return (
     <>
       <AddNewFileSourceUnconnected
         filename={filename}
-        url={URL}
-        updateInterval={interval}
+        url={url}
+        updateInterval={updateInterval}
         statusMessage={statusMessage}
         statusType={statusType}
-        updateUpdateInterval={setInterval}
+        updateUpdateInterval={setUpdateInterval}
         updateURL={setURL}
         updateFilename={setFilename}
         updateStatusMessage={updateStatusMessage}
@@ -46,12 +47,12 @@ const AddNewFileSourceStory = () => {
           <th>filename</th>
           <th>frequency</th>
         </tr>
-        {addedSoFar.map(([a, b, c]) => {
+        {addedSoFar.map(({ filename: f, url: u, updateInterval: i }) => {
           return (
             <tr>
-              <td>{a}</td>
-              <td>{b}</td>
-              <td>{c}</td>
+              <td>{f}</td>
+              <td>{u}</td>
+              <td>{i}</td>
             </tr>
           );
         })}
