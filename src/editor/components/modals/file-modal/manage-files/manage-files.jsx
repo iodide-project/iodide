@@ -15,7 +15,7 @@ import {
   deleteFileFromNotebook
 } from "../../../../actions/file-request-actions";
 
-export class FileModalUnconnected extends React.Component {
+export class ManageFilesUnconnected extends React.Component {
   static propTypes = {
     // Required
     deleteFile: PropTypes.func.isRequired,
@@ -349,4 +349,4 @@ export function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FileModalUnconnected);
+)(ManageFilesUnconnected);
