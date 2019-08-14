@@ -10,6 +10,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 
 import TextInput from "./text-input";
 import { ContainedButton } from "../../../../../shared/components/buttons";
+
 import { addFileSource as addFileSourceAction } from "../../../../actions/file-source-actions";
 import {
   updateFileSourceInputFilename as updateFileSourceInputFilenameAction,
@@ -22,7 +23,11 @@ const AddNewSourceContainer = styled.div`
   display: grid;
   grid-template-columns: auto auto auto auto;
   align-items: start;
-  grid-column-gap: calc(var(--marg) * 2);
+  grid-column-gap: 40px;
+`;
+
+const AddNewSourceButtonContainer = styled.div`
+  position: relative;
 `;
 
 const AddNewSourceButton = styled(ContainedButton)`
@@ -52,7 +57,7 @@ const hasAllowedProtocol = url => {
   });
 };
 
-export function addNewFileSourceUnconnected({
+export function AddNewFileSourceUnconnected({
   filename,
   url,
   updateInterval,
@@ -106,10 +111,11 @@ export function addNewFileSourceUnconnected({
     // clear status.type if not NONE after k seconds.
     if (statusVisible) {
       // change class?
-      if (status.type !== "NONE") {
+      if (status.type === "SUCCESS" || status.type === "ERROR") {
         setTimeout(() => {
           updateStatusVisibility(false);
         }, 4000);
+        // wait for bridge to be completed.
         setTimeout(() => {
           updateStatus({ type: "NONE" });
         }, 4500);
@@ -120,9 +126,11 @@ export function addNewFileSourceUnconnected({
   return (
     <>
       <AddNewSourceContainer>
-        <AddNewSourceButton onClick={submitInformation}>
-          add file source
-        </AddNewSourceButton>
+        <AddNewSourceButtonContainer>
+          <AddNewSourceButton onClick={submitInformation}>
+            add file source
+          </AddNewSourceButton>
+        </AddNewSourceButtonContainer>
         <TextInput
           label="source URL"
           value={url}
@@ -169,7 +177,7 @@ export function addNewFileSourceUnconnected({
   );
 }
 
-addNewFileSourceUnconnected.propTypes = {
+AddNewFileSourceUnconnected.propTypes = {
   filename: PropTypes.string,
   url: PropTypes.string,
   updateInterval: PropTypes.string,
@@ -191,4 +199,4 @@ export default connect(
     updateFileSourceInputFilename: updateFileSourceInputFilenameAction,
     addFileSource: addFileSourceAction
   }
-)(addNewFileSourceUnconnected);
+)(AddNewFileSourceUnconnected);

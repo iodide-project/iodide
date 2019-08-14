@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import styled from "react-emotion";
 import { connect } from "react-redux";
 import Delete from "@material-ui/icons/Delete";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { ListItem, ListMetadata } from "../../../../../shared/components/list";
 
 import FileSourceListItemDescription from "./file-source-list-item-description";
+
+import InProgress from "./in-progress";
 
 import { DELETE_ANIMATION_LENGTH_MS } from "../shared/constants";
 
@@ -65,20 +66,6 @@ const DownloadNowButton = styled(OutlineButton)`
   padding-right: 0px;
 `;
 
-const Fader = styled.div`
-  cursor: pointer;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  margin: auto;
-  display: grid;
-  align-content: center;
-  justify-content: center;
-  opacity: ${({ active }) => (active ? 1 : 0)};
-  transform: ${({ active }) => (!active ? "translateY(-5px)" : "none")};
-  transition: opacity 200ms, transform 250ms;
-`;
-
 const DeleteButtonContainer = styled(ListMetadata)`
   align-self: center;
   display: grid;
@@ -126,10 +113,7 @@ export function FileSourceListItemUnconnected({
       />
       <FileSourceInterval>{updateInterval}</FileSourceInterval>
       <DownloadNowButtonContainer>
-        <Fader active={isCurrentlyRunning}>
-          <CircularProgress size={20} />
-        </Fader>
-        <Fader active={!isCurrentlyRunning}>
+        <InProgress spinning={isCurrentlyRunning}>
           <DownloadNowButton
             disabled={isCurrentlyRunning}
             onClick={() => {
@@ -138,7 +122,7 @@ export function FileSourceListItemUnconnected({
           >
             download now
           </DownloadNowButton>
-        </Fader>
+        </InProgress>
       </DownloadNowButtonContainer>
       <DeleteButtonContainer>
         <DeleteButton onClick={onDeleteFileSource}>

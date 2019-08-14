@@ -5,8 +5,7 @@ import FileSourceList from "./file-source-list";
 
 const FileSourceContainer = styled.div`
   /* this css variable is used in the children of FileSourceContainer */
-  --marg: 20px;
-  padding: var(--marg);
+  padding: 20px;
   overflow: auto;
 `;
 
