@@ -4,15 +4,6 @@ import { makeSuggestionList } from "./make-suggestion-list";
 
 const { Text } = monaco.languages.CompletionItemKind;
 
-// export function fetchChunkIdentifiers(chunkContent) {
-//   const fetchIdentifierRE = /^\w+: (\w+) *= *$/;
-//   let result = fetchIdentifierRE.exec(chunkContent);
-//   while (result) {
-//     identifierSet.add(result[1]);
-//     result = identifiersRE.exec(chunkContent);
-//   }
-// }
-
 function getChunksIdentifiersWithRegex(chunkContents, regex) {
   // FIXME: this implementation is not terribly clever or efficient.
   // If we move this to the store or a language worker, perhaps
