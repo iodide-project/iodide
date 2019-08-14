@@ -23,6 +23,7 @@ const initialState = notebookCreated => {
   return {
     iomd: "initial content",
     title: "initial title",
+    modalState: "MODALS_CLOSED",
     userData: { name: "this-user" },
     notebookInfo: Object.assign(
       {
