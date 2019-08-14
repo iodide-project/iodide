@@ -15,6 +15,8 @@ import {
 } from "../../../../actions/file-source-inputs-actions";
 import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/state-schema";
 
+import { validateUrl, validateFilename } from "./validators";
+
 const AddNewSourceContainer = styled.div`
   display: grid;
   grid-template-columns: auto auto auto 120px;
@@ -45,14 +47,6 @@ const FileSourceStatusText = styled.div`
   color: ${props => (props.statusType === "ERROR" ? "red" : "black")};
 `;
 
-const ALLOWED_PROTOCOLS = ["https", "http"];
-
-const hasAllowedProtocol = url => {
-  return ALLOWED_PROTOCOLS.some(protocol => {
-    return url.startsWith(protocol);
-  });
-};
-
 export function AddNewFileSourceUnconnected({
   filename,
   url,
@@ -64,6 +58,9 @@ export function AddNewFileSourceUnconnected({
 }) {
   const [statusVisible, updateStatusVisibility] = useState(false);
   const [status, updateStatus] = useState({ type: "NONE", text: "" });
+
+  const urlIsValidForDisplay = validateUrl(url, true);
+  const isValidFilenameForDisplay = validateFilename(filename, true);
 
   const handleUpdateIntervalChange = event => {
     updateFileSourceInputUpdateInterval(event.target.value);
@@ -77,7 +74,7 @@ export function AddNewFileSourceUnconnected({
         type: "ERROR",
         text: "must include source URL & desired filename"
       });
-    } else if (!hasAllowedProtocol(url)) {
+    } else if (!validateUrl(url)) {
       updateStatus({
         type: "ERROR",
         text: "source URL must include the protocol (e.g. https://)"
@@ -130,11 +127,13 @@ export function AddNewFileSourceUnconnected({
         <TextInput
           label="source URL"
           value={url}
+          isValid={urlIsValidForDisplay}
           onKey={updateFileSourceInputURL}
         />
         <TextInput
           label="desired filename"
           value={filename}
+          isValid={isValidFilenameForDisplay}
           onKey={updateFileSourceInputFilename}
         />
         <DropdownSelector
@@ -169,7 +168,10 @@ AddNewFileSourceUnconnected.propTypes = {
 };
 
 export function mapStateToProps(state) {
-  return Object.assign({}, state.fileSourceInputs);
+  const fileSourceInputs = Object.assign({}, state.fileSourceInputs);
+  return {
+    ...fileSourceInputs
+  };
 }
 
 export default connect(

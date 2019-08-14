@@ -5,12 +5,14 @@ import TextField from "@material-ui/core/TextField";
 
 import { MUI_INPUT_STYLES } from "../shared/constants";
 
-function TextInput({ label, value, onKey, classes }) {
-  const handleChange = evt => {
-    onKey(evt.target.value);
+function TextInput({ isValid, label, value, onKey, classes }) {
+  const handleChange = event => {
+    const text = event.target.value;
+    onKey(text);
   };
   return (
     <TextField
+      error={!isValid}
       label={label}
       type="search"
       classes={{ root: classes.root, input: classes.input }}
@@ -26,6 +28,7 @@ function TextInput({ label, value, onKey, classes }) {
 TextInput.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
+  isValid: PropTypes.bool,
   onKey: PropTypes.func,
   classes: PropTypes.objectOf(PropTypes.string)
 };
