@@ -4,7 +4,9 @@ const initialState = () => ({
   fileSourceInputs: {
     filename: "",
     url: "",
-    updateInterval: "daily"
+    updateInterval: "daily",
+    statusMessage: "",
+    statusType: "ERROR"
   }
 });
 
@@ -49,5 +51,33 @@ describe("UPDATE_FILE_SOURCE_INPUT_UPDATE_INTERVAL", () => {
       updateInterval: "weekly"
     });
     expect(FS(nextState).updateInterval).toBe("weekly");
+  });
+});
+
+describe("UPDATE_FILE_SOURCE_INPUT_STATUS_MESSAGE", () => {
+  let state;
+  beforeEach(() => {
+    state = initialState();
+  });
+  it("updates url", () => {
+    const nextState = fileSourceInputsReducer(state, {
+      type: "UPDATE_FILE_SOURCE_INPUT_STATUS_MESSAGE",
+      statusMessage: "testtesttest"
+    });
+    expect(FS(nextState).statusMessage).toBe("testtesttest");
+  });
+});
+
+describe("UPDATE_FILE_SOURCE_INPUT_STATUS_TYPE", () => {
+  let state;
+  beforeEach(() => {
+    state = initialState();
+  });
+  it("updates url", () => {
+    const nextState = fileSourceInputsReducer(state, {
+      type: "UPDATE_FILE_SOURCE_INPUT_STATUS_TYPE",
+      statusType: "ERROR"
+    });
+    expect(FS(nextState).statusType).toBe("ERROR");
   });
 });
