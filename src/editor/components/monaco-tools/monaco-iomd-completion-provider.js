@@ -1,12 +1,12 @@
 // FIXME importing store directly has proven to be an antipattern
 // should use a higher-order fucntion or something
-import { store } from "../store";
-import { getChunkContainingLine } from "../iomd-tools/iomd-selection";
+import { store } from "../../store";
+import { getChunkContainingLine } from "../../iomd-tools/iomd-selection";
 
 import {
   NONCODE_EVAL_TYPES,
   RUNNABLE_CHUNK_TYPES
-} from "../state-schemas/state-schema";
+} from "../../state-schemas/state-schema";
 import { fetchLineSuggestion } from "./fetch-line-suggestion";
 import { delimLineSuggestion } from "./delim-line-suggestion";
 import { codeChunkIdentifiers } from "./code-chunk-identifiers";
@@ -50,17 +50,9 @@ export const iomdCompletionProvider = {
         return {};
       }
       default: {
-        // FIXME: perhaps this should not be hardcoded here, but this concept of
-        // code-like chunk types that might share identifers does not fit
-        // any existing concept
-        const codeLikeChunkTypes = Object.keys(languageDefinitions).concat([
-          "css",
-          "fetch"
-        ]);
         return codeChunkIdentifiers(
-          iomdChunks
-            .filter(c => codeLikeChunkTypes.includes(c.chunkType))
-            .map(c => c.chunkContent)
+          iomdChunks,
+          Object.keys(languageDefinitions)
         );
       }
     }

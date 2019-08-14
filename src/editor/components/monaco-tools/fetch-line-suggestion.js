@@ -1,6 +1,6 @@
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
-import { FETCH_CHUNK_TYPES } from "../state-schemas/state-schema";
+import { FETCH_CHUNK_TYPES } from "../../state-schemas/state-schema";
 import { makeSuggestionList } from "./make-suggestion-list";
 
 const { Keyword, Snippet, File } = monaco.languages.CompletionItemKind;

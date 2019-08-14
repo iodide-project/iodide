@@ -54,7 +54,7 @@ import "monaco-editor/esm/vs/editor/contrib/suggest/suggestController";
 // import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast';
 
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import "./monaco-language-init";
+import "./monaco-tools/monaco-language-init";
 //
 import "monaco-editor/esm/vs/language/css/monaco.contribution";
 

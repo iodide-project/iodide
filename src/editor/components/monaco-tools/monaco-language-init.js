@@ -20,12 +20,12 @@ import {
 import {
   language as iomdLang,
   conf as iomdConf
-} from "../iomd-tools/iomd-monaco-lang-def";
+} from "../../iomd-tools/iomd-monaco-lang-def";
 
 import {
   language as fetchLang,
   conf as fetchConf
-} from "../iomd-tools/fetch-monaco-lang-def";
+} from "../../iomd-tools/fetch-monaco-lang-def";
 
 import { iomdCompletionProvider } from "./monaco-iomd-completion-provider";
 
