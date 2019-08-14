@@ -17,15 +17,12 @@ import {
   conf as pyConf
 } from "monaco-editor/esm/vs/basic-languages/python/python";
 
-import {
-  language as iomdLang,
-  conf as iomdConf
-} from "../../iomd-tools/iomd-monaco-lang-def";
+import { language as iomdLang, conf as iomdConf } from "./iomd-monaco-lang-def";
 
 import {
   language as fetchLang,
   conf as fetchConf
-} from "../../iomd-tools/fetch-monaco-lang-def";
+} from "./fetch-monaco-lang-def";
 
 import { iomdCompletionProvider } from "./monaco-iomd-completion-provider";
 

@@ -2,10 +2,8 @@ require("dotenv").config();
 const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs");
-const CreateFileWebpack = require("create-file-webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
-const WebpackShellPlugin = require("webpack-shell-plugin");
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
 const LodashModuleReplacementPlugin = require("lodash-webpack-plugin");
@@ -31,11 +29,9 @@ const { SOURCE_VERSION } = process.env;
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || "dev";
 
 const APP_DIR = path.resolve(__dirname, "src/");
-const MONACO_PATH = path.resolve(__dirname, "node_modules/monaco-editor/");
 
 const plugins = [];
 
-// const config
 module.exports = env => {
   env = env || ""; // eslint-disable-line no-param-reassign
   process.env.NODE_ENV = env.NODE_ENV || "production";
@@ -56,16 +52,9 @@ module.exports = env => {
     entry: {
       iodide: `${APP_DIR}/editor/index.jsx`,
       "iodide.eval-frame": `${APP_DIR}/eval-frame/index.jsx`,
-      "server.home": `${APP_DIR}/server/index.jsx`,
-      // "editor.worker": 'monaco-editor/esm/vs/editor/editor.worker.js'
-      "monaco.editor.worker": `${MONACO_PATH}/esm/vs/editor/editor.worker.js`,
-      "monaco.json.worker": `${MONACO_PATH}/esm/vs/language/json/json.worker`,
-      "monaco.css.worker": `${MONACO_PATH}/esm/vs/language/css/css.worker`,
-      "monaco.html.worker": `${MONACO_PATH}/esm/vs/language/html/html.worker`,
-      "monaco.ts.worker": `${MONACO_PATH}/esm/vs/language/typescript/ts.worker`
+      "server.home": `${APP_DIR}/server/index.jsx`
     },
     output: {
-      globalObject: "self",
       path: BUILD_DIR,
       filename: `[name].${APP_VERSION_STRING}.js`
     },
@@ -102,25 +91,6 @@ module.exports = env => {
           test: /\.css$/,
           use: [MiniCssExtractPlugin.loader, "css-loader"]
         },
-        // {
-        //   test: /\.css$/,
-        //   include: APP_DIR,
-        //   exclude: MONACO_PATH,
-        //   use: [
-        //     { loader: MiniCssExtractPlugin.loader },
-        //     {
-        //       loader: "css-loader",
-        //       options: {
-        //         modules: false
-        //       }
-        //     }
-        //   ]
-        // },
-        // {
-        //   test: /\.css$/,
-        //   include: MONACO_PATH,
-        //   use: [MiniCssExtractPlugin.loader, "css-loader"]
-        // },
         {
           test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
           loader: `file-loader?name=iodide.${APP_VERSION_STRING}.fonts/[name].[ext]`
@@ -130,10 +100,6 @@ module.exports = env => {
     watchOptions: { poll: true, ignored: /node_modules/ },
     plugins: [
       ...plugins,
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^((fs)|(path)|(os)|(crypto)|(source-map-support))$/,
-        contextRegExp: /vs(\/|\\)language(\/|\\)typescript(\/|\\)lib/
-      }),
       new CircularDependencyPlugin({
         exclude: /a\.js|node_modules/,
         failOnError: true,
@@ -172,7 +138,6 @@ module.exports = env => {
         filename: `[name].${APP_VERSION_STRING}.css`
       }),
       new WriteFilePlugin()
-      // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
     ],
     devServer: {
       before: app => {

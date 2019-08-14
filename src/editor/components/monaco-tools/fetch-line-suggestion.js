@@ -59,6 +59,8 @@ export const fetchLineSuggestion = (lineSoFar, fileNames) => {
       ...itemProps
     }));
 
+    // and in addition to the templates, insert strings like "json:"
+    // for each known fetch type (if people don't want the whole template)
     suggestions.push(
       ...FETCH_CHUNK_TYPES.map(x => ({
         label: x,

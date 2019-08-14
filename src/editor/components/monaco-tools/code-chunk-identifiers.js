@@ -46,11 +46,10 @@ export function codeChunkIdentifiers(chunks, activeLanguages) {
       .map(c => c.chunkContent)
   );
 
-  const varNames = [...fetchVarnames]
-    .concat(...cssVarnames)
-    .concat(...codeVarnames);
+  cssVarnames.forEach(v => fetchVarnames.add(v));
+  codeVarnames.forEach(v => fetchVarnames.add(v));
 
   return {
-    suggestions: makeSuggestionList(varNames, Text)
+    suggestions: makeSuggestionList([...fetchVarnames], Text)
   };
 }

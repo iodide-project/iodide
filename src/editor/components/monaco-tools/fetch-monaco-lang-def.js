@@ -1,7 +1,7 @@
 import {
   IODIDE_API_LOAD_TYPES,
   FETCH_CHUNK_TYPES
-} from "../state-schemas/state-schema";
+} from "../../state-schemas/state-schema";
 
 export const language = {
   tokenizer: {

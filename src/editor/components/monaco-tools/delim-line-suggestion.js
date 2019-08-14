@@ -4,8 +4,9 @@ import { makeSuggestionList } from "./make-suggestion-list";
 
 const { Keyword } = monaco.languages.CompletionItemKind;
 
-// FIXME validChunkFlags should move to state-schema, or some other place
-// where we keep globally relevant things like this.
+// FIXME validChunkFlags should probably move to state eventually, since
+// we've discussed allowing plugins to define flags that might only
+// be available at run time. but for now, we can just hardcode this here.
 export const validChunkFlags = ["skipRunAll"];
 
 export const delimLineSuggestion = (lineSoFar, knownChunkTypes, lineNumber) => {

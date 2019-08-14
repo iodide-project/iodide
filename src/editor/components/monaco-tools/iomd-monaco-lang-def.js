@@ -1,6 +1,6 @@
-// this function is used to set the nextEmbedded options
-// for the final token of  delimLime
 const delimEolToken = (token, nextEmbedded) => ({
+  // this function is used to set the nextEmbedded options
+  // for the final token of  delimLime
   cases: {
     [`${nextEmbedded}@embedModes`]: {
       token,
