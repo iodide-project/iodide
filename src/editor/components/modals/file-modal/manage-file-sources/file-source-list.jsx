@@ -32,12 +32,6 @@ const NoFileSourcesNotice = styled.span`
   text-align: center;
 `;
 
-// FIXME: bring this component into its own file so we can reuse.
-// for now, however, it will be more advantageous to not encourage its use elsewhere
-// until it is needed.
-
-// FIXME: bring this button approach to the files modal
-
 const FileSourceListUnconnected = ({
   fileSources = [],
   getFileSources,
