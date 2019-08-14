@@ -10,7 +10,6 @@ const hasntRunYet = {
 };
 
 const currentlyRunning = {
-  // hasn't run
   filename: "ranAndFailed",
   id: 1,
   url: "https://whatever.com/api",
