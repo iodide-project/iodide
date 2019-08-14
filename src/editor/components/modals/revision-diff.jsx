@@ -25,7 +25,10 @@ class RevisionDiffUnconnected extends React.Component {
     revisionContentFetchStatus: PropTypes.string.isRequired,
     canRevert: PropTypes.bool,
     revertToSelectedRevisionId: PropTypes.func.isRequired,
-    selectedRevision: PropTypes.object // eslint-disable-line react/forbid-prop-types
+    selectedRevision: PropTypes.shape({
+      created: PropTypes.string,
+      id: PropTypes.number
+    })
   };
 
   constructor(props) {
@@ -60,7 +63,6 @@ class RevisionDiffUnconnected extends React.Component {
               ? this.props.selectedRevision.created
               : undefined
           }
-          aboveOtherModals
         />
         <ReactDiffViewer
           oldValue={this.props.previousRevisionContent}

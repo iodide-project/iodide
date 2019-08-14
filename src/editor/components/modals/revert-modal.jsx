@@ -13,8 +13,7 @@ export default class RevertModal extends React.Component {
     onCloseOrCancel: PropTypes.func.isRequired,
     onRevert: PropTypes.func.isRequired,
     visible: PropTypes.bool,
-    aboveOtherModals: PropTypes.bool,
-    date: PropTypes.object // eslint-disable-line react/forbid-prop-types
+    date: PropTypes.string
   };
 
   render() {
@@ -22,7 +21,7 @@ export default class RevertModal extends React.Component {
       <Modal
         visible={this.props.visible}
         onCloseOrCancel={this.props.onCloseOrCancel}
-        aboveOtherModals={this.props.aboveOtherModals}
+        aboveOtherModals
       >
         <ModalTitle>Restore this revision?</ModalTitle>
         <ModalContent>
