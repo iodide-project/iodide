@@ -18,3 +18,17 @@ export function updateFileSourceInputUpdateInterval(updateInterval) {
     updateInterval
   };
 }
+
+export function updateFileSourceInputStatusMessage(statusMessage) {
+  return {
+    type: "UPDATE_FILE_SOURCE_INPUT_STATUS_MESSAGE",
+    statusMessage
+  };
+}
+
+export function updateFileSourceInputStatusType(statusType) {
+  return {
+    type: "UPDATE_FILE_SOURCE_INPUT_STATUS_TYPE",
+    statusType
+  };
+}

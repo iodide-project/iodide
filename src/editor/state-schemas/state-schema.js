@@ -13,6 +13,12 @@ export const FETCH_CHUNK_TYPES = [
   "arrayBuffer"
 ];
 export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json", "arrayBuffer"];
+export const FILE_SOURCE_INPUT_STATUS_TYPES = [
+  "NONE",
+  "LOADING",
+  "SUCCESS",
+  "ERROR"
+];
 
 export const FILE_SOURCE_UPDATE_INTERVAL_MAP = {
   "never updates": null,
@@ -303,6 +309,11 @@ export const stateProperties = {
   fileSourceInputs: {
     type: "object",
     properties: {
+      statusMessage: { type: "string" },
+      statusType: {
+        type: "string",
+        enum: FILE_SOURCE_INPUT_STATUS_TYPES
+      },
       url: { type: "string" },
       filename: { type: "string" },
       updateInterval: {
@@ -311,6 +322,8 @@ export const stateProperties = {
       }
     },
     default: {
+      statusMessage: "",
+      statusType: "NONE",
       url: "",
       filename: "",
       updateInterval: FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key

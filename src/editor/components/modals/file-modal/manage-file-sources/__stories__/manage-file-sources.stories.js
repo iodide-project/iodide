@@ -16,6 +16,8 @@ const AddNewFileSourceStory = () => {
   const [filename, setFilename] = useState("");
   const [URL, setURL] = useState("");
   const [interval, setInterval] = useState("never updates");
+  const [statusMessage, updateStatusMessage] = useState("");
+  const [statusType, updateStatusType] = useState("NONE");
   // const [addFSState, addFileSourceGo] = useState(undefined);
 
   const addFileSource = async (a, b, c) => {
@@ -28,9 +30,13 @@ const AddNewFileSourceStory = () => {
         filename={filename}
         url={URL}
         updateInterval={interval}
-        updateFileSourceInputUpdateInterval={setInterval}
-        updateFileSourceInputURL={setURL}
-        updateFileSourceInputFilename={setFilename}
+        statusMessage={statusMessage}
+        statusType={statusType}
+        updateUpdateInterval={setInterval}
+        updateURL={setURL}
+        updateFilename={setFilename}
+        updateStatusMessage={updateStatusMessage}
+        updateStatusType={updateStatusType}
         addFileSource={addFileSource}
       />
       <h3>added so far</h3>

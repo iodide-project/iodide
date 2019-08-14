@@ -9,10 +9,13 @@ import { ContainedButton } from "../../../../../shared/components/buttons";
 
 import { addFileSource as addFileSourceAction } from "../../../../actions/file-source-actions";
 import {
-  updateFileSourceInputFilename as updateFileSourceInputFilenameAction,
-  updateFileSourceInputURL as updateFileSourceInputURLAction,
-  updateFileSourceInputUpdateInterval as updateFileSourceInputUpdateIntervalAction
+  updateFileSourceInputFilename,
+  updateFileSourceInputURL,
+  updateFileSourceInputUpdateInterval,
+  updateFileSourceInputStatusMessage,
+  updateFileSourceInputStatusType
 } from "../../../../actions/file-source-inputs-actions";
+
 import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/state-schema";
 
 import { validateUrl, validateFilename } from "./validators";
@@ -50,10 +53,14 @@ const FileSourceStatusText = styled.div`
 export function AddNewFileSourceUnconnected({
   filename,
   url,
+  statusMessage,
+  statusType,
   updateInterval,
-  updateFileSourceInputFilename,
-  updateFileSourceInputURL,
-  updateFileSourceInputUpdateInterval,
+  updateFilename,
+  updateURL,
+  updateUpdateInterval,
+  updateStatusMessage,
+  updateStatusType,
   addFileSource
 }) {
   const [statusVisible, updateStatusVisibility] = useState(false);
@@ -63,7 +70,7 @@ export function AddNewFileSourceUnconnected({
   const isValidFilenameForDisplay = validateFilename(filename, true);
 
   const handleUpdateIntervalChange = event => {
-    updateFileSourceInputUpdateInterval(event.target.value);
+    updateUpdateInterval(event.target.value);
   };
   const submitInformation = async () => {
     updateStatusVisibility(true);
@@ -91,11 +98,9 @@ export function AddNewFileSourceUnconnected({
       }
       if (request) {
         updateStatus({ type: "SUCCESS", text: "added file source" });
-        updateFileSourceInputURL("");
-        updateFileSourceInputFilename("");
-        updateFileSourceInputUpdateInterval(
-          FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key
-        );
+        updateURL("");
+        updateFilename("");
+        updateUpdateInterval(FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key);
       }
     }
   };
@@ -128,13 +133,13 @@ export function AddNewFileSourceUnconnected({
           label="source URL"
           value={url}
           isValid={urlIsValidForDisplay}
-          onKey={updateFileSourceInputURL}
+          onKey={updateURL}
         />
         <TextInput
           label="desired filename"
           value={filename}
           isValid={isValidFilenameForDisplay}
-          onKey={updateFileSourceInputFilename}
+          onKey={updateFilename}
         />
         <DropdownSelector
           value={updateInterval}
@@ -160,11 +165,15 @@ export function AddNewFileSourceUnconnected({
 AddNewFileSourceUnconnected.propTypes = {
   filename: PropTypes.string,
   url: PropTypes.string,
+  statusMessage: PropTypes.string,
+  statusType: PropTypes.string,
   updateInterval: PropTypes.string,
   addFileSource: PropTypes.func,
-  updateFileSourceInputFilename: PropTypes.func,
-  updateFileSourceInputURL: PropTypes.func,
-  updateFileSourceInputUpdateInterval: PropTypes.func
+  updateFilename: PropTypes.func,
+  updateURL: PropTypes.func,
+  updateUpdateInterval: PropTypes.func,
+  updateStatusMessage: PropTypes.func,
+  updateStatusType: PropTypes.func
 };
 
 export function mapStateToProps(state) {
@@ -177,9 +186,11 @@ export function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   {
-    updateFileSourceInputUpdateInterval: updateFileSourceInputUpdateIntervalAction,
-    updateFileSourceInputURL: updateFileSourceInputURLAction,
-    updateFileSourceInputFilename: updateFileSourceInputFilenameAction,
-    addFileSource: addFileSourceAction
+    updateUpdateInterval: updateFileSourceInputUpdateInterval,
+    updateURL: updateFileSourceInputURL,
+    updateFilename: updateFileSourceInputFilename,
+    addFileSource: addFileSourceAction,
+    updateStatusMessage: updateFileSourceInputStatusMessage,
+    updateStatusTYpe: updateFileSourceInputStatusType
   }
 )(AddNewFileSourceUnconnected);
