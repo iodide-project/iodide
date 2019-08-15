@@ -49,8 +49,6 @@ the following format:
 {
   "languageId": "jsx",
   "displayName": "React JSX",
-  "codeMirrorMode": "jsx",
-  "keybinding": "x",
   "url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
   "module": "jsx",
   "evaluator": "evaluateJSX",
@@ -63,10 +61,6 @@ The individual fields are described below:
 - `languageId`: A short identifier for the language.  This is used to specify the language at the beginning of a [IOMD](iomd.md) chunk, for example, `%% jsx`.  By convention, this should be the filename extension that is most commonly used for the language.
 
 - `displayName`: A longer name used to identify the language in menus and other UX elements.
-
-- `codeMirrorMode`: The name of the CodeMirror plugin used to provide syntax highlighting for the language.  A list of the available plugin names is [here](https://github.com/codemirror/CodeMirror/tree/master/mode).
-
-- `keybinding`: The key used to select the language.  (TODO: Is this used anymore following the IOMD editing refactor?)
 
 - `url`: The URL to a JavaScript source file that defines the language support.  It is evaluated directly in the scope that runs Iodide user code, therefore it should should be "modularized" such that it only adds a single object to the global namespace.
 

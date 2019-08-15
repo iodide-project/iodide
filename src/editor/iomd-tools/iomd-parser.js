@@ -19,7 +19,7 @@ export function iomdParser(fullIomd) {
   let currentChunkLines = [];
   let currentEvalType = "";
   let evalFlags = [];
-  let currentChunkStartLine = 0;
+  let currentChunkStartLine = 1;
 
   const newChunkId = str => {
     const hash = hashCode(str);
@@ -46,15 +46,16 @@ export function iomdParser(fullIomd) {
   };
 
   for (const [i, line] of iomdLines.entries()) {
+    const lineNum = i + 1; // monaco uses 1-based indexing
     if (line.slice(0, 2) === "%%") {
       // if line start with '%%', a new chunk has started
-      // push the current chunk (unless it's on line 0), then reset
-      if (i !== 0) {
-        // DON'T push a chunk if we're only on line 0
-        pushChunk(i - 1);
+      // push the current chunk (unless it's on line 1), then reset
+      if (lineNum !== 1) {
+        // DON'T push a chunk if we're only on line 1
+        pushChunk(lineNum - 1);
       }
       // reset the currentChunk state
-      currentChunkStartLine = i;
+      currentChunkStartLine = lineNum;
       currentChunkLines = [];
       evalFlags = [];
       // find the first char on this line that isn't '%'
@@ -77,6 +78,6 @@ export function iomdParser(fullIomd) {
     }
   }
   // this is what's left over in the final chunk
-  pushChunk(iomdLines.length - 1);
+  pushChunk(iomdLines.length);
   return chunks;
 }

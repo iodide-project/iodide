@@ -1,4 +1,3 @@
-import CodeMirror from "codemirror";
 import { call, put } from "redux-saga/effects";
 
 import {
@@ -20,8 +19,6 @@ export function* loadLanguagePlugin(pluginData) {
   yield call(triggerEvalFrameTask, "EVAL_LANGUAGE_PLUGIN", {
     pluginData
   });
-  // FIXME this empty function argument seems sketchy
-  yield call([CodeMirror, "requireMode"], pluginData.codeMirrorMode, () => {});
   yield put({
     type: "ADD_LANGUAGE_TO_EDITOR",
     languageDefinition: pluginData

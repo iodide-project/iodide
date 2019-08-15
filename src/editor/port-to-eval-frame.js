@@ -56,21 +56,6 @@ function receiveMessage(event) {
         );
         break;
       }
-      case "AUTOCOMPLETION_SUGGESTIONS": {
-        const hintOptions = {
-          disableKeywords: true,
-          completeSingle: false,
-          completeOnSingleClick: false
-        };
-        // CodeMirror is actually already in the global namespace.
-        window.CodeMirror.showHint(
-          window.ACTIVE_EDITOR_REF,
-          () => message,
-          hintOptions
-        ); // eslint-disable-line
-        window.ACTIVE_EDITOR_REF = undefined;
-        break;
-      }
       case "REDUX_ACTION":
         // in this case, `message` is a redux action
         if (validateActionFromEvalFrame(message)) {
