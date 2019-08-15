@@ -1,7 +1,7 @@
 import { languageDefinitions } from "./language-definitions";
 import { historySchema } from "./history-schema";
 
-export const NONCODE_EVAL_TYPES = ["css", "md", "meta", "raw"];
+export const NONCODE_EVAL_TYPES = ["css", "md", "raw"];
 export const RUNNABLE_CHUNK_TYPES = ["plugin", "fetch"];
 export const FETCH_CHUNK_TYPES = [
   "css",
@@ -9,8 +9,10 @@ export const FETCH_CHUNK_TYPES = [
   "text",
   "blob",
   "json",
-  "arrayBuffer"
+  "arrayBuffer",
+  "plugin"
 ];
+
 export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json", "arrayBuffer"];
 
 const appMessageSchema = {
@@ -30,9 +32,6 @@ export const languageSchema = {
     pluginType: { type: "string", enum: ["language"] },
     languageId: { type: "string" },
     displayName: { type: "string" },
-    codeMirrorMode: { type: "string" },
-    codeMirrorModeLoaded: { type: "boolean" },
-    keybinding: { type: "string" },
     module: { type: "string" },
     evaluator: { type: "string" },
     asyncEvaluator: { type: "string" },
@@ -104,13 +103,10 @@ export const stateProperties = {
     type: "object",
     properties: {
       line: { type: "integer" },
-      col: { type: "integer" },
-      // if forceUpdate is true when the editor recieves it as props,
-      // then the editor must reposition the cursor using internal editor APIs
-      forceUpdate: { type: "boolean" }
+      col: { type: "integer" }
     },
     additionalProperties: false,
-    default: { line: 0, col: 0, forceUpdate: false }
+    default: { line: 1, col: 1 }
   },
   editorSelections: {
     type: "array",

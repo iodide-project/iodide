@@ -15,8 +15,8 @@ export function updateEditorSelections(selections) {
   };
 }
 
-export function updateEditorCursor(line, col, forceUpdate = false) {
-  return { type: "UPDATE_CURSOR", line, col, forceUpdate };
+export function updateEditorCursor(line, col) {
+  return { type: "UPDATE_CURSOR", line, col };
 }
 
 export function moveCursorToNextChunk() {
@@ -32,6 +32,6 @@ export function moveCursorToNextChunk() {
         : selections[selections.length - 1].end.line;
 
     const targetChunk = getChunkContainingLine(iomdChunks, targetLine);
-    dispatch(updateEditorCursor(targetChunk.endLine + 1, 0, true));
+    dispatch(updateEditorCursor(targetChunk.endLine + 1, 0));
   };
 }

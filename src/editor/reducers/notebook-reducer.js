@@ -32,7 +32,6 @@ function addAppMessageToState(state, appMessage) {
 const initialVariables = new Set(Object.keys(window)); // gives all global variables
 initialVariables.add("__core-js_shared__");
 initialVariables.add("Mousetrap");
-initialVariables.add("CodeMirror");
 
 const notebookReducer = (state = newNotebook(), action) => {
   let nextState;
@@ -44,9 +43,9 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { wrapEditors: !state.wrapEditors });
 
     case "UPDATE_CURSOR": {
-      const { line, col, forceUpdate } = action;
+      const { line, col } = action;
       return Object.assign({}, state, {
-        editorCursor: { line, col, forceUpdate }
+        editorCursor: { line, col }
       });
     }
 
@@ -215,7 +214,6 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "ADD_LANGUAGE_TO_EDITOR": {
       const { languageDefinition } = action;
-      languageDefinition.codeMirrorModeLoaded = false;
       const loadedLanguages = Object.assign({}, state.loadedLanguages, {
         [languageDefinition.languageId]: languageDefinition
       });
@@ -223,18 +221,6 @@ const notebookReducer = (state = newNotebook(), action) => {
         [languageDefinition.languageId]: languageDefinition
       });
       return Object.assign({}, state, { loadedLanguages, languageDefinitions });
-    }
-
-    case "CODEMIRROR_MODE_READY": {
-      const { codeMirrorMode } = action;
-      const loadedLanguages = Object.assign({}, state.loadedLanguages);
-      // set all languages with correct codeMirrorMode to have codeMirrorModeLoaded===true
-      Object.keys(loadedLanguages).forEach(langKey => {
-        if (loadedLanguages[langKey].codeMirrorMode === codeMirrorMode) {
-          loadedLanguages[langKey].codeMirrorModeLoaded = true;
-        }
-      });
-      return Object.assign({}, state, { loadedLanguages });
     }
 
     case "UPDATE_PANE_POSITIONS": {

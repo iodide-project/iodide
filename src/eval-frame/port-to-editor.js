@@ -1,7 +1,6 @@
 import { evaluateCode } from "./actions/actions";
 import { loadLanguagePlugin } from "./actions/language-actions";
 import { getUserDefinedVariablesFromWindow } from "./initialize-user-variables";
-import { getCompletions } from "./tools/notebook-utils";
 import {
   onParentContextFileRequestSuccess,
   onParentContextFileRequestError
@@ -80,15 +79,6 @@ async function receiveMessage(event) {
       }
       case "REQUESTED_FILE_OPERATION_ERROR": {
         onParentContextFileRequestError(message.reason, message.fileRequestID);
-        break;
-      }
-      case "REQUEST_AUTOCOMPLETE_SUGGESTIONS": {
-        const { token, context, from, to } = message;
-        postMessageToEditor("AUTOCOMPLETION_SUGGESTIONS", {
-          list: getCompletions(token, context),
-          from,
-          to
-        });
         break;
       }
       case "EVAL_CODE": {
