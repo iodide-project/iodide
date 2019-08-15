@@ -52,7 +52,7 @@ class IomdEditorUnconnected extends React.Component {
     wordWrap: PropTypes.string.isRequired,
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
-    editorPositionString: PropTypes.string.isRequired,
+    editorPosition: PropTypes.arrayOf(PropTypes.number),
     delimLines: PropTypes.arrayOf(PropTypes.number),
     // action creators
     updateIomdContent: PropTypes.func.isRequired,
@@ -137,7 +137,7 @@ class IomdEditorUnconnected extends React.Component {
       editorCursorCol,
       content,
       wordWrap,
-      editorPositionString,
+      editorPosition,
       delimLines
     } = this.props;
     const { lineNumber, column } = this.editor.getPosition();
@@ -152,7 +152,7 @@ class IomdEditorUnconnected extends React.Component {
       this.editor.setValue(content);
     }
 
-    if (editorPositionString !== prevProps.editorPositionString) {
+    if (!deepEqual(editorPosition, prevProps.editorPosition)) {
       this.editor.layout();
     }
 
@@ -190,13 +190,11 @@ function mapStateToProps(state) {
   const wordWrap = state.wrapEditors ? "on" : "off";
   const { line: editorCursorLine, col: editorCursorCol } = state.editorCursor;
 
-  // by passing in the editorPositionString prop, we can ensure that the
+  // by passing in the editorPosition prop, we can ensure that the
   // Monaco instance does a fresh layout when the position
   // of it's containing pane changes. Slightly hacky but actually
   // works great.
-  const editorPositionString = Object.values(
-    state.panePositions.EditorPositioner
-  ).join(",");
+  const editorPosition = Object.values(state.panePositions.EditorPositioner);
 
   const delimLines = state.iomdChunks.map(chunk => chunk.startLine);
 
@@ -205,7 +203,7 @@ function mapStateToProps(state) {
     delimLines,
     editorCursorLine,
     editorCursorCol,
-    editorPositionString,
+    editorPosition,
     wordWrap
   };
 }
