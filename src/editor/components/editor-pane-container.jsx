@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import deepEqual from "deep-equal";
 
-import IomdEditor from "./iomd-editor";
+import IomdEditor from "./iomd-editor/iomd-editor";
 import DeclaredVariablesPane from "./panes/declared-variables-pane";
 import ConsolePane from "./panes/console-pane";
 

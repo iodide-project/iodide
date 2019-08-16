@@ -22,8 +22,9 @@ export function setKernelState(kernelState) {
 }
 
 export function addToEvalQueue(chunk) {
-  return dispatch => {
-    if (chunkNotRunnable(chunk)) return;
+  return (dispatch, getState) => {
+    if (chunkNotRunnable(chunk) || getState().modalState !== "MODALS_CLOSED")
+      return;
     dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk });
   };
 }

@@ -1,9 +1,39 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import { moveCursorToNextChunk, updateEditorCursor } from "../actions";
+import {
+  moveCursorToNextChunk,
+  toggleWrapInEditors,
+  updateEditorCursor,
+  updateEditorSelections,
+  updateIomdContent
+} from "../editor-actions";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+
+describe("basic editor actions", () => {
+  it("updateIomdContent works as expected", () => {
+    const iomd = "foo";
+    expect(updateIomdContent(iomd)).toEqual({
+      type: "UPDATE_IOMD_CONTENT",
+      iomd
+    });
+  });
+
+  it("toggleWrapInEditors works as expected", () => {
+    expect(toggleWrapInEditors()).toEqual({
+      type: "TOGGLE_WRAP_IN_EDITORS"
+    });
+  });
+
+  it("updateEditorSelections works as expected", () => {
+    const selections = [1, 2];
+    expect(updateEditorSelections(selections)).toEqual({
+      type: "UPDATE_SELECTIONS",
+      selections
+    });
+  });
+});
 
 describe("updateEditorCursor - returns correct action", () => {
   it("should create an action to update the cursor (NO force param)", () => {
@@ -11,21 +41,19 @@ describe("updateEditorCursor - returns correct action", () => {
     const expectedAction = {
       type: "UPDATE_CURSOR",
       line,
-      col,
-      forceUpdate: false
+      col
     };
     expect(updateEditorCursor(line, col)).toEqual(expectedAction);
   });
 
   it("should create an action to update the cursor (with force param)", () => {
-    const [line, col, forceUpdate] = [1, 2, true];
+    const [line, col] = [1, 2];
     const expectedAction = {
       type: "UPDATE_CURSOR",
       line,
-      col,
-      forceUpdate
+      col
     };
-    expect(updateEditorCursor(line, col, forceUpdate)).toEqual(expectedAction);
+    expect(updateEditorCursor(line, col)).toEqual(expectedAction);
   });
 });
 
@@ -46,8 +74,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 11,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 
@@ -75,8 +102,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 16,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 
@@ -102,8 +128,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 11,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 
@@ -134,8 +159,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 21,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 
@@ -167,8 +191,7 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
       {
         type: "UPDATE_CURSOR",
         line: 21,
-        col: 0,
-        forceUpdate: true
+        col: 0
       }
     ];
 

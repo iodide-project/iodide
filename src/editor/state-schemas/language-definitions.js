@@ -4,11 +4,8 @@ export const jsLanguageDefinition = {
   pluginType: "language",
   languageId: "js",
   displayName: "JavaScript",
-  codeMirrorMode: "javascript",
-  codeMirrorModeLoaded: true,
   module: "window",
   evaluator: "eval",
-  keybinding: "j",
   url: ""
 };
 
@@ -19,8 +16,6 @@ const PYODIDE_URL = process.env.USE_LOCAL_PYODIDE
 const pyLanguageDefinition = {
   languageId: "py",
   displayName: "Python",
-  codeMirrorMode: "python",
-  keybinding: "p",
   url: PYODIDE_URL,
   module: "pyodide",
   evaluator: "runPython",

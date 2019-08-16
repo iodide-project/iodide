@@ -1,6 +1,12 @@
 import { store } from "../../store";
-import * as actions from "../actions";
 import { toggleModal } from "../modal-actions";
+import {
+  clearVariables,
+  resetNotebook,
+  saveNotebook,
+  setViewMode,
+  updateTitle
+} from "../notebook-actions";
 import { evaluateNotebook, setKernelState } from "../eval-actions";
 
 import { stateProperties } from "../../state-schemas/state-schema";
@@ -14,9 +20,6 @@ import { languageDefinitions } from "../../state-schemas/language-definitions";
 // This relies on the functionality in createValidatedReducer
 
 describe("make sure createValidatedReducer is checking correctly", () => {
-  beforeEach(() => {
-    store.dispatch(actions.resetNotebook());
-  });
   it("createValidatedReducer should throw an error if we pass an action that inserts an invalid state value", () => {
     expect(() => store.dispatch(toggleModal(100))).toThrowError(
       SchemaValidationError
@@ -26,51 +29,30 @@ describe("make sure createValidatedReducer is checking correctly", () => {
 
 describe("make sure action creators leave store in a consitent state", () => {
   beforeEach(() => {
-    store.dispatch(actions.resetNotebook());
+    store.dispatch(resetNotebook());
   });
 
   it("setKernelState", () => {
     expect(() => store.dispatch(setKernelState("KERNEL_BUSY"))).not.toThrow();
   });
 
-  it("updateAppMessages, no details", () => {
-    expect(() =>
-      store.dispatch(actions.updateAppMessages({ message: "foo" }))
-    ).not.toThrow();
-  });
-  it("updateAppMessages, with details", () => {
-    expect(() =>
-      store.dispatch(
-        actions.updateAppMessages({ message: "foo", details: "bat" })
-      )
-    ).not.toThrow();
-  });
-
-  it("toggleWrapInEditors", () => {
-    expect(() => store.dispatch(actions.toggleWrapInEditors())).not.toThrow();
-  });
-
   it("saveNotebook", () => {
-    expect(() => store.dispatch(actions.saveNotebook())).not.toThrow();
+    expect(() => store.dispatch(saveNotebook())).not.toThrow();
   });
   it("saveNotebook(false)", () => {
-    expect(() => store.dispatch(actions.saveNotebook(false))).not.toThrow();
+    expect(() => store.dispatch(saveNotebook(false))).not.toThrow();
   });
 
   it("clearVariables", () => {
-    expect(() => store.dispatch(actions.clearVariables())).not.toThrow();
+    expect(() => store.dispatch(clearVariables())).not.toThrow();
   });
 
   it("updateTitle", () => {
-    expect(() =>
-      store.dispatch(actions.updateTitle("test title"))
-    ).not.toThrow();
+    expect(() => store.dispatch(updateTitle("test title"))).not.toThrow();
   });
 
   it("setViewMode", () => {
-    expect(() =>
-      store.dispatch(actions.setViewMode("REPORT_VIEW"))
-    ).not.toThrow();
+    expect(() => store.dispatch(setViewMode("REPORT_VIEW"))).not.toThrow();
   });
 
   it("addLanguage", () => {
@@ -84,10 +66,6 @@ describe("make sure action creators leave store in a consitent state", () => {
 
   it("evaluateNotebook", () => {
     expect(() => store.dispatch(evaluateNotebook())).not.toThrow();
-  });
-
-  it("toggleEditorLink", () => {
-    expect(() => store.dispatch(actions.clearVariables())).not.toThrow();
   });
 });
 

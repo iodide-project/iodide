@@ -25,7 +25,8 @@ describe("evaluateNotebook", () => {
         { id: 1, evalFlags: [], chunkContent: "foo" },
         { id: 2, evalFlags: ["skipRunAll"], chunkContent: "foo" },
         { id: 3, evalFlags: [], chunkContent: "foo" }
-      ]
+      ],
+      modalState: "MODALS_CLOSED"
     };
   });
 
@@ -44,26 +45,33 @@ describe("evaluateNotebook", () => {
 // ========================================================
 
 describe("addToEvalQueue", () => {
-  let dispatch;
+  let store;
+  let testState;
+  const modalState = "MODALS_CLOSED";
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = undefined;
+    testState = { modalState };
   });
 
   // some random types that SHOULD be enqueued
   ["js", "py", "jl", "etc"].forEach(chunkType => {
     const chunk = { chunkType, chunkContent: "foo" };
     it("dispatch if chunk of any type other than NONCODE_EVAL_TYPES", () => {
-      addToEvalQueue(chunk)(dispatch);
-      expect(dispatch).toBeCalledWith({ type: "ADD_TO_EVAL_QUEUE", chunk });
+      const expectedActions = [{ type: "ADD_TO_EVAL_QUEUE", chunk }];
+      store = mockStore(testState);
+      store.dispatch(addToEvalQueue(chunk));
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
   NONCODE_EVAL_TYPES.forEach(chunkType => {
     const chunk = { chunkType, chunkContent: "foo" };
     it("DO NOT dispatch if chunk of any NONCODE_EVAL_TYPES", () => {
-      addToEvalQueue(chunk)(dispatch);
-      expect(dispatch).not.toBeCalled();
+      const expectedActions = [];
+      store = mockStore(testState);
+      store.dispatch(addToEvalQueue(chunk));
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 
@@ -82,8 +90,10 @@ describe("addToEvalQueue", () => {
   ].forEach(chunkContent => {
     const chunk = { chunkType: jsLanguageDefinition, chunkContent };
     it("DO NOT dispatch if chunkContent is empty", () => {
-      addToEvalQueue(chunk)(dispatch);
-      expect(dispatch).not.toBeCalled();
+      const expectedActions = [];
+      store = mockStore(testState);
+      store.dispatch(addToEvalQueue(chunk));
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
 });
@@ -95,10 +105,11 @@ describe("evalConsoleInput", () => {
   let testState;
   let consoleText;
   const languageLastUsed = "js";
+  const modalState = "MODALS_CLOSED";
 
   beforeEach(() => {
     store = undefined;
-    testState = { languageLastUsed };
+    testState = { languageLastUsed, modalState };
   });
 
   it("if there is text in the console, eval", () => {
@@ -149,7 +160,8 @@ describe("evaluateText", () => {
         };
       }),
       editorSelections: [],
-      editorCursor: { line: 0, col: 0 }
+      editorCursor: { line: 1, col: 1 },
+      modalState: "MODALS_CLOSED"
     };
   });
 
