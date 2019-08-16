@@ -179,7 +179,7 @@ export function mapStateToProps(state) {
     updateInterval: fileSources.updateInterval,
     statusMessage: fileSources.statusMessage,
     statusType: fileSources.statusType,
-    statusVisibilityClass: fileSources.statusType === "NONE" ? "hide" : "show";
+    statusVisibilityClass: fileSources.statusType === "NONE" ? "hide" : "show"
   };
 }
 

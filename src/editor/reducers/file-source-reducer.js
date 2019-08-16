@@ -1,3 +1,4 @@
+// FIXME: this would SUBSTANTIALLY simplified with immer.
 function produceIndividualFileSource(fs) {
   return {
     ...fs,
@@ -8,12 +9,12 @@ function produceIndividualFileSource(fs) {
 }
 
 function produceSources(sources) {
-  return sources.map(f => produceIndividualFileSource(f));
+  return sources ? sources.map(f => produceIndividualFileSource(f)) : [];
 }
 
 function produceFileSourcesObject(state) {
   const fileSources = { ...state.fileSources };
-  fileSources.sources = produceSources(fileSources.sources);
+  fileSources.sources = produceSources(state.fileSources.sources);
   return fileSources;
 }
 
