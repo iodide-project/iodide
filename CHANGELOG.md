@@ -1,5 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
+- Add revert functionality for revision browser
 - removes iodide.environment API
 - Add back local-only dev mode using command "npm run simple-serve"
 - Iodide docker container no longer hardcodes server hostnames, can
