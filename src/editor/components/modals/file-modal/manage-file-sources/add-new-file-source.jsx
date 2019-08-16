@@ -7,14 +7,14 @@ import TextInput from "./text-input";
 import DropdownSelector from "./dropdown-selector";
 import { ContainedButton } from "../../../../../shared/components/buttons";
 
-import { addFileSource as addFileSourceAction } from "../../../../actions/file-source-actions";
 import {
+  addFileSource as addFileSourceAction,
   updateFileSourceInputFilename,
   updateFileSourceInputURL,
   updateFileSourceInputUpdateInterval,
   updateFileSourceInputStatusMessage,
   updateFileSourceInputStatusType
-} from "../../../../actions/file-source-inputs-actions";
+} from "../../../../actions/file-source-actions";
 
 import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/state-schema";
 
@@ -172,11 +172,14 @@ AddNewFileSourceUnconnected.propTypes = {
 };
 
 export function mapStateToProps(state) {
-  const fileSourceInputs = Object.assign({}, state.fileSourceInputs);
-  fileSourceInputs.statusVisibilityClass =
-    fileSourceInputs.statusType === "NONE" ? "hide" : "show";
+  const { fileSources } = state;
   return {
-    ...fileSourceInputs
+    filename: fileSources.filename,
+    url: fileSources.url,
+    updateInterval: fileSources.updateInterval,
+    statusMessage: fileSources.statusMessage,
+    statusType: fileSources.statusType,
+    statusVisibilityClass: fileSources.statusType === "NONE" ? "hide" : "show";
   };
 }
 

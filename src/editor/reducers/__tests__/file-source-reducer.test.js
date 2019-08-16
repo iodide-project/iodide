@@ -1,37 +1,44 @@
 import fileSourceReducer from "../file-source-reducer";
 
 const initialState = () => ({
-  fileSources: [
-    {
-      id: 162,
-      latest_file_update_operation: {
-        id: 318,
-        scheduled: "2019-07-24T03:28:35.592234Z",
-        started: "2019-07-24T03:28:35.603029Z",
-        ended: "2019-07-24T03:28:35.919054Z",
-        status: "completed",
-        failure_reason: null
+  fileSources: {
+    sources: [
+      {
+        id: 162,
+        latest_file_update_operation: {
+          id: 318,
+          scheduled: "2019-07-24T03:28:35.592234Z",
+          started: "2019-07-24T03:28:35.603029Z",
+          ended: "2019-07-24T03:28:35.919054Z",
+          status: "completed",
+          failure_reason: null
+        },
+        update_interval: "weekly",
+        filename: "polls.csv",
+        url: "https://whatever.com/api"
       },
-      update_interval: "weekly",
-      filename: "polls.csv",
-      url: "https://whatever.com/api"
-    },
-    {
-      id: 163,
-      latest_file_update_operation: {
-        id: 319,
-        scheduled: "2019-07-24T03:28:58.270366Z",
-        started: "2019-07-24T03:28:58.281627Z",
-        ended: "2019-07-24T03:28:58.483848Z",
-        status: "failed",
-        failure_reason:
-          "406 Client Error: Not Acceptable for url: https://whatever.com/"
-      },
-      update_interval: "never",
-      filename: "whatever.csv",
-      url: "https://whatever.com"
-    }
-  ]
+      {
+        id: 163,
+        latest_file_update_operation: {
+          id: 319,
+          scheduled: "2019-07-24T03:28:58.270366Z",
+          started: "2019-07-24T03:28:58.281627Z",
+          ended: "2019-07-24T03:28:58.483848Z",
+          status: "failed",
+          failure_reason:
+            "406 Client Error: Not Acceptable for url: https://whatever.com/"
+        },
+        update_interval: "never",
+        filename: "whatever.csv",
+        url: "https://whatever.com"
+      }
+    ],
+    filename: "",
+    url: "",
+    updateInterval: "daily",
+    statusMessage: "",
+    statusType: "ERROR"
+  }
 });
 
 const newFileSource01 = () => {
@@ -59,8 +66,8 @@ describe("UPDATE_FILE_SOURCES", () => {
       type: "UPDATE_FILE_SOURCES",
       fileSources: [newFileSource01()]
     });
-    expect(FS(nextState).length).toBe(1);
-    expect(FS(nextState)[0].id).toBe(1010);
+    expect(FS(nextState).sources.length).toBe(1);
+    expect(FS(nextState).sources[0].id).toBe(1010);
   });
 });
 
@@ -77,8 +84,8 @@ describe("ADD_FILE_SOURCE_TO_NOTEBOOK", () => {
       updateInterval: "never",
       fileSourceID: 2000
     });
-    expect(FS(nextState).length).toBe(3);
-    expect(FS(nextState)[2].id).toBe(2000);
+    expect(FS(nextState).sources.length).toBe(3);
+    expect(FS(nextState).sources[2].id).toBe(2000);
   });
 });
 
@@ -92,8 +99,8 @@ describe("DELETE_FILE_SOURCE_FROM_NOTEBOOK", () => {
       type: "DELETE_FILE_SOURCE_FROM_NOTEBOOK",
       fileSourceID: 162
     });
-    expect(FS(nextState).length).toBe(1);
-    expect(FS(nextState)[0].id).toBe(163);
+    expect(FS(nextState).sources.length).toBe(1);
+    expect(FS(nextState).sources[0].id).toBe(163);
   });
 });
 
@@ -116,11 +123,81 @@ describe("UPDATE_FILE_SOURCE_STATUS", () => {
       fileSourceID: 162,
       fileUpdateOperation
     });
-    expect(FS(nextState)[0].latest_file_update_operation).toEqual(
+    expect(FS(nextState).sources[0].latest_file_update_operation).toEqual(
       fileUpdateOperation
     );
-    expect(FS(nextState)[1].latest_file_update_operation).not.toEqual(
+    expect(FS(nextState).sources[1].latest_file_update_operation).not.toEqual(
       fileUpdateOperation
     );
+  });
+});
+
+describe("UPDATE_FILE_SOURCE_INPUT_FILENAME", () => {
+  let state;
+  beforeEach(() => {
+    state = initialState();
+  });
+  it("updates filename", () => {
+    const nextState = fileSourceReducer(state, {
+      type: "UPDATE_FILE_SOURCE_INPUT_FILENAME",
+      filename: "test.json"
+    });
+    expect(FS(nextState).filename).toBe("test.json");
+  });
+});
+
+describe("UPDATE_FILE_SOURCE_INPUT_URL", () => {
+  let state;
+  beforeEach(() => {
+    state = initialState();
+  });
+  it("updates url", () => {
+    const nextState = fileSourceReducer(state, {
+      type: "UPDATE_FILE_SOURCE_INPUT_URL",
+      url: "https://whatever.com"
+    });
+    expect(FS(nextState).url).toBe("https://whatever.com");
+  });
+});
+
+describe("UPDATE_FILE_SOURCE_INPUT_UPDATE_INTERVAL", () => {
+  let state;
+  beforeEach(() => {
+    state = initialState();
+  });
+  it("updates url", () => {
+    const nextState = fileSourceReducer(state, {
+      type: "UPDATE_FILE_SOURCE_INPUT_UPDATE_INTERVAL",
+      updateInterval: "weekly"
+    });
+    expect(FS(nextState).updateInterval).toBe("weekly");
+  });
+});
+
+describe("UPDATE_FILE_SOURCE_INPUT_STATUS_MESSAGE", () => {
+  let state;
+  beforeEach(() => {
+    state = initialState();
+  });
+  it("updates url", () => {
+    const nextState = fileSourceReducer(state, {
+      type: "UPDATE_FILE_SOURCE_INPUT_STATUS_MESSAGE",
+      statusMessage: "testtesttest"
+    });
+    expect(FS(nextState).statusMessage).toBe("testtesttest");
+  });
+});
+
+describe("UPDATE_FILE_SOURCE_INPUT_STATUS_TYPE", () => {
+  let state;
+  beforeEach(() => {
+    state = initialState();
+  });
+  it("updates url", () => {
+    const nextState = fileSourceReducer(state, {
+      type: "UPDATE_FILE_SOURCE_INPUT_STATUS_TYPE",
+      statusType: "ERROR"
+    });
+    expect(FS(nextState).statusType).toBe("ERROR");
   });
 });

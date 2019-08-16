@@ -306,9 +306,10 @@ export const stateProperties = {
       }
     }
   },
-  fileSourceInputs: {
+  fileSources: {
     type: "object",
     properties: {
+      sources: { type: "array", items: fileSourceSchema },
       statusMessage: { type: "string" },
       statusType: {
         type: "string",
@@ -330,7 +331,6 @@ export const stateProperties = {
     },
     additionalProperties: false
   },
-  fileSources: { type: "array", items: fileSourceSchema },
   notebookInfo: {
     type: "object",
     properties: {

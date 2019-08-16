@@ -151,7 +151,9 @@ FileSourceListItemUnconnected.propTypes = {
 };
 
 export function mapStateToProps(state, ownProps) {
-  const fileSource = state.fileSources.find(fs => fs.id === ownProps.id);
+  const fileSource = state.fileSources.sources.find(
+    fs => fs.id === ownProps.id
+  );
   const fileUpdateOperation = fileSource.latest_file_update_operation;
   const hasFileUpdateOperation =
     fileUpdateOperation !== null &&

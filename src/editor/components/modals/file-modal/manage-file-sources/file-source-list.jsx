@@ -107,10 +107,12 @@ FileSourceListUnconnected.propTypes = {
 
 export function mapStateToProps(state) {
   return {
-    fileSources: state.fileSources.map(({ id, filename }) => ({
-      id,
-      filename
-    }))
+    fileSources: state.fileSources.sources.map(({ id, filename }) => {
+      return {
+        id,
+        filename
+      };
+    })
   };
 }
 

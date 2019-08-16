@@ -43,14 +43,15 @@ const failed = {
   }
 };
 
+const makeState = (...sources) => {
+  return { fileSources: { sources } };
+};
+
 describe("FileSourceList mapStateToProps", () => {
   it("maps to a currently-running file source", () => {
-    const fs = mapStateToProps(
-      {
-        fileSources: [currentlyRunning]
-      },
-      { id: currentlyRunning.id }
-    );
+    const fs = mapStateToProps(makeState(currentlyRunning), {
+      id: currentlyRunning.id
+    });
     expect(fs.id).toBe(currentlyRunning.id);
     expect(fs.filename).toBe(currentlyRunning.filename);
     expect(fs.url).toBe(currentlyRunning.url);
@@ -68,12 +69,7 @@ describe("FileSourceList mapStateToProps", () => {
   });
 
   it("maps to an unrun file source", () => {
-    const fs = mapStateToProps(
-      {
-        fileSources: [hasntRunYet]
-      },
-      { id: hasntRunYet.id }
-    );
+    const fs = mapStateToProps(makeState(hasntRunYet), { id: hasntRunYet.id });
     expect(fs.id).toBe(hasntRunYet.id);
     expect(fs.filename).toBe(hasntRunYet.filename);
     expect(fs.url).toBe(hasntRunYet.url);
@@ -87,12 +83,9 @@ describe("FileSourceList mapStateToProps", () => {
   });
 
   it("maps to an finished-running file source", () => {
-    const fs = mapStateToProps(
-      {
-        fileSources: [finishedRunning]
-      },
-      { id: finishedRunning.id }
-    );
+    const fs = mapStateToProps(makeState(finishedRunning), {
+      id: finishedRunning.id
+    });
     expect(fs.id).toBe(finishedRunning.id);
     expect(fs.filename).toBe(finishedRunning.filename);
     expect(fs.url).toBe(finishedRunning.url);
@@ -110,12 +103,7 @@ describe("FileSourceList mapStateToProps", () => {
   });
 
   it("maps to an finished-running file source", () => {
-    const fs = mapStateToProps(
-      {
-        fileSources: [failed]
-      },
-      { id: failed.id }
-    );
+    const fs = mapStateToProps(makeState(failed), { id: failed.id });
     expect(fs.id).toBe(failed.id);
     expect(fs.filename).toBe(failed.filename);
     expect(fs.url).toBe(failed.url);
