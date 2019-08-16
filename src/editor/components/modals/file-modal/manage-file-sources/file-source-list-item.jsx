@@ -6,13 +6,20 @@ import Delete from "@material-ui/icons/Delete";
 
 import { ListItem, ListMetadata } from "../../../../../shared/components/list";
 
+import DeleteModal from "../../../../../shared/components/delete-modal";
+
 import FileSourceListItemDescription from "./file-source-list-item-description";
 
 import InProgress from "./in-progress";
 
 import { DELETE_ANIMATION_LENGTH_MS } from "../shared/constants";
 
-import { createFileUpdateOperation as createFileUpdateOperationAction } from "../../../../actions/file-source-actions";
+import {
+  createFileUpdateOperation as createFileUpdateOperationAction,
+  deleteFileSource as deleteFileSourceAction,
+  setConfirmDeleteID as setConfirmDeleteIDAction,
+  setIsDeletingAnimationID as setIsDeletingAnimationIDAction
+} from "../../../../actions/file-source-actions";
 
 import {
   TextButton,
@@ -93,43 +100,60 @@ export function FileSourceListItemUnconnected({
   failureReason,
   showFailureReason,
   listSize,
-  isDeleting,
-  onDeleteFileSource,
-  createFileUpdateOperation
+  isDeletingClass,
+  deleteFileSource,
+  createFileUpdateOperation,
+  isConfirmingDelete,
+  setConfirmDeleteID,
+  setIsDeletingAnimationID
 }) {
   return (
-    <FileSourceListItemContainer
-      type={listSize}
-      className={isDeleting ? "disappearing" : undefined}
-    >
-      <FileSourceListItemDescription
-        url={url}
-        filename={filename}
-        latestFileUpdateOperationStatus={latestFileUpdateOperationStatus}
-        lastUpdated={lastUpdated}
-        hasBeenRun={hasBeenRun}
-        failureReason={failureReason}
-        showFailureReason={showFailureReason}
+    <>
+      <DeleteModal
+        visible={isConfirmingDelete}
+        title={`Delete the file source for "${filename}"?`}
+        content="This action will not delete any files downloaded by the file source."
+        onCloseOrCancel={() => {}}
+        deleteFunction={() => {
+          setIsDeletingAnimationID(id);
+          setTimeout(() => {
+            deleteFileSource(id);
+            setIsDeletingAnimationID(undefined);
+          }, DELETE_ANIMATION_LENGTH_MS);
+        }}
+        onDelete={() => {}}
+        aboveOtherModals
       />
-      <FileSourceInterval>{updateInterval}</FileSourceInterval>
-      <DownloadNowButtonContainer>
-        <InProgress spinning={isCurrentlyRunning}>
-          <DownloadNowButton
-            disabled={isCurrentlyRunning}
-            onClick={() => {
-              createFileUpdateOperation(id);
-            }}
-          >
-            download now
-          </DownloadNowButton>
-        </InProgress>
-      </DownloadNowButtonContainer>
-      <DeleteButtonContainer>
-        <DeleteButton onClick={onDeleteFileSource}>
-          <Delete />
-        </DeleteButton>
-      </DeleteButtonContainer>
-    </FileSourceListItemContainer>
+      <FileSourceListItemContainer type={listSize} className={isDeletingClass}>
+        <FileSourceListItemDescription
+          url={url}
+          filename={filename}
+          latestFileUpdateOperationStatus={latestFileUpdateOperationStatus}
+          lastUpdated={lastUpdated}
+          hasBeenRun={hasBeenRun}
+          failureReason={failureReason}
+          showFailureReason={showFailureReason}
+        />
+        <FileSourceInterval>{updateInterval}</FileSourceInterval>
+        <DownloadNowButtonContainer>
+          <InProgress spinning={isCurrentlyRunning}>
+            <DownloadNowButton
+              disabled={isCurrentlyRunning}
+              onClick={() => {
+                createFileUpdateOperation(id);
+              }}
+            >
+              download now
+            </DownloadNowButton>
+          </InProgress>
+        </DownloadNowButtonContainer>
+        <DeleteButtonContainer>
+          <DeleteButton onClick={() => setConfirmDeleteID(id)}>
+            <Delete />
+          </DeleteButton>
+        </DeleteButtonContainer>
+      </FileSourceListItemContainer>
+    </>
   );
 }
 
@@ -145,12 +169,17 @@ FileSourceListItemUnconnected.propTypes = {
   failureReason: PropTypes.string,
   showFailureReason: PropTypes.bool,
   listSize: PropTypes.string,
-  isDeleting: PropTypes.bool,
-  onDeleteFileSource: PropTypes.func,
-  createFileUpdateOperation: PropTypes.func
+  isDeletingClass: PropTypes.string,
+  isConfirmingDelete: PropTypes.bool,
+  deleteFileSource: PropTypes.func,
+  createFileUpdateOperation: PropTypes.func,
+  setIsDeletingAnimationID: PropTypes.func,
+  setConfirmDeleteID: PropTypes.func
 };
 
 export function mapStateToProps(state, ownProps) {
+  const { isDeletingAnimationID, confirmDeleteID } = state.fileSources;
+
   const fileSource = state.fileSources.sources.find(
     fs => fs.id === ownProps.id
   );
@@ -183,6 +212,11 @@ export function mapStateToProps(state, ownProps) {
 
   const listSize = showFailureReason || !hasBeenRun ? "triple" : "single";
 
+  const isDeletingClass =
+    isDeletingAnimationID === fileSource.id ? "disappearing" : undefined;
+
+  const isConfirmingDelete = confirmDeleteID === fileSource.id;
+
   return {
     id: fileSource.id,
     filename: fileSource.filename,
@@ -194,13 +228,18 @@ export function mapStateToProps(state, ownProps) {
     hasBeenRun,
     failureReason,
     showFailureReason,
-    listSize
+    listSize,
+    isDeletingClass,
+    isConfirmingDelete
   };
 }
 
 export default connect(
   mapStateToProps,
   {
+    setIsDeletingAnimationID: setIsDeletingAnimationIDAction,
+    setConfirmDeleteID: setConfirmDeleteIDAction,
+    deleteFileSource: deleteFileSourceAction,
     createFileUpdateOperation: createFileUpdateOperationAction
   }
 )(FileSourceListItemUnconnected);

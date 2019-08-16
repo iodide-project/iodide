@@ -95,7 +95,7 @@ export default (state, action) => {
       );
     }
 
-    case "UPDATE_FILE_SOUCE_INPUT_STATUS_TYPE": {
+    case "UPDATE_FILE_SOURCE_INPUT_STATUS_TYPE": {
       return produceNewStateWithUpdatedFileSourcesPrimitive(
         state,
         action,
@@ -124,6 +124,30 @@ export default (state, action) => {
         state,
         action,
         "updateInterval"
+      );
+    }
+
+    case "UPDATE_FILE_SOURCE_INPUT_CONFIRM_DELETE_ID": {
+      return produceNewStateWithUpdatedFileSourcesPrimitive(
+        state,
+        action,
+        "confirmDeleteID"
+      );
+    }
+
+    case "UPDATE_FILE_SOURCE_INPUT_SET_IS_DELETING_ANIMATION_ID": {
+      return produceNewStateWithUpdatedFileSourcesPrimitive(
+        state,
+        action,
+        "isDeletingAnimationID"
+      );
+    }
+
+    case "UPDATE_FILE_SOURCE_STATUS_VISIBILITY": {
+      return produceNewStateWithUpdatedFileSourcesPrimitive(
+        state,
+        action,
+        "statusIsVisible"
       );
     }
 

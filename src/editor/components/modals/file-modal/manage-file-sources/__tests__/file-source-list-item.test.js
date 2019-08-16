@@ -44,7 +44,9 @@ const failed = {
 };
 
 const makeState = (...sources) => {
-  return { fileSources: { sources } };
+  return {
+    fileSources: { sources, confirmDeleteID: 3, isDeletingAnimationID: 3 }
+  };
 };
 
 describe("FileSourceList mapStateToProps", () => {
@@ -118,5 +120,26 @@ describe("FileSourceList mapStateToProps", () => {
       failed.latest_file_update_operation.failure_reason
     );
     expect(fs.showFailureReason).toBe(true);
+  });
+
+  it("marks a file source for deletion confirmation", () => {
+    const fs = mapStateToProps(makeState(failed), { id: failed.id });
+    expect(fs.id).toBe(failed.id);
+    expect(fs.filename).toBe(failed.filename);
+    expect(fs.url).toBe(failed.url);
+    expect(fs.updateInterval).toBe(failed.update_interval);
+    expect(fs.lastUpdated).toBe(failed.latest_file_update_operation.started);
+    expect(fs.latestFileUpdateOperationStatus).toBe(
+      failed.latest_file_update_operation.status
+    );
+    expect(fs.isCurrentlyRunning).toBe(false);
+    expect(fs.hasBeenRun).toBe(true);
+    expect(fs.failureReason).toBe(
+      failed.latest_file_update_operation.failure_reason
+    );
+    expect(fs.showFailureReason).toBe(true);
+
+    expect(fs.isDeletingClass).toBe("disappearing");
+    expect(fs.isConfirmingDelete).toBe(true);
   });
 });

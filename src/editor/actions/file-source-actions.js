@@ -1,7 +1,13 @@
 import {
+  FILE_SOURCE_UPDATE_SELECTOR_OPTIONS,
   FILE_SOURCE_UPDATE_INTERVAL_MAP,
   reverseFileSourceUpdateInterval
 } from "../state-schemas/state-schema";
+
+// FIXME: we should move this function to
+// a shared path
+
+import { validateUrl as validateUrlForFileSource } from "../components/modals/file-modal/manage-file-sources/validators";
 
 import {
   saveFileSourceToServer,
@@ -149,5 +155,94 @@ export function updateFileSourceInputStatusType(statusType) {
   return {
     type: "UPDATE_FILE_SOURCE_INPUT_STATUS_TYPE",
     statusType
+  };
+}
+
+export function setConfirmDeleteID(confirmDeleteID) {
+  return {
+    type: "UPDATE_FILE_SOURCE_INPUT_CONFIRM_DELETE_ID",
+    confirmDeleteID
+  };
+}
+
+export function setIsDeletingAnimationID(isDeletingAnimationID) {
+  return {
+    type: "UPDATE_FILE_SOURCE_INPUT_SET_IS_DELETING_ANIMATION_ID",
+    isDeletingAnimationID
+  };
+}
+
+export function updateFileSourceStatusVisibility(statusIsVisible) {
+  return {
+    type: "UPDATE_FILE_SOURCE_STATUS_VISIBILITY",
+    statusIsVisible
+  };
+}
+
+export function validateAndSubmitFileSourceInputs(
+  url,
+  filename,
+  updateInterval
+) {
+  return async dispatch => {
+    dispatch(updateFileSourceStatusVisibility(true));
+    dispatch(updateFileSourceInputStatusMessage("adding file source ..."));
+    dispatch(updateFileSourceInputStatusType("LOADING"));
+
+    if (url === "" || filename === "") {
+      dispatch(updateFileSourceInputStatusType("ERROR"));
+      dispatch(
+        updateFileSourceInputStatusMessage(
+          "must include source url & desired filename"
+        )
+      );
+    } else if (!validateUrlForFileSource(url)) {
+      dispatch(updateFileSourceInputStatusType("ERROR"));
+      dispatch(
+        updateFileSourceInputStatusMessage(
+          "source URL must include the protocol (e.g. https://)"
+        )
+      );
+    } else {
+      let request;
+      try {
+        request = await dispatch(addFileSource(url, filename, updateInterval));
+      } catch (err) {
+        dispatch(updateFileSourceInputStatusType("ERROR"));
+        dispatch(updateFileSourceInputStatusMessage(err.message));
+      }
+      if (request) {
+        dispatch(updateFileSourceInputStatusType("SUCCESS"));
+        dispatch(updateFileSourceInputStatusMessage("added file source"));
+        dispatch(updateFileSourceInputURL(""));
+        dispatch(updateFileSourceInputFilename(""));
+        dispatch(
+          updateFileSourceInputUpdateInterval(
+            FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key
+          )
+        );
+      }
+    }
+  };
+}
+
+// used in the manage file sources modal in the useEffect.
+export function clearUpdateStatus() {
+  return (dispatch, getState) => {
+    const { statusIsVisible, statusType } = getState().fileSources;
+    // clear status.type if not NONE after k seconds.
+    if (statusIsVisible) {
+      // change class?
+      if (statusType === "SUCCESS" || statusType === "ERROR") {
+        setTimeout(() => {
+          dispatch(updateFileSourceStatusVisibility(false));
+        }, 4000);
+        // wait for the status visibility transition to finish.
+        setTimeout(() => {
+          dispatch(updateFileSourceInputStatusType("NONE"));
+          dispatch(updateFileSourceInputStatusMessage(""));
+        }, 4500);
+      }
+    }
   };
 }

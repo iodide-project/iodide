@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import styled from "react-emotion";
@@ -8,12 +8,14 @@ import DropdownSelector from "./dropdown-selector";
 import { ContainedButton } from "../../../../../shared/components/buttons";
 
 import {
-  addFileSource as addFileSourceAction,
   updateFileSourceInputFilename,
   updateFileSourceInputURL,
   updateFileSourceInputUpdateInterval,
   updateFileSourceInputStatusMessage,
-  updateFileSourceInputStatusType
+  updateFileSourceInputStatusType,
+  updateFileSourceStatusVisibility,
+  validateAndSubmitFileSourceInputs as validateAndSubmitFileSourceInputsAction,
+  clearUpdateStatus as clearUpdateStatusAction
 } from "../../../../actions/file-source-actions";
 
 import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/state-schema";
@@ -60,78 +62,38 @@ export function AddNewFileSourceUnconnected({
   updateFilename,
   updateURL,
   updateUpdateInterval,
-  updateStatusMessage,
-  updateStatusType,
-  addFileSource
+  statusIsVisible,
+  isValidURLForDisplay,
+  isValidFilenameForDisplay,
+  validateAndSubmitFileSourceInputs,
+  clearUpdateStatus
 }) {
-  const [statusVisible, updateStatusVisibility] = useState(false);
-
-  const urlIsValidForDisplay = validateUrl(url, true);
-  const isValidFilenameForDisplay = validateFilename(filename, true);
-
   const handleUpdateIntervalChange = event => {
     updateUpdateInterval(event.target.value);
   };
-  const submitInformation = async () => {
-    updateStatusVisibility(true);
-    updateStatusMessage("adding file source ...");
-    updateStatusType("LOADING");
 
-    if (url === "" || filename === "") {
-      updateStatusType("ERROR");
-      updateStatusMessage("must include source url & desired filename");
-    } else if (!validateUrl(url)) {
-      updateStatusType("ERROR");
-      updateStatusMessage(
-        "source URL must include the protocol (e.g. https://)"
-      );
-    } else {
-      let request;
-      try {
-        request = await addFileSource(url, filename, updateInterval);
-      } catch (err) {
-        updateStatusType("ERROR");
-        updateStatusMessage(err.message);
-      }
-      if (request) {
-        updateStatusType("SUCCESS");
-        updateStatusMessage("added file source");
-        updateURL("");
-        updateFilename("");
-        updateUpdateInterval(FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key);
-      }
-    }
-  };
-
-  useEffect(() => {
-    // clear status.type if not NONE after k seconds.
-    if (statusVisible) {
-      // change class?
-      if (statusType === "SUCCESS" || statusType === "ERROR") {
-        setTimeout(() => {
-          updateStatusVisibility(false);
-        }, 4000);
-        // wait for the status visibility transition to finish.
-        setTimeout(() => {
-          updateStatusType("NONE");
-          updateStatusMessage("");
-        }, 4500);
-      }
-    }
-  });
+  // clears the update status if the resulting state
+  // has it that statusIsVisible === true and statusType !== "NONE"
+  // (that is, it is "SUCCESS" or "ERROR"), in which case it
+  // cascades the redux store state changes around the animation
+  useEffect(clearUpdateStatus);
 
   return (
     <>
       <AddNewSourceContainer>
         <AddNewSourceButtonContainer>
-          <AddNewSourceButton onClick={submitInformation}>
+          <AddNewSourceButton
+            onClick={() =>
+              validateAndSubmitFileSourceInputs(url, filename, updateInterval)
+            }
+          >
             add file source
           </AddNewSourceButton>
         </AddNewSourceButtonContainer>
         <TextInput
           label="source URL"
           value={url}
-          isValid={urlIsValidForDisplay}
+          isValid={isValidURLForDisplay}
           onKey={updateURL}
         />
         <TextInput
@@ -148,7 +110,10 @@ export function AddNewFileSourceUnconnected({
         />
       </AddNewSourceContainer>
       <FileSourceStatus className={statusVisibilityClass}>
-        <FileSourceStatusText statusType={statusType} isVisible={statusVisible}>
+        <FileSourceStatusText
+          statusType={statusType}
+          isVisible={statusIsVisible}
+        >
           {statusMessage}
         </FileSourceStatusText>
       </FileSourceStatus>
@@ -162,13 +127,15 @@ AddNewFileSourceUnconnected.propTypes = {
   statusMessage: PropTypes.string,
   statusType: PropTypes.string,
   updateInterval: PropTypes.string,
-  addFileSource: PropTypes.func,
   updateFilename: PropTypes.func,
   updateURL: PropTypes.func,
   statusVisibilityClass: PropTypes.string,
   updateUpdateInterval: PropTypes.func,
-  updateStatusMessage: PropTypes.func,
-  updateStatusType: PropTypes.func
+  statusIsVisible: PropTypes.bool,
+  isValidURLForDisplay: PropTypes.bool,
+  isValidFilenameForDisplay: PropTypes.bool,
+  validateAndSubmitFileSourceInputs: PropTypes.func,
+  clearUpdateStatus: PropTypes.func
 };
 
 export function mapStateToProps(state) {
@@ -179,18 +146,23 @@ export function mapStateToProps(state) {
     updateInterval: fileSources.updateInterval,
     statusMessage: fileSources.statusMessage,
     statusType: fileSources.statusType,
-    statusVisibilityClass: fileSources.statusType === "NONE" ? "hide" : "show"
+    statusVisibilityClass: fileSources.statusType === "NONE" ? "hide" : "show",
+    statusIsVisible: fileSources.statusIsVisible,
+    isValidURLForDisplay: validateUrl(fileSources.url, true),
+    isValidFilenameForDisplay: validateFilename(fileSources.filename, true)
   };
 }
 
 export default connect(
   mapStateToProps,
   {
-    addFileSource: addFileSourceAction,
     updateUpdateInterval: updateFileSourceInputUpdateInterval,
     updateURL: updateFileSourceInputURL,
     updateFilename: updateFileSourceInputFilename,
     updateStatusMessage: updateFileSourceInputStatusMessage,
-    updateStatusType: updateFileSourceInputStatusType
+    updateStatusType: updateFileSourceInputStatusType,
+    updateStatusVisibility: updateFileSourceStatusVisibility,
+    validateAndSubmitFileSourceInputs: validateAndSubmitFileSourceInputsAction,
+    clearUpdateStatus: clearUpdateStatusAction
   }
 )(AddNewFileSourceUnconnected);

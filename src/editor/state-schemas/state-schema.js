@@ -315,19 +315,27 @@ export const stateProperties = {
         type: "string",
         enum: FILE_SOURCE_INPUT_STATUS_TYPES
       },
+      statusIsVisible: {
+        type: "boolean"
+      },
       url: { type: "string" },
       filename: { type: "string" },
       updateInterval: {
         type: "string",
         enum: FILE_SOURCE_UPDATE_SELECTOR_OPTIONS.map(f => f.key)
-      }
+      },
+      confirmDeleteID: { type: "number" },
+      isDeletingAnimationID: { type: "number" }
     },
     default: {
+      sources: [],
       statusMessage: "",
       statusType: "NONE",
       url: "",
       filename: "",
-      updateInterval: FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key
+      updateInterval: FILE_SOURCE_UPDATE_SELECTOR_OPTIONS[0].key,
+      confirmDeleteID: undefined,
+      isDeletingAnimationID: undefined
     },
     additionalProperties: false
   },
