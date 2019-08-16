@@ -9,7 +9,7 @@
 - Disable "History" menu item for the tryit notebook
 - Add documentation for how the Iodide server's authentication system works
 - Migrated to Monaco editor, providing several text editing improvements (find/replace text; autocomplete, including hits for Iodide custom chunk types; etc)
-- Add revert functionality for revision browser
+- Add revert functionality for revision browser (#2047)
 
 # 0.10.0 (2019-07-15)
 
