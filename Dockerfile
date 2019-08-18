@@ -1,5 +1,6 @@
 FROM python:3.7.3-alpine AS app-base
 
+RUN echo ${TARGE}
 EXPOSE 8000
 
 WORKDIR /app
@@ -20,8 +21,6 @@ RUN apk --no-cache add \
 
 # Install Python dependencies
 COPY requirements/*.txt /tmp/requirements/
-# Switch to /tmp to install dependencies outside home dir
-WORKDIR /tmp
 
 WORKDIR /app
 COPY . /app
@@ -36,10 +35,11 @@ ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 FROM app-base AS prod
 
 ARG PIP_FILE=build.txt
-RUN pip install --user --require-hashes --no-cache-dir -r requirements/$PIP_FILE
+RUN pip install --user --require-hashes --no-cache-dir -r /tmp/requirements/$PIP_FILE
+RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
 FROM app-base AS dev
 
 ARG PIP_FILE=all.txt
-RUN pip install --user --require-hashes --no-cache-dir -r requirements/$PIP_FILE
+RUN pip install --user --require-hashes --no-cache-dir -r /tmp/requirements/$PIP_FILE
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
