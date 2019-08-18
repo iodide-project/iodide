@@ -1,8 +1,4 @@
-FROM python:3.7.3-alpine
-
-# Default to building for local development.
-# Override with `--build-arg PIP_FILE=build.txt` to build for production.
-ARG PIP_FILE=all.txt
+FROM python:3.7.3-alpine AS app-base
 
 EXPOSE 8000
 
@@ -26,19 +22,24 @@ RUN apk --no-cache add \
 COPY requirements/*.txt /tmp/requirements/
 # Switch to /tmp to install dependencies outside home dir
 WORKDIR /tmp
-# TODO: Consider a way to install only the "build.txt" deps for production.
-RUN pip install --require-hashes --no-cache-dir -r requirements/$PIP_FILE
 
 WORKDIR /app
 COPY . /app
 RUN chown app:app -R .
 USER app
 
-RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
-
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
 # where volume-mounted files do not have execute bits set.
 # https://github.com/docker/compose/issues/2301#issuecomment-154450785 has additional background.
 ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
-CMD ["dev"]
+FROM app-base AS prod
+
+ARG PIP_FILE=build.txt
+RUN pip install --user --require-hashes --no-cache-dir -r requirements/$PIP_FILE
+
+FROM app-base AS dev
+
+ARG PIP_FILE=all.txt
+RUN pip install --user --require-hashes --no-cache-dir -r requirements/$PIP_FILE
+RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
