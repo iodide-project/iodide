@@ -1,6 +1,5 @@
 FROM python:3.7.3-alpine AS app-base
 
-RUN echo ${TARGE}
 EXPOSE 8000
 
 WORKDIR /app
