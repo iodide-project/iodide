@@ -227,7 +227,7 @@ export function validateAndSubmitFileSourceInputs(
 }
 
 // used in the manage file sources modal in the useEffect.
-export function clearUpdateStatus() {
+export function clearFileSourceInputUpdateStatus() {
   return (dispatch, getState) => {
     const { statusIsVisible, statusType } = getState().fileSources;
     // clear status.type if not NONE after k seconds.

@@ -15,7 +15,7 @@ import {
   updateFileSourceInputStatusType,
   updateFileSourceStatusVisibility,
   validateAndSubmitFileSourceInputs as validateAndSubmitFileSourceInputsAction,
-  clearUpdateStatus as clearUpdateStatusAction
+  clearFileSourceInputUpdateStatus as clearFileSourceInputUpdateStatusAction
 } from "../../../../actions/file-source-actions";
 
 import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/state-schema";
@@ -163,6 +163,6 @@ export default connect(
     updateStatusType: updateFileSourceInputStatusType,
     updateStatusVisibility: updateFileSourceStatusVisibility,
     validateAndSubmitFileSourceInputs: validateAndSubmitFileSourceInputsAction,
-    clearUpdateStatus: clearUpdateStatusAction
+    clearUpdateStatus: clearFileSourceInputUpdateStatusAction
   }
 )(AddNewFileSourceUnconnected);
