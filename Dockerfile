@@ -36,11 +36,9 @@ FROM app-base AS prod
 ARG PIP_FILE=build.txt
 RUN pip install --user --require-hashes --no-cache-dir -r /tmp/requirements/$PIP_FILE
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
-CMD ["prod"]
 
 FROM app-base AS dev
 
 ARG PIP_FILE=all.txt
 RUN pip install --user --require-hashes --no-cache-dir -r /tmp/requirements/$PIP_FILE
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
-CMD ["dev"]
