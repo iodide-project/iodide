@@ -1,5 +1,3 @@
-// import CodeMirror from 'codemirror'
-
 import {
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet,
@@ -9,7 +7,7 @@ import {
 import { iomdParser } from "../iomd-parser";
 
 document.body.innerHTML = "";
-
+// make sure NOTEBOOK starts on line 11 -- then you can just subtract 10 to get Monaco line numbers
 const NOTEBOOK = `
 %% js
 
@@ -32,8 +30,6 @@ x = [1,2,3,4,5]
 {
   "languageId": "jsx",
   "displayName": "jsx",
-  "codeMirrorMode": "jsx",
-  "keybinding": "x",
   "url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
   "module": "jsx",
   "evaluator": "evaluateJSX",
@@ -51,8 +47,6 @@ var z = 30
 {
   "languageId": "blahblah",
   "displayName": "blahblah",
-  "codeMirrorMode": "blahblah",
-  "keybinding": "b",
   "url": "blah.com/language.json",
   "module": "bla",
   "evaluator": "evaluateBlahBlah",
@@ -63,37 +57,42 @@ var z = 30
 
 const fetchSelections = [
   {
-    start: 9,
-    end: 9,
-    selectedText: ": https",
-    expectedValue: "js: https://whatever.com"
-  },
-  {
     start: 10,
     end: 10,
     selectedText: ": https",
-    expectedValue: "css: https://another-domain.biz"
+    expectedValue: "js: https://whatever.com"
   },
   {
     start: 11,
     end: 11,
     selectedText: ": https",
-    expectedValue: "file: /files/gritty-data.csv"
+    expectedValue: "css: https://another-domain.biz"
   },
   {
-    start: 9,
-    end: 10,
-    selectedText: "s://whatever.com\ncss: ht",
-    expectedValue: "js: https://whatever.com\ncss: https://another-domain.biz"
+    start: 12,
+    end: 12,
+    selectedText: ": https",
+    expectedValue: "file: /files/gritty-data.csv"
   },
   {
     start: 10,
     end: 11,
+    selectedText: "s://whatever.com\ncss: ht",
+    expectedValue: "js: https://whatever.com\ncss: https://another-domain.biz"
+  },
+  {
+    start: 11,
+    end: 12,
     selectedText: "//another-domain.biz\nfile: /file",
     expectedValue:
       "css: https://another-domain.biz\nfile: /files/gritty-data.csv"
   }
 ];
+
+const getNotebookLines = (a, b) =>
+  NOTEBOOK.split("\n")
+    .slice(a - 1, b) // NOTE: monaco does 1-based line indexing
+    .join("\n");
 
 // line 11.
 const SELECTION_A = `https://another-domain.biz
@@ -121,27 +120,12 @@ const SELECTION_C = `[1,2,3,4,5]
 {
   "languageId": "jsx",
   "displayName": "jsx",
-  "codeMirrorMode": "jsx",
   "key`;
-
-// lines 27-36. end of plugin chunk
-const SELECTION_D = `"url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
-"module": "jsx",
-"evaluator": "evaluateJSX",
-"pluginType": "language"
-}
-
-%% js
-
-var x = 10
-var y = 20`;
 
 const FULL_PLUGIN_CHUNK = `
 {
   "languageId": "jsx",
   "displayName": "jsx",
-  "codeMirrorMode": "jsx",
-  "keybinding": "x",
   "url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
   "module": "jsx",
   "evaluator": "evaluateJSX",
@@ -151,8 +135,8 @@ const FULL_PLUGIN_CHUNK = `
 
 const partialPluginSelections = [
   {
-    start: 22,
-    end: 22,
+    start: 23,
+    end: 23,
     selectedText: 'orMode": "j',
     expectedValue: FULL_PLUGIN_CHUNK
   }
@@ -161,16 +145,16 @@ const partialPluginSelections = [
 const iomdChunks = iomdParser(NOTEBOOK);
 
 describe("selectionToChunks", () => {
-  it("correctly backs out various fetch selections and plugin chunks", () => {
-    [...fetchSelections, ...partialPluginSelections].forEach(line => {
+  [...fetchSelections, ...partialPluginSelections].forEach((line, i) => {
+    it(`correctly backs out various fetch selections and plugin chunks; case ${i}; expectedValue: ${line.expectedValue}`, () => {
       const [chunk] = selectionToChunks(line, iomdChunks);
       expect(chunk.chunkContent).toBe(line.expectedValue);
     });
   });
 
   const selectionParamsA = {
-    start: 10,
-    end: 16,
+    start: 11,
+    end: 17,
     selectedText: SELECTION_A
   };
 
@@ -188,8 +172,8 @@ describe("selectionToChunks", () => {
   });
 
   const selectionParamsB = {
-    start: 5,
-    end: 9,
+    start: 6,
+    end: 10,
     selectedText: SELECTION_B
   };
 
@@ -205,8 +189,8 @@ describe("selectionToChunks", () => {
   });
 
   const selectionParamsC = {
-    start: 16,
-    end: 24,
+    start: 17,
+    end: 25,
     selectedText: SELECTION_C
   };
   const selectedChunksC = selectionToChunks(selectionParamsC, iomdChunks);
@@ -221,9 +205,9 @@ describe("selectionToChunks", () => {
   });
 
   const selectionParamsD = {
-    start: 25,
-    end: 34,
-    selectedText: SELECTION_D
+    start: 23,
+    end: 33,
+    selectedText: getNotebookLines(23, 32)
   };
   const selectedChunksD = selectionToChunks(selectionParamsD, iomdChunks);
   const [firstChunkD, secondChunkD] = selectedChunksD;
@@ -238,17 +222,15 @@ describe("selectionToChunks", () => {
 });
 
 const pluginChunkA = {
-  start: 20,
-  end: 20,
+  start: 21,
+  end: 21,
   selectedText: 'geId": "js'
 };
 
 const pluginChunkB = {
-  start: 21,
-  end: 39,
+  start: 22,
+  end: 40,
   selectedText: `Name": "jsx",
-  "codeMirrorMode": "jsx",
-  "keybinding": "x",
   "url": "https://raw.githubusercontent.com/hamilton/iodide-jsx/master/docs/evaluate-jsx.js",
   "module": "jsx",
   "evaluator": "evaluateJSX",

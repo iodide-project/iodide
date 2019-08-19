@@ -23,6 +23,7 @@ const initialState = notebookCreated => {
   return {
     iomd: "initial content",
     title: "initial title",
+    modalState: "MODALS_CLOSED",
     userData: { name: "this-user" },
     notebookInfo: Object.assign(
       {
@@ -74,6 +75,7 @@ describe("saveNotebookToServer", () => {
           revision_id: 1,
           revision_is_latest: true,
           serverSaveStatus: "OK",
+          tryItMode: false,
           user_can_save: true,
           username: "this-user"
         },
@@ -179,6 +181,7 @@ describe("createNewNotebookOnServer", () => {
             revision_id: forked ? 2 : 1,
             revision_is_latest: true,
             serverSaveStatus: "OK",
+            tryItMode: false,
             user_can_save: true,
             username: "this-user"
           },

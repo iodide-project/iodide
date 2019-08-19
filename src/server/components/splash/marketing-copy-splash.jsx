@@ -125,11 +125,11 @@ export default class MarketingCopySplash extends React.Component {
               Bring the power of the web to your data analysis.
             </PointTitle>
             Directly import and utilize the best-in-class visualization and UI
-            tools in Javascript.
+            tools in JavaScript.
           </Point>
           <Point>
             <PointTitle>
-              Combine Python, Javascript, Markdown, and CSS.
+              Combine Python, JavaScript, Markdown, and CSS.
             </PointTitle>
             Choose the right language for the task with zero additional
             installation.

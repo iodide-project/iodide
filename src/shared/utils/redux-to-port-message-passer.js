@@ -31,6 +31,8 @@ export class MessagePasser {
   constructor() {
     this.dispatchQueueManager = new MessageQueueManager();
     this.postMessageQueueManager = new MessageQueueManager();
+    this.currentMessageId = 0;
+    this.messagesAwaitingResponse = {};
   }
 
   connectPostMessage(postMessage) {
@@ -43,6 +45,35 @@ export class MessagePasser {
   postMessage(...params) {
     this.postMessageQueueManager.sendMsg(...params);
   }
+
+  nextMessageId() {
+    this.currentMessageId += 1;
+    return String(this.currentMessageId);
+  }
+
+  async postMessageAndAwaitResponse(messageType, message) {
+    const messageId = this.nextMessageId();
+    this.postMessageQueueManager.sendMsg(messageType, message, messageId);
+    return new Promise((resolve, reject) => {
+      this.messagesAwaitingResponse[messageId] = { resolve, reject };
+    });
+  }
+
+  handleMessageResponse(responseStatus, messageId, message) {
+    if (responseStatus === "SUCCESS") {
+      this.messagesAwaitingResponse[messageId].resolve(message);
+    } else if (responseStatus === "ERROR") {
+      this.messagesAwaitingResponse[messageId].reject(message);
+    } else {
+      console.error({
+        responseStatus,
+        messageId,
+        message
+      });
+      throw new TypeError('responseStatus must be "SUCCESS" or "ERROR"');
+    }
+  }
+
   dispatch(...params) {
     this.dispatchQueueManager.sendMsg(...params);
   }

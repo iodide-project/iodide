@@ -22,8 +22,9 @@ export function setKernelState(kernelState) {
 }
 
 export function addToEvalQueue(chunk) {
-  return dispatch => {
-    if (chunkNotRunnable(chunk)) return;
+  return (dispatch, getState) => {
+    if (chunkNotRunnable(chunk) || getState().modalState !== "MODALS_CLOSED")
+      return;
     dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk });
   };
 }
@@ -56,25 +57,5 @@ export function evaluateNotebook() {
     getState()
       .iomdChunks.filter(chunkNotSkipped)
       .forEach(chunk => dispatch(addToEvalQueue(chunk)));
-  };
-}
-
-export function evalConsoleInput(consoleText) {
-  return (dispatch, getState) => {
-    // exit if there is no code in the console to  eval
-    if (!consoleText) {
-      return undefined;
-    }
-
-    const chunk = {
-      chunkContent: consoleText,
-      chunkType: getState().languageLastUsed
-    };
-
-    dispatch({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
-    dispatch({ type: "RESET_HISTORY_CURSOR" });
-    dispatch(addToEvalQueue(chunk));
-    dispatch({ type: "UPDATE_CONSOLE_TEXT", consoleText: "" });
-    return Promise.resolve();
   };
 }

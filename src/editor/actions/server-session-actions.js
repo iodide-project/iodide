@@ -1,4 +1,4 @@
-import { updateAppMessages } from "./actions";
+import { updateAppMessages } from "./app-message-actions";
 import { createNewNotebookOnServer } from "./server-save-actions";
 import { updateAutosave } from "./autosave-actions";
 import { loginToServer, logoutFromServer } from "../../shared/utils/login";
