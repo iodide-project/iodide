@@ -74,7 +74,6 @@
     "prop-types": "15.7.2",
     "query-string": "6.8.2",
     "react": "16.9.0",
-    "react-codemirror2": "6.0.0",
     "react-diff-viewer": "2.0.1",
     "react-dom": "16.9.0",
     "react-emotion": "9.2.12",
