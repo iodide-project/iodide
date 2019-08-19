@@ -1,4 +1,4 @@
-.PHONY: build root-shell shell dbshell up lint lintfix test
+.PHONY: build build-prod root-shell shell dbshell up lint lintfix test
 
 build:
 	npm install
