@@ -6,6 +6,10 @@
   reuse in multiple server environments (#1943)
 - Hide "unsaved changes" in revision browser if no unsaved changes (#2046)
 - Show revision, docs, contribute links even on non-public sites
+- Adds a new feature, file sources, which allows notebook authors to schedule
+  the fetching of files from URLs. This feature is available in the notebook
+  menu (click _Menu > Manage Files_)
+  
 
 # 0.10.0 (2019-07-15)
 
