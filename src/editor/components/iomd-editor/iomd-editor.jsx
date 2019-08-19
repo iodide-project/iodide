@@ -194,7 +194,9 @@ function mapStateToProps(state) {
   // Monaco instance does a fresh layout when the position
   // of it's containing pane changes. Slightly hacky but actually
   // works great.
-  const editorPosition = Object.values(state.panePositions.EditorPositioner);
+  const editorPosition = Object.values(
+    state.panePositions.EditorPositioner
+  ).filter(x => typeof x === "number");
 
   const delimLines = state.iomdChunks.map(chunk => chunk.startLine);
 
