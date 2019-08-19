@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
-import format from "date-fns/format";
 
 import {
   ListMain,
@@ -9,8 +8,6 @@ import {
   ListSecondaryText,
   ListSecondaryTextLink
 } from "../../../../../shared/components/list";
-
-const formatDate = str => format(new Date(str), "MMM dd, uuuu HH:mm:ss");
 
 const operationStatusColors = {
   pending: "MediumSeaGreen",
@@ -109,9 +106,7 @@ const FileSourceListDescription = ({
             </StatusLabel>
           )}
 
-          {lastUpdated && (
-            <LastRanLabel>on {formatDate(lastUpdated)}</LastRanLabel>
-          )}
+          {lastUpdated && <LastRanLabel>on {lastUpdated}</LastRanLabel>}
         </FileInformationContainer>
       </ListPrimaryText>
       <FileSourceURLContainer href={url}>

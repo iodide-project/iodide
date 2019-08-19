@@ -12,6 +12,8 @@ import FileSourceListItemDescription from "./file-source-list-item-description";
 
 import InProgress from "./in-progress";
 
+import { timeMonthDayYear } from "../../../../../shared/date-formatters";
+
 import { DELETE_ANIMATION_LENGTH_MS } from "../shared/constants";
 
 import {
@@ -113,7 +115,9 @@ export function FileSourceListItemUnconnected({
         visible={isConfirmingDelete}
         title={`Delete the file source for "${filename}"?`}
         content="This action will not delete any files downloaded by the file source."
-        onCloseOrCancel={() => {}}
+        onCloseOrCancel={() => {
+          setConfirmDeleteID(undefined);
+        }}
         deleteFunction={() => {
           setIsDeletingAnimationID(id);
           setTimeout(() => {
@@ -200,7 +204,7 @@ export function mapStateToProps(state, ownProps) {
     : undefined;
 
   const lastUpdated = hasFileUpdateOperation
-    ? fileUpdateOperation.started
+    ? timeMonthDayYear(fileUpdateOperation.started)
     : undefined;
 
   const failureReason =

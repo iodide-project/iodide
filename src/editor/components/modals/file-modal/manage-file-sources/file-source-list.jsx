@@ -12,8 +12,6 @@ import {
   getFileSources as getFileSourcesAction
 } from "../../../../actions/file-source-actions";
 
-// FIXME: make sure this applies to 'manage files' as well.
-
 const FileSourceListContainer = styled.div`
   width: 100%;
   margin: auto;
@@ -29,10 +27,6 @@ const NoFileSourcesNotice = styled.span`
 `;
 
 const FileSourceListUnconnected = ({ fileSources = [], getFileSources }) => {
-  // we will handle the delete modal state in a hook.
-  // otherwise, the state for the file sources is managed in the
-  // store itself.
-
   useEffect(() => {
     getFileSources();
   }, []);
