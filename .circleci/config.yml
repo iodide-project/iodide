@@ -73,7 +73,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: sudo pip install mkdocs markdown-include
+          command: sudo pip install mkdocs mkdocs-mermaid-plugin markdown-include bs4
       - run:
           name: Build docs
           command: mkdocs build

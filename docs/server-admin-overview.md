@@ -1,14 +1,37 @@
 # Server administration overview
 
-Iodide is currently designed to be deployable on [Heroku](https://heroku.com)
-out of the box, using [Github](https://github.com) as an authentication
-provider. We are also steadily working on a docker-container based
-version of Iodide which should be suitable for use in other environments
-(e.g. Google Cloud Platform) using other authentication/identity providers,
-but this is not yet ready for public use.
-
 This documentation is currently somewhat incomplete, help filling it out is
 welcome.
+
+## Architecture
+
+At heart, Iodide is a fairly standard CRUD (create-read-update-delete) application, built on top of [Django](https://www.djangoproject.com/). The main unconventional piece is that (when properly configured), Iodide
+will serve content from two domains: the bulk of the site and JavaScript
+is served from a "primary" domain (e.g. https://alpha.iodide.io/), but the actual evaluation context for notebooks is served from a *seperate* domain (e.g. https://alpha.iodide.app/), loaded transparently from the primary one. This is designed to provide some measure of security against a malicious notebook being used (for example) to steal a user's credentials or private information.
+
+Here is an architecture diagram describing the main components:
+
+<div class="mermaid">
+graph TD
+
+User(User)
+Website(Iodide website / editor)
+EvalFrame(Iodide eval-frame)
+Webhead(Iodide webhead - Django)
+DB(Database Storage - Heroku Postgres or Google CloudSQL)
+Redis(Redish cache)
+
+User --> Website
+EvalFrame --> Webhead
+Website --> EvalFrame
+Website --> Webhead
+Webhead --> DB
+Webhead --> Redis
+</div>
+
+## Deployment
+
+Iodide is currently designed to be deployable on [Heroku](https://heroku.com) out of the box, using [Github](https://github.com) as an authentication provider. We are also steadily working on a docker-container based version of Iodide which should be suitable for use in other environments (e.g. Google Cloud Platform) using other authentication/identity providers, but this is not yet ready for public use.
 
 ## Important configuration variables
 
