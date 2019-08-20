@@ -49,7 +49,7 @@ export function updateSelectedRevisionId(selectedRevisionId) {
   };
 }
 
-export function revertToSelectedRevisionId() {
+export function restoreSelectedRevision() {
   return (dispatch, getState) => {
     dispatch({
       type: "UPDATE_IOMD_CONTENT",

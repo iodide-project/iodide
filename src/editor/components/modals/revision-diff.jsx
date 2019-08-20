@@ -6,9 +6,9 @@ import { connect } from "react-redux";
 
 import Fab from "@material-ui/core/Fab";
 
-import RevertModal from "./revert-modal";
+import RestoreModal from "./restore-modal";
 
-import { revertToSelectedRevisionId } from "../../actions/history-modal-actions";
+import { restoreSelectedRevision } from "../../actions/history-modal-actions";
 
 import { getPreviousRevisionId } from "../../tools/revision-history";
 
@@ -23,8 +23,8 @@ class RevisionDiffUnconnected extends React.Component {
     currentRevisionContent: PropTypes.string,
     previousRevisionContent: PropTypes.string,
     revisionContentFetchStatus: PropTypes.string.isRequired,
-    canRevert: PropTypes.bool,
-    revertToSelectedRevisionId: PropTypes.func.isRequired,
+    canRestore: PropTypes.bool,
+    restoreSelectedRevision: PropTypes.func.isRequired,
     selectedRevision: PropTypes.shape({
       created: PropTypes.string,
       id: PropTypes.number
@@ -34,7 +34,7 @@ class RevisionDiffUnconnected extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pendingRevert: false
+      pendingRestore: false
     };
   }
 
@@ -50,13 +50,13 @@ class RevisionDiffUnconnected extends React.Component {
     }
     return (
       <DiffContainer>
-        <RevertModal
-          visible={this.state.pendingRevert !== false}
+        <RestoreModal
+          visible={this.state.pendingRestore !== false}
           onCloseOrCancel={() => {
-            this.setState({ pendingRevert: false });
+            this.setState({ pendingRestore: false });
           }}
-          onRevert={() => {
-            this.props.revertToSelectedRevisionId();
+          onRestore={() => {
+            this.props.restoreSelectedRevision();
           }}
           date={
             this.props.selectedRevision
@@ -69,10 +69,10 @@ class RevisionDiffUnconnected extends React.Component {
           newValue={this.props.currentRevisionContent}
           splitView={false}
         />
-        {this.props.canRevert && (
+        {this.props.canRestore && (
           <Fab
             onClick={() => {
-              this.setState({ pendingRevert: true });
+              this.setState({ pendingRestore: true });
             }}
             variant="extended"
             style={{
@@ -84,7 +84,7 @@ class RevisionDiffUnconnected extends React.Component {
               borderRadius: 8
             }}
           >
-            Revert
+            Restore this revision
           </Fab>
         )}
       </DiffContainer>
@@ -125,7 +125,7 @@ export function mapStateToProps(state) {
     currentRevisionContent,
     revisionContentFetchStatus,
     previousRevisionContent,
-    canRevert:
+    canRestore:
       selectedRevisionId !== undefined &&
       state.iomd !== currentRevisionContent &&
       revisionContentFetchStatus === "IDLE",
@@ -135,5 +135,5 @@ export function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { revertToSelectedRevisionId } // mapDispatchToProps shorthand
+  { restoreSelectedRevision } // mapDispatchToProps shorthand
 )(RevisionDiffUnconnected);
