@@ -73,7 +73,10 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: sudo pip install mkdocs mkdocs-mermaid-plugin markdown-include bs4
+          command: |
+            sudo pip install mkdocs markdown-include bs4
+            # version on pypi is out of date and incompatible with python 3, see https://github.com/pugong/mkdocs-mermaid-plugin/issues/5
+            sudo pip install git+https://github.com/pugong/mkdocs-mermaid-plugin#egg=mkdocs-mermaid-plugin
       - run:
           name: Build docs
           command: mkdocs build
