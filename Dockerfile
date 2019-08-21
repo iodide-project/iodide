@@ -1,6 +1,6 @@
 FROM python:3.7.3-alpine AS app-base
 
-ENV PATH="/app/.local/bin:$PATH"
+ENV PATH="/root/.local/bin:/app/.local/bin:$PATH"
 
 EXPOSE 8000
 
