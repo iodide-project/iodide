@@ -8,7 +8,7 @@ build:
 build-prod:
 	npm install
 	npm run-script build-production
-	docker build --target prod -t app:build .
+	docker build --target app-base -t app:build .
 
 root-shell:
 	docker-compose run --rm -u 0 server bash

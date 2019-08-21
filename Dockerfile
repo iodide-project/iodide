@@ -1,6 +1,6 @@
 FROM python:3.7.3-alpine AS app-base
 
-ENV PATH="/app/.local/bin:$PATH"
+ENV PATH="~/.local/:$PATH"
 
 EXPOSE 8000
 
@@ -25,7 +25,7 @@ COPY . /app
 RUN chown app:app -R .
 USER app
 
-COPY requirements/build.txt .requirements
+COPY requirements/build.txt ./requirements/
 RUN pip install --user --require-hashes --no-cache-dir -r requirements/build.txt
 
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
@@ -35,7 +35,7 @@ ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
 FROM app-base AS dev
 
-COPY requirements/all.txt requirements/tests.txt ./requirements/
-RUN pip install --user --require-hashes --no-cache-dir -r requirements/all.txt
+COPY requirements/tests.txt ./requirements/
+RUN pip install --user --require-hashes --no-cache-dir -r requirements/tests.txt
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
