@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     "server.notebooks",
     "server.files",
     "spinach.contrib.spinachd",
+    "kernels.apps.Kernels",
 ]
 
 RESTRICT_API = env.bool("RESTRICT_API", default=False)
