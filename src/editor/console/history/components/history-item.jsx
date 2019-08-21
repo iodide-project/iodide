@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 import AppMessage from "./app-message";
-import { HistoryValueRenderer } from "../../components/remote-reps/remote-value-renderer";
+import { HistoryValueRenderer } from "../../../components/remote-reps/remote-value-renderer";
 
 import HistoryInputItem from "./history-input-item";
 import ConsoleMessage from "./console-message";

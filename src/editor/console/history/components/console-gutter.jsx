@@ -2,7 +2,7 @@ import React from "react";
 import styled from "react-emotion";
 import PropTypes from "prop-types";
 
-import THEME from "../../../shared/theme";
+import THEME from "../../../../shared/theme";
 
 const GutterContainer = styled("div")`
   box-sizing: content-box;

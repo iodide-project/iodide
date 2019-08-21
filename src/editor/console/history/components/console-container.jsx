@@ -1,6 +1,6 @@
 import styled from "react-emotion";
 import PropTypes from "prop-types";
-import THEME from "../../../shared/theme";
+import THEME from "../../../../shared/theme";
 
 const ConsoleContainer = styled("div")`
   display: grid;

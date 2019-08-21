@@ -4,7 +4,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import WarningIcon from "@material-ui/icons/Warning";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
-import BaseIcon from "./base-icon";
+import BaseIcon from "../../base-icon";
 
 const Error = BaseIcon(ErrorIcon, { color: "rgb(215,0,34)" });
 const Warning = BaseIcon(WarningIcon, { color: "rgb(190,155,0)" });

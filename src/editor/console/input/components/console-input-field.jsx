@@ -2,13 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import {
-  updateConsoleText,
-  consoleHistoryStepBack,
-  evalConsoleInput
-} from "../console-actions";
+import { updateConsoleText, consoleHistoryStepBack } from "../actions";
+import { evalConsoleInput } from "../thunks";
 
-import THEME from "../../../shared/theme";
+import THEME from "../../../../shared/theme";
 
 export function getTextAreaPosition(textArea) {
   return {

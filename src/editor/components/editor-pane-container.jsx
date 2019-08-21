@@ -5,7 +5,7 @@ import { isEqual } from "lodash";
 
 import IomdEditor from "./iomd-editor/iomd-editor";
 import DeclaredVariablesPane from "./panes/declared-variables-pane";
-import ConsolePane from "../console/components/console-pane";
+import ConsolePane from "../console/console-pane";
 
 import FixedPositionContainer from "../../shared/components/fixed-position-container";
 

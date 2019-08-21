@@ -2,8 +2,8 @@ import React from "react";
 import styled from "react-emotion";
 
 import DoubleChevron from "./double-chevron-icon";
-import ConsoleGutter from "./console-gutter";
-import BaseIcon from "./base-icon";
+import ConsoleGutter from "../../history/components/console-gutter";
+import BaseIcon from "../../base-icon";
 
 import ConsoleInputField from "./console-input-field";
 import ConsoleLanguageMenu from "./console-language-menu";

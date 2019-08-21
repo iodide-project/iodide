@@ -6,7 +6,8 @@ import messagePasserEditor from "../../shared/utils/redux-to-port-message-passer
 
 import evalFrameStateSelector from "../state-schemas/eval-frame-state-selector";
 import fileSourceReducer from "./file-source-reducer";
-
+import consoleHistory from "../console/history/reducer";
+import consoleInput from "../console/input/reducer";
 /*
 It is suggested that using combineReducers, and following the standard
 of having each reducer only function on a section of the state container,
@@ -32,5 +33,7 @@ export default reduceReducers(
   notebookReducer,
   fileSourceReducer,
   evalFrameActionReducer,
+  consoleHistory,
+  consoleInput,
   sendStateToEvalFrame
 );

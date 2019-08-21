@@ -2,6 +2,7 @@ import Ajv from "ajv";
 
 import { historySchema } from "../state-schemas/history-schema";
 import { languageSchema } from "../state-schemas/state-schema";
+import { types as consoleActions } from "../console/history/actions";
 // these are the schemas of actions from the eval frame that
 // are ok to pass to the editor
 
@@ -26,50 +27,6 @@ const schemas = {
       languageDefinition: languageActionSchema
     }
   },
-  ADD_TO_CONSOLE_HISTORY: historyActionSchema,
-  SET_CONSOLE_LANGUAGE: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      language: { type: "string" },
-      type: { type: "string" }
-    },
-    required: ["language", "type"]
-  },
-  CLEAR_CONSOLE_TEXT_CACHE: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      type: { type: "string" }
-    },
-    required: ["type"]
-  },
-  CONSOLE_HISTORY_MOVE: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      type: { type: "string" },
-      consoleCursorDelta: { type: "integer" }
-    },
-    required: ["type", "consoleCursorDelta"]
-  },
-  RESET_HISTORY_CURSOR: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      type: { type: "string" }
-    },
-    required: ["type"]
-  },
-  UPDATE_CONSOLE_TEXT: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      type: { type: "string" },
-      consoleText: { type: "string" }
-    },
-    required: ["type", "consoleText"]
-  },
   UPDATE_USER_VARIABLES: {
     type: "object",
     additionalProperties: false,
@@ -82,7 +39,8 @@ const schemas = {
     },
     required: ["type", "userDefinedVarNames"]
   },
-  UPDATE_VALUE_IN_HISTORY: {
+  [consoleActions.ADD]: historyActionSchema,
+  [consoleActions.UPDATE]: {
     type: "object",
     additionalProperties: false,
     required: ["type", "historyItem"],
