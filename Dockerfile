@@ -1,7 +1,6 @@
 FROM python:3.7.3-alpine AS app-base
 
-ENV PATH="~/.local/:$PATH"
-
+ENV PATH="/app/.local/bin"
 EXPOSE 8000
 
 WORKDIR /app
@@ -20,13 +19,13 @@ RUN apk --no-cache add \
     postgresql-dev \
     postgresql-client
 
+COPY requirements/build.txt ./requirements/
+RUN pip install --user --require-hashes --no-cache-dir -r requirements/build.txt
+
 WORKDIR /app
 COPY . /app
 RUN chown app:app -R .
 USER app
-
-COPY requirements/build.txt ./requirements/
-RUN pip install --user --require-hashes --no-cache-dir -r requirements/build.txt
 
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
 # where volume-mounted files do not have execute bits set.
