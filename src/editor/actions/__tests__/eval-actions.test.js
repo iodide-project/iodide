@@ -7,7 +7,7 @@ import {
   evaluateText
 } from "../eval-actions";
 
-import { evalConsoleInput } from "../console-actions";
+import { evalConsoleInput } from "../../console/console-actions";
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 import { jsLanguageDefinition } from "../../state-schemas/language-definitions";
 

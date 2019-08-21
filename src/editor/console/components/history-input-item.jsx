@@ -5,7 +5,7 @@ import DoubleChevronIcon from "./double-chevron-icon";
 import BaseIcon from "./base-icon";
 import ConsoleContainer from "./console-container";
 import ConsoleGutter from "./console-gutter";
-import THEME from "../../../../shared/theme";
+import THEME from "../../../shared/theme";
 
 const DoubleChevron = styled(BaseIcon(DoubleChevronIcon))`
   margin: 0;

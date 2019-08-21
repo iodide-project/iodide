@@ -17,7 +17,7 @@ import { setKernelState } from "../eval-actions";
 import {
   addInputToConsole,
   addEvalTypeConsoleErrorToHistory
-} from "../console-message-actions";
+} from "../../console/console-message-actions";
 
 import { evaluateFetch } from "./fetch-cell-saga";
 import { triggerEvalFrameTask } from "./eval-frame-sender";

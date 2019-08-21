@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
 
-import AppMessage from "./console/app-message";
-import { HistoryValueRenderer } from "../remote-reps/remote-value-renderer";
+import AppMessage from "./app-message";
+import { HistoryValueRenderer } from "../../components/remote-reps/remote-value-renderer";
 
-import HistoryInputItem from "./console/history-input-item";
-import ConsoleMessage from "./console/console-message";
+import HistoryInputItem from "./history-input-item";
+import ConsoleMessage from "./console-message";
 
 const FetchResults = styled("pre")`
   padding: 0;

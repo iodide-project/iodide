@@ -1,7 +1,7 @@
 import { all, call, put } from "redux-saga/effects";
 
 import parseFetchCell from "../fetch-cell-parser";
-import { addToConsoleHistory } from "../console-message-actions";
+import { addToConsoleHistory } from "../../console/console-message-actions";
 import { evaluateLanguagePlugin } from "./language-plugin-saga";
 
 import { triggerEvalFrameTask } from "./eval-frame-sender";

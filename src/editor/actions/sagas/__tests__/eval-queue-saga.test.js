@@ -15,7 +15,7 @@ import {
   addLoadingLanguageMsgToHistory,
   addInputToConsole,
   addEvalTypeConsoleErrorToHistory
-} from "../../console-message-actions";
+} from "../../../console/console-message-actions";
 
 // this string is the returnValue from a saga was still running when
 // it was timed out by redux-test-plan

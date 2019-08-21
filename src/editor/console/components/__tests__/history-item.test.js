@@ -2,10 +2,10 @@ import { shallow } from "enzyme";
 import React from "react";
 
 import { HistoryItemUnconnected } from "../history-item";
-import HistoryInputItem from "../console/history-input-item";
-import AppMessage from "../console/app-message";
-import ConsoleMessage from "../console/console-message";
-import { HistoryValueRenderer } from "../../remote-reps/remote-value-renderer";
+import HistoryInputItem from "../history-input-item";
+import AppMessage from "../app-message";
+import ConsoleMessage from "../console-message";
+import { HistoryValueRenderer } from "../../../components/remote-reps/remote-value-renderer";
 
 describe("HistoryItem React component", () => {
   const historyItem = props => {

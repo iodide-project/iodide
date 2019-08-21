@@ -6,9 +6,9 @@ import {
   updateConsoleText,
   consoleHistoryStepBack,
   evalConsoleInput
-} from "../../../actions/console-actions";
+} from "../console-actions";
 
-import THEME from "../../../../shared/theme";
+import THEME from "../../../shared/theme";
 
 export function getTextAreaPosition(textArea) {
   return {

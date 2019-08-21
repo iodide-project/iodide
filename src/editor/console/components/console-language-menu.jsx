@@ -4,13 +4,13 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
-import Popover from "../../../../shared/components/popover";
-import Menu from "../../../../shared/components/menu";
-import MenuItem from "../../../../shared/components/menu-item";
-import { TextButton } from "../../../../shared/components/buttons";
+import Popover from "../../../shared/components/popover";
+import Menu from "../../../shared/components/menu";
+import MenuItem from "../../../shared/components/menu-item";
+import { TextButton } from "../../../shared/components/buttons";
 import BaseIcon from "./base-icon";
 
-import { setConsoleLanguage } from "../../../actions/console-actions";
+import { setConsoleLanguage } from "../console-actions";
 
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;

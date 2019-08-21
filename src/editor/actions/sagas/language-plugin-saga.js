@@ -3,7 +3,7 @@ import { call, put } from "redux-saga/effects";
 import {
   addLoadingLanguageMsgToHistory,
   addPluginParseErrorToHistory
-} from "../console-message-actions";
+} from "../../console/console-message-actions";
 import { triggerEvalFrameTask } from "./eval-frame-sender";
 
 export const languageReady = (state, lang) =>

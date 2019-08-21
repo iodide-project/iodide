@@ -1,4 +1,4 @@
-import { addToEvalQueue } from "./eval-actions";
+import { addToEvalQueue } from "../actions/eval-actions";
 
 export function consoleHistoryStepBack(consoleCursorDelta) {
   return {
