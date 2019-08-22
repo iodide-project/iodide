@@ -5,7 +5,7 @@ import { HistoryItemUnconnected } from "../history-item";
 import HistoryInputItem from "../history-input-item";
 import AppMessage from "../app-message";
 import ConsoleMessage from "../console-message";
-import { HistoryValueRenderer } from "../../../components/remote-reps/remote-value-renderer";
+import { HistoryValueRenderer } from "../../../../components/remote-reps/remote-value-renderer";
 
 describe("HistoryItem React component", () => {
   const historyItem = props => {
