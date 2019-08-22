@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
-import DoubleChevronIcon from "../../input/components/double-chevron-icon";
+import DoubleChevronIcon from "../../double-chevron-icon";
 import BaseIcon from "../../base-icon";
 import ConsoleContainer from "./console-container";
-import ConsoleGutter from "./console-gutter";
+import ConsoleGutter from "../../console-gutter";
 import THEME from "../../../../shared/theme";
 
 const DoubleChevron = styled(BaseIcon(DoubleChevronIcon))`
