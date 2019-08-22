@@ -31,7 +31,7 @@ Main --> Redis
 
 The main unconventional piece is that (when properly configured), Iodide
 will serve content from two domains: the bulk of the site and JavaScript
-is served from a "primary" domain (e.g. https://alpha.iodide.io/), but the actual evaluation context for the notebook content is served from a *seperate* domain (e.g. https://alpha.iodide.app/), loaded transparently from the primary one. This is designed to provide some measure of security against a malicious notebook being used (for example) to steal a user's credentials or private information: the evaluation context (eval-frame) has no credentials or cookies associated with it, so is not able to directly access server APIs which are privileged.
+is served from a "primary" domain (e.g. https://alpha.iodide.io/), but the actual evaluation context for the notebook content is served from a *separate* domain (e.g. https://alpha.iodide.app/), loaded transparently from the primary one. This is designed to provide some measure of security against a malicious notebook being used (for example) to steal a user's credentials or private information: the evaluation context (eval-frame) has no credentials or cookies associated with it, so is not able to directly access server APIs which are privileged.
 
 ## Deployment
 
