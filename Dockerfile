@@ -1,7 +1,5 @@
 FROM python:3.7.3-alpine AS app-base
 
-ENV PATH="/root/.local/bin:/app/.local/bin:$PATH"
-
 EXPOSE 8000
 
 WORKDIR /app
@@ -21,12 +19,11 @@ RUN apk --no-cache add \
     postgresql-client
 
 COPY requirements/build.txt ./requirements/
-RUN pip install --user --require-hashes --no-cache-dir -r requirements/build.txt
+RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 
 WORKDIR /app
 COPY . /app
 RUN chown app:app -R .
-USER app
 
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
 # where volume-mounted files do not have execute bits set.
@@ -36,6 +33,8 @@ ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 FROM app-base AS dev
 
 COPY requirements/tests.txt ./requirements/
-RUN pip install --user --require-hashes --no-cache-dir -r requirements/tests.txt
+RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
+
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
+USER app
