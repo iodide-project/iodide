@@ -1,19 +1,26 @@
 export default function reducer(state, action) {
+  const { consoleInput } = state;
   switch (action.type) {
     case "console/input/SET_LANGUAGE": {
       return Object.assign({}, state, { languageLastUsed: action.language });
     }
 
     case "console/input/UPDATE_TEXT": {
-      return Object.assign({}, state, { consoleText: action.consoleText });
+      return Object.assign({}, state, {
+        consoleInput: { ...consoleInput, consoleText: action.consoleText }
+      });
     }
 
     case "console/input/CLEAR_TEXT_CACHE": {
-      return Object.assign({}, state, { consoleTextCache: "" });
+      return Object.assign({}, state, {
+        consoleInput: { ...consoleInput, consoleTextCache: "" }
+      });
     }
 
     case "console/input/RESET_HISTORY_CURSOR": {
-      return Object.assign({}, state, { consoleScrollbackPosition: 0 });
+      return Object.assign({}, state, {
+        consoleInput: { ...consoleInput, consoleScrollbackPosition: 0 }
+      });
     }
 
     case "console/input/MOVE_HISTORY_CURSOR": {
@@ -27,15 +34,16 @@ export default function reducer(state, action) {
       const nextScrollback = Math.min(
         Math.max(
           0,
-          state.consoleScrollbackPosition + action.consoleCursorDelta
+          state.consoleInput.consoleScrollbackPosition +
+            action.consoleCursorDelta
         ),
         historyLength
       );
 
-      let { consoleTextCache } = state;
+      let { consoleTextCache } = state.consoleInput;
       if (state.consoleScrollbackPosition === 0) {
         // if we moved FROM 0, set the consoleTextCache from the current value
-        consoleTextCache = state.consoleText;
+        consoleTextCache = state.consoleInput.consoleText;
       }
 
       let nextConsoleText;
@@ -47,9 +55,11 @@ export default function reducer(state, action) {
         nextConsoleText = inputHistory[historyLength - nextScrollback].content;
       }
       return Object.assign({}, state, {
-        consoleText: nextConsoleText,
-        consoleTextCache,
-        consoleScrollbackPosition: nextScrollback
+        consoleInput: {
+          consoleText: nextConsoleText,
+          consoleTextCache,
+          consoleScrollbackPosition: nextScrollback
+        }
       });
     }
 

@@ -1,4 +1,4 @@
-export const historySchema = {
+export const historyItemSchema = {
   type: "object",
   properties: {
     // content: { type: "string" },
@@ -39,4 +39,10 @@ export const historySchema = {
     properties: { content: { type: "string" } }
   },
   additionalProperties: false
+};
+
+export const historySchema = {
+  type: "array",
+  items: historyItemSchema,
+  default: []
 };

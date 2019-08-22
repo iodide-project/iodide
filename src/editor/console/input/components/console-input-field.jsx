@@ -144,7 +144,7 @@ const mapDispatchToProps = {
 
 export function mapStateToProps(state) {
   return {
-    consoleText: state.consoleText
+    consoleText: state.consoleInput.consoleText
   };
 }
 

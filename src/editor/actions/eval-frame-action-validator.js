@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-import { historySchema } from "../state-schemas/history-schema";
+import { historyItemSchema } from "../console/history/state-schema";
 import { languageSchema } from "../state-schemas/state-schema";
 import { types as consoleActions } from "../console/history/actions";
 // these are the schemas of actions from the eval frame that
@@ -17,7 +17,7 @@ export class ActionSchemaValidationError extends Error {
 const languageActionSchema = Object.assign({}, languageSchema);
 languageActionSchema.properties.type = { type: "string" };
 
-const historyActionSchema = Object.assign({}, historySchema);
+const historyActionSchema = Object.assign({}, historyItemSchema);
 historyActionSchema.properties.type = { type: "string" };
 
 const schemas = {
