@@ -3,12 +3,12 @@
 build:
 	npm install
 	npm run build
-	docker build --target dev -t app:build .
+	DOCKER_BUILDKIT=1 docker build -t app:build --build-arg APP_ENV=dev .
 
 build-prod:
 	npm install
 	npm run-script build-production
-	docker build --target app-base -t app:build .
+	DOCKER_BUILDKIT=1 docker build -t app:build --build-arg APP_ENV=prod .
 
 root-shell:
 	docker-compose run --rm -u 0 server bash
