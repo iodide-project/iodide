@@ -20,6 +20,9 @@ RUN apk --no-cache add \
     postgresql-dev \
     postgresql-client
 
+WORKDIR /app
+COPY . /app
+
 FROM base AS prod_preinstall
 RUN echo "Installing prod dependencies"
 
@@ -29,13 +32,11 @@ RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 FROM base AS dev_preinstall
 RUN echo "Installing dev dependencies"
 
-COPY requirements/tests.txt ./requirements/
-RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
+COPY requirements ./requirements/
+RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
 FROM ${APP_ENV}_preinstall AS release
-WORKDIR /app
-COPY . /app
 RUN chown app:app -R .
 USER app
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
