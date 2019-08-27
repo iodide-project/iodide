@@ -17,12 +17,14 @@ RUN apk --no-cache --virtual add \
     libffi-dev \
     py-cffi \
     postgresql \
-    postgresql-dev \ 
+    postgresql-dev \
     postgresql-client
 
 # Install virtualenv
 RUN pip install virtualenv
 RUN virtualenv /venv
+
+RUN chown -R app:app /venv
 
 WORKDIR /app
 COPY . /app
