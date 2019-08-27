@@ -1,5 +1,7 @@
 FROM python:3.7.3-alpine AS base
 
+ENV PATH="/venv/bin:$PATH"
+
 EXPOSE 8000
 
 WORKDIR /app
@@ -15,8 +17,12 @@ RUN apk --no-cache --virtual add \
     libffi-dev \
     py-cffi \
     postgresql \
-    postgresql-dev \
+    postgresql-dev \ 
     postgresql-client
+
+# Install virtualenv
+RUN pip install virtualenv
+RUN virtualenv /venv
 
 WORKDIR /app
 COPY . /app
@@ -27,9 +33,6 @@ RUN echo "Installing dev dependencies"
 COPY requirements ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
-
-# Purge build dependencies that are no longer required
-RUN apk del postgresql-dev
 
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
 # where volume-mounted files do not have execute bits set.
@@ -46,8 +49,6 @@ RUN echo "Installing prod dependencies"
 COPY requirements/build.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
-
-RUN apk del postgresql-dev
 
 ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
