@@ -85,14 +85,14 @@ export const fileSchema = {
 };
 
 export const fileUpdateOperationSchema = {
-  type: "object",
+  type: ["object", "null"],
   properties: {
     id: { type: "integer" },
-    scheduled: { type: "string" },
-    started: { type: "string" },
-    ended: { type: "string" },
-    status: { type: "integer" },
-    failure_reason: { type: "string" }
+    scheduled: { type: ["string", "null"] },
+    started: { type: ["string", "null"] },
+    ended: { type: ["string", "null"] },
+    status: { type: ["string", "null"] },
+    failure_reason: { type: ["string", "null"] }
   }
 };
 
