@@ -1,7 +1,7 @@
 // The "Public API" for notebooks. This lets notebooks and third-party plugins
 // extend and manipulate the notebook
 
-import UserReps from "../components/reps/user-reps-manager";
+import UserReps from "./user-reps-manager";
 import { output } from "./output";
 import { file } from "./file/file";
 

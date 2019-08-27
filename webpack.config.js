@@ -2,10 +2,8 @@ require("dotenv").config();
 const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs");
-const CreateFileWebpack = require("create-file-webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
-const WebpackShellPlugin = require("webpack-shell-plugin");
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
 const LodashModuleReplacementPlugin = require("lodash-webpack-plugin");
@@ -34,7 +32,6 @@ const APP_DIR = path.resolve(__dirname, "src/");
 
 const plugins = [];
 
-// const config
 module.exports = env => {
   env = env || ""; // eslint-disable-line no-param-reassign
   process.env.NODE_ENV = env.NODE_ENV || "production";
@@ -141,7 +138,6 @@ module.exports = env => {
         filename: `[name].${APP_VERSION_STRING}.css`
       }),
       new WriteFilePlugin()
-      // Use an external helper script, due to https://github.com/1337programming/webpack-shell-plugin/issues/41
     ],
     devServer: {
       before: app => {

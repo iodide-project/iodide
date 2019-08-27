@@ -1,0 +1,43 @@
+diff --git a/node_modules/monaco-editor/esm/vs/base/browser/ui/scrollbar/scrollableElement.js b/node_modules/monaco-editor/esm/vs/base/browser/ui/scrollbar/scrollableElement.js
+index aed294f..173b279 100644
+--- a/node_modules/monaco-editor/esm/vs/base/browser/ui/scrollbar/scrollableElement.js
++++ b/node_modules/monaco-editor/esm/vs/base/browser/ui/scrollbar/scrollableElement.js
+@@ -17,6 +17,7 @@ var __extends = (this && this.__extends) || (function () {
+ })();
+ import './media/scrollbars.css';
+ import * as dom from '../../dom.js';
++import * as browser from '../../../../base/browser/browser'
+ import { createFastDomNode } from '../../fastDomNode.js';
+ import { StandardWheelEvent } from '../../mouseEvent.js';
+ import { HorizontalScrollbar } from './horizontalScrollbar.js';
+@@ -239,7 +240,11 @@ var AbstractScrollableElement = /** @class */ (function (_super) {
+             var onMouseWheel = function (browserEvent) {
+                 _this._onMouseWheel(new StandardWheelEvent(browserEvent));
+             };
+-            this._mouseWheelToDispose.push(dom.addDisposableListener(this._listenOnDomNode, 'mousewheel', onMouseWheel));
++            if (browser.isFirefox) {
++                this._register(dom.addDisposableListener(this._listenOnDomNode, 'DOMMouseScroll', onMouseWheel, true));
++            } else {
++                this._register(dom.addDisposableListener(this._listenOnDomNode, 'mousewheel', onMouseWheel, true));
++            }
+         }
+     };
+     AbstractScrollableElement.prototype._onMouseWheel = function (e) {
+diff --git a/node_modules/monaco-editor/esm/vs/editor/browser/controller/mouseHandler.js b/node_modules/monaco-editor/esm/vs/editor/browser/controller/mouseHandler.js
+index c63a756..1048e4c 100644
+--- a/node_modules/monaco-editor/esm/vs/editor/browser/controller/mouseHandler.js
++++ b/node_modules/monaco-editor/esm/vs/editor/browser/controller/mouseHandler.js
+@@ -73,7 +73,12 @@ var MouseHandler = /** @class */ (function (_super) {
+                 e.stopPropagation();
+             }
+         };
+-        _this._register(dom.addDisposableListener(_this.viewHelper.viewDomNode, 'mousewheel', onMouseWheel, true));
++        if (browser.isFirefox) {
++            this._register(dom.addDisposableListener(this.viewHelper.viewDomNode, 'DOMMouseScroll', onMouseWheel, true));
++        } else {
++            this._register(dom.addDisposableListener(this.viewHelper.viewDomNode, 'mousewheel', onMouseWheel, true));
++        }
++        //_this._register(dom.addDisposableListener(_this.viewHelper.viewDomNode, 'mousewheel', onMouseWheel, true));
+         _this._context.addEventHandler(_this);
+         return _this;
+     }

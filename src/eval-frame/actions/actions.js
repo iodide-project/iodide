@@ -21,29 +21,6 @@ const MOST_RECENT_CHUNK_ID = new Singleton();
 
 export { MOST_RECENT_CHUNK_ID };
 
-// ////////////// actual actions
-
-export function setConsoleLanguage(language) {
-  return {
-    type: "SET_CONSOLE_LANGUAGE",
-    language
-  };
-}
-
-export function updateConsoleText(consoleText) {
-  return {
-    type: "UPDATE_CONSOLE_TEXT",
-    consoleText
-  };
-}
-
-export function consoleHistoryStepBack(consoleCursorDelta) {
-  return {
-    type: "CONSOLE_HISTORY_MOVE",
-    consoleCursorDelta
-  };
-}
-
 export function runCodeWithLanguage(language, code) {
   const { module, evaluator, asyncEvaluator } = language;
   if (asyncEvaluator !== undefined) {

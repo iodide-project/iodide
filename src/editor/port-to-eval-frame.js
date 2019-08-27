@@ -1,13 +1,12 @@
 import Mousetrap from "mousetrap";
-import { evalConsoleInput } from "./actions/eval-actions";
 import { handleFileRequest } from "./actions/file-request-actions";
 import validateActionFromEvalFrame from "./actions/eval-frame-action-validator";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
 
 let portToEvalFrame;
 
-export function postMessageToEvalFrame(messageType, message) {
-  portToEvalFrame.postMessage({ messageType, message });
+export function postMessageToEvalFrame(messageType, message, messageId) {
+  portToEvalFrame.postMessage({ messageType, message, messageId });
 }
 
 export function postActionToEvalFrame(actionObj) {
@@ -30,8 +29,15 @@ function receiveMessage(event) {
   if (trustedMessage) {
     const { messageType, message } = event.data;
     switch (messageType) {
-      case "CONSOLE_NEEDS_EVALUATION": {
-        messagePasserEditor.dispatch(evalConsoleInput(message));
+      case "RESPONSE_MESSAGE": {
+        const { status, responseId, payload } = message;
+        if (typeof responseId !== "string") {
+          console.error(
+            `messages with messageType===RESPONSE_MESSAGE must have string responseId. This type: ${typeof responseId}`,
+            message
+          );
+        }
+        messagePasserEditor.handleMessageResponse(status, responseId, payload);
         break;
       }
       case "EVAL_FRAME_TASK_RESPONSE": {
@@ -48,21 +54,6 @@ function receiveMessage(event) {
         messagePasserEditor.dispatch(
           handleFileRequest(requestType, fileName, fileRequestID, options)
         );
-        break;
-      }
-      case "AUTOCOMPLETION_SUGGESTIONS": {
-        const hintOptions = {
-          disableKeywords: true,
-          completeSingle: false,
-          completeOnSingleClick: false
-        };
-        // CodeMirror is actually already in the global namespace.
-        window.CodeMirror.showHint(
-          window.ACTIVE_EDITOR_REF,
-          () => message,
-          hintOptions
-        ); // eslint-disable-line
-        window.ACTIVE_EDITOR_REF = undefined;
         break;
       }
       case "REDUX_ACTION":

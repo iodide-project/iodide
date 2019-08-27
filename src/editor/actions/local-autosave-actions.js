@@ -1,6 +1,7 @@
 import { getLocalAutosave, clearLocalAutosave } from "../tools/local-autosave";
 import { getRevisionID } from "../tools/server-tools";
-import { updateIomdContent, updateNotebookInfo, updateTitle } from "./actions";
+import { updateNotebookInfo, updateTitle } from "./notebook-actions";
+import { updateIomdContent } from "./editor-actions";
 
 // Check to see if we have an autosaved revision available, if so
 // replace the notebook content with it

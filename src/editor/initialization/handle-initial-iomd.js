@@ -1,4 +1,4 @@
-import { updateIomdContent } from "../actions/actions";
+import { updateIomdContent } from "../actions/editor-actions";
 
 export default function handleInitialIomd(store) {
   const iomdElt = document.getElementById("iomd");
