@@ -26,13 +26,12 @@ Iodide notebooks.
 
 ## Server administration
 
-**[Overview](server-admin-overview.md)**: Overview of what is required to set up an Iodide server instance.
+**[Overview](server-admin-overview.md)**: An overview of the basic architecture of the Iodide server and how to configure it.
 
 **[Authentication Design](authentication-design.md)**: Detailed documentation of how authentication on an
 Iodide server works.
 
 **[Common tasks](common-server-tasks.md)**: Information on common server administration tasks.
-
 
 ## Policies and terms
 

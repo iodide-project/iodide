@@ -71,3 +71,12 @@ The individual fields are described below:
 - `asyncEvaluator`: (optional) If evaluating code requires making asynchronous calls, for example, to load additional code from a remote location, an `asyncEvaluator` method should be provided.  It will take precedence over `evaluator` if provided.  It takes a string of source code, but returns a `Promise` that resolves to result value rather than returning the result immediately.  Otherwise, it follows the same conventions as `evaluator`.
 
 - `pluginType`: Must always be `language` for language plugins.  Other values are resolved for other plugin types to be defined in the future.
+
+If desired, you may also place the language plugin definition inside a json file and load it using a fetch cell as follows:
+
+```
+%% fetch
+plugin: https://example.com/plugin-definition.json
+```
+
+See the iomd documentation on [chunk types](../iomd/#iomd-chunk-types) for more details.

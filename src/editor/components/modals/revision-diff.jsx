@@ -4,7 +4,15 @@ import ReactDiffViewer from "react-diff-viewer";
 import styled from "react-emotion";
 import { connect } from "react-redux";
 
+import Fab from "@material-ui/core/Fab";
+
+import RestoreModal from "./restore-modal";
+
+import { restoreSelectedRevision } from "../../actions/history-modal-actions";
+
 import { getPreviousRevisionId } from "../../tools/revision-history";
+
+import THEME from "../../../shared/theme";
 
 const DiffContainer = styled("div")`
   overflow: auto;
@@ -14,8 +22,21 @@ class RevisionDiffUnconnected extends React.Component {
   static propTypes = {
     currentRevisionContent: PropTypes.string,
     previousRevisionContent: PropTypes.string,
-    revisionContentFetchStatus: PropTypes.string.isRequired
+    revisionContentFetchStatus: PropTypes.string.isRequired,
+    canRestore: PropTypes.bool,
+    restoreSelectedRevision: PropTypes.func.isRequired,
+    selectedRevision: PropTypes.shape({
+      created: PropTypes.string,
+      id: PropTypes.number
+    })
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      pendingRestore: false
+    };
+  }
 
   render() {
     if (this.props.revisionContentFetchStatus === "FETCHING") {
@@ -29,11 +50,43 @@ class RevisionDiffUnconnected extends React.Component {
     }
     return (
       <DiffContainer>
+        <RestoreModal
+          visible={this.state.pendingRestore !== false}
+          onCloseOrCancel={() => {
+            this.setState({ pendingRestore: false });
+          }}
+          onRestore={() => {
+            this.props.restoreSelectedRevision();
+          }}
+          date={
+            this.props.selectedRevision
+              ? this.props.selectedRevision.created
+              : undefined
+          }
+        />
         <ReactDiffViewer
           oldValue={this.props.previousRevisionContent}
           newValue={this.props.currentRevisionContent}
           splitView={false}
         />
+        {this.props.canRestore && (
+          <Fab
+            onClick={() => {
+              this.setState({ pendingRestore: true });
+            }}
+            variant="extended"
+            style={{
+              right: 32,
+              bottom: 16,
+              position: "fixed",
+              color: "#fff",
+              background: THEME.clientModal.background,
+              borderRadius: 8
+            }}
+          >
+            Restore this revision
+          </Fab>
+        )}
       </DiffContainer>
     );
   }
@@ -50,7 +103,9 @@ export function mapStateToProps(state) {
 
   let currentRevisionContent;
   let previousRevisionContent;
+  let selectedRevision;
   if (selectedRevisionId !== undefined && revisionContent) {
+    selectedRevision = revisionList.find(r => r.id === selectedRevisionId);
     currentRevisionContent = revisionContent[selectedRevisionId];
     const previousRevisionId = getPreviousRevisionId(
       revisionList,
@@ -69,8 +124,16 @@ export function mapStateToProps(state) {
   return {
     currentRevisionContent,
     revisionContentFetchStatus,
-    previousRevisionContent
+    previousRevisionContent,
+    canRestore:
+      selectedRevisionId !== undefined &&
+      state.iomd !== currentRevisionContent &&
+      revisionContentFetchStatus === "IDLE",
+    selectedRevision
   };
 }
 
-export default connect(mapStateToProps)(RevisionDiffUnconnected);
+export default connect(
+  mapStateToProps,
+  { restoreSelectedRevision } // mapDispatchToProps shorthand
+)(RevisionDiffUnconnected);

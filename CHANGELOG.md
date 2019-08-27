@@ -1,17 +1,20 @@
-# (Unreleased; add upcoming change notes here)
+ # (Unreleased; add upcoming change notes here)
 
-- Removed iodide.environment API
-- Add back local-only dev mode using command "npm run simple-serve"
+- Adds a new feature, file sources, which allows notebook authors to    
+  schedule the fetching of files from URLs. This feature is available in the notebook menu (click _Menu > Manage Files_)
+
+# 0.11.0 (2019-08-21)
+
+- Removed iodide.environment API (#2038)
+- Add back local-only dev mode using command "npm run simple-serve" (#2024)
 - Iodide docker container no longer hardcodes server hostnames, can
   reuse in multiple server environments (#1943)
 - Hide "unsaved changes" in revision browser if no unsaved changes (#2046)
 - Show revision, docs, contribute links even on non-public sites
-- Adds a new feature, file sources, which allows notebook authors to schedule
-  the fetching of files from URLs. This feature is available in the notebook
-  menu (click _Menu > Manage Files_)
-- Disable "History" menu item for the tryit notebook
-- Add documentation for how the Iodide server's authentication system works
-- Migrated to Monaco editor, providing several text editing improvements (find/replace text; autocomplete, including hits for Iodide custom chunk types; etc)
+- Disable "History" menu item for the tryit notebook (#2125)
+- Add documentation for how the Iodide server's authentication system work (#2091)
+- Migrated to Monaco editor, providing several text editing improvements (find/replace text; autocomplete, including hits for Iodide custom chunk types; etc) (#2117)
+- Add "restore" functionality for revision browser (#2047)
 
 # 0.10.0 (2019-07-15)
 
