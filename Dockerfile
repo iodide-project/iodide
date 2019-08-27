@@ -1,5 +1,6 @@
 FROM python:3.7.3-alpine AS base
 
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PATH="/venv/bin:$PATH"
 
 EXPOSE 8000
@@ -24,7 +25,12 @@ RUN apk --no-cache --virtual add \
 RUN pip install virtualenv
 RUN virtualenv /venv
 
+# Set Virtual Env Permissions
 RUN chown -R app:app /venv
+
+# Set User and user permissions
+RUN chown app:app -R .
+USER app
 
 WORKDIR /app
 COPY . /app
@@ -41,10 +47,6 @@ RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 # https://github.com/docker/compose/issues/2301#issuecomment-154450785 has additional background.
 ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
-# Set User and user permissions
-RUN chown app:app -R .
-USER app
-
 FROM base AS release
 RUN echo "Installing prod dependencies"
 
@@ -54,5 +56,3 @@ RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
 ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
-RUN chown app:app -R .
-USER app
