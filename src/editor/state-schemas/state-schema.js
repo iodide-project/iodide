@@ -104,7 +104,7 @@ export const fileSourceSchema = {
     url: { type: ["string", "null"] },
     filename: { type: "string" },
     update_interval: { type: ["string", "null"] },
-    last_file_update_operation: fileUpdateOperationSchema
+    latest_file_update_operation: fileUpdateOperationSchema
   }
 };
 

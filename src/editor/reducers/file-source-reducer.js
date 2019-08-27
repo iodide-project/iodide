@@ -66,7 +66,6 @@ export default (state, action) => {
       const sources = produceSources(state.fileSources.sources).filter(
         f => f.id !== fileSourceID
       );
-      // return Object.assign({}, state, { fileSources });
       return produceNewStateWithNestedUpdate(state, { sources });
     }
 

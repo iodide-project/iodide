@@ -34,7 +34,7 @@ const FileSourceListUnconnected = ({ fileSources = [], getFileSources }) => {
   return fileSources.length ? (
     <FileSourceListContainer>
       <List>
-        {fileSources.map(({ id }) => {
+        {fileSources.map(id => {
           return <FileSourceListItem key={id} id={id} />;
         })}
       </List>
@@ -47,17 +47,13 @@ const FileSourceListUnconnected = ({ fileSources = [], getFileSources }) => {
 };
 
 FileSourceListUnconnected.propTypes = {
-  fileSources: PropTypes.arrayOf(PropTypes.object),
+  fileSources: PropTypes.arrayOf(PropTypes.number),
   getFileSources: PropTypes.func
 };
 
 export function mapStateToProps(state) {
   return {
-    fileSources: state.fileSources.sources.map(({ id }) => {
-      return {
-        id
-      };
-    })
+    fileSources: state.fileSources.sources.map(({ id }) => id)
   };
 }
 
