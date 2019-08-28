@@ -22,6 +22,12 @@ import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/s
 
 import { validateUrl, validateFilename } from "./validators";
 
+// FIXME: there is a rendering bug on Firefox on SD screens + Linux
+// where the border pixel calculations appear to get aliased. This is not
+// a result of overflow issues nor of the component libraries we're using,
+// but rather a result of how the modal resizes flexibly. This issue only
+// seems to appear when the width / height are odd-valued pixels on non-retina
+// displays, as far as I can tell.
 const AddNewSourceContainer = styled.div`
   display: grid;
   grid-template-columns: auto auto auto 120px;

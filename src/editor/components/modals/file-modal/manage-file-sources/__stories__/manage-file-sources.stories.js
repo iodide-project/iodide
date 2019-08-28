@@ -6,6 +6,7 @@ import { storiesOf } from "@storybook/react";
 
 import { AddNewFileSourceUnconnected } from "../add-new-file-source";
 import { ContainedButton } from "../../../../../../shared/components/buttons";
+// import { clearFileSourceUpdateStatus } from "../../../../../actions/file-source-actions";
 
 import InProgress from "../in-progress";
 
@@ -18,6 +19,9 @@ const AddNewFileSourceStory = () => {
   const [updateInterval, setUpdateInterval] = useState("never updates");
   const [statusMessage, updateStatusMessage] = useState("");
   const [statusType, updateStatusType] = useState("NONE");
+
+  const clearUpdateStatus = () => {};
+
   const addFileSource = async (f, u, i) => {
     updateAddedSoFar([
       ...addedSoFar,
@@ -25,6 +29,7 @@ const AddNewFileSourceStory = () => {
     ]);
     return "success";
   };
+
   return (
     <>
       <AddNewFileSourceUnconnected
@@ -39,6 +44,7 @@ const AddNewFileSourceStory = () => {
         updateStatusMessage={updateStatusMessage}
         updateStatusType={updateStatusType}
         addFileSource={addFileSource}
+        clearUpdateStatus={clearUpdateStatus}
       />
       <h3>added so far</h3>
       <table>
@@ -132,8 +138,8 @@ ManageFileSourcesStories.add("InProgress", () => {
     <>
       <h1>InProgress</h1>
       <p>
-        This component is not to be used until it is better-conceived to be more
-        catch-all.
+        NOTE: avoid using this component for the time being. It does not
+        generalize well.
       </p>
       <SpinningFalse />
       <SpinningTrue />
