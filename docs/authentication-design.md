@@ -1,3 +1,5 @@
+# Server Authentication Design
+
 The Iodide authentication system is designed to support two use cases:
 an internal system for use by organizations (e.g. Mozilla) and a public web
 site. In either case, it is chiefly designed to delegate authentication and
