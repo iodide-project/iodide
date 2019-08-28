@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import deepEqual from "deep-equal";
+import { isEqual } from "lodash";
 import styled from "react-emotion";
 
 import HelpOutline from "@material-ui/icons/HelpOutline";
@@ -30,7 +30,7 @@ export class ConsolePaneUnconnected extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return (
-      !deepEqual(this.props, nextProps) &&
+      !isEqual(this.props, nextProps) &&
       (this.props.paneVisible || nextProps.paneVisible)
     );
   }
@@ -100,7 +100,7 @@ function areStatesEqual(next, prev) {
   return (
     next.panePositions.ConsolePositioner.display ===
       prev.panePositions.ConsolePositioner.display &&
-    deepEqual(
+    isEqual(
       next.history.map(h => h.historyId),
       prev.history.map(h => h.historyId)
     )
