@@ -20,10 +20,6 @@ RUN apt-get update && \
 RUN pip install virtualenv
 RUN virtualenv /venv
 
-# Set User and user permissions
-# RUN chown app:app -R .
-# USER app
-
 WORKDIR /app
 COPY . /app
 
