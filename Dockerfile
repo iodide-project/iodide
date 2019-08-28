@@ -1,4 +1,4 @@
-FROM python:3.8.0b3-slim-buster AS base
+FROM python:3.7-slim AS base
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PATH="/venv/bin:$PATH"
@@ -11,10 +11,11 @@ RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nol
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get -y install libpq-dev && \
-    apt-get -y install libffi-dev && \
-    apt-get -y install python-dev && \
-    apt-get -y install build-essential
+    apt-get -y install \ 
+    libpq-dev \
+    libffi-dev \
+    python-dev \
+    build-essential
 
 # Install virtualenv
 RUN pip install virtualenv
