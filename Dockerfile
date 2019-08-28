@@ -7,7 +7,7 @@ EXPOSE 8000
 
 WORKDIR /app
 
-RUN adduser --uid 10001 --disabled-password --gecos '' --no-create-home app
+RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
 RUN apt-get update && \
     apt-get -y upgrade && \
@@ -20,12 +20,9 @@ RUN apt-get update && \
 RUN pip install virtualenv
 RUN virtualenv /venv
 
-# Set permissions for virtualenv
-RUN chown app:app -R /venv
-
 # Set User and user permissions
-RUN chown app:app -R .
-USER app
+# RUN chown app:app -R .
+# USER app
 
 WORKDIR /app
 COPY . /app
@@ -35,17 +32,28 @@ COPY . /app
 # https://github.com/docker/compose/issues/2301#issuecomment-154450785 has additional background.
 ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
-FROM base AS devapp
-RUN echo "Installing dev dependencies"
-
-COPY requirements ./requirements/
-RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
-RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
-
 FROM base AS release
 RUN echo "Installing prod dependencies"
+
+COPY --from=base --chown=app:app /venv /venv
 
 COPY requirements/build.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
+
+COPY --chown=app:app . .
+USER app
+
+FROM base AS devapp
+RUN echo "Installing dev dependencies"
+
+USER root
+
+COPY --from=release --chown=app:app /venv /venv
+COPY --from=release --chown=app:app /app/static /app/static
+
+COPY requirements ./requirements/
+RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
+
+USER app
 
