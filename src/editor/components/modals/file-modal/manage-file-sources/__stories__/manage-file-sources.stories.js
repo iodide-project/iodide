@@ -4,72 +4,74 @@ import styled from "react-emotion";
 
 import { storiesOf } from "@storybook/react";
 
-import { AddNewFileSourceUnconnected } from "../add-new-file-source";
 import { ContainedButton } from "../../../../../../shared/components/buttons";
-// import { clearFileSourceUpdateStatus } from "../../../../../actions/file-source-actions";
 
 import InProgress from "../in-progress";
 
 const ManageFileSourcesStories = storiesOf("ManageFileSources", module);
 
-const AddNewFileSourceStory = () => {
-  const [addedSoFar, updateAddedSoFar] = useState([]);
-  const [filename, setFilename] = useState("cool.csv");
-  const [url, setURL] = useState("https://whatever.edu");
-  const [updateInterval, setUpdateInterval] = useState("never updates");
-  const [statusMessage, updateStatusMessage] = useState("");
-  const [statusType, updateStatusType] = useState("NONE");
+// FIXME: re-implement the `AddNewFileSourceUnconnected` story
+// when we have removed the unnecessary Redux state and put
+// local state back into this. I will leave this story commented out
+// for future reference when someone circles back on this task.
+// const AddNewFileSourceStory = () => {
+//   const [addedSoFar, updateAddedSoFar] = useState([]);
+//   const [filename, setFilename] = useState("cool.csv");
+//   const [url, setURL] = useState("https://whatever.edu");
+//   const [updateInterval, setUpdateInterval] = useState("never updates");
+//   const [statusMessage, updateStatusMessage] = useState("");
+//   const [statusType, updateStatusType] = useState("NONE");
 
-  const clearUpdateStatus = () => {};
+//   const clearUpdateStatus = () => {};
 
-  const addFileSource = async (f, u, i) => {
-    updateAddedSoFar([
-      ...addedSoFar,
-      { filename: f, url: u, updateInterval: i }
-    ]);
-    return "success";
-  };
+//   const addFileSource = async (f, u, i) => {
+//     updateAddedSoFar([
+//       ...addedSoFar,
+//       { filename: f, url: u, updateInterval: i }
+//     ]);
+//     return "success";
+//   };
 
-  return (
-    <>
-      <AddNewFileSourceUnconnected
-        filename={filename}
-        url={url}
-        updateInterval={updateInterval}
-        statusMessage={statusMessage}
-        statusType={statusType}
-        updateUpdateInterval={setUpdateInterval}
-        updateURL={setURL}
-        updateFilename={setFilename}
-        updateStatusMessage={updateStatusMessage}
-        updateStatusType={updateStatusType}
-        addFileSource={addFileSource}
-        clearUpdateStatus={clearUpdateStatus}
-      />
-      <h3>added so far</h3>
-      <table>
-        <tr>
-          <th>url</th>
-          <th>filename</th>
-          <th>frequency</th>
-        </tr>
-        {addedSoFar.map(({ filename: f, url: u, updateInterval: i }) => {
-          return (
-            <tr>
-              <td>{f}</td>
-              <td>{u}</td>
-              <td>{i}</td>
-            </tr>
-          );
-        })}
-      </table>
-    </>
-  );
-};
+//   return (
+//     <>
+//       <AddNewFileSourceUnconnected
+//         filename={filename}
+//         url={url}
+//         updateInterval={updateInterval}
+//         statusMessage={statusMessage}
+//         statusType={statusType}
+//         updateUpdateInterval={setUpdateInterval}
+//         updateURL={setURL}
+//         updateFilename={setFilename}
+//         updateStatusMessage={updateStatusMessage}
+//         updateStatusType={updateStatusType}
+//         addFileSource={addFileSource}
+//         clearUpdateStatus={clearUpdateStatus}
+//       />
+//       <h3>added so far</h3>
+//       <table>
+//         <tr>
+//           <th>url</th>
+//           <th>filename</th>
+//           <th>frequency</th>
+//         </tr>
+//         {addedSoFar.map(({ filename: f, url: u, updateInterval: i }) => {
+//           return (
+//             <tr>
+//               <td>{f}</td>
+//               <td>{u}</td>
+//               <td>{i}</td>
+//             </tr>
+//           );
+//         })}
+//       </table>
+//     </>
+//   );
+// };
 
-ManageFileSourcesStories.add("AddNewFileSource", () => {
-  return <AddNewFileSourceStory />;
-});
+// ManageFileSourcesStories.add("AddNewFileSource", () => {
+//   return <AddNewFileSourceStory />;
+// });
 
 const Title = ({ children }) => {
   return <h2>{children}</h2>;

@@ -7,7 +7,10 @@ import {
 // FIXME: we should move this function to
 // a shared path
 
-import { validateUrl as validateUrlForFileSource } from "../components/modals/file-modal/manage-file-sources/validators";
+import {
+  validateUrl as validateUrlForFileSource,
+  validateFilename as validateFilenameForFileSource
+} from "../components/modals/file-modal/manage-file-sources/validators";
 
 import {
   saveFileSourceToServer,
@@ -198,11 +201,10 @@ export function validateAndSubmitFileSourceInputs(
       );
     } else if (!validateUrlForFileSource(url)) {
       dispatch(updateFileSourceInputStatusType("ERROR"));
-      dispatch(
-        updateFileSourceInputStatusMessage(
-          "source URL must include the protocol (e.g. https://)"
-        )
-      );
+      dispatch(updateFileSourceInputStatusMessage("invalid URL"));
+    } else if (!validateFilenameForFileSource(filename)) {
+      dispatch(updateFileSourceInputStatusType("ERROR"));
+      dispatch(updateFileSourceInputStatusMessage("invalid filename"));
     } else {
       let request;
       try {

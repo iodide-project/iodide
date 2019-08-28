@@ -20,7 +20,7 @@ import {
 
 import { FILE_SOURCE_UPDATE_SELECTOR_OPTIONS } from "../../../../state-schemas/state-schema";
 
-import { validateUrl, validateFilename } from "./validators";
+import { validateUrl, couldBeValidFilename } from "./validators";
 
 // FIXME: there is a rendering bug on Firefox on SD screens + Linux
 // where the border pixel calculations appear to get aliased. This is not
@@ -155,7 +155,7 @@ export function mapStateToProps(state) {
     statusVisibilityClass: fileSources.statusType === "NONE" ? "hide" : "show",
     statusIsVisible: fileSources.statusIsVisible,
     isValidURLForDisplay: validateUrl(fileSources.url, true),
-    isValidFilenameForDisplay: validateFilename(fileSources.filename, true)
+    isValidFilenameForDisplay: couldBeValidFilename(fileSources.filename)
   };
 }
 
