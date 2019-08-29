@@ -42,16 +42,18 @@ ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 FROM base AS release
 
 COPY --from=base --chown=app:app /app/static /app/static
+
+# Set user and user permissions
 COPY --chown=app:app . . 
 USER app
 
 FROM base AS devapp
 
+COPY --from=base --chown=app:app /venv /venv
 COPY --from=base --chown=app:app /app/static /app/static 
 
 # Install dev python dependencies
 COPY requirements/tests.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
 
-# Set user and user permissions
 USER app
