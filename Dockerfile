@@ -23,9 +23,6 @@ RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 
 FROM python-builder AS base
 
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1
-ENV PATH="/venv/bin:$PATH"
-
 RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
 COPY --from=python-builder /venv /venv
@@ -44,13 +41,12 @@ ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
 FROM base AS release
 
-USER root
 COPY --from=base --chown=app:app /app/static /app/static
+COPY --chown=app:app . . 
 USER app
 
 FROM base AS devapp
 
-COPY --from=base --chown=app:app /venv /venv
 COPY --from=base --chown=app:app /app/static /app/static 
 
 # Install dev python dependencies
@@ -58,5 +54,4 @@ COPY requirements/tests.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
 
 # Set user and user permissions
-COPY --chown=app:app . . 
 USER app
