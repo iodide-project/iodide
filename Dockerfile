@@ -54,7 +54,8 @@ USER app
 
 FROM base AS release
 
-COPY --from=base /app/static /app/static
+USER root
+COPY --from=base --chown=app:app /app/static /app/static
 
 RUN chown app:app -R .
 USER app
