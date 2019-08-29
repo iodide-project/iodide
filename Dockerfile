@@ -32,6 +32,7 @@ EXPOSE 8000
 WORKDIR /app
 COPY . /app
 
+# Collect static files
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
