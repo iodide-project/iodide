@@ -25,7 +25,7 @@ FROM python-builder as base
 
 RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
-COPY --from=python-builder /venv /venv
+COPY --from=python-builder --chown=app:app /venv /venv
 
 EXPOSE 8000
 
