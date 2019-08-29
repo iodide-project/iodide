@@ -204,7 +204,7 @@ export function mapStateToProps(state, ownProps) {
     : undefined;
 
   const lastUpdated = hasFileUpdateOperation
-    ? timeMonthDayYear(fileUpdateOperation.started)
+    ? timeMonthDayYear(fileUpdateOperation.started_at)
     : undefined;
 
   const failureReason =

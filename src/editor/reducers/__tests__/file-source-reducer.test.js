@@ -7,9 +7,9 @@ const initialState = () => ({
         id: 162,
         latest_file_update_operation: {
           id: 318,
-          scheduled: "2019-07-24T03:28:35.592234Z",
-          started: "2019-07-24T03:28:35.603029Z",
-          ended: "2019-07-24T03:28:35.919054Z",
+          scheduled_at: "2019-07-24T03:28:35.592234Z",
+          started_at: "2019-07-24T03:28:35.603029Z",
+          ended_at: "2019-07-24T03:28:35.919054Z",
           status: "completed",
           failure_reason: null
         },
@@ -21,9 +21,9 @@ const initialState = () => ({
         id: 163,
         latest_file_update_operation: {
           id: 319,
-          scheduled: "2019-07-24T03:28:58.270366Z",
-          started: "2019-07-24T03:28:58.281627Z",
-          ended: "2019-07-24T03:28:58.483848Z",
+          scheduled_at: "2019-07-24T03:28:58.270366Z",
+          started_at: "2019-07-24T03:28:58.281627Z",
+          ended_at: "2019-07-24T03:28:58.483848Z",
           status: "failed",
           failure_reason:
             "406 Client Error: Not Acceptable for url: https://whatever.com/"
@@ -112,9 +112,9 @@ describe("UPDATE_FILE_SOURCE_STATUS", () => {
   it("updates the status in a particular file source", () => {
     const fileUpdateOperation = {
       id: 320,
-      scheduled: "2019-07-24T03:28:58.270366Z",
-      started: "2019-07-24T03:28:58.281627Z",
-      ended: "2019-07-24T03:28:58.483848Z",
+      scheduled_at: "2019-07-24T03:28:58.270366Z",
+      started_at: "2019-07-24T03:28:58.281627Z",
+      ended_at: "2019-07-24T03:28:58.483848Z",
       status: "completed",
       failure_reason: null
     };

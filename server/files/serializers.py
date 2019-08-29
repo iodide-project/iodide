@@ -48,9 +48,9 @@ class FileUpdateOperationSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "file_source_id",
-            "scheduled",
-            "started",
-            "ended",
+            "scheduled_at",
+            "started_at",
+            "ended_at",
             "status",
             "failure_reason",
         )
@@ -72,7 +72,7 @@ class FileUpdateOperationWithoutReasonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FileUpdateOperation
-        fields = ("id", "file_source_id", "scheduled", "started", "ended", "status")
+        fields = ("id", "file_source_id", "scheduled_at", "started_at", "ended_at", "status")
 
 
 class FileUpdateOperationLatestSerializer(serializers.RelatedField):
@@ -84,9 +84,9 @@ class FileUpdateOperationLatestSerializer(serializers.RelatedField):
             obj = FileUpdateOperationSerializer(value).data
             return {
                 "id": obj["id"],
-                "scheduled": obj["scheduled"],
-                "started": obj["started"],
-                "ended": obj["ended"],
+                "scheduled_at": obj["scheduled_at"],
+                "started_at": obj["started_at"],
+                "ended_at": obj["ended_at"],
                 "status": obj["status"],
                 "failure_reason": obj["failure_reason"],
             }
@@ -103,9 +103,9 @@ class FileUpdateOperationWithoutReasonLatestSerializer(serializers.RelatedField)
             obj = FileUpdateOperationSerializer(value).data
             return {
                 "id": obj["id"],
-                "scheduled": obj["scheduled"],
-                "started": obj["started"],
-                "ended": obj["ended"],
+                "scheduled_at": obj["scheduled_at"],
+                "started": obj["started_at"],
+                "ended": obj["ended_at"],
                 "status": obj["status"],
             }
 

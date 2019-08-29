@@ -60,10 +60,10 @@ class FileUpdateOperation(models.Model):
     Represents a pending, ongoing, or completed operation to update a file
     """
 
-    PENDING = 0
-    RUNNING = 1
-    COMPLETED = 2
-    FAILED = 3
+    PENDING = "pending"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
     OPERATION_STATUSES = (
         (PENDING, "pending"),
         (RUNNING, "running"),
@@ -72,10 +72,10 @@ class FileUpdateOperation(models.Model):
     )
 
     file_source = models.ForeignKey(FileSource, on_delete=models.CASCADE)
-    scheduled = models.DateTimeField(auto_now_add=True)
-    started = models.DateTimeField(null=True)
-    ended = models.DateTimeField(null=True)
-    status = models.IntegerField(choices=OPERATION_STATUSES, default=PENDING)
+    scheduled_at = models.DateTimeField(auto_now_add=True)
+    started_at = models.DateTimeField(null=True)
+    ended_at = models.DateTimeField(null=True)
+    status = models.CharField(max_length=32, choices=OPERATION_STATUSES, default=PENDING)
     failure_reason = models.CharField(max_length=128, null=True)
 
     def __str__(self):  # pragma: no cover

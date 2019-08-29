@@ -88,9 +88,9 @@ export const fileUpdateOperationSchema = {
   type: ["object", "null"],
   properties: {
     id: { type: "integer" },
-    scheduled: { type: ["string", "null"] },
-    started: { type: ["string", "null"] },
-    ended: { type: ["string", "null"] },
+    scheduled_at: { type: ["string", "null"] },
+    started_at: { type: ["string", "null"] },
+    ended_at: { type: ["string", "null"] },
     status: { type: ["string", "null"] },
     failure_reason: { type: ["string", "null"] }
   }

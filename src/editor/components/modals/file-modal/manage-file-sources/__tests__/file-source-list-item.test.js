@@ -17,7 +17,7 @@ const currentlyRunning = {
   update_interval: "never",
   latest_file_update_operation: {
     status: "running",
-    started: "2019-07-08"
+    started_at: "2019-07-08"
   }
 };
 
@@ -28,7 +28,7 @@ const finishedRunning = {
   update_interval: "never",
   latest_file_update_operation: {
     status: "complete",
-    started: "2019-07-08"
+    started_at: "2019-07-08"
   }
 };
 
@@ -39,7 +39,7 @@ const failed = {
   update_interval: "never",
   latest_file_update_operation: {
     status: "failed",
-    started: "2019-07-08",
+    started_at: "2019-07-08",
     failure_reason: "failure reason goes here"
   }
 };
@@ -60,7 +60,7 @@ describe("FileSourceList mapStateToProps", () => {
     expect(fs.url).toBe(currentlyRunning.url);
     expect(fs.updateInterval).toBe(currentlyRunning.update_interval);
     expect(fs.lastUpdated).toBe(
-      timeMonthDayYear(currentlyRunning.latest_file_update_operation.started)
+      timeMonthDayYear(currentlyRunning.latest_file_update_operation.started_at)
     );
     expect(fs.latestFileUpdateOperationStatus).toBe(
       currentlyRunning.latest_file_update_operation.status
@@ -94,7 +94,7 @@ describe("FileSourceList mapStateToProps", () => {
     expect(fs.url).toBe(finishedRunning.url);
     expect(fs.updateInterval).toBe(finishedRunning.update_interval);
     expect(fs.lastUpdated).toBe(
-      timeMonthDayYear(finishedRunning.latest_file_update_operation.started)
+      timeMonthDayYear(finishedRunning.latest_file_update_operation.started_at)
     );
     expect(fs.latestFileUpdateOperationStatus).toBe(
       finishedRunning.latest_file_update_operation.status
@@ -112,7 +112,7 @@ describe("FileSourceList mapStateToProps", () => {
     expect(fs.url).toBe(failed.url);
     expect(fs.updateInterval).toBe(failed.update_interval);
     expect(fs.lastUpdated).toBe(
-      timeMonthDayYear(failed.latest_file_update_operation.started)
+      timeMonthDayYear(failed.latest_file_update_operation.started_at)
     );
     expect(fs.latestFileUpdateOperationStatus).toBe(
       failed.latest_file_update_operation.status
@@ -132,7 +132,7 @@ describe("FileSourceList mapStateToProps", () => {
     expect(fs.url).toBe(failed.url);
     expect(fs.updateInterval).toBe(failed.update_interval);
     expect(fs.lastUpdated).toBe(
-      timeMonthDayYear(failed.latest_file_update_operation.started)
+      timeMonthDayYear(failed.latest_file_update_operation.started_at)
     );
     expect(fs.latestFileUpdateOperationStatus).toBe(
       failed.latest_file_update_operation.status

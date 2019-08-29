@@ -16,7 +16,7 @@ def execute_file_update_operation(update_operation_id):
 
     # set status to RUNNING
     update_operation.status = FileUpdateOperation.RUNNING
-    update_operation.started = datetime.datetime.now()
+    update_operation.started_at = datetime.datetime.now()
     update_operation.save()
 
     # actually run the query against the URL
@@ -41,7 +41,7 @@ def execute_file_update_operation(update_operation_id):
         update_operation.status = FileUpdateOperation.FAILED
         update_operation.failure_reason = str(e)
 
-    update_operation.ended = datetime.datetime.now()
+    update_operation.ended_at = datetime.datetime.now()
     update_operation.save()
 
 
