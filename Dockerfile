@@ -21,7 +21,7 @@ RUN virtualenv /venv
 COPY requirements/build.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 
-FROM python-builder as base
+FROM python-builder AS base
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PATH="/venv/bin:$PATH"
@@ -42,8 +42,15 @@ RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 # https://github.com/docker/compose/issues/2301#issuecomment-154450785 has additional background.
 ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
+FROM base AS release
+
+USER root
+COPY --from=base --chown=app:app /app/static /app/static
+USER app
+
 FROM base AS devapp
 
+COPY --from=base --chown=app:app /venv /venv
 COPY --from=base --chown=app:app /app/static /app/static 
 
 # Install dev python dependencies
@@ -52,10 +59,4 @@ RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
 
 # Set user and user permissions
 COPY --chown=app:app . . 
-USER app
-
-FROM base AS release
-
-USER root
-COPY --from=base --chown=app:app /app/static /app/static
 USER app
