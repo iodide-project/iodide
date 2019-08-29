@@ -23,6 +23,9 @@ RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 
 FROM python-builder as base
 
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV PATH="/venv/bin:$PATH"
+
 RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
 COPY --from=python-builder /venv /venv
