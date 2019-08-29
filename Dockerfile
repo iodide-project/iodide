@@ -32,6 +32,8 @@ EXPOSE 8000
 WORKDIR /app
 COPY . /app
 
+RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
+
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
 # where volume-mounted files do not have execute bits set.
 # https://github.com/docker/compose/issues/2301#issuecomment-154450785 has additional background.
@@ -41,9 +43,10 @@ FROM base AS devapp
 
 COPY requirements/tests.txt ./requirements/
 
+COPY --from=base /app/static /app/static 
+
 # Install dev python dependencies
 RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
-RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
 # Set user and user permissions
 RUN chown app:app -R .
@@ -51,8 +54,7 @@ USER app
 
 FROM base AS release
 
-RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
+COPY --from=base /app/static /app/static
 
 RUN chown app:app -R .
 USER app
-
