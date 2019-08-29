@@ -1,13 +1,9 @@
-FROM python:3.7-slim AS base
+FROM python:3.7-slim AS python-builder
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PATH="/venv/bin:$PATH"
 
-EXPOSE 8000
-
 WORKDIR /app
-
-RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
 RUN apt-get update && \
     apt-get -y upgrade && \
@@ -21,6 +17,18 @@ RUN apt-get update && \
 RUN pip install virtualenv
 RUN virtualenv /venv
 
+# Install base python dependencies 
+COPY requirements/build.txt ./requirements/
+RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
+
+FROM python-builder as base
+
+RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
+
+COPY --from=python-builder /venv /venv
+
+EXPOSE 8000
+
 WORKDIR /app
 COPY . /app
 
@@ -30,27 +38,21 @@ COPY . /app
 ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
 FROM base AS release
-RUN echo "Installing prod dependencies"
 
-COPY --from=base --chown=app:app /venv /venv
-
-COPY requirements/build.txt ./requirements/
-RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
-COPY --chown=app:app . .
+RUN chown app:app -R .
 USER app
 
 FROM base AS devapp
-RUN echo "Installing dev dependencies"
 
-USER root
+COPY requirements/tests.txt ./requirements/
 
-COPY --from=release --chown=app:app /venv /venv
-COPY --from=release --chown=app:app /app/static /app/static
-
-COPY requirements ./requirements/
+# Install dev python dependencies
 RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
+RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
+# Set user and user permissions
+RUN chown app:app -R .
 USER app
 
