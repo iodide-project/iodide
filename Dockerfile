@@ -25,7 +25,7 @@ FROM python-builder as base
 
 RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
-COPY --from=python-builder --chown=app:app /venv /venv
+COPY --from=python-builder /venv /venv
 
 EXPOSE 8000
 
@@ -41,11 +41,11 @@ ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
 FROM base AS devapp
 
-COPY requirements/tests.txt ./requirements/
-
+COPY --from=base /venv /venv
 COPY --from=base /app/static /app/static 
 
 # Install dev python dependencies
+COPY requirements/tests.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
 
 # Set user and user permissions
@@ -54,8 +54,8 @@ USER app
 
 FROM base AS release
 
-USER root
+COPY --from=base --chown=app:app /venv /venv
 COPY --from=base --chown=app:app /app/static /app/static
 
-RUN chown app:app -R .
+RUN chown app:app -R . 
 USER app
