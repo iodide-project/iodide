@@ -111,7 +111,7 @@
     "dotenv": "8.1.0",
     "enzyme": "3.10.0",
     "enzyme-adapter-react-16": "1.14.0",
-    "eslint": "6.1.0",
+    "eslint": "6.3.0",
     "eslint-config-airbnb": "16.1.0",
     "eslint-loader": "3.0.0",
     "eslint-plugin-emotion": "10.0.14",
