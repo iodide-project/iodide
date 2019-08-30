@@ -20,9 +20,9 @@ from .tasks import execute_file_update_operation
 
 class FileViewSet(viewsets.ModelViewSet):
 
-    serializer_class = FilesSerializer
-
     http_method_names = ["post", "put", "delete"]
+    queryset = File.objects.all()
+    serializer_class = FilesSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -60,8 +60,6 @@ class FileViewSet(viewsets.ModelViewSet):
 
         return Response(FilesSerializer(file_obj_to_update).data, status=201)
 
-    queryset = File.objects.all()
-
 
 class NotebookFileSourceViewSet(viewsets.ModelViewSet):
 
@@ -92,14 +90,12 @@ class NotebookFileSourceViewSet(viewsets.ModelViewSet):
             return base.filter(id__in=filter_by_id)
         return base
 
-    queryset = FileSource.objects.all()
-
 
 class FileSourceViewSet(viewsets.ModelViewSet):
 
-    serializer_class = FileSourceSerializer
-
     http_method_names = ["post", "put", "delete"]
+    queryset = FileSource.objects.all()
+    serializer_class = FileSourceSerializer
 
     def perform_destroy(self, instance):
         if instance.notebook.owner != self.request.user:
@@ -117,8 +113,6 @@ class FileSourceViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
 
         serializer.save()
-
-    queryset = FileSource.objects.all()
 
 
 class FileUpdateOperationViewSet(viewsets.ModelViewSet):

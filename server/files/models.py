@@ -85,4 +85,4 @@ class FileUpdateOperation(models.Model):
         verbose_name = "File Update Operation"
         verbose_name_plural = "File Update Operations"
         ordering = ("id",)
-        db_table = "file_operation"
+        db_table = "file_update_operation"
