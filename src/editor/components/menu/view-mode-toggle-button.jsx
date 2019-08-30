@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
-import { setViewMode } from "../../actions/actions";
+import { setViewMode } from "../../actions/notebook-actions";
 
 export class ViewModeToggleButtonUnconnected extends React.Component {
   static propTypes = {
@@ -59,12 +59,10 @@ export function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    setViewModeToReport: () => dispatch(setViewMode("REPORT_VIEW")),
-    setViewModeToExplore: () => dispatch(setViewMode("EXPLORE_VIEW"))
-  };
-}
+const mapDispatchToProps = {
+  setViewModeToReport: () => setViewMode("REPORT_VIEW"),
+  setViewModeToExplore: () => setViewMode("EXPLORE_VIEW")
+};
 
 export default connect(
   mapStateToProps,

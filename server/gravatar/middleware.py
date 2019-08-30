@@ -13,7 +13,7 @@ class GravatarMiddleware(object):
     def __call__(self, request):
         user = request.user
         if user.is_authenticated and not user.avatar:
-            user.avatar = "http://www.gravatar.com/avatar/{}?d=identicon".format(
+            user.avatar = "https://www.gravatar.com/avatar/{}?d=identicon".format(
                 hashlib.md5(user.email.encode("utf-8")).hexdigest()
             )
             user.save()

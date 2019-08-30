@@ -16,7 +16,7 @@ Flowing from those core principles, we have a number of secondary principles/obj
 
 - Avoid magic APIs -- users should (within reason) not have to learn about a ton of idiosyncrasies of the notebook to get up and running.
 
-    - Users need to be able to build off of existing work/examples/resources. Users need to be able to pull examples from bl.ocks.org or JSfiddle or Stackoverflow and have them run in the notebook without modification (within reason). This means, among other things, seamless access to all browser APIs is a hard requirement, and things that change the way standard Javascript is executed in the browser are to be avoided.
+    - Users need to be able to build off of existing work/examples/resources. Users need to be able to pull examples from bl.ocks.org or JSfiddle or Stackoverflow and have them run in the notebook without modification (within reason). This means, among other things, seamless access to all browser APIs is a hard requirement, and things that change the way standard JavaScript is executed in the browser are to be avoided.
     - Helper libraries are desirable, but they should just act like regular JS libraries and not require users to contort their mental model of how vanilla JS works, or pollute the regular JS environment. (Ex: it would be preferable to add a single namespaced helper lib than to dump a bunch of utility functions into the global scope).
     - We want to support syntax extensions for mathematics, but we want them to be opt in, not something that a user will have to learn to be able to use a notebook.
 - Don’t innovate too much -- at least initially, we want to follow existing, familiar paradigms that will enable people to dive right in.

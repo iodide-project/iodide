@@ -1,6 +1,7 @@
 import Ajv from "ajv";
 
-import { languageSchema, historySchema } from "../state-schemas/state-schema";
+import { historySchema } from "../state-schemas/history-schema";
+import { languageSchema } from "../state-schemas/state-schema";
 // these are the schemas of actions from the eval frame that
 // are ok to pass to the editor
 
@@ -52,11 +53,6 @@ const schemas = {
     },
     required: ["type", "consoleCursorDelta"]
   },
-  // FIXME environment actions disabled for now
-  // ENVIRONMENT_UPDATE_FROM_EDITOR: {
-  // },
-  // ENVIRONMENT_UPDATE_FROM_EVAL_FRAME: {
-  // },
   RESET_HISTORY_CURSOR: {
     type: "object",
     additionalProperties: false,
@@ -65,9 +61,6 @@ const schemas = {
     },
     required: ["type"]
   },
-  // FIXME environment actions disabled for now
-  // SAVE_ENVIRONMENT: {
-  // },
   UPDATE_CONSOLE_TEXT: {
     type: "object",
     additionalProperties: false,
@@ -141,9 +134,7 @@ export default function validateActionFromEvalFrame(action) {
       console.info("Redux initiated: ", action.type);
     } else {
       throw new ActionSchemaValidationError(
-        `Invalid action from eval frame: action type not permitted: ${
-          action.type
-        }`
+        `Invalid action from eval frame: action type not permitted: ${action.type}`
       );
     }
   } else if (!validator(action.type)(action)) {

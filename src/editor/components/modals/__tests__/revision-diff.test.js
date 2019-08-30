@@ -6,7 +6,7 @@ describe("RevisionDiff mapStateToProps", () => {
 
   beforeEach(() => {
     state = {
-      jsmd: "Local",
+      iomd: "Local",
       notebookHistory: {
         revisionList: [{ id: 3 }, { id: 2 }, { id: 1 }],
         revisionContent: {

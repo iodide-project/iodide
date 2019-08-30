@@ -64,6 +64,7 @@ typings/
 
 # Python cache directory
 .cache
+__pycache__
 
 # dotenv environment variables file
 .env

@@ -1,10 +1,12 @@
+import pytest
 from django.urls import reverse
 
 from helpers import get_rest_framework_time_string
 from server.notebooks.models import NotebookRevision
 
 
-def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
+@pytest.fixture
+def two_test_notebooks_and_revisions(two_test_notebooks):
     test_notebook = two_test_notebooks[0]
 
     # add another revision to the main notebook that we are testing
@@ -18,6 +20,11 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
         title="Revision for another notebook",
         content="*fake notebook 2 content 2*",
     )
+    return two_test_notebooks
+
+
+def test_read_notebook_revisions(fake_user, two_test_notebooks_and_revisions, client):
+    test_notebook = two_test_notebooks_and_revisions[0]
 
     # verify that we can list notebook revisions and that we only get what we
     # expect in the expected order (latest first)
@@ -62,6 +69,18 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks, client):
         "id": test_revision.id,
         "title": test_revision.title,
     }
+
+
+def test_read_notebook_revisions_restricted(
+    fake_user, two_test_notebooks_and_revisions, client, restricted_api
+):
+    """
+    tests that in restricted API mode listing of revisions returns a permission
+    denied response
+    """
+    test_notebook = two_test_notebooks_and_revisions[0]
+    resp = client.get(reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}))
+    assert resp.status_code == 403
 
 
 def test_read_multiple_revisions(fake_user, test_notebook, client):
@@ -127,7 +146,12 @@ def test_create_notebook_revision_non_owner(fake_user, fake_user2, test_notebook
 
 
 def test_create_notebook_revision(fake_user, test_notebook, client):
-    post_blob = {"title": "My cool notebook", "content": "*modified test content"}
+    last_revision = NotebookRevision.objects.filter(notebook_id=test_notebook.id).first()
+    post_blob = {
+        "parent_revision_id": last_revision.id,
+        "title": "My cool notebook",
+        "content": "*modified test content",
+    }
 
     # should be able to create a revision if we are the owner
     client.force_login(user=fake_user)
@@ -151,6 +175,36 @@ def test_create_notebook_revision(fake_user, test_notebook, client):
         "id": new_notebook_revision.id,
         "title": post_blob["title"],
     }
+
+
+@pytest.mark.parametrize("bad_revision_id", [10, "abc"])
+def test_create_notebook_revision_incorrect_parent_id(
+    fake_user, test_notebook, client, bad_revision_id
+):
+    last_revision = NotebookRevision.objects.filter(notebook_id=test_notebook.id).first()
+    if type(bad_revision_id) == int:
+        bad_revision_id = last_revision.id + bad_revision_id
+    post_blob = {
+        "parent_revision_id": bad_revision_id,
+        "title": "My cool notebook",
+        "content": "*modified test content",
+    }
+    client.force_login(user=fake_user)
+    resp = client.post(
+        reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}), post_blob
+    )
+    assert resp.status_code == 400
+
+    # no new notebook revisions should be created
+    assert NotebookRevision.objects.count() == 1
+    only_notebook_revision = NotebookRevision.objects.first()
+    assert only_notebook_revision.title == last_revision.title
+    assert only_notebook_revision.content == last_revision.content
+
+    # be sure that we get the expected error
+    assert resp.json() == [
+        f"Based on non-latest revision {bad_revision_id} (expected: {last_revision.id})"
+    ]
 
 
 def test_dont_create_unmodified_notebook_revision(fake_user, test_notebook, client):

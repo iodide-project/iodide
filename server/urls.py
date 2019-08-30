@@ -4,8 +4,10 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.urls import path
 from django.views.generic.base import RedirectView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 import server.views
+from server.jwt.api_views import TokenObtainPairView
 
 admin.site.unregister(Group)  # Hide the group, not used right now
 
@@ -39,7 +41,12 @@ urlpatterns = [
     # various views to help with the authentication pipeline
     url(r"^oauth/", include("social_django.urls", namespace="social")),
     url(r"^login_success/$", server.views.login_success, name="login_success"),
+    url(r"^login/$", server.views.login, name="login"),
     url(r"^logout/$", server.views.logout, name="logout"),
+    # jwt auth
+    url(r"^api/v1/token/$", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    url(r"^api/v1/token/refresh/$", TokenRefreshView.as_view(), name="token_refresh"),
+    url(r"^token/$", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     # admin stuff
     path("admin/", admin.site.urls),
     url(r"^$", server.views.index, name="index"),

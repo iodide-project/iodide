@@ -15,6 +15,8 @@ THEME.client.console.lineHeightPx =
   THEME.client.console.lineHeight * THEME.client.console.fontSizeValue;
 THEME.client.console.fontFamily = "monospace";
 
+THEME.defaultUserIconSize = 40;
+
 THEME.logo = {};
 THEME.logo.darkColor = "#4f3554";
 
@@ -38,24 +40,18 @@ THEME.header.right.minWidth = THEME.header.left.minWidth;
 // sets the header background on both the notebook itself and the server bar.
 THEME.header.backgroundLeft = "#3f1b47";
 THEME.header.backgroundRight = "#1e0f21";
-THEME.header.background = `linear-gradient(to right, ${
-  THEME.header.backgroundLeft
-}, ${THEME.header.backgroundRight})`;
+THEME.header.background = `linear-gradient(to right, ${THEME.header.backgroundLeft}, ${THEME.header.backgroundRight})`;
 
 // elementBackground is the background css property for
 // various contained elements such as featured notebooks.
 THEME.elementBackgroundLeft = "rgb(248, 243, 248)";
 THEME.elementBackgroundRight = "rgb(250, 248, 250)";
-THEME.elementBackground = `linear-gradient(to right, ${
-  THEME.elementBackgroundLeft
-}, ${THEME.elementBackgroundRight})`;
+THEME.elementBackground = `linear-gradient(to right, ${THEME.elementBackgroundLeft}, ${THEME.elementBackgroundRight})`;
 
 THEME.clientModal = {};
 THEME.clientModal.backgroundLeft = "#301934";
 THEME.clientModal.backgroundRight = "#563C5C";
-THEME.clientModal.background = `linear-gradient(to left, ${
-  THEME.clientModal.backgroundLeft
-}, ${THEME.clientModal.backgroundRight})`;
+THEME.clientModal.background = `linear-gradient(to left, ${THEME.clientModal.backgroundLeft}, ${THEME.clientModal.backgroundRight})`;
 
 // BUTTON COLORS
 THEME.button = {};

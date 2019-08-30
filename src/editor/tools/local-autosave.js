@@ -1,6 +1,5 @@
 import db from "./local-autosave-client";
 import { connectionModeIsServer } from "./server-tools";
-import { setPreviousAutosave, loadAutosave } from "../actions/actions";
 
 function getAutosaveKey(state) {
   const documentId = connectionModeIsServer(state)
@@ -9,27 +8,15 @@ function getAutosaveKey(state) {
   return `autosave-${documentId}`;
 }
 
-async function getLocalAutosaveState(state) {
+async function getLocalAutosave(state) {
   const autosaveKey = getAutosaveKey(state);
   const autosave = await db.autosave.get(autosaveKey);
-  return autosave;
+  return autosave || {};
 }
 
-async function checkForLocalAutosave(store) {
-  const state = store.getState();
-  const autosaveState = await getLocalAutosaveState(state);
-  if (
-    autosaveState &&
-    autosaveState.dirtyCopy &&
-    autosaveState.dirtyCopy !== autosaveState.originalCopy
-  ) {
-    const automaticallyApply =
-      state.notebookInfo.username === state.userData.name;
-    if (automaticallyApply) {
-      store.dispatch(loadAutosave());
-    }
-    store.dispatch(setPreviousAutosave(true));
-  }
+async function haveLocalAutosave(state) {
+  const localAutosave = await getLocalAutosave(state);
+  return Object.keys(localAutosave).length > 0;
 }
 
 async function clearLocalAutosave(state) {
@@ -37,34 +24,21 @@ async function clearLocalAutosave(state) {
   await db.autosave.delete(autosaveKey);
 }
 
-async function updateLocalAutosave(state, original) {
+async function writeLocalAutosave(state) {
   const autosaveKey = getAutosaveKey(state);
-  const { jsmd } = state;
-  if (original) {
-    // save (over) original, clear any existing dirty copy
-    db.autosave.put(
-      {
-        originalCopy: jsmd,
-        originalCopyRevision: state.notebookInfo.revision_id,
-        originalSaved: new Date().toISOString()
-      },
-      autosaveKey
-    );
-  } else {
-    const autosaveState = await getLocalAutosaveState(state);
-    db.autosave.put(
-      Object.assign(autosaveState, {
-        dirtyCopy: jsmd,
-        dirtySaved: new Date().toISOString()
-      }),
-      autosaveKey
-    );
-  }
+  db.autosave.put(
+    {
+      iomd: state.iomd,
+      title: state.title,
+      parentRevisionId: state.notebookInfo.revision_id
+    },
+    autosaveKey
+  );
 }
 
 export {
-  checkForLocalAutosave,
-  getLocalAutosaveState,
+  getLocalAutosave,
+  haveLocalAutosave,
   clearLocalAutosave,
-  updateLocalAutosave
+  writeLocalAutosave
 };

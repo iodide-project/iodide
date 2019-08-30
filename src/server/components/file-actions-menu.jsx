@@ -52,11 +52,10 @@ export default class FileActionsMenu extends React.Component {
         </Popover>
         <DeleteModal
           visible={this.state.deleteModalVisible}
-          onClose={this.hideDeleteModal}
+          onCloseOrCancel={this.hideDeleteModal}
           title={`delete the file  "${this.props.filename}"?`}
           deleteFunction={deleteFileOnServer}
           content={this.props.modalBody}
-          onCancel={this.hideDeleteModal}
           onDelete={this.props.onDelete}
           elementID={this.props.fileID}
         />

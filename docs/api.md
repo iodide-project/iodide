@@ -6,28 +6,26 @@ challenges presented by JavaScript and web browsers.
 Please direct clarifications or observations of inaccuracy to [our issue
 tracker](https://github.com/iodide-project/iodide/issues/new).
 
-
 ## `iodide.file`
 
 The `iodide.file` API provides convenience functions for working with files
 uploaded to the Iodide server in your notebook.
-
 
 ### `iodide.file.save(fileName, serializerType, data[, saveOptions])`
 
 Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises),
 which, when resolved, will signal that `data` was uploaded to the server under the filename
-`fileName`. If the file already exists or `data` is not serializable, the Promise will reject. 
+`fileName`. If the file already exists or `data` is not serializable, the Promise will reject.
 Because you must own the notebook in order to save files to it, if you do not own a
 notebook and run `iodide.file.save` Iodide will throw an error. As such, we suggest including
-the [`skipRunAll` tag](https://iodide-project.github.io/docs/jsmd/#skiprunall) in the JS chunk
+the [`skipRunAll` tag](https://iodide-project.github.io/docs/iomd/#skiprunall) in the JS chunk
 evaluating `iodide.file.save` so that a user viewing your report does not encounter an error. Take
 a look at the example in the `iodide.file.save` examples section.
 
 `fileName` (required) is a string that represents the file name.
 
-`serializerType` (required) is a string consisting of one of four options: `text` (applies `.toString()` to `data`), `json` (applies `JSON.serialize(data)`), `arrayBuffer` (saves as a binary array buffer), and `blob` (saves as a `Blob` object). These match the `fetchType` in `iodide.file.load` – if you save with a certain `serializerType`, it is recommended to load it with the same `fetchType`.
+`serializerType` (required) is a string consisting of one of four options: `text` (applies `.toString()` to `data`), `json` (applies `JSON.stringify(data)`), `arrayBuffer` (saves as a binary array buffer), and `blob` (saves as a `Blob` object). These match the `fetchType` in `iodide.file.load` – if you save with a certain `serializerType`, it is recommended to load it with the same `fetchType`.
 
 `data` (required) is any object or variable in the eval name space. It will be serialized depending on the `serializerType`.
 
@@ -35,7 +33,6 @@ The optional argument `saveOptions` has the following keys:
 
 - `overwrite` (optional, default `false`): if `true`, will overwrite whatever is
   at `fileName` with `data`. If `false`, and the file exists, the Promise will reject.
-
 
 #### `iodide.file.save` examples
 
@@ -46,7 +43,7 @@ The optional argument `saveOptions` has the following keys:
 // the array of objects.
 // This overwrites whatever is in `cached-data.csv` because overwrite is set to true.
 
-%% fetch 
+%% fetch
 
 // first, let's import d3-dsv, which has the d3.csvFormat function.
 
@@ -56,7 +53,7 @@ js: https://cdnjs.cloudflare.com/ajax/libs/d3-dsv/1.0.8/d3-dsv.js
 
 const data = [{x1: 10, x2: 'random string'}, {x1: 20, x2: 'another string'}];
 
-iodide.file.save('cached-data.csv', d3.csvFormat(data), 'text', { overwrite: true });
+iodide.file.save('cached-data.csv', 'text', d3.csvFormat(data), { overwrite: true });
 
 %% js
 
@@ -74,10 +71,10 @@ iodide.file.load('cached-data.csv', 'text').then((raw) => {
 // Int16Array, and want to save it.
 
 async function saveAndLoad() {
-  // imagine 1 million entries here. 
+  // imagine 1 million entries here.
   await iodide.file.save(
-    'model-output.bin', 
-    'arrayBuffer', 
+    'model-output.bin',
+    'arrayBuffer',
     Int16Array.from([10,342,3,1, ...]));
   // Let's load it back into the notebook.
   const buffer = await iodide.file.load('model-output.bin', 'arrayBuffer');
@@ -110,7 +107,7 @@ fetch('https://...').then((r) => r.json())
 
 %% js
 
-// this chunk will be the one that loads the cached correlations when the notebook 
+// this chunk will be the one that loads the cached correlations when the notebook
 // is opened as a report (that is, all code chunks are evaluated).
 
 iodide.file.load('correlations.data', 'json', 'correlations');
@@ -148,35 +145,36 @@ async function catchTheCatThenDisplay() {
 catchTheCatThenDisplay();
 ```
 
-
 ### `iodide.file.load(fileName, fileType[, variableName])`
 
 Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
-that, when resolved, loads into the notebook the save file `fileName`. 
-If the file does not exist or if you pass in invalid arguments, the Promise will reject. You can 
-find a list of uploaded files on your notebook's revisions page (available at 
+that, when resolved, loads into the notebook the save file `fileName`.
+If the file does not exist or if you pass in invalid arguments, the Promise will reject. You can
+find a list of uploaded files on your notebook's revisions page (available at
 `https://iodide.io/notebooks/<notebook-id>/revisions`). You can also access any
 uploaded file through the fetch chunk, [following this
 pattern](https://iodide-project.github.io/docs/workflows/#uploading-data-to-an-iodide-notebook).
 For most use cases using [fetch
-chunks](https://iodide-project.github.io/docs/jsmd/#fetch-chunks-fetch) is
+chunks](https://iodide-project.github.io/docs/iomd/#fetch-chunks-fetch) is
 preferable and more straightforward. In more dynamic cases,
 however, `iodide.file.load` can provide more nuanced workflows.
 
-`fileName` is the name of the file uploaded to the Iodide server. 
+`fileName` is the name of the file uploaded to the Iodide server.
 
-`fileType` is the file type to handle. These are the same as the following data fetch types 
-available to [fetch chunks]
-(https://iodide-project.github.io/docs/jsmd/#fetch-chunks-fetch):
- `json` (load this file as json and parse into a javascript object), 
- `text` (load this file as text), `arrayBuffer` (load this file into an Array Buffer, especially useful when working with typed arrays) and `blob` (load this file as a [Blob]
- (https://developer.mozilla.org/en-US/docs/Web/API/Blob)). These match the `serializerType` in `iodide.file.save` – if you save with a certain `serializerType`, it is recommended to load it with the same `fetchType`.
+`fileType` is the file type to handle. These are the same as the following data fetch types
+available to [fetch chunks](https://iodide-project.github.io/docs/iomd/#fetch-chunks-fetch):
+
+- `json` (load this file as json and parse into a javascript object),
+- `text` (load this file as text),
+- `arrayBuffer` (load this file into an Array Buffer, especially useful when working with typed arrays) and
+- `blob` (load this file as a [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob)).
+
+These match the `serializerType` in `iodide.file.save` – if you save with a certain `serializerType`, it is recommended to load it with the same `fetchType`.
 
 `variableName` (required for `json`, `text`, and `blob` file types, otherwise
 not applicable): the variable name in which to load the data, available in the
 browser `window` namespace.
-
 
 #### `iodide.file.load` examples
 
@@ -188,11 +186,11 @@ browser `window` namespace.
 
 iodide.file.load('cached-data.csv', 'text').then((rawCSV) => {
   const processedData = d3.csvParse(rawCSV);
-  // use a plotting library of some sort here:  
+  // use a plotting library of some sort here:
   plotGraph(processedData, ...);
 });
 
-%% js 
+%% js
 
 iodide.file.load('gritty.mp4', 'blob', 'gritty').then(() => {
   // load this gritty video into a <video /> tag in the md chunk below this one.
@@ -219,14 +217,12 @@ iodide.file.load('query-results.json', 'json', 'queryResults');
 var entries = queryResults.rows.map(...);
 ```
 
-
 ### `iodide.file.delete(fileName)`
 
 Deletes the file specified by `fileName`. Returns a
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
 that when resolved, denotes that the file was deleted on the server. If the file does not exist,
 the Promise will reject.
-
 
 ### `iodide.file.delete` examples
 
@@ -252,11 +248,9 @@ iodide.file.delete('old-dataset.txt')
 });
 ```
 
-
 ### `iodide.file.list()`
 
 Returns an Array of file names available to the current notebook.
-
 
 #### `iodide.file.list` examples
 
@@ -276,12 +270,10 @@ const plotRequests = iodide.file.list()
 Promise.all(plotRequests);
 ```
 
-
 ### `iodide.file.exists(fileName)`
 
 Returns `true` if the file `fileName` is available to the notebook, and `false`
 otherwise.
-
 
 #### `iodide.file.exists` examples
 
@@ -303,7 +295,7 @@ if (iodide.file.exists(FILENAME)) {
   // if we don't have the cached file, let's go ahead
   // and download the bigger one, manipulate it with some
   // function processDataAndReduceItsSize, then save it to the server
-  // so the next time we run this code chunk, we'll just load the 
+  // so the next time we run this code chunk, we'll just load the
   // cached (smaller) version.
   fetch('http://...')
     .then((r) => r.json())
@@ -315,26 +307,23 @@ if (iodide.file.exists(FILENAME)) {
 }
 ```
 
-
 ### `iodide.file.lastUpdated(fileName)`
 
 Returns a `Date` object that represents when the file associated with `fileName`
 was last updated.
 
-
 #### `iodide.file.lastUpdated` examples
 
 ```javascript
-
 // get the oldest csv file
 
 const oldestDate = Math.min(
-  ...iodide.file.list()
-     .filter(f => f.includes('.csv'))
-     .map(iodide.file.lastUpdated)
+  ...iodide.file
+    .list()
+    .filter(f => f.includes(".csv"))
+    .map(iodide.file.lastUpdated)
 );
 ```
-
 
 ## `iodide.addOutputRenderer(rendererSpecification)`
 
@@ -346,7 +335,8 @@ An output renderer specification is an object that has two functions:
 - `shouldRender` is a function that takes a value,
   inspects it in some way, and then returns `true` if this renderer should handle
   the value, and `false` otherwise.
-- `render` takes a value and returns an HTML string that
+- `render` takes a value and returns an HTML string. The string is sanitized and may include only the tags `div`, `span`, `ol`, `ul`, `li`, `table`, `thead`, `tbody`, `th`, `tr`, `td`, and `pre`. Additionally, only the atributes `style` and `class` are allowed in these elements.
+  - Note that for convenience, we have included the standard set of `[rendered_html](https://github.com/jupyter/notebook/blob/master/notebook/static/notebook/less/renderedhtml.less)` styles from [Jupyter](https://jupyter.org/), so language plugin authors may re-use HTML output from Jupyter kernels (subject to the constraints above), and end up with similar looking results. Please contact us if you encounter difficulties with this.
 
 Calling `iodide.addOutputRenderer` takes the renderer spec and adds
 it to the _end_ of the chain of user-defined renderers that checked whenever a user outputs a return value in a cell.
@@ -367,7 +357,6 @@ const GeoLocationOutputRenderer = {
 iodide.addOutputRenderer(GeoLocationOutputRenderer);
 ```
 
-
 ## `iodide.clearOutputRenderers()`
 
 Clears all user-defined output renderers that have been added to the Iodide session
@@ -377,12 +366,16 @@ using `iodide.addOutputRenderer(rendererSpecification)`
 
 The `iodide.output` API provides convenience functions for programmatically adding DOM elements to your report without having to explicitly include them in a Markdown chunk.
 
-The DOM elements created using these functions are inserted into your report in the order in which they appear in your JSMD code. Importantly, the code chunk that created the element provides a key that allows Iodide to track the location of the element. Because of this, if you evaluate a code chunk that produces a DOM element using these functions, changing that code chunk will cause the element to be removed from your report and you will have to evaluate the code chunk again to refresh the element. (This is ensures that obsolete DOM elements are never left behind when you make code changes)
+The DOM elements created using these functions are inserted into your report in the order in which they appear in your IOMD code. Importantly, the code chunk that created the element provides a key that allows Iodide to track the location of the element. Because of this, if you evaluate a code chunk that produces a DOM element using these functions, changing that code chunk will cause the element to be removed from your report and you will have to evaluate the code chunk again to refresh the element. (This is ensures that obsolete DOM elements are never left behind when you make code changes.)
 
-These convenience functions are only intended to be used for synchronous rendering. If you use them within an asynchronous callback, the DOM elements may be placed in unexpected positions within your report. To ensure that you have full control over the placement of DOM elements that you wish to target within asynchronous operations, it is recommended that you explicitly place a target DOM element within a Markdown chunk.
+These convenience functions are only intended to be used for synchronous rendering. If you use them within an asynchronous callback, the DOM elements may be placed in unexpected positions within your report. To ensure that you have full control over the placement of DOM elements that you wish to target within asynchronous operations, it is recommended that you explicitly place a DOM element within a Markdown chunk, and that you target that element with code in a script.
+
+Note also that because of the way the browser event loop works, if you create or mutate multiple DOM elements within a synchronous loop, all of those changes will be applied to the DOM at once. This means that it it's not possible, for example, to track the progress of a long-running synchronous computation loop by updating a DOM node from the main thread. For situations like this, you may need to use a more advanced technique like a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
 
 ### `iodide.output.element(nodeType)`
+
 This function creates a DOM element of `nodeType` in your report and returns a reference to the element. This DOM element can then be manipulated using any function that operates on DOM elements or any DOM API provided by the browser.
 
 ### `iodide.output.text(string)`
+
 This function takes the given `string`, splits it at each new line, and for each resulting line of text adds a new `div` containing that line to your report.

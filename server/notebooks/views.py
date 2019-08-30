@@ -5,11 +5,12 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
 from django.urls import reverse
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from ..base.models import User
 from ..files.models import File
-from ..settings import APP_VERSION_STRING, EVAL_FRAME_ORIGIN
+from ..settings import EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH, SITE_URL
 from ..views import get_user_info_dict
 from .models import Notebook, NotebookRevision
 from .names import get_random_compound
@@ -21,10 +22,13 @@ def _get_user_info_json(user):
     return {}
 
 
+@xframe_options_exempt
+def eval_frame_view(request):
+    return render(request, "notebook_eval_frame.html", {"editor_origin": SITE_URL})
+
+
 def _get_iframe_src():
-    return urllib.parse.urljoin(
-        EVAL_FRAME_ORIGIN, "iodide.eval-frame.{}.html".format(APP_VERSION_STRING)
-    )
+    return urllib.parse.urljoin(EVAL_FRAME_ORIGIN, reverse(eval_frame_view))
 
 
 @ensure_csrf_cookie
@@ -54,6 +58,8 @@ def notebook_view(request, pk):
         "connectionMode": "SERVER",
         "title": revision.title,
         "files": files,
+        "max_filename_length": MAX_FILENAME_LENGTH,
+        "max_file_size": MAX_FILE_SIZE,
     }
     if notebook.forked_from is not None:
         notebook_info["forked_from"] = notebook.forked_from.id
@@ -66,8 +72,9 @@ def notebook_view(request, pk):
             "title": revision.title,
             "user_info": _get_user_info_json(request.user),
             "notebook_info": notebook_info,
-            "jsmd": revision.content,
+            "iomd": revision.content,
             "iframe_src": _get_iframe_src(),
+            "eval_frame_origin": EVAL_FRAME_ORIGIN,
         },
     )
 
@@ -131,7 +138,7 @@ def new_notebook_view(request):
         return redirect(reverse("try-it"))
 
     # create a new notebook and redirect to its view
-    new_notebook_content_template = get_template("new_notebook_content.jsmd")
+    new_notebook_content_template = get_template("new_notebook_content.iomd")
     with transaction.atomic():
         notebook = Notebook.objects.create(owner=request.user)
         NotebookRevision.objects.create(
@@ -152,7 +159,7 @@ def tryit_view(request):
     if request.user.is_authenticated:
         return redirect(new_notebook_view)
     # create a new notebook and redirect to its view
-    new_notebook_content_template = get_template("new_notebook_content.jsmd")
+    new_notebook_content_template = get_template("new_notebook_content.iomd")
     return render(
         request,
         "notebook.html",
@@ -163,7 +170,8 @@ def tryit_view(request):
                 "tryItMode": True,
                 "title": "Untitled notebook",
             },
-            "jsmd": new_notebook_content_template.render(),
+            "iomd": new_notebook_content_template.render(),
             "iframe_src": _get_iframe_src(),
+            "eval_frame_origin": EVAL_FRAME_ORIGIN,
         },
     )

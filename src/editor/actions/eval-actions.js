@@ -2,7 +2,7 @@ import {
   getChunkContainingLine,
   selectionToChunks,
   removeDuplicatePluginChunksInSelectionSet
-} from "../jsmd-tools/jsmd-selection";
+} from "../iomd-tools/iomd-selection";
 
 import { NONCODE_EVAL_TYPES } from "../state-schemas/state-schema";
 
@@ -11,7 +11,8 @@ const chunkNotSkipped = chunk =>
     chunk.evalFlags.includes("skipRunAll") ||
     chunk.evalFlags.includes("skiprunall")
   );
-const chunkNotRunnable = chunk => NONCODE_EVAL_TYPES.includes(chunk.chunkType);
+const chunkNotRunnable = ({ chunkType, chunkContent }) =>
+  NONCODE_EVAL_TYPES.includes(chunkType) || chunkContent.trim() === "";
 
 export function setKernelState(kernelState) {
   return {
@@ -21,18 +22,19 @@ export function setKernelState(kernelState) {
 }
 
 export function addToEvalQueue(chunk) {
-  return dispatch => {
-    if (chunkNotRunnable(chunk)) return;
+  return (dispatch, getState) => {
+    if (chunkNotRunnable(chunk) || getState().modalState !== "MODALS_CLOSED")
+      return;
     dispatch({ type: "ADD_TO_EVAL_QUEUE", chunk });
   };
 }
 
 export function evaluateText() {
   return (dispatch, getState) => {
-    const { jsmdChunks, editorSelections, editorCursor } = getState();
+    const { iomdChunks, editorSelections, editorCursor } = getState();
 
     if (editorSelections.length === 0) {
-      const activeChunk = getChunkContainingLine(jsmdChunks, editorCursor.line);
+      const activeChunk = getChunkContainingLine(iomdChunks, editorCursor.line);
       dispatch(addToEvalQueue(activeChunk));
     } else {
       const selectionChunkSet = editorSelections
@@ -41,7 +43,7 @@ export function evaluateText() {
           end: selection.end.line,
           selectedText: selection.selectedText
         }))
-        .map(selection => selectionToChunks(selection, jsmdChunks))
+        .map(selection => selectionToChunks(selection, iomdChunks))
         .map(removeDuplicatePluginChunksInSelectionSet());
       selectionChunkSet.forEach(selection => {
         selection.forEach(chunk => dispatch(addToEvalQueue(chunk)));
@@ -53,27 +55,7 @@ export function evaluateText() {
 export function evaluateNotebook() {
   return (dispatch, getState) => {
     getState()
-      .jsmdChunks.filter(chunkNotSkipped)
+      .iomdChunks.filter(chunkNotSkipped)
       .forEach(chunk => dispatch(addToEvalQueue(chunk)));
-  };
-}
-
-export function evalConsoleInput(consoleText) {
-  return (dispatch, getState) => {
-    // exit if there is no code in the console to  eval
-    if (!consoleText) {
-      return undefined;
-    }
-
-    const chunk = {
-      chunkContent: consoleText,
-      chunkType: getState().languageLastUsed
-    };
-
-    dispatch({ type: "CLEAR_CONSOLE_TEXT_CACHE" });
-    dispatch({ type: "RESET_HISTORY_CURSOR" });
-    dispatch(addToEvalQueue(chunk));
-    dispatch({ type: "UPDATE_CONSOLE_TEXT", consoleText: "" });
-    return Promise.resolve();
   };
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "react-emotion";
+import THEME from "../../shared/theme";
 
 const UserNameContainer = styled("a")`
   display: flex;
@@ -21,7 +22,9 @@ const UserNameContainer = styled("a")`
   }
 `;
 
-const Avatar = ({ src }) => <img src={src} alt={src} />;
+const Avatar = ({ src }) => (
+  <img src={`${src}&s=${THEME.defaultUserIconSize}`} alt={src} />
+);
 
 Avatar.propTypes = {
   src: PropTypes.string.isRequired

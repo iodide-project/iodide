@@ -22,24 +22,16 @@ describe("HeaderMessages mapStateToProps", () => {
       },
       notebookInfo: {
         user_can_save: true,
+        revision_is_latest: true,
         connectionMode: "SERVER"
       }
     };
     ownProps = {};
   });
 
-  it("displays local save message", () => {
-    state.hasPreviousAutosave = true;
-    state.userData.name = "test1";
-    state.notebookInfo.username = "test2";
-    const connectionModes = ["STANDALONE", "SERVER"];
-    connectionModes.forEach(connectionMode => {
-      state.notebookInfo.connectionMode = connectionMode;
-      expect(mapStateToProps(state, ownProps)).toEqual({
-        message: "HAS_PREVIOUS_AUTOSAVE",
-        connectionModeIsServer: connectionMode === "SERVER"
-      });
-    });
+  it("displays standalone notification", () => {
+    state.notebookInfo.connectionMode = "STANDALONE";
+    expect(mapStateToProps(state, ownProps).message).toEqual("STANDALONE_MODE");
   });
 
   it("displays login message", () => {
@@ -54,6 +46,25 @@ describe("HeaderMessages mapStateToProps", () => {
     const props = mapStateToProps(state, ownProps);
     expect(props.message).toEqual("NEED_TO_MAKE_COPY");
     expect(props.owner).toEqual("test");
+  });
+
+  [
+    ["ERROR_GENERAL", "SERVER_ERROR_GENERAL"],
+    ["ERROR_OUT_OF_DATE", "NOTEBOOK_REVISION_ID_OUT_OF_DATE"],
+    ["ERROR_UNAUTHORIZED", "SERVER_ERROR_UNAUTHORIZED"]
+  ].forEach(errorTuple => {
+    const [serverError, expectedMessage] = errorTuple;
+    it(`gives ${expectedMessage} when server error is ${serverError}`, () => {
+      state.notebookInfo.serverSaveStatus = serverError;
+      const props = mapStateToProps(state, ownProps);
+      expect(props.message).toEqual(expectedMessage);
+    });
+  });
+
+  it("lets you know when your notebook is based on an historical revision", () => {
+    state.notebookInfo.revision_is_latest = false;
+    const props = mapStateToProps(state, ownProps);
+    expect(props.message).toEqual("NOTEBOOK_REVISION_ID_OUT_OF_DATE");
   });
 
   it("displays nothing", () => {

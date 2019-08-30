@@ -42,12 +42,15 @@ def test_index_view(client, ten_test_notebooks, fake_user, logged_in):
     # if user logged in, they should have an avatar defined
     fake_user.refresh_from_db()
     if logged_in:
-        assert fake_user.avatar.startswith("http://www.gravatar.com/avatar/")
+        assert fake_user.avatar.startswith("https://www.gravatar.com/avatar/")
     else:
         assert fake_user.avatar is None
 
     listed_notebooks = ten_test_notebooks[::2]
     revisions = NotebookRevision.objects
+    expected_gravatar_url = (
+        "https://www.gravatar.com/avatar/eaee5961bc7ad96538a4933cb069fda9?d=identicon"
+    )
     # assert that the pageData element has the expected structure
     assert get_title_block(resp.content) == "Iodide"
     assert get_script_block_json(resp.content, "pageData") == {
@@ -63,7 +66,7 @@ def test_index_view(client, ten_test_notebooks, fake_user, logged_in):
         ],
         "userInfo": {
             "name": fake_user.username,
-            "avatar": "http://www.gravatar.com/avatar/eaee5961bc7ad96538a4933cb069fda9?d=identicon",
+            "avatar": expected_gravatar_url,
             "notebooks": [
                 {
                     "id": test_notebook.id,

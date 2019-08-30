@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
-isort --check-only --recursive server/
-black --check server/
 
+set -e
+
+isort --check-only --recursive server/
+flake8 server/

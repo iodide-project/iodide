@@ -57,7 +57,7 @@ class NotebookRevisionDetailSerializer(serializers.ModelSerializer):
         ).first()
         if attrs["title"] == last_revision.title and attrs["content"] == last_revision.content:
             raise serializers.ValidationError("Revision unchanged from previous")
-        return serializers.ModelSerializer.validate(self, attrs)
+        return super().validate(attrs)
 
     class Meta:
         model = NotebookRevision

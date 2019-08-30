@@ -2,7 +2,7 @@
 
 **[Getting started and key concepts](key_concepts.md)**: The central concepts in Iodide, and how to get started.
 
-**[JSMD format](jsmd.md)**: The simple file format used to write Iodide notebooks.
+**[IOMD format](iomd.md)**: The simple file format used to write Iodide notebooks.
 
 **[Language plugins](language_plugins.md)**: Support for programming languages
 other than JavaScript.
@@ -12,7 +12,7 @@ Iodide notebooks.
 
 **[Common workflows and tips](workflows.md)**: Pointers for accomplishing common tasks in Iodide.
 
-**[Server administration](server-admin.md)**: Information on common server administration tasks.
+**[Quirks, gotchas, and workarounds](quirks.md)**: Information about edge cases in the Iodide environment, and how to work around them.
 
 ## Developer documentation
 
@@ -23,6 +23,15 @@ Iodide notebooks.
 **[Local development](local-dev.md)**: Setting up a local development environment.
 
 **[Making a new release](making-a-new-release.md)**: Step-by-step instructions for making a new Iodide release.
+
+## Server administration
+
+**[Overview](server-admin-overview.md)**: An overview of the basic architecture of the Iodide server and how to configure it.
+
+**[Authentication Design](authentication-design.md)**: Detailed documentation of how authentication on an
+Iodide server works.
+
+**[Common tasks](common-server-tasks.md)**: Information on common server administration tasks.
 
 ## Policies and terms
 

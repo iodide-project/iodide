@@ -8,7 +8,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
-import { updateSelectedRevisionId } from "../../actions/actions";
+import { updateSelectedRevisionId } from "../../actions/history-modal-actions";
 
 const RevisionListContainer = styled("div")`
   overflow: auto;
@@ -23,6 +23,7 @@ class RevisionListUnconnected extends React.Component {
       })
     ),
     selectedRevisionId: PropTypes.number,
+    hasLocalOnlyChanges: PropTypes.bool,
     updateSelectedRevisionId: PropTypes.func.isRequired
   };
 
@@ -43,14 +44,16 @@ class RevisionListUnconnected extends React.Component {
     return (
       <RevisionListContainer>
         <List>
-          <ListItem
-            button
-            key="local-changes"
-            onClick={() => this.revisionClicked(undefined)}
-            selected={this.props.selectedRevisionId === undefined}
-          >
-            <ListItemText primary="Unsaved Changes" />
-          </ListItem>
+          {this.props.hasLocalOnlyChanges && (
+            <ListItem
+              button
+              key="local-changes"
+              onClick={() => this.revisionClicked(undefined)}
+              selected={this.props.selectedRevisionId === undefined}
+            >
+              <ListItemText primary="Unsaved Changes" />
+            </ListItem>
+          )}
           {this.props.revisionList &&
             this.props.revisionList.map(revision => (
               <ListItem
@@ -73,19 +76,16 @@ class RevisionListUnconnected extends React.Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    updateSelectedRevisionId: revisionId => {
-      dispatch(updateSelectedRevisionId(revisionId));
-    }
-  };
-}
-
 export function mapStateToProps(state) {
   const notebookHistory = state.notebookHistory || {};
-  const { revisionList, selectedRevisionId } = notebookHistory;
+  const {
+    hasLocalOnlyChanges,
+    revisionList,
+    selectedRevisionId
+  } = notebookHistory;
 
   return {
+    hasLocalOnlyChanges,
     revisionList,
     selectedRevisionId
   };
@@ -93,5 +93,5 @@ export function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  { updateSelectedRevisionId } // mapDispatchToProps shorthand
 )(RevisionListUnconnected);

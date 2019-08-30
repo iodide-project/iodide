@@ -1,18 +1,20 @@
 import { call, take } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
 
+import { evaluateByType } from "../eval-queue-saga";
 import {
-  evaluateByType,
+  triggerEvalFrameTask,
+  sendTaskToEvalFrame
+} from "../eval-frame-sender";
+import {
   evaluateLanguagePlugin,
   loadKnownLanguage,
-  triggerEvalFrameTask,
-  sendTaskToEvalFrame,
   loadLanguagePlugin
-} from "../eval-queue-saga";
+} from "../language-plugin-saga";
 import {
-  loadingLanguageConsoleMsg,
+  addLoadingLanguageMsgToHistory,
   addInputToConsole,
-  evalTypeConsoleError
+  addEvalTypeConsoleErrorToHistory
 } from "../../console-message-actions";
 
 // this string is the returnValue from a saga was still running when
@@ -23,7 +25,6 @@ function purifiedMessage(messageAction) {
   // set up message action template and drop keys that are impure
   const action = Object.assign({}, messageAction);
   delete action.historyId;
-  delete action.lastRan;
   return { action };
 }
 
@@ -107,7 +108,7 @@ describe("loadKnownLanguage test", () => {
           "mock_return_value"
         ]
       ])
-      .put.like(purifiedMessage(loadingLanguageConsoleMsg(displayName)))
+      .put.like(purifiedMessage(addLoadingLanguageMsgToHistory(displayName)))
       .call(loadLanguagePlugin, languagePlugin)
       .silentRun();
   });
@@ -139,7 +140,7 @@ describe("evaluateByType test", () => {
 
     await expectSaga(evaluateByType, evalType, evalText, chunkId)
       .withState(state)
-      .put.like(purifiedMessage(evalTypeConsoleError(evalType)))
+      .put.like(purifiedMessage(addEvalTypeConsoleErrorToHistory(evalType)))
       .silentRun()
       .catch(e => expect(e.message).toBe("unknown evalType"));
   });
@@ -192,14 +193,13 @@ describe("evaluateByType test", () => {
       .silentRun();
   });
 
-  [["fetch", "EVAL_FETCH"], [evalType, "EVAL_CODE"]].forEach(evalTypeCase => {
+  [[evalType, "EVAL_CODE"]].forEach(evalTypeCase => {
     it(`if evalType ok, trigger correct eval frame action for "${
       evalTypeCase[0]
     }"`, async () => {
       [evalType, evalTaskType] = evalTypeCase;
       const taskPayload = {
         EVAL_LANGUAGE_PLUGIN: { pluginText: evalText },
-        EVAL_FETCH: { fetchText: evalText },
         EVAL_CODE: {
           code: evalText,
           language: state.languageDefinitions[evalType],

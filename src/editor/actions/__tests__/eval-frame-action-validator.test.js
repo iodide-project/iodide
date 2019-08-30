@@ -67,7 +67,6 @@ describe("validateActionFromEvalFrame should return true it action is valid", ()
         type: "ADD_TO_CONSOLE_HISTORY",
         historyId: "s03nv9dns",
         content: "ok",
-        lastRan: +new Date(),
         historyType: "CONSOLE_MESSAGE",
         level: "ERROR"
       })

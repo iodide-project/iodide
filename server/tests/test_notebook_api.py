@@ -14,6 +14,11 @@ def test_notebook_list(client, two_test_notebooks):
     ]
 
 
+def test_notebook_list_restricted(client, restricted_api, two_test_notebooks):
+    resp = client.get(reverse("notebooks-list"))
+    assert resp.status_code == 403
+
+
 def test_notebook_detail(client, test_notebook):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     resp = client.get(reverse("notebooks-detail", kwargs={"pk": test_notebook.id}))
@@ -72,7 +77,22 @@ def test_create_notebook_logged_in(fake_user, client, notebook_post_blob, specif
     notebook = Notebook.objects.first()
     assert notebook.title == post_blob["title"]
     assert notebook.owner == fake_user
+    notebook_revision = NotebookRevision.objects.get(notebook=notebook)
 
+    # the response should also contain the revision id and other
+    # data that we want
+    assert resp.json() == {
+        "forked_from": None,
+        "id": notebook.id,
+        "owner": fake_user.username,
+        "title": notebook.title,
+        "latest_revision": {
+            "content": notebook_revision.content,
+            "created": get_rest_framework_time_string(notebook_revision.created),
+            "id": notebook_revision.id,
+            "title": notebook_revision.title,
+        },
+    }
     # should have a first revision to go along with the new notebook
     assert NotebookRevision.objects.count() == 1
 

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import re
 
 import dj_database_url
 import environ
@@ -33,9 +34,10 @@ DEBUG = env.bool("IODIDE_SERVER_DEBUG", default=False)
 
 SITE_URL = env("SERVER_URI", default="http://localhost:8000/")
 SITE_HOSTNAME = furl(SITE_URL).host
-ALLOWED_HOSTS = [SITE_HOSTNAME]
-APP_VERSION_STRING = env.str("APP_VERSION_STRING", "dev")
 EVAL_FRAME_ORIGIN = env.str("EVAL_FRAME_ORIGIN", SITE_URL)
+EVAL_FRAME_HOSTNAME = furl(EVAL_FRAME_ORIGIN).host
+ALLOWED_HOSTS = list(set([SITE_HOSTNAME, EVAL_FRAME_HOSTNAME]))
+APP_VERSION_STRING = env.str("APP_VERSION_STRING", "dev")
 
 # Define URI redirects.
 # Is a ;-delimited list of redirects, where each section is of the form
@@ -84,15 +86,20 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "server.base",
+    "server.jwt",
     "server.notebooks",
     "server.files",
 ]
+
+RESTRICT_API = env.bool("RESTRICT_API", default=False)
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
-    ]
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": ["server.permissions.RestrictedOrNot"],
 }
 
 MIDDLEWARE = [
@@ -106,6 +113,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if EVAL_FRAME_HOSTNAME != SITE_HOSTNAME:
+    MIDDLEWARE.append("server.notebooks.middleware.NotebookEvalFrameMiddleware")
 
 if DOCKERFLOW_ENABLED:
     INSTALLED_APPS.append("dockerflow.django")
@@ -183,8 +193,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# openidc settings
 OPENIDC_EMAIL_HEADER = env.str("OPENIDC_HEADER", default="HTTP_X_FORWARDED_USER")
-OPENIDC_AUTH_WHITELIST = []
+OPENIDC_AUTH_WHITELIST = [
+    re.compile(whitelist_re)
+    for whitelist_re in env.str("OPENIDC_AUTH_WHITELIST", default="^/api").split(",")
+    if whitelist_re
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -199,7 +214,8 @@ USE_TZ = True
 # Files in this directory will be served by WhiteNoise at the site root.
 WHITENOISE_ROOT = os.path.join(ROOT, "build")
 STATIC_ROOT = os.path.join(ROOT, "static")
-STATIC_URL = EVAL_FRAME_ORIGIN
+STATIC_URL = SITE_URL
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "server", "static"),)
 
 # Create hashed+gzipped versions of assets during collectstatic,
 # which will then be served by WhiteNoise with a suitable max-age.

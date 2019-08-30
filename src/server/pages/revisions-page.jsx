@@ -9,7 +9,7 @@ import PageBody from "../components/page-body";
 import Header from "../components/header";
 import BelowFoldContainer from "../components/page-containers/below-fold-container";
 import { MediumUserName } from "../components/user-name";
-import { fetchWithCSRFTokenAndJSONContent } from "../../shared/fetch-with-csrf-token";
+import { deleteNotebookRequest } from "../../shared/server-api/notebook";
 import NotebookActionsMenu from "../components/notebook-actions-menu";
 import RevisionActionsMenu from "../components/revision-actions-menu";
 import FilesList from "../components/files-list";
@@ -134,14 +134,10 @@ export default class RevisionsPage extends React.Component {
     this.setState({ files });
   }
 
-  onDeleteRevision(revisionID) {
+  async onDeleteRevision(revisionID) {
     if (this.state.revisions.length === 1) {
-      fetchWithCSRFTokenAndJSONContent(
-        `/api/v1/notebooks/${this.props.ownerInfo.notebookId}/`,
-        {
-          method: "DELETE"
-        }
-      ).then(this.onDeleteNotebook);
+      await deleteNotebookRequest(this.props.ownerInfo.notebookId);
+      this.onDeleteNotebook();
     } else {
       const revisions = this.state.revisions.filter(r => r.id !== revisionID);
       this.setState({ revisions });
@@ -213,9 +209,7 @@ export default class RevisionsPage extends React.Component {
                   <ListMain>
                     <ListPrimaryText>
                       <a
-                        href={`/notebooks/${revision.notebookId}?revision=${
-                          revision.id
-                        }`}
+                        href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}
                       >
                         {revision.title}
                       </a>
@@ -224,16 +218,12 @@ export default class RevisionsPage extends React.Component {
                   <ListMetadata>
                     <ListLinkSet>
                       <ListSmallLink
-                        href={`/notebooks/${revision.notebookId}?revision=${
-                          revision.id
-                        }`}
+                        href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}
                       >
                         explore
                       </ListSmallLink>
                       <ListSmallLink
-                        href={`/notebooks/${revision.notebookId}?revision=${
-                          revision.id
-                        }&viewMode=report`}
+                        href={`/notebooks/${revision.notebookId}?revision=${revision.id}&viewMode=report`}
                       >
                         report
                       </ListSmallLink>
@@ -241,17 +231,13 @@ export default class RevisionsPage extends React.Component {
                   </ListMetadata>
                   <ListDate>
                     <RevisionDateLink
-                      href={`/notebooks/${revision.notebookId}?revision=${
-                        revision.id
-                      }`}
+                      href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}
                     >
                       {format(new Date(revision.date), "MMM dd, uuuu")}
                     </RevisionDateLink>
                     <RevisionDateLink
                       size="small"
-                      href={`/notebooks/${revision.notebookId}?revision=${
-                        revision.id
-                      }`}
+                      href={`/notebooks/${revision.notebookId}?revision=${revision.id}`}
                     >
                       {format(new Date(revision.date), "HH:mm:ss")}
                     </RevisionDateLink>

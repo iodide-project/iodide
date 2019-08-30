@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from helpers import get_script_block, get_script_block_json, get_title_block
 from server.notebooks.models import Notebook, NotebookRevision
+from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 
 
 def test_notebook_view(client, test_notebook):
@@ -12,7 +13,7 @@ def test_notebook_view(client, test_notebook):
     resp = client.get(reverse("notebook-view", args=[str(test_notebook.id)]))
     assert resp.status_code == 200
     assert get_title_block(resp.content) == initial_revision.title
-    expected_content = '<script id="jsmd" type="text/jsmd">{}</script>'.format(
+    expected_content = '<script id="iomd" type="text/iomd">{}</script>'.format(
         initial_revision.content
     )
     assert expected_content in str(resp.content)
@@ -26,6 +27,8 @@ def test_notebook_view(client, test_notebook):
         "title": "First revision",
         "user_can_save": False,
         "username": "testuser1",
+        "max_filename_length": MAX_FILENAME_LENGTH,
+        "max_file_size": MAX_FILE_SIZE,
     }
 
     # add a new revision, verify that a fresh load gets it
@@ -36,7 +39,7 @@ def test_notebook_view(client, test_notebook):
     resp = client.get(reverse("notebook-view", args=[str(test_notebook.id)]))
     assert resp.status_code == 200
     assert get_title_block(resp.content) == new_revision.title
-    new_expected_content = '<script id="jsmd" type="text/jsmd">{}</script>'.format(
+    new_expected_content = '<script id="iomd" type="text/iomd">{}</script>'.format(
         new_revision_content
     )
     assert new_expected_content in str(resp.content)
@@ -45,7 +48,7 @@ def test_notebook_view(client, test_notebook):
 def test_notebook_view_old_revision(client, test_notebook):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     new_revision_content = "My new fun content"
-    new_revision = NotebookRevision.objects.create(
+    NotebookRevision.objects.create(
         content=new_revision_content, notebook=test_notebook, title="Second revision"
     )
     resp = client.get(
@@ -54,7 +57,7 @@ def test_notebook_view_old_revision(client, test_notebook):
     assert resp.status_code == 200
     assert get_title_block(resp.content) == initial_revision.title
     print(str(resp.content))
-    assert get_script_block(resp.content, "jsmd", "text/jsmd") == initial_revision.content
+    assert get_script_block(resp.content, "iomd", "text/iomd") == initial_revision.content
     assert get_script_block_json(resp.content, "notebookInfo") == {
         "connectionMode": "SERVER",
         "files": [],
@@ -65,6 +68,8 @@ def test_notebook_view_old_revision(client, test_notebook):
         "title": "First revision",
         "user_can_save": False,
         "username": "testuser1",
+        "max_filename_length": MAX_FILENAME_LENGTH,
+        "max_file_size": MAX_FILE_SIZE,
     }
 
 
@@ -135,3 +140,10 @@ def test_notebook_revisions_page(fake_user, test_notebook, client):
         ],
         "userInfo": {},
     }
+
+
+def test_eval_frame_view(client):
+    uri = reverse("eval-frame-view")
+    resp = client.get(uri)
+    assert resp.status_code == 200
+    assert '<div id="eval-container"></div>' in str(resp.content)

@@ -1,14 +1,9 @@
-import messagePasserEval from "../../shared/utils/redux-to-port-message-passer";
 import {
   addConsoleEntryInEditor,
   sendStatusResponseToEditor
 } from "./editor-message-senders";
 
-const CodeMirror = require("codemirror"); // eslint-disable-line
-
-export function addToEvaluationQueue(chunk) {
-  messagePasserEval.postMessage("ADD_TO_EVALUATION_QUEUE", chunk);
-}
+import { IODIDE_EVALUATION_RESULTS } from "../iodide-evaluation-results";
 
 class Singleton {
   constructor() {
@@ -26,29 +21,6 @@ const MOST_RECENT_CHUNK_ID = new Singleton();
 
 export { MOST_RECENT_CHUNK_ID };
 
-// ////////////// actual actions
-
-export function setConsoleLanguage(language) {
-  return {
-    type: "SET_CONSOLE_LANGUAGE",
-    language
-  };
-}
-
-export function updateConsoleText(consoleText) {
-  return {
-    type: "UPDATE_CONSOLE_TEXT",
-    consoleText
-  };
-}
-
-export function consoleHistoryStepBack(consoleCursorDelta) {
-  return {
-    type: "CONSOLE_HISTORY_MOVE",
-    consoleCursorDelta
-  };
-}
-
 export function runCodeWithLanguage(language, code) {
   const { module, evaluator, asyncEvaluator } = language;
   if (asyncEvaluator !== undefined) {
@@ -64,9 +36,7 @@ export function runCodeWithLanguage(language, code) {
     } catch (e) {
       if (e.message === "window[module] is undefined") {
         throw new Error(
-          `Error evaluating ${
-            language.displayName
-          }; evaluation module "${module}" not not defined`
+          `Error evaluating ${language.displayName}; evaluation module "${module}" not not defined`
         );
       }
       throw e;
@@ -87,28 +57,21 @@ export function runCodeWithLanguage(language, code) {
 export async function evaluateCode(code, language, chunkId, evalId) {
   try {
     MOST_RECENT_CHUNK_ID.set(chunkId);
-    const output = await runCodeWithLanguage(language, code);
-    addConsoleEntryInEditor({
-      historyType: "CONSOLE_OUTPUT",
-      value: output
+    const value = await runCodeWithLanguage(language, code);
+
+    const historyId = addConsoleEntryInEditor({
+      historyType: "CONSOLE_OUTPUT"
     });
+    IODIDE_EVALUATION_RESULTS[historyId] = value;
 
     sendStatusResponseToEditor("SUCCESS", evalId);
   } catch (error) {
-    addConsoleEntryInEditor({
+    const historyId = addConsoleEntryInEditor({
       historyType: "CONSOLE_OUTPUT",
-      value: error,
       level: "ERROR"
     });
+    IODIDE_EVALUATION_RESULTS[historyId] = error;
 
     sendStatusResponseToEditor("ERROR", evalId);
   }
-}
-
-export function saveEnvironment(updateObj, update) {
-  return {
-    type: "SAVE_ENVIRONMENT",
-    updateObj,
-    update
-  };
 }

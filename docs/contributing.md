@@ -6,9 +6,13 @@ Thank you for your interest in contributing to Iodide! There are many ways to co
 
 Work on Iodide happens on Github. Core members and contributors can make Pull Requests to fix issues and add features, which all go through the same review process. We’ll detail how you can start making PRs below.
 
-We’ll do our best to keep `master` in a non-breaking state, ideally with tests always passing. The unfortunate reality of software development is sometimes things break. As such, `master` cannot be expected to remain reliable at all times. We recommend using the latest stable version of Iodide.
+We do our best to keep `master` in a non-breaking state, with tests always passing. The unfortunate reality of software development is sometimes things break. As such, `master` cannot be expected to remain reliable at all times. If you require stability, we recommend using a [released version](https://github.com/iodide-project/iodide/releases) of Iodide.
 
 We keep a file, [CHANGELOG.md](https://github.com/iodide-project/iodide/blob/master/CHANGELOG.md), outlining changes to Iodide in each release. We like to think of the audience for changelogs as non-developers who primarily run the latest stable. So the change log will primarily outline user-visible changes such as new features and deprecations, and will exclude things that might otherwise be inconsequential to the end user experience, such as infrastructure or refactoring.
+
+### Setting up a development environment
+
+[Detailed instruction available here.](local-dev.md)
 
 ## Bugs & Issues
 
@@ -20,7 +24,7 @@ Core contributors are monitoring new issues & comments all the time, and will la
 
 Pull requests are the primary mechanism we use to change Iodide. GitHub itself has some [great documentation](https://help.github.com/articles/about-pull-requests/) on using the Pull Request feature. We use the "fork and pull" model [described here](https://help.github.com/articles/about-pull-requests/), where contributors push changes to their personal fork and create pull requests to bring those changes into the source repository.
 
-Please make pull requests against the `master` branch.
+Please make pull requests against the `master` branch. Even for relatively small changes, we recommend creating a branch on your end to develop and test changes: this will make it easier to rebase your changes when needed.
 
 If you’re looking for a way to jump in and contribute, our list of [`good first issues`](https://github.com/iodide-project/iodide/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) is a great place to start.
 
@@ -56,29 +60,9 @@ Some guidelines that we tend to follow:
 
 ### Linting
 
-We rely on linting as a way of standardizing low-level style choices in the code. For the front-end, we use [Airbnb's Javascript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react), as well as [Prettier](https://pretter.io). On the back-end, we use [Black](https://black.readthedocs.io/en/stable/) and [isort](https://github.com/timothycrosley/isort). It is recommended to configure your editor to use the above linting tools.
+We rely on linting as a way of standardizing low-level style choices in the code. For the front-end, we use [Airbnb's JavaScript Style Guide](https://github.com/airbnb/javascript) along with their [React Guide](https://github.com/airbnb/javascript/tree/master/react), as well as [Prettier](https://pretter.io). On the back-end, we use [Black](https://black.readthedocs.io/en/stable/) and [isort](https://github.com/timothycrosley/isort). It is recommended to configure your editor to use the above linting tools.
 
 The use of a linter in your development worflow means you can focus on the higher-level aspects of style. As such we will likely not accept any PRs that fail linting. If this feels like a hassle, we'd recommend roughly following the Development Workflow below so you don't have to sweat this detail!
-
-## Contribution Prerequisites
-
-- You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/). If you want to work on the server, you will also need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
-- You should have some familiarity with React, Redux, modern ECMAScript, or be willing to learn.
-- You should have some familiarity with how Git works, or be willing ot learn.
-
-## Development Workflow
-
-`npm run lint` will lint everything in `src/`. Please make sure all your contributions pass the linter. Running `make lint` will check for linting errors for code in `server/` and `make lintfix` will fix those errors.
-
-`npm run start` writes development versions of the Iodide app resources to `dev/`. To run your dev notebook, just open the file `dev/iodide.dev.html` in your browser. All changes to the code will be detected and bundled into `dev/`.
-
-In dev mode, resource paths are set to be relative to the `dev/` directory. Thus, when you export a notebook from a dev notebook, you need to be sure to save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js/css/font files.
-
-`npm run build`  will write deployable versions of the Iodide app resources to `prod/`. This builds just once, and does not watch your files for changes.
-
-The files built in prod mode have resource paths set to fixed web addresses, not relative paths (this is a required for exported notebooks to be portable). This means that if you open the file `prod/iodide.${VERSION}.html` in your browser, it will not load the js/css/font resources located in `prod/`, it will load them from the hard-coded web address (if they exist at that location). Once the js/css/fonts are uploaded to the matching URI, the file `prod/iodide.${VERSION}.html` (as well as any notebook exported from it) should run correctly from any local filesystem location or web address.
-
-`npm test` runs the test suite. If you are hoping to submit a PR for your changes, it is vital that the test suite passes.
 
 ### Landing a PR!
 
@@ -121,6 +105,12 @@ All contributions to Iodide will be licensed under the [Mozilla Public License 2
 
 ## Get in Touch
 
-Please feel free to join our [Google group](https://groups.google.com/forum/#!forum/iodide-dev) to contact us and keep up with what we're working on.
+For real-time collaboration, we have a channel on
+[Gitter](https://gitter.im/iodide-project/iodide). As of this writing, the
+code Iodide team is mostly available during EST/PST. For longer or
+asynchronous discussions, we also have a [Google
+group](https://groups.google.com/forum/#!forum/iodide-dev).
 
-You can also [chat with us on Gitter](https://gitter.im/iodide-project/iodide).
+Every week on Tuesday at 9am PST, we have a project meeting on Zoom, which
+anyone is welcome to join. If you have Zoom installed, you should be able to join
+via this URL: [https://mozilla.zoom.us/j/368434069](https://mozilla.zoom.us/j/368434069).

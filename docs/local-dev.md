@@ -1,5 +1,11 @@
 # Setting up a local development environment
 
+This document covers the nuts and bolts of setting up a development environment, but be sure to review our [main contribution page](contributing.md) for more general information.
+
+## Prerequisites
+
+You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/). If you want to work on the server, you will also need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
+
 ## Installing dependencies
 
 Run `npm install` after cloning this repository.
@@ -8,27 +14,25 @@ Run `npm install` after cloning this repository.
 
 ### Client-only mode
 
-If you're only working on client code and don't need to use/test any of the server functionality described below. You can use `npm run start-and-serve` to write development versions of the Iodide client-side app resources to `dev/` and to serve the files in that folder at `http://localhost:8000`. You can open `http://localhost:8000/iodide.dev.html` in your browser to get started with a blank notebook, or open `http://localhost:8000` to see the list of files saved in `dev/` (in case you have exported other test notebooks in that folder)
+If you're only working on client code and don't need to use/test any of the server functionality described below,
+you can skip setting up a full docker environment and get up and running quickly. Just run
+`npm run simple-serve` after `npm install`: this should start up a web server which will provide a basic
+version of the editing environment you can access at [http://localhost:8000/](http://localhost:8000/).
 
-The command `npm run start-and-serve` runs in watch mode, so changes to files will be detected and bundled into `dev/` automatically, but you will need to refresh the page in your browser manually to see the changes -- we have disabled "hot reloading" because automatically refreshing the browser would cause any active notebooks to lose their evaluation state.
+The command runs in watch mode, so changes to files will be detected and bundled automatically, but you will need to refresh the page in your browser manually to see the changes -- we have disabled "hot reloading" because automatically refreshing the browser would cause any active notebooks to lose their evaluation state.
 
-If you require verbose Redux logging, you can use the command `npm run start-and-serve -- reduxVerbose`
-
-#### Exporting from client-only dev mode
-
-In this mode, resource paths are set to be relative to the `dev/` directory. Thus, if you export a bundled notebook from a dev notebook, you need to be sure save the exported HTML file in the `dev/` folder for the relative paths to correctly resolve the required js, css, and font files (and if you want to share a notebook that you created in a dev environment, you'll need to update the paths to point to the web-accessible resources at `iodide.io` and `iodide.app`).
+If you require verbose Redux logging, you can use the command `REDUX_LOGGING=VERBOSE npm run simple-serve`
 
 ### Server mode
 
-We have been building an experimental iodide server based on Python and Django. Currently the main features
-it supports are login/identity (via the GitHub API). To test/run it locally, follow this set of steps:
+To develop or test server-side functionality like saving notebooks or authentication, you will need to set up a server environment using docker and docker-compose. Follow this set of steps:
 
-* Register a [GitHub oauth token](https://github.com/settings/applications/new). Set the homepage URL to be
-"http://localhost:8000" and the authentication callback URL to be "http://localhost:8000/oauth/complete/github/".
-* Copy `.env-dist` to `.env` and set the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to the values provided above.
-* Make sure you have [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed and working correctly
-* Run `make build && make up`
-* You should now be able to navigate to a test server instance at http://localhost:8000
+- Register a [GitHub oauth token](https://github.com/settings/applications/new). Set the homepage URL to be
+  "http://localhost:8000" and the authentication callback URL to be "http://localhost:8000/oauth/complete/github/".
+- Copy `.env-dist` to `.env` and set the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to the values provided above.
+- Make sure you have [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed and working correctly
+- Run `make build && make up`
+- You should now be able to navigate to a test server instance at http://localhost:8000
 
 On subsequent runs, you only need to run `make up`.
 
@@ -71,5 +75,16 @@ mkdocs build
 
 ## Testing
 
+Iodide currently has two test suites, one written with [jest](https://jestjs.io/) to test the editor environment. Another written with [pytest](https://docs.pytest.org/en/latest/) to test the server.
+
+### Editor unit tests (jest)
+
 Run `npm test` to run the test suite once, or `npm test --watch` to run the suite in watch mode, which will automatically re-run the tests when the source or tests have changed.
 
+### Iodide server unit tests (pytest)
+
+After bringing up the docker-compose environment (see above), run `make shell` then `py.test` to run the full test suite. You can run a small subset of the tests by specifying what you want on the command line. For example `py.test server/tests/test_file_api.py` will only run the tests contained in that file.
+
+## Running with a local build of Pyodide
+
+If you want to test your local changes to Pyodide with your local build of Iodide, there are [instructions here](https://github.com/iodide-project/pyodide/pull/455).

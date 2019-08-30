@@ -3,14 +3,17 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import deepEqual from "deep-equal";
 
-import JsmdEditor from "./jsmd-editor";
+import IomdEditor from "./iomd-editor/iomd-editor";
+import DeclaredVariablesPane from "./panes/declared-variables-pane";
+import ConsolePane from "./panes/console-pane";
+
 import FixedPositionContainer from "../../shared/components/fixed-position-container";
 
 import LayoutManager from "./pane-layout/layout-manager";
 
 class EditorPaneContainer extends React.Component {
   static propTypes = {
-    hideEditor: PropTypes.bool.isRequired
+    reportOnly: PropTypes.bool.isRequired
   };
 
   shouldComponentUpdate(nextProps) {
@@ -23,9 +26,23 @@ class EditorPaneContainer extends React.Component {
         <LayoutManager />
         <FixedPositionContainer
           paneId="EditorPositioner"
-          hidden={this.props.hideEditor}
+          hidden={this.props.reportOnly}
         >
-          <JsmdEditor />
+          <IomdEditor />
+        </FixedPositionContainer>
+
+        <FixedPositionContainer
+          paneId="WorkspacePositioner"
+          hidden={this.props.reportOnly}
+        >
+          <DeclaredVariablesPane />
+        </FixedPositionContainer>
+
+        <FixedPositionContainer
+          paneId="ConsolePositioner"
+          hidden={this.props.reportOnly}
+        >
+          <ConsolePane />
         </FixedPositionContainer>
       </React.Fragment>
     );
@@ -34,7 +51,7 @@ class EditorPaneContainer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    hideEditor: state.viewMode === "REPORT_VIEW"
+    reportOnly: state.viewMode === "REPORT_VIEW"
   };
 }
 

@@ -1,6 +1,7 @@
 import { languageDefinitions } from "./language-definitions";
+import { historySchema } from "./history-schema";
 
-export const NONCODE_EVAL_TYPES = ["css", "md", "meta", "raw"];
+export const NONCODE_EVAL_TYPES = ["css", "md", "raw"];
 export const RUNNABLE_CHUNK_TYPES = ["plugin", "fetch"];
 export const FETCH_CHUNK_TYPES = [
   "css",
@@ -8,8 +9,10 @@ export const FETCH_CHUNK_TYPES = [
   "text",
   "blob",
   "json",
-  "arrayBuffer"
+  "arrayBuffer",
+  "plugin"
 ];
+
 export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json", "arrayBuffer"];
 
 const appMessageSchema = {
@@ -23,39 +26,12 @@ const appMessageSchema = {
   additionalProperties: false
 };
 
-export const historySchema = {
-  type: "object",
-  properties: {
-    cellId: { type: ["integer", "null"] },
-    content: { type: "string" },
-    historyId: { type: "string" },
-    historyType: {
-      type: "string",
-      enum: [
-        "APP_MESSAGE",
-        "FETCH_CELL_INFO",
-        "CONSOLE_INPUT",
-        "CONSOLE_OUTPUT",
-        "CONSOLE_MESSAGE"
-      ]
-    },
-    lastRan: { type: "integer" },
-    level: { type: "string", enum: ["INFO", "LOG", "WARN", "ERROR"] },
-    language: { type: "string" },
-    value: {}
-  },
-  additionalProperties: false
-};
-
 export const languageSchema = {
   type: "object",
   properties: {
     pluginType: { type: "string", enum: ["language"] },
     languageId: { type: "string" },
     displayName: { type: "string" },
-    codeMirrorMode: { type: "string" },
-    codeMirrorModeLoaded: { type: "boolean" },
-    keybinding: { type: "string" },
     module: { type: "string" },
     evaluator: { type: "string" },
     asyncEvaluator: { type: "string" },
@@ -72,14 +48,6 @@ export const fileSchema = {
     lastUpdated: { type: "string" }
   },
   additionalProperties: false
-};
-
-const environmentVariableSchema = {
-  type: "array",
-  items: [
-    { type: "string", enum: ["object", "string", "rawString"] },
-    { type: "string" }
-  ]
 };
 
 const panePositionSchema = {
@@ -135,13 +103,10 @@ export const stateProperties = {
     type: "object",
     properties: {
       line: { type: "integer" },
-      col: { type: "integer" },
-      // if forceUpdate is true when the editor recieves it as props,
-      // then the editor must reposition the cursor using internal editor APIs
-      forceUpdate: { type: "boolean" }
+      col: { type: "integer" }
     },
     additionalProperties: false,
-    default: { line: 0, col: 0, forceUpdate: false }
+    default: { line: 1, col: 1 }
   },
   editorSelections: {
     type: "array",
@@ -171,19 +136,19 @@ export const stateProperties = {
     items: historySchema,
     default: []
   },
-  jsmd: {
+  iomd: {
     type: "string",
     default: ""
   },
   previouslySavedContent: {
     type: "object",
-    default: { title: "", jsmd: "" },
+    default: { title: "", iomd: "" },
     properties: {
       title: { type: "string" },
-      jsmd: { type: "string" }
+      iomd: { type: "string" }
     }
   },
-  jsmdChunks: {
+  iomdChunks: {
     type: "array",
     items: {
       type: "object",
@@ -227,7 +192,7 @@ export const stateProperties = {
   },
   modalState: {
     type: "string",
-    enum: ["HELP_MODAL", "HISTORY_MODAL", "MODALS_CLOSED"],
+    enum: ["HELP_MODAL", "HISTORY_MODAL", "FILE_MODAL", "MODALS_CLOSED"],
     default: "MODALS_CLOSED"
   },
   kernelState: {
@@ -244,6 +209,10 @@ export const stateProperties = {
   notebookHistory: {
     type: "object",
     properties: {
+      hasLocalOnlyChanges: {
+        type: "boolean",
+        default: false
+      },
       revisionContentFetchStatus: {
         type: "string",
         enum: ["FETCHING", "ERROR", "IDLE"],
@@ -266,7 +235,7 @@ export const stateProperties = {
         },
         default: []
       },
-      selectedRevision: {
+      selectedRevisionId: {
         type: "number"
       },
       revisionContent: {
@@ -276,10 +245,6 @@ export const stateProperties = {
       }
     }
   },
-  checkingRevisionIsLatest: {
-    type: "boolean",
-    default: false
-  },
   notebookInfo: {
     type: "object",
     properties: {
@@ -288,9 +253,9 @@ export const stateProperties = {
       notebook_id: { type: "integer" },
       revision_id: { type: "integer" },
       revision_is_latest: { type: "boolean" },
-      connectionStatus: {
+      serverSaveStatus: {
         type: "string",
-        enum: ["CONNECTION_ACTIVE", "CONNECTION_LOST"]
+        enum: ["OK", "ERROR_UNAUTHORIZED", "ERROR_OUT_OF_DATE", "ERROR_GENERAL"]
       },
       connectionMode: {
         type: "string",
@@ -304,7 +269,7 @@ export const stateProperties = {
       revision_is_latest: true,
       user_can_save: false,
       connectionMode: "STANDALONE",
-      connectionStatus: "CONNECTION_ACTIVE",
+      serverSaveStatus: "OK",
       files: []
     }
   },
@@ -317,11 +282,6 @@ export const stateProperties = {
       ConsolePositioner: Object.assign({}, positionerDefaults),
       WorkspacePositioner: Object.assign({}, positionerDefaults)
     }
-  },
-  savedEnvironment: {
-    type: "object",
-    additionalProperties: environmentVariableSchema,
-    default: {}
   },
   title: {
     type: "string",

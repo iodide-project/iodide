@@ -5,8 +5,8 @@ export function loginToServer(successCallback) {
     successCallback(userData);
   };
 
-  const url = "/oauth/login/github";
-  const name = "github_login";
+  const url = "/login/";
+  const name = "login";
   const specs = "width=500,height=600";
   const authWindow = window.open(url, name, specs);
   authWindow.focus();

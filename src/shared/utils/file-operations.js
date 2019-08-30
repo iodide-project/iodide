@@ -1,17 +1,19 @@
-import { genericFetch } from "./fetch-tools";
-import fetchWithCSRFToken, {
-  fetchWithCSRFTokenAndJSONContent
-} from "../fetch-with-csrf-token";
+import { genericFetch } from "../utils/fetch-tools";
+import {
+  deleteFileRequest,
+  updateFileRequest,
+  createFileRequest
+} from "../server-api/file";
 
 export function loadFileFromServer(path, fetchType) {
-  return genericFetch(path, fetchType);
+  return genericFetch(`files/${path}`, fetchType);
 }
 
 export function valueToFile(data, fileName) {
   return new File([data], fileName);
 }
 
-export function selectFileAndFormatMetadata(notebookID) {
+export function selectSingleFileAndFormatMetadata(notebookID) {
   return new Promise(resolve => {
     const filePicker = document.createElement("input");
     filePicker.type = "file";
@@ -34,16 +36,44 @@ export function selectFileAndFormatMetadata(notebookID) {
   });
 }
 
+export function selectMultipleFilesAndFormatMetadata(notebookID) {
+  return new Promise(resolve => {
+    const formDataPromises = [];
+    const filePicker = document.createElement("input");
+    filePicker.type = "file";
+    filePicker.id = "file-picker";
+    filePicker.name = "files[]";
+    filePicker.multiple = "multiple";
+    filePicker.click();
+    filePicker.addEventListener("change", evt => {
+      Array.from(evt.target.files).forEach(file => {
+        formDataPromises.push(
+          new Promise(formDataResolve => {
+            const formData = new FormData();
+            formData.append(
+              "metadata",
+              JSON.stringify({
+                filename: file.name,
+                notebook_id: notebookID
+              })
+            );
+            formData.append("file", file);
+            formDataResolve(formData);
+          })
+        );
+      });
+      Promise.all(formDataPromises).then(resolve);
+    });
+  });
+}
+
 export function uploadFile(formData, fileID = undefined) {
   // if fileID not defined, this will upload the file, or return an error if
   // the filename in formData is already in the files table.
   // if fileID is provided, will attempt to update the entry in the files table.
-  const url = fileID ? `/api/v1/files/${fileID}/` : `/api/v1/files/`;
-  const method = fileID ? "PUT" : "POST";
-  return fetchWithCSRFToken(url, {
-    body: formData,
-    method
-  });
+  return fileID // if fileID undefined, upload, otherwise update
+    ? updateFileRequest(fileID, formData)
+    : createFileRequest(formData);
 }
 
 export function selectAndUploadFile(notebookID, successCallback = () => {}) {
@@ -52,7 +82,7 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
   filePicker.id = "file-picker";
   filePicker.name = "files[]";
   filePicker.click();
-  filePicker.addEventListener("change", evt => {
+  filePicker.addEventListener("change", async evt => {
     const file = evt.target.files[0];
     const formData = new FormData();
     formData.append(
@@ -63,12 +93,8 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
       })
     );
     formData.append("file", file);
-    fetchWithCSRFToken("/api/v1/files/", {
-      body: formData,
-      method: "POST"
-    })
-      .then(output => output.json())
-      .then(output => successCallback(output));
+    const output = createFileRequest(formData);
+    successCallback(output);
   });
 }
 
@@ -94,27 +120,9 @@ export async function saveFileToServer(
 ) {
   const formData = makeFormData(notebookID, data, fileName);
   const r = await uploadFile(formData, fileID);
-  if (r.status === 500) throw new Error(r.statusText);
-  return r.json();
-}
-
-export function makeDeleteRequestPRIVATE(url) {
-  return fetchWithCSRFTokenAndJSONContent(url, { method: "DELETE" }).then(r => {
-    if (r.status === 500) throw new Error(r.statusText);
-    return undefined;
-  });
-}
-
-export function deleteNotebookOnServer(notebookID) {
-  return makeDeleteRequestPRIVATE(`/api/v1/notebooks/${notebookID}`);
-}
-
-export function deleteRevisionOnServer(notebookID, revisionID) {
-  return makeDeleteRequestPRIVATE(
-    `/api/v1/notebooks/${notebookID}/revisions/${revisionID}`
-  );
+  return r;
 }
 
 export function deleteFileOnServer(fileID) {
-  return makeDeleteRequestPRIVATE(`/api/v1/files/${fileID}/`);
+  return deleteFileRequest(fileID);
 }

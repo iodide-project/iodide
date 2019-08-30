@@ -1,3 +1,5 @@
+import re
+
 import mock
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -17,11 +19,12 @@ class OpenIDCAuthMiddlewareTests(TestCase):
         self.addCleanup(mock_resolve_patcher.stop)
 
     def test_whitelisted_url_is_not_authed(self):
-        request = mock.Mock()
-        request.path = "/whitelisted-view/"
         whitelisted_view_name = "whitelisted-view"
+        whitelisted_path = "/whitelisted-view/"
+        request = mock.Mock()
+        request.path = whitelisted_path
 
-        with self.settings(OPENIDC_AUTH_WHITELIST=[whitelisted_view_name]):
+        with self.settings(OPENIDC_AUTH_WHITELIST=[re.compile(f"^{whitelisted_path}$")]):
             mock_view = mock.Mock()
             mock_view.url_name = whitelisted_view_name
             self.mock_resolve.return_value = mock_view
@@ -29,17 +32,19 @@ class OpenIDCAuthMiddlewareTests(TestCase):
             response = self.middleware(request)
             self.assertEqual(response, self.response)
 
-    def test_404_path_forces_authentication(self):
+    def test_404_pass_through(self):
         request = mock.Mock()
+        request.path = "/foo/"
         request.META = {}
 
         self.mock_resolve.side_effect = Resolver404
 
         response = self.middleware(request)
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response, self.response)
 
     def test_request_missing_headers_raises_401(self):
         request = mock.Mock()
+        request.path = "/foo/"
         request.META = {}
 
         with self.settings(OPENIDC_AUTH_WHITELIST=[]):
@@ -51,6 +56,7 @@ class OpenIDCAuthMiddlewareTests(TestCase):
         user_email = "user@example.com"
 
         request = mock.Mock()
+        request.path = "/foo/"
         request.META = {settings.OPENIDC_EMAIL_HEADER: user_email}
 
         User = get_user_model()

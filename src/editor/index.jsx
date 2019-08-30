@@ -5,9 +5,6 @@ import { render } from "react-dom";
 // external styles
 import "font-awesome/css/font-awesome.css";
 import "opensans-npm-webfont/style.css";
-import "codemirror/theme/eclipse.css";
-import "codemirror/lib/codemirror.css";
-import "codemirror/addon/hint/show-hint.css";
 import "golden-layout/src/css/goldenlayout-base.css";
 import "golden-layout/src/css/goldenlayout-light-theme.css";
 
@@ -16,9 +13,10 @@ import "../shared/style/base";
 import "./style/top-level-container-styles.css";
 import "./style/side-panes.css";
 import "./style/menu-and-button-and-ui-styles.css";
-import "./style/codemirror-styles.css";
 import "./style/help-modal-styles.css";
 import "./style/golden-layout-style-overrides.css";
+import "./style/eval-container.css";
+import "./style/jupyter-rendered-html-styles.css";
 
 // theme settings
 import "./style/client-style-defaults";
@@ -27,45 +25,31 @@ import NotebookHeader from "./components/menu/notebook-header";
 import EditorPaneContainer from "./components/editor-pane-container";
 import { store } from "./store";
 import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
-import handleInitialJsmd from "./initialization/handle-initial-jsmd";
+import handleInitialIomd from "./initialization/handle-initial-iomd";
 import handleServerVariables from "./initialization/handle-server-variables";
 import handleReportViewModeInitialization from "./initialization/handle-report-view-mode-initialization";
 import { initializeDefaultKeybindings } from "./initialization/keybindings";
 
 import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
-import "./initialization/initialize-codemirror-loadmode";
-import "./initialization/initialize-dom";
-import { checkNotebookConsistency } from "./actions/actions";
-import { flushServerAutosave } from "./actions/server-actions";
+import { restoreLocalAutosave } from "./actions/local-autosave-actions";
+import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
-import { checkForLocalAutosave } from "./tools/local-autosave";
 
 initializeDefaultKeybindings();
 
 window.addEventListener("message", listenForEvalFramePortReady, false);
 
 handleServerVariables(store);
-handleInitialJsmd(store);
-checkForLocalAutosave(store);
+handleInitialIomd(store);
+store.dispatch(restoreLocalAutosave());
 handleReportViewModeInitialization(store);
 
 messagePasserEditor.connectDispatch(store.dispatch);
 
 document.addEventListener(
   "visibilitychange",
-  () => {
-    if (!document.hidden) {
-      // check notebook consistency if we are returning to this
-      // tab or browser
-      store.dispatch(checkNotebookConsistency());
-    } else {
-      // flush any pending server autosave if we're navigating
-      // away (this will help ensure that a notebook shared
-      // with others e.g. with a copypaste link will be up-to-date)
-      flushServerAutosave();
-    }
-  },
+  () => store.dispatch(handleEditorVisibilityChange(document.hidden)),
   false
 );
 

@@ -64,9 +64,15 @@ export const isLoggedIn = userInfo => "name" in userInfo;
 export default class UserPage extends React.Component {
   static propTypes = {
     thisUser: PropTypes.shape({
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+      github_url: PropTypes.string,
       name: PropTypes.string
     }),
     userInfo: PropTypes.shape({
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+      github_url: PropTypes.string,
       name: PropTypes.string
     }),
     notebookList: PropTypes.arrayOf(

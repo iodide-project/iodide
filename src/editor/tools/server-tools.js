@@ -84,6 +84,10 @@ function getId(state, idKey) {
   return value;
 }
 
+export function isLoggedIn(state) {
+  return !!(state.userData && state.userData.name);
+}
+
 export function getNotebookID(state) {
   return getId(state, "notebook_id");
 }

@@ -29,6 +29,19 @@ export default function evalFrameActionReducer(state, action) {
       return Object.assign({}, state, { history });
     }
 
+    case "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT": {
+      const i = state.history.findIndex(h => h.historyId === action.historyId);
+      const history = [...state.history.slice()];
+      const contentLines = history[i].content;
+
+      contentLines[action.lineIndex] = action.lineContent;
+
+      history[i] = Object.assign({}, history[i], {
+        content: contentLines
+      });
+      return Object.assign({}, state, { history });
+    }
+
     case "UPDATE_CONSOLE_TEXT": {
       return Object.assign({}, state, { consoleText: action.consoleText });
     }
@@ -85,28 +98,6 @@ export default function evalFrameActionReducer(state, action) {
 
     case "SET_CONSOLE_LANGUAGE": {
       return Object.assign({}, state, { languageLastUsed: action.language });
-    }
-
-    case "SAVE_ENVIRONMENT": {
-      let newSavedEnvironment;
-      if (action.update) {
-        newSavedEnvironment = Object.assign(
-          {},
-          state.savedEnvironment,
-          action.updateObj
-        );
-      } else {
-        newSavedEnvironment = action.updateObj;
-      }
-      return Object.assign({}, state, {
-        savedEnvironment: newSavedEnvironment
-      });
-    }
-
-    case "ENVIRONMENT_UPDATE_FROM_EDITOR": {
-      return Object.assign({}, state, {
-        savedEnvironment: action.savedEnvironment
-      });
     }
 
     case "ADD_LANGUAGE_TO_EVAL_FRAME": {

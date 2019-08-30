@@ -21,6 +21,11 @@ def api_client():
 
 
 @pytest.fixture
+def restricted_api(settings):
+    settings.RESTRICT_API = True
+
+
+@pytest.fixture
 def fake_user(transactional_db):
     user = User.objects.create(username="testuser1", email="user@foo.com")
     return user

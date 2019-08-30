@@ -9,13 +9,13 @@ import UserMenu from "../../../shared/components/user-menu";
 import ViewModeToggleButton from "./view-mode-toggle-button";
 import NotebookTaskButton from "./notebook-task-button";
 import KernelState from "./kernel-state";
+import { login, logout } from "../../actions/server-session-actions";
+import { connectionModeIsServer } from "../../tools/server-tools";
 
 // FIXME there is NO REASON to use "tasks" here.
 // we should use map dispatch to props and regular actions like
 // we do in every other component
 import tasks from "../../user-tasks/task-definitions";
-
-import { connectionModeIsServer } from "../../tools/server-tools";
 
 const ViewControlsContainer = styled("div")`
   display: flex;
@@ -28,7 +28,9 @@ export class ViewControlsUnconnected extends React.Component {
     isAuthenticated: PropTypes.bool.isRequired,
     name: PropTypes.string,
     avatar: PropTypes.string,
-    isServer: PropTypes.bool.isRequired
+    isServer: PropTypes.bool.isRequired,
+    login: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired
   };
 
   render() {
@@ -43,8 +45,8 @@ export class ViewControlsUnconnected extends React.Component {
           // this stuff should not be passed down as props
           <UserMenu
             isAuthenticated={this.props.isAuthenticated}
-            loginCallback={tasks.loginGithub.callback}
-            logoutCallback={tasks.logoutGithub.callback}
+            loginCallback={this.props.login}
+            logoutCallback={this.props.logout}
             avatar={this.props.avatar}
             username={this.props.name}
           />
@@ -66,4 +68,12 @@ export function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(ViewControlsUnconnected);
+const mapDispatchToProps = {
+  login,
+  logout
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ViewControlsUnconnected);
