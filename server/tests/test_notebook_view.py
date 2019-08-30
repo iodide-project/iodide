@@ -46,14 +46,12 @@ def test_notebook_view(client, test_notebook):
     assert new_expected_content in str(resp.content)
 
 
-def test_notebook_view_escapes_iomd(client, test_notebook_with_html_tags):
-    initial_revision = NotebookRevision.objects.filter(notebook=test_notebook_with_html_tags).last()
-    iomd_content = initial_revision.content
+def test_notebook_view_escapes_iomd(client, fake_user):
+    notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook")
+    iomd_content = "</script><script>alert('31337')"
+    NotebookRevision.objects.create(notebook=notebook, title="First revision", content=iomd_content)
 
-    # Make sure the content needs to be escaped
-    assert iomd_content != escape(iomd_content)
-
-    resp = client.get(reverse("notebook-view", args=[str(test_notebook_with_html_tags.id)]))
+    resp = client.get(reverse("notebook-view", args=[str(notebook.id)]))
     expected_content = '<script id="iomd" type="text/iomd">{}</script>'.format(escape(iomd_content))
     assert expected_content in str(resp.content)
 

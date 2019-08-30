@@ -48,15 +48,6 @@ def test_notebook(fake_user):
 
 
 @pytest.fixture
-def test_notebook_with_html_tags(fake_user):
-    notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook")
-    NotebookRevision.objects.create(
-        notebook=notebook, title="First revision", content="</script><script>alert('31337')"
-    )
-    return notebook
-
-
-@pytest.fixture
 def test_file(test_notebook):
     return File.objects.create(
         notebook=test_notebook, filename="test.csv", content=b"a,b\n12,34\n56,78"
