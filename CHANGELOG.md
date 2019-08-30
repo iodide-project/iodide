@@ -1,3 +1,8 @@
+ # (Unreleased; add upcoming change notes here)
+
+- Adds a new feature, file sources, which allows notebook authors to    
+  schedule the fetching of files from URLs. This feature is available in the notebook menu (click _Menu > Manage Files_)
+
 # 0.11.0 (2019-08-21)
 
 - Removed iodide.environment API (#2038)

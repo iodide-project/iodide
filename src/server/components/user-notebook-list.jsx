@@ -10,7 +10,7 @@ import {
   ListPrimaryText,
   ListLinkSet,
   ListMetadata
-} from "./list";
+} from "../../shared/components/list";
 import UserNotebookMiniLinks from "./user-notebook-mini-links";
 import NotebookActionsMenu from "./notebook-actions-menu";
 import { ActionsContainer, BodyIconStyle } from "../style/icon-styles";

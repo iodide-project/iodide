@@ -2,22 +2,20 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { ModalContainer } from "../modal-container";
-import DeleteModal from "../../../../server/components/delete-modal";
-import OverwriteModal from "../../../../server/components/upload-modal";
-import TitleBar from "../title-bar";
+import DeleteModal from "../../../../../shared/components/delete-modal";
+import OverwriteModal from "../../../../../shared/components/upload-modal";
 import Body from "./body";
 import {
   deleteFileOnServer,
   selectMultipleFilesAndFormatMetadata,
   uploadFile
-} from "../../../../shared/utils/file-operations";
+} from "../../../../../shared/utils/file-operations";
 import {
   addFileToNotebook,
   deleteFileFromNotebook
-} from "../../../actions/file-request-actions";
+} from "../../../../actions/file-request-actions";
 
-export class FileModalUnconnected extends React.Component {
+export class ManageFilesUnconnected extends React.Component {
   static propTypes = {
     // Required
     deleteFile: PropTypes.func.isRequired,
@@ -313,14 +311,11 @@ export class FileModalUnconnected extends React.Component {
           aboveOtherModals
         />
       )}
-      <ModalContainer tabIndex="-1">
-        <TitleBar title="Manage Files" />
-        <Body
-          files={this.state.files}
-          onAddButtonClick={this.onAddButtonClick}
-          confirmDelete={this.confirmDelete}
-        />
-      </ModalContainer>
+      <Body
+        files={this.state.files}
+        onAddButtonClick={this.onAddButtonClick}
+        confirmDelete={this.confirmDelete}
+      />
     </React.Fragment>
   );
 }
@@ -354,4 +349,4 @@ export function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FileModalUnconnected);
+)(ManageFilesUnconnected);

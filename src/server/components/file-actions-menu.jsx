@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Popover from "../../shared/components/popover";
 import Menu from "../../shared/components/menu";
 import MenuItem from "../../shared/components/menu-item";
-import DeleteModal from "./delete-modal";
+import DeleteModal from "../../shared/components/delete-modal";
 import { deleteFileOnServer } from "../../shared/utils/file-operations";
 
 export default class FileActionsMenu extends React.Component {

@@ -54,6 +54,8 @@ pytest-env==0.6.2 \
 pytest-mock==1.10.4 \
     --hash=sha256:43ce4e9dd5074993e7c021bb1c22cbb5363e612a2b5a76bc6d956775b10758b7 \
     --hash=sha256:5bf5771b1db93beac965a7347dc81c675ec4090cb841e49d9d34637a25c30568
+responses==0.10.6 \
+    --hash=sha256:97193c0183d63fba8cd3a041c75464e4b09ea0aff6328800d1546598567dde0b
 pytest==5.1.1 \
     --hash=sha256:95b1f6db806e5b1b5b443efeb58984c24945508f93a866c1719e1a507a957d7c \
     --hash=sha256:c3d5020755f70c82eceda3feaf556af9a341334414a8eca521a18f463bcead88
@@ -79,5 +81,7 @@ appdirs==1.4.3 \
 click==7.0 \
     --hash=sha256:2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13 \
     --hash=sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7
+pytest_freezegun==0.3.0 \
+    --hash=sha256:88bb8c2a0b3a9623dd2a565693786d6a0f87aaf929dfca2b1680b5d84abcde71
 flake8-black==0.1.1 \
     --hash=sha256:56f85aaa5a83f06a3f61e680e3b50f156b5e557ebdcb964d823d86f4c108b0c8

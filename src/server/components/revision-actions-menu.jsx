@@ -4,7 +4,7 @@ import Popover from "../../shared/components/popover";
 import Menu from "../../shared/components/menu";
 import MenuItem from "../../shared/components/menu-item";
 import MenuDivider from "../../shared/components/menu-divider";
-import DeleteModal from "./delete-modal";
+import DeleteModal from "../../shared/components/delete-modal";
 import { deleteNotebookRevisionRequest } from "../../shared/server-api/notebook";
 
 export default class RevisionsActionsMenu extends React.Component {

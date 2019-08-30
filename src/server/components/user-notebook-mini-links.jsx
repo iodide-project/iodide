@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ListSmallLink } from "./list";
+import { ListSmallLink } from "../../shared/components/list";
 
 const MiniLink = ({ id }) => (
   <React.Fragment>

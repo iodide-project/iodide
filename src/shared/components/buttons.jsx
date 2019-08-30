@@ -37,6 +37,7 @@ color: ${props => props.buttonColor || THEME.button.baseColor};
 font-size: ${props => props.size || "13px"};
 :hover {
   color: black;
+  background-color: lightgray;
 }
 `;
 

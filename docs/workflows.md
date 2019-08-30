@@ -27,13 +27,15 @@ If you want to work with data stored on your local machine or if you are
 encountering CORS problems while attempting to use a dataset from a remote
 server, you may upload data directly to Iodide.
 
+### uploading files directly
+
 Data is uploaded on a per-notebook basis&mdash;rather than uploading data to
 your user account, you upload it to a specific notebook. To do so, click on the
 hamburger menu icon near the top-left of the page, then click _Manage Files_.
-The file management modal will appear. Click _Add Files_ and select any number
-of files to upload. Once the files finished uploading, they will appear in a
-list alongside other files associated with that notebook. Click _Delete_ at any
-time to delete a file.
+The file management modal will appear. By default, you will be in the _Manage
+Files_ tab. Click _Add Files_ and select any number of files to upload. Once the
+files finished uploading, they will appear in a list alongside other files
+associated with that notebook. Click _Delete_ at any time to delete a file.
 
 To access this file from your notebook, you would use a fetch cell with the
 syntax --
@@ -43,11 +45,37 @@ syntax --
 TYPE: VAR_NAME = FILE_NAME
 ```
 
--- where `TYPE` is the type of the file ("text", "json", "arraybuffer", or "blob"), `VARNAME`
-is the variable into which you want to load the data, and `FILE_NAME` is the
-name of the file you uploaded.
+-- where `TYPE` is the type of the file ("text", "json", "arraybuffer", or
+"blob"), `VARNAME` is the variable into which you want to load the data, and
+`FILE_NAME` is the name of the file you uploaded.
 
-This notebook [shows how to load and use an image blob](https://alpha.iodide.io/notebooks/127/).
+This notebook [shows how to load and use an image
+blob](https://alpha.iodide.io/notebooks/127/).
+
+### scheduling file uploads
+
+Additionally, from the file management modal you can also add _file sources_,
+which allow you schedule file downloads from URLS on the Iodide server. To do
+so, click on the _manage file sources_ tab in the file management modal tab bar.
+Enter a URL as an input, a filename as an output, and an automatic update
+interval (with the options: "never", where the file source must be manually
+updated; "daily", where the file source is updated once a day; and "weekly"
+where the file source is updated once a week). The file sources API will
+download the file at the specified URL and save the file to the Iodide server
+according to the update interval. The resulting file will be available to the
+notebook just like any other file.
+
+Readers will not be able to see what file sources the author has added, but can
+utilize the saved file outputs in the notebook as files. There are a few
+intended use cases for file sources:
+
+1. sometimes a notebook author may want to utilize a dataset from a URL that may
+   have sensitive information in the URL, such as an API key. Using a file
+   source will allow the author to fetch and save the data without exposing that
+   information.
+2. sometimes an author may want to cache data from a URL that is not available
+   due to CORS restrictions, but wants the dataset to be refreshed periodically
+   without having to manually add the data themselves.
 
 ## Manipulating the DOM (for e.g adding plots)
 
