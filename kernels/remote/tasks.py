@@ -18,35 +18,25 @@ def execute_remote_operation(pk):
     if operation is None:
         # TODO: figure out a good exception here
         # then update the remote operation that it's running
-        operation_queryset.update(
-            status=RemoteOperation.STATUS_FAILED,
-            failed_at=timezone.now(),
-        )
+        operation_queryset.update(status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now())
         raise RemoteOperationMissing
 
     # then update the remote operation that it's running
-    operation_queryset.update(
-        status=RemoteOperation.STATUS_RUNNING,
-        running_at=timezone.now(),
-    )
+    operation_queryset.update(status=RemoteOperation.STATUS_RUNNING, running_at=timezone.now())
 
     # then execute the remote operation with the given snippet and all other
     # parameters
     try:
-        result = operation.backend.execute(snippet=operation.snippet, **operation.parameters)
-    except Exception as exc:
-        operation_queryset.update(
-            status=RemoteOperation.STATUS_FAILED,
-            failed_at=timezone.now(),
+        result = operation.backend.execute_operation(
+            snippet=operation.snippet, **operation.parameters
         )
+    except Exception as exc:
+        operation_queryset.update(status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now())
         raise ExecutionError from exc
 
     # and safe the result as a Iodide file, the result should be a
     # memory effecient iterator, e.g. a streaming response
-    operation.backend.save(operation.notebook, operation.filename, result)
+    operation.backend.save_result(operation.notebook, operation.filename, result)
 
     # then update the remote operation that it was completed
-    operation_queryset.update(
-        status=RemoteOperation.STATUS_COMPLETED,
-        completed_at=timezone.now(),
-    )
+    operation_queryset.update(status=RemoteOperation.STATUS_COMPLETED, completed_at=timezone.now())

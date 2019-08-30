@@ -1,25 +1,61 @@
-import toml
-from class_registry import AutoRegister, ClassRegistry
-from six import with_metaclass
+from abc import ABCMeta, abstractmethod
+
+from class_registry import ClassRegistry
 
 from server.files.models import File
-from .exceptions import ParametersParseError
 
-
-REMOTE_CHUNK_CONTENT_DIVIDER = "-----"
 
 # A simple explicit remote kernel registry,
 # TODO: can be turned into an EntryPointClassRegistry later
 # when remote kernels are abstracted out of iodide
-remote_kernels = ClassRegistry()
+registry = ClassRegistry(attr_name="token")
 
 
-class RemoteKernel(with_metaclass(AutoRegister(remote_kernels))):
+class Backend(metaclass=ABCMeta):
     """
     The base class for all kernels that use a remote
     service for evaluating a notebook chunk.
     """
-    def save(self, notebook, filename, content):
+    #: The string by which the remote chunk is devided in parameters and content
+    REMOTE_CHUNK_DIVIDER = "-----"
+
+    @abstractmethod
+    def parse_chunk(self, notebook, chunk):
+        """
+        Given the notebook object and the content of a remote chunk
+        this should return a dictionary in the format:
+
+        {
+            "parameters: {
+                "output_name": "results",
+            },
+            "filename": "file/name.txt",
+            "snippet": "SELECT 1",
+        }
+        """
+
+    @abstractmethod
+    def execute_operation(self, *args, **kwargs):
+        """
+        Executes the remote operation using the provided parameters
+        on the remote kernel and returns the results.
+        """
+
+    def build_filename(self, notebook, chunk):
+        """
+        Given a notebook and chunk content string build a filename
+        to save a result in.
+        """
+        # TODO: implement sensible computed filename from given notebook and chunk content
+        return "foo.bar"
+
+    def split_chunk(self, chunk):
+        """
+        Splits the provided chunk content by a divider once and returns the result
+        """
+        return chunk.split(self.REMOTE_CHUNK_DIVIDER, 1)
+
+    def save_result(self, notebook, filename, content):
         """
         Given the provided notebook, filename and content
         create a new file object.
@@ -31,74 +67,8 @@ class RemoteKernel(with_metaclass(AutoRegister(remote_kernels))):
         TODO: Should this be marked with a "remote" flag somehow to
         show up in a separate tab of the file modal?
         """
-        File.objects.create(
+        return File.objects.create(
             notebook=notebook,
             filename=filename,
             content=content,
         )
-
-
-class QueryRemoteKernel(RemoteKernel):
-    """
-    A remote kernel to query against a remote source
-    such as Redash.
-
-    """
-    #: The name of the remote kernel used in the registry for reverse lookups.
-    element = "query"
-
-    def filename(self, notebook, content):
-        # TODO: implement sensible computed filename from given notebook and content
-        return "foo.bar"
-
-    def parse(self, notebook, content):
-        """
-        Parse the incoming remote chunk content as TOML and return a
-        dict with the values, e.g.::
-
-            data_source = telemetry
-            output_name = result
-            filename = user_count_query.json
-            -----
-            select count(*) from telemetry.users
-            -----
-            select count(*) from telemetry.users
-
-        will return:
-
-            {
-                "parameters": {
-                    "data_source": "telemetry",
-                    "output_name": "result",
-                },
-                "filename": "user_count_query.json",
-                "snippet": "select count(*) from telemetry.users",
-            }
-        """
-        parameters, snippet = content.split(REMOTE_CHUNK_CONTENT_DIVIDER, 1)
-
-        try:
-            parsed = toml.loads(parameters)
-        except (TypeError, toml.TomlDecodeError) as exc:
-            raise ParametersParseError from exc
-
-        filename = parsed.pop("filename")
-        if filename is None:
-            # calculate the filename if it wasn't provided
-            # TODO: check if this is something we really want, product-wise
-            filename = self.filename(notebook, content)
-
-        parsed.update({
-            "snippet": snippet,
-            "filename": filename,
-        })
-        return parsed
-
-    def execute(self, *args, **kwargs):
-        """
-        Executes the remote operation using the provided parameters
-        on the remote kernel and returns the results.
-        """
-        # TODO: given the provided parameters build the request to Redash,
-        # wait for the results and return them as a streaming object
-        # to be saved as a file

@@ -1,12 +1,13 @@
 import json
 
+from class_registry import RegistryKeyError
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 from ..notebooks.models import Notebook
-from .backends import remote_kernels
+from . import backends
 from .exceptions import ParametersParseError
 from .models import RemoteOperation
 from .serializers import RemoteOperationSerializer
@@ -32,15 +33,16 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
 
         # get the remote kernel slug and see if we have a matching backend
         remote_kernel = request.data["remote_kernel"]
-        backend = remote_kernels.get(remote_kernel, None)
-        if remote_kernel is None:
+        try:
+            backend = backends.registry[remote_kernel]
+        except RegistryKeyError as exc:
             # TODO: maybe raise a more specific exception here?
-            raise PermissionDenied
+            raise PermissionDenied from exc
 
         # parse the content provided from the client using the backend
         content = request.data["content"]
         try:
-            parsed = backend.parse(content)
+            parsed = backend.parse_chunk(content)
         except ParametersParseError:
             # TODO: do something smart here like letting users
             # know that the remote chunk can't be validated

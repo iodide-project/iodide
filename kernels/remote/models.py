@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 
 from server.notebooks.models import Notebook
-from .backends import remote_kernels
+from . import backends
 
 
 class RemoteOperation(models.Model):
@@ -76,7 +76,7 @@ class RemoteOperation(models.Model):
         """
         Return the remote kernel backend of the given remote chunk
         """
-        backend = remote_kernels.get(self.remote_kernel, None)
+        backend = backends.registry.get(self.remote_kernel, None)
         if backend is None:
             raise ValueError(f"RemoteKernel Backend not found for {self.remote_kernel}")
         return backend
