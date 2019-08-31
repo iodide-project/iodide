@@ -2,6 +2,7 @@ import random
 
 import pytest
 from django.urls import reverse
+from django.utils.html import escape
 
 from helpers import get_script_block, get_script_block_json, get_title_block
 from server.notebooks.models import Notebook, NotebookRevision
@@ -43,6 +44,16 @@ def test_notebook_view(client, test_notebook):
         new_revision_content
     )
     assert new_expected_content in str(resp.content)
+
+
+def test_notebook_view_escapes_iomd(client, fake_user):
+    notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook")
+    iomd_content = "</script><script>alert('31337')"
+    NotebookRevision.objects.create(notebook=notebook, title="First revision", content=iomd_content)
+
+    resp = client.get(reverse("notebook-view", args=[str(notebook.id)]))
+    expected_content = '<script id="iomd" type="text/iomd">{}</script>'.format(escape(iomd_content))
+    assert expected_content in str(resp.content)
 
 
 def test_notebook_view_old_revision(client, test_notebook):
