@@ -4,6 +4,7 @@
   schedule the fetching of files from URLs. This feature is available in the notebook menu (click _Menu > Manage Files_)
 - Fixed a bug where script tags aren't being rendered properly that could lead
   to arbitrary code execution attacks (#2193)
+- Add multi stage docker builds for smaller docker images (#2163)
 
 # 0.11.0 (2019-08-21)
 
