@@ -5,6 +5,14 @@ ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /app
 
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y install \ 
+    libpq-dev \
+    libffi-dev \
+    python-dev \
+    build-essential
+
 # Install virtualenv
 RUN pip install virtualenv
 RUN virtualenv /venv
@@ -20,14 +28,6 @@ ENV PATH="/venv/bin:$PATH"
 
 RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get -y install \ 
-    libpq-dev \
-    libffi-dev \
-    python-dev \
-    build-essential
-    
 COPY --from=python-builder /venv /venv
 
 EXPOSE 8000
@@ -38,22 +38,19 @@ COPY . /app
 # Collect static files
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
+# Set user permissions
+COPY --chown=app:app . . 
+
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
 # where volume-mounted files do not have execute bits set.
 # https://github.com/docker/compose/issues/2301#issuecomment-154450785 has additional background.
 ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
 FROM base AS release
-
-# Set user and user permissions
-COPY --chown=app:app . . 
 USER app
 
 FROM base AS devapp
 
-COPY --from=base --chown=app:app /venv /venv
-
 # Install dev python dependencies
 RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
-
 USER app
