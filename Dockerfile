@@ -51,6 +51,7 @@ USER app
 
 FROM base AS devapp
 
+USER root
 # Install dev python dependencies
 RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
 USER app
