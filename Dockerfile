@@ -5,20 +5,12 @@ ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /app
 
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get -y install \ 
-    libpq-dev \
-    libffi-dev \
-    python-dev \
-    build-essential
-
 # Install virtualenv
 RUN pip install virtualenv
 RUN virtualenv /venv
 
 # Install base python dependencies 
-COPY requirements/build.txt ./requirements/
+COPY requirements/*.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 
 FROM python:3.7-slim AS base
@@ -28,6 +20,14 @@ ENV PATH="/venv/bin:$PATH"
 
 RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y install \ 
+    libpq-dev \
+    libffi-dev \
+    python-dev \
+    build-essential
+    
 COPY --from=python-builder /venv /venv
 
 EXPOSE 8000
@@ -45,8 +45,6 @@ ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
 FROM base AS release
 
-COPY --from=base --chown=app:app /app/static /app/static
-
 # Set user and user permissions
 COPY --chown=app:app . . 
 USER app
@@ -54,10 +52,8 @@ USER app
 FROM base AS devapp
 
 COPY --from=base --chown=app:app /venv /venv
-COPY --from=base --chown=app:app /app/static /app/static 
 
 # Install dev python dependencies
-COPY requirements/tests.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
 
 USER app
