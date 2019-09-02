@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.module_loading import import_string
 
 
 class RemoteKernelConfig(AppConfig):
@@ -15,9 +16,5 @@ class RemoteKernelConfig(AppConfig):
                 f"The RemoteKernelConfig {self.name} requires a backend attribute set to populate the remote kernel registry."
             )
         from . import backends
+        backend = import_string(self.backend)
         backends.registry.register(backend)
-
-
-class RemoteConfig(AppConfig):
-    name = "kernels.remote"
-    verbose_name = "Remote Kernels"
