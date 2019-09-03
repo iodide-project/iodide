@@ -1,10 +1,7 @@
-version: '3.4'
+version: '3'
 services:
   server:
     image: app:build
-    build:
-      context: .
-      target: devapp
     env_file: .env
     depends_on:
       - db
@@ -17,24 +14,7 @@ services:
     volumes:
       - .:/app
     command: dev
-  
-  server-prod:
-    image: app:prod
-    build:
-      context: .
-      target: base
-    depends_on:
-      - db
-      - redis
-    links:
-      - db
-      - redis
-    ports:
-      - "8080:8080"
-    volumes:
-      - .:/app
-    command: prod
-  
+
   worker:
     image: app:build
     env_file: .env
