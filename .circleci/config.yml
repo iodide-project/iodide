@@ -18,7 +18,7 @@ restore_javascript_cache: &restore_javascript_cache
       - v1-javascript-dependencies-{{ checksum "package.json" }}
       - v1-javascript-dependencies-
 
-version: 2.1
+version: 2
 jobs:
   test-javascript:
     docker:
@@ -52,9 +52,9 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: Build Docker image
-          command: cp .env-dist .env; docker-compose build --pull
-      # save the built docker containers into CircleCI's cache. This is
+          name: Build Docker images
+          command: docker build -t app:prod --target=base . && docker build -t app:build . 
+      # save the built docker container into CircleCI's cache. This is
       # required since Workflows do not have the same remote docker instance.
       - run:
           name: docker save app:build and app:prod
@@ -144,6 +144,11 @@ jobs:
             "$CIRCLE_PROJECT_USERNAME" \
             "$CIRCLE_PROJECT_REPONAME" \
             "$CIRCLE_BUILD_URL" > version.json
+      # We are not using the cached docker file here b/c we want the production
+      # build to use only the required Python files.
+      - run:
+          name: Build Docker image
+          command: docker build -t app:prod --target=base .
       - run:
           name: Push image to Docker Hub
           command: |
