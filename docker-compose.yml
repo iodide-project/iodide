@@ -2,6 +2,8 @@ version: '3'
 services:
   server:
     image: app:build
+    build: 
+      context: .
     env_file: .env
     depends_on:
       - db
