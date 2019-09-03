@@ -81,7 +81,8 @@ appdirs==1.4.3 \
 click==7.0 \
     --hash=sha256:2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13 \
     --hash=sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7
-pytest_freezegun==0.3.0 \
-    --hash=sha256:88bb8c2a0b3a9623dd2a565693786d6a0f87aaf929dfca2b1680b5d84abcde71
+pytest_freezegun==0.3.0.post1 \
+    --hash=sha256:94c370a2cd3db9692962522cb74525d908e669df7cb53a448e01bb47c21a8173 \
+    --hash=sha256:b86b13ef75959bedf4c32f1fd81fec66fa4502d9892e0ef6ad1717a34fe1560e
 flake8-black==0.1.1 \
     --hash=sha256:56f85aaa5a83f06a3f61e680e3b50f156b5e557ebdcb964d823d86f4c108b0c8
