@@ -53,11 +53,11 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Build Docker image
-          command: docker build -t app:prod --target=base . && docker build -t app:build . 
-      # save the built docker container into CircleCI's cache. This is
+          command: docker-compose build --pull
+      # save the built docker containers into CircleCI's cache. This is
       # required since Workflows do not have the same remote docker instance.
       - run:
-          name: docker save app:build
+          name: docker save app:build and app:prod
           command: mkdir -p /tmp; docker save -o /tmp/docker.tar "app:build"; docker save -o /tmp/docker-prod.tar "app:prod"
       - save_cache:
           key: v1-{{ .Branch }}-{{epoch}}
@@ -144,11 +144,6 @@ jobs:
             "$CIRCLE_PROJECT_USERNAME" \
             "$CIRCLE_PROJECT_REPONAME" \
             "$CIRCLE_BUILD_URL" > version.json
-      # We are not using the cached docker file here b/c we want the production
-      # build to use only the required Python files.
-      - run:
-          name: Build Docker image
-          command: docker build -t app:prod --target=base .
       - run:
           name: Push image to Docker Hub
           command: |
