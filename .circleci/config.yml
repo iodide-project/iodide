@@ -18,7 +18,7 @@ restore_javascript_cache: &restore_javascript_cache
       - v1-javascript-dependencies-{{ checksum "package.json" }}
       - v1-javascript-dependencies-
 
-version: 2
+version: 2.1
 jobs:
   test-javascript:
     docker:
