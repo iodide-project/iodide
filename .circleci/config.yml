@@ -53,7 +53,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Build Docker image
-          command: docker-compose build --pull
+          command: cp .env-dist .env; docker-compose build --pull
       # save the built docker containers into CircleCI's cache. This is
       # required since Workflows do not have the same remote docker instance.
       - run:
