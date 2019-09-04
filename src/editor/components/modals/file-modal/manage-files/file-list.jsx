@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { List } from "../../../../server/components/list";
+import { List } from "../../../../../shared/components/list";
 import FileListItem from "./file-list-item";
 import { fileShape } from "./propShapes";
 

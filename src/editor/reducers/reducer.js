@@ -5,6 +5,8 @@ import evalFrameActionReducer from "./eval-frame-reducer";
 import messagePasserEditor from "../../shared/utils/redux-to-port-message-passer";
 
 import evalFrameStateSelector from "../state-schemas/eval-frame-state-selector";
+import fileSourceReducer from "./file-source-reducer";
+
 /*
 It is suggested that using combineReducers, and following the standard
 of having each reducer only function on a section of the state container,
@@ -28,6 +30,7 @@ function sendStateToEvalFrame(state) {
 
 export default reduceReducers(
   notebookReducer,
+  fileSourceReducer,
   evalFrameActionReducer,
   sendStateToEvalFrame
 );

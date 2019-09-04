@@ -6,7 +6,7 @@
 {% block content %}
 <div id="notebook-header"></div>
 <div id="editor-react-root"></div>
-<script id="iomd" type="text/iomd">{{ iomd|safe }}</script>
+<script id="iomd" type="text/iomd">{{ iomd|escape }}</script>
 <iframe
   id="eval-frame"
   src="{{ iframe_src|safe }}"

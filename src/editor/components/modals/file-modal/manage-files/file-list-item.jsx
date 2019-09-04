@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import styled from "react-emotion";
 
-import { TextButton } from "../../../../shared/components/buttons";
+import { TextButton } from "../../../../../shared/components/buttons";
 import {
   ListItem,
   LIST_BORDER,
   LIST_BORDER_RADIUS
-} from "../../../../server/components/list";
-import THEME from "../../../../shared/theme";
+} from "../../../../../shared/components/list";
+import THEME from "../../../../../shared/theme";
 import { fileShape } from "./propShapes";
 import { defaultSpacing } from "./styles";
 

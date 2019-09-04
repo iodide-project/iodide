@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import deepEqual from "deep-equal";
+import { isEqual } from "lodash";
 
 import IomdEditor from "./iomd-editor/iomd-editor";
 import DeclaredVariablesPane from "./panes/declared-variables-pane";
@@ -17,7 +17,7 @@ class EditorPaneContainer extends React.Component {
   };
 
   shouldComponentUpdate(nextProps) {
-    return !deepEqual(this.props, nextProps);
+    return !isEqual(this.props, nextProps);
   }
 
   render() {

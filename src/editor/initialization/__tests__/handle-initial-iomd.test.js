@@ -71,3 +71,33 @@ blah blah
     ]);
   });
 });
+
+describe("handleInitialIomd unescapes #iomd elt content", () => {
+  const iomdString = `
+%% js
+blah &lt;&gt;&#39;&quot;&amp; blah
+    `;
+  let store;
+
+  beforeEach(() => {
+    document.body.innerHTML = `
+<script id="iomd">${iomdString}</script>
+`;
+    store = mockStore({});
+  });
+
+  it("store is valid", () => {
+    expect(() => handleInitialIomd(store)).not.toThrow();
+  });
+
+  const unescapedIomdString = `
+%% js
+blah <>'"& blah
+    `;
+  it("iomd is correct", () => {
+    handleInitialIomd(store);
+    expect(store.getActions()).toEqual([
+      { iomd: unescapedIomdString, type: "UPDATE_IOMD_CONTENT" }
+    ]);
+  });
+});

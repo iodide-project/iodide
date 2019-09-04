@@ -15,6 +15,7 @@ import re
 
 import dj_database_url
 import environ
+from celery.schedules import crontab
 from furl import furl
 
 env = environ.Env()
@@ -223,3 +224,14 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Add a MIME type for .wasm files (which is not included in WhiteNoise's defaults)
 WHITENOISE_MIMETYPES = {".wasm": "application/wasm"}
+
+REDIS_HOST = env.str("REDIS_HOST", default="redis")
+REDIS_URL = env.str("REDIS_URL", default=f"redis://{REDIS_HOST}:6379/1")
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_BEAT_SCHEDULE = {
+    "run_scheduled_file_operations": {
+        "task": "server.files.tasks.execute_scheduled_file_operations",
+        "schedule": crontab(minute=0, hour=0),
+    }
+}

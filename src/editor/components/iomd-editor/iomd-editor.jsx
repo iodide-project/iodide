@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import deepEqual from "deep-equal";
+import { isEqual } from "lodash";
 
 /* eslint-disable import/first */
 
@@ -128,7 +128,7 @@ class IomdEditorUnconnected extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return !deepEqual(this.props, nextProps);
+    return !isEqual(this.props, nextProps);
   }
 
   componentDidUpdate(prevProps) {
@@ -152,7 +152,7 @@ class IomdEditorUnconnected extends React.Component {
       this.editor.setValue(content);
     }
 
-    if (!deepEqual(editorPosition, prevProps.editorPosition)) {
+    if (!isEqual(editorPosition, prevProps.editorPosition)) {
       this.editor.layout();
     }
 

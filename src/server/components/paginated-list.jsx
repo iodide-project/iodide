@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "react-emotion";
 import PropTypes from "prop-types";
-import { List, Placeholder } from "./list";
+import { List, Placeholder } from "../../shared/components/list";
 import { OutlineButton } from "../../shared/components/buttons";
 
 const PaginationContainer = styled("div")`

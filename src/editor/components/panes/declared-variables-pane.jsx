@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import deepEqual from "deep-equal";
+import { isEqual } from "lodash";
 
 import { DeclaredVariable } from "./declared-variable";
 
@@ -13,7 +13,7 @@ export class DeclaredVariablesPaneUnconnected extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return (
-      !deepEqual(this.props, nextProps) &&
+      !isEqual(this.props, nextProps) &&
       (this.props.paneVisible || nextProps.paneVisible)
     );
   }

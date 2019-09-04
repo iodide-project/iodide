@@ -1,4 +1,4 @@
-import { FileModalUnconnected, mapStateToProps } from "../index";
+import { ManageFilesUnconnected, mapStateToProps } from "../manage-files";
 import Body from "../body";
 import FileList from "../file-list";
 
@@ -31,7 +31,7 @@ describe("file-modal/index.jsx", () => {
         ]
       },
 
-      // Remember that FileModalUnconnected uses its own keys which are not
+      // Remember that ManageFilesUnconnected uses its own keys which are not
       // related to notebookInfo IDs.
       files: {
         "0": {
@@ -52,7 +52,7 @@ describe("file-modal/index.jsx", () => {
       }
     };
 
-    fmu = new FileModalUnconnected(mapStateToProps(state));
+    fmu = new ManageFilesUnconnected(mapStateToProps(state));
   });
 
   it("mapStateToProps", () => {
@@ -76,9 +76,9 @@ describe("file-modal/index.jsx", () => {
   });
 
   describe("getNewFileKey", () => {
-    // Use a fresh FileModalUnconnected with no savedFiles to ensure that the
+    // Use a fresh ManageFilesUnconnected with no savedFiles to ensure that the
     // constructor never calls getNewFileKey
-    const fmu2 = new FileModalUnconnected({
+    const fmu2 = new ManageFilesUnconnected({
       savedFiles: []
     });
 

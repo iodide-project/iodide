@@ -11,7 +11,7 @@ import {
   ListAuthor,
   ListMetadata,
   ListLinkSet
-} from "./list";
+} from "../../shared/components/list";
 import UserNotebookMiniLinks from "./user-notebook-mini-links";
 import { SmallUserName as UserName } from "../components/user-name";
 import { monthDayYear } from "../../shared/date-formatters";

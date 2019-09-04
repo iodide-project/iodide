@@ -8,7 +8,7 @@ import { closeModals } from "../../actions/modal-actions";
 
 import HelpModal from "./help-modal";
 import HistoryModal from "./history-modal";
-import FileModal from "./file-modal";
+import FileModal from "./file-modal/file-modal";
 
 export class IodideModalRootUnconnected extends React.Component {
   static propTypes = {
