@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.utils import timezone
 
 from .exceptions import RemoteOperationMissing, ExecutionError
@@ -16,13 +17,15 @@ def execute_remote_operation(pk):
     # to catch transaction issues or other side effects
     operation = operation_queryset.first()
     if operation is None:
-        # TODO: figure out a good exception here
-        # then update the remote operation that it's running
-        operation_queryset.update(status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now())
-        raise RemoteOperationMissing
+        with transaction.atomic():
+            # TODO: figure out a good exception here
+            # then update the remote operation that it's running
+            operation_queryset.update(status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now())
+            raise RemoteOperationMissing
 
-    # then update the remote operation that it's running
-    operation_queryset.update(status=RemoteOperation.STATUS_RUNNING, running_at=timezone.now())
+    with transaction.atomic():
+        # then update the remote operation that it's running
+        operation_queryset.update(status=RemoteOperation.STATUS_RUNNING, started_at=timezone.now())
 
     # then execute the remote operation with the given snippet and all other
     # parameters
@@ -31,12 +34,14 @@ def execute_remote_operation(pk):
             snippet=operation.snippet, **operation.parameters
         )
     except Exception as exc:
-        operation_queryset.update(status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now())
-        raise ExecutionError from exc
+        with transaction.atomic():
+            operation_queryset.update(status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now())
+            raise ExecutionError from exc
 
     # and safe the result as a Iodide file, the result should be a
     # memory effecient iterator, e.g. a streaming response
-    operation.backend.save_result(operation.notebook, operation.filename, result)
+    operation.backend.save_result(operation, result)
 
-    # then update the remote operation that it was completed
-    operation_queryset.update(status=RemoteOperation.STATUS_COMPLETED, completed_at=timezone.now())
+    with transaction.atomic():
+        # then update the remote operation that it was completed
+        operation_queryset.update(status=RemoteOperation.STATUS_COMPLETED, ended_at=timezone.now())

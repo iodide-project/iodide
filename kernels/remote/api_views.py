@@ -3,19 +3,19 @@ import json
 from class_registry import RegistryKeyError
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 
 from ..notebooks.models import Notebook
 from . import backends
 from .exceptions import ParametersParseError
-from .models import RemoteOperation
-from .serializers import RemoteOperationSerializer
+from .models import RemoteFile, RemoteOperation
+from .serializers import RemoteFileSerializer, RemoteOperationSerializer
 
 
 class RemoteOperationViewSet(viewsets.ModelViewSet):
     serializer_class = RemoteOperationSerializer
-    http_method_names = ["post", "get"]
+    http_method_names = ["post"]
     queryset = RemoteOperation.objects.all()
 
     def create(self, request):
@@ -32,9 +32,9 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
 
         # get the remote kernel slug and see if we have a matching backend
-        remote_kernel = request.data["remote_kernel"]
+        backend = request.data["backend"]
         try:
-            backend = backends.registry[remote_kernel]
+            backend = backends.registry[backend]
         except RegistryKeyError as exc:
             # TODO: maybe raise a more specific exception here?
             raise PermissionDenied from exc
@@ -50,12 +50,27 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
                 "The remote chunk couldn't be parsed, please check the syntax and evaluate again."
             )
 
-        # create the remote chunk in the database for later retrieval
-        operation = RemoteOperation.objects.create(
-            notebook_id=notebook.id,
-            remote_kernel=remote_kernel,
+        operation = backend.create_operation(
+            notebook,
+            backend=backend,
             snippet=parsed["snippet"],
             filename=parsed["filename"],
             parameters=parsed["parameters"],
         )
-        return Response(RemoteOperationSerializer(operation).data, status=201)
+        return Response(RemoteOperationSerializer(operation).data, status=status.HTTP_201_CREATED)
+
+
+class RemoteFileViewSet(viewsets.ModelViewSet):
+    http_method_names = ["put", "delete"]
+    queryset = RemoteFile.objects.all()
+    serializer_class = RemoteFileSerializer
+
+    def perform_destroy(self, instance):
+        if instance.notebook.owner != self.request.user:
+            raise PermissionDenied
+        super().perform_destroy(instance)
+
+    def perform_update(self, serializer):
+        if self.request.user != serializer.validated_data["notebook"].owner:
+            raise PermissionDenied
+        serializer.save()

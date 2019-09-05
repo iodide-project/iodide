@@ -1,6 +1,17 @@
 from rest_framework import serializers
 
-from .models import RemoteOperation
+from .models import RemoteFile, RemoteOperation
+
+
+class RemoteFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RemoteFile
+        fields = (
+            "id",
+            "notebook_id",
+            "filename",
+            "operation_id",
+        )
 
 
 class RemoteOperationSerializer(serializers.ModelSerializer):
@@ -9,13 +20,13 @@ class RemoteOperationSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "notebook_id",
-            "remote_kernel",
+            "backend",
             "status",
             "parameters",
             "filename",
             "snippet",
-            "created_at",
-            "running_at",
-            "completed_at",
+            "scheduled_at",
+            "started_at",
+            "ended_at",
             "failed_at",
         )

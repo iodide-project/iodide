@@ -35,7 +35,7 @@ class RemoteOperation(models.Model):
         help_text="The status of the remote operation, string-based for easier inspection",
     )
 
-    remote_kernel = models.CharField(
+    backend = models.CharField(
         max_length=24, help_text="The slug of the remote kernel backend, e.g. 'query'"
     )
     parameters = JSONField(
@@ -54,13 +54,13 @@ class RemoteOperation(models.Model):
         help_text="The actual snippet to be sent to the remote kernel for processing, e.g a SQL query"
     )
 
-    created_at = models.DateTimeField(
+    scheduled_at = models.DateTimeField(
         auto_now_add=True, help_text="The datetime when the remote operation was first created"
     )
-    running_at = models.DateTimeField(
+    started_at = models.DateTimeField(
         blank=True, null=True, help_text="The datetime when the remote operation started running"
     )
-    completed_at = models.DateTimeField(
+    ended_at = models.DateTimeField(
         blank=True,
         null=True,
         help_text="The datetime when the remote operation was completed successfully",
@@ -77,13 +77,31 @@ class RemoteOperation(models.Model):
         """
         Return the remote kernel backend of the given remote chunk
         """
-        backend = backends.registry.get(self.remote_kernel, None)
+        backend = backends.registry.get(self.backend, None)
         if backend is None:
-            raise ValueError(f"RemoteKernel Backend not found for {self.remote_kernel}")
+            raise ValueError(f"RemoteKernel Backend not found for {self.backend}")
         return backend
 
     class Meta:
         verbose_name = "Remote Operation"
         verbose_name_plural = "Remote Operations"
         unique_together = ("notebook", "filename")
-        ordering = ("-created",)
+        ordering = ("-scheduled_at",)
+
+
+class RemoteFile(BaseContentFile):
+    """
+    Represents a file saved on the server with content
+    fetched from a remote kernel
+    """
+    created_at = models.DateTimeField(
+        auto_now_add=True, help_text="The datetime when the remote file was first created"
+    )
+    refreshed_at = models.DateTimeField(
+        auto_now_add=True, help_text="The datetime when the remote file was last refreshed at"
+    )
+    operation = models.ForeignKey(RemoteOperation, on_delete=models.CASCADE)
+
+    class Meta(BaseContentFile.Meta):
+        verbose_name = "Remote file"
+        verbose_name_plural = "Remote files"

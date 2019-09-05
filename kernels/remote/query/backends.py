@@ -9,6 +9,7 @@ class QueryBackend(Backend):
     A remote kernel to query against a remote source
     such as Redash.
     """
+    # The name of the backend in the backend registry
     token = "query"
 
     def parse_chunk(self, notebook, chunk):

@@ -1,9 +1,13 @@
+import hashlib
+import os
 from abc import ABCMeta, abstractmethod
 
 from class_registry import ClassRegistry
+from django.db import transaction
+from django.utils import timezone
 
-from server.files.models import File
-
+from .models import RemoteFile, RemoteOperation
+from .tasks import execute_remote_operation
 
 # A simple explicit remote kernel registry,
 # TODO: can be turned into an EntryPointClassRegistry later
@@ -16,6 +20,7 @@ class Backend(metaclass=ABCMeta):
     The base class for all kernels that use a remote
     service for evaluating a notebook chunk.
     """
+
     #: The string by which the remote chunk is devided in parameters and content
     REMOTE_CHUNK_DIVIDER = "-----"
 
@@ -45,9 +50,12 @@ class Backend(metaclass=ABCMeta):
         """
         Given a notebook and chunk content string build a filename
         to save a result in.
+
+        Uses the format "<MD5 hash of chunk content>.ioresult", e.g.
+        "a1d0c6e83f027327d8461063f4ac58a6.ioresult"
         """
-        # TODO: implement sensible computed filename from given notebook and chunk content
-        return "foo.bar"
+        chunk_hash = hashlib.md5(chunk.encode()).hexdigest()
+        return f"{chunk_hash}.ioresult"
 
     def split_chunk(self, chunk):
         """
@@ -55,20 +63,63 @@ class Backend(metaclass=ABCMeta):
         """
         return chunk.split(self.REMOTE_CHUNK_DIVIDER, 1)
 
-    def save_result(self, notebook, filename, content):
+    def create_operation(self, notebook, **params):
         """
-        Given the provided notebook, filename and content
-        create a new file object.
-
-        TODO: It may make sense to create a separate RemoteFile
-        that contains some of the metadata that the file was created
-        with originally.
-
-        TODO: Should this be marked with a "remote" flag somehow to
-        show up in a separate tab of the file modal?
+        Creates the remote operation in the database for later retrieval
         """
-        return File.objects.create(
-            notebook=notebook,
-            filename=filename,
-            content=content,
-        )
+        return RemoteOperation.objects.create(notebook_id=notebook.id, **params)
+
+    def save_result(self, operation, content):
+        """
+        Given the provided remote operation and resulting content
+        create a new remote file object.
+        """
+        try:
+            # See if we've previously saved a result in a file
+            # with the provided filename and notebook
+            with transaction.atomic():
+                remote_file = RemoteFile.objects.get(
+                    notebook_id=operation.notebook_id, filename=operation.filename
+                )
+                remote_file.content = content
+                remote_file.operation = operation
+                remote_file.save()
+        except RemoteFile.DoesNotExist:
+            # or create it newly instead
+            with transaction.atomic():
+                remote_file = RemoteFile.objects.create(
+                    notebook=operation.notebook,
+                    filename=operation.filename,
+                    content=content,
+                    operation=operation,
+                )
+        return remote_file
+
+    def refresh_file(self, remote_file):
+        """
+        Refresh the provided remote file using the last operation's
+        parameters.
+        """
+        if remote_file.operation is None:
+            raise ValueError("Cannot refresh a file without previous operation.")
+
+        with transaction.atomic():
+            operation = self.create_operation(
+                notebook_id=remote_file.notebook.id,
+                # TODO: use name of remote file and not from remote operation in
+                # case we ever want to implement renaming files?
+                filename=remote_file.filename,
+                backend=remote_file.operation.backend,
+                snippet=remote_file.operation.snippet,
+                parameters=remote_file.operation.parameters,
+            )
+
+            # TODO: make this use the Celery task API
+            transaction.on_commit(lambda: execute_remote_operation(pk=operation.pk))
+
+            transaction.on_commit(
+                # Record when the file was refreshed
+                lambda: RemoteFile.objects.filter(pk=remote_file.pk).update(
+                    refreshed_at=timezone.now()
+                )
+            )
