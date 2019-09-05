@@ -11,15 +11,14 @@ export default function reducer(state, action) {
       });
     }
 
-    case "console/input/CLEAR_TEXT_CACHE": {
+    case "console/input/RESET": {
       return Object.assign({}, state, {
-        consoleInput: { ...consoleInput, consoleTextCache: "" }
-      });
-    }
-
-    case "console/input/RESET_HISTORY_CURSOR": {
-      return Object.assign({}, state, {
-        consoleInput: { ...consoleInput, consoleScrollbackPosition: 0 }
+        consoleInput: {
+          ...consoleInput,
+          consoleScrollbackPosition: 0,
+          consoleTextCache: "",
+          consoleText: ""
+        }
       });
     }
 

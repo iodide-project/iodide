@@ -1,9 +1,5 @@
 import { addToEvalQueue } from "../../actions/eval-actions";
-import {
-  clearConsoleTextCache,
-  resetHistoryCursor,
-  resetConsoleText
-} from "./actions";
+import { resetConsole } from "./actions";
 
 export function evalConsoleInput(consoleText) {
   return (dispatch, getState) => {
@@ -15,10 +11,8 @@ export function evalConsoleInput(consoleText) {
       chunkContent: consoleText,
       chunkType: getState().languageLastUsed
     };
-    dispatch(clearConsoleTextCache());
-    dispatch(resetHistoryCursor());
     dispatch(addToEvalQueue(chunk));
-    dispatch(resetConsoleText());
+    dispatch(resetConsole());
     return Promise.resolve();
   };
 }

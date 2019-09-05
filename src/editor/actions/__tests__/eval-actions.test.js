@@ -120,10 +120,8 @@ describe("evalConsoleInput", () => {
     };
 
     const expectedActions = [
-      { type: "console/input/CLEAR_TEXT_CACHE" },
-      { type: "console/input/RESET_HISTORY_CURSOR" },
       { type: "ADD_TO_EVAL_QUEUE", chunk },
-      { type: "console/input/UPDATE_TEXT", consoleText: "" }
+      { type: "console/input/RESET" }
     ];
     store = mockStore(testState);
     store.dispatch(evalConsoleInput(consoleText));
