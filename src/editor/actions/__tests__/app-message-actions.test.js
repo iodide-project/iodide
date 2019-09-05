@@ -24,7 +24,7 @@ describe("updateAppMessages", () => {
         content: "LOGGED_OUT",
         historyId: expectedRandomId,
         historyType: "APP_MESSAGE",
-        type: "ADD_TO_CONSOLE_HISTORY"
+        type: "console/history/ADD"
       },
       {
         message: {

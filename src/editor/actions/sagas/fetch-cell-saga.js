@@ -1,7 +1,11 @@
 import { all, call, put } from "redux-saga/effects";
 
 import parseFetchCell from "../fetch-cell-parser";
-import { addToConsoleHistory } from "../console-message-actions";
+import {
+  addToConsoleHistory,
+  updateHistoryLineContent,
+  updateHistoryEntryLevel
+} from "../../console/history/actions";
 import { evaluateLanguagePlugin } from "./language-plugin-saga";
 
 import { triggerEvalFrameTask } from "./eval-frame-sender";
@@ -36,19 +40,14 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
   try {
     fetchedFile = yield call(fileFetcher, filePath, fetchType);
   } catch (err) {
-    yield put({
-      type: "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT",
-      historyId,
-      lineIndex,
-      lineContent: `ERROR: ${filePath}\n    ${err}`
-    });
-    yield put({
-      type: "UPDATE_VALUE_IN_HISTORY",
-      historyItem: {
+    yield put(
+      updateHistoryLineContent(
         historyId,
-        level: "ERROR"
-      }
-    });
+        lineIndex,
+        `ERROR: ${filePath}\n    ${err}`
+      )
+    );
+    yield put(updateHistoryEntryLevel("ERROR"));
     throw new Error(`failed to fetch file; halting eval queue`);
   }
 
@@ -72,12 +71,13 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
 
   const ifVarSet = varName ? ` (var ${varName})` : "";
 
-  yield put({
-    type: "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT",
-    historyId,
-    lineIndex,
-    lineContent: `SUCCESS: ${filePath} loaded${ifVarSet}`
-  });
+  yield put(
+    updateHistoryLineContent(
+      historyId,
+      lineIndex,
+      `SUCCESS: ${filePath} loaded${ifVarSet}`
+    )
+  );
 }
 
 export function* evaluateFetch(fetchText) {

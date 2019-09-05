@@ -1,9 +1,9 @@
-import generateRandomId from "../../shared/utils/generate-random-id";
+import generateRandomId from "../../../shared/utils/generate-random-id";
 
 export const addToConsoleHistory = (
   historyItem,
   historyId = generateRandomId()
-) => ({ type: "ADD_TO_CONSOLE_HISTORY", historyId, ...historyItem });
+) => ({ type: "console/history/ADD", historyId, ...historyItem });
 
 export const addAppMessageToConsoleHistory = content =>
   addToConsoleHistory({ content, historyType: "APP_MESSAGE" });
@@ -35,3 +35,19 @@ export const addPluginParseErrorToHistory = errorMessage =>
     content: `plugin definition failed to parse:\n${errorMessage}`,
     level: "ERROR"
   });
+
+export const updateHistoryEntryLevel = (historyId, level) => ({
+  type: "console/history/UPDATE",
+  historyItem: { historyId, level }
+});
+
+export const updateHistoryLineContent = (
+  historyId,
+  lineIndex,
+  lineContent
+) => ({
+  type: "console/history/UPDATE_LINE",
+  historyId,
+  lineIndex,
+  lineContent
+});

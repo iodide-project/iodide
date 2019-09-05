@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-import { historySchema } from "../state-schemas/history-schema";
+import { historyItemSchema } from "../console/history/state-schema";
 import { languageSchema } from "../state-schemas/state-schema";
 // these are the schemas of actions from the eval frame that
 // are ok to pass to the editor
@@ -16,7 +16,7 @@ export class ActionSchemaValidationError extends Error {
 const languageActionSchema = Object.assign({}, languageSchema);
 languageActionSchema.properties.type = { type: "string" };
 
-const historyActionSchema = Object.assign({}, historySchema);
+const historyActionSchema = Object.assign({}, historyItemSchema);
 historyActionSchema.properties.type = { type: "string" };
 
 const schemas = {
@@ -25,50 +25,6 @@ const schemas = {
     properties: {
       languageDefinition: languageActionSchema
     }
-  },
-  ADD_TO_CONSOLE_HISTORY: historyActionSchema,
-  SET_CONSOLE_LANGUAGE: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      language: { type: "string" },
-      type: { type: "string" }
-    },
-    required: ["language", "type"]
-  },
-  CLEAR_CONSOLE_TEXT_CACHE: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      type: { type: "string" }
-    },
-    required: ["type"]
-  },
-  CONSOLE_HISTORY_MOVE: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      type: { type: "string" },
-      consoleCursorDelta: { type: "integer" }
-    },
-    required: ["type", "consoleCursorDelta"]
-  },
-  RESET_HISTORY_CURSOR: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      type: { type: "string" }
-    },
-    required: ["type"]
-  },
-  UPDATE_CONSOLE_TEXT: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      type: { type: "string" },
-      consoleText: { type: "string" }
-    },
-    required: ["type", "consoleText"]
   },
   UPDATE_USER_VARIABLES: {
     type: "object",
@@ -82,7 +38,8 @@ const schemas = {
     },
     required: ["type", "userDefinedVarNames"]
   },
-  UPDATE_VALUE_IN_HISTORY: {
+  "console/history/ADD": historyActionSchema,
+  "console/history/UPDATE": {
     type: "object",
     additionalProperties: false,
     required: ["type", "historyItem"],

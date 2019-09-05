@@ -1,5 +1,6 @@
 import { languageDefinitions } from "./language-definitions";
-import { historySchema } from "./history-schema";
+import { historySchema } from "../console/history/state-schema";
+import { consoleInputSchema } from "../console/input/state-schema";
 
 // FIXME: break out enums to be in a separate file.
 export const NONCODE_EVAL_TYPES = ["css", "md", "raw"];
@@ -142,20 +143,7 @@ export const stateProperties = {
     items: appMessageSchema,
     default: []
   },
-  consoleText: {
-    type: "string",
-    default: ""
-  },
-  consoleTextCache: {
-    // stores the current entry when keying up/down
-    type: "string",
-    default: ""
-  },
-  consoleScrollbackPosition: {
-    // the position from the END of the history when keying up/down in the console
-    type: "integer",
-    default: 0
-  },
+  consoleInput: consoleInputSchema,
   editorCursor: {
     type: "object",
     properties: {
@@ -188,11 +176,7 @@ export const stateProperties = {
     type: "boolean",
     default: false
   },
-  history: {
-    type: "array",
-    items: historySchema,
-    default: []
-  },
+  history: historySchema,
   iomd: {
     type: "string",
     default: ""

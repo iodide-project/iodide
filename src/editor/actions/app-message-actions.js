@@ -1,4 +1,4 @@
-import { addAppMessageToConsoleHistory } from "./console-message-actions";
+import { addAppMessageToConsoleHistory } from "../console/history/actions";
 
 export function updateAppMessages(messageObj) {
   return dispatch => {
