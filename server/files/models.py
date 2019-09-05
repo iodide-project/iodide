@@ -6,30 +6,46 @@ from ..notebooks.models import Notebook
 from ..settings import MAX_FILE_SIZE, MAX_FILE_SOURCE_URL_LENGTH, MAX_FILENAME_LENGTH
 
 
-class File(models.Model):
+class BaseFile(models.Model):
     """
-    Represents a file saved on the server
+    The abstract base model for files
     """
 
     notebook = models.ForeignKey(Notebook, on_delete=models.CASCADE)
     # FIXME: add a validator for filename (for minimum length and maybe
     # other things)
     filename = models.CharField(max_length=MAX_FILENAME_LENGTH)
-    content = models.BinaryField(max_length=MAX_FILE_SIZE)
-    last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):  # pragma: no cover
         return self.filename
 
     class Meta:
+        abstract = True
         unique_together = ("notebook", "filename")
+        ordering = ("id",)
+
+
+class BaseContentFile(BaseFile):
+    content = models.BinaryField(max_length=MAX_FILE_SIZE)
+
+    class Meta(BaseFile.Meta):
+        pass
+
+
+class File(BaseContentFile):
+    """
+    Represents a file saved on the server
+    """
+
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta(BaseContentFile.Meta):
         verbose_name = "File"
         verbose_name_plural = "Files"
-        ordering = ("id",)
         db_table = "file"
 
 
-class FileSource(models.Model):
+class FileSource(BaseFile):
     """
     Represents a source for files (an external URL)
     """
@@ -38,21 +54,15 @@ class FileSource(models.Model):
     WEEKLY = timedelta(weeks=1)
     UPDATE_INTERVALS = ((DAILY, "daily"), (WEEKLY, "weekly"))
 
-    notebook = models.ForeignKey(Notebook, on_delete=models.CASCADE)
-    # FIXME: add a validator for filename (for minimum length and maybe
-    # other things)
-    filename = models.CharField(max_length=MAX_FILENAME_LENGTH)
     url = models.URLField(max_length=MAX_FILE_SOURCE_URL_LENGTH)
     update_interval = models.DurationField(null=True, choices=UPDATE_INTERVALS)
 
     def __str__(self):  # pragma: no cover
         return self.url
 
-    class Meta:
-        unique_together = ("notebook", "filename")
+    class Meta(BaseFile.Meta):
         verbose_name = "File Source"
         verbose_name_plural = "File Sources"
-        ordering = ("id",)
         db_table = "file_source"
 
 
@@ -66,10 +76,10 @@ class FileUpdateOperation(models.Model):
     COMPLETED = "completed"
     FAILED = "failed"
     OPERATION_STATUSES = (
-        (PENDING, "pending"),
-        (RUNNING, "running"),
-        (COMPLETED, "completed"),
-        (FAILED, "failed"),
+        (PENDING, "Pending"),
+        (RUNNING, "Running"),
+        (COMPLETED, "Completed"),
+        (FAILED, "Failed"),
     )
 
     file_source = models.ForeignKey(FileSource, on_delete=models.CASCADE)

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
+from server.files.models import BaseContentFile
 from server.notebooks.models import Notebook
 from . import backends
 
