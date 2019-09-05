@@ -28,27 +28,28 @@ ENV PATH="/venv/bin:$PATH"
 
 RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
-COPY --from=python-builder /venv /venv
-
-EXPOSE 8000
+COPY --chown=app:app --from=python-builder /venv /venv
 
 WORKDIR /app
 COPY . /app
 
+# Set user permissions
+COPY --chown=app:app . . 
+RUN chown app /app
+USER app
+
 # Collect static files
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
 
-# Set user permissions
-COPY --chown=app:app . . 
-USER app
 # Using /bin/bash as the entrypoint works around some volume mount issues on Windows
 # where volume-mounted files do not have execute bits set.
 # https://github.com/docker/compose/issues/2301#issuecomment-154450785 has additional background.
 ENTRYPOINT ["/bin/bash", "/app/bin/run"]
 
+EXPOSE 8000
+
 FROM base AS devapp
 
-USER root
 # Install dev python dependencies
-RUN pip install --require-hashes --no-cache-dir -r requirements/tests.txt
+RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
 USER app
