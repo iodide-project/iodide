@@ -57,7 +57,7 @@ jobs:
       # save the built docker container into CircleCI's cache. This is
       # required since Workflows do not have the same remote docker instance.
       - run:
-          name: docker save app:build and app:prod
+          name: Save built images
           command: mkdir -p /tmp; docker save -o /tmp/docker.tar "app:build"; docker save -o /tmp/docker-prod.tar "app:prod"
       - save_cache:
           key: v1-{{ .Branch }}-{{epoch}}
