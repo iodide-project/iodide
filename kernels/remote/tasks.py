@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.utils import timezone
 
+from . import backends
 from .exceptions import RemoteOperationMissing, ExecutionError
 from .models import RemoteOperation
 
@@ -27,10 +28,13 @@ def execute_remote_operation(pk):
         # then update the remote operation that it's running
         operation_queryset.update(status=RemoteOperation.STATUS_RUNNING, started_at=timezone.now())
 
+    # instantiate the backend for the given operation
+    backend = backends.get_backend(operation.backend)
+
     # then execute the remote operation with the given snippet and all other
     # parameters
     try:
-        result = operation.backend.execute_operation(
+        result = backend.execute_operation(
             snippet=operation.snippet, **operation.parameters
         )
     except Exception as exc:
@@ -40,7 +44,7 @@ def execute_remote_operation(pk):
 
     # and safe the result as a Iodide file, the result should be a
     # memory effecient iterator, e.g. a streaming response
-    operation.backend.save_result(operation, result)
+    backend.save_result(operation, result)
 
     with transaction.atomic():
         # then update the remote operation that it was completed

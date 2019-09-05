@@ -23,3 +23,10 @@ class ExecutionError(RemoteKernelException):
     The exception for when the parameters sent from the client
     side can't be parsed successfully.
     """
+
+
+class BackendError(RemoteKernelException):
+    """
+    The exception for when loading or instantiating a remote
+    kernel backend fails.
+    """

@@ -43,8 +43,6 @@ class QueryBackend(Backend):
 
         filename = parsed.pop("filename")
         if filename is None:
-            # calculate the filename if it wasn't provided
-            # TODO: check if this is something we really want, product-wise
             filename = self.build_filename(notebook, chunk)
 
         parsed.update({"snippet": snippet, "filename": filename})

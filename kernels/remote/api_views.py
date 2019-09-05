@@ -1,6 +1,5 @@
 import json
 
-from class_registry import RegistryKeyError
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
@@ -32,12 +31,7 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
 
         # get the remote kernel slug and see if we have a matching backend
-        backend = request.data["backend"]
-        try:
-            backend = backends.registry[backend]
-        except RegistryKeyError as exc:
-            # TODO: maybe raise a more specific exception here?
-            raise PermissionDenied from exc
+        backend = backends.get_backend(request.data["backend"], PermissionDenied)
 
         # parse the content provided from the client using the backend
         content = request.data["content"]

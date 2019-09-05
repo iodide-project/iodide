@@ -1,11 +1,11 @@
 import hashlib
-import os
 from abc import ABCMeta, abstractmethod
 
-from class_registry import ClassRegistry
+from class_registry import ClassRegistry, RegistryKeyError
 from django.db import transaction
 from django.utils import timezone
 
+from .exceptions import BackendError
 from .models import RemoteFile, RemoteOperation
 from .tasks import execute_remote_operation
 
@@ -13,6 +13,16 @@ from .tasks import execute_remote_operation
 # TODO: can be turned into an EntryPointClassRegistry later
 # when remote kernels are abstracted out of iodide
 registry = ClassRegistry(attr_name="token")
+
+
+def get_backend(token, exc_cls=BackendError):
+    """
+    Return the backend with the given token or raise the given exception.
+    """
+    try:
+        return registry[token]
+    except RegistryKeyError as exc:
+        raise exc_cls from exc
 
 
 class Backend(metaclass=ABCMeta):
