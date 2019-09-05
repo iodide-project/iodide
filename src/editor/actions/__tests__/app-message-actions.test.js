@@ -3,8 +3,6 @@ import thunk from "redux-thunk";
 import { updateAppMessages } from "../app-message-actions";
 import generateRandomId from "../../../shared/utils/generate-random-id";
 
-import { types as consoleActions } from "../../console/history/actions";
-
 jest.mock("../../../shared/utils/generate-random-id");
 
 const middlewares = [thunk];
@@ -26,7 +24,7 @@ describe("updateAppMessages", () => {
         content: "LOGGED_OUT",
         historyId: expectedRandomId,
         historyType: "APP_MESSAGE",
-        type: consoleActions.ADD
+        type: "console/history/ADD"
       },
       {
         message: {

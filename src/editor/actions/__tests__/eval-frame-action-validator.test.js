@@ -2,8 +2,6 @@ import validateActionFromEvalFrame, {
   ActionSchemaValidationError
 } from "../eval-frame-action-validator";
 
-import { types as consoleActions } from "../../console/history/actions";
-
 describe("validateActionFromEvalFrame should throw errors as expected", () => {
   it("throw if action obj has no type property", () => {
     expect(() => validateActionFromEvalFrame({ notType: 1 })).toThrowError(
@@ -20,7 +18,7 @@ describe("validateActionFromEvalFrame should throw errors as expected", () => {
   it("throw if action obj is not valid (extra action props)", () => {
     expect(() =>
       validateActionFromEvalFrame({
-        type: consoleActions.UPDATE,
+        type: "console/history/ADD",
         extra_prop: "extra_prop is not valid"
       })
     ).toThrowError(ActionSchemaValidationError);
@@ -48,7 +46,7 @@ describe("validateActionFromEvalFrame should return true it action is valid", ()
   it("some action params", () => {
     expect(
       validateActionFromEvalFrame({
-        type: consoleActions.UPDATE,
+        type: "console/history/UPDATE",
         historyItem: {
           historyId: "s03nv9dns",
           content: "ok",
@@ -58,7 +56,7 @@ describe("validateActionFromEvalFrame should return true it action is valid", ()
     ).toEqual(true);
     expect(
       validateActionFromEvalFrame({
-        type: consoleActions.ADD,
+        type: "console/history/ADD",
         historyId: "s03nv9dns",
         content: "ok",
         historyType: "CONSOLE_MESSAGE",

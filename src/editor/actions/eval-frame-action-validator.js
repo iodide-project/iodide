@@ -2,7 +2,6 @@ import Ajv from "ajv";
 
 import { historyItemSchema } from "../console/history/state-schema";
 import { languageSchema } from "../state-schemas/state-schema";
-import { types as consoleActions } from "../console/history/actions";
 // these are the schemas of actions from the eval frame that
 // are ok to pass to the editor
 
@@ -39,8 +38,8 @@ const schemas = {
     },
     required: ["type", "userDefinedVarNames"]
   },
-  [consoleActions.ADD]: historyActionSchema,
-  [consoleActions.UPDATE]: {
+  "console/history/ADD": historyActionSchema,
+  "console/history/UPDATE": {
     type: "object",
     additionalProperties: false,
     required: ["type", "historyItem"],

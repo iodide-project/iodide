@@ -71,12 +71,13 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
 
   const ifVarSet = varName ? ` (var ${varName})` : "";
 
-  yield put({
-    type: "UPDATE_LINE_IN_HISTORY_ITEM_CONTENT",
-    historyId,
-    lineIndex,
-    lineContent: `SUCCESS: ${filePath} loaded${ifVarSet}`
-  });
+  yield put(
+    updateHistoryLineContent(
+      historyId,
+      lineIndex,
+      `SUCCESS: ${filePath} loaded${ifVarSet}`
+    )
+  );
 }
 
 export function* evaluateFetch(fetchText) {

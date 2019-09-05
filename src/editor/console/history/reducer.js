@@ -1,14 +1,12 @@
-import { types } from "./actions";
-
 export default function reducer(state, action) {
   switch (action.type) {
-    case types.ADD: {
+    case "console/history/ADD": {
       const actionCopy = Object.assign({}, action);
       delete actionCopy.type;
       const history = [...state.history, actionCopy];
       return Object.assign({}, state, { history });
     }
-    case types.UPDATE: {
+    case "console/history/UPDATE": {
       const actionCopy = Object.assign({}, action);
       const history = [...state.history.slice()];
       const i = history.findIndex(
@@ -23,7 +21,7 @@ export default function reducer(state, action) {
       return Object.assign({}, state, { history });
     }
 
-    case types.UPDATE_LINE: {
+    case "console/history/UPDATE_LINE": {
       const i = state.history.findIndex(h => h.historyId === action.historyId);
       const history = [...state.history.slice()];
       const contentLines = history[i].content;
