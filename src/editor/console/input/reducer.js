@@ -11,15 +11,14 @@ export default function reducer(state, action) {
       });
     }
 
-    case "console/input/CLEAR_TEXT_CACHE": {
+    case "console/input/RESET": {
       return Object.assign({}, state, {
-        consoleInput: { ...consoleInput, consoleTextCache: "" }
-      });
-    }
-
-    case "console/input/RESET_HISTORY_CURSOR": {
-      return Object.assign({}, state, {
-        consoleInput: { ...consoleInput, consoleScrollbackPosition: 0 }
+        consoleInput: {
+          ...consoleInput,
+          consoleScrollbackPosition: 0,
+          consoleTextCache: "",
+          consoleText: ""
+        }
       });
     }
 
@@ -30,7 +29,8 @@ export default function reducer(state, action) {
       );
       const historyLength = inputHistory.length;
       // note that we bound consoleScrollbackPosition between
-      // zero (which represents the cursor being in th) and historyLength
+      // zero and historyLength. Zero represents the current content entered in the console by the user,
+      // not a history entry; the first history entry is at 1
       const nextScrollback = Math.min(
         Math.max(
           0,
@@ -41,7 +41,7 @@ export default function reducer(state, action) {
       );
 
       let { consoleTextCache } = state.consoleInput;
-      if (state.consoleScrollbackPosition === 0) {
+      if (state.consoleInput.consoleScrollbackPosition === 0) {
         // if we moved FROM 0, set the consoleTextCache from the current value
         consoleTextCache = state.consoleInput.consoleText;
       }
