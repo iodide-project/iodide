@@ -1,7 +1,6 @@
 version: '3'
 services:
   server:
-    image: app:build
     build: 
       context: .
     env_file: .env
@@ -18,7 +17,8 @@ services:
     command: dev
 
   worker:
-    image: app:build
+    build:
+      context: .
     env_file: .env
     depends_on:
       - db
@@ -31,7 +31,8 @@ services:
     command: worker
 
   beat:
-    image: app:build
+    build:
+      context: .
     env_file: .env
     depends_on:
       - db
