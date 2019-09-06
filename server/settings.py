@@ -99,9 +99,9 @@ INSTALLED_APPS = [
     "server.jwt",
     "server.notebooks",
     "server.files",
+    "server.kernels.apps.RemoteConfig",
+    "server.kernels.remote.query.apps.QueryConfig",
     "spinach.contrib.spinachd",
-    "kernels.apps.RemoteConfig",
-    "kernels.remote.query.apps.QueryConfig",
 ]
 
 RESTRICT_API = env.bool("RESTRICT_API", default=False)

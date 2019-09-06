@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class RemoteConfig(AppConfig):
-    name = "kernels.remote"
+    name = "server.kernels.remote"
     verbose_name = "Remote Kernels"
