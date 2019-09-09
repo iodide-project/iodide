@@ -106,9 +106,7 @@ describe("ConsoleInputUnconnected React component", () => {
 describe("ConsoleInput mapStateToProps", () => {
   let state;
   beforeEach(() => {
-    state = {
-      consoleText: "TEST_TEXT"
-    };
+    state = { consoleInput: { consoleText: "TEST_TEXT" } };
   });
 
   it("loads state.consoleTest as expected", () => {

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "react-emotion";
 
 import ConsoleContainer from "./console-container";
-import ConsoleGutter from "./console-gutter";
+import ConsoleGutter from "../../console-gutter";
 import levels from "./log-levels";
 
 const MessageContainer = styled(ConsoleContainer)`

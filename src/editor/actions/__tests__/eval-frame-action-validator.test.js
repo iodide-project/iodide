@@ -18,7 +18,7 @@ describe("validateActionFromEvalFrame should throw errors as expected", () => {
   it("throw if action obj is not valid (extra action props)", () => {
     expect(() =>
       validateActionFromEvalFrame({
-        type: "RESET_HISTORY_CURSOR",
+        type: "console/history/ADD",
         extra_prop: "extra_prop is not valid"
       })
     ).toThrowError(ActionSchemaValidationError);
@@ -43,18 +43,10 @@ describe("validateActionFromEvalFrame should throw errors as expected", () => {
 });
 
 describe("validateActionFromEvalFrame should return true it action is valid", () => {
-  it("no action params", () => {
-    expect(
-      validateActionFromEvalFrame({
-        type: "RESET_HISTORY_CURSOR"
-      })
-    ).toEqual(true);
-  });
-
   it("some action params", () => {
     expect(
       validateActionFromEvalFrame({
-        type: "UPDATE_VALUE_IN_HISTORY",
+        type: "console/history/UPDATE",
         historyItem: {
           historyId: "s03nv9dns",
           content: "ok",
@@ -64,7 +56,7 @@ describe("validateActionFromEvalFrame should return true it action is valid", ()
     ).toEqual(true);
     expect(
       validateActionFromEvalFrame({
-        type: "ADD_TO_CONSOLE_HISTORY",
+        type: "console/history/ADD",
         historyId: "s03nv9dns",
         content: "ok",
         historyType: "CONSOLE_MESSAGE",

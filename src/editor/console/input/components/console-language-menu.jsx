@@ -8,9 +8,9 @@ import Popover from "../../../../shared/components/popover";
 import Menu from "../../../../shared/components/menu";
 import MenuItem from "../../../../shared/components/menu-item";
 import { TextButton } from "../../../../shared/components/buttons";
-import BaseIcon from "./base-icon";
+import BaseIcon from "../../base-icon";
 
-import { setConsoleLanguage } from "../../../actions/console-actions";
+import { setConsoleLanguage } from "../actions";
 
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;

@@ -2,11 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import {
-  updateConsoleText,
-  consoleHistoryStepBack,
-  evalConsoleInput
-} from "../../../actions/console-actions";
+import { updateConsoleText, consoleHistoryStepBack } from "../actions";
+import { evalConsoleInput } from "../thunks";
 
 import THEME from "../../../../shared/theme";
 
@@ -147,7 +144,7 @@ const mapDispatchToProps = {
 
 export function mapStateToProps(state) {
   return {
-    consoleText: state.consoleText
+    consoleText: state.consoleInput.consoleText
   };
 }
 

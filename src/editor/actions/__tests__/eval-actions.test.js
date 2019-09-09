@@ -7,7 +7,7 @@ import {
   evaluateText
 } from "../eval-actions";
 
-import { evalConsoleInput } from "../console-actions";
+import { evalConsoleInput } from "../../console/input/thunks";
 import { NONCODE_EVAL_TYPES } from "../../state-schemas/state-schema";
 import { jsLanguageDefinition } from "../../state-schemas/language-definitions";
 
@@ -120,10 +120,8 @@ describe("evalConsoleInput", () => {
     };
 
     const expectedActions = [
-      { type: "CLEAR_CONSOLE_TEXT_CACHE" },
-      { type: "RESET_HISTORY_CURSOR" },
       { type: "ADD_TO_EVAL_QUEUE", chunk },
-      { type: "UPDATE_CONSOLE_TEXT", consoleText: "" }
+      { type: "console/input/RESET" }
     ];
     store = mockStore(testState);
     store.dispatch(evalConsoleInput(consoleText));

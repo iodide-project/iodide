@@ -6,11 +6,11 @@ import styled from "react-emotion";
 
 import HelpOutline from "@material-ui/icons/HelpOutline";
 
-import HistoryItem from "./history-item";
-import ConsoleInput from "./console/console-input";
+import HistoryItem from "./history/components/history-item";
+import ConsoleInput from "./input/components/console-input";
 
 import EmptyPaneContents from "./empty-pane-contents";
-import OnboardingContent from "../../../shared/components/onboarding-content";
+import OnboardingContent from "../../shared/components/onboarding-content";
 
 const HelpIcon = styled(HelpOutline)`
   display: inline-block;
