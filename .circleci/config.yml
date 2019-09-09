@@ -147,8 +147,8 @@ jobs:
       # We are not using the cached docker file here b/c we want the production
       # build to use only the required Python files.
       - run:
-          name: Build Docker image
-          command: docker build -t app:prod --target=base .
+          name: Load Production Image
+          command: docker load --input /tmp/docker-prod.tar
       - run:
           name: Push image to Docker Hub
           command: |
