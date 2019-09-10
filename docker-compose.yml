@@ -1,7 +1,7 @@
 version: '3'
 services:
   server:
-    build: 
+    build:
       context: .
     env_file: .env
     depends_on:

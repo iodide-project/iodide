@@ -7,7 +7,7 @@ WORKDIR /app
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get -y install \ 
+    apt-get -y install \
     libpq-dev \
     libffi-dev \
     python-dev \
@@ -17,11 +17,27 @@ RUN apt-get update && \
 RUN pip install virtualenv
 RUN virtualenv /venv
 
-# Install base python dependencies 
+# Install base python dependencies
 COPY requirements/*.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 
 FROM python:3.7-slim AS base
+
+# install a few essentials and clean apt caches afterwards
+RUN mkdir -p \
+        /usr/share/man/man1 \
+        /usr/share/man/man2 \
+        /usr/share/man/man3 \
+        /usr/share/man/man4 \
+        /usr/share/man/man5 \
+        /usr/share/man/man6 \
+        /usr/share/man/man7 \
+        /usr/share/man/man8 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        apt-transport-https postgresql-client netcat  && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PATH="/venv/bin:$PATH"
@@ -34,7 +50,7 @@ WORKDIR /app
 COPY . /app
 
 # Set user permissions
-COPY --chown=app:app . . 
+COPY --chown=app:app . .
 RUN chown app /app
 USER app
 
