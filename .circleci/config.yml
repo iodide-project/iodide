@@ -137,6 +137,7 @@ jobs:
       - image: circleci/node:8
     working_directory: ~/iodide
     steps:
+      - setup_remote_docker
       - restore_cache:
           key: v1-{{.Branch}}
       - run:
