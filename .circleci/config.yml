@@ -53,7 +53,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Build Docker images
-          command: docker build -t app:prod --target=base . && docker build -t app:build . 
+          command: docker build -t app:prod --target=base . && docker build -t app:build .
       # save the built docker container into CircleCI's cache. This is
       # required since Workflows do not have the same remote docker instance.
       - run:
@@ -135,6 +135,8 @@ jobs:
       - run: npm install
       - run: npm run build
       - setup_remote_docker
+      # We are not using the cached docker file here b/c we want to copy in
+      # some custom versioning data
       - run:
           name: Create version.json
           command: |
@@ -144,9 +146,9 @@ jobs:
             "$CIRCLE_PROJECT_USERNAME" \
             "$CIRCLE_PROJECT_REPONAME" \
             "$CIRCLE_BUILD_URL" > version.json
-      - run:
-          name: Load Production Image
-          command: docker load --input /tmp/docker-prod.tar
+       - run:
+          name: Build Docker image
+          command: docker build -t app:prod --target=base .
       - run:
           name: Push image to Docker Hub
           command: |
