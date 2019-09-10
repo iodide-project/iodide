@@ -52,8 +52,17 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
+          name: Create version.json
+          command: |
+            printf '{"commit":"%s","version":"%s","source":"https://github.com/%s/%s","build":"%s"}\n' \
+            "$CIRCLE_SHA1" \
+            "$CIRCLE_TAG" \
+            "$CIRCLE_PROJECT_USERNAME" \
+            "$CIRCLE_PROJECT_REPONAME" \
+            "$CIRCLE_BUILD_URL" > version.json
+      - run:
           name: Build Docker images
-          command: docker build -t app:prod --target=base . && docker build -t app:build . 
+          command: docker build -t app:prod --target=base . && docker build -t app:build .
       # save the built docker container into CircleCI's cache. This is
       # required since Workflows do not have the same remote docker instance.
       - run:
@@ -127,26 +136,12 @@ jobs:
     docker:
       - image: circleci/node:8
     working_directory: ~/iodide
-    environment:
-      npm_config_cache: ~/cache/npm
     steps:
-      - checkout
-      - run: rm -rf node_modules/*/.git
-      - run: npm install
-      - run: npm run build
-      - setup_remote_docker
-      - run:
-          name: Create version.json
-          command: |
-            printf '{"commit":"%s","version":"%s","source":"https://github.com/%s/%s","build":"%s"}\n' \
-            "$CIRCLE_SHA1" \
-            "$CIRCLE_TAG" \
-            "$CIRCLE_PROJECT_USERNAME" \
-            "$CIRCLE_PROJECT_REPONAME" \
-            "$CIRCLE_BUILD_URL" > version.json
+      - restore_cache:
+          key: v1-{{.Branch}}
       - run:
           name: Load Production Image
-          command: docker load --input /tmp/docker-prod.tar
+          command: docker load -i /tmp/docker-prod.tar
       - run:
           name: Push image to Docker Hub
           command: |
