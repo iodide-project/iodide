@@ -1,6 +1,6 @@
 from django.conf import settings
-from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.db import models
 
 from server.files.models import BaseContentFile
 from server.notebooks.models import Notebook
@@ -38,7 +38,7 @@ class RemoteOperation(models.Model):
         max_length=24, help_text="The slug of the remote kernel backend, e.g. 'query'"
     )
     parameters = JSONField(
-        help_text="The parameters as provided as part of the remote chunk content"
+        help_text="The parameters as provided as part of the remote chunk content", default=dict
     )
 
     # TODO: we need to validate this and also provide a view to check availability
@@ -50,7 +50,9 @@ class RemoteOperation(models.Model):
     )
 
     snippet = models.TextField(
-        help_text="The actual snippet to be sent to the remote kernel for processing, e.g a SQL query"
+        help_text=(
+            "The actual snippet to be sent to the remote kernel for " "processing, e.g a SQL query"
+        )
     )
 
     scheduled_at = models.DateTimeField(
@@ -69,12 +71,11 @@ class RemoteOperation(models.Model):
     )
 
     def __str__(self):
-        return self.pk
+        return str(self.pk)
 
     class Meta:
         verbose_name = "Remote Operation"
         verbose_name_plural = "Remote Operations"
-        unique_together = ("notebook", "filename")
         ordering = ("-scheduled_at",)
 
 
@@ -83,11 +84,12 @@ class RemoteFile(BaseContentFile):
     Represents a file saved on the server with content
     fetched from a remote kernel
     """
+
     created_at = models.DateTimeField(
         auto_now_add=True, help_text="The datetime when the remote file was first created"
     )
     refreshed_at = models.DateTimeField(
-        auto_now_add=True, help_text="The datetime when the remote file was last refreshed at"
+        blank=True, null=True, help_text="The datetime when the remote file was last refreshed at"
     )
     operation = models.ForeignKey(RemoteOperation, on_delete=models.CASCADE)
 

@@ -6,12 +6,7 @@ from .models import RemoteFile, RemoteOperation
 class RemoteFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = RemoteFile
-        fields = (
-            "id",
-            "notebook_id",
-            "filename",
-            "operation_id",
-        )
+        fields = ("id", "notebook_id", "filename", "operation_id")
 
 
 class RemoteOperationSerializer(serializers.ModelSerializer):

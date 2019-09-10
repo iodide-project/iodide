@@ -5,7 +5,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
-from ..notebooks.models import Notebook
+from server.notebooks.models import Notebook
+
 from . import backends
 from .exceptions import ParametersParseError
 from .models import RemoteFile, RemoteOperation

@@ -71,7 +71,8 @@ class Backend(metaclass=ABCMeta):
         """
         Splits the provided chunk content by a divider once and returns the result
         """
-        return chunk.split(self.REMOTE_CHUNK_DIVIDER, 1)
+        header, body = chunk.split(self.REMOTE_CHUNK_DIVIDER, 1)
+        return [header, body.strip()]
 
     def create_operation(self, notebook, **params):
         """
@@ -110,12 +111,9 @@ class Backend(metaclass=ABCMeta):
         Refresh the provided remote file using the last operation's
         parameters.
         """
-        if remote_file.operation is None:
-            raise ValueError("Cannot refresh a file without previous operation.")
-
         with transaction.atomic():
             operation = self.create_operation(
-                notebook_id=remote_file.notebook.id,
+                notebook=remote_file.notebook,
                 # TODO: use name of remote file and not from remote operation in
                 # case we ever want to implement renaming files?
                 filename=remote_file.filename,
@@ -133,3 +131,5 @@ class Backend(metaclass=ABCMeta):
                     refreshed_at=timezone.now()
                 )
             )
+
+            return operation

@@ -9,6 +9,7 @@ class QueryBackend(Backend):
     A remote kernel to query against a remote source
     such as Redash.
     """
+
     # The name of the backend in the backend registry
     token = "query"
 
@@ -56,3 +57,4 @@ class QueryBackend(Backend):
         # TODO: given the provided parameters build the request to Redash,
         # wait for the results and return them as a streaming object
         # to be saved as a file
+        return b"faaaaaaaake!"

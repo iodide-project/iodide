@@ -2,7 +2,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from . import backends
-from .exceptions import RemoteOperationMissing, ExecutionError
+from .exceptions import ExecutionError, RemoteOperationMissing
 from .models import RemoteOperation
 
 
@@ -21,7 +21,9 @@ def execute_remote_operation(pk):
         with transaction.atomic():
             # TODO: figure out a good exception here
             # then update the remote operation that it's running
-            operation_queryset.update(status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now())
+            operation_queryset.update(
+                status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now()
+            )
             raise RemoteOperationMissing
 
     with transaction.atomic():
@@ -34,12 +36,12 @@ def execute_remote_operation(pk):
     # then execute the remote operation with the given snippet and all other
     # parameters
     try:
-        result = backend.execute_operation(
-            snippet=operation.snippet, **operation.parameters
-        )
+        result = backend.execute_operation(snippet=operation.snippet, **operation.parameters)
     except Exception as exc:
         with transaction.atomic():
-            operation_queryset.update(status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now())
+            operation_queryset.update(
+                status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now()
+            )
             raise ExecutionError from exc
 
     # and safe the result as a Iodide file, the result should be a
