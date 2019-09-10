@@ -24,6 +24,8 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
+.coverage
+coverage.xml
 
 # coverage.py
 .coverage

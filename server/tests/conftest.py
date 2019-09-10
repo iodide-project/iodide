@@ -16,6 +16,9 @@ def pytest_configure(config):
     )
 
 
+pytest_plugins = ["server.tests.plugins.lean", "server.tests.plugins.staticfiles"]
+
+
 @pytest.fixture
 def api_client():
     """
