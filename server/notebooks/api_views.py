@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 
 from .models import Notebook, NotebookRevision
 from .serializers import (
@@ -31,33 +31,42 @@ class NotebookViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
         super().perform_destroy(instance)
 
-    def perform_create(self, serializer):
-        with transaction.atomic():
-            if "owner" in self.request.data:
-                User = get_user_model()
-                if (
-                    not self.request.data["owner"]
-                    or self.request.data["owner"] == self.request.user.username
-                ):
-                    owner = self.request.user
-                elif self.request.user.can_create_on_behalf_of_others:
-                    owner = get_object_or_404(User, username=self.request.data["owner"])
-                else:
-                    raise PermissionDenied
-            else:
+    def create(self, request):
+        if "owner" in self.request.data:
+            if (
+                not self.request.data["owner"]
+                or self.request.data["owner"] == self.request.user.username
+            ):
                 owner = self.request.user
-
-            if "forked_from" in self.request.data:
-                nbr_id = self.request.data["forked_from"]
-                forked_from = NotebookRevision.objects.get(id=nbr_id)
+            elif self.request.user.can_create_on_behalf_of_others:
+                User = get_user_model()
+                owner, _ = User.objects.get_or_create(username=self.request.data["owner"])
             else:
-                forked_from = None
+                raise PermissionDenied
+        else:
+            owner = self.request.user
+
+        if "forked_from" in self.request.data:
+            nbr_id = self.request.data["forked_from"]
+            try:
+                forked_from = NotebookRevision.objects.get(id=nbr_id)
+            except NotebookRevision.DoesNotExist:
+                raise Http404(f"Notebook with id {nbr_id} does not exist")
+        else:
+            forked_from = None
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        with transaction.atomic():
             notebook = serializer.save(owner=owner, forked_from=forked_from)
             NotebookRevision.objects.create(
                 notebook=notebook,
                 title=self.request.data["title"],
                 content=self.request.data["content"],
             )
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     queryset = Notebook.objects.all()
 

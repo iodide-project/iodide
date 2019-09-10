@@ -1,4 +1,5 @@
 import pytest
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from helpers import get_rest_framework_time_string
@@ -118,6 +119,23 @@ def test_create_notebook_for_another_user(
         assert NotebookRevision.objects.count() == 0
 
 
+def test_create_notebook_for_another_user_who_does_not_yet_exist(
+    fake_user, client, notebook_post_blob
+):
+    uncreated_username = "uncreated_user"
+    post_blob = {**notebook_post_blob, **{"owner": uncreated_username}}
+    fake_user.can_create_on_behalf_of_others = True
+    fake_user.save()
+    client.force_login(user=fake_user)
+    resp = client.post(reverse("notebooks-list"), post_blob)
+    assert resp.status_code == 201
+    assert Notebook.objects.count() == 1
+    notebook = Notebook.objects.first()
+    assert notebook.title == post_blob["title"]
+    created_user = get_user_model().objects.get(username=uncreated_username)
+    assert notebook.owner == created_user
+
+
 def test_delete_notebook_not_logged_in(test_notebook, client):
     # should not be able to delete a notebook if not logged in
     resp = client.delete(reverse("notebooks-detail", kwargs={"pk": test_notebook.id}))
@@ -162,7 +180,7 @@ def test_fork_notebook_not_logged_in(client, notebook_fork_post_blob):
 def test_incorrect_fork_notebook(client, fake_user, incorrect_notebook_fork_post_blob):
     client.force_login(user=fake_user)
     resp = client.post(reverse("notebooks-list"), incorrect_notebook_fork_post_blob)
-    assert resp.status_code == 400
+    assert resp.status_code == 404
 
 
 def test_fork_notebook_logged_in(client, fake_user, fake_user2, test_notebook):

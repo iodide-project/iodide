@@ -40,6 +40,9 @@ class OpenIDCAuthMiddleware(object):
 
         try:
             user = self.User.objects.get(username=openidc_email)
+            if not user.email:
+                user.email = openidc_email
+                user.save()
         except self.User.DoesNotExist:
             user = self.User(username=openidc_email, email=openidc_email)
             user.save()
