@@ -41,6 +41,7 @@ RUN mkdir -p \
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PATH="/venv/bin:$PATH"
+RUN echo export PATH="/venv/bin:\$PATH" > /etc/profile.d/venv.sh
 
 RUN groupadd --gid 10001 app && useradd -g app --uid 10001 --shell /usr/sbin/nologin app
 
