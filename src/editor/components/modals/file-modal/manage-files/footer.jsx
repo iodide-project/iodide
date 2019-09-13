@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 
 const FileFooter = styled.footer`
   align-self: end;

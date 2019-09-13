@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import AddNewFileSource from "./add-new-file-source";
 import FileSourceList from "./file-source-list";
 

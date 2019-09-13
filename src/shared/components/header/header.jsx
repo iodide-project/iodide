@@ -1,4 +1,4 @@
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import THEME from "../../theme";
 
 // NB: the slight margin-bottom is there to accomodate the notebook pane margin size,

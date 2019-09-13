@@ -1,7 +1,6 @@
-import { css } from "emotion";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 
-const hoverSet = color => css`
+const hoverSet = color => `
   a {
     text-decoration: none;
     color: ${color};

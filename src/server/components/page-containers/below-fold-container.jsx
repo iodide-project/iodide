@@ -1,4 +1,4 @@
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import { sharedProperties } from "../../style/base";
 
 export default styled("div")`

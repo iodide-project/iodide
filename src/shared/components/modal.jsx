@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import styled, { keyframes } from "react-emotion";
+import styled from "@emotion/styled";
+import { keyframes } from "@emotion/core";
 import PropTypes from "prop-types";
 
 import {

@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import { List, Placeholder } from "../../shared/components/list";
 import { OutlineButton } from "../../shared/components/buttons";

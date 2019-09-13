@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import HelpModalContent from "./help-modal-content";
 import LogoMark from "../../../shared/components/logo/logo-mark";
 import ThreeElements from "../../../shared/components/three-set/three-elements";

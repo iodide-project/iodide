@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 
 const MAIN_GRAY = "#e0e0e0";
 const MenuDividerContainer = styled("li")`

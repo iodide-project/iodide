@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 
 import TextInput from "./text-input";
 import DropdownSelector from "./dropdown-selector";

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import Settings from "@material-ui/icons/Settings";
 import MoreHoriz from "@material-ui/icons/MoreHoriz";
 import format from "date-fns/format";
