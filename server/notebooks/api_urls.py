@@ -1,6 +1,6 @@
 from rest_framework import routers
 
-from ..files.api_views import NotebookFileViewSet, NotebookFileSourceViewSet
+from ..files.api_views import NotebookFileSourceViewSet, NotebookFileViewSet
 from .api_views import NotebookRevisionViewSet, NotebookViewSet
 
 router = routers.SimpleRouter()
@@ -16,9 +16,7 @@ router.register(
     basename="notebook-file-sources",
 )
 router.register(
-    r"notebooks/(?P<notebook_id>[0-9]+)/files",
-    NotebookFileViewSet,
-    basename="notebook-files",
+    r"notebooks/(?P<notebook_id>[0-9]+)/files", NotebookFileViewSet, basename="notebook-files"
 )
 
 urlpatterns = router.urls

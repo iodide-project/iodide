@@ -94,15 +94,13 @@ def test_put_to_file_api_restricted(fake_user2, api_client, test_notebook, test_
 
 def test_list_files_for_notebook(client, test_notebook, test_file, fake_user):
     client.force_login(user=fake_user)
-    resp = client.get(
-        reverse("notebook-files-list", kwargs={"notebook_id": test_notebook.id})
-    )
+    resp = client.get(reverse("notebook-files-list", kwargs={"notebook_id": test_notebook.id}))
     assert resp.status_code == 200
     assert resp.json() == [
         {
             "filename": test_file.filename,
             "id": test_file.id,
             "notebook_id": test_file.notebook_id,
-            "last_updated": test_file.last_updated.isoformat().replace('+00:00', 'Z'),
+            "last_updated": test_file.last_updated.isoformat().replace("+00:00", "Z"),
         }
     ]
