@@ -3,7 +3,7 @@
 build:
 	npm install
 	npm run build
-	docker build -t app:build .
+	docker-compose build
 
 root-shell:
 	docker-compose run --rm -u 0 server bash

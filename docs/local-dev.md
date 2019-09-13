@@ -87,4 +87,4 @@ After bringing up the docker-compose environment (see above), run `make shell` t
 
 ## Running with a local build of Pyodide
 
-If you want to test your local changes to Pyodide with your local build of Iodide, there are [instructions here](https://github.com/iodide-project/pyodide/pull/455).
+If you want to test your local changes to Pyodide with your local build of Iodide, there are [instructions here](https://github.com/iodide-project/pyodide/blob/master/docs/using_pyodide_from_iodide.md#using-a-local-build-of-pyodide-with-iodide).

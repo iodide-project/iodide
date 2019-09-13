@@ -52,17 +52,27 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: Build Docker image
-          command: docker build -t app:build .
+          name: Create version.json
+          command: |
+            printf '{"commit":"%s","version":"%s","source":"https://github.com/%s/%s","build":"%s"}\n' \
+            "$CIRCLE_SHA1" \
+            "$CIRCLE_TAG" \
+            "$CIRCLE_PROJECT_USERNAME" \
+            "$CIRCLE_PROJECT_REPONAME" \
+            "$CIRCLE_BUILD_URL" > version.json
+      - run:
+          name: Build Docker images
+          command: docker build -t app:prod --target=base . && docker build -t app:build .
       # save the built docker container into CircleCI's cache. This is
       # required since Workflows do not have the same remote docker instance.
       - run:
-          name: docker save app:build
-          command: mkdir -p /tmp; docker save -o /tmp/docker.tar "app:build"
+          name: Save built images
+          command: mkdir -p /tmp; docker save -o /tmp/docker.tar "app:build"; docker save -o /tmp/docker-prod.tar "app:prod"
       - save_cache:
           key: v1-{{ .Branch }}-{{epoch}}
           paths:
             - /tmp/docker.tar
+            - /tmp/docker-prod.tar
             - Dockerfile
             - docker-compose.yml
 
@@ -126,40 +136,25 @@ jobs:
     docker:
       - image: circleci/node:8
     working_directory: ~/iodide
-    environment:
-      npm_config_cache: ~/cache/npm
     steps:
-      - checkout
-      - run: rm -rf node_modules/*/.git
-      - run: npm install
-      - run: npm run build
       - setup_remote_docker
+      - restore_cache:
+          key: v1-{{.Branch}}
       - run:
-          name: Create version.json
-          command: |
-            printf '{"commit":"%s","version":"%s","source":"https://github.com/%s/%s","build":"%s"}\n' \
-            "$CIRCLE_SHA1" \
-            "$CIRCLE_TAG" \
-            "$CIRCLE_PROJECT_USERNAME" \
-            "$CIRCLE_PROJECT_REPONAME" \
-            "$CIRCLE_BUILD_URL" > version.json
-      # We are not using the cached docker file here b/c we want the production
-      # build to use only the required Python files.
-      - run:
-          name: Build Docker image
-          command: docker build -t app:build --build-arg PIP_FILE=build.txt .
+          name: Load Production Image
+          command: docker load -i /tmp/docker-prod.tar
       - run:
           name: Push image to Docker Hub
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             # deploy master
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker tag app:build ${DOCKERHUB_REPO}:latest
+              docker tag app:prod ${DOCKERHUB_REPO}:latest
               docker push ${DOCKERHUB_REPO}:latest
             elif [ ! -z "${CIRCLE_TAG}" ]; then
             # deploy a release tag...
               echo "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
-              docker tag app:build "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
+              docker tag app:prod "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
               docker images
               docker push "${DOCKERHUB_REPO}:${CIRCLE_TAG}"
             fi
