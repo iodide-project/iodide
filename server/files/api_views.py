@@ -73,11 +73,11 @@ class NotebookFileViewSet(viewsets.ModelViewSet):
         return {"notebook_id": notebook_id}
 
     def get_queryset(self):
-        base = File.objects.filter(notebook_id=self.kwargs["notebook_id"])
+        files = File.objects.filter(notebook_id=self.kwargs["notebook_id"])
         filter_by_id = self.request.query_params.getlist("id")
         if filter_by_id:
-            return base.filter(id__in=filter_by_id)
-        return base
+            return files.filter(id__in=filter_by_id)
+        return files
 
 
 class NotebookFileSourceViewSet(viewsets.ModelViewSet):
