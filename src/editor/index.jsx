@@ -32,6 +32,7 @@ import { initializeDefaultKeybindings } from "./initialization/keybindings";
 
 import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
+import { getFiles } from "./actions/file-actions";
 import { restoreLocalAutosave } from "./actions/local-autosave-actions";
 import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
@@ -43,6 +44,7 @@ window.addEventListener("message", listenForEvalFramePortReady, false);
 handleServerVariables(store);
 handleInitialIomd(store);
 store.dispatch(restoreLocalAutosave());
+store.dispatch(getFiles());
 handleReportViewModeInitialization(store);
 
 messagePasserEditor.connectDispatch(store.dispatch);

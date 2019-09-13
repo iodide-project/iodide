@@ -45,11 +45,6 @@ def notebook_view(request, pk):
         revision = notebook.revisions.first()
         latest_revision_id = revision.id
 
-    files = [
-        {"filename": file.filename, "id": file.id, "lastUpdated": file.last_updated.isoformat()}
-        for file in File.objects.filter(notebook_id=pk).order_by("-last_updated")
-    ]
-
     notebook_info = {
         "username": notebook.owner.username,
         "user_can_save": notebook.owner_id == request.user.id,
@@ -58,7 +53,6 @@ def notebook_view(request, pk):
         "revision_is_latest": revision.id == latest_revision_id,
         "connectionMode": "SERVER",
         "title": revision.title,
-        "files": files,
         "max_filename_length": MAX_FILENAME_LENGTH,
         "max_file_size": MAX_FILE_SIZE,
     }

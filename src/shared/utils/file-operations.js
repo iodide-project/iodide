@@ -2,7 +2,8 @@ import { genericFetch } from "../utils/fetch-tools";
 import {
   deleteFileRequest,
   updateFileRequest,
-  createFileRequest
+  createFileRequest,
+  getFilesRequest
 } from "../server-api/file";
 
 export function loadFileFromServer(path, fetchType) {
@@ -125,4 +126,8 @@ export async function saveFileToServer(
 
 export function deleteFileOnServer(fileID) {
   return deleteFileRequest(fileID);
+}
+
+export function getFilesForNotebookFromServer(notebookID) {
+  return getFilesRequest(notebookID);
 }
