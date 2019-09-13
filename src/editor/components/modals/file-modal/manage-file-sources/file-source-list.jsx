@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 

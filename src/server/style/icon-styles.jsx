@@ -1,5 +1,5 @@
 import { css } from "emotion";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 
 export const ActionsContainer = styled("div")`
   max-width: 55px;

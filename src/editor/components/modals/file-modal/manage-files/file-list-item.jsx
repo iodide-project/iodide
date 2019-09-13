@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 
 import { TextButton } from "../../../../../shared/components/buttons";
 import {

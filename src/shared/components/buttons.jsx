@@ -1,6 +1,5 @@
 import React from "react";
-import { css } from "emotion";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import THEME from "../theme";
 
@@ -11,7 +10,7 @@ export const ButtonGroup = styled("div")`
   margin-bottom: 60px;
 `;
 
-const buttonReset = css`
+const GenericButton = styled("button")`
   display: inline-block;
   text-transform: uppercase;
   background: none;
@@ -31,29 +30,32 @@ const buttonReset = css`
   }
 `;
 
-const TextButtonContainer = elementType => styled(elementType)`
-${buttonReset}
-color: ${props => props.buttonColor || THEME.button.baseColor};
-font-size: ${props => props.size || "13px"};
-:hover {
-  color: black;
-  background-color: lightgray;
-}
+const TextButtonContainer = elementType => styled(
+  GenericButton.withComponent(elementType)
+)`
+  color: ${props => props.buttonColor || THEME.button.baseColor};
+  font-size: ${props => props.size || "13px"};
+  :hover {
+    color: black;
+    background-color: lightgray;
+  }
 `;
 
-const OutlineButtonContainer = elementType => styled(elementType)`
-${buttonReset}
-color: ${props => props.buttonColor || THEME.button.baseColor};
-border: 1px solid darkgray;
-font-size: ${props => props.size || "13px"};
+const OutlineButtonContainer = elementType => styled(
+  GenericButton.withComponent(elementType)
+)`
+  color: ${props => props.buttonColor || THEME.button.baseColor};
+  border: 1px solid darkgray;
+  font-size: ${props => props.size || "13px"};
 
-:hover {
-  background-color: lightgray;
-}
+  :hover {
+    background-color: lightgray;
+  }
 `;
 
-const ContainedButtonContainer = elementType => styled(elementType)`
-  ${buttonReset}
+const ContainedButtonContainer = elementType => styled(
+  GenericButton.withComponent(elementType)
+)`
   color: white;
   background-color: ${props => props.buttonColor || THEME.button.baseColor};
   font-size: ${props => props.size || "13px"};
@@ -95,7 +97,3 @@ export class ContainedButton extends React.Component {
     return ButtonFactory(ContainedButtonContainer, this.props);
   }
 }
-
-// TextButton.propTypes = buttonPropTypes;
-// OutlineButton.propTypes = buttonPropTypes;
-// ContainedButton.propTypes = buttonPropTypes;

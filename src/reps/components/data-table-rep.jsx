@@ -2,7 +2,7 @@ import React from "react";
 import ReactTable from "react-table";
 import PropTypes from "prop-types";
 
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 
 import "react-table/react-table.css";
 import "./react-table-styles.css";

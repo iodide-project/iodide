@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import ReactDiffViewer from "react-diff-viewer";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import { connect } from "react-redux";
 
 import Fab from "@material-ui/core/Fab";

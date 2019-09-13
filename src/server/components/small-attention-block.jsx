@@ -1,4 +1,4 @@
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 
 const PLACEHOLDER_BACKGROUND_COLOR = "rgb(240, 240, 240)";
 

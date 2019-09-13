@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { css } from "emotion";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 import THEME from "../theme";
 
 const IodideLogoContainer = styled("h2")`

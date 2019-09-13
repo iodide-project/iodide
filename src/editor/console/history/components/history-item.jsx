@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import styled from "react-emotion";
+import styled from "@emotion/styled";
 
 import AppMessage from "./app-message";
 import { HistoryValueRenderer } from "../../../components/remote-reps/remote-value-renderer";
