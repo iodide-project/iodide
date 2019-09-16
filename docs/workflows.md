@@ -1,5 +1,7 @@
 # Common workflows and tips
 
+_Please also read our page about a few [JavaScript quirks](quirks.md) that you might encounter while using JavaScript in Iodide._
+
 ## Getting data into an Iodide notebook
 
 Iodide can use JavaScript and standard browser APIs to download data from public URLs on the web. As a convenience, we also provide a “fetch chunk” in IOMD, which allows you to load data using a shorthand syntax. You can read more about IOMD fetch chunk syntax in the fetch chunk section of the [IOMD docs](iomd.md).
@@ -21,7 +23,7 @@ To work around CORS errors, you need to upload your data to a server that does n
 
 ### Uploading data to an Iodide notebook
 
-_Note (2019-03-11): during our alpha period, files larger than 10MB cannot be uploaded._
+_Note: during our alpha period, files larger than 10MB cannot be uploaded._
 
 If you want to work with data stored on your local machine or if you are
 encountering CORS problems while attempting to use a dataset from a remote
