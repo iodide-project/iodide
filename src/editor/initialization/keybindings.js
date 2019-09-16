@@ -3,6 +3,12 @@ import tasks from "../user-tasks/task-definitions";
 
 Mousetrap.prototype.stopCallback = () => false;
 
+let warnUser = false;
+
+const preventBacknav = e => {
+  warnUser = e.target === document.body;
+};
+
 export function initializeDefaultKeybindings() {
   Object.keys(tasks).forEach(t => {
     const task = tasks[t];
@@ -10,4 +16,13 @@ export function initializeDefaultKeybindings() {
       Mousetrap.bind(task.keybindings, task.keybindingCallback);
     }
   });
+  Mousetrap.bind(["delete", "backspace"], preventBacknav);
 }
+
+window.onbeforeunload = () => {
+  if (warnUser) {
+    warnUser = false;
+    return "Are you sure you want to leave?";
+  }
+  return undefined;
+};
