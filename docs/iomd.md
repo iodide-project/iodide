@@ -24,13 +24,13 @@ As we said above, a IOMD file is just a plain text file with text blocks represe
 A few things to note about IOMD:
 
 - Iodide natively supports the following IOMD chunk types (described in more detail below):
-  - `%% js` for JavaScript source code
-  - `%% py` for Python source code
-  - `%% md` for Markdown
-  - `%% css` for CSS styles
-  - `%% fetch` for retrieving resources
-  - `%% plugin` for Iodide plugins
-  - `%% raw` for raw text (which Iodide will ignore)
+    - `%% js` for JavaScript source code
+    - `%% py` for Python source code
+    - `%% md` for Markdown
+    - `%% css` for CSS styles
+    - `%% fetch` for retrieving resources
+    - `%% plugin` for Iodide plugins
+    - `%% raw` for raw text (which Iodide will ignore)
 - A chunk started with just `%%` but no explicit chunk type will inherit its type of the chunk above it.
 - Any chunk with an unknown type will be ignored by Iodide.
 - Any blank lines above the first chunk specifier will be ignored.
