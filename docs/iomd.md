@@ -103,6 +103,8 @@ JavaScript chunks allow you to input JavaScript that is you can execute within y
 
 The last value returned by your code chunk is displayed in the Iodide Console.
 
+_For more information on working with JavaScript in Iodide, be sure to check out our docs about [useful workflows](workflows.md) and the [quirks and workarounds](quirks.md) that might unfamiliar to JS development in other contexts._
+
 ### CSS (`%% css`)
 
 CSS chunks allow you to input [CSS styles](https://developer.mozilla.org/en-US/docs/Web/CSS) to change the appearance of your report. Like Markdown chunks, these chunks are evaluated while you type, allowing you get real time feedback as you make changes to your styles.
