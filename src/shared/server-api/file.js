@@ -26,3 +26,7 @@ export function deleteFileRequest(fileID) {
     false
   );
 }
+
+export function getFilesRequest(notebookID) {
+  return signedAPIRequest(`/api/v1/notebooks/${notebookID}/files/`);
+}
