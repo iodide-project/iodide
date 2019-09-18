@@ -1,5 +1,6 @@
  # (Unreleased; add upcoming change notes here)
 
+- Fixes undesired behavior caused by reliance on existence of local autosave [#2259](https://github.com/iodide-project/iodide/issues/2259)
 - Adds a new feature, file sources, which allows notebook authors to    
   schedule the fetching of files from URLs. This feature is available in the notebook menu (click _Menu > Manage Files_)
 - Add multi stage docker builds for smaller docker images (#2156)
