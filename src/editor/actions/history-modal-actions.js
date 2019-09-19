@@ -2,7 +2,7 @@ import {
   getRevisionList,
   getRevisions
 } from "../../shared/server-api/revisions";
-import { getLocalAutosave, haveLocalAutosave } from "../tools/local-autosave";
+import { getLocalAutosave } from "../tools/local-autosave";
 import { getRevisionIdsNeededForDisplay } from "../tools/revision-history";
 import { getNotebookID, isLoggedIn } from "../tools/server-tools";
 import { updateAutosave } from "./autosave-actions";
@@ -70,38 +70,32 @@ export function getNotebookRevisionList() {
     dispatch({ type: "GETTING_NOTEBOOK_REVISION_LIST" });
     getRevisionList(getNotebookID(getState()), isLoggedIn(getState()))
       .then(revisionList => {
-        haveLocalAutosave(getState())
-          .then(havePendingChanges => {
-            if (havePendingChanges) {
-              getLocalAutosave(getState())
-                .then(localAutosaveState => {
-                  const hasLocalOnlyChanges =
-                    localAutosaveState.iomd !==
-                    getState().notebookHistory.revisionContent[
-                      revisionList[0].id
-                    ];
-                  dispatch({
-                    type: "UPDATE_NOTEBOOK_HISTORY",
-                    hasLocalOnlyChanges,
-                    revisionList,
-                    selectedRevisionId: hasLocalOnlyChanges
-                      ? undefined
-                      : revisionList[0].id
-                  });
-                  getRequiredRevisionContent(getState(), dispatch);
-                })
-                .catch(() => {
-                  dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
-                });
-            } else {
-              dispatch({
-                type: "UPDATE_NOTEBOOK_HISTORY",
-                hasLocalOnlyChanges: false,
-                revisionList,
-                selectedRevisionId: revisionList[0].id
-              });
-              getRequiredRevisionContent(getState(), dispatch);
+        getLocalAutosave(getState())
+          .then(localAutosaveState => {
+            let hasLocalOnlyChanges = false;
+            if (
+              "revisionContent" in getState().notebookHistory &&
+              "iomd" in localAutosaveState
+            ) {
+              if (
+                revisionList[0].id in getState().notebookHistory.revisionContent
+              ) {
+                hasLocalOnlyChanges =
+                  localAutosaveState.iomd !==
+                  getState().notebookHistory.revisionContent[
+                    revisionList[0].id
+                  ];
+              }
             }
+            dispatch({
+              type: "UPDATE_NOTEBOOK_HISTORY",
+              hasLocalOnlyChanges,
+              revisionList,
+              selectedRevisionId: hasLocalOnlyChanges
+                ? undefined
+                : revisionList[0].id
+            });
+            getRequiredRevisionContent(getState(), dispatch);
           })
           .catch(() => {
             dispatch({ type: "ERROR_GETTING_NOTEBOOK_REVISION_LIST" });
