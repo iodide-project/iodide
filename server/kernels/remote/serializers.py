@@ -1,12 +1,6 @@
 from rest_framework import serializers
 
-from .models import RemoteFile, RemoteOperation
-
-
-class RemoteFileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RemoteFile
-        fields = ("id", "notebook_id", "filename", "operation_id")
+from .models import RemoteOperation
 
 
 class RemoteOperationSerializer(serializers.ModelSerializer):

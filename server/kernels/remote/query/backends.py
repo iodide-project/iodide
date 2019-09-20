@@ -57,4 +57,4 @@ class QueryBackend(Backend):
         # TODO: given the provided parameters build the request to Redash,
         # wait for the results and return them as a streaming object
         # to be saved as a file
-        return b"faaaaaaaake!"
+        return b"It's a faaaaaaaake!"  # https://youtu.be/7qKcJF4fOPs

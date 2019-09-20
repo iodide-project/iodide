@@ -1,8 +1,9 @@
 import pytest
 
+from server.files.models import File
 from server.kernels.remote.backends import Backend, get_backend, registry
 from server.kernels.remote.exceptions import BackendError
-from server.kernels.remote.models import RemoteFile, RemoteOperation
+from server.kernels.remote.models import RemoteOperation
 from server.kernels.remote.query.backends import QueryBackend
 
 TEST_CHUNK = """
@@ -56,10 +57,10 @@ def two_remote_operations(remote_backend, test_notebook):
 
 @pytest.fixture
 def remote_file(remote_operation):
-    return RemoteFile.objects.create(
+    return File.objects.create(
         notebook=remote_operation.notebook,
         filename=remote_operation.filename,
-        operation=remote_operation,
+        remote_operation=remote_operation,
     )
 
 
@@ -119,23 +120,23 @@ def test_save_result_remote_file_new(remote_backend, remote_operation):
         }
         """,
     )
-    assert remote_file.operation == remote_operation
-    assert RemoteFile.objects.count() == 1
+    assert remote_file.remote_operation == remote_operation
+    assert File.objects.count() == 1
 
 
 def test_save_result_remote_file_exists(remote_backend, remote_operation, remote_file):
     # doesn't create another remote file but just updates the one
     remote_file_2 = remote_backend.save_result(remote_operation, b"something entirely different")
-    assert remote_file.operation == remote_operation
+    assert remote_file.remote_operation == remote_operation
     assert remote_file == remote_file_2
-    assert RemoteFile.objects.count() == 1
+    assert File.objects.count() == 1
 
 
 def test_refresh_file(remote_backend, remote_file):
-    assert RemoteFile.objects.count() == 1
+    assert File.objects.count() == 1
     assert RemoteOperation.objects.count() == 1
     new_operation = remote_backend.refresh_file(remote_file)
-    assert RemoteFile.objects.count() == 1
+    assert File.objects.count() == 1
     assert RemoteOperation.objects.count() == 2
     assert isinstance(new_operation, RemoteOperation)
     assert new_operation.notebook == remote_file.notebook

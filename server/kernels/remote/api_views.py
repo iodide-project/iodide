@@ -9,8 +9,8 @@ from server.notebooks.models import Notebook
 
 from . import backends
 from .exceptions import ParametersParseError
-from .models import RemoteFile, RemoteOperation
-from .serializers import RemoteFileSerializer, RemoteOperationSerializer
+from .models import RemoteOperation
+from .serializers import RemoteOperationSerializer
 
 
 class RemoteOperationViewSet(viewsets.ModelViewSet):
@@ -32,7 +32,7 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
 
         # get the remote kernel slug and see if we have a matching backend
-        backend = backends.get_backend(request.data["backend"], PermissionDenied)
+        backend = backends.get_backend(metadata["backend"], PermissionDenied)
 
         # parse the content provided from the client using the backend
         content = request.data["content"]
@@ -53,19 +53,3 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
             parameters=parsed["parameters"],
         )
         return Response(RemoteOperationSerializer(operation).data, status=status.HTTP_201_CREATED)
-
-
-class RemoteFileViewSet(viewsets.ModelViewSet):
-    http_method_names = ["put", "delete"]
-    queryset = RemoteFile.objects.all()
-    serializer_class = RemoteFileSerializer
-
-    def perform_destroy(self, instance):
-        if instance.notebook.owner != self.request.user:
-            raise PermissionDenied
-        super().perform_destroy(instance)
-
-    def perform_update(self, serializer):
-        if self.request.user != serializer.validated_data["notebook"].owner:
-            raise PermissionDenied
-        serializer.save()

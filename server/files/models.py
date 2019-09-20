@@ -1,7 +1,9 @@
 from datetime import timedelta
 
 from django.db import models
+from django.utils import timezone
 
+from ..kernels.remote.models import RemoteOperation
 from ..notebooks.models import Notebook
 from ..settings import MAX_FILE_SIZE, MAX_FILE_SOURCE_URL_LENGTH, MAX_FILENAME_LENGTH
 
@@ -25,21 +27,26 @@ class BaseFile(models.Model):
         ordering = ("id",)
 
 
-class BaseContentFile(BaseFile):
-    content = models.BinaryField(max_length=MAX_FILE_SIZE)
-
-    class Meta(BaseFile.Meta):
-        abstract = True
-
-
-class File(BaseContentFile):
+class File(BaseFile):
     """
     Represents a file saved on the server
     """
 
-    last_updated = models.DateTimeField(auto_now=True)
+    content = models.BinaryField(max_length=MAX_FILE_SIZE)
 
-    class Meta(BaseContentFile.Meta):
+    last_updated = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(
+        help_text="The datetime when the file was first created",
+        default=timezone.now,
+    )
+    refreshed_at = models.DateTimeField(
+        blank=True, null=True, help_text="The datetime when the file was last refreshed at"
+    )
+    remote_operation = models.ForeignKey(
+        RemoteOperation, null=True, blank=True, on_delete=models.SET_NULL
+    )
+
+    class Meta(BaseFile.Meta):
         verbose_name = "File"
         verbose_name_plural = "Files"
         db_table = "file"

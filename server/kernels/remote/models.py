@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from server.files.models import BaseContentFile
 from server.notebooks.models import Notebook
 
 
@@ -77,22 +76,3 @@ class RemoteOperation(models.Model):
         verbose_name = "Remote Operation"
         verbose_name_plural = "Remote Operations"
         ordering = ("-scheduled_at",)
-
-
-class RemoteFile(BaseContentFile):
-    """
-    Represents a file saved on the server with content
-    fetched from a remote kernel
-    """
-
-    created_at = models.DateTimeField(
-        auto_now_add=True, help_text="The datetime when the remote file was first created"
-    )
-    refreshed_at = models.DateTimeField(
-        blank=True, null=True, help_text="The datetime when the remote file was last refreshed at"
-    )
-    operation = models.ForeignKey(RemoteOperation, on_delete=models.CASCADE)
-
-    class Meta(BaseContentFile.Meta):
-        verbose_name = "Remote file"
-        verbose_name_plural = "Remote files"
