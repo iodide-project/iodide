@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "social_django",
     "rest_framework",
     "rest_framework.authtoken",
     "server.base",
@@ -126,7 +127,6 @@ if USE_OPENIDC_AUTH:
     INSTALLED_APPS.append("server.openidc")
     MIDDLEWARE.append("server.openidc.middleware.OpenIDCAuthMiddleware")
 elif SOCIAL_AUTH_GITHUB_KEY:
-    INSTALLED_APPS.append("social_django")
     MIDDLEWARE.extend(
         [
             "social_django.middleware.SocialAuthExceptionMiddleware",
