@@ -36,8 +36,7 @@ class File(BaseFile):
 
     last_updated = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(
-        help_text="The datetime when the file was first created",
-        default=timezone.now,
+        help_text="The datetime when the file was first created", default=timezone.now
     )
     refreshed_at = models.DateTimeField(
         blank=True, null=True, help_text="The datetime when the file was last refreshed at"
