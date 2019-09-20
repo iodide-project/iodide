@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from django.http import HttpResponse
 from django.urls import Resolver404, resolve
 from rest_framework.authentication import SessionAuthentication
@@ -41,11 +42,13 @@ class OpenIDCAuthMiddleware(object):
         try:
             user = self.User.objects.get(username=openidc_email)
             if not user.email:
-                user.email = openidc_email
-                user.save()
+                with transaction.atomic():
+                    user.email = openidc_email
+                    user.save()
         except self.User.DoesNotExist:
             user = self.User(username=openidc_email, email=openidc_email)
-            user.save()
+            with transaction.atomic():
+                user.save()
 
         request.user = user
 
