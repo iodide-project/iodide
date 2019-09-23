@@ -72,21 +72,13 @@ export function getNotebookRevisionList() {
       .then(revisionList => {
         getLocalAutosave(getState())
           .then(localAutosaveState => {
-            let hasLocalOnlyChanges = false;
-            if (
+            const hasLocalOnlyChanges =
               "revisionContent" in getState().notebookHistory &&
-              "iomd" in localAutosaveState
-            ) {
-              if (
-                revisionList[0].id in getState().notebookHistory.revisionContent
-              ) {
-                hasLocalOnlyChanges =
-                  localAutosaveState.iomd !==
-                  getState().notebookHistory.revisionContent[
-                    revisionList[0].id
-                  ];
-              }
-            }
+              "iomd" in localAutosaveState &&
+              revisionList[0].id in
+                getState().notebookHistory.revisionContent &&
+              localAutosaveState.iomd !==
+                getState().notebookHistory.revisionContent[revisionList[0].id];
             dispatch({
               type: "UPDATE_NOTEBOOK_HISTORY",
               hasLocalOnlyChanges,
