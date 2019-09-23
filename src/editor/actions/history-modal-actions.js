@@ -2,7 +2,7 @@ import {
   getRevisionList,
   getRevisions
 } from "../../shared/server-api/revisions";
-import { haveLocalAutosave } from "../tools/local-autosave";
+import { getLocalAutosave } from "../tools/local-autosave";
 import { getRevisionIdsNeededForDisplay } from "../tools/revision-history";
 import { getNotebookID, isLoggedIn } from "../tools/server-tools";
 import { updateAutosave } from "./autosave-actions";
@@ -70,13 +70,20 @@ export function getNotebookRevisionList() {
     dispatch({ type: "GETTING_NOTEBOOK_REVISION_LIST" });
     getRevisionList(getNotebookID(getState()), isLoggedIn(getState()))
       .then(revisionList => {
-        haveLocalAutosave(getState())
-          .then(havePendingChanges => {
+        getLocalAutosave(getState())
+          .then(localAutosaveState => {
+            const hasLocalOnlyChanges =
+              "revisionContent" in getState().notebookHistory &&
+              "iomd" in localAutosaveState &&
+              revisionList[0].id in
+                getState().notebookHistory.revisionContent &&
+              localAutosaveState.iomd !==
+                getState().notebookHistory.revisionContent[revisionList[0].id];
             dispatch({
               type: "UPDATE_NOTEBOOK_HISTORY",
-              hasLocalOnlyChanges: havePendingChanges,
+              hasLocalOnlyChanges,
               revisionList,
-              selectedRevisionId: havePendingChanges
+              selectedRevisionId: hasLocalOnlyChanges
                 ? undefined
                 : revisionList[0].id
             });
