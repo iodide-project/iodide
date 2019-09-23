@@ -35,6 +35,6 @@ export async function deleteFileSourceFromServer(fileSourceID) {
   return deleteFileSourceRequest(fileSourceID);
 }
 
-export async function getFileSourcesFromServer(notebookID) {
-  return getFileSourcesRequest(notebookID);
+export async function getFileSourcesFromServer(notebookID, loggedIn) {
+  return getFileSourcesRequest(notebookID, loggedIn);
 }
