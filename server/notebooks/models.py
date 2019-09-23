@@ -30,6 +30,7 @@ class Notebook(models.Model):
         verbose_name = "Notebook"
         verbose_name_plural = "Notebooks"
         ordering = ("id",)
+        db_table = "notebook"
 
 
 class NotebookRevision(models.Model):
@@ -57,3 +58,4 @@ class NotebookRevision(models.Model):
         verbose_name = "Notebook Revision"
         verbose_name_plural = "Notebook Revisions"
         ordering = ("-created",)
+        db_table = "notebook_revision"
