@@ -48,8 +48,8 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
         operation = backend.create_operation(
             notebook,
             backend=backend,
-            snippet=parsed["snippet"],
             filename=parsed["filename"],
+            snippet=parsed["snippet"],
             parameters=parsed["parameters"],
         )
         return Response(RemoteOperationSerializer(operation).data, status=status.HTTP_201_CREATED)

@@ -75,11 +75,19 @@ class Backend(metaclass=ABCMeta):
         header, body = chunk.split(self.REMOTE_CHUNK_DIVIDER, 1)
         return [header, body.strip()]
 
-    def create_operation(self, notebook, **params):
+    def create_operation(self, notebook, backend, filename, **params):
         """
         Creates the remote operation in the database for later retrieval
         """
-        return RemoteOperation.objects.create(notebook_id=notebook.id, **params)
+        operation = RemoteOperation.objects.create(
+            notebook_id=notebook.id,
+            backend=backend,
+            filename=filename,
+            **params
+        )
+        # TODO: make this use the Celery task API
+        transaction.on_commit(lambda: execute_remote_operation(pk=operation.pk))
+        return operation
 
     def save_result(self, operation, content):
         """
@@ -122,9 +130,6 @@ class Backend(metaclass=ABCMeta):
                 snippet=remote_file.remote_operation.snippet,
                 parameters=remote_file.remote_operation.parameters,
             )
-
-            # TODO: make this use the Celery task API
-            transaction.on_commit(lambda: execute_remote_operation(pk=operation.pk))
 
             transaction.on_commit(
                 # Record when the file was refreshed

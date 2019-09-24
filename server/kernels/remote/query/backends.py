@@ -35,19 +35,18 @@ class QueryBackend(Backend):
                 "snippet": "select count(*) from telemetry.users",
             }
         """
-        parameters, snippet = self.split(chunk)
+        parameters, snippet = self.split_chunk(chunk)
 
         try:
-            parsed = toml.loads(parameters)
+            parsed_parameters = toml.loads(parameters)
         except (TypeError, toml.TomlDecodeError) as exc:
             raise ParametersParseError from exc
 
-        filename = parsed.pop("filename")
+        filename = parsed_parameters.pop("filename", None)
         if filename is None:
             filename = self.build_filename(notebook, chunk)
 
-        parsed.update({"snippet": snippet, "filename": filename})
-        return parsed
+        return {"snippet": snippet, "filename": filename, "parameters": parsed_parameters}
 
     def execute_operation(self, *args, **kwargs):
         """
