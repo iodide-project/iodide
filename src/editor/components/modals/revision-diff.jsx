@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import React from "react";
-import ReactDiffViewer from "react-diff-viewer";
 import styled from "@emotion/styled";
 import { connect } from "react-redux";
 
 import Fab from "@material-ui/core/Fab";
 
 import RestoreModal from "./restore-modal";
+import { RevisionDiffContent } from "./revision-diff-content";
 
 import { restoreSelectedRevision } from "../../actions/history-modal-actions";
 
@@ -15,7 +15,9 @@ import { getPreviousRevisionId } from "../../tools/revision-history";
 import THEME from "../../../shared/theme";
 
 const DiffContainer = styled("div")`
-  overflow: auto;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 `;
 
 class RevisionDiffUnconnected extends React.Component {
@@ -64,10 +66,9 @@ class RevisionDiffUnconnected extends React.Component {
               : undefined
           }
         />
-        <ReactDiffViewer
-          oldValue={this.props.previousRevisionContent}
-          newValue={this.props.currentRevisionContent}
-          splitView={false}
+        <RevisionDiffContent
+          original={this.props.previousRevisionContent}
+          modified={this.props.currentRevisionContent}
         />
         {this.props.canRestore && (
           <Fab
