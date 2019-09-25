@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-- Uses `DiffEditor` of `monaco` [#2275](https://github.com/iodide-project/iodide/issues/2259)
+- Uses `DiffEditor` of `monaco` [#2275](https://github.com/iodide-project/iodide/issues/2275)
 - Fixes undesired behavior caused by reliance on existence of local autosave [#2259](https://github.com/iodide-project/iodide/issues/2259)
 - Adds a new feature, file sources, which allows notebook authors to    
   schedule the fetching of files from URLs. This feature is available in the notebook menu (click _Menu > Manage Files_)
