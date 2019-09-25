@@ -16,6 +16,15 @@ def get_user_info_dict(user):
     return {}
 
 
+def get_base_page_info_dict():
+    if settings.IS_STAGING:
+        return {
+            "isStaging": settings.IS_STAGING,
+            "productionServerURL": settings.PRODUCTION_SERVER_URL,
+        }
+    return {}
+
+
 @ensure_csrf_cookie
 def index(request):
     user_info = get_user_info_dict(request.user)
@@ -38,6 +47,7 @@ def index(request):
         {
             "title": "Iodide",
             "page_data": {
+                **get_base_page_info_dict(),
                 "userInfo": user_info,
                 # this is horrible and will not scale
                 "notebookList": [
@@ -84,6 +94,7 @@ def user(request, name=None):
         {
             "title": title,
             "page_data": {
+                **get_base_page_info_dict(),
                 "userInfo": user_info,
                 "thisUser": this_user,
                 "notebookList": [

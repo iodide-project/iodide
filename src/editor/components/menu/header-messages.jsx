@@ -1,7 +1,7 @@
 import React from "react";
-import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import HeaderMessageContainer from "../../../shared/components/header/header-message-container";
 import LoginModal from "../../../shared/components/login-modal";
 
 import {
@@ -14,28 +14,6 @@ import {
   revertToLatestServerRevision,
   saveNotebookToServer
 } from "../../actions/server-save-actions";
-
-const HeaderMessageContainer = styled("div")`
-  background-color: lightyellow;
-  padding: 5px;
-  border-bottom: darkgrey solid 1px;
-
-  a {
-    color: #0366d6;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
-  a:active,
-  a:hover {
-    outline-width: 0;
-  }
-`;
 
 export class HeaderMessagesUnconnected extends React.Component {
   static propTypes = {

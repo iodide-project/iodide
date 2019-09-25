@@ -11,7 +11,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from ..base.models import User
 from ..files.models import File
 from ..settings import EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH, SITE_URL
-from ..views import get_user_info_dict
+from ..views import get_base_page_info_dict, get_user_info_dict
 from .models import Notebook, NotebookRevision
 from .names import get_random_compound
 
@@ -118,6 +118,7 @@ def notebook_revisions(request, pk):
         {
             "title": f"Revisions - {nb.title}",
             "page_data": {
+                **get_base_page_info_dict(),
                 "userInfo": get_user_info_dict(request.user),
                 "ownerInfo": owner_info,
                 "revisions": revisions,
