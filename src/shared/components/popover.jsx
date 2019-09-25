@@ -5,7 +5,7 @@ import styled from "@emotion/styled";
 
 import { Manager, Reference, Popper } from "react-popper";
 
-import { TextButton } from "../../shared/components/buttons";
+import { GenericButton } from "../../shared/components/buttons";
 
 const ClickContainer = styled("div")`
   border: ${props => {
@@ -118,9 +118,7 @@ export default class Popover extends React.Component {
             >
               <div ref={ref}>
                 {this.props.title ? (
-                  <TextButton buttonColor="black" type="button">
-                    {this.props.title}
-                  </TextButton>
+                  <GenericButton>{this.props.title}</GenericButton>
                 ) : (
                   this.props.activatingComponent
                 )}
