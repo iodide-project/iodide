@@ -1,13 +1,15 @@
- # (Unreleased; add upcoming change notes here)
+# (Unreleased; add upcoming change notes here)
 
-- Fixes undesired behavior caused by reliance on existence of local autosave [#2259](https://github.com/iodide-project/iodide/issues/2259)
-- Adds a new feature, file sources, which allows notebook authors to    
-  schedule the fetching of files from URLs. This feature is available in the notebook menu (click _Menu > Manage Files_)
+# 0.12.0 (2019-09-25)
+
+- Fix spurious "unsaved changes" changeset in revision browser (#2259)
+- Adds a new feature, file sources, which allows notebook authors to schedule
+  the fetching of files from URLs. This feature is available in the notebook menu
+  (click _Menu > Manage Files_) (#1985)
 - Add multi stage docker builds for smaller docker images (#2156)
 - Fixed a bug where script tags aren't being rendered properly that could lead
   to arbitrary code execution attacks (#2193)
-- Add multi stage docker builds for smaller docker images (#2163)
-- Fixes warnings caused by outdated version of Emotion
+- Fixes warnings caused by outdated version of Emotion (#2244)
 
 # 0.11.0 (2019-08-21)
 
