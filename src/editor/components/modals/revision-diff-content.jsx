@@ -51,17 +51,13 @@ export class RevisionDiffContent extends React.Component {
       original: monaco.editor.createModel(original, "text/plain"),
       modified: monaco.editor.createModel(modified, "text/plain")
     });
-
-    this.editor.layout();
   }
 
   componentDidUpdate() {
     const { original, modified } = this.props;
 
-    this.editor.setModel({
-      original: monaco.editor.createModel(original, "text/plain"),
-      modified: monaco.editor.createModel(modified, "text/plain")
-    });
+    this.editor.getModel().original.setValue(original);
+    this.editor.getModel().modified.setValue(modified);
 
     this.editor.layout();
   }
