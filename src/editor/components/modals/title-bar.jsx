@@ -11,14 +11,12 @@ const TitleBar = styled(AppBar)`
   background: ${THEME.clientModal.background};
 `;
 
-const Title = styled(Typography)`
-  color: #fff;
-`;
-
 const RenderedTitleBar = props => (
   <TitleBar position="static">
     <Toolbar>
-      <Title variant="title">{props.title}</Title>
+      <Typography variant="title" style={{ color: "#fff" }}>
+        {props.title}
+      </Typography>
     </Toolbar>
   </TitleBar>
 );
