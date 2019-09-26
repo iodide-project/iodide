@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Fixes coloring of history modal's title
+
 # 0.12.0 (2019-09-25)
 
 - Fix spurious "unsaved changes" changeset in revision browser (#2259)
