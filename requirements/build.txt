@@ -64,9 +64,9 @@ djangorestframework==3.10.3 \
     --hash=sha256:dc81cbf9775c6898a580f6f1f387c4777d12bd87abf0f5406018d32ccae71090
 djangorestframework-simplejwt==4.3.0 \
     --hash=sha256:4cb1a51bf9b098b983e1326a1cfc65fb0b3c5a2aa0fa43effdbf05dd6da5e8cb
-dockerflow==2019.6.0 \
-    --hash=sha256:3342654c419492fa16dc5872546c893433fefce8fd9ba90da9bc9cfcafaecac1 \
-    --hash=sha256:885e4e32ebedc87a86c0d9c16fe4797f9ffe70622eb3a056615e37611eb983fd
+dockerflow==2019.9.0 \
+    --hash=sha256:2d66cf55c68a02f5e5c4b65bd6a7a3398de8d1b473ac09a8b314d562bad6f43e \
+    --hash=sha256:887cd21b4bcdead6f66628dc9879ed5f14eccb038732e68f90e4f476ce714e1c
 furl==2.1.0 \
     --hash=sha256:f4d6f1e5479c376a5b7bdc62795d736d8c1b2a754f366a2ad2816e46e946e22e \
     --hash=sha256:c0e0231a1feee2acd256574b7033df3144775451c610cb587060d6a0d7e0b621
