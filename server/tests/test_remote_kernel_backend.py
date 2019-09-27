@@ -2,9 +2,15 @@ import pytest
 
 from server.files.models import File
 from server.kernels.remote.backends import Backend, get_backend, registry
-from server.kernels.remote.exceptions import BackendError, ParametersParseError
+from server.kernels.remote.exceptions import (
+    BackendError,
+    ExecutionError,
+    MissingOperation,
+    ParametersParseError,
+)
 from server.kernels.remote.models import RemoteOperation
 from server.kernels.remote.query.backends import QueryBackend
+from server.kernels.remote.tasks import execute_remote_operation
 
 TEST_CHUNK = """
 data_source = "telemetry"
@@ -25,6 +31,13 @@ class PassingTestBackend(QueryBackend):
 
     def execute_operation(self, *args, **kwargs):
         return TEST_RESULT
+
+
+class FailingTestBackend(QueryBackend):
+    token = "failing"
+
+    def execute_operation(self, *args, **kwargs):
+        raise ValueError
 
 
 @pytest.fixture
@@ -187,3 +200,26 @@ def test_refresh_file(remote_backend, remote_file):
     assert RemoteOperation.objects.count() == 2
     assert isinstance(new_operation, RemoteOperation)
     assert new_operation.notebook == remote_file.notebook
+
+
+@pytest.mark.django_db
+def test_execute_remote_operation_not_found():
+    with pytest.raises(MissingOperation):
+        execute_remote_operation(10000)
+
+
+def test_execute_remote_operation_failure(test_notebook):
+    registry.register(FailingTestBackend)
+    remote_operation = RemoteOperation.objects.create(
+        notebook=test_notebook,
+        filename="test.ioresult",
+        backend="failing",
+        parameters={},
+        snippet="SELECT 1;",
+    )
+    assert remote_operation.status == remote_operation.STATUS_PENDING
+    with pytest.raises(ExecutionError):
+        execute_remote_operation(remote_operation.pk)
+
+    remote_operation.refresh_from_db()
+    assert remote_operation.status == remote_operation.STATUS_FAILED

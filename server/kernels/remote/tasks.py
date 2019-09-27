@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from ...celery import celery
 from . import backends
-from .exceptions import ExecutionError, RemoteOperationMissing
+from .exceptions import ExecutionError, MissingOperation
 from .models import RemoteOperation
 
 logger = logging.getLogger(__name__)
@@ -22,14 +22,8 @@ def execute_remote_operation(pk):
     # to catch transaction issues or other side effects
     operation = operation_queryset.first()
     if operation is None:
-        with transaction.atomic():
-            # TODO: figure out a good exception here
-            # then update the remote operation that it's running
-            logger.error("Remote operation %s not found", pk)
-            operation_queryset.update(
-                status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now()
-            )
-            raise RemoteOperationMissing
+        logger.error("Remote operation %s not found", pk)
+        raise MissingOperation
 
     with transaction.atomic():
         # then update the remote operation that it's running
@@ -48,8 +42,8 @@ def execute_remote_operation(pk):
             operation_queryset.update(
                 status=RemoteOperation.STATUS_FAILED, failed_at=timezone.now()
             )
-            logger.error("Remote operation %s failed", pk, exc_info=True)
-            raise ExecutionError from exc
+        logger.error("Remote operation %s failed", pk, exc_info=True)
+        raise ExecutionError from exc
 
     # and safe the result as a Iodide file, the result should be a
     # memory effecient iterator, e.g. a streaming response

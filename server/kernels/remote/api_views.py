@@ -1,8 +1,7 @@
 import json
 
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
+from rest_framework import exceptions, status, viewsets
 from rest_framework.response import Response
 
 from server.notebooks.models import Notebook
@@ -29,25 +28,27 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
         metadata = json.loads(self.request.data["metadata"])
         notebook = get_object_or_404(Notebook, id=metadata["notebook_id"])
         if notebook.owner != request.user:
-            raise PermissionDenied
+            raise exceptions.PermissionDenied(
+                "Remote chunks can only be executed by the notebook owner."
+            )
 
         # get the remote kernel slug and see if we have a matching backend
-        backend = backends.get_backend(metadata["backend"], PermissionDenied)
+        backend = backends.get_backend(metadata["backend"], exceptions.PermissionDenied)
 
         # parse the content provided from the client using the backend
         content = request.data["content"]
         try:
-            parsed = backend.parse_chunk(content)
+            parsed = backend.parse_chunk(notebook, content)
         except ParametersParseError:
             # TODO: do something smart here like letting users
             # know that the remote chunk can't be validated
-            raise ValueError(
+            raise exceptions.ParseError(
                 "The remote chunk couldn't be parsed, please check the syntax and evaluate again."
             )
 
         operation = backend.create_operation(
             notebook,
-            backend=backend,
+            backend=backend.token,
             filename=parsed["filename"],
             snippet=parsed["snippet"],
             parameters=parsed["parameters"],

@@ -64,6 +64,13 @@ class FileViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"])
     def refresh(self, request, pk):
+        """
+        API endpoint to refresh the file with the given primary key
+        that was previously created with a remote kernel backened.
+
+        This will effectively create a new remote operation to update
+        the contents of the file.
+        """
         instance = self.get_object()
         if instance.notebook.owner != request.user:
             raise PermissionDenied
