@@ -4,8 +4,9 @@ import tempfile
 import pytest
 from django.urls import reverse
 
-from helpers import get_rest_framework_time_string
 from server.files.models import File
+
+from .helpers import get_rest_framework_time_string
 
 
 def post_file(f, client, test_notebook):
