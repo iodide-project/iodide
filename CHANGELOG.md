@@ -1,8 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-# unreleased
-
-- Extend Python test harness to run linting as part of test suite. [#2305]
+- Extend Python test harness to run linting and coverage as part of test suite (#2305)
 
 # 0.12.0 (2019-09-25)
 
