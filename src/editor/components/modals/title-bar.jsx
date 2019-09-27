@@ -12,7 +12,7 @@ const TitleBar = styled(AppBar)`
 `;
 
 const Title = styled(Typography)`
-  color: #fff;
+  color: #fff !important;
 `;
 
 const RenderedTitleBar = props => (
