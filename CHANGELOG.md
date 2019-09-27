@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-- Fixes coloring of history modal's title
+- Fix coloring of history modal's title (#2301)
 
 # 0.12.0 (2019-09-25)
 
