@@ -1,6 +1,4 @@
 import datetime
-import os
-import sys
 
 import pytest
 from rest_framework.test import APIClient
@@ -9,7 +7,13 @@ from server.base.models import User
 from server.files.models import File, FileSource
 from server.notebooks.models import Notebook, NotebookRevision
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "helpers"))
+
+def pytest_configure(config):
+    # work-around for https://github.com/ktosiek/pytest-freezegun/issues/13
+    config.addinivalue_line(
+        "markers",
+        "freeze_time(timestamp): freeze time to the given timestamp for the duration of the test.",
+    )
 
 
 @pytest.fixture

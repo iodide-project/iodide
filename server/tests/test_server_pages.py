@@ -2,9 +2,10 @@ import pytest
 from django.conf import settings
 from django.urls import reverse
 
-from helpers import get_script_block_json, get_title_block
 from server.base.models import User
 from server.notebooks.models import Notebook, NotebookRevision
+
+from .helpers import get_script_block_json, get_title_block
 
 
 @pytest.fixture
