@@ -16,10 +16,34 @@ const UserNotebooks = styled("div")`
   width: ${sharedProperties.pageWidth}px;
   margin: auto;
 `;
+
+const NoNotebooksCreateInstructions = styled.div`
+  align-items: center;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 7px;
+
+  #drop-instructions {
+    font-size: 0.8em;
+    font-weight: normal;
+  }
+`;
+
+const SomeNotebooksCreateInstructions = styled.div`
+  align-items: center;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 7px;
+  justify-content: start;
+`;
+
 const LetsGetStarted = () => (
   <AttentionBlock>
-    <div>Shall we get started?</div>
-    <NewNotebookButton />
+    <span>Shall we get started?</span>
+    <NoNotebooksCreateInstructions>
+      <NewNotebookButton />
+      <span id="drop-instructions">or drop files directly onto this page</span>
+    </NoNotebooksCreateInstructions>
   </AttentionBlock>
 );
 
@@ -45,7 +69,10 @@ export default class LoggedInSplash extends React.Component {
           </SplashTitle>
           {this.props.userInfo.notebooks.length ? (
             <React.Fragment>
-              <NewNotebookButton />
+              <SomeNotebooksCreateInstructions>
+                <NewNotebookButton />
+                <span>or drop files directly onto this page</span>
+              </SomeNotebooksCreateInstructions>
               <PageHeader>Your Notebooks</PageHeader>
               <UserNotebookList
                 showMenu
