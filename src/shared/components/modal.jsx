@@ -1,23 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import styled from "@emotion/styled";
-import { keyframes } from "@emotion/core";
 import PropTypes from "prop-types";
+
+import { fadeIn } from "../keyframes";
 
 import {
   MODAL_ZINDEX,
   NESTED_MODAL_ZINDEX
 } from "../../editor/style/z-index-styles";
-
-const fadeIn = keyframes`
-0% {
-  opacity: 0;
-}
-
-100% {
-  opacity: 1;
-}
-`;
 
 const Backdrop = styled("div")`
   position: fixed;
@@ -100,9 +91,9 @@ const disableScrolling = () => {
   document.body.style.paddingRight = `${getScrollBarSize()}px`;
 };
 
-const enableScrolling = () => {
-  document.body.style.overflow = "auto";
-  document.body.style.paddingRight = "0px";
+const restoreScrolling = (overflow, paddingRight) => {
+  document.body.style.overflow = overflow;
+  document.body.style.paddingRight = paddingRight;
 };
 
 export default class Modal extends React.Component {
@@ -126,6 +117,24 @@ export default class Modal extends React.Component {
     this.closeModalOnEscapeKeypress = this.closeModalOnEscapeKeypress.bind(
       this
     );
+    this.previousBodyOverflow = document.body.style.overflow;
+    this.previousBodyPaddingRight = document.body.style.paddingRight;
+  }
+
+  getSnapshotBeforeUpdate() {
+    this.previousBodyOverflow = document.body.style.overflow;
+    this.previousBodyPaddingRight = document.body.style.paddingRight;
+    return null;
+  }
+
+  componentDidUpdate() {
+    if (!this.props.visible) {
+      restoreScrolling(
+        this.previousBodyOverflow,
+        this.previousBodyPaddingRight
+      );
+      document.removeEventListener("keydown", this.closeModalOnEscapeKeypress);
+    }
   }
 
   componentWillUnmount() {
@@ -137,11 +146,7 @@ export default class Modal extends React.Component {
   }
 
   render() {
-    if (!this.props.visible) {
-      enableScrolling();
-      document.removeEventListener("keydown", this.closeModalOnEscapeKeypress);
-      return null;
-    }
+    if (!this.props.visible) return null;
     document.addEventListener("keydown", this.closeModalOnEscapeKeypress);
     disableScrolling();
     return ReactDOM.createPortal(
