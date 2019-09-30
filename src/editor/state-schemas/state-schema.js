@@ -80,8 +80,7 @@ export const fileSchema = {
   properties: {
     filename: { type: "string" },
     id: { type: "integer" },
-    notebook_id: { type: "integer" },
-    last_updated: { type: "string" }
+    lastUpdated: { type: "string" }
   },
   additionalProperties: false
 };

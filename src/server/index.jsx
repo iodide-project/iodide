@@ -12,12 +12,19 @@ import RevisionsPage from "./pages/revisions-page";
 
 const pageData = JSON.parse(document.getElementById("pageData").textContent);
 
+// create a header message if we're a staging site
+const headerMessage = pageData.isStaging
+  ? `You are in Iodide's staging environment, intended for testing and development. The production site is here: <a href="${pageData.productionServerURL}">${pageData.productionServerURL}</a>`
+  : "";
+
 const routes = [
   {
     name: "index",
     path: "",
     action: () => (
       <HomePage
+        isStaging={pageData.isStaging}
+        headerMessage={headerMessage}
         userInfo={pageData.userInfo}
         notebookList={pageData.notebookList}
       />
@@ -28,6 +35,7 @@ const routes = [
     path: "/:username",
     action: () => (
       <UserPage
+        headerMessage={headerMessage}
         userInfo={pageData.userInfo}
         thisUser={pageData.thisUser}
         notebookList={pageData.notebookList}
@@ -39,6 +47,7 @@ const routes = [
     path: "/notebooks/:notebookId/revisions/",
     action: () => (
       <RevisionsPage
+        headerMessage={headerMessage}
         userInfo={pageData.userInfo}
         ownerInfo={pageData.ownerInfo}
         revisions={pageData.revisions}

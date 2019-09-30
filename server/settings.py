@@ -40,6 +40,10 @@ EVAL_FRAME_HOSTNAME = furl(EVAL_FRAME_ORIGIN).host
 ALLOWED_HOSTS = list(set([SITE_HOSTNAME, EVAL_FRAME_HOSTNAME]))
 APP_VERSION_STRING = env.str("APP_VERSION_STRING", "dev")
 
+# Special settings so staging servers can redirect to production
+IS_STAGING = env.bool("IS_STAGING", default=False)
+PRODUCTION_SERVER_URL = env.str("PRODUCTION_SERVER_URL", None)
+
 # Define URI redirects.
 # Is a ;-delimited list of redirects, where each section is of the form
 # $prefix=$destination
@@ -84,6 +88,7 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "social_django",
     "rest_framework",
     "rest_framework.authtoken",
     "server.base",
@@ -126,7 +131,6 @@ if USE_OPENIDC_AUTH:
     INSTALLED_APPS.append("server.openidc")
     MIDDLEWARE.append("server.openidc.middleware.OpenIDCAuthMiddleware")
 elif SOCIAL_AUTH_GITHUB_KEY:
-    INSTALLED_APPS.append("social_django")
     MIDDLEWARE.extend(
         [
             "social_django.middleware.SocialAuthExceptionMiddleware",

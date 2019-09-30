@@ -1,8 +1,14 @@
-import pytest
-from django.urls import reverse
+import json
 
-from helpers import get_rest_framework_time_string
+import pytest
+import responses
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+from social_django.models import UserSocialAuth
+
 from server.notebooks.models import Notebook, NotebookRevision
+
+from .helpers import get_rest_framework_time_string
 
 
 def test_notebook_list(client, two_test_notebooks):
@@ -118,6 +124,53 @@ def test_create_notebook_for_another_user(
         assert NotebookRevision.objects.count() == 0
 
 
+@responses.activate
+@pytest.mark.parametrize("github_auth", [None, "valid", "error"])
+def test_create_notebook_for_another_user_who_does_not_yet_exist(
+    fake_user, client, notebook_post_blob, settings, github_auth
+):
+    uncreated_username = "uncreated_user"
+    if github_auth:
+        settings.SOCIAL_AUTH_GITHUB_KEY = "1234"
+        fake_github_uid = 4321
+        if github_auth == "valid":
+            responses.add(
+                responses.GET,
+                f"https://api.github.com/users/{uncreated_username}",
+                body=json.dumps({"id": fake_github_uid}),
+                status=200,
+            )
+        else:
+            # testing case where we can't access github
+            responses.add(
+                responses.GET,
+                f"https://api.github.com/users/{uncreated_username}",
+                body="failed!!!!!",
+                status=500,
+            )
+
+    post_blob = {**notebook_post_blob, **{"owner": uncreated_username}}
+    fake_user.can_create_on_behalf_of_others = True
+    fake_user.save()
+    client.force_login(user=fake_user)
+    resp = client.post(reverse("notebooks-list"), post_blob)
+    if github_auth == "error":
+        assert resp.status_code == 500
+        assert Notebook.objects.count() == 0
+        assert UserSocialAuth.objects.count() == 0
+    else:
+        assert resp.status_code == 201
+        assert Notebook.objects.count() == 1
+        notebook = Notebook.objects.first()
+        assert notebook.title == post_blob["title"]
+        created_user = get_user_model().objects.get(username=uncreated_username)
+        assert notebook.owner == created_user
+        if github_auth:
+            # should have a placeholder social auth object created
+            social_auth = UserSocialAuth.objects.get(user=created_user, provider="github")
+            assert social_auth.uid == str(fake_github_uid)
+
+
 def test_delete_notebook_not_logged_in(test_notebook, client):
     # should not be able to delete a notebook if not logged in
     resp = client.delete(reverse("notebooks-detail", kwargs={"pk": test_notebook.id}))
@@ -162,7 +215,7 @@ def test_fork_notebook_not_logged_in(client, notebook_fork_post_blob):
 def test_incorrect_fork_notebook(client, fake_user, incorrect_notebook_fork_post_blob):
     client.force_login(user=fake_user)
     resp = client.post(reverse("notebooks-list"), incorrect_notebook_fork_post_blob)
-    assert resp.status_code == 400
+    assert resp.status_code == 404
 
 
 def test_fork_notebook_logged_in(client, fake_user, fake_user2, test_notebook):

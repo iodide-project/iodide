@@ -6,7 +6,11 @@ export function getFiles() {
     const files = await getFilesForNotebookFromServer(notebookID);
     dispatch({
       type: "UPDATE_FILES_FROM_SERVER",
-      files
+      files: files.map(file => ({
+        id: file.id,
+        filename: file.filename,
+        lastUpdated: file.last_updated
+      }))
     });
   };
 }

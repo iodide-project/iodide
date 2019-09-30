@@ -87,6 +87,7 @@ export default class RevisionsPage extends React.Component {
     userInfo: PropTypes.shape({
       name: PropTypes.string
     }),
+    headerMessage: PropTypes.string,
     ownerInfo: PropTypes.shape({
       notebookId: PropTypes.number,
       forkedFromRevisionID: PropTypes.number,
@@ -150,7 +151,10 @@ export default class RevisionsPage extends React.Component {
     const forkedFrom = Boolean(this.props.ownerInfo.forkedFromRevisionID);
     return (
       <div>
-        <Header userInfo={this.props.userInfo} />
+        <Header
+          userInfo={this.props.userInfo}
+          headerMessage={this.props.headerMessage}
+        />
         <PageBody>
           <BelowFoldContainer>
             <RevisionsPageHeader>

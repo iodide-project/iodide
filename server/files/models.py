@@ -26,6 +26,7 @@ class File(models.Model):
         verbose_name = "File"
         verbose_name_plural = "Files"
         ordering = ("id",)
+        db_table = "file"
 
 
 class FileSource(models.Model):

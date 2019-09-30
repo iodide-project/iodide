@@ -4,9 +4,10 @@ import pytest
 from django.urls import reverse
 from django.utils.html import escape
 
-from helpers import get_script_block, get_script_block_json, get_title_block
 from server.notebooks.models import Notebook, NotebookRevision
 from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
+
+from .helpers import get_script_block, get_script_block_json, get_title_block
 
 
 def test_notebook_view(client, test_notebook):

@@ -10,7 +10,7 @@ export const ButtonGroup = styled("div")`
   margin-bottom: 60px;
 `;
 
-const GenericButton = styled("button")`
+export const GenericButton = styled("button")`
   display: inline-block;
   text-transform: uppercase;
   background: none;
