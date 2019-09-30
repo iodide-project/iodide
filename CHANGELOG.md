@@ -2,6 +2,7 @@
 
 - Extend Python test harness to run linting and coverage as part of test suite (#2305)
 - Fix coloring of history modal's title (#2301)
+- Increase maximum length of file source URLs from 200 to 8192
 
 # 0.12.0 (2019-09-25)
 
