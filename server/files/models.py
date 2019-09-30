@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.db import models
 
 from ..notebooks.models import Notebook
-from ..settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
+from ..settings import MAX_FILE_SIZE, MAX_FILE_SOURCE_URL_LENGTH, MAX_FILENAME_LENGTH
 
 
 class File(models.Model):
@@ -42,7 +42,7 @@ class FileSource(models.Model):
     # FIXME: add a validator for filename (for minimum length and maybe
     # other things)
     filename = models.CharField(max_length=MAX_FILENAME_LENGTH)
-    url = models.URLField()
+    url = models.URLField(max_length=MAX_FILE_SOURCE_URL_LENGTH)
     update_interval = models.DurationField(null=True, choices=UPDATE_INTERVALS)
 
     def __str__(self):  # pragma: no cover
