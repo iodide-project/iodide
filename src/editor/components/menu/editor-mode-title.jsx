@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
-import Helmet from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 import { connect } from "react-redux";
 
@@ -37,7 +37,9 @@ export class TitleUnconnected extends React.Component {
   render() {
     const elem = (
       <TitleContainer>
-        <Helmet title={this.props.pageTitle} />
+        <HelmetProvider>
+          <Helmet title={this.props.pageTitle} />
+        </HelmetProvider>
         <InputElement
           titleColor={this.props.titleColor}
           value={this.props.notebookTitle}
