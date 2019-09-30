@@ -2,6 +2,7 @@
 
 - Extend Python test harness to run linting and coverage as part of test suite (#2305)
 - Fix coloring of history modal's title (#2301)
+- Fix console warning by switching from react-helmet to react-helmet-async (#2315)
 
 # 0.12.0 (2019-09-25)
 
