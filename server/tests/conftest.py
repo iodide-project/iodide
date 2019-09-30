@@ -7,8 +7,6 @@ from server.base.models import User
 from server.files.models import File, FileSource
 from server.notebooks.models import Notebook, NotebookRevision
 
-pytest_plugins = ["server.tests.plugins.lean", "server.tests.plugins.staticfiles"]
-
 
 def pytest_configure(config):
     # work-around for https://github.com/ktosiek/pytest-freezegun/issues/13
