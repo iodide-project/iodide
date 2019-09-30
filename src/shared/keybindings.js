@@ -1,5 +1,5 @@
 import Mousetrap from "mousetrap";
-import tasks from "../user-tasks/task-definitions";
+import tasks from "../editor/user-tasks/task-definitions";
 
 Mousetrap.prototype.stopCallback = () => false;
 

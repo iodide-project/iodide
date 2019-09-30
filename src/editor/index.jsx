@@ -28,13 +28,13 @@ import messagePasserEditor from "../shared/utils/redux-to-port-message-passer";
 import handleInitialIomd from "./initialization/handle-initial-iomd";
 import handleServerVariables from "./initialization/handle-server-variables";
 import handleReportViewModeInitialization from "./initialization/handle-report-view-mode-initialization";
-import { initializeDefaultKeybindings } from "./initialization/keybindings";
 
 import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
 import { restoreLocalAutosave } from "./actions/local-autosave-actions";
 import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
+import { initializeDefaultKeybindings } from "../shared/keybindings";
 
 initializeDefaultKeybindings();
 
