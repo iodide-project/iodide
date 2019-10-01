@@ -17,8 +17,7 @@
     "build-production": "webpack -p",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "postinstall": "patch-package"
+    "build-storybook": "build-storybook"
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -68,7 +67,7 @@
     "markdown-it": "10.0.0",
     "markdown-it-anchor": "5.2.4",
     "markdown-it-emoji": "1.4.0",
-    "monaco-editor": "0.17.1",
+    "monaco-editor": "0.18.1",
     "mousetrap": "1.6.3",
     "numeral": "2.0.6",
     "opensans-npm-webfont": "1.0.0",
@@ -130,7 +129,6 @@
     "jquery": "3.4.1",
     "lodash-webpack-plugin": "0.11.5",
     "mini-css-extract-plugin": "0.8.0",
-    "patch-package": "6.2.0",
     "prettier": "1.18.2",
     "raw-loader": "3.1.0",
     "react-test-renderer": "16.10.1",
