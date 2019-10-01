@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('files', '0003_saner_table_names'),
+        ('files', '0004_increase_max_size_of_file_source_url'),
     ]
 
     operations = [
