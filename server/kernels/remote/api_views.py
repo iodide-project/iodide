@@ -40,8 +40,6 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
         try:
             parsed = backend.parse_chunk(notebook, content)
         except ParametersParseError:
-            # TODO: do something smart here like letting users
-            # know that the remote chunk can't be validated
             raise exceptions.ParseError(
                 "The remote chunk couldn't be parsed, please check the syntax and evaluate again."
             )

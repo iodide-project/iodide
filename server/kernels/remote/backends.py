@@ -79,15 +79,15 @@ class Backend(metaclass=ABCMeta):
         """
         Creates the remote operation in the database for later retrieval
         """
-        operation = RemoteOperation.objects.create(
-            notebook_id=notebook.id,
-            creator_id=creator.id,
-            backend=backend,
-            filename=filename,
-            **params,
-        )
-        # TODO: make this use the Celery task API
-        transaction.on_commit(lambda: execute_remote_operation(pk=operation.pk))
+        with transaction.atomic():
+            operation = RemoteOperation.objects.create(
+                notebook_id=notebook.id,
+                creator_id=creator.id,
+                backend=backend,
+                filename=filename,
+                **params,
+            )
+            transaction.on_commit(lambda: execute_remote_operation.delay(pk=operation.pk))
         return operation
 
     def save_result(self, operation, content):

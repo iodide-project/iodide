@@ -29,7 +29,7 @@ def test_post_to_file_api(fake_user, client, test_notebook):
         resp = post_file(f, client, test_notebook)
         assert resp.status_code == 201
         assert File.objects.count() == 1
-        created_file = File.objects.get(id=1)
+        created_file = File.objects.first()
         assert created_file.content.tobytes() == b"hello"
         assert resp.json() == {
             "id": created_file.id,

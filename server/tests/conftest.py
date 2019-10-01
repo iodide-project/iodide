@@ -1,9 +1,11 @@
 import datetime
 
 import pytest
+from celery.contrib.testing.worker import start_worker
 from rest_framework.test import APIClient
 
 from server.base.models import User
+from server.celery import celery
 from server.files.models import File, FileSource
 from server.notebooks.models import Notebook, NotebookRevision
 
@@ -14,6 +16,13 @@ def pytest_configure(config):
         "markers",
         "freeze_time(timestamp): freeze time to the given timestamp for the duration of the test.",
     )
+
+
+@pytest.fixture
+def celery_worker():
+    celery.loader.import_module("celery.contrib.testing.tasks")
+    worker = start_worker(celery)
+    return worker
 
 
 @pytest.fixture
