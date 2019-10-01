@@ -75,12 +75,16 @@ class Backend(metaclass=ABCMeta):
         header, body = chunk.split(self.REMOTE_CHUNK_DIVIDER, 1)
         return [header, body.strip()]
 
-    def create_operation(self, notebook, backend, filename, **params):
+    def create_operation(self, notebook, creator, backend, filename, **params):
         """
         Creates the remote operation in the database for later retrieval
         """
         operation = RemoteOperation.objects.create(
-            notebook_id=notebook.id, backend=backend, filename=filename, **params
+            notebook_id=notebook.id,
+            creator_id=creator.id,
+            backend=backend,
+            filename=filename,
+            **params,
         )
         # TODO: make this use the Celery task API
         transaction.on_commit(lambda: execute_remote_operation(pk=operation.pk))
@@ -112,7 +116,7 @@ class Backend(metaclass=ABCMeta):
                 )
         return remote_file
 
-    def refresh_file(self, remote_file):
+    def refresh_file(self, remote_file, creator):
         """
         Refresh the provided remote file using the last operation's
         parameters.
@@ -120,6 +124,7 @@ class Backend(metaclass=ABCMeta):
         with transaction.atomic():
             operation = self.create_operation(
                 notebook=remote_file.notebook,
+                creator=creator,
                 # TODO: use name of remote file and not from remote operation in
                 # case we ever want to implement renaming files?
                 filename=remote_file.filename,

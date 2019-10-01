@@ -47,7 +47,8 @@ class RemoteOperationViewSet(viewsets.ModelViewSet):
             )
 
         operation = backend.create_operation(
-            notebook,
+            notebook=notebook,
+            creator=request.user,
             backend=backend.token,
             filename=parsed["filename"],
             snippet=parsed["snippet"],

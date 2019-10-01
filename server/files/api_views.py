@@ -76,7 +76,7 @@ class FileViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
         if instance.remote_operation:
             backend = backends.get_backend(instance.remote_operation.backend, PermissionDenied)
-            backend.refresh_file(instance)
+            backend.refresh_file(instance, request.user)
         return Response(FilesSerializer(instance).data, status=201)
 
 

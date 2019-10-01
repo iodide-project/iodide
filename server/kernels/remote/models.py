@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
+from server.base.models import User
 from server.notebooks.models import Notebook
 
 
@@ -19,6 +20,12 @@ class RemoteOperation(models.Model):
         (STATUS_RUNNING, "Running"),
         (STATUS_COMPLETED, "Completed"),
         (STATUS_FAILED, "Failed"),
+    )
+    creator = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="remote_operations",
+        help_text="A back reference to the creator of the remote operation",
     )
     notebook = models.ForeignKey(
         Notebook,
@@ -39,7 +46,6 @@ class RemoteOperation(models.Model):
     parameters = JSONField(
         help_text="The parameters as provided as part of the remote chunk content", default=dict
     )
-
     # TODO: we need to validate this and also provide a view to check availability
     filename = models.CharField(
         max_length=settings.MAX_FILENAME_LENGTH,
@@ -47,7 +53,6 @@ class RemoteOperation(models.Model):
         null=True,
         help_text="The filename as provided as part of the remote chunk content",
     )
-
     snippet = models.TextField(
         help_text=(
             "The actual snippet to be sent to the remote kernel for " "processing, e.g a SQL query"

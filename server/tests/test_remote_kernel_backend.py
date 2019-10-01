@@ -47,9 +47,10 @@ def remote_backend():
 
 
 @pytest.fixture
-def remote_operation(remote_backend, test_notebook):
+def remote_operation(fake_user, remote_backend, test_notebook):
     return RemoteOperation.objects.create(
         notebook=test_notebook,
+        creator=fake_user,
         filename="test.ioresult",
         backend="test",
         parameters={},
@@ -58,10 +59,11 @@ def remote_operation(remote_backend, test_notebook):
 
 
 @pytest.fixture
-def two_remote_operations(remote_backend, test_notebook):
+def two_remote_operations(fake_user, remote_backend, test_notebook):
     for x in range(2, 1):
         return RemoteOperation.objects.create(
             notebook=test_notebook,
+            creator=fake_user,
             filename=f"test{x}.ioresult",
             backend="test",
             parameters={},
@@ -149,10 +151,11 @@ filename = "user_count_query.json"
     ]
 
 
-def test_create_operation(remote_backend, test_notebook):
+def test_create_operation(fake_user, remote_backend, test_notebook):
     assert File.objects.count() == 0
     operation = remote_backend.create_operation(
-        test_notebook,
+        notebook=test_notebook,
+        creator=fake_user,
         backend="test",
         snippet="select count(*) from telemetry.users",
         filename="testresult.json",
@@ -192,10 +195,10 @@ def test_save_result_remote_file_exists(remote_backend, remote_operation, remote
     assert File.objects.count() == 1
 
 
-def test_refresh_file(remote_backend, remote_file):
+def test_refresh_file(fake_user, remote_backend, remote_file):
     assert File.objects.count() == 1
     assert RemoteOperation.objects.count() == 1
-    new_operation = remote_backend.refresh_file(remote_file)
+    new_operation = remote_backend.refresh_file(remote_file, fake_user)
     assert File.objects.count() == 1
     assert RemoteOperation.objects.count() == 2
     assert isinstance(new_operation, RemoteOperation)
@@ -208,10 +211,11 @@ def test_execute_remote_operation_not_found():
         execute_remote_operation(10000)
 
 
-def test_execute_remote_operation_failure(test_notebook):
+def test_execute_remote_operation_failure(fake_user, test_notebook):
     registry.register(FailingTestBackend)
     remote_operation = RemoteOperation.objects.create(
         notebook=test_notebook,
+        creator=fake_user,
         filename="test.ioresult",
         backend="failing",
         parameters={},
