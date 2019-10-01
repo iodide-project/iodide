@@ -17,7 +17,7 @@
     "build-production": "webpack -p",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
+    "build-storybook": "build-storybook"
   },
   "jest": {
     "setupFilesAfterEnv": [
