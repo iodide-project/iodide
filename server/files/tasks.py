@@ -3,6 +3,7 @@ import logging
 
 import requests
 from django.conf import settings
+from django.utils import timezone
 
 from ..celery import celery
 from .models import File, FileSource, FileUpdateOperation
@@ -16,7 +17,7 @@ def execute_file_update_operation(update_operation_id):
 
     # set status to RUNNING
     update_operation.status = FileUpdateOperation.RUNNING
-    update_operation.started_at = datetime.datetime.now()
+    update_operation.started_at = timezone.now()
     update_operation.save()
 
     # actually run the query against the URL
@@ -41,7 +42,7 @@ def execute_file_update_operation(update_operation_id):
         update_operation.status = FileUpdateOperation.FAILED
         update_operation.failure_reason = str(e)
 
-    update_operation.ended_at = datetime.datetime.now()
+    update_operation.ended_at = timezone.now()
     update_operation.save()
 
 
