@@ -1,7 +1,6 @@
 import datetime
 
 import pytest
-from celery.contrib.testing.worker import start_worker
 from rest_framework.test import APIClient
 
 from server.base.models import User
@@ -18,11 +17,36 @@ def pytest_configure(config):
     )
 
 
+@pytest.fixture(scope="session")
+def celery_includes():
+    """You can override this include modules when a worker start.
+    You can have this return a list of module names to import,
+    these can be task modules, modules registering signals, and so on.
+    """
+    return ["celery.contrib.testing.tasks"]
+
+
 @pytest.fixture
-def celery_worker():
-    celery.loader.import_module("celery.contrib.testing.tasks")
-    worker = start_worker(celery)
-    return worker
+def celery_worker_parameters():
+    """Redefine this fixture to change the init parameters of Celery workers.
+
+    This can be used e. g. to define queues the worker will consume tasks from.
+
+    The dict returned by your fixture will then be used
+    as parameters when instantiating :class:`~celery.worker.WorkController`.
+    """
+    return {
+        # For some reason this `celery.ping` is not registed IF our own worker is still
+        # running. To avoid failing tests in that case, we disable the ping check.
+        # see: https://github.com/celery/celery/issues/3642#issuecomment-369057682
+        # here is the ping task: `from celery.contrib.testing.tasks import ping`
+        "perform_ping_check": False
+    }
+
+
+@pytest.fixture
+def celery_app(transactional_db):
+    return celery
 
 
 @pytest.fixture

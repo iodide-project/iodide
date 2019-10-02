@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 
 from server.files.models import File
@@ -157,15 +159,16 @@ def test_create_operation(
     assert File.objects.count() == 0
     # start a worker here (and not use celery's own pytest worker)
     # to make sure the transactional_db fixture is applied to its context
-    with celery_worker:
-        operation = remote_backend.create_operation(
-            notebook=test_notebook,
-            creator=fake_user,
-            backend="test",
-            snippet="select count(*) from telemetry.users",
-            filename="testresult.json",
-            parameters={},
-        )
+    operation = remote_backend.create_operation(
+        notebook=test_notebook,
+        creator=fake_user,
+        backend="test",
+        snippet="select count(*) from telemetry.users",
+        filename="testresult.json",
+        parameters={},
+    )
+    # because the thread needs to be actually committing the transaction
+    sleep(0.1)
     assert isinstance(operation, RemoteOperation)
     assert operation.status == operation.STATUS_PENDING
     assert operation.parameters == {}
