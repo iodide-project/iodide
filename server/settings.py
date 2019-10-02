@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import re
 
-import dj_database_url
 import environ
 from celery.schedules import crontab
 from furl import furl
@@ -180,8 +179,11 @@ WSGI_APPLICATION = "server.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+DATABASES = {"default": env.db_url_config()}
 DB_REQUIRES_SSL = env.bool("DB_REQUIRES_SSL", default=not DEBUG)
-DATABASES = {"default": dj_database_url.config(conn_max_age=500, ssl_require=DB_REQUIRES_SSL)}
+if DB_REQUIRES_SSL:
+    DATABASES["default"]["OPTIONS"]["sslmode"] = "require"
+DATABASES["default"].setdefault("CONN_MAX_AGE", 500)
 
 AUTHENTICATION_BACKENDS = (
     "social_core.backends.github.GithubOAuth2"
