@@ -51,7 +51,7 @@ case $1 in
   ci)
     shift
     tests "--lean" "$@"
-    bash <(curl -s https://codecov.io/bash) -s /tmp
+    bash <(curl -s https://codecov.io/bash) -s /tmp -Z
     ;;
   *)
     exec "$@"
