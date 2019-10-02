@@ -1,6 +1,5 @@
 # (Unreleased; add upcoming change notes here)
 
-# unreleased
 - Add test coverage reporting with Codecov. (#2322)
 
 # 0.13.0 (2019-10-01)
