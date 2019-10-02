@@ -179,12 +179,10 @@ WSGI_APPLICATION = "server.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgres://postgres@db/postgres")
-}
+DATABASES = {"default": env.db("DATABASE_URL", default="postgres://postgres@db/postgres")}
 DB_REQUIRES_SSL = env.bool("DB_REQUIRES_SSL", default=not DEBUG)
 if DB_REQUIRES_SSL:
-    DATABASES["default"]["OPTIONS"]["sslmode"] = "require"
+    DATABASES["default"].setdefault("OPTIONS", {})["sslmode"] = "require"
 DATABASES["default"].setdefault("CONN_MAX_AGE", 500)
 
 AUTHENTICATION_BACKENDS = (
