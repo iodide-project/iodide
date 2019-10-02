@@ -5,6 +5,7 @@ from unittest.mock import call, patch
 import pytest
 import responses
 from django.urls import reverse
+from django.utils import timezone
 from freezegun import freeze_time
 
 from server.files.models import File, FileSource, FileUpdateOperation
@@ -141,7 +142,7 @@ def test_post_file_update_operation(fake_user, test_notebook, test_file_source, 
         file_update_operation = FileUpdateOperation.objects.first()
         assert file_update_operation.file_source_id == test_file_source.id
         assert file_update_operation.status == FileUpdateOperation.PENDING
-        assert file_update_operation.scheduled_at.replace(tzinfo=None) == datetime.datetime.now()
+        assert file_update_operation.scheduled_at == timezone.now()
         assert file_update_operation.started_at is None
         assert file_update_operation.ended_at is None
 
