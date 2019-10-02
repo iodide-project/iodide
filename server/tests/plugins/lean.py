@@ -1,4 +1,8 @@
-OPTIONAL_PLUGINS = ["_cov", "flake8", "isort"]
+"""
+A Pytest plugin to automatically disable some plugins if an optional
+command line argument is passed: --lean
+"""
+OPTIONAL_PLUGINS = ["flake8", "isort"]
 
 
 def pytest_addoption(parser):

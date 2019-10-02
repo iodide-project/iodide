@@ -1,3 +1,6 @@
+"""
+A Pytest plugin to automatically run Django's collectstatic management command.
+"""
 import pytest
 from django.core.management import call_command
 

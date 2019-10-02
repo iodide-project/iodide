@@ -24,9 +24,4 @@ lintfix:
 	docker-compose run --rm server ./bin/lint-fix.sh
 
 test:
-	docker-compose run --rm server ./manage.py check
-	docker-compose run server python -m pytest
-
-leantest:
-	docker-compose run --rm server ./manage.py check
-	docker-compose run server python -m pytest --lean # skips linter and coverage checks
+	docker-compose run --rm server tests
