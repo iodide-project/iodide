@@ -34,7 +34,8 @@ jobs:
       - *save_javascript_cache
       - run: npm run lint
       - run: npm run build
-      - run: npm run test -- --runInBand
+      - run: npm run test-coverage -- --runInBand
+      - run: bash <(curl -s https://codecov.io/bash) -f coverage/coverage-final.json -Z
 
   build:
     docker:
