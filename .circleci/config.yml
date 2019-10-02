@@ -34,7 +34,8 @@ jobs:
       - *save_javascript_cache
       - run: npm run lint
       - run: npm run build
-      - run: npm run test -- --runInBand
+      - run: npm run test-coverage -- --runInBand
+      - run: bash <(curl -s https://codecov.io/bash) -f coverage/coverage-final.json -Z
 
   build:
     docker:
@@ -123,6 +124,8 @@ jobs:
       - run:
           name: Test Code
           command: |
+            set -x
+            export CI_ENV=`bash <(curl -s https://codecov.io/env)`
             cp .env-dist .env
             # we need to wait for the db to come up
             docker-compose up -d
@@ -130,7 +133,7 @@ jobs:
             # we need to re-collect static as docker-compose mounts the checkout directory over what we have in the image
             chmod 777 . # make sure we have permission to write the files in our volume
             # run the actual tests
-            make leantest
+            docker-compose run --rm $(CI_ENV) -e CODECOV_TOKEN server ci
 
   deploy:
     docker:

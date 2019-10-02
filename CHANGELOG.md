@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Add test coverage reporting with Codecov. (#2322)
+
 # 0.13.0 (2019-10-01)
 
 - Extend Python test harness to run linting and coverage as part of test suite (#2305)
