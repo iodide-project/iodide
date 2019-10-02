@@ -5,6 +5,7 @@ from unittest.mock import call, patch
 import pytest
 import responses
 from django.urls import reverse
+from django.utils import timezone
 from freezegun import freeze_time
 
 from server.files.models import File, FileSource, FileUpdateOperation
