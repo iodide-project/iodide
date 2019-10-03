@@ -17,7 +17,6 @@ export default class Header extends React.Component {
     headerMessage: PropTypes.string
   };
   render() {
-    console.log(this.props.headerMessage);
     return (
       <React.Fragment>
         <HeaderContainer>
