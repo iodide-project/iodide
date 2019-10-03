@@ -34,9 +34,11 @@ import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 import { restoreLocalAutosave } from "./actions/local-autosave-actions";
 import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
-import { initializeDefaultKeybindings } from "../shared/keybindings";
+import { initializeDefaultKeybindings } from "./initialization/keybindings";
+import { handleInterceptBackspace } from "../shared/intercept-keybindings";
 
 initializeDefaultKeybindings();
+handleInterceptBackspace();
 
 window.addEventListener("message", listenForEvalFramePortReady, false);
 
