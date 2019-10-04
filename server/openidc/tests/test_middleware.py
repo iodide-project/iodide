@@ -71,3 +71,24 @@ class OpenIDCAuthMiddlewareTests(TestCase):
 
         self.assertEqual(request.user.email, user_email)
         self.assertFalse(request.user.is_staff)
+
+    def test_add_email_when_not_present(self):
+        user_email = "user@example.com"
+        User = get_user_model()
+        User.objects.create(username=user_email)
+
+        request = mock.Mock()
+        request.path = "/foo/"
+        request.META = {settings.OPENIDC_EMAIL_HEADER: user_email}
+
+        with self.settings(OPENIDC_AUTH_WHITELIST=[]):
+            response = self.middleware(request)
+
+        self.assertEqual(response, self.response)
+
+        # should not create any extra users
+        self.assertEqual(User.objects.all().count(), 1)
+
+        # user should now have email address
+        self.assertEqual(request.user.email, user_email)
+        self.assertFalse(request.user.is_staff)

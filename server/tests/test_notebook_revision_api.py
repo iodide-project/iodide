@@ -1,8 +1,9 @@
 import pytest
 from django.urls import reverse
 
-from helpers import get_rest_framework_time_string
 from server.notebooks.models import NotebookRevision
+
+from .helpers import get_rest_framework_time_string
 
 
 @pytest.fixture

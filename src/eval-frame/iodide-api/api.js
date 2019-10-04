@@ -18,7 +18,8 @@ export const iodide = {
   getDataSync,
   output,
   file,
-  VERSION: process.env.IODIDE_VERSION
+  VERSION: process.env.IODIDE_VERSION,
+  COMMIT_HASH: process.env.COMMIT_HASH
 };
 
 export default iodide;

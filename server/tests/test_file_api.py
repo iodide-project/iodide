@@ -4,8 +4,9 @@ import tempfile
 import pytest
 from django.urls import reverse
 
-from helpers import get_rest_framework_time_string
 from server.files.models import File
+
+from .helpers import get_rest_framework_time_string
 
 
 def post_file(f, client, test_notebook):
@@ -90,3 +91,17 @@ def test_put_to_file_api_restricted(fake_user2, api_client, test_notebook, test_
         assert resp.status_code == 403
         updated_file = File.objects.get(id=test_file.id)
         assert updated_file.content.tobytes() == test_file.content
+
+
+def test_list_files_for_notebook(client, test_notebook, test_file, fake_user):
+    client.force_login(user=fake_user)
+    resp = client.get(reverse("notebook-files-list", kwargs={"notebook_id": test_notebook.id}))
+    assert resp.status_code == 200
+    assert resp.json() == [
+        {
+            "filename": test_file.filename,
+            "id": test_file.id,
+            "notebook_id": test_file.notebook_id,
+            "last_updated": test_file.last_updated.isoformat().replace("+00:00", "Z"),
+        }
+    ]

@@ -37,6 +37,7 @@ export default class HomePage extends React.Component {
       name: PropTypes.string,
       avatar: PropTypes.string
     }),
+    headerMessage: PropTypes.string,
     notebookList: PropTypes.arrayOf(PropTypes.object)
   };
   render() {
@@ -44,7 +45,10 @@ export default class HomePage extends React.Component {
     const { notebookList } = this.props;
     return (
       <div>
-        <Header userInfo={this.props.userInfo} />
+        <Header
+          userInfo={this.props.userInfo}
+          headerMessage={this.props.headerMessage}
+        />
         <PageBody>
           <TopContainer>
             {!isLoggedIn && process.env.IODIDE_PUBLIC && (

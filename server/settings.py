@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import re
 
-import dj_database_url
 import environ
 from celery.schedules import crontab
 from furl import furl
@@ -40,6 +39,10 @@ EVAL_FRAME_HOSTNAME = furl(EVAL_FRAME_ORIGIN).host
 ALLOWED_HOSTS = list(set([SITE_HOSTNAME, EVAL_FRAME_HOSTNAME]))
 APP_VERSION_STRING = env.str("APP_VERSION_STRING", "dev")
 
+# Special settings so staging servers can redirect to production
+IS_STAGING = env.bool("IS_STAGING", default=False)
+PRODUCTION_SERVER_URL = env.str("PRODUCTION_SERVER_URL", None)
+
 # Define URI redirects.
 # Is a ;-delimited list of redirects, where each section is of the form
 # $prefix=$destination
@@ -51,7 +54,7 @@ DOCKERFLOW_ENABLED = env.bool("DOCKERFLOW_ENABLED", default=False)
 # Social auth
 SOCIAL_AUTH_GITHUB_KEY = env.str("GITHUB_CLIENT_ID", None)
 SOCIAL_AUTH_GITHUB_SECRET = env.str("GITHUB_CLIENT_SECRET", None)
-SOCIAL_AUTH_GITHUB_SCOPE = []
+SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 # OpenIDC (aka auth0 identity/authentication)
@@ -66,6 +69,9 @@ GA_TRACKING_ID = env.str("GA_TRACKING_ID", None)
 # Maximum file length for uploaded data / assets
 MAX_FILENAME_LENGTH = 120
 MAX_FILE_SIZE = 1024 * 1024 * 10  # 10 megabytes is the default
+
+# Maximum length of file source URL
+MAX_FILE_SOURCE_URL_LENGTH = 8192
 
 # Minimum # of revisions for a notebook to show up in the index page list
 MIN_FIREHOSE_REVISIONS = 10
@@ -84,6 +90,7 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "social_django",
     "rest_framework",
     "rest_framework.authtoken",
     "server.base",
@@ -126,7 +133,6 @@ if USE_OPENIDC_AUTH:
     INSTALLED_APPS.append("server.openidc")
     MIDDLEWARE.append("server.openidc.middleware.OpenIDCAuthMiddleware")
 elif SOCIAL_AUTH_GITHUB_KEY:
-    INSTALLED_APPS.append("social_django")
     MIDDLEWARE.extend(
         [
             "social_django.middleware.SocialAuthExceptionMiddleware",
@@ -173,8 +179,11 @@ WSGI_APPLICATION = "server.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+DATABASES = {"default": env.db("DATABASE_URL", default="postgres://postgres@db/postgres")}
 DB_REQUIRES_SSL = env.bool("DB_REQUIRES_SSL", default=not DEBUG)
-DATABASES = {"default": dj_database_url.config(conn_max_age=500, ssl_require=DB_REQUIRES_SSL)}
+if DB_REQUIRES_SSL:
+    DATABASES["default"].setdefault("OPTIONS", {})["sslmode"] = "require"
+DATABASES["default"].setdefault("CONN_MAX_AGE", 500)
 
 AUTHENTICATION_BACKENDS = (
     "social_core.backends.github.GithubOAuth2"

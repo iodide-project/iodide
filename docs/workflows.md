@@ -1,5 +1,13 @@
 # Common workflows and tips
 
+_Please also read our page about a few [JavaScript quirks](quirks.md) that you might encounter while using JavaScript in Iodide._
+
+## Running Async code
+
+When you are running code in an Iodide notebook, if you run a code chunk that returns a Promise Iodide will pause further evaluation until the Promise resolves. [This demo notebook](https://alpha.iodide.io/notebooks/3249/) gives a simple example of the concept. and [this notebook](https://alpha.iodide.io/notebooks/2327/) shows how the idea can be used with an [immediately invoked function expression](https://developer.mozilla.org/en-US/docs/Glossary/IIFE) to fetch data programmatically.
+
+This feature of Iodide may be used to simplify async workflows, particularly when you wish to share a notebook report, which will automatically run code in the notebook.
+
 ## Getting data into an Iodide notebook
 
 Iodide can use JavaScript and standard browser APIs to download data from public URLs on the web. As a convenience, we also provide a “fetch chunk” in IOMD, which allows you to load data using a shorthand syntax. You can read more about IOMD fetch chunk syntax in the fetch chunk section of the [IOMD docs](iomd.md).
@@ -21,7 +29,7 @@ To work around CORS errors, you need to upload your data to a server that does n
 
 ### Uploading data to an Iodide notebook
 
-_Note (2019-03-11): during our alpha period, files larger than 10MB cannot be uploaded._
+_Note: during our alpha period, files larger than 10MB cannot be uploaded._
 
 If you want to work with data stored on your local machine or if you are
 encountering CORS problems while attempting to use a dataset from a remote

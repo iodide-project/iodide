@@ -1,7 +1,9 @@
 import logging
 
-import requests
+from requests.exceptions import HTTPError
 from social_django.models import UserSocialAuth
+
+from . import get_github_user_data
 
 logger = logging.getLogger(__name__)
 
@@ -23,16 +25,12 @@ class GithubAuthMiddleware(object):
                 request.user.social_auth_extra_data = social_auth_extra_data
                 if not request.user.avatar:
                     try:
-                        r = requests.get(
-                            "https://api.github.com/users/%s" % social_auth_extra_data["login"]
-                        )
-                        r.raise_for_status()
-                        github_info = r.json()
+                        github_info = get_github_user_data(social_auth_extra_data["login"])
                         avatar_url = github_info.get("avatar_url")
                         if avatar_url:
                             request.user.avatar = avatar_url
                             request.user.save()
-                    except requests.exceptions.HTTPError as err:
+                    except HTTPError as err:
                         # was unable to get user info from github, we can just
                         # return a blank avatar for this case
                         logger.error(

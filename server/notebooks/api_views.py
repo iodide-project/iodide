@@ -1,11 +1,17 @@
+import logging
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
-from rest_framework.exceptions import ValidationError
+from requests.exceptions import HTTPError
+from rest_framework import status, viewsets
+from rest_framework.exceptions import APIException, ValidationError
+from rest_framework.response import Response
+from social_django.models import UserSocialAuth
 
+from ..github import get_github_user_data
 from .models import Notebook, NotebookRevision
 from .serializers import (
     NotebookDetailSerializer,
@@ -13,6 +19,8 @@ from .serializers import (
     NotebookRevisionDetailSerializer,
     NotebookRevisionSerializer,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class NotebookViewSet(viewsets.ModelViewSet):
@@ -31,33 +39,59 @@ class NotebookViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
         super().perform_destroy(instance)
 
-    def perform_create(self, serializer):
-        with transaction.atomic():
-            if "owner" in self.request.data:
-                User = get_user_model()
-                if (
-                    not self.request.data["owner"]
-                    or self.request.data["owner"] == self.request.user.username
-                ):
-                    owner = self.request.user
-                elif self.request.user.can_create_on_behalf_of_others:
-                    owner = get_object_or_404(User, username=self.request.data["owner"])
-                else:
-                    raise PermissionDenied
-            else:
+    @transaction.atomic
+    def create(self, request):
+        if "owner" in self.request.data:
+            owner_username = self.request.data["owner"]
+            if not owner_username or owner_username == self.request.user.username:
                 owner = self.request.user
-
-            if "forked_from" in self.request.data:
-                nbr_id = self.request.data["forked_from"]
-                forked_from = NotebookRevision.objects.get(id=nbr_id)
+            elif self.request.user.can_create_on_behalf_of_others:
+                User = get_user_model()
+                owner, _ = User.objects.get_or_create(username=owner_username)
+                if (
+                    settings.SOCIAL_AUTH_GITHUB_KEY
+                    and not UserSocialAuth.objects.filter(user=owner, provider="github").exists()
+                ):
+                    # if this does not succeed, we will return a 500
+                    try:
+                        github_user_data = get_github_user_data(owner_username)
+                    except HTTPError as err:
+                        logger.error(
+                            "Error getting information for user %s from github: %s",
+                            request.user.username,
+                            err,
+                        )
+                        raise APIException(
+                            "Error getting github user data for user %s".format(owner_username)
+                        )
+                    UserSocialAuth.objects.get_or_create(
+                        user=owner, provider="github", defaults={"uid": github_user_data["id"]}
+                    )
             else:
-                forked_from = None
-            notebook = serializer.save(owner=owner, forked_from=forked_from)
-            NotebookRevision.objects.create(
-                notebook=notebook,
-                title=self.request.data["title"],
-                content=self.request.data["content"],
-            )
+                raise PermissionDenied
+        else:
+            owner = self.request.user
+
+        if "forked_from" in self.request.data:
+            nbr_id = self.request.data["forked_from"]
+            try:
+                forked_from = NotebookRevision.objects.get(id=nbr_id)
+            except NotebookRevision.DoesNotExist:
+                raise Http404(f"Notebook with id {nbr_id} does not exist")
+        else:
+            forked_from = None
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        notebook = serializer.save(owner=owner, forked_from=forked_from)
+        NotebookRevision.objects.create(
+            notebook=notebook,
+            title=self.request.data["title"],
+            content=self.request.data["content"],
+        )
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     queryset = Notebook.objects.all()
 

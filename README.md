@@ -1,6 +1,6 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/iodide-project/iodide/master.svg)](https://circleci.com/gh/iodide-project/iodide)
 [![Join the chat at https://gitter.im/iodide-project/iodide](https://badges.gitter.im/iodide-project/iodide.svg)](https://gitter.im/iodide-project/iodide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
+[![codecov](https://codecov.io/gh/iodide-project/iodide/branch/master/graph/badge.svg)](https://codecov.io/gh/iodide-project/iodide)
 
 <h1 align='center'>
   <img width=100 src='https://files.gitter.im/iodide-project/iodide/xW1J/iodide-sticker-2.png' />

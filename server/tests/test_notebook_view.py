@@ -4,9 +4,10 @@ import pytest
 from django.urls import reverse
 from django.utils.html import escape
 
-from helpers import get_script_block, get_script_block_json, get_title_block
 from server.notebooks.models import Notebook, NotebookRevision
 from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
+
+from .helpers import get_script_block, get_script_block_json, get_title_block
 
 
 def test_notebook_view(client, test_notebook):
@@ -20,7 +21,6 @@ def test_notebook_view(client, test_notebook):
     assert expected_content in str(resp.content)
     assert get_script_block_json(resp.content, "notebookInfo") == {
         "connectionMode": "SERVER",
-        "files": [],
         "forked_from": False,
         "notebook_id": test_notebook.id,
         "revision_id": initial_revision.id,
@@ -70,7 +70,6 @@ def test_notebook_view_old_revision(client, test_notebook):
     assert get_script_block(resp.content, "iomd", "text/iomd") == initial_revision.content
     assert get_script_block_json(resp.content, "notebookInfo") == {
         "connectionMode": "SERVER",
-        "files": [],
         "forked_from": False,
         "notebook_id": test_notebook.id,
         "revision_id": initial_revision.id,

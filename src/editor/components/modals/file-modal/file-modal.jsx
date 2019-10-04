@@ -6,6 +6,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
+import { getFiles as getFilesAction } from "../../../actions/file-actions";
 import { getFileSources as getFileSourcesAction } from "../../../actions/file-source-actions";
 
 import { ModalContainer } from "../modal-container";
@@ -13,10 +14,11 @@ import ManageFiles from "./manage-files/manage-files";
 import ManageFileSources from "./manage-file-sources/manage-file-sources";
 import THEME from "../../../../shared/theme";
 
-const FileModalUnconnected = ({ getFileSources }) => {
+const FileModalUnconnected = ({ getFileSources, getFiles }) => {
   const [tab, setTab] = useState(0);
   useEffect(() => {
     getFileSources();
+    getFiles();
   }, []);
 
   const changeTab = (evt, val) => setTab(val);
@@ -40,19 +42,11 @@ const FileModalUnconnected = ({ getFileSources }) => {
 };
 
 FileModalUnconnected.propTypes = {
-  getFileSources: PropTypes.func
+  getFileSources: PropTypes.func,
+  getFiles: PropTypes.func
 };
-
-function mapDispatchToProps(dispatch) {
-  return {
-    getFileSources: () => {
-      // run this every time we open the manage file sources tab specifically.
-      dispatch(getFileSourcesAction());
-    }
-  };
-}
 
 export default connect(
   undefined,
-  mapDispatchToProps
+  { getFileSources: getFileSourcesAction, getFiles: getFilesAction }
 )(FileModalUnconnected);

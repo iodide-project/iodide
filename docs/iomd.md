@@ -24,13 +24,13 @@ As we said above, a IOMD file is just a plain text file with text blocks represe
 A few things to note about IOMD:
 
 - Iodide natively supports the following IOMD chunk types (described in more detail below):
-  - `%% js` for JavaScript source code
-  - `%% py` for Python source code
-  - `%% md` for Markdown
-  - `%% css` for CSS styles
-  - `%% fetch` for retrieving resources
-  - `%% plugin` for Iodide plugins
-  - `%% raw` for raw text (which Iodide will ignore)
+    - `%% js` for JavaScript source code
+    - `%% py` for Python source code
+    - `%% md` for Markdown
+    - `%% css` for CSS styles
+    - `%% fetch` for retrieving resources
+    - `%% plugin` for Iodide plugins
+    - `%% raw` for raw text (which Iodide will ignore)
 - A chunk started with just `%%` but no explicit chunk type will inherit its type of the chunk above it.
 - Any chunk with an unknown type will be ignored by Iodide.
 - Any blank lines above the first chunk specifier will be ignored.
@@ -102,6 +102,8 @@ $$\lim_{h\to 0} \frac{f(x+h)-f(x)}{h}.$$
 JavaScript chunks allow you to input JavaScript that is you can execute within your browser. The code runs within the scope of your Report (in a separate [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) from the code editor), and allows you to use the full set of [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) available in your browser.
 
 The last value returned by your code chunk is displayed in the Iodide Console.
+
+_For more information on working with JavaScript in Iodide, be sure to check out our docs about [useful workflows](workflows.md) and the [quirks and workarounds](quirks.md) that might unfamiliar to JS development in other contexts._
 
 ### CSS (`%% css`)
 

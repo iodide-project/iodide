@@ -28,6 +28,11 @@ wait_for() {
 
 wait_for db 5432
 
+tests() {
+  python manage.py check
+  python -m pytest "$@"  # skips linter checks
+}
+
 case $1 in
   dev)
     python manage.py migrate --noinput
@@ -38,6 +43,15 @@ case $1 in
     ;;
   beat)
     celery -A server beat --pidfile ${SCHEDULER_PIDFILE} -l debug
+    ;;
+  tests)
+    shift
+    tests
+    ;;
+  ci)
+    shift
+    tests "--lean" "$@"
+    bash <(curl -s https://codecov.io/bash) -s /tmp -Z
     ;;
   *)
     exec "$@"

@@ -44,7 +44,7 @@ variables *must* be defined:
 
 Variable name | Example | Purpose |
 ------------- | ------- | ------ |
-DATABASE_URL | postgres://USER:PASSWORD... | Defines location of database, see [dj-database-url](https://github.com/kennethreitz/dj-database-url) documentation
+DATABASE_URL | postgres://USER:PASSWORD... | Defines location of database, see [django-environ](https://django-environ.readthedocs.io/en/latest/#environ.environ.Env.db_url_config) documentation
 GITHUB_CLIENT_ID | bdc0d336e6bdac44... | Github client id credential, provided when you register a github application
 GITHUB_CLIENT_SECRET | 9dd7e43338bc08b95ac7... | Github client secret credential, provided when you register github application
 SECRET_KEY | q+50k8-no4ukn9pc25(i*=...| See [django documentation](https://docs.djangoproject.com/en/dev/ref/settings/#secret-key)

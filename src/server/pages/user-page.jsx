@@ -82,15 +82,16 @@ export default class UserPage extends React.Component {
         latestRevision: PropTypes.string,
         last_revision: PropTypes.string
       })
-    )
+    ),
+    headerMessage: PropTypes.string
   };
   render() {
-    const { thisUser, userInfo, notebookList } = this.props;
+    const { thisUser, userInfo, notebookList, headerMessage } = this.props;
     const isUserAccount =
       isLoggedIn(userInfo) && thisUser.name === userInfo.name;
     return (
       <div>
-        <Header userInfo={userInfo} />
+        <Header userInfo={userInfo} headerMessage={headerMessage} />
         <PageBody>
           <BelowFoldContainer>
             <UserInformationContainer>

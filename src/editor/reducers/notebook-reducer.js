@@ -151,6 +151,12 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { viewMode });
     }
 
+    case "UPDATE_FILES_FROM_SERVER": {
+      const { files } = action;
+      const notebookInfo = { ...state.notebookInfo, files };
+      return { ...state, notebookInfo };
+    }
+
     case "ADD_FILE_TO_NOTEBOOK": {
       const { filename, lastUpdated, fileID } = action;
       const files = state.notebookInfo.files.map(f => Object.assign({}, f));

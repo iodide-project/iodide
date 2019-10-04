@@ -61,6 +61,25 @@ class FileViewSet(viewsets.ModelViewSet):
         return Response(FilesSerializer(file_obj_to_update).data, status=201)
 
 
+class NotebookFileViewSet(viewsets.ModelViewSet):
+
+    http_method_names = ["get"]
+    serializer_class = FilesSerializer
+
+    def get_serializer_context(self):
+        notebook_id = int(self.kwargs["notebook_id"])
+        if not Notebook.objects.filter(id=notebook_id).exists():
+            raise Http404("Notebook with id %s does not exist" % notebook_id)
+        return {"notebook_id": notebook_id}
+
+    def get_queryset(self):
+        files = File.objects.filter(notebook_id=self.kwargs["notebook_id"])
+        filter_by_id = self.request.query_params.getlist("id")
+        if filter_by_id:
+            return files.filter(id__in=filter_by_id)
+        return files
+
+
 class NotebookFileSourceViewSet(viewsets.ModelViewSet):
 
     http_method_names = ["get"]

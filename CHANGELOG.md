@@ -1,12 +1,26 @@
- # (Unreleased; add upcoming change notes here)
+# (Unreleased; add upcoming change notes here)
 
-- Adds a new feature, file sources, which allows notebook authors to    
-  schedule the fetching of files from URLs. This feature is available in the notebook menu (click _Menu > Manage Files_)
+- Add test coverage reporting with Codecov. (#2322)
+- Fix use of naive datetime in favor of timezone-aware datetime objects. (#2323)
+- Collect email addresses from github logins
+
+# 0.13.0 (2019-10-01)
+
+- Extend Python test harness to run linting and coverage as part of test suite (#2305)
+- Fix coloring of history modal's title (#2301)
+- Increase maximum length of file source URLs from 200 to 8192 (#2314)
+- Fix console warning by switching from react-helmet to react-helmet-async (#2315)
+
+# 0.12.0 (2019-09-25)
+
+- Fix spurious "unsaved changes" changeset in revision browser (#2259)
+- Adds a new feature, file sources, which allows notebook authors to schedule
+  the fetching of files from URLs. This feature is available in the notebook menu
+  (click _Menu > Manage Files_) (#1985)
 - Add multi stage docker builds for smaller docker images (#2156)
 - Fixed a bug where script tags aren't being rendered properly that could lead
   to arbitrary code execution attacks (#2193)
-- Add multi stage docker builds for smaller docker images (#2163)
-- Fixes warnings caused by outdated version of Emotion
+- Fixes warnings caused by outdated version of Emotion (#2244)
 
 # 0.11.0 (2019-08-21)
 
