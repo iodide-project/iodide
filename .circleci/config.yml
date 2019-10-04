@@ -133,7 +133,7 @@ jobs:
             # we need to re-collect static as docker-compose mounts the checkout directory over what we have in the image
             chmod 777 . # make sure we have permission to write the files in our volume
             # run the actual tests
-            docker-compose run --rm $(CI_ENV) -e CODECOV_TOKEN server ci
+            docker-compose run --rm $(CI_ENV) -e CI -e CIRCLECI -e CIRCLE_BRANCH -e CIRCLE_BUILD_NUM -e CIRCLE_NODE_INDEX -e CIRCLE_PR_NUMBER -e CIRCLE_SHA1 server ci
 
   deploy:
     docker:
