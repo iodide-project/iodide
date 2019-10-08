@@ -20,6 +20,7 @@ import messagePasserEval from "../shared/utils/redux-to-port-message-passer";
 import { iodide } from "./iodide-api/api";
 
 import "./port-to-editor";
+import { handleInterceptBackspace } from "../shared/intercept-keybindings";
 
 messagePasserEval.connectDispatch(store.dispatch);
 window.iodide = iodide;
@@ -43,3 +44,4 @@ render(
 );
 
 initializeUserVariables();
+handleInterceptBackspace();
