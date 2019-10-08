@@ -91,11 +91,11 @@
     "universal-router": "8.3.0"
   },
   "devDependencies": {
-    "@babel/core": "7.6.2",
+    "@babel/core": "7.6.3",
     "@babel/plugin-proposal-class-properties": "7.5.5",
     "@babel/plugin-transform-modules-commonjs": "7.6.0",
-    "@babel/preset-env": "7.6.2",
-    "@babel/preset-react": "7.0.0",
+    "@babel/preset-env": "7.6.3",
+    "@babel/preset-react": "7.6.3",
     "@storybook/addon-actions": "5.2.3",
     "@storybook/addon-links": "5.2.3",
     "@storybook/addons": "5.2.3",
