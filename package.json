@@ -59,7 +59,7 @@
     "dompurify": "2.0.5",
     "emotion": "10.0.17",
     "error-stack-parser": "2.0.4",
-    "eslint-config-prettier": "6.3.0",
+    "eslint-config-prettier": "6.4.0",
     "font-awesome": "4.7.0",
     "golden-layout": "1.5.9",
     "jss": "10.0.0",
