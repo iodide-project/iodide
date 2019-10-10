@@ -91,7 +91,7 @@
     "universal-router": "8.3.0"
   },
   "devDependencies": {
-    "@babel/core": "7.6.3",
+    "@babel/core": "7.6.4",
     "@babel/plugin-proposal-class-properties": "7.5.5",
     "@babel/plugin-transform-modules-commonjs": "7.6.0",
     "@babel/preset-env": "7.6.3",
