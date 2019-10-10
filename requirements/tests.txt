@@ -77,9 +77,9 @@ pytest_freezegun==0.3.0.post1 \
     --hash=sha256:b86b13ef75959bedf4c32f1fd81fec66fa4502d9892e0ef6ad1717a34fe1560e
 flake8-black==0.1.1 \
     --hash=sha256:56f85aaa5a83f06a3f61e680e3b50f156b5e557ebdcb964d823d86f4c108b0c8
-pytest-cov==2.7.1 \
-    --hash=sha256:2b097cde81a302e1047331b48cadacf23577e431b61e9c6f49a1170bbe3d3da6 \
-    --hash=sha256:e00ea4fdde970725482f1f35630d12f074e121a23801aabf2ae154ec6bdd343a
+pytest-cov==2.8.1 \
+    --hash=sha256:cdbdef4f870408ebdbfeb44e63e07eb18bb4619fae852f6e760645fa36172626 \
+    --hash=sha256:cc6742d8bac45070217169f5f72ceee1e0e55b0221f54bcf24845972d3a47f2b
 pytest-flake8==1.0.4 \
     --hash=sha256:4d225c13e787471502ff94409dcf6f7927049b2ec251c63b764a4b17447b60c0 \
     --hash=sha256:d7e2b6b274a255b7ae35e9224c85294b471a83b76ecb6bd53c337ae977a499af
