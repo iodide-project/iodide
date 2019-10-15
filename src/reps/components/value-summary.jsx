@@ -202,7 +202,30 @@ export default class ValueSummary extends React.Component {
     size: PropTypes.number,
     stringValue: PropTypes.string
   };
+
+  state = {
+    error: null,
+    errorInfo: null
+  };
+
+  componentDidCatch(error, errorInfo) {
+    // Catch errors in any components below and re-render with error message
+    this.setState({
+      error,
+      errorInfo
+    });
+  }
+
   render() {
+    if (this.state.error) {
+      return (
+        <pre>
+          ExpandableRep render failed. errorInfo:
+          {JSON.stringify(this.state.errorInfo)}
+        </pre>
+      );
+    }
+    console.log("ValueSUmmary props", this.props);
     const { objType, tiny, size } = this.props;
     const ValueSummaryRepForType = getValueSummaryRepForType(objType);
 

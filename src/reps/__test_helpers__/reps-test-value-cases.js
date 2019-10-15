@@ -238,13 +238,13 @@ export const compositeObjects = {
   },
 
   object_falsyPropKeys: {
-    NaN: 1,
-    "": 2,
-    null: 3,
-    undefined: 4,
-    0: 5,
-    // [BigInt("0")]: 5.5, // eslint-disable-line no-undef
-    false: 6
+    NaN: "falsy_nan",
+    "": "falsy_emptyString",
+    null: "falsy_null",
+    undefined: "falsy_undefined",
+    0: "falsy_zero",
+    // [BigInt("0")]: "falsy_bigZero", // eslint-disable-line no-undef
+    false: "falsy_false"
   },
 
   object_weirdPropKeys: {
@@ -440,8 +440,8 @@ const handler = {
 };
 
 export const proxyObjects = {
-  simple_proxy: new Proxy({ foo: 1, bar: 2 }, handler),
-  nested_proxy: {
+  proxy_simple: new Proxy({ foo: 1, bar: 2 }, handler),
+  proxy_nested: {
     a: new Proxy({ foo: 1, bar: 2 }, handler),
     b: new Proxy({ foo: 1, bar: 2 }, handler)
   }
