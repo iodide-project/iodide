@@ -6,6 +6,7 @@ export const simpleTypes = {
   number_exp: 10e55,
   number_nan: NaN,
   number_inf: Infinity,
+  // bigint: BigInt(9007199254740991), bigint not yet available in node?
   string_empty: "",
   string_short: "asjhdflkdskfhla",
   string_medium: "abcd ".repeat(100),
@@ -66,8 +67,8 @@ export const arrayBuffers = {
     (_, i) => Math.cos(i) ** 2 + i
   )
   // spec-ed, not yet implemented
-  // BigInt64Array: new BigInt64Array(1000),
-  // BigUint64Array: new BigUint64Array(1000)
+  // typedArray_BigInt64Array: new BigInt64Array(1000),
+  // typedArray_BigUint64Array: new BigUint64Array(1000)
 };
 
 // ==================== functions
@@ -234,6 +235,22 @@ export const compositeObjects = {
     embbiggenString(s) {
       return s + s;
     }
+  },
+
+  object_falsyPropKeys: {
+    NaN: 1,
+    "": 2,
+    null: 3,
+    undefined: 4,
+    0: 5,
+    // [BigInt("0")]: 5.5, // eslint-disable-line no-undef
+    false: 6
+  },
+
+  object_weirdPropKeys: {
+    Infinity: -Infinity,
+    [-Infinity]: Infinity,
+    [console.log]: 4534
   }
 };
 
@@ -324,6 +341,11 @@ export const rowTableCases = {
     id: Math.sin(i)
   })),
 
+  rowsTable_falsyColNames: new Array(58).fill(0).map((x, i) => ({
+    row: i,
+    ...compositeObjects.object_falsyPropKeys
+  })),
+
   rowsTable_sortCheck: new Array(58).fill(0).map((x, i) => ({
     i,
     "2*i": 2 * i,
@@ -341,18 +363,47 @@ export const rowTableCases = {
       .join("")
   })),
 
+  rowsTable_arrayWithProperties: (() => {
+    const table = new Array(58).fill(0).map((x, i) => ({
+      i,
+      "2*i": 2 * i,
+      "i^2": 2 ** i,
+      "sin(i)": Math.sin(i),
+      "2*sin(i)": 2 * Math.sin(i),
+      "sin(i)^2": Math.sin(i) ** 2,
+      ties: Math.round(Math.sin(i * 50) * 10),
+      "null and undef": [0, null, undefined][Math.round(Math.sin(i)) + 1],
+      "-i": -i,
+      "array of length i": new Array(i).fill(1).map((y, j) => i * j),
+      "string from i": new Array(i)
+        .fill(1)
+        .map((y, j) => String.fromCharCode((j % 26) + 65))
+        .join("")
+    }));
+    table.propString = "foo";
+    table.propNum = "foo";
+    table.propArray = Object.keys(table[0]);
+    return table;
+  })(),
+
   rowsTable_augmentedObjects: new Array(113).fill(0).map((x, i) => ({
     index: i,
     time: new Date(Math.cos(i) * 1e12),
     score: Math.sin(i),
-    subObj: { subInd: i, subSubArray: [i, 2, 3, 4, 5, "asdf", [i, 2, 3]] },
+    subObj: {
+      subInd: i,
+      subSubArray: [i, 2, 3, 4, 5, "asdf", [i, 2, 3]]
+    },
     subArray: new Array(i).fill(1).map((y, j) => i * j)
   })),
   rowsTable_shortTable: new Array(3).fill(0).map((x, i) => ({
     index: i,
     time: new Date(Math.cos(i) * 1e12),
     score: Math.sin(i),
-    subObj: { subInd: i, subSubArray: [i, 2, 3, 4, 5, "asdf", [i, 2, 3]] },
+    subObj: {
+      subInd: i,
+      subSubArray: [i, 2, 3, 4, 5, "asdf", [i, 2, 3]]
+    },
     subArray: new Array(i).fill(1).map((y, j) => i * j)
   })),
   rowsTable_compositeObjects: new Array(532).fill(compositeObjects),
@@ -378,6 +429,22 @@ export const blobObjects = {
   blob_fromJson: new Blob([JSON.stringify({ hello: "world" }, null, 2)], {
     type: "application/json"
   })
+};
+
+// ==================== proxies
+
+const handler = {
+  get(obj, prop) {
+    return prop in obj ? obj[prop] : 37;
+  }
+};
+
+export const proxyObjects = {
+  simple_proxy: new Proxy({ foo: 1, bar: 2 }, handler),
+  nested_proxy: {
+    a: new Proxy({ foo: 1, bar: 2 }, handler),
+    b: new Proxy({ foo: 1, bar: 2 }, handler)
+  }
 };
 
 // ==================== objects with iodideRender
@@ -417,5 +484,6 @@ export const allCases = Object.assign(
   rowTableCases,
   rowTableFails,
   blobObjects,
+  proxyObjects,
   iodideRenderObjects
 );
