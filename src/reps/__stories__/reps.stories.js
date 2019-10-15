@@ -194,7 +194,7 @@ allTestCases.add("expandable rep", () => {
                   <ExpandableRep
                     pathToEntity={[name]}
                     valueSummary={serializedValueSummary}
-                    getChildSummaries={getChildSummary}
+                    getChildSummaries={path => getChildSummary("window", path)}
                     rootObjName="STORYBOOK_TEST_CASES"
                   />
                 </td>
