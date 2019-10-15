@@ -250,7 +250,7 @@ export const compositeObjects = {
   object_weirdPropKeys: {
     Infinity: -Infinity,
     [-Infinity]: Infinity,
-    [console.log]: 4534
+    [Math.random]: 4534
   }
 };
 
