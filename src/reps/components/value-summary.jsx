@@ -202,7 +202,6 @@ export default class ValueSummary extends React.Component {
     size: PropTypes.number,
     stringValue: PropTypes.string
   };
-
   render() {
     const { objType, tiny, size } = this.props;
     const ValueSummaryRepForType = getValueSummaryRepForType(objType);
