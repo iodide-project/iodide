@@ -172,9 +172,11 @@ export default class TableRenderer extends React.Component {
 
     const columns = Object.keys(data[0])
       .filter(k => k !== "ORIGINAL_DATA_TABLE_ROW_INDEX")
+      // .map(k => k !== "ORIGINAL_DATA_TABLE_ROW_INDEX")
       .map(k => ({
-        Header: k,
-        accessor: k,
+        Header: k === "" ? '""' : k,
+        accessor: k === "" ? row => row[""] : k,
+        id: k === "" ? "empty_string_column" : k,
         width: Math.max(k.length, MIN_CELL_CHAR_WIDTH) * PX_PER_CHAR,
         Cell: rowInfo => {
           return (
