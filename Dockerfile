@@ -1,4 +1,4 @@
-FROM python:3.7-slim AS python-builder
+FROM python:3.8-slim AS python-builder
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PATH="/venv/bin:$PATH"
@@ -21,7 +21,7 @@ RUN virtualenv /venv
 COPY requirements/*.txt ./requirements/
 RUN pip install --require-hashes --no-cache-dir -r requirements/build.txt
 
-FROM python:3.7-slim AS base
+FROM python:3.8-slim AS base
 
 # install a few essentials and clean apt caches afterwards
 RUN mkdir -p \
