@@ -38,7 +38,13 @@ server, you may upload data directly to Iodide.
 ### uploading files directly
 
 Data is uploaded on a per-notebook basis&mdash;rather than uploading data to
-your user account, you upload it to a specific notebook. To do so, click on the
+your user account, you upload it to a specific notebook. There are two ways to
+do this.
+
+To create a new notebook with certain files attached, drop the files anywhere on
+the Iodide homepage.
+
+To add files to an existing notebook, open the notebook and click on the
 hamburger menu icon near the top-left of the page, then click _Manage Files_.
 The file management modal will appear. By default, you will be in the _Manage
 Files_ tab. Click _Add Files_ and select any number of files to upload. Once the

@@ -99,8 +99,19 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
   });
 }
 
-export function makeFormData(notebookID, data, fileName) {
-  const file = valueToFile(data, fileName);
+export function makeFormData(
+  notebookID,
+  data,
+  fileName,
+  dataIsAlreadyFile = false
+) {
+  let file;
+  if (!dataIsAlreadyFile) {
+    file = valueToFile(data, fileName);
+  } else {
+    file = data;
+  }
+
   const formData = new FormData();
   formData.append(
     "metadata",
@@ -117,9 +128,10 @@ export async function saveFileToServer(
   notebookID,
   data,
   fileName,
-  fileID = undefined
+  fileID = undefined,
+  dataIsAlreadyFile = false
 ) {
-  const formData = makeFormData(notebookID, data, fileName);
+  const formData = makeFormData(notebookID, data, fileName, dataIsAlreadyFile);
   const r = await uploadFile(formData, fileID);
   return r;
 }
