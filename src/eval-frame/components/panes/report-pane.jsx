@@ -15,18 +15,22 @@ mdIt
   .use(MarkdownItEmoji)
   .use(MarkdownItTag);
 
-const mdDiv = html => (
+const mdDiv = (key, html) => (
   <div
+    key={key}
     className="user-markdown"
     dangerouslySetInnerHTML={{ __html: html }} // eslint-disable-line react/no-danger
   />
 );
 
-const styleTag = css => (
+const styleTag = (key, css) => (
   <style
+    key={key}
     dangerouslySetInnerHTML={{ __html: css }} // eslint-disable-line react/no-danger
   />
 );
+
+const otherCellTag = key => <div key={key} id={`side-effect-target-${key}`} />;
 
 const paneStyle = {
   height: "100%",
@@ -45,35 +49,25 @@ export class ReportPaneUnconnected extends React.Component {
   };
 
   render() {
-    const mdComponents = this.props.reportChunks.map(chunk => {
+    const reportComponents = this.props.reportChunks.map(chunk => {
       const key = chunk.chunkId;
-      let contents;
-      let htmlId;
       switch (chunk.chunkType) {
         case "md":
         case "html":
           // FIXME: 'html' chunks are really markdown chunks --
           // we pass them thru the MD parser (for validation)
           // before putting in the report
-          contents = mdDiv(mdIt.render(chunk.chunkContent));
-          break;
+          return mdDiv(key, mdIt.render(chunk.chunkContent));
         case "css":
-          contents = styleTag(chunk.chunkContent);
-          break;
+          return styleTag(key, chunk.chunkContent);
         default:
           // in the case of code and other cell types,
           // just want an empty div; `contents` can remain undefined
-          htmlId = `side-effect-target-${key}`;
-          break;
+          return otherCellTag(key);
       }
-      return (
-        <div key={key} id={htmlId}>
-          {contents}
-        </div>
-      );
     });
 
-    return <div style={paneStyle}>{mdComponents}</div>;
+    return <div style={paneStyle}>{reportComponents}</div>;
   }
 }
 
