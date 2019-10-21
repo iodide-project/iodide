@@ -11,13 +11,13 @@
     <!-- Add these meta properties to render domain on Facebook -->
 		<meta property="og:title" content="{{ title }}">
 		<meta property="og:description" content="{{ title }}">
-		<meta property="og:image" content="https://files.gitter.im/iodide-project/iodide/xW1J/iodide-sticker-2.png">
-		<meta property="og:url" content="https://iodide.io">
+		<meta property="og:image" content="{% static 'assets/apple-touch-icon.png' %}">
+		<meta property="og:url" content="{ setting.SITE_URL }">
 		<!-- Add these meta properties are for twitter -->
 		<meta name="twitter:title" content="{{ title }}">
 		<meta name="twitter:description" content="{{ title }}">
 		<!-- <meta name="twitter:site" content="@iodide"> -->
-		<meta name="twitter:image" content="https://files.gitter.im/iodide-project/iodide/xW1J/iodide-sticker-2.png">
+		<meta name="twitter:image" content="{% static 'assets/apple-touch-icon.png' %}">
 		<meta name="twitter:card" content="summary">
     <title>{{ title }}</title>
   </head>
