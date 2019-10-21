@@ -5,6 +5,8 @@
 - Collect email addresses from github logins
 - Allow users to drop files onto the homepage to create a new notebook with
   those files attached (#2133)
+- Add appropriate metadata so that Iodide links have a preview card when shared
+  on social media sites (#2344)
 
 # 0.13.0 (2019-10-01)
 
