@@ -21,6 +21,7 @@
     "build-storybook": "build-storybook"
   },
   "jest": {
+    "coverageDirectory": ".coverage",
     "setupFilesAfterEnv": [
       "<rootDir>/test/setupTests.js"
     ],
