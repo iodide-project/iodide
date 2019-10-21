@@ -1,47 +1,30 @@
-version: '3'
+version: '3.4'
+
+x-app:
+  &app
+  build:
+    context: .
+  env_file: .env
+  volumes:
+    - $PWD:/app
+  links:
+    - db
+    - redis
+  command: dev
+
+
 services:
   server:
-    build:
-      context: .
-    env_file: .env
-    depends_on:
-      - db
-      - redis
-    links:
-      - db
-      - redis
+    <<: *app
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
-    command: dev
 
   worker:
-    build:
-      context: .
-    env_file: .env
-    depends_on:
-      - db
-      - redis
-    links:
-      - db
-      - redis
-    volumes:
-      - .:/app
+    <<: *app
     command: worker
 
   beat:
-    build:
-      context: .
-    env_file: .env
-    depends_on:
-      - db
-      - redis
-    links:
-      - db
-      - redis
-    volumes:
-      - .:/app
+    <<: *app
     command: beat
 
   db:
