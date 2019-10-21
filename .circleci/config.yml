@@ -142,11 +142,7 @@ jobs:
             chmod 777 . # make sure we have permission to write the files in our volume
             # run the actual tests
             docker-compose run --rm server ci
-            bash <(curl -s https://codecov.io/bash) \
-              # look for coverage results in the volume created by docker-compose
-              -s .coverage \
-              # exit with 1 if not successful
-              -Z
+            bash <(curl -s https://codecov.io/bash) -f .coverage/coverage.xml -Z
 
   deploy:
     docker:
