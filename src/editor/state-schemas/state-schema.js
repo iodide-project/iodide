@@ -72,7 +72,7 @@ export const languageSchema = {
     asyncEvaluator: { type: "string" },
     url: { type: "string" }
   },
-  additionalProperties: false
+  additionalProperties: true
 };
 
 export const fileSchema = {
