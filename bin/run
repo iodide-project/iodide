@@ -5,8 +5,6 @@ set -eo pipefail
 : "${PORT:=8000}"
 : "${SLEEP:=1}"
 : "${TRIES:=60}"
-: "${MONITOR_PIDFILE:=/app/celerymonitor.pid}"
-: "${SCHEDULER_PIDFILE:=/app/celerybeat.pid}"
 
 usage() {
   echo "usage: bin/run dev"
@@ -40,10 +38,7 @@ case $1 in
     exec python manage.py runserver 0.0.0.0:${PORT}
     ;;
   worker)
-    celery -A server worker -l debug --events
-    ;;
-  beat)
-    celery -A server beat --pidfile ${SCHEDULER_PIDFILE} -l debug
+    exec python manage.py spinach
     ;;
   tests)
     shift

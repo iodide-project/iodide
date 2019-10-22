@@ -4,14 +4,18 @@ import logging
 import requests
 from django.conf import settings
 from django.utils import timezone
+from spinach import Tasks
 
-from ..celery import celery
 from .models import File, FileSource, FileUpdateOperation
 
 logger = logging.getLogger(__name__)
 
+tasks = Tasks()
 
-@celery.task
+ONE_DAY = datetime.timedelta(days=1)
+
+
+@tasks.task(name="files:execute_file_update_operation")
 def execute_file_update_operation(update_operation_id):
     update_operation = FileUpdateOperation.objects.get(id=update_operation_id)
 
@@ -46,10 +50,10 @@ def execute_file_update_operation(update_operation_id):
     update_operation.save()
 
 
-@celery.task
+@tasks.task(name="files:execute_scheduled_file_operations", periodicity=ONE_DAY)
 def execute_scheduled_file_operations():
     # this runs once a day, always queue daily operations
-    intervals_to_queue = [datetime.timedelta(days=1)]
+    intervals_to_queue = [ONE_DAY]
     # if it is monday, include the weekly ones as well
     if datetime.datetime.today().weekday() == 0:
         intervals_to_queue.append(datetime.timedelta(weeks=1))
@@ -61,4 +65,4 @@ def execute_scheduled_file_operations():
     file_sources = FileSource.objects.filter(update_interval__in=intervals_to_queue)
     for file_source in file_sources:
         update_operation = FileUpdateOperation.objects.create(file_source=file_source)
-        execute_file_update_operation.apply_async(args=[update_operation.id])
+        tasks.schedule(execute_file_update_operation, update_operation.id)

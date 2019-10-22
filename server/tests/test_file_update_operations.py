@@ -113,7 +113,7 @@ def test_run_scheduled_file_operations(fake_user, test_notebook, date):
     daily_ids = set([file_sources[0].id])
 
     with freeze_time(date):
-        with patch("server.files.tasks.execute_file_update_operation.apply_async") as mock_task:
+        with patch("server.files.tasks.tasks.schedule") as mock_schedule:
             execute_scheduled_file_operations()
             update_operations = FileUpdateOperation.objects.all()
             if date == "2019-07-08":
@@ -123,14 +123,17 @@ def test_run_scheduled_file_operations(fake_user, test_notebook, date):
                 # only the daily task should have run
                 assert set(update_operations.values_list("file_source_id", flat=True)) == daily_ids
             # also make sure we queued the relevant async tasks
-            mock_task.assert_has_calls(
-                [call(args=[id]) for id in update_operations.values_list("id", flat=True)]
+            mock_schedule.assert_has_calls(
+                [
+                    call(execute_file_update_operation, id)
+                    for id in update_operations.values_list("id", flat=True)
+                ]
             )
 
 
 @pytest.mark.freeze_time("2017-05-21")
 def test_post_file_update_operation(fake_user, test_notebook, test_file_source, client):
-    with patch("server.files.tasks.execute_file_update_operation.apply_async") as mock_task:
+    with patch("server.files.tasks.tasks.schedule") as mock_schedule:
         client.force_login(user=fake_user)
         resp = client.post(
             reverse("file-update-operations-list"), {"file_source_id": test_file_source.id}
@@ -147,4 +150,6 @@ def test_post_file_update_operation(fake_user, test_notebook, test_file_source, 
         assert file_update_operation.ended_at is None
 
         # verify that the expected task has been queued
-        mock_task.assert_has_calls([call(args=[file_update_operation.id])])
+        mock_schedule.assert_has_calls(
+            [call(execute_file_update_operation, file_update_operation.id)]
+        )
