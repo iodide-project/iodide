@@ -65,7 +65,7 @@ const MapKeyValSummaryItem = ({ summaryItem }) => {
   return (
     <React.Fragment key={JSON.stringify(path)}>
       <ValueSummary tiny {...keySummary} />
-      {" → "}
+      →
       <ValueSummary tiny {...valSummary} />
     </React.Fragment>
   );

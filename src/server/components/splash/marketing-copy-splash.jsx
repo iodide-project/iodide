@@ -103,9 +103,8 @@ export default class MarketingCopySplash extends React.Component {
           </SplashTitle>
         </SingleSplash>
         <SplashCopy>
-          {
-            "Create, share, collaborate, and reproduce powerful reports and visualizations with tools you already know. "
-          }
+          Create, share, collaborate, and reproduce powerful reports and
+          visualizations with tools you already know.
         </SplashCopy>
         <ButtonGroup>
           <ContainedButton onClick={this.showLoginModal}>
