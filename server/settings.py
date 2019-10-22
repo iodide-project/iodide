@@ -158,7 +158,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "social_django.context_processors.backends",
                 "server.context_processors.google_analytics",
-                "server.context_processors.site_url"
+                "server.context_processors.site_url",
             ]
         },
     }

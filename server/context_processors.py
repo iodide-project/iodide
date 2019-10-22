@@ -15,6 +15,7 @@ def google_analytics(request):
     else:
         return {"google_analytics": ""}
 
+
 def site_url(request):
     """
     Returns site URL.
