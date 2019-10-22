@@ -35,7 +35,7 @@ jobs:
       - run: npm run lint
       - run: npm run build
       - run: npm run test-coverage -- --runInBand
-      - run: bash <(curl -s https://codecov.io/bash) -f coverage/coverage-final.json -Z
+      - run: bash <(curl -s https://codecov.io/bash) -f .coverage/coverage-final.json -Z
 
   build:
     docker:
@@ -81,7 +81,7 @@ jobs:
 
   docs:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.8
     steps:
       - checkout
       - run:
@@ -118,6 +118,13 @@ jobs:
           command: docker load -i /tmp/docker.tar
 
       - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+
+      - run:
           name: Lint code
           command: |
             cp .env-dist .env
@@ -127,7 +134,6 @@ jobs:
           name: Test Code
           command: |
             set -x
-            export CI_ENV=`bash <(curl -s https://codecov.io/env)`
             cp .env-dist .env
             # we need to wait for the db to come up
             docker-compose up -d
@@ -135,7 +141,8 @@ jobs:
             # we need to re-collect static as docker-compose mounts the checkout directory over what we have in the image
             chmod 777 . # make sure we have permission to write the files in our volume
             # run the actual tests
-            docker-compose run --rm $(CI_ENV) -e CI -e CIRCLECI -e CIRCLE_BRANCH -e CIRCLE_BUILD_NUM -e CIRCLE_NODE_INDEX -e CIRCLE_PR_NUMBER -e CIRCLE_SHA1 server ci
+            docker-compose run --rm server ci
+            bash <(curl -s https://codecov.io/bash) -f .coverage/coverage.xml -Z
 
   deploy:
     docker:

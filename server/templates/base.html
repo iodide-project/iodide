@@ -8,6 +8,16 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/favicon-16x16.png' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}">
     <link rel="mask-icon" href="{% static 'assets/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <!-- meta-properties for Facebook, Slack, and other social media -->
+		<meta property="og:title" content="{{ title }}">
+		<meta property="og:description" content="{{ title }}">
+		<meta property="og:image" content="{% static 'assets/apple-touch-icon.png' %}">
+		<meta property="og:url" content="{{ SITE_URL }}">
+		<!-- twitter-specific metadata properties -->
+		<meta name="twitter:title" content="{{ title }}">
+		<meta name="twitter:description" content="{{ title }}">
+		<meta name="twitter:image" content="{% static 'assets/apple-touch-icon.png' %}">
+		<meta name="twitter:card" content="summary">
     <title>{{ title }}</title>
   </head>
   <body>

@@ -1,7 +1,7 @@
 [run]
 source = server
 branch = True
-data_file = /tmp/.coverage
+data_file = /app/.coverage/data
 
 [report]
 show_missing = True
@@ -12,4 +12,4 @@ omit =
     *management/commands*
 
 [xml]
-output = /tmp/coverage.xml
+output = /app/.coverage/coverage.xml
