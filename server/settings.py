@@ -15,10 +15,9 @@ import re
 
 import environ
 import redis
-from furl import furl
 from django.utils.log import DEFAULT_LOGGING
+from furl import furl
 from spinach.brokers.redis import RedisBroker, recommended_socket_opts
-
 
 env = environ.Env()
 

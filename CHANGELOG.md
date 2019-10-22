@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Move to Spinach from Celery. (#2381)
+
 # 0.14.0 (2019-10-24)
 
 - Add test coverage reporting with Codecov. (#2322)
