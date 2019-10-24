@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReportPane report pane: empty 1`] = `
+<div
+  style={
+    Object {
+      "height": "100%",
+      "overflow": "auto",
+    }
+  }
+/>
+`;
+
+exports[`ReportPane report pane: single markdown chunk 1`] = `
+<div
+  style={
+    Object {
+      "height": "100%",
+      "overflow": "auto",
+    }
+  }
+>
+  <div
+    className="user-markdown"
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "<p><em>cheezburger</em></p>
+",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`ReportPane report pane: single markdown chunk, css chunk 1`] = `
+<div
+  style={
+    Object {
+      "height": "100%",
+      "overflow": "auto",
+    }
+  }
+>
+  <div
+    className="user-markdown"
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "<p><em>cheezburger</em></p>
+",
+      }
+    }
+  />
+  <style
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "#htmlInMd {border: 2px solid gray; margin: 8px; padding: 4px;}",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`ReportPane report pane: single markdown chunk, other kind of chunk 1`] = `
+<div
+  style={
+    Object {
+      "height": "100%",
+      "overflow": "auto",
+    }
+  }
+>
+  <div
+    className="user-markdown"
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "<p><em>cheezburger</em></p>
+",
+      }
+    }
+  />
+  <div
+    id="side-effect-target-2"
+  />
+</div>
+`;
