@@ -2,7 +2,7 @@
 
 - Add test coverage reporting with Codecov. (#2322)
 - Fix use of naive datetime in favor of timezone-aware datetime objects. (#2323)
-- Collect email addresses from github logins
+- Collect email addresses from github logins (#2329)
 - Allow users to drop files onto the homepage to create a new notebook with
   those files attached (#2133)
 - Add appropriate metadata so that Iodide links have a preview card when shared
