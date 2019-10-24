@@ -15,7 +15,6 @@ export default class NotebookMenuItem extends React.Component {
       PropTypes.instanceOf(ExternalLinkTask)
     ])
   };
-  static muiName = "MenuItem";
 
   constructor(props) {
     super(props);
@@ -26,6 +25,8 @@ export default class NotebookMenuItem extends React.Component {
       }
     });
   }
+
+  static muiName = "MenuItem";
 
   render() {
     return (
