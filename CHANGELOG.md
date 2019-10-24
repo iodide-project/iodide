@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.14.0 (2019-10-24)
+
 - Add test coverage reporting with Codecov. (#2322)
 - Fix use of naive datetime in favor of timezone-aware datetime objects. (#2323)
 - Collect email addresses from github logins (#2329)
