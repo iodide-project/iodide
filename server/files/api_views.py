@@ -15,7 +15,7 @@ from .serializers import (
     FilesSerializer,
     FileUpdateOperationSerializer,
 )
-from .tasks import execute_file_update_operation
+from .tasks import execute_file_update_operation, tasks
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -147,6 +147,6 @@ class FileUpdateOperationViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
 
         update_operation = FileUpdateOperation.objects.create(file_source=file_source)
-        execute_file_update_operation.apply_async(args=[update_operation.id])
+        tasks.schedule(execute_file_update_operation, update_operation.id)
 
         return Response(FileUpdateOperationSerializer(update_operation).data, status=201)

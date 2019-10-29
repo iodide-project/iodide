@@ -23,10 +23,6 @@ services:
     <<: *app
     command: worker
 
-  beat:
-    <<: *app
-    command: beat
-
   db:
     image: postgres:9.5-alpine
     logging:

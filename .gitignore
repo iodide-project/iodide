@@ -84,6 +84,3 @@ wallaby.js
 
 # mkdocs
 site
-
-# celery
-celerybeat-schedule

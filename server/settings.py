@@ -14,8 +14,10 @@ import os
 import re
 
 import environ
-from celery.schedules import crontab
+import redis
+from django.utils.log import DEFAULT_LOGGING
 from furl import furl
+from spinach.brokers.redis import RedisBroker, recommended_socket_opts
 
 env = environ.Env()
 
@@ -97,6 +99,7 @@ INSTALLED_APPS = [
     "server.jwt",
     "server.notebooks",
     "server.files",
+    "spinach.contrib.spinachd",
 ]
 
 RESTRICT_API = env.bool("RESTRICT_API", default=False)
@@ -163,6 +166,14 @@ TEMPLATES = [
         },
     }
 ]
+
+LOGGING = DEFAULT_LOGGING.copy()
+LOGGING["loggers"].update(
+    {
+        "spinach": {"handlers": ["console"], "level": "INFO"},
+        "server": {"handlers": ["console"], "level": "INFO"},
+    }
+)
 
 # When DEBUG is True, allow HTTP traffic, otherwise, never allow HTTP traffic.
 SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=not DEBUG)
@@ -237,11 +248,4 @@ WHITENOISE_MIMETYPES = {".wasm": "application/wasm"}
 
 REDIS_HOST = env.str("REDIS_HOST", default="redis")
 REDIS_URL = env.str("REDIS_URL", default=f"redis://{REDIS_HOST}:6379/1")
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = REDIS_URL
-CELERY_BEAT_SCHEDULE = {
-    "run_scheduled_file_operations": {
-        "task": "server.files.tasks.execute_scheduled_file_operations",
-        "schedule": crontab(minute=0, hour=0),
-    }
-}
+SPINACH_BROKER = RedisBroker(redis.from_url(REDIS_URL, **recommended_socket_opts))
