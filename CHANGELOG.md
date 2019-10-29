@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-- Move to Spinach from Celery. (#2381)
+- Use Spinach task scheduler instead of Celery: simpler, and eliminates the need for a worker beat node (#2381)
 
 # 0.14.0 (2019-10-24)
 
