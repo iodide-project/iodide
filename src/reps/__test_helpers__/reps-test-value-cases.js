@@ -435,7 +435,7 @@ export const blobObjects = {
 
 const handler = {
   get(obj, prop) {
-    return prop in obj ? obj[prop] : 37;
+    return prop in obj ? obj[prop] + 5 : 37;
   }
 };
 
@@ -446,6 +446,50 @@ export const proxyObjects = {
     b: new Proxy({ foo: 1, bar: 2 }, handler)
   }
 };
+
+const proxyTargets = {
+  baseTarget: {
+    foo: 1213,
+    bar: x => x ** 3,
+    bat: "sadf",
+    sub: { a: 5423, b: "asdf" }
+  },
+  functionTarget: (x, y) => x ** 2 + y ** 2
+};
+
+const proxyHandlers = {
+  get: { get: (target, prop) => String(target[prop]) + String(prop) },
+  set: { set: () => "foo" },
+  has: { has: () => "foo" },
+  apply: { apply: () => "foo" },
+  construct: { construct: () => "foo" },
+  ownKeys: { ownKeys: () => ["a1", "b2", "c3"] },
+  deleteProperty: { deleteProperty: () => "foo" },
+  defineProperty: { defineProperty: () => "foo" },
+  isExtensible: { isExtensible: () => "foo" },
+  preventExtensions: { preventExtensions: () => "foo" },
+  getPrototypeOf_notNull: { getPrototypeOf: () => Blob.prototype },
+  getPrototypeOf_null: { getPrototypeOf: () => null },
+  setPrototypeOf: { setPrototypeOf: () => "foo" },
+  getOwnPropertyDescriptor: { getOwnPropertyDescriptor: () => "foo" }
+};
+
+// add cases for different targets and handlers
+
+for (const t of Object.keys(proxyTargets)) {
+  let allHandlers = {};
+  for (const h of Object.keys(proxyHandlers)) {
+    proxyObjects[`proxy_${t}_${h}`] = new Proxy(
+      proxyTargets[t],
+      proxyHandlers[h]
+    );
+    allHandlers = { ...allHandlers, ...proxyHandlers[h] };
+  }
+  proxyObjects[`proxy_${t}_allHandlers`] = new Proxy(
+    proxyTargets[t],
+    allHandlers
+  );
+}
 
 // ==================== objects with iodideRender
 

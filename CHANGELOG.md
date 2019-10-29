@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Fix reps bug involving proxies (#2254, #2237, #1748)
+
 # 0.14.0 (2019-10-24)
 
 - Add test coverage reporting with Codecov. (#2322)
