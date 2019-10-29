@@ -41,6 +41,7 @@ allTestCases.add("table of type/class info", () => {
           <td>objType</td>
           <td>objClass</td>
           <td>size</td>
+          <td>js toString value</td>
         </tr>
       </thead>
       <tbody>
@@ -52,6 +53,7 @@ allTestCases.add("table of type/class info", () => {
               <td>{getType(value)}</td>
               <td>{getClass(value)}</td>
               <td>{objSize(value)}</td>
+              <td>{Object().toString.call(value)}</td>
             </tr>
           );
         })}

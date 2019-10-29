@@ -34,10 +34,14 @@ export const typesWithLength = [
   "Uint32Array",
 
   "Float32Array",
-  "Float64Array",
+  "Float64Array"
+];
 
+export const typesWithZeroLength = [
   "Function",
-  "GeneratorFunction"
+  "GeneratorFunction",
+  "Null",
+  "Undefined"
 ];
 
 export const nonExpandableTypes = [
