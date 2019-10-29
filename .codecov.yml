@@ -1,0 +1,28 @@
+codecov:
+  notify:
+    require_ci_to_pass: yes
+
+coverage:
+  precision: 2
+  round: down
+  # 50...75 results in any coverage less than 50% having a red background.
+  # The color would gradually change to green when approaching the 75% mark.
+  # Any coverage over 75% would result in a solid green color.
+  range: 50..75
+
+  status:
+    project:
+      default:
+        # the minimum coverage ratio that the commit must meet to be considered a success
+        target: 50%
+        # percentage to allow the coverage to drop by,
+        # without poting an error status
+        threshold: 1%
+
+comment:
+  # reach: coverage graph, diff: coverage diff to base, tree: list of files
+  layout: "reach,diff,tree"
+  # update, if exists. Otherwise post new. Skip if deleted.
+  behavior: once
+  # if yes, only post the comment if coverage changes
+  require_changes: no

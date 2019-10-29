@@ -1,6 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
 - Use Spinach task scheduler instead of Celery: simpler, and eliminates the need for a worker beat node (#2381)
+- Fix reps bug involving proxies (#2254, #2237, #1748)
 
 # 0.14.0 (2019-10-24)
 

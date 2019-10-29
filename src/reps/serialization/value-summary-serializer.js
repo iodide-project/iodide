@@ -2,6 +2,7 @@ import { truncateString } from "../shared/truncate-string";
 import { newValueSummary } from "../shared/rep-serialization-core-types";
 import {
   typesWithLength,
+  typesWithZeroLength,
   typesWithByteLength,
   typesWithSize,
   nonExpandableTypes
@@ -11,27 +12,39 @@ export function getClass(obj) {
   if (obj === null) return "Null";
   if (obj === undefined) return "Undefined";
   try {
-    return obj.constructor.name;
+    return Object.getPrototypeOf(obj).constructor.name;
   } catch (error) {
-    return "CLASS CANNOT BE DETERMINED";
+    return "<unknown>";
   }
 }
 
-export const getType = obj =>
-  Object()
+export const getType = obj => {
+  const type = Object()
     .toString.call(obj)
     .split(" ")[1]
     .slice(0, -1);
 
+  // handle broad type categories that don't need further specification
+  if (["Object", "Error", "Function"].includes(type)) {
+    return type;
+  }
+  // otherwise, use the class
+  return getClass(obj);
+};
+
 export function objSize(obj) {
-  if (obj === null) return 0;
-  if (obj === undefined) return 0;
   const type = getType(obj);
+  if (type === "Function") return 0;
+  if (typesWithZeroLength.includes(type)) return 0;
   if (type === "RegExp") return obj.source.length;
   if (typesWithLength.includes(type)) return obj.length;
   if (typesWithByteLength.includes(type)) return obj.byteLength;
   if (typesWithSize.includes(type)) return obj.size;
-  return Object.getOwnPropertyNames(obj).length;
+  try {
+    return Object.getOwnPropertyNames(obj).length;
+  } catch (error) {
+    return 0;
+  }
 }
 
 export function repStringVal(obj, tiny = false) {
@@ -48,9 +61,9 @@ export function repStringVal(obj, tiny = false) {
   } else if (type === "Error") {
     stringVal = getClass(obj);
   } else if (type === "Function") {
-    stringVal = `ƒ ${obj.name}`;
+    stringVal = obj.name ? `ƒ ${obj.name}` : "ƒ";
   } else if (type === "GeneratorFunction") {
-    stringVal = `ƒ* ${obj.name}`;
+    stringVal = obj.name ? `ƒ* ${obj.name}` : "ƒ*";
   } else {
     stringVal = getClass(obj);
   }
