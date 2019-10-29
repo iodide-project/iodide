@@ -31,7 +31,8 @@
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/fileMock.js",
       "\\.(css|less)$": "<rootDir>/test/styleMock.js",
-      "monaco-editor/esm/vs/editor/editor.api": "<rootDir>/test/monaco-mock.js"
+      "monaco-editor/esm/vs/editor/editor.api": "<rootDir>/test/monaco-mock.js",
+      "revision-diff-content": "identity-obj-proxy"
     },
     "globals": {
       "window": true,
@@ -123,6 +124,7 @@
     "fake-indexeddb": "2.1.1",
     "git-revision-webpack-plugin": "3.0.4",
     "file-loader": "4.2.0",
+    "identity-obj-proxy": "3.0.0",
     "jest": "24.9.0",
     "jest-cli": "24.9.0",
     "jest-fetch-mock": "2.1.2",
