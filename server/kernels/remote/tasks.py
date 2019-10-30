@@ -2,16 +2,18 @@ import logging
 
 from django.db import transaction
 from django.utils import timezone
+from spinach import Tasks
 
-from ...celery import celery
 from . import backends
 from .exceptions import ExecutionError, MissingOperation
 from .models import RemoteOperation
 
 logger = logging.getLogger(__name__)
 
+tasks = Tasks()
 
-@celery.task
+
+@tasks.task(name="kernels:execute_remote_operation")
 def execute_remote_operation(pk):
     """
     A task to execute a remote operation and store the result

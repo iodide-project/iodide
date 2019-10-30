@@ -154,11 +154,9 @@ filename = "user_count_query.json"
 
 
 def test_create_operation(
-    fake_user, remote_backend, test_notebook, transactional_db, celery_worker
+    fake_user, remote_backend, test_notebook, transactional_db
 ):
     assert File.objects.count() == 0
-    # start a worker here (and not use celery's own pytest worker)
-    # to make sure the transactional_db fixture is applied to its context
     operation = remote_backend.create_operation(
         notebook=test_notebook,
         creator=fake_user,
