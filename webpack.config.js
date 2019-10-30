@@ -3,7 +3,7 @@ const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
 const LodashModuleReplacementPlugin = require("lodash-webpack-plugin");
@@ -28,6 +28,8 @@ const { SOURCE_VERSION } = process.env;
 
 const APP_VERSION_STRING = process.env.APP_VERSION_STRING || "dev";
 
+const IS_PRODUCTION = process.env.NODE_ENV !== "dev";
+
 const APP_DIR = path.resolve(__dirname, "src/");
 
 const plugins = [];
@@ -35,10 +37,6 @@ const plugins = [];
 module.exports = env => {
   env = env || ""; // eslint-disable-line no-param-reassign
   process.env.NODE_ENV = env.NODE_ENV || "production";
-
-  if (!process.env.NODE_ENV.startsWith("dev")) {
-    plugins.push(new UglifyJSPlugin());
-  }
 
   // default case: heroku or local python server using docker-compose
   EDITOR_ORIGIN =
@@ -98,6 +96,12 @@ module.exports = env => {
       ]
     },
     watchOptions: { poll: true, ignored: /node_modules/ },
+    optimization: {
+      minimize: !IS_PRODUCTION,
+      minimizer: [new TerserPlugin({
+        sourceMap: true,
+      })],
+    },
     plugins: [
       ...plugins,
       new CircularDependencyPlugin({
