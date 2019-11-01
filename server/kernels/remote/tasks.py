@@ -50,7 +50,7 @@ def execute_remote_operation(pk):
     # and safe the result as a Iodide file, the result should be a
     # memory effecient iterator, e.g. a streaming response
     backend.save_result(operation, result)
-    logger.info("Remote operation %s is storing its result", pk, operation.backend)
+    logger.info("Remote operation %s is storing its result using backend %s", pk, operation.backend)
 
     with transaction.atomic():
         # then update the remote operation that it was completed

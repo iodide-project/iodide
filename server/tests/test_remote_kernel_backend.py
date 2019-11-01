@@ -153,9 +153,7 @@ filename = "user_count_query.json"
     ]
 
 
-def test_create_operation(
-    fake_user, remote_backend, test_notebook, transactional_db
-):
+def test_create_operation(fake_user, remote_backend, test_notebook, transactional_db):
     assert File.objects.count() == 0
     operation = remote_backend.create_operation(
         notebook=test_notebook,

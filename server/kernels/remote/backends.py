@@ -8,7 +8,7 @@ from django.utils import timezone
 from ...files.models import File
 from .exceptions import BackendError
 from .models import RemoteOperation
-from .tasks import execute_remote_operation
+from .tasks import execute_remote_operation, tasks
 
 # A simple explicit remote kernel registry,
 # TODO: can be turned into an EntryPointClassRegistry later
@@ -87,7 +87,7 @@ class Backend(metaclass=ABCMeta):
                 filename=filename,
                 **params,
             )
-            transaction.on_commit(lambda: execute_remote_operation.delay(pk=operation.pk))
+            transaction.on_commit(lambda: tasks.schedule(execute_remote_operation, operation.pk))
         return operation
 
     def save_result(self, operation, content):
