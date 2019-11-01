@@ -97,7 +97,7 @@ module.exports = env => {
     },
     watchOptions: { poll: true, ignored: /node_modules/ },
     optimization: {
-      minimize: !IS_PRODUCTION,
+      minimize: IS_PRODUCTION,
       minimizer: [new TerserPlugin({
         sourceMap: true,
       })],
