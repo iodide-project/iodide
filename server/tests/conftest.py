@@ -1,11 +1,16 @@
 import datetime
+import logging
+import time
 
 import pytest
 from rest_framework.test import APIClient
+from spinach.contrib.spinachd.apps import spin
 
 from server.base.models import User
 from server.files.models import File, FileSource
 from server.notebooks.models import Notebook, NotebookRevision
+
+logger = logging.getLogger(__name__)
 
 
 def pytest_configure(config):
@@ -14,6 +19,19 @@ def pytest_configure(config):
         "markers",
         "freeze_time(timestamp): freeze time to the given timestamp for the duration of the test.",
     )
+
+
+@pytest.fixture(scope="session", autouse=True)
+def spinach_worker(request):
+    spin.start_workers(number=1, block=False)
+    logger.info("Starting Spinach workers.")
+
+    def stop_workers():
+        spin.stop_workers()
+        logging.info("Stopping Spinach workers.")
+        time.sleep(2)
+
+    request.addfinalizer(stop_workers)
 
 
 @pytest.fixture
