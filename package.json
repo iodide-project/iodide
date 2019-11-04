@@ -14,8 +14,7 @@
     "test-coverage": "jest --no-cache --coverage",
     "simple-serve": "webpack-dev-server --watch --mode=development --env.NODE_ENV=dev",
     "start": "webpack --watch --mode=development --env.NODE_ENV=dev",
-    "build": "webpack --env.NODE_ENV=dev",
-    "build-production": "webpack -p",
+    "build": "webpack -p",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -31,7 +30,8 @@
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/fileMock.js",
       "\\.(css|less)$": "<rootDir>/test/styleMock.js",
-      "monaco-editor/esm/vs/editor/editor.api": "<rootDir>/test/monaco-mock.js"
+      "monaco-editor/esm/vs/editor/editor.api": "<rootDir>/test/monaco-mock.js",
+      "revision-diff-content": "identity-obj-proxy"
     },
     "globals": {
       "window": true,
@@ -76,7 +76,6 @@
     "prop-types": "15.7.2",
     "query-string": "6.8.3",
     "react": "16.11.0",
-    "react-diff-viewer": "2.0.3",
     "react-dom": "16.11.0",
     "react-helmet-async": "1.0.4",
     "react-jss": "8.6.1",
@@ -122,8 +121,9 @@
     "eslint-plugin-prettier": "3.1.1",
     "eslint-plugin-react": "7.16.0",
     "fake-indexeddb": "2.1.1",
-    "git-revision-webpack-plugin": "3.0.4",
     "file-loader": "4.2.0",
+    "git-revision-webpack-plugin": "3.0.4",
+    "identity-obj-proxy": "3.0.0",
     "jest": "24.9.0",
     "jest-cli": "24.9.0",
     "jest-fetch-mock": "2.1.2",
@@ -137,10 +137,10 @@
     "redux-mock-store": "1.5.3",
     "redux-saga-test-plan": "4.0.0-rc.3",
     "style-loader": "1.0.0",
-    "uglifyjs-webpack-plugin": "2.2.0",
+    "terser-webpack-plugin": "2.2.1",
     "unused-webpack-plugin": "2.4.0",
     "webpack": "4.41.2",
-    "webpack-cli": "3.3.9",
+    "webpack-cli": "3.3.10",
     "webpack-dev-server": "3.9.0",
     "webpack-merge": "4.2.2",
     "write-file-webpack-plugin": "4.5.1"
