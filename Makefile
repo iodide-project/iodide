@@ -25,3 +25,7 @@ lintfix:
 
 test:
 	docker-compose run --rm server tests
+
+pip-compile:
+	docker-compose run --rm server -- pip-compile --verbose --upgrade --generate-hashes -o requirements/build.txt requirements/build.in
+	docker-compose run --rm server -- pip-compile --verbose --upgrade --generate-hashes -o requirements/tests.txt requirements/tests.in
