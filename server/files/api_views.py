@@ -4,8 +4,10 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from ..kernels.remote import backends
 from ..notebooks.models import Notebook
 from .models import File, FileSource, FileUpdateOperation
 from .serializers import (
@@ -59,6 +61,23 @@ class FileViewSet(viewsets.ModelViewSet):
         file_obj_to_update.save()
 
         return Response(FilesSerializer(file_obj_to_update).data, status=201)
+
+    @action(detail=True, methods=["post"])
+    def refresh(self, request, pk):
+        """
+        API endpoint to refresh the file with the given primary key
+        that was previously created with a remote kernel backened.
+
+        This will effectively create a new remote operation to update
+        the contents of the file.
+        """
+        instance = self.get_object()
+        if instance.notebook.owner != request.user:
+            raise PermissionDenied
+        if instance.remote_operation:
+            backend = backends.get_backend(instance.remote_operation.backend, PermissionDenied)
+            backend.refresh_file(instance, request.user)
+        return Response(FilesSerializer(instance).data, status=201)
 
 
 class NotebookFileViewSet(viewsets.ModelViewSet):

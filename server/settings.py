@@ -99,6 +99,8 @@ INSTALLED_APPS = [
     "server.jwt",
     "server.notebooks",
     "server.files",
+    "server.kernels.apps.RemoteConfig",
+    "server.kernels.remote.query.apps.QueryConfig",
     "spinach.contrib.spinachd",
 ]
 
