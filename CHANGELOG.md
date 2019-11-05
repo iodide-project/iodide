@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Await script load before continuing evaluation in iodide (fixes #1278)
+
 # 0.15.0 (2019-11-04)
 
 - Use Spinach task scheduler instead of Celery: simpler, and eliminates the need for a worker beat node (#2381)
