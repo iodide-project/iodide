@@ -1,6 +1,8 @@
 # (Unreleased; add upcoming change notes here)
 
-- Await script load before continuing evaluation in iodide (fixes #1278)
+# 0.15.1 (2019-11-06)
+
+- Await script load before continuing evaluation in iodide (fixes #1278) (#2411)
 
 # 0.15.0 (2019-11-04)
 
