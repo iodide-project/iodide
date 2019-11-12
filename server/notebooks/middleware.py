@@ -13,7 +13,7 @@ class NotebookEvalFrameMiddleware(object):
     """
 
     MIDDLEWARE_PATHS = set(
-        [reverse("eval-frame-view"), "iodide.eval-frame.dev.css", "iodide.eval-frame.dev.js"]
+        [reverse("eval-frame-view"), "iodide.eval-frame.css", "iodide.eval-frame.js"]
     )
 
     def __init__(self, get_response):

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block head %}
-<link rel="stylesheet" type="text/css" href="/server.home.dev.css">
+<link rel="stylesheet" type="text/css" href="/server.home.css" />
 {% endblock %}
 {% block content %}
 <div id="page"></div>
 {{ page_data|json_script:"pageData" }}
-<script src="/server.home.dev.js"></script>
+<script src="/server.home.js"></script>
 {% endblock %}

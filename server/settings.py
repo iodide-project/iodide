@@ -39,7 +39,6 @@ SITE_HOSTNAME = furl(SITE_URL).host
 EVAL_FRAME_ORIGIN = env.str("EVAL_FRAME_ORIGIN", SITE_URL)
 EVAL_FRAME_HOSTNAME = furl(EVAL_FRAME_ORIGIN).host
 ALLOWED_HOSTS = list(set([SITE_HOSTNAME, EVAL_FRAME_HOSTNAME]))
-APP_VERSION_STRING = env.str("APP_VERSION_STRING", "dev")
 
 # Special settings so staging servers can redirect to production
 IS_STAGING = env.bool("IS_STAGING", default=False)

@@ -26,8 +26,6 @@ const { IODIDE_PUBLIC } = process.env || false;
 const { USE_LOCAL_PYODIDE } = process.env || false;
 const { SOURCE_VERSION } = process.env;
 
-const APP_VERSION_STRING = process.env.APP_VERSION_STRING || "dev";
-
 const IS_PRODUCTION = process.env.NODE_ENV !== "dev";
 
 const APP_DIR = path.resolve(__dirname, "src/");
@@ -54,7 +52,7 @@ module.exports = env => {
     },
     output: {
       path: BUILD_DIR,
-      filename: `[name].${APP_VERSION_STRING}.js`
+      filename: `[name].js`
     },
     devtool: "source-map",
     resolve: {
@@ -91,7 +89,7 @@ module.exports = env => {
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
-          loader: `file-loader?name=iodide.${APP_VERSION_STRING}.fonts/[name].[ext]`
+          loader: `file-loader?name=iodide.fonts/[name].[ext]`
         }
       ]
     },
@@ -124,7 +122,7 @@ module.exports = env => {
       }),
       new webpack.EnvironmentPlugin(["NODE_ENV"]),
       new webpack.DefinePlugin({
-        "process.env.IODIDE_VERSION": JSON.stringify(APP_VERSION_STRING),
+        "process.env.IODIDE_VERSION": JSON.stringify("dev"),
         "process.env.IODIDE_REDUX_LOG_MODE": JSON.stringify(reduxLogMode),
         "process.env.USE_LOCAL_PYODIDE": JSON.stringify(USE_LOCAL_PYODIDE),
         "process.env.USE_OPENIDC_AUTH": JSON.stringify(USE_OPENIDC_AUTH),
@@ -139,7 +137,7 @@ module.exports = env => {
         )
       }),
       new MiniCssExtractPlugin({
-        filename: `[name].${APP_VERSION_STRING}.css`
+        filename: `[name].css`
       }),
       new WriteFilePlugin()
     ],
