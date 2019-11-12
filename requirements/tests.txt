@@ -130,9 +130,9 @@ pyparsing==2.4.5 \
 pytest-cov==2.8.1 \
     --hash=sha256:cc6742d8bac45070217169f5f72ceee1e0e55b0221f54bcf24845972d3a47f2b \
     --hash=sha256:cdbdef4f870408ebdbfeb44e63e07eb18bb4619fae852f6e760645fa36172626
-pytest-django==3.6.0 \
-    --hash=sha256:497e8d967d2ec82b3388267b2f1f037761ff34c10ebb13c534d8c5804846e4eb \
-    --hash=sha256:b6c900461a6a7c450dcf11736cabc289a90f5d6f28ef74c46e32e86ffd16a4bd
+pytest-django==3.7.0 \
+    --hash=sha256:17592f06d51c2ef4b7a0fb24aa32c8b6998506a03c8439606cb96db160106659 \
+    --hash=sha256:ef3d15b35ed7e46293475e6f282e71a53bcd8c6f87bdc5d5e7ad0f4d49352127
 pytest-env==0.6.2 \
     --hash=sha256:7e94956aef7f2764f3c147d216ce066bf6c42948bb9e293169b1b1c880a580c2
 pytest-flake8==1.0.4 \
