@@ -50,10 +50,8 @@ jobs:
       - run: npm install
       - *save_javascript_cache
       - run: npm run build
-      - setup_remote_docker
-# temporarily disabling docker layer caching, see: https://bugzilla.mozilla.org/show_bug.cgi?id=1589709
-#      - setup_remote_docker:
-#          # docker_layer_caching: true
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Create version.json
           command: |
