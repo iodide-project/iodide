@@ -117,7 +117,7 @@ async function receiveMessage(event) {
       case "LOAD_SCRIPT": {
         const { script } = message;
         try {
-          loadScriptFromBlob(script);
+          await loadScriptFromBlob(script);
           sendStatusResponseToEditor("SUCCESS", message.taskId);
         } catch {
           sendStatusResponseToEditor("ERROR", message.taskId);

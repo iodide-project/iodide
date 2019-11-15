@@ -10,6 +10,12 @@ You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https
 
 Run `npm install` after cloning this repository.
 
+### How to add a Python dependency
+
+Add new dependencies to the requirements template file `requirements/build.in`
+and run `make pip-compile`. This will regenerate the `requirements/build.txt`
+file which will be used when building the Iodide server image.
+
 ## Running/Building
 
 ### Client-only mode

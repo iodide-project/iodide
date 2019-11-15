@@ -1,9 +1,15 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.15.1 (2019-11-06)
+
+- Await script load before continuing evaluation in iodide (fixes #1278) (#2411)
+
+# 0.15.0 (2019-11-04)
+
 - Use Spinach task scheduler instead of Celery: simpler, and eliminates the need for a worker beat node (#2381)
-- Fix reps bug involving proxies (#2254, #2237, #1748)
-- Use Monaco for displaying diffs (fixes #2275, #2260)
-- Use webpack production mode for building iodide (fixes #2023)
+- Fix reps bug involving proxies (#2254, #2237, #1748) (#2395)
+- Use Monaco for displaying diffs (fixes #2275, #2260) (#2334)
+- Use webpack production mode for building iodide (fixes #2023) (#2402)
 
 # 0.14.0 (2019-10-24)
 

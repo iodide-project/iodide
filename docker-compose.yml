@@ -24,7 +24,7 @@ services:
     command: worker
 
   db:
-    image: postgres:9.5-alpine
+    image: postgres:9.6-alpine
     logging:
       driver: "none"
 

@@ -1,0 +1,14 @@
+Faker
+flake8
+flake8-black
+pyflakes
+pycodestyle
+pytest
+pytest-cov
+pytest-django
+pytest-env
+pytest-flake8
+pytest-freezegun
+pytest-mock
+pytest-isort
+responses

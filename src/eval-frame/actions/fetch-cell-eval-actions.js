@@ -8,10 +8,11 @@ export function loadScriptFromBlob(blob) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const url = URL.createObjectURL(blob);
-    script.onload = () => resolve(`scripted loaded`);
-    script.onerror = err => reject(new Error(err));
     script.src = url;
     document.head.appendChild(script);
+
+    script.onload = () => resolve(`scripted loaded`);
+    script.onerror = err => reject(new Error(err));
   });
 }
 
