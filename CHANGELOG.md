@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-- Allow running simple-serve from a port other than 8000
+- Allow running simple-serve from a port other than 8000 (fixes #2444)
 
 # 0.15.1 (2019-11-06)
 
