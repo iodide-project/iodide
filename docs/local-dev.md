@@ -27,6 +27,7 @@ version of the editing environment you can access at [http://localhost:8000/](ht
 
 The command runs in watch mode, so changes to files will be detected and bundled automatically, but you will need to refresh the page in your browser manually to see the changes -- we have disabled "hot reloading" because automatically refreshing the browser would cause any active notebooks to lose their evaluation state.
 
+If you want to use another port number (e.g `9999`), you can use the command `npm run simple-serve -- --port=9999`
 If you require verbose Redux logging, you can use the command `REDUX_LOGGING=VERBOSE npm run simple-serve`
 
 ### Server mode
