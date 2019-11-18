@@ -2,6 +2,7 @@ require("dotenv").config();
 const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs");
+const minimist = require('minimist')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
@@ -15,7 +16,8 @@ const reduxLogMode = process.env.REDUX_LOGGING
   ? process.env.REDUX_LOGGING
   : "SILENT";
 
-const DEV_SERVER_PORT = 8000;
+const ARGV = minimist(process.argv.slice(2));
+const DEV_SERVER_PORT = ARGV.port || 8000;
 
 const BUILD_DIR = path.resolve(__dirname, "build/");
 

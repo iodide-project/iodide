@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Vertically align text in language selector(fixes #2446)
+- Allow running simple-serve from a port other than 8000 (fixes #2444)
 - Fix bug unable to create revision with blank content (#2445)
 
 # 0.15.1 (2019-11-06)
