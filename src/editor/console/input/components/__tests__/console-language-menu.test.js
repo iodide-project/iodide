@@ -4,6 +4,11 @@ describe("ConsoleLanguageMenu mapStateToProps", () => {
   let state;
   beforeEach(() => {
     state = {
+      history: [
+        { historyId: "wrmhklxskc" },
+        { historyId: "xqtol9pck6" },
+        { historyId: "7k77hjno1d" }
+      ],
       languageDefinitions: {
         js: { languageId: "js", displayName: "JavaScript" },
         py: { languageId: "py", displayName: "Python" }
@@ -24,6 +29,17 @@ describe("ConsoleLanguageMenu mapStateToProps", () => {
     );
     expect(new Set(props.availableLanguages.map(d => d.displayName))).toEqual(
       new Set(["JavaScript", "Python", "Julia"])
+    );
+  });
+  it("sets shouldDisplayClearConsoleAction prop as true when history not empty", () => {
+    expect(mapStateToProps(state).shouldDisplayClearConsoleAction).toEqual(
+      true
+    );
+  });
+  it("sets shouldDisplayClearConsoleAction prop as false when history empty", () => {
+    state.history = [];
+    expect(mapStateToProps(state).shouldDisplayClearConsoleAction).toEqual(
+      false
     );
   });
 });
