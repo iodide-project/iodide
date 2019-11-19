@@ -27,7 +27,6 @@ wait_for() {
 wait_for db 5432
 
 tests() {
-  mkdir -p /app/.coverage
   python manage.py check
   python -m pytest "$@"  # skips linter checks
 }
