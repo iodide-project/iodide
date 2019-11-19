@@ -43,6 +43,7 @@ class NotebookRevision(models.Model):
     title = models.CharField(max_length=Notebook.MAX_TITLE_LENGTH)
     created = models.DateTimeField(auto_now_add=True)
     content = models.TextField(blank=True)
+    is_draft = models.BooleanField()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

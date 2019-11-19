@@ -19,6 +19,7 @@ from .serializers import (
     NotebookRevisionDetailSerializer,
     NotebookRevisionSerializer,
 )
+from .tasks import execute_notebook_revisions_cleanup, tasks
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +89,7 @@ class NotebookViewSet(viewsets.ModelViewSet):
             notebook=notebook,
             title=self.request.data["title"],
             content=self.request.data["content"],
+            is_draft=False,
         )
 
         headers = self.get_success_headers(serializer.data)
@@ -105,7 +107,7 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
         notebook_id = int(self.kwargs["notebook_id"])
         if not Notebook.objects.filter(id=notebook_id).exists():
             raise Http404("Notebook with id %s does not exist" % notebook_id)
-        return {"notebook_id": notebook_id}
+        return {"notebook_id": notebook_id, "is_draft": True}
 
     def get_queryset(self):
         base = NotebookRevision.objects.filter(notebook_id=self.kwargs["notebook_id"])
@@ -145,5 +147,5 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
                     f"Based on non-latest revision {parent_revision_id} "
                     f"(expected: {last_revision.id})"
                 )
-
         serializer.save(**ctx)
+        tasks.schedule(execute_notebook_revisions_cleanup, ctx["notebook_id"])

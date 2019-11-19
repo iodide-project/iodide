@@ -12,7 +12,10 @@ def two_test_notebooks_and_revisions(two_test_notebooks):
 
     # add another revision to the main notebook that we are testing
     NotebookRevision.objects.create(
-        notebook=test_notebook, title="Revision 2", content="*fake notebook content 2*"
+        notebook=test_notebook,
+        title="Revision 2",
+        content="*fake notebook content 2*",
+        is_draft=False,
     )
 
     # add a revision for another notebook, to make sure that doesn't get mixed in
@@ -20,6 +23,7 @@ def two_test_notebooks_and_revisions(two_test_notebooks):
         notebook=two_test_notebooks[1],
         title="Revision for another notebook",
         content="*fake notebook 2 content 2*",
+        is_draft=False,
     )
     return two_test_notebooks
 
@@ -94,6 +98,7 @@ def test_read_multiple_revisions(fake_user, test_notebook, client):
             notebook=test_notebook,
             title="Revision %s" % i,
             content="*fake notebook content %s*" % i,
+            is_draft=False,
         )
         for i in range(2, 4)
     ]

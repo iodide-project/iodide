@@ -45,7 +45,10 @@ def test_notebook_detail(client, test_notebook):
     # add another revision, make sure all return values are updated
     # appropriately
     new_revision = NotebookRevision.objects.create(
-        notebook=test_notebook, title="Second revision", content="*updated fake notebook content*"
+        notebook=test_notebook,
+        title="Second revision",
+        content="*updated fake notebook content*",
+        is_draft=False,
     )
     resp = client.get(reverse("notebooks-detail", kwargs={"pk": test_notebook.id}))
     assert resp.status_code == 200

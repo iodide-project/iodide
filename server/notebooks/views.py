@@ -141,6 +141,7 @@ def new_notebook_view(request):
             notebook=notebook,
             content=new_notebook_content_template.render(),
             title=get_random_compound(),
+            is_draft=True,
         )
     return redirect(notebook)
 
