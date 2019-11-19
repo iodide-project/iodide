@@ -13,6 +13,7 @@ import { TextButton } from "../../../../shared/components/buttons";
 import BaseIcon from "../../base-icon";
 
 import { setConsoleLanguage } from "../actions";
+import { clearHistory } from "../../history/actions";
 
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;
@@ -71,6 +72,7 @@ const DeleteIcon = styled(Delete)`
 
 const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
+  clearConsoleHistory,
   currentLanguage,
   setConsoleLanguageProp
 }) => {
@@ -98,10 +100,7 @@ const ConsoleLanguageMenuUnconnected = ({
             </MenuItem>
           ))}
           <Divider light />
-          <MenuItem
-            key="clear-history"
-            onClick={() => console.log("clear-console-history")}
-          >
+          <MenuItem key="clear-history" onClick={() => clearConsoleHistory()}>
             <LanguageName>Clear history</LanguageName>
             <LanguageShort>
               <DeleteIcon />
@@ -120,6 +119,7 @@ ConsoleLanguageMenuUnconnected.propTypes = {
       languageId: PropTypes.string.isRequired
     })
   ).isRequired,
+  clearConsoleHistory: PropTypes.func.isRequired,
   currentLanguage: PropTypes.string.isRequired,
   setConsoleLanguageProp: PropTypes.func.isRequired
 };
@@ -133,7 +133,10 @@ export function mapStateToProps(state) {
     availableLanguages
   };
 }
-const mapDispatchToProps = { setConsoleLanguageProp: setConsoleLanguage };
+const mapDispatchToProps = {
+  clearConsoleHistory: clearHistory,
+  setConsoleLanguageProp: setConsoleLanguage
+};
 
 export default connect(
   mapStateToProps,
