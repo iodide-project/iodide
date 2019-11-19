@@ -50,7 +50,7 @@ describe("ConsoleLanguageMenu mapStateToProps", () => {
   });
 });
 
-describe("ConsoleLanguageMenu mapStateToProps", () => {
+describe("ConsoleLanguageMenu clearConsoleHistory", () => {
   let props;
   beforeEach(() => {
     props = {
