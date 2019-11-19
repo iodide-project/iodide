@@ -62,4 +62,7 @@ class NotebookRevisionDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotebookRevision
         fields = ("id", "title", "created", "content")
-        write_only_fields = "notebook_id"
+        extra_kwargs = {
+            "notebook_id": {"write_only": True},
+            "is_draft": {"write_only": True},
+        }

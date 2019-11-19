@@ -248,3 +248,5 @@ WHITENOISE_MIMETYPES = {".wasm": "application/wasm"}
 REDIS_HOST = env.str("REDIS_HOST", default="redis")
 REDIS_URL = env.str("REDIS_URL", default=f"redis://{REDIS_HOST}:6379/1")
 SPINACH_BROKER = RedisBroker(redis.from_url(REDIS_URL, **recommended_socket_opts))
+
+NOTEBOOK_REVISION_FIXED_WINDOW_LENGTH_SECS = 60
