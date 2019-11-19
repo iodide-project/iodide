@@ -248,8 +248,7 @@ def test_create_notebook_revision_content_empty_string(fake_user, test_notebook,
     client.force_login(user=fake_user)
 
     resp = client.post(
-        reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}),
-        post_blob,
+        reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}), post_blob,
     )
 
     assert resp.status_code == 201
