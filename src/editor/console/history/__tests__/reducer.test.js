@@ -2,7 +2,6 @@ import reducer from "../reducer";
 
 describe("console/history/CLEAR", () => {
   let state;
-
   beforeEach(() => {
     state = {
       history: [
@@ -31,12 +30,9 @@ describe("console/history/CLEAR", () => {
       ]
     };
   });
-
   it("empties out the history array in the state", () => {
     const action = { type: "console/history/CLEAR" };
-
     const nextState = reducer(state, action);
-
     expect(nextState.history).toEqual([]);
   });
 });
