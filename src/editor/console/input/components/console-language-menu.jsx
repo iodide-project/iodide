@@ -56,6 +56,11 @@ const LanguageName = styled("div")`
   padding-right: 6px;
 `;
 
+const LanguageSelect = styled("div")`
+  display: flex;
+  align-items: center;
+`;
+
 const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
   currentLanguage,
@@ -67,10 +72,10 @@ const ConsoleLanguageMenuUnconnected = ({
         placement="left-end"
         activatingComponent={
           <LanguageSelectButton>
-            <div>
+            <LanguageSelect>
               <ArrowDropUp />
               {currentLanguage}
-            </div>
+            </LanguageSelect>
           </LanguageSelectButton>
         }
       >
