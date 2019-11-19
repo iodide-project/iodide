@@ -36,6 +36,8 @@ export const addPluginParseErrorToHistory = errorMessage =>
     level: "ERROR"
   });
 
+export const clearHistory = () => ({ type: "console/history/CLEAR" });
+
 export const updateHistoryEntryLevel = (historyId, level) => ({
   type: "console/history/UPDATE",
   historyItem: { historyId, level }

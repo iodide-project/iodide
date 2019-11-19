@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import Divider from "@material-ui/core/Divider";
+import Delete from "@material-ui/icons/Delete";
 import Popover from "../../../../shared/components/popover";
 import Menu from "../../../../shared/components/menu";
 import MenuItem from "../../../../shared/components/menu-item";
@@ -11,6 +13,7 @@ import { TextButton } from "../../../../shared/components/buttons";
 import BaseIcon from "../../base-icon";
 
 import { setConsoleLanguage } from "../actions";
+import { clearHistory } from "../../history/actions";
 
 const ArrowDropUp = styled(BaseIcon(ArrowDropUpIcon))`
   display: inline-block;
@@ -61,10 +64,18 @@ const LanguageSelect = styled("div")`
   align-items: center;
 `;
 
-const ConsoleLanguageMenuUnconnected = ({
+const DeleteIcon = styled(Delete)`
+  margin-left: -2px;
+  margin-top: 5px;
+  width: 16px !important;
+`;
+
+export const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
+  clearConsoleHistory,
   currentLanguage,
-  setConsoleLanguageProp
+  setConsoleLanguageProp,
+  shouldDisplayClearConsoleAction
 }) => {
   return (
     <React.Fragment>
@@ -89,6 +100,15 @@ const ConsoleLanguageMenuUnconnected = ({
               <LanguageShort>{language.languageId}</LanguageShort>
             </MenuItem>
           ))}
+          <Divider light />
+          {shouldDisplayClearConsoleAction && (
+            <MenuItem key="clear-history" onClick={() => clearConsoleHistory()}>
+              <LanguageName>Clear history</LanguageName>
+              <LanguageShort>
+                <DeleteIcon />
+              </LanguageShort>
+            </MenuItem>
+          )}
         </Menu>
       </Popover>
     </React.Fragment>
@@ -102,20 +122,28 @@ ConsoleLanguageMenuUnconnected.propTypes = {
       languageId: PropTypes.string.isRequired
     })
   ).isRequired,
+  clearConsoleHistory: PropTypes.func.isRequired,
   currentLanguage: PropTypes.string.isRequired,
-  setConsoleLanguageProp: PropTypes.func.isRequired
+  setConsoleLanguageProp: PropTypes.func.isRequired,
+  shouldDisplayClearConsoleAction: PropTypes.bool
 };
 
 export function mapStateToProps(state) {
   const availableLanguages = Object.values(
     Object.assign({}, state.languageDefinitions, state.loadedLanguages)
   );
+  const shouldDisplayClearConsoleAction =
+    state.history && state.history.length > 0;
   return {
     currentLanguage: state.languageLastUsed,
-    availableLanguages
+    availableLanguages,
+    shouldDisplayClearConsoleAction
   };
 }
-const mapDispatchToProps = { setConsoleLanguageProp: setConsoleLanguage };
+const mapDispatchToProps = {
+  clearConsoleHistory: clearHistory,
+  setConsoleLanguageProp: setConsoleLanguage
+};
 
 export default connect(
   mapStateToProps,

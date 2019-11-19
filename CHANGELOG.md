@@ -3,6 +3,7 @@
 - Vertically align text in language selector(fixes #2446)
 - Allow running simple-serve from a port other than 8000 (fixes #2444)
 - Fix bug unable to create revision with blank content (#2445)
+- Enable user to clear console history with a click (#1015)
 
 # 0.15.1 (2019-11-06)
 
