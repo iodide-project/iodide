@@ -11,7 +11,14 @@ RUN apt-get update && \
     libpq-dev \
     libffi-dev \
     python-dev \
-    build-essential
+    build-essential \
+    curl
+
+ENV GECKODRIVER_VERSION='0.24.0'
+RUN curl -sSfL "https://github.com/mozilla/geckodriver/releases/download/v${GECKODRIVER_VERSION}/geckodriver-v${GECKODRIVER_VERSION}-linux64.tar.gz" \
+    | tar -zxC "/usr/local/bin" \
+    && curl -sSfL 'https://download.mozilla.org/?product=firefox-beta-latest&lang=en-US&os=linux64' \
+    | tar -jxC "/usr/local/bin"
 
 # Install virtualenv
 RUN pip install virtualenv
@@ -53,7 +60,7 @@ COPY . /app
 # Set user permissions
 COPY --chown=app:app . .
 RUN chown app /app
-USER app
+# USER app
 
 # Collect static files
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
@@ -69,4 +76,4 @@ FROM base AS devapp
 
 # Install dev python dependencies
 RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
-USER app
+# USER app

@@ -32,6 +32,11 @@ tests() {
   python -m pytest "$@"  # skips linter checks
 }
 
+integration-tests() {
+  mkdir -p /app/.coverage
+  python -m pytest integration-tests --driver Firefox
+}
+
 case $1 in
   dev)
     python manage.py migrate --noinput
@@ -43,6 +48,10 @@ case $1 in
   tests)
     shift
     tests
+    ;;
+  integration-tests)
+    shift
+    integration-tests
     ;;
   ci)
     shift

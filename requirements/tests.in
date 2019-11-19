@@ -11,4 +11,5 @@ pytest-flake8
 pytest-freezegun
 pytest-mock
 pytest-isort
+pytest-selenium
 responses
