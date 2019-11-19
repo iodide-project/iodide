@@ -42,7 +42,7 @@ class NotebookRevision(models.Model):
 
     title = models.CharField(max_length=Notebook.MAX_TITLE_LENGTH)
     created = models.DateTimeField(auto_now_add=True)
-    content = models.TextField()
+    content = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

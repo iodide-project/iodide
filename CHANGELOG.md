@@ -2,6 +2,7 @@
 
 - Vertically align text in language selector(fixes #2446)
 - Allow running simple-serve from a port other than 8000 (fixes #2444)
+- Allow blank content on notebook revision creation (fixes #2445) (#2455)
 
 # 0.15.1 (2019-11-06)
 
