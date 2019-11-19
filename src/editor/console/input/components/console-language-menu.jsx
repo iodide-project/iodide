@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import Divider from "@material-ui/core/Divider";
+import Delete from "@material-ui/icons/Delete";
 import Popover from "../../../../shared/components/popover";
 import Menu from "../../../../shared/components/menu";
 import MenuItem from "../../../../shared/components/menu-item";
@@ -61,6 +63,12 @@ const LanguageSelect = styled("div")`
   align-items: center;
 `;
 
+const DeleteIcon = styled(Delete)`
+  margin-left: -2px;
+  margin-top: 5px;
+  width: 16px !important;
+`;
+
 const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
   currentLanguage,
@@ -89,6 +97,16 @@ const ConsoleLanguageMenuUnconnected = ({
               <LanguageShort>{language.languageId}</LanguageShort>
             </MenuItem>
           ))}
+          <Divider light />
+          <MenuItem
+            key="clear-history"
+            onClick={() => console.log("clear-console-history")}
+          >
+            <LanguageName>Clear history</LanguageName>
+            <LanguageShort>
+              <DeleteIcon />
+            </LanguageShort>
+          </MenuItem>
         </Menu>
       </Popover>
     </React.Fragment>
