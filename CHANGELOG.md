@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-- Removed redundant description metadata for link previews (#2448)
+- Remove redundant description metadata for link previews (#2448)
 - Vertically align text in language selector(fixes #2446)
 - Allow running simple-serve from a port other than 8000 (fixes #2444)
 - Allow blank content on notebook revision creation (fixes #2445) (#2455)
