@@ -1,7 +1,7 @@
-import reducer from "../reducer"
+import reducer from "../reducer";
 
 describe("console/history/CLEAR", () => {
-  let state
+  let state;
 
   beforeEach(() => {
     state = {
@@ -29,14 +29,14 @@ describe("console/history/CLEAR", () => {
           historyType: "CONSOLE_OUTPUT"
         }
       ]
-    }
-  })
+    };
+  });
 
   it("empties out the history array in the state", () => {
-    const action = { type: "console/history/CLEAR" }
+    const action = { type: "console/history/CLEAR" };
 
-    const nextState = reducer(state, action)
+    const nextState = reducer(state, action);
 
-    expect(nextState.history).toEqual([])
-  })
-})
+    expect(nextState.history).toEqual([]);
+  });
+});
