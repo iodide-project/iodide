@@ -1,5 +1,9 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.15.2 (2019-11-10)
+
+- No longer piping Title into HEAD metadata of base.html, og:description and twitter:description.
+
 # 0.15.1 (2019-11-06)
 
 - Await script load before continuing evaluation in iodide (fixes #1278) (#2411)
