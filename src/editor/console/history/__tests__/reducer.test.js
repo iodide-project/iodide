@@ -6,18 +6,6 @@ describe("console/history/CLEAR", () => {
     state = {
       history: [
         {
-          content: "Loading Python language plugin",
-          historyId: "wrmhklxskc",
-          historyType: "CONSOLE_MESSAGE",
-          level: "LOG"
-        },
-        {
-          content: "Python plugin ready",
-          historyId: "xqtol9pck6",
-          historyType: "CONSOLE_MESSAGE",
-          level: "LOG"
-        },
-        {
           content: "1+2",
           historyId: "7k77hjno1d",
           historyType: "CONSOLE_INPUT",
