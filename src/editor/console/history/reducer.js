@@ -6,6 +6,9 @@ export default function reducer(state, action) {
       const history = [...state.history, actionCopy];
       return Object.assign({}, state, { history });
     }
+    case "console/history/CLEAR": {
+      return Object.assign({}, state, { history: [] })
+    }
     case "console/history/UPDATE": {
       const actionCopy = Object.assign({}, action);
       const history = [...state.history.slice()];
