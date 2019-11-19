@@ -1,4 +1,10 @@
-import { mapStateToProps } from "../console-language-menu";
+import React from "react";
+import { shallow } from "enzyme";
+
+import {
+  ConsoleLanguageMenuUnconnected,
+  mapStateToProps
+} from "../console-language-menu";
 
 describe("ConsoleLanguageMenu mapStateToProps", () => {
   let state;
@@ -41,5 +47,31 @@ describe("ConsoleLanguageMenu mapStateToProps", () => {
     expect(mapStateToProps(state).shouldDisplayClearConsoleAction).toEqual(
       false
     );
+  });
+});
+
+describe("ConsoleLanguageMenu mapStateToProps", () => {
+  let props;
+  beforeEach(() => {
+    props = {
+      availableLanguages: [
+        {
+          languageId: "py",
+          displayName: "Python"
+        }
+      ],
+      clearConsoleHistory: jest.fn(),
+      currentLanguage: "py",
+      setConsoleLanguageProp: jest.fn(),
+      shouldDisplayClearConsoleAction: true
+    };
+  });
+  it("calls correct action when 'Clear console' item is clicked", () => {
+    const wrapper = shallow(<ConsoleLanguageMenuUnconnected {...props} />, {
+      context: {}
+    });
+    expect(props.clearConsoleHistory).toHaveBeenCalledTimes(0);
+    wrapper.findWhere(c => c.key() === "clear-history").simulate("click");
+    expect(props.clearConsoleHistory).toHaveBeenCalledTimes(1);
   });
 });

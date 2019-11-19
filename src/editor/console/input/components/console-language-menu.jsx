@@ -70,7 +70,7 @@ const DeleteIcon = styled(Delete)`
   width: 16px !important;
 `;
 
-const ConsoleLanguageMenuUnconnected = ({
+export const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
   clearConsoleHistory,
   currentLanguage,
