@@ -51,8 +51,8 @@ export function mapStateToProps(state) {
   const isReportView = state.viewMode === "REPORT_VIEW";
   return {
     isReportView,
-    buttonText: isReportView ? "Explore" : "Report",
-    tooltipText: isReportView ? "Explore this notebook" : "Go to Report view",
+    buttonText: isReportView ? "Explore" : "View as Report",
+    tooltipText: isReportView ? "Explore this notebook" : undefined,
     style: isReportView
       ? { backgroundColor: "#eee", border: "1px solid #ccc", color: "black" }
       : { color: "#fafafa" }

@@ -76,8 +76,7 @@ describe("ViewModeToggleButton mapStateToProps", () => {
     state.viewMode = "not_REPORT_VIEW";
     expect(mapStateToProps(state)).toEqual({
       isReportView: false,
-      buttonText: "Report",
-      tooltipText: "Go to Report view",
+      buttonText: "View as Report",
       style: { color: "#fafafa" }
     });
   });
