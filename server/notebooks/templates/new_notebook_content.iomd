@@ -1,6 +1,8 @@
 %% md
 # Welcome to Iodide!
-Type `shift+enter` to evaluate a chunk and move to the next, or Press `alt+h` for help.
+Type `shift+enter` (or the :arrow_forward: button above) to evaluate a chunk and move to the next. Press the :fast_forward: button to evaluate the entire notebook in one go.
+
+For help, type `alt+h` or press the :question: button.
 
 <span id="htmlInMd">To start fresh, delete the text in the editor (`control+a` then `delete`)</span>
 
