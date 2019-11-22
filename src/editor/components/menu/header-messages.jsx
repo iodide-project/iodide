@@ -1,9 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import styled from "@emotion/styled";
+
 import HeaderMessageContainer from "../../../shared/components/header/header-message-container";
 import LoginModal from "../../../shared/components/login-modal";
 
+import { evaluateNotebook } from "../../actions/eval-actions";
 import {
   connectionModeIsServer,
   connectionModeIsStandalone
@@ -14,6 +17,10 @@ import {
   revertToLatestServerRevision,
   saveNotebookToServer
 } from "../../actions/server-save-actions";
+
+const EmojiButton = styled("span")`
+  cursor: pointer;
+`;
 
 export class HeaderMessagesUnconnected extends React.Component {
   static propTypes = {
@@ -27,6 +34,7 @@ export class HeaderMessagesUnconnected extends React.Component {
       "SERVER_ERROR_OUT_OF_DATE"
     ]),
     owner: PropTypes.string,
+    evaluateNotebook: PropTypes.func.isRequired,
     saveNotebookToServer: PropTypes.func.isRequired,
     revertToLatestServerRevision: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
@@ -48,6 +56,32 @@ export class HeaderMessagesUnconnected extends React.Component {
 
   hideLoginModal() {
     this.setState({ showLoginModal: false });
+  }
+
+  introText() {
+    // some hopefully helpful text which we pop up if the user is browsing
+    // a notebook that they didn't create (either in not-logged-in or a logged-in
+    // state)
+    return (
+      <React.Fragment>
+        {this.props.owner && (
+          <React.Fragment>
+            This notebook is owned by{" "}
+            <a href={`/${this.props.owner}`}>{this.props.owner}</a>.{" "}
+          </React.Fragment>
+        )}
+        To run {this.props.owner ? "it" : "this notebook"}, press the{" "}
+        <EmojiButton
+          onClick={this.props.evaluateNotebook}
+          aria-label="Run Full Notebook"
+        >
+          <span role="img" aria-label="fast forward icon">
+            ⏩
+          </span>
+        </EmojiButton>{" "}
+        button.
+      </React.Fragment>
+    );
   }
 
   render() {
@@ -86,20 +120,19 @@ export class HeaderMessagesUnconnected extends React.Component {
       case "NEED_TO_LOGIN":
         content = (
           <React.Fragment>
-            You can modify and experiment with this notebook freely. To save
-            your work, you need to <a onClick={this.showLoginModal}>login</a>.
+            {this.introText()} To save any changes, you need to{" "}
+            <a onClick={this.showLoginModal}>log in</a>.
           </React.Fragment>
         );
         break;
       case "NEED_TO_MAKE_COPY":
         content = (
           <React.Fragment>
-            This notebook is owned by{" "}
-            <a href={`/${this.props.owner}`}>{this.props.owner}</a>.{" "}
+            {this.introText()}{" "}
             <a onClick={this.props.createNewNotebookOnServer}>
               Make a copy to your account
             </a>{" "}
-            if you want to save any modifications.
+            if you want to save any changes.
           </React.Fragment>
         );
         break;
@@ -121,41 +154,38 @@ export class HeaderMessagesUnconnected extends React.Component {
 }
 
 export function mapStateToProps(state) {
-  if (state.viewMode === "EXPLORE_VIEW") {
-    if (connectionModeIsStandalone(state)) {
-      return { message: "STANDALONE_MODE" };
-    } else if (
-      state.userData.name === undefined &&
-      connectionModeIsServer(state)
-    ) {
-      return { message: "NEED_TO_LOGIN" };
-    } else if (
-      !state.notebookInfo.user_can_save &&
-      connectionModeIsServer(state)
-    ) {
-      return {
-        message: "NEED_TO_MAKE_COPY",
-        owner: state.notebookInfo.username
-      };
-    } else if (state.notebookInfo.serverSaveStatus === "ERROR_GENERAL") {
-      return { message: "SERVER_ERROR_GENERAL" };
-    } else if (state.notebookInfo.serverSaveStatus === "ERROR_OUT_OF_DATE") {
-      return {
-        message: "NOTEBOOK_REVISION_ID_OUT_OF_DATE"
-      };
-    } else if (state.notebookInfo.serverSaveStatus === "ERROR_UNAUTHORIZED") {
-      return { message: "SERVER_ERROR_UNAUTHORIZED" };
-    } else if (!state.notebookInfo.revision_is_latest) {
-      return {
-        message: "NOTEBOOK_REVISION_ID_OUT_OF_DATE"
-      };
+  function getMessage() {
+    if (state.viewMode === "EXPLORE_VIEW") {
+      if (connectionModeIsStandalone(state)) {
+        return "STANDALONE_MODE";
+      } else if (
+        state.userData.name === undefined &&
+        connectionModeIsServer(state)
+      ) {
+        return "NEED_TO_LOGIN";
+      } else if (
+        !state.notebookInfo.user_can_save &&
+        connectionModeIsServer(state)
+      ) {
+        return "NEED_TO_MAKE_COPY";
+      } else if (state.notebookInfo.serverSaveStatus === "ERROR_GENERAL") {
+        return "SERVER_ERROR_GENERAL";
+      } else if (state.notebookInfo.serverSaveStatus === "ERROR_OUT_OF_DATE") {
+        return "NOTEBOOK_REVISION_ID_OUT_OF_DATE";
+      } else if (state.notebookInfo.serverSaveStatus === "ERROR_UNAUTHORIZED") {
+        return "SERVER_ERROR_UNAUTHORIZED";
+      } else if (!state.notebookInfo.revision_is_latest) {
+        return "NOTEBOOK_REVISION_ID_OUT_OF_DATE";
+      }
     }
+    return undefined;
   }
 
-  return {};
+  return { owner: state.notebookInfo.username, message: getMessage() };
 }
 
 const mapDispatchToProps = {
+  evaluateNotebook,
   login,
   saveNotebookToServer,
   createNewNotebookOnServer,
