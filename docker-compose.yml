@@ -6,7 +6,7 @@ x-app:
     context: .
   env_file: .env
   volumes:
-    - $PWD:/app
+    - .:/app
   links:
     - db
     - redis
