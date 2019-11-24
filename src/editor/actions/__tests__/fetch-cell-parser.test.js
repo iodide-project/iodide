@@ -3,7 +3,8 @@ import parseFetchCell, {
   commentOnlyLine,
   emptyLine,
   parseAssignmentCommand,
-  validFetchUrl
+  validFetchUrl,
+  validVariableName
 } from "../fetch-cell-parser";
 
 // test commentOnlyLine /////////////////////////
@@ -83,24 +84,6 @@ describe("parseAssignmentCommand gives correct results", () => {
         varName: "foo",
         filePath: "data/table.csv",
         isRelPath: true
-      }
-    },
-    {
-      command: "f o o =   https://d3js.org/d3.v5.min.js",
-      result: {
-        error: "INVALID_VARIABLE_NAME"
-      }
-    },
-    {
-      command: '"foo" =   https://d3js.org/d3.v5.min.js',
-      result: {
-        error: "INVALID_VARIABLE_NAME"
-      }
-    },
-    {
-      command: "*foo =   https://d3js.org/d3.v5.min.js",
-      result: {
-        error: "INVALID_VARIABLE_NAME"
       }
     }
   ];
@@ -292,6 +275,32 @@ describe("validate fetch url", () => {
   invalidLines.forEach(testCase => {
     it(`IS NOT a valid fetch url "${testCase}"`, () => {
       expect(validFetchUrl(testCase)).toBe(false);
+    });
+  });
+});
+
+describe("validate data fetch variable name", () => {
+  const validLines = [
+    "json:   foo  =   https://valid-host.com/file.json",
+    `text: foo123 =   https://valid-host.com/file.txt`,
+    "arrayBuffer: 変数  =   https://valid-host.com/file.arrow"
+  ];
+  validLines.forEach(testCase => {
+    it(`has a VALID variable name "${testCase}"`, () => {
+      expect(validVariableName(testCase)).toBe(true);
+    });
+  });
+
+  const invalidLines = [
+    "json: f o o = https://valid-host.com/file.json",
+    `json: "foo" = https://valid-host.com/file.json`,
+    "json: *foo = https://valid-host.com/file.json",
+    "json: 1foo = https://valid-host.com/file.json"
+
+  ];
+  invalidLines.forEach(testCase => {
+    it(`has an INVALID variable name "${testCase}"`, () => {
+      expect(validVariableName(testCase)).toBe(false);
     });
   });
 });

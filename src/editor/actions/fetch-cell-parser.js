@@ -29,9 +29,6 @@ export function parseFileLine(fetchCommand) {
 
 export function parseAssignmentCommand(fetchCommand) {
   const varName = fetchCommand.substring(0, fetchCommand.indexOf("=")).trim();
-  if (!isValidIdentifier(varName)) {
-    return { error: "INVALID_VARIABLE_NAME" };
-  }
   const filePath = parseFileLine(
     fetchCommand.substring(fetchCommand.indexOf("=") + 1).trim()
   );
@@ -56,6 +53,16 @@ export function missingFetchType(line) {
 export function validFetchType(line) {
   const fetchType = line.trim().split(": ")[0];
   return fetchType.trimLeft().match(/^(css|js|arrayBuffer|blob|json|text)$/);
+}
+
+export function validVariableName(line) {
+  const fetchType = line.trim().split(": ")[0].trim();
+  const fetchCommand = line.trim().split(": ").slice(1).join(": ");
+  if (fetchType.match(/^(css|js)$/)) {
+    return true;
+  }
+  const varName = fetchCommand.substring(0, fetchCommand.indexOf("=")).trim();
+  return isValidIdentifier(varName);
 }
 
 export function validFetchUrl(line) {
@@ -113,6 +120,9 @@ export function parseFetchCellLine(line) {
   }
   if (!validFetchUrl(line)) {
     return { error: "INVALID_FETCH_URL" };
+  }
+  if (!validVariableName(line)) {
+    return { error: "INVALID_VARIABLE_NAME" };
   }
 
   const [fetchType, ...fetchContents] = line.trim().split(": ");
