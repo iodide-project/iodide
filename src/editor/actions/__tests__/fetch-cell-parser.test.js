@@ -203,6 +203,10 @@ const invalidFetchLines = [
     result: { error: "INVALID_FETCH_URL" }
   },
   {
+    line: "https://some-host.com/styles.css",
+    result: { error: "MISSING_FETCH_TYPE" }
+  },
+  {
     line: "text: asd## = https://iodide.io/data/foo.csv",
     result: { error: "INVALID_VARIABLE_NAME" }
   },
@@ -263,7 +267,8 @@ describe("validate fetch url", () => {
     "js: https://valid-host.com/file.js",
     "css: /path/to/file.css",
     "json: varname = path/to/file.json",
-    "text: varname=path/to/file.text"
+    "text: varname=path/to/file.text",
+    "arrayBuffer: varname = https://valid-ホスト.com/file.arrow"
   ];
   validLines.forEach(testCase => {
     it(`IS a valid fetch url"${testCase}"`, () => {
