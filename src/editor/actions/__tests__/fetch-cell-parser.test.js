@@ -2,7 +2,8 @@ import parseFetchCell, {
   parseFetchCellLine,
   commentOnlyLine,
   emptyLine,
-  parseAssignmentCommand
+  parseAssignmentCommand,
+  validFetchContent
 } from "../fetch-cell-parser";
 
 // test commentOnlyLine /////////////////////////
@@ -215,6 +216,10 @@ const invalidFetchLines = [
     result: { error: "INVALID_FETCH_TYPE" }
   },
   {
+    line: "js: js: https://d3js.org/d3.v5.min.js",
+    result: { error: "INVALID_FETCH_TYPE" }
+  },
+  {
     line: "text: asd## = https://iodide.io/data/foo.csv",
     result: { error: "INVALID_VARIABLE_NAME" }
   },
@@ -267,5 +272,26 @@ text: foo = https://iodide.io/data/foo.csv
 `;
   it("fetch cell text case 2", () => {
     expect(parseFetchCell(fetchCellText2).length).toEqual(1);
+  });
+});
+
+describe("validate fetch content", () => {
+  const validLines = [
+    "js: https://valid-host.com/file.js",
+    "css: /path/to/file.css",
+    "json: varname = path/to/file.json",
+    "text: varname=path/to/file.text"
+  ];
+  validLines.forEach(testCase => {
+    it(`IS a valid fetch content"${testCase}"`, () => {
+      expect(validFetchContent(testCase)).toBe(true);
+    });
+  });
+
+  const invalidLines = ["js: js: https://valid-host.com/file.js"];
+  invalidLines.forEach(testCase => {
+    it(`IS NOT a valid fetch content "${testCase}"`, () => {
+      expect(validFetchContent(testCase)).toBe(false);
+    });
   });
 });
