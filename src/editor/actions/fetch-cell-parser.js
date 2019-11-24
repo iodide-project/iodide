@@ -64,8 +64,9 @@ export function validFetchContent(line) {
   if (fetchType.match(/^(js|css)$/)) {
     fetchUrl = fetchContent;
   } else {
-    const varName = fetchContent.split("=")[0];
-    fetchUrl = fetchContent.replace(new RegExp(`^${varName}=`), "").trim();
+    fetchUrl = fetchContent.split("=");
+    fetchUrl.shift();
+    fetchUrl = fetchUrl.join("=").trim();
   }
 
   return (
