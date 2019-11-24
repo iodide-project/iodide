@@ -217,7 +217,7 @@ const invalidFetchLines = [
   },
   {
     line: "js: js: https://d3js.org/d3.v5.min.js",
-    result: { error: "INVALID_FETCH_TYPE" }
+    result: { error: "INVALID_FETCH_CONTENT" }
   },
   {
     line: "text: asd## = https://iodide.io/data/foo.csv",

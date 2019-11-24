@@ -96,7 +96,7 @@ export function parseFetchCellLine(line) {
 
   // Report invalid lines early on
   const _fetchType = line.trim().split(": ")[0];
-  if (!line.trim().match(/^[\w]+:/)) {
+  if (!line.trim().match(/^\w+\s*:/)) {
     return { error: "MISSING_FETCH_TYPE" };
   }
   if (!_fetchType.trimLeft().match(/^(css|js|arrayBuffer|blob|json|text)$/)) {
