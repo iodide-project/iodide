@@ -3,7 +3,7 @@ import parseFetchCell, {
   commentOnlyLine,
   emptyLine,
   parseAssignmentCommand,
-  validFetchContent
+  validFetchUrl
 } from "../fetch-cell-parser";
 
 // test commentOnlyLine /////////////////////////
@@ -217,7 +217,7 @@ const invalidFetchLines = [
   },
   {
     line: "js: js: https://d3js.org/d3.v5.min.js",
-    result: { error: "INVALID_FETCH_CONTENT" }
+    result: { error: "INVALID_FETCH_URL" }
   },
   {
     line: "text: asd## = https://iodide.io/data/foo.csv",
@@ -275,7 +275,7 @@ text: foo = https://iodide.io/data/foo.csv
   });
 });
 
-describe("validate fetch content", () => {
+describe("validate fetch url", () => {
   const validLines = [
     "js: https://valid-host.com/file.js",
     "css: /path/to/file.css",
@@ -283,15 +283,15 @@ describe("validate fetch content", () => {
     "text: varname=path/to/file.text"
   ];
   validLines.forEach(testCase => {
-    it(`IS a valid fetch content"${testCase}"`, () => {
-      expect(validFetchContent(testCase)).toBe(true);
+    it(`IS a valid fetch url"${testCase}"`, () => {
+      expect(validFetchUrl(testCase)).toBe(true);
     });
   });
 
   const invalidLines = ["js: js: https://valid-host.com/file.js"];
   invalidLines.forEach(testCase => {
-    it(`IS NOT a valid fetch content "${testCase}"`, () => {
-      expect(validFetchContent(testCase)).toBe(false);
+    it(`IS NOT a valid fetch url "${testCase}"`, () => {
+      expect(validFetchUrl(testCase)).toBe(false);
     });
   });
 });

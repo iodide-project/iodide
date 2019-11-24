@@ -49,7 +49,16 @@ export function emptyLine(line) {
   return line.replace(/\s+/g, "") === "";
 }
 
-export function validFetchContent(line) {
+export function missingFetchType(line) {
+  return !line.trim().match(/^\w+\s*:/);
+}
+
+export function validFetchType(line) {
+  const fetchType = line.trim().split(": ")[0];
+  return fetchType.trimLeft().match(/^(css|js|arrayBuffer|blob|json|text)$/);
+}
+
+export function validFetchUrl(line) {
   /*
     Assume fetch type and variable name are valid,
     For script fetch (css & js), valid fetch content is:
@@ -95,16 +104,15 @@ export function parseFetchCellLine(line) {
     .split(" //")[0]
     .trim();
 
-  // Report invalid lines early on
-  const _fetchType = line.trim().split(": ")[0];
-  if (!line.trim().match(/^\w+\s*:/)) {
+  // Report errors lines early on
+  if (missingFetchType(line)) {
     return { error: "MISSING_FETCH_TYPE" };
   }
-  if (!_fetchType.trimLeft().match(/^(css|js|arrayBuffer|blob|json|text)$/)) {
+  if (!validFetchType(line)) {
     return { error: "INVALID_FETCH_TYPE" };
   }
-  if (!validFetchContent(line)) {
-    return { error: "INVALID_FETCH_CONTENT" };
+  if (!validFetchUrl(line)) {
+    return { error: "INVALID_FETCH_URL" };
   }
 
   const [fetchType, ...fetchContents] = line.trim().split(": ");

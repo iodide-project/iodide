@@ -21,7 +21,8 @@ import { loadFileFromServer } from "../../../shared/utils/file-operations";
 export const errorTypeToString = {
   MISSING_FETCH_TYPE: "fetch type not specified",
   INVALID_FETCH_TYPE: "invalid fetch type",
-  INVALID_VARIABLE_NAME: "invalid variable name"
+  INVALID_FETCH_URL: "invalid fetch url",
+  INVALID_VARIABLE_NAME: "invalid variable name",
 };
 
 const syntaxErrorToString = fetchInfo => `Syntax error, ${
