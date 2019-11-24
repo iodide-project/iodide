@@ -47,7 +47,7 @@ export function emptyLine(line) {
 }
 
 export function missingFetchType(line) {
-  return !line.trim().match(/^\w+\s*:/);
+  return !line.trim().match(/^\w+\s*: /);
 }
 
 export function validFetchType(line) {
