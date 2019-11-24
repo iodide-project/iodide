@@ -56,8 +56,15 @@ export function validFetchType(line) {
 }
 
 export function validVariableName(line) {
-  const fetchType = line.trim().split(": ")[0].trim();
-  const fetchCommand = line.trim().split(": ").slice(1).join(": ");
+  const fetchType = line
+    .trim()
+    .split(": ")[0]
+    .trim();
+  const fetchCommand = line
+    .trim()
+    .split(": ")
+    .slice(1)
+    .join(": ");
   if (fetchType.match(/^(css|js)$/)) {
     return true;
   }
@@ -93,7 +100,7 @@ export function validFetchUrl(line) {
   );
 }
 
-export function parseFetchCellLine(line) {
+export function parseFetchCellLine(lineWithComments) {
   // intitial sketch of syntax at:
   // https://github.com/iodide-project/iodide/issues/1009
   // syntax is:
@@ -102,11 +109,11 @@ export function parseFetchCellLine(line) {
   // ...${optional comment: zero or more spaces,
   //     followed by ' //' (which includes a space),
   //     followed by anything}
-  if (emptyLine(line)) return undefined;
-  if (commentOnlyLine(line)) return undefined;
+  if (emptyLine(lineWithComments)) return undefined;
+  if (commentOnlyLine(lineWithComments)) return undefined;
 
   // first, strip out comment from the end of line (if it exists)
-  line = line
+  const line = lineWithComments
     .trim()
     .split(" //")[0]
     .trim();

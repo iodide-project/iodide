@@ -296,7 +296,6 @@ describe("validate data fetch variable name", () => {
     `json: "foo" = https://valid-host.com/file.json`,
     "json: *foo = https://valid-host.com/file.json",
     "json: 1foo = https://valid-host.com/file.json"
-
   ];
   invalidLines.forEach(testCase => {
     it(`has an INVALID variable name "${testCase}"`, () => {
