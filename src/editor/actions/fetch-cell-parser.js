@@ -112,13 +112,13 @@ export function parseFetchCellLine(lineWithComments) {
   if (emptyLine(lineWithComments)) return undefined;
   if (commentOnlyLine(lineWithComments)) return undefined;
 
-  // first, strip out comment from the end of line (if it exists)
+  // First, strip out comment from the end of line (if it exists)
   const line = lineWithComments
     .trim()
     .split(" //")[0]
     .trim();
 
-  // Report errors lines early on
+  // Report errors in fetch lines early on
   if (missingFetchType(line)) {
     return { error: "MISSING_FETCH_TYPE" };
   }
@@ -135,7 +135,6 @@ export function parseFetchCellLine(lineWithComments) {
   const [fetchType, ...fetchContents] = line.trim().split(": ");
   const fetchContent = fetchContents.join(": ");
 
-  // This switch is only entered if the line is valid
   const fetchCommand = fetchContent;
   switch (fetchType) {
     case "text":
