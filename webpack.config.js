@@ -28,8 +28,6 @@ const { IODIDE_PUBLIC } = process.env || false;
 const { USE_LOCAL_PYODIDE } = process.env || false;
 const { SOURCE_VERSION } = process.env;
 
-const IS_PRODUCTION = process.env.NODE_ENV !== "dev";
-
 const APP_DIR = path.resolve(__dirname, "src/");
 
 const plugins = [];
@@ -97,7 +95,7 @@ module.exports = env => {
     },
     watchOptions: { poll: true, ignored: /node_modules/ },
     optimization: {
-      minimize: IS_PRODUCTION,
+      minimize: env.NODE_ENV !== "dev",
       minimizer: [new TerserPlugin({
         sourceMap: true,
       })],
