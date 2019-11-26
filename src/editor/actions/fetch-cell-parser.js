@@ -1,5 +1,14 @@
 import { isValidIdentifier } from "../../shared/utils/is-valid-js-identifier";
 
+const URL_FETCH_TYPES = ["css", "js"];
+const VALID_FETCH_TYPES = URL_FETCH_TYPES.concat([
+  "arrayBuffer",
+  "blob",
+  "json",
+  "text",
+  "plugin"
+]);
+
 export function isRelPath(path) {
   // super dumb check -- just see if it has http or https at the front
   return !(
@@ -29,9 +38,6 @@ export function parseFileLine(fetchCommand) {
 
 export function parseAssignmentCommand(fetchCommand) {
   const varName = fetchCommand.substring(0, fetchCommand.indexOf("=")).trim();
-  if (!isValidIdentifier(varName)) {
-    return { error: "INVALID_VARIABLE_NAME" };
-  }
   const filePath = parseFileLine(
     fetchCommand.substring(fetchCommand.indexOf("=") + 1).trim()
   );
@@ -49,7 +55,61 @@ export function emptyLine(line) {
   return line.replace(/\s+/g, "") === "";
 }
 
-export function parseFetchCellLine(line) {
+export function missingFetchType(line) {
+  return !line.trim().match(/^\w+\s*: /);
+}
+
+export function validFetchType(line) {
+  const fetchType = line.trim().split(": ")[0];
+  return VALID_FETCH_TYPES.includes(fetchType.trimLeft());
+}
+
+export function validVariableName(line) {
+  const fetchType = line
+    .trim()
+    .split(": ")[0]
+    .trim();
+  const fetchCommand = line
+    .trim()
+    .split(": ")
+    .slice(1)
+    .join(": ");
+  if (fetchType.match(/^(css|js)$/)) {
+    return true;
+  }
+  const varName = fetchCommand.substring(0, fetchCommand.indexOf("=")).trim();
+  return isValidIdentifier(varName);
+}
+
+export function validFetchUrl(line) {
+  /*
+    Assume fetch type and variable name are valid,
+    For script fetch (css & js), valid fetch content is:
+      "<fetch-url>"
+    For data fetch (arrayBuffer, blob, json & text), valid fetch content is:
+      "<variable-name> = <fetch-url>"
+  */
+  const fetchType = line.split(": ")[0];
+  const fetchContent = line.replace(new RegExp(`^${fetchType}: `), "").trim();
+
+  let fetchUrl;
+  if (URL_FETCH_TYPES.includes(fetchType)) {
+    fetchUrl = fetchContent;
+  } else {
+    fetchUrl = fetchContent.split("=");
+    fetchUrl.shift();
+    fetchUrl = fetchUrl.join("=").trim();
+  }
+
+  return (
+    // valid script fetch url
+    !!fetchUrl.match(/^(ftp|http)s?:\/\/[^ "]+$/) ||
+    // valid script fetch local url
+    !!fetchUrl.match(/^[^ "]*$/)
+  );
+}
+
+export function parseFetchCellLine(lineWithComments) {
   // intitial sketch of syntax at:
   // https://github.com/iodide-project/iodide/issues/1009
   // syntax is:
@@ -58,38 +118,50 @@ export function parseFetchCellLine(line) {
   // ...${optional comment: zero or more spaces,
   //     followed by ' //' (which includes a space),
   //     followed by anything}
-  if (emptyLine(line)) return undefined;
-  if (commentOnlyLine(line)) return undefined;
+  if (emptyLine(lineWithComments)) return undefined;
+  if (commentOnlyLine(lineWithComments)) return undefined;
 
-  const [fetchType, fetchContent] = line.trim().split(": "); // .map(s => s.)
-  if (fetchContent) {
-    // this switch is only entered if the line contains ': ', in which case
-    // fetchContent is defined
+  // First, strip out comment from the end of line (if it exists)
+  const line = lineWithComments
+    .trim()
+    .split(" //")[0]
+    .trim();
 
-    // first, strip out comment from the end of line (if it exists)
-    const fetchCommand = fetchContent
-      .trim()
-      .split(" //")[0]
-      .trim();
-    switch (fetchType) {
-      case "text":
-      case "json":
-      case "arrayBuffer":
-      case "blob":
-        return Object.assign(
-          {},
-          { fetchType },
-          parseAssignmentCommand(fetchCommand)
-        );
-      case "js":
-      case "css":
-      case "plugin":
-        return Object.assign({}, { fetchType }, parseFileLine(fetchCommand));
-      default:
-        return { error: "INVALID_FETCH_TYPE" };
-    }
+  // Report errors in fetch lines early on
+  if (missingFetchType(line)) {
+    return { error: "MISSING_FETCH_TYPE" };
   }
-  return { error: "MISSING_FETCH_TYPE" };
+  if (!validFetchType(line)) {
+    return { error: "INVALID_FETCH_TYPE" };
+  }
+  if (!validFetchUrl(line)) {
+    return { error: "INVALID_FETCH_URL" };
+  }
+  if (!validVariableName(line)) {
+    return { error: "INVALID_VARIABLE_NAME" };
+  }
+
+  const [fetchType, ...fetchContents] = line.trim().split(": ");
+  const fetchContent = fetchContents.join(": ");
+
+  const fetchCommand = fetchContent;
+  switch (fetchType) {
+    case "text":
+    case "json":
+    case "arrayBuffer":
+    case "blob":
+      return Object.assign(
+        {},
+        { fetchType },
+        parseAssignmentCommand(fetchCommand)
+      );
+    case "js":
+    case "css":
+    case "plugin":
+      return Object.assign({}, { fetchType }, parseFileLine(fetchCommand));
+    default:
+      throw Error("Should never reach here");
+  }
 }
 
 export default function parseFetchCell(cellText) {
