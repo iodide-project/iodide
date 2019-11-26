@@ -1,7 +1,7 @@
 import { isValidIdentifier } from "../../shared/utils/is-valid-js-identifier";
 
 const URL_FETCH_TYPES = ['css', 'js'];
-const VALID_FETCH_TYPES = URL_FETCH_TYPES.concat(['arrayBuffer', 'blob', 'json', 'text']);
+const VALID_FETCH_TYPES = URL_FETCH_TYPES.concat(['arrayBuffer', 'blob', 'json', 'text', 'plugin']);
 
 export function isRelPath(path) {
   // super dumb check -- just see if it has http or https at the front
