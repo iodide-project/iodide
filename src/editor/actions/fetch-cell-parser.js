@@ -52,7 +52,7 @@ export function missingFetchType(line) {
 
 export function validFetchType(line) {
   const fetchType = line.trim().split(": ")[0];
-  return fetchType.trimLeft().match(/^(css|js|arrayBuffer|blob|json|text)$/);
+  return VALID_FETCH_TYPES.includes(fetchType.trimLeft());
 }
 
 export function validVariableName(line) {
