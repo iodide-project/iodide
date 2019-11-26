@@ -84,7 +84,7 @@ export function validFetchUrl(line) {
   const fetchContent = line.replace(new RegExp(`^${fetchType}: `), "").trim();
 
   let fetchUrl;
-  if (fetchType.match(/^(js|css)$/)) {
+  if (URL_FETCH_TYPES.includes(fetchType)) {
     fetchUrl = fetchContent;
   } else {
     fetchUrl = fetchContent.split("=");
