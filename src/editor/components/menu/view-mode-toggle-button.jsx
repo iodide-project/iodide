@@ -52,7 +52,7 @@ export function mapStateToProps(state) {
   return {
     isReportView,
     buttonText: isReportView ? "Explore" : "View as Report",
-    tooltipText: isReportView ? "Explore this notebook" : undefined,
+    tooltipText: isReportView ? "Explore this notebook" : "Go to Report view",
     style: isReportView
       ? { backgroundColor: "#eee", border: "1px solid #ccc", color: "black" }
       : { color: "#fafafa" }
