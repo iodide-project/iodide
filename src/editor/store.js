@@ -19,19 +19,13 @@ let finalReducer;
 const sagaMiddleware = createSagaMiddleware();
 if (process.env.NODE_ENV === "production") {
   finalReducer = reducer;
-  enhancer = compose(
-    applyMiddleware(thunk),
-    applyMiddleware(sagaMiddleware)
-  );
+  enhancer = compose(applyMiddleware(thunk), applyMiddleware(sagaMiddleware));
 } else if (
   process.env.NODE_ENV === "test" ||
   process.env.IODIDE_REDUX_LOG_MODE === "SILENT"
 ) {
   finalReducer = createValidatedReducer(reducer, stateSchema);
-  enhancer = compose(
-    applyMiddleware(thunk),
-    applyMiddleware(sagaMiddleware)
-  );
+  enhancer = compose(applyMiddleware(thunk), applyMiddleware(sagaMiddleware));
 } else if (process.env.IODIDE_REDUX_LOG_MODE === "VERY_VERBOSE") {
   finalReducer = createValidatedReducer(reducer, stateSchema);
   enhancer = compose(

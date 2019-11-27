@@ -38,8 +38,9 @@ export default class NotebookIconMenu extends React.Component {
 
   render() {
     const { anchorElement } = this.state;
-    const children = React.Children.map(this.props.children.filter(c => c), c =>
-      React.cloneElement(c, { onClick: this.handleIconButtonClose })
+    const children = React.Children.map(
+      this.props.children.filter(c => c),
+      c => React.cloneElement(c, { onClick: this.handleIconButtonClose })
     );
     return (
       <Tooltip classes={{ tooltip: "iodide-tooltip" }} title="Menu">

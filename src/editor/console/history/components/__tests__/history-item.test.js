@@ -56,7 +56,10 @@ describe("HistoryItem React component", () => {
     const hist = historyItem({
       historyType: "FETCH_CELL_INFO",
       historyId: "123456asdfg",
-      valueToRender: [{ text: "a", id: "z" }, { text: "b", id: "y" }],
+      valueToRender: [
+        { text: "a", id: "z" },
+        { text: "b", id: "y" }
+      ],
       level: "ERROR"
     });
     expect(hist.find(ConsoleMessage).length).toBe(1);

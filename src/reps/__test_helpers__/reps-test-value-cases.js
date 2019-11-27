@@ -140,7 +140,11 @@ export const baseObjects = {
   date: new Date("2000-01-01"),
   regex: /^.*$/,
   regex_long: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-  map: new Map([[1, "one"], [2, "two"], [3, "three"]]),
+  map: new Map([
+    [1, "one"],
+    [2, "two"],
+    [3, "three"]
+  ]),
   map_big: new Map([
     [1, "one"],
     [2, "two"],
@@ -321,7 +325,10 @@ if (window.document !== undefined) {
 // ==================== Promise
 
 export const promiseCases = {
-  promise: new Promise(() => "resolve", () => "reject"),
+  promise: new Promise(
+    () => "resolve",
+    () => "reject"
+  ),
   // this causes problems with node that show up in jest when testing
   // see: https://github.com/facebook/jest/issues/5311
   // uncomment this for storybook testing, but be sure to comment it
