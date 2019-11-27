@@ -57,10 +57,7 @@ export function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    deleteFileSource: deleteFileSourceAction,
-    getFileSources: getFileSourcesAction
-  }
-)(FileSourceListUnconnected);
+export default connect(mapStateToProps, {
+  deleteFileSource: deleteFileSourceAction,
+  getFileSources: getFileSourcesAction
+})(FileSourceListUnconnected);

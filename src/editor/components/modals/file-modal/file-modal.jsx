@@ -46,7 +46,7 @@ FileModalUnconnected.propTypes = {
   getFiles: PropTypes.func
 };
 
-export default connect(
-  undefined,
-  { getFileSources: getFileSourcesAction, getFiles: getFilesAction }
-)(FileModalUnconnected);
+export default connect(undefined, {
+  getFileSources: getFileSourcesAction,
+  getFiles: getFilesAction
+})(FileModalUnconnected);

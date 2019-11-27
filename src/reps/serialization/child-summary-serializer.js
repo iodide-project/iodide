@@ -111,9 +111,10 @@ function serializeStringPathsSummary(strObj) {
     "STRING_RANGE"
   );
 
-  return splitIndexRange(initialRange, MAX_SUMMARY_STRING_LEN).map(
-    rangeDescriptor => newChildSummaryItem(rangeDescriptor, null)
-  );
+  return splitIndexRange(
+    initialRange,
+    MAX_SUMMARY_STRING_LEN
+  ).map(rangeDescriptor => newChildSummaryItem(rangeDescriptor, null));
 }
 
 export function serializeStringSummaryForRange(strObj, min, max) {

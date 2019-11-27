@@ -23,9 +23,10 @@ function orderUnequalVals(a, b, desc) {
 }
 
 export function getDataTableSummary(rootObjName, path, pageSize, page, sorted) {
-  const tabularObj = getObjAtPath(window[rootObjName], path).map(
-    (row, rowNum) => ({ row, rowNum })
-  );
+  const tabularObj = getObjAtPath(
+    window[rootObjName],
+    path
+  ).map((row, rowNum) => ({ row, rowNum }));
   const colNames = Object.keys(tabularObj[0].row);
 
   let sortedData;

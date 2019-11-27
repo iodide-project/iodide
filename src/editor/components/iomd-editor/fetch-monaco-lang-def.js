@@ -42,7 +42,11 @@ export const conf = {
   comments: {
     lineComment: "//"
   },
-  brackets: [["{", "}"], ["[", "]"], ["(", ")"]],
+  brackets: [
+    ["{", "}"],
+    ["[", "]"],
+    ["(", ")"]
+  ],
   autoClosingPairs: [
     { open: "{", close: "}" },
     { open: "[", close: "]" },

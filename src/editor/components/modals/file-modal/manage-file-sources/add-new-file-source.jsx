@@ -159,16 +159,13 @@ export function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    updateUpdateInterval: updateFileSourceInputUpdateInterval,
-    updateURL: updateFileSourceInputURL,
-    updateFilename: updateFileSourceInputFilename,
-    updateStatusMessage: updateFileSourceInputStatusMessage,
-    updateStatusType: updateFileSourceInputStatusType,
-    updateStatusVisibility: updateFileSourceStatusVisibility,
-    validateAndSubmitFileSourceInputs: validateAndSubmitFileSourceInputsAction,
-    clearUpdateStatus: clearFileSourceInputUpdateStatusAction
-  }
-)(AddNewFileSourceUnconnected);
+export default connect(mapStateToProps, {
+  updateUpdateInterval: updateFileSourceInputUpdateInterval,
+  updateURL: updateFileSourceInputURL,
+  updateFilename: updateFileSourceInputFilename,
+  updateStatusMessage: updateFileSourceInputStatusMessage,
+  updateStatusType: updateFileSourceInputStatusType,
+  updateStatusVisibility: updateFileSourceStatusVisibility,
+  validateAndSubmitFileSourceInputs: validateAndSubmitFileSourceInputsAction,
+  clearUpdateStatus: clearFileSourceInputUpdateStatusAction
+})(AddNewFileSourceUnconnected);

@@ -194,9 +194,7 @@ describe("evaluateByType test", () => {
   });
 
   [[evalType, "EVAL_CODE"]].forEach(evalTypeCase => {
-    it(`if evalType ok, trigger correct eval frame action for "${
-      evalTypeCase[0]
-    }"`, async () => {
+    it(`if evalType ok, trigger correct eval frame action for "${evalTypeCase[0]}"`, async () => {
       [evalType, evalTaskType] = evalTypeCase;
       const taskPayload = {
         EVAL_LANGUAGE_PLUGIN: { pluginText: evalText },

@@ -36,29 +36,30 @@ describe("connectionModeIsStandalone && connectionModeIsServer", () => {
 });
 
 describe("getNotebookID && getRevisionID", () => {
-  [[getNotebookID, "notebook_id"], [getRevisionID, "revision_id"]].forEach(
-    ([fn, nbId]) => {
-      it(`${fn.name} returns ${nbId} if one exists and one is on a server. Otherwise returns undefined.`, () => {
-        const nb = makeState("SERVER");
-        nb.notebookInfo[nbId] = 5;
-        expect(fn(nb)).toBe(5);
-        nb.notebookInfo[nbId] = undefined;
-        expect(fn(nb)).toBe(undefined);
-      });
-      it(`${fn.name} returns undefined if the notebook is in standalone mode`, () => {
-        // this is an edge case, but here
-        // the identifier is still 5 in nb.notebookInfo, and we should still return undefined.
-        const nb = makeState("STANDALONE");
-        nb.notebookInfo[nbId] = 5;
-        expect(fn(nb)).toBe(undefined);
-      });
-      it(`${fn.name} throws if state.notebookInfo.${nbId} is not an integer nor undefined`, () => {
-        const nb = makeState("SERVER");
-        nb.notebookInfo[nbId] = "some string";
-        expect(() => fn(nb)).toThrow();
-      });
-    }
-  );
+  [
+    [getNotebookID, "notebook_id"],
+    [getRevisionID, "revision_id"]
+  ].forEach(([fn, nbId]) => {
+    it(`${fn.name} returns ${nbId} if one exists and one is on a server. Otherwise returns undefined.`, () => {
+      const nb = makeState("SERVER");
+      nb.notebookInfo[nbId] = 5;
+      expect(fn(nb)).toBe(5);
+      nb.notebookInfo[nbId] = undefined;
+      expect(fn(nb)).toBe(undefined);
+    });
+    it(`${fn.name} returns undefined if the notebook is in standalone mode`, () => {
+      // this is an edge case, but here
+      // the identifier is still 5 in nb.notebookInfo, and we should still return undefined.
+      const nb = makeState("STANDALONE");
+      nb.notebookInfo[nbId] = 5;
+      expect(fn(nb)).toBe(undefined);
+    });
+    it(`${fn.name} throws if state.notebookInfo.${nbId} is not an integer nor undefined`, () => {
+      const nb = makeState("SERVER");
+      nb.notebookInfo[nbId] = "some string";
+      expect(() => fn(nb)).toThrow();
+    });
+  });
 });
 
 describe("isLoggedIn", () => {
