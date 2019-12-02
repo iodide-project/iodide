@@ -238,12 +238,9 @@ export function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    setIsDeletingAnimationID: setIsDeletingAnimationIDAction,
-    setConfirmDeleteID: setConfirmDeleteIDAction,
-    deleteFileSource: deleteFileSourceAction,
-    createFileUpdateOperation: createFileUpdateOperationAction
-  }
-)(FileSourceListItemUnconnected);
+export default connect(mapStateToProps, {
+  setIsDeletingAnimationID: setIsDeletingAnimationIDAction,
+  setConfirmDeleteID: setConfirmDeleteIDAction,
+  deleteFileSource: deleteFileSourceAction,
+  createFileUpdateOperation: createFileUpdateOperationAction
+})(FileSourceListItemUnconnected);

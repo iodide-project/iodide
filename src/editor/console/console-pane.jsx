@@ -114,9 +114,6 @@ export function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  { areStatesEqual }
-)(ConsolePaneUnconnected);
+export default connect(mapStateToProps, null, null, { areStatesEqual })(
+  ConsolePaneUnconnected
+);

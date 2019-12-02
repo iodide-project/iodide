@@ -70,7 +70,4 @@ export function mapDispatchToProps(dispatch) {
     }
   };
 }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TitleUnconnected);
+export default connect(mapStateToProps, mapDispatchToProps)(TitleUnconnected);

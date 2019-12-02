@@ -6,7 +6,7 @@ x-app:
     context: .
   env_file: .env
   volumes:
-    - $PWD:/app
+    - .:/app
   links:
     - db
     - redis
@@ -29,4 +29,4 @@ services:
       driver: "none"
 
   redis:
-    image: redis:5.0.6-alpine
+    image: redis:5.0.7-alpine

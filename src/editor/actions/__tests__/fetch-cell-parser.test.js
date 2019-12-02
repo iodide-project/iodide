@@ -2,7 +2,9 @@ import parseFetchCell, {
   parseFetchCellLine,
   commentOnlyLine,
   emptyLine,
-  parseAssignmentCommand
+  parseAssignmentCommand,
+  validFetchUrl,
+  validVariableName
 } from "../fetch-cell-parser";
 
 // test commentOnlyLine /////////////////////////
@@ -82,24 +84,6 @@ describe("parseAssignmentCommand gives correct results", () => {
         varName: "foo",
         filePath: "data/table.csv",
         isRelPath: true
-      }
-    },
-    {
-      command: "f o o =   https://d3js.org/d3.v5.min.js",
-      result: {
-        error: "INVALID_VARIABLE_NAME"
-      }
-    },
-    {
-      command: '"foo" =   https://d3js.org/d3.v5.min.js',
-      result: {
-        error: "INVALID_VARIABLE_NAME"
-      }
-    },
-    {
-      command: "*foo =   https://d3js.org/d3.v5.min.js",
-      result: {
-        error: "INVALID_VARIABLE_NAME"
       }
     }
   ];
@@ -215,6 +199,14 @@ const invalidFetchLines = [
     result: { error: "INVALID_FETCH_TYPE" }
   },
   {
+    line: "js: js: https://d3js.org/d3.v5.min.js",
+    result: { error: "INVALID_FETCH_URL" }
+  },
+  {
+    line: "https://some-host.com/styles.css",
+    result: { error: "MISSING_FETCH_TYPE" }
+  },
+  {
     line: "text: asd## = https://iodide.io/data/foo.csv",
     result: { error: "INVALID_VARIABLE_NAME" }
   },
@@ -267,5 +259,52 @@ text: foo = https://iodide.io/data/foo.csv
 `;
   it("fetch cell text case 2", () => {
     expect(parseFetchCell(fetchCellText2).length).toEqual(1);
+  });
+});
+
+describe("validate fetch url", () => {
+  const validLines = [
+    "js: https://valid-host.com/file.js",
+    "css: /path/to/file.css",
+    "json: varname = path/to/file.json",
+    "text: varname=path/to/file.text",
+    "arrayBuffer: varname = https://valid-ホスト.com/file.arrow"
+  ];
+  validLines.forEach(testCase => {
+    it(`IS a valid fetch url"${testCase}"`, () => {
+      expect(validFetchUrl(testCase)).toBe(true);
+    });
+  });
+
+  const invalidLines = ["js: js: https://valid-host.com/file.js"];
+  invalidLines.forEach(testCase => {
+    it(`IS NOT a valid fetch url "${testCase}"`, () => {
+      expect(validFetchUrl(testCase)).toBe(false);
+    });
+  });
+});
+
+describe("validate data fetch variable name", () => {
+  const validLines = [
+    "json:   foo  =   https://valid-host.com/file.json",
+    `text: foo123 =   https://valid-host.com/file.txt`,
+    "arrayBuffer: 変数  =   https://valid-host.com/file.arrow"
+  ];
+  validLines.forEach(testCase => {
+    it(`has a VALID variable name "${testCase}"`, () => {
+      expect(validVariableName(testCase)).toBe(true);
+    });
+  });
+
+  const invalidLines = [
+    "json: f o o = https://valid-host.com/file.json",
+    `json: "foo" = https://valid-host.com/file.json`,
+    "json: *foo = https://valid-host.com/file.json",
+    "json: 1foo = https://valid-host.com/file.json"
+  ];
+  invalidLines.forEach(testCase => {
+    it(`has an INVALID variable name "${testCase}"`, () => {
+      expect(validVariableName(testCase)).toBe(false);
+    });
   });
 });

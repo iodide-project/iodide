@@ -2,7 +2,10 @@ import { mapStateToProps } from "../file-source-list";
 
 const st01 = {
   fileSources: {
-    sources: [{ id: 0, filename: "a" }, { id: 1, filename: "b" }]
+    sources: [
+      { id: 0, filename: "a" },
+      { id: 1, filename: "b" }
+    ]
   }
 };
 
