@@ -6,6 +6,7 @@
 - Allow blank content on notebook revision creation (fixes #2445) (#2455)
 - Enable user to clear console history with a click (#1015)
 - Report more specific errors in console when executing fetch cell (fixes #1853) (#2475)
+- Better onboarding around the use of the "run all" button (#2471)
 
 # 0.15.1 (2019-11-06)
 
