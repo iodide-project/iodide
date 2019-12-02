@@ -29,9 +29,10 @@ def test_post_to_file_api(fake_user, client, test_notebook):
         resp = post_file(f, client, test_notebook)
         assert resp.status_code == 201
         assert File.objects.count() == 1
-        created_file = File.objects.get(id=1)
+        resp_json = resp.json()
+        created_file = File.objects.get(id=resp_json["id"])
         assert created_file.content.tobytes() == b"hello"
-        assert resp.json() == {
+        assert resp_json == {
             "id": created_file.id,
             "last_updated": get_rest_framework_time_string(created_file.last_updated),
             "filename": "my cool file.csv",
