@@ -28,6 +28,7 @@ export default function reducer(state, action) {
         d => d.historyType === "CONSOLE_INPUT"
       );
       const historyLength = inputHistory.length;
+      let preConsoleLanguage = "js";
       // note that we bound consoleScrollbackPosition between
       // zero and historyLength. Zero represents the current content entered in the console by the user,
       // not a history entry; the first history entry is at 1
@@ -50,16 +51,24 @@ export default function reducer(state, action) {
       if (nextScrollback === 0) {
         // if we moved TO 0, set the consoleText from the cache
         nextConsoleText = consoleTextCache;
+        preConsoleLanguage =
+          historyLength > 0
+            ? inputHistory[historyLength - 1].language
+            : preConsoleLanguage;
       } else {
         // otherwise set the consoleText to the history value
         nextConsoleText = inputHistory[historyLength - nextScrollback].content;
+
+        preConsoleLanguage =
+          inputHistory[historyLength - nextScrollback].language;
       }
       return Object.assign({}, state, {
         consoleInput: {
           consoleText: nextConsoleText,
           consoleTextCache,
           consoleScrollbackPosition: nextScrollback
-        }
+        },
+        languageLastUsed: preConsoleLanguage
       });
     }
 
