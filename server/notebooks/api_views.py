@@ -107,7 +107,7 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
         notebook_id = int(self.kwargs["notebook_id"])
         if not Notebook.objects.filter(id=notebook_id).exists():
             raise Http404("Notebook with id %s does not exist" % notebook_id)
-        return {"notebook_id": notebook_id, "is_draft": True}
+        return {"notebook_id": notebook_id}
 
     def get_queryset(self):
         base = NotebookRevision.objects.filter(notebook_id=self.kwargs["notebook_id"])
@@ -147,5 +147,6 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
                     f"Based on non-latest revision {parent_revision_id} "
                     f"(expected: {last_revision.id})"
                 )
+        ctx["is_draft"] = True
         serializer.save(**ctx)
         tasks.schedule(execute_notebook_revisions_cleanup, ctx["notebook_id"])

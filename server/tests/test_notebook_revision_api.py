@@ -56,6 +56,7 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks_and_revisions, cl
             "created": get_rest_framework_time_string(revision.created),
             "id": revision.id,
             "title": revision.title,
+            "is_draft": False,
         }
         for revision in NotebookRevision.objects.filter(notebook=test_notebook)
     ]
@@ -73,6 +74,7 @@ def test_read_notebook_revisions(fake_user, two_test_notebooks_and_revisions, cl
         "created": get_rest_framework_time_string(test_revision.created),
         "id": test_revision.id,
         "title": test_revision.title,
+        "is_draft": False,
     }
 
 
@@ -180,6 +182,7 @@ def test_create_notebook_revision(fake_user, test_notebook, client):
         "created": get_rest_framework_time_string(new_notebook_revision.created),
         "id": new_notebook_revision.id,
         "title": post_blob["title"],
+        "is_draft": True,
     }
 
 

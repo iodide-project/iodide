@@ -250,4 +250,4 @@ REDIS_URL = env.str("REDIS_URL", default=f"redis://{REDIS_HOST}:6379/1")
 SPINACH_BROKER = RedisBroker(redis.from_url(REDIS_URL, **recommended_socket_opts))
 
 # Spacing for permanently-saved notebook revisions
-NOTEBOOK_REVISION_SAVE_INTERVAL = 60
+NOTEBOOK_REVISION_SAVE_INTERVAL_SECS = 60
