@@ -16,7 +16,7 @@ def execute_notebook_revisions_cleanup(notebook_id, now_utc=None):
 
     Prune revision history so that there is only one revision in each
     time window, also marking draft revisions that older than window length
-    as non-draft.
+    as non-draft. See also: "tumbling windows"
 
     * Time window: This task groups draft revisions into fixed-size windows
       (alsocalled Tumbling windows).
