@@ -41,7 +41,7 @@ def execute_notebook_revisions_cleanup(notebook_id, now_utc=None):
     ]
     NotebookRevision.objects.filter(id__in=intermediate_revision_ids).delete()
 
-    # mark old revisions as non-draft
+    # mark remaining old revisions as non-draft
     non_draft_revision_ids = [
         revision_window[0].id
         for revision_window in revision_windows
