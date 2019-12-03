@@ -12,7 +12,7 @@ tasks = Tasks()
 
 @tasks.task(name="notebooks:execute_notebook_revisions_cleanup")
 def execute_notebook_revisions_cleanup(notebook_id, now_utc=None):
-    """Prue revision hisotry.
+    """Prune revision hisotry.
 
     Prune revision history so that there is only one revision in each
     time window, also marking draft revisions that older than window length
