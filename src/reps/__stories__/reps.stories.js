@@ -30,7 +30,7 @@ window.allCases = allCases;
 
 const headerStyle = { fontWeight: "bold", background: "#ddd" };
 
-const allTestCases = storiesOf("all test cases", module);
+const allTestCases = storiesOf("reps test cases", module);
 
 allTestCases.add("table of type/class info", () => {
   return (
