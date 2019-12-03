@@ -39,6 +39,7 @@ def test_notebook_detail(client, test_notebook):
             "created": get_rest_framework_time_string(initial_revision.created),
             "id": initial_revision.id,
             "title": initial_revision.title,
+            "is_draft": False,
         },
     }
 
@@ -62,6 +63,7 @@ def test_notebook_detail(client, test_notebook):
             "created": get_rest_framework_time_string(new_revision.created),
             "id": new_revision.id,
             "title": new_revision.title,
+            "is_draft": False,
         },
     }
 
@@ -100,6 +102,7 @@ def test_create_notebook_logged_in(fake_user, client, notebook_post_blob, specif
             "created": get_rest_framework_time_string(notebook_revision.created),
             "id": notebook_revision.id,
             "title": notebook_revision.title,
+            "is_draft": False,
         },
     }
     # should have a first revision to go along with the new notebook
