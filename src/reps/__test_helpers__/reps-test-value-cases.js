@@ -1,11 +1,15 @@
 export const simpleTypes = {
   number_int: 232937,
-  number_float: 453.12312312,
+  number_float: 54321.123456789,
   number_zero: 0,
   number_negative: -534.23,
   number_exp: 10e55,
   number_nan: NaN,
   number_inf: Infinity,
+  number_long_big: 1234567891011121314e100,
+  number_long_big_neg: -1234567891011121314e100,
+  number_long_tiny: 1234567891011121314e-100,
+  number_long_tiny_neg: -1234567891011121314e-100,
   // bigint: BigInt(9007199254740991), bigint not yet available in node?
   string_empty: "",
   string_short: "asjhdflkdskfhla",

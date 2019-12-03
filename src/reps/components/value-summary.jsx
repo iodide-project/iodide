@@ -2,7 +2,10 @@ import React from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 
-import { truncateString } from "../shared/truncate-string";
+import {
+  truncateString,
+  truncateNumberString
+} from "../shared/truncate-string";
 
 const numberColor = "rgb(28, 0, 207)";
 const boolColor = numberColor;
@@ -206,11 +209,16 @@ export default class ValueSummary extends React.Component {
     const { objType, tiny, size } = this.props;
     const ValueSummaryRepForType = getValueSummaryRepForType(objType);
 
-    // if we want the tiny rep, if needed, shorten the string even further
-    const { stringValue, isTruncated } = truncateString(
+    // if we want the tiny rep, shorten the string even further if needed
+    const truncFunc =
+      objType === "Number" ? truncateNumberString : truncateString;
+    const truncLenOrPrecision =
+      objType === "Number" ? 5 : TINY_REP_TRUNCATION_LEN;
+
+    const { stringValue, isTruncated } = truncFunc(
       this.props.stringValue,
       tiny ? MAX_TINY_STRING_LEN : Infinity,
-      TINY_REP_TRUNCATION_LEN
+      truncLenOrPrecision
     );
     const finalTruncationStatus = isTruncated || this.props.isTruncated;
 
