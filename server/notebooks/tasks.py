@@ -32,7 +32,7 @@ def execute_notebook_revisions_cleanup(notebook_id, now_utc=None):
     revision_windows = [revision_groups[k] for k in sorted(revision_groups.keys(), reverse=True)]
 
     threshold = timedelta(seconds=NOTEBOOK_REVISION_FIXED_WINDOW_LENGTH_SECS)
-    # delete the intermediate revisions
+    # delete intermediate revisions
     intermediate_revision_ids = [
         revision.id
         for revision_window in revision_windows
