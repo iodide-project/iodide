@@ -248,15 +248,11 @@ def test_dont_create_unmodified_notebook_revision(fake_user, test_notebook, clie
 
 def test_create_notebook_revision_content_empty_string(fake_user, test_notebook, client):
     last_revision = NotebookRevision.objects.filter(notebook_id=test_notebook.id).first()
-    post_blob = {
-        "parent_revision_id": last_revision.id,
-        "title": "new title",
-        "content": "",
-    }
+    post_blob = {"parent_revision_id": last_revision.id, "title": "new title", "content": ""}
     client.force_login(user=fake_user)
 
     resp = client.post(
-        reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}), post_blob,
+        reverse("notebook-revisions-list", kwargs={"notebook_id": test_notebook.id}), post_blob
     )
 
     assert resp.status_code == 201

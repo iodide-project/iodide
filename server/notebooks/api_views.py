@@ -147,6 +147,5 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
                     f"Based on non-latest revision {parent_revision_id} "
                     f"(expected: {last_revision.id})"
                 )
-        ctx["is_draft"] = True
-        serializer.save(**ctx)
+        serializer.save(**{**ctx, "is_draft": True})
         tasks.schedule(execute_notebook_revisions_cleanup, ctx["notebook_id"])
