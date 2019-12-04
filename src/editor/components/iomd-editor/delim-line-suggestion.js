@@ -28,8 +28,6 @@ export const delimLineSuggestion = (lineSoFar, knownChunkTypes, lineNumber) => {
     // if the delimLine already includes a valid chunk type
     // then return the valid chunkflags as suggestions
     suggestions = makeSuggestionList(validChunkFlags, Keyword);
-    // } else if (lineSoFar.match("^%%+[a-z]$")) {
-    //   suggestions = makeSuggestionList(knownChunkTypes, Keyword);
   } else {
     // otherwise, suggest a chunk types without a prefix
     suggestions = makeSuggestionList(knownChunkTypes, Keyword);
