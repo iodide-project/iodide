@@ -4,6 +4,14 @@
   color: black;
   /* any extras will just be numbers: */
 }
+
+/* Workaround for bug in Firefox that causes some html to incorrectly overflow with horizontal scrollbars: see https://github.com/iodide-project/iodide/issues/2458 */
+@supports (-moz-appearance: meterbar) and (display: flex) {
+  .rendered_html {
+    padding-right: 18px;
+  }
+}
+
 .rendered_html em {
   font-style: italic;
 }
