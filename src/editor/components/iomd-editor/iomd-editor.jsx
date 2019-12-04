@@ -165,7 +165,10 @@ class IomdEditorUnconnected extends React.Component {
           stickiness: decorationsDontGrow
         }
       }));
-      this.editor.deltaDecorations(iomdDelimLineDecorationIds, newDecorations);
+      iomdDelimLineDecorationIds = this.editor.deltaDecorations(
+        iomdDelimLineDecorationIds,
+        newDecorations
+      );
     }
 
     this.editor.updateOptions({ wordWrap });
@@ -198,7 +201,9 @@ function mapStateToProps(state) {
     state.panePositions.EditorPositioner
   ).filter(x => typeof x === "number");
 
-  const delimLines = state.iomdChunks.map(chunk => chunk.startLine);
+  const delimLines = state.iomdChunks
+    .map(chunk => chunk.startLine)
+    .filter(x => x !== 1);
 
   return {
     content: state.iomd,
