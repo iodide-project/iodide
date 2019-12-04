@@ -7,17 +7,32 @@ describe("delimLineSuggestion", () => {
   [
     {
       lineSoFar: "%",
-      suggestions: ["%% js", "%% md", "%% foo"],
+      suggestions: ["%%", "%% js", "%% md", "%% foo"],
       hasReplaceRange: true
     },
     {
       lineSoFar: "%%",
-      suggestions: ["%% js", "%% md", "%% foo"],
+      suggestions: ["%%", "%% js", "%% md", "%% foo"],
+      hasReplaceRange: true
+    },
+    {
+      lineSoFar: "%j",
+      suggestions: ["%%", "%% js", "%% md", "%% foo"],
+      hasReplaceRange: true
+    },
+    {
+      lineSoFar: "%%j",
+      suggestions: ["%%", "%% js", "%% md", "%% foo"],
       hasReplaceRange: true
     },
     {
       lineSoFar: "%%%%%",
-      suggestions: ["%%%%% js", "%%%%% md", "%%%%% foo"],
+      suggestions: ["%%%%%", "%%%%% js", "%%%%% md", "%%%%% foo"],
+      hasReplaceRange: true
+    },
+    {
+      lineSoFar: "%%%%%o",
+      suggestions: ["%%%%%", "%%%%% js", "%%%%% md", "%%%%% foo"],
       hasReplaceRange: true
     },
     {
@@ -27,7 +42,22 @@ describe("delimLineSuggestion", () => {
     },
     {
       lineSoFar: "%% ",
-      suggestions: ["js", "md", "foo"],
+      suggestions: knownChunkTypes,
+      hasReplaceRange: false
+    },
+    {
+      lineSoFar: "%%%%%% ",
+      suggestions: knownChunkTypes,
+      hasReplaceRange: false
+    },
+    {
+      lineSoFar: "%%%%%%    ",
+      suggestions: knownChunkTypes,
+      hasReplaceRange: false
+    },
+    {
+      lineSoFar: "%%    j",
+      suggestions: knownChunkTypes,
       hasReplaceRange: false
     }
   ].forEach(({ lineSoFar, suggestions, hasReplaceRange }, i) => {
