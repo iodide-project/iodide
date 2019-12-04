@@ -4,6 +4,10 @@
 #
 #    pip-compile --generate-hashes --output-file=requirements/build.txt requirements/build.in
 #
+asgiref==3.2.3 \
+    --hash=sha256:7e06d934a7718bf3975acbf87780ba678957b87c7adc056f13b6215d610695a0 \
+    --hash=sha256:ea448f92fc35a0ef4b1508f53a04c4670255a3f33d22a81c8fc9c872036adbe5 \
+    # via django
 blinker==1.4 \
     --hash=sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6 \
     # via spinach
@@ -52,9 +56,9 @@ defusedxml==0.6.0 \
 django-environ==0.4.5 \
     --hash=sha256:6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde \
     --hash=sha256:c57b3c11ec1f319d9474e3e5a79134f40174b17c7cc024bbb2fad84646b120c4
-django==2.2.7 \
-    --hash=sha256:16040e1288c6c9f68c6da2fe75ebde83c0a158f6f5d54f4c5177b0c1478c5b86 \
-    --hash=sha256:89c2007ca4fa5b351a51a279eccff298520783b713bf28efb89dfb81c80ea49b
+django==3.0 \
+    --hash=sha256:6f857bd4e574442ba35a7172f1397b303167dae964cf18e53db5e85fe248d000 \
+    --hash=sha256:d98c9b6e5eed147bc51f47c014ff6826bd1ab50b166956776ee13db5a58804ae
 djangorestframework-simplejwt==4.3.0 \
     --hash=sha256:4cb1a51bf9b098b983e1326a1cfc65fb0b3c5a2aa0fa43effdbf05dd6da5e8cb \
     --hash=sha256:d025211806622c53020aa4f66029f1f7305e38de6439116b4a842661fc02cf36
