@@ -35,7 +35,10 @@ def test_notebook_view(client, test_notebook):
     # add a new revision, verify that a fresh load gets it
     new_revision_content = "My new fun content"
     new_revision = NotebookRevision.objects.create(
-        content=new_revision_content, notebook=test_notebook, title="Second revision"
+        content=new_revision_content,
+        notebook=test_notebook,
+        title="Second revision",
+        is_draft=False,
     )
     resp = client.get(reverse("notebook-view", args=[str(test_notebook.id)]))
     assert resp.status_code == 200
@@ -49,7 +52,9 @@ def test_notebook_view(client, test_notebook):
 def test_notebook_view_escapes_iomd(client, fake_user):
     notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook")
     iomd_content = "</script><script>alert('31337')"
-    NotebookRevision.objects.create(notebook=notebook, title="First revision", content=iomd_content)
+    NotebookRevision.objects.create(
+        notebook=notebook, title="First revision", content=iomd_content, is_draft=False
+    )
 
     resp = client.get(reverse("notebook-view", args=[str(notebook.id)]))
     expected_content = '<script id="iomd" type="text/iomd">{}</script>'.format(escape(iomd_content))
@@ -60,7 +65,10 @@ def test_notebook_view_old_revision(client, test_notebook):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     new_revision_content = "My new fun content"
     NotebookRevision.objects.create(
-        content=new_revision_content, notebook=test_notebook, title="Second revision"
+        content=new_revision_content,
+        notebook=test_notebook,
+        title="Second revision",
+        is_draft=False,
     )
     resp = client.get(
         reverse("notebook-view", args=[str(test_notebook.id)]) + f"?revision={initial_revision.id}"
@@ -125,7 +133,10 @@ def test_tryit_view(client, fake_user, logged_in):
 def test_notebook_revisions_page(fake_user, test_notebook, client):
     # create another notebook revision
     NotebookRevision.objects.create(
-        notebook=test_notebook, title="second revision", content="*fake notebook content 2*"
+        notebook=test_notebook,
+        title="second revision",
+        content="*fake notebook content 2*",
+        is_draft=False,
     )
     resp = client.get(reverse("notebook-revisions", args=[str(test_notebook.id)]))
     assert get_title_block(resp.content) == f"Revisions - {test_notebook.title}"

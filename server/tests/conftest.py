@@ -64,7 +64,7 @@ def fake_user2(transactional_db):
 def test_notebook(fake_user):
     notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook")
     NotebookRevision.objects.create(
-        notebook=notebook, title="First revision", content="*fake notebook content*"
+        notebook=notebook, title="First revision", content="*fake notebook content*", is_draft=False
     )
     return notebook
 
@@ -85,6 +85,7 @@ def two_test_notebooks(fake_user):
             notebook=notebook,
             title="First revision of notebook %s" % i,
             content="*fake notebook content %s*" % i,
+            is_draft=False,
         )
         notebooks.append(notebook)
     return notebooks

@@ -19,6 +19,7 @@ from .serializers import (
     NotebookRevisionDetailSerializer,
     NotebookRevisionSerializer,
 )
+from .tasks import execute_notebook_revisions_cleanup, tasks
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +89,7 @@ class NotebookViewSet(viewsets.ModelViewSet):
             notebook=notebook,
             title=self.request.data["title"],
             content=self.request.data["content"],
+            is_draft=False,
         )
 
         headers = self.get_success_headers(serializer.data)
@@ -145,5 +147,5 @@ class NotebookRevisionViewSet(viewsets.ModelViewSet):
                     f"Based on non-latest revision {parent_revision_id} "
                     f"(expected: {last_revision.id})"
                 )
-
-        serializer.save(**ctx)
+        serializer.save(**{**ctx, "is_draft": True})
+        tasks.schedule(execute_notebook_revisions_cleanup, ctx["notebook_id"])

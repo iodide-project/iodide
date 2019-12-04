@@ -20,6 +20,7 @@ def ten_test_notebooks(fake_user):
             notebook=notebook,
             title="First revision of notebook %s" % i,
             content="*fake notebook content %s*" % i,
+            is_draft=False,
         )
         # every other notebook gets min # of revisions to show up in the index page list
         if i % 2 == 0:
@@ -28,6 +29,7 @@ def ten_test_notebooks(fake_user):
                     notebook=notebook,
                     title="Revision %s of notebook %s" % (j, i),
                     content="*fake notebook content %s revision %s" % (i, j),
+                    is_draft=False,
                 )
         notebooks.append(notebook)
     return notebooks
@@ -116,7 +118,7 @@ def test_user_view_with_different_names(transactional_db, client, username, firs
     )
     notebook = Notebook.objects.create(owner=test_user, title="Fake notebook")
     revision = NotebookRevision.objects.create(
-        notebook=notebook, title="First revision", content="*fake notebook content*"
+        notebook=notebook, title="First revision", content="*fake notebook content*", is_draft=False
     )
     resp = client.get(reverse("user", kwargs={"name": test_user.username}))
     assert resp.status_code == 200

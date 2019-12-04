@@ -7,6 +7,7 @@
 - Enable user to clear console history with a click (#1015)
 - Report more specific errors in console when executing fetch cell (fixes #1853) (#2475)
 - Better onboarding around the use of the "run all" button (#2471)
+- Automatically prune revision history (fixes #2451) (#2461)
 
 # 0.15.1 (2019-11-06)
 
