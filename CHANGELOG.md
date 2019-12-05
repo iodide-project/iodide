@@ -1,10 +1,12 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.16.0 (2019-12-05)
+
 - Remove redundant description metadata for link previews (#2448)
 - Vertically align text in language selector(fixes #2446)
 - Allow running simple-serve from a port other than 8000 (fixes #2444)
 - Allow blank content on notebook revision creation (fixes #2445) (#2455)
-- Enable user to clear console history with a click (#1015)
+- Enable user to clear console history with a click (fixes #1015) (#2453)
 - Report more specific errors in console when executing fetch cell (fixes #1853) (#2475)
 - Better onboarding around the use of the "run all" button (#2471)
 - Automatically prune revision history (fixes #2451) (#2461)
