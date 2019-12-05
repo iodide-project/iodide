@@ -66,9 +66,9 @@ entrypoints==0.3 \
     --hash=sha256:589f874b313739ad35be6e0cd7efde2a4e9b6fea91edcc34e58ecbb8dbe56d19 \
     --hash=sha256:c70dd71abe5a8c85e55e12c19bd91ccfeec11a6e99044204511f9ed547d48451 \
     # via flake8
-faker==2.0.5 \
-    --hash=sha256:29093e61f12745150774fd05ab499e87252a4fa51ed51e45c40179e854f87925 \
-    --hash=sha256:c1d19f8c63487b4711189403f5c2e06af1dd8b5be7928f6547f5f7cddd13d917
+faker==3.0.0 \
+    --hash=sha256:202ad3b2ec16ae7c51c02904fb838831f8d2899e61bf18db1e91a5a582feab11 \
+    --hash=sha256:92c84a10bec81217d9cb554ee12b3838c8986ce0b5d45f72f769da22e4bb5432
 flake8-black==0.1.1 \
     --hash=sha256:56f85aaa5a83f06a3f61e680e3b50f156b5e557ebdcb964d823d86f4c108b0c8
 flake8==3.7.9 \
