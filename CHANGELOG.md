@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Unescape hexadecimal quotes in iomd (fixes #2524) (#2525)
+
 # 0.16.0 (2019-12-05)
 
 - Remove redundant description metadata for link previews (#2448)
