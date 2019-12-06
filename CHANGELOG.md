@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Further refine escaping iomd returned by iodide server
+
 # 0.16.1 (2019-12-05)
 
 - Unescape hexadecimal quotes in iomd (fixes #2524) (#2525)
