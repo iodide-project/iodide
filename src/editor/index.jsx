@@ -40,6 +40,7 @@ import CSSCascadeProvider from "../shared/components/css-cascade-provider";
 import { initializeDefaultKeybindings } from "./initialization/keybindings";
 import { handleInterceptBackspace } from "../shared/intercept-keybindings";
 
+// eslint-disable-next-line func-names
 initializeDefaultKeybindings();
 handleInterceptBackspace();
 
