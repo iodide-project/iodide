@@ -43,7 +43,6 @@ export function setViewMode(viewMode) {
         "",
         `/notebooks/${notebookId}/?${objectToQueryString(params)}`
       );
-      console.log(window.history.length);
     }
     dispatch({
       type: "SET_VIEW_MODE",
