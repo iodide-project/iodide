@@ -13,7 +13,7 @@ export function handleInterceptBackspace() {
 }
 
 window.onbeforeunload = () => {
-  if (warnUser) {
+  if (warnUser || window.history.pushState) {
     warnUser = false;
     return "Are you sure you want to leave?";
   }
