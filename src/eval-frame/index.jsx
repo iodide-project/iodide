@@ -44,7 +44,7 @@ render(
   document.getElementById("view-mode-styles")
 );
 
+window.autocompleteJs = autocompleteJs;
+
 initializeUserVariables();
 handleInterceptBackspace();
-
-window.autocompleteJs = autocompleteJs;
