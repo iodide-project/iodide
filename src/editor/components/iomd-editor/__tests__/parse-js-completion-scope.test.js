@@ -28,7 +28,7 @@ const testExpressions = [
   {
     expr: `const fetchLineSuggestion = (lineSoFar, fileNames) => {
   let suggestions;
-  if (lineSoFar.match(/\w+:`,
+  if (lineSoFar.match(/\w+:`, // eslint-disable-line
     scope: []
   },
 
