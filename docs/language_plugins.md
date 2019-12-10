@@ -70,6 +70,8 @@ The individual fields are described below:
 
 - `asyncEvaluator`: (optional) If evaluating code requires making asynchronous calls, for example, to load additional code from a remote location, an `asyncEvaluator` method should be provided.  It will take precedence over `evaluator` if provided.  It takes a string of source code, but returns a `Promise` that resolves to result value rather than returning the result immediately.  Otherwise, it follows the same conventions as `evaluator`.
 
+- `autocomplete`: (optional) The name of the function to get autocomplete candidates.  This function must accept a single argument `code`, and return a array of strings representing candidate completions. _Note_: language plugin authors are encouraged to see whether there is a Jupyter kernel that implement this functionality for their language; such code could be adapted by setting the `cursor_pos` argument expected by Jupyter to the final position in the `code` string (Iodide always passes code strings that are truncated to the cursor's position). Please see the [Jupyter docs](https://jupyter-client.readthedocs.io/en/stable/messaging.html#completion).
+
 - `pluginType`: Must always be `language` for language plugins.  Other values are resolved for other plugin types to be defined in the future.
 
 If desired, you may also place the language plugin definition inside a json file and load it using a fetch cell as follows:

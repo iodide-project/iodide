@@ -11,7 +11,6 @@ import { fetchLineSuggestion } from "./fetch-line-suggestion";
 import { delimLineSuggestion } from "./delim-line-suggestion";
 import { codeChunkIdentifiers } from "./code-chunk-identifiers";
 import { makeSuggestionList } from "./make-suggestion-list";
-import { getCompletionScope } from "./parse-js-completion-scope";
 import messagePasserEditor from "../../../shared/utils/redux-to-port-message-passer";
 
 const { Field } = monaco.languages.CompletionItemKind;
@@ -57,23 +56,28 @@ export function makeIomdCompletionProvider(getState) {
           return {};
         }
 
-        case "js": {
-          const chunkSoFar = model.getValueInRange({
-            startLineNumber: currentChunk.startLine + 1,
-            startColumn: 1,
-            endLineNumber: position.lineNumber,
-            endColumn: position.column
-          });
-          const path = getCompletionScope(chunkSoFar);
-          if (!path) return {};
-
-          const completions = await messagePasserEditor.postMessageAndAwaitResponse(
-            "CODE_COMPLETION_REQUEST",
-            { language: "js", path }
-          );
-          return { suggestions: makeSuggestionList(completions, Field) };
-        }
         default: {
+          if (
+            completionType in languageDefinitions &&
+            languageDefinitions[completionType].autocomplete !== undefined
+          ) {
+            const chunkSoFar = model.getValueInRange({
+              startLineNumber: currentChunk.startLine + 1,
+              startColumn: 1,
+              endLineNumber: position.lineNumber,
+              endColumn: position.column
+            });
+
+            const completions = await messagePasserEditor.postMessageAndAwaitResponse(
+              "CODE_COMPLETION_REQUEST",
+              {
+                language: languageDefinitions[completionType],
+                code: chunkSoFar
+              }
+            );
+            return { suggestions: makeSuggestionList(completions, Field) };
+          }
+
           return codeChunkIdentifiers(
             iomdChunks,
             Object.keys(languageDefinitions)

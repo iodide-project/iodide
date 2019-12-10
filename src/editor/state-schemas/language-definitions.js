@@ -6,7 +6,8 @@ export const jsLanguageDefinition = {
   displayName: "JavaScript",
   module: "window",
   evaluator: "eval",
-  url: ""
+  url: "",
+  autocomplete: "autocompleteJs"
 };
 
 const PYODIDE_URL = process.env.USE_LOCAL_PYODIDE
@@ -20,7 +21,8 @@ const pyLanguageDefinition = {
   module: "pyodide",
   evaluator: "runPython",
   asyncEvaluator: "runPythonAsync",
-  pluginType: "language"
+  pluginType: "language",
+  autocomplete: "autocomplete"
 };
 
 export const languageDefinitions = {

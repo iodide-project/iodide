@@ -70,7 +70,8 @@ export const languageSchema = {
     module: { type: "string" },
     evaluator: { type: "string" },
     asyncEvaluator: { type: "string" },
-    url: { type: "string" }
+    url: { type: "string" },
+    autocomplete: { type: "string" }
   },
   additionalProperties: true
 };

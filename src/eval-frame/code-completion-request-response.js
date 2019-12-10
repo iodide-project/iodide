@@ -1,4 +1,6 @@
-export function getObjAtPath(path) {
+import { getCompletionScope } from "./parse-js-completion-scope";
+
+function getObjAtPath(path) {
   let obj = window;
   for (let i = 0; i < path.length; i++) {
     obj = obj[path[i]];
@@ -6,14 +8,19 @@ export function getObjAtPath(path) {
   return obj;
 }
 
+export function autocompleteJs(code) {
+  const path = getCompletionScope(code);
+  const obj = getObjAtPath(path);
+  const items = Object.getOwnPropertyNames(obj);
+  console.log({ obj, path, items });
+  return items;
+}
+
 export function codeCompletionRequestResponse(message) {
   console.log(message);
-  if (message.language === "js") {
-    const { path } = message;
-    const obj = getObjAtPath(path);
-    const items = Object.getOwnPropertyNames(obj);
-    console.log({ obj, path, items });
-    return items;
+  const { code, language } = message;
+  if (language.languageId === "js") {
+    return autocompleteJs(code);
   }
-  return [];
+  return window[language.module][language.autocomplete](code);
 }
