@@ -5,9 +5,9 @@ export const jsLanguageDefinition = {
   languageId: "js",
   displayName: "JavaScript",
   module: "window",
-  evaluator: "eval",
-  url: "",
+  evaluator: "evalJS",
   autocomplete: "autocompleteJs"
+  url: "",
 };
 
 const PYODIDE_URL = process.env.USE_LOCAL_PYODIDE
