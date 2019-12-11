@@ -1,3 +1,5 @@
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+
 import { store } from "../../store";
 import { getChunkContainingLine } from "../../iomd-tools/iomd-selection";
 
@@ -8,11 +10,15 @@ import {
 import { fetchLineSuggestion } from "./fetch-line-suggestion";
 import { delimLineSuggestion } from "./delim-line-suggestion";
 import { codeChunkIdentifiers } from "./code-chunk-identifiers";
+import { makeSuggestionList } from "./make-suggestion-list";
+import messagePasserEditor from "../../../shared/utils/redux-to-port-message-passer";
+
+const { Field } = monaco.languages.CompletionItemKind;
 
 export function makeIomdCompletionProvider(getState) {
   return {
     triggerCharacters: ["%"],
-    provideCompletionItems: (model, position) => {
+    provideCompletionItems: async (model, position) => {
       const { iomdChunks, languageDefinitions, notebookInfo } = getState();
       const currentChunk = getChunkContainingLine(
         iomdChunks,
@@ -30,6 +36,7 @@ export function makeIomdCompletionProvider(getState) {
         currentChunk.startLine === position.lineNumber || lineSoFar === "%"
           ? "delimLine"
           : currentChunk.chunkType;
+
       switch (completionType) {
         case "delimLine": {
           const knownChunkTypes = Object.keys(languageDefinitions)
@@ -48,7 +55,29 @@ export function makeIomdCompletionProvider(getState) {
         case "md": {
           return {};
         }
+
         default: {
+          if (
+            completionType in languageDefinitions &&
+            languageDefinitions[completionType].autocomplete !== undefined
+          ) {
+            const chunkSoFar = model.getValueInRange({
+              startLineNumber: currentChunk.startLine + 1,
+              startColumn: 1,
+              endLineNumber: position.lineNumber,
+              endColumn: position.column
+            });
+
+            const completions = await messagePasserEditor.postMessageAndAwaitResponse(
+              "CODE_COMPLETION_REQUEST",
+              {
+                language: languageDefinitions[completionType],
+                code: chunkSoFar
+              }
+            );
+            return { suggestions: makeSuggestionList(completions, Field) };
+          }
+
           return codeChunkIdentifiers(
             iomdChunks,
             Object.keys(languageDefinitions)

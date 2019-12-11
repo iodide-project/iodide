@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Add autocomplete for JS and language plugins (Pyodide working POC) (#2539)
+
 # 0.16.1 (2019-12-05)
 
 - Unescape hexadecimal quotes in iomd (fixes #2524) (#2525)
