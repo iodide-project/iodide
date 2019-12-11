@@ -21,7 +21,6 @@ import { iodide } from "./iodide-api/api";
 
 import "./port-to-editor";
 import { handleInterceptBackspace } from "../shared/intercept-keybindings";
-import { autocompleteJs } from "./code-completion-request-response";
 
 messagePasserEval.connectDispatch(store.dispatch);
 window.iodide = iodide;
@@ -44,7 +43,6 @@ render(
   document.getElementById("view-mode-styles")
 );
 
-window.autocompleteJs = autocompleteJs;
-
-initializeUserVariables();
 handleInterceptBackspace();
+// initializeUserVariables() **MUST** be the last line of this file!
+initializeUserVariables();
