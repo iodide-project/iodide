@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-- Restores autocomplete for JavaScript
+- Add autocomplete for JS and language plugins (Pyodide working POC) (#2539)
 
 # 0.16.1 (2019-12-05)
 
