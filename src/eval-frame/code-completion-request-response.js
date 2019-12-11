@@ -2,7 +2,7 @@ const scopeEndRE = /(\["[^"]*|\['[^']*|\[`[^`]*|\s*\.|\s*\.[_$a-zA-Z][_$a-zA-Z0-
 const scopeRootRE = /[_$a-zA-Z][_$a-zA-Z0-9]*$/;
 const scopeMiddleRE = /\s*\.([_$a-zA-Z][_$a-zA-Z0-9]*)$|\["(.*)"\]$|\['(.*)'\]$|\[`(.*)`\]$|\[([0-9]*)\]$/;
 
-function getCompletionScope(code) {
+export function getCompletionScope(code) {
   let codeRemaining = code;
   const scope = [];
   let match = scopeEndRE.exec(code);

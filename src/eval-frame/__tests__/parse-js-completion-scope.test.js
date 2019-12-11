@@ -1,4 +1,4 @@
-import { getCompletionScope } from "../parse-js-completion-scope";
+import { getCompletionScope } from "../code-completion-request-response";
 
 /* eslint-disable no-irregular-whitespace */
 const testExpressions = [
