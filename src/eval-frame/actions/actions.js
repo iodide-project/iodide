@@ -25,8 +25,8 @@ function evalJavaScript(codeString) {
   // for async script loading from blobs, see:
   // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
   const tempId = Math.random().toString();
-  const enhancedString = `try {
-      window[${tempId}] = window.eval(\`${codeString}\`)
+  const enhancedString = `try { window[${tempId}] = window.eval(\`
+${codeString}\`)
     } catch (err) {
       window[${tempId}] = err
     }
@@ -45,6 +45,7 @@ function evalJavaScript(codeString) {
       const value = window[tempId];
       console.log("JS EVAL VALUE", value);
       delete window[tempId];
+      if (value instanceof Error) reject(value);
       resolve(value);
     };
     script.onerror = err => {

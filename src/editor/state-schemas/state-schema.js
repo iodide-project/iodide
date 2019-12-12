@@ -1,6 +1,7 @@
 import { languageDefinitions } from "./language-definitions";
 import { historySchema } from "../console/history/state-schema";
 import { consoleInputSchema } from "../console/input/state-schema";
+import { tracebackInfoSchema } from "../tracebacks/state-schema";
 
 // FIXME: break out enums to be in a separate file.
 export const NONCODE_EVAL_TYPES = ["css", "md", "raw"];
@@ -370,6 +371,7 @@ export const stateProperties = {
     type: "string",
     default: "untitled"
   },
+  tracebackInfo: tracebackInfoSchema,
   userData: {
     type: "object",
     properties: {
