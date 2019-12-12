@@ -6,16 +6,12 @@ import {
   updateHistoryLineContent,
   updateHistoryEntryLevel
 } from "../../console/history/actions";
+import { jsScriptLoaded } from "../../tracebacks/actions";
 import { evaluateLanguagePlugin } from "./language-plugin-saga";
 
 import { triggerEvalFrameTask } from "./eval-frame-sender";
 
-import {
-  // errorMessage,
-  genericFetch
-  // successMessage,
-  // syntaxErrorToString
-} from "../../../shared/utils/fetch-tools";
+import { genericFetch } from "../../../shared/utils/fetch-tools";
 import { loadFileFromServer } from "../../../shared/utils/file-operations";
 
 export const errorTypeToString = {
@@ -58,9 +54,11 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
       value: fetchedFile
     });
   } else if (fetchType === "js") {
-    yield call(triggerEvalFrameTask, "LOAD_SCRIPT", {
+    const scriptUUID = yield call(triggerEvalFrameTask, "LOAD_SCRIPT", {
       script: fetchedFile
     });
+    // console.log(scriptUUID);
+    yield put(jsScriptLoaded(filePath, scriptUUID));
   } else if (fetchType === "css") {
     yield call(triggerEvalFrameTask, "ADD_CSS", {
       css: fetchedFile,
