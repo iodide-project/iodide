@@ -4,10 +4,10 @@ export const jsLanguageDefinition = {
   pluginType: "language",
   languageId: "js",
   displayName: "JavaScript",
-  module: "window",
-  evaluator: "evalJS",
-  autocomplete: "autocompleteJs"
   url: "",
+  module: "window",
+  evaluator: "evalJavaScript",
+  autocomplete: "autocompleteJs"
 };
 
 const PYODIDE_URL = process.env.USE_LOCAL_PYODIDE
