@@ -21,7 +21,7 @@ const MOST_RECENT_CHUNK_ID = new Singleton();
 
 export { MOST_RECENT_CHUNK_ID };
 
-function evalJS(codeString) {
+function evalJavaScript(codeString) {
   // for async script loading from blobs, see:
   // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
   const tempId = Math.random().toString();
@@ -54,7 +54,7 @@ function evalJS(codeString) {
     };
   });
 }
-window.evalJS = evalJS;
+window.evalJavaScript = evalJavaScript;
 
 export function runCodeWithLanguage(language, code) {
   const { module, evaluator, asyncEvaluator } = language;
