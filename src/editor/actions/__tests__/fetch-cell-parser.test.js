@@ -268,7 +268,8 @@ describe("validate fetch url", () => {
     "css: /path/to/file.css",
     "json: varname = path/to/file.json",
     "text: varname=path/to/file.text",
-    "arrayBuffer: varname = https://valid-ホスト.com/file.arrow"
+    "arrayBuffer: varname = https://valid-ホスト.com/file.arrow",
+    "bytes: varname = https://valid-ホスト.com/file.arrow"
   ];
   validLines.forEach(testCase => {
     it(`IS a valid fetch url"${testCase}"`, () => {

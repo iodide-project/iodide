@@ -4,6 +4,7 @@ const URL_FETCH_TYPES = ["css", "js"];
 const VALID_FETCH_TYPES = URL_FETCH_TYPES.concat([
   "arrayBuffer",
   "blob",
+  "bytes",
   "json",
   "text",
   "plugin"
@@ -86,7 +87,7 @@ export function validFetchUrl(line) {
     Assume fetch type and variable name are valid,
     For script fetch (css & js), valid fetch content is:
       "<fetch-url>"
-    For data fetch (arrayBuffer, blob, json & text), valid fetch content is:
+    For data fetch (arrayBuffer, blob, bytes, json & text), valid fetch content is:
       "<variable-name> = <fetch-url>"
   */
   const fetchType = line.split(": ")[0];
@@ -150,6 +151,7 @@ export function parseFetchCellLine(lineWithComments) {
     case "json":
     case "arrayBuffer":
     case "blob":
+    case "bytes":
       return Object.assign(
         {},
         { fetchType },
