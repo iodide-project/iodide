@@ -52,7 +52,7 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
     throw new Error(`failed to fetch file; halting eval queue`);
   }
 
-  if (["text", "json", "blob", "arrayBuffer"].includes(fetchType)) {
+  if (["text", "json", "blob", "arrayBuffer", "bytes"].includes(fetchType)) {
     yield call(triggerEvalFrameTask, "ASSIGN_VARIABLE", {
       name: varName,
       value: fetchedFile
