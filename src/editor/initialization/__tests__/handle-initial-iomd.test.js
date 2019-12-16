@@ -75,7 +75,7 @@ blah blah
 describe("handleInitialIomd unescapes #iomd elt content", () => {
   const iomdString = `
 %% js
-blah &lt;&gt;&#39;&quot;&amp; &#x27;blah&#x27;
+blah &lt;&gt;&#x27;&quot;&amp; blah &amp;#x27;
     `;
   let store;
 
@@ -92,7 +92,7 @@ blah &lt;&gt;&#39;&quot;&amp; &#x27;blah&#x27;
 
   const unescapedIomdString = `
 %% js
-blah <>'"& 'blah'
+blah <>'"& blah &#x27;
     `;
   it("iomd is correct", () => {
     handleInitialIomd(store);
