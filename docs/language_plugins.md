@@ -30,7 +30,7 @@ levels of support to make it easier to know what to expect.
 | [AssemblyScript](https://alpha.iodide.io/notebooks/1234) | AssemblyScript | ✓       | ✓       |         |         |          |
 | [Lua](https://alpha.iodide.io/notebooks/1416/)            | Lua            | ✓       | ✓       |         |         |          |
 | [Opal](https://alpha.iodide.io/notebooks/1453/)           | Ruby           | ✓       | ✓       |         |         |          |
-| [Julide](https://github.com/keno/julia-wasm)                                                                        | Julia           | ✓        |         |         |         |          |
+| [Julide](https://github.com/keno/julia-wasm)                                                                        | Julia           | ✓        | ✓       | ✓       |         |          |
 | [Domical](https://github.com/louisabraham/domical)                              | OCaml          | ✓       |         |         |         |          |
 | [PlantUml](https://github.com/six42/iodide-plantuml-plugin)                              | PlantUml          | ✓       |         |         |         |          |
 
