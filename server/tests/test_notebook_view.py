@@ -2,7 +2,6 @@ import random
 
 import pytest
 from django.urls import reverse
-from django.utils.html import escape
 
 from server.notebooks.models import Notebook, NotebookRevision
 from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
@@ -51,13 +50,16 @@ def test_notebook_view(client, test_notebook):
 
 def test_notebook_view_escapes_iomd(client, fake_user):
     notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook")
-    iomd_content = "</script><script>alert('31337')"
+    iomd_content = "<>'\"&abcd="
+    expected_escaped_iomd_content = "&lt;&gt;&#x27;&quot;&amp;abcd="
     NotebookRevision.objects.create(
         notebook=notebook, title="First revision", content=iomd_content, is_draft=False
     )
 
     resp = client.get(reverse("notebook-view", args=[str(notebook.id)]))
-    expected_content = '<script id="iomd" type="text/iomd">{}</script>'.format(escape(iomd_content))
+    expected_content = '<script id="iomd" type="text/iomd">{}</script>'.format(
+        expected_escaped_iomd_content
+    )
     assert expected_content in str(resp.content)
 
 
