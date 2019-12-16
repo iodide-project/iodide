@@ -59,9 +59,9 @@ django-environ==0.4.5 \
 django==3.0 \
     --hash=sha256:6f857bd4e574442ba35a7172f1397b303167dae964cf18e53db5e85fe248d000 \
     --hash=sha256:d98c9b6e5eed147bc51f47c014ff6826bd1ab50b166956776ee13db5a58804ae
-djangorestframework-simplejwt==4.3.0 \
-    --hash=sha256:4cb1a51bf9b098b983e1326a1cfc65fb0b3c5a2aa0fa43effdbf05dd6da5e8cb \
-    --hash=sha256:d025211806622c53020aa4f66029f1f7305e38de6439116b4a842661fc02cf36
+djangorestframework-simplejwt==4.4.0 \
+    --hash=sha256:288ee78618d906f26abf6282b639b8f1806ce1d9a7578897a125cf79c609f259 \
+    --hash=sha256:c315be70aa12a5f5790c0ab9acd426c3a58eebea65a77d0893248c5144a5080c
 djangorestframework==3.10.3 \
     --hash=sha256:5488aed8f8df5ec1d70f04b2114abc52ae6729748a176c453313834a9ee179c8 \
     --hash=sha256:dc81cbf9775c6898a580f6f1f387c4777d12bd87abf0f5406018d32ccae71090
