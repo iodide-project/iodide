@@ -1,6 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
-- Further refine escaping iomd returned by iodide server
+- Further refine escaping iomd returned by iodide server (#2526)
+- Add autocomplete for JS and language plugins (Pyodide working POC) (#2539)
 
 # 0.16.1 (2019-12-05)
 

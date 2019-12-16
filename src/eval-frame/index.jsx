@@ -43,5 +43,6 @@ render(
   document.getElementById("view-mode-styles")
 );
 
-initializeUserVariables();
 handleInterceptBackspace();
+// initializeUserVariables() **MUST** be the last line of this file!
+initializeUserVariables();

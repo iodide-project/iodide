@@ -16,6 +16,7 @@ import {
   setVariableInWindow
 } from "./actions/fetch-cell-eval-actions";
 import { repInfoRequestResponseFromEvalFrame } from "./eval-frame-rep-info-request-response";
+import { codeCompletionRequestResponse } from "./code-completion-request-response";
 
 const mc = new MessageChannel();
 const portToEditor = mc.port1;
@@ -68,6 +69,11 @@ async function receiveMessage(event) {
       case "REP_INFO_REQUEST": {
         const repInfo = repInfoRequestResponseFromEvalFrame(message);
         sendResponseMessageToEditor("SUCCESS", messageId, repInfo);
+        break;
+      }
+      case "CODE_COMPLETION_REQUEST": {
+        const completionList = codeCompletionRequestResponse(message);
+        sendResponseMessageToEditor("SUCCESS", messageId, completionList);
         break;
       }
       case "REQUESTED_FILE_OPERATION_SUCCESS": {
