@@ -136,9 +136,9 @@ pytest-freezegun==0.3.0.post1 \
 pytest-isort==0.3.1 \
     --hash=sha256:3be60e0de277b420ff89303ca6494320c41f7819ffa898756b90ef976e4c636a \
     --hash=sha256:4bfee60dad1870b51700d55a85f5ceda766bd9d3d2878c1bbabee80e61b1be1a
-pytest-mock==1.12.1 \
-    --hash=sha256:96a0cebc66e09930be2a15b03333d90b59584d3fb011924f81c14b50ee0afbba \
-    --hash=sha256:e5381be2608e49547f5e47633c5f81241ebf6206d17ce516a7a18d5a917e3859
+pytest-mock==1.13.0 \
+    --hash=sha256:67e414b3caef7bff6fc6bd83b22b5bc39147e4493f483c2679bc9d4dc485a94d \
+    --hash=sha256:e24a911ec96773022ebcc7030059b57cd3480b56d4f5d19b7c370ec635e6aed5
 pytest==5.3.1 \
     --hash=sha256:63344a2e3bce2e4d522fd62b4fdebb647c019f1f9e4ca075debbd13219db4418 \
     --hash=sha256:f67403f33b2b1d25a6756184077394167fe5e2f9d8bdaab30707d19ccec35427
