@@ -24,36 +24,33 @@ const InputContainer = styled(ConsoleContainer)`
 `;
 
 const InputBody = styled("pre")`
-  padding:0;
+  padding: 0;
   margin: 0;
-  padding-top:5px;
-  padding-bottom:5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   font-size: ${THEME.client.console.fontSize};
   line-height: ${THEME.client.console.lineHeight};
   font-family: monospace;
   grid-column: 2 / 4;
-  opacity:.7;
-
-  :before {
-    font-family: sans-serif;
-    content: "${props => props.language || ""}";
-    border-left: 1px solid rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    border-bottom-left-radius: 3px;
-    color: rgba(0,0,0,.6);
-    background-color: ${inputBackgroundColor(0.9)};
-    padding-right:4px;
-    padding-left:4px;
-    padding-top:3px;
-    float: right;
-    font-size:10px;
-    transform: translate(0px, -5px);
-  }
+  opacity: 0.7;
 `;
 
 InputBody.propTypes = {
   language: PropTypes.string
 };
+
+const LanguageLabel = styled("span")`
+  font-family: sans-serif;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom-left-radius: 3px;
+  color: rgba(0, 0, 0, 0.6);
+  background-color: ${inputBackgroundColor(0.9)};
+  padding: 0px 4px;
+  float: right;
+  font-size: 10px;
+  transform: translate(0px, -5px);
+`;
 
 const HistoryInputItem = ({ language, children }) => {
   return (
@@ -61,7 +58,10 @@ const HistoryInputItem = ({ language, children }) => {
       <ConsoleGutter>
         <DoubleChevron />
       </ConsoleGutter>
-      <InputBody language={language}>{children.trim()}</InputBody>
+      <InputBody>
+        <LanguageLabel>{language}</LanguageLabel>
+        {children.trim()}
+      </InputBody>
     </InputContainer>
   );
 };
