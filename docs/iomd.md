@@ -122,7 +122,7 @@ Each line in a fetch cell must specify:
 1. the "fetch type", one of `js`, `css`, `json`, `text`, `arrayBuffer`, `blob`, or `plugin`
 2. the url from which the resource will be fetched
 
-Additionally, data fetches (`json`, `text`, `blob`, `arrayBuffer`, `bytes`) must specify the variable name into which the data will be stored.
+Additionally, data fetches (`json`, `text`, `blob`, `arrayBuffer`, and `bytes`) must specify the variable name into which the data will be stored.
 
 This example demonstrates how a fetch chunk is used.
 
@@ -135,7 +135,7 @@ text: csvDataString = https://www.exmpl.co/a_csv_file.csv
 arrayBuffer: bigDataframe = https://www.exmpl.co/a_binary.arrow
 json: jsonData = https://www.exmpl.co/a_json_file.json
 blob: blobData = https://www.exmpl.co/a_binary_blob.arrow
-bytes: blobData = https://www.exmpl.co/a_binary_blob.arrow
+bytes: binaryData = https://www.exmpl.co/a_binary_file.hdf5
 ```
 
 All of the requested resources are downloaded in parallel (asynchronously), but if several evaluations are queued, following chunks will not be evaluated until all the resources are available. This allows you to manage the retrieval of assets in a more synchronous workflow, without having to deal with the asynchronous nature of Web APIs (of course, you are free to manage that complexity with JavaScript code and using those APIs if you need that extra control).
