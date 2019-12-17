@@ -31,26 +31,22 @@ ${codeString}\`)
       window[${tempId}] = err
     }
   `;
-  // const enhancedString = `window[${tempId}] = window.eval("${codeString}")`;
   return new Promise((resolve, reject) => {
     const blob = new Blob([enhancedString]);
-    console.log({ blob });
     const script = document.createElement("script");
     const url = URL.createObjectURL(blob);
-    console.log({ url });
     script.src = url;
     document.head.appendChild(script);
     script.onload = () => {
+      const tracebackId = url.toString();
       URL.revokeObjectURL(url);
       const value = window[tempId];
-      console.log("JS EVAL VALUE", value);
       delete window[tempId];
       if (value instanceof Error) reject(value);
-      resolve(value);
+      resolve({ value, tracebackId });
     };
     script.onerror = err => {
       URL.revokeObjectURL(url);
-      console.log("EVAL ERROR");
       reject(new Error(err));
     };
   });
@@ -78,29 +74,25 @@ export function runCodeWithLanguage(language, code) {
       throw e;
     }
   }
-  // FIXME: i experimented with this, and I think
-  // wrapping this in a promise doesn't do anything.
-  // i think we can simplify this away. -bc
-  return new Promise((resolve, reject) => {
-    try {
-      resolve(window[module][evaluator](code));
-    } catch (e) {
-      reject(e);
-    }
-  });
+
+  return window[module][evaluator](code);
 }
 
 export async function evaluateCode(code, language, chunkId, evalId) {
   try {
+    let value;
+    let tracebackId;
     MOST_RECENT_CHUNK_ID.set(chunkId);
-    const value = await runCodeWithLanguage(language, code);
-
+    if (language.evalReturnsId) {
+      ({ value, tracebackId } = await runCodeWithLanguage(language, code));
+    } else {
+      value = await runCodeWithLanguage(language, code);
+    }
     const historyId = addConsoleEntryInEditor({
       historyType: "CONSOLE_OUTPUT"
     });
     IODIDE_EVALUATION_RESULTS[historyId] = value;
-
-    sendStatusResponseToEditor("SUCCESS", evalId);
+    sendStatusResponseToEditor("SUCCESS", evalId, { tracebackId, historyId });
   } catch (error) {
     const historyId = addConsoleEntryInEditor({
       historyType: "CONSOLE_OUTPUT",
