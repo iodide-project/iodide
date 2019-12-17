@@ -19,6 +19,8 @@ import {
   addEvalTypeConsoleErrorToHistory
 } from "../../console/history/actions";
 
+import { recordTracebackInfo } from "../../tracebacks/actions";
+
 import { evaluateFetch } from "./fetch-cell-saga";
 import { triggerEvalFrameTask } from "./eval-frame-sender";
 import {
@@ -49,7 +51,14 @@ export function* updateUserVariables() {
   });
 }
 
-export function* evaluateByType(evalType, evalText, chunkId) {
+export function* evaluateByType(chunk) {
+  const {
+    chunkType: evalType,
+    chunkContent: evalText,
+    chunkId,
+    startLine,
+    endLine
+  } = chunk;
   const state = yield select();
 
   if (!evalTypeIsDefined(state, evalType)) {
@@ -67,11 +76,26 @@ export function* evaluateByType(evalType, evalText, chunkId) {
   } else if (evalType === "fetch") {
     yield call(evaluateFetch, evalText);
   } else {
-    yield call(triggerEvalFrameTask, "EVAL_CODE", {
+    const language = state.languageDefinitions[evalType];
+    const payload = yield call(triggerEvalFrameTask, "EVAL_CODE", {
       code: evalText,
-      language: state.languageDefinitions[evalType],
+      language,
       chunkId
     });
+    const { tracebackId, historyId } = payload;
+    console.log("payload", payload);
+    console.log({ tracebackId, historyId });
+    if (tracebackId !== undefined) {
+      yield put(
+        recordTracebackInfo(
+          historyId,
+          tracebackId,
+          evalType,
+          startLine,
+          endLine
+        )
+      );
+    }
   }
   yield call(updateUserVariables);
 }
@@ -84,9 +108,8 @@ export function* evaluateCurrentQueue() {
   while (true) {
     try {
       const { chunk } = yield take(evalQueue);
-      const { chunkType, chunkContent, chunkId } = chunk;
       yield put(setKernelState("KERNEL_BUSY"));
-      yield call(evaluateByType, chunkType, chunkContent, chunkId);
+      yield call(evaluateByType, chunk);
       yield put(setKernelState("KERNEL_IDLE"));
     } catch (error) {
       if (process.env.NODE_ENV === "dev") {

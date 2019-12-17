@@ -79,7 +79,8 @@ export const languageSchema = {
     evaluator: { type: "string" },
     asyncEvaluator: { type: "string" },
     url: { type: "string" },
-    autocomplete: { type: "string" }
+    autocomplete: { type: "string" },
+    evalReturnsId: { type: "boolean", default: false }
   },
   additionalProperties: true
 };
