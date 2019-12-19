@@ -50,6 +50,11 @@ export const fetchLineSuggestion = (lineSoFar, fileNames) => {
         label: "blob",
         detail: "Blob data fetch statement",
         insertText: "blob: ${1:varName} = ${2:fileOrUrl}"
+      },
+      {
+        label: "bytes",
+        detail: "bytes data fetch statement",
+        insertText: "bytes: ${1:varName} = ${2:fileOrUrl}"
       }
       /* eslint-enable */
     ].map(itemProps => ({

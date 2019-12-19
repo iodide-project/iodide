@@ -3,6 +3,7 @@ import { fetchLineSuggestion } from "../fetch-line-suggestion";
 const nonFileNameSuggestionLabels = [
   "arrayBuffer",
   "blob",
+  "bytes",
   "css",
   "javascript",
   "js",

@@ -12,10 +12,17 @@ export const FETCH_CHUNK_TYPES = [
   "blob",
   "json",
   "arrayBuffer",
+  "bytes",
   "plugin"
 ];
 
-export const IODIDE_API_LOAD_TYPES = ["text", "blob", "json", "arrayBuffer"];
+export const IODIDE_API_LOAD_TYPES = [
+  "text",
+  "blob",
+  "json",
+  "arrayBuffer",
+  "bytes"
+];
 export const FILE_SOURCE_INPUT_STATUS_TYPES = [
   "NONE",
   "LOADING",

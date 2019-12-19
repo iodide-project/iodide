@@ -167,8 +167,9 @@ available to [fetch chunks](https://iodide-project.github.io/docs/iomd/#fetch-ch
 
 - `json` (load this file as json and parse into a javascript object),
 - `text` (load this file as text),
-- `arrayBuffer` (load this file into an Array Buffer, especially useful when working with typed arrays) and
-- `blob` (load this file as a [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob)).
+- `arrayBuffer` (load this file into an Array Buffer, especially useful when working with typed arrays)
+- `blob` (load this file as a [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob)) and
+- `bytes` (load this file into an Array Buffer then convert it to [Uint8Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array), especially useful when working with APIs that expect a typed array of bytes)
 
 These match the `serializerType` in `iodide.file.save` – if you save with a certain `serializerType`, it is recommended to load it with the same `fetchType`.
 
