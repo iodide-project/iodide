@@ -37,6 +37,35 @@ const evalRangesSchema = {
   additionalProperties: true
 };
 
+const evalErrorStackSchema = {
+  type: "object",
+  properties: {
+    historyId: { type: "string" },
+    tracebackId: { type: "string" },
+    language: { type: "string" },
+    originalLines: {
+      type: "object",
+      properties: {
+        startLine: { type: "integer" },
+        endLine: { type: "integer" }
+      },
+      additionalProperties: false,
+      default: {}
+    },
+    currentLines: {
+      type: "object",
+      properties: {
+        startLine: { type: "integer" },
+        endLine: { type: "integer" }
+      },
+      additionalProperties: false,
+      default: {}
+    },
+    editedSinceEval: { type: "boolean", default: false }
+  },
+  additionalProperties: true
+};
+
 export const tracebackInfoSchema = {
   type: "object",
   properties: {
@@ -48,6 +77,11 @@ export const tracebackInfoSchema = {
     evalRanges: {
       type: "object",
       additionalProperties: evalRangesSchema,
+      default: {}
+    },
+    evalErrorStacks: {
+      type: "object",
+      additionalProperties: evalErrorStackSchema,
       default: {}
     }
   },
