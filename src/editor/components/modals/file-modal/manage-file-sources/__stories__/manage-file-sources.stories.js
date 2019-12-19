@@ -1,14 +1,68 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import styled from "@emotion/styled";
-
+import React from "react";
+import { Provider } from "react-redux";
 import { storiesOf } from "@storybook/react";
+import configureStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
-import { ContainedButton } from "../../../../../../shared/components/buttons";
+import ManageFileSources from "../manage-file-sources";
 
-import InProgress from "../in-progress";
+const mockStore = configureStore([thunk]);
 
-const ManageFileSourcesStories = storiesOf("ManageFileSources", module);
+const allTestCases = storiesOf("File sources pane", module);
+
+allTestCases.add("no file sources", () => {
+  const store = mockStore({
+    fileSources: {
+      sources: [],
+      statusType: "NONE",
+      statusIsVisible: true,
+      url: "",
+      filename: "",
+      updateInterval: "never updates"
+    }
+  });
+  return (
+    <Provider store={store}>
+      <ManageFileSources />
+    </Provider>
+  );
+});
+
+allTestCases.add("one file source", () => {
+  const store = mockStore({
+    fileSources: {
+      sources: [
+        {
+          id: 162,
+          latest_file_update_operation: {
+            id: 318,
+            scheduled_at: "2019-07-24T03:28:35.592234Z",
+            started_at: "2019-07-24T03:28:35.603029Z",
+            ended_at: "2019-07-24T03:28:35.919054Z",
+            status: "completed",
+            failure_reason: null
+          },
+          update_interval: "weekly",
+          filename: "polls.csv",
+          url: "https://whatever.com/api"
+        }
+      ],
+      statusMessage: "foo",
+      statusType: "NONE",
+      statusIsVisible: true,
+      url: "http://foo.bar",
+      filename: "baz",
+      updateInterval: "never updates",
+      confirmDeleteID: 123,
+      isDeletingAnimationID: 1234
+    }
+  });
+  return (
+    <Provider store={store}>
+      <ManageFileSources />
+    </Provider>
+  );
+});
 
 // FIXME: re-implement the `AddNewFileSourceUnconnected` story
 // when we have removed the unnecessary Redux state and put
@@ -72,80 +126,3 @@ const ManageFileSourcesStories = storiesOf("ManageFileSources", module);
 // ManageFileSourcesStories.add("AddNewFileSource", () => {
 //   return <AddNewFileSourceStory />;
 // });
-
-const Title = ({ children }) => {
-  return <h2>{children}</h2>;
-};
-
-const MainContainer = styled.div`
-  display: grid;
-  grid-template-columns: 300px 300px;
-  align-items: center;
-`;
-
-Title.propTypes = {
-  children: PropTypes.element
-};
-
-const InProgressWrapper = styled.div`
-  position: relative;
-`;
-
-const SpinningFalse = () => (
-  <MainContainer>
-    <Title>spinning=false</Title>
-    <InProgressWrapper>
-      <InProgress spinning={false}>
-        <ContainedButton onClick={() => {}}>
-          clicking will not work here
-        </ContainedButton>
-      </InProgress>
-    </InProgressWrapper>
-  </MainContainer>
-);
-
-const SpinningTrue = () => (
-  <MainContainer>
-    <Title>spinning=false</Title>
-    <InProgressWrapper>
-      <InProgress spinning>
-        <ContainedButton onClick={() => {}}>Click this!!!!</ContainedButton>
-      </InProgress>
-    </InProgressWrapper>
-  </MainContainer>
-);
-
-const OnOrOff = () => {
-  const [spinning, setSpinning] = useState(false);
-  function checkItOut() {
-    setSpinning(true);
-    setTimeout(() => {
-      setSpinning(false);
-    }, 4000);
-  }
-  return (
-    <MainContainer>
-      <Title>updates</Title>
-      <InProgressWrapper>
-        <InProgress spinning={spinning}>
-          <ContainedButton onClick={checkItOut}>Click this!!!!</ContainedButton>
-        </InProgress>
-      </InProgressWrapper>
-    </MainContainer>
-  );
-};
-
-ManageFileSourcesStories.add("InProgress", () => {
-  return (
-    <>
-      <h1>InProgress</h1>
-      <p>
-        NOTE: avoid using this component for the time being. It does not
-        generalize well.
-      </p>
-      <SpinningFalse />
-      <SpinningTrue />
-      <OnOrOff />
-    </>
-  );
-});
