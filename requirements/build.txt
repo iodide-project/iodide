@@ -56,9 +56,9 @@ defusedxml==0.6.0 \
 django-environ==0.4.5 \
     --hash=sha256:6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde \
     --hash=sha256:c57b3c11ec1f319d9474e3e5a79134f40174b17c7cc024bbb2fad84646b120c4
-django==3.0 \
-    --hash=sha256:6f857bd4e574442ba35a7172f1397b303167dae964cf18e53db5e85fe248d000 \
-    --hash=sha256:d98c9b6e5eed147bc51f47c014ff6826bd1ab50b166956776ee13db5a58804ae
+django==3.0.1 \
+    --hash=sha256:315b11ea265dd15348d47f2cbb044ef71da2018f6e582fed875c889758e6f844 \
+    --hash=sha256:b61295749be7e1c42467c55bcabdaee9fbe9496fdf9ed2e22cef44d9de2ff953
 djangorestframework-simplejwt==4.4.0 \
     --hash=sha256:288ee78618d906f26abf6282b639b8f1806ce1d9a7578897a125cf79c609f259 \
     --hash=sha256:c315be70aa12a5f5790c0ab9acd426c3a58eebea65a77d0893248c5144a5080c

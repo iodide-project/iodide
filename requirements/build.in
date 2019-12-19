@@ -3,7 +3,7 @@ certifi
 chardet
 defusedxml
 django-environ
-Django<=3.0
+Django<4.0
 djangorestframework
 djangorestframework-simplejwt
 dockerflow
