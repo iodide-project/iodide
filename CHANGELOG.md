@@ -2,6 +2,7 @@
 
 - Further refine escaping iomd returned by iodide server (#2526)
 - Add autocomplete for JS and language plugins (Pyodide working POC) (#2539)
+- Add `bytes` fetch to fetch chunks (see docs) (fixes #1786) (#2550)
 
 # 0.16.1 (2019-12-05)
 
@@ -17,7 +18,6 @@
 - Report more specific errors in console when executing fetch cell (fixes #1853) (#2475)
 - Better onboarding around the use of the "run all" button (#2471)
 - Automatically prune revision history (fixes #2451) (#2461)
-- Add `bytes` fetch to fetch chunks (see docs) (fixes #1786)
 
 # 0.15.1 (2019-11-06)
 
