@@ -80,7 +80,7 @@ export const languageSchema = {
     asyncEvaluator: { type: "string" },
     url: { type: "string" },
     autocomplete: { type: "string" },
-    evalReturnsId: { type: "boolean", default: false }
+    implementsTracebacks: { type: "boolean", default: false }
   },
   additionalProperties: true
 };

@@ -8,7 +8,7 @@ export const jsLanguageDefinition = {
   module: "window",
   evaluator: "evalJavaScript",
   autocomplete: "autocompleteJs",
-  evalReturnsId: true
+  implementsTracebacks: true
 };
 
 const PYODIDE_URL = process.env.USE_LOCAL_PYODIDE
