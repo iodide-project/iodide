@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.17.0 (2019-12-19)
+
 - Further refine escaping iomd returned by iodide server (#2526)
 - Add autocomplete for JS and language plugins (Pyodide working POC) (#2539)
 - Add `bytes` fetch to fetch chunks (see docs) (fixes #1786) (#2550)
