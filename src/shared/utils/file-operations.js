@@ -140,6 +140,6 @@ export function deleteFileOnServer(fileID) {
   return deleteFileRequest(fileID);
 }
 
-export function getFilesForNotebookFromServer(notebookID) {
-  return getFilesRequest(notebookID);
+export function getFilesForNotebookFromServer(notebookID, loggedIn) {
+  return getFilesRequest(notebookID, loggedIn);
 }
