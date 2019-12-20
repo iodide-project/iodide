@@ -46,6 +46,7 @@ const failed = {
 
 const makeState = (...sources) => {
   return {
+    notebookInfo: { user_can_save: true },
     fileSources: { sources, confirmDeleteID: 3, isDeletingAnimationID: 3 }
   };
 };

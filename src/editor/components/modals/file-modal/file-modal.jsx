@@ -31,8 +31,8 @@ const FileModalUnconnected = ({ getFileSources, getFiles }) => {
         }}
       >
         <Tabs value={tab} onChange={changeTab}>
-          <Tab label="Manage Files" />
-          <Tab label="Manage File Sources" />
+          <Tab label="Files" />
+          <Tab label="File Sources" />
         </Tabs>
       </AppBar>
       {tab === 0 && <ManageFiles />}

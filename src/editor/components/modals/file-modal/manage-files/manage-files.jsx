@@ -20,6 +20,7 @@ export class ManageFilesUnconnected extends React.Component {
     // Required
     deleteFile: PropTypes.func.isRequired,
     notebookID: PropTypes.number.isRequired,
+    readOnly: PropTypes.bool.isRequired,
     saveFile: PropTypes.func.isRequired,
 
     // Not required
@@ -315,6 +316,7 @@ export class ManageFilesUnconnected extends React.Component {
         files={this.state.files}
         onAddButtonClick={this.onAddButtonClick}
         confirmDelete={this.confirmDelete}
+        readOnly={this.props.readOnly}
       />
     </React.Fragment>
   );
@@ -342,7 +344,8 @@ export function mapStateToProps(state) {
     maxFileSizeMB: state.notebookInfo.max_file_size / 1024 / 1024,
     maxFilenameLength: state.notebookInfo.max_filename_length,
     notebookID: state.notebookInfo.notebook_id,
-    savedFiles: state.notebookInfo.files
+    savedFiles: state.notebookInfo.files,
+    readOnly: !state.notebookInfo.user_can_save
   };
 }
 

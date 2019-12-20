@@ -61,6 +61,7 @@ describe("file-modal/index.jsx", () => {
       maxFileSizeMB: 10,
       maxFilenameLength: state.notebookInfo.max_filename_length,
       notebookID: 15,
+      readOnly: true,
       savedFiles: state.notebookInfo.files
     });
   });

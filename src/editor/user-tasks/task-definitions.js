@@ -99,7 +99,8 @@ tasks.clearVariables = new UserTask({
 });
 
 tasks.toggleFileModal = new UserTask({
-  title: "Manage Files",
+  title: "View or Manage Files",
+  menuTitle: "Files",
   callback() {
     store.dispatch(toggleFileModal());
   }

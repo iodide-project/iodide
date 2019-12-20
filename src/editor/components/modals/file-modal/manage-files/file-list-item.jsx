@@ -138,7 +138,8 @@ class SavedOrDeletedContent extends React.Component {
   static propTypes = {
     file: PropTypes.shape(fileShape).isRequired,
     fileKey: PropTypes.string.isRequired,
-    confirmDelete: PropTypes.func.isRequired
+    confirmDelete: PropTypes.func.isRequired,
+    readOnly: PropTypes.bool.isRequired
   };
 
   render = () => (
@@ -149,20 +150,22 @@ class SavedOrDeletedContent extends React.Component {
       >
         {this.props.file.name}
       </FilenameLink>
-      <FileActions>
-        <FileAction
-          className="file-action file-action-delete"
-          onClick={() => {
-            this.props.confirmDelete(
-              this.props.file.name,
-              this.props.fileKey,
-              this.props.file.id
-            );
-          }}
-        >
-          delete
-        </FileAction>
-      </FileActions>
+      {!this.props.readOnly && (
+        <FileActions>
+          <FileAction
+            className="file-action file-action-delete"
+            onClick={() => {
+              this.props.confirmDelete(
+                this.props.file.name,
+                this.props.fileKey,
+                this.props.file.id
+              );
+            }}
+          >
+            delete
+          </FileAction>
+        </FileActions>
+      )}
     </React.Fragment>
   );
 }
@@ -173,7 +176,8 @@ export default class extends React.Component {
     fileKey: PropTypes.string.isRequired,
     confirmDelete: PropTypes.func.isRequired,
     firstVisible: PropTypes.bool.isRequired,
-    lastVisible: PropTypes.bool.isRequired
+    lastVisible: PropTypes.bool.isRequired,
+    readOnly: PropTypes.bool.isRequired
   };
 
   render() {
@@ -199,6 +203,7 @@ export default class extends React.Component {
             fileKey={this.props.fileKey}
             file={this.props.file}
             confirmDelete={this.props.confirmDelete}
+            readOnly={this.props.readOnly}
           />
         );
         break;

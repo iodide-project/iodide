@@ -107,7 +107,8 @@ export function FileSourceListItemUnconnected({
   createFileUpdateOperation,
   isConfirmingDelete,
   setConfirmDeleteID,
-  setIsDeletingAnimationID
+  setIsDeletingAnimationID,
+  readOnly
 }) {
   return (
     <>
@@ -130,7 +131,8 @@ export function FileSourceListItemUnconnected({
       />
       <FileSourceListItemContainer type={listSize} className={isDeletingClass}>
         <FileSourceListItemDescription
-          url={url}
+          url={readOnly ? "URL hidden " : url}
+          readOnly={readOnly}
           filename={filename}
           latestFileUpdateOperationStatus={latestFileUpdateOperationStatus}
           lastUpdated={lastUpdated}
@@ -139,23 +141,27 @@ export function FileSourceListItemUnconnected({
           showFailureReason={showFailureReason}
         />
         <FileSourceInterval>{updateInterval}</FileSourceInterval>
-        <DownloadNowButtonContainer>
-          <InProgress spinning={isCurrentlyRunning}>
-            <DownloadNowButton
-              disabled={isCurrentlyRunning}
-              onClick={() => {
-                createFileUpdateOperation(id);
-              }}
-            >
-              download now
-            </DownloadNowButton>
-          </InProgress>
-        </DownloadNowButtonContainer>
-        <DeleteButtonContainer>
-          <DeleteButton onClick={() => setConfirmDeleteID(id)}>
-            <Delete />
-          </DeleteButton>
-        </DeleteButtonContainer>
+        {!readOnly && (
+          <React.Fragment>
+            <DownloadNowButtonContainer>
+              <InProgress spinning={isCurrentlyRunning}>
+                <DownloadNowButton
+                  disabled={isCurrentlyRunning}
+                  onClick={() => {
+                    createFileUpdateOperation(id);
+                  }}
+                >
+                  download now
+                </DownloadNowButton>
+              </InProgress>
+            </DownloadNowButtonContainer>
+            <DeleteButtonContainer>
+              <DeleteButton onClick={() => setConfirmDeleteID(id)}>
+                <Delete />
+              </DeleteButton>
+            </DeleteButtonContainer>
+          </React.Fragment>
+        )}
       </FileSourceListItemContainer>
     </>
   );
@@ -178,10 +184,12 @@ FileSourceListItemUnconnected.propTypes = {
   deleteFileSource: PropTypes.func,
   createFileUpdateOperation: PropTypes.func,
   setIsDeletingAnimationID: PropTypes.func,
-  setConfirmDeleteID: PropTypes.func
+  setConfirmDeleteID: PropTypes.func,
+  readOnly: PropTypes.bool
 };
 
 export function mapStateToProps(state, ownProps) {
+  const readOnly = !state.notebookInfo.user_can_save;
   const { isDeletingAnimationID, confirmDeleteID } = state.fileSources;
 
   const fileSource = state.fileSources.sources.find(
@@ -203,9 +211,10 @@ export function mapStateToProps(state, ownProps) {
     ? fileUpdateOperation.status
     : undefined;
 
-  const lastUpdated = hasFileUpdateOperation
-    ? timeMonthDayYear(fileUpdateOperation.started_at)
-    : undefined;
+  const lastUpdated =
+    hasFileUpdateOperation && fileUpdateOperation.started_at
+      ? timeMonthDayYear(fileUpdateOperation.started_at)
+      : undefined;
 
   const failureReason =
     hasFileUpdateOperation && fileUpdateOperation.failure_reason !== null
@@ -234,7 +243,8 @@ export function mapStateToProps(state, ownProps) {
     showFailureReason,
     listSize,
     isDeletingClass,
-    isConfirmingDelete
+    isConfirmingDelete,
+    readOnly
   };
 }
 

@@ -8,7 +8,8 @@ import { fileShape } from "./propShapes";
 export default class extends React.Component {
   static propTypes = {
     files: PropTypes.objectOf(PropTypes.shape(fileShape)).isRequired,
-    confirmDelete: PropTypes.func.isRequired
+    confirmDelete: PropTypes.func.isRequired,
+    readOnly: PropTypes.bool.isRequired
   };
 
   /**
@@ -58,6 +59,7 @@ export default class extends React.Component {
             fileKey={fileKey}
             file={file}
             confirmDelete={this.props.confirmDelete}
+            readOnly={this.props.readOnly}
           />
         ))}
       </List>
