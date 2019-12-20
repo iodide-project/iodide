@@ -37,6 +37,7 @@
       "window": true,
       "USE_LOCAL_PYODIDE": false
     },
+    "globalSetup": "./test/global-setup.js",
     "setupFiles": [
       "jest-localstorage-mock",
       "<rootDir>/test/globals-test.js"

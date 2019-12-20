@@ -24,5 +24,6 @@ global.IODIDE_CSS_PATH = "testing IODIDE_CSS_PATH";
 global.IODIDE_VERSION = "testing IODIDE_VERSION";
 global.PYODIDE_VERSION = "testing PYODIDE_VERSION";
 process.env.NODE_ENV = "test";
+process.env.TZ = "UTC";
 
 Enzyme.configure({ adapter: new Adapter() });
