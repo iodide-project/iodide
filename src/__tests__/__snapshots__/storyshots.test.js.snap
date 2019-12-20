@@ -6,13 +6,13 @@ exports[`Storyshots DropTarget File manager 1`] = `
   id="file-manager-modal"
 >
   <header
-    className="MuiPaper-root-20 MuiPaper-elevation4-26 MuiAppBar-root-11 MuiAppBar-positionStatic-15 MuiAppBar-colorPrimary-18 css-1qq5x30-FileAppBar e1yhwqbz1"
+    className="MuiPaper-root-182 MuiPaper-elevation4-188 MuiAppBar-root-173 MuiAppBar-positionStatic-177 MuiAppBar-colorPrimary-180 css-1qq5x30-FileAppBar e1yhwqbz1"
   >
     <div
-      className="MuiToolbar-root-47 MuiToolbar-regular-49 MuiToolbar-gutters-48"
+      className="MuiToolbar-root-209 MuiToolbar-regular-211 MuiToolbar-gutters-210"
     >
       <h2
-        className="MuiTypography-root-51 MuiTypography-title-57 css-12n7j8m-Title e1yhwqbz2"
+        className="MuiTypography-root-213 MuiTypography-title-219 css-12n7j8m-Title e1yhwqbz2"
       >
         File Manager
       </h2>
@@ -75,7 +75,7 @@ exports[`Storyshots DropTarget Image gallery 1`] = `
       </span>
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root-87"
+        className="MuiSvgIcon-root-249"
         focusable="false"
         id="upload-arrow"
         role="presentation"
@@ -119,7 +119,7 @@ exports[`Storyshots DropTarget Image gallery 1`] = `
 </div>
 `;
 
-exports[`Storyshots ManageFileSources InProgress 1`] = `
+exports[`Storyshots File sources pane InProgress 1`] = `
 Array [
   <h1>
     InProgress
@@ -128,13 +128,13 @@ Array [
     NOTE: avoid using this component for the time being. It does not generalize well.
   </p>,
   <div
-    className="css-gd5iwk-MainContainer e1nqpz400"
+    className="css-gd5iwk-MainContainer e6w09u40"
   >
     <h2>
       spinning=false
     </h2>
     <div
-      className="css-tmsrwn-InProgressWrapper e1nqpz401"
+      className="css-tmsrwn-InProgressWrapper e6w09u41"
     >
       <div
         className="css-1j25m8h-Fader e14z2c7b0"
@@ -178,13 +178,13 @@ Array [
     </div>
   </div>,
   <div
-    className="css-gd5iwk-MainContainer e1nqpz400"
+    className="css-gd5iwk-MainContainer e6w09u40"
   >
     <h2>
       spinning=false
     </h2>
     <div
-      className="css-tmsrwn-InProgressWrapper e1nqpz401"
+      className="css-tmsrwn-InProgressWrapper e6w09u41"
     >
       <div
         className="css-brp0y-Fader e14z2c7b0"
@@ -228,13 +228,13 @@ Array [
     </div>
   </div>,
   <div
-    className="css-gd5iwk-MainContainer e1nqpz400"
+    className="css-gd5iwk-MainContainer e6w09u40"
   >
     <h2>
       updates
     </h2>
     <div
-      className="css-tmsrwn-InProgressWrapper e1nqpz401"
+      className="css-tmsrwn-InProgressWrapper e6w09u41"
     >
       <div
         className="css-1j25m8h-Fader e14z2c7b0"
@@ -278,6 +278,781 @@ Array [
     </div>
   </div>,
 ]
+`;
+
+exports[`Storyshots File sources pane no file sources: user can save 1`] = `
+<div
+  className="css-18cybrd-FileSourceContainer e1sva3cf0"
+>
+  <div
+    className="css-uq4c6c-AddNewSourceContainer e16t3edm0"
+  >
+    <div
+      className="css-k8tvds-AddNewSourceButtonContainer e16t3edm1"
+    >
+      <button
+        className="e16t3edm2 css-1qyod06-ContainedButtonContainer-GenericButton-ContainedButtonContainer-AddNewSourceButton e1ac55ls4"
+        onClick={[Function]}
+      >
+        add file source
+      </button>
+    </div>
+    <div
+      className="MuiFormControl-root-12 TextInput-root-11 MuiFormControl-marginDense-14 MuiFormControl-fullWidth-15"
+    >
+      <label
+        className="MuiFormLabel-root-27 MuiInputLabel-root-16 MuiInputLabel-formControl-21 MuiInputLabel-animated-24 MuiInputLabel-marginDense-22 MuiInputLabel-outlined-26"
+        data-shrink={false}
+      >
+        source URL
+      </label>
+      <div
+        className="MuiInputBase-root-47 MuiOutlinedInput-root-34 MuiInputBase-fullWidth-56 MuiInputBase-formControl-48 MuiInputBase-marginDense-54"
+        onClick={[Function]}
+      >
+        <fieldset
+          aria-hidden={true}
+          className="MuiPrivateNotchedOutline-root-64 MuiOutlinedInput-notchedOutline-41"
+          style={
+            Object {
+              "paddingLeft": 8,
+            }
+          }
+        >
+          <legend
+            className="MuiPrivateNotchedOutline-legend-65"
+            style={
+              Object {
+                "width": 0.01,
+              }
+            }
+          >
+            <span
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "&#8203;",
+                }
+              }
+            />
+          </legend>
+        </fieldset>
+        <input
+          aria-invalid={false}
+          className="MuiInputBase-input-57 MuiOutlinedInput-input-42 MuiInputBase-inputType-60 MuiInputBase-inputTypeSearch-61 MuiInputBase-inputMarginDense-58 MuiOutlinedInput-inputMarginDense-43"
+          disabled={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      className="MuiFormControl-root-12 TextInput-root-11 MuiFormControl-marginDense-14 MuiFormControl-fullWidth-15"
+    >
+      <label
+        className="MuiFormLabel-root-27 MuiInputLabel-root-16 MuiInputLabel-formControl-21 MuiInputLabel-animated-24 MuiInputLabel-marginDense-22 MuiInputLabel-outlined-26"
+        data-shrink={false}
+      >
+        desired filename
+      </label>
+      <div
+        className="MuiInputBase-root-47 MuiOutlinedInput-root-34 MuiInputBase-fullWidth-56 MuiInputBase-formControl-48 MuiInputBase-marginDense-54"
+        onClick={[Function]}
+      >
+        <fieldset
+          aria-hidden={true}
+          className="MuiPrivateNotchedOutline-root-64 MuiOutlinedInput-notchedOutline-41"
+          style={
+            Object {
+              "paddingLeft": 8,
+            }
+          }
+        >
+          <legend
+            className="MuiPrivateNotchedOutline-legend-65"
+            style={
+              Object {
+                "width": 0.01,
+              }
+            }
+          >
+            <span
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "&#8203;",
+                }
+              }
+            />
+          </legend>
+        </fieldset>
+        <input
+          aria-invalid={false}
+          className="MuiInputBase-input-57 MuiOutlinedInput-input-42 MuiInputBase-inputType-60 MuiInputBase-inputTypeSearch-61 MuiInputBase-inputMarginDense-58 MuiOutlinedInput-inputMarginDense-43"
+          disabled={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      className="MuiFormControl-root-12 DropdownInput-root-66 MuiFormControl-marginDense-14 MuiFormControl-fullWidth-15"
+    >
+      <label
+        className="MuiFormLabel-root-27 MuiFormLabel-filled-31 MuiInputLabel-root-16 MuiInputLabel-formControl-21 MuiInputLabel-animated-24 MuiInputLabel-shrink-23 MuiInputLabel-marginDense-22 MuiInputLabel-outlined-26"
+        data-shrink={true}
+      >
+        update frequency
+      </label>
+      <div
+        className="MuiInputBase-root-47 MuiOutlinedInput-root-34 MuiInputBase-fullWidth-56 MuiInputBase-formControl-48 MuiInputBase-marginDense-54"
+        onClick={[Function]}
+      >
+        <fieldset
+          aria-hidden={true}
+          className="MuiPrivateNotchedOutline-root-64 MuiOutlinedInput-notchedOutline-41"
+          style={
+            Object {
+              "paddingLeft": 8,
+            }
+          }
+        >
+          <legend
+            className="MuiPrivateNotchedOutline-legend-65"
+            style={
+              Object {
+                "width": 0,
+              }
+            }
+          >
+            <span
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "&#8203;",
+                }
+              }
+            />
+          </legend>
+        </fieldset>
+        <div
+          className="MuiSelect-root-67"
+        >
+          <div
+            aria-haspopup="true"
+            aria-pressed="false"
+            className="MuiSelect-select-68 MuiSelect-selectMenu-71 MuiSelect-outlined-70 MuiInputBase-input-57 MuiOutlinedInput-input-42 MuiInputBase-inputMarginDense-58 MuiOutlinedInput-inputMarginDense-43"
+            id="select-update-interval"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+            tabIndex={0}
+          >
+            never
+          </div>
+          <input
+            id="update-interval"
+            name="update-interval"
+            type="hidden"
+            value="never updates"
+          />
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root-74 MuiSelect-icon-73"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="hide css-1lybtb3-FileSourceStatus e16t3edm3"
+  >
+    <div
+      className="css-1ou38y-FileSourceStatusText e16t3edm4"
+    />
+  </div>
+  <span
+    className="css-1370wcq-NoFileSourcesNotice ejhm0bl1"
+  >
+    No file sources are associated with this notebook
+  </span>
+</div>
+`;
+
+exports[`Storyshots File sources pane no file sources: user can't save 1`] = `
+<div
+  className="css-18cybrd-FileSourceContainer e1sva3cf0"
+>
+  <span
+    className="css-1370wcq-NoFileSourcesNotice ejhm0bl1"
+  >
+    No file sources are associated with this notebook
+  </span>
+</div>
+`;
+
+exports[`Storyshots File sources pane one file source: user can save 1`] = `
+<div
+  className="css-18cybrd-FileSourceContainer e1sva3cf0"
+>
+  <div
+    className="css-uq4c6c-AddNewSourceContainer e16t3edm0"
+  >
+    <div
+      className="css-k8tvds-AddNewSourceButtonContainer e16t3edm1"
+    >
+      <button
+        className="e16t3edm2 css-1qyod06-ContainedButtonContainer-GenericButton-ContainedButtonContainer-AddNewSourceButton e1ac55ls4"
+        onClick={[Function]}
+      >
+        add file source
+      </button>
+    </div>
+    <div
+      className="MuiFormControl-root-88 TextInput-root-87 MuiFormControl-marginDense-90 MuiFormControl-fullWidth-91"
+    >
+      <label
+        className="MuiFormLabel-root-103 MuiFormLabel-filled-107 MuiInputLabel-root-92 MuiInputLabel-formControl-97 MuiInputLabel-animated-100 MuiInputLabel-shrink-99 MuiInputLabel-marginDense-98 MuiInputLabel-outlined-102"
+        data-shrink={true}
+      >
+        source URL
+      </label>
+      <div
+        className="MuiInputBase-root-123 MuiOutlinedInput-root-110 MuiInputBase-fullWidth-132 MuiInputBase-formControl-124 MuiInputBase-marginDense-130"
+        onClick={[Function]}
+      >
+        <fieldset
+          aria-hidden={true}
+          className="MuiPrivateNotchedOutline-root-140 MuiOutlinedInput-notchedOutline-117"
+          style={
+            Object {
+              "paddingLeft": 8,
+            }
+          }
+        >
+          <legend
+            className="MuiPrivateNotchedOutline-legend-141"
+            style={
+              Object {
+                "width": 0,
+              }
+            }
+          >
+            <span
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "&#8203;",
+                }
+              }
+            />
+          </legend>
+        </fieldset>
+        <input
+          aria-invalid={false}
+          className="MuiInputBase-input-133 MuiOutlinedInput-input-118 MuiInputBase-inputType-136 MuiInputBase-inputTypeSearch-137 MuiInputBase-inputMarginDense-134 MuiOutlinedInput-inputMarginDense-119"
+          disabled={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="search"
+          value="http://foo.bar"
+        />
+      </div>
+    </div>
+    <div
+      className="MuiFormControl-root-88 TextInput-root-87 MuiFormControl-marginDense-90 MuiFormControl-fullWidth-91"
+    >
+      <label
+        className="MuiFormLabel-root-103 MuiFormLabel-filled-107 MuiInputLabel-root-92 MuiInputLabel-formControl-97 MuiInputLabel-animated-100 MuiInputLabel-shrink-99 MuiInputLabel-marginDense-98 MuiInputLabel-outlined-102"
+        data-shrink={true}
+      >
+        desired filename
+      </label>
+      <div
+        className="MuiInputBase-root-123 MuiOutlinedInput-root-110 MuiInputBase-fullWidth-132 MuiInputBase-formControl-124 MuiInputBase-marginDense-130"
+        onClick={[Function]}
+      >
+        <fieldset
+          aria-hidden={true}
+          className="MuiPrivateNotchedOutline-root-140 MuiOutlinedInput-notchedOutline-117"
+          style={
+            Object {
+              "paddingLeft": 8,
+            }
+          }
+        >
+          <legend
+            className="MuiPrivateNotchedOutline-legend-141"
+            style={
+              Object {
+                "width": 0,
+              }
+            }
+          >
+            <span
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "&#8203;",
+                }
+              }
+            />
+          </legend>
+        </fieldset>
+        <input
+          aria-invalid={false}
+          className="MuiInputBase-input-133 MuiOutlinedInput-input-118 MuiInputBase-inputType-136 MuiInputBase-inputTypeSearch-137 MuiInputBase-inputMarginDense-134 MuiOutlinedInput-inputMarginDense-119"
+          disabled={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="search"
+          value="baz"
+        />
+      </div>
+    </div>
+    <div
+      className="MuiFormControl-root-88 DropdownInput-root-142 MuiFormControl-marginDense-90 MuiFormControl-fullWidth-91"
+    >
+      <label
+        className="MuiFormLabel-root-103 MuiFormLabel-filled-107 MuiInputLabel-root-92 MuiInputLabel-formControl-97 MuiInputLabel-animated-100 MuiInputLabel-shrink-99 MuiInputLabel-marginDense-98 MuiInputLabel-outlined-102"
+        data-shrink={true}
+      >
+        update frequency
+      </label>
+      <div
+        className="MuiInputBase-root-123 MuiOutlinedInput-root-110 MuiInputBase-fullWidth-132 MuiInputBase-formControl-124 MuiInputBase-marginDense-130"
+        onClick={[Function]}
+      >
+        <fieldset
+          aria-hidden={true}
+          className="MuiPrivateNotchedOutline-root-140 MuiOutlinedInput-notchedOutline-117"
+          style={
+            Object {
+              "paddingLeft": 8,
+            }
+          }
+        >
+          <legend
+            className="MuiPrivateNotchedOutline-legend-141"
+            style={
+              Object {
+                "width": 0,
+              }
+            }
+          >
+            <span
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "&#8203;",
+                }
+              }
+            />
+          </legend>
+        </fieldset>
+        <div
+          className="MuiSelect-root-143"
+        >
+          <div
+            aria-haspopup="true"
+            aria-pressed="false"
+            className="MuiSelect-select-144 MuiSelect-selectMenu-147 MuiSelect-outlined-146 MuiInputBase-input-133 MuiOutlinedInput-input-118 MuiInputBase-inputMarginDense-134 MuiOutlinedInput-inputMarginDense-119"
+            id="select-update-interval"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+            tabIndex={0}
+          >
+            never
+          </div>
+          <input
+            id="update-interval"
+            name="update-interval"
+            type="hidden"
+            value="never updates"
+          />
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root-150 MuiSelect-icon-149"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="hide css-1lybtb3-FileSourceStatus e16t3edm3"
+  >
+    <div
+      className="css-1ou38y-FileSourceStatusText e16t3edm4"
+    >
+      foo
+    </div>
+  </div>
+  <div
+    className="css-kwmixv-FileSourceListContainer ejhm0bl0"
+  >
+    <div
+      className="css-1h6cnob-List edroo1r3"
+    >
+      <div
+        className="css-1plv9qp-ListItem-FileSourceListItemContainer e171f62t0"
+        type="single"
+      >
+        <div
+          className="css-17gy4x4-ListMain-FileSourceListItemDescriptionContainer ekm3pjw0"
+        >
+          <div
+            className="css-1ii6l3k-ListPrimaryText edroo1r6"
+          >
+            <div
+              className="css-107lzi5-FileInformationContainer ekm3pjw4"
+            >
+              <div
+                className="css-ewsdp9-FileName ekm3pjw2"
+              >
+                polls.csv
+              </div>
+              <div
+                className="css-1310kcv-StatusLabel ekm3pjw6"
+              >
+                completed
+              </div>
+              <div
+                className="css-1slbrh6-LastRanLabel ekm3pjw5"
+              >
+                on 
+                Jul 24, 2019 03:28:35
+              </div>
+            </div>
+          </div>
+          <div
+            className="css-1l6e0b2-ListSecondaryText-FileSourceURLContainer ekm3pjw1"
+            href="https://whatever.com/api"
+          >
+            <a
+              className="css-12r6hxh-ListSecondaryTextLink-FileSourceURL ekm3pjw3"
+              href="https://whatever.com/api"
+            >
+              https://whatever.com/api
+            </a>
+          </div>
+          <div
+            className="css-12194tc-FileUpdateOperationHelperText ekm3pjw7"
+          />
+        </div>
+        <div
+          className="css-1i9aeia-ListMetadata-FileSourceInterval e171f62t1"
+        >
+          weekly
+        </div>
+        <div
+          className="css-172mtsi-ListMetadata-DownloadNowButtonContainer e171f62t2"
+        >
+          <div
+            className="css-1j25m8h-Fader e14z2c7b0"
+          >
+            <div
+              className="MuiCircularProgress-root-163 MuiCircularProgress-colorPrimary-166 MuiCircularProgress-indeterminate-165"
+              role="progressbar"
+              style={
+                Object {
+                  "height": 20,
+                  "width": 20,
+                }
+              }
+            >
+              <svg
+                className="MuiCircularProgress-svg-168"
+                viewBox="22 22 44 44"
+              >
+                <circle
+                  className="MuiCircularProgress-circle-169 MuiCircularProgress-circleIndeterminate-171"
+                  cx={44}
+                  cy={44}
+                  fill="none"
+                  r={20.2}
+                  strokeWidth={3.6}
+                  style={Object {}}
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            className="css-brp0y-Fader e14z2c7b0"
+          >
+            <button
+              className="e171f62t3 css-b0sfua-OutlineButtonContainer-GenericButton-OutlineButtonContainer-DownloadNowButton e1ac55ls3"
+              disabled={false}
+              onClick={[Function]}
+            >
+              download now
+            </button>
+          </div>
+        </div>
+        <div
+          className="css-jgdtod-ListMetadata-DeleteButtonContainer e171f62t4"
+        >
+          <button
+            className="e171f62t5 css-pic388-TextButtonContainer-GenericButton-TextButtonContainer-DeleteButton e1ac55ls2"
+            onClick={[Function]}
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root-150"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+              />
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots File sources pane one file source: user can't save 1`] = `
+<div
+  className="css-18cybrd-FileSourceContainer e1sva3cf0"
+>
+  <div
+    className="css-kwmixv-FileSourceListContainer ejhm0bl0"
+  >
+    <div
+      className="css-1h6cnob-List edroo1r3"
+    >
+      <div
+        className="css-1plv9qp-ListItem-FileSourceListItemContainer e171f62t0"
+        type="single"
+      >
+        <div
+          className="css-17gy4x4-ListMain-FileSourceListItemDescriptionContainer ekm3pjw0"
+        >
+          <div
+            className="css-1ii6l3k-ListPrimaryText edroo1r6"
+          >
+            <div
+              className="css-107lzi5-FileInformationContainer ekm3pjw4"
+            >
+              <div
+                className="css-ewsdp9-FileName ekm3pjw2"
+              >
+                polls.csv
+              </div>
+              <div
+                className="css-1310kcv-StatusLabel ekm3pjw6"
+              >
+                completed
+              </div>
+              <div
+                className="css-1slbrh6-LastRanLabel ekm3pjw5"
+              >
+                on 
+                Jul 24, 2019 03:28:35
+              </div>
+            </div>
+          </div>
+          <div
+            className="css-1l6e0b2-ListSecondaryText-FileSourceURLContainer ekm3pjw1"
+            href="URL hidden "
+          >
+            <a
+              className="css-12r6hxh-ListSecondaryTextLink-FileSourceURL ekm3pjw3"
+              href="URL hidden "
+            >
+              URL hidden 
+            </a>
+          </div>
+        </div>
+        <div
+          className="css-1i9aeia-ListMetadata-FileSourceInterval e171f62t1"
+        >
+          weekly
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Files pane no files: user can save 1`] = `
+<div
+  className="css-1tqhp7d-BodyWrapper e198ef500"
+>
+  <div
+    className="css-qy57zi-Body e198ef501"
+  >
+    <button
+      className="e1oxbv6c0 css-1u8zh25-ContainedButtonContainer-GenericButton-ContainedButtonContainer-AddButton e1ac55ls4"
+      onClick={[Function]}
+    >
+      Add files
+    </button>
+    <span
+      className="css-1l4unqs-NoFilesNotice emgvl1y0"
+    >
+      No files are attached to this notebook
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Files pane no files: user can't save 1`] = `
+<div
+  className="css-1tqhp7d-BodyWrapper e198ef500"
+>
+  <div
+    className="css-qy57zi-Body e198ef501"
+  >
+    <span
+      className="css-1l4unqs-NoFilesNotice emgvl1y0"
+    >
+      No files are attached to this notebook
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Files pane one file: user can save 1`] = `
+<div
+  className="css-1tqhp7d-BodyWrapper e198ef500"
+>
+  <div
+    className="css-qy57zi-Body e198ef501"
+  >
+    <button
+      className="e1oxbv6c0 css-1u8zh25-ContainedButtonContainer-GenericButton-ContainedButtonContainer-AddButton e1ac55ls4"
+      onClick={[Function]}
+    >
+      Add files
+    </button>
+    <div
+      className="css-1h6cnob-List edroo1r3"
+    >
+      <div
+        className="saved first-visible last-visible css-1e1cs9a-ListItem-FileListItem eclaraf0"
+        id={null}
+      >
+        <a
+          className="css-16plg5q-FilenameLink eclaraf1"
+          href="http://localhost/files/foobar.jsx"
+          target="_blank"
+        >
+          foobar.jsx
+        </a>
+        <div
+          className="css-1361dfe-FileActions eclaraf5"
+        >
+          <button
+            className="file-action file-action-delete eclaraf6 css-nz5qwq-TextButtonContainer-GenericButton-TextButtonContainer-FileAction e1ac55ls2"
+            onClick={[Function]}
+          >
+            delete
+          </button>
+        </div>
+      </div>
+    </div>
+    <footer
+      className="css-k9pcj0-FileFooter evif4vm0"
+    >
+      These files can be loaded by
+       
+      <a
+        href="https://iodide-project.github.io/docs/iomd/#fetch-chunks-fetch"
+      >
+        fetch chunks
+      </a>
+       
+      and manipulated via the
+       
+      <a
+        href="https://iodide-project.github.io/docs/api/#iodidefile"
+      >
+        file API
+      </a>
+      .
+    </footer>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Files pane one file: user can't save 1`] = `
+<div
+  className="css-1tqhp7d-BodyWrapper e198ef500"
+>
+  <div
+    className="css-qy57zi-Body e198ef501"
+  >
+    <div
+      className="css-1h6cnob-List edroo1r3"
+    >
+      <div
+        className="saved first-visible last-visible css-1e1cs9a-ListItem-FileListItem eclaraf0"
+        id={null}
+      >
+        <a
+          className="css-16plg5q-FilenameLink eclaraf1"
+          href="http://localhost/files/foobar.jsx"
+          target="_blank"
+        >
+          foobar.jsx
+        </a>
+      </div>
+    </div>
+    <footer
+      className="css-k9pcj0-FileFooter evif4vm0"
+    >
+      These files can be loaded by
+       
+      <a
+        href="https://iodide-project.github.io/docs/iomd/#fetch-chunks-fetch"
+      >
+        fetch chunks
+      </a>
+       
+      and manipulated via the
+       
+      <a
+        href="https://iodide-project.github.io/docs/api/#iodidefile"
+      >
+        file API
+      </a>
+      .
+    </footer>
+  </div>
+</div>
 `;
 
 exports[`Storyshots base ValueRenderer component array_classInstances 1`] = `null`;

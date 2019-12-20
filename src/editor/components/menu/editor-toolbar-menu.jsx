@@ -14,7 +14,6 @@ export class EditorToolbarMenuUnconnected extends React.Component {
   static propTypes = {
     isServer: PropTypes.bool.isRequired,
     isLoggedIn: PropTypes.bool,
-    canModifyNotebook: PropTypes.bool,
     isTrialNotebook: PropTypes.bool
   };
 
@@ -30,10 +29,9 @@ export class EditorToolbarMenuUnconnected extends React.Component {
           task={tasks.toggleHistoryModal}
           disabled={this.props.isTrialNotebook}
         />
-        <NotebookMenuItem
-          task={tasks.toggleFileModal}
-          disabled={!this.props.canModifyNotebook}
-        />
+        {this.props.isServer && (
+          <NotebookMenuItem task={tasks.toggleFileModal} />
+        )}
         <NotebookMenuItem task={tasks.clearVariables} />
         <NotebookMenuItem task={tasks.toggleHelpModal} />
       </NotebookIconMenu>
@@ -46,9 +44,8 @@ export function mapStateToProps(state) {
 
   return {
     isServer,
-    isTrialNotebook: isServer && notebookIsATrial(state),
     isLoggedIn: isServer && state.userData.name,
-    canModifyNotebook: isServer && Boolean(state.notebookInfo.user_can_save)
+    isTrialNotebook: isServer && notebookIsATrial(state)
   };
 }
 

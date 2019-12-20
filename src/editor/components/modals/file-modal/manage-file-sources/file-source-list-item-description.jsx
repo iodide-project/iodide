@@ -87,6 +87,7 @@ const FileUpdateOperationHelperText = styled.div`
 
 const FileSourceListDescription = ({
   url,
+  readOnly,
   filename,
   latestFileUpdateOperationStatus,
   lastUpdated,
@@ -112,20 +113,23 @@ const FileSourceListDescription = ({
       <FileSourceURLContainer href={url}>
         <FileSourceURL href={url}>{url}</FileSourceURL>
       </FileSourceURLContainer>
-      <FileUpdateOperationHelperText
-        error={showFailureReason}
-        collapsed={!(showFailureReason || !hasBeenRun)}
-        title={failureReason}
-      >
-        {showFailureReason && failureReason}
-        {!hasBeenRun && `click "download now" or wait for scheduler`}
-      </FileUpdateOperationHelperText>
+      {!readOnly && (
+        <FileUpdateOperationHelperText
+          error={showFailureReason}
+          collapsed={!(showFailureReason || !hasBeenRun)}
+          title={failureReason}
+        >
+          {showFailureReason && failureReason}
+          {!hasBeenRun && `click "download now" or wait for scheduler`}
+        </FileUpdateOperationHelperText>
+      )}
     </FileSourceListItemDescriptionContainer>
   );
 };
 
 FileSourceListDescription.propTypes = {
   url: PropTypes.string,
+  readOnly: PropTypes.bool,
   filename: PropTypes.string,
   failureReason: PropTypes.string,
   showFailureReason: PropTypes.bool,

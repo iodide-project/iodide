@@ -31,7 +31,8 @@ export default class extends React.Component {
   static propTypes = {
     files: PropTypes.objectOf(PropTypes.shape(fileShape)).isRequired,
     onAddButtonClick: PropTypes.func.isRequired,
-    confirmDelete: PropTypes.func.isRequired
+    confirmDelete: PropTypes.func.isRequired,
+    readOnly: PropTypes.bool.isRequired
   };
 
   hasVisibleFiles = () => {
@@ -46,12 +47,15 @@ export default class extends React.Component {
     <React.Fragment>
       <BodyWrapper>
         <Body>
-          <AddButton onAddButtonClick={this.props.onAddButtonClick} />
+          {!this.props.readOnly && (
+            <AddButton onAddButtonClick={this.props.onAddButtonClick} />
+          )}
           {this.hasVisibleFiles() ? (
             <React.Fragment>
               <FileList
                 files={this.props.files}
                 confirmDelete={this.props.confirmDelete}
+                readOnly={this.props.readOnly}
               />
               <Footer />
             </React.Fragment>

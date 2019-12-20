@@ -1,5 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import styled from "@emotion/styled";
+
 import AddNewFileSource from "./add-new-file-source";
 import FileSourceList from "./file-source-list";
 
@@ -9,13 +12,24 @@ const FileSourceContainer = styled.div`
   overflow: auto;
 `;
 
-function ManageFileSources() {
-  return (
+export class ManageFileSourcesUnconnected extends React.Component {
+  static propTypes = {
+    // Required
+    readOnly: PropTypes.bool.isRequired
+  };
+
+  render = () => (
     <FileSourceContainer>
-      <AddNewFileSource />
+      {!this.props.readOnly && <AddNewFileSource />}
       <FileSourceList />
     </FileSourceContainer>
   );
 }
 
-export default ManageFileSources;
+export function mapStateToProps(state) {
+  return {
+    readOnly: !state.notebookInfo.user_can_save
+  };
+}
+
+export default connect(mapStateToProps)(ManageFileSourcesUnconnected);
