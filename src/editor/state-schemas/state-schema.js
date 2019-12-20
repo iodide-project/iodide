@@ -73,6 +73,7 @@ export const languageSchema = {
   type: "object",
   properties: {
     pluginType: { type: "string", enum: ["language"] },
+    pluginVersion: { type: ["number", "null"], enum: [2] },
     languageId: { type: "string" },
     displayName: { type: "string" },
     module: { type: "string" },

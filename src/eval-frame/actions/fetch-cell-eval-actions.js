@@ -12,9 +12,8 @@ export function loadScriptFromBlob(blob) {
     document.head.appendChild(script);
 
     script.onload = () => {
-      // console.log({ url: url.toString() });
       URL.revokeObjectURL(url);
-      resolve(url.toString());
+      resolve(url.toString().slice(-36));
     };
     script.onerror = err => reject(new Error(err));
   });

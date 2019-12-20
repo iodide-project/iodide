@@ -4,6 +4,9 @@ import {
 } from "./editor-message-senders";
 
 import { IODIDE_EVALUATION_RESULTS } from "../iodide-evaluation-results";
+import generateRandomId from "../../shared/utils/generate-random-id";
+
+import { getErrorStackFrame } from "./eval-by-script-tag-stack-summary";
 
 class Singleton {
   constructor() {
@@ -24,31 +27,38 @@ export { MOST_RECENT_CHUNK_ID };
 function evalJavaScript(codeString) {
   // for async script loading from blobs, see:
   // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
-  const tempId = Math.random().toString();
-  const enhancedString = `try { window[${tempId}] = window.eval(\`
-${codeString}\`)
-    } catch (err) {
-      window[${tempId}] = err
-    }
-  `;
-  return new Promise((resolve, reject) => {
+  const tempId = generateRandomId();
+  // temporarily saving the raw string object on `window` removes the
+  // need for complicated string escaping in the eval in the script
+  window[`code-${tempId}`] = codeString;
+
+  const enhancedString = `try {
+  window["${tempId}"] = window.eval(window["code-${tempId}"])
+} catch (err) {
+  window["${tempId}"] = err
+}`;
+  return new Promise(resolve => {
     const blob = new Blob([enhancedString]);
     const script = document.createElement("script");
     const url = URL.createObjectURL(blob);
     script.src = url;
     document.head.appendChild(script);
+    const tracebackId = url.toString().slice(-36);
     script.onload = () => {
-      const tracebackId = url.toString();
       URL.revokeObjectURL(url);
       const value = window[tempId];
       delete window[tempId];
-      if (value instanceof Error) reject(value);
-      resolve({ value, tracebackId });
+      delete window[`code-${tempId}`];
+      const errorTrace =
+        value instanceof Error ? getErrorStackFrame(value) : undefined;
+      resolve({ value, tracebackId, errorTrace });
     };
-    script.onerror = err => {
-      URL.revokeObjectURL(url);
-      reject(new Error(err));
-    };
+    // script.onerror = err => {
+    //   URL.revokeObjectURL(url);
+    //   delete window[`code-${tempId}`];
+    //   resolve({ value: err, tracebackId, error: getErrorStackFrame(err) });
+    //   // reject(new Error(err));
+    // };
   });
 }
 window.evalJavaScript = evalJavaScript;
@@ -78,21 +88,44 @@ export function runCodeWithLanguage(language, code) {
   return window[module][evaluator](code);
 }
 
+export async function evaluateCodeV2Plugins(code, language, chunkId, evalId) {
+  MOST_RECENT_CHUNK_ID.set(chunkId);
+
+  const { value, tracebackId, errorTrace } = await runCodeWithLanguage(
+    language,
+    code
+  );
+
+  const status = errorTrace === undefined ? "SUCCESS" : "ERROR";
+  const level = errorTrace === undefined ? undefined : "ERROR";
+
+  const historyId = addConsoleEntryInEditor({
+    historyType: "CONSOLE_OUTPUT",
+    level
+  });
+  IODIDE_EVALUATION_RESULTS[historyId] = value;
+  sendStatusResponseToEditor(status, evalId, {
+    tracebackId,
+    historyId,
+    errorTrace
+  });
+}
+
 export async function evaluateCode(code, language, chunkId, evalId) {
+  if (language.pluginVersion === 2) {
+    evaluateCodeV2Plugins(code, language, chunkId, evalId);
+    return;
+  }
   try {
-    let value;
-    let tracebackId;
     MOST_RECENT_CHUNK_ID.set(chunkId);
-    if (language.evalReturnsId) {
-      ({ value, tracebackId } = await runCodeWithLanguage(language, code));
-    } else {
-      value = await runCodeWithLanguage(language, code);
-    }
+    const value = await runCodeWithLanguage(language, code);
+
     const historyId = addConsoleEntryInEditor({
       historyType: "CONSOLE_OUTPUT"
     });
     IODIDE_EVALUATION_RESULTS[historyId] = value;
-    sendStatusResponseToEditor("SUCCESS", evalId, { tracebackId, historyId });
+
+    sendStatusResponseToEditor("SUCCESS", evalId);
   } catch (error) {
     const historyId = addConsoleEntryInEditor({
       historyType: "CONSOLE_OUTPUT",
@@ -103,3 +136,44 @@ export async function evaluateCode(code, language, chunkId, evalId) {
     sendStatusResponseToEditor("ERROR", evalId);
   }
 }
+
+// export async function evaluateCode(code, language, chunkId, evalId) {
+//   try {
+//     let value;
+//     let tracebackId;
+//     MOST_RECENT_CHUNK_ID.set(chunkId);
+//     if (language.implementsTracebacks) {
+//       ({ value, tracebackId } = await runCodeWithLanguage(language, code));
+//     } else {
+//       value = await runCodeWithLanguage(language, code);
+//     }
+//     const historyId = addConsoleEntryInEditor({
+//       historyType: "CONSOLE_OUTPUT"
+//     });
+//     IODIDE_EVALUATION_RESULTS[historyId] = value;
+//     sendStatusResponseToEditor("SUCCESS", evalId, { tracebackId, historyId });
+//   } catch (error) {
+//     const historyId = addConsoleEntryInEditor({
+//       historyType: "CONSOLE_OUTPUT",
+//       level: "ERROR"
+//     });
+
+//     // let err = error;
+//     // let traceback;
+
+//     // console.log(error.name);
+//     // console.log(error.message);
+//     console.log(error.stack);
+//     console.log("STACK:\n", getErrorStackFrame(error));
+
+//     // console.log("STACK:\n", ErrorStackParser.parse(error));
+//     // const st = await StackTrace.fromError(error);
+//     // console.log("STACK TRACE:\n", st);
+
+//     // if (language.implementsTracebacks) {
+//     //   ({ err, traceback } = await runCodeWithLanguage(language, code));
+//     // }
+//     IODIDE_EVALUATION_RESULTS[historyId] = error;
+//     sendStatusResponseToEditor("ERROR", evalId);
+//   }
+// }

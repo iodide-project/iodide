@@ -2,6 +2,7 @@
 
 export const jsLanguageDefinition = {
   pluginType: "language",
+  pluginVersion: 2,
   languageId: "js",
   displayName: "JavaScript",
   url: "",
