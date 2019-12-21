@@ -16,7 +16,15 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
   };
   constructor(props) {
     super(props);
+    this.printReport = this.printReport.bind(this);
     this.toggleViewMode = this.toggleViewMode.bind(this);
+  }
+
+  printReport() {
+    if (this.props.isReportView) {
+      document.getElementById("eval-frame").contentWindow.focus();
+      document.getElementById("eval-frame").contentWindow.print();
+    }
   }
 
   toggleViewMode() {
@@ -33,14 +41,26 @@ export class ViewModeToggleButtonUnconnected extends React.Component {
         classes={{ tooltip: "iodide-tooltip" }}
         title={this.props.tooltipText}
       >
-        <Button
-          style={this.props.style}
-          onClick={this.toggleViewMode}
-          variant="text"
-          mini
-        >
-          {this.props.buttonText}
-        </Button>
+        <div>
+          {this.props.isReportView && (
+            <Button
+              style={this.props.style}
+              onClick={this.printReport}
+              variant="text"
+              mini
+            >
+              Print
+            </Button>
+          )}
+          <Button
+            style={this.props.style}
+            onClick={this.toggleViewMode}
+            variant="text"
+            mini
+          >
+            {this.props.buttonText}
+          </Button>
+        </div>
       </Tooltip>
     );
   }

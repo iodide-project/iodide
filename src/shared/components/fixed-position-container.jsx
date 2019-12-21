@@ -53,6 +53,12 @@ export function mapStateToProps(state, ownProps) {
       width: "100%",
       height: "100%"
     };
+
+    if (state.viewMode === "REPORT_VIEW") {
+      style.position = "static";
+      style.border = "none";
+      style.overflow = "visible";
+    }
   }
   return {
     style
