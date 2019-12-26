@@ -58,6 +58,7 @@
   color: #fafafa;
   width: 36px !important;
   height:36px !important;
+  padding: 0 !important;
 }
 
 .menu-button:hover {
