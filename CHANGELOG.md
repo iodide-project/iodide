@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Allow users to make a copy of any notebook (fixes #1621)
+
 # 0.17.0 (2019-12-19)
 
 - Further refine escaping iomd returned by iodide server (#2526)

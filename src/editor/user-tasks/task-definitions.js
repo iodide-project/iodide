@@ -12,6 +12,7 @@ import {
   toggleHistoryModal
 } from "../actions/modal-actions";
 import { clearVariables } from "../actions/notebook-actions";
+import { createNewNotebookOnServer } from "../actions/server-save-actions";
 
 // FIXME: remove requirement to import store in this file by attaching
 // keypress handling to store in initializeDefaultKeybindings() --
@@ -80,6 +81,13 @@ tasks.saveNotebook = new UserTask({
   keybindings: ["ctrl+s", "meta+s"],
   preventDefaultKeybinding: true,
   callback() {}
+});
+
+tasks.makeCopy = new UserTask({
+  title: "Make a Copy",
+  callback() {
+    store.dispatch(createNewNotebookOnServer());
+  }
 });
 
 tasks.clearVariables = new UserTask({

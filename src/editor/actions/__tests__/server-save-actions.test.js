@@ -156,6 +156,8 @@ describe("saveNotebookToServer", () => {
 describe("createNewNotebookOnServer", () => {
   [true, false].forEach(forked => {
     it(forked ? "forked" : "not forked", async () => {
+      global.open = jest.fn();
+
       const state = initialState(forked);
       const store = mockStore(state);
       createNotebookRequest.mockClear();
@@ -170,24 +172,32 @@ describe("createNewNotebookOnServer", () => {
       );
       expect(createNotebookRequest.mock.calls).toEqual(
         forked
-          ? [[state.title, state.iomd, { forked_from: 1 }]]
+          ? [[`Copy of "${state.title}"`, state.iomd, { forked_from: 1 }]]
           : [[state.title, state.iomd, {}]]
       );
-
-      expect(store.getActions()).toEqual([
-        {
-          notebookInfo: {
-            notebook_id: forked ? 2 : 1,
-            revision_id: forked ? 2 : 1,
-            revision_is_latest: true,
-            serverSaveStatus: "OK",
-            tryItMode: false,
-            user_can_save: true,
-            username: "this-user"
-          },
-          type: "UPDATE_NOTEBOOK_INFO"
-        }
-      ]);
+      if (forked) {
+        expect(global.open).toBeCalled();
+      } else {
+        expect(global.open).not.toBeCalled();
+      }
+      expect(store.getActions()).toEqual(
+        forked
+          ? []
+          : [
+              {
+                notebookInfo: {
+                  notebook_id: 1,
+                  revision_id: 1,
+                  revision_is_latest: true,
+                  serverSaveStatus: "OK",
+                  tryItMode: false,
+                  user_can_save: true,
+                  username: "this-user"
+                },
+                type: "UPDATE_NOTEBOOK_INFO"
+              }
+            ]
+      );
     });
   });
 
