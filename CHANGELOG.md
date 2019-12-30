@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Solve duplicate revisions issue after revision coalescing (fixes 2517)
+
 # 0.17.0 (2019-12-19)
 
 - Further refine escaping iomd returned by iodide server (#2526)
