@@ -8,6 +8,7 @@ from django.urls import reverse
 from server.notebooks.models import Notebook, NotebookRevision
 from server.notebooks.tasks import execute_notebook_revisions_cleanup
 
+NOW_UTC = datetime(2019, 11, 20, 10, 15, 50, tzinfo=pytz.utc)
 # sorted by time asc
 CREATED_DATETIMES = [
     # 10:13
@@ -21,7 +22,12 @@ CREATED_DATETIMES = [
     datetime(2019, 11, 20, 10, 15, 10, tzinfo=pytz.utc),
     datetime(2019, 11, 20, 10, 15, 40, tzinfo=pytz.utc),
 ]
-NOW_UTC = datetime(2019, 11, 20, 10, 15, 50, tzinfo=pytz.utc)
+CREATED_DATETIMES_FOR_DUPLICATE_REVISIONS = [
+    # 10:13
+    datetime(2019, 11, 20, 10, 13, 40, tzinfo=pytz.utc),
+    # 10:14
+    datetime(2019, 11, 20, 10, 14, 40, tzinfo=pytz.utc),
+]
 
 
 @pytest.fixture
@@ -34,6 +40,25 @@ def notebook_and_draft_revisions(fake_user):
             notebook=notebook,
             title=f"Revision {i}",
             content=f"fake notebook content for revision {i}",
+            is_draft=True,
+        )
+        revision.created = created
+        revision.save()
+        notebook_revisions.append(revision)
+
+    return notebook, notebook_revisions
+
+
+@pytest.fixture
+def notebook_and_duplicate_draft_revisions(fake_user):
+    notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook")
+    notebook_revisions = []
+
+    for i, created in enumerate(CREATED_DATETIMES_FOR_DUPLICATE_REVISIONS):
+        revision = NotebookRevision.objects.create(
+            notebook=notebook,
+            title=f"Revision",
+            content=f"fake notebook content for revision",
             is_draft=True,
         )
         revision.created = created
@@ -64,6 +89,21 @@ def test_execute_notebook_revisions_cleanup(notebook_and_draft_revisions):
 
     assert not updated_revisions[3].is_draft
     assert updated_revisions[3].created == CREATED_DATETIMES[-6]
+
+
+def test_execute_notebook_revisions_cleanup_for_duplicate_revisions(
+    notebook_and_duplicate_draft_revisions,
+):
+    notebook, revisions = notebook_and_duplicate_draft_revisions
+
+    # execute
+    execute_notebook_revisions_cleanup(notebook.id, NOW_UTC)
+
+    # verify
+    updated_revisions = NotebookRevision.objects.filter(notebook=notebook)
+    assert len(updated_revisions) == 1
+    assert not updated_revisions[0].is_draft
+    assert updated_revisions[0].created == CREATED_DATETIMES_FOR_DUPLICATE_REVISIONS[0]
 
 
 def test_execute_notebook_revisions_cleanup_is_scheduled(fake_user, test_notebook, client):
