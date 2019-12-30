@@ -1,5 +1,5 @@
 # (Unreleased; add upcoming change notes here)
-- Fixes centering of Help and Play icons in header in some browsers by removing padding (#2567)
+- Center "Help" and "Play" icons in some browsers (fixes #2567) (#2570)
 
 # 0.17.0 (2019-12-19)
 
