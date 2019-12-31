@@ -31,9 +31,8 @@ CREATED_DATETIMES_FOR_DUPLICATE_REVISIONS = [
 
 
 @pytest.fixture
-def notebook_and_draft_revisions(fake_user):
+def notebook_with_draft_revisions(fake_user):
     notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook")
-    notebook_revisions = []
 
     for i, created in enumerate(CREATED_DATETIMES):
         revision = NotebookRevision.objects.create(
@@ -44,15 +43,13 @@ def notebook_and_draft_revisions(fake_user):
         )
         revision.created = created
         revision.save()
-        notebook_revisions.append(revision)
 
-    return notebook, notebook_revisions
+    return notebook
 
 
 @pytest.fixture
-def notebook_and_duplicate_draft_revisions(fake_user):
+def notebook_with_duplicate_draft_revisions(fake_user):
     notebook = Notebook.objects.create(owner=fake_user, title="Fake notebook")
-    notebook_revisions = []
 
     for i, created in enumerate(CREATED_DATETIMES_FOR_DUPLICATE_REVISIONS):
         revision = NotebookRevision.objects.create(
@@ -63,13 +60,12 @@ def notebook_and_duplicate_draft_revisions(fake_user):
         )
         revision.created = created  # manually override the value provided by auto_now_add
         revision.save()
-        notebook_revisions.append(revision)
 
-    return notebook, notebook_revisions
+    return notebook
 
 
-def test_execute_notebook_revisions_cleanup(notebook_and_draft_revisions):
-    notebook, revisions = notebook_and_draft_revisions
+def test_execute_notebook_revisions_cleanup(notebook_with_draft_revisions):
+    notebook = notebook_with_draft_revisions
 
     # execute
     execute_notebook_revisions_cleanup(notebook.id, NOW_UTC)
@@ -92,9 +88,9 @@ def test_execute_notebook_revisions_cleanup(notebook_and_draft_revisions):
 
 
 def test_execute_notebook_revisions_cleanup_for_duplicate_revisions(
-    notebook_and_duplicate_draft_revisions,
+    notebook_with_duplicate_draft_revisions,
 ):
-    notebook, revisions = notebook_and_duplicate_draft_revisions
+    notebook = notebook_with_duplicate_draft_revisions
 
     # execute
     execute_notebook_revisions_cleanup(notebook.id, NOW_UTC)
