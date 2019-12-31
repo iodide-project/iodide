@@ -1,6 +1,8 @@
 # (Unreleased; add upcoming change notes here)
 - Center "Help" and "Play" icons in some browsers (fixes #2567) (#2570)
 
+- Handle cases where coalescing revisions results in no change (fixes #2517)
+
 # 0.17.0 (2019-12-19)
 
 - Further refine escaping iomd returned by iodide server (#2526)
