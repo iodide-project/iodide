@@ -54,8 +54,8 @@ def notebook_with_duplicate_draft_revisions(fake_user):
     for i, created in enumerate(CREATED_DATETIMES_FOR_DUPLICATE_REVISIONS):
         revision = NotebookRevision.objects.create(
             notebook=notebook,
-            title=f"Revision",
-            content=f"fake notebook content for revision",
+            title="Revision",
+            content="fake notebook content for revision",
             is_draft=True,
         )
         revision.created = created  # manually override the value provided by auto_now_add
@@ -90,6 +90,7 @@ def test_execute_notebook_revisions_cleanup(notebook_with_draft_revisions):
 def test_execute_notebook_revisions_cleanup_for_duplicate_revisions(
     notebook_with_duplicate_draft_revisions,
 ):
+    # tests the case where a draft revision is not actually different from the last non-draft revision
     notebook = notebook_with_duplicate_draft_revisions
 
     # execute
