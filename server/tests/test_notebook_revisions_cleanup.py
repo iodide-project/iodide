@@ -90,7 +90,7 @@ def test_execute_notebook_revisions_cleanup(notebook_with_draft_revisions):
 def test_execute_notebook_revisions_cleanup_for_duplicate_revisions(
     notebook_with_duplicate_draft_revisions,
 ):
-    # tests the case where a draft revision is not actually different from 
+    # tests the case where a draft revision is not actually different from
     # the last non-draft revision
     notebook = notebook_with_duplicate_draft_revisions
 
