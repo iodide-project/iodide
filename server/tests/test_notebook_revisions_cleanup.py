@@ -61,7 +61,7 @@ def notebook_and_duplicate_draft_revisions(fake_user):
             content=f"fake notebook content for revision",
             is_draft=True,
         )
-        revision.created = created
+        revision.created = created  # manually override the value provided by auto_now_add
         revision.save()
         notebook_revisions.append(revision)
 

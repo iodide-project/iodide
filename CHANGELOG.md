@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-- Solve duplicate revisions issue after revision coalescing (fixes 2517)
+- Handle cases where coalescing revisions results in no change (fixes #2517)
 
 # 0.17.0 (2019-12-19)
 

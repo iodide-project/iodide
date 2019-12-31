@@ -43,8 +43,9 @@ def execute_notebook_revisions_cleanup(notebook_id, now_utc=None):
     intermediate_revision_ids = [
         revision.id for revision_window in revision_windows for revision in revision_window[1:]
     ]
+
     # for remaining_revisions, if a revision is same as the previous one (issue #2517), then
-    # also add it to the intermediate revisions.
+    # also add it to the intermediate revisions, so we don't accidentally coalesce down to a duplicate revision.
     remaining_revisions = [revision_window[0] for revision_window in revision_windows]
     last_revision = latest_non_draft_revision
     for revision in remaining_revisions:
@@ -56,6 +57,7 @@ def execute_notebook_revisions_cleanup(notebook_id, now_utc=None):
             intermediate_revision_ids.append(revision.id)
         else:
             last_revision = revision
+
     # delete intermediate revisions
     NotebookRevision.objects.filter(
         id__in=intermediate_revision_ids, created__lt=now_utc - threshold
