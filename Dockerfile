@@ -72,12 +72,9 @@ FROM base AS devapp
 RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
 # USER app
 
-# Install firefox
+# Install chromium
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get -y install firefox-esr
-
-# Install the gecko diver
-ENV GECKODRIVER_VERSION='0.26.0'
-RUN curl -sSfL "https://github.com/mozilla/geckodriver/releases/download/v${GECKODRIVER_VERSION}/geckodriver-v${GECKODRIVER_VERSION}-linux64.tar.gz" \
-    | tar -zxC "/usr/local/bin"
+    apt-get -y install \
+      chromium \
+      chromium-driver

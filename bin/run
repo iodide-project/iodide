@@ -34,7 +34,7 @@ tests() {
 
 integration-tests() {
   mkdir -p /app/.coverage
-  python -m pytest integration-tests --driver Firefox
+  python -m pytest integration-tests --driver Chrome
 }
 
 case $1 in
