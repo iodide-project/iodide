@@ -14,12 +14,6 @@ RUN apt-get update && \
     build-essential \
     curl
 
-ENV GECKODRIVER_VERSION='0.24.0'
-RUN curl -sSfL "https://github.com/mozilla/geckodriver/releases/download/v${GECKODRIVER_VERSION}/geckodriver-v${GECKODRIVER_VERSION}-linux64.tar.gz" \
-    | tar -zxC "/usr/local/bin" \
-    && curl -sSfL 'https://download.mozilla.org/?product=firefox-beta-latest&lang=en-US&os=linux64' \
-    | tar -jxC "/usr/local/bin"
-
 # Install virtualenv
 RUN pip install virtualenv
 RUN virtualenv /venv
@@ -77,3 +71,13 @@ FROM base AS devapp
 # Install dev python dependencies
 RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
 # USER app
+
+# Install firefox
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y install firefox-esr
+
+# Install the gecko diver
+ENV GECKODRIVER_VERSION='0.26.0'
+RUN curl -sSfL "https://github.com/mozilla/geckodriver/releases/download/v${GECKODRIVER_VERSION}/geckodriver-v${GECKODRIVER_VERSION}-linux64.tar.gz" \
+    | tar -zxC "/usr/local/bin"
