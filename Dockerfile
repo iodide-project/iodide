@@ -11,8 +11,7 @@ RUN apt-get update && \
     libpq-dev \
     libffi-dev \
     python-dev \
-    build-essential \
-    curl
+    build-essential
 
 # Install virtualenv
 RUN pip install virtualenv
@@ -36,7 +35,14 @@ RUN mkdir -p \
         /usr/share/man/man8 && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        apt-transport-https postgresql-client netcat build-essential git curl  && \
+        apt-transport-https \
+        postgresql-client \
+        netcat \
+        build-essential \
+        git \
+        chromium \
+        chromium-driver \
+        curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -71,10 +77,3 @@ FROM base AS devapp
 # Install dev python dependencies
 RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
 # USER app
-
-# Install chromium
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get -y install \
-      chromium \
-      chromium-driver
