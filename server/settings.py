@@ -38,7 +38,9 @@ SITE_URL = env("SERVER_URI", default="http://localhost:8000/")
 SITE_HOSTNAME = furl(SITE_URL).host
 EVAL_FRAME_ORIGIN = env.str("EVAL_FRAME_ORIGIN", SITE_URL)
 EVAL_FRAME_HOSTNAME = furl(EVAL_FRAME_ORIGIN).host
-ALLOWED_HOSTS = list(set([SITE_HOSTNAME, EVAL_FRAME_HOSTNAME]))
+DOCKER_ORIGIN = env("DOCKER_ORIGIN", default=SITE_URL)
+DOCKER_HOSTNAME = furl(DOCKER_ORIGIN).host
+ALLOWED_HOSTS = list(set([SITE_HOSTNAME, EVAL_FRAME_HOSTNAME, DOCKER_HOSTNAME]))
 
 # Special settings so staging servers can redirect to production
 IS_STAGING = env.bool("IS_STAGING", default=False)

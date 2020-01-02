@@ -23,6 +23,12 @@ services:
     <<: *app
     command: worker
 
+  tester:
+    <<: *app
+    links:
+      - server
+    command: noop
+
   db:
     image: postgres:9.6-alpine
     logging:

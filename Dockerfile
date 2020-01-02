@@ -35,7 +35,14 @@ RUN mkdir -p \
         /usr/share/man/man8 && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        apt-transport-https postgresql-client netcat build-essential git curl  && \
+        apt-transport-https \
+        postgresql-client \
+        netcat \
+        build-essential \
+        git \
+        chromium \
+        chromium-driver \
+        curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

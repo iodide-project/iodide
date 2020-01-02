@@ -32,6 +32,12 @@ tests() {
   python -m pytest "$@"  # skips linter checks
 }
 
+integration-tests() {
+  mkdir -p /app/.coverage
+  wait_for server 8000
+  python -m pytest integration-tests --driver Chrome
+}
+
 case $1 in
   dev)
     python manage.py migrate --noinput
@@ -44,9 +50,16 @@ case $1 in
     shift
     tests
     ;;
+  integration-tests)
+    shift
+    integration-tests
+    ;;
   ci)
     shift
     tests "--lean" "$@"
+    ;;
+  noop)
+    shift
     ;;
   *)
     exec "$@"
