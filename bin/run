@@ -34,6 +34,7 @@ tests() {
 
 integration-tests() {
   mkdir -p /app/.coverage
+  wait_for server 8000
   python -m pytest integration-tests --driver Chrome
 }
 
@@ -56,6 +57,9 @@ case $1 in
   ci)
     shift
     tests "--lean" "$@"
+    ;;
+  noop)
+    shift
     ;;
   *)
     exec "$@"

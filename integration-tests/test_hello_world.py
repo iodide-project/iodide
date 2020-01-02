@@ -1,2 +1,7 @@
+import environ
+
+
 def test_hello_world(selenium):
-    selenium.get("http://localhost:8000")
+    base_url = environ.Env()("DOCKER_ORIGIN")
+    selenium.get(base_url)
+    assert selenium.title == "Iodide"

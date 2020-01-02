@@ -27,7 +27,7 @@ test:
 	docker-compose run --rm server tests
 
 integration-test:
-	docker-compose run --rm server integration-tests
+	docker-compose run --rm tester integration-tests
 
 pip-compile:
 	docker-compose run --rm server -- pip-compile --verbose --upgrade --generate-hashes -o requirements/build.txt requirements/build.in
