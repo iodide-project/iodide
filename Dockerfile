@@ -60,7 +60,7 @@ COPY . /app
 # Set user permissions
 COPY --chown=app:app . .
 RUN chown app /app
-# USER app
+USER app
 
 # Collect static files
 RUN DEBUG=False SECRET_KEY=foo ./manage.py collectstatic --noinput -c
@@ -76,4 +76,4 @@ FROM base AS devapp
 
 # Install dev python dependencies
 RUN pip install --require-hashes --no-cache-dir -r requirements/all.txt
-# USER app
+USER app
