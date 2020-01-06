@@ -97,16 +97,12 @@ export async function evaluateCodeV2Plugins(code, language, chunkId, evalId) {
   );
 
   const status = errorTrace === undefined ? "SUCCESS" : "ERROR";
-  const level = errorTrace === undefined ? undefined : "ERROR";
 
-  const historyId = addConsoleEntryInEditor({
-    historyType: "CONSOLE_OUTPUT",
-    level
-  });
-  IODIDE_EVALUATION_RESULTS[historyId] = value;
+  IODIDE_EVALUATION_RESULTS[evalId] = value;
+
   sendStatusResponseToEditor(status, evalId, {
     tracebackId,
-    historyId,
+    historyId: evalId,
     errorTrace
   });
 }
@@ -120,19 +116,10 @@ export async function evaluateCode(code, language, chunkId, evalId) {
     MOST_RECENT_CHUNK_ID.set(chunkId);
     const value = await runCodeWithLanguage(language, code);
 
-    const historyId = addConsoleEntryInEditor({
-      historyType: "CONSOLE_OUTPUT"
-    });
-    IODIDE_EVALUATION_RESULTS[historyId] = value;
-
-    sendStatusResponseToEditor("SUCCESS", evalId);
+    IODIDE_EVALUATION_RESULTS[evalId] = value;
+    sendStatusResponseToEditor("SUCCESS", evalId, { historyId: evalId });
   } catch (error) {
-    const historyId = addConsoleEntryInEditor({
-      historyType: "CONSOLE_OUTPUT",
-      level: "ERROR"
-    });
-    IODIDE_EVALUATION_RESULTS[historyId] = error;
-
-    sendStatusResponseToEditor("ERROR", evalId);
+    IODIDE_EVALUATION_RESULTS[evalId] = error;
+    sendStatusResponseToEditor("ERROR", evalId, { historyId: evalId });
   }
 }

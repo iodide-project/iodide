@@ -13,11 +13,15 @@ export function sendTaskToEvalFrame(taskType, payload) {
 }
 
 // sagas
-export function* triggerEvalFrameTask(taskType, payload) {
+export function* triggerEvalFrameTask(taskType, payload, throwOnError = true) {
   const taskId = yield call(sendTaskToEvalFrame, taskType, payload);
   const response = yield take(`EVAL_FRAME_TASK_RESPONSE-${taskId}`);
-  if (response.status === "ERROR") {
-    throw new Error(`EVAL_FRAME_TASK_RESPONSE-${taskId}-FAILED`);
+
+  if (throwOnError) {
+    if (response.status === "ERROR") {
+      throw new Error(`EVAL_FRAME_TASK_RESPONSE-${taskId}-FAILED`);
+    }
+    return response.payload;
   }
-  return response.payload;
+  return response;
 }
