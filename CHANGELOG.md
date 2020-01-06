@@ -1,6 +1,6 @@
 # (Unreleased; add upcoming change notes here)
 
-- Allow users to make a copy of any notebook (fixes #1621)
+- Allow users to make a copy of any notebook (fixes #1621) (#2593)
 
 # 0.17.0 (2019-12-19)
 
