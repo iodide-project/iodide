@@ -16,6 +16,7 @@ import { setKernelState } from "../eval-actions";
 
 import {
   addInputToConsole,
+  addOutputToConsole,
   addEvalTypeConsoleErrorToHistory
 } from "../../console/history/actions";
 
@@ -77,14 +78,21 @@ export function* evaluateByType(chunk) {
     yield call(evaluateFetch, evalText);
   } else {
     const language = state.languageDefinitions[evalType];
-    const payload = yield call(triggerEvalFrameTask, "EVAL_CODE", {
-      code: evalText,
-      language,
-      chunkId
-    });
+    const { status, payload } = yield call(
+      triggerEvalFrameTask,
+      "EVAL_CODE",
+      {
+        code: evalText,
+        language,
+        chunkId
+      },
+      false
+    );
+
+    const level = status === "ERROR" ? "ERROR" : undefined;
     const { tracebackId, historyId } = payload;
-    console.log("payload", payload);
-    console.log({ tracebackId, historyId });
+    yield put(addOutputToConsole(level, historyId));
+
     if (tracebackId !== undefined) {
       yield put(
         recordTracebackInfo(
@@ -95,6 +103,10 @@ export function* evaluateByType(chunk) {
           endLine
         )
       );
+    }
+
+    if (status === "ERROR") {
+      throw new Error(`CODE EVAL FAILED: ${historyId}`);
     }
   }
   yield call(updateUserVariables);
