@@ -61,7 +61,7 @@ export class HistoryItemUnconnected extends React.Component {
       }
       default:
         return (
-          <ConsoleMessage level="warn">
+          <ConsoleMessage level="WARN">
             Unknown history type {this.props.historyType}
           </ConsoleMessage>
         );
