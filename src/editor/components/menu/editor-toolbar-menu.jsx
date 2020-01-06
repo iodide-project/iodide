@@ -13,7 +13,8 @@ import {
 export class EditorToolbarMenuUnconnected extends React.Component {
   static propTypes = {
     isServer: PropTypes.bool.isRequired,
-    canUpload: PropTypes.bool,
+    isLoggedIn: PropTypes.bool,
+    canModifyNotebook: PropTypes.bool,
     isTrialNotebook: PropTypes.bool
   };
 
@@ -22,12 +23,17 @@ export class EditorToolbarMenuUnconnected extends React.Component {
       <NotebookIconMenu>
         {this.props.isServer && <NotebookMenuItem task={tasks.newNotebook} />}
         <NotebookMenuItem
+          task={tasks.makeCopy}
+          disabled={!this.props.isLoggedIn}
+        />
+        <NotebookMenuItem
           task={tasks.toggleHistoryModal}
           disabled={this.props.isTrialNotebook}
         />
-        {this.props.canUpload && (
-          <NotebookMenuItem task={tasks.toggleFileModal} />
-        )}
+        <NotebookMenuItem
+          task={tasks.toggleFileModal}
+          disabled={!this.props.canModifyNotebook}
+        />
         <NotebookMenuItem task={tasks.clearVariables} />
         <NotebookMenuItem task={tasks.toggleHelpModal} />
       </NotebookIconMenu>
@@ -41,7 +47,8 @@ export function mapStateToProps(state) {
   return {
     isServer,
     isTrialNotebook: isServer && notebookIsATrial(state),
-    canUpload: isServer && Boolean(state.notebookInfo.user_can_save)
+    isLoggedIn: isServer && state.userData.name,
+    canModifyNotebook: isServer && Boolean(state.notebookInfo.user_can_save)
   };
 }
 

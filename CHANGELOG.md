@@ -3,6 +3,8 @@
 
 - Handle cases where coalescing revisions results in no change (fixes #2517)
 
+- Allow users to make a copy of any notebook (fixes #1621) (#2593)
+
 # 0.17.0 (2019-12-19)
 
 - Further refine escaping iomd returned by iodide server (#2526)

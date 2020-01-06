@@ -43,12 +43,24 @@ export function createNewNotebookOnServer() {
     const state = getState();
     const originalNotebookId = getNotebookID(state);
     try {
+      const forked = originalNotebookId;
       const notebook = await createNotebookRequest(
-        state.title,
+        forked ? `Copy of "${state.title}"` : state.title,
         state.iomd,
-        originalNotebookId ? { forked_from: getRevisionID(state) } : {}
+        forked ? { forked_from: getRevisionID(state) } : {}
       );
-      window.history.replaceState({}, "", `/notebooks/${notebook.id}/`);
+      const newLocation = `/notebooks/${notebook.id}/`;
+
+      // if we created a forked copy, open that in a new tab
+      // and keep the notebook here as-is
+      if (forked) {
+        window.open(newLocation, "_blank");
+        return;
+      }
+
+      // otherwise we saved a notebook for the first time,
+      // update our internal state accordingly
+      window.history.replaceState({}, "", newLocation);
       dispatch(
         updateNotebookInfo({
           notebook_id: notebook.id,
@@ -57,7 +69,7 @@ export function createNewNotebookOnServer() {
           serverSaveStatus: "OK",
           tryItMode: false,
           user_can_save: true,
-          username: state.userData.name // in case this notebook was forked
+          username: state.userData.name
         })
       );
 
