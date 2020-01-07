@@ -13,7 +13,8 @@ export const historyItemSchema = {
         "FETCH_CELL_INFO",
         "CONSOLE_INPUT",
         "CONSOLE_OUTPUT",
-        "CONSOLE_MESSAGE"
+        "CONSOLE_MESSAGE",
+        "CONSOLE_OUTPUT_ERROR_STACK"
       ]
     },
     level: { type: "string", enum: ["INFO", "LOG", "WARN", "ERROR"] },

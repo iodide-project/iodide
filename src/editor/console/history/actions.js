@@ -32,6 +32,9 @@ export const addInputToConsole = (evalText, evalType) =>
 export const addOutputToConsole = (level, historyId) =>
   addToConsoleHistory({ historyType: "CONSOLE_OUTPUT", level }, historyId);
 
+export const addErrorStackToConsole = historyId =>
+  addToConsoleHistory({ historyType: "CONSOLE_OUTPUT_ERROR_STACK" }, historyId);
+
 export const addPluginParseErrorToHistory = errorMessage =>
   addToConsoleHistory({
     historyType: "CONSOLE_MESSAGE",

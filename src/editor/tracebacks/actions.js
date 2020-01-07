@@ -22,3 +22,11 @@ export function recordTracebackInfo(
     endLine
   };
 }
+
+export function recordErrorStack(historyId, errorStack) {
+  return {
+    type: "traceback/RECORD_ERROR_STACK",
+    historyId,
+    errorStack
+  };
+}
