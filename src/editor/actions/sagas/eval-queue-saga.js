@@ -17,10 +17,14 @@ import { setKernelState } from "../eval-actions";
 import {
   addInputToConsole,
   addOutputToConsole,
+  addErrorStackToConsole,
   addEvalTypeConsoleErrorToHistory
 } from "../../console/history/actions";
 
-import { recordTracebackInfo } from "../../tracebacks/actions";
+import {
+  recordTracebackInfo,
+  recordErrorStack
+} from "../../tracebacks/actions";
 
 import { evaluateFetch } from "./fetch-cell-saga";
 import { triggerEvalFrameTask } from "./eval-frame-sender";
@@ -90,8 +94,7 @@ export function* evaluateByType(chunk) {
     );
 
     const level = status === "ERROR" ? "ERROR" : undefined;
-    const { tracebackId, historyId } = payload;
-    yield put(addOutputToConsole(level, historyId));
+    const { tracebackId, historyId, errorStack } = payload;
 
     if (tracebackId !== undefined) {
       yield put(
@@ -105,7 +108,16 @@ export function* evaluateByType(chunk) {
       );
     }
 
+    if (errorStack !== undefined) {
+      console.log({ errorStack });
+      yield put(recordErrorStack(historyId, errorStack));
+      yield put(addErrorStackToConsole(historyId));
+    } else {
+      yield put(addOutputToConsole(level, historyId));
+    }
+
     if (status === "ERROR") {
+      // need to throw here to halt evals and clear queue
       throw new Error(`CODE EVAL FAILED: ${historyId}`);
     }
   }

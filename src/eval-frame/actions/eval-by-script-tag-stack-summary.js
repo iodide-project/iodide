@@ -1,3 +1,8 @@
+const intOrUndefined = x => {
+  const y = Number.parseInt(x, 10);
+  return Number.isNaN(y) ? undefined : y;
+};
+
 const firefoxStackLineRe = /^(.*)@blob.*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(.*):([0-9]+):([0-9]+)$/;
 
 // because the inner eval in the script-based js evaluator begins
@@ -29,8 +34,8 @@ export const parseFFOrSafari = splitStack => {
       return {
         functionName,
         fileName,
-        lineNumber,
-        columnNumber,
+        lineNumber: intOrUndefined(lineNumber),
+        columnNumber: intOrUndefined(columnNumber),
         evalInUserCode
       };
     });
@@ -72,8 +77,8 @@ export const parseChrome = splitStack => {
       return {
         functionName: functionName !== "eval" ? functionName : "",
         fileName,
-        lineNumber: lineNumber || maybeLineNumber,
-        columnNumber,
+        lineNumber: intOrUndefined(lineNumber || maybeLineNumber),
+        columnNumber: intOrUndefined(columnNumber),
         evalInUserCode
       };
     });

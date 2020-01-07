@@ -49,9 +49,9 @@ function evalJavaScript(codeString) {
       const value = window[tempId];
       delete window[tempId];
       delete window[`code-${tempId}`];
-      const errorTrace =
+      const errorStack =
         value instanceof Error ? getErrorStackFrame(value) : undefined;
-      resolve({ value, tracebackId, errorTrace });
+      resolve({ value, tracebackId, errorStack });
     };
     // script.onerror = err => {
     //   URL.revokeObjectURL(url);
@@ -91,19 +91,19 @@ export function runCodeWithLanguage(language, code) {
 export async function evaluateCodeV2Plugins(code, language, chunkId, evalId) {
   MOST_RECENT_CHUNK_ID.set(chunkId);
 
-  const { value, tracebackId, errorTrace } = await runCodeWithLanguage(
+  const { value, tracebackId, errorStack } = await runCodeWithLanguage(
     language,
     code
   );
 
-  const status = errorTrace === undefined ? "SUCCESS" : "ERROR";
+  const status = errorStack === undefined ? "SUCCESS" : "ERROR";
 
   IODIDE_EVALUATION_RESULTS[evalId] = value;
 
   sendStatusResponseToEditor(status, evalId, {
     tracebackId,
     historyId: evalId,
-    errorTrace
+    errorStack
   });
 }
 

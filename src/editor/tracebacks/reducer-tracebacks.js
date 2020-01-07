@@ -41,6 +41,21 @@ export default function reducer(state, action) {
       };
     }
 
+    case "traceback/RECORD_ERROR_STACK": {
+      const { historyId, errorStack } = action;
+      const { evalErrorStacks } = tracebackInfo;
+      return {
+        ...state,
+        tracebackInfo: {
+          ...tracebackInfo,
+          evalErrorStacks: {
+            ...evalErrorStacks,
+            [historyId]: errorStack
+          }
+        }
+      };
+    }
+
     default: {
       return state;
     }
