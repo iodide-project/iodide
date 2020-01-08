@@ -1,6 +1,7 @@
-const loadedScriptsSchema = {
+const loadedScriptTracebackSchema = {
   type: "object",
   properties: {
+    tracebackType: { const: "FETCHED_JS_SCRIPT" },
     tracebackId: { type: "string" },
     url: { type: "string" },
     filename: { type: "string" }
@@ -8,31 +9,12 @@ const loadedScriptsSchema = {
   additionalProperties: true
 };
 
-const evalRangesSchema = {
+const userEvalTracebackSchema = {
   type: "object",
   properties: {
-    historyId: { type: "string" },
-    tracebackId: { type: "string" },
-    language: { type: "string" },
-    originalLines: {
-      type: "object",
-      properties: {
-        startLine: { type: "integer" },
-        endLine: { type: "integer" }
-      },
-      additionalProperties: false,
-      default: {}
-    },
-    currentLines: {
-      type: "object",
-      properties: {
-        startLine: { type: "integer" },
-        endLine: { type: "integer" }
-      },
-      additionalProperties: false,
-      default: {}
-    },
-    editedSinceEval: { type: "boolean", default: false }
+    tracebackType: { const: "USER_EVALUATION" },
+    evalId: { type: "string" },
+    tracebackId: { type: "string" }
   },
   additionalProperties: true
 };
@@ -41,7 +23,7 @@ const errorStackItemSchema = {
   type: "object",
   properties: {
     functionName: { type: "string" },
-    fileName: { type: "string" },
+    tracebackId: { type: "string" },
     lineNumber: { type: "number" },
     columnNumber: { type: "number" },
     evalInUserCode: { type: "boolean" }
@@ -66,14 +48,11 @@ const evalErrorStackSchema = {
 export const tracebackInfoSchema = {
   type: "object",
   properties: {
-    loadedScripts: {
+    tracebackItems: {
       type: "object",
-      additionalProperties: loadedScriptsSchema,
-      default: {}
-    },
-    evalRanges: {
-      type: "object",
-      additionalProperties: evalRangesSchema,
+      additionalProperties: {
+        anyOf: [loadedScriptTracebackSchema, userEvalTracebackSchema]
+      },
       default: {}
     },
     evalErrorStacks: {
@@ -83,5 +62,5 @@ export const tracebackInfoSchema = {
     }
   },
   additionalProperties: false,
-  default: { evalRanges: {}, loadedScripts: {}, evalErrorStacks: {} }
+  default: { tracebackItems: {}, evalErrorStacks: {} }
 };

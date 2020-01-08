@@ -3,14 +3,15 @@ export default function reducer(state, action) {
   switch (action.type) {
     case "traceback/JS_SCRIPT_LOADED": {
       const { scriptUrl, tracebackId } = action;
-      const { loadedScripts } = tracebackInfo;
+      const { tracebackItems } = tracebackInfo;
       return {
         ...state,
         tracebackInfo: {
           ...tracebackInfo,
-          loadedScripts: {
-            ...loadedScripts,
+          tracebackItems: {
+            ...tracebackItems,
             [tracebackId]: {
+              tracebackType: "FETCHED_JS_SCRIPT",
               scriptUrl,
               tracebackId,
               fileName: scriptUrl.split("/").pop()
@@ -20,21 +21,18 @@ export default function reducer(state, action) {
       };
     }
     case "traceback/RECORD_TRACEBACK_INFO": {
-      const { historyId, tracebackId, language, startLine, endLine } = action;
-      const { evalRanges } = tracebackInfo;
+      const { evalId, tracebackId } = action;
+      const { tracebackItems } = tracebackInfo;
       return {
         ...state,
         tracebackInfo: {
           ...tracebackInfo,
-          evalRanges: {
-            ...evalRanges,
+          tracebackItems: {
+            ...tracebackItems,
             [tracebackId]: {
-              historyId,
-              tracebackId,
-              language,
-              originalLines: { startLine, endLine },
-              currentLines: { startLine, endLine },
-              editedSinceEval: false
+              tracebackType: "USER_EVALUATION",
+              evalId,
+              tracebackId
             }
           }
         }
@@ -42,7 +40,7 @@ export default function reducer(state, action) {
     }
 
     case "traceback/RECORD_ERROR_STACK": {
-      const { historyId, errorStack } = action;
+      const { evalId, errorStack } = action;
       const { evalErrorStacks } = tracebackInfo;
       return {
         ...state,
@@ -50,7 +48,7 @@ export default function reducer(state, action) {
           ...tracebackInfo,
           evalErrorStacks: {
             ...evalErrorStacks,
-            [historyId]: errorStack
+            [evalId]: errorStack
           }
         }
       };

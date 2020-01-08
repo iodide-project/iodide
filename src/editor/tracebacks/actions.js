@@ -6,27 +6,19 @@ export function jsScriptLoaded(scriptUrl, tracebackId) {
   };
 }
 
-export function recordTracebackInfo(
-  historyId,
-  tracebackId,
-  language,
-  startLine,
-  endLine
-) {
+export function recordTracebackInfo(evalId, tracebackId, language) {
   return {
     type: "traceback/RECORD_TRACEBACK_INFO",
-    historyId,
+    evalId,
     tracebackId,
-    language,
-    startLine,
-    endLine
+    language
   };
 }
 
-export function recordErrorStack(historyId, errorStack) {
+export function recordErrorStack(evalId, errorStack) {
   return {
     type: "traceback/RECORD_ERROR_STACK",
-    historyId,
+    evalId,
     errorStack
   };
 }

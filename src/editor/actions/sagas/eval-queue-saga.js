@@ -36,6 +36,8 @@ import {
   evaluateLanguagePlugin
 } from "./language-plugin-saga";
 
+import { historyIdGen } from "../../tools/id-generators";
+
 // helpers
 
 const evalTypeIsDefined = (state, lang) =>
@@ -65,6 +67,7 @@ export function* evaluateByType(chunk) {
     endLine
   } = chunk;
   const state = yield select();
+  const evalId = `${historyIdGen.nextId()}-${evalType}`;
 
   if (!evalTypeIsDefined(state, evalType)) {
     yield put(addEvalTypeConsoleErrorToHistory(evalType));
@@ -75,7 +78,8 @@ export function* evaluateByType(chunk) {
     yield call(loadKnownLanguage, state.languageDefinitions[evalType]);
   }
 
-  yield put(addInputToConsole(evalText, evalType));
+  yield put(addInputToConsole(evalText, evalType, evalId, startLine, endLine));
+
   if (evalType === "plugin") {
     yield call(evaluateLanguagePlugin, evalText);
   } else if (evalType === "fetch") {
@@ -90,35 +94,28 @@ export function* evaluateByType(chunk) {
         language,
         chunkId
       },
-      false
+      false,
+      evalId
     );
 
     const level = status === "ERROR" ? "ERROR" : undefined;
-    const { tracebackId, historyId, errorStack } = payload;
+    const { tracebackId, errorStack } = payload;
 
     if (tracebackId !== undefined) {
-      yield put(
-        recordTracebackInfo(
-          historyId,
-          tracebackId,
-          evalType,
-          startLine,
-          endLine
-        )
-      );
+      yield put(recordTracebackInfo(evalId, tracebackId, evalType));
     }
 
     if (errorStack !== undefined) {
       console.log({ errorStack });
-      yield put(recordErrorStack(historyId, errorStack));
-      yield put(addErrorStackToConsole(historyId));
+      yield put(recordErrorStack(evalId, errorStack));
+      yield put(addErrorStackToConsole(evalId));
     } else {
-      yield put(addOutputToConsole(level, historyId));
+      yield put(addOutputToConsole(level, evalId));
     }
 
     if (status === "ERROR") {
       // need to throw here to halt evals and clear queue
-      throw new Error(`CODE EVAL FAILED: ${historyId}`);
+      throw new Error(`CODE EVAL FAILED: ${evalId}`);
     }
   }
   yield call(updateUserVariables);
