@@ -8,6 +8,7 @@ export function loadLanguagePlugin(pluginData, historyId) {
   let value;
   let languagePluginPromise;
 
+  // FIXME: this can pretty easily be moved to the editor
   addConsoleEntryInEditor({
     historyType: "CONSOLE_MESSAGE",
     content: "fetching plugin",
