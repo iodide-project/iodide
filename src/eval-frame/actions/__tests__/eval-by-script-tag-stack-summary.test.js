@@ -10,7 +10,7 @@ const firefoxStacks = [
     parsed: [
       {
         functionName: "",
-        fileName: "d6da3813-192b-468c-aee0-0eacc32bb464",
+        tracebackId: "d6da3813-192b-468c-aee0-0eacc32bb464",
         lineNumber: 2,
         columnNumber: 4
       }
@@ -23,13 +23,13 @@ const firefoxStacks = [
     parsed: [
       {
         functionName: "",
-        fileName: "a600a746-031f-46fb-8c67-a48557466867",
+        tracebackId: "a600a746-031f-46fb-8c67-a48557466867",
         lineNumber: 4,
         columnNumber: 13
       },
       {
         functionName: "",
-        fileName: "a600a746-031f-46fb-8c67-a48557466867",
+        tracebackId: "a600a746-031f-46fb-8c67-a48557466867",
         lineNumber: 4,
         columnNumber: 6
       }
@@ -42,13 +42,13 @@ const firefoxStacks = [
     parsed: [
       {
         functionName: "failTest",
-        fileName: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
+        tracebackId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
         lineNumber: 3,
         columnNumber: 18
       },
       {
         functionName: "",
-        fileName: "ddef1bb2-3561-4d41-9500-917a5fdecc9f",
+        tracebackId: "ddef1bb2-3561-4d41-9500-917a5fdecc9f",
         lineNumber: 1,
         columnNumber: 9
       }
@@ -63,25 +63,25 @@ failTest3@blob:http://localhost:8000/67eddeb7-42f8-4b78-9ef8-abc36889bdd7 line 2
     parsed: [
       {
         functionName: "failTest",
-        fileName: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
+        tracebackId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
         lineNumber: 3,
         columnNumber: 18
       },
       {
         functionName: "failTest2",
-        fileName: "67eddeb7-42f8-4b78-9ef8-abc36889bdd7",
+        tracebackId: "67eddeb7-42f8-4b78-9ef8-abc36889bdd7",
         lineNumber: 2,
         columnNumber: 24
       },
       {
         functionName: "failTest3",
-        fileName: "67eddeb7-42f8-4b78-9ef8-abc36889bdd7",
+        tracebackId: "67eddeb7-42f8-4b78-9ef8-abc36889bdd7",
         lineNumber: 16,
         columnNumber: 16
       },
       {
         functionName: "",
-        fileName: "c7af4998-6e4a-4049-920d-13b4b3624d9c",
+        tracebackId: "c7af4998-6e4a-4049-920d-13b4b3624d9c",
         lineNumber: 3,
         columnNumber: 12
       }
@@ -96,27 +96,27 @@ failTest3@blob:http://localhost:8000/67eddeb7-42f8-4b78-9ef8-abc36889bdd7 line 2
     parsed: [
       {
         functionName: "failTest",
-        fileName: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
+        tracebackId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
         lineNumber: 3,
         columnNumber: 18
       },
       {
         functionName: "",
-        fileName: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
+        tracebackId: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
         lineNumber: 4,
         columnNumber: 14,
         evalInUserCode: true
       },
       {
         functionName: "",
-        fileName: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
+        tracebackId: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
         lineNumber: 5,
         columnNumber: 3,
         evalInUserCode: true
       },
       {
         functionName: "",
-        fileName: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
+        tracebackId: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
         lineNumber: 1,
         columnNumber: 13
       }
@@ -131,25 +131,25 @@ memoized@blob:http://localhost:8000/533ead26-ded8-4613-bd69-de650bde5bb7:10552:2
     parsed: [
       {
         functionName: "failTest",
-        fileName: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
+        tracebackId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
         lineNumber: 3,
         columnNumber: 18
       },
       {
         functionName: "failTest2",
-        fileName: "13fccf0f-4b5f-42a8-9e31-55cd2b604b70",
+        tracebackId: "13fccf0f-4b5f-42a8-9e31-55cd2b604b70",
         lineNumber: 3,
         columnNumber: 24
       },
       {
         functionName: "memoized",
-        fileName: "533ead26-ded8-4613-bd69-de650bde5bb7",
+        tracebackId: "533ead26-ded8-4613-bd69-de650bde5bb7",
         lineNumber: 10552,
         columnNumber: 27
       },
       {
         functionName: "",
-        fileName: "7cf46998-8771-4016-b940-8c92aec65441",
+        tracebackId: "7cf46998-8771-4016-b940-8c92aec65441",
         lineNumber: 3,
         columnNumber: 22
       }
@@ -165,32 +165,32 @@ memff@blob:http://localhost:8000/dfeb3e06-b116-407f-80de-a09ec84fd0b2 line 2 > e
     parsed: [
       {
         functionName: "failTest2",
-        fileName: "13fccf0f-4b5f-42a8-9e31-55cd2b604b70",
+        tracebackId: "13fccf0f-4b5f-42a8-9e31-55cd2b604b70",
         lineNumber: 6,
         columnNumber: 18
       },
       {
         functionName: "memoized",
-        fileName: "533ead26-ded8-4613-bd69-de650bde5bb7",
+        tracebackId: "533ead26-ded8-4613-bd69-de650bde5bb7",
         lineNumber: 10552,
         columnNumber: 27
       },
       {
         functionName: "memff",
-        fileName: "dfeb3e06-b116-407f-80de-a09ec84fd0b2",
+        tracebackId: "dfeb3e06-b116-407f-80de-a09ec84fd0b2",
         lineNumber: 5,
         columnNumber: 18
       },
       {
         functionName: "",
-        fileName: "b4cb21b0-4004-4721-b62f-320b93a5dee9",
+        tracebackId: "b4cb21b0-4004-4721-b62f-320b93a5dee9",
         lineNumber: 1,
         columnNumber: 6,
         evalInUserCode: true
       },
       {
         functionName: "",
-        fileName: "b4cb21b0-4004-4721-b62f-320b93a5dee9",
+        tracebackId: "b4cb21b0-4004-4721-b62f-320b93a5dee9",
         lineNumber: 1,
         columnNumber: 1
       }
@@ -220,7 +220,7 @@ const chromeStacks = [
     parsed: [
       {
         functionName: "",
-        fileName: "9ecd3231-b49f-44fa-b5be-f671f37310a9",
+        tracebackId: "9ecd3231-b49f-44fa-b5be-f671f37310a9",
         lineNumber: 2,
         columnNumber: 4
       }
@@ -236,13 +236,13 @@ const chromeStacks = [
     parsed: [
       {
         functionName: "",
-        fileName: "ee06386b-3b4a-44a7-a939-44199384f43f",
+        tracebackId: "ee06386b-3b4a-44a7-a939-44199384f43f",
         lineNumber: 4,
         columnNumber: 15
       },
       {
         functionName: "",
-        fileName: "ee06386b-3b4a-44a7-a939-44199384f43f",
+        tracebackId: "ee06386b-3b4a-44a7-a939-44199384f43f",
         lineNumber: 4,
         columnNumber: 6
       }
@@ -257,12 +257,12 @@ const chromeStacks = [
     parsed: [
       {
         functionName: "failTest",
-        fileName: "b81ec193-9a86-44f0-9a77-801a451ecc94",
+        tracebackId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
         lineNumber: 3
       },
       {
         functionName: "",
-        fileName: "25148751-415f-452d-8e24-d27a07fc5b3c",
+        tracebackId: "25148751-415f-452d-8e24-d27a07fc5b3c",
         lineNumber: 1,
         columnNumber: 1
       }
@@ -279,24 +279,24 @@ const chromeStacks = [
     parsed: [
       {
         functionName: "failTest",
-        fileName: "b81ec193-9a86-44f0-9a77-801a451ecc94",
+        tracebackId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
         lineNumber: 3
       },
       {
         functionName: "failTest2",
-        fileName: "6ce0d6a8-c976-4129-9618-9204fff00ada",
+        tracebackId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
         lineNumber: 3,
         columnNumber: 16
       },
       {
         functionName: "failTest3",
-        fileName: "6ce0d6a8-c976-4129-9618-9204fff00ada",
+        tracebackId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
         lineNumber: 17,
         columnNumber: 16
       },
       {
         functionName: "",
-        fileName: "de90461d-fe44-4944-bce3-2afe0b6c1d8a",
+        tracebackId: "de90461d-fe44-4944-bce3-2afe0b6c1d8a",
         lineNumber: 3,
         columnNumber: 3
       }
@@ -313,26 +313,26 @@ const chromeStacks = [
     parsed: [
       {
         functionName: "failTest",
-        fileName: "b81ec193-9a86-44f0-9a77-801a451ecc94",
+        tracebackId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
         lineNumber: 3
       },
       {
         functionName: "",
-        fileName: "fa39f3b8-a303-4908-906e-a2cc633c8768",
+        tracebackId: "fa39f3b8-a303-4908-906e-a2cc633c8768",
         lineNumber: 4,
         columnNumber: 6,
         evalInUserCode: true
       },
       {
         functionName: "",
-        fileName: "fa39f3b8-a303-4908-906e-a2cc633c8768",
+        tracebackId: "fa39f3b8-a303-4908-906e-a2cc633c8768",
         lineNumber: 5,
         columnNumber: 3,
         evalInUserCode: true
       },
       {
         functionName: "",
-        fileName: "fa39f3b8-a303-4908-906e-a2cc633c8768",
+        tracebackId: "fa39f3b8-a303-4908-906e-a2cc633c8768",
         lineNumber: 1,
         columnNumber: 13
       }
@@ -349,23 +349,23 @@ const chromeStacks = [
     parsed: [
       {
         functionName: "failTest",
-        fileName: "b81ec193-9a86-44f0-9a77-801a451ecc94",
+        tracebackId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
         lineNumber: 3
       },
       {
         functionName: "failTest2",
-        fileName: "6ce0d6a8-c976-4129-9618-9204fff00ada",
+        tracebackId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
         lineNumber: 3,
         columnNumber: 16
       },
       {
         functionName: "memoized",
-        fileName: "0d071643-65d2-41b5-a002-78be6a6673fa",
+        tracebackId: "0d071643-65d2-41b5-a002-78be6a6673fa",
         lineNumber: 10552
       },
       {
         functionName: "",
-        fileName: "afb94ea0-f618-4d65-856c-5d8ab2fbd1f0",
+        tracebackId: "afb94ea0-f618-4d65-856c-5d8ab2fbd1f0",
         lineNumber: 3,
         columnNumber: 20
       }
@@ -383,31 +383,31 @@ const chromeStacks = [
     parsed: [
       {
         functionName: "failTest2",
-        fileName: "6ce0d6a8-c976-4129-9618-9204fff00ada",
+        tracebackId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
         lineNumber: 6,
         columnNumber: 18
       },
       {
         functionName: "memoized",
-        fileName: "0d071643-65d2-41b5-a002-78be6a6673fa",
+        tracebackId: "0d071643-65d2-41b5-a002-78be6a6673fa",
         lineNumber: 10552
       },
       {
         functionName: "memff",
-        fileName: "db9dc30a-5f19-4c59-b57a-661917246598",
+        tracebackId: "db9dc30a-5f19-4c59-b57a-661917246598",
         lineNumber: 5,
         columnNumber: 16
       },
       {
         functionName: "",
-        fileName: "df482ed2-2b32-4dfa-85fc-0b109a2a6752",
+        tracebackId: "df482ed2-2b32-4dfa-85fc-0b109a2a6752",
         lineNumber: 1,
         columnNumber: 1,
         evalInUserCode: true
       },
       {
         functionName: "",
-        fileName: "df482ed2-2b32-4dfa-85fc-0b109a2a6752",
+        tracebackId: "df482ed2-2b32-4dfa-85fc-0b109a2a6752",
         lineNumber: 1,
         columnNumber: 1
       }

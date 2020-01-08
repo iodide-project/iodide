@@ -85,7 +85,7 @@ export function* evaluateFetch(fetchText) {
   if (syntaxErrors.length) {
     yield put(
       addToConsoleHistory({
-        historyType: "FETCH_CELL_INFO",
+        historyType: "CONSOLE_OUTPUT_FETCH",
         content: syntaxErrors.map(syntaxErrorToString),
         level: "ERROR"
       })
@@ -95,7 +95,7 @@ export function* evaluateFetch(fetchText) {
 
   const { historyId } = yield put(
     addToConsoleHistory({
-      historyType: "FETCH_CELL_INFO",
+      historyType: "CONSOLE_OUTPUT_FETCH",
       content: fetches.map(fetchProgressInitialStrings)
     })
   );

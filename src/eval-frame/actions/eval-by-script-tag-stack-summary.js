@@ -21,7 +21,7 @@ export const parseFFOrSafari = splitStack => {
     .map(matches => {
       const [
         functionName,
-        fileName,
+        tracebackId,
         maybeUserEvals,
         lineNumber,
         columnNumber
@@ -33,7 +33,7 @@ export const parseFFOrSafari = splitStack => {
 
       return {
         functionName,
-        fileName,
+        tracebackId,
         lineNumber: intOrUndefined(lineNumber),
         columnNumber: intOrUndefined(columnNumber),
         evalInUserCode
@@ -59,7 +59,7 @@ export const parseChrome = splitStack => {
       const [
         functionName,
         maybeUserEvals,
-        fileName,
+        tracebackId,
         maybeLineNumber,
         lineTail
       ] = matches.slice(1);
@@ -76,7 +76,7 @@ export const parseChrome = splitStack => {
 
       return {
         functionName: functionName !== "eval" ? functionName : "",
-        fileName,
+        tracebackId,
         lineNumber: intOrUndefined(lineNumber || maybeLineNumber),
         columnNumber: intOrUndefined(columnNumber),
         evalInUserCode
