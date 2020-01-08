@@ -1,17 +1,12 @@
-export const historyItemSchema = {
+export const genericHistoryItemSchema = {
   type: "object",
   properties: {
-    // content: { type: "string" },
-    content: {
-      anyOf: [{ type: "string" }, { type: "array", items: { type: "string" } }]
-    },
+    content: { type: "string" },
     historyId: { type: "string" },
     historyType: {
       type: "string",
       enum: [
         "APP_MESSAGE",
-        "FETCH_CELL_INFO",
-        "CONSOLE_INPUT",
         "CONSOLE_OUTPUT",
         "CONSOLE_MESSAGE",
         "CONSOLE_OUTPUT_ERROR_STACK"
@@ -20,30 +15,34 @@ export const historyItemSchema = {
     level: { type: "string", enum: ["INFO", "LOG", "WARN", "ERROR"] },
     language: { type: "string" }
   },
-  if: {
-    properties: {
-      historyType: {
-        enum: ["FETCH_CELL_INFO"]
-      }
-    }
+  additionalProperties: false
+};
+
+export const inputItemSchema = {
+  type: "object",
+  properties: {
+    content: { type: "string" },
+    historyId: { type: "string" },
+    historyType: { const: "CONSOLE_INPUT" },
+    language: { type: "string" }
   },
-  then: {
-    properties: {
-      content: {
-        type: "array",
-        items: { type: "string" },
-        default: []
-      }
-    }
-  },
-  else: {
-    properties: { content: { type: "string" } }
+  additionalProperties: false
+};
+
+export const historyFetchInfoSchema = {
+  type: "object",
+  properties: {
+    content: { type: "array", items: { type: "string" } },
+    historyId: { type: "string" },
+    historyType: { const: "CONSOLE_OUTPUT_FETCH" }
   },
   additionalProperties: false
 };
 
 export const historySchema = {
   type: "array",
-  items: historyItemSchema,
+  items: {
+    anyOf: [genericHistoryItemSchema, historyFetchInfoSchema, inputItemSchema]
+  },
   default: []
 };
