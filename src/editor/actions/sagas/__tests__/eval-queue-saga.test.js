@@ -17,6 +17,8 @@ import {
   addEvalTypeConsoleErrorToHistory
 } from "../../../console/history/actions";
 
+import { historyIdGen } from "../../../tools/id-generators";
+
 // this string is the returnValue from a saga was still running when
 // it was timed out by redux-test-plan
 const RUNNING_AT_TIMEOUT = "@@redux-saga/TASK_CANCEL";
@@ -34,6 +36,7 @@ describe("triggerEvalFrameTask test", () => {
   const taskType = "A_TASK";
   const payload = "PAYLOAD";
   const taskId = "TASK_ID";
+  const throwOnError = true;
   const payloadFromEvalFrame = "payloadFromEvalFrame";
   let taskResponse;
 
@@ -42,12 +45,18 @@ describe("triggerEvalFrameTask test", () => {
   });
 
   it("always sends task to eval frame", async () => {
-    await expectSaga(triggerEvalFrameTask, taskType, payload)
+    await expectSaga(
+      triggerEvalFrameTask,
+      taskType,
+      payload,
+      throwOnError,
+      taskId
+    )
       .provide([
         [call(sendTaskToEvalFrame, taskType, payload), taskId],
         [take(`EVAL_FRAME_TASK_RESPONSE-${taskId}`), taskResponse]
       ])
-      .call(sendTaskToEvalFrame, taskType, payload)
+      .call(sendTaskToEvalFrame, taskType, payload, taskId)
       .run();
   });
 
@@ -56,7 +65,13 @@ describe("triggerEvalFrameTask test", () => {
     // need to suppress console.error b/c saga uses it internally somehow
     console.error = jest.fn();
 
-    await expectSaga(triggerEvalFrameTask, taskType, payload)
+    await expectSaga(
+      triggerEvalFrameTask,
+      taskType,
+      payload,
+      throwOnError,
+      taskId
+    )
       .provide([
         [call(sendTaskToEvalFrame, taskType, payload), taskId],
         [take(`EVAL_FRAME_TASK_RESPONSE-${taskId}`), taskResponse]
@@ -72,7 +87,13 @@ describe("triggerEvalFrameTask test", () => {
   });
 
   it("returns payload if EVAL_FRAME_TASK_RESPONSE action is not 'ERROR'", async () => {
-    await expectSaga(triggerEvalFrameTask, taskType, payload)
+    await expectSaga(
+      triggerEvalFrameTask,
+      taskType,
+      payload,
+      throwOnError,
+      taskId
+    )
       .provide([
         [call(sendTaskToEvalFrame, taskType, payload), taskId],
         [take(`EVAL_FRAME_TASK_RESPONSE-${taskId}`), taskResponse]
@@ -86,7 +107,9 @@ describe("triggerEvalFrameTask test", () => {
     const expectSagaOutcome = await expectSaga(
       triggerEvalFrameTask,
       taskType,
-      payload
+      payload,
+      throwOnError,
+      taskId
     )
       .provide([[call(sendTaskToEvalFrame, taskType, payload), taskId]])
       .silentRun();
@@ -117,30 +140,47 @@ describe("loadKnownLanguage test", () => {
 // ========================================================
 
 describe("evaluateByType test", () => {
-  let evalType = "some_language_id";
+  const evalType = "some_language_id";
   const evalText = "some code to eval";
+  const chunkId = "chunk-1";
+  const startLine = 10;
+  const endLine = 23;
+
+  const evalId = "input-1-some_language_id";
+
+  let chunk;
   let state;
   let evalTaskType;
-  const chunkId = "chunk-1";
 
   beforeEach(() => {
-    evalType = "some_language_id";
+    chunk = {
+      chunkType: evalType,
+      chunkContent: evalText,
+      chunkId,
+      startLine,
+      endLine
+    };
+
     state = {
       languageDefinitions: {
         [evalType]: { displayName: "LANG_NAME", languageId: evalType }
       },
       loadedLanguages: { [evalType]: "DUMMY" }
     };
+
+    historyIdGen.resetIdForTestingPurposesOnly();
   });
 
   it("puts message and throws if evalType is not defined'", async () => {
-    evalType = "invalidEvalType";
+    chunk.chunkType = "invalidEvalType";
     // need to suppress console.error b/c saga uses it internally somehow
     console.error = jest.fn();
 
-    await expectSaga(evaluateByType, evalType, evalText, chunkId)
+    await expectSaga(evaluateByType, chunk)
       .withState(state)
-      .put.like(purifiedMessage(addEvalTypeConsoleErrorToHistory(evalType)))
+      .put.like(
+        purifiedMessage(addEvalTypeConsoleErrorToHistory("invalidEvalType"))
+      )
       .silentRun()
       .catch(e => expect(e.message).toBe("unknown evalType"));
   });
@@ -148,65 +188,96 @@ describe("evaluateByType test", () => {
   it("call loadKnownLanguage if lang NOT loaded", async () => {
     // overwrite loaded status of evalType
     state.loadedLanguages = {};
-    await expectSaga(evaluateByType, evalType, evalText, chunkId)
+    await expectSaga(evaluateByType, chunk)
       .withState(state)
-      .call(loadKnownLanguage, state.languageDefinitions[evalType])
+      .call(loadKnownLanguage, state.languageDefinitions[chunk.chunkType])
       .silentRun();
   });
 
   it("if lang NOT loaded, but loads ok, add input to console", async () => {
     // overwrite loaded status of evalType
     state.loadedLanguages = {};
-    await expectSaga(evaluateByType, evalType, evalText, chunkId)
+    await expectSaga(evaluateByType, chunk)
       .withState(state)
       .provide([
         [
-          call(loadKnownLanguage, state.languageDefinitions[evalType]),
+          call(loadKnownLanguage, state.languageDefinitions[chunk.chunkType]),
           "load lang ok"
         ]
       ])
       // .call(loadKnownLanguage, "LANG_NAME", evalType)
-      .put.like(purifiedMessage(addInputToConsole(evalText, evalType)))
+      .put.like(
+        purifiedMessage(
+          addInputToConsole(
+            evalText,
+            evalType,
+            evalId,
+            startLine,
+            endLine,
+            chunkId
+          )
+        )
+      )
       .silentRun();
   });
 
   it("if lang pre-loaded don't call loadKnownLanguage", async () => {
-    await expectSaga(evaluateByType, evalType, evalText, chunkId)
+    await expectSaga(evaluateByType, chunk)
       .withState(state)
       .not.call(loadKnownLanguage)
       .silentRun();
   });
 
   it("if lang pre-loaded, add input to console", async () => {
-    await expectSaga(evaluateByType, evalType, evalText, chunkId)
+    // FIXME this is horribly brittle
+    await expectSaga(evaluateByType, chunk)
       .withState(state)
-      .put.like(purifiedMessage(addInputToConsole(evalText, evalType)))
+      .put.like(
+        purifiedMessage(
+          addInputToConsole(
+            evalText,
+            evalType,
+            evalId,
+            startLine,
+            endLine,
+            chunkId
+          )
+        )
+      )
       .silentRun();
   });
 
   it(`if evalType ok, trigger correct eval frame action for "plugin"`, async () => {
-    evalType = "plugin";
-    const pluginText = "{}";
-    await expectSaga(evaluateByType, evalType, pluginText, chunkId)
+    chunk.chunkType = "plugin";
+    chunk.chunkContent = "{}";
+    await expectSaga(evaluateByType, chunk)
       .withState(state)
-      .call(evaluateLanguagePlugin, pluginText)
+      .call(evaluateLanguagePlugin, chunk.chunkContent)
       .silentRun();
   });
 
   [[evalType, "EVAL_CODE"]].forEach(evalTypeCase => {
     it(`if evalType ok, trigger correct eval frame action for "${evalTypeCase[0]}"`, async () => {
-      [evalType, evalTaskType] = evalTypeCase;
+      const [evalTypeForCase, evalTaskTypeForCase] = evalTypeCase;
       const taskPayload = {
         EVAL_LANGUAGE_PLUGIN: { pluginText: evalText },
         EVAL_CODE: {
           code: evalText,
-          language: state.languageDefinitions[evalType],
+          language: state.languageDefinitions[evalTypeForCase],
           chunkId
         }
       };
-      await expectSaga(evaluateByType, evalType, evalText, chunkId)
+      const throwOnError = false;
+
+      await expectSaga(evaluateByType, chunk)
         .withState(state)
-        .call(triggerEvalFrameTask, evalTaskType, taskPayload[evalTaskType])
+        .call(
+          triggerEvalFrameTask,
+          evalTaskTypeForCase,
+          taskPayload[evalTaskTypeForCase],
+          throwOnError,
+          evalId
+        )
         .silentRun();
     });
   });
