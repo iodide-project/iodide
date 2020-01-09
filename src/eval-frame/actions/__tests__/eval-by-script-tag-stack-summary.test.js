@@ -1,6 +1,8 @@
 import {
   parseFFOrSafari,
-  parseChrome
+  parseChromeOld,
+  parseChromeNew,
+  chromeStackLineHeadRe
 } from "../eval-by-script-tag-stack-summary";
 
 const firefoxStacks = [
@@ -211,7 +213,44 @@ describe("correctly parse Firefox stacks", () => {
 // chrome
 // ====================================
 
-const chromeStacks = [
+// const chromeStackLines = [
+//   {
+//     line:
+//       "    at eval (eval at <anonymous> (blob:http://localhost:8000/2aebdf4e-1787-404c-8704-81107742bca8:2:33), <anonymous>:4:17)",
+//     groups: [
+//       "eval",
+//       " (eval at <anonymous> ",
+//       "ee06386b-3b4a-44a7-a939-44199384f43f",
+//       "4",
+//       "17"
+//     ]
+//   },
+//   {
+//     line:
+//       "    at eval (eval at <anonymous> (ee06386b-3b4a-44a7-a939-44199384f43f:2), <anonymous>:4:15)",
+//     groups: [
+//       "eval",
+//       " (eval at <anonymous> ",
+//       "ee06386b-3b4a-44a7-a939-44199384f43f",
+//       "4",
+//       "17"
+//     ]
+//   }
+// ];
+
+// //    at failTest (blob:http://localhost:8000/6c90e86d-9878-4a25-9dee-f2c7c6fb2c4f:4:18)
+// //    at eval (eval at <anonymous> (blob:http://localhost:8000/b16301fd-c279-496b-95ed-bd38ce9e1921:2:33), <anonymous>:1:1)
+
+// describe("chrome regex returns correct groups", () => {
+//   chromeStackLines.forEach(({ line, groups }, i) => {
+//     const matchedGroups = line.match(chromeStackLineHeadRe).slice(1);
+//     it(`correctly chrome regex for case ${i}; line:\n\`${line}\``, () => {
+//       expect(matchedGroups).toEqual(groups);
+//     });
+//   });
+// });
+
+const chromeStacksOld = [
   {
     stack: `ReferenceError: bb is not defined
     at eval (eval at <anonymous> (9ecd3231-b49f-44fa-b5be-f671f37310a9:2), <anonymous>:2:4)
@@ -415,9 +454,64 @@ const chromeStacks = [
   }
 ];
 
-describe("correctly parse Chrome stacks", () => {
-  chromeStacks.forEach(({ stack, parsed }, i) => {
-    const caseParsed = parseChrome(stack.split("\n"));
+describe("correctly parse old Chrome stacks", () => {
+  chromeStacksOld.forEach(({ stack, parsed }, i) => {
+    const caseParsed = parseChromeOld(stack.split("\n"));
+    it(`correctly parse Chrome stack case ${i}; stack:\n\`${stack}\``, () => {
+      expect(caseParsed).toEqual(parsed);
+    });
+  });
+});
+
+const chromeStacksNew = [
+  {
+    stack: `TypeError: Cannot read property 'trim' of undefined
+    at eval (eval at <anonymous> (blob:http://localhost:8000/2aebdf4e-1787-404c-8704-81107742bca8:2:33), <anonymous>:4:17)
+    at Array.map (<anonymous>)
+    at eval (eval at <anonymous> (blob:http://localhost:8000/2aebdf4e-1787-404c-8704-81107742bca8:2:33), <anonymous>:4:6)
+    at eval (<anonymous>)
+    at blob:http://localhost:8000/2aebdf4e-1787-404c-8704-81107742bca8:2:33`,
+    parsed: [
+      {
+        functionName: "",
+        tracebackId: "2aebdf4e-1787-404c-8704-81107742bca8",
+        lineNumber: 4,
+        columnNumber: 17
+      },
+      {
+        functionName: "",
+        tracebackId: "2aebdf4e-1787-404c-8704-81107742bca8",
+        lineNumber: 4,
+        columnNumber: 6
+      }
+    ]
+  },
+  {
+    stack: ` TypeError: x.fakeMethod is not a function
+    at failTest (blob:http://localhost:8000/6c90e86d-9878-4a25-9dee-f2c7c6fb2c4f:4:18)
+    at eval (eval at <anonymous> (blob:http://localhost:8000/b16301fd-c279-496b-95ed-bd38ce9e1921:2:33), <anonymous>:1:1)
+    at eval (<anonymous>)
+    at blob:http://localhost:8000/b16301fd-c279-496b-95ed-bd38ce9e1921:2:33`,
+    parsed: [
+      {
+        functionName: "failTest",
+        tracebackId: "6c90e86d-9878-4a25-9dee-f2c7c6fb2c4f",
+        lineNumber: 4,
+        columnNumber: 18
+      },
+      {
+        functionName: "",
+        tracebackId: "b16301fd-c279-496b-95ed-bd38ce9e1921",
+        lineNumber: 1,
+        columnNumber: 1
+      }
+    ]
+  }
+];
+
+describe("correctly parse new Chrome stacks", () => {
+  chromeStacksNew.forEach(({ stack, parsed }, i) => {
+    const caseParsed = parseChromeNew(stack.split("\n"));
     it(`correctly parse Chrome stack case ${i}; stack:\n\`${stack}\``, () => {
       expect(caseParsed).toEqual(parsed);
     });
