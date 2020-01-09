@@ -1,8 +1,7 @@
 import {
   parseFFOrSafari,
   parseChromeOld,
-  parseChromeNew,
-  chromeStackLineHeadRe
+  parseChromeNew
 } from "../eval-by-script-tag-stack-summary";
 
 const firefoxStacks = [
