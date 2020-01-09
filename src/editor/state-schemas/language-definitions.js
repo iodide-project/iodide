@@ -2,11 +2,12 @@
 
 export const jsLanguageDefinition = {
   pluginType: "language",
+  pluginVersion: 2,
   languageId: "js",
   displayName: "JavaScript",
-  module: "window",
-  evaluator: "eval",
   url: "",
+  module: "window",
+  evaluator: "evalJavaScript",
   autocomplete: "autocompleteJs"
 };
 

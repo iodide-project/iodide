@@ -7,7 +7,13 @@ import { setKernelState } from "../../eval-actions";
 import { evaluateCurrentQueue, evaluateByType } from "../eval-queue-saga";
 
 function mockChunk(type, text, id) {
-  return { chunkType: type, chunkContent: text, chunkId: id };
+  return {
+    chunkType: type,
+    chunkContent: text,
+    chunkId: id,
+    startLine: 3,
+    endline: 5
+  };
 }
 function mockAddToEvalQueueAction(type, text, id) {
   return { type: "ADD_TO_EVAL_QUEUE", chunk: mockChunk(type, text, id) };
@@ -23,9 +29,9 @@ describe("evaluateCurrentQueue test", () => {
   it("if no errors, calls evaluateByType on all items dispatched", async () => {
     const chunkContent = "foo";
     await expectSaga(evaluateCurrentQueue)
-      .call(evaluateByType, evalType, chunkContent, 1)
-      .call(evaluateByType, evalType, chunkContent, 2)
-      .call(evaluateByType, evalType, chunkContent, 3)
+      .call(evaluateByType, mockChunk(evalType, chunkContent, 1))
+      .call(evaluateByType, mockChunk(evalType, chunkContent, 2))
+      .call(evaluateByType, mockChunk(evalType, chunkContent, 3))
       .put(setKernelState("KERNEL_BUSY"))
       .put(setKernelState("KERNEL_BUSY"))
       .put(setKernelState("KERNEL_BUSY"))

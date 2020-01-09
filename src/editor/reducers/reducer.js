@@ -8,6 +8,7 @@ import evalFrameStateSelector from "../state-schemas/eval-frame-state-selector";
 import fileSourceReducer from "./file-source-reducer";
 import consoleHistory from "../console/history/reducer";
 import consoleInput from "../console/input/reducer";
+import tracebacks from "../tracebacks/reducer-tracebacks";
 /*
 It is suggested that using combineReducers, and following the standard
 of having each reducer only function on a section of the state container,
@@ -30,10 +31,11 @@ function sendStateToEvalFrame(state) {
 }
 
 export default reduceReducers(
+  tracebacks,
   notebookReducer,
   fileSourceReducer,
   evalFrameActionReducer,
   consoleHistory,
   consoleInput,
-  sendStateToEvalFrame
+  sendStateToEvalFrame // sendStateToEvalFrame MUST BE LAST
 );

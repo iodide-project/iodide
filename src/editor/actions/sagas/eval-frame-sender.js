@@ -3,21 +3,26 @@ import messagePasserEditor from "../../../shared/utils/redux-to-port-message-pas
 import generateRandomId from "../../../shared/utils/generate-random-id";
 
 // sender
-export function sendTaskToEvalFrame(taskType, payload) {
-  const taskId = generateRandomId();
-  messagePasserEditor.postMessage(
-    taskType,
-    Object.assign({}, payload, { taskId })
-  );
-  return taskId;
+export function sendTaskToEvalFrame(taskType, payload, taskId) {
+  messagePasserEditor.postMessage(taskType, { ...payload, taskId });
 }
 
 // sagas
-export function* triggerEvalFrameTask(taskType, payload) {
-  const taskId = yield call(sendTaskToEvalFrame, taskType, payload);
+export function* triggerEvalFrameTask(
+  taskType,
+  payload,
+  throwOnError = true,
+  taskId = generateRandomId()
+) {
+  yield call(sendTaskToEvalFrame, taskType, payload, taskId);
+
   const response = yield take(`EVAL_FRAME_TASK_RESPONSE-${taskId}`);
-  if (response.status === "ERROR") {
-    throw new Error(`EVAL_FRAME_TASK_RESPONSE-${taskId}-FAILED`);
+
+  if (throwOnError) {
+    if (response.status === "ERROR") {
+      throw new Error(`EVAL_FRAME_TASK_RESPONSE-${taskId}-FAILED`);
+    }
+    return response.payload;
   }
-  return response.payload;
+  return response;
 }

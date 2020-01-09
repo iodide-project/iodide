@@ -1,7 +1,10 @@
 # (Unreleased; add upcoming change notes here)
-- Center "Help" and "Play" icons in some browsers (fixes #2567) (#2570)
 
+- Center "Help" and "Play" icons in some browsers (fixes #2567) (#2570)
 - Handle cases where coalescing revisions results in no change (fixes #2517)
+- Improve error tracebacks for JS code
+- Add concept of language plugin versions to allow adding new features to languages without breaking existing plugins
+- Add V2 language plugin API, which will allow language plugins to have improved error tracebacks
 
 - Allow users to make a copy of any notebook (fixes #1621) (#2593)
 

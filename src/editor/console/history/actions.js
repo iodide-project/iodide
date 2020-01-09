@@ -22,11 +22,35 @@ export const addLoadingLanguageMsgToHistory = langDisplayName =>
     level: "LOG"
   });
 
-export const addInputToConsole = (evalText, evalType) =>
+export const addInputToConsole = (
+  evalText,
+  evalType,
+  evalId,
+  startLine,
+  endLine,
+  chunkId,
+  historyId = generateRandomId()
+) =>
+  addToConsoleHistory(
+    {
+      historyType: "CONSOLE_INPUT",
+      content: evalText,
+      language: evalType,
+      evalId,
+      originalChunkId: chunkId,
+      originalLines: { startLine, endLine },
+      currentLines: { startLine, endLine }
+    },
+    historyId
+  );
+
+export const addOutputToConsole = (level, evalId) =>
+  addToConsoleHistory({ historyType: "CONSOLE_OUTPUT", level, evalId });
+
+export const addErrorStackToConsole = evalId =>
   addToConsoleHistory({
-    historyType: "CONSOLE_INPUT",
-    content: evalText,
-    language: evalType
+    historyType: "CONSOLE_OUTPUT_ERROR_STACK",
+    evalId
   });
 
 export const addPluginParseErrorToHistory = errorMessage =>

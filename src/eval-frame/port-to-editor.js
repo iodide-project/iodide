@@ -123,8 +123,8 @@ async function receiveMessage(event) {
       case "LOAD_SCRIPT": {
         const { script } = message;
         try {
-          await loadScriptFromBlob(script);
-          sendStatusResponseToEditor("SUCCESS", message.taskId);
+          const scriptUUID = await loadScriptFromBlob(script);
+          sendStatusResponseToEditor("SUCCESS", message.taskId, scriptUUID);
         } catch {
           sendStatusResponseToEditor("ERROR", message.taskId);
         }

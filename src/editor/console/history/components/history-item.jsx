@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 
 import AppMessage from "./app-message";
 import { HistoryValueRenderer } from "../../../components/remote-reps/remote-value-renderer";
+import ErrorStackRenderer from "../../../tracebacks/components/error-stack-renderer";
 
 import HistoryInputItem from "./history-input-item";
 import ConsoleMessage from "./console-message";
@@ -18,7 +19,7 @@ export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
     content: PropTypes.string,
     level: PropTypes.string,
-    historyId: PropTypes.string.isRequired,
+    evalId: PropTypes.string,
     historyType: PropTypes.string.isRequired,
     language: PropTypes.string
   };
@@ -48,11 +49,18 @@ export class HistoryItemUnconnected extends React.Component {
       case "CONSOLE_OUTPUT": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
-            <HistoryValueRenderer valueKey={this.props.historyId} />
+            <HistoryValueRenderer valueKey={this.props.evalId} />
           </ConsoleMessage>
         );
       }
-      case "FETCH_CELL_INFO": {
+      case "CONSOLE_OUTPUT_ERROR_STACK": {
+        return (
+          <ConsoleMessage level="ERROR">
+            <ErrorStackRenderer evalId={this.props.evalId} />
+          </ConsoleMessage>
+        );
+      }
+      case "CONSOLE_OUTPUT_FETCH": {
         return (
           <ConsoleMessage level={this.props.level || "OUTPUT"}>
             <FetchResults>{this.props.content}</FetchResults>
@@ -61,7 +69,7 @@ export class HistoryItemUnconnected extends React.Component {
       }
       default:
         return (
-          <ConsoleMessage level="warn">
+          <ConsoleMessage level="WARN">
             Unknown history type {this.props.historyType}
           </ConsoleMessage>
         );
@@ -73,11 +81,12 @@ export function mapStateToProps(state, ownProps) {
   const historyItem = state.history.filter(
     h => h.historyId === ownProps.historyId
   )[0];
-  const { content, historyId, historyType, level, language } = historyItem;
+  const { content, historyType, level, language, evalId } = historyItem;
 
   return {
-    content: historyType === "FETCH_CELL_INFO" ? content.join("\n") : content,
-    historyId,
+    content:
+      historyType === "CONSOLE_OUTPUT_FETCH" ? content.join("\n") : content,
+    evalId,
     historyType,
     level,
     language
