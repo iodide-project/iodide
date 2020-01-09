@@ -69,10 +69,12 @@ export function mapStateToProps(state, ownProps) {
       currentLines,
       editedSinceEval
     });
-    const userEval = evalInUserCode ? " (relative to `eval`)" : "";
+    const userEval = evalInUserCode ? " (within eval)" : "";
     traceDisplayName = `[${evalId}${userEval}]`;
 
-    finalLineNumber = lineNumber + currentLines.startLine;
+    if (!evalInUserCode) {
+      finalLineNumber = lineNumber + currentLines.startLine;
+    }
     hasBeenEdited = editedSinceEval;
   } else {
     traceDisplayName = tracebackItem.fileName;
