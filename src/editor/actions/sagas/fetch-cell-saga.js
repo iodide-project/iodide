@@ -57,7 +57,6 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
     const scriptUUID = yield call(triggerEvalFrameTask, "LOAD_SCRIPT", {
       script: fetchedFile
     });
-    // console.log(scriptUUID);
     yield put(jsScriptLoaded(filePath, scriptUUID));
   } else if (fetchType === "css") {
     yield call(triggerEvalFrameTask, "ADD_CSS", {

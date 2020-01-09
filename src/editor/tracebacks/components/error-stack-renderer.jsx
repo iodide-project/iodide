@@ -28,7 +28,6 @@ const keyFromStackItem = stackItem => {
 };
 
 const ErrorStackRendererUnconnected = ({ message, name, stack }) => {
-  console.log({ message, name, stack });
   return (
     <React.Fragment>
       <pre>

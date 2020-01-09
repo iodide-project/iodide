@@ -137,7 +137,6 @@ export function getErrorStackFrame(e) {
     );
   }
 
-
   const { name, message } = e;
   return { name, message, stack };
 }

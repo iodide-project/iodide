@@ -4,11 +4,7 @@ import generateRandomId from "../../../shared/utils/generate-random-id";
 
 // sender
 export function sendTaskToEvalFrame(taskType, payload, taskId) {
-  messagePasserEditor.postMessage(
-    taskType,
-    Object.assign({}, payload, { taskId })
-    // { ...payload, taskId }
-  );
+  messagePasserEditor.postMessage(taskType, { ...payload, taskId });
 }
 
 // sagas
