@@ -150,7 +150,6 @@ describe("evaluateByType test", () => {
 
   let chunk;
   let state;
-  let evalTaskType;
 
   beforeEach(() => {
     chunk = {
