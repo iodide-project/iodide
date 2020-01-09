@@ -45,15 +45,17 @@ export const parseFFOrSafari = splitStack => {
 
 const chromeStackLineHeadRe = /^ {4}at ([.\S]*)(.*)\(([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}):([0-9]+)\)(.*)$/;
 
+const chromeOldStackLineHeadRe = chromeStackLineHeadRe;
+
 const chromeStackLineTailRe = /.*:([0-9]+):([0-9]+)\)$/;
 
 // see note above about plain chunk match for FF
 const chromePlainChunkMatch = " (eval at <anonymous> ";
 
-export const parseChrome = splitStack => {
+export const parseChromeOld = splitStack => {
   const parsed = splitStack
     .slice(1, -2)
-    .map(line => line.match(chromeStackLineHeadRe))
+    .map(line => line.match(chromeOldStackLineHeadRe))
     .filter(matches => matches !== null)
     .map(matches => {
       const [
@@ -86,11 +88,56 @@ export const parseChrome = splitStack => {
   return parsed;
 };
 
+export const chromeNewStackRe = /^ {4}at ([.\S]*)(.*)\(blob.*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}):.*([0-9]+):([0-9]+)\)$/;
+
+export const parseChromeNew = splitStack => {
+  const parsed = splitStack
+    .slice(1, -2)
+    .map(line => line.match(chromeNewStackRe))
+    .filter(matches => matches !== null)
+    .map(matches => {
+      const [
+        functionName,
+        maybeUserEvals,
+        tracebackId,
+        lineNumber,
+        columnNumber
+      ] = matches.slice(1);
+
+      const evalInUserCode =
+        maybeUserEvals !== " " && maybeUserEvals !== chromePlainChunkMatch
+          ? true
+          : undefined;
+
+      return {
+        functionName: functionName !== "eval" ? functionName : "",
+        tracebackId,
+        lineNumber: intOrUndefined(lineNumber),
+        columnNumber: intOrUndefined(columnNumber),
+        evalInUserCode
+      };
+    });
+
+  return parsed;
+};
+
 export function getErrorStackFrame(e) {
-  const splitStack = e.stack.split("\n");
-  const stack = splitStack[0].match(firefoxStackLineRe)
-    ? parseFFOrSafari(splitStack)
-    : parseChrome(splitStack);
+  const splitStack = e.stack.split("\n").filter(line => line !== "");
+
+  let stack;
+  if (splitStack[0].match(firefoxStackLineRe)) {
+    stack = parseFFOrSafari(splitStack);
+  } else if (splitStack[1].match(chromeOldStackLineHeadRe)) {
+    stack = parseChromeOld(splitStack);
+  } else if (splitStack[1].match(chromeNewStackRe)) {
+    stack = parseChromeNew(splitStack);
+  } else {
+    console.warn(
+      "Error stack parsing not available for this browser, please file an issue."
+    );
+  }
+
+
   const { name, message } = e;
   return { name, message, stack };
 }
