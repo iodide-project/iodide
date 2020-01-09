@@ -24,7 +24,7 @@ const MOST_RECENT_CHUNK_ID = new Singleton();
 
 export { MOST_RECENT_CHUNK_ID };
 
-function evalJavaScript(codeString) {
+window.evalJavaScript = codeString => {
   // for async script loading from blobs, see:
   // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
   const tempId = generateRandomId();
@@ -53,15 +53,8 @@ function evalJavaScript(codeString) {
         value instanceof Error ? getErrorStackFrame(value) : undefined;
       resolve({ value, tracebackId, errorStack });
     };
-    // script.onerror = err => {
-    //   URL.revokeObjectURL(url);
-    //   delete window[`code-${tempId}`];
-    //   resolve({ value: err, tracebackId, error: getErrorStackFrame(err) });
-    //   // reject(new Error(err));
-    // };
   });
-}
-window.evalJavaScript = evalJavaScript;
+};
 
 export function runCodeWithLanguage(language, code) {
   const { module, evaluator, asyncEvaluator } = language;

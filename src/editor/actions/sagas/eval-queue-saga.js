@@ -67,7 +67,7 @@ export function* evaluateByType(chunk) {
     endLine
   } = chunk;
   const state = yield select();
-  const evalId = `in-${historyIdGen.nextId()}-${evalType}`;
+  const evalId = `input-${historyIdGen.nextId()}-${evalType}`;
 
   if (!evalTypeIsDefined(state, evalType)) {
     yield put(addEvalTypeConsoleErrorToHistory(evalType));
@@ -108,7 +108,6 @@ export function* evaluateByType(chunk) {
     }
 
     if (errorStack !== undefined) {
-      console.log({ errorStack });
       yield put(recordErrorStack(evalId, errorStack));
       yield put(addErrorStackToConsole(evalId));
     } else {
