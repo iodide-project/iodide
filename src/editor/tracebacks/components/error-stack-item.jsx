@@ -56,24 +56,22 @@ export function mapStateToProps(state, ownProps) {
   let hasBeenEdited;
 
   if (tracebackItem.tracebackType === "USER_EVALUATION") {
-    // console.log("ghi", getHistoryInputByEvalId(state, tracebackItem.evalId));
     const {
-      language,
       evalId,
-      currentLines,
+      originalChunkId,
       editedSinceEval
     } = getHistoryInputByEvalId(state, tracebackItem.evalId);
-    console.log({
-      language,
-      evalId,
-      currentLines,
-      editedSinceEval
-    });
+
     const userEval = evalInUserCode ? " (within eval)" : "";
     traceDisplayName = `[${evalId}${userEval}]`;
 
     if (!evalInUserCode) {
-      finalLineNumber = lineNumber + currentLines.startLine;
+      const originalChunkArray = state.iomdChunks.filter(
+        chunk => chunk.chunkId === originalChunkId
+      );
+      const startLine =
+        originalChunkArray.length > 0 ? originalChunkArray[0].startLine : 0;
+      finalLineNumber = lineNumber + startLine;
     }
     hasBeenEdited = editedSinceEval;
   } else {
