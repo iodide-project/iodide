@@ -67,7 +67,7 @@ export function* evaluateByType(chunk) {
     endLine
   } = chunk;
   const state = yield select();
-  const evalId = `${historyIdGen.nextId()}-${evalType}`;
+  const evalId = `in-${historyIdGen.nextId()}-${evalType}`;
 
   if (!evalTypeIsDefined(state, evalType)) {
     yield put(addEvalTypeConsoleErrorToHistory(evalType));
@@ -78,7 +78,9 @@ export function* evaluateByType(chunk) {
     yield call(loadKnownLanguage, state.languageDefinitions[evalType]);
   }
 
-  yield put(addInputToConsole(evalText, evalType, evalId, startLine, endLine));
+  yield put(
+    addInputToConsole(evalText, evalType, evalId, startLine, endLine, chunkId)
+  );
 
   if (evalType === "plugin") {
     yield call(evaluateLanguagePlugin, evalText);

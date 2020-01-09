@@ -28,6 +28,7 @@ export const addInputToConsole = (
   evalId,
   startLine,
   endLine,
+  chunkId,
   historyId = generateRandomId()
 ) =>
   addToConsoleHistory(
@@ -36,6 +37,7 @@ export const addInputToConsole = (
       content: evalText,
       language: evalType,
       evalId,
+      originalChunkId: chunkId,
       originalLines: { startLine, endLine },
       currentLines: { startLine, endLine }
     },

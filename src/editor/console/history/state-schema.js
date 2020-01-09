@@ -22,6 +22,7 @@ export const inputItemSchema = {
     historyId: { type: "string" },
     historyType: { const: "CONSOLE_INPUT" },
     language: { type: "string" },
+    originalChunkId: { type: "string" },
     originalLines: {
       type: "object",
       properties: {
