@@ -11,7 +11,6 @@ import {
   toggleHelpModal,
   toggleHistoryModal
 } from "../actions/modal-actions";
-import { clearVariables } from "../actions/notebook-actions";
 import { createNewNotebookOnServer } from "../actions/server-save-actions";
 
 // FIXME: remove requirement to import store in this file by attaching
@@ -87,14 +86,6 @@ tasks.makeCopy = new UserTask({
   title: "Make a Copy",
   callback() {
     store.dispatch(createNewNotebookOnServer());
-  }
-});
-
-tasks.clearVariables = new UserTask({
-  title: "Clear Variables",
-  preventDefaultKeybinding: true,
-  callback() {
-    store.dispatch(clearVariables());
   }
 });
 

@@ -32,7 +32,6 @@ export class EditorToolbarMenuUnconnected extends React.Component {
         {this.props.isServer && (
           <NotebookMenuItem task={tasks.toggleFileModal} />
         )}
-        <NotebookMenuItem task={tasks.clearVariables} />
         <NotebookMenuItem task={tasks.toggleHelpModal} />
       </NotebookIconMenu>
     );

@@ -3,25 +3,3 @@
   height: 100%;
   overflow: auto;
 }
-
-div.declared-variables-list {
-  padding: 15px;
-}
-
-div.declared-variable {
-  padding-bottom: 15px;
-}
-
-div.declared-variable-name {
-  font-size: 14px;
-  font-family: monospace;
-  background: #f9f9f9;
-  border: 1px solid #f1f1f1;
-  padding: 1px 10px;
-  color: #000;
-}
-
-div.declared-variable-value {
-  padding-left: 20px;
-  overflow-x: auto;
-}

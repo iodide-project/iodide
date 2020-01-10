@@ -1,7 +1,26 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "@emotion/styled";
 
 import { WindowValueRenderer } from "../remote-reps/remote-value-renderer";
+
+const DeclaredVariableContainer = styled("div")`
+  padding-bottom: 15px;
+`;
+
+const DeclaredVariableName = styled("div")`
+  font-size: 14px;
+  font-family: monospace;
+  background: #f9f9f9;
+  border: 1px solid #f1f1f1;
+  padding: 1px 10px;
+  color: #000;
+`;
+
+const DeclaredVariableValue = styled("div")`
+  padding-left: 20px;
+  overflow-x: auto;
+`;
 
 export class DeclaredVariable extends React.Component {
   static propTypes = {
@@ -9,12 +28,12 @@ export class DeclaredVariable extends React.Component {
   };
   render() {
     return (
-      <div className="declared-variable">
-        <div className="declared-variable-name">{this.props.varName} = </div>
-        <div className="declared-variable-value">
+      <DeclaredVariableContainer>
+        <DeclaredVariableName>{this.props.varName} = </DeclaredVariableName>
+        <DeclaredVariableValue>
           <WindowValueRenderer valueKey={this.props.varName} />
-        </div>
-      </div>
+        </DeclaredVariableValue>
+      </DeclaredVariableContainer>
     );
   }
 }

@@ -4,6 +4,7 @@
 - Handle cases where coalescing revisions results in no change (fixes #2517)
 - Allow users to make a copy of any notebook (fixes #1621) (#2593)
 - Allow viewing files when not logged in (fixes #2562) (#2575)
+- Move "clear declared variables" to workspace pane (#2621)
 
 # 0.17.0 (2019-12-19)
 
