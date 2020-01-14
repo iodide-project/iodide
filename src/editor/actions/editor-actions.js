@@ -35,3 +35,7 @@ export function moveCursorToNextChunk() {
     dispatch(updateEditorCursor(targetChunk.endLine + 1, 0));
   };
 }
+
+export function setErrorInEditor() {
+  return undefined;
+}

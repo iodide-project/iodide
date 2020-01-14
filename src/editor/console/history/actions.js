@@ -38,8 +38,7 @@ export const addInputToConsole = (
       language: evalType,
       evalId,
       originalChunkId: chunkId,
-      originalLines: { startLine, endLine },
-      currentLines: { startLine, endLine }
+      originalLines: { startLine, endLine }
     },
     historyId
   );
@@ -77,3 +76,13 @@ export const updateHistoryLineContent = (
   lineIndex,
   lineContent
 });
+
+export const setHistoryItemScroll = historyId => ({
+  type: "console/history/SET_SCROLL_TARGET",
+  historyId
+});
+
+export const clearHistoryItemScroll = () => setHistoryItemScroll(undefined);
+//  ({
+//    type: "console/history/CLEAR_SCROLL_TARGET"
+//  });
