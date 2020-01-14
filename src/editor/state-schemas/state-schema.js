@@ -177,20 +177,11 @@ export const stateProperties = {
     },
     default: []
   },
-
-  gettingRevisionList: {
-    type: "boolean",
-    default: false
-  },
-  hasPreviousAutosave: {
-    type: "boolean",
-    default: false
-  },
+  gettingRevisionList: { type: "boolean", default: false },
+  hasPreviousAutosave: { type: "boolean", default: false },
   history: historySchema,
-  iomd: {
-    type: "string",
-    default: ""
-  },
+  // historyScrollTargetId: { type: "string", default: "" },
+  iomd: { type: "string", default: "" },
   previouslySavedContent: {
     type: "object",
     default: { title: "", iomd: "" },
@@ -224,18 +215,7 @@ export const stateProperties = {
     additionalProperties: languageSchema,
     default: languageDefinitions
   },
-  languageLastUsed: {
-    type: "string",
-    default: "js"
-  },
-  lastExport: {
-    type: "string",
-    default: undefined
-  },
-  lastSaved: {
-    type: "string",
-    default: undefined
-  },
+  languageLastUsed: { type: "string", default: "js" },
   loadedLanguages: {
     type: "object",
     additionalProperties: languageSchema,
@@ -368,10 +348,7 @@ export const stateProperties = {
       WorkspacePositioner: Object.assign({}, positionerDefaults)
     }
   },
-  title: {
-    type: "string",
-    default: "untitled"
-  },
+  title: { type: "string", default: "untitled" },
   tracebackInfo: tracebackInfoSchema,
   userData: {
     type: "object",
@@ -392,10 +369,7 @@ export const stateProperties = {
     enum: ["EXPLORE_VIEW", "REPORT_VIEW"],
     default: "EXPLORE_VIEW"
   },
-  wrapEditors: {
-    type: "boolean",
-    default: true
-  }
+  wrapEditors: { type: "boolean", default: true }
 };
 
 export const stateSchema = {

@@ -1,90 +1,100 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 
-// import styled from "@emotion/styled";
+import styled from "@emotion/styled";
 
-import { getHistoryInputByEvalId } from "../../console/history/selectors";
-// const MessageBody = styled("div")`
-//   margin: auto;
-//   margin-left: 0;
-//   padding-top: 5px;
-//   padding-bottom: 5px;
-//   min-height: 20px;
-//   max-width: calc(100% - 5px);
-//   overflow-x: hidden;
-// `;
+import { History, OpenInNew } from "@material-ui/icons";
+import Tooltip from "@material-ui/core/Tooltip";
 
-const StackItemUnconnected = ({
+import GoToLineIcon from "./go-to-line-icon";
+
+const TinyIconButton = styled("div")`
+  color: rgba(0, 0, 0, 0.54);
+  padding: 4px;
+  overflow: visible;
+  font-size: 1.5rem;
+  text-align: center;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 50%;
+  border: 0;
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  outline: none;
+  position: relative;
+  align-items: center;
+  user-select: none;
+  vertical-align: middle;
+  justify-content: center;
+  text-decoration: none;
+  background-color: transparent;
+  :hover {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+`;
+
+const StackItem = ({
+  tracebackId,
   functionName,
   traceDisplayName,
   lineNumber,
-  columnNumber
+  columnNumber,
+  editedSinceEval,
+  evalInUserCode,
+  tracebackType,
+  goToTracebackItem
 }) => {
-  const colStr = columnNumber !== undefined ? ` col ${columnNumber}` : "";
-  const fnStr = functionName !== "" ? `; in ${functionName}` : "";
+  let Icon;
+  let tooltipText;
+  if (tracebackType === "FETCHED_JS_SCRIPT") {
+    Icon = OpenInNew;
+    tooltipText = "Open script URL in new tab";
+  } else if (evalInUserCode) {
+    Icon = History;
+    tooltipText = "Go to error in history";
+  } else if (tracebackType === "USER_EVALUATION" && editedSinceEval) {
+    Icon = History;
+    tooltipText = "Go to error in history (code edited since evaluation)";
+  } else {
+    Icon = GoToLineIcon;
+    tooltipText = "Go to error in editor";
+  }
+
+  const fnStr =
+    functionName !== "" ? (
+      <React.Fragment>
+        <i>{functionName}</i> in{" "}
+      </React.Fragment>
+    ) : (
+      ""
+    );
+
+  const colStr = columnNumber >= 0 ? ` col ${columnNumber}` : "";
+
   return (
-    <React.Fragment>
-      <pre>
-        {traceDisplayName}: line {lineNumber}
-        {colStr}
-        {fnStr}
-      </pre>
-    </React.Fragment>
+    <div>
+      <Tooltip classes={{ tooltip: "iodide-tooltip" }} title={tooltipText}>
+        <TinyIconButton onClick={() => goToTracebackItem(tracebackId)}>
+          <Icon />
+        </TinyIconButton>
+      </Tooltip>
+      {fnStr}
+      {traceDisplayName}: line {lineNumber}
+      {colStr}
+    </div>
   );
 };
 
-StackItemUnconnected.propTypes = {
+StackItem.propTypes = {
+  tracebackId: PropTypes.string.isRequired,
   functionName: PropTypes.string.isRequired,
   traceDisplayName: PropTypes.string.isRequired,
   lineNumber: PropTypes.number.isRequired,
-  columnNumber: PropTypes.number
+  columnNumber: PropTypes.number,
+  editedSinceEval: PropTypes.bool.isRequired,
+  evalInUserCode: PropTypes.bool,
+  tracebackType: PropTypes.string.isRequired,
+  goToTracebackItem: PropTypes.func.isRequired
 };
 
-export function mapStateToProps(state, ownProps) {
-  const {
-    functionName,
-    tracebackId,
-    lineNumber,
-    columnNumber,
-    evalInUserCode
-  } = ownProps;
-  const tracebackItem = state.tracebackInfo.tracebackItems[tracebackId];
-
-  let traceDisplayName;
-  let finalLineNumber = lineNumber;
-  let hasBeenEdited;
-
-  if (tracebackItem.tracebackType === "USER_EVALUATION") {
-    const {
-      evalId,
-      originalChunkId,
-      editedSinceEval
-    } = getHistoryInputByEvalId(state, tracebackItem.evalId);
-
-    const userEval = evalInUserCode ? " (within eval)" : "";
-    traceDisplayName = `[${evalId}${userEval}]`;
-
-    if (!evalInUserCode) {
-      const originalChunkArray = state.iomdChunks.filter(
-        chunk => chunk.chunkId === originalChunkId
-      );
-      const startLine =
-        originalChunkArray.length > 0 ? originalChunkArray[0].startLine : 0;
-      finalLineNumber = lineNumber + startLine;
-    }
-    hasBeenEdited = editedSinceEval;
-  } else {
-    traceDisplayName = tracebackItem.fileName;
-  }
-
-  return {
-    traceDisplayName,
-    functionName,
-    lineNumber: finalLineNumber,
-    columnNumber,
-    hasBeenEdited
-  };
-}
-
-export default connect(mapStateToProps)(StackItemUnconnected);
+export default StackItem;

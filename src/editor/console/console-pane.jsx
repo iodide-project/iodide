@@ -21,6 +21,7 @@ export class ConsolePaneUnconnected extends React.Component {
   static propTypes = {
     historyIds: PropTypes.arrayOf(PropTypes.string),
     paneVisible: PropTypes.bool.isRequired
+    // scrollTargetId: PropTypes.string.isRequired
   };
 
   constructor(props) {
@@ -36,6 +37,21 @@ export class ConsolePaneUnconnected extends React.Component {
   }
 
   componentDidUpdate() {
+    // console.log(
+    //   "scroll",
+    //   prevProps,
+    //   prevProps.scrollTargetId,
+    //   this.props.scrollTargetId
+    // );
+    // if (prevProps.scrollTargetId !== this.props.scrollTargetId) {
+    //   document
+    //     .getElementById(this.props.scrollTargetId)
+    //     .scrollIntoView({ behavior: "smooth" });
+    //   // this.historyScrollerRef.current.scrollIntoView({
+    //   //   top: this.historyScrollerRef.current.scrollHeight,
+    //   //   behavior: "smooth"
+    //   // });
+    // }
     // scroll to bottom on update
     this.historyScrollerRef.current.scrollTo({
       top: this.historyScrollerRef.current.scrollHeight,
@@ -98,6 +114,7 @@ export class ConsolePaneUnconnected extends React.Component {
 
 function areStatesEqual(next, prev) {
   return (
+    // next.historyScrollTargetId === prev.historyScrollTargetId &&
     next.panePositions.ConsolePositioner.display ===
       prev.panePositions.ConsolePositioner.display &&
     isEqual(
@@ -111,6 +128,7 @@ export function mapStateToProps(state) {
   return {
     historyIds: state.history.map(h => h.historyId),
     paneVisible: state.panePositions.ConsolePositioner.display === "block"
+    // scrollTargetId: state.historyScrollTargetId
   };
 }
 

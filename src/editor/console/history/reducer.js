@@ -37,6 +37,43 @@ export default function reducer(state, action) {
       return Object.assign({}, state, { history });
     }
 
+    case "console/history/SET_SCROLL_TARGET": {
+      // const history = [...state.history.slice()];
+      // const i = history.findIndex(h => h.historyId === action.historyId);
+      // const historyEntry = {
+      //   ...history[i],
+      //   scrollToThisItem: true
+      // };
+      // history[i] = historyEntry;
+      const history = state.history.map(item => {
+        // if (item.scrollToThisItem) {
+        //   item.scrollToThisItem = false;
+        // }
+        return {
+          ...item,
+          scrollToThisItem:
+            item.historyId === action.historyId ? true : undefined
+        };
+      });
+      return { ...state, history };
+    }
+
+    // case "console/history/CLEAR_SCROLL_TARGET": {
+    //   const history = state.history.map(item => {
+    //     // if (item.scrollToThisItem) {
+    //     //   item.scrollToThisItem = false;
+    //     // }
+    //     return { ...item, scrollToThisItem: undefined };
+    //   });
+    //   // const i = history.findIndex(h => h.historyId === action.historyId);
+    //   // const historyEntry = {
+    //   //   ...history[i],
+    //   //   scrollToThisItem: true
+    //   // };
+    //   // history[i] = historyEntry;
+    //   return { ...state, history };
+    // }
+
     default: {
       return state;
     }
