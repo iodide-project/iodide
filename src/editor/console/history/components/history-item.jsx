@@ -18,7 +18,6 @@ const FetchResults = styled("pre")`
 
 export class HistoryItemUnconnected extends React.Component {
   static propTypes = {
-    // historyId: PropTypes.string,
     content: PropTypes.string,
     level: PropTypes.string,
     evalId: PropTypes.string,
@@ -121,7 +120,6 @@ export function mapStateToProps(state, ownProps) {
   } = historyItem;
 
   return {
-    // historyId: ownProps.historyId,
     content:
       historyType === "CONSOLE_OUTPUT_FETCH" ? content.join("\n") : content,
     evalId,
