@@ -1,16 +1,18 @@
 export default function reducer(state, action) {
   switch (action.type) {
     case "console/history/ADD": {
-      const actionCopy = Object.assign({}, action);
+      const actionCopy = { ...action };
       delete actionCopy.type;
       const history = [...state.history, actionCopy];
-      return Object.assign({}, state, { history });
+      return { ...state, history };
     }
+
     case "console/history/CLEAR": {
-      return Object.assign({}, state, { history: [] });
+      return { ...state, history: [] };
     }
+
     case "console/history/UPDATE": {
-      const actionCopy = Object.assign({}, action);
+      const actionCopy = { ...action };
       const history = [...state.history.slice()];
       const i = history.findIndex(
         h => h.historyId === actionCopy.historyItem.historyId
@@ -21,7 +23,7 @@ export default function reducer(state, action) {
         actionCopy.historyItem
       );
       history[i] = historyEntry;
-      return Object.assign({}, state, { history });
+      return { ...state, history };
     }
 
     case "console/history/UPDATE_LINE": {
@@ -31,24 +33,12 @@ export default function reducer(state, action) {
 
       contentLines[action.lineIndex] = action.lineContent;
 
-      history[i] = Object.assign({}, history[i], {
-        content: contentLines
-      });
-      return Object.assign({}, state, { history });
+      history[i] = { ...history[i], content: contentLines };
+      return { ...state, history };
     }
 
     case "console/history/SET_SCROLL_TARGET": {
-      // const history = [...state.history.slice()];
-      // const i = history.findIndex(h => h.historyId === action.historyId);
-      // const historyEntry = {
-      //   ...history[i],
-      //   scrollToThisItem: true
-      // };
-      // history[i] = historyEntry;
       const history = state.history.map(item => {
-        // if (item.scrollToThisItem) {
-        //   item.scrollToThisItem = false;
-        // }
         return {
           ...item,
           scrollToThisItem:
@@ -57,22 +47,6 @@ export default function reducer(state, action) {
       });
       return { ...state, history };
     }
-
-    // case "console/history/CLEAR_SCROLL_TARGET": {
-    //   const history = state.history.map(item => {
-    //     // if (item.scrollToThisItem) {
-    //     //   item.scrollToThisItem = false;
-    //     // }
-    //     return { ...item, scrollToThisItem: undefined };
-    //   });
-    //   // const i = history.findIndex(h => h.historyId === action.historyId);
-    //   // const historyEntry = {
-    //   //   ...history[i],
-    //   //   scrollToThisItem: true
-    //   // };
-    //   // history[i] = historyEntry;
-    //   return { ...state, history };
-    // }
 
     default: {
       return state;
