@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.18.0 (2020-01-22)
+
 - Center "Help" and "Play" icons in some browsers (fixes #2567) (#2570)
 - Handle cases where coalescing revisions results in no change (fixes #2517)
 - Allow users to make a copy of any notebook (fixes #1621) (#2593)
