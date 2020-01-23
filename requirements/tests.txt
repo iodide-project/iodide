@@ -89,9 +89,9 @@ mccabe==0.6.1 \
     --hash=sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42 \
     --hash=sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f \
     # via flake8
-more-itertools==8.0.2 \
-    --hash=sha256:b84b238cce0d9adad5ed87e745778d20a3f8487d0f0cb8b8a586816c7496458d \
-    --hash=sha256:c833ef592a0324bcc6a60e48440da07645063c453880c9477ceb22490aec1564 \
+more-itertools==8.1.0 \
+    --hash=sha256:1a2a32c72400d365000412fe08eb4a24ebee89997c18d3d147544f70f5403b39 \
+    --hash=sha256:c468adec578380b6281a114cb8a5db34eb1116277da92d7c46f904f0b52d3288 \
     # via pytest
 packaging==20.0 \
     --hash=sha256:aec3fdbb8bc9e4bb65f0634b9f551ced63983a529d6a8931817d52fdd0816ddb \
