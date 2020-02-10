@@ -1,5 +1,8 @@
 # (Unreleased; add upcoming change notes here)
 
+- Can now specify notebook iomd via a URL parameter with new or
+  tryit endpoints (fixes #2565) (#2676)
+
 # 0.18.0 (2020-01-22)
 
 - Center "Help" and "Play" icons in some browsers (fixes #2567) (#2570)
