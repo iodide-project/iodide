@@ -128,18 +128,31 @@ def notebook_revisions(request, pk):
     )
 
 
+def _get_new_notebook_content(iomd):
+    if iomd:
+        return iomd
+    # default is to create a new notebook from our default template
+    return get_template("new_notebook_content.iomd").render()
+
+
+def _get_iomd_params(iomd):
+    if iomd:
+        return f"?iomd={urllib.parse.quote_plus(iomd)}"
+    return ""
+
+
 @ensure_csrf_cookie
 def new_notebook_view(request):
+    iomd = request.GET.get("iomd")
     if not request.user.is_authenticated:
-        return redirect(reverse("try-it"))
+        return redirect(reverse("try-it") + _get_iomd_params(iomd))
 
     # create a new notebook and redirect to its view
-    new_notebook_content_template = get_template("new_notebook_content.iomd")
     with transaction.atomic():
         notebook = Notebook.objects.create(owner=request.user)
         NotebookRevision.objects.create(
             notebook=notebook,
-            content=new_notebook_content_template.render(),
+            content=_get_new_notebook_content(iomd),
             title=get_random_compound(),
             is_draft=True,
         )
@@ -153,10 +166,11 @@ def tryit_view(request):
 
     If user is logged in, redirect to `/new/`
     """
+    iomd = request.GET.get("iomd")
+
     if request.user.is_authenticated:
-        return redirect(new_notebook_view)
-    # create a new notebook and redirect to its view
-    new_notebook_content_template = get_template("new_notebook_content.iomd")
+        return redirect(reverse(new_notebook_view) + _get_iomd_params(iomd))
+
     return render(
         request,
         "notebook.html",
@@ -167,7 +181,7 @@ def tryit_view(request):
                 "tryItMode": True,
                 "title": "Untitled notebook",
             },
-            "iomd": new_notebook_content_template.render(),
+            "iomd": _get_new_notebook_content(iomd),
             "iframe_src": _get_iframe_src(),
             "eval_frame_origin": EVAL_FRAME_ORIGIN,
         },

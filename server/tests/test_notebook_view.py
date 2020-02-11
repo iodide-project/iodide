@@ -1,4 +1,5 @@
 import random
+import urllib.parse
 
 import pytest
 from django.urls import reverse
@@ -93,34 +94,50 @@ def test_notebook_view_old_revision(client, test_notebook):
 
 
 @pytest.mark.parametrize("logged_in", [True, False])
-def test_new_notebook_view(client, fake_user, logged_in):
+@pytest.mark.parametrize("iomd", [None, "%%md\nfoo"])
+def test_new_notebook_view(client, fake_user, logged_in, iomd):
     random.seed(0)
     if logged_in:
         client.force_login(fake_user)
 
-    response = client.get(reverse("new-notebook"), follow=True)
+    path = reverse("new-notebook")
+    params = f"?iomd={urllib.parse.quote_plus(iomd)}" if iomd else ""
+    path += params
+
+    response = client.get(path, follow=True)
     (last_url, _) = response.redirect_chain[-1]
     if logged_in:
         assert NotebookRevision.objects.count() == 1
         assert Notebook.objects.count() == 1
         assert Notebook.objects.values_list("title", flat=True).first() == "neodymium(III) iodide"
+        if iomd:
+            assert NotebookRevision.objects.first().content == iomd
         assert last_url == Notebook.objects.all()[0].get_absolute_url()
     else:
         assert NotebookRevision.objects.count() == 0
         assert Notebook.objects.count() == 0
-        assert last_url == reverse("try-it")
+        assert last_url == reverse("try-it") + params
 
 
 @pytest.mark.parametrize("logged_in", [True, False])
-def test_tryit_view(client, fake_user, logged_in):
+@pytest.mark.parametrize("iomd", [None, "%%md\nfoo"])
+def test_tryit_view(client, fake_user, logged_in, iomd):
     if logged_in:
         client.force_login(fake_user)
-    response = client.get(reverse("try-it"), follow=True)
+
+    path = reverse("try-it")
+    if iomd:
+        path += f"?iomd={urllib.parse.quote_plus(iomd)}"
+
+    response = client.get(path, follow=True)
 
     if logged_in:
         # if we are logged in, this view should redirect to /new`
+        # the content being what's in the payload
         assert NotebookRevision.objects.count() == 1
         assert Notebook.objects.count() == 1
+        if iomd:
+            assert NotebookRevision.objects.first().content == iomd
         assert len(response.redirect_chain) == 2
         (last_url, _) = response.redirect_chain[-1]
         assert last_url == Notebook.objects.all()[0].get_absolute_url()
