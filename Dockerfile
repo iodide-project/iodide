@@ -15,7 +15,7 @@ RUN apt-get update && \
 
 # Install virtualenv
 RUN pip install virtualenv
-RUN virtualenv /venv
+RUN virtualenv --seeder pip /venv
 
 # Install base python dependencies
 COPY requirements/*.txt ./requirements/
