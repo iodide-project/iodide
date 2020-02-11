@@ -14,7 +14,7 @@ RUN apt-get update && \
     build-essential
 
 # Install virtualenv
-RUN pip install virtualenv
+RUN pip install virtualenv==20.0.1
 RUN virtualenv --seeder pip /venv
 
 # Install base python dependencies
