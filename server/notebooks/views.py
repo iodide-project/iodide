@@ -4,7 +4,6 @@ from django.db import transaction
 from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
-from django.template import Template
 from django.urls import reverse
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -134,7 +133,6 @@ def _get_new_notebook_content(iomd):
     if iomd:
         return iomd
     # default is to create a new notebook from our default template
-    print(get_template("new_notebook_content.iomd").backend)
     return get_template("new_notebook_content.iomd").render()
 
 
@@ -170,10 +168,10 @@ def tryit_view(request):
     If user is logged in, redirect to `/new/`
     """
     iomd = request.GET.get("iomd")
+
     if request.user.is_authenticated:
         return redirect(reverse(new_notebook_view) + _get_iomd_params(iomd))
 
-    print(_get_new_notebook_content(iomd))
     return render(
         request,
         "notebook.html",
