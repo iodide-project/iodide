@@ -7,7 +7,7 @@ x-app:
   env_file: .env
   volumes:
     - .:/app
-  links:
+  depends_on:
     - db
     - redis
   command: dev
