@@ -127,6 +127,7 @@ jobs:
           command: |
             set -x
             cp .env-dist .env
+            docker-compose build
             # we need to wait for the db to come up
             docker-compose up -d
             docker-compose run server bash -c "while ! nc -zv db 5432; do sleep 1 && echo waiting for db; done"
