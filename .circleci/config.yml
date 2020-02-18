@@ -103,6 +103,8 @@ jobs:
             fi
 
   test-server:
+    docker:
+      image: circleci/python:3.8
     machine:
       enable: true
     environment:
