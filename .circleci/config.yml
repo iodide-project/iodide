@@ -103,10 +103,9 @@ jobs:
             fi
 
   test-server:
-    docker:
-      image: circleci/python:3.8
     machine:
       enable: true
+      image: ubuntu-1604:201903-01
     environment:
       DEVELOPMENT: 1
     steps:
