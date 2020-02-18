@@ -105,7 +105,6 @@ jobs:
   test-server:
     machine:
       enable: true
-      image: ubuntu-1604:201903-01
     environment:
       DEVELOPMENT: 1
     steps:
