@@ -130,9 +130,9 @@ pytest-env==0.6.2 \
 pytest-flake8==1.0.4 \
     --hash=sha256:4d225c13e787471502ff94409dcf6f7927049b2ec251c63b764a4b17447b60c0 \
     --hash=sha256:d7e2b6b274a255b7ae35e9224c85294b471a83b76ecb6bd53c337ae977a499af
-pytest-freezegun==0.3.0.post1 \
-    --hash=sha256:94c370a2cd3db9692962522cb74525d908e669df7cb53a448e01bb47c21a8173 \
-    --hash=sha256:b86b13ef75959bedf4c32f1fd81fec66fa4502d9892e0ef6ad1717a34fe1560e
+pytest-freezegun==0.4.1 \
+    --hash=sha256:060cdf192848e50a4a681a5e73f8b544c4ee5ebc1fab3cb7223a0097bac2f83f \
+    --hash=sha256:1c77b2917883b8abf817fc39a1fd3f40ac43711eb923512abe7b6557e55eaaf1
 pytest-isort==0.3.1 \
     --hash=sha256:3be60e0de277b420ff89303ca6494320c41f7819ffa898756b90ef976e4c636a \
     --hash=sha256:4bfee60dad1870b51700d55a85f5ceda766bd9d3d2878c1bbabee80e61b1be1a
