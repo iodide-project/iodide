@@ -37,17 +37,6 @@ describe("ConsoleLanguageMenu mapStateToProps", () => {
       new Set(["JavaScript", "Python", "Julia"])
     );
   });
-  it("sets shouldDisplayClearConsoleAction prop as true when history not empty", () => {
-    expect(mapStateToProps(state).shouldDisplayClearConsoleAction).toEqual(
-      true
-    );
-  });
-  it("sets shouldDisplayClearConsoleAction prop as false when history empty", () => {
-    state.history = [];
-    expect(mapStateToProps(state).shouldDisplayClearConsoleAction).toEqual(
-      false
-    );
-  });
 });
 
 describe("ConsoleLanguageMenu clearConsoleHistory", () => {
@@ -62,8 +51,7 @@ describe("ConsoleLanguageMenu clearConsoleHistory", () => {
       ],
       clearConsoleHistory: jest.fn(),
       currentLanguage: "py",
-      setConsoleLanguageProp: jest.fn(),
-      shouldDisplayClearConsoleAction: true
+      setConsoleLanguageProp: jest.fn()
     };
   });
   it("calls correct action when 'Clear console' item is clicked", () => {

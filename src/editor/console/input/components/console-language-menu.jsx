@@ -74,8 +74,7 @@ export const ConsoleLanguageMenuUnconnected = ({
   availableLanguages,
   clearConsoleHistory,
   currentLanguage,
-  setConsoleLanguageProp,
-  shouldDisplayClearConsoleAction
+  setConsoleLanguageProp
 }) => {
   return (
     <React.Fragment>
@@ -101,14 +100,12 @@ export const ConsoleLanguageMenuUnconnected = ({
             </MenuItem>
           ))}
           <Divider light />
-          {shouldDisplayClearConsoleAction && (
-            <MenuItem key="clear-history" onClick={() => clearConsoleHistory()}>
-              <LanguageName>Clear history</LanguageName>
-              <LanguageShort>
-                <DeleteIcon />
-              </LanguageShort>
-            </MenuItem>
-          )}
+          <MenuItem key="clear-history" onClick={() => clearConsoleHistory()}>
+            <LanguageName>Clear history</LanguageName>
+            <LanguageShort>
+              <DeleteIcon />
+            </LanguageShort>
+          </MenuItem>
         </Menu>
       </Popover>
     </React.Fragment>
@@ -124,20 +121,16 @@ ConsoleLanguageMenuUnconnected.propTypes = {
   ).isRequired,
   clearConsoleHistory: PropTypes.func.isRequired,
   currentLanguage: PropTypes.string.isRequired,
-  setConsoleLanguageProp: PropTypes.func.isRequired,
-  shouldDisplayClearConsoleAction: PropTypes.bool
+  setConsoleLanguageProp: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state) {
   const availableLanguages = Object.values(
     Object.assign({}, state.languageDefinitions, state.loadedLanguages)
   );
-  const shouldDisplayClearConsoleAction =
-    state.history && state.history.length > 0;
   return {
     currentLanguage: state.languageLastUsed,
-    availableLanguages,
-    shouldDisplayClearConsoleAction
+    availableLanguages
   };
 }
 const mapDispatchToProps = {
