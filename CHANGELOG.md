@@ -2,6 +2,7 @@
 
 - Can now specify notebook iomd via a URL parameter with new or
   tryit endpoints (fixes #2565) (#2676)
+- "Clear history" button is always shown in the Console dropdown
 
 # 0.18.0 (2020-01-22)
 
