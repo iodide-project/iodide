@@ -63,3 +63,33 @@ describe("ConsoleLanguageMenu clearConsoleHistory", () => {
     expect(props.clearConsoleHistory).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("ConsoleLanguageMenu setConsoleLanguageProp", () => {
+  let props;
+  beforeEach(() => {
+    props = {
+      availableLanguages: [
+        {
+          languageId: "js",
+          displayName: "JavaScript"
+        },
+        {
+          languageId: "py",
+          displayName: "Python"
+        }
+      ],
+      clearConsoleHistory: jest.fn(),
+      currentLanguage: "js",
+      setConsoleLanguageProp: jest.fn()
+    };
+  });
+  it("calls correct action when a language is clicked", () => {
+    const wrapper = shallow(<ConsoleLanguageMenuUnconnected {...props} />, {
+      context: {}
+    });
+    expect(props.setConsoleLanguageProp).toHaveBeenCalledTimes(0);
+    wrapper.findWhere(c => c.key() === "py").simulate("click");
+    expect(props.setConsoleLanguageProp).toHaveBeenCalledTimes(1);
+    expect(props.setConsoleLanguageProp).toBeCalledWith("py");
+  });
+});
