@@ -194,23 +194,20 @@ def tryit_view(request):
 '''
 @csrf_exempt
 def customize_view(request):
+    iomd = None
+    data = None
 
     if request.method == "POST":
-        if 'template' in request.FILES and 'data' in request.FILES:
+        if 'template' in request.FILES :
             postedTemplate = request.FILES['template']
-            postedData = request.FILES['data']
-            
-            print("received data")
-            print(len(postedData))
-        
             iomd = postedTemplate.read().decode()
+        if 'data' in request.FILES:
+            postedData = request.FILES['data']
             data = postedData.read().decode()
-        else:
-            iomd = None
-            data = None 
-        
-
-        
+        if 'data[]' in request.FIELS:
+            datalist = request.FILES.getlist('data[]')
+            # add multiple <script id="fileNumber"> in
+            # default template files.
 
         return render(
         request,
@@ -227,4 +224,6 @@ def customize_view(request):
             "iframe_src": _get_iframe_src(),
             "eval_frame_origin": EVAL_FRAME_ORIGIN,
         },
-    )
+        )
+    else:
+        return new_notebook_view(request)
