@@ -7,7 +7,7 @@
 <div id="notebook-header"></div>
 <div id="editor-react-root"></div>
 <script id="iomd" type="text/iomd">{{ iomd|escape }}</script>
-<script id="file0" type="application/json">{{datafile|escape}}</script>
+<script id="file0" type="text">{{datafile|safe}}</script>
 <iframe
   id="eval-frame"
   src="{{ iframe_src|safe }}"

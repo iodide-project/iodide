@@ -204,6 +204,9 @@ def customize_view(request):
         if 'data' in request.FILES:
             postedData = request.FILES['data']
             data = postedData.read().decode()
+            print(type(data))
+            print(data[:20])
+
         if 'data[]' in request.FILES:
             datalist = request.FILES.getlist('data[]')
             # add multiple <script id="fileNumber"> in
