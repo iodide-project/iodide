@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="/iodide.css">
+<base target="_blank" rel="noopener noreferrer">
+{% endblock %}
+{% block content %}
+<div id="notebook-header"></div>
+<div id="editor-react-root"></div>
+<script id="iomd" type="text/iomd">{{ iomd|escape }}</script>
+<script id="file0" type="application/json">{{datafile|escape}}</script>
+<iframe
+  id="eval-frame"
+  src="{{ iframe_src|safe }}"
+  sandbox="allow-scripts allow-same-origin allow-modals allow-popups"
+  allowfullscreen="true"
+  allowvr="yes"
+  allow="microphone"
+></iframe>
+{{ user_info|json_script:"userData" }}
+{{ notebook_info|json_script:"notebookInfo" }}
+<script>
+  window.evalFrameOrigin = "{{ eval_frame_origin }}";
+</script>
+<script src="/iodide.js"></script>
+{% endblock %}

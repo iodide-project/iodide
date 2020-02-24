@@ -196,18 +196,25 @@ def tryit_view(request):
 def customize_view(request):
 
     if request.method == "POST":
+        if 'template' in request.FILES and 'data' in request.FILES:
+            postedTemplate = request.FILES['template']
+            postedData = request.FILES['data']
+            
+            print("received data")
+            print(len(postedData))
         
-        postedTemplate = request.FILES['template']
-        postedData = request.FILES['data']
-    
-        template = postedTemplate.read().decode()
-        data = postedData.read().decode()
+            iomd = postedTemplate.read().decode()
+            data = postedData.read().decode()
+        else:
+            iomd = None
+            data = None 
+        
 
-        iomd = template + data
+        
 
         return render(
         request,
-        "notebook.html",
+        "notebook_uploaded_files.html",
         {
             "user_info": {},
             "notebook_info": {
@@ -216,6 +223,7 @@ def customize_view(request):
                 "title": "POST SUCCESS",
             },
             "iomd": _get_new_notebook_content(iomd),
+            "datafile": data,
             "iframe_src": _get_iframe_src(),
             "eval_frame_origin": EVAL_FRAME_ORIGIN,
         },
