@@ -37,17 +37,6 @@ describe("ConsoleLanguageMenu mapStateToProps", () => {
       new Set(["JavaScript", "Python", "Julia"])
     );
   });
-  it("sets shouldDisplayClearConsoleAction prop as true when history not empty", () => {
-    expect(mapStateToProps(state).shouldDisplayClearConsoleAction).toEqual(
-      true
-    );
-  });
-  it("sets shouldDisplayClearConsoleAction prop as false when history empty", () => {
-    state.history = [];
-    expect(mapStateToProps(state).shouldDisplayClearConsoleAction).toEqual(
-      false
-    );
-  });
 });
 
 describe("ConsoleLanguageMenu clearConsoleHistory", () => {
@@ -62,8 +51,7 @@ describe("ConsoleLanguageMenu clearConsoleHistory", () => {
       ],
       clearConsoleHistory: jest.fn(),
       currentLanguage: "py",
-      setConsoleLanguageProp: jest.fn(),
-      shouldDisplayClearConsoleAction: true
+      setConsoleLanguageProp: jest.fn()
     };
   });
   it("calls correct action when 'Clear console' item is clicked", () => {
@@ -73,5 +61,35 @@ describe("ConsoleLanguageMenu clearConsoleHistory", () => {
     expect(props.clearConsoleHistory).toHaveBeenCalledTimes(0);
     wrapper.findWhere(c => c.key() === "clear-history").simulate("click");
     expect(props.clearConsoleHistory).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("ConsoleLanguageMenu setConsoleLanguageProp", () => {
+  let props;
+  beforeEach(() => {
+    props = {
+      availableLanguages: [
+        {
+          languageId: "js",
+          displayName: "JavaScript"
+        },
+        {
+          languageId: "py",
+          displayName: "Python"
+        }
+      ],
+      clearConsoleHistory: jest.fn(),
+      currentLanguage: "js",
+      setConsoleLanguageProp: jest.fn()
+    };
+  });
+  it("calls correct action when a language is clicked", () => {
+    const wrapper = shallow(<ConsoleLanguageMenuUnconnected {...props} />, {
+      context: {}
+    });
+    expect(props.setConsoleLanguageProp).toHaveBeenCalledTimes(0);
+    wrapper.findWhere(c => c.key() === "py").simulate("click");
+    expect(props.setConsoleLanguageProp).toHaveBeenCalledTimes(1);
+    expect(props.setConsoleLanguageProp).toBeCalledWith("py");
   });
 });

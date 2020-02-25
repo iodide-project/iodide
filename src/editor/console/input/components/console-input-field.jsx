@@ -83,15 +83,13 @@ export class ConsoleInputUnconnected extends React.Component {
   }
 
   handleKeyDown(event) {
-    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-      if (event.key === "ArrowUp" && this.onFirstLine()) {
-        this.props.updateConsoleText(this.textAreaRef.current.value);
-        this.props.consoleHistoryStepBack(1);
-      }
-      if (event.key === "ArrowDown" && this.onLastLine()) {
-        this.props.updateConsoleText(this.textAreaRef.current.value);
-        this.props.consoleHistoryStepBack(-1);
-      }
+    if (event.key === "ArrowUp" && this.onFirstLine()) {
+      this.props.updateConsoleText(this.textAreaRef.current.value);
+      this.props.consoleHistoryStepBack(1);
+    }
+    if (event.key === "ArrowDown" && this.onLastLine()) {
+      this.props.updateConsoleText(this.textAreaRef.current.value);
+      this.props.consoleHistoryStepBack(-1);
     }
     if (event.key === "Enter" && !event.shiftKey) {
       this.props.evalConsoleInput(this.textAreaRef.current.value);

@@ -3,8 +3,32 @@ import React from "react";
 
 import {
   ConsoleInputUnconnected,
+  getTextAreaPosition,
   mapStateToProps
 } from "../console-input-field";
+
+describe("getTextAreaPosition", () => {
+  it("should return currentLine & totalLines", () => {
+    const tests = [
+      [0, "foo\nbar\nbat", 1, 3],
+      [3, "foo\nbar\nbat", 1, 3],
+      [4, "foo\nbar\nbat", 2, 3],
+      [7, "foo\nbar\nbat", 2, 3],
+      [8, "foo\nbar\nbat", 3, 3],
+      [11, "foo\nbar\nbat", 3, 3],
+      [99, "foo\nbar\nbat", 3, 3]
+    ];
+    tests.forEach(([selectionStart, value, currentLine, totalLines]) => {
+      const textArea = {
+        selectionStart,
+        value
+      };
+      const position = getTextAreaPosition(textArea);
+      expect(position.currentLine).toBe(currentLine);
+      expect(position.totalLines).toBe(totalLines);
+    });
+  });
+});
 
 describe("ConsoleInputUnconnected React component", () => {
   let props;
