@@ -17,18 +17,18 @@ describe("getTextAreaPosition", () => {
       [8, "foo\nbar\nbat", 3, 3],
       [11, "foo\nbar\nbat", 3, 3],
       [99, "foo\nbar\nbat", 3, 3]
-    ]
+    ];
     tests.forEach(([selectionStart, value, currentLine, totalLines]) => {
       const textArea = {
         selectionStart,
         value
-      }
-      const position = getTextAreaPosition(textArea)
-      expect(position.currentLine).toBe(currentLine)
-      expect(position.totalLines).toBe(totalLines)
-    })
-  })
-})
+      };
+      const position = getTextAreaPosition(textArea);
+      expect(position.currentLine).toBe(currentLine);
+      expect(position.totalLines).toBe(totalLines);
+    });
+  });
+});
 
 describe("ConsoleInputUnconnected React component", () => {
   let props;
