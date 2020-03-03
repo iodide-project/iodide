@@ -29,10 +29,9 @@ const Body = styled.div`
 
 export default class extends React.Component {
   static propTypes = {
-    files: PropTypes.objectOf(PropTypes.shape(fileShape)).isRequired,
+    files: PropTypes.arrayOf(PropTypes.shape(fileShape)).isRequired,
     onAddButtonClick: PropTypes.func.isRequired,
-    confirmDelete: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool.isRequired
+    confirmDelete: PropTypes.func.isRequired
   };
 
   hasVisibleFiles = () => {
@@ -47,15 +46,12 @@ export default class extends React.Component {
     <React.Fragment>
       <BodyWrapper>
         <Body>
-          {!this.props.readOnly && (
-            <AddButton onAddButtonClick={this.props.onAddButtonClick} />
-          )}
+          <AddButton onAddButtonClick={this.props.onAddButtonClick} />
           {this.hasVisibleFiles() ? (
             <React.Fragment>
               <FileList
                 files={this.props.files}
                 confirmDelete={this.props.confirmDelete}
-                readOnly={this.props.readOnly}
               />
               <Footer />
             </React.Fragment>

@@ -20,5 +20,8 @@
 <script>
   window.evalFrameOrigin = "{{ eval_frame_origin }}";
 </script>
+{% for filename, filecontent, mimetype in files %}
+<script id="file-{{ filename }}" type="application/base64" mimetype="{{ mimetype }}">{{ filecontent }}</script>
+{% endfor %}
 <script src="/iodide.js"></script>
 {% endblock %}

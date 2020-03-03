@@ -1,5 +1,8 @@
+import base64
+import mimetypes
 import urllib.parse
 
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
@@ -135,17 +138,35 @@ def _get_new_notebook_content(iomd):
     return get_template("new_notebook_content.iomd").render()
 
 
-def _get_iomd_params(iomd):
-    if iomd:
-        return f"?iomd={urllib.parse.quote_plus(iomd)}"
-    return ""
+def _get_files_from_request(request, base64_encode=False):
+    filenames = request.GET.getlist("filename")
+    file_contents = request.GET.getlist("file")
+
+    if len(file_contents) != len(filenames):
+        raise ValidationError("Number of file contents must match filenames")
+
+    # re-encode file_contents in the appropriate format
+    file_contents = [bytes(file_content, "utf-8") for file_content in file_contents]
+    if base64_encode:
+        file_contents = [
+            base64.b64encode(file_content).decode("utf-8") for file_content in file_contents
+        ]
+
+    return zip(
+        filenames, file_contents, [mimetypes.guess_type(filename)[0] for filename in filenames],
+    )
 
 
 @ensure_csrf_cookie
 def new_notebook_view(request):
-    iomd = request.GET.get("iomd")
     if not request.user.is_authenticated:
-        return redirect(reverse("try-it") + _get_iomd_params(iomd))
+        return redirect(reverse("try-it") + "?" + request.META["QUERY_STRING"])
+
+    try:
+        iomd = request.GET.get("iomd")
+        files = _get_files_from_request(request)
+    except ValidationError as e:
+        return HttpResponseBadRequest(content=e)
 
     # create a new notebook and redirect to its view
     with transaction.atomic():
@@ -156,6 +177,8 @@ def new_notebook_view(request):
             title=get_random_compound(),
             is_draft=True,
         )
+        for (filename, content, _) in files:
+            File.objects.create(notebook=notebook, filename=filename, content=content)
     return redirect(notebook)
 
 
@@ -166,10 +189,14 @@ def tryit_view(request):
 
     If user is logged in, redirect to `/new/`
     """
-    iomd = request.GET.get("iomd")
-
     if request.user.is_authenticated:
-        return redirect(reverse(new_notebook_view) + _get_iomd_params(iomd))
+        return redirect(reverse(new_notebook_view) + "?" + request.META["QUERY_STRING"])
+
+    try:
+        iomd = request.GET.get("iomd")
+        files = _get_files_from_request(request, base64_encode=True)
+    except ValidationError as e:
+        return HttpResponseBadRequest(content=e)
 
     return render(
         request,
@@ -182,6 +209,7 @@ def tryit_view(request):
                 "title": "Untitled notebook",
             },
             "iomd": _get_new_notebook_content(iomd),
+            "files": files,
             "iframe_src": _get_iframe_src(),
             "eval_frame_origin": EVAL_FRAME_ORIGIN,
         },

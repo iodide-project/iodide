@@ -128,8 +128,22 @@ class ErrorContent extends React.Component {
 
   render = () => (
     <React.Fragment>
-      <Filename>{this.props.file.name}</Filename>
+      <Filename>{this.props.file.filename}</Filename>
       <span>{this.props.file.errorMessage}</span>
+    </React.Fragment>
+  );
+}
+
+class LocalOnlyContent extends React.Component {
+  static propTypes = {
+    file: PropTypes.shape(fileShape).isRequired
+  };
+  render = () => (
+    <React.Fragment>
+      <Filename>{this.props.file.filename}</Filename>
+      <FileStatus>
+        <span>Local Only</span>
+      </FileStatus>
     </React.Fragment>
   );
 }
@@ -137,35 +151,27 @@ class ErrorContent extends React.Component {
 class SavedOrDeletedContent extends React.Component {
   static propTypes = {
     file: PropTypes.shape(fileShape).isRequired,
-    fileKey: PropTypes.string.isRequired,
-    confirmDelete: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool.isRequired
+    confirmDelete: PropTypes.func.isRequired
   };
 
   render = () => (
     <React.Fragment>
       <FilenameLink
-        href={`${window.location.href}files/${this.props.file.name}`}
+        href={`${window.location.href}files/${this.props.file.filename}`}
         target="_blank"
       >
-        {this.props.file.name}
+        {this.props.file.filename}
       </FilenameLink>
-      {!this.props.readOnly && (
-        <FileActions>
-          <FileAction
-            className="file-action file-action-delete"
-            onClick={() => {
-              this.props.confirmDelete(
-                this.props.file.name,
-                this.props.fileKey,
-                this.props.file.id
-              );
-            }}
-          >
-            delete
-          </FileAction>
-        </FileActions>
-      )}
+      <FileActions>
+        <FileAction
+          className="file-action file-action-delete"
+          onClick={() => {
+            this.props.confirmDelete(this.props.file);
+          }}
+        >
+          delete
+        </FileAction>
+      </FileActions>
     </React.Fragment>
   );
 }
@@ -173,11 +179,9 @@ class SavedOrDeletedContent extends React.Component {
 export default class extends React.Component {
   static propTypes = {
     file: PropTypes.shape(fileShape).isRequired,
-    fileKey: PropTypes.string.isRequired,
     confirmDelete: PropTypes.func.isRequired,
     firstVisible: PropTypes.bool.isRequired,
-    lastVisible: PropTypes.bool.isRequired,
-    readOnly: PropTypes.bool.isRequired
+    lastVisible: PropTypes.bool.isRequired
   };
 
   render() {
@@ -193,6 +197,10 @@ export default class extends React.Component {
         content = <ErrorContent file={this.props.file} />;
         break;
 
+      case "local":
+        content = <LocalOnlyContent file={this.props.file} />;
+        break;
+
       // Deleted files are displayed just like saved files because we want to
       // watch the saved file out and CSS transitions cannot be applied to
       // elements that are removed from the DOM or set to "display: none".
@@ -200,10 +208,8 @@ export default class extends React.Component {
       case "deleted":
         content = (
           <SavedOrDeletedContent
-            fileKey={this.props.fileKey}
             file={this.props.file}
             confirmDelete={this.props.confirmDelete}
-            readOnly={this.props.readOnly}
           />
         );
         break;

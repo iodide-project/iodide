@@ -1,93 +1,37 @@
 import {
   loadFileFromServer,
-  saveFileToServer,
-  deleteFileOnServer
+  makeFormData
 } from "../../shared/utils/file-operations";
 import {
   getNotebookID,
-  fileExists,
-  getFileID,
   validateFileExistence,
-  validateFileAbsence,
   validateFetchType
 } from "../tools/server-tools";
-import { addFileToNotebook, deleteFileFromNotebook } from "./file-actions";
+import { saveFile, deleteFile } from "./file-actions";
 
 import {
-  onFileOperationSuccess,
-  onFileOperationError
+  postFileOperationErrorMessage,
+  postFileOperationSuccessMessage
 } from "./file-request-callbacks";
 
-export function saveFile(fileName, fileRequestID, data, overwrite) {
-  return async (dispatch, getState) => {
-    const state = getState();
-
-    const { username: notebookOwner } = state.notebookInfo;
-    const { name: thisUser } = state.userData;
-
-    if (notebookOwner !== thisUser) {
-      onFileOperationError(
-        fileRequestID,
-        new Error("only the owner of this notebook can save files")
-      );
-      return undefined;
-    }
-
-    const notebookID = getNotebookID(state);
-    const fileID = getFileID(state, fileName);
-    if (!overwrite && fileExists(fileName, state)) {
-      try {
-        validateFileAbsence(fileName, "save", getState());
-      } catch (err) {
-        onFileOperationError(fileRequestID, err);
-        return undefined;
-      }
-    }
-    try {
-      const fileInfo = await saveFileToServer(
-        notebookID,
-        data,
-        fileName,
-        fileID
-      );
-      const { filename, id } = fileInfo;
-      const lastUpdated = fileInfo.last_updated;
-      dispatch(addFileToNotebook(filename, lastUpdated, id));
-      onFileOperationSuccess(fileRequestID, undefined);
-      return undefined;
-    } catch (err) {
-      onFileOperationError(fileRequestID, err);
-      return undefined;
-    }
+export function saveFileRequest(fileName, fileRequestID, data, overwrite) {
+  return (dispatch, getState) => {
+    const notebookID = getNotebookID(getState());
+    const formData = makeFormData(notebookID, data, fileName);
+    return dispatch(saveFile(formData, { fileRequestID, overwrite }));
   };
 }
 
-export function loadFile(fileName, fileRequestID, fetchType) {
+export function loadFileRequest(fileName, fileRequestID, fetchType) {
   return async (_, getState) => {
     try {
       validateFileExistence(fileName, "load", getState());
       validateFetchType(fetchType);
       const file = await loadFileFromServer(fileName, fetchType);
-      onFileOperationSuccess(fileRequestID, file);
+      postFileOperationSuccessMessage(fileRequestID, file);
       return undefined;
     } catch (err) {
-      onFileOperationError(fileRequestID, err);
-      return undefined;
-    }
-  };
-}
-
-export function deleteFile(fileName, fileRequestID) {
-  return async (dispatch, getState) => {
-    try {
-      const fileID = getFileID(getState(), fileName);
-      validateFileExistence(fileName, "delete", getState());
-      const output = await deleteFileOnServer(fileID);
-      dispatch(deleteFileFromNotebook(fileID));
-      onFileOperationSuccess(fileRequestID, output);
-      return undefined;
-    } catch (err) {
-      onFileOperationError(fileRequestID, err);
+      postFileOperationErrorMessage(fileRequestID, err);
       return undefined;
     }
   };
@@ -103,20 +47,22 @@ export function handleFileRequest(
     switch (requestType) {
       case "LOAD_FILE": {
         const { fetchType } = options;
-        dispatch(loadFile(fileName, fileRequestID, fetchType));
+        dispatch(loadFileRequest(fileName, fileRequestID, fetchType, true));
         break;
       }
       case "SAVE_FILE": {
         const { data, overwrite } = options;
-        dispatch(saveFile(fileName, fileRequestID, data, overwrite));
+        dispatch(
+          saveFileRequest(fileName, fileRequestID, data, overwrite, true)
+        );
         break;
       }
       case "DELETE_FILE": {
-        dispatch(deleteFile(fileName, fileRequestID));
+        dispatch(deleteFile(fileName, { fileRequestID }));
         break;
       }
       default: {
-        onFileOperationError(
+        postFileOperationErrorMessage(
           fileRequestID,
           Error(
             `an unknown request type got through the validation: ${requestType}`

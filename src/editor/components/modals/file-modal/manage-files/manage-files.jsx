@@ -4,43 +4,43 @@ import { connect } from "react-redux";
 
 import DeleteModal from "../../../../../shared/components/delete-modal";
 import OverwriteModal from "../../../../../shared/components/upload-modal";
-import Body from "./body";
+import { selectMultipleFilesAndFormatMetadata } from "../../../../../shared/utils/file-operations";
 import {
-  deleteFileOnServer,
-  selectMultipleFilesAndFormatMetadata,
-  uploadFile
-} from "../../../../../shared/utils/file-operations";
-import {
-  addFileToNotebook,
-  deleteFileFromNotebook
+  addTemporaryFile,
+  deleteFile,
+  fileOperationError,
+  saveFile
 } from "../../../../actions/file-actions";
+
+import Body from "./body";
+import { fileShape } from "./propShapes";
 
 export class ManageFilesUnconnected extends React.Component {
   static propTypes = {
     // Required
+    canUploadFiles: PropTypes.bool.isRequired,
     deleteFile: PropTypes.func.isRequired,
+    fileOperationError: PropTypes.func.isRequired,
     notebookID: PropTypes.number.isRequired,
-    readOnly: PropTypes.bool.isRequired,
     saveFile: PropTypes.func.isRequired,
+    saveTemporaryFile: PropTypes.func.isRequired,
+    savedFiles: PropTypes.arrayOf(PropTypes.shape(fileShape)).isRequired,
 
     // Not required
     maxFileSize: PropTypes.number,
     maxFileSizeMB: PropTypes.number,
-    maxFilenameLength: PropTypes.number,
-    savedFiles: PropTypes.arrayOf(PropTypes.object)
+    maxFilenameLength: PropTypes.number
   };
 
   static defaultProps = {
     maxFileSize: false,
     maxFileSizeMB: false,
-    maxFilenameLength: false,
-    savedFiles: []
+    maxFilenameLength: false
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      files: this.getInitialFiles(),
       pendingDelete: false,
       pendingOverwrites: []
     };
@@ -51,81 +51,42 @@ export class ManageFilesUnconnected extends React.Component {
       this.props.notebookID
     );
 
-    formDataArray.forEach(formData => {
-      const unsavedFile = formData.get("file");
-      const savedFileKey = this.getSavedFileKey(unsavedFile.name);
-      const savedFileID = this.getSavedFileID(savedFileKey);
-
-      if (savedFileKey) {
-        this.confirmOverwrite(
-          formData,
-          unsavedFile.name,
-          savedFileKey,
-          savedFileID
-        );
-      } else if (this.fileTooBig(unsavedFile)) {
-        this.setState(state => this.fileTooBigUpdater(state, unsavedFile));
-      } else if (this.filenameTooLong(unsavedFile)) {
-        this.setState(state => this.filenameTooLongUpdater(state, unsavedFile));
-      } else {
-        this.handleValidFile(formData);
-      }
+    formDataArray.forEach(async formData => {
+      this.saveFile(formData);
     });
   };
 
-  onDelete = () => {
-    this.setState(state => this.deleteUpdater(state));
-  };
+  saveFile = async (formData, confirmedOverwrite = false) => {
+    const unsavedFile = formData.get("file");
 
-  getFilesStateCopy = state => {
-    return Object.entries(state.files).reduce((acc, [k, v]) => {
-      acc[k] = Object.assign({}, v);
-      return acc;
-    }, {});
-  };
-
-  /**
-   * Return a unique key for keeping track of a file, starting with 0 and
-   * incrementing by one each additional time this method is called.
-   */
-  getNewFileKey = () => {
-    if (this.lastFileKey === undefined) {
-      this.lastFileKey = 0;
+    if (
+      !confirmedOverwrite &&
+      this.props.savedFiles.find(f => f.filename === unsavedFile.name)
+    ) {
+      this.confirmOverwrite(formData, unsavedFile.name);
+    } else if (this.fileTooBig(unsavedFile)) {
+      this.props.fileOperationError(
+        unsavedFile.name,
+        `File exceeds maximum size of ${this.props.maxFileSizeMB}MB`
+      );
+    } else if (this.filenameTooLong(unsavedFile)) {
+      this.props.fileOperationError(
+        unsavedFile.name,
+        `Filename exceeds maximum length of ${this.props.maxFilenameLength} characters`
+      );
+    } else if (!this.props.canUploadFiles) {
+      // if we can't upload files store a temporary file
+      // we store the file content as base64 to get around the fact that we can't
+      // store array buffers in our state schema
+      const fileContent = await unsavedFile.arrayBuffer();
+      this.props.saveTemporaryFile(
+        unsavedFile.name,
+        btoa(String.fromCharCode(...new Uint8Array(fileContent))),
+        unsavedFile.type
+      );
     } else {
-      this.lastFileKey += 1;
+      this.props.saveFile(formData);
     }
-    return this.lastFileKey;
-  };
-
-  /**
-   * Return an object representing the files that have already been saved to
-   * this notebook. Each file is keyed by a unique identifier so that we can
-   * keep track of it before, during, and after upload. Note that these keys are
-   * unrelated to the file IDs returned from the server.
-   */
-  getInitialFiles = () => {
-    return this.props.savedFiles.reduce((acc, current) => {
-      acc[this.getNewFileKey()] = {
-        id: current.id,
-        name: current.filename,
-        status: "saved"
-      };
-      return acc;
-    }, {});
-  };
-
-  getSavedFileKey = name => {
-    const fileEntry = Object.entries(this.state.files).find(tuple => {
-      if (tuple[1].status === "saved") {
-        return tuple[1].name === name;
-      }
-      return false;
-    });
-    return fileEntry ? fileEntry[0] : undefined;
-  };
-
-  getSavedFileID = fileKey => {
-    return this.state.files[fileKey] ? this.state.files[fileKey].id : undefined;
   };
 
   fileTooBig = ({ size }) => {
@@ -138,130 +99,32 @@ export class ManageFilesUnconnected extends React.Component {
     );
   };
 
-  deleteUpdater = state => {
-    const files = this.getFilesStateCopy(state);
-    files[state.pendingDelete.fileKey].status = "deleted";
-    return { files, pendingDelete: false };
-  };
-
-  fileTooBigUpdater = (state, { name }) => {
-    const files = this.getFilesStateCopy(state);
-    files[this.getNewFileKey()] = {
-      name,
-      status: "error",
-      errorMessage: `File exceeds maximum size of ${this.props.maxFileSizeMB}MB`
-    };
-    return { files };
-  };
-
-  filenameTooLongUpdater = (state, { name }) => {
-    const files = this.getFilesStateCopy(state);
-    files[this.getNewFileKey()] = {
-      name,
-      status: "error",
-      errorMessage: `Filename exceeds maximum length of ${this.props.maxFilenameLength} characters`
-    };
-    return { files };
-  };
-
-  handleValidFile = formData => {
-    const fileKey = this.getNewFileKey();
-    this.saveFileWithKey(formData, fileKey);
-  };
-
-  saveFileWithKey = async (formData, fileKey, fileID = undefined) => {
-    const file = formData.get("file");
-
-    // Update state immediately to reflect that this file has begun
-    // uploading. This allows us to show a spinner in its row for the
-    // duration of the upload.
-    this.setState(state =>
-      this.fileUploadBeganUpdater(state, fileKey, file.name)
-    );
-
-    try {
-      const id = await this.props.saveFile(formData, fileID);
-      this.setState(state => this.fileSavedUpdater(state, fileKey, id));
-    } catch (err) {
-      this.setState(state =>
-        this.fileErroredUpdater(state, fileKey, "File could not be uploaded")
-      );
-    }
-  };
-
-  fileUploadBeganUpdater = (state, fileKey, name) => {
-    const files = this.getFilesStateCopy(state);
-    files[fileKey] = {
-      name,
-      status: "uploading"
-    };
-    return { files };
-  };
-
-  fileSavedUpdater = (state, fileKey, id) => {
-    const files = this.getFilesStateCopy(state);
-    files[fileKey].status = "saved";
-    files[fileKey].id = id;
-    return { files };
-  };
-
-  fileErroredUpdater = (state, fileKey, errorMessage) => {
-    const files = this.getFilesStateCopy(state);
-    files[fileKey].status = "error";
-    files[fileKey].errorMessage = errorMessage;
-    return { files };
-  };
-
-  confirmDelete = (name, fileKey, id) => {
-    this.setState({ pendingDelete: { name, fileKey, id } });
+  confirmDelete = file => {
+    this.setState({ pendingDelete: file });
   };
 
   hideDeleteModal = () => {
-    this.setState({ pendingDelete: false });
+    this.setState({ pendingDelete: undefined });
   };
 
   executePendingDelete = async () => {
-    try {
-      await this.props.deleteFile(this.state.pendingDelete.id);
-    } catch (err) {
-      this.setState(state =>
-        this.fileErroredUpdater(
-          state,
-          state.pendingDelete.fileKey,
-          "File could not be deleted"
-        )
-      );
-    }
+    this.props.deleteFile(this.state.pendingDelete.filename);
 
     // We don't need to call hideDeleteModal() here because the DeleteModal
     // component will call it for us
   };
 
-  confirmOverwrite = (newFormData, name, existingFileKey, existingFileID) => {
+  confirmOverwrite = (newFormData, name) => {
     this.setState(state =>
-      this.confirmOverwriteUpdater(
-        state,
-        newFormData,
-        name,
-        existingFileKey,
-        existingFileID
-      )
+      this.confirmOverwriteUpdater(state, newFormData, name)
     );
   };
 
-  confirmOverwriteUpdater = (
-    state,
-    newFormData,
-    name,
-    existingFileKey,
-    existingFileID
-  ) => {
+  confirmOverwriteUpdater = (state, newFormData, name) => {
     const pendingOverwritesCopy = Array.from(state.pendingOverwrites);
     pendingOverwritesCopy.push({
       newFormData,
-      name,
-      existingFileKey,
-      existingFileID
+      name
     });
     return { pendingOverwrites: pendingOverwritesCopy };
   };
@@ -281,11 +144,7 @@ export class ManageFilesUnconnected extends React.Component {
       return po.name === name;
     });
 
-    this.saveFileWithKey(
-      pendingOverwrite.newFormData,
-      pendingOverwrite.existingFileKey,
-      pendingOverwrite.existingFileID
-    );
+    this.saveFile(pendingOverwrite.newFormData, true);
 
     this.hideOverwriteModal(name);
   };
@@ -293,10 +152,13 @@ export class ManageFilesUnconnected extends React.Component {
   render = () => (
     <React.Fragment>
       <DeleteModal
-        visible={this.state.pendingDelete !== false}
-        title={`Delete file "${this.state.pendingDelete.name}?"`}
+        visible={!!this.state.pendingDelete}
+        title={
+          this.state.pendingDelete
+            ? `Delete file "${this.state.pendingDelete.filename}?"`
+            : ""
+        }
         onCloseOrCancel={this.hideDeleteModal}
-        onDelete={this.onDelete}
         deleteFunction={this.executePendingDelete}
         aboveOtherModals
       />
@@ -313,10 +175,9 @@ export class ManageFilesUnconnected extends React.Component {
         />
       )}
       <Body
-        files={this.state.files}
+        files={this.props.savedFiles}
         onAddButtonClick={this.onAddButtonClick}
         confirmDelete={this.confirmDelete}
-        readOnly={this.props.readOnly}
       />
     </React.Fragment>
   );
@@ -324,16 +185,17 @@ export class ManageFilesUnconnected extends React.Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    saveFile: async (formData, fileID = undefined) => {
-      const response = await uploadFile(formData, fileID);
-      const { filename, id } = response;
-      const lastUpdated = response.last_updated;
-      dispatch(addFileToNotebook(filename, lastUpdated, id));
-      return id;
+    saveTemporaryFile: (filename, content, type) => {
+      dispatch(addTemporaryFile(filename, content, type));
     },
-    deleteFile: async fileID => {
-      await deleteFileOnServer(fileID);
-      dispatch(deleteFileFromNotebook(fileID));
+    saveFile: async formData => {
+      dispatch(saveFile(formData));
+    },
+    deleteFile: filename => {
+      dispatch(deleteFile(filename));
+    },
+    fileOperationError: (filename, errorMessage) => {
+      dispatch(fileOperationError(filename, errorMessage));
     }
   };
 }
@@ -345,7 +207,7 @@ export function mapStateToProps(state) {
     maxFilenameLength: state.notebookInfo.max_filename_length,
     notebookID: state.notebookInfo.notebook_id,
     savedFiles: state.notebookInfo.files,
-    readOnly: !state.notebookInfo.user_can_save
+    canUploadFiles: state.notebookInfo.user_can_save
   };
 }
 

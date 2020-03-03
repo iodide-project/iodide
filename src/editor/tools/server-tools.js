@@ -101,7 +101,9 @@ export function getFiles(state) {
 }
 
 export function fileExists(fileName, state) {
-  const files = getFiles(state);
+  const files = getFiles(state).filter(
+    file => file.status === "saved" || file.status === "local"
+  );
   return files.map(f => f.filename).includes(fileName);
 }
 
