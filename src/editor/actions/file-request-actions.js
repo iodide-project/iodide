@@ -11,27 +11,12 @@ import {
   validateFileAbsence,
   validateFetchType
 } from "../tools/server-tools";
+import { addFileToNotebook, deleteFileFromNotebook } from "./file-actions";
 
 import {
   onFileOperationSuccess,
   onFileOperationError
 } from "./file-request-callbacks";
-
-export function addFileToNotebook(filename, lastUpdated, fileID) {
-  return {
-    type: "ADD_FILE_TO_NOTEBOOK",
-    filename,
-    lastUpdated,
-    fileID
-  };
-}
-
-export function deleteFileFromNotebook(fileID) {
-  return {
-    type: "DELETE_FILE_FROM_NOTEBOOK",
-    fileID
-  };
-}
 
 export function saveFile(fileName, fileRequestID, data, overwrite) {
   return async (dispatch, getState) => {

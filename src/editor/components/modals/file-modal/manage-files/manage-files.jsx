@@ -13,7 +13,7 @@ import {
 import {
   addFileToNotebook,
   deleteFileFromNotebook
-} from "../../../../actions/file-request-actions";
+} from "../../../../actions/file-actions";
 
 export class ManageFilesUnconnected extends React.Component {
   static propTypes = {
