@@ -16,3 +16,19 @@ export function getFiles() {
     });
   };
 }
+
+export function addFileToNotebook(filename, lastUpdated, fileID) {
+  return {
+    type: "ADD_FILE_TO_NOTEBOOK",
+    filename,
+    lastUpdated,
+    fileID
+  };
+}
+
+export function deleteFileFromNotebook(fileID) {
+  return {
+    type: "DELETE_FILE_FROM_NOTEBOOK",
+    fileID
+  };
+}
