@@ -60,9 +60,16 @@ export function missingFetchType(line) {
   return !line.trim().match(/^\w+\s*: /);
 }
 
+function getFetchType(line) {
+  return line
+    .trim()
+    .split(": ")[0]
+    .trimLeft();
+}
+
 export function validFetchType(line) {
-  const fetchType = line.trim().split(": ")[0];
-  return VALID_FETCH_TYPES.includes(fetchType.trimLeft());
+  const fetchType = getFetchType(line);
+  return VALID_FETCH_TYPES.includes(fetchType);
 }
 
 export function validVariableName(line) {
@@ -138,7 +145,7 @@ export function parseFetchCellLine(lineWithComments) {
   if (!validFetchUrl(line)) {
     return { error: "INVALID_FETCH_URL" };
   }
-  if (!validVariableName(line)) {
+  if (getFetchType(line) !== "plugin" && !validVariableName(line)) {
     return { error: "INVALID_VARIABLE_NAME" };
   }
 

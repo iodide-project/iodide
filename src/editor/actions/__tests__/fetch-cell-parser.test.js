@@ -173,6 +173,16 @@ const validFetchLines = [
       filePath: "https://d3js.org/d3.v5.min.js",
       isRelPath: false
     }
+  },
+  {
+    line:
+      "plugin: https://raw.githubusercontent.com/iodide-project/iodide-mermaid-plugin/master/plugin.json",
+    result: {
+      fetchType: "plugin",
+      filePath:
+        "https://raw.githubusercontent.com/iodide-project/iodide-mermaid-plugin/master/plugin.json",
+      isRelPath: false
+    }
   }
 ];
 describe("return valid results for valid fetch lines", () => {
