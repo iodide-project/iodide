@@ -3,6 +3,7 @@
 - Can now specify notebook iomd via a URL parameter with new or
   tryit endpoints (fixes #2565) (#2676)
 - Always show "Clear history" button in the Console dropdown (#2707)
+- Fix plugin cell parsing
 
 # 0.18.0 (2020-01-22)
 
