@@ -9,7 +9,8 @@ from rest_framework_simplejwt.views import TokenRefreshView
 import server.views
 from server.jwt.api_views import TokenObtainPairView
 
-admin.site.unregister(Group)  # Hide the group, not used right now
+if admin.site.is_registered(Group):
+    admin.site.unregister(Group)  # Hide the group, not used right now
 
 
 def parse_redirects(redirects):
