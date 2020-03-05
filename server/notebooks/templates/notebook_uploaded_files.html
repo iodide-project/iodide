@@ -7,7 +7,11 @@
 <div id="notebook-header"></div>
 <div id="editor-react-root"></div>
 <script id="iomd" type="text/iomd">{{ iomd|escape }}</script>
-<script id="file0" type="text">{{datafile|safe}}</script>
+
+{% for data in datalist %}
+<script id="file{{forloop.counter0}}" type="text">{{data|safe}}</script>
+{% endfor %}
+
 <iframe
   id="eval-frame"
   src="{{ iframe_src|safe }}"
