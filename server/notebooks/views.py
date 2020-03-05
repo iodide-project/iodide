@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 from ..base.models import User
 from ..files.models import File
@@ -189,28 +190,35 @@ def tryit_view(request):
     )
 
 '''
-    Let user use his own template file and data
-    template and data should be enclosed in a POST request.
+    Let user use his own template file and data file.
+    Data file must be posted via enctype="multipart/form-data"
+    Supports multiple data file
 '''
+@require_http_methods(["POST"])
 @csrf_exempt
-def customize_view(request):
+def from_template_view(request):
     iomd = None
-    data = None
+    data = []
 
-    if request.method == "POST":
-        if 'template' in request.FILES :
-            postedTemplate = request.FILES['template']
-            iomd = postedTemplate.read().decode()
-        if 'data' in request.FILES:
-            postedData = request.FILES['data']
-            data = postedData.read().decode()
-            print(type(data))
-            print(data[:20])
-
-        if 'data[]' in request.FILES:
-            datalist = request.FILES.getlist('data[]')
-            # add multiple <script id="fileNumber"> in
-            # default template files.
+    # Support posting template through uploading files
+    if 'template' in request.FILES :
+        postedTemplate = request.FILES['template']
+        iomd = postedTemplate.read().decode()
+    # Support posting template through a textarea.
+    # for mach-perftest-notebook
+    if 'template' in request.POST:
+        postedTemplate = request.POST.get('template')
+        iomd = postedTemplate
+    # receives only 1 data file. 
+    if 'data' in request.FILES:
+        postedData = request.FILES['data']
+        data.append(postedData.read().decode())
+    # receives multiple data files
+    if 'data[]' in request.FILES:
+        for datafile in request.FILES.getlist('data[]'):
+            data.append(datafile.read().decode())
+            
+        
 
         return render(
         request,
@@ -220,10 +228,10 @@ def customize_view(request):
             "notebook_info": {
                 "connectionMode": "SERVER",
                 "tryItMode": True,
-                "title": "POST SUCCESS",
+                "title": "Customized Template",
             },
             "iomd": _get_new_notebook_content(iomd),
-            "datafile": data,
+            "datalist": data,
             "iframe_src": _get_iframe_src(),
             "eval_frame_origin": EVAL_FRAME_ORIGIN,
         },
