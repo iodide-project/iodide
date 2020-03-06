@@ -6,8 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
 from django.urls import reverse
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie,csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from ..base.models import User
