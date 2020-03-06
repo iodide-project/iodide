@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
 from django.urls import reverse
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.decorators.csrf import ensure_csrf_cookie,csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
 
 from ..base.models import User
@@ -188,11 +188,14 @@ def tryit_view(request):
         },
     )
 
-'''
+
+"""
     Let user use his own template file and data file.
     Data file must be posted via enctype="multipart/form-data"
     Supports multiple data file
-'''
+"""
+
+
 @require_http_methods(["POST"])
 @csrf_exempt
 def from_template_view(request):
@@ -200,40 +203,38 @@ def from_template_view(request):
     data = []
 
     # Support posting template through uploading files
-    if 'template' in request.FILES :
-        postedTemplate = request.FILES['template']
+    if "template" in request.FILES:
+        postedTemplate = request.FILES["template"]
         iomd = postedTemplate.read().decode()
     # Support posting template through a textarea.
     # for mach-perftest-notebook
-    if 'template' in request.POST:
-        postedTemplate = request.POST.get('template')
+    if "template" in request.POST:
+        postedTemplate = request.POST.get("template")
         iomd = postedTemplate
-    # receives only 1 data file. 
-    if 'data' in request.FILES:
-        postedData = request.FILES['data']
+    # receives only 1 data file.
+    if "data" in request.FILES:
+        postedData = request.FILES["data"]
         data.append(postedData.read().decode())
     # receives multiple data files
-    if 'data[]' in request.FILES:
-        for datafile in request.FILES.getlist('data[]'):
+    if "data[]" in request.FILES:
+        for datafile in request.FILES.getlist("data[]"):
             data.append(datafile.read().decode())
-            
-        
 
         return render(
-        request,
-        "notebook_uploaded_files.html",
-        {
-            "user_info": {},
-            "notebook_info": {
-                "connectionMode": "SERVER",
-                "tryItMode": True,
-                "title": "Customized Template",
+            request,
+            "notebook_uploaded_files.html",
+            {
+                "user_info": {},
+                "notebook_info": {
+                    "connectionMode": "SERVER",
+                    "tryItMode": True,
+                    "title": "Customized Template",
+                },
+                "iomd": _get_new_notebook_content(iomd),
+                "datalist": data,
+                "iframe_src": _get_iframe_src(),
+                "eval_frame_origin": EVAL_FRAME_ORIGIN,
             },
-            "iomd": _get_new_notebook_content(iomd),
-            "datalist": data,
-            "iframe_src": _get_iframe_src(),
-            "eval_frame_origin": EVAL_FRAME_ORIGIN,
-        },
         )
     else:
         return new_notebook_view(request)
