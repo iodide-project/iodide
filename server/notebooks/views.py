@@ -208,7 +208,7 @@ def from_template_view(request):
         iomd = postedTemplate.read().decode()
     # Support posting template through a textarea.
     # for mach-perftest-notebook
-    if "template" in request.POST:
+    elif "template" in request.POST:
         postedTemplate = request.POST.get("template")
         iomd = postedTemplate
     # receives only 1 data file.
@@ -216,25 +216,27 @@ def from_template_view(request):
         postedData = request.FILES["data"]
         data.append(postedData.read().decode())
     # receives multiple data files
-    if "data[]" in request.FILES:
+    elif "data[]" in request.FILES:
         for datafile in request.FILES.getlist("data[]"):
             data.append(datafile.read().decode())
-
-        return render(
-            request,
-            "notebook_uploaded_files.html",
-            {
-                "user_info": {},
-                "notebook_info": {
-                    "connectionMode": "SERVER",
-                    "tryItMode": True,
-                    "title": "Customized Template",
-                },
-                "iomd": _get_new_notebook_content(iomd),
-                "datalist": data,
-                "iframe_src": _get_iframe_src(),
-                "eval_frame_origin": EVAL_FRAME_ORIGIN,
-            },
-        )
-    else:
+    # if user posted nothing at all,
+    # return new empty notebook
+    if iomd is None and len(data) == 0:
         return new_notebook_view(request)
+
+    return render(
+        request,
+        "notebook_uploaded_files.html",
+        {
+            "user_info": {},
+            "notebook_info": {
+                "connectionMode": "SERVER",
+                "tryItMode": True,
+                "title": "Customized Template",
+            },
+            "iomd": _get_new_notebook_content(iomd),
+            "datalist": data,
+            "iframe_src": _get_iframe_src(),
+            "eval_frame_origin": EVAL_FRAME_ORIGIN,
+        },
+    )
