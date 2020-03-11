@@ -88,6 +88,15 @@ class IomdEditorUnconnected extends React.Component {
         enabled: false
       }
     });
+
+    // FIXME: this unbinds Alt-W so that it can be used to toggle word wrap.
+    // this is using a private API, but there does not appear to be a public API
+    // https://github.com/microsoft/monaco-editor/issues/287
+    // eslint-disable-next-line
+    this.editor._standaloneKeybindingService.addDynamicKeybinding(
+      "-toggleFindWholeWord"
+    );
+
     window.MONACO_EDITOR = this.editor;
 
     this.editor.onDidChangeModelContent(() => {
