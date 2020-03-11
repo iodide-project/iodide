@@ -155,6 +155,10 @@ class IomdEditorUnconnected extends React.Component {
       this.editor.setPosition(
         new monaco.Position(editorCursorLine, editorCursorCol)
       );
+      this.editor.revealLineInCenterIfOutsideViewport(
+        editorCursorLine,
+        monaco.editor.ScrollType.Smooth
+      );
     }
 
     if (content !== this.editor.getValue()) {
