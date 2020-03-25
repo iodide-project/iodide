@@ -28,10 +28,12 @@ import "./monaco-custom-styles.css";
 import {
   updateIomdContent,
   updateEditorCursor,
-  updateEditorSelections
+  updateEditorSelections,
+  clearErrorInEditor
 } from "../../actions/editor-actions";
 
 import { updateAutosave } from "../../actions/autosave-actions";
+import { errorUnderlineWidget } from "./error-underline-widget";
 
 function unpackMonacoSelection(s, monacoModel) {
   return {
@@ -52,6 +54,8 @@ class IomdEditorUnconnected extends React.Component {
     wordWrap: PropTypes.string.isRequired,
     editorCursorLine: PropTypes.number.isRequired,
     editorCursorCol: PropTypes.number.isRequired,
+    editorErrorLine: PropTypes.number,
+    editorErrorCol: PropTypes.number,
     editorPosition: PropTypes.arrayOf(PropTypes.number),
     delimLines: PropTypes.arrayOf(PropTypes.number),
     // action creators
@@ -64,6 +68,7 @@ class IomdEditorUnconnected extends React.Component {
   constructor(props) {
     super(props);
     this.containerDivRef = React.createRef();
+    console.log("iomd editor constructor", { this: this });
 
     // explicitly bind "this" for all methods in constructors
     this.handleEditorUpdate = this.handleEditorUpdate.bind(this);
@@ -84,6 +89,7 @@ class IomdEditorUnconnected extends React.Component {
       lineNumbersMinChars: 3,
       lineDecorationsWidth: 3,
       renderLineHighlight: "gutter",
+      smoothScrolling: true,
       minimap: {
         enabled: false
       }
@@ -96,6 +102,8 @@ class IomdEditorUnconnected extends React.Component {
     this.editor._standaloneKeybindingService.addDynamicKeybinding(
       "-toggleFindWholeWord"
     );
+
+    this.editor.addContentWidget(errorUnderlineWidget);
 
     window.MONACO_EDITOR = this.editor;
 
@@ -144,13 +152,14 @@ class IomdEditorUnconnected extends React.Component {
     const {
       editorCursorLine,
       editorCursorCol,
+      editorErrorLine,
+      editorErrorCol,
       content,
       wordWrap,
       editorPosition,
       delimLines
     } = this.props;
     const { lineNumber, column } = this.editor.getPosition();
-
     if (lineNumber !== editorCursorLine || column !== editorCursorCol) {
       this.editor.setPosition(
         new monaco.Position(editorCursorLine, editorCursorCol)
@@ -163,6 +172,19 @@ class IomdEditorUnconnected extends React.Component {
 
     if (content !== this.editor.getValue()) {
       this.editor.setValue(content);
+    }
+
+    const editorErrorHasChanged =
+      editorErrorLine !== prevProps.editorErrorLine ||
+      editorErrorCol !== prevProps.editorErrorCol;
+
+    if (editorErrorHasChanged) {
+      this.editor.revealPositionInCenter(
+        { lineNumber: editorErrorLine, column: editorErrorCol },
+        monaco.editor.ScrollType.Smooth
+      );
+      errorUnderlineWidget.setPosition(editorErrorLine, editorErrorCol);
+      this.editor.layoutContentWidget(errorUnderlineWidget);
     }
 
     if (!isEqual(editorPosition, prevProps.editorPosition)) {
@@ -206,6 +228,7 @@ function mapStateToProps(state) {
   const wordWrap = state.wrapEditors ? "on" : "off";
   const { line: editorCursorLine, col: editorCursorCol } = state.editorCursor;
 
+  const { line: editorErrorLine, col: editorErrorCol } = state.editorError;
   // by passing in the editorPosition prop, we can ensure that the
   // Monaco instance does a fresh layout when the position
   // of it's containing pane changes. Slightly hacky but actually
@@ -223,6 +246,8 @@ function mapStateToProps(state) {
     delimLines,
     editorCursorLine,
     editorCursorCol,
+    editorErrorLine,
+    editorErrorCol,
     editorPosition,
     wordWrap
   };
@@ -232,6 +257,7 @@ const mapDispatchToProps = {
   updateIomdContent,
   updateEditorCursor,
   updateEditorSelections,
+  clearErrorInEditor,
   updateAutosave
 };
 

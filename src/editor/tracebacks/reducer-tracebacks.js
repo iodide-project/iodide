@@ -2,7 +2,7 @@ export default function reducer(state, action) {
   const { tracebackInfo } = state;
   switch (action.type) {
     case "traceback/JS_SCRIPT_LOADED": {
-      const { scriptUrl, tracebackId } = action;
+      const { scriptUrl, jsScriptTagBlobId } = action;
       const { tracebackItems } = tracebackInfo;
       return {
         ...state,
@@ -10,10 +10,10 @@ export default function reducer(state, action) {
           ...tracebackInfo,
           tracebackItems: {
             ...tracebackItems,
-            [tracebackId]: {
+            [jsScriptTagBlobId]: {
               tracebackType: "FETCHED_JS_SCRIPT",
               scriptUrl,
-              tracebackId,
+              jsScriptTagBlobId,
               fileName: scriptUrl.split("/").pop()
             }
           }
@@ -21,7 +21,7 @@ export default function reducer(state, action) {
       };
     }
     case "traceback/RECORD_TRACEBACK_INFO": {
-      const { evalId, tracebackId } = action;
+      const { evalId, jsScriptTagBlobId } = action;
       const { tracebackItems } = tracebackInfo;
       return {
         ...state,
@@ -29,10 +29,10 @@ export default function reducer(state, action) {
           ...tracebackInfo,
           tracebackItems: {
             ...tracebackItems,
-            [tracebackId]: {
+            [jsScriptTagBlobId]: {
               tracebackType: "USER_EVALUATION",
               evalId,
-              tracebackId
+              jsScriptTagBlobId
             }
           }
         }

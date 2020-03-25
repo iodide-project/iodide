@@ -11,7 +11,7 @@ const firefoxStacks = [
     parsed: [
       {
         functionName: "",
-        tracebackId: "d6da3813-192b-468c-aee0-0eacc32bb464",
+        jsScriptTagBlobId: "d6da3813-192b-468c-aee0-0eacc32bb464",
         lineNumber: 2,
         columnNumber: 4
       }
@@ -24,13 +24,13 @@ const firefoxStacks = [
     parsed: [
       {
         functionName: "",
-        tracebackId: "a600a746-031f-46fb-8c67-a48557466867",
+        jsScriptTagBlobId: "a600a746-031f-46fb-8c67-a48557466867",
         lineNumber: 4,
         columnNumber: 13
       },
       {
         functionName: "",
-        tracebackId: "a600a746-031f-46fb-8c67-a48557466867",
+        jsScriptTagBlobId: "a600a746-031f-46fb-8c67-a48557466867",
         lineNumber: 4,
         columnNumber: 6
       }
@@ -43,13 +43,13 @@ const firefoxStacks = [
     parsed: [
       {
         functionName: "failTest",
-        tracebackId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
+        jsScriptTagBlobId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
         lineNumber: 3,
         columnNumber: 18
       },
       {
         functionName: "",
-        tracebackId: "ddef1bb2-3561-4d41-9500-917a5fdecc9f",
+        jsScriptTagBlobId: "ddef1bb2-3561-4d41-9500-917a5fdecc9f",
         lineNumber: 1,
         columnNumber: 9
       }
@@ -64,25 +64,25 @@ failTest3@blob:http://localhost:8000/67eddeb7-42f8-4b78-9ef8-abc36889bdd7 line 2
     parsed: [
       {
         functionName: "failTest",
-        tracebackId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
+        jsScriptTagBlobId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
         lineNumber: 3,
         columnNumber: 18
       },
       {
         functionName: "failTest2",
-        tracebackId: "67eddeb7-42f8-4b78-9ef8-abc36889bdd7",
+        jsScriptTagBlobId: "67eddeb7-42f8-4b78-9ef8-abc36889bdd7",
         lineNumber: 2,
         columnNumber: 24
       },
       {
         functionName: "failTest3",
-        tracebackId: "67eddeb7-42f8-4b78-9ef8-abc36889bdd7",
+        jsScriptTagBlobId: "67eddeb7-42f8-4b78-9ef8-abc36889bdd7",
         lineNumber: 16,
         columnNumber: 16
       },
       {
         functionName: "",
-        tracebackId: "c7af4998-6e4a-4049-920d-13b4b3624d9c",
+        jsScriptTagBlobId: "c7af4998-6e4a-4049-920d-13b4b3624d9c",
         lineNumber: 3,
         columnNumber: 12
       }
@@ -97,27 +97,27 @@ failTest3@blob:http://localhost:8000/67eddeb7-42f8-4b78-9ef8-abc36889bdd7 line 2
     parsed: [
       {
         functionName: "failTest",
-        tracebackId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
+        jsScriptTagBlobId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
         lineNumber: 3,
         columnNumber: 18
       },
       {
         functionName: "",
-        tracebackId: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
+        jsScriptTagBlobId: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
         lineNumber: 4,
         columnNumber: 14,
         evalInUserCode: true
       },
       {
         functionName: "",
-        tracebackId: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
+        jsScriptTagBlobId: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
         lineNumber: 5,
         columnNumber: 3,
         evalInUserCode: true
       },
       {
         functionName: "",
-        tracebackId: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
+        jsScriptTagBlobId: "4ef5e1c2-dbf7-4cca-80b5-939a45ee5ded",
         lineNumber: 1,
         columnNumber: 13
       }
@@ -132,25 +132,25 @@ memoized@blob:http://localhost:8000/533ead26-ded8-4613-bd69-de650bde5bb7:10552:2
     parsed: [
       {
         functionName: "failTest",
-        tracebackId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
+        jsScriptTagBlobId: "d666d25c-6b52-4cb6-a3c9-0d6f30d59e84",
         lineNumber: 3,
         columnNumber: 18
       },
       {
         functionName: "failTest2",
-        tracebackId: "13fccf0f-4b5f-42a8-9e31-55cd2b604b70",
+        jsScriptTagBlobId: "13fccf0f-4b5f-42a8-9e31-55cd2b604b70",
         lineNumber: 3,
         columnNumber: 24
       },
       {
         functionName: "memoized",
-        tracebackId: "533ead26-ded8-4613-bd69-de650bde5bb7",
+        jsScriptTagBlobId: "533ead26-ded8-4613-bd69-de650bde5bb7",
         lineNumber: 10552,
         columnNumber: 27
       },
       {
         functionName: "",
-        tracebackId: "7cf46998-8771-4016-b940-8c92aec65441",
+        jsScriptTagBlobId: "7cf46998-8771-4016-b940-8c92aec65441",
         lineNumber: 3,
         columnNumber: 22
       }
@@ -166,32 +166,32 @@ memff@blob:http://localhost:8000/dfeb3e06-b116-407f-80de-a09ec84fd0b2 line 2 > e
     parsed: [
       {
         functionName: "failTest2",
-        tracebackId: "13fccf0f-4b5f-42a8-9e31-55cd2b604b70",
+        jsScriptTagBlobId: "13fccf0f-4b5f-42a8-9e31-55cd2b604b70",
         lineNumber: 6,
         columnNumber: 18
       },
       {
         functionName: "memoized",
-        tracebackId: "533ead26-ded8-4613-bd69-de650bde5bb7",
+        jsScriptTagBlobId: "533ead26-ded8-4613-bd69-de650bde5bb7",
         lineNumber: 10552,
         columnNumber: 27
       },
       {
         functionName: "memff",
-        tracebackId: "dfeb3e06-b116-407f-80de-a09ec84fd0b2",
+        jsScriptTagBlobId: "dfeb3e06-b116-407f-80de-a09ec84fd0b2",
         lineNumber: 5,
         columnNumber: 18
       },
       {
         functionName: "",
-        tracebackId: "b4cb21b0-4004-4721-b62f-320b93a5dee9",
+        jsScriptTagBlobId: "b4cb21b0-4004-4721-b62f-320b93a5dee9",
         lineNumber: 1,
         columnNumber: 6,
         evalInUserCode: true
       },
       {
         functionName: "",
-        tracebackId: "b4cb21b0-4004-4721-b62f-320b93a5dee9",
+        jsScriptTagBlobId: "b4cb21b0-4004-4721-b62f-320b93a5dee9",
         lineNumber: 1,
         columnNumber: 1
       }
@@ -258,7 +258,7 @@ const chromeStacksOld = [
     parsed: [
       {
         functionName: "",
-        tracebackId: "9ecd3231-b49f-44fa-b5be-f671f37310a9",
+        jsScriptTagBlobId: "9ecd3231-b49f-44fa-b5be-f671f37310a9",
         lineNumber: 2,
         columnNumber: 4
       }
@@ -274,13 +274,13 @@ const chromeStacksOld = [
     parsed: [
       {
         functionName: "",
-        tracebackId: "ee06386b-3b4a-44a7-a939-44199384f43f",
+        jsScriptTagBlobId: "ee06386b-3b4a-44a7-a939-44199384f43f",
         lineNumber: 4,
         columnNumber: 15
       },
       {
         functionName: "",
-        tracebackId: "ee06386b-3b4a-44a7-a939-44199384f43f",
+        jsScriptTagBlobId: "ee06386b-3b4a-44a7-a939-44199384f43f",
         lineNumber: 4,
         columnNumber: 6
       }
@@ -295,12 +295,12 @@ const chromeStacksOld = [
     parsed: [
       {
         functionName: "failTest",
-        tracebackId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
+        jsScriptTagBlobId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
         lineNumber: 3
       },
       {
         functionName: "",
-        tracebackId: "25148751-415f-452d-8e24-d27a07fc5b3c",
+        jsScriptTagBlobId: "25148751-415f-452d-8e24-d27a07fc5b3c",
         lineNumber: 1,
         columnNumber: 1
       }
@@ -317,24 +317,24 @@ const chromeStacksOld = [
     parsed: [
       {
         functionName: "failTest",
-        tracebackId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
+        jsScriptTagBlobId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
         lineNumber: 3
       },
       {
         functionName: "failTest2",
-        tracebackId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
+        jsScriptTagBlobId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
         lineNumber: 3,
         columnNumber: 16
       },
       {
         functionName: "failTest3",
-        tracebackId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
+        jsScriptTagBlobId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
         lineNumber: 17,
         columnNumber: 16
       },
       {
         functionName: "",
-        tracebackId: "de90461d-fe44-4944-bce3-2afe0b6c1d8a",
+        jsScriptTagBlobId: "de90461d-fe44-4944-bce3-2afe0b6c1d8a",
         lineNumber: 3,
         columnNumber: 3
       }
@@ -351,26 +351,26 @@ const chromeStacksOld = [
     parsed: [
       {
         functionName: "failTest",
-        tracebackId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
+        jsScriptTagBlobId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
         lineNumber: 3
       },
       {
         functionName: "",
-        tracebackId: "fa39f3b8-a303-4908-906e-a2cc633c8768",
+        jsScriptTagBlobId: "fa39f3b8-a303-4908-906e-a2cc633c8768",
         lineNumber: 4,
         columnNumber: 6,
         evalInUserCode: true
       },
       {
         functionName: "",
-        tracebackId: "fa39f3b8-a303-4908-906e-a2cc633c8768",
+        jsScriptTagBlobId: "fa39f3b8-a303-4908-906e-a2cc633c8768",
         lineNumber: 5,
         columnNumber: 3,
         evalInUserCode: true
       },
       {
         functionName: "",
-        tracebackId: "fa39f3b8-a303-4908-906e-a2cc633c8768",
+        jsScriptTagBlobId: "fa39f3b8-a303-4908-906e-a2cc633c8768",
         lineNumber: 1,
         columnNumber: 13
       }
@@ -387,23 +387,23 @@ const chromeStacksOld = [
     parsed: [
       {
         functionName: "failTest",
-        tracebackId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
+        jsScriptTagBlobId: "b81ec193-9a86-44f0-9a77-801a451ecc94",
         lineNumber: 3
       },
       {
         functionName: "failTest2",
-        tracebackId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
+        jsScriptTagBlobId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
         lineNumber: 3,
         columnNumber: 16
       },
       {
         functionName: "memoized",
-        tracebackId: "0d071643-65d2-41b5-a002-78be6a6673fa",
+        jsScriptTagBlobId: "0d071643-65d2-41b5-a002-78be6a6673fa",
         lineNumber: 10552
       },
       {
         functionName: "",
-        tracebackId: "afb94ea0-f618-4d65-856c-5d8ab2fbd1f0",
+        jsScriptTagBlobId: "afb94ea0-f618-4d65-856c-5d8ab2fbd1f0",
         lineNumber: 3,
         columnNumber: 20
       }
@@ -421,31 +421,31 @@ const chromeStacksOld = [
     parsed: [
       {
         functionName: "failTest2",
-        tracebackId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
+        jsScriptTagBlobId: "6ce0d6a8-c976-4129-9618-9204fff00ada",
         lineNumber: 6,
         columnNumber: 18
       },
       {
         functionName: "memoized",
-        tracebackId: "0d071643-65d2-41b5-a002-78be6a6673fa",
+        jsScriptTagBlobId: "0d071643-65d2-41b5-a002-78be6a6673fa",
         lineNumber: 10552
       },
       {
         functionName: "memff",
-        tracebackId: "db9dc30a-5f19-4c59-b57a-661917246598",
+        jsScriptTagBlobId: "db9dc30a-5f19-4c59-b57a-661917246598",
         lineNumber: 5,
         columnNumber: 16
       },
       {
         functionName: "",
-        tracebackId: "df482ed2-2b32-4dfa-85fc-0b109a2a6752",
+        jsScriptTagBlobId: "df482ed2-2b32-4dfa-85fc-0b109a2a6752",
         lineNumber: 1,
         columnNumber: 1,
         evalInUserCode: true
       },
       {
         functionName: "",
-        tracebackId: "df482ed2-2b32-4dfa-85fc-0b109a2a6752",
+        jsScriptTagBlobId: "df482ed2-2b32-4dfa-85fc-0b109a2a6752",
         lineNumber: 1,
         columnNumber: 1
       }
@@ -473,13 +473,13 @@ const chromeStacksNew = [
     parsed: [
       {
         functionName: "",
-        tracebackId: "2aebdf4e-1787-404c-8704-81107742bca8",
+        jsScriptTagBlobId: "2aebdf4e-1787-404c-8704-81107742bca8",
         lineNumber: 4,
         columnNumber: 17
       },
       {
         functionName: "",
-        tracebackId: "2aebdf4e-1787-404c-8704-81107742bca8",
+        jsScriptTagBlobId: "2aebdf4e-1787-404c-8704-81107742bca8",
         lineNumber: 4,
         columnNumber: 6
       }
@@ -494,13 +494,13 @@ const chromeStacksNew = [
     parsed: [
       {
         functionName: "failTest",
-        tracebackId: "6c90e86d-9878-4a25-9dee-f2c7c6fb2c4f",
+        jsScriptTagBlobId: "6c90e86d-9878-4a25-9dee-f2c7c6fb2c4f",
         lineNumber: 4,
         columnNumber: 18
       },
       {
         functionName: "",
-        tracebackId: "b16301fd-c279-496b-95ed-bd38ce9e1921",
+        jsScriptTagBlobId: "b16301fd-c279-496b-95ed-bd38ce9e1921",
         lineNumber: 1,
         columnNumber: 1
       }

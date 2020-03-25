@@ -1,16 +1,16 @@
-export function jsScriptLoaded(scriptUrl, tracebackId) {
+export function jsScriptLoaded(scriptUrl, jsScriptTagBlobId) {
   return {
     type: "traceback/JS_SCRIPT_LOADED",
     scriptUrl,
-    tracebackId
+    jsScriptTagBlobId
   };
 }
 
-export function recordTracebackInfo(evalId, tracebackId, language) {
+export function recordTracebackInfo(evalId, jsScriptTagBlobId, language) {
   return {
     type: "traceback/RECORD_TRACEBACK_INFO",
     evalId,
-    tracebackId,
+    jsScriptTagBlobId,
     language
   };
 }

@@ -1,6 +1,6 @@
 export const getResponseTypeFromFetchType = fetchEntry => {
   if (fetchEntry === "css") return "text";
-  if (fetchEntry === "js") return "blob";
+  if (fetchEntry === "js") return "text";
   if (fetchEntry === "plugin") return "text";
   if (fetchEntry === "bytes") return "arrayBuffer";
   return fetchEntry;

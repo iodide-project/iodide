@@ -2,7 +2,7 @@ const loadedScriptTracebackSchema = {
   type: "object",
   properties: {
     tracebackType: { const: "FETCHED_JS_SCRIPT" },
-    tracebackId: { type: "string" },
+    jsScriptTagBlobId: { type: "string" },
     url: { type: "string" },
     filename: { type: "string" }
   },
@@ -14,7 +14,7 @@ const userEvalTracebackSchema = {
   properties: {
     tracebackType: { const: "USER_EVALUATION" },
     evalId: { type: "string" },
-    tracebackId: { type: "string" }
+    jsScriptTagBlobId: { type: "string" }
   },
   additionalProperties: true
 };
@@ -23,7 +23,8 @@ const errorStackItemSchema = {
   type: "object",
   properties: {
     functionName: { type: "string" },
-    tracebackId: { type: "string" },
+    jsScriptTagBlobId: { type: "string" },
+    evalId: { type: "string" },
     lineNumber: { type: "number" },
     columnNumber: { type: "number" },
     evalInUserCode: { type: "boolean" }

@@ -4,14 +4,18 @@ export const getHistoryInputByEvalId = (state, evalId) => {
   )[0];
 };
 
-// export const doesEvalIdChunkStillExist = (state, evalId) => {
-//   const { originalChunkId } = getHistoryInputByEvalId(state, evalId);
-//   const originalChunkArray = state.iomdChunks.filter(
-//     chunk => chunk.chunkId === originalChunkId
-//   );
-// };
+export const chunkForEvalIdNotEdited = (state, evalId) => {
+  const { originalChunkId } = getHistoryInputByEvalId(state, evalId);
 
-export const getChunkStartlineInEditorByEvalId = (state, evalId) => {
+  // if the original chunkId is still in the chunks array,
+  // then the chunk has not been edited since eval
+  return (
+    state.iomdChunks.filter(chunk => chunk.chunkId === originalChunkId).length >
+    0
+  );
+};
+
+export const getChunkStartLineInEditorByEvalId = (state, evalId) => {
   const { originalChunkId } = getHistoryInputByEvalId(state, evalId);
   const originalChunkArray = state.iomdChunks.filter(
     chunk => chunk.chunkId === originalChunkId

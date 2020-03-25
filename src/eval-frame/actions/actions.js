@@ -4,9 +4,9 @@ import {
 } from "./editor-message-senders";
 
 import { IODIDE_EVALUATION_RESULTS } from "../iodide-evaluation-results";
-import generateRandomId from "../../shared/utils/generate-random-id";
-
-import { getErrorStackFrame } from "./eval-by-script-tag-stack-summary";
+// import generateRandomId from "../../shared/utils/generate-random-id";
+// import { getErrorStackFrame } from "./eval-by-script-tag-stack-summary";
+import jsKernel from "./javascript-kernel";
 
 class Singleton {
   constructor() {
@@ -24,37 +24,7 @@ const MOST_RECENT_CHUNK_ID = new Singleton();
 
 export { MOST_RECENT_CHUNK_ID };
 
-window.evalJavaScript = codeString => {
-  // for async script loading from blobs, see:
-  // https://developer.mozilla.org/en-US/docs/Games/Techniques/Async_scripts
-  const tempId = generateRandomId();
-  // temporarily saving the raw string object on `window` removes the
-  // need for complicated string escaping in the eval in the script
-  window[`code-${tempId}`] = codeString;
-
-  const enhancedString = `try {
-  window["${tempId}"] = window.eval(window["code-${tempId}"])
-} catch (err) {
-  window["${tempId}"] = err
-}`;
-  return new Promise(resolve => {
-    const blob = new Blob([enhancedString]);
-    const script = document.createElement("script");
-    const url = URL.createObjectURL(blob);
-    script.src = url;
-    document.head.appendChild(script);
-    const tracebackId = url.toString().slice(-36);
-    script.onload = () => {
-      URL.revokeObjectURL(url);
-      const value = window[tempId];
-      delete window[tempId];
-      delete window[`code-${tempId}`];
-      const errorStack =
-        value instanceof Error ? getErrorStackFrame(value) : undefined;
-      resolve({ value, tracebackId, errorStack });
-    };
-  });
-};
+window.evalJavaScript = jsKernel.evalJavaScript;
 
 export function runCodeWithLanguage(language, code) {
   const { module, evaluator, asyncEvaluator } = language;
@@ -83,18 +53,17 @@ export function runCodeWithLanguage(language, code) {
 
 export async function evaluateCodeV2Plugins(code, language, chunkId, evalId) {
   MOST_RECENT_CHUNK_ID.set(chunkId);
-
-  const { value, tracebackId, errorStack } = await runCodeWithLanguage(
-    language,
-    code
-  );
+  const { module, evaluator } = language;
+  const { value, jsScriptTagBlobId, errorStack } = await window[module][
+    evaluator
+  ](code, { evalId });
 
   const status = errorStack === undefined ? "SUCCESS" : "ERROR";
 
   IODIDE_EVALUATION_RESULTS[evalId] = value;
 
   sendStatusResponseToEditor(status, evalId, {
-    tracebackId,
+    jsScriptTagBlobId,
     historyId: evalId,
     errorStack
   });

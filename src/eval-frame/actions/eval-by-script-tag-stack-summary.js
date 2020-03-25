@@ -21,7 +21,7 @@ export const parseFFOrSafari = splitStack => {
     .map(matches => {
       const [
         functionName,
-        tracebackId,
+        jsScriptTagBlobId,
         maybeUserEvals,
         lineNumber,
         columnNumber
@@ -33,7 +33,7 @@ export const parseFFOrSafari = splitStack => {
 
       return {
         functionName,
-        tracebackId,
+        jsScriptTagBlobId,
         lineNumber: intOrUndefined(lineNumber),
         columnNumber: intOrUndefined(columnNumber),
         evalInUserCode
@@ -61,7 +61,7 @@ export const parseChromeOld = splitStack => {
       const [
         functionName,
         maybeUserEvals,
-        tracebackId,
+        jsScriptTagBlobId,
         maybeLineNumber,
         lineTail
       ] = matches.slice(1);
@@ -78,7 +78,7 @@ export const parseChromeOld = splitStack => {
 
       return {
         functionName: functionName !== "eval" ? functionName : "",
-        tracebackId,
+        jsScriptTagBlobId,
         lineNumber: intOrUndefined(lineNumber || maybeLineNumber),
         columnNumber: intOrUndefined(columnNumber),
         evalInUserCode
@@ -99,7 +99,7 @@ export const parseChromeNew = splitStack => {
       const [
         functionName,
         maybeUserEvals,
-        tracebackId,
+        jsScriptTagBlobId,
         lineNumber,
         columnNumber
       ] = matches.slice(1);
@@ -111,7 +111,7 @@ export const parseChromeNew = splitStack => {
 
       return {
         functionName: functionName !== "eval" ? functionName : "",
-        tracebackId,
+        jsScriptTagBlobId,
         lineNumber: intOrUndefined(lineNumber),
         columnNumber: intOrUndefined(columnNumber),
         evalInUserCode

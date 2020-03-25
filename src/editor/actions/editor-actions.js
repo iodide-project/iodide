@@ -36,6 +36,10 @@ export function moveCursorToNextChunk() {
   };
 }
 
-export function setErrorInEditor() {
-  return undefined;
+export function setErrorInEditor(line, col) {
+  return { type: "SET_ERROR_IN_EDITOR", line, col };
+}
+
+export function clearErrorInEditor() {
+  return { type: "SET_ERROR_IN_EDITOR", line: undefined, col: undefined };
 }

@@ -177,10 +177,18 @@ export const stateProperties = {
     },
     default: []
   },
+  editorError: {
+    type: "object",
+    properties: {
+      line: { type: "integer" },
+      col: { type: "integer" }
+    },
+    additionalProperties: false,
+    default: { line: undefined, col: undefined }
+  },
   gettingRevisionList: { type: "boolean", default: false },
   hasPreviousAutosave: { type: "boolean", default: false },
   history: historySchema,
-  // historyScrollTargetId: { type: "string", default: "" },
   iomd: { type: "string", default: "" },
   previouslySavedContent: {
     type: "object",

@@ -85,7 +85,7 @@ export function* evaluateByType(chunk) {
   if (evalType === "plugin") {
     yield call(evaluateLanguagePlugin, evalText);
   } else if (evalType === "fetch") {
-    yield call(evaluateFetch, evalText);
+    yield call(evaluateFetch, evalText, chunkId);
   } else {
     const language = state.languageDefinitions[evalType];
     const { status, payload } = yield call(
@@ -101,10 +101,10 @@ export function* evaluateByType(chunk) {
     );
 
     const level = status === "ERROR" ? "ERROR" : undefined;
-    const { tracebackId, errorStack } = payload;
+    const { jsScriptTagBlobId, errorStack } = payload;
 
-    if (tracebackId !== undefined) {
-      yield put(recordTracebackInfo(evalId, tracebackId, evalType));
+    if (jsScriptTagBlobId !== undefined) {
+      yield put(recordTracebackInfo(evalId, jsScriptTagBlobId, evalType));
     }
 
     if (errorStack !== undefined) {
@@ -134,6 +134,7 @@ export function* evaluateCurrentQueue() {
       yield call(evaluateByType, chunk);
       yield put(setKernelState("KERNEL_IDLE"));
     } catch (error) {
+      // throw error;
       if (process.env.NODE_ENV === "dev") {
         console.error("------ Caught error at eval queue top level ------");
         console.error(error);
