@@ -29,7 +29,7 @@ ErrorStackRendererUnconnected.propTypes = {
 
 export function mapStateToProps(state, ownProps) {
   const { evalId } = ownProps;
-  const { name, message, stack } = state.tracebackInfo.evalErrorStacks[evalId];
+  const { name, message, stack } = state.evalErrorStacks[evalId];
   return {
     name,
     message,

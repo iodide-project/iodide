@@ -21,10 +21,7 @@ import {
   addEvalTypeConsoleErrorToHistory
 } from "../../console/history/actions";
 
-import {
-  recordTracebackInfo,
-  recordErrorStack
-} from "../../tracebacks/actions";
+import { recordErrorStack } from "../../tracebacks/actions";
 
 import { evaluateFetch } from "./fetch-cell-saga";
 import { triggerEvalFrameTask } from "./eval-frame-sender";
@@ -101,11 +98,7 @@ export function* evaluateByType(chunk) {
     );
 
     const level = status === "ERROR" ? "ERROR" : undefined;
-    const { jsScriptTagBlobId, errorStack } = payload;
-
-    if (jsScriptTagBlobId !== undefined) {
-      yield put(recordTracebackInfo(evalId, jsScriptTagBlobId, evalType));
-    }
+    const { errorStack } = payload;
 
     if (errorStack !== undefined) {
       yield put(recordErrorStack(evalId, errorStack));
@@ -134,7 +127,6 @@ export function* evaluateCurrentQueue() {
       yield call(evaluateByType, chunk);
       yield put(setKernelState("KERNEL_IDLE"));
     } catch (error) {
-      // throw error;
       if (process.env.NODE_ENV === "dev") {
         console.error("------ Caught error at eval queue top level ------");
         console.error(error);

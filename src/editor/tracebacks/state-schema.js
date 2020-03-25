@@ -1,24 +1,3 @@
-const loadedScriptTracebackSchema = {
-  type: "object",
-  properties: {
-    tracebackType: { const: "FETCHED_JS_SCRIPT" },
-    jsScriptTagBlobId: { type: "string" },
-    url: { type: "string" },
-    filename: { type: "string" }
-  },
-  additionalProperties: true
-};
-
-const userEvalTracebackSchema = {
-  type: "object",
-  properties: {
-    tracebackType: { const: "USER_EVALUATION" },
-    evalId: { type: "string" },
-    jsScriptTagBlobId: { type: "string" }
-  },
-  additionalProperties: true
-};
-
 const errorStackItemSchema = {
   type: "object",
   properties: {
@@ -32,36 +11,21 @@ const errorStackItemSchema = {
   additionalProperties: false
 };
 
-const evalErrorStackSchema = {
+export const evalErrorStacksSchema = {
   type: "object",
-  properties: {
-    message: { type: "string" },
-    name: { type: "string" },
-    stack: {
-      type: "array",
-      items: errorStackItemSchema,
-      default: []
-    }
-  },
-  additionalProperties: false
-};
 
-export const tracebackInfoSchema = {
-  type: "object",
-  properties: {
-    tracebackItems: {
-      type: "object",
-      additionalProperties: {
-        anyOf: [loadedScriptTracebackSchema, userEvalTracebackSchema]
-      },
-      default: {}
+  additionalProperties: {
+    type: "object",
+    properties: {
+      message: { type: "string" },
+      name: { type: "string" },
+      stack: {
+        type: "array",
+        items: errorStackItemSchema,
+        default: []
+      }
     },
-    evalErrorStacks: {
-      type: "object",
-      additionalProperties: evalErrorStackSchema,
-      default: {}
-    }
+    additionalProperties: false
   },
-  additionalProperties: false,
   default: { tracebackItems: {}, evalErrorStacks: {} }
 };
