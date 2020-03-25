@@ -211,7 +211,7 @@ whitenoise==5.0.1 \
     --hash=sha256:0f9137f74bd95fa54329ace88d8dc695fbe895369a632e35f7a136e003e41d73 \
     --hash=sha256:62556265ec1011bd87113fb81b7516f52688887b7a010ee899ff1fd18fd22700 \
     # via -r build.in
-zipp==3.0.0 \
-    --hash=sha256:12248a63bbdf7548f89cb4c7cda4681e537031eda29c02ea29674bc6854460c2 \
-    --hash=sha256:7c0f8e91abc0dc07a5068f315c52cb30c66bfbc581e5b50704c8a2f6ebae794a \
+zipp==3.1.0 \
+    --hash=sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b \
+    --hash=sha256:c599e4d75c98f6798c509911d08a22e6c021d074469042177c8c86fb92eefd96 \
     # via -r build.in, importlib-metadata
