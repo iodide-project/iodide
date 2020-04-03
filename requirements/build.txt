@@ -239,10 +239,10 @@ social-auth-app-django==3.1.0 \
     --hash=sha256:9237e3d7b6f6f59494c3b02e0cce6efc69c9d33ad9d1a064e3b2318bcbe89ae3 \
     --hash=sha256:f151396e5b16e2eee12cd2e211004257826ece24fc4ae97a147df386c1cd7082 \
     # via -r build.in
-social-auth-core==3.3.2 \
-    --hash=sha256:1ce0f672827465df416b7170536cf6ac2415158fe993acc227aec1ead5d429ee \
-    --hash=sha256:3d04148d3f01d163cbf893d35250abe86e3e759203bd6f3036fdb85f89f85109 \
-    --hash=sha256:6320ff4644eece77dd8cec7939361918e26a877fc282974071f9a8892fd6df7e \
+social-auth-core==3.3.3 \
+    --hash=sha256:21c0639c56befd33ec162c2210d583bb1de8e1136d53b21bafb96afaf2f86c91 \
+    --hash=sha256:2f6ce1af8ec2b2cc37b86d647f7d4e4292f091ee556941db34b1e0e2dee77fc0 \
+    --hash=sha256:4a3cdf69c449b235cdabd54a1be7ba3722611297e69fded52e3584b1a990af25 \
     # via -r build.in, social-auth-app-django
 spinach==0.0.11 \
     --hash=sha256:20e6b802cd2c7855173009aabbcf5d2a48bdbf93c2a13d3e78a777b5300b128f \
