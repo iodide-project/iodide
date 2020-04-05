@@ -37,7 +37,6 @@ export class HistoryItemUnconnected extends React.Component {
       this.props.scrollToThisItem &&
       prevProps.scrollToThisItem !== this.props.scrollToThisItem
     ) {
-      console.log("scroll attempt");
       this.scrollTargetRef.current.scrollIntoView({ behavior: "smooth" });
       this.props.clearHistoryItemScroll();
     }

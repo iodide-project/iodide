@@ -68,7 +68,6 @@ class IomdEditorUnconnected extends React.Component {
   constructor(props) {
     super(props);
     this.containerDivRef = React.createRef();
-    console.log("iomd editor constructor", { this: this });
 
     // explicitly bind "this" for all methods in constructors
     this.handleEditorUpdate = this.handleEditorUpdate.bind(this);
