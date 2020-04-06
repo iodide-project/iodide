@@ -1,5 +1,9 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.19.1 (2020-04-06)
+
+- GitHub authentication doesn't use URL query parameters (fixes #2682) (#2751)
+
 # 0.19.0 (2020-03-03)
 
 - Can now specify notebook iomd via a URL parameter with new or
