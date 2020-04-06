@@ -4,7 +4,7 @@ This document covers the nuts and bolts of setting up a development environment,
 
 ## Prerequisites
 
-You should have [Node](https://nodejs.org/) installed at v8.0.0+ and [npm](https://www.npmjs.com/). If you want to work on the server, you will also need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
+You should have [Node](https://nodejs.org/) installed at v12.0.0+ and [npm](https://www.npmjs.com/). If you want to work on the server, you will also need [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
 
 ## Installing dependencies
 

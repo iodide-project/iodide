@@ -7,7 +7,7 @@
   "license": "MPL-2.0",
   "browserslist": "> 0.25%, not dead",
   "engines": {
-    "node": "8.x"
+    "node": "12.x"
   },
   "scripts": {
     "test": "jest --no-cache",
