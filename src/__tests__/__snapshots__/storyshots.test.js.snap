@@ -119,6 +119,388 @@ exports[`Storyshots DropTarget Image gallery 1`] = `
 </div>
 `;
 
+exports[`Storyshots Error stack items error stack items 1`] = `
+Array [
+  <div>
+    <i>
+      foo
+    </i>
+     in
+     
+    <span
+      aria-describedby={null}
+      className=""
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="Open script URL in new tab"
+    >
+      <a
+        className="css-29u2iz-GoToErrorLink epop88j1"
+      >
+        lodash.js
+        : line 
+        3
+         col 6
+        <div
+          className="css-rwnk6s-InlineIconWrapper epop88j0"
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIconroot-1-1-9 MuiSvgIconfontSizeSmall-1-1-16"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+            />
+          </svg>
+        </div>
+      </a>
+    </span>
+  </div>,
+  <div>
+    <i>
+      bar
+    </i>
+     in
+     
+    <span
+      aria-describedby={null}
+      className=""
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="Go to error in editor"
+    >
+      <a
+        className="css-29u2iz-GoToErrorLink epop88j1"
+      >
+        [input-5-js]
+        : line 
+        33
+         col 46
+        <div
+          className="css-rwnk6s-InlineIconWrapper epop88j0"
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIconroot-1-1-9 MuiSvgIconfontSizeSmall-1-1-16"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <svg
+              style={
+                Object {
+                  "height": "24px",
+                  "width": "24px",
+                }
+              }
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M 20,17 H 7 v 2 h 13 z"
+              />
+              <path
+                d="M 16,9 H 7 v 2 h 9 z"
+              />
+              <path
+                d="M 7,15 H 21 V 13 H 7 Z"
+              />
+              <path
+                d="M 7,5 V 7 H 21 V 5 Z"
+              />
+              <path
+                d="M 2,14 V 5.9999997 L 6,10 Z"
+              />
+            </svg>
+          </svg>
+        </div>
+      </a>
+    </span>
+  </div>,
+  <div>
+    <i>
+      baradfd
+    </i>
+     in
+     
+    <span
+      aria-describedby={null}
+      className=""
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="Go to error in history (code edited since run)"
+    >
+      <a
+        className="css-29u2iz-GoToErrorLink epop88j1"
+      >
+        [input-3-js]
+        : line 
+        21
+         col 4
+        <div
+          className="css-rwnk6s-InlineIconWrapper epop88j0"
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIconroot-1-1-9 MuiSvgIconfontSizeSmall-1-1-16"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+            />
+          </svg>
+        </div>
+      </a>
+    </span>
+  </div>,
+  <div>
+    
+    <span
+      aria-describedby={null}
+      className=""
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="Go to error in editor"
+    >
+      <a
+        className="css-29u2iz-GoToErrorLink epop88j1"
+      >
+        [input-8-js]
+        : line 
+        2
+         col 14
+        <div
+          className="css-rwnk6s-InlineIconWrapper epop88j0"
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIconroot-1-1-9 MuiSvgIconfontSizeSmall-1-1-16"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <svg
+              style={
+                Object {
+                  "height": "24px",
+                  "width": "24px",
+                }
+              }
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M 20,17 H 7 v 2 h 13 z"
+              />
+              <path
+                d="M 16,9 H 7 v 2 h 9 z"
+              />
+              <path
+                d="M 7,15 H 21 V 13 H 7 Z"
+              />
+              <path
+                d="M 7,5 V 7 H 21 V 5 Z"
+              />
+              <path
+                d="M 2,14 V 5.9999997 L 6,10 Z"
+              />
+            </svg>
+          </svg>
+        </div>
+      </a>
+    </span>
+  </div>,
+]
+`;
+
+exports[`Storyshots Error stacks error stack items 1`] = `
+Array [
+  <div>
+    <div
+      aria-describedby={null}
+      className=" css-hy4trn-TinyIconButton epop88j0"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title={null}
+    >
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root-181"
+        focusable="false"
+        role="presentation"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+        />
+      </svg>
+    </div>
+    <i>
+      foo
+    </i>
+     in
+     
+    lodash.js
+    : line 
+    3
+     col 6
+  </div>,
+  <div>
+    <div
+      aria-describedby={null}
+      className=" css-hy4trn-TinyIconButton epop88j0"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title={null}
+    >
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root-181"
+        focusable="false"
+        role="presentation"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+        />
+      </svg>
+    </div>
+    <i>
+      bar
+    </i>
+     in
+     
+    [input-5-js]
+    : line 
+    33
+     col 46
+  </div>,
+  <div>
+    <div
+      aria-describedby={null}
+      className=" css-hy4trn-TinyIconButton epop88j0"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title={null}
+    >
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root-181"
+        focusable="false"
+        role="presentation"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+        />
+      </svg>
+    </div>
+    <i>
+      baradfd
+    </i>
+     in
+     
+    [input-3-js]
+    : line 
+    21
+     col 4
+  </div>,
+  <div>
+    <div
+      aria-describedby={null}
+      className=" css-hy4trn-TinyIconButton epop88j0"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title={null}
+    >
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root-181"
+        focusable="false"
+        role="presentation"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+        />
+      </svg>
+    </div>
+    
+    [input-8-js]
+    : line 
+    2
+     col 14
+  </div>,
+]
+`;
+
 exports[`Storyshots File sources pane InProgress 1`] = `
 Array [
   <h1>

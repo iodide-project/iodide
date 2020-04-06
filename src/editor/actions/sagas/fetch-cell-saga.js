@@ -55,12 +55,6 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex, chunkId) {
   } else if (fetchType === "js") {
     const state = yield select();
     const language = state.loadedLanguages.js;
-    console.log({
-      code: fetchedFile,
-      language,
-      chunkId,
-      filePath
-    });
     yield call(
       triggerEvalFrameTask,
       "EVAL_CODE",

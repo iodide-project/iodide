@@ -52,25 +52,12 @@ class JavascriptKernel {
 
   constructor() {
     this.evalJavaScript = this.evalJavaScript.bind(this);
-    // this.blobIdToEvalIdMapping = {};
-    console.log("jskern constructor", { this: this });
   }
 
   async evalJavaScript(codeString, { evalId }) {
-    console.log("in kenr.evalJS - before eval", {
-      codeString,
-      evalId,
-      this: this
-    });
-
     const { value, jsScriptTagBlobId, errorStack } = await evalJavaScript(
       codeString
     );
-    console.log("in kenr.evalJS - after eval", {
-      value,
-      jsScriptTagBlobId,
-      errorStack
-    });
     this.blobIdToEvalIdMapping[jsScriptTagBlobId] = evalId;
     return {
       value,

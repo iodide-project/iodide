@@ -1,85 +1,83 @@
 import React from "react";
+import { Provider as ReduxProvider } from "react-redux";
 
 import { storiesOf } from "@storybook/react";
 
 // import { createStore } from "redux";
 // import { Provider } from "react-redux";
 
-// import {ErrorStackRendererUnconnected} from "../error-stack-renderer"
+// import ErrorStackRenderer from "../error-stack-renderer";
 
 import { ErrorStackRendererUnconnected } from "../error-stack-renderer";
 import ConsoleMessage from "../../../console/history/components/console-message";
 
-const errorStackItemStories = storiesOf("Error stacks", module);
+import CSSCascadeProvider from "../../../../shared/components/css-cascade-provider";
 
-// const state = {}
+const store = {
+  getState: () => {},
+  subscribe: () => 0,
+  dispatch: console.log
+};
 
-// const store = createStore(s => s, state);
+// eslint-disable-next-line react/prop-types
+function Provider({ story }) {
+  return (
+    <CSSCascadeProvider>
+      <ReduxProvider store={store}>{story}</ReduxProvider>
+    </CSSCascadeProvider>
+  );
+}
+const errorStackStories = storiesOf(
+  "Error stack",
+  module
+).addDecorator(story => <Provider story={story()} />);
 
-// addDecorator(S => (
-//   <Provider store={store}>
-//     <S />
-//   </Provider>
-// ));
-
-const goToTracebackItem = x => console.log(x);
+const onClickFn = console.log;
 
 const stack = {
   name: "SomeError",
   message: "a bad thing happened",
   stack: [
     {
-      tracebackId: "traceback-1",
       functionName: "foo",
       traceDisplayName: "lodash.js",
       lineNumber: 3,
       columnNumber: 6,
-      editedSinceEval: false,
-      evalInUserCode: false,
-      tracebackType: "FETCHED_JS_SCRIPT",
-      goToTracebackItem,
+      goToErrorType: "OPEN_SCRIPT",
+      onClickFn,
       key: "1"
     },
     {
-      tracebackId: "traceback-2",
       functionName: "bar",
       traceDisplayName: "[input-5-js]",
       lineNumber: 33,
       columnNumber: 46,
-      editedSinceEval: false,
-      evalInUserCode: false,
-      tracebackType: "USER_EVALUATION",
-      goToTracebackItem,
+      goToErrorType: "SHOW_IN_EDITOR",
+      onClickFn,
       key: "2"
     },
     {
-      tracebackId: "traceback-3",
       functionName: "baradfd",
       traceDisplayName: "[input-3-js]",
       lineNumber: 21,
       columnNumber: 4,
-      editedSinceEval: true,
-      evalInUserCode: false,
-      tracebackType: "USER_EVALUATION",
-      goToTracebackItem,
+      goToErrorType: "SHOW_IN_HISTORY",
+      onClickFn,
       key: "3"
     },
     {
-      tracebackId: "traceback-4",
       functionName: "",
       traceDisplayName: "[input-8-js]",
       lineNumber: 2,
       columnNumber: 14,
-      editedSinceEval: true,
-      evalInUserCode: true,
-      tracebackType: "USER_EVALUATION",
-      goToTracebackItem,
+      goToErrorType: "SHOW_IN_EDITOR",
+      onClickFn,
       key: "4"
     }
   ]
 };
 
-errorStackItemStories.add("tables", () => (
+errorStackStories.add("error stacks", () => (
   <ConsoleMessage level="ERROR">
     <ErrorStackRendererUnconnected {...stack} />
   </ConsoleMessage>
