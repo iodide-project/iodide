@@ -93,7 +93,7 @@ export function saveNotebookToServer(forceSave = false) {
     try {
       // no notebook exists yet on server, need to create one
       if (!notebookInServer) {
-        dispatch(createNewNotebookOnServer());
+        await dispatch(createNewNotebookOnServer());
         return;
       }
       // save existing revision
