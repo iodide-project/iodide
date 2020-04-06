@@ -2,7 +2,7 @@
 
 # 0.19.1 (2020-04-06)
 
-- GitHub authentication doesn't use URL query parameters (fixes #2682) (#2751)
+- GitHub authentication no longer uses URL query parameters (fixes #2682) (#2751)
 
 # 0.19.0 (2020-03-03)
 
