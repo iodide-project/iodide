@@ -3,11 +3,6 @@ import { Provider as ReduxProvider } from "react-redux";
 
 import { storiesOf } from "@storybook/react";
 
-// import { createStore } from "redux";
-// import { Provider } from "react-redux";
-
-// import ErrorStackRenderer from "../error-stack-renderer";
-
 import { ErrorStackRendererUnconnected } from "../error-stack-renderer";
 import ConsoleMessage from "../../../console/history/components/console-message";
 

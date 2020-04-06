@@ -4,8 +4,6 @@ import {
 } from "./editor-message-senders";
 
 import { IODIDE_EVALUATION_RESULTS } from "../iodide-evaluation-results";
-// import generateRandomId from "../../shared/utils/generate-random-id";
-// import { getErrorStackFrame } from "./eval-by-script-tag-stack-summary";
 import jsKernel from "./javascript-kernel";
 
 class Singleton {

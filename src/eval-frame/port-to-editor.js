@@ -120,16 +120,16 @@ async function receiveMessage(event) {
         }
         break;
       }
-      case "LOAD_SCRIPT": {
-        const { script } = message;
-        try {
-          const scriptUUID = await loadScriptFromBlob(script);
-          sendStatusResponseToEditor("SUCCESS", message.taskId, scriptUUID);
-        } catch {
-          sendStatusResponseToEditor("ERROR", message.taskId);
-        }
-        break;
-      }
+      // case "LOAD_SCRIPT": {
+      //   const { script } = message;
+      //   try {
+      //     const scriptUUID = await loadScriptFromBlob(script);
+      //     sendStatusResponseToEditor("SUCCESS", message.taskId, scriptUUID);
+      //   } catch {
+      //     sendStatusResponseToEditor("ERROR", message.taskId);
+      //   }
+      //   break;
+      // }
       case "ADD_CSS": {
         const { css, filePath } = message;
         try {

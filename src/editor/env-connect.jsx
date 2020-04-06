@@ -1,4 +1,3 @@
-// import { mapStateToProps } from "./tracebacks/components/error-stack-item"
 import React from "react";
 import { connect } from "react-redux";
 
