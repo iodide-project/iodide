@@ -59,6 +59,7 @@ describe("saveNotebookToServer", () => {
     const store = mockStore({
       ...initialState(false)
     });
+    createNotebookRequest.mockReset();
     createNotebookRequest.mockResolvedValue({
       id: 1,
       latest_revision: {
