@@ -10,19 +10,19 @@ save_javascript_cache: &save_javascript_cache
     paths:
       - ~/cache/npm
       - node_modules
-    key: v1-javascript-dependencies-{{ checksum "package.json" }}
+    key: v2-javascript-dependencies-{{ checksum "package.json" }}
 
 restore_javascript_cache: &restore_javascript_cache
   restore_cache:
     keys:
-      - v1-javascript-dependencies-{{ checksum "package.json" }}
-      - v1-javascript-dependencies-
+      - v2-javascript-dependencies-{{ checksum "package.json" }}
+      - v2-javascript-dependencies-
 
 version: 2
 jobs:
   test-javascript:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:12
     working_directory: ~/iodide
     environment:
       npm_config_cache: ~/cache/npm
@@ -40,7 +40,7 @@ jobs:
 
   build:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:12
     working_directory: ~/iodide
     environment:
       npm_config_cache: ~/cache/npm
@@ -144,7 +144,7 @@ jobs:
 
   deploy:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:12
     working_directory: ~/iodide
     steps:
       - setup_remote_docker
