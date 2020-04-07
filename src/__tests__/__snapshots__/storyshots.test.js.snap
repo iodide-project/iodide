@@ -6,13 +6,13 @@ exports[`Storyshots DropTarget File manager 1`] = `
   id="file-manager-modal"
 >
   <header
-    className="MuiPaper-root-182 MuiPaper-elevation4-188 MuiAppBar-root-173 MuiAppBar-positionStatic-177 MuiAppBar-colorPrimary-180 css-1qq5x30-FileAppBar e1yhwqbz1"
+    className="MuiPaperroot-0-1-288 MuiPaperelevation4-0-1-294 MuiAppBarroot-0-1-279 MuiAppBarpositionStatic-0-1-283 MuiAppBarcolorPrimary-0-1-286 css-1qq5x30-FileAppBar e1yhwqbz1"
   >
     <div
-      className="MuiToolbar-root-209 MuiToolbar-regular-211 MuiToolbar-gutters-210"
+      className="MuiToolbarroot-0-1-315 MuiToolbarregular-0-1-317 MuiToolbargutters-0-1-316"
     >
       <h2
-        className="MuiTypography-root-213 MuiTypography-title-219 css-12n7j8m-Title e1yhwqbz2"
+        className="MuiTypographyroot-0-1-319 MuiTypographytitle-0-1-325 css-12n7j8m-Title e1yhwqbz2"
       >
         File Manager
       </h2>
@@ -75,7 +75,7 @@ exports[`Storyshots DropTarget Image gallery 1`] = `
       </span>
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root-249"
+        className="MuiSvgIconroot-0-1-355"
         focusable="false"
         id="upload-arrow"
         role="presentation"
@@ -119,55 +119,271 @@ exports[`Storyshots DropTarget Image gallery 1`] = `
 </div>
 `;
 
-exports[`Storyshots Error stack items error stack items 1`] = `
-Array [
-  <div>
-    <i>
-      foo
-    </i>
-     in
-     
-    <span
-      aria-describedby={null}
-      className=""
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onTouchEnd={[Function]}
-      onTouchStart={[Function]}
-      title="Open script URL in new tab"
+exports[`Storyshots Error stacks full error stack 1`] = `
+<div
+  className="css-fpcehc-ConsoleContainer-MessageContainer e5kgce00"
+>
+  <div
+    className="css-jgvzxp-GutterContainer e1uftkd40"
+  >
+    <div
+      className="css-1e7flpk-GutterAligner e1uftkd41"
     >
-      <a
-        className="css-29u2iz-GoToErrorLink epop88j1"
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIconroot-0-1-262 css-ket06j-BaseIcon e34nmjp0"
+        focusable="false"
+        role="presentation"
+        viewBox="0 0 24 24"
       >
-        lodash.js
-        : line 
-        3
-         col 6
-        <div
-          className="css-rwnk6s-InlineIconWrapper epop88j0"
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+        />
+      </svg>
+    </div>
+  </div>
+  <div
+    className="css-1xcucn7-MessageBody e5kgce01"
+  >
+    <pre
+      className="css-l792xz-ErrorStackWrapper e1j51ux0"
+    >
+      SomeError
+      : 
+      a bad thing happened
+      
+
+      <div>
+        <i>
+          bar
+        </i>
+         in
+         
+        <span
+          aria-describedby={null}
+          className=""
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="Go to error in editor"
         >
-          <svg
-            aria-hidden="true"
-            className="MuiSvgIconroot-1-1-9 MuiSvgIconfontSizeSmall-1-1-16"
-            focusable="false"
-            role="presentation"
-            viewBox="0 0 24 24"
+          <a
+            className="css-29u2iz-GoToErrorLink epop88j1"
           >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
-            />
-          </svg>
-        </div>
-      </a>
-    </span>
-  </div>,
+            [input-5-js]
+            : line 
+            33
+             col 46
+            <div
+              className="css-rwnk6s-InlineIconWrapper epop88j0"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIconroot-0-1-262 MuiSvgIconfontSizeSmall-0-1-269"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <svg
+                  style={
+                    Object {
+                      "height": "24px",
+                      "width": "24px",
+                    }
+                  }
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M 20,17 H 7 v 2 h 13 z"
+                  />
+                  <path
+                    d="M 16,9 H 7 v 2 h 9 z"
+                  />
+                  <path
+                    d="M 7,15 H 21 V 13 H 7 Z"
+                  />
+                  <path
+                    d="M 7,5 V 7 H 21 V 5 Z"
+                  />
+                  <path
+                    d="M 2,14 V 5.9999997 L 6,10 Z"
+                  />
+                </svg>
+              </svg>
+            </div>
+          </a>
+        </span>
+      </div>
+      <div>
+        <i>
+          baradfd
+        </i>
+         in
+         
+        <span
+          aria-describedby={null}
+          className=""
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="Go to error in history (code edited since run)"
+        >
+          <a
+            className="css-29u2iz-GoToErrorLink epop88j1"
+          >
+            [input-3-js]
+            : line 
+            21
+             col 4
+            <div
+              className="css-rwnk6s-InlineIconWrapper epop88j0"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIconroot-0-1-262 MuiSvgIconfontSizeSmall-0-1-269"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+                />
+              </svg>
+            </div>
+          </a>
+        </span>
+      </div>
+      <div>
+        
+        <span
+          aria-describedby={null}
+          className=""
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="Go to error in editor"
+        >
+          <a
+            className="css-29u2iz-GoToErrorLink epop88j1"
+          >
+            [input-8-js]
+            : line 
+            2
+             col 14
+            <div
+              className="css-rwnk6s-InlineIconWrapper epop88j0"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIconroot-0-1-262 MuiSvgIconfontSizeSmall-0-1-269"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <svg
+                  style={
+                    Object {
+                      "height": "24px",
+                      "width": "24px",
+                    }
+                  }
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M 20,17 H 7 v 2 h 13 z"
+                  />
+                  <path
+                    d="M 16,9 H 7 v 2 h 9 z"
+                  />
+                  <path
+                    d="M 7,15 H 21 V 13 H 7 Z"
+                  />
+                  <path
+                    d="M 7,5 V 7 H 21 V 5 Z"
+                  />
+                  <path
+                    d="M 2,14 V 5.9999997 L 6,10 Z"
+                  />
+                </svg>
+              </svg>
+            </div>
+          </a>
+        </span>
+      </div>
+      <div>
+        <i>
+          foo
+        </i>
+         in
+         
+        <span
+          aria-describedby={null}
+          className=""
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="Open script URL in new tab"
+        >
+          <a
+            className="css-29u2iz-GoToErrorLink epop88j1"
+          >
+            lodash.js
+            : line 
+            3
+             col 6
+            <div
+              className="css-rwnk6s-InlineIconWrapper epop88j0"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIconroot-0-1-262 MuiSvgIconfontSizeSmall-0-1-269"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                />
+              </svg>
+            </div>
+          </a>
+        </span>
+      </div>
+    </pre>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Error stacks/Stack items All items in one list 1`] = `
+Array [
   <div>
     <i>
       bar
@@ -198,7 +414,7 @@ Array [
         >
           <svg
             aria-hidden="true"
-            className="MuiSvgIconroot-1-1-9 MuiSvgIconfontSizeSmall-1-1-16"
+            className="MuiSvgIconroot-0-1-185 MuiSvgIconfontSizeSmall-0-1-192"
             focusable="false"
             role="presentation"
             viewBox="0 0 24 24"
@@ -263,7 +479,7 @@ Array [
         >
           <svg
             aria-hidden="true"
-            className="MuiSvgIconroot-1-1-9 MuiSvgIconfontSizeSmall-1-1-16"
+            className="MuiSvgIconroot-0-1-185 MuiSvgIconfontSizeSmall-0-1-192"
             focusable="false"
             role="presentation"
             viewBox="0 0 24 24"
@@ -306,7 +522,7 @@ Array [
         >
           <svg
             aria-hidden="true"
-            className="MuiSvgIconroot-1-1-9 MuiSvgIconfontSizeSmall-1-1-16"
+            className="MuiSvgIconroot-0-1-185 MuiSvgIconfontSizeSmall-0-1-192"
             focusable="false"
             role="presentation"
             viewBox="0 0 24 24"
@@ -341,54 +557,15 @@ Array [
       </a>
     </span>
   </div>,
-]
-`;
-
-exports[`Storyshots Error stacks error stack items 1`] = `
-Array [
   <div>
-    <div
-      aria-describedby={null}
-      className=" css-hy4trn-TinyIconButton epop88j0"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onTouchEnd={[Function]}
-      onTouchStart={[Function]}
-      title={null}
-    >
-      <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root-181"
-        focusable="false"
-        role="presentation"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
-        <path
-          d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
-        />
-      </svg>
-    </div>
     <i>
       foo
     </i>
      in
      
-    lodash.js
-    : line 
-    3
-     col 6
-  </div>,
-  <div>
-    <div
+    <span
       aria-describedby={null}
-      className=" css-hy4trn-TinyIconButton epop88j0"
+      className=""
       onBlur={[Function]}
       onClick={[Function]}
       onFocus={[Function]}
@@ -396,109 +573,270 @@ Array [
       onMouseOver={[Function]}
       onTouchEnd={[Function]}
       onTouchStart={[Function]}
-      title={null}
+      title="Open script URL in new tab"
     >
-      <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root-181"
-        focusable="false"
-        role="presentation"
-        viewBox="0 0 24 24"
+      <a
+        className="css-29u2iz-GoToErrorLink epop88j1"
       >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
-        <path
-          d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
-        />
-      </svg>
-    </div>
-    <i>
-      bar
-    </i>
-     in
-     
-    [input-5-js]
-    : line 
-    33
-     col 46
-  </div>,
-  <div>
-    <div
-      aria-describedby={null}
-      className=" css-hy4trn-TinyIconButton epop88j0"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onTouchEnd={[Function]}
-      onTouchStart={[Function]}
-      title={null}
-    >
-      <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root-181"
-        focusable="false"
-        role="presentation"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
-        <path
-          d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
-        />
-      </svg>
-    </div>
-    <i>
-      baradfd
-    </i>
-     in
-     
-    [input-3-js]
-    : line 
-    21
-     col 4
-  </div>,
-  <div>
-    <div
-      aria-describedby={null}
-      className=" css-hy4trn-TinyIconButton epop88j0"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onTouchEnd={[Function]}
-      onTouchStart={[Function]}
-      title={null}
-    >
-      <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root-181"
-        focusable="false"
-        role="presentation"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
-        <path
-          d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
-        />
-      </svg>
-    </div>
-    
-    [input-8-js]
-    : line 
-    2
-     col 14
+        lodash.js
+        : line 
+        3
+         col 6
+        <div
+          className="css-rwnk6s-InlineIconWrapper epop88j0"
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIconroot-0-1-185 MuiSvgIconfontSizeSmall-0-1-192"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+            />
+          </svg>
+        </div>
+      </a>
+    </span>
   </div>,
 ]
+`;
+
+exports[`Storyshots Error stacks/Stack items/Individual items item 0 1`] = `
+<div>
+  <i>
+    bar
+  </i>
+   in
+   
+  <span
+    aria-describedby={null}
+    className=""
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onMouseLeave={[Function]}
+    onMouseOver={[Function]}
+    onTouchEnd={[Function]}
+    onTouchStart={[Function]}
+    title="Go to error in editor"
+  >
+    <a
+      className="css-29u2iz-GoToErrorLink epop88j1"
+    >
+      [input-5-js]
+      : line 
+      33
+       col 46
+      <div
+        className="css-rwnk6s-InlineIconWrapper epop88j0"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIconroot-0-1-202 MuiSvgIconfontSizeSmall-0-1-209"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <svg
+            style={
+              Object {
+                "height": "24px",
+                "width": "24px",
+              }
+            }
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M 20,17 H 7 v 2 h 13 z"
+            />
+            <path
+              d="M 16,9 H 7 v 2 h 9 z"
+            />
+            <path
+              d="M 7,15 H 21 V 13 H 7 Z"
+            />
+            <path
+              d="M 7,5 V 7 H 21 V 5 Z"
+            />
+            <path
+              d="M 2,14 V 5.9999997 L 6,10 Z"
+            />
+          </svg>
+        </svg>
+      </div>
+    </a>
+  </span>
+</div>
+`;
+
+exports[`Storyshots Error stacks/Stack items/Individual items item 1 1`] = `
+<div>
+  <i>
+    baradfd
+  </i>
+   in
+   
+  <span
+    aria-describedby={null}
+    className=""
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onMouseLeave={[Function]}
+    onMouseOver={[Function]}
+    onTouchEnd={[Function]}
+    onTouchStart={[Function]}
+    title="Go to error in history (code edited since run)"
+  >
+    <a
+      className="css-29u2iz-GoToErrorLink epop88j1"
+    >
+      [input-3-js]
+      : line 
+      21
+       col 4
+      <div
+        className="css-rwnk6s-InlineIconWrapper epop88j0"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIconroot-0-1-219 MuiSvgIconfontSizeSmall-0-1-226"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+          />
+        </svg>
+      </div>
+    </a>
+  </span>
+</div>
+`;
+
+exports[`Storyshots Error stacks/Stack items/Individual items item 2 1`] = `
+<div>
+  
+  <span
+    aria-describedby={null}
+    className=""
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onMouseLeave={[Function]}
+    onMouseOver={[Function]}
+    onTouchEnd={[Function]}
+    onTouchStart={[Function]}
+    title="Go to error in editor"
+  >
+    <a
+      className="css-29u2iz-GoToErrorLink epop88j1"
+    >
+      [input-8-js]
+      : line 
+      2
+       col 14
+      <div
+        className="css-rwnk6s-InlineIconWrapper epop88j0"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIconroot-0-1-236 MuiSvgIconfontSizeSmall-0-1-243"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <svg
+            style={
+              Object {
+                "height": "24px",
+                "width": "24px",
+              }
+            }
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M 20,17 H 7 v 2 h 13 z"
+            />
+            <path
+              d="M 16,9 H 7 v 2 h 9 z"
+            />
+            <path
+              d="M 7,15 H 21 V 13 H 7 Z"
+            />
+            <path
+              d="M 7,5 V 7 H 21 V 5 Z"
+            />
+            <path
+              d="M 2,14 V 5.9999997 L 6,10 Z"
+            />
+          </svg>
+        </svg>
+      </div>
+    </a>
+  </span>
+</div>
+`;
+
+exports[`Storyshots Error stacks/Stack items/Individual items item 3 1`] = `
+<div>
+  <i>
+    foo
+  </i>
+   in
+   
+  <span
+    aria-describedby={null}
+    className=""
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onMouseLeave={[Function]}
+    onMouseOver={[Function]}
+    onTouchEnd={[Function]}
+    onTouchStart={[Function]}
+    title="Open script URL in new tab"
+  >
+    <a
+      className="css-29u2iz-GoToErrorLink epop88j1"
+    >
+      lodash.js
+      : line 
+      3
+       col 6
+      <div
+        className="css-rwnk6s-InlineIconWrapper epop88j0"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIconroot-0-1-253 MuiSvgIconfontSizeSmall-0-1-260"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+          />
+        </svg>
+      </div>
+    </a>
+  </span>
+</div>
 `;
 
 exports[`Storyshots File sources pane InProgress 1`] = `
@@ -522,7 +860,7 @@ Array [
         className="css-1j25m8h-Fader e14z2c7b0"
       >
         <div
-          className="MuiCircularProgress-root-1 MuiCircularProgress-colorPrimary-4 MuiCircularProgress-indeterminate-3"
+          className="MuiCircularProgressroot-0-1-1 MuiCircularProgresscolorPrimary-0-1-4 MuiCircularProgressindeterminate-0-1-3"
           role="progressbar"
           style={
             Object {
@@ -532,11 +870,11 @@ Array [
           }
         >
           <svg
-            className="MuiCircularProgress-svg-6"
+            className="MuiCircularProgresssvg-0-1-6"
             viewBox="22 22 44 44"
           >
             <circle
-              className="MuiCircularProgress-circle-7 MuiCircularProgress-circleIndeterminate-9"
+              className="MuiCircularProgresscircle-0-1-7 MuiCircularProgresscircleIndeterminate-0-1-9"
               cx={44}
               cy={44}
               fill="none"
@@ -572,7 +910,7 @@ Array [
         className="css-brp0y-Fader e14z2c7b0"
       >
         <div
-          className="MuiCircularProgress-root-1 MuiCircularProgress-colorPrimary-4 MuiCircularProgress-indeterminate-3"
+          className="MuiCircularProgressroot-0-1-1 MuiCircularProgresscolorPrimary-0-1-4 MuiCircularProgressindeterminate-0-1-3"
           role="progressbar"
           style={
             Object {
@@ -582,11 +920,11 @@ Array [
           }
         >
           <svg
-            className="MuiCircularProgress-svg-6"
+            className="MuiCircularProgresssvg-0-1-6"
             viewBox="22 22 44 44"
           >
             <circle
-              className="MuiCircularProgress-circle-7 MuiCircularProgress-circleIndeterminate-9"
+              className="MuiCircularProgresscircle-0-1-7 MuiCircularProgresscircleIndeterminate-0-1-9"
               cx={44}
               cy={44}
               fill="none"
@@ -622,7 +960,7 @@ Array [
         className="css-1j25m8h-Fader e14z2c7b0"
       >
         <div
-          className="MuiCircularProgress-root-1 MuiCircularProgress-colorPrimary-4 MuiCircularProgress-indeterminate-3"
+          className="MuiCircularProgressroot-0-1-1 MuiCircularProgresscolorPrimary-0-1-4 MuiCircularProgressindeterminate-0-1-3"
           role="progressbar"
           style={
             Object {
@@ -632,11 +970,11 @@ Array [
           }
         >
           <svg
-            className="MuiCircularProgress-svg-6"
+            className="MuiCircularProgresssvg-0-1-6"
             viewBox="22 22 44 44"
           >
             <circle
-              className="MuiCircularProgress-circle-7 MuiCircularProgress-circleIndeterminate-9"
+              className="MuiCircularProgresscircle-0-1-7 MuiCircularProgresscircleIndeterminate-0-1-9"
               cx={44}
               cy={44}
               fill="none"
@@ -680,21 +1018,21 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
       </button>
     </div>
     <div
-      className="MuiFormControl-root-12 TextInput-root-11 MuiFormControl-marginDense-14 MuiFormControl-fullWidth-15"
+      className="MuiFormControlroot-0-1-14 TextInputroot-0-1-13 MuiFormControlmarginDense-0-1-16 MuiFormControlfullWidth-0-1-17"
     >
       <label
-        className="MuiFormLabel-root-27 MuiInputLabel-root-16 MuiInputLabel-formControl-21 MuiInputLabel-animated-24 MuiInputLabel-marginDense-22 MuiInputLabel-outlined-26"
+        className="MuiFormLabelroot-0-1-29 MuiInputLabelroot-0-1-18 MuiInputLabelformControl-0-1-23 MuiInputLabelanimated-0-1-26 MuiInputLabelmarginDense-0-1-24 MuiInputLabeloutlined-0-1-28"
         data-shrink={false}
       >
         source URL
       </label>
       <div
-        className="MuiInputBase-root-47 MuiOutlinedInput-root-34 MuiInputBase-fullWidth-56 MuiInputBase-formControl-48 MuiInputBase-marginDense-54"
+        className="MuiInputBaseroot-0-1-49 MuiOutlinedInputroot-0-1-36 MuiInputBasefullWidth-0-1-58 MuiInputBaseformControl-0-1-50 MuiInputBasemarginDense-0-1-56"
         onClick={[Function]}
       >
         <fieldset
           aria-hidden={true}
-          className="MuiPrivateNotchedOutline-root-64 MuiOutlinedInput-notchedOutline-41"
+          className="MuiPrivateNotchedOutlineroot-0-1-66 MuiOutlinedInputnotchedOutline-0-1-43"
           style={
             Object {
               "paddingLeft": 8,
@@ -702,7 +1040,7 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
           }
         >
           <legend
-            className="MuiPrivateNotchedOutline-legend-65"
+            className="MuiPrivateNotchedOutlinelegend-0-1-67"
             style={
               Object {
                 "width": 0.01,
@@ -720,7 +1058,7 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
         </fieldset>
         <input
           aria-invalid={false}
-          className="MuiInputBase-input-57 MuiOutlinedInput-input-42 MuiInputBase-inputType-60 MuiInputBase-inputTypeSearch-61 MuiInputBase-inputMarginDense-58 MuiOutlinedInput-inputMarginDense-43"
+          className="MuiInputBaseinput-0-1-59 MuiOutlinedInputinput-0-1-44 MuiInputBaseinputType-0-1-62 MuiInputBaseinputTypeSearch-0-1-63 MuiInputBaseinputMarginDense-0-1-60 MuiOutlinedInputinputMarginDense-0-1-45"
           disabled={false}
           onBlur={[Function]}
           onChange={[Function]}
@@ -732,21 +1070,21 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
       </div>
     </div>
     <div
-      className="MuiFormControl-root-12 TextInput-root-11 MuiFormControl-marginDense-14 MuiFormControl-fullWidth-15"
+      className="MuiFormControlroot-0-1-14 TextInputroot-0-1-13 MuiFormControlmarginDense-0-1-16 MuiFormControlfullWidth-0-1-17"
     >
       <label
-        className="MuiFormLabel-root-27 MuiInputLabel-root-16 MuiInputLabel-formControl-21 MuiInputLabel-animated-24 MuiInputLabel-marginDense-22 MuiInputLabel-outlined-26"
+        className="MuiFormLabelroot-0-1-29 MuiInputLabelroot-0-1-18 MuiInputLabelformControl-0-1-23 MuiInputLabelanimated-0-1-26 MuiInputLabelmarginDense-0-1-24 MuiInputLabeloutlined-0-1-28"
         data-shrink={false}
       >
         desired filename
       </label>
       <div
-        className="MuiInputBase-root-47 MuiOutlinedInput-root-34 MuiInputBase-fullWidth-56 MuiInputBase-formControl-48 MuiInputBase-marginDense-54"
+        className="MuiInputBaseroot-0-1-49 MuiOutlinedInputroot-0-1-36 MuiInputBasefullWidth-0-1-58 MuiInputBaseformControl-0-1-50 MuiInputBasemarginDense-0-1-56"
         onClick={[Function]}
       >
         <fieldset
           aria-hidden={true}
-          className="MuiPrivateNotchedOutline-root-64 MuiOutlinedInput-notchedOutline-41"
+          className="MuiPrivateNotchedOutlineroot-0-1-66 MuiOutlinedInputnotchedOutline-0-1-43"
           style={
             Object {
               "paddingLeft": 8,
@@ -754,7 +1092,7 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
           }
         >
           <legend
-            className="MuiPrivateNotchedOutline-legend-65"
+            className="MuiPrivateNotchedOutlinelegend-0-1-67"
             style={
               Object {
                 "width": 0.01,
@@ -772,7 +1110,7 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
         </fieldset>
         <input
           aria-invalid={false}
-          className="MuiInputBase-input-57 MuiOutlinedInput-input-42 MuiInputBase-inputType-60 MuiInputBase-inputTypeSearch-61 MuiInputBase-inputMarginDense-58 MuiOutlinedInput-inputMarginDense-43"
+          className="MuiInputBaseinput-0-1-59 MuiOutlinedInputinput-0-1-44 MuiInputBaseinputType-0-1-62 MuiInputBaseinputTypeSearch-0-1-63 MuiInputBaseinputMarginDense-0-1-60 MuiOutlinedInputinputMarginDense-0-1-45"
           disabled={false}
           onBlur={[Function]}
           onChange={[Function]}
@@ -784,21 +1122,21 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
       </div>
     </div>
     <div
-      className="MuiFormControl-root-12 DropdownInput-root-66 MuiFormControl-marginDense-14 MuiFormControl-fullWidth-15"
+      className="MuiFormControlroot-0-1-14 DropdownInputroot-0-1-68 MuiFormControlmarginDense-0-1-16 MuiFormControlfullWidth-0-1-17"
     >
       <label
-        className="MuiFormLabel-root-27 MuiFormLabel-filled-31 MuiInputLabel-root-16 MuiInputLabel-formControl-21 MuiInputLabel-animated-24 MuiInputLabel-shrink-23 MuiInputLabel-marginDense-22 MuiInputLabel-outlined-26"
+        className="MuiFormLabelroot-0-1-29 MuiFormLabelfilled-0-1-33 MuiInputLabelroot-0-1-18 MuiInputLabelformControl-0-1-23 MuiInputLabelanimated-0-1-26 MuiInputLabelshrink-0-1-25 MuiInputLabelmarginDense-0-1-24 MuiInputLabeloutlined-0-1-28"
         data-shrink={true}
       >
         update frequency
       </label>
       <div
-        className="MuiInputBase-root-47 MuiOutlinedInput-root-34 MuiInputBase-fullWidth-56 MuiInputBase-formControl-48 MuiInputBase-marginDense-54"
+        className="MuiInputBaseroot-0-1-49 MuiOutlinedInputroot-0-1-36 MuiInputBasefullWidth-0-1-58 MuiInputBaseformControl-0-1-50 MuiInputBasemarginDense-0-1-56"
         onClick={[Function]}
       >
         <fieldset
           aria-hidden={true}
-          className="MuiPrivateNotchedOutline-root-64 MuiOutlinedInput-notchedOutline-41"
+          className="MuiPrivateNotchedOutlineroot-0-1-66 MuiOutlinedInputnotchedOutline-0-1-43"
           style={
             Object {
               "paddingLeft": 8,
@@ -806,7 +1144,7 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
           }
         >
           <legend
-            className="MuiPrivateNotchedOutline-legend-65"
+            className="MuiPrivateNotchedOutlinelegend-0-1-67"
             style={
               Object {
                 "width": 0,
@@ -823,12 +1161,12 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
           </legend>
         </fieldset>
         <div
-          className="MuiSelect-root-67"
+          className="MuiSelectroot-0-1-69"
         >
           <div
             aria-haspopup="true"
             aria-pressed="false"
-            className="MuiSelect-select-68 MuiSelect-selectMenu-71 MuiSelect-outlined-70 MuiInputBase-input-57 MuiOutlinedInput-input-42 MuiInputBase-inputMarginDense-58 MuiOutlinedInput-inputMarginDense-43"
+            className="MuiSelectselect-0-1-70 MuiSelectselectMenu-0-1-73 MuiSelectoutlined-0-1-72 MuiInputBaseinput-0-1-59 MuiOutlinedInputinput-0-1-44 MuiInputBaseinputMarginDense-0-1-60 MuiOutlinedInputinputMarginDense-0-1-45"
             id="select-update-interval"
             onBlur={[Function]}
             onClick={[Function]}
@@ -847,7 +1185,7 @@ exports[`Storyshots File sources pane no file sources: user can save 1`] = `
           />
           <svg
             aria-hidden="true"
-            className="MuiSvgIcon-root-74 MuiSelect-icon-73"
+            className="MuiSvgIconroot-0-1-76 MuiSelecticon-0-1-75"
             focusable="false"
             role="presentation"
             viewBox="0 0 24 24"
@@ -905,21 +1243,21 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
       </button>
     </div>
     <div
-      className="MuiFormControl-root-88 TextInput-root-87 MuiFormControl-marginDense-90 MuiFormControl-fullWidth-91"
+      className="MuiFormControlroot-0-1-90 TextInputroot-0-1-89 MuiFormControlmarginDense-0-1-92 MuiFormControlfullWidth-0-1-93"
     >
       <label
-        className="MuiFormLabel-root-103 MuiFormLabel-filled-107 MuiInputLabel-root-92 MuiInputLabel-formControl-97 MuiInputLabel-animated-100 MuiInputLabel-shrink-99 MuiInputLabel-marginDense-98 MuiInputLabel-outlined-102"
+        className="MuiFormLabelroot-0-1-105 MuiFormLabelfilled-0-1-109 MuiInputLabelroot-0-1-94 MuiInputLabelformControl-0-1-99 MuiInputLabelanimated-0-1-102 MuiInputLabelshrink-0-1-101 MuiInputLabelmarginDense-0-1-100 MuiInputLabeloutlined-0-1-104"
         data-shrink={true}
       >
         source URL
       </label>
       <div
-        className="MuiInputBase-root-123 MuiOutlinedInput-root-110 MuiInputBase-fullWidth-132 MuiInputBase-formControl-124 MuiInputBase-marginDense-130"
+        className="MuiInputBaseroot-0-1-125 MuiOutlinedInputroot-0-1-112 MuiInputBasefullWidth-0-1-134 MuiInputBaseformControl-0-1-126 MuiInputBasemarginDense-0-1-132"
         onClick={[Function]}
       >
         <fieldset
           aria-hidden={true}
-          className="MuiPrivateNotchedOutline-root-140 MuiOutlinedInput-notchedOutline-117"
+          className="MuiPrivateNotchedOutlineroot-0-1-142 MuiOutlinedInputnotchedOutline-0-1-119"
           style={
             Object {
               "paddingLeft": 8,
@@ -927,7 +1265,7 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
           }
         >
           <legend
-            className="MuiPrivateNotchedOutline-legend-141"
+            className="MuiPrivateNotchedOutlinelegend-0-1-143"
             style={
               Object {
                 "width": 0,
@@ -945,7 +1283,7 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
         </fieldset>
         <input
           aria-invalid={false}
-          className="MuiInputBase-input-133 MuiOutlinedInput-input-118 MuiInputBase-inputType-136 MuiInputBase-inputTypeSearch-137 MuiInputBase-inputMarginDense-134 MuiOutlinedInput-inputMarginDense-119"
+          className="MuiInputBaseinput-0-1-135 MuiOutlinedInputinput-0-1-120 MuiInputBaseinputType-0-1-138 MuiInputBaseinputTypeSearch-0-1-139 MuiInputBaseinputMarginDense-0-1-136 MuiOutlinedInputinputMarginDense-0-1-121"
           disabled={false}
           onBlur={[Function]}
           onChange={[Function]}
@@ -957,21 +1295,21 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
       </div>
     </div>
     <div
-      className="MuiFormControl-root-88 TextInput-root-87 MuiFormControl-marginDense-90 MuiFormControl-fullWidth-91"
+      className="MuiFormControlroot-0-1-90 TextInputroot-0-1-89 MuiFormControlmarginDense-0-1-92 MuiFormControlfullWidth-0-1-93"
     >
       <label
-        className="MuiFormLabel-root-103 MuiFormLabel-filled-107 MuiInputLabel-root-92 MuiInputLabel-formControl-97 MuiInputLabel-animated-100 MuiInputLabel-shrink-99 MuiInputLabel-marginDense-98 MuiInputLabel-outlined-102"
+        className="MuiFormLabelroot-0-1-105 MuiFormLabelfilled-0-1-109 MuiInputLabelroot-0-1-94 MuiInputLabelformControl-0-1-99 MuiInputLabelanimated-0-1-102 MuiInputLabelshrink-0-1-101 MuiInputLabelmarginDense-0-1-100 MuiInputLabeloutlined-0-1-104"
         data-shrink={true}
       >
         desired filename
       </label>
       <div
-        className="MuiInputBase-root-123 MuiOutlinedInput-root-110 MuiInputBase-fullWidth-132 MuiInputBase-formControl-124 MuiInputBase-marginDense-130"
+        className="MuiInputBaseroot-0-1-125 MuiOutlinedInputroot-0-1-112 MuiInputBasefullWidth-0-1-134 MuiInputBaseformControl-0-1-126 MuiInputBasemarginDense-0-1-132"
         onClick={[Function]}
       >
         <fieldset
           aria-hidden={true}
-          className="MuiPrivateNotchedOutline-root-140 MuiOutlinedInput-notchedOutline-117"
+          className="MuiPrivateNotchedOutlineroot-0-1-142 MuiOutlinedInputnotchedOutline-0-1-119"
           style={
             Object {
               "paddingLeft": 8,
@@ -979,7 +1317,7 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
           }
         >
           <legend
-            className="MuiPrivateNotchedOutline-legend-141"
+            className="MuiPrivateNotchedOutlinelegend-0-1-143"
             style={
               Object {
                 "width": 0,
@@ -997,7 +1335,7 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
         </fieldset>
         <input
           aria-invalid={false}
-          className="MuiInputBase-input-133 MuiOutlinedInput-input-118 MuiInputBase-inputType-136 MuiInputBase-inputTypeSearch-137 MuiInputBase-inputMarginDense-134 MuiOutlinedInput-inputMarginDense-119"
+          className="MuiInputBaseinput-0-1-135 MuiOutlinedInputinput-0-1-120 MuiInputBaseinputType-0-1-138 MuiInputBaseinputTypeSearch-0-1-139 MuiInputBaseinputMarginDense-0-1-136 MuiOutlinedInputinputMarginDense-0-1-121"
           disabled={false}
           onBlur={[Function]}
           onChange={[Function]}
@@ -1009,21 +1347,21 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
       </div>
     </div>
     <div
-      className="MuiFormControl-root-88 DropdownInput-root-142 MuiFormControl-marginDense-90 MuiFormControl-fullWidth-91"
+      className="MuiFormControlroot-0-1-90 DropdownInputroot-0-1-144 MuiFormControlmarginDense-0-1-92 MuiFormControlfullWidth-0-1-93"
     >
       <label
-        className="MuiFormLabel-root-103 MuiFormLabel-filled-107 MuiInputLabel-root-92 MuiInputLabel-formControl-97 MuiInputLabel-animated-100 MuiInputLabel-shrink-99 MuiInputLabel-marginDense-98 MuiInputLabel-outlined-102"
+        className="MuiFormLabelroot-0-1-105 MuiFormLabelfilled-0-1-109 MuiInputLabelroot-0-1-94 MuiInputLabelformControl-0-1-99 MuiInputLabelanimated-0-1-102 MuiInputLabelshrink-0-1-101 MuiInputLabelmarginDense-0-1-100 MuiInputLabeloutlined-0-1-104"
         data-shrink={true}
       >
         update frequency
       </label>
       <div
-        className="MuiInputBase-root-123 MuiOutlinedInput-root-110 MuiInputBase-fullWidth-132 MuiInputBase-formControl-124 MuiInputBase-marginDense-130"
+        className="MuiInputBaseroot-0-1-125 MuiOutlinedInputroot-0-1-112 MuiInputBasefullWidth-0-1-134 MuiInputBaseformControl-0-1-126 MuiInputBasemarginDense-0-1-132"
         onClick={[Function]}
       >
         <fieldset
           aria-hidden={true}
-          className="MuiPrivateNotchedOutline-root-140 MuiOutlinedInput-notchedOutline-117"
+          className="MuiPrivateNotchedOutlineroot-0-1-142 MuiOutlinedInputnotchedOutline-0-1-119"
           style={
             Object {
               "paddingLeft": 8,
@@ -1031,7 +1369,7 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
           }
         >
           <legend
-            className="MuiPrivateNotchedOutline-legend-141"
+            className="MuiPrivateNotchedOutlinelegend-0-1-143"
             style={
               Object {
                 "width": 0,
@@ -1048,12 +1386,12 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
           </legend>
         </fieldset>
         <div
-          className="MuiSelect-root-143"
+          className="MuiSelectroot-0-1-145"
         >
           <div
             aria-haspopup="true"
             aria-pressed="false"
-            className="MuiSelect-select-144 MuiSelect-selectMenu-147 MuiSelect-outlined-146 MuiInputBase-input-133 MuiOutlinedInput-input-118 MuiInputBase-inputMarginDense-134 MuiOutlinedInput-inputMarginDense-119"
+            className="MuiSelectselect-0-1-146 MuiSelectselectMenu-0-1-149 MuiSelectoutlined-0-1-148 MuiInputBaseinput-0-1-135 MuiOutlinedInputinput-0-1-120 MuiInputBaseinputMarginDense-0-1-136 MuiOutlinedInputinputMarginDense-0-1-121"
             id="select-update-interval"
             onBlur={[Function]}
             onClick={[Function]}
@@ -1072,7 +1410,7 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
           />
           <svg
             aria-hidden="true"
-            className="MuiSvgIcon-root-150 MuiSelect-icon-149"
+            className="MuiSvgIconroot-0-1-152 MuiSelecticon-0-1-151"
             focusable="false"
             role="presentation"
             viewBox="0 0 24 24"
@@ -1158,7 +1496,7 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
             className="css-1j25m8h-Fader e14z2c7b0"
           >
             <div
-              className="MuiCircularProgress-root-163 MuiCircularProgress-colorPrimary-166 MuiCircularProgress-indeterminate-165"
+              className="MuiCircularProgressroot-0-1-165 MuiCircularProgresscolorPrimary-0-1-168 MuiCircularProgressindeterminate-0-1-167"
               role="progressbar"
               style={
                 Object {
@@ -1168,11 +1506,11 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
               }
             >
               <svg
-                className="MuiCircularProgress-svg-168"
+                className="MuiCircularProgresssvg-0-1-170"
                 viewBox="22 22 44 44"
               >
                 <circle
-                  className="MuiCircularProgress-circle-169 MuiCircularProgress-circleIndeterminate-171"
+                  className="MuiCircularProgresscircle-0-1-171 MuiCircularProgresscircleIndeterminate-0-1-173"
                   cx={44}
                   cy={44}
                   fill="none"
@@ -1204,7 +1542,7 @@ exports[`Storyshots File sources pane one file source: user can save 1`] = `
           >
             <svg
               aria-hidden="true"
-              className="MuiSvgIcon-root-150"
+              className="MuiSvgIconroot-0-1-152"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"

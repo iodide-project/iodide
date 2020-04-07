@@ -8,7 +8,7 @@ import { History, OpenInNew } from "@material-ui/icons";
 import Tooltip from "@material-ui/core/Tooltip";
 import { openScriptInNewTab, scrollToHistoryItemByEvalId } from "../thunks";
 import { setErrorInEditor } from "../../actions/editor-actions";
-import { envConnect } from "../../env-connect";
+import { storyConnect } from "../../story-connect";
 
 import { getChunkStartLineInEditorByEvalId } from "../../console/history/selectors";
 
@@ -99,18 +99,17 @@ export const StackItemUnconnected = ({
 };
 
 StackItemUnconnected.propTypes = {
+  columnNumber: PropTypes.number.isRequired,
+  functionName: PropTypes.string.isRequired,
   goToErrorType: PropTypes.oneOf([
     "OPEN_SCRIPT",
     "SHOW_IN_EDITOR",
     "SHOW_IN_HISTORY",
     "USER_EVAL"
   ]),
-  // tooltipText: PropTypes.string.isRequired,
-  functionName: PropTypes.string.isRequired,
-  traceDisplayName: PropTypes.string.isRequired,
-  columnNumber: PropTypes.number.isRequired,
   lineNumber: PropTypes.number.isRequired,
-  onClickFn: PropTypes.func.isRequired
+  onClickFn: PropTypes.func.isRequired,
+  traceDisplayName: PropTypes.string.isRequired
 };
 
 if (process.env.STORYBOOK_MODE === "true") {
@@ -214,4 +213,4 @@ export function mapStateToProps(state, ownProps) {
   };
 }
 
-export default envConnect(mapStateToProps)(StackItemUnconnected);
+export default storyConnect(mapStateToProps)(StackItemUnconnected);
