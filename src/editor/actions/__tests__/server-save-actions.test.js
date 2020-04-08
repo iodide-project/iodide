@@ -19,6 +19,12 @@ jest.mock("../../tools/local-autosave");
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
+async function wait(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
 const initialState = notebookCreated => {
   return {
     iomd: "initial content",
@@ -65,9 +71,8 @@ describe("saveNotebookToServer", () => {
         id: 1
       }
     });
-    await expect(store.dispatch(saveNotebookToServer())).resolves.toBe(
-      undefined
-    );
+    await store.dispatch(saveNotebookToServer());
+    await wait(1000);
     expect(store.getActions()).toEqual([
       {
         notebookInfo: {
