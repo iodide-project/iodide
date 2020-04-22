@@ -1,6 +1,7 @@
 import { languageDefinitions } from "./language-definitions";
 import { historySchema } from "../console/history/state-schema";
 import { consoleInputSchema } from "../console/input/state-schema";
+import { evalErrorStacksSchema } from "../tracebacks/state-schema";
 
 // FIXME: break out enums to be in a separate file.
 export const NONCODE_EVAL_TYPES = ["css", "md", "raw"];
@@ -72,6 +73,7 @@ export const languageSchema = {
   type: "object",
   properties: {
     pluginType: { type: "string", enum: ["language"] },
+    pluginVersion: { type: ["number", "null"], enum: [2] },
     languageId: { type: "string" },
     displayName: { type: "string" },
     module: { type: "string" },
@@ -175,20 +177,19 @@ export const stateProperties = {
     },
     default: []
   },
-
-  gettingRevisionList: {
-    type: "boolean",
-    default: false
+  editorError: {
+    type: "object",
+    properties: {
+      line: { type: "integer" },
+      col: { type: "integer" }
+    },
+    additionalProperties: false,
+    default: { line: undefined, col: undefined }
   },
-  hasPreviousAutosave: {
-    type: "boolean",
-    default: false
-  },
+  gettingRevisionList: { type: "boolean", default: false },
+  hasPreviousAutosave: { type: "boolean", default: false },
   history: historySchema,
-  iomd: {
-    type: "string",
-    default: ""
-  },
+  iomd: { type: "string", default: "" },
   previouslySavedContent: {
     type: "object",
     default: { title: "", iomd: "" },
@@ -222,18 +223,7 @@ export const stateProperties = {
     additionalProperties: languageSchema,
     default: languageDefinitions
   },
-  languageLastUsed: {
-    type: "string",
-    default: "js"
-  },
-  lastExport: {
-    type: "string",
-    default: undefined
-  },
-  lastSaved: {
-    type: "string",
-    default: undefined
-  },
+  languageLastUsed: { type: "string", default: "js" },
   loadedLanguages: {
     type: "object",
     additionalProperties: languageSchema,
@@ -366,10 +356,8 @@ export const stateProperties = {
       WorkspacePositioner: Object.assign({}, positionerDefaults)
     }
   },
-  title: {
-    type: "string",
-    default: "untitled"
-  },
+  title: { type: "string", default: "untitled" },
+  evalErrorStacks: evalErrorStacksSchema,
   userData: {
     type: "object",
     properties: {
@@ -389,10 +377,7 @@ export const stateProperties = {
     enum: ["EXPLORE_VIEW", "REPORT_VIEW"],
     default: "EXPLORE_VIEW"
   },
-  wrapEditors: {
-    type: "boolean",
-    default: true
-  }
+  wrapEditors: { type: "boolean", default: true }
 };
 
 export const stateSchema = {

@@ -49,6 +49,14 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
+    case "SET_ERROR_IN_EDITOR": {
+      const { line, col } = action;
+      return {
+        ...state,
+        editorError: { line, col }
+      };
+    }
+
     case "UPDATE_SELECTIONS": {
       return Object.assign({}, state, {
         editorSelections: action.selections.map(s => Object.assign({}, s))

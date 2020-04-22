@@ -35,3 +35,11 @@ export function moveCursorToNextChunk() {
     dispatch(updateEditorCursor(targetChunk.endLine + 1, 0));
   };
 }
+
+export function setErrorInEditor(line, col) {
+  return { type: "SET_ERROR_IN_EDITOR", line, col };
+}
+
+export function clearErrorInEditor() {
+  return { type: "SET_ERROR_IN_EDITOR", line: undefined, col: undefined };
+}

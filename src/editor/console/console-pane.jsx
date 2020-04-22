@@ -21,6 +21,7 @@ export class ConsolePaneUnconnected extends React.Component {
   static propTypes = {
     historyIds: PropTypes.arrayOf(PropTypes.string),
     paneVisible: PropTypes.bool.isRequired
+    // scrollTargetId: PropTypes.string.isRequired
   };
 
   constructor(props) {
@@ -36,7 +37,6 @@ export class ConsolePaneUnconnected extends React.Component {
   }
 
   componentDidUpdate() {
-    // scroll to bottom on update
     this.historyScrollerRef.current.scrollTo({
       top: this.historyScrollerRef.current.scrollHeight,
       behavior: "smooth"

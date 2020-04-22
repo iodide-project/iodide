@@ -1,5 +1,9 @@
 # (Unreleased; add upcoming change notes here)
 
+- Improve error tracebacks for JS code
+- Add concept of language plugin versions to allow adding new features to languages without breaking existing plugins
+- Add V2 language plugin API, which will allow language plugins to have improved error tracebacks
+
 # 0.19.1 (2020-04-06)
 
 - GitHub authentication no longer uses URL query parameters (fixes #2682) (#2751)

@@ -1,4 +1,4 @@
-import { all, call, put } from "redux-saga/effects";
+import { all, call, put, select } from "redux-saga/effects";
 
 import parseFetchCell from "../fetch-cell-parser";
 import {
@@ -10,12 +10,7 @@ import { evaluateLanguagePlugin } from "./language-plugin-saga";
 
 import { triggerEvalFrameTask } from "./eval-frame-sender";
 
-import {
-  // errorMessage,
-  genericFetch
-  // successMessage,
-  // syntaxErrorToString
-} from "../../../shared/utils/fetch-tools";
+import { genericFetch } from "../../../shared/utils/fetch-tools";
 import { loadFileFromServer } from "../../../shared/utils/file-operations";
 
 export const errorTypeToString = {
@@ -33,7 +28,7 @@ const syntaxErrorToString = fetchInfo => `Syntax error, ${
 const fetchProgressInitialStrings = fetchInfo =>
   `fetching ${fetchInfo.parsed.fetchType} from ${fetchInfo.parsed.filePath}`;
 
-function* handleValidFetch(fetchInfo, historyId, lineIndex) {
+function* handleValidFetch(fetchInfo, historyId, lineIndex, chunkId) {
   const { filePath, fetchType, isRelPath, varName } = fetchInfo.parsed;
   const fileFetcher = isRelPath ? loadFileFromServer : genericFetch;
 
@@ -58,9 +53,19 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
       value: fetchedFile
     });
   } else if (fetchType === "js") {
-    yield call(triggerEvalFrameTask, "LOAD_SCRIPT", {
-      script: fetchedFile
-    });
+    const state = yield select();
+    const language = state.loadedLanguages.js;
+    yield call(
+      triggerEvalFrameTask,
+      "EVAL_CODE",
+      {
+        code: fetchedFile,
+        language,
+        chunkId
+      },
+      true,
+      filePath
+    );
   } else if (fetchType === "css") {
     yield call(triggerEvalFrameTask, "ADD_CSS", {
       css: fetchedFile,
@@ -81,13 +86,13 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
   );
 }
 
-export function* evaluateFetch(fetchText) {
+export function* evaluateFetch(fetchText, chunkId) {
   const fetches = parseFetchCell(fetchText);
   const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
   if (syntaxErrors.length) {
     yield put(
       addToConsoleHistory({
-        historyType: "FETCH_CELL_INFO",
+        historyType: "CONSOLE_OUTPUT_FETCH",
         content: syntaxErrors.map(syntaxErrorToString),
         level: "ERROR"
       })
@@ -97,14 +102,14 @@ export function* evaluateFetch(fetchText) {
 
   const { historyId } = yield put(
     addToConsoleHistory({
-      historyType: "FETCH_CELL_INFO",
+      historyType: "CONSOLE_OUTPUT_FETCH",
       content: fetches.map(fetchProgressInitialStrings)
     })
   );
 
   yield all(
-    fetches.map((fetchSpec, i) =>
-      call(handleValidFetch, fetchSpec, historyId, i)
+    fetches.map((fetchSpec, lineIndex) =>
+      call(handleValidFetch, fetchSpec, historyId, lineIndex, chunkId)
     )
   );
 }

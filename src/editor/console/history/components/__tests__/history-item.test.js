@@ -52,9 +52,9 @@ describe("HistoryItem React component", () => {
     expect(hist.find(HistoryValueRenderer).length).toBe(1);
   });
 
-  it("always renders the FETCH_CELL_INFO as an ConsoleMessage component", () => {
+  it("always renders the CONSOLE_OUTPUT_FETCH as an ConsoleMessage component", () => {
     const hist = historyItem({
-      historyType: "FETCH_CELL_INFO",
+      historyType: "CONSOLE_OUTPUT_FETCH",
       historyId: "123456asdfg",
       valueToRender: [
         { text: "a", id: "z" },

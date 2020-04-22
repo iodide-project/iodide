@@ -10,11 +10,7 @@ import {
   sendStatusResponseToEditor,
   sendResponseMessageToEditor
 } from "./actions/editor-message-senders";
-import {
-  addCSS,
-  loadScriptFromBlob,
-  setVariableInWindow
-} from "./actions/fetch-cell-eval-actions";
+import { addCSS, setVariableInWindow } from "./actions/fetch-cell-eval-actions";
 import { repInfoRequestResponseFromEvalFrame } from "./eval-frame-rep-info-request-response";
 import { codeCompletionRequestResponse } from "./code-completion-request-response";
 
@@ -114,16 +110,6 @@ async function receiveMessage(event) {
         const { name, value } = message;
         try {
           setVariableInWindow(name, value);
-          sendStatusResponseToEditor("SUCCESS", message.taskId);
-        } catch {
-          sendStatusResponseToEditor("ERROR", message.taskId);
-        }
-        break;
-      }
-      case "LOAD_SCRIPT": {
-        const { script } = message;
-        try {
-          await loadScriptFromBlob(script);
           sendStatusResponseToEditor("SUCCESS", message.taskId);
         } catch {
           sendStatusResponseToEditor("ERROR", message.taskId);

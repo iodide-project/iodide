@@ -16,7 +16,7 @@
     "start": "webpack --watch --mode=development --env.NODE_ENV=dev",
     "build": "webpack -p",
     "lint": "eslint src/ test/ --ext=.js --ext=.jsx -f unix",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "STORYBOOK_MODE=true start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
   "jest": {

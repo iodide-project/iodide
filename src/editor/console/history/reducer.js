@@ -1,16 +1,18 @@
 export default function reducer(state, action) {
   switch (action.type) {
     case "console/history/ADD": {
-      const actionCopy = Object.assign({}, action);
+      const actionCopy = { ...action };
       delete actionCopy.type;
       const history = [...state.history, actionCopy];
-      return Object.assign({}, state, { history });
+      return { ...state, history };
     }
+
     case "console/history/CLEAR": {
-      return Object.assign({}, state, { history: [] });
+      return { ...state, history: [] };
     }
+
     case "console/history/UPDATE": {
-      const actionCopy = Object.assign({}, action);
+      const actionCopy = { ...action };
       const history = [...state.history.slice()];
       const i = history.findIndex(
         h => h.historyId === actionCopy.historyItem.historyId
@@ -21,7 +23,7 @@ export default function reducer(state, action) {
         actionCopy.historyItem
       );
       history[i] = historyEntry;
-      return Object.assign({}, state, { history });
+      return { ...state, history };
     }
 
     case "console/history/UPDATE_LINE": {
@@ -31,10 +33,19 @@ export default function reducer(state, action) {
 
       contentLines[action.lineIndex] = action.lineContent;
 
-      history[i] = Object.assign({}, history[i], {
-        content: contentLines
+      history[i] = { ...history[i], content: contentLines };
+      return { ...state, history };
+    }
+
+    case "console/history/SET_SCROLL_TARGET": {
+      const history = state.history.map(item => {
+        return {
+          ...item,
+          scrollToThisItem:
+            item.historyId === action.historyId ? true : undefined
+        };
       });
-      return Object.assign({}, state, { history });
+      return { ...state, history };
     }
 
     default: {
