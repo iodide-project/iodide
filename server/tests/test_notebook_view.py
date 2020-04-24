@@ -7,7 +7,7 @@ from django.urls import reverse
 from server.notebooks.models import Notebook, NotebookRevision
 from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 
-from .helpers import get_script_block, get_script_block_json, get_title_block
+from .helpers import get_script_block, get_script_block_json, get_title_block,get_file_script_block
 
 
 def test_notebook_view(client, test_notebook):
@@ -148,6 +148,61 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
         assert Notebook.objects.count() == 0
         assert len(response.redirect_chain) == 0
 
+@pytest.mark.parametrize("logged_in", [True, False])
+@pytest.mark.parametrize("request_method", ["POST", "GET"])
+def test_tryit_view_file_uploads(client,fake_user,logged_in,request_method):
+    import tempfile
+    # we should see the same script blocks
+    # for both logged_in and both request_method
+    path = reverse("new")
+    with tempfile.NamedTemporaryFile() as f:
+        file_content = "testing file uploads to script tags"
+        f.write(file_content)
+        f.seek(0)
+
+        if logged_in:
+            client.force_login(fake_user)
+            if request_method == "POST":
+                resp = client.post(
+                    path,
+                    {
+                        "filename": f.name,
+                        "file": open(f.name),
+                    },
+                    follow = True,
+                )
+                assert get_file_script_block(resp.content,f.name,f.mimetype) == file_content
+            if request_method == "GET":
+                resp = client.get(
+                    path,
+                    {
+                        "filename": f.name,
+                        "file": open(f.name),
+                    },
+                    follow = True,
+                )
+                assert get_file_script_block(resp.content,f.name,f.mimetype) == file_content
+        if not logged_in:
+            if request_method == "POST":
+                resp = client.post(
+                    path,
+                    {
+                        "filename": f.name,
+                        "file": open(f.name),
+                    },
+                    follow = True,
+                )
+                assert get_file_script_block(resp.content,f.name,f.mimetype) == file_content
+            if request_method == "GET":
+                resp = client.get(
+                    path,
+                    {
+                        "filename": f.name,
+                        "file": open(f.name),
+                    },
+                    follow = True,
+                )
+                assert get_file_script_block(resp.content,f.name,f.mimetype) == file_content
 
 def test_notebook_revisions_page(fake_user, test_notebook, client):
     # create another notebook revision
