@@ -164,7 +164,7 @@ def test_tryit_view_file_uploads(client, fake_user, logged_in, request_method):
         file_mimetype = mimetypes.guess_type(f.name)
         f.write(file_content)
         f.seek(0)
-        path = reverse("try-it") + "?iomd=1234"
+        path = reverse("try-it")
 
         def http_response(request_method):
             if request_method == "POST":
