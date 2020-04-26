@@ -149,7 +149,7 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
         assert len(response.redirect_chain) == 0
 
 
-@pytest.mark.parametrize("logged_in", [False])
+@pytest.mark.parametrize("logged_in", [True])
 def test_tryit_view_get_api(client, fake_user, logged_in):
     """
     Test that we can pass file parameters to the try it view
@@ -171,7 +171,6 @@ def test_tryit_view_get_api(client, fake_user, logged_in):
 
     else:
         resp = client.get(f"/tryit?iomd=123&file={file_content}&filename={file_name}", follow=True)
-        print(resp.content.decode())
         assert (
             base64.b64decode(get_file_script_block(resp.content, file_name, "text/plain")).decode()
             == file_content
