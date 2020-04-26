@@ -1,6 +1,6 @@
 import messagePasserEditor from "../../shared/utils/redux-to-port-message-passer";
 
-export function onFileOperationSuccess(
+export function postFileOperationSuccessMessage(
   fileRequestID,
   fileOrResponse,
   messagePasser = messagePasserEditor
@@ -11,13 +11,13 @@ export function onFileOperationSuccess(
   });
 }
 
-export function onFileOperationError(
+export function postFileOperationErrorMessage(
   fileRequestID,
-  err,
+  errorMessage,
   messagePasser = messagePasserEditor
 ) {
   messagePasser.postMessage("REQUESTED_FILE_OPERATION_ERROR", {
     fileRequestID,
-    reason: err.message
+    reason: errorMessage
   });
 }

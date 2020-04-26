@@ -1,4 +1,5 @@
 import { updateIomdContent } from "../actions/editor-actions";
+import { addTemporaryFile } from "../actions/file-actions";
 
 export default function handleInitialIomd(store) {
   const iomdElt = document.getElementById("iomd");
@@ -24,4 +25,12 @@ export default function handleInitialIomd(store) {
       )
     );
   }
+
+  // add any "files" specified in script tags to the document as temporary files
+  document.querySelectorAll('[id^="file-"]').forEach(fileElement => {
+    const filename = fileElement.getAttribute("id").split("file-")[1];
+    const mimeType = fileElement.getAttribute("mimetype");
+    const content = fileElement.innerHTML;
+    store.dispatch(addTemporaryFile(filename, content, mimeType));
+  });
 }

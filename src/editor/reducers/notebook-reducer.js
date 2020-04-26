@@ -152,22 +152,38 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case "UPDATE_FILES_FROM_SERVER": {
-      const { files } = action;
-      const notebookInfo = { ...state.notebookInfo, files };
+      const { serverFiles } = action;
+      // include a list of files marked "local" -> these are temporary
+      // files uploaded inside a trial notebook or a notebook that doesn't
+      // belong to a user
+      const localFiles = state.notebookInfo.files.filter(f => {
+        return f.status === "local";
+      });
+      const notebookInfo = {
+        ...state.notebookInfo,
+        files: serverFiles
+          .filter(f => !localFiles.find(lf => lf.filename === f.filename))
+          .concat(localFiles)
+      };
       return { ...state, notebookInfo };
     }
 
-    case "ADD_FILE_TO_NOTEBOOK": {
-      const { filename, lastUpdated, fileID } = action;
+    case "SAVE_TEMPORARY_FILE": {
+      const { filename, content, mimeType } = action;
       const files = state.notebookInfo.files.map(f => Object.assign({}, f));
-      if (!files.map(f => f.filename).includes(filename))
+      if (!files.map(f => f.filename).includes(filename)) {
         files.push({
           filename,
-          lastUpdated,
-          id: fileID
+          content,
+          mimeType,
+          status: "local",
+          id: undefined
         });
-      else {
-        files.find(f => f.filename === filename).lastUpdated = lastUpdated;
+      } else {
+        const file = files.find(f => f.filename === filename);
+        file.content = content;
+        file.status = "local";
+        file.mimeType = mimeType;
       }
       const notebookInfo = Object.assign({}, state.notebookInfo, {
         files
@@ -175,13 +191,52 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { notebookInfo });
     }
 
-    case "DELETE_FILE_FROM_NOTEBOOK": {
+    case "UPDATE_FILE": {
+      const { filename, lastUpdated, fileID, status, errorMessage } = action;
+      const files = state.notebookInfo.files.map(f => Object.assign({}, f));
+      if (!files.map(f => f.filename).includes(filename))
+        files.push({
+          errorMessage,
+          filename,
+          lastUpdated,
+          status,
+          id: fileID
+        });
+      else {
+        const file = files.find(f => f.filename === filename);
+        file.content = undefined;
+        file.errorMessage = errorMessage;
+        file.lastUpdated = lastUpdated;
+        file.mimeType = undefined;
+        file.status = status;
+      }
+      const notebookInfo = Object.assign({}, state.notebookInfo, {
+        files
+      });
+      return Object.assign({}, state, { notebookInfo });
+    }
+
+    case "DELETE_FILE": {
       const { fileID } = action;
       const { files } = state.notebookInfo;
       const notebookInfo = Object.assign({}, state.notebookInfo, {
         files: files.filter(f => f.id !== fileID).map(f => Object.assign({}, f))
       });
       return Object.assign({}, state, { notebookInfo });
+    }
+
+    case "FILE_OPERATION_ERROR": {
+      const { filename, errorMessage } = action;
+
+      const file = state.notebookInfo.files.find(f => f.filename === filename);
+      file.status = "error";
+      file.errorMessage = errorMessage;
+
+      return Object.assign({}, state, {
+        notebookInfo: Object.assign({}, state.notebookInfo, {
+          files: state.notebookInfo.files
+        })
+      });
     }
 
     case "SET_MODAL_STATE": {
@@ -209,7 +264,10 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "LOGOUT": {
       const userData = {};
-      return Object.assign({}, state, { userData });
+      return Object.assign({}, state, {
+        notebookInfo: { ...state.notebookInfo, user_can_save: false },
+        userData
+      });
     }
 
     case "UPDATE_APP_MESSAGES": {

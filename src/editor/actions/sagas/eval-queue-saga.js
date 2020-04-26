@@ -65,7 +65,7 @@ export function* evaluateByType(evalType, evalText, chunkId) {
   if (evalType === "plugin") {
     yield call(evaluateLanguagePlugin, evalText);
   } else if (evalType === "fetch") {
-    yield call(evaluateFetch, evalText);
+    yield call(evaluateFetch, evalText, state.notebookInfo.files);
   } else {
     yield call(triggerEvalFrameTask, "EVAL_CODE", {
       code: evalText,

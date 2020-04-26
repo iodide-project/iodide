@@ -31,7 +31,7 @@ import handleReportViewModeInitialization from "./initialization/handle-report-v
 
 import { listenForEvalFramePortReady } from "./port-to-eval-frame";
 
-import { getFiles } from "./actions/file-actions";
+import { updateFiles } from "./actions/file-actions";
 import { getFileSources } from "./actions/file-source-actions";
 
 import { restoreLocalAutosave } from "./actions/local-autosave-actions";
@@ -48,7 +48,7 @@ window.addEventListener("message", listenForEvalFramePortReady, false);
 handleServerVariables(store);
 handleInitialIomd(store);
 store.dispatch(restoreLocalAutosave());
-store.dispatch(getFiles());
+store.dispatch(updateFiles());
 store.dispatch(getFileSources());
 handleReportViewModeInitialization(store);
 

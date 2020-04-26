@@ -10,8 +10,8 @@ export function loadFileFromServer(path, fetchType) {
   return genericFetch(`files/${path}`, fetchType);
 }
 
-export function valueToFile(data, fileName) {
-  return new File([data], fileName);
+export function valueToFile(data, fileName, options) {
+  return new File([data], fileName, options);
 }
 
 export function selectSingleFileAndFormatMetadata(notebookID) {
@@ -99,12 +99,7 @@ export function selectAndUploadFile(notebookID, successCallback = () => {}) {
   });
 }
 
-export function makeFormData(
-  notebookID,
-  data,
-  fileName,
-  dataIsAlreadyFile = false
-) {
+export function makeFormData(notebookID, data, fileName, dataIsAlreadyFile) {
   let file;
   if (!dataIsAlreadyFile) {
     file = valueToFile(data, fileName);

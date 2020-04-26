@@ -4,7 +4,7 @@ import {
   reverseFileSourceUpdateInterval
 } from "../state-schemas/state-schema";
 
-import { getFiles } from "./file-actions";
+import { updateFiles } from "./file-actions";
 
 import {
   validateUrl as validateUrlForFileSource,
@@ -123,7 +123,7 @@ export function createFileUpdateOperation(fileSourceID) {
       /* eslint-enable no-await-in-loop */
     }
     // once file update operation completes, fetch all available files from the server.
-    dispatch(getFiles());
+    dispatch(updateFiles());
   };
 }
 

@@ -31,7 +31,7 @@ export default class DeleteModal extends React.Component {
     // add delete here
     try {
       await this.props.deleteFunction(this.props.elementID);
-      this.props.onDelete(this.props.elementID);
+      if (this.props.onDelete) this.props.onDelete(this.props.elementID);
       this.props.onCloseOrCancel();
     } catch (err) {
       // FIXME: need a better reporting mechanism for delete failures

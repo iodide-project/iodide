@@ -1,6 +1,7 @@
 import { updateAppMessages } from "./app-message-actions";
 import { createNewNotebookOnServer } from "./server-save-actions";
 import { updateAutosave } from "./autosave-actions";
+import { uploadAllTemporaryFiles } from "./file-actions";
 import { loginToServer, logoutFromServer } from "../../shared/utils/login";
 import { notebookIsATrial } from "../tools/server-tools";
 
@@ -21,6 +22,8 @@ export function loginSuccess(userData) {
       );
       // trigger a save action immediately
       dispatch(updateAutosave());
+      // upload any temporary files
+      dispatch(uploadAllTemporaryFiles());
     }
   };
 }

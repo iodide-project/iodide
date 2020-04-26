@@ -5,6 +5,7 @@ import {
 } from "../../shared/server-api/notebook";
 import { clearLocalAutosave } from "../tools/local-autosave";
 import { getNotebookID, getRevisionID } from "../tools/server-tools";
+import { uploadAllTemporaryFiles } from "./file-actions";
 import { updateTitle, updateNotebookInfo } from "./notebook-actions";
 import { updateIomdContent } from "./editor-actions";
 
@@ -72,6 +73,9 @@ export function createNewNotebookOnServer() {
           username: state.userData.name
         })
       );
+
+      // upload any temporary files
+      dispatch(uploadAllTemporaryFiles());
 
       // remove previous autosave if we've successfully saved.
       clearLocalAutosave(state);

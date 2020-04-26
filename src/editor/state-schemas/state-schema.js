@@ -88,7 +88,11 @@ export const fileSchema = {
   properties: {
     filename: { type: "string" },
     id: { type: "integer" },
-    lastUpdated: { type: "string" }
+    lastUpdated: { type: "string" },
+    status: { type: "string", enum: ["saved", "local", "error", "deleted"] },
+    errorMessage: { type: "string" },
+    mimeType: { type: "string" },
+    content: { type: "string" }
   },
   additionalProperties: false
 };

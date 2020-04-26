@@ -907,7 +907,7 @@ exports[`Storyshots File sources pane one file source: user can't save 1`] = `
 </div>
 `;
 
-exports[`Storyshots Files pane no files: user can save 1`] = `
+exports[`Storyshots Files pane no files 1`] = `
 <div
   className="css-1tqhp7d-BodyWrapper e198ef500"
 >
@@ -929,23 +929,7 @@ exports[`Storyshots Files pane no files: user can save 1`] = `
 </div>
 `;
 
-exports[`Storyshots Files pane no files: user can't save 1`] = `
-<div
-  className="css-1tqhp7d-BodyWrapper e198ef500"
->
-  <div
-    className="css-qy57zi-Body e198ef501"
-  >
-    <span
-      className="css-1l4unqs-NoFilesNotice emgvl1y0"
-    >
-      No files are attached to this notebook
-    </span>
-  </div>
-</div>
-`;
-
-exports[`Storyshots Files pane one file: user can save 1`] = `
+exports[`Storyshots Files pane one file 1`] = `
 <div
   className="css-1tqhp7d-BodyWrapper e198ef500"
 >
@@ -962,74 +946,9 @@ exports[`Storyshots Files pane one file: user can save 1`] = `
       className="css-1h6cnob-List edroo1r3"
     >
       <div
-        className="saved first-visible last-visible css-1e1cs9a-ListItem-FileListItem eclaraf0"
-        id={null}
-      >
-        <a
-          className="css-16plg5q-FilenameLink eclaraf1"
-          href="http://localhost/files/foobar.jsx"
-          target="_blank"
-        >
-          foobar.jsx
-        </a>
-        <div
-          className="css-1361dfe-FileActions eclaraf5"
-        >
-          <button
-            className="file-action file-action-delete eclaraf6 css-nz5qwq-TextButtonContainer-GenericButton-TextButtonContainer-FileAction e1ac55ls2"
-            onClick={[Function]}
-          >
-            delete
-          </button>
-        </div>
-      </div>
-    </div>
-    <footer
-      className="css-k9pcj0-FileFooter evif4vm0"
-    >
-      These files can be loaded by
-       
-      <a
-        href="https://iodide-project.github.io/docs/iomd/#fetch-chunks-fetch"
-      >
-        fetch chunks
-      </a>
-       
-      and manipulated via the
-       
-      <a
-        href="https://iodide-project.github.io/docs/api/#iodidefile"
-      >
-        file API
-      </a>
-      .
-    </footer>
-  </div>
-</div>
-`;
-
-exports[`Storyshots Files pane one file: user can't save 1`] = `
-<div
-  className="css-1tqhp7d-BodyWrapper e198ef500"
->
-  <div
-    className="css-qy57zi-Body e198ef501"
-  >
-    <div
-      className="css-1h6cnob-List edroo1r3"
-    >
-      <div
-        className="saved first-visible last-visible css-1e1cs9a-ListItem-FileListItem eclaraf0"
-        id={null}
-      >
-        <a
-          className="css-16plg5q-FilenameLink eclaraf1"
-          href="http://localhost/files/foobar.jsx"
-          target="_blank"
-        >
-          foobar.jsx
-        </a>
-      </div>
+        className=" first-visible css-8ttp8x-ListItem-FileListItem eclaraf0"
+        id="file-215"
+      />
     </div>
     <footer
       className="css-k9pcj0-FileFooter evif4vm0"
