@@ -149,23 +149,33 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
         assert len(response.redirect_chain) == 0
 
 
-@pytest.mark.parametrize("logged_in", [True, False])
+@pytest.mark.parametrize("logged_in", [False])
 def test_tryit_view_get_api(client, fake_user, logged_in):
     """
-    Test if /try-it handles GET request file upload correctly
+    Test that we can pass file parameters to the try it view
     """
-
-    import mimetypes
+    import base64
+    from server.files.models import File
 
     file_name = "data.txt"
-    file_content = "testing"
-    file_mimetype = mimetypes.guess_type(file_name)
+    file_content = "12345"
 
     if logged_in:
         client.force_login(fake_user)
+        resp = client.get(f"/tryit?file={file_content}&filename={file_name}", follow=True)
+        print(resp.json())
+        assert resp.status_code == 200
+        assert NotebookRevision.objects.count() == 1
+        assert Notebook.objects.count() == 1
+        assert File.objects.count() == 1
 
-    resp = client.get(f"/tryit?file={file_content}&filename={file_name}", follow=True)
-    assert get_file_script_block(resp.content, file_name, file_mimetype) == file_content
+    else:
+        resp = client.get(f"/tryit?iomd=123&file={file_content}&filename={file_name}", follow=True)
+        print(resp.content.decode())
+        assert (
+            base64.b64decode(get_file_script_block(resp.content, file_name, "text/plain")).decode()
+            == file_content
+        )
 
 
 def test_notebook_revisions_page(fake_user, test_notebook, client):
