@@ -101,7 +101,7 @@ def test_new_notebook_view(client, fake_user, logged_in, iomd):
         client.force_login(fake_user)
 
     path = reverse("new-notebook")
-    params = f"?iomd={urllib.parse.quote_plus(iomd)}" if iomd else ""
+    params = f"?iomd={urllib.parse.quote_plus(iomd)}" if iomd else "?"
     path += params
 
     response = client.get(path, follow=True)

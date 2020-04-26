@@ -33,13 +33,33 @@ const syntaxErrorToString = fetchInfo => `Syntax error, ${
 const fetchProgressInitialStrings = fetchInfo =>
   `fetching ${fetchInfo.parsed.fetchType} from ${fetchInfo.parsed.filePath}`;
 
-function* handleValidFetch(fetchInfo, historyId, lineIndex) {
+function* handleValidFetch(fetchInfo, temporaryFiles, historyId, lineIndex) {
   const { filePath, fetchType, isRelPath, varName } = fetchInfo.parsed;
-  const fileFetcher = isRelPath ? loadFileFromServer : genericFetch;
 
   let fetchedFile;
   try {
-    fetchedFile = yield call(fileFetcher, filePath, fetchType);
+    if (isRelPath && temporaryFiles.find(t => t.filename === filePath)) {
+      const temporaryFile = temporaryFiles.find(t => t.filename === filePath);
+      const binaryContent = Uint8Array.from(atob(temporaryFile.content), c =>
+        c.charCodeAt(0)
+      );
+      switch (fetchType) {
+        case "bytes":
+          fetchedFile = binaryContent;
+          break;
+        case "blob":
+          fetchedFile = new Blob([binaryContent], {
+            type: temporaryFile.mimeType
+          });
+          break;
+        default:
+          // convert to a textual representation
+          fetchedFile = new TextDecoder("utf-8").decode(binaryContent);
+      }
+    } else {
+      const fileFetcher = isRelPath ? loadFileFromServer : genericFetch;
+      fetchedFile = yield call(fileFetcher, filePath, fetchType);
+    }
   } catch (err) {
     yield put(
       updateHistoryLineContent(
@@ -81,7 +101,7 @@ function* handleValidFetch(fetchInfo, historyId, lineIndex) {
   );
 }
 
-export function* evaluateFetch(fetchText) {
+export function* evaluateFetch(fetchText, files) {
   const fetches = parseFetchCell(fetchText);
   const syntaxErrors = fetches.filter(fetchInfo => fetchInfo.parsed.error);
   if (syntaxErrors.length) {
@@ -101,10 +121,15 @@ export function* evaluateFetch(fetchText) {
       content: fetches.map(fetchProgressInitialStrings)
     })
   );
-
   yield all(
     fetches.map((fetchSpec, i) =>
-      call(handleValidFetch, fetchSpec, historyId, i)
+      call(
+        handleValidFetch,
+        fetchSpec,
+        files.filter(file => file.status === "local"),
+        historyId,
+        i
+      )
     )
   );
 }

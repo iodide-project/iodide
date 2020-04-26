@@ -29,9 +29,7 @@ export class EditorToolbarMenuUnconnected extends React.Component {
           task={tasks.toggleHistoryModal}
           disabled={this.props.isTrialNotebook}
         />
-        {this.props.isServer && (
-          <NotebookMenuItem task={tasks.toggleFileModal} />
-        )}
+        <NotebookMenuItem task={tasks.toggleFileModal} />
         <NotebookMenuItem task={tasks.clearVariables} />
         <NotebookMenuItem task={tasks.toggleHelpModal} />
       </NotebookIconMenu>

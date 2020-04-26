@@ -5,7 +5,7 @@ import thunk from "redux-thunk";
 import * as FILE_OPS from "../../../shared/utils/file-operations";
 import * as CALLBACKS from "../file-request-callbacks";
 
-import { saveFile, loadFile, deleteFile } from "../file-request-actions";
+import { saveFileRequest, loadFileRequest } from "../file-request-actions";
 
 const mockStore = configureMockStore([thunk]);
 
@@ -14,22 +14,14 @@ const initialState = () => {
     userData: { name: "this-user" },
     notebookInfo: {
       connectionMode: "SERVER",
+      notebook_id: 1,
       username: "this-user",
       files: [
         {
           filename: "file1.csv",
+          status: "saved",
           id: 0,
           lastUpdated: "2019-04-03T16:51:45.075609+00:00"
-        },
-        {
-          filename: "file2.csv",
-          id: 1,
-          lastUpdated: "2019-04-01T14:51:00.075609+00:00"
-        },
-        {
-          filename: "file3.csv",
-          id: 2,
-          lastUpdated: "2019-03-29T22:22:12.075609+00:00"
         }
       ]
     }
@@ -38,7 +30,7 @@ const initialState = () => {
 
 jest.useFakeTimers();
 
-describe("loadFile (editor action)", () => {
+describe("loadFileRequest (from eval frame)", () => {
   let loadFileMock;
   let successMock;
   let errorMock;
@@ -47,9 +39,9 @@ describe("loadFile (editor action)", () => {
   beforeEach(() => {
     loadFileMock = jest.spyOn(FILE_OPS, "loadFileFromServer");
     loadFileMock.mockReset();
-    successMock = jest.spyOn(CALLBACKS, "onFileOperationSuccess");
+    successMock = jest.spyOn(CALLBACKS, "postFileOperationSuccessMessage");
     successMock.mockReset();
-    errorMock = jest.spyOn(CALLBACKS, "onFileOperationError");
+    errorMock = jest.spyOn(CALLBACKS, "postFileOperationErrorMessage");
     errorMock.mockReset();
     store = mockStore(initialState());
   });
@@ -59,7 +51,7 @@ describe("loadFile (editor action)", () => {
       return Promise.reject(new Error("artificial error"));
     });
     const request = store.dispatch(
-      loadFile("file1.csv", "file-request-id-0", "text")
+      loadFileRequest("file1.csv", "file-request-id-0", "text")
     );
 
     await expect(request).resolves.toBe(undefined);
@@ -74,7 +66,7 @@ describe("loadFile (editor action)", () => {
     });
 
     const request = store.dispatch(
-      loadFile("file1.csv", "file-request-id-0", "text")
+      loadFileRequest("file1.csv", "file-request-id-0", "text")
     );
 
     jest.runAllTicks();
@@ -85,35 +77,40 @@ describe("loadFile (editor action)", () => {
   });
 });
 
-describe("saveFile (editor action)", () => {
-  let saveFileMock;
+describe("saveFileRequest (from eval frame)", () => {
+  let uploadFileMock;
   let successMock;
   let errorMock;
   let store;
 
   beforeEach(() => {
-    saveFileMock = jest.spyOn(FILE_OPS, "saveFileToServer");
-    saveFileMock.mockReset();
-    successMock = jest.spyOn(CALLBACKS, "onFileOperationSuccess");
+    uploadFileMock = jest.spyOn(FILE_OPS, "uploadFile");
+    uploadFileMock.mockReset();
+    successMock = jest.spyOn(CALLBACKS, "postFileOperationSuccessMessage");
     successMock.mockReset();
-    errorMock = jest.spyOn(CALLBACKS, "onFileOperationError");
+    errorMock = jest.spyOn(CALLBACKS, "postFileOperationErrorMessage");
     errorMock.mockReset();
     store = mockStore(initialState());
   });
 
   it("returns error if there was a server error, passing the reason down to the eval frame", async () => {
-    const request = store.dispatch(
-      saveFile("new-data.csv", "file-request-id-0", "data", true)
-    );
+    uploadFileMock.mockImplementation(() => {
+      throw new Error("Upload failed");
+    });
 
-    await expect(request).resolves.toBe(undefined);
-    expect(saveFileMock).toHaveBeenCalledTimes(1);
-    expect(store.getActions()).toEqual([]);
+    await expect(
+      store.dispatch(
+        saveFileRequest("new-data.csv", "file-request-id-0", "data", true)
+      )
+    ).resolves.toBe(undefined);
+
+    expect(uploadFileMock).toHaveBeenCalledTimes(1);
+    expect(store.getActions()).toEqual([{ type: "NOOP" }]);
     expect(errorMock).toHaveBeenCalledTimes(1);
   });
 
-  it("successfully calls saveFileToServer & dispatches ADD_FILE_TO_NOTEBOOK", async () => {
-    saveFileMock.mockImplementation(() => {
+  it("successfully calls saveFileToServer & dispatches UPDATE_FILE", async () => {
+    uploadFileMock.mockImplementation(() => {
       return Promise.resolve({
         filename: "test.csv",
         id: 0,
@@ -121,83 +118,24 @@ describe("saveFile (editor action)", () => {
       });
     });
 
-    const request = store.dispatch(
-      saveFile("new-data.csv", "file-request-id-0", "data", true)
-    );
+    await expect(
+      store.dispatch(
+        saveFileRequest("new-data.csv", "file-request-id-0", "data", true)
+      )
+    ).resolves.toBe(undefined);
 
-    await expect(request).resolves.toBe(undefined);
-
-    expect(saveFileMock).toHaveBeenCalledTimes(1);
+    expect(uploadFileMock).toHaveBeenCalledTimes(1);
 
     expect(store.getActions()).toEqual([
       {
-        type: "ADD_FILE_TO_NOTEBOOK",
+        type: "UPDATE_FILE",
         filename: "test.csv",
         lastUpdated: "a-date-string",
+        status: "saved",
+        errorMessage: undefined,
         fileID: 0
       }
     ]);
-    expect(successMock).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe("deleteFile (editor action)", () => {
-  let deleteFileMock;
-  let successMock;
-  let errorMock;
-  let store;
-
-  beforeEach(() => {
-    deleteFileMock = jest.spyOn(FILE_OPS, "deleteFileOnServer");
-    deleteFileMock.mockReset();
-    successMock = jest.spyOn(CALLBACKS, "onFileOperationSuccess");
-    successMock.mockReset();
-    errorMock = jest.spyOn(CALLBACKS, "onFileOperationError");
-    errorMock.mockReset();
-    store = mockStore(initialState());
-  });
-
-  it("fails if attempting to delete a non-existent file", () => {
-    store.dispatch(deleteFile("does-not-exist.csv", "some-file-request-id"));
-    expect(errorMock).toHaveBeenCalledTimes(1);
-  });
-
-  it("successfully handles a server error on deleteFileFromServer and sends the appropriate message back to the eval frame", async () => {
-    deleteFileMock.mockImplementation(() => {
-      return Promise.reject(new Error("artificial error"));
-    });
-
-    const request = store.dispatch(
-      deleteFile("file1.csv", "file-request-id-0")
-    );
-
-    await expect(request).resolves.toBe(undefined);
-    expect(deleteFileMock).toHaveBeenCalledTimes(1);
-
-    expect(store.getActions()).toEqual([]);
-
-    expect(errorMock).toHaveBeenCalledTimes(1);
-  });
-
-  it("successfully calls deleteFileFromServer & dispatches DELETE_FILE_FROM_NOTEBOOK", async () => {
-    deleteFileMock.mockImplementation(() => {
-      return Promise.resolve(undefined);
-    });
-
-    const request = store.dispatch(
-      deleteFile("file1.csv", "file-request-id-0")
-    );
-
-    await expect(request).resolves.toBe(undefined);
-    expect(deleteFileMock).toHaveBeenCalled();
-
-    expect(store.getActions()).toEqual([
-      {
-        fileID: 0,
-        type: "DELETE_FILE_FROM_NOTEBOOK"
-      }
-    ]);
-
     expect(successMock).toHaveBeenCalledTimes(1);
   });
 });
