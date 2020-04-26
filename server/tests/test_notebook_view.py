@@ -150,33 +150,22 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
 
 
 @pytest.mark.parametrize("logged_in", [True, False])
-@pytest.mark.parametrize("request_method", ["POST", "GET"])
-def test_tryit_view_file_uploads(client, fake_user, logged_in, request_method):
-    import tempfile
+def test_tryit_view_get_api(client, fake_user, logged_in):
+    """
+    Test if /try-it handles GET request file upload correctly
+    """
+
     import mimetypes
 
-    # we should see the same script blocks
-    # for both logged_in and both request_method
+    file_name = "data.txt"
+    file_content = "testing"
+    file_mimetype = mimetypes.guess_type(file_name)
 
-    with tempfile.NamedTemporaryFile(mode="w+") as f:
-        f.name = "data.txt"
-        file_content = "testing"
-        file_mimetype = mimetypes.guess_type(f.name)
-        f.write(file_content)
-        f.seek(0)
-        path = reverse("try-it")
+    if logged_in:
+        client.force_login(fake_user)
 
-        def http_response(request_method):
-            if request_method == "POST":
-                return client.post(path, {"filename": f.name, "file": f}, follow=True)
-            else:
-                return client.get(path, {"filename": f.name, "file": open(f.name)}, follow=True)
-
-        if logged_in:
-            client.force_login(fake_user)
-
-        resp = http_response(request_method)
-        assert get_file_script_block(resp.content, f.name, file_mimetype) == file_content
+    resp = client.get(f"/tryit?file={file_content}&filename={file_name}", follow=True)
+    assert get_file_script_block(resp.content, file_name, file_mimetype) == file_content
 
 
 def test_notebook_revisions_page(fake_user, test_notebook, client):
