@@ -20,7 +20,7 @@ def get_script_block(page_content, id, mimetype):
 
 def get_file_script_block(page_content, id, mimetype):
     m = re.search(
-        r' <script id="file-%s" type="application/base64" mimetype="%s">(.*?)</script>'
+        r'<script id="file-%s" type="application/base64" mimetype="%s">(.*?)</script>'
         % (id, mimetype),
         str(page_content),
     )
