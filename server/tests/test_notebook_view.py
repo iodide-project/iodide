@@ -4,6 +4,7 @@ import urllib.parse
 import pytest
 from django.urls import reverse
 
+from server.files.models import File
 from server.notebooks.models import Notebook, NotebookRevision
 from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 
@@ -149,25 +150,26 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
         assert len(response.redirect_chain) == 0
 
 
-@pytest.mark.parametrize("logged_in", [True])
+@pytest.mark.parametrize("logged_in", [False, True])
 def test_tryit_view_get_api(client, fake_user, logged_in):
     """
     Test that we can pass file parameters to the try it view
     """
     import base64
-    from server.files.models import File
 
     file_name = "data.txt"
-    file_content = "12345"
+    file_content = "12345abcde"
 
     if logged_in:
         client.force_login(fake_user)
         resp = client.get(f"/tryit?file={file_content}&filename={file_name}", follow=True)
-        print(resp.json())
         assert resp.status_code == 200
         assert NotebookRevision.objects.count() == 1
         assert Notebook.objects.count() == 1
         assert File.objects.count() == 1
+        assert File.objects.first().filename == file_name
+        assert bytes(File.objects.first().content) == bytes(file_content, encoding="utf8")
+        assert File.objects.first().notebook.id == Notebook.objects.first().id
 
     else:
         resp = client.get(f"/tryit?iomd=123&file={file_content}&filename={file_name}", follow=True)
