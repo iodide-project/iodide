@@ -135,9 +135,9 @@ pytest-django==3.9.0 \
 pytest-env==0.6.2 \
     --hash=sha256:7e94956aef7f2764f3c147d216ce066bf6c42948bb9e293169b1b1c880a580c2 \
     # via -r tests.in
-pytest-flake8==1.0.4 \
-    --hash=sha256:4d225c13e787471502ff94409dcf6f7927049b2ec251c63b764a4b17447b60c0 \
-    --hash=sha256:d7e2b6b274a255b7ae35e9224c85294b471a83b76ecb6bd53c337ae977a499af \
+pytest-flake8==1.0.5 \
+    --hash=sha256:6e26d94ad41184d9a5113a90179b303efddb53eda505f827418ca78f5b39403a \
+    --hash=sha256:d85efaafbdb9580791cfa8671799dd40d482fc30bd4476c1ca5efd661e751333 \
     # via -r tests.in
 pytest-freezegun==0.4.1 \
     --hash=sha256:060cdf192848e50a4a681a5e73f8b544c4ee5ebc1fab3cb7223a0097bac2f83f \
