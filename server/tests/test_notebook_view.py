@@ -1,3 +1,4 @@
+import base64
 import random
 import urllib.parse
 
@@ -155,14 +156,15 @@ def test_tryit_view_get_api(client, fake_user, logged_in):
     """
     Test that we can pass file parameters to the try it view
     """
-    import base64
 
     file_name = "data.txt"
     file_content = "12345abcde"
 
     if logged_in:
         client.force_login(fake_user)
-        resp = client.get(f"/tryit?file={file_content}&filename={file_name}", follow=True)
+        resp = client.get(
+            reverse("try-it") + f"?file={file_content}&filename={file_name}", follow=True
+        )
         assert resp.status_code == 200
         assert NotebookRevision.objects.count() == 1
         assert Notebook.objects.count() == 1
@@ -170,9 +172,10 @@ def test_tryit_view_get_api(client, fake_user, logged_in):
         assert File.objects.first().filename == file_name
         assert bytes(File.objects.first().content) == bytes(file_content, encoding="utf8")
         assert File.objects.first().notebook.id == Notebook.objects.first().id
-
     else:
-        resp = client.get(f"/tryit?iomd=123&file={file_content}&filename={file_name}", follow=True)
+        resp = client.get(
+            reverse("try-it") + f"?iomd=123&file={file_content}&filename={file_name}", follow=True,
+        )
         assert (
             base64.b64decode(get_file_script_block(resp.content, file_name, "text/plain")).decode()
             == file_content
