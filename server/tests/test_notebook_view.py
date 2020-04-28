@@ -1,13 +1,15 @@
+import base64
 import random
 import urllib.parse
 
 import pytest
 from django.urls import reverse
 
+from server.files.models import File
 from server.notebooks.models import Notebook, NotebookRevision
 from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 
-from .helpers import get_script_block, get_script_block_json, get_title_block
+from .helpers import get_file_script_block, get_script_block, get_script_block_json, get_title_block
 
 
 def test_notebook_view(client, test_notebook):
@@ -147,6 +149,37 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
         assert NotebookRevision.objects.count() == 0
         assert Notebook.objects.count() == 0
         assert len(response.redirect_chain) == 0
+
+
+@pytest.mark.parametrize("logged_in", [False, True])
+def test_tryit_view_get_api(client, fake_user, logged_in):
+    """
+    Test that we can pass file parameters to the try it view
+    """
+
+    file_name = "data.txt"
+    file_content = "12345abcde"
+
+    if logged_in:
+        client.force_login(fake_user)
+        resp = client.get(
+            reverse("try-it") + f"?file={file_content}&filename={file_name}", follow=True
+        )
+        assert resp.status_code == 200
+        assert NotebookRevision.objects.count() == 1
+        assert Notebook.objects.count() == 1
+        assert File.objects.count() == 1
+        assert File.objects.first().filename == file_name
+        assert bytes(File.objects.first().content) == bytes(file_content, encoding="utf8")
+        assert File.objects.first().notebook.id == Notebook.objects.first().id
+    else:
+        resp = client.get(
+            reverse("try-it") + f"?iomd=123&file={file_content}&filename={file_name}", follow=True,
+        )
+        assert (
+            base64.b64decode(get_file_script_block(resp.content, file_name, "text/plain")).decode()
+            == file_content
+        )
 
 
 def test_notebook_revisions_page(fake_user, test_notebook, client):

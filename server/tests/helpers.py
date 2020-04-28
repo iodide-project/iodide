@@ -18,6 +18,17 @@ def get_script_block(page_content, id, mimetype):
     raise Exception("Script block with id `%s` and mimetype `%s` not found" % (id, mimetype))
 
 
+def get_file_script_block(page_content, id, mimetype):
+    m = re.search(
+        r'<script id="file-%s" type="application/base64" mimetype="%s">(.*?)</script>'
+        % (id, mimetype),
+        str(page_content),
+    )
+    if m:
+        return str(m.group(1))
+    raise Exception("Script block with id `%s` and mimetype `%s` not found" % (id, mimetype))
+
+
 # pull the contents of a script block out of the page, parse it as json
 def get_script_block_json(page_content, id):
     return json.loads(get_script_block(page_content, id, "application/json"))
