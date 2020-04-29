@@ -155,7 +155,7 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
 @pytest.mark.parametrize("logged_in", [False, True])
 def test_new_notebook_file_parameters(client, fake_user, logged_in, endpoint):
     """
-    Test that we can pass file parameters to the try it view and new notebook view
+    Test that we can pass file parameters to the try it and new notebook views
     """
 
     file_name = "data.txt"
