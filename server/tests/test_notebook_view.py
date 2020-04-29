@@ -151,10 +151,11 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
         assert len(response.redirect_chain) == 0
 
 
+@pytest.mark.parametrize("endpoint", ["try-it", "new-notebook"])
 @pytest.mark.parametrize("logged_in", [False, True])
-def test_tryit_view_get_api(client, fake_user, logged_in):
+def test_new_notebook_file_parameters(client, fake_user, logged_in, endpoint):
     """
-    Test that we can pass file parameters to the try it view
+    Test that we can pass file parameters to the try it and new notebook views
     """
 
     file_name = "data.txt"
@@ -162,24 +163,31 @@ def test_tryit_view_get_api(client, fake_user, logged_in):
 
     if logged_in:
         client.force_login(fake_user)
-        resp = client.get(
-            reverse("try-it") + f"?file={file_content}&filename={file_name}", follow=True
-        )
-        assert resp.status_code == 200
+
+    resp = client.get(
+        reverse(endpoint) + f"?iomd=123&file={file_content}&filename={file_name}", follow=True
+    )
+    assert resp.status_code == 200
+    if logged_in:
         assert NotebookRevision.objects.count() == 1
         assert Notebook.objects.count() == 1
         assert File.objects.count() == 1
         assert File.objects.first().filename == file_name
         assert bytes(File.objects.first().content) == bytes(file_content, encoding="utf8")
         assert File.objects.first().notebook.id == Notebook.objects.first().id
+        if endpoint == "new-notebook":
+            assert len(resp.redirect_chain) == 1
+        else:
+            assert len(resp.redirect_chain) == 2
     else:
-        resp = client.get(
-            reverse("try-it") + f"?iomd=123&file={file_content}&filename={file_name}", follow=True,
-        )
         assert (
             base64.b64decode(get_file_script_block(resp.content, file_name, "text/plain")).decode()
             == file_content
         )
+        if endpoint == "new-notebook":
+            assert len(resp.redirect_chain) == 1
+            (last_url, _) = resp.redirect_chain[-1]
+            assert reverse("try-it") in last_url
 
 
 def test_notebook_revisions_page(fake_user, test_notebook, client):
