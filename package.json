@@ -92,10 +92,10 @@
     "universal-router": "9.0.1"
   },
   "devDependencies": {
-    "@babel/core": "7.9.0",
+    "@babel/core": "7.9.6",
     "@babel/plugin-proposal-class-properties": "7.8.3",
-    "@babel/plugin-transform-modules-commonjs": "7.9.0",
-    "@babel/preset-env": "7.9.5",
+    "@babel/plugin-transform-modules-commonjs": "7.9.6",
+    "@babel/preset-env": "7.9.6",
     "@babel/preset-react": "7.9.4",
     "@storybook/addon-actions": "5.3.18",
     "@storybook/addon-links": "5.3.18",
