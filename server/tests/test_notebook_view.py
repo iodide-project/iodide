@@ -159,27 +159,32 @@ def test_new_notebook_file_parameters(client, fake_user, logged_in, endpoint):
     """
 
     file_name = "data.txt"
-    file_content = "12345abcde"
+    file_content = "test content"
+    title = "My%20title"
 
     if logged_in:
         client.force_login(fake_user)
 
     resp = client.get(
-        reverse(endpoint) + f"?iomd=123&file={file_content}&filename={file_name}", follow=True
+        reverse(endpoint) + f"?iomd=123&file={file_content}&filename={file_name}&title={title}",
+        follow=True,
     )
     assert resp.status_code == 200
     if logged_in:
         assert NotebookRevision.objects.count() == 1
         assert Notebook.objects.count() == 1
+        assert Notebook.objects.first().title == "My title"
         assert File.objects.count() == 1
         assert File.objects.first().filename == file_name
         assert bytes(File.objects.first().content) == bytes(file_content, encoding="utf8")
         assert File.objects.first().notebook.id == Notebook.objects.first().id
+
         if endpoint == "new-notebook":
             assert len(resp.redirect_chain) == 1
         else:
             assert len(resp.redirect_chain) == 2
     else:
+        assert get_script_block_json(resp.content, "notebookInfo")["title"] == "My title"
         assert (
             base64.b64decode(get_file_script_block(resp.content, file_name, "text/plain")).decode()
             == file_content

@@ -164,6 +164,7 @@ def new_notebook_view(request):
 
     try:
         iomd = request.GET.get("iomd")
+        title = request.GET.get("title")
         files = _get_files_from_request(request)
     except ValidationError as e:
         return HttpResponseBadRequest(content=e)
@@ -174,7 +175,7 @@ def new_notebook_view(request):
         NotebookRevision.objects.create(
             notebook=notebook,
             content=_get_new_notebook_content(iomd),
-            title=get_random_compound(),
+            title=title if title else get_random_compound(),
             is_draft=True,
         )
         for (filename, content, _) in files:
@@ -194,6 +195,7 @@ def tryit_view(request):
 
     try:
         iomd = request.GET.get("iomd")
+        title = request.GET.get("title")
         files = _get_files_from_request(request, base64_encode=True)
     except ValidationError as e:
         return HttpResponseBadRequest(content=e)
@@ -206,7 +208,7 @@ def tryit_view(request):
             "notebook_info": {
                 "connectionMode": "SERVER",
                 "tryItMode": True,
-                "title": "Untitled notebook",
+                "title": title if title else "Untitled notebook",
             },
             "iomd": _get_new_notebook_content(iomd),
             "files": files,
