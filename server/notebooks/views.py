@@ -208,7 +208,7 @@ def tryit_view(request):
             "notebook_info": {
                 "connectionMode": "SERVER",
                 "tryItMode": True,
-                "title": "Untitled notebook" if title is None else title,
+                "title": title if title else "Untitled notebook",
             },
             "iomd": _get_new_notebook_content(iomd),
             "files": files,
