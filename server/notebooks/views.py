@@ -175,7 +175,7 @@ def new_notebook_view(request):
         NotebookRevision.objects.create(
             notebook=notebook,
             content=_get_new_notebook_content(iomd),
-            title=get_random_compound() if title is None else title,
+            title=title if title else get_random_compound(),
             is_draft=True,
         )
         for (filename, content, _) in files:
