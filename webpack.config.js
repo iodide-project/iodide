@@ -2,7 +2,7 @@ require("dotenv").config();
 const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs");
-const minimist = require('minimist')
+const minimist = require('minimist');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
