@@ -160,9 +160,9 @@ orderedmultidict==1.0.1 \
     --hash=sha256:04070bbb5e87291cc9bfa51df413677faf2141c73c61d2a5f7b26bea3cd882ad \
     --hash=sha256:43c839a17ee3cdd62234c47deca1a8508a3f2ca1d0678a3bf791c87cf84adbf3 \
     # via -r build.in, furl
-pip-tools==5.1.0 \
-    --hash=sha256:37c40df48c349ad516b96b447f93ca6d6398d477df95497295e32ab91979614c \
-    --hash=sha256:aa4c7f5b7faff0e61c3ca31f018397a4f361195efbb9db143faa57d6341e48a8 \
+pip-tools==5.1.2 \
+    --hash=sha256:111ec415d3776498c8c1a8596ae9651160d17ea93303a70f25aa1f8de3d1a47b \
+    --hash=sha256:a524452490f9dc888f55bef73846db2aa27041aaa72e232913d75ea732f6acc9 \
     # via -r build.in
 psycopg2-binary==2.8.5 \
     --hash=sha256:008da3ab51adc70a5f1cfbbe5db3a22607ab030eb44bcecf517ad11a0c2b3cac \
