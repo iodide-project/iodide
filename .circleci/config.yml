@@ -99,6 +99,7 @@ jobs:
           command: |
             if [ $CIRCLE_BRANCH == "master" ]; then
               git remote add docs git@github.com:iodide-project/docs.git
+              git pull docs
               mkdocs gh-deploy --force --remote-name=docs --remote-branch=master --ignore-version
             fi
 
