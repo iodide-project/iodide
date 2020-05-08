@@ -9,7 +9,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
 from django.urls import reverse
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from django.views.decorators.http import require_http_methods
 
 from ..base.models import User
 from ..files.models import File
@@ -199,6 +200,50 @@ def tryit_view(request):
         files = _get_files_from_request(request, base64_encode=True)
     except ValidationError as e:
         return HttpResponseBadRequest(content=e)
+
+    return render(
+        request,
+        "notebook.html",
+        {
+            "user_info": {},
+            "notebook_info": {
+                "connectionMode": "SERVER",
+                "tryItMode": True,
+                "title": title if title else "Untitled notebook",
+            },
+            "iomd": _get_new_notebook_content(iomd),
+            "files": files,
+            "iframe_src": _get_iframe_src(),
+            "eval_frame_origin": EVAL_FRAME_ORIGIN,
+        },
+    )
+
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def from_template_view(request):
+    iomd = urllib.parse.unquote(request.POST.get("iomd", ""))
+    if not iomd:
+        return HttpResponseBadRequest("Must specify iomd template")
+
+    title = request.POST.get("title")
+
+    # NOTE: We can not sadly not use files (request.FILES) attached to forms, as
+    # it is not possible to attach those programatically from the client side via
+    # JavaScript
+    files = []
+    for filename in [
+        k.replace("file-", "", 1) for k in request.POST.keys() if k.startswith("file-")
+    ]:
+        if not filename:
+            return HttpResponseBadRequest("Filename must have at least one character")
+        file_content = request.POST[f"file-{filename}"]
+        actual_file_size = len(file_content) * 3 / 4  # base64 size = 4 * actual / 3
+        if actual_file_size > MAX_FILE_SIZE:
+            return HttpResponseBadRequest(
+                f"File {filename} exceeds maximum file size {MAX_FILE_SIZE}"
+            )
+        files.append((filename, file_content, mimetypes.guess_type(filename)[0]))
 
     return render(
         request,
