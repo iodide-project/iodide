@@ -31,39 +31,49 @@ const initialState = () => {
 };
 
 describe("updateFiles", () => {
-  it("translates a response from the server as expected", async () => {
-    const getFilesMock = jest.spyOn(FILE_OPS, "getFilesForNotebookFromServer");
-    getFilesMock.mockImplementation(() => {
-      return Promise.resolve([
-        {
-          id: 1,
-          filename: "test.csv",
-          notebook_id: 0,
-          last_updated: "a-date-string"
-        }
-      ]);
-    });
-    const store = mockStore(initialState());
-
-    const request = store.dispatch(updateFiles());
-
-    await expect(request).resolves.toBe(undefined);
-
-    expect(getFilesMock).toHaveBeenCalledTimes(1);
-
-    expect(store.getActions()).toEqual([
-      {
-        type: "UPDATE_FILES_FROM_SERVER",
-        serverFiles: [
+  [undefined, 1].forEach(notebookId => {
+    it(`translates a response from the server as expected (notebookId: ${notebookId}`, async () => {
+      const getFilesMock = jest.spyOn(
+        FILE_OPS,
+        "getFilesForNotebookFromServer"
+      );
+      getFilesMock.mockReset();
+      getFilesMock.mockImplementation(() => {
+        return Promise.resolve([
           {
-            filename: "test.csv",
             id: 1,
-            lastUpdated: "a-date-string",
-            status: "saved"
+            filename: "test.csv",
+            notebook_id: 0,
+            last_updated: "a-date-string"
           }
-        ]
+        ]);
+      });
+      const state = initialState();
+      state.notebookInfo.notebook_id = notebookId;
+      const store = mockStore(state);
+
+      await store.dispatch(updateFiles());
+
+      if (notebookId) {
+        expect(getFilesMock).toHaveBeenCalledTimes(1);
+        expect(store.getActions()).toEqual([
+          {
+            type: "UPDATE_FILES_FROM_SERVER",
+            serverFiles: [
+              {
+                filename: "test.csv",
+                id: 1,
+                lastUpdated: "a-date-string",
+                status: "saved"
+              }
+            ]
+          }
+        ]);
+      } else {
+        expect(getFilesMock).toHaveBeenCalledTimes(0);
+        expect(store.getActions()).toEqual([]);
       }
-    ]);
+    });
   });
 });
 

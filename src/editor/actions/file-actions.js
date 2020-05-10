@@ -34,18 +34,20 @@ export function fileOperationError(filename, errorMessage, options = {}) {
 
 export function updateFiles() {
   return async (dispatch, getState) => {
-    const loggedIn = isLoggedIn(getState());
     const notebookID = getNotebookID(getState());
-    const files = await getFilesForNotebookFromServer(notebookID, loggedIn);
-    dispatch({
-      type: "UPDATE_FILES_FROM_SERVER",
-      serverFiles: files.map(file => ({
-        id: file.id,
-        filename: file.filename,
-        lastUpdated: file.last_updated,
-        status: "saved"
-      }))
-    });
+    if (notebookID) {
+      const loggedIn = isLoggedIn(getState());
+      const files = await getFilesForNotebookFromServer(notebookID, loggedIn);
+      dispatch({
+        type: "UPDATE_FILES_FROM_SERVER",
+        serverFiles: files.map(file => ({
+          id: file.id,
+          filename: file.filename,
+          lastUpdated: file.last_updated,
+          status: "saved"
+        }))
+      });
+    }
   };
 }
 
