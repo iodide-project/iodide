@@ -45,6 +45,7 @@ urlpatterns = [
     url(r"^login_success/$", server.views.login_success, name="login_success"),
     url(r"^login/$", server.views.login, name="login"),
     url(r"^logout/$", server.views.logout, name="logout"),
+    url(r"^userinfo/$", server.views.userinfo, name="userinfo"),
     # jwt auth
     url(r"^api/v1/token/$", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     url(r"^api/v1/token/refresh/$", TokenRefreshView.as_view(), name="token_refresh"),

@@ -5,6 +5,8 @@ from django.db.models import Count, Max
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from .base.models import User
 from .notebooks.models import Notebook
@@ -127,3 +129,11 @@ def login_success(request):
 def logout(request):
     django_logout(request)
     return redirect(reverse("index"))
+
+
+@api_view()
+def userinfo(request):
+    """
+    Simple API mostly here to check if a user is logged in or not
+    """
+    return Response(get_user_info_dict(request.user))
