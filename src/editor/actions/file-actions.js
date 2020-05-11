@@ -130,12 +130,10 @@ export function deleteFile(filename, options = {}) {
 export function uploadAllTemporaryFiles() {
   return async (dispatch, getState) => {
     const state = getState();
-    console.log(getFiles(state));
     const temporaryFiles = getFiles(state).filter(
       file => file.status === "local"
     );
     temporaryFiles.forEach(async temporaryFile => {
-      console.log(atob(temporaryFile.content));
       const file = new File(
         [Uint8Array.from(atob(temporaryFile.content), c => c.charCodeAt(0))],
         temporaryFile.filename,
