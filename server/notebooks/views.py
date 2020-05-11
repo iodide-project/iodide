@@ -225,25 +225,25 @@ def from_template_view(request):
     iomd = urllib.parse.unquote(request.POST.get("iomd", ""))
     if not iomd:
         return HttpResponseBadRequest("Must specify iomd template")
-
     title = request.POST.get("title")
 
-    # NOTE: We can not sadly not use files (request.FILES) attached to forms, as
-    # it is not possible to attach those programatically from the client side via
-    # JavaScript
+    # take the files from the request, one-by-one
     files = []
-    for filename in [
-        k.replace("file-", "", 1) for k in request.POST.keys() if k.startswith("file-")
-    ]:
-        if not filename:
-            return HttpResponseBadRequest("Filename must have at least one character")
-        file_content = request.POST[f"file-{filename}"]
-        actual_file_size = len(file_content) * 3 / 4  # base64 size = 4 * actual / 3
-        if actual_file_size > MAX_FILE_SIZE:
+    for posted_file in request.FILES.values():
+        filename = posted_file.name
+        # there is an assumption here that MAX_FILE_SIZE is relatively small
+        # and thus this will not overwhelm the server
+        if posted_file.size > MAX_FILE_SIZE:
             return HttpResponseBadRequest(
                 f"File {filename} exceeds maximum file size {MAX_FILE_SIZE}"
             )
-        files.append((filename, file_content, mimetypes.guess_type(filename)[0]))
+        files.append(
+            (
+                filename,
+                base64.b64encode(posted_file.read()).decode("utf-8"),
+                mimetypes.guess_type(filename)[0],
+            )
+        )
 
     return render(
         request,
