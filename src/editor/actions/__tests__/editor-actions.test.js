@@ -5,6 +5,7 @@ import {
   toggleWrapInEditors,
   updateEditorCursor,
   updateEditorSelections,
+  setIomdModifiedLocally,
   updateIomdContent
 } from "../editor-actions";
 
@@ -198,4 +199,15 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
     store.dispatch(moveCursorToNextChunk());
     expect(store.getActions()).toEqual(expectedActions);
   });
+});
+
+describe("setIomdModifiedLocally", () => {
+  const store = mockStore({});
+  store.dispatch(setIomdModifiedLocally());
+  expect(store.getActions()).toEqual([
+    {
+      type: "SET_IOMD_MODIFIED_LOCALLY"
+    }
+  ]);
+  expect(store.getState()).toEqual({});
 });

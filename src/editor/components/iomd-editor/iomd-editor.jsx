@@ -27,6 +27,7 @@ import "./monaco-custom-styles.css";
 
 import {
   updateIomdContent,
+  setIomdModifiedLocally,
   updateEditorCursor,
   updateEditorSelections
 } from "../../actions/editor-actions";
@@ -56,6 +57,7 @@ class IomdEditorUnconnected extends React.Component {
     delimLines: PropTypes.arrayOf(PropTypes.number),
     // action creators
     updateIomdContent: PropTypes.func.isRequired,
+    setIomdModifiedLocally: PropTypes.func.isRequired,
     updateEditorCursor: PropTypes.func.isRequired,
     updateEditorSelections: PropTypes.func.isRequired,
     updateAutosave: PropTypes.func.isRequired
@@ -176,6 +178,7 @@ class IomdEditorUnconnected extends React.Component {
 
   handleEditorUpdate(content) {
     this.props.updateIomdContent(content);
+    this.props.setIomdModifiedLocally();
     this.props.updateAutosave();
   }
 
@@ -217,6 +220,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   updateIomdContent,
+  setIomdModifiedLocally,
   updateEditorCursor,
   updateEditorSelections,
   updateAutosave

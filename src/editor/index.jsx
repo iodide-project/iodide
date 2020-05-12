@@ -38,10 +38,8 @@ import { restoreLocalAutosave } from "./actions/local-autosave-actions";
 import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
 import { initializeDefaultKeybindings } from "./initialization/keybindings";
-import { handleInterceptBackspace } from "../shared/intercept-keybindings";
 
 initializeDefaultKeybindings();
-handleInterceptBackspace();
 
 window.addEventListener("message", listenForEvalFramePortReady, false);
 
@@ -59,6 +57,20 @@ document.addEventListener(
   () => store.dispatch(handleEditorVisibilityChange(document.hidden)),
   false
 );
+
+window.onbeforeunload = () => {
+  // we want to warn the user before unload in two scenarios:
+  // (1) the user has computed some unique state
+  // (2) the user does not own the notebook and they have made local modifications
+  const state = store.getState();
+  if (
+    state.hasUniqueKernelState ||
+    (!state.notebookInfo.user_can_save && state.iomdModifiedLocally)
+  ) {
+    return "";
+  }
+  return undefined;
+};
 
 render(
   <Provider store={store}>

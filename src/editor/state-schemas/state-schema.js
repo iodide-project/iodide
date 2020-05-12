@@ -248,6 +248,14 @@ export const stateProperties = {
     enum: ["HELP_MODAL", "HISTORY_MODAL", "FILE_MODAL", "MODALS_CLOSED"],
     default: "MODALS_CLOSED"
   },
+  iomdModifiedLocally: {
+    type: "boolean",
+    default: false
+  },
+  hasUniqueKernelState: {
+    type: "boolean",
+    default: false
+  },
   kernelState: {
     type: "string",
     enum: [

@@ -57,7 +57,16 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "UPDATE_IOMD_CONTENT": {
       const { iomd } = action;
-      return Object.assign({}, state, { iomd, iomdChunks: iomdParser(iomd) });
+      return Object.assign({}, state, {
+        iomd,
+        iomdChunks: iomdParser(iomd)
+      });
+    }
+
+    case "SET_IOMD_MODIFIED_LOCALLY": {
+      return Object.assign({}, state, {
+        iomdModifiedLocally: true
+      });
     }
 
     case "GETTING_NOTEBOOK_REVISION_LIST": {
@@ -241,6 +250,13 @@ const notebookReducer = (state = newNotebook(), action) => {
 
     case "SET_MODAL_STATE": {
       return Object.assign({}, state, { modalState: action.modalState });
+    }
+
+    case "KERNEL_STATE_UPDATED": {
+      // we say we have unique state only if we have also made local modifications
+      return Object.assign({}, state, {
+        hasUniqueKernelState: state.iomdModifiedLocally
+      });
     }
 
     case "SET_KERNEL_STATE": {

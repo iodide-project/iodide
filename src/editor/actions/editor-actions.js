@@ -4,6 +4,10 @@ export function updateIomdContent(text) {
   return { type: "UPDATE_IOMD_CONTENT", iomd: text };
 }
 
+export function setIomdModifiedLocally() {
+  return { type: "SET_IOMD_MODIFIED_LOCALLY" };
+}
+
 export function toggleWrapInEditors() {
   return { type: "TOGGLE_WRAP_IN_EDITORS" };
 }

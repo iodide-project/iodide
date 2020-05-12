@@ -12,7 +12,7 @@ import {
   RUNNABLE_CHUNK_TYPES
 } from "../../state-schemas/state-schema";
 
-import { setKernelState } from "../eval-actions";
+import { kernelStateUpdated, setKernelState } from "../eval-actions";
 
 import {
   addInputToConsole,
@@ -85,6 +85,7 @@ export function* evaluateCurrentQueue() {
     try {
       const { chunk } = yield take(evalQueue);
       const { chunkType, chunkContent, chunkId } = chunk;
+      yield put(kernelStateUpdated());
       yield put(setKernelState("KERNEL_BUSY"));
       yield call(evaluateByType, chunkType, chunkContent, chunkId);
       yield put(setKernelState("KERNEL_IDLE"));

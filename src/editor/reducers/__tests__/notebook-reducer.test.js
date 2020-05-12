@@ -29,3 +29,29 @@ describe("misc. notebook operations that don't belong elsewhere", () => {
     ).toEqual(NEW_NAME);
   });
 });
+
+describe("update modified locally", () => {
+  it("Updates the variable as expected", () => {
+    expect(notebookReducer({}, { type: "SET_IOMD_MODIFIED_LOCALLY" })).toEqual({
+      iomdModifiedLocally: true
+    });
+  });
+});
+
+describe("update unique state", () => {
+  [true, false].forEach(iomdModifiedLocally => {
+    it(`update unique state (has local modifications: ${
+      iomdModifiedLocally ? "yes" : "no"
+    })`, () => {
+      expect(
+        notebookReducer(
+          { iomdModifiedLocally },
+          { type: "KERNEL_STATE_UPDATED" }
+        )
+      ).toEqual({
+        iomdModifiedLocally,
+        hasUniqueKernelState: iomdModifiedLocally
+      });
+    });
+  });
+});
