@@ -63,7 +63,7 @@ class NotebookViewSet(viewsets.ModelViewSet):
                             err,
                         )
                         raise APIException(
-                            "Error getting github user data for user %s".format(owner_username)
+                            f"Error getting github user data for user {owner_username}"
                         )
                     UserSocialAuth.objects.get_or_create(
                         user=owner, provider="github", defaults={"uid": github_user_data["id"]}
