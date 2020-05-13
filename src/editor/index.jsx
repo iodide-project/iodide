@@ -64,8 +64,8 @@ window.onbeforeunload = () => {
   // (2) the user does not own the notebook and they have made local modifications
   const state = store.getState();
   if (
-    state.hasUniqueKernelState ||
-    (!state.notebookInfo.user_can_save && state.iomdModifiedLocally)
+    state.sessionHasUserEvals ||
+    (!state.notebookInfo.user_can_save && state.sessionHasUserEdits)
   ) {
     return "";
   }

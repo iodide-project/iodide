@@ -5,7 +5,7 @@ import {
   toggleWrapInEditors,
   updateEditorCursor,
   updateEditorSelections,
-  setIomdModifiedLocally,
+  setSessionHasUserEdits,
   updateIomdContent
 } from "../editor-actions";
 
@@ -201,12 +201,12 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
   });
 });
 
-describe("setIomdModifiedLocally", () => {
+describe("setSessionHasUserEdits", () => {
   const store = mockStore({});
-  store.dispatch(setIomdModifiedLocally());
+  store.dispatch(setSessionHasUserEdits());
   expect(store.getActions()).toEqual([
     {
-      type: "SET_IOMD_MODIFIED_LOCALLY"
+      type: "SET_SESSION_HAS_USER_EDITS"
     }
   ]);
   expect(store.getState()).toEqual({});

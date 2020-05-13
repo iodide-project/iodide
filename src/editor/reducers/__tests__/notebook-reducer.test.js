@@ -32,25 +32,28 @@ describe("misc. notebook operations that don't belong elsewhere", () => {
 
 describe("update modified locally", () => {
   it("Updates the variable as expected", () => {
-    expect(notebookReducer({}, { type: "SET_IOMD_MODIFIED_LOCALLY" })).toEqual({
-      iomdModifiedLocally: true
-    });
+    expect(notebookReducer({}, { type: "SET_SESSION_HAS_USER_EDITS" })).toEqual(
+      {
+        sessionHasUserEdits: true
+      }
+    );
   });
 });
 
-describe("update unique state", () => {
-  [true, false].forEach(iomdModifiedLocally => {
+describe("set kernel state", () => {
+  [true, false].forEach(sessionHasUserEdits => {
     it(`update unique state (has local modifications: ${
-      iomdModifiedLocally ? "yes" : "no"
+      sessionHasUserEdits ? "yes" : "no"
     })`, () => {
       expect(
         notebookReducer(
-          { iomdModifiedLocally },
-          { type: "KERNEL_STATE_UPDATED" }
+          { sessionHasUserEdits },
+          { type: "SET_KERNEL_STATE", kernelState: "BUSY" }
         )
       ).toEqual({
-        iomdModifiedLocally,
-        hasUniqueKernelState: iomdModifiedLocally
+        sessionHasUserEdits,
+        kernelState: "BUSY",
+        sessionHasUserEvals: sessionHasUserEdits
       });
     });
   });

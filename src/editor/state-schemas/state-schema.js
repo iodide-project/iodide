@@ -248,11 +248,11 @@ export const stateProperties = {
     enum: ["HELP_MODAL", "HISTORY_MODAL", "FILE_MODAL", "MODALS_CLOSED"],
     default: "MODALS_CLOSED"
   },
-  iomdModifiedLocally: {
+  sessionHasUserEdits: {
     type: "boolean",
     default: false
   },
-  hasUniqueKernelState: {
+  sessionHasUserEvals: {
     type: "boolean",
     default: false
   },

@@ -4,8 +4,8 @@ export function updateIomdContent(text) {
   return { type: "UPDATE_IOMD_CONTENT", iomd: text };
 }
 
-export function setIomdModifiedLocally() {
-  return { type: "SET_IOMD_MODIFIED_LOCALLY" };
+export function setSessionHasUserEdits() {
+  return { type: "SET_SESSION_HAS_USER_EDITS" };
 }
 
 export function toggleWrapInEditors() {

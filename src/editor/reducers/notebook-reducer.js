@@ -63,9 +63,9 @@ const notebookReducer = (state = newNotebook(), action) => {
       });
     }
 
-    case "SET_IOMD_MODIFIED_LOCALLY": {
+    case "SET_SESSION_HAS_USER_EDITS": {
       return Object.assign({}, state, {
-        iomdModifiedLocally: true
+        sessionHasUserEdits: true
       });
     }
 
@@ -252,15 +252,11 @@ const notebookReducer = (state = newNotebook(), action) => {
       return Object.assign({}, state, { modalState: action.modalState });
     }
 
-    case "KERNEL_STATE_UPDATED": {
-      // we say we have unique state only if we have also made local modifications
-      return Object.assign({}, state, {
-        hasUniqueKernelState: state.iomdModifiedLocally
-      });
-    }
-
     case "SET_KERNEL_STATE": {
-      return Object.assign({}, state, { kernelState: action.kernelState });
+      return Object.assign({}, state, {
+        sessionHasUserEvals: state.sessionHasUserEdits,
+        kernelState: action.kernelState
+      });
     }
 
     case "LOGIN_SUCCESS": {

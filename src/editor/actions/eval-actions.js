@@ -14,12 +14,6 @@ const chunkNotSkipped = chunk =>
 const chunkNotRunnable = ({ chunkType, chunkContent }) =>
   NONCODE_EVAL_TYPES.includes(chunkType) || chunkContent.trim() === "";
 
-export function kernelStateUpdated() {
-  return {
-    type: "KERNEL_STATE_UPDATED"
-  };
-}
-
 export function setKernelState(kernelState) {
   return {
     type: "SET_KERNEL_STATE",
