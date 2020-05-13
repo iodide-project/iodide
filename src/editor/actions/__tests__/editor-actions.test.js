@@ -5,7 +5,6 @@ import {
   toggleWrapInEditors,
   updateEditorCursor,
   updateEditorSelections,
-  setSessionHasUserEdits,
   updateIomdContent
 } from "../editor-actions";
 

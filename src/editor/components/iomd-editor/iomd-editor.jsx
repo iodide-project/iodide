@@ -27,7 +27,6 @@ import "./monaco-custom-styles.css";
 
 import {
   updateIomdContent,
-  setSessionHasUserEdits,
   updateEditorCursor,
   updateEditorSelections
 } from "../../actions/editor-actions";
@@ -57,7 +56,6 @@ class IomdEditorUnconnected extends React.Component {
     delimLines: PropTypes.arrayOf(PropTypes.number),
     // action creators
     updateIomdContent: PropTypes.func.isRequired,
-    setSessionHasUserEdits: PropTypes.func.isRequired,
     updateEditorCursor: PropTypes.func.isRequired,
     updateEditorSelections: PropTypes.func.isRequired,
     updateAutosave: PropTypes.func.isRequired
@@ -219,7 +217,6 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   updateIomdContent,
-  setSessionHasUserEdits,
   updateEditorCursor,
   updateEditorSelections,
   updateAutosave
