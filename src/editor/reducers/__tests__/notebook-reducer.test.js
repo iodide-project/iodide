@@ -30,16 +30,6 @@ describe("misc. notebook operations that don't belong elsewhere", () => {
   });
 });
 
-describe("update modified locally", () => {
-  it("Updates the variable as expected", () => {
-    expect(notebookReducer({}, { type: "SET_SESSION_HAS_USER_EDITS" })).toEqual(
-      {
-        sessionHasUserEdits: true
-      }
-    );
-  });
-});
-
 describe("set kernel state", () => {
   [true, false].forEach(sessionHasUserEdits => {
     it(`update unique state (has local modifications: ${

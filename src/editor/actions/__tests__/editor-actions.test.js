@@ -15,9 +15,10 @@ const mockStore = configureMockStore(middlewares);
 describe("basic editor actions", () => {
   it("updateIomdContent works as expected", () => {
     const iomd = "foo";
-    expect(updateIomdContent(iomd)).toEqual({
+    expect(updateIomdContent(iomd, true)).toEqual({
       type: "UPDATE_IOMD_CONTENT",
-      iomd
+      iomd,
+      userInitiated: true
     });
   });
 
@@ -199,15 +200,4 @@ describe("moveCursorToNextChunk dispatches correct actions", () => {
     store.dispatch(moveCursorToNextChunk());
     expect(store.getActions()).toEqual(expectedActions);
   });
-});
-
-describe("setSessionHasUserEdits", () => {
-  const store = mockStore({});
-  store.dispatch(setSessionHasUserEdits());
-  expect(store.getActions()).toEqual([
-    {
-      type: "SET_SESSION_HAS_USER_EDITS"
-    }
-  ]);
-  expect(store.getState()).toEqual({});
 });

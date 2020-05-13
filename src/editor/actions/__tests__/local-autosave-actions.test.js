@@ -81,7 +81,7 @@ describe("restoreLocalAutosave", () => {
       undefined
     );
     expect(store.getActions()).toEqual([
-      { type: "UPDATE_IOMD_CONTENT", iomd: "autosaved" },
+      { type: "UPDATE_IOMD_CONTENT", iomd: "autosaved", userInitiated: false },
       { type: "UPDATE_NOTEBOOK_TITLE", title: "autosaved title" },
       {
         type: "UPDATE_NOTEBOOK_INFO",

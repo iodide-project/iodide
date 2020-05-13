@@ -239,7 +239,11 @@ describe("revertToLatestServerRevision", () => {
       undefined
     );
     expect(store.getActions()).toEqual([
-      { type: "UPDATE_IOMD_CONTENT", iomd: "newer content" },
+      {
+        type: "UPDATE_IOMD_CONTENT",
+        iomd: "newer content",
+        userInitiated: false
+      },
       { type: "UPDATE_NOTEBOOK_TITLE", title: "newer revision" },
       {
         type: "UPDATE_NOTEBOOK_INFO",
