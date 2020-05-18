@@ -248,6 +248,14 @@ export const stateProperties = {
     enum: ["HELP_MODAL", "HISTORY_MODAL", "FILE_MODAL", "MODALS_CLOSED"],
     default: "MODALS_CLOSED"
   },
+  sessionHasUserEdits: {
+    type: "boolean",
+    default: false
+  },
+  sessionHasUserEvals: {
+    type: "boolean",
+    default: false
+  },
   kernelState: {
     type: "string",
     enum: [

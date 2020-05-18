@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Don't warn unnecessarily when navigating away from a notebook (fixes #2537)
+
 # 0.19.1 (2020-04-06)
 
 - GitHub authentication no longer uses URL query parameters (fixes #2682) (#2751)

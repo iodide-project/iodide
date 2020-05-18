@@ -175,7 +175,7 @@ class IomdEditorUnconnected extends React.Component {
   }
 
   handleEditorUpdate(content) {
-    this.props.updateIomdContent(content);
+    this.props.updateIomdContent(content, true);
     this.props.updateAutosave();
   }
 

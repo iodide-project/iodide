@@ -56,8 +56,16 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case "UPDATE_IOMD_CONTENT": {
-      const { iomd } = action;
-      return Object.assign({}, state, { iomd, iomdChunks: iomdParser(iomd) });
+      const { iomd, userInitiated } = action;
+      return Object.assign({}, state, {
+        iomd,
+        sessionHasUserEdits: state.sessionHasUserEdits || userInitiated,
+        iomdChunks: iomdParser(iomd)
+      });
+    }
+
+    case "SET_SESSION_HAS_USER_EDITS": {
+      return Object.assign({}, state, {});
     }
 
     case "GETTING_NOTEBOOK_REVISION_LIST": {
@@ -244,7 +252,10 @@ const notebookReducer = (state = newNotebook(), action) => {
     }
 
     case "SET_KERNEL_STATE": {
-      return Object.assign({}, state, { kernelState: action.kernelState });
+      return Object.assign({}, state, {
+        sessionHasUserEvals: state.sessionHasUserEdits,
+        kernelState: action.kernelState
+      });
     }
 
     case "LOGIN_SUCCESS": {

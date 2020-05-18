@@ -67,7 +67,7 @@ blah blah
   it("iomd is correct", () => {
     handleInitialIomd(store);
     expect(store.getActions()).toEqual([
-      { iomd: iomdString, type: "UPDATE_IOMD_CONTENT" }
+      { iomd: iomdString, type: "UPDATE_IOMD_CONTENT", userInitiated: false }
     ]);
   });
 });
@@ -97,7 +97,11 @@ blah <>'"& blah &#x27;
   it("iomd is correct", () => {
     handleInitialIomd(store);
     expect(store.getActions()).toEqual([
-      { iomd: unescapedIomdString, type: "UPDATE_IOMD_CONTENT" }
+      {
+        iomd: unescapedIomdString,
+        type: "UPDATE_IOMD_CONTENT",
+        userInitiated: false
+      }
     ]);
   });
 });

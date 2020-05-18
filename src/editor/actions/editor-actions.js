@@ -1,7 +1,11 @@
 import { getChunkContainingLine } from "../iomd-tools/iomd-selection";
 
-export function updateIomdContent(text) {
-  return { type: "UPDATE_IOMD_CONTENT", iomd: text };
+export function updateIomdContent(iomd, userInitiated = false) {
+  return { type: "UPDATE_IOMD_CONTENT", iomd, userInitiated };
+}
+
+export function setSessionHasUserEdits() {
+  return { type: "SET_SESSION_HAS_USER_EDITS" };
 }
 
 export function toggleWrapInEditors() {

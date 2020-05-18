@@ -14,9 +14,10 @@ const mockStore = configureMockStore(middlewares);
 describe("basic editor actions", () => {
   it("updateIomdContent works as expected", () => {
     const iomd = "foo";
-    expect(updateIomdContent(iomd)).toEqual({
+    expect(updateIomdContent(iomd, true)).toEqual({
       type: "UPDATE_IOMD_CONTENT",
-      iomd
+      iomd,
+      userInitiated: true
     });
   });
 

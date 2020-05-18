@@ -29,3 +29,22 @@ describe("misc. notebook operations that don't belong elsewhere", () => {
     ).toEqual(NEW_NAME);
   });
 });
+
+describe("set kernel state", () => {
+  [true, false].forEach(sessionHasUserEdits => {
+    it(`update unique state (has local modifications: ${
+      sessionHasUserEdits ? "yes" : "no"
+    })`, () => {
+      expect(
+        notebookReducer(
+          { sessionHasUserEdits },
+          { type: "SET_KERNEL_STATE", kernelState: "BUSY" }
+        )
+      ).toEqual({
+        sessionHasUserEdits,
+        kernelState: "BUSY",
+        sessionHasUserEvals: sessionHasUserEdits
+      });
+    });
+  });
+});
