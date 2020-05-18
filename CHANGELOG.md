@@ -2,7 +2,8 @@
 
 - Allow creating iodide notebook with attached files via a POST request, using
   a new `/from-template/` endpoint (fixes #2681) (#2849)
-- Don't warn unnecessarily when navigating away from a notebook (fixes #2537)
+- Don't warn unnecessarily when navigating away from a notebook (fixes #2537) (#2855)
+- Allow attaching files to a trial notebook (or when unauthenticated) (fixes #2680) (#2727)
 
 # 0.19.1 (2020-04-06)
 
