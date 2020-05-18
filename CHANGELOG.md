@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Allow creating iodide notebook with attached files via a POST request, using
+  a new `/from-template/` endpoint (fixes #2681) (#2849)
 - Don't warn unnecessarily when navigating away from a notebook (fixes #2537)
 
 # 0.19.1 (2020-04-06)

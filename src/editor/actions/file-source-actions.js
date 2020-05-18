@@ -27,20 +27,22 @@ import {
 export function getFileSources() {
   return async (dispatch, getState) => {
     const state = getState();
-    const loggedIn = isLoggedIn(state);
     const notebookID = getState().notebookInfo.notebook_id;
-    const response = await getFileSourcesFromServer(notebookID, loggedIn);
-    const fileSources = response.map(f => {
-      const fileSource = Object.assign({}, f);
-      fileSource.update_interval = reverseFileSourceUpdateInterval(
-        f.update_interval
-      );
-      return fileSource;
-    });
-    dispatch({
-      type: "UPDATE_FILE_SOURCES",
-      fileSources
-    });
+    if (notebookID) {
+      const loggedIn = isLoggedIn(state);
+      const response = await getFileSourcesFromServer(notebookID, loggedIn);
+      const fileSources = response.map(f => {
+        const fileSource = Object.assign({}, f);
+        fileSource.update_interval = reverseFileSourceUpdateInterval(
+          f.update_interval
+        );
+        return fileSource;
+      });
+      dispatch({
+        type: "UPDATE_FILE_SOURCES",
+        fileSources
+      });
+    }
   };
 }
 

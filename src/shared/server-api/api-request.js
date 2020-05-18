@@ -14,6 +14,7 @@ export class APIError extends Error {
 // it easier to switch to different authentication methods or otherwise change
 // the implementation of the API in the future.
 
+const CSRF_TOKEN_ID = "csrftoken";
 const JWT_ACCESS_TOKEN_ID = "jwt-access-token";
 const JWT_ACCESS_TOKEN_REFRESH_INTERVAL = 4 * 60; // 4 minutes
 const JWT_REFRESH_TOKEN_ID = "jwt-refresh-token";
@@ -66,7 +67,7 @@ async function getResultError(result) {
 // this adds a csrf token to requests, when available, so django
 // can figure out which user the request is coming from
 function fetchWithCSRFToken(url, otherParts, headers = {}) {
-  const csrfToken = getCookie("csrftoken");
+  const csrfToken = getCookie(CSRF_TOKEN_ID);
   const defaultHeaders = {
     "X-CSRFToken": csrfToken
   };
@@ -92,6 +93,22 @@ async function getJWTAuthToken() {
     JWT_REFRESH_TOKEN_ID,
     tokenData.refresh,
     JWT_REFRESH_TOKEN_REFRESH_INTERVAL
+  );
+}
+
+export function hasAuthTokens() {
+  return (
+    getCookie(CSRF_TOKEN_ID) ||
+    getCookie(JWT_ACCESS_TOKEN_ID) ||
+    getCookie(JWT_REFRESH_TOKEN_ID)
+  );
+}
+
+export function forgetAuthTokens() {
+  [CSRF_TOKEN_ID, JWT_ACCESS_TOKEN_ID, JWT_REFRESH_TOKEN_ID].forEach(
+    cookieName => {
+      setCookie(cookieName, "", "-99999999");
+    }
   );
 }
 

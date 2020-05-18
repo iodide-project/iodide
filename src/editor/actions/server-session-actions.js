@@ -3,6 +3,11 @@ import { createNewNotebookOnServer } from "./server-save-actions";
 import { updateAutosave } from "./autosave-actions";
 import { uploadAllTemporaryFiles } from "./file-actions";
 import { loginToServer, logoutFromServer } from "../../shared/utils/login";
+import { userInfoRequest } from "../../shared/server-api/userinfo";
+import {
+  forgetAuthTokens,
+  hasAuthTokens
+} from "../../shared/server-api/api-request";
 import { notebookIsATrial } from "../tools/server-tools";
 
 export function loginSuccess(userData) {
@@ -50,6 +55,7 @@ export function login(successCallback) {
 }
 
 function logoutSuccess(dispatch) {
+  forgetAuthTokens();
   dispatch({ type: "LOGOUT" });
   dispatch(
     updateAppMessages({ message: "Logged Out", messageType: "LOGGED_OUT" })
@@ -68,5 +74,21 @@ function logoutFailure(dispatch) {
 export function logout() {
   return dispatch => {
     logoutFromServer(logoutSuccess, logoutFailure, dispatch);
+  };
+}
+
+export function checkLogin() {
+  return async (dispatch, getState) => {
+    if (notebookIsATrial(getState()) && hasAuthTokens()) {
+      const userInfo = await userInfoRequest();
+      if (userInfo.name) {
+        // we are actually logged in, but just don't know it --
+        // this can happen if we create a notebook through the
+        // a POST request and the /from-template/ endpoint --
+        // trigger a loginSuccess callback, this will create a
+        // new notebook as expected
+        dispatch(loginSuccess(userInfo));
+      }
+    }
   };
 }

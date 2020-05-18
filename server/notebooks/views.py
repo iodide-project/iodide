@@ -9,7 +9,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
 from django.urls import reverse
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from django.views.decorators.http import require_http_methods
 
 from ..base.models import User
 from ..files.models import File
@@ -199,6 +200,50 @@ def tryit_view(request):
         files = _get_files_from_request(request, base64_encode=True)
     except ValidationError as e:
         return HttpResponseBadRequest(content=e)
+
+    return render(
+        request,
+        "notebook.html",
+        {
+            "user_info": {},
+            "notebook_info": {
+                "connectionMode": "SERVER",
+                "tryItMode": True,
+                "title": title if title else "Untitled notebook",
+            },
+            "iomd": _get_new_notebook_content(iomd),
+            "files": files,
+            "iframe_src": _get_iframe_src(),
+            "eval_frame_origin": EVAL_FRAME_ORIGIN,
+        },
+    )
+
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def from_template_view(request):
+    iomd = urllib.parse.unquote(request.POST.get("iomd", ""))
+    if not iomd:
+        return HttpResponseBadRequest("Must specify iomd template")
+    title = request.POST.get("title")
+
+    # take the files from the request, one-by-one
+    files = []
+    for posted_file in request.FILES.values():
+        filename = posted_file.name
+        # there is an assumption here that MAX_FILE_SIZE is relatively small
+        # and thus this will not overwhelm the server
+        if posted_file.size > MAX_FILE_SIZE:
+            return HttpResponseBadRequest(
+                f"File {filename} exceeds maximum file size {MAX_FILE_SIZE}"
+            )
+        files.append(
+            (
+                filename,
+                base64.b64encode(posted_file.read()).decode("utf-8"),
+                mimetypes.guess_type(filename)[0],
+            )
+        )
 
     return render(
         request,

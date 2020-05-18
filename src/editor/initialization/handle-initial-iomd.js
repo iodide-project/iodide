@@ -28,7 +28,7 @@ export default function handleInitialIomd(store) {
 
   // add any "files" specified in script tags to the document as temporary files
   document.querySelectorAll('[id^="file-"]').forEach(fileElement => {
-    const filename = fileElement.getAttribute("id").split("file-")[1];
+    const filename = fileElement.getAttribute("id").slice("file-".length);
     const mimeType = fileElement.getAttribute("mimetype");
     const content = fileElement.innerHTML;
     store.dispatch(addTemporaryFile(filename, content, mimeType));

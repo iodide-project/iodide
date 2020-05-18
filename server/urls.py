@@ -39,11 +39,13 @@ urlpatterns = [
     url(r"^notebooks/", include("server.notebooks.urls")),
     url(r"^new/?", server.notebooks.views.new_notebook_view, name="new-notebook"),
     url(r"^tryit/?", server.notebooks.views.tryit_view, name="try-it"),
+    url(r"^from-template/?", server.notebooks.views.from_template_view, name="from-template"),
     # various views to help with the authentication pipeline
     url(r"^oauth/", include("social_django.urls", namespace="social")),
     url(r"^login_success/$", server.views.login_success, name="login_success"),
     url(r"^login/$", server.views.login, name="login"),
     url(r"^logout/$", server.views.logout, name="logout"),
+    url(r"^userinfo/$", server.views.userinfo, name="userinfo"),
     # jwt auth
     url(r"^api/v1/token/$", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     url(r"^api/v1/token/refresh/$", TokenRefreshView.as_view(), name="token_refresh"),

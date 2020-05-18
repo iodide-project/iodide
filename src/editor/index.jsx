@@ -35,6 +35,7 @@ import { updateFiles } from "./actions/file-actions";
 import { getFileSources } from "./actions/file-source-actions";
 
 import { restoreLocalAutosave } from "./actions/local-autosave-actions";
+import { checkLogin } from "./actions/server-session-actions";
 import { handleEditorVisibilityChange } from "./actions/window-actions";
 import CSSCascadeProvider from "../shared/components/css-cascade-provider";
 import { initializeDefaultKeybindings } from "./initialization/keybindings";
@@ -48,6 +49,7 @@ handleInitialIomd(store);
 store.dispatch(restoreLocalAutosave());
 store.dispatch(updateFiles());
 store.dispatch(getFileSources());
+store.dispatch(checkLogin());
 handleReportViewModeInitialization(store);
 
 messagePasserEditor.connectDispatch(store.dispatch);
