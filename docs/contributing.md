@@ -54,6 +54,7 @@ We've found the following articles to be particularly useful, and we suggest rea
 - [Unit-testing Redux connection components](https://hackernoon.com/unit-testing-redux-connected-components-692fa3c4441c)
 
 Some guidelines that we tend to follow:
+
 - we don't use snapshots for testing
 - we don't always test purely declarative code
 - we use the connected/unconnected pattern for testing components that connect to the redux store
