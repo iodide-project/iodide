@@ -1,5 +1,8 @@
 # (Unreleased; add upcoming change notes here)
 
+- Fix one last case where the user might be warned unnecessarily when navigating
+  away from iodide (#2884)
+
 # 0.20 (2020-05-23)
 
 - Allow creating iodide notebook with attached files via a POST request, using
