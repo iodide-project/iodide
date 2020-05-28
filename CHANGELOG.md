@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.20.1 (2020-05-28)
+
 - Fix one last case where the user might be warned unnecessarily when navigating
   away from iodide (#2884)
 
