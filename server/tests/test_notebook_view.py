@@ -1,5 +1,6 @@
 import base64
 import random
+import tempfile
 import urllib.parse
 
 import pytest
@@ -149,6 +150,43 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
         assert NotebookRevision.objects.count() == 0
         assert Notebook.objects.count() == 0
         assert len(response.redirect_chain) == 0
+
+
+@pytest.mark.parametrize("file_size", [1, 10485764])
+def test_from_template_view(client, file_size):
+    endpoint = "from-template"
+
+    # endpoint should not accept a GET request
+    resp = client.get(
+        reverse(endpoint)
+    )
+    assert resp.status_code == 405
+
+    # HTTPBadRequest if no iomd is provided
+    resp = client.post(
+            reverse(endpoint),
+            {
+                "iomd": "",
+            },
+        )
+    assert resp.status_code == 400
+    assert resp.content == b"Must specify iomd template"
+
+    with tempfile.NamedTemporaryFile(mode="w+") as f:
+        for _ in range(file_size):
+            f.write("0")
+        f.seek(0)
+        resp = client.post(
+            reverse(endpoint),
+            {
+                "iomd": "Test IOMD",
+                "file": f.name,
+            },
+        )
+        if file_size == 10485764:
+            assert resp.status_code == 400
+            assert str(resp.content) ==\
+                f"File {f.name} exceeds maximum file size {MAX_FILE_SIZE}"
 
 
 @pytest.mark.parametrize("endpoint", ["try-it", "new-notebook"])
