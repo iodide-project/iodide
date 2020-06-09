@@ -112,9 +112,9 @@ django-environ==0.4.5 \
     --hash=sha256:6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde \
     --hash=sha256:c57b3c11ec1f319d9474e3e5a79134f40174b17c7cc024bbb2fad84646b120c4 \
     # via -r build.in
-django==3.0.6 \
-    --hash=sha256:051ba55d42daa3eeda3944a8e4df2bc96d4c62f94316dea217248a22563c3621 \
-    --hash=sha256:9aaa6a09678e1b8f0d98a948c56482eac3e3dd2ddbfb8de70a868135ef3b5e01 \
+django==3.0.7 \
+    --hash=sha256:5052b34b34b3425233c682e0e11d658fd6efd587d11335a0203d827224ada8f2 \
+    --hash=sha256:e1630333248c9b3d4e38f02093a26f1e07b271ca896d73097457996e0fae12e8 \
     # via -r build.in, djangorestframework-simplejwt
 djangorestframework-simplejwt==4.4.0 \
     --hash=sha256:288ee78618d906f26abf6282b639b8f1806ce1d9a7578897a125cf79c609f259 \
