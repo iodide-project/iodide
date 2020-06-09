@@ -232,10 +232,10 @@ six==1.15.0 \
     --hash=sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259 \
     --hash=sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced \
     # via -r build.in, cryptography, furl, orderedmultidict, pip-tools, python-dateutil, social-auth-app-django, social-auth-core
-social-auth-app-django==3.1.0 \
-    --hash=sha256:6d0dd18c2d9e71ca545097d57b44d26f59e624a12833078e8e52f91baf849778 \
-    --hash=sha256:9237e3d7b6f6f59494c3b02e0cce6efc69c9d33ad9d1a064e3b2318bcbe89ae3 \
-    --hash=sha256:f151396e5b16e2eee12cd2e211004257826ece24fc4ae97a147df386c1cd7082 \
+social-auth-app-django==3.4.0 \
+    --hash=sha256:02b561e175d4a93896e4436b591586b61e647bd8eeef14c99a26344eb3b48d0e \
+    --hash=sha256:09575f5c7dd91465df3a898c58e7c4ae1e78f31edba36b8b7be47ab0aeef2789 \
+    --hash=sha256:47d1720115a9eaad78a67e99987d556abaa01222b9c2b9538182bbdbb10304ba \
     # via -r build.in
 social-auth-core==3.3.3 \
     --hash=sha256:21c0639c56befd33ec162c2210d583bb1de8e1136d53b21bafb96afaf2f86c91 \
