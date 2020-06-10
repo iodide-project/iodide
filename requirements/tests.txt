@@ -68,9 +68,9 @@ faker==4.1.0 \
 flake8-black==0.2.0 \
     --hash=sha256:10e7ff9f81f637a9471684e5624d6a32b11cba362b38df4e20fc8f761184440b \
     # via -r tests.in
-flake8==3.8.2 \
-    --hash=sha256:c69ac1668e434d37a2d2880b3ca9aafd54b3a10a3ac1ab101d22f29e29cf8634 \
-    --hash=sha256:ccaa799ef9893cebe69fdfefed76865aeaefbb94cb8545617b2298786a4de9a5 \
+flake8==3.8.3 \
+    --hash=sha256:15e351d19611c887e482fb960eae4d44845013cc142d42896e9862f775d8cf5c \
+    --hash=sha256:f04b9fcbac03b0a3e58c0ab3a0ecc462e023a9faf046d57794184028123aa208 \
     # via -r tests.in, flake8-black, pytest-flake8
 freezegun==0.3.15 \
     --hash=sha256:82c757a05b7c7ca3e176bfebd7d6779fd9139c7cb4ef969c38a28d74deef89b2 \
