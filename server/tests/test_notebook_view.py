@@ -159,37 +159,62 @@ def test_from_template_view_reject_get_request(client):
 
 def test_from_template_view_reject_no_iomd(client):
 
-    resp = client.post(reverse("from-template"), {"iomd": "", },)
+    resp = client.post(reverse("from-template"), {"iomd": "",},)
     assert resp.status_code == 400
     assert resp.content == b"Must specify iomd template"
 
 
 def test_from_template_view_file_too_big(client, settings):
     settings.MAX_FILE_SIZE = 8
-
-    # print(settings.MAX_FILE_SIZE) # prints 8
-    with tempfile.NamedTemporaryFile(mode="w+") as f:
-        f.write("0" * 2 * settings.MAX_FILE_SIZE)
-        f.seek(0)
+    with tempfile.NamedTemporaryFile(mode="w+") as f1, tempfile.NamedTemporaryFile(mode="w+") as f2:
+        f1.write("0")
+        f1.seek(0)
+        f2.write("0" * 2 * settings.MAX_FILE_SIZE)
+        f2.seek(0)
         resp = client.post(
             reverse("from-template"),
             {
                 "iomd": "Test IOMD",
                 "title": "Test title",
                 "filename": "tempFile",
-                "file": open(f.name),
+                "file1": open(f1.name),
+                "file2": open(f2.name),
             },
         )
+        assert resp.status_code == 400
+        real_file_name = f2.name[f2.name.rfind("/") + 1 :]
+        assert resp.content == bytes(
+            f"File {real_file_name} exceeds maximum file size {settings.MAX_FILE_SIZE}", "utf-8"
+        )
 
-        # print(resp.content)
-        # prints:
-        # <script id="file-tmpxbddk78t" type="application/base64" mimetype="None">
-        #   MDAwMDAwMDAwMDAwMDAwMA==
-        # </script>
-        assert settings.MAX_FILE_SIZE == 8
-        assert resp.status_code == 400  # 200
-        # real_file_name = f.name[f.name.rfind("/")+1:]
-        # assert resp.content == bytes(f"File {real_file_name} exceeds maximum file size {MAX_FILE_SIZE}")
+
+def test_from_template_view_post_success(client):
+    with tempfile.NamedTemporaryFile(mode="w+") as f1, tempfile.NamedTemporaryFile(mode="w+") as f2:
+        f1.write("0000")
+        f1.seek(0)
+        f2.write("1111")
+        f2.seek(0)
+
+        resp = client.post(
+            reverse("from-template"),
+            {
+                "iomd": "Test IOMD",
+                "title": "Test title",
+                "file1": open(f1.name),
+                "file2": open(f2.name),
+            },
+        )
+        f1_name = f1.name[f1.name.rfind("/") + 1 :]
+        f2_name = f2.name[f2.name.rfind("/") + 1 :]
+        assert resp.status_code == 200
+        assert (
+            base64.b64decode(get_file_script_block(resp.content, f1_name, "None")).decode()
+            == "0000"
+        )
+        assert (
+            base64.b64decode(get_file_script_block(resp.content, f2_name, "None")).decode()
+            == "1111"
+        )
 
 
 @pytest.mark.parametrize("endpoint", ["try-it", "new-notebook"])
