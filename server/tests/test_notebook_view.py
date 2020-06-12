@@ -8,12 +8,11 @@ from django.urls import reverse
 
 from server.files.models import File
 from server.notebooks.models import Notebook, NotebookRevision
-from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 
 from .helpers import get_file_script_block, get_script_block, get_script_block_json, get_title_block
 
 
-def test_notebook_view(client, test_notebook):
+def test_notebook_view(client, test_notebook, settings):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     resp = client.get(reverse("notebook-view", args=[str(test_notebook.id)]))
     assert resp.status_code == 200
@@ -31,8 +30,8 @@ def test_notebook_view(client, test_notebook):
         "title": "First revision",
         "user_can_save": False,
         "username": "testuser1",
-        "max_filename_length": MAX_FILENAME_LENGTH,
-        "max_file_size": MAX_FILE_SIZE,
+        "max_filename_length": settings.MAX_FILENAME_LENGTH,
+        "max_file_size": settings.MAX_FILE_SIZE,
     }
 
     # add a new revision, verify that a fresh load gets it
@@ -67,7 +66,7 @@ def test_notebook_view_escapes_iomd(client, fake_user):
     assert expected_content in str(resp.content)
 
 
-def test_notebook_view_old_revision(client, test_notebook):
+def test_notebook_view_old_revision(client, test_notebook, settings):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     new_revision_content = "My new fun content"
     NotebookRevision.objects.create(
@@ -91,8 +90,8 @@ def test_notebook_view_old_revision(client, test_notebook):
         "title": "First revision",
         "user_can_save": False,
         "username": "testuser1",
-        "max_filename_length": MAX_FILENAME_LENGTH,
-        "max_file_size": MAX_FILE_SIZE,
+        "max_filename_length": settings.MAX_FILENAME_LENGTH,
+        "max_file_size": settings.MAX_FILE_SIZE,
     }
 
 
@@ -152,41 +151,45 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
         assert len(response.redirect_chain) == 0
 
 
-@pytest.mark.parametrize("file_size", [1, 10485764])
-def test_from_template_view(client, file_size):
-    endpoint = "from-template"
+def test_from_template_view_reject_get_request(client):
 
-    # endpoint should not accept a GET request
-    resp = client.get(
-        reverse(endpoint)
-    )
+    resp = client.get(reverse("from-template"))
     assert resp.status_code == 405
 
-    # HTTPBadRequest if no iomd is provided
-    resp = client.post(
-            reverse(endpoint),
-            {
-                "iomd": "",
-            },
-        )
+
+def test_from_template_view_reject_no_iomd(client):
+
+    resp = client.post(reverse("from-template"), {"iomd": "", },)
     assert resp.status_code == 400
     assert resp.content == b"Must specify iomd template"
 
+
+def test_from_template_view_file_too_big(client, settings):
+    settings.MAX_FILE_SIZE = 8
+
+    # print(settings.MAX_FILE_SIZE) # prints 8
     with tempfile.NamedTemporaryFile(mode="w+") as f:
-        for _ in range(file_size):
-            f.write("0")
+        f.write("0" * 2 * settings.MAX_FILE_SIZE)
         f.seek(0)
         resp = client.post(
-            reverse(endpoint),
+            reverse("from-template"),
             {
                 "iomd": "Test IOMD",
-                "file": f.name,
+                "title": "Test title",
+                "filename": "tempFile",
+                "file": open(f.name),
             },
         )
-        if file_size == 10485764:
-            assert resp.status_code == 400
-            assert str(resp.content) ==\
-                f"File {f.name} exceeds maximum file size {MAX_FILE_SIZE}"
+
+        # print(resp.content)
+        # prints:
+        # <script id="file-tmpxbddk78t" type="application/base64" mimetype="None">
+        #   MDAwMDAwMDAwMDAwMDAwMA==
+        # </script>
+        assert settings.MAX_FILE_SIZE == 8
+        assert resp.status_code == 400  # 200
+        # real_file_name = f.name[f.name.rfind("/")+1:]
+        # assert resp.content == bytes(f"File {real_file_name} exceeds maximum file size {MAX_FILE_SIZE}")
 
 
 @pytest.mark.parametrize("endpoint", ["try-it", "new-notebook"])
