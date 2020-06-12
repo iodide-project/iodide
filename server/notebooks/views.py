@@ -2,6 +2,7 @@ import base64
 import mimetypes
 import urllib.parse
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import HttpResponseBadRequest
@@ -14,7 +15,6 @@ from django.views.decorators.http import require_http_methods
 
 from ..base.models import User
 from ..files.models import File
-from ..settings import EVAL_FRAME_ORIGIN, MAX_FILE_SIZE, MAX_FILENAME_LENGTH, SITE_URL
 from ..views import get_base_page_info_dict, get_user_info_dict
 from .models import Notebook, NotebookRevision
 from .names import get_random_compound
@@ -28,11 +28,11 @@ def _get_user_info_json(user):
 
 @xframe_options_exempt
 def eval_frame_view(request):
-    return render(request, "notebook_eval_frame.html", {"editor_origin": SITE_URL})
+    return render(request, "notebook_eval_frame.html", {"editor_origin": settings.SITE_URL})
 
 
 def _get_iframe_src():
-    return urllib.parse.urljoin(EVAL_FRAME_ORIGIN, reverse(eval_frame_view))
+    return urllib.parse.urljoin(settings.EVAL_FRAME_ORIGIN, reverse(eval_frame_view))
 
 
 @ensure_csrf_cookie
@@ -57,8 +57,8 @@ def notebook_view(request, pk):
         "revision_is_latest": revision.id == latest_revision_id,
         "connectionMode": "SERVER",
         "title": revision.title,
-        "max_filename_length": MAX_FILENAME_LENGTH,
-        "max_file_size": MAX_FILE_SIZE,
+        "max_filename_length": settings.MAX_FILENAME_LENGTH,
+        "max_file_size": settings.MAX_FILE_SIZE,
     }
     if notebook.forked_from is not None:
         notebook_info["forked_from"] = notebook.forked_from.id
@@ -73,7 +73,7 @@ def notebook_view(request, pk):
             "notebook_info": notebook_info,
             "iomd": revision.content,
             "iframe_src": _get_iframe_src(),
-            "eval_frame_origin": EVAL_FRAME_ORIGIN,
+            "eval_frame_origin": settings.EVAL_FRAME_ORIGIN,
         },
     )
 
@@ -214,7 +214,7 @@ def tryit_view(request):
             "iomd": _get_new_notebook_content(iomd),
             "files": files,
             "iframe_src": _get_iframe_src(),
-            "eval_frame_origin": EVAL_FRAME_ORIGIN,
+            "eval_frame_origin": settings.EVAL_FRAME_ORIGIN,
         },
     )
 
@@ -231,11 +231,11 @@ def from_template_view(request):
     files = []
     for posted_file in request.FILES.values():
         filename = posted_file.name
-        # there is an assumption here that MAX_FILE_SIZE is relatively small
+        # there is an assumption here that settings.MAX_FILE_SIZE is relatively small
         # and thus this will not overwhelm the server
-        if posted_file.size > MAX_FILE_SIZE:
+        if posted_file.size > settings.MAX_FILE_SIZE:
             return HttpResponseBadRequest(
-                f"File {filename} exceeds maximum file size {MAX_FILE_SIZE}"
+                f"File {filename} exceeds maximum file size {settings.MAX_FILE_SIZE}"
             )
         files.append(
             (
@@ -258,6 +258,6 @@ def from_template_view(request):
             "iomd": _get_new_notebook_content(iomd),
             "files": files,
             "iframe_src": _get_iframe_src(),
-            "eval_frame_origin": EVAL_FRAME_ORIGIN,
+            "eval_frame_origin": settings.EVAL_FRAME_ORIGIN,
         },
     )
