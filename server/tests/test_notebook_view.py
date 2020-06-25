@@ -1,4 +1,5 @@
 import base64
+import os
 import random
 import tempfile
 import urllib.parse
@@ -157,35 +158,31 @@ def test_from_template_view_reject_get_request(client):
     assert resp.status_code == 405
 
 
-def test_from_template_view_reject_no_iomd(client):
+def test_from_template_view_reject_empty_iomd(client):
 
-    resp = client.post(reverse("from-template"), {"iomd": "",},)
+    resp = client.post(reverse("from-template"), {"iomd": ""},)
     assert resp.status_code == 400
     assert resp.content == b"Must specify iomd template"
 
 
 def test_from_template_view_file_too_big(client, settings):
     settings.MAX_FILE_SIZE = 8
-    with tempfile.NamedTemporaryFile(mode="w+") as f1, tempfile.NamedTemporaryFile(mode="w+") as f2:
-        f1.write("0")
-        f1.seek(0)
-        f2.write("0" * 2 * settings.MAX_FILE_SIZE)
-        f2.seek(0)
-        resp = client.post(
-            reverse("from-template"),
-            {
-                "iomd": "Test IOMD",
-                "title": "Test title",
-                "filename": "tempFile",
-                "file1": open(f1.name),
-                "file2": open(f2.name),
-            },
-        )
-        assert resp.status_code == 400
-        real_file_name = f2.name[f2.name.rfind("/") + 1 :]
-        assert resp.content == bytes(
-            f"File {real_file_name} exceeds maximum file size {settings.MAX_FILE_SIZE}", "utf-8"
-        )
+    import io
+
+    f1 = io.StringIO("7 bytes")
+    f2 = io.StringIO("more than 8 bytes")
+    resp = client.post(
+        reverse("from-template"),
+        {
+            "iomd": "Test IOMD",
+            "title": "Test title",
+            "filename": "tempFile",
+            "file1": f1,
+            "file2": f2,
+        },
+    )
+    assert resp.status_code == 400
+    assert "exceeds maximum file size" in resp.content.decode("utf-8")
 
 
 def test_from_template_view_post_success(client):
@@ -204,15 +201,17 @@ def test_from_template_view_post_success(client):
                 "file2": open(f2.name),
             },
         )
-        f1_name = f1.name[f1.name.rfind("/") + 1 :]
-        f2_name = f2.name[f2.name.rfind("/") + 1 :]
         assert resp.status_code == 200
         assert (
-            base64.b64decode(get_file_script_block(resp.content, f1_name, "None")).decode()
+            base64.b64decode(
+                get_file_script_block(resp.content, os.path.basename(f1.name), "None")
+            ).decode()
             == "0000"
         )
         assert (
-            base64.b64decode(get_file_script_block(resp.content, f2_name, "None")).decode()
+            base64.b64decode(
+                get_file_script_block(resp.content, os.path.basename(f2.name), "None")
+            ).decode()
             == "1111"
         )
 
