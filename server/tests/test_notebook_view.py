@@ -1,5 +1,8 @@
 import base64
+import io
+import os
 import random
+import tempfile
 import urllib.parse
 
 import pytest
@@ -7,12 +10,11 @@ from django.urls import reverse
 
 from server.files.models import File
 from server.notebooks.models import Notebook, NotebookRevision
-from server.settings import MAX_FILE_SIZE, MAX_FILENAME_LENGTH
 
 from .helpers import get_file_script_block, get_script_block, get_script_block_json, get_title_block
 
 
-def test_notebook_view(client, test_notebook):
+def test_notebook_view(client, test_notebook, settings):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     resp = client.get(reverse("notebook-view", args=[str(test_notebook.id)]))
     assert resp.status_code == 200
@@ -30,8 +32,8 @@ def test_notebook_view(client, test_notebook):
         "title": "First revision",
         "user_can_save": False,
         "username": "testuser1",
-        "max_filename_length": MAX_FILENAME_LENGTH,
-        "max_file_size": MAX_FILE_SIZE,
+        "max_filename_length": settings.MAX_FILENAME_LENGTH,
+        "max_file_size": settings.MAX_FILE_SIZE,
     }
 
     # add a new revision, verify that a fresh load gets it
@@ -66,7 +68,7 @@ def test_notebook_view_escapes_iomd(client, fake_user):
     assert expected_content in str(resp.content)
 
 
-def test_notebook_view_old_revision(client, test_notebook):
+def test_notebook_view_old_revision(client, test_notebook, settings):
     initial_revision = NotebookRevision.objects.filter(notebook=test_notebook).last()
     new_revision_content = "My new fun content"
     NotebookRevision.objects.create(
@@ -90,8 +92,8 @@ def test_notebook_view_old_revision(client, test_notebook):
         "title": "First revision",
         "user_can_save": False,
         "username": "testuser1",
-        "max_filename_length": MAX_FILENAME_LENGTH,
-        "max_file_size": MAX_FILE_SIZE,
+        "max_filename_length": settings.MAX_FILENAME_LENGTH,
+        "max_file_size": settings.MAX_FILE_SIZE,
     }
 
 
@@ -149,6 +151,60 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
         assert NotebookRevision.objects.count() == 0
         assert Notebook.objects.count() == 0
         assert len(response.redirect_chain) == 0
+
+
+def test_from_template_view_reject_get_request(client):
+    resp = client.get(reverse("from-template"))
+    assert resp.status_code == 405
+
+
+def test_from_template_view_reject_empty_iomd(client):
+    resp = client.post(reverse("from-template"), {"iomd": ""},)
+    assert resp.status_code == 400
+    assert resp.content == b"Must specify iomd template"
+
+
+def test_from_template_view_file_too_big(client, settings):
+    settings.MAX_FILE_SIZE = 8
+    f1 = io.StringIO("7 bytes")
+    f2 = io.StringIO("more than 8 bytes")
+    resp = client.post(
+        reverse("from-template"),
+        {"iomd": "Test IOMD", "title": "Test title", "file1": f1, "file2": f2},
+    )
+    assert resp.status_code == 400
+    assert "exceeds maximum file size" in resp.content.decode("utf-8")
+
+
+def test_from_template_view_post_success(client):
+    with tempfile.NamedTemporaryFile(mode="w+") as f1, tempfile.NamedTemporaryFile(mode="w+") as f2:
+        f1.write("0000")
+        f1.seek(0)
+        f2.write("1111")
+        f2.seek(0)
+
+        resp = client.post(
+            reverse("from-template"),
+            {
+                "iomd": "Test IOMD",
+                "title": "Test title",
+                "file1": open(f1.name),
+                "file2": open(f2.name),
+            },
+        )
+        assert resp.status_code == 200
+        assert (
+            base64.b64decode(
+                get_file_script_block(resp.content, os.path.basename(f1.name), "None")
+            ).decode()
+            == "0000"
+        )
+        assert (
+            base64.b64decode(
+                get_file_script_block(resp.content, os.path.basename(f2.name), "None")
+            ).decode()
+            == "1111"
+        )
 
 
 @pytest.mark.parametrize("endpoint", ["try-it", "new-notebook"])
