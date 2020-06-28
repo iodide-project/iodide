@@ -1,4 +1,5 @@
 import base64
+import io
 import os
 import random
 import tempfile
@@ -153,13 +154,11 @@ def test_tryit_view(client, fake_user, logged_in, iomd):
 
 
 def test_from_template_view_reject_get_request(client):
-
     resp = client.get(reverse("from-template"))
     assert resp.status_code == 405
 
 
 def test_from_template_view_reject_empty_iomd(client):
-
     resp = client.post(reverse("from-template"), {"iomd": ""},)
     assert resp.status_code == 400
     assert resp.content == b"Must specify iomd template"
@@ -167,19 +166,11 @@ def test_from_template_view_reject_empty_iomd(client):
 
 def test_from_template_view_file_too_big(client, settings):
     settings.MAX_FILE_SIZE = 8
-    import io
-
     f1 = io.StringIO("7 bytes")
     f2 = io.StringIO("more than 8 bytes")
     resp = client.post(
         reverse("from-template"),
-        {
-            "iomd": "Test IOMD",
-            "title": "Test title",
-            "filename": "tempFile",
-            "file1": f1,
-            "file2": f2,
-        },
+        {"iomd": "Test IOMD", "title": "Test title", "file1": f1, "file2": f2},
     )
     assert resp.status_code == 400
     assert "exceeds maximum file size" in resp.content.decode("utf-8")
