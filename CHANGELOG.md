@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Allow new windows opened from iodide to submit forms (#2919)
+
 # 0.20.1 (2020-05-28)
 
 - Fix one last case where the user might be warned unnecessarily when navigating
