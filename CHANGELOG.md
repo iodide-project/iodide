@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.20.2 (2020-07-16)
+
 - Allow new windows opened from iodide to submit forms (#2919)
 
 # 0.20.1 (2020-05-28)
