@@ -115,14 +115,14 @@ django-environ==0.4.5 \
 django==3.0.7 \
     --hash=sha256:5052b34b34b3425233c682e0e11d658fd6efd587d11335a0203d827224ada8f2 \
     --hash=sha256:e1630333248c9b3d4e38f02093a26f1e07b271ca896d73097457996e0fae12e8 \
-    # via -r build.in, djangorestframework-simplejwt
+    # via -r build.in, djangorestframework, djangorestframework-simplejwt
 djangorestframework-simplejwt==4.4.0 \
     --hash=sha256:288ee78618d906f26abf6282b639b8f1806ce1d9a7578897a125cf79c609f259 \
     --hash=sha256:c315be70aa12a5f5790c0ab9acd426c3a58eebea65a77d0893248c5144a5080c \
     # via -r build.in
-djangorestframework==3.10.3 \
-    --hash=sha256:5488aed8f8df5ec1d70f04b2114abc52ae6729748a176c453313834a9ee179c8 \
-    --hash=sha256:dc81cbf9775c6898a580f6f1f387c4777d12bd87abf0f5406018d32ccae71090 \
+djangorestframework==3.11.1 \
+    --hash=sha256:6dd02d5a4bd2516fb93f80360673bf540c3b6641fec8766b1da2870a5aa00b32 \
+    --hash=sha256:8b1ac62c581dbc5799b03e535854b92fc4053ecfe74bad3f9c05782063d4196b \
     # via -r build.in, djangorestframework-simplejwt
 dockerflow==2019.10.0 \
     --hash=sha256:44baf5c78dbf28855924c8c21c41f83147a3bd854cc0c9e1930b3b46174df6c9 \
