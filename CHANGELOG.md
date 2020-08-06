@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Wait for database before running migrations (#2935)
+
 # 0.20.2 (2020-07-16)
 
 - Allow new windows opened from iodide to submit forms (#2919)
