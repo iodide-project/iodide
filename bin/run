@@ -34,6 +34,7 @@ tests() {
 
 case $1 in
   dev)
+    bash -c "while ! echo > /dev/tcp/db/5432 > /dev/null 2>&1; do sleep 1 && echo waiting for db; done"
     python manage.py migrate --noinput
     exec python manage.py runserver 0.0.0.0:${PORT}
     ;;
