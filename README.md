@@ -1,16 +1,24 @@
+# Please note: Iodide is no longer under development, nor being actively maintained.
+
+New PRs and issues are unlikely to be reviewed, and bugs are likely to go unfixed. We hope that future projects may me able to learn something from our experiments, so as of September 2020 we have no plans to take down the demo server at https://alpha.iodide.io/. Nonetheless, iodide.io should not be used for important work, as it may be shut down in the future.
+
+Huge thanks to our community for your support and interest over these last few years!
+
+<br />
+
 [![CircleCI](https://img.shields.io/circleci/project/github/iodide-project/iodide/master.svg)](https://circleci.com/gh/iodide-project/iodide)
 [![Join the chat at https://gitter.im/iodide-project/iodide](https://badges.gitter.im/iodide-project/iodide.svg)](https://gitter.im/iodide-project/iodide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![codecov](https://codecov.io/gh/iodide-project/iodide/branch/master/graph/badge.svg)](https://codecov.io/gh/iodide-project/iodide)
 
-<h1 align='center'>
+<p align="center">
   <img width=100 src='https://files.gitter.im/iodide-project/iodide/xW1J/iodide-sticker-2.png' />
-   <br />
-  The Iodide notebook</h1>
+</p>
 
-_[Try it in your browser right now](https://alpha.iodide.io/)!_
-### Please note: Iodide is in early alpha, and still subject to breakage, changes, and overhauls
+# The Iodide notebook
 
 ### _View source_ for science
+_[Try it in your browser right now](https://alpha.iodide.io/)!_
+
 Today, sharing scientific results is easier than ever. You can email a PDF, write up a Google doc, or post to your blog. You can embed plots, data tables, and even interactive visualizations. But what if you want people to be able to replicate and extend your results -- to take your results and “view source” to see how you arrived at your conclusions? Or even hack and remix them to ask their own questions?
 
 To do that now, you typically have a couple of options. You could send your code alongside your nice, clean PDF or blog post, allowing you fine-grained control over your presentation, but that requires you to separate your presentable results from your code and to manage multiple files. Alternatively, you could share your results and code bundled together in a notebook format that mixes code with write-up; this has the advantage of keeping your code and results closely tied together, but the presentation can get a bit unwieldy, especially if you want to share your results with a less technical audience. And in either case, sharing your code will only allow your collaborators to replicate and extend your results if they are first able to replicate your whole setup -- if they can run your code with the same libraries, the same data, and the server access.
