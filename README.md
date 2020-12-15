@@ -2,6 +2,11 @@
 
 New PRs and issues are unlikely to be reviewed, and bugs are likely to go unfixed. We hope that future projects may be able to learn something from our experiments, so as of September 2020 we have no plans to take down the demo server at https://alpha.iodide.io/. Nonetheless, iodide.io should not be used for important work, as it may be shut down in the future.
 
+Note that the [pyodide project](https://github.com/iodide-project/pyodide) (python-on-webassembly) continues and
+is unaffected by this change. For another take on interactive, client-side notebooks, you may also be interested
+in the [Starboard Notebook](https://github.com/gzuidhof/starboard-notebook) which provides some of the same capabilities
+as Iodide and is in active development.
+
 Huge thanks to our community for your support and interest over these last few years!
 
 <br />
