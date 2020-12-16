@@ -143,9 +143,9 @@ pytest-isort==1.0.0 \
     --hash=sha256:5d47dd4c45a7c2eb4a0401ae4febe143724dd8a2acf1e7317c80145bac8b608a \
     --hash=sha256:758156cb4dc1db72adc1b7e253011f5eea117fab32af03cedb4cbfc6058b5f8f \
     # via -r tests.in
-pytest-mock==3.1.0 \
-    --hash=sha256:997729451dfc36b851a9accf675488c7020beccda15e11c75632ee3d1b1ccd71 \
-    --hash=sha256:ce610831cedeff5331f4e2fc453a5dd65384303f680ab34bee2c6533855b431c \
+pytest-mock==3.4.0 \
+    --hash=sha256:c0fc979afac4aaba545cbd01e9c20736eb3fefb0a066558764b07d3de8f04ed3 \
+    --hash=sha256:c3981f5edee6c4d1942250a60d9b39d38d5585398de1bfce057f925bdda720f4 \
     # via -r tests.in
 pytest==5.4.2 \
     --hash=sha256:95c710d0a72d91c13fae35dce195633c929c3792f54125919847fdcdf7caa0d3 \
