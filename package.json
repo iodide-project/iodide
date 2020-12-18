@@ -58,7 +58,7 @@
     "date-fns": "2.14.0",
     "debounce-action": "0.1.0",
     "dexie": "3.0.1",
-    "dompurify": "2.0.11",
+    "dompurify": "2.0.17",
     "emotion": "10.0.27",
     "error-stack-parser": "2.0.6",
     "eslint-config-prettier": "6.11.0",
