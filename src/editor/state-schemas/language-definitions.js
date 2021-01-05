@@ -12,7 +12,7 @@ export const jsLanguageDefinition = {
 
 const PYODIDE_URL = process.env.USE_LOCAL_PYODIDE
   ? "/pyodide/pyodide.js"
-  : "https://pyodide-cdn2.iodide.io/v0.15.0/full/pyodide.js";
+  : "https://cdn.jsdelivr.net/v0.15.0/full/pyodide.js";
 
 const pyLanguageDefinition = {
   languageId: "py",
