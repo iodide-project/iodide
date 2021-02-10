@@ -48,7 +48,7 @@
     ]
   },
   "dependencies": {
-    "@emotion/core": "10.0.27",
+    "@emotion/core": "10.1.1",
     "@emotion/styled": "10.0.27",
     "@iktakahiro/markdown-it-katex": "3.1.0",
     "@material-ui/core": "3.9.4",
@@ -106,7 +106,7 @@
     "babel-eslint": "10.1.0",
     "babel-jest": "25.5.1",
     "babel-loader": "8.1.0",
-    "babel-plugin-emotion": "10.0.27",
+    "babel-plugin-emotion": "10.2.2",
     "babel-plugin-lodash": "3.3.4",
     "babel-plugin-macros": "2.8.0",
     "circular-dependency-plugin": "5.2.0",
