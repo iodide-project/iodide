@@ -1,7 +1,8 @@
 # (Unreleased; add upcoming change notes here)
 
+# 0.20.3 (2021-03-20)
+
 - Warn about iodide potentially going away in the future (#3081)
-- Use pyodide from jsdelivr (#3020)
 - Wait for database before running migrations (#2935)
 - Switched to the jsDelivr CDN for pyodide 0.15.0 (#3020)
 
