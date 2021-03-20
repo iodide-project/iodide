@@ -1,6 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
 - Wait for database before running migrations (#2935)
+- Switched to the jsDelivr CDN for pyodide 0.15.0 (#3020)
 
 # 0.20.2 (2020-07-16)
 
