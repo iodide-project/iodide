@@ -15,7 +15,7 @@ const pageData = JSON.parse(document.getElementById("pageData").textContent);
 // create a header message if we're a staging site
 const headerMessage = pageData.isStaging
   ? `You are in Iodide's staging environment, intended for testing and development. The production site is here: <a href="${pageData.productionServerURL}">${pageData.productionServerURL}</a>`
-  : "";
+  : '<b>Please note</b>: Iodide is no longer under development, nor being actively maintained. This site should not be used for important work as it may be shut down in the future. For more information, see <a href="https://github.com/iodide-project/iodide">the GitHub Repository</a>.';
 
 const routes = [
   {

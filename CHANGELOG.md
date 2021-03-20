@@ -1,5 +1,7 @@
 # (Unreleased; add upcoming change notes here)
 
+- Warn about iodide potentially going away in the future (#3081)
+- Use pyodide from jsdelivr (#3020)
 - Wait for database before running migrations (#2935)
 - Switched to the jsDelivr CDN for pyodide 0.15.0 (#3020)
 
