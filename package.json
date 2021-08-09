@@ -55,7 +55,7 @@
     "@material-ui/icons": "3.0.2",
     "ajv": "6.12.2",
     "css-element-queries": "1.2.3",
-    "date-fns": "2.14.0",
+    "date-fns": "2.18.0",
     "debounce-action": "0.1.0",
     "dexie": "3.0.1",
     "dompurify": "2.0.17",
